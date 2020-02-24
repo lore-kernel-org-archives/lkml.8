@@ -2,173 +2,216 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D73C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295EBC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6356720836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFF72072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ+Er6bn"
+	dkim=pass (1024-bit key) header.d=cloudguard.onmicrosoft.com header.i=@cloudguard.onmicrosoft.com header.b="GNOTBd0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgBXNXK (ORCPT
+        id S1727513AbgBXNYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:23:10 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43735 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgBXNXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:23:09 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r11so10351598wrq.10;
-        Mon, 24 Feb 2020 05:23:07 -0800 (PST)
+        Mon, 24 Feb 2020 08:24:14 -0500
+Received: from mail-zr0che01on2082.outbound.protection.outlook.com ([40.107.24.82]:6067
+        "EHLO CHE01-ZR0-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726806AbgBXNYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:24:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JTIv878o3kFH2XIdbEAmKZRPnpAOCsc06wZkgaNOKKbk9YKiW53bGiM5v9YDoLZB4wSIPk+K2uLUUpC1juWD8knhgHk77BOiuzvkGkbbFs05bHlHSkKAxelB0FhKPuFOGNMByWN+quhLFpg1ZzyR0XOi636qZL5EGSzLJHC7Nyld8VctdWyWiXlhd4cdCsyrSgJLQjJY9UCbCNdthM2Y05Nt6rzSNa71VK2K87Td7YQ/MqxTH6lIziXXriMcAoerFPGDTByxzY2MQ6IpnVmtu0pmuFeaIUHtjiQ4EZd9/i9btWWSFQl1euuwD/M76JKuVDbQeg2b3PN168HUnouD1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jk4eTNpNZIfbp0rdXbzCwFI9tGksP4KNNfSvvK9vWks=;
+ b=QRUVwqZo0A8E/Tg/+5AM1XD7EJmc3Abx+XrTyJH5piAU4JSlTMS+U+zVZAuqyzvgcOiOVf0SZZ3Vmpt4/SxiiG0JnK0AZQeWuoH8u591y3BTK4jS+nzPMXIBp8WYK6OrARpnbAYnZ1aSpujggl9qkXUAROYFzcxjVIUExVcKzAPtlYgYRh2KFMoZyFD3fWvnvNPAcdO3biGN3LKt3D1gXJ7yb2E6UCbGTWf7k8m0sO/PS2QnahVbQrAUD63etFokTmIG0YLhEs3E9fk20rbiCkZVhRbBiAptcs1ikRaNF7giuaJvaTBgd+hrpboj2kgcL0RDn0ryYRaZwwwMFIy/3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=onway.ch; dmarc=pass action=none header.from=onway.ch;
+ dkim=pass header.d=onway.ch; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VVbC5gLHR4yvUi9/1oHpmpfPLd1cTf7rKPhbOVibfvA=;
-        b=nZ+Er6bnu9NAANUCJQsLH9xn2qY4PV29m4rBNuQLqX+sm7XjOQSOVhr3uvinbc3Gw2
-         Z8Gy97ASz6Waj6Tlb0W9fOejWx2niXnXxlWyV6u6Gy0x/WsFBcpEJ2pj6VSIYWibluqn
-         NDibT5RHD+I8fj0piJJLqET6z0NUXtsMKCHk4RDIvOePogmLKDsqxAQPGbY3UL4b2ss+
-         /sUU3wixVdGMoZ+jdqVZxHZgn3aPmBe4w76JwDTBsjeY2HsL6GSyBGeLglv6rxtAy+da
-         2siGfxYT2eYZJfYytqUAcglrqlE3lNhl16sRAVg8Cw7l265RiBxd4lNdPl+iQgjcjcKD
-         ky6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VVbC5gLHR4yvUi9/1oHpmpfPLd1cTf7rKPhbOVibfvA=;
-        b=QF9SkXP0VFWuPVrovoxZLa07uxuCGnsnJ98UxxilUvJ8lX5+brquxCIJXiIJYVeQx5
-         ubv1+mO6K/yY1ZXGdKm+Q3X1vyrZCi7dFvdgMpP9kAYAnZkyVPLuws5v1KQQ8+6MVZSk
-         CUyfdfAejKo9f74ZEUScUIsjqNhbiFkIpFafOpx+gYpq1DFknG1ZjKDc0nnP4gL4KJo3
-         KAajfkyK42XA5seObKDvdZ8Y3Onc8r8OZ2yssFXMsKTNbRy8C2K3BUXbNp8Y3fx40BD6
-         YwRiTBtM321l7l0svXKBBSCLAlDpvWErsM4YtXAd0pt9R55BlKboKEPHffLO1bjzYmYB
-         ErGw==
-X-Gm-Message-State: APjAAAVxmRRilRMDROUJ2PUKm/U66787CDiccYcZtwEOlJp9KYrqMkF6
-        YTUt2zQ+LM+J9fNPyGQUoFCcQHmn
-X-Google-Smtp-Source: APXvYqzxxkpsyjYl9JyAtHtAmjKM8GLv1qb2XlMzrH7fcepRzF8ODOpD7CmTVLcSCaFAXRbbT7LgBA==
-X-Received: by 2002:a5d:66ca:: with SMTP id k10mr15454421wrw.194.1582550587045;
-        Mon, 24 Feb 2020 05:23:07 -0800 (PST)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id s22sm17464417wmh.4.2020.02.24.05.23.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 05:23:06 -0800 (PST)
-Date:   Mon, 24 Feb 2020 14:23:03 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
-Message-ID: <20200224132303.GB2209519@ulmo>
-References: <20200221222711.15973-1-robh@kernel.org>
+ d=cloudguard.onmicrosoft.com; s=selector2-cloudguard-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jk4eTNpNZIfbp0rdXbzCwFI9tGksP4KNNfSvvK9vWks=;
+ b=GNOTBd0KVSsya+8B1X1vUnuY+eatbLp86hpW5qqdxk/sNjinnx1+dqWPVOs+oJBRz6hy3ljoInxsnent7AZbi9LQ4m6IuxVbm2pXHGRYI5bHXlfGAjkLOj+J/nBDgnHM71uzpqN5HAmszIAv6tspTY/ZgaQQZWqsqph1gtgLfzY=
+Received: from GV0P278MB0083.CHEP278.PROD.OUTLOOK.COM (10.186.181.138) by
+ GV0P278MB0115.CHEP278.PROD.OUTLOOK.COM (10.186.181.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.18; Mon, 24 Feb 2020 13:24:05 +0000
+Received: from GV0P278MB0083.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::58c6:b764:cf29:233d]) by GV0P278MB0083.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::58c6:b764:cf29:233d%3]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 13:24:05 +0000
+Received: from bohrium.local (185.12.128.225) by PR0P264CA0119.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:19::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 13:24:04 +0000
+From:   Andreas Tobler <andreas.tobler@onway.ch>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
+Thread-Topic: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
+Thread-Index: AQHV6xWuKJPktnRSx0+cZ6Tsw+Vdsg==
+Date:   Mon, 24 Feb 2020 13:24:04 +0000
+Message-ID: <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
+References: <20200221072349.335551332@linuxfoundation.org>
+ <20200221072403.369335694@linuxfoundation.org>
+In-Reply-To: <20200221072403.369335694@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0119.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:19::35) To GV0P278MB0083.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:1d::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=andreas.tobler@onway.ch; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [185.12.128.225]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dd81c0b1-f86a-421b-a4f6-08d7b92cd1e7
+x-ms-traffictypediagnostic: GV0P278MB0115:
+x-microsoft-antispam-prvs: <GV0P278MB0115C09F93B976B1F75BFFADF3EC0@GV0P278MB0115.CHEP278.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:291;
+x-forefront-prvs: 032334F434
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(42606007)(39830400003)(366004)(136003)(396003)(199004)(189003)(66616009)(66476007)(81156014)(6512007)(81166006)(8676002)(186003)(8936002)(66946007)(26005)(2906002)(6486002)(71200400001)(956004)(5660300002)(2616005)(52116002)(316002)(966005)(110136005)(16526019)(66446008)(66556008)(64756008)(36756003)(31696002)(6506007)(44832011)(53546011)(54906003)(86362001)(508600001)(31686004)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:GV0P278MB0115;H:GV0P278MB0083.CHEP278.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: onway.ch does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HSEV6VKc9yczXWLeg9XiT34/+omV7VcIaGPaWfyIPNAnyDH9ntPlvMgh79h9dnpljjN1pHv1ouKE9TjcN8tEXb7MmBOwJ4yXa9w7iMb6Krsh3tue+1WQB2z2BbY9SLqEbeUDDAazbwyN3CjTAnBeX/H1bWiScwxerENN5Cx6ybTEIzBD7Qm/Uh2m8mUIB5v1+T5SUK4p59od+80zhSVeJUpE5h55U/0ifTvG4WHXP5h2Ik4t/MY6JVWMMIoz8ukLxxzo8VcyzNV7o5TSYR2DvD7tIvHjsi1L/Bkx9+Kh5lpd1ZNWy5UnDTe6B3FLKocR+RmpDcsKdyZU+Ezf5+YAzofyum69pFM0y4Z7D5WYtmc7BnseIp2qgEFqvJfLfnlBAWhH2mjwMWqIM8YX5SFqtGprDoOe+2ScpV8ttxd7V5CpBn0I1wQBFTZOOMAX9mhJhkKyceRrhbTH3uQSakQQNFdiiEE8tA+S5/Ud8G5UOfWCQ7KGV+4el6wyZzysYuhj8wkyEB7OOdiLr/LXkwW6BQ==
+x-ms-exchange-antispam-messagedata: ALP8AgmF5/vX4+XRoZHT5l8slDrD4Ws471AmFMf7g3RozTaRk8QRFaPgt6CqrDRk/7zfQoSgRcNg5dEhqhW6hpiemHOoroKtoOAFaW96x7s+6+mkBf2pN1YXFkt+sFGnCN4B15XZE1ix/LoNhzN1Mw==
+x-ms-exchange-transport-forked: True
+Content-Type: multipart/mixed;
+        boundary="_002_1429291b77c541aa8dee8858eba6d138onwaych_"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QTprm0S8XgL7H0Dt"
-Content-Disposition: inline
-In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-OriginatorOrg: onway.ch
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd81c0b1-f86a-421b-a4f6-08d7b92cd1e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 13:24:04.9056
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6609f251-fcb7-49e1-90a9-db1acfa508db
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aNUoptg6h8ucSG6fVSYoVg81tYCLO7xOTNGTMMJ1qn8BW/V3wrueXnHCtLeinRpZNd21IdaNqsLFkTnQLzzRMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--_002_1429291b77c541aa8dee8858eba6d138onwaych_
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <465F8109E379994987CBF9857EAA0C40@CHEP278.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 
---QTprm0S8XgL7H0Dt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+SGkgYWxsLA0KDQpPbiAyMS4wMi4yMCAwODozOSwgR3JlZyBLcm9haC1IYXJ0bWFuIHdyb3RlOg0K
+PiBGcm9tOiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+DQo+IA0KPiBbIFVw
+c3RyZWFtIGNvbW1pdCAwMjkzOWNkMTY3MDk1ZjE2MzI4YTFiZDVjYWI1YTkwYjU1MDYwNmRmIF0N
+Cj4gDQo+IFRoZSBjdXJyZW50IGRlc2NyaXB0b3IgaXMgbm90IG9uIGFueSBsaXN0IG9mIHRoZSB2
+aXJ0dWFsIERNQSBjaGFubmVsLg0KPiBPbmNlIHNkbWFfdGVybWluYXRlX2FsbCgpIGlzIGNhbGxl
+ZCB3aGVuIGEgZGVzY3JpcHRvciBpcyBjdXJyZW50bHkNCj4gaW4gZmxpZ2h0IHRoZW4gdGhpcyBv
+bmUgaXMgZm9yZ290dGVuIHRvIGJlIGZyZWVkLiBXZSBoYXZlIHRvIGNhbGwNCj4gdmNoYW5fdGVy
+bWluYXRlX3ZkZXNjKCkgb24gdGhpcyBkZXNjcmlwdG9yIHRvIHJlLWFkZCBpdCB0byB0aGUgbGlz
+dHMuDQo+IE5vdyB0aGF0IHdlIGFsc28gZnJlZSB0aGUgY3VycmVudGx5IHJ1bm5pbmcgZGVzY3Jp
+cHRvciB3ZSBjYW4gKGFuZA0KPiBhY3R1YWxseSBoYXZlIHRvKSByZW1vdmUgdGhlIGN1cnJlbnQg
+ZGVzY3JpcHRvciBmcm9tIGl0cyBsaXN0IGFsc28NCj4gZm9yIHRoZSBjeWNsaWMgY2FzZS4NCj4g
+DQo+IFNpZ25lZC1vZmYtYnk6IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4N
+Cj4gUmV2aWV3ZWQtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCj4gVGVzdGVk
+LWJ5OiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+IExpbms6IGh0dHBzOi8vbG9y
+ZS5rZXJuZWwub3JnL3IvMjAxOTEyMTYxMDUzMjguMTUxOTgtMTAtcy5oYXVlckBwZW5ndXRyb25p
+eC5kZQ0KPiBTaWduZWQtb2ZmLWJ5OiBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPg0KPiBT
+aWduZWQtb2ZmLWJ5OiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtlcm5lbC5vcmc+DQo+IC0tLQ0KPiAg
+IGRyaXZlcnMvZG1hL2lteC1zZG1hLmMgfCAxOSArKysrKysrKysrKy0tLS0tLS0tDQo+ICAgMSBm
+aWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9kbWEvaW14LXNkbWEuYyBiL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMN
+Cj4gaW5kZXggYzI3ZTIwNmE3NjRjMy4uNjZmMWIyYWM1Y2RlNCAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9kbWEvaW14LXNkbWEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jDQo+IEBA
+IC03NjAsMTIgKzc2MCw4IEBAIHN0YXRpYyB2b2lkIHNkbWFfc3RhcnRfZGVzYyhzdHJ1Y3Qgc2Rt
+YV9jaGFubmVsICpzZG1hYykNCj4gICAJCXJldHVybjsNCj4gICAJfQ0KPiAgIAlzZG1hYy0+ZGVz
+YyA9IGRlc2MgPSB0b19zZG1hX2Rlc2MoJnZkLT50eCk7DQo+IC0JLyoNCj4gLQkgKiBEbyBub3Qg
+ZGVsZXRlIHRoZSBub2RlIGluIGRlc2NfaXNzdWVkIGxpc3QgaW4gY3ljbGljIG1vZGUsIG90aGVy
+d2lzZQ0KPiAtCSAqIHRoZSBkZXNjIGFsbG9jYXRlZCB3aWxsIG5ldmVyIGJlIGZyZWVkIGluIHZj
+aGFuX2RtYV9kZXNjX2ZyZWVfbGlzdA0KPiAtCSAqLw0KPiAtCWlmICghKHNkbWFjLT5mbGFncyAm
+IElNWF9ETUFfU0dfTE9PUCkpDQo+IC0JCWxpc3RfZGVsKCZ2ZC0+bm9kZSk7DQo+ICsNCj4gKwls
+aXN0X2RlbCgmdmQtPm5vZGUpOw0KPiAgIA0KPiAgIAlzZG1hLT5jaGFubmVsX2NvbnRyb2xbY2hh
+bm5lbF0uYmFzZV9iZF9wdHIgPSBkZXNjLT5iZF9waHlzOw0KPiAgIAlzZG1hLT5jaGFubmVsX2Nv
+bnRyb2xbY2hhbm5lbF0uY3VycmVudF9iZF9wdHIgPSBkZXNjLT5iZF9waHlzOw0KPiBAQCAtMTA3
+MSw3ICsxMDY3LDYgQEAgc3RhdGljIHZvaWQgc2RtYV9jaGFubmVsX3Rlcm1pbmF0ZV93b3JrKHN0
+cnVjdCB3b3JrX3N0cnVjdCAqd29yaykNCj4gICANCj4gICAJc3Bpbl9sb2NrX2lycXNhdmUoJnNk
+bWFjLT52Yy5sb2NrLCBmbGFncyk7DQo+ICAgCXZjaGFuX2dldF9hbGxfZGVzY3JpcHRvcnMoJnNk
+bWFjLT52YywgJmhlYWQpOw0KPiAtCXNkbWFjLT5kZXNjID0gTlVMTDsNCj4gICAJc3Bpbl91bmxv
+Y2tfaXJxcmVzdG9yZSgmc2RtYWMtPnZjLmxvY2ssIGZsYWdzKTsNCj4gICAJdmNoYW5fZG1hX2Rl
+c2NfZnJlZV9saXN0KCZzZG1hYy0+dmMsICZoZWFkKTsNCj4gICAJc2RtYWMtPmNvbnRleHRfbG9h
+ZGVkID0gZmFsc2U7DQo+IEBAIC0xMDgwLDExICsxMDc1LDE5IEBAIHN0YXRpYyB2b2lkIHNkbWFf
+Y2hhbm5lbF90ZXJtaW5hdGVfd29yayhzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspDQo+ICAgc3Rh
+dGljIGludCBzZG1hX2Rpc2FibGVfY2hhbm5lbF9hc3luYyhzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4p
+DQo+ICAgew0KPiAgIAlzdHJ1Y3Qgc2RtYV9jaGFubmVsICpzZG1hYyA9IHRvX3NkbWFfY2hhbihj
+aGFuKTsNCj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiArDQo+ICsJc3Bpbl9sb2NrX2lycXNh
+dmUoJnNkbWFjLT52Yy5sb2NrLCBmbGFncyk7DQo+ICAgDQo+ICAgCXNkbWFfZGlzYWJsZV9jaGFu
+bmVsKGNoYW4pOw0KPiAgIA0KPiAtCWlmIChzZG1hYy0+ZGVzYykNCj4gKwlpZiAoc2RtYWMtPmRl
+c2MpIHsNCj4gKwkJdmNoYW5fdGVybWluYXRlX3ZkZXNjKCZzZG1hYy0+ZGVzYy0+dmQpOw0KPiAr
+CQlzZG1hYy0+ZGVzYyA9IE5VTEw7DQo+ICAgCQlzY2hlZHVsZV93b3JrKCZzZG1hYy0+dGVybWlu
+YXRlX3dvcmtlcik7DQo+ICsJfQ0KPiArDQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmc2Rt
+YWMtPnZjLmxvY2ssIGZsYWdzKTsNCj4gICANCj4gICAJcmV0dXJuIDA7DQo+ICAgfQ0KPiANCg0K
+VGhpcyBwYXRjaCBicmVha3Mgb3VyIGlteDYgYm9hcmQgd2l0aCB0aGUgYXR0YWNoZWQgdHJhY2Uu
+ICBSZXZlcnRpbmcgdGhlIA0KcGF0Y2ggbWFrZXMgaXQgYm9vdCBhZ2Fpbi4NCkkgdHJpZWQgYWxz
+byA1LjYtcmMzIGFuZCBpdCBib290ZWQgdG9vLiBBIGNsb3NlciBsb29rIGludG8gaW14LXNkbWEu
+YyANCmZyb20gNS42LXJjMyBzaG93ZWQgbWUgc29tZSBkZXRhaWxzIHdoaWNoIG1pZ2h0IGhhdmUg
+dG8gYmUgYmFja3BvcnRlZCBhcyANCndlbGwgdG8gbWFrZSB0aGlzIHBhdGNoIHdvcmsuDQpJIHRy
+aWVkIGExZmY2YTA3ZjVhMzk1MWZjYWM4NGYwNjRhNzZkMWFkNzljMTBlNDAgYW5kIHdhcyBzb21l
+aG93IA0Kc3VjY2Vzc2Z1bC4gSSBzdGlsbCBoYXZlIG9uZSB0cmFjZSBidXQgdGhlIGJvYXJkIGJv
+b3RzIG5vdy4NCg0KQW55IGluc2lnaHRzIGZyb20gdGhlIGV4cGVydHM/DQpUSUEsDQpBbmRyZWFz
+DQoNCg0KDQoNCg0K
 
-On Fri, Feb 21, 2020 at 04:27:10PM -0600, Rob Herring wrote:
-> Fix all the warnings in the DT binding schema examples when built with
-> 'W=3D1'. This is in preparation to make that the default for examples.
->=20
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/stm32/st,mlahb.yaml    |  2 +-
->  .../clock/allwinner,sun4i-a10-osc-clk.yaml         |  2 +-
->  .../bindings/clock/allwinner,sun9i-a80-gt-clk.yaml |  2 +-
->  .../display/allwinner,sun4i-a10-tv-encoder.yaml    |  6 +-----
->  .../bindings/display/bridge/anx6345.yaml           | 10 ++--------
->  .../display/panel/leadtek,ltk500hd1829.yaml        |  2 ++
->  .../bindings/display/panel/xinpeng,xpp055c272.yaml |  2 ++
->  .../bindings/display/simple-framebuffer.yaml       |  6 +-----
->  .../devicetree/bindings/dma/ti/k3-udma.yaml        | 14 +-------------
->  .../devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 14 +++++++-------
->  .../devicetree/bindings/gpu/arm,mali-midgard.yaml  | 14 +++++++-------
->  .../bindings/iio/adc/samsung,exynos-adc.yaml       |  2 +-
->  .../bindings/input/touchscreen/goodix.yaml         |  2 +-
->  .../devicetree/bindings/media/ti,cal.yaml          |  2 +-
->  .../devicetree/bindings/mfd/max77650.yaml          |  4 ++--
->  .../devicetree/bindings/mmc/mmc-controller.yaml    |  1 +
->  Documentation/devicetree/bindings/nvmem/nvmem.yaml |  2 ++
->  .../bindings/phy/allwinner,sun4i-a10-usb-phy.yaml  |  2 +-
->  .../bindings/pinctrl/st,stm32-pinctrl.yaml         |  2 +-
->  .../devicetree/bindings/regulator/regulator.yaml   |  2 +-
->  .../sram/allwinner,sun4i-a10-system-control.yaml   |  2 +-
->  .../bindings/timer/allwinner,sun4i-a10-timer.yaml  |  2 +-
->  22 files changed, 39 insertions(+), 58 deletions(-)
+--_002_1429291b77c541aa8dee8858eba6d138onwaych_
+Content-Type: text/plain; name="trace_uart_sdma.txt"
+Content-Description: trace_uart_sdma.txt
+Content-Disposition: attachment; filename="trace_uart_sdma.txt"; size=2083;
+	creation-date="Mon, 24 Feb 2020 13:24:04 GMT";
+	modification-date="Mon, 24 Feb 2020 13:24:04 GMT"
+Content-ID: <6678F70FF5EFDF438ABD80DFD6AE3755@CHEP278.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+a2xvZzogLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tCmtsb2c6IFdBUk5JTkc6
+IENQVTogMCBQSUQ6IDMwNyBhdCBrZXJuZWwvZG1hL21hcHBpbmcuYzozMzUgZG1hX2ZyZWVfYXR0
+cnMrMHhjNC8weGM4Cmtsb2c6IE1vZHVsZXMgbGlua2VkIGluOiBuZl9kZWZyYWdfaXB2NAprbG9n
+OiBDUFU6IDAgUElEOiAzMDcgQ29tbTogZ2luYSBOb3QgdGFpbnRlZCA1LjQuMjIgIzQKa2xvZzog
+SGFyZHdhcmUgbmFtZTogRnJlZXNjYWxlIGkuTVg2IFF1YWQvRHVhbExpdGUgKERldmljZSBUcmVl
+KQprbG9nOiBbPGMwMTEwMzI4Pl0gKHVud2luZF9iYWNrdHJhY2UpIGZyb20gWzxjMDEwYjdlYz5d
+IChzaG93X3N0YWNrKzB4MTAvMHgxNCkKa2xvZzogWzxjMDEwYjdlYz5dIChzaG93X3N0YWNrKSBm
+cm9tIFs8YzA4ZGQ3Zjg+XSAoZHVtcF9zdGFjaysweDkwLzB4YTQpCmtsb2c6IFs8YzA4ZGQ3Zjg+
+XSAoZHVtcF9zdGFjaykgZnJvbSBbPGMwMTJiZWEwPl0gKF9fd2FybisweGJjLzB4ZDgpCmtsb2c6
+IFs8YzAxMmJlYTA+XSAoX193YXJuKSBmcm9tIFs8YzAxMmJmMjA+XSAod2Fybl9zbG93cGF0aF9m
+bXQrMHg2NC8weGM0KQprbG9nOiBbPGMwMTJiZjIwPl0gKHdhcm5fc2xvd3BhdGhfZm10KSBmcm9t
+IFs8YzAxODFhNjg+XSAoZG1hX2ZyZWVfYXR0cnMrMHhjNC8weGM4KQprbG9nOiBbPGMwMTgxYTY4
+Pl0gKGRtYV9mcmVlX2F0dHJzKSBmcm9tIFs8YzA0NjMxYzg+XSAoc2RtYV9mcmVlX2JkKzB4MzAv
+MHgzOCkKa2xvZzogWzxjMDQ2MzFjOD5dIChzZG1hX2ZyZWVfYmQpIGZyb20gWzxjMDQ2MzFkYz5d
+IChzZG1hX2Rlc2NfZnJlZSsweGMvMHgxOCkKa2xvZzogWzxjMDQ2MzFkYz5dIChzZG1hX2Rlc2Nf
+ZnJlZSkgZnJvbSBbPGMwNDY0ZjcwPl0gKHNkbWFfY2hhbm5lbF9zeW5jaHJvbml6ZSsweDQ4LzB4
+ODgpCmtsb2c6IFs8YzA0NjRmNzA+XSAoc2RtYV9jaGFubmVsX3N5bmNocm9uaXplKSBmcm9tIFs8
+YzA0OTVmYWM+XSAoaW14X3VhcnRfc2h1dGRvd24rMHgxNmMvMHgyYTgpCmtsb2c6IFs8YzA0OTVm
+YWM+XSAoaW14X3VhcnRfc2h1dGRvd24pIGZyb20gWzxjMDQ4NTdiOD5dICh1YXJ0X3BvcnRfc2h1
+dGRvd24rMHgzNC8weDQwKQprbG9nOiBbPGMwNDg1N2I4Pl0gKHVhcnRfcG9ydF9zaHV0ZG93bikg
+ZnJvbSBbPGMwNDg1ODE0Pl0gKHVhcnRfdHR5X3BvcnRfc2h1dGRvd24rMHg1MC8weGI4KQprbG9n
+OiBbPGMwNDg1ODE0Pl0gKHVhcnRfdHR5X3BvcnRfc2h1dGRvd24pIGZyb20gWzxjMDQ4MTQ0Yz5d
+ICh0dHlfcG9ydF9zaHV0ZG93bisweDkwLzB4OWMpCmtsb2c6IFs8YzA0ODE0NGM+XSAodHR5X3Bv
+cnRfc2h1dGRvd24pIGZyb20gWzxjMDQ4MWMyYz5dICh0dHlfcG9ydF9jbG9zZSsweDNjLzB4NzQp
+Cmtsb2c6IFs8YzA0ODFjMmM+XSAodHR5X3BvcnRfY2xvc2UpIGZyb20gWzxjMDQ3ODQ1OD5dICh0
+dHlfcmVsZWFzZSsweGYwLzB4NDhjKQprbG9nOiBbPGMwNDc4NDU4Pl0gKHR0eV9yZWxlYXNlKSBm
+cm9tIFs8YzAyNDI1ZWM+XSAoX19mcHV0KzB4ODgvMHgyMTgpCmtsb2c6IFs8YzAyNDI1ZWM+XSAo
+X19mcHV0KSBmcm9tIFs8YzAxNDc3OTg+XSAodGFza193b3JrX3J1bisweGE0LzB4YzQpCmtsb2c6
+IFs8YzAxNDc3OTg+XSAodGFza193b3JrX3J1bikgZnJvbSBbPGMwMTBiMzEwPl0gKGRvX3dvcmtf
+cGVuZGluZysweDU1MC8weDU1YykKa2xvZzogWzxjMDEwYjMxMD5dIChkb193b3JrX3BlbmRpbmcp
+IGZyb20gWzxjMDEwMTA2Yz5dIChzbG93X3dvcmtfcGVuZGluZysweGMvMHgyMCkKa2xvZzogRXhj
+ZXB0aW9uIHN0YWNrKDB4ZWU3MjNmYjAgdG8gMHhlZTcyM2ZmOCkKa2xvZzogM2ZhMDogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAgMDAwMDU0MDIgYmVhNmFiNjQg
+MDAwMDAwMDAKa2xvZzogM2ZjMDogMDAwMDAwMDAgYjZmMTI0ZDAgYmVhNmFiYTQgMDAwMDAwMDYg
+MDAwMDAwMGQgMDAwMDAwMDEgMDAwODRmZjggMDAwMDAwMDAKa2xvZzogM2ZlMDogMDAwNDgyMmMg
+YmVhNmFiODggMDAwMzQ3ODAgYjZkMDhjMzQgNjAwYjAwMTAgMDAwMDAwMDYKa2xvZzogLS0tWyBl
+bmQgdHJhY2UgODZmZWE0ZTc0YTI2N2Y1NyBdLS0tCg==
 
---QTprm0S8XgL7H0Dt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5TzjcACgkQ3SOs138+
-s6GeWhAArfC4DkbVVCEJsL56rih4V9WezBzZTgBe1i7wY66Vpn+tD3fjS7VGo9rZ
-VHqoeP4Ny+uMURGs8jNhigP/wiDxAPuRcyMsw8daDESGMxcafJFa1Jczv+NZv+XL
-4DDgKxYRSmPLdaYr7IKwEEj0Rrz1RMpHff51gX+Nj6nxZ8Y8KpYWPvn5STXsbzal
-ESS82GbDWWnvXonMsXQZ+86BHxWZaFqgKKOKAog692OXOl1qFprityO8LLCM2edB
-5HCAdRQiJAJaH+osFgT/vocpq5hqEk93NZj7efmZ4DPoTe2wMuoUgdh5alRM3XK7
-nKTxOFHx7oe7MiWRglyhyjGiCxzB24g5CXAjL1Sj12weqE2GMzDQxiswLUcUNu4B
-vYTmfeHUbXuiDly++sC1xQpIhaepNV9gr+GuH1JAYbMwkinAixZgXtWLC9IjT9+Z
-mwb6+muaIR8OZwC3SsPWYEKn3zAa7TQaAlPrQTCZZucBK/80saCnE0o5JqqmCjN6
-2DoG7yxnmgQfp/l8f5cL34bHtuwarJ4kdppZUetIsyX1FUB9ihRUKbAkwEfruPU7
-1vvthv6rLFcTQVGxUNXlT5cNs390K3pDOP5KfRhDXdfkTh9q6VP5svmvZWLd4a3X
-vefVbUKo+4iS8tRRUD6WC2x6dHdAA18BcBlGd/Cpvem/2s4JpXU=
-=Ilg9
------END PGP SIGNATURE-----
-
---QTprm0S8XgL7H0Dt--
+--_002_1429291b77c541aa8dee8858eba6d138onwaych_--
