@@ -6,100 +6,53 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C77C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4116CC38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FC820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC6620CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgBXVzx (ORCPT
+        id S1728115AbgBXV5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:55:53 -0500
-Received: from mga05.intel.com ([192.55.52.43]:22185 "EHLO mga05.intel.com"
+        Mon, 24 Feb 2020 16:57:01 -0500
+Received: from verein.lst.de ([213.95.11.211]:40500 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbgBXVzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:55:52 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 13:55:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="226127573"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 13:55:51 -0800
-Date:   Mon, 24 Feb 2020 13:55:51 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        id S1727421AbgBXV5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:57:01 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C9FFA68B05; Mon, 24 Feb 2020 22:56:57 +0100 (CET)
+Date:   Mon, 24 Feb 2020 22:56:57 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/61] KVM: x86: Encapsulate CPUID entries and metadata
- in struct
-Message-ID: <20200224215551.GL29865@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-17-sean.j.christopherson@intel.com>
- <87y2swq95k.fsf@vitty.brq.redhat.com>
+Subject: Re: [PATCH 4/5] dma-direct: provide a arch_dma_clear_uncached hook
+Message-ID: <20200224215657.GA12618@lst.de>
+References: <20200224194446.690816-1-hch@lst.de> <20200224194446.690816-5-hch@lst.de> <20200224215327.GB11565@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2swq95k.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200224215327.GB11565@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:58:47PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, Feb 24, 2020 at 01:53:28PM -0800, Ira Weiny wrote:
+> > +	else if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED))
+> > +		arch_dma_clear_uncached(cpu_addr, size);
 > 
-> > @@ -539,7 +549,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
-> >  		entry->flags |= KVM_CPUID_FLAG_STATE_READ_NEXT;
-> >  
-> >  		for (i = 1, max_idx = entry->eax & 0xff; i < max_idx; ++i) {
-> > -			if (!do_host_cpuid(&entry[i], nent, maxnent, function, 0))
-> > +			entry = do_host_cpuid(array, 2, 0);
-> 
-> I'd change this to 
->                         entry = do_host_cpuid(array, function, 0);
-> 
-> to match other call sites.
+> Isn't using arch_dma_clear_uncached() before patch 5 going to break
+> bisectability?
 
-Done.  That did look weird, no idea why I decided to hardcode only this one.
-
-> > +			if (!entry)
-> >  				goto out;
-> >  		}
-> >  		break;
-> > @@ -802,22 +814,22 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
-> >  	return r;
-> >  }
-> >  
-> > -static int do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 func,
-> > -			 int *nent, int maxnent, unsigned int type)
-> > +static int do_cpuid_func(struct kvm_cpuid_array *array, u32 func,
-> > +			 unsigned int type)
-> >  {
-> > -	if (*nent >= maxnent)
-> > +	if (array->nent >= array->maxnent)
-> >  		return -E2BIG;
-> >  
-> >  	if (type == KVM_GET_EMULATED_CPUID)
-> > -		return __do_cpuid_func_emulated(entry, func, nent, maxnent);
-> > +		return __do_cpuid_func_emulated(array, func);
-> 
-> Would it make sense to move 'if (array->nent >= array->maxnent)' check
-> to __do_cpuid_func_emulated() to match do_host_cpuid()?
-
-I considered doing exactly that.  IIRC, I opted not to because at this
-point in the series, the initial call to do_host_cpuid() is something like
-halfway down the massive __do_cpuid_func(), and eliminating the early check
-didn't feel quite right, e.g. there is a fair amount of unnecessary code
-that runs before hitting the first do_host_cpuid().
-
-What if I add a patch towards the end of the series to move this check into
-__do_cpuid_func_emulated(), i.e. after __do_cpuid_func() has been trimmed
-down to size and the early check really is superfluous.
+Only if ARCH_HAS_DMA_CLEAR_UNCACHED is selected by anything, which
+only happens in patch 5.
