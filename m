@@ -2,133 +2,113 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA7CC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3FEC11D34
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44172072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098902072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgBXPEI (ORCPT
+        id S1728328AbgBXPEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:04:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50211 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbgBXPDY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:03:24 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j6FG0-0004y1-FQ; Mon, 24 Feb 2020 16:02:52 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 958E8104097;
-        Mon, 24 Feb 2020 16:02:43 +0100 (CET)
-Message-Id: <20200224145643.998293311@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Mon, 24 Feb 2020 15:01:46 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V3 15/22] bpf: Use migrate_disable/enable in array macros and cgroup/lirc code.
-References: <20200224140131.461979697@linutronix.de>
+        Mon, 24 Feb 2020 10:04:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36726 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727646AbgBXPEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:04:30 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5690CB038;
+        Mon, 24 Feb 2020 15:04:28 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm,compaction,cma: add alloc_contig flag to
+ compact_control
+To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org,
+        riel@fb.com
+Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        mhocko@kernel.org, mgorman@techsingularity.net,
+        rientjes@google.com, aarcange@redhat.com
+References: <cover.1582321645.git.riel@surriel.com>
+ <c21c46cb76de2d991fd23164489f763bb385c152.1582321645.git.riel@surriel.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3Vq
+Message-ID: <49d4dec8-d908-80f3-d24c-6ab155aa3daf@suse.cz>
+Date:   Mon, 24 Feb 2020 16:04:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <c21c46cb76de2d991fd23164489f763bb385c152.1582321645.git.riel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+On 2/21/20 10:53 PM, Rik van Riel wrote:
+> Add information to struct compact_control to indicate that the allocator
+> would really like to clear out this specific part of memory, used by for
+> example CMA.
+> 
+> Signed-off-by: Rik van Riel <riel@surriel.com>
 
-Replace the preemption disable/enable with migrate_disable/enable() to
-reflect the actual requirement and to allow PREEMPT_RT to substitute it
-with an actual migration disable mechanism which does not disable
-preemption.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Including the code paths that go via __bpf_prog_run_save_cb().
+Could have been just squashed into patch 2, but no strong feelings.
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
----
- include/linux/bpf.h    |    8 ++++----
- include/linux/filter.h |    5 +++--
- 2 files changed, 7 insertions(+), 6 deletions(-)
-
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -885,7 +885,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 		struct bpf_prog *_prog;			\
- 		struct bpf_prog_array *_array;		\
- 		u32 _ret = 1;				\
--		preempt_disable();			\
-+		migrate_disable();			\
- 		rcu_read_lock();			\
- 		_array = rcu_dereference(array);	\
- 		if (unlikely(check_non_null && !_array))\
-@@ -898,7 +898,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 		}					\
- _out:							\
- 		rcu_read_unlock();			\
--		preempt_enable();			\
-+		migrate_enable();			\
- 		_ret;					\
- 	 })
- 
-@@ -932,7 +932,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 		u32 ret;				\
- 		u32 _ret = 1;				\
- 		u32 _cn = 0;				\
--		preempt_disable();			\
-+		migrate_disable();			\
- 		rcu_read_lock();			\
- 		_array = rcu_dereference(array);	\
- 		_item = &_array->items[0];		\
-@@ -944,7 +944,7 @@ int bpf_prog_array_copy(struct bpf_prog_
- 			_item++;			\
- 		}					\
- 		rcu_read_unlock();			\
--		preempt_enable();			\
-+		migrate_enable();			\
- 		if (_ret)				\
- 			_ret = (_cn ? NET_XMIT_CN : NET_XMIT_SUCCESS);	\
- 		else					\
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -677,6 +677,7 @@ static inline u8 *bpf_skb_cb(struct sk_b
- 	return qdisc_skb_cb(skb)->data;
- }
- 
-+/* Must be invoked with migration disabled */
- static inline u32 __bpf_prog_run_save_cb(const struct bpf_prog *prog,
- 					 struct sk_buff *skb)
- {
-@@ -702,9 +703,9 @@ static inline u32 bpf_prog_run_save_cb(c
- {
- 	u32 res;
- 
--	preempt_disable();
-+	migrate_disable();
- 	res = __bpf_prog_run_save_cb(prog, skb);
--	preempt_enable();
-+	migrate_enable();
- 	return res;
- }
- 
+> ---
+>  mm/internal.h   | 1 +
+>  mm/page_alloc.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 3cf20ab3ca01..78492d9815b4 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -206,6 +206,7 @@ struct compact_control {
+>  	bool whole_zone;		/* Whole zone should/has been scanned */
+>  	bool contended;			/* Signal lock or sched contention */
+>  	bool rescan;			/* Rescanning the same pageblock */
+> +	bool alloc_contig;		/* alloc_contig_range allocation */
+>  };
+>  
+>  /*
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..a36736812596 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8402,6 +8402,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+>  		.ignore_skip_hint = true,
+>  		.no_set_skip_hint = true,
+>  		.gfp_mask = current_gfp_context(gfp_mask),
+> +		.alloc_contig = true,
+>  	};
+>  	INIT_LIST_HEAD(&cc.migratepages);
+>  
+> 
 
