@@ -2,137 +2,141 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92B6C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCD2C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BED20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:15:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0aRJ8jlk"
+	by mail.kernel.org (Postfix) with ESMTP id ED2F320658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgBXIPy (ORCPT
+        id S1727229AbgBXISP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:15:54 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45893 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXIPx (ORCPT
+        Mon, 24 Feb 2020 03:18:15 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:45181 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXISO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:15:53 -0500
-Received: by mail-lj1-f196.google.com with SMTP id e18so8991349ljn.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:15:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9E4atKHNFhMUgRRiEy/HKZbsazKIFq0A6zQaS+Ym2Rs=;
-        b=0aRJ8jlk7K/HKTsns95GBBaEHmGtOdnFbjYj9vIhbo4+tLtlyfufBnVwleKPB1/X98
-         Pgtv8FVCl9tXtLobT7bdmwNtDdZHepJTvYQCXdV9n1wLvHk+nzSJlzAmbOEH8mlNtA7v
-         2DGluNg5tOwwERslMq2gB1V/ls4vsq6Q3436qFBbuOHbRKV974b0zOc/iXXNTzaB7r9u
-         0Y+UxTJda51orCm8P6331EASksnvu6HLENq7I9WhIqKwFNvx+Aj7pHEwlDpT19zJbP6d
-         hq9a+vogQGu+76vpLV9FQ94YnCrRP3OaxqfAj5NR7t5mEhqvtmmMD5AZ5LSwOYCEeT2G
-         hHlg==
+        Mon, 24 Feb 2020 03:18:14 -0500
+Received: by mail-il1-f199.google.com with SMTP id w6so16871360ill.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:18:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9E4atKHNFhMUgRRiEy/HKZbsazKIFq0A6zQaS+Ym2Rs=;
-        b=d6nbSiQT8mHiQrl/7LyMzYoCYuDsFJAj7OrTktOooIZDkzlwz2DI+RD/t3TXJXs5oW
-         cnJ/3PubEVkZ6ubNWIEHOme47ORyRcQxwHXTvL6VFJp6F6+R+X57wugAlg+UwKYCcb3F
-         T9DY8EEx6D0zbg9Bm/ZibKWPqK+bYK/Y/GGn0WpjmS+CcxePLI95K2Q6/ZXpfswhh3fh
-         yz1//Xdp05a9x9dB/6aACN4oBgylVpbZhqLbqdMcHkZXy9IeDQZ7H3KqZT36f+V6Bmm+
-         wQuGYiXX2kCrf/qK5kwG18JJYTDxY+a741kmyAbBeHjwJYP91CQaMyJx6YqFFtfny227
-         y7XA==
-X-Gm-Message-State: APjAAAWCCBTpWjKao6Z6Sj+RwW5Wr/sSlxVKSSzZkdE3YZVow7QNDGXH
-        CSEdkVhF+vFKedDDW7yQ7tqBzg==
-X-Google-Smtp-Source: APXvYqzgh1ZGX/532+S4qeKBsp3fOZk0JQWUNLbURDxZxQbr4hjc1+mWNY2lYVuZyvgFoFMOCV92hw==
-X-Received: by 2002:a2e:9b5a:: with SMTP id o26mr29929299ljj.190.1582532151395;
-        Mon, 24 Feb 2020 00:15:51 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n189sm3008847lfa.14.2020.02.24.00.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 00:15:50 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id DF908100FD9; Mon, 24 Feb 2020 11:16:22 +0300 (+03)
-Date:   Mon, 24 Feb 2020 11:16:22 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Florian Weimer <fweimer@redhat.com>, mtk.manpages@gmail.com,
-        linux-man@vger.kernel.org, Lokesh Gidra <lokeshgidra@google.com>
-Subject: Re: [PATCH v7 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
-Message-ID: <20200224081622.f4oy2pqk6aq6krfp@box>
-References: <20200221174248.244748-1-bgeffon@google.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JLPU87tnj1f/dwZOZUf4sgSYUIjyyQgE9NDCtchiKHg=;
+        b=iDiJoJom4dFwQsql6tud6GBE+qqlhd/b5s15nM6V0Q8YYDVqJTHGy3k9KS7EGDt3I9
+         tbDERtfpJu7N0rlSmhtX1kpUFf8mjF2fxftcYb4hZUF3kI+yBMa9CmCHWfz5Py5UHcJ5
+         kymi/3ssjpVCQKiCd1bZdOcE3gU9PCikBlxGRLi3vt287niJIHSu4OHoJBTlfiMkK4ya
+         D9q2Y9PnOldw45OlRs1IWOtoT25Trk2d3pFbiDQOLzXTqUw2Mvo9Lxnn+EEyjNtG/RiN
+         tlxgf7n6qPWKRGblK3VMlGC5n0W6R5exvAF7TJj2TloAqxu/eDvHXyKYIkCFKTwIX8mx
+         HIYA==
+X-Gm-Message-State: APjAAAVj2bEwmqCsNMYqOk/VJY1M/btrTJuM3o+kd3qGUUKF73XGtmQm
+        msVCSdZ4peXY21qPJHGszpXs0WkdP86ssS2KOUwrGi/bZJ8U
+X-Google-Smtp-Source: APXvYqweqrylK3pukroyPFpF1CqM/vmRCGM+KOrt5PclygW/HBOfAPZfaJMekDpiEsgrLRmdG8dMFShCCyW/LuXmtBU0b3/BSwvs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221174248.244748-1-bgeffon@google.com>
+X-Received: by 2002:a92:3a07:: with SMTP id h7mr57387937ila.203.1582532294128;
+ Mon, 24 Feb 2020 00:18:14 -0800 (PST)
+Date:   Mon, 24 Feb 2020 00:18:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003cbb40059f4e0346@google.com>
+Subject: kernel panic: audit: backlog limit exceeded
+From:   syzbot <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        dan.carpenter@oracle.com, davem@davemloft.net, eparis@redhat.com,
+        fzago@cray.com, gregkh@linuxfoundation.org, john.hammond@intel.com,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        paul@paul-moore.com, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:42:46AM -0800, Brian Geffon wrote:
-> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
-> set, the source mapping will not be removed. The remap operation
-> will be performed as it would have been normally by moving over the
-> page tables to the new mapping. The old vma will have any locked
-> flags cleared, have no pagetables, and any userfaultfds that were
-> watching that range will continue watching it.
-> 
-> For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
-> the mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
-> a VMA you MUST use the MREMAP_MAYMOVE flag, it's not possible to resize
-> a VMA while also moving with MREMAP_DONTUNMAP so old_len must always
-> be equal to the new_len otherwise it will return -EINVAL.
-> 
-> We hope to use this in Chrome OS where with userfaultfd we could write
-> an anonymous mapping to disk without having to STOP the process or worry
-> about VMA permission changes.
-> 
-> This feature also has a use case in Android, Lokesh Gidra has said
-> that "As part of using userfaultfd for GC, We'll have to move the physical
-> pages of the java heap to a separate location. For this purpose mremap
-> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
-> heap, its virtual mapping will be removed as well. Therefore, we'll
-> require performing mmap immediately after. This is not only time consuming
-> but also opens a time window where a native thread may call mmap and
-> reserve the java heap's address range for its own usage. This flag
-> solves the problem."
-> 
->   v6 -> v7:
->     - Don't allow resizing VMA as part of MREMAP_DONTUNMAP.
->       There is no clear use case at the moment and it can be added
->       later as it simplifies the implementation for now.
-> 
->   v5 -> v6:
->     - Code cleanup suggested by Kirill.
-> 
->   v4 -> v5:
->     - Correct commit message to more accurately reflect the behavior.
->     - Clear VM_LOCKED and VM_LOCKEDONFAULT on the old vma.
->            
-> Signed-off-by: Brian Geffon <bgeffon@google.com>
-> Reviewed-by: Minchan Kim <minchan@kernel.org>
-> Tested-by: Lokesh Gidra <lokeshgidra@google.com>
+Hello,
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+syzbot found the following crash on:
 
--- 
- Kirill A. Shutemov
+HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-kdump-re..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=148bfdd9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
+dashboard link: https://syzkaller.appspot.com/bug?extid=9a5e789e4725b9ef1316
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151b1109e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128bfdd9e00000
+
+The bug was bisected to:
+
+commit 0c1b9970ddd4cc41002321c3877e7f91aacb896d
+Author: Dan Carpenter <dan.carpenter@oracle.com>
+Date:   Fri Jul 28 14:42:27 2017 +0000
+
+    staging: lustre: lustre: Off by two in lmv_fid2path()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e6c3e9e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1416c3e9e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1016c3e9e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com
+Fixes: 0c1b9970ddd4 ("staging: lustre: lustre: Off by two in lmv_fid2path()")
+
+audit: audit_backlog=13 > audit_backlog_limit=7
+audit: audit_lost=1 audit_rate_limit=0 audit_backlog_limit=7
+Kernel panic - not syncing: audit: backlog limit exceeded
+CPU: 1 PID: 9913 Comm: syz-executor024 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ audit_panic.cold+0x32/0x32 kernel/audit.c:307
+ audit_log_lost kernel/audit.c:377 [inline]
+ audit_log_lost+0x8b/0x180 kernel/audit.c:349
+ audit_log_start kernel/audit.c:1788 [inline]
+ audit_log_start+0x70e/0x7c0 kernel/audit.c:1745
+ audit_log+0x95/0x120 kernel/audit.c:2345
+ xt_replace_table+0x61d/0x830 net/netfilter/x_tables.c:1413
+ __do_replace+0x1da/0x950 net/ipv6/netfilter/ip6_tables.c:1084
+ do_replace net/ipv6/netfilter/ip6_tables.c:1157 [inline]
+ do_ip6t_set_ctl+0x33a/0x4c8 net/ipv6/netfilter/ip6_tables.c:1681
+ nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
+ nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
+ ipv6_setsockopt net/ipv6/ipv6_sockglue.c:949 [inline]
+ ipv6_setsockopt+0x147/0x180 net/ipv6/ipv6_sockglue.c:933
+ tcp_setsockopt net/ipv4/tcp.c:3165 [inline]
+ tcp_setsockopt+0x8f/0xe0 net/ipv4/tcp.c:3159
+ sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
+ __sys_setsockopt+0x261/0x4c0 net/socket.c:2130
+ __do_sys_setsockopt net/socket.c:2146 [inline]
+ __se_sys_setsockopt net/socket.c:2143 [inline]
+ __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2143
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44720a
+Code: 49 89 ca b8 37 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 1a e0 fb ff c3 66 0f 1f 84 00 00 00 00 00 49 89 ca b8 36 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 fa df fb ff c3 66 0f 1f 84 00 00 00 00 00
+RSP: 002b:00007ffd032dec78 EFLAGS: 00000286 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000044720a
+RDX: 0000000000000040 RSI: 0000000000000029 RDI: 0000000000000003
+RBP: 00007ffd032deda0 R08: 00000000000003b8 R09: 0000000000004000
+R10: 00000000006d7b40 R11: 0000000000000286 R12: 00007ffd032deca0
+R13: 00000000006d9d60 R14: 0000000000000029 R15: 00000000006d7ba0
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
