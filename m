@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A2CC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF30C11D28
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C4F20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515C220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgBXIIN (ORCPT
+        id S1727324AbgBXIIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:08:13 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:39365 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXIIN (ORCPT
+        Mon, 24 Feb 2020 03:08:16 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:51400 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgBXIIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:08:13 -0500
-Received: by mail-io1-f72.google.com with SMTP id z26so14151106iog.6
+        Mon, 24 Feb 2020 03:08:15 -0500
+Received: by mail-il1-f198.google.com with SMTP id c12so16840454ilr.18
         for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:08:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Wna1rMldzsmbnjszH8n3rODL+05VVA6Ale5k8VVJ2i4=;
-        b=WedBB3EL9RtmUO+3zooX09VCDmtSqMfF4lOQ2zmnptXKeMYjuin6PIkN5x4fbJjcDJ
-         KJDgrJO8+JBJSFgdch1GMJyE5QIlAZuC6XJdtdUjsgryc8M4lQpBOu8sAeuYX7aVtaBL
-         BeaSGCJnhOUdPFLVfXkTtrI2CqqC0h/8N87ohzG5e7SSYBi/7RWYmJhnb0qBBN4mZRZ7
-         gb+AdgjESDRk2RerkL/BmYmnHKK1StvNvfS4SIa8CKEvjH9fHpvR35cDMK7SxaFRVG7S
-         6Ppvt6HlAAwki6P01BoITWvGAYvuDvzs+nJ09ncoxHICyqhjt82v+9t1eAghYJ/Xg1Wg
-         K66Q==
-X-Gm-Message-State: APjAAAWNvbu9eF+q/BicoWFCAvWTetO39ayE1+Gq+iPlEYdanNZSTeGr
-        15b0IMdw7vE9BuhBxiFNiWsrXnL+Kbc1FXH9Mh0cwIe5hrsg
-X-Google-Smtp-Source: APXvYqyvSyynHQG4jiljx7UD/b0fRBe/Nar2IzCegIL4JyjWa1ESBPfuOi1gU9+drfh+dlzfeBgOhWR3+WmkaRWZM6CYPwgpv1IS
+        bh=4ffBqSpOrkn3eYeP2zdTUWaU56natMn7rNnOnAVtWBQ=;
+        b=nFqTo8xbytvxbTJFeBMAlXvrvYoqijekdyRwNt2pRL7NQYuU/frpNpaea8TVQNBVlY
+         EyjOwrCrtLSgdq6S/AvBRVvnBnUQfDLEq3kVemFoBkVJLNuHlJFBYZv/hVAz5UOnyqKX
+         IsaaTTL5t6Owpzp1P1pKerjMgWBbPuq5GiMCuGOXftoK2TkwCRoxP5MzY3GEVYYloE7I
+         1ueCQGNswtL7UHsVmCbaiz6F+ykyOQyMMlg9WlUVzV77mPutfIBR8yxPIMsaxR3hLx20
+         pb3MRgtUsg3cui9NsE6Hg7AeYo/2nV6F1Q6VHG5MiCXHr1Hb3tFGRGui4c2s8+vbwuu1
+         o9rQ==
+X-Gm-Message-State: APjAAAU8X31J2nOsX1OdfyQyAfZms/o80bAdUgZcbQuuOM73waTwVrJU
+        hqaWZAdGiclsFBXmlW/Gfy2wngCWERtJKTajlsl2G4LKlCTr
+X-Google-Smtp-Source: APXvYqxC8Yp8nQNnAGIMalHBXGSQjJQGagoRK7FT4+BzgT0wZNor+UJic1ApcwJqNEcQnO7RK3/ZV9kMOcz5ENk9CgnvIvoBoBkA
 MIME-Version: 1.0
-X-Received: by 2002:a92:3a9b:: with SMTP id i27mr60243880ilf.39.1582531692452;
+X-Received: by 2002:a5e:c604:: with SMTP id f4mr48055490iok.304.1582531692969;
  Mon, 24 Feb 2020 00:08:12 -0800 (PST)
 Date:   Mon, 24 Feb 2020 00:08:12 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005fe204059f4ddf27@google.com>
-Subject: kernel panic: audit: rate limit exceeded
-From:   syzbot <syzbot+72461ac44b36c98f58e5@syzkaller.appspotmail.com>
-To:     eparis@redhat.com, kvalo@codeaurora.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        paul@paul-moore.com, peter.senna@collabora.com,
-        romain.perier@collabora.com, stas.yakovlev@gmail.com,
+Message-ID: <00000000000067c539059f4ddf1a@google.com>
+Subject: KMSAN: uninit-value in audit_receive
+From:   syzbot <syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com>
+To:     eparis@redhat.com, glider@google.com, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org, paul@paul-moore.com,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,69 +57,81 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    0c0ddd6a Merge tag 'linux-watchdog-5.6-rc3' of git://www.l..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=12c8a3d9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
-dashboard link: https://syzkaller.appspot.com/bug?extid=72461ac44b36c98f58e5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c803ede00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17237de9e00000
-
-The bug was bisected to:
-
-commit 28b75415ad19fef232d8daab4d5de17d753f0b36
-Author: Romain Perier <romain.perier@collabora.com>
-Date:   Wed Aug 23 07:16:51 2017 +0000
-
-    wireless: ipw2200: Replace PCI pool old API
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12dbfe09e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11dbfe09e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16dbfe09e00000
+HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=15c21c81e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=399c44bf1f43b8747403
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dbda7ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1721fe09e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+72461ac44b36c98f58e5@syzkaller.appspotmail.com
-Fixes: 28b75415ad19 ("wireless: ipw2200: Replace PCI pool old API")
+Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
 
-audit: audit_lost=1 audit_rate_limit=2 audit_backlog_limit=0
-Kernel panic - not syncing: audit: rate limit exceeded
-CPU: 1 PID: 10031 Comm: syz-executor626 Not tainted 5.6.0-rc2-syzkaller #0
+=====================================================
+BUG: KMSAN: uninit-value in audit_set_feature kernel/audit.c:1119 [inline]
+BUG: KMSAN: uninit-value in audit_receive_msg kernel/audit.c:1318 [inline]
+BUG: KMSAN: uninit-value in audit_receive+0x2691/0x6be0 kernel/audit.c:1513
+CPU: 1 PID: 11583 Comm: syz-executor100 Not tainted 5.6.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- audit_panic.cold+0x32/0x32 kernel/audit.c:307
- audit_log_lost kernel/audit.c:377 [inline]
- audit_log_lost+0x8b/0x180 kernel/audit.c:349
- audit_log_end+0x23c/0x2b0 kernel/audit.c:2322
- audit_log_config_change+0xcc/0xf0 kernel/audit.c:396
- audit_receive_msg+0x2246/0x28b0 kernel/audit.c:1277
- audit_receive+0x114/0x230 kernel/audit.c:1513
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ audit_set_feature kernel/audit.c:1119 [inline]
+ audit_receive_msg kernel/audit.c:1318 [inline]
+ audit_receive+0x2691/0x6be0 kernel/audit.c:1513
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1917
  sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441239
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd68c9df48 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441239
-RDX: 0000000000000000 RSI: 00000000200006c0 RDI: 0000000000000003
-RBP: 0000000000018b16 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402060
-R13: 00000000004020f0 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2430
+ __compat_sys_sendmsg net/compat.c:642 [inline]
+ __do_compat_sys_sendmsg net/compat.c:649 [inline]
+ __se_compat_sys_sendmsg net/compat.c:646 [inline]
+ __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7fcbd99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ff99b74c EFLAGS: 00000246 ORIG_RAX: 0000000000000172
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200000c0
+RDX: 0000000000000000 RSI: 00000000080ea078 RDI: 00000000ff99b7a0
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2793 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1051 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+ netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2430
+ __compat_sys_sendmsg net/compat.c:642 [inline]
+ __do_compat_sys_sendmsg net/compat.c:649 [inline]
+ __se_compat_sys_sendmsg net/compat.c:646 [inline]
+ __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+=====================================================
 
 
 ---
@@ -131,6 +141,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
