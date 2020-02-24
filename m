@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037D7C11D34
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4F2C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92BE2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19C02072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgBXPDh (ORCPT
+        id S1728158AbgBXPDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:03:37 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50219 "EHLO
+        Mon, 24 Feb 2020 10:03:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50223 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgBXPDZ (ORCPT
+        with ESMTP id S1728002AbgBXPDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 10:03:25 -0500
 Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6FFw-00051R-NK; Mon, 24 Feb 2020 16:02:48 +0100
+        id 1j6FFy-00052t-3b; Mon, 24 Feb 2020 16:02:50 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 451AB10409A;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B2F2610409C;
         Mon, 24 Feb 2020 16:02:44 +0100 (CET)
-Message-Id: <20200224145644.317843926@linutronix.de>
+Message-Id: <20200224145644.509685912@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 24 Feb 2020 15:01:49 +0100
+Date:   Mon, 24 Feb 2020 15:01:51 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V3 18/22] bpf: Replace open coded recursion prevention in sys_bpf()
+Subject: [patch V3 20/22] bpf: Prepare hashtab locking for PREEMPT_RT
 References: <20200224140131.461979697@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -54,100 +54,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The required protection is that the caller cannot be migrated to a
-different CPU as these functions end up in places which take either a hash
-bucket lock or might trigger a kprobe inside the memory allocator. Both
-scenarios can lead to deadlocks. The deadlock prevention is per CPU by
-incrementing a per CPU variable which temporarily blocks the invocation of
-BPF programs from perf and kprobes.
+PREEMPT_RT forbids certain operations like memory allocations (even with
+GFP_ATOMIC) from atomic contexts. This is required because even with
+GFP_ATOMIC the memory allocator calls into code pathes which acquire locks
+with long held lock sections. To ensure the deterministic behaviour these
+locks are regular spinlocks, which are converted to 'sleepable' spinlocks
+on RT. The only true atomic contexts on an RT kernel are the low level
+hardware handling, scheduling, low level interrupt handling, NMIs etc. None
+of these contexts should ever do memory allocations.
 
-Replace the open coded preempt_[dis|en]able and __this_cpu_[inc|dec] pairs
-with the new helper functions. These functions are already prepared to make
-BPF work on PREEMPT_RT enabled kernels. No functional change for !RT
-kernels.
+As regular device interrupt handlers and soft interrupts are forced into
+thread context, the existing code which does
+  spin_lock*(); alloc(GPF_ATOMIC); spin_unlock*();
+just works.
+
+In theory the BPF locks could be converted to regular spinlocks as well,
+but the bucket locks and percpu_freelist locks can be taken from arbitrary
+contexts (perf, kprobes, tracepoints) which are required to be atomic
+contexts even on RT. These mechanisms require preallocated maps, so there
+is no need to invoke memory allocations within the lock held sections.
+
+BPF maps which need dynamic allocation are only used from (forced) thread
+context on RT and can therefore use regular spinlocks which in turn allows
+to invoke memory allocations from the lock held section.
+
+To achieve this make the hash bucket lock a union of a raw and a regular
+spinlock and initialize and lock/unlock either the raw spinlock for
+preallocated maps or the regular variant for maps which require memory
+allocations.
+
+On a non RT kernel this distinction is neither possible nor required.
+spinlock maps to raw_spinlock and the extra code and conditional is
+optimized out by the compiler. No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V3: Restrict it to sys_bpf(). Hashtab code is already handled.
----
- kernel/bpf/syscall.c |   27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+ kernel/bpf/hashtab.c |   65 +++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 9 deletions(-)
 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -171,11 +171,7 @@ static int bpf_map_update_value(struct b
- 						    flags);
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -46,10 +46,43 @@
+  * from one of these contexts completed. sys_bpf() uses the same mechanism
+  * by pinning the task to the current CPU and incrementing the recursion
+  * protection accross the map operation.
++ *
++ * This has subtle implications on PREEMPT_RT. PREEMPT_RT forbids certain
++ * operations like memory allocations (even with GFP_ATOMIC) from atomic
++ * contexts. This is required because even with GFP_ATOMIC the memory
++ * allocator calls into code pathes which acquire locks with long held lock
++ * sections. To ensure the deterministic behaviour these locks are regular
++ * spinlocks, which are converted to 'sleepable' spinlocks on RT. The only
++ * true atomic contexts on an RT kernel are the low level hardware
++ * handling, scheduling, low level interrupt handling, NMIs etc. None of
++ * these contexts should ever do memory allocations.
++ *
++ * As regular device interrupt handlers and soft interrupts are forced into
++ * thread context, the existing code which does
++ *   spin_lock*(); alloc(GPF_ATOMIC); spin_unlock*();
++ * just works.
++ *
++ * In theory the BPF locks could be converted to regular spinlocks as well,
++ * but the bucket locks and percpu_freelist locks can be taken from
++ * arbitrary contexts (perf, kprobes, tracepoints) which are required to be
++ * atomic contexts even on RT. These mechanisms require preallocated maps,
++ * so there is no need to invoke memory allocations within the lock held
++ * sections.
++ *
++ * BPF maps which need dynamic allocation are only used from (forced)
++ * thread context on RT and can therefore use regular spinlocks which in
++ * turn allows to invoke memory allocations from the lock held section.
++ *
++ * On a non RT kernel this distinction is neither possible nor required.
++ * spinlock maps to raw_spinlock and the extra code is optimized out by the
++ * compiler.
+  */
+ struct bucket {
+ 	struct hlist_nulls_head head;
+-	raw_spinlock_t lock;
++	union {
++		raw_spinlock_t raw_lock;
++		spinlock_t     lock;
++	};
+ };
+ 
+ struct bpf_htab {
+@@ -88,13 +121,26 @@ struct htab_elem {
+ 	char key[0] __aligned(8);
+ };
+ 
++static inline bool htab_is_prealloc(const struct bpf_htab *htab)
++{
++	return !(htab->map.map_flags & BPF_F_NO_PREALLOC);
++}
++
++static inline bool htab_use_raw_lock(const struct bpf_htab *htab)
++{
++	return (!IS_ENABLED(CONFIG_PREEMPT_RT) || htab_is_prealloc(htab));
++}
++
+ static void htab_init_buckets(struct bpf_htab *htab)
+ {
+ 	unsigned i;
+ 
+ 	for (i = 0; i < htab->n_buckets; i++) {
+ 		INIT_HLIST_NULLS_HEAD(&htab->buckets[i].head, i);
+-		raw_spin_lock_init(&htab->buckets[i].lock);
++		if (htab_use_raw_lock(htab))
++			raw_spin_lock_init(&htab->buckets[i].raw_lock);
++		else
++			spin_lock_init(&htab->buckets[i].lock);
  	}
+ }
  
--	/* must increment bpf_prog_active to avoid kprobe+bpf triggering from
--	 * inside bpf map update or delete otherwise deadlocks are possible
--	 */
--	preempt_disable();
--	__this_cpu_inc(bpf_prog_active);
-+	bpf_disable_instrumentation();
- 	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
- 	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
- 		err = bpf_percpu_hash_update(map, key, value, flags);
-@@ -206,8 +202,7 @@ static int bpf_map_update_value(struct b
- 		err = map->ops->map_update_elem(map, key, value, flags);
- 		rcu_read_unlock();
- 	}
--	__this_cpu_dec(bpf_prog_active);
--	preempt_enable();
-+	bpf_enable_instrumentation();
- 	maybe_wait_bpf_programs(map);
+@@ -103,7 +149,10 @@ static inline unsigned long htab_lock_bu
+ {
+ 	unsigned long flags;
  
- 	return err;
-@@ -222,8 +217,7 @@ static int bpf_map_copy_value(struct bpf
- 	if (bpf_map_is_dev_bound(map))
- 		return bpf_map_offload_lookup_elem(map, key, value);
+-	raw_spin_lock_irqsave(&b->lock, flags);
++	if (htab_use_raw_lock(htab))
++		raw_spin_lock_irqsave(&b->raw_lock, flags);
++	else
++		spin_lock_irqsave(&b->lock, flags);
+ 	return flags;
+ }
  
--	preempt_disable();
--	this_cpu_inc(bpf_prog_active);
-+	bpf_disable_instrumentation();
- 	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
- 	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
- 		err = bpf_percpu_hash_copy(map, key, value);
-@@ -268,8 +262,7 @@ static int bpf_map_copy_value(struct bpf
- 		rcu_read_unlock();
- 	}
+@@ -111,7 +160,10 @@ static inline void htab_unlock_bucket(co
+ 				      struct bucket *b,
+ 				      unsigned long flags)
+ {
+-	raw_spin_unlock_irqrestore(&b->lock, flags);
++	if (htab_use_raw_lock(htab))
++		raw_spin_unlock_irqrestore(&b->raw_lock, flags);
++	else
++		spin_unlock_irqrestore(&b->lock, flags);
+ }
  
--	this_cpu_dec(bpf_prog_active);
--	preempt_enable();
-+	bpf_enable_instrumentation();
- 	maybe_wait_bpf_programs(map);
+ static bool htab_lru_map_delete_node(void *arg, struct bpf_lru_node *node);
+@@ -128,11 +180,6 @@ static bool htab_is_percpu(const struct
+ 		htab->map.map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH;
+ }
  
- 	return err;
-@@ -1136,13 +1129,11 @@ static int map_delete_elem(union bpf_att
- 		goto out;
- 	}
- 
--	preempt_disable();
--	__this_cpu_inc(bpf_prog_active);
-+	bpf_disable_instrumentation();
- 	rcu_read_lock();
- 	err = map->ops->map_delete_elem(map, key);
- 	rcu_read_unlock();
--	__this_cpu_dec(bpf_prog_active);
--	preempt_enable();
-+	bpf_enable_instrumentation();
- 	maybe_wait_bpf_programs(map);
- out:
- 	kfree(key);
-@@ -1254,13 +1245,11 @@ int generic_map_delete_batch(struct bpf_
- 			break;
- 		}
- 
--		preempt_disable();
--		__this_cpu_inc(bpf_prog_active);
-+		bpf_disable_instrumentation();
- 		rcu_read_lock();
- 		err = map->ops->map_delete_elem(map, key);
- 		rcu_read_unlock();
--		__this_cpu_dec(bpf_prog_active);
--		preempt_enable();
-+		bpf_enable_instrumentation();
- 		maybe_wait_bpf_programs(map);
- 		if (err)
- 			break;
+-static bool htab_is_prealloc(const struct bpf_htab *htab)
+-{
+-	return !(htab->map.map_flags & BPF_F_NO_PREALLOC);
+-}
+-
+ static inline void htab_elem_set_ptr(struct htab_elem *l, u32 key_size,
+ 				     void __percpu *pptr)
+ {
 
