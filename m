@@ -2,113 +2,150 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDCBC35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A3DC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8522067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277CB206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582504171;
+	bh=dRCqXeY4BmYLF7jY7gxIAW1bKQQeiEjoqAXBKX4RsYo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HPQUkl7lYLyUBQAolhrdwq5Fwsepc05lJ+/efGxT8r87P/96+kfoAdxFn50pWCteL
+	 uWVV8O0y+Zg2xUfVb349NVY18SECoenSKI6f5Hzi/tqNrqa/K0gTMYgoeGIrV3tqbW
+	 ZvrOb8NlgToDZEUHRFbcggehU3Wic7Jx1fzst8nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBXA2P (ORCPT
+        id S1727202AbgBXA3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:28:15 -0500
-Received: from mga06.intel.com ([134.134.136.31]:61331 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgBXA2P (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:28:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 16:28:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,478,1574150400"; 
-   d="scan'208";a="349808261"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Feb 2020 16:28:11 -0800
-Subject: Re: [PATCH v2 2/2] perf annotate: Support interactive annotation of
- code without symbols
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200221024608.1847-1-yao.jin@linux.intel.com>
- <20200221024608.1847-3-yao.jin@linux.intel.com>
- <20200221144531.GA657629@krava>
- <6bb8c073-4a10-8e49-05dc-819b671a875d@linux.intel.com>
- <20200223195030.GB16664@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <f5fe3519-3c16-7913-f422-ddc874678979@linux.intel.com>
-Date:   Mon, 24 Feb 2020 08:28:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 23 Feb 2020 19:29:22 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33744 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXA3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 19:29:22 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w6so7232084otk.0;
+        Sun, 23 Feb 2020 16:29:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9C3Udx1D1DIdp1i8/eh8sT/C9Vzzs0UrF8N4PaPtKL8=;
+        b=PYHLlY6A5SIei/BPPam5xL5F7rBhryLnJqbmwRxf4aauTfz+bqvxnO3ymsAAxZH9yx
+         lsYKxxGfxaWny9y0SE1ItUlbJXnRU0SlLtSqx/Y3QNThuNaPRLILGlHwRqUThdkZlYM5
+         UX7sNMuCkSgCD7Km0T0Ls7HeQ/2DyxzJJ1rL5T7RO6u7Z2D7VNagRl0MN2+a91jNWGyd
+         AXNoYVQKEGGf5UMlsITqolwcoTQ6/8zT41LOrsEs9rwe2EXOdW5mbKoBOIimJbPASdcd
+         qdPoqB2b4vAzgrMUxL8sAHfd9YzaZqNeo+Ru4beCgJiwviwQ9XklFgxcqUylHe6GI+bb
+         GBMg==
+X-Gm-Message-State: APjAAAXYirrcD/ThSmJfuh0kp6I5fLtkXAvDnaEE/SOTD/yA13lNgm//
+        8HKIwquIh7o3q014fy9unQnkXLULM+BqEiyWk8VHyA9N
+X-Google-Smtp-Source: APXvYqzDN+R8PPgZf6yIc7l0P8ZtL6kbXsw+7HtqFkiR99MwsbCjyGxiwOog3gTlFJ76sAPKK8B+bnGwRCP77nTtGnI=
+X-Received: by 2002:a9d:7559:: with SMTP id b25mr37014520otl.189.1582504161350;
+ Sun, 23 Feb 2020 16:29:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200223195030.GB16664@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
+ <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
+ <CAJZ5v0hrOma52rocMsitvYUK6WxHAa0702_8XJn1UJZVyhz=rQ@mail.gmail.com>
+ <877e0qj4bm.fsf@riseup.net> <CAJZ5v0hH1XiphdakYFPmHLL+hFKw2U3YNU9HSRxsdRUV6ZtM5g@mail.gmail.com>
+ <87ftf3fv69.fsf@riseup.net>
+In-Reply-To: <87ftf3fv69.fsf@riseup.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 24 Feb 2020 01:29:10 +0100
+Message-ID: <CAJZ5v0jqp7aEh43kUvxyMWxbnEUjUZZ31iHk_oxDdvGM6RTdMw@mail.gmail.com>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
+ latency QoS interface
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 21, 2020 at 11:10 PM Francisco Jerez <currojerez@riseup.net> wrote:
+>
+> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>
+> > On Thu, Feb 13, 2020 at 9:09 AM Francisco Jerez <currojerez@riseup.net> wrote:
+> >>
+> >> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+> >>
+> >> > On Thu, Feb 13, 2020 at 1:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >> >>
+> >> >> On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
+> >> >> >
+> >
+> > [cut]
+> >
+> >> >
+> >> > And BTW, posting patches as RFC is fine even if they have not been
+> >> > tested.  At least you let people know that you work on something this
+> >> > way, so if they work on changes in the same area, they may take that
+> >> > into consideration.
+> >> >
+> >>
+> >> Sure, that was going to be the first RFC.
+> >>
+> >> > Also if there are objections to your proposal, you may save quite a
+> >> > bit of time by sending it early.
+> >> >
+> >> > It is unfortunate that this series has clashed with the changes that
+> >> > you were about to propose, but in this particular case in my view it
+> >> > is better to clean up things and start over.
+> >> >
+> >>
+> >> Luckily it doesn't clash with the second RFC I was meaning to send,
+> >> maybe we should just skip the first?
+> >
+> > Yes, please.
+> >
+> >> Or maybe it's valuable as a curiosity anyway?
+> >
+> > No, let's just focus on the latest one.
+> >
+> > Thanks!
+>
+> We don't seem to have reached much of an agreement on the general
+> direction of RFC2, so I can't really get started with it.  Here is RFC1
+> for the record:
+>
+> https://github.com/curro/linux/commits/intel_pstate-lp-hwp-v10.8-alt
 
+Appreciate the link, but that hasn't been posted to linux-pm yet, so
+there's not much to discuss.
 
-On 2/24/2020 3:50 AM, Jiri Olsa wrote:
-> On Sat, Feb 22, 2020 at 07:37:49AM +0800, Jin, Yao wrote:
->>
->>
->> On 2/21/2020 10:45 PM, Jiri Olsa wrote:
->>> On Fri, Feb 21, 2020 at 10:46:08AM +0800, Jin Yao wrote:
->>>
->>> SNIP
->>>
->>>>
->>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>> ---
->>>>    tools/perf/ui/browsers/hists.c | 51 +++++++++++++++++++++++++++++-----
->>>>    tools/perf/util/annotate.h     |  2 ++
->>>>    2 files changed, 46 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
->>>> index f36dee499320..5144528b2931 100644
->>>> --- a/tools/perf/ui/browsers/hists.c
->>>> +++ b/tools/perf/ui/browsers/hists.c
->>>> @@ -2465,13 +2465,47 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
->>>>    	return 0;
->>>>    }
->>>> +static struct symbol *new_annotate_sym(u64 addr, struct map *map,
->>>> +				       struct annotation_options *opts)
->>>> +{
->>>> +	struct symbol *sym;
->>>> +	struct annotated_source *src;
->>>> +	char name[64];
->>>> +
->>>> +	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
->>>> +
->>>> +	sym = symbol__new(addr,
->>>> +			  opts->annotate_dummy_len ?
->>>> +			  opts->annotate_dummy_len : ANNOTATION_DUMMY_LEN,
->>>
->>> I can't see annotate_dummy_len being set anywhere..
->>>
->>
->> Yes, annotate_dummy_len is not set in this patch. Currently we just use the
->> default value. While maybe in future we will provide a perf report option or
->> set it in perf config. Now I just leave an interface here.
-> 
-> if that's just 'maybe in future we will provide' then please keep just the
-> ANNOTATION_DUMMY_LEN, the abandoned opts->annotate_dummy_len var is confusing
-> 
-> thanks,
-> jirka
-> 
+And when you post it, please rebase it on top of linux-next.
 
-OK, I will keep just the ANNOTATION_DUMMY_LEN and remove the 
-opts->annotate_dummy_len in next version.
+> Specifically the following patch conflicts with this series:
+>
+> https://github.com/curro/linux/commit/9a16f35531bbb76d38493da892ece088e31dc2e0
+>
+> Series improves performance-per-watt of GfxBench gl_4 (AKA Car Chase) by
+> over 15% on my system with the branch above, actual FPS "only" improves
+> about 5.9% on ICL laptop due to it being very lightly TDP-bound with its
+> rather huge TDP.  The performance of almost every graphics benchmark
+> I've tried improves significantly with it (a number of SynMark
+> test-cases are improved by around 40% in perf-per-watt, Egypt
+> perf-per-watt improves by about 25%).
+>
+> Hopefully we can come up with some alternative plan of action.
 
-Thanks
-Jin Yao
+It is very easy to replace the patch above with an alternative one on
+top of linux-next that will add CPU_RESPONSE_FREQUENCY QoS along the
+lines of the CPU latency QoS implementation in there without the need
+restore to global QoS classes.
+
+IOW, you don't really need the code that goes away in linux-next to
+implement what you need.
+
+Thanks!
