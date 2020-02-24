@@ -4,105 +4,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA49C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39CFC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB2F20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D337620836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgBXRWK (ORCPT
+        id S1728298AbgBXRWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:22:10 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:43130 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727673AbgBXRWI (ORCPT
+        Mon, 24 Feb 2020 12:22:14 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48799 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbgBXRWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 12:22:08 -0500
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 4DC0E67A7D5;
-        Mon, 24 Feb 2020 18:22:05 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 24 Feb
- 2020 18:22:04 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Mon, 24 Feb 2020 18:22:04 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1j6HQc-0002l7-Tk; Mon, 24 Feb 2020 18:21:58 +0100
+Message-ID: <7716263db71ca07a52e5a562882f0ae7f35fee48.camel@pengutronix.de>
+Subject: Re: [PATCH v3 3/4] dt-bindings: display: imx: add bindings for DCSS
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Shawn Guo <shawnguo@kernel.org>,
-        "Vinod Koul" <vkoul@kernel.org>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dma: imx-sdma: Fix the event id check to include RX event
- for UART6
-Thread-Topic: [PATCH] dma: imx-sdma: Fix the event id check to include RX
- event for UART6
-Thread-Index: AQHV6zYWVmd7WYLi20CvYMo8u04O/6gqhq0A
-Date:   Mon, 24 Feb 2020 17:22:04 +0000
-Message-ID: <c4f8b6e7-32d3-0523-43f7-33aef2ebb66b@kontron.de>
-References: <20200224171531.22204-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20200224171531.22204-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <26B40BE5F01BA54ABC9C4ADADFF6A1D6@snt-world.com>
-Content-Transfer-Encoding: base64
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     agx@sigxcpu.org, lukas@mntmn.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Feb 2020 18:21:57 +0100
+In-Reply-To: <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
+         <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 4DC0E67A7D5.AFBD6
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linus.ml.walleij@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, vkoul@kernel.org
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjQuMDIuMjAgMTg6MTYsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+IEZyb206IEZyaWVk
-ZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4gDQo+IE9uIGkuTVg2
-IHRoZSBETUEgZXZlbnQgZm9yIHRoZSBSWCBjaGFubmVsIG9mIFVBUlQ2IGlzICcwJy4gVG8gZml4
-DQo+IHRoZSBicm9rZW4gRE1BIHN1cHBvcnQgZm9yIFVBUlQ2LCB3ZSBjaGFuZ2UgdGhlIGNoZWNr
-IGZvciBldmVudF9pZDANCj4gdG8gaW5jbHVkZSAnMCcgYXMgYSB2YWxpZCBpZC4NCj4gDQo+IEZp
-eGVzOiAxZWMxZTgyZjI1MTAgKCJkbWFlbmdpbmU6IEFkZCBGcmVlc2NhbGUgaS5NWCBTRE1BIHN1
-cHBvcnQiKQ0KPiBDYzogc3RhYmxlQHZnZXIua2VybmVsDQoNClNvcnJ5LCBJIG1lc3NlZCB1cCB0
-aGUgc3RhYmxlIHRhZy4gV2lsbCBzZW5kIGFnYWluLg0KDQo+IFNpZ25lZC1vZmYtYnk6IEZyaWVk
-ZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4gLS0tDQo+ICAgZHJp
-dmVycy9kbWEvaW14LXNkbWEuYyB8IDQgKystLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
-dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEv
-aW14LXNkbWEuYyBiL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMNCj4gaW5kZXggMDY2YjIxYTMyMjMy
-Li4zZDRhYWM5N2IxZmMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMNCj4g
-KysrIGIvZHJpdmVycy9kbWEvaW14LXNkbWEuYw0KPiBAQCAtMTMzMSw3ICsxMzMxLDcgQEAgc3Rh
-dGljIHZvaWQgc2RtYV9mcmVlX2NoYW5fcmVzb3VyY2VzKHN0cnVjdCBkbWFfY2hhbiAqY2hhbikN
-Cj4gICANCj4gICAJc2RtYV9jaGFubmVsX3N5bmNocm9uaXplKGNoYW4pOw0KPiAgIA0KPiAtCWlm
-IChzZG1hYy0+ZXZlbnRfaWQwKQ0KPiArCWlmIChzZG1hYy0+ZXZlbnRfaWQwID49IDApDQo+ICAg
-CQlzZG1hX2V2ZW50X2Rpc2FibGUoc2RtYWMsIHNkbWFjLT5ldmVudF9pZDApOw0KPiAgIAlpZiAo
-c2RtYWMtPmV2ZW50X2lkMSkNCj4gICAJCXNkbWFfZXZlbnRfZGlzYWJsZShzZG1hYywgc2RtYWMt
-PmV2ZW50X2lkMSk7DQo+IEBAIC0xNjMxLDcgKzE2MzEsNyBAQCBzdGF0aWMgaW50IHNkbWFfY29u
-ZmlnKHN0cnVjdCBkbWFfY2hhbiAqY2hhbiwNCj4gICAJbWVtY3B5KCZzZG1hYy0+c2xhdmVfY29u
-ZmlnLCBkbWFlbmdpbmVfY2ZnLCBzaXplb2YoKmRtYWVuZ2luZV9jZmcpKTsNCj4gICANCj4gICAJ
-LyogU2V0IEVOQkxuIGVhcmxpZXIgdG8gbWFrZSBzdXJlIGRtYSByZXF1ZXN0IHRyaWdnZXJlZCBh
-ZnRlciB0aGF0ICovDQo+IC0JaWYgKHNkbWFjLT5ldmVudF9pZDApIHsNCj4gKwlpZiAoc2RtYWMt
-PmV2ZW50X2lkMCA+PSAwKSB7DQo+ICAgCQlpZiAoc2RtYWMtPmV2ZW50X2lkMCA+PSBzZG1hYy0+
-c2RtYS0+ZHJ2ZGF0YS0+bnVtX2V2ZW50cykNCj4gICAJCQlyZXR1cm4gLUVJTlZBTDsNCj4gICAJ
-CXNkbWFfZXZlbnRfZW5hYmxlKHNkbWFjLCBzZG1hYy0+ZXZlbnRfaWQwKTsNCj4g
+On Fr, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
+> Add bindings for iMX8MQ Display Controller Subsystem.
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> new file mode 100644
+> index 00000000..efd2494
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: iMX8MQ Display Controller Subsystem (DCSS)
+> +
+> +maintainers:
+> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> +
+> +description:
+> +
+> +  The DCSS (display controller sub system) is used to source up to three
+> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> +  2.2) or MIPI-DSI.
+
+HDMI 2.0a and MIPI_DSI are not really properties of the DCSS, but
+rather the connected bridges. Maybe just drop them here?
+
+>  The DCSS is intended to support up to 4kp60 displays. HDR10
+> +  image processing capabilities are included to provide a solution capable of
+> +  driving next generation high dynamic range displays.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx8mq-dcss
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    maxItems: 3
+> +    items:
+> +      - description: Context loader completion and error interrupt
+> +      - description: DTG interrupt used to signal context loader trigger time
+> +      - description: DTG interrupt for Vblank
+> +
+> +  interrupt-names:
+> +    maxItems: 3
+> +    items:
+> +      - const: ctx_ld
+
+Can we make this just "ctxld" for a bit more consistency with the name
+below?
+
+> +      - const: ctxld_kick
+> +      - const: vblank
+> +
+> +  clocks:
+> +    maxItems: 5
+> +    items:
+> +      - description: Display APB clock for all peripheral PIO access interfaces
+> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> +      - description: RTRAM clock
+> +      - description: Pixel clock, can be driver either by HDMI phy clock or MIPI
+> +      - description: DTRC clock, needed by video decompressor
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: axi
+> +      - const: rtrm
+> +      - const: pix
+> +      - const: dtrc
+> +
+> +  port@0:
+> +    type: object
+> +    description: A port node pointing to a hdmi_in or mipi_in port node.
+
+"A port node pointing to the input port of a HDMI/DP or MIPI display
+bridge".
+
+> +
+> +examples:
+> +  - |
+> +    dcss: display-controller@32e00000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "nxp,imx8mq-dcss";
+> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> +        interrupts = <6>, <8>, <9>;
+> +        interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
+> +        interrupt-parent = <&irqsteer>;
+> +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> +                 <&clk 254>,<&clk 122>;
+> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
+> +        assigned-clock-rates = <800000000>,
+> +                               <400000000>;
+> +        port@0 {
+> +            dcss_out: endpoint {
+> +                remote-endpoint = <&hdmi_in>;
+> +            };
+> +        };
+> +    };
+> +
+
