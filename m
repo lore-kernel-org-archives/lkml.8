@@ -2,152 +2,224 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845C8C38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1BCC38BE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E5220836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7B920836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dO861vxh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pWIKHL5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgBXTcd (ORCPT
+        id S1727287AbgBXTej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:32:33 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36635 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgBXTcd (ORCPT
+        Mon, 24 Feb 2020 14:34:39 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:30774 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgBXTej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 14:32:33 -0500
-Received: by mail-vs1-f66.google.com with SMTP id a2so6440294vso.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 11:32:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AgL45fhULAGu5G+w7I1P5SZRJSZy9unRzGksGlG5Ac8=;
-        b=dO861vxh0JbDJlF8dML1sOiyH1MDcmL4Zp5QNt6Au8+HWAMJbbaV0ys5arCMrYnV20
-         NhcM3dZjvHefFpOcL62Wa+Y/yM88qqN2gQJpEH1ImycEmUcS3sV8Ex0m1hIFHGhZj5kl
-         i9TCt5a5fmqkuzEuepliXC1g1Tf5c/0pgSzMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AgL45fhULAGu5G+w7I1P5SZRJSZy9unRzGksGlG5Ac8=;
-        b=cgxiQyBUPFw4yjJb0gwQRY7qZDePoLhXm5gasmYqjRArpXJxGrOIOgfz14Wl5lo5PK
-         hdHRlpENB1cGtQwbLMDZaCBkN/kILLNLcB08a1AZpxIU3x2mdsvU9xCv7YtE07AbLvic
-         JgpmRmQs3PCN8OeinmGv99B9doAnl8tOCxuokwywmLD63lNgOwBAu3VRciHzjeqZJAmj
-         /kAXTfVyvDVK4Fc1iNhQPGoT85PxqsB+kmhyBFqusgOPGa+S/C7uGReSs+MLfk7k0tWD
-         Xv6vIPCXuxz/Un0iAACSPNsTavRL3VDsixPqB1cFzshRJewV2vcVuAnuE/DzMyxZwERi
-         fvEQ==
-X-Gm-Message-State: APjAAAVE8ujqLL1liDOUS3H+VIO0QbuenGTM0Kcfj2dsyYoGie6EA5Vo
-        +LR71PZp+Rp56dHZqudwB6N9gGKvyX9Gw1ERCNPt2g==
-X-Google-Smtp-Source: APXvYqx1q97BlcOmkjgYEGVruOJfe4m4wnPFvEzBNmD79LKbHDZWVUv4ovG9D5w6eIpxyEBGpsJQag8+B15P7pmhy2c=
-X-Received: by 2002:a67:fc8c:: with SMTP id x12mr25076429vsp.96.1582572751694;
- Mon, 24 Feb 2020 11:32:31 -0800 (PST)
+        Mon, 24 Feb 2020 14:34:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1582572879; x=1614108879;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TaX3Wv7PyIziT4d1G8a+2bb+qyLwg4X9NtQlx1p7X3Q=;
+  b=pWIKHL5pLp3lpk75g+i8mVPHmMAb2bClf739S+9XtaBmGeHl8/LbgT+e
+   Z2d2KZzb+lW9uEPoiEzNgx8RmZR5w8TCWjFH6jjgQ9a6Izhbv9x4CZ+IP
+   0O49GCNyBPXDLmcAb2b+95jNtWtM2+drd0QTDaDgHe1GV+QRJkptQHu/B
+   RhTtBNbXaKccBrDCfQLhfojrIQvDC0rXHT57NuKMRoZH8ckv32qcCTotG
+   62IClb8BZBJBSI5Gg7VlMP4pNj1trKKUSmDf9gUDTPK5Oh+oQ05rb09Qo
+   DVFxD3WNYgTOqWULyAcm3EDab2pd2dDqVSU3H1nf6In2iDEbTl2imaroV
+   Q==;
+IronPort-SDR: /GP6jn2SwZSjRQSmLmU2MYE6e6cst6DhkMNRrDaRh9cMgd4+3qy2nRqXmDRJ81IlAOBt9P5KNx
+ joPb8nzn+uVi9aNsRzXuyzUcWLaFx+z2u6JmKe1QezZlJrNTnwU6VnJYITxATe4TvJ/suxfRwp
+ EhndQl1BXY/IEPB+PLzneERAEVzKahlwPSWVXT40nY2trIqiZtr+mE1Dw3ZvggaocY8flxJ4B+
+ fNlFoNUbdfPI49hJUD13sZNrbbGHX74qW8KMjGdJhntHfcuR9C1h9CMk+L6LAKOp88+Nkls2/k
+ nJk=
+X-IronPort-AV: E=Sophos;i="5.70,481,1574092800"; 
+   d="scan'208";a="132056460"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Feb 2020 03:34:39 +0800
+IronPort-SDR: YG2MsjojoEmZd7aWHauY9CtzTMyU/cjyZxx/I5gFLksZUld+K9jrhlVyQk8RquETIBh+5soJvH
+ zMz8dpDKCYbBAKWWA7riYV3fVM1Cdg68Kk5AneZfItIpTrOTODnFiBzUqLrUC7Qywb73MQyrjX
+ rXhY4vgzXCmk1QvUebRqd297jfUfm8BUjq+iqbiveZBMgmy6ViBWfDbw1jszcw236Re/xqbEz+
+ yq3/ayg+KlUNXH4BSw7eUSG0jnyE5tuaQjkuAoSHgA/4GGItyjtZ59a2mkWEQqVOEAEPLRWtMG
+ KNjgIFn8IexulcTKw0RTF7yC
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 11:27:06 -0800
+IronPort-SDR: LshLh2Ryp4MLHSTzrZvRnNagIEJVqT3vitq311Cg7HS3btSIzWem6KWLj2Y9gw6moLXBQD7fod
+ jcDC6jdh97rNR4tF3uTDPierzwc9cnleC3BOAWeMZMjfvd9hoWCUqel08HYj3PvqoQQ0/j721I
+ IfuZjo7wUx74Y1P2TBU09zonoUrf5FZ25qCiA4ecgvYJoG4c0oflw3guWuZsiAbYcKH2Zcp3Rw
+ 8Dqy89EHkMLPBGLKg4KkD6Kn5R5DqpW0Epb6tsw1zBCssis/eYU7PYuLHHPF0QPklXHpmNVslL
+ cic=
+WDCIronportException: Internal
+Received: from yoda.sdcorp.global.sandisk.com (HELO yoda.int.fusionio.com) ([10.196.158.80])
+  by uls-op-cesaip01.wdc.com with ESMTP; 24 Feb 2020 11:34:37 -0800
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>, stable@vger.kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        linux-riscv@lists.infradead.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] RISC-V: Move all address space definition macros to one place
+Date:   Mon, 24 Feb 2020 11:34:36 -0800
+Message-Id: <20200224193436.26860-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <0000000000000cce30059f4e27e9@google.com>
-In-Reply-To: <0000000000000cce30059f4e27e9@google.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Mon, 24 Feb 2020 11:32:20 -0800
-Message-ID: <CANFp7mWobejCpiq5xXouKAcRBSAbVwxKOnFbJ_XfiU6rLsT0Vw@mail.gmail.com>
-Subject: Re: WARNING: refcount bug in l2cap_chan_put
-To:     syzbot <syzbot+198362c76088d1515529@syzkaller.appspotmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        netdev <netdev@vger.kernel.org>, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Resent in plain text; sorry for double send)
+If both CONFIG_KASAN and CONFIG_SPARSEMEM_VMEMMAP are set, we get the
+following compilation error.
 
-I took a brief look at this error and uncovered that 6lowpan uses zero
-locks when using l2cap (should be using the channel lock).
+---------------------------------------------------------------
+./arch/riscv/include/asm/pgtable-64.h: In function ‘pud_page’:
+./include/asm-generic/memory_model.h:54:29: error: ‘vmemmap’ undeclared
+(first use in this function); did you mean ‘mem_map’?
+ #define __pfn_to_page(pfn) (vmemmap + (pfn))
+                             ^~~~~~~
+./include/asm-generic/memory_model.h:82:21: note: in expansion of
+macro ‘__pfn_to_page’
 
-It seems like it would be better just to convert its direct use of
-l2cap channel into using an l2cap socket.
+ #define pfn_to_page __pfn_to_page
+                     ^~~~~~~~~~~~~
+./arch/riscv/include/asm/pgtable-64.h:70:9: note: in expansion of macro
+‘pfn_to_page’
+  return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
+---------------------------------------------------------------
 
-On Mon, Feb 24, 2020 at 12:28 AM syzbot
-<syzbot+198362c76088d1515529@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    bee46b30 Add linux-next specific files for 20200221
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1244ea7ee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=10693880b4976691
-> dashboard link: https://syzkaller.appspot.com/bug?extid=198362c76088d1515529
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160a03d9e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f8e1dde00000
->
-> Bisection is inconclusive: the bug happens on the oldest tested release.
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f03a7ee00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10083a7ee00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17f03a7ee00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+198362c76088d1515529@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> refcount_t: underflow; use-after-free.
-> WARNING: CPU: 1 PID: 2940 at lib/refcount.c:28 refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 2940 Comm: kworker/1:12 Not tainted 5.6.0-rc2-next-20200221-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: events do_enable_set
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x197/0x210 lib/dump_stack.c:118
->  panic+0x2e3/0x75c kernel/panic.c:221
->  __warn.cold+0x2f/0x3e kernel/panic.c:582
->  report_bug+0x289/0x300 lib/bug.c:195
->  fixup_bug arch/x86/kernel/traps.c:175 [inline]
->  fixup_bug arch/x86/kernel/traps.c:170 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
->  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
-> Code: e9 d8 fe ff ff 48 89 df e8 81 81 10 fe e9 85 fe ff ff e8 07 54 d1 fd 48 c7 c7 00 c8 91 88 c6 05 6b f6 fc 06 01 e8 23 74 a1 fd <0f> 0b e9 ac fe ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
-> RSP: 0018:ffffc9000952fbd8 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff815ee766 RDI: fffff520012a5f6d
-> RBP: ffffc9000952fbe8 R08: ffff88809e82e600 R09: ffffed1015d26661
-> R10: ffffed1015d26660 R11: ffff8880ae933307 R12: 0000000000000003
-> R13: ffff888095b3f018 R14: dead000000000122 R15: ffffc9000952fc98
->  refcount_sub_and_test include/linux/refcount.h:261 [inline]
->  refcount_dec_and_test include/linux/refcount.h:281 [inline]
->  kref_put include/linux/kref.h:64 [inline]
->  l2cap_chan_put+0x1d9/0x240 net/bluetooth/l2cap_core.c:501
->  do_enable_set+0x54b/0x960 net/bluetooth/6lowpan.c:1075
->  process_one_work+0xa05/0x17a0 kernel/workqueue.c:2266
->  worker_thread+0x98/0xe40 kernel/workqueue.c:2412
->  kthread+0x361/0x430 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Fix the compliation errors by moving all the address space definition
+macros before including pgtable-64.h.
+
+Cc: stable@vger.kernel.org
+Fixes: 8ad8b72721d0 (riscv: Add KASAN support)
+
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+ arch/riscv/include/asm/pgtable.h | 78 +++++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 37 deletions(-)
+
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 453afb0a570a..4f6ee48a42e8 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -19,6 +19,47 @@
+ #include <asm/tlbflush.h>
+ #include <linux/mm_types.h>
+ 
++#ifdef CONFIG_MMU
++
++#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
++#define VMALLOC_END      (PAGE_OFFSET - 1)
++#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
++
++#define BPF_JIT_REGION_SIZE	(SZ_128M)
++#define BPF_JIT_REGION_START	(PAGE_OFFSET - BPF_JIT_REGION_SIZE)
++#define BPF_JIT_REGION_END	(VMALLOC_END)
++
++/*
++ * Roughly size the vmemmap space to be large enough to fit enough
++ * struct pages to map half the virtual address space. Then
++ * position vmemmap directly below the VMALLOC region.
++ */
++#define VMEMMAP_SHIFT \
++	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
++#define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
++#define VMEMMAP_END	(VMALLOC_START - 1)
++#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
++
++/*
++ * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if kernel
++ * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
++ */
++#define vmemmap		((struct page *)VMEMMAP_START)
++
++#define PCI_IO_SIZE      SZ_16M
++#define PCI_IO_END       VMEMMAP_START
++#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
++
++#define FIXADDR_TOP      PCI_IO_START
++#ifdef CONFIG_64BIT
++#define FIXADDR_SIZE     PMD_SIZE
++#else
++#define FIXADDR_SIZE     PGDIR_SIZE
++#endif
++#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
++
++#endif
++
+ #ifdef CONFIG_64BIT
+ #include <asm/pgtable-64.h>
+ #else
+@@ -90,31 +131,6 @@ extern pgd_t swapper_pg_dir[];
+ #define __S110	PAGE_SHARED_EXEC
+ #define __S111	PAGE_SHARED_EXEC
+ 
+-#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+-#define VMALLOC_END      (PAGE_OFFSET - 1)
+-#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+-
+-#define BPF_JIT_REGION_SIZE	(SZ_128M)
+-#define BPF_JIT_REGION_START	(PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+-#define BPF_JIT_REGION_END	(VMALLOC_END)
+-
+-/*
+- * Roughly size the vmemmap space to be large enough to fit enough
+- * struct pages to map half the virtual address space. Then
+- * position vmemmap directly below the VMALLOC region.
+- */
+-#define VMEMMAP_SHIFT \
+-	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+-#define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
+-#define VMEMMAP_END	(VMALLOC_START - 1)
+-#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
+-
+-/*
+- * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if kernel
+- * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
+- */
+-#define vmemmap		((struct page *)VMEMMAP_START)
+-
+ static inline int pmd_present(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
+@@ -452,18 +468,6 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
+ #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
+ 
+-#define PCI_IO_SIZE      SZ_16M
+-#define PCI_IO_END       VMEMMAP_START
+-#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
+-
+-#define FIXADDR_TOP      PCI_IO_START
+-#ifdef CONFIG_64BIT
+-#define FIXADDR_SIZE     PMD_SIZE
+-#else
+-#define FIXADDR_SIZE     PGDIR_SIZE
+-#endif
+-#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+-
+ /*
+  * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+-- 
+2.25.0
+
