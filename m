@@ -2,100 +2,156 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6202DC35670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE08C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA502067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:01:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jGJpEda6"
+	by mail.kernel.org (Postfix) with ESMTP id A4C4420727
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582506417;
+	bh=TpPXfqAvidZXmEFGEiTlgiOr6hgutCz0Pj755Kcpc0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AUjqKeCa6raLSLtSxY8fer+Nu8Brd/ee7Aeo7yhrLJVcadIGs/5+8IKf8QvxXtzmV
+	 l1xAz4witkDF0c4Ro1HKyo8l2J0FhXSVEd0Vhx7OwtTMaiawmV6G4317AS13HbcyUV
+	 e25n1GLG+M5eC9y0cwO5eBkGwLTY9fJUN5LilM44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgBXBBi (ORCPT
+        id S1727188AbgBXBG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:01:38 -0500
-Received: from mail-qt1-f176.google.com ([209.85.160.176]:34443 "EHLO
-        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXBBh (ORCPT
+        Sun, 23 Feb 2020 20:06:56 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35381 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbgBXBGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:01:37 -0500
-Received: by mail-qt1-f176.google.com with SMTP id l16so5533836qtq.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:01:36 -0800 (PST)
+        Sun, 23 Feb 2020 20:06:55 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q8so8171666ljb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:06:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=geE21WUpBxQzQVQ/tm6WUyB7aw7f534naxzTS3XIcv0=;
-        b=jGJpEda6lopIP0mDT3i7FtSyQ3i6gqRGvIA9MaPXAtj59/jXfXc8AwPdE72fa0U4+y
-         lrdobdpZ61vy2gEduRj+HlYMaCBuHmHKxLnUALcURmkJRWhmUiG1gvFSWWtIQPzZ49DJ
-         2YzwNIWLLpKVEBDxc3Oo+ea2TiDzuXuqKrurEdRW7HK5HxUdVWt3Cv6lENsIv5/Rr9n6
-         tX/f32Zp/qsFhZe1DocUrH+nkPXCwLJk0/T79wKK9/W77YiagWI430Jx4VVL7AEF+b9e
-         KWyMl9upimK5JT0V1cbEhDB8eW/HFzK2yQFCVOPPox/CxUmledYa0Wu1mrsGXx3nNmGJ
-         zmpQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JOQFZKJ09bR9GxrGCRAILlsxRe+Mkc5csmWcmUCoQJc=;
+        b=eH7EfBrSugBS2PBkWUhZ4dkDBlqTxzT/hIcYkayplTOGh12dCJk04xf7jP//eYR9ZI
+         kHKZkQSaevFs5P/Hy0T+Hr7Ji5ufteDTEbskZaR+/74RZsfyA0ebu0ARSD4F1Rl/MqDR
+         iCnhEBp/bW1S4feHHsBCHNc8LYAGNEzJNxzPo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=geE21WUpBxQzQVQ/tm6WUyB7aw7f534naxzTS3XIcv0=;
-        b=OtuATQ/XblsTjYpAgv5Z80Ta8PFMKUgNn3Nln7VdI4uY4QCF9hvgKUPbCABQwAKybt
-         4UDKcPoRALFwC2ib4nIB7RGkILJ1FuL3JtBfwgFIBJMWfQApjCn57Tc+fbzGLbC33FrL
-         f9QEJ1eHlG44nx5+b737T3u4Ygn//aocll9SoJHJWXixWCYQXlakuCTxZ4BTGXeHnjFR
-         XBHlaflUviFnvJY30rximyKnr1RmoPXvFNcmVFB0yxjqA2kwgyH9DphiD7KnDGOmbsZR
-         SnjUHo2VWAxTpRN2lYYNDQsSZbu6Wg1stM3oyPr/7yO5qOfnGviQVUStfxB+Z/e0mNS+
-         KPmQ==
-X-Gm-Message-State: APjAAAX9aZx+/uwU7b4e1+bZNqZpElqQttawgGEkpfpWuEh+ldTnMhpd
-        Fzt5+LPo7RJLZvd6IV+1l6dcEQ==
-X-Google-Smtp-Source: APXvYqzHDhibNU/FjhfRNLuBs+K68RGY5OBJ3tRFqPbaKs8ZtyL2ibvIYBw9UDct2gsG48nwEyaGlg==
-X-Received: by 2002:aed:2f01:: with SMTP id l1mr44205155qtd.391.1582506095368;
-        Sun, 23 Feb 2020 17:01:35 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e2sm5242528qkb.112.2020.02.23.17.01.34
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JOQFZKJ09bR9GxrGCRAILlsxRe+Mkc5csmWcmUCoQJc=;
+        b=g9gMC8ZwMn3KFl17g5J5KuIPO3ISIhKA4mg4SexFT6wrIb2DjsWY57dRhRpFTknASd
+         ut6W0fx3KPRjI6nu4lrMGCvn/sreEoGxioRsXFk6zOShDgfr2HegyWmue+WRY1kpB03j
+         Z+Cs0CIFroI9EyXYP3brnk3Ph59iJ9GYx1TREKfG562darXobSYR7H5T4x7SHqJUMM7j
+         9JC/0cg0rJ0UK9uL966bXjjLjhW3A7TNAXmG/t85QiPJulUbsrlOOmnEtmBsS9CBqjMn
+         iP3jpGbSS+d+aDI1pkEA/T07Hy+riusEGeSugWxvIQYKzGiKRgYc+6tbNc+EvYcvvpKY
+         St3Q==
+X-Gm-Message-State: APjAAAX5ThiVoh+AtkgQDCkOQndd21faoKKFxl5x1x60nvfCuxUBE81h
+        zvZDU/E2XdT2w9BrF+hAREyXcqvia+4=
+X-Google-Smtp-Source: APXvYqyOeDpOVuT/YmZXbbDSIl93Jg50NpPifrYufNuNtO/IUrQQ0IbNJmaqMYGuZgNZuBlR4zPdUg==
+X-Received: by 2002:a2e:8eda:: with SMTP id e26mr29205802ljl.65.1582506412832;
+        Sun, 23 Feb 2020 17:06:52 -0800 (PST)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id v15sm1352977lfg.51.2020.02.23.17.06.50
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 17:01:34 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
-Date:   Sun, 23 Feb 2020 20:01:33 -0500
-Message-Id: <62491094-D13B-4EED-8190-4AA4EB77036B@lca.pw>
-References: <CAJZ5v0iSEV9S=zTa9++vUCO6GTfBE2sxNY+b4mMMt4Y6RCRvjA@mail.gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, elver@google.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAJZ5v0iSEV9S=zTa9++vUCO6GTfBE2sxNY+b4mMMt4Y6RCRvjA@mail.gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-X-Mailer: iPhone Mail (17D50)
+        Sun, 23 Feb 2020 17:06:52 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 7so5564233lfz.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:06:50 -0800 (PST)
+X-Received: by 2002:a19:f514:: with SMTP id j20mr25977951lfb.31.1582506408850;
+ Sun, 23 Feb 2020 17:06:48 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205123216.GO12867@shao2-debian> <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com> <20200221132048.GE652992@krava>
+ <20200223141147.GA53531@shbuild999.sh.intel.com> <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com>
+In-Reply-To: <20200224003301.GA5061@shbuild999.sh.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 23 Feb 2020 17:06:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+Message-ID: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Feb 23, 2020 at 4:33 PM Feng Tang <feng.tang@intel.com> wrote:
+>
+> From the perf c2c data, and the source code checking, the conflicts
+> only happens for root_user.__count, and root_user.sigpending, as
+> all running tasks are accessing this global data for get/put and
+> other operations.
 
+That's odd.
 
-> On Feb 23, 2020, at 7:12 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
->=20
-> It may be a bug under certain conditions, but you don't mention what
-> conditions they are.  Reporting it as a general bug is not accurate at
-> the very least.
+Why? Because those two would be guaranteed to be in the same cacheline
+_after_ you've aligned that user_struct.
 
-Could we rule out load tearing, store tearing and reload of global_req in cp=
-uidle_governor_latency() for all compilers and architectures which could int=
-roduce logic bugs?
+So if it were a false sharing issue between those two, it would
+actually get _worse_ with alignment. Those two fields are basically
+next to each other.
 
-	int global_req =3D cpu_latency_qos_limit();
+But maybe it was straddling a cacheline before, and it caused two
+cache accesses each time?
 
-	if (device_req > global_req)
-		device_req =3D global_req;
+I find this as confusing as you do.
 
-If under register pressure, the compiler might get ride of the tmp variable,=
- i.e.,
+If it's sigpending vs the __refcount, then we almost always change
+them together. sigpending gets incremented by __sigqueue_alloc() -
+which also does a "get_uid()", and then we decrement it in
+__sigqueue_free() - which also does a "free_uid().
 
-If (device_req > cpu_latency_qos_limit())
-=E2=80=94-> race with the writer.
-         device_req =3D cpu_latency_qos_limit();
+That said, exactly *because* they get incremented and decremented
+together, maybe we could do something clever: make the "sigpending" be
+a separate user counter, kind of how we do mm->user vs mm-.count.
 
+And we'd only increment __refcount as the sigpending goes from zero to
+non-zero, and decrement it as sigpending goes back to zero. Avoiding
+the double atomics for the case of "lots of signals".
 
+>      ffffffff8225b580 d types__ptrace
+>      ffffffff8225b5c0 D root_user
+>      ffffffff8225b680 D init_user_ns
+
+I'm assuming this is after the alignment patch (since that's 64-byte
+aligned there).
+
+What was it without the alignment?
+
+> No, it's not the biggest, I tried another machine 'Xeon Phi(TM) CPU 7295',
+> which has 72C/288T, and the regression is not seen. This is the part
+> confusing me :)
+
+Hmm.
+
+Humor me - what  happens if you turn off SMT on that Cascade Lake
+system?  Maybe it's about the thread ID bit in the L1? Although again,
+I'd have expected things to get _worse_ if it's the two fields that
+are now in the same cachline thanks to alignment.
+
+The Xeon Phi is the small-core setup, right? They may be slow enough
+to not show the issue as clearly despite having more cores. And it
+wouldn't show effects of some out-of-order speculative cache accesses.
+
+                Linus
