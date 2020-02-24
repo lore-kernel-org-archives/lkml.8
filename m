@@ -2,139 +2,130 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBC3C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D2BC35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5817020675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478462071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n8isivMf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kvTvYofZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgBXBLI (ORCPT
+        id S1727226AbgBXBLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:11:08 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34087 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbgBXBLI (ORCPT
+        Sun, 23 Feb 2020 20:11:45 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37334 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgBXBLp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:11:08 -0500
-Received: by mail-ua1-f67.google.com with SMTP id 1so2658237uao.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:11:06 -0800 (PST)
+        Sun, 23 Feb 2020 20:11:45 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q84so7465085oic.4
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:11:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zT10dhFzTQfQk4qZLNGzW74d8YteQDI8/eIgEFfv+OM=;
-        b=n8isivMfbvLTUE8W5OF33bsEQHbC9GWAfYDMGxgEsCd67xnLu5gDVB9DXvZR6Rsx1O
-         55Mu59uQZ9ycLOFST2i7wZ7g5Hz2Km/BWEoh8CuZd9UfD8ypdnoG0zR2phZcKA7ScuyY
-         3/UoFGfVGlgcXlM70PiZd0OSnnRxK7cvW1Uw4=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=HX1fJHLiNwnVKz7r+onFwX/niXbmKqUAA8UMhmaKQVk=;
+        b=kvTvYofZbz9U3B5NUoEdMRddWJRK/T6OWfWosieMYrRCRmBG6eds6cFCmkYooinSxb
+         8VPn/Y70cjNOolZdgXXxZbXrOgCEDWU+L7iglCMwW+DF/5BFvXKY0G0dPLuQ4lQmY5WP
+         JNK5G2q80TrH67xVPlf3bovornkAJZFsIRARlH+qEnAVUsgB1s6isDKWXfcJA0FwjoBY
+         nRdSBFeW6FTnlcgIbbxsM8b/CY2eBs+XAdfipDCubdL5u0kKxae5lEJ6Fy2NEr7PkG2O
+         ATHNhSb++IjMLmUksnNBie+sd/AN3rJrbjO2Xqcd8JLvVZlsIYm7dt+uer/M20dGt1FP
+         48pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zT10dhFzTQfQk4qZLNGzW74d8YteQDI8/eIgEFfv+OM=;
-        b=BIRkTyvj9Q6NgFEyOO6eCrgJeJYMek5B2ecpKpZhk5zYOzXY8ljGuhtWndFiHSCQi+
-         7gOoHI5WABUANm2BfM/8NbZFcr5dDSipV8NKL/5hyKIEXBSAyvvOh3jtUGc5NBYUyq7h
-         bhDq3x8RD1SL29QrHg9QMfcAzlGRGwG5xXlUD3CJkZ5Cv4dkLXbTKr78DHWI/0PigiRA
-         BouSdzzaVVsFzXq+eW8ipIFuJ63ohdYRw3uG+VfnEHh1rt5EL7H9Og9iV58IGzXnuCYF
-         e4mJBbbEkiYzw0aYXbkdMtwLokl8Ir8dT5HDK2pCadlxUVmava1PRq3xpAwVJfRZxZy9
-         TjSQ==
-X-Gm-Message-State: APjAAAXRO3DNohB8JhjhWtIi9MLx3thgo4gjC+e0PiwpgboNP7Pk7FSk
-        HHYOmf6zl5qpjp24/HQoJry6CvR5Kts=
-X-Google-Smtp-Source: APXvYqyDEU4mIsfyeJyeNNxvv/qwl5K09vXRIIE8KVlCA7s10aKMXwxQDp5mptOd4FFJzxG2o4q5mw==
-X-Received: by 2002:ab0:4e0e:: with SMTP id g14mr23324642uah.20.1582506665247;
-        Sun, 23 Feb 2020 17:11:05 -0800 (PST)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id i22sm2678602uap.17.2020.02.23.17.11.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 17:11:04 -0800 (PST)
-Received: by mail-vk1-f175.google.com with SMTP id t129so2092878vkg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:11:03 -0800 (PST)
-X-Received: by 2002:a1f:add3:: with SMTP id w202mr22215488vke.30.1582506662987;
- Sun, 23 Feb 2020 17:11:02 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=HX1fJHLiNwnVKz7r+onFwX/niXbmKqUAA8UMhmaKQVk=;
+        b=PY3gUWz2Rw4TfrgTDFkwCGK6npfkXZ2NpZ6LFe/fqBpZBKq1XZUB6jL8H0R8KiSdu2
+         ccq9RPkyvSbAasqfn2Z1n8Kn5g7aj/QIUHiqmZL4ggnyCo36HiU0U6mTGPDqQmNEgt5f
+         cD3avtOQD/w6rdBbk2EGaN26xdpfXC9aWZja6wjYpTYLv+s7/8F+Ejdl/fHgGmAmahk3
+         PQVVU2Sc8xn6hJvJH6nPrEk1pzpQsecn576dZTFylw2Ye4ITvs1l1FRw8ktPmmwPAxb1
+         y3Ueit91P0UMDx1o5DaQsI95XBm3++AbJHgoZV1u8vF9fXQk4DLhwQyVkYzChoR4V8eo
+         fMaA==
+X-Gm-Message-State: APjAAAVDLPfcteXB06dityjEOJzGhlIttepHiZIcxqHdEc5Ado5MTQkO
+        3Li2logbakuGEUlw1JGLOd5Fdw==
+X-Google-Smtp-Source: APXvYqxhhn1kZfC9aGeOzvgd6UOP1g9Z1kN2EROT2rl+Hr6et8C1VoRjmDndu2vyAIreE4N4uciOPg==
+X-Received: by 2002:a05:6808:84:: with SMTP id s4mr10963771oic.147.1582506704543;
+        Sun, 23 Feb 2020 17:11:44 -0800 (PST)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id j5sm3881050otl.71.2020.02.23.17.11.42
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 23 Feb 2020 17:11:43 -0800 (PST)
+Date:   Sun, 23 Feb 2020 17:11:12 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+cc:     Hugh Dickins <hughd@google.com>, Jens Axboe <axboe@kernel.dk>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
+In-Reply-To: <alpine.LSU.2.11.2002231058520.5735@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.2002231710420.7354@eggly.anvils>
+References: <cover.1582216294.git.schatzberg.dan@gmail.com> <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com> <alpine.LSU.2.11.2002231058520.5735@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net> <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
- <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com> <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
- <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
-In-Reply-To: <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Mon, 24 Feb 2020 12:10:37 +1100
-X-Gmail-Original-Message-ID: <CAKz_xw3z7uXtK1SQKYLu_oP3GmqKR7RXvWj2b1cfyZO-Q-ZxQw@mail.gmail.com>
-Message-ID: <CAKz_xw3z7uXtK1SQKYLu_oP3GmqKR7RXvWj2b1cfyZO-Q-ZxQw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Yonghui Yu <yonghui.yu@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, 23 Feb 2020, Hugh Dickins wrote:
+> On Thu, 20 Feb 2020, Dan Schatzberg wrote:
+> 
+> > memalloc_use_memcg() worked for kernel allocations but was silently
+> > ignored for user pages.
+> > 
+> > This patch establishes a precedence order for who gets charged:
+> > 
+> > 1. If there is a memcg associated with the page already, that memcg is
+> >    charged. This happens during swapin.
+> > 
+> > 2. If an explicit mm is passed, mm->memcg is charged. This happens
+> >    during page faults, which can be triggered in remote VMs (eg gup).
+> > 
+> > 3. Otherwise consult the current process context. If it has configured
+> >    a current->active_memcg, use that. Otherwise, current->mm->memcg.
+> > 
+> > Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
+> > would always charge the root cgroup. Now it looks up the current
+> > active_memcg first (falling back to charging the root cgroup if not
+> > set).
+> > 
+> > Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Acked-by: Tejun Heo <tj@kernel.org>
+> 
+> Acked-by: Hugh Dickins <hughd@google.com>
+> 
+> Yes, internally we have some further not-yet-upstreamed complications
+> here (mainly, the "memcg=" mount option for all charges on a tmpfs to
+> be charged to that memcg); but what you're doing here does not obstruct
+> adding that later, they fit in well with the hierarchy that you (and
+> Johannes) mapped out above, and it's really an improvement for shmem
+> not to be referring to current there - thanks.
 
-I think the intention is that this driver talks to a 'standard' arm
-smc firmware watchdog call:
+I acked slightly too soon. There are two other uses of "try_charge" in
+mm/shmem.c: we can be confident that the userfaultfd one knows what mm
+it's dealing with, but the shmem_swapin_page() instance has a similar
+use of current->mm, that you also want to adjust to NULL, don't you?
 
-https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
-
-Each device could re-implement that ATF driver to talk to the specific hardware,
-and could perhaps use a custom SMCWD_FUNC_ID, defined in the dts.
-
-The goal was to provide an ATF patch and linux driver patch that would
-be generic. But the above ATF patch
-is only for mt8173. Right now it just specifies an interface. It has
-less functionality than your meson driver Xingyu.
-If it is not suitable, that is fine.
-
-The above ATF patch is deployed on oak, elm, and hana mt8173
-chromebook devices, this driver is intended to support those devices.
-
-Evan
-
-
-On Sat, Feb 22, 2020 at 3:01 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
->
-> Hi, Julius
->
-> On 2020/2/22 3:41, Julius Werner wrote:
-> >> Because the ATF does not define standard wdt index, each vendor defines
-> >> its own index.
-> >> So I don't think that the current driver[0] can fully cover my usecases.
-> > I think the best way to solve this would be to put the SMC function ID
-> > as another field into the device tree, so that multiple vendors could
-> > share the same driver even if their firmware interface uses a
-> > different SMC. But they still have to implement the same API for that
-> > SMC, of course, not sure if the Meson driver is suitable for that (but
-> > if it is then I think merging those drivers would be a good idea).
-> The SMC function ID may be solved by the DTS, but the wdt indexs(Eg:
-> SMCWD_INFO) are also different
-> for each vendor. The imx_sc_wdt.c is also use the SMC to operate the
-> WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
-> are different from ours. IMO, If the ATF can implement a common hal
-> interface and index for watchdog, then writing a
-> common smc wdt driver will be easier to compatible with all vendors.
->
-> Best Regards
-> >
-> > .
+Hugh
