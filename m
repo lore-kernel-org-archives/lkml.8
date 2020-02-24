@@ -7,64 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F5C3567B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389B3C35679
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2C120675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1ECB20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lCZcMwQ8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="z0Pw8W/v"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MeEGm8yd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zzlQpzty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgBXJI7 (ORCPT
+        id S1727229AbgBXJI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:08:59 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:53407 "EHLO
+        Mon, 24 Feb 2020 04:08:58 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37871 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727000AbgBXJI6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726925AbgBXJI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 04:08:58 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 4CD3B4AB;
+        by mailnew.west.internal (Postfix) with ESMTP id 5AF454CD;
         Mon, 24 Feb 2020 04:08:56 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:08:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=MWuEelg9MTdO9
-        PYjQ6DDeRPe8i75Vlfg90HjY3N5/Co=; b=lCZcMwQ8ILSRfPlSVJhwU2gCbZjpL
-        wkiphS3LaiM8ihe7gPFmTMrSKM582Qz1BF9aMLBwzewJ9Ls70izbCJ8+pFK1DL4l
-        6OLtC5EJE8kMxviGr8kjAY5/bRkfPRP8g54b8S4LejYJDzs1e5NTUEo0G4yR1YkS
-        hr2MEr1Fzd8O3NnCB7rwl/j2B3YTeL8E3f8mtrJegYmmUmq/T3HYvcQWInJsulDL
-        MfYy9zQaIiRYbKBNH6KGY+zEY3UBL2CyQo3aJXAMPewaX+BBDudaa0C4cz5wz4dm
-        6Pb5wqUo4r2fvFMxAmV//1EzYo/seAcBxZPFWA9ikr8NyvMLY3AGXlD9g==
+        :mime-version:content-transfer-encoding; s=fm2; bh=8vrsYnMg3+xlG
+        wkxA2xqTXt5S7dQQOBwNLJokfKT5TI=; b=MeEGm8ydYTSDljDyxAs5wLbVVWQrV
+        ZLc+D4bpc6kIWpyJTtjbRUZAdIm7Ho4neycCK2r7oX5b2WQI9O4AzKdlL+6zzD9z
+        eMCb0E8IAaRikxxmmaHPI7zNa6oaMXBPgho3XFDnZPz+B8muLWHE+JnIAtPMbST2
+        WdqreU0RTYMSF5vcnSBLgUTYhP/FTo9lRBtqt90SUajuBoeWphrqja3NHLAtJTS6
+        h7BL0HGfEE9KUUfOTuOmIcUYR/6dd0cEJCF8Ta6jc0hmC+3Ms+YXvSxbbY5WV129
+        By0cqCutzcXGKC8E2by+EnNBJlvoqtgGMjR9FE0Y/cHbnHh0twqb1BtjA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=MWuEelg9MTdO9PYjQ6DDeRPe8i75Vlfg90HjY3N5/Co=; b=z0Pw8W/v
-        JV+34kCfgps/S4Xac0oXvJR1N/jnjlsE0CQ/y6Jn3MTR1DdnTZyioa8xdP4kV+qH
-        FrejhIdSm8YDMkHqblP77PxYUJMX9Y6s79Xzhk9PGyewZqMz9oV5APN/hB5TmRhe
-        JgdLekuAYB+QlPVMzUzm6teTjpTnMQXgVav/faGrWMIttPtoOxmM2p9/QD/7i8xC
-        QlPgYNvrKGQHZw9bn3Qd+akoXLdRfY9+d3AtcyHSMsT5xwwlvwxnrIzMypiGF1Aq
-        aQY3AgXQgUGvEOf3+t/cjnpudUnjMokMO3GuyJKBIopqQCyVuMI03gyDcN/Lc6Ms
-        TkRNLkc4aWYp3Q==
-X-ME-Sender: <xms:o5JTXkhx-72TTdKGljILwh9TJ9YBki3SG5ECNXL4nG0DQ55TObhjXw>
+        fm2; bh=8vrsYnMg3+xlGwkxA2xqTXt5S7dQQOBwNLJokfKT5TI=; b=zzlQpzty
+        TQi+s9EWJWK2dZJ3xg6Rrr/ChaWBFHaPKGXqTxduw6vEWfblw87uof8xbmFmV0gL
+        OIMvoutCNzlimhGippaMJBNmnY4cpX/eoQuovotdlX2c581aEfwKruTrQfnQm5zc
+        VRMs8gUwP9ELDykd49fk7oJrrN3rCYShYffseJQvf9ARD4xiVlohsb9/KoVgWg8A
+        WJLsLegxr3un88Js5NBTyDIjCvOoIa7f7xf1PHhBg5ljrEFHe40tB9riscSvmK+2
+        YZax7iskHT1iH3bBjKnTujW1TF/Nw4wxjMvde5xhVebtGILX5orSXl7ffljcDmsu
+        Zsvn3NTHszT1qA==
+X-ME-Sender: <xms:ppJTXjTmQpTuM8_FjJ4Lcv_wIY6cYU5OJjn656Dm8k2QC7jyeh2s4w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegovehorg
-    hsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgjfhgggfes
-    tdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvg
-    estggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhg
-    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:o5JTXnFLg_wvUzlKlyjZViXjdSy5sePp4-Qol9_rlunLIa4keSujVg>
-    <xmx:o5JTXr8AtXffe_r6y8WebYzR1e2bTW-3Lct8AJYfTT_Jbu9qAdOQFA>
-    <xmx:o5JTXmzmOXeIon-rNgQtuRTp-Mhb6coOA1fV_queZ1DfzHWHd0hd8w>
-    <xmx:p5JTXolrE6rnd5x55Znx-r0HqXNSpSAHfpjcmjNV3Mm8XxFzu3_-8Ai3J2g>
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
+    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:ppJTXsWL0OGsKJoUQUu_qHB-GBs4IF5zq4_afrl4OfY2LE01e5Y-uQ>
+    <xmx:ppJTXoeLpU0IHK2dJP-nL9wOWpJ8K7n9H_DjmfWma_018eFICKL2-A>
+    <xmx:ppJTXvwR_zBnusltx-lZlhZShIXI-9zuW-QuSh6E4tbH3lE8Vzjxww>
+    <xmx:qJJTXsdgiH4mN_Q1Y_kAZwvirdItS31sFpZWycjD-4YKr5qjkm-WTw22ksI>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0D3803060FCB;
-        Mon, 24 Feb 2020 04:08:50 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id E275F3060F9B;
+        Mon, 24 Feb 2020 04:08:53 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -78,12 +77,10 @@ Cc:     dri-devel@lists.freedesktop.org,
         Maxime Ripard <maxime@cerno.tech>,
         Kamal Dasu <kdasu.kdev@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 01/89] dt-bindings: i2c: brcmstb: Convert the BRCMSTB binding to a schema
-Date:   Mon, 24 Feb 2020 10:06:03 +0100
-Message-Id: <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
+Subject: [PATCH 03/89] i2c: brcmstb: Support BCM2711 HDMI BSC controllers
+Date:   Mon, 24 Feb 2020 10:06:05 +0100
+Message-Id: <1ed75ec6dc9310afd768c0bbfd8e73268e8cdfa9.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -94,133 +91,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch the DT binding to a YAML schema to enable the DT validation.
+The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
+EDID. This block is split into two parts, the BSC and the AUTO_I2C,
+lying in two separate register areas.
+
+The AUTO_I2C block has a mailbox-like interface and will take away the
+BSC control from the CPU if enabled. However, the BSC is the actually
+the same controller than the one supported by the brcmstb driver, and
+the AUTO_I2C doesn't really bring any immediate benefit.
+
+Let's use the BSC then, but let's also tie the AUTO_I2C registers with a
+separate compatible so that we can enable AUTO_I2C if needed in the
+future.
+
+The AUTO_I2C is enabled by default at boot though, so we first need to
+release the BSC from the AUTO_I2C control.
 
 Cc: Kamal Dasu <kdasu.kdev@gmail.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Wolfram Sang <wsa@the-dreams.de>
 Cc: bcm-kernel-feedback-list@broadcom.com
 Cc: linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 59 +++++++-
- Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt       | 26 +---
- MAINTAINERS                                                 |  2 +-
- 3 files changed, 60 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
+ drivers/i2c/busses/i2c-brcmstb.c | 33 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-new file mode 100644
-index 000000000000..3189d74096e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/brcm,brcmstb-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom STB BSC IIC Master Controller
-+
-+maintainers:
-+  - Kamal Dasu <kdasu.kdev@gmail.com>
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,brcmstb-i2c
-+      - brcm,brcmper-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    enum:
-+      - 46875
-+      - 50000
-+      - 93750
-+      - 97500
-+      - 187500
-+      - 200000
-+      - 375000
-+      - 390000
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-frequency
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+      bsca: i2c@f0406200 {
-+          clock-frequency = <390000>;
-+          compatible = "brcm,brcmstb-i2c";
-+          interrupt-parent = <&irq0_intc>;
-+          reg = <0xf0406200 0x58>;
-+          interrupts = <0x18>;
-+          interrupt-names = "upg_bsca";
-+      };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt b/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
-deleted file mode 100644
-index 0380609b177a..000000000000
---- a/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--Broadcom stb bsc iic master controller
--
--Required properties:
--
--- compatible: should be "brcm,brcmstb-i2c" or "brcm,brcmper-i2c"
--- clock-frequency: 32-bit decimal value of iic master clock freqency in Hz
--		   valid values are 375000, 390000, 187500, 200000
--		   93750, 97500, 46875 and 50000
--- reg: specifies the base physical address and size of the registers
--
--Optional properties :
--
--- interrupts: specifies the interrupt number, the irq line to be used
--- interrupt-names: Interrupt name string
--
--Example:
--
--bsca: i2c@f0406200 {
--      clock-frequency = <390000>;
--      compatible = "brcm,brcmstb-i2c";
--      interrupt-parent = <&irq0_intc>;
--      reg = <0xf0406200 0x58>;
--      interrupts = <0x18>;
--      interrupt-names = "upg_bsca";
--};
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 38fe2f3f7b6f..9e45ed8be540 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3431,7 +3431,7 @@ L:	linux-i2c@vger.kernel.org
- L:	bcm-kernel-feedback-list@broadcom.com
- S:	Supported
- F:	drivers/i2c/busses/i2c-brcmstb.c
--F:	Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
-+F:	Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-brcmstb.c
+index 506991596b68..169a2836922d 100644
+--- a/drivers/i2c/busses/i2c-brcmstb.c
++++ b/drivers/i2c/busses/i2c-brcmstb.c
+@@ -580,6 +580,31 @@ static void brcmstb_i2c_set_bsc_reg_defaults(struct brcmstb_i2c_dev *dev)
+ 	brcmstb_i2c_set_bus_speed(dev);
+ }
  
- BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
- M:	Al Cooper <alcooperx@gmail.com>
++#define AUTOI2C_CTRL0		0x26c
++#define AUTOI2C_CTRL0_RELEASE_BSC	BIT(1)
++
++static int bcm2711_release_bsc(struct brcmstb_i2c_dev *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev->device);
++	struct resource *iomem;
++	void __iomem *autoi2c;
++
++	/* Map hardware registers */
++	iomem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "auto-i2c");
++	autoi2c = devm_ioremap_resource(&pdev->dev, iomem);
++	if (IS_ERR(autoi2c))
++		return PTR_ERR(autoi2c);
++
++	writel(AUTOI2C_CTRL0_RELEASE_BSC, autoi2c + AUTOI2C_CTRL0);
++	devm_iounmap(&pdev->dev, autoi2c);
++
++	/* We need to reset the controller after the release */
++	dev->bsc_regmap->iic_enable = 0;
++	bsc_writel(dev, dev->bsc_regmap->iic_enable, iic_enable);
++
++	return 0;
++}
++
+ static int brcmstb_i2c_probe(struct platform_device *pdev)
+ {
+ 	int rc = 0;
+@@ -609,6 +634,13 @@ static int brcmstb_i2c_probe(struct platform_device *pdev)
+ 		goto probe_errorout;
+ 	}
+ 
++	if (of_device_is_compatible(dev->device->of_node,
++				    "brcm,bcm2711-hdmi-i2c")) {
++		rc = bcm2711_release_bsc(dev);
++		if (rc)
++			goto probe_errorout;
++	}
++
+ 	rc = of_property_read_string(dev->device->of_node, "interrupt-names",
+ 				     &int_name);
+ 	if (rc < 0)
+@@ -705,6 +737,7 @@ static SIMPLE_DEV_PM_OPS(brcmstb_i2c_pm, brcmstb_i2c_suspend,
+ static const struct of_device_id brcmstb_i2c_of_match[] = {
+ 	{.compatible = "brcm,brcmstb-i2c"},
+ 	{.compatible = "brcm,brcmper-i2c"},
++	{.compatible = "brcm,bcm2711-hdmi-i2c"},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, brcmstb_i2c_of_match);
 -- 
 git-series 0.9.1
