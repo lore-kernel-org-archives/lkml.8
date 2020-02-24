@@ -2,229 +2,163 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCA1C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6FDC38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFF721556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF4221556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qcf4YAHK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B6tD71Oa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgBXVrm (ORCPT
+        id S1728185AbgBXVsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:47:42 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40426 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgBXVrl (ORCPT
+        Mon, 24 Feb 2020 16:48:06 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57811 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727421AbgBXVsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:47:41 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so939275wmi.5;
-        Mon, 24 Feb 2020 13:47:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wpGsu30wsrwwgvONGvaCoryOWDxeUCSkXTPhLer+B18=;
-        b=qcf4YAHKArN90n8hn53nSe6TLi2TTwsNbbKf3kqrzyMmHSYiflKVLWm8xb2EXvF+yQ
-         UxeUPIlbDJdFf0D0pymlZWgW7RCQuvb0HDgUH6/atrE7LsCBCxn4p5KT9PCcS9eOhCg/
-         jiwVesUKeN4puJjuyrA8AVwBXpk1Bh3AqiKUhMjMMe5jZ5oE+A8DVFT0cFdJJjFtHnI/
-         ehR9lOZJsd0PECCvrvKe9O5J6iavJFsnDXpbvOftwm+ULYb3lxs694v0maIkHRfVVki9
-         Flt42aYmfbfhcttBi4e9gM7EVft8/E5wmYb9TnfbV9EFLvZiYu7Xv4mLKVokeNYr9mrH
-         2pqg==
+        Mon, 24 Feb 2020 16:48:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582580884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y3mparikf9DdIUeIjvvwXQ1Z1K4Cli1iz2ALnY2BpjQ=;
+        b=B6tD71OayeJ+8SGSYHcZ9H3eICc8ljwbIm80SzjfWqWSg6nFhq9qnt0CcG0UsoFjeJLaGI
+        2kevA5KT5+C42W3nCnZfcOFPStcd/NjBVTAt6NHTL1vIVwGMaHCzbCLqak3L61dlfdPGkR
+        uK+0em3pV4MlPvi5v3+FL05Y5ckyvJc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-gusilmOBPDi1yVW9oGKMmg-1; Mon, 24 Feb 2020 16:48:02 -0500
+X-MC-Unique: gusilmOBPDi1yVW9oGKMmg-1
+Received: by mail-wr1-f70.google.com with SMTP id p8so6228443wrw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:48:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wpGsu30wsrwwgvONGvaCoryOWDxeUCSkXTPhLer+B18=;
-        b=V3sJgFtgHDydL1oxvt9rEQAeNYOdvMxiWLxpLUjKU8ldbiCWaKtOhBEqXbXXhnK559
-         u+VNGy4TpIeRPDTajB3qiMjgcbRPVP+4SguwRAICY6U3Vu/0CsAX7dRSVWIUXb8K4t8Q
-         RuqyCCvYrXgmfgyeYr+1k8eHSU8Q3RnsoETwYDycjKPCfUDp313HL6dcxEr6+h+E3p4J
-         mSAf9jUoGJUpdLlzWl67aGuTAVGOJwv2R++0DvkBqjfKWARu+UhDiyMgk0rC+8l3lS2a
-         XwTB2WEBpU4L5ugbCkYM6ECtMfVBcAIXI5/TTnl8dqn9PKXQrnyTi+Y/JDOTreM59HXV
-         WbjQ==
-X-Gm-Message-State: APjAAAV1FkasSyaUYpHZ1iuj3G2TlanA8bE4aZYC8KfaptXFTkGt0USq
-        Be9pjf83hRPbY4etT1u+8R0=
-X-Google-Smtp-Source: APXvYqyWNknQAEOEv/bM1o5Bk4ZxRvTdT5bpVvR4f6fdeWOI8TXCvriMZx0NtsLnHGMVRyLMrjnrVg==
-X-Received: by 2002:a7b:c218:: with SMTP id x24mr931234wmi.149.1582580858823;
-        Mon, 24 Feb 2020 13:47:38 -0800 (PST)
-Received: from ziggy.stardust ([130.65.254.13])
-        by smtp.gmail.com with ESMTPSA id f12sm1062871wmj.10.2020.02.24.13.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 13:47:38 -0800 (PST)
-Subject: Re: [PATCH v7 06/13] media: mtk-mdp: Check return value of of_clk_get
-To:     Hans Verkuil <hverkuil@xs4all.nl>, matthias.bgg@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com
-Cc:     devicetree@vger.kernel.org, drinkcat@chromium.org,
-        frank-w@public-files.de, sean.wang@mediatek.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        wens@csie.org, linux-mediatek@lists.infradead.org,
-        rdunlap@infradead.org, hsinyi@chromium.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-References: <20200213201953.15268-1-matthias.bgg@kernel.org>
- <20200213201953.15268-7-matthias.bgg@kernel.org>
- <9d39ba53-482e-ba8f-2699-c34540a3dfd0@xs4all.nl>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1c75d9ef-555a-7a07-b17a-c985605a16bc@gmail.com>
-Date:   Mon, 24 Feb 2020 22:47:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=y3mparikf9DdIUeIjvvwXQ1Z1K4Cli1iz2ALnY2BpjQ=;
+        b=lDqoJRDb4/rQ2K3ZJzmvK7/R1xY64mSWU52UG3DiU6iuOaO3+n256b08K4SsDUkXS3
+         CxD8feJUVoi7P9d9U0uiiRCXkrAkBX13DJLEg03Iu+wWlFuYagUqkbbjheWZ5fxwGFAl
+         SokSlSOLPgBtiUpvm8bALI9plmSFzxalJPaP7oBq0O2YIXMuEj99p5V5hONfQtui6ZVH
+         vPJ71Po6YPY1/nNwpivFWWbt81Nv7OF/cJiM/JkaggIe7+SJ1ruOuOWjUEJ/IJtPPlCR
+         qPeGLwyIW7GLqg8nkQ3iWT+8DAZsAS0270j7TP/zhXywEGeDqx34Jj/WfduLcERWJmbS
+         U0Hw==
+X-Gm-Message-State: APjAAAUvd25ev9i10suYp6ikYaiEgoGzPsYNsHWmBQAEJnseRl/7OEDZ
+        WJUbVPzP7h4KXgqbL2zf8lxtNO63OpZWpFfrMOX2VG7dMJFiQytcymumXzjDICzxguxha+2G868
+        UwTJIMJRmZvtOOjQ47YtpkMhz
+X-Received: by 2002:a1c:5419:: with SMTP id i25mr1036345wmb.150.1582580880344;
+        Mon, 24 Feb 2020 13:48:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxcGJyPEiNp1nOJTpE1947zCHRS0Mdf/QuU39ULake55oSamxvw9KPNbmzyW5qp2oa0/4ydHA==
+X-Received: by 2002:a1c:5419:: with SMTP id i25mr1036324wmb.150.1582580880079;
+        Mon, 24 Feb 2020 13:48:00 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id z21sm1026315wml.5.2020.02.24.13.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:47:59 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 42/61] KVM: x86: Add a helper to check kernel support when setting cpu cap
+In-Reply-To: <20200201185218.24473-43-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-43-sean.j.christopherson@intel.com>
+Date:   Mon, 24 Feb 2020 22:47:58 +0100
+Message-ID: <875zfvodwx.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <9d39ba53-482e-ba8f-2699-c34540a3dfd0@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
+> Add a helper, kvm_cpu_cap_check_and_set(), to query boot_cpu_has() as
+> part of setting a KVM cpu capability.  VMX in particular has a number of
+> features that are dependent on both a VMCS capability and kernel
+> support.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.h   |  6 ++++++
+>  arch/x86/kvm/svm.c     |  3 +--
+>  arch/x86/kvm/vmx/vmx.c | 18 ++++++++----------
+>  3 files changed, 15 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index c64283582d96..7b71ae0ca05e 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -274,4 +274,10 @@ static __always_inline void kvm_cpu_cap_set(unsigned x86_feature)
+>  	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
+>  }
+>  
+> +static __always_inline void kvm_cpu_cap_check_and_set(unsigned x86_feature)
+> +{
+> +	if (boot_cpu_has(x86_feature))
+> +		kvm_cpu_cap_set(x86_feature);
+> +}
+> +
+>  #endif
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 7cb05945162e..defb2c0dbf8a 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -1362,8 +1362,7 @@ static __init void svm_set_cpu_caps(void)
+>  
+>  	/* CPUID 0x8000000A */
+>  	/* Support next_rip if host supports it */
+> -	if (boot_cpu_has(X86_FEATURE_NRIPS))
+> -		kvm_cpu_cap_set(X86_FEATURE_NRIPS);
+> +	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
+>  
+>  	if (npt_enabled)
+>  		kvm_cpu_cap_set(X86_FEATURE_NPT);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index cfd0ef314176..cecf59225136 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7118,18 +7118,16 @@ static __init void vmx_set_cpu_caps(void)
+>  		kvm_cpu_cap_set(X86_FEATURE_VMX);
+>  
+>  	/* CPUID 0x7 */
+> -	if (boot_cpu_has(X86_FEATURE_MPX) && kvm_mpx_supported())
+> -		kvm_cpu_cap_set(X86_FEATURE_MPX);
+> -	if (boot_cpu_has(X86_FEATURE_INVPCID) && cpu_has_vmx_invpcid())
+> -		kvm_cpu_cap_set(X86_FEATURE_INVPCID);
+> -	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> -	    vmx_pt_mode_is_host_guest())
+> -		kvm_cpu_cap_set(X86_FEATURE_INTEL_PT);
+> +	if (kvm_mpx_supported())
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_MPX);
+> +	if (cpu_has_vmx_invpcid())
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_INVPCID);
+> +	if (vmx_pt_mode_is_host_guest())
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_INTEL_PT);
+>  
+>  	/* PKU is not yet implemented for shadow paging. */
+> -	if (enable_ept && boot_cpu_has(X86_FEATURE_PKU) &&
+> -	    boot_cpu_has(X86_FEATURE_OSPKE))
+> -		kvm_cpu_cap_set(X86_FEATURE_PKU);
+> +	if (enable_ept && boot_cpu_has(X86_FEATURE_OSPKE))
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
+>  
+>  	/* CPUID 0xD.1 */
+>  	if (!vmx_xsaves_supported())
 
-On 24/02/2020 18:36, Hans Verkuil wrote:
-> Hi Matthias,
-> 
-> On 2/13/20 9:19 PM, matthias.bgg@kernel.org wrote:
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> Check the return value of of_clk_get and print an error
->> message if not EPROBE_DEFER.
->>
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> 
-> This patch is independent from the remainder of this series, right?
-> It looks good to me, so is it OK if I merge this in the media subsystem?
-> 
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Yes it is independent. Please merge it to the media subsystem.
+-- 
+Vitaly
 
-Thanks,
-Matthias
-
-> Regards,
-> 
-> 	Hans
-> 
->>
->> ---
->>
->> Changes in v7:
->> - fix check of return value of of_clk_get
->> - fix identation
->>
->> Changes in v6: None
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->> index 0c4788af78dd..58abfbdfb82d 100644
->> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->> @@ -110,6 +110,12 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
->>  
->>  	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
->>  		comp->clk[i] = of_clk_get(node, i);
->> +		if (IS_ERR(comp->clk[i])) {
->> +			if (PTR_ERR(comp->clk[i]) != -EPROBE_DEFER)
->> +				dev_err(dev, "Failed to get clock\n");
->> +
->> +			return PTR_ERR(comp->clk[i]);
->> +		}
->>  
->>  		/* Only RDMA needs two clocks */
->>  		if (comp->type != MTK_MDP_RDMA)
->>
-> 
