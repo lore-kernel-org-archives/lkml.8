@@ -2,107 +2,148 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D5FC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD50C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058FA20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2D220661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbgBXIiO convert rfc822-to-8bit (ORCPT
+        id S1727358AbgBXIiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:38:14 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:33989 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXIiN (ORCPT
+        Mon, 24 Feb 2020 03:38:17 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:45701 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbgBXIiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:38:13 -0500
-Received: by mail-yb1-f193.google.com with SMTP id u47so4304323ybi.1;
-        Mon, 24 Feb 2020 00:38:11 -0800 (PST)
+        Mon, 24 Feb 2020 03:38:14 -0500
+Received: by mail-il1-f200.google.com with SMTP id w6so16958899ill.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:38:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GYdftOcIqrGMbrAGknl8JJ43sFoBTr6C6LGG7tEcZyE=;
-        b=tFy+lyQBqWBtCuzuGcacCFqtsI/2lV9V+uTasqPEcqpIoDUBOZbJaeCOe/rHCV2zhU
-         d0rlJ0O7djij5FYo+e6mPMeN0dm4TcgzwIPxotO5NNb90JAEuURWWYjgr7itRm5DfSQB
-         m5dbKXZzI5BJ+NOuuCBw3yQm//ou8rm5FJPBGWQZSJI4KQILbSrUOvMjjNpXrgGiTipO
-         vNXg9cN/0CIkEuQMVakC1tLn7Wb43bwlO8D5Rdroep5fYSPNX1No4e4rRTC04tLXd8DE
-         M+3VfAiEY0rJj9pwKfHj7OdLA4p1wPbmE6hPV/ikGzWPongvmaKggm3/aESmmJ8CetOD
-         GqFg==
-X-Gm-Message-State: APjAAAVVqH86DrEXvKLOZS4s4P/SVH2qaJY8FFJ33D2DLjwQOlRz1GZF
-        BOGvY4Duj3320GYV40GOfWjiQV055d+LyDz5irzdB28HvkU=
-X-Google-Smtp-Source: APXvYqyTABrSBWAa0rXXjErNZDgSuBu8N3xv065QCGBydaKCKm9fR4HeekY/4vOml+q8tjIeE5MafCmHG9SbROnHgPc=
-X-Received: by 2002:a25:86c9:: with SMTP id y9mr9650730ybm.376.1582533490824;
- Mon, 24 Feb 2020 00:38:10 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=EZ7jDUHxaFXpH3SIZZeA1xwvBDqCFzmxRKIrCIr4NWU=;
+        b=kpLmClhfn6g8QNPoNbZScpUc2TzdKeL72YsGvLRFjlsCCYAPChhtlRjxpGF2zssg8P
+         5zOAqObP7LN3NNl9TCzzmrHk1H3+5X/I0DGrKwrx3GeumU2bV2ed8dA4IDV3mWVfHmBq
+         UKKsLgqd8TLttAz9CkwvN6tDUQ+QpZCco+q7wMZw3j+EYsKsID2YLb14AHmSwhwyhfg7
+         Mm+GFuDXJCBKG0R9gA/xW8b4sZHEdRCdHV6YL5CB3gjaeCkY89jsl8MdP91HlXtkHc3+
+         P8VgCtaaqxOko05X7dwLyn0fIkujEPEZ1DfFdE8XSTYeBnaMHDbO8pF1kkN2LpL3OvBU
+         blqA==
+X-Gm-Message-State: APjAAAUYtZWIpHfSQICptaH3MPNz2j49JDlCLPmjGxaTUfLjcYSNJUJk
+        cb1cmlU+In/B7lv1tnim/wO+R0WP6wWkfssaXxgYol1hDUSm
+X-Google-Smtp-Source: APXvYqxEdgdbJHGcOIAGha4yJb07y3J6Ie8VKae3Oi3/LyjLw+wYFUqWmtCrHhh0v0m/eTDzuz3QmZbAPb8QOC+ciYMzNJ8zbGu9
 MIME-Version: 1.0
-References: <20200219191730.1277800-1-paulburton@kernel.org>
- <20200219191730.1277800-3-paulburton@kernel.org> <1582387719.3.1@crapouillou.net>
-In-Reply-To: <1582387719.3.1@crapouillou.net>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Mon, 24 Feb 2020 09:37:59 +0100
-Message-ID: <CAAdtpL5JgO0Wtned6KKKKYyM7ZWQ6Y=9X=EQRWYYXgOZ7nbWBg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6602:1301:: with SMTP id h1mr48375829iov.5.1582533493950;
+ Mon, 24 Feb 2020 00:38:13 -0800 (PST)
+Date:   Mon, 24 Feb 2020 00:38:13 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c0910e059f4e4a82@google.com>
+Subject: KMSAN: uninit-value in br_dev_xmit
+From:   syzbot <syzbot+18c8b623c66fc198c493@syzkaller.appspotmail.com>
+To:     bridge@lists.linux-foundation.org, davem@davemloft.net,
+        glider@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, nikolay@cumulusnetworks.com,
+        roopa@cumulusnetworks.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 5:08 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi,
->
-> So I think Thomas is the best candidate to be maintainer, since he has
-> both experience and free time ;)
->
-> I'm sort-of the maintainer for the Ingenic platform and drivers, if
-> Jiaxun wants to do the same for Loongson hardware, that would make
-> Thomas' job easier. Having three co-maintainers with equal rights would
-> be a total mess.
+Hello,
 
-You might want to add yourself a R: entry in MAINTAINERS, to be listed
-as designated reviewer on the Ingenic patches.
-(Similarly for Jiaxun with Loongson).
+syzbot found the following crash on:
 
->
-> -Paul
->
->
-> Le mer., févr. 19, 2020 at 11:17, Paul Burton <paulburton@kernel.org>
-> a écrit :
-> > My time with MIPS the company has reached its end, and so at best I'll
-> > have little time spend on maintaining arch/mips/. Reflect that in
-> > MAINTAINERS by changing status to Odd Fixes. Hopefully this might spur
-> > the involvement of someone with more time, but even if not it should
-> > help serve to avoid unrealistic expectations.
-> >
-> > Signed-off-by: Paul Burton <paulburton@kernel.org>
-> > ---
-> >  MAINTAINERS | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index afa228ade18e..67f05f6dbf77 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11120,7 +11120,7 @@ W:    http://www.linux-mips.org/
-> >  T:   git git://git.linux-mips.org/pub/scm/ralf/linux.git
-> >  T:   git git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
-> >  Q:   http://patchwork.linux-mips.org/project/linux-mips/list/
-> > -S:   Supported
-> > +S:   Odd Fixes
-> >  F:   Documentation/devicetree/bindings/mips/
-> >  F:   Documentation/mips/
-> >  F:   arch/mips/
->
->
+HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d9a3d9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=18c8b623c66fc198c493
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+18c8b623c66fc198c493@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in br_dev_xmit+0x99a/0x1730 net/bridge/br_device.c:64
+CPU: 0 PID: 14704 Comm: syz-executor.1 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ br_dev_xmit+0x99a/0x1730 net/bridge/br_device.c:64
+ __netdev_start_xmit include/linux/netdevice.h:4524 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4538 [inline]
+ xmit_one net/core/dev.c:3470 [inline]
+ dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3486
+ __dev_queue_xmit+0x37de/0x4220 net/core/dev.c:4063
+ dev_queue_xmit+0x4b/0x60 net/core/dev.c:4096
+ __bpf_tx_skb net/core/filter.c:2061 [inline]
+ __bpf_redirect_common net/core/filter.c:2100 [inline]
+ __bpf_redirect+0x11d5/0x1440 net/core/filter.c:2107
+ ____bpf_clone_redirect net/core/filter.c:2140 [inline]
+ bpf_clone_redirect+0x466/0x620 net/core/filter.c:2112
+ bpf_prog_a481c1313990ee2c+0x5e0/0x1000
+ bpf_dispatcher_nopfunc include/linux/bpf.h:521 [inline]
+ bpf_test_run+0x60c/0xe50 net/bpf/test_run.c:48
+ bpf_prog_test_run_skb+0xcab/0x24a0 net/bpf/test_run.c:388
+ bpf_prog_test_run kernel/bpf/syscall.c:2572 [inline]
+ __do_sys_bpf+0xa684/0x13510 kernel/bpf/syscall.c:3414
+ __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
+ __ia32_sys_bpf+0xdb/0x120 kernel/bpf/syscall.c:3355
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f79d99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f5d740cc EFLAGS: 00000296 ORIG_RAX: 0000000000000165
+RAX: ffffffffffffffda RBX: 000000000000000a RCX: 0000000020000140
+RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2793 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ pskb_expand_head+0x20b/0x1b00 net/core/skbuff.c:1629
+ skb_ensure_writable+0x3ea/0x490 net/core/skbuff.c:5453
+ __bpf_try_make_writable net/core/filter.c:1635 [inline]
+ bpf_try_make_writable net/core/filter.c:1641 [inline]
+ bpf_try_make_head_writable net/core/filter.c:1649 [inline]
+ ____bpf_clone_redirect net/core/filter.c:2134 [inline]
+ bpf_clone_redirect+0x251/0x620 net/core/filter.c:2112
+ bpf_prog_a481c1313990ee2c+0x5e0/0x1000
+ bpf_dispatcher_nopfunc include/linux/bpf.h:521 [inline]
+ bpf_test_run+0x60c/0xe50 net/bpf/test_run.c:48
+ bpf_prog_test_run_skb+0xcab/0x24a0 net/bpf/test_run.c:388
+ bpf_prog_test_run kernel/bpf/syscall.c:2572 [inline]
+ __do_sys_bpf+0xa684/0x13510 kernel/bpf/syscall.c:3414
+ __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
+ __ia32_sys_bpf+0xdb/0x120 kernel/bpf/syscall.c:3355
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
