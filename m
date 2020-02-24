@@ -2,112 +2,121 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4397DC38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8E6C38BE1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2565A2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A7B20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCmLeD/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgBXSyR (ORCPT
+        id S1727833AbgBXSzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:54:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727426AbgBXSyR (ORCPT
+        Mon, 24 Feb 2020 13:55:51 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56905 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726664AbgBXSzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:54:17 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OInH56098826;
-        Mon, 24 Feb 2020 13:54:12 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1b7mteb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 13:54:12 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01OIpFKU104621;
-        Mon, 24 Feb 2020 13:54:11 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1b7mtdt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 13:54:11 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01OIorM7004201;
-        Mon, 24 Feb 2020 18:54:11 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02dal.us.ibm.com with ESMTP id 2yaux6k9r0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 18:54:11 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01OIsAi810420644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 18:54:10 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4201EB205F;
-        Mon, 24 Feb 2020 18:54:10 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C38D2B2064;
-        Mon, 24 Feb 2020 18:54:09 +0000 (GMT)
-Received: from [9.41.103.158] (unknown [9.41.103.158])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 18:54:09 +0000 (GMT)
-Subject: Re: [PATCH v2] spi: Add FSI-attached SPI controller driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-References: <20200203223003.4567-1-eajames@linux.ibm.com>
- <CAHp75VfHAS46-kMyg7Ky4jn7zmkht6wd9ayCfn+rrO0R6aNr6A@mail.gmail.com>
-From:   Eddie James <eajames@linux.vnet.ibm.com>
-Message-ID: <fab0fdf2-6ce7-7635-178e-9bd090d03dc0@linux.vnet.ibm.com>
-Date:   Mon, 24 Feb 2020 12:54:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 13:55:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582570550;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qmy+/DcMDdUSTfHqKJLRQ4XAfLyXoIHclUXkSdOie50=;
+        b=NCmLeD/RVoK2OcOb9iYPnBQwTMald18Bhh2Xol6+zK6D4nyuDDZf4MRYpD5+pUc4R/A1eN
+        gJqi2YzIQdtpD/lQ+q34yhssi/HeC8Hy0ZqZFf3s4FkejuMiWb7K1iC/fXSHVk3G03Fu8E
+        iORl2RIXgYgd31I9m6eMivmQqvyw0Cg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-7ETrrvy6P_W0JtIXWTFDjg-1; Mon, 24 Feb 2020 13:55:48 -0500
+X-MC-Unique: 7ETrrvy6P_W0JtIXWTFDjg-1
+Received: by mail-wr1-f70.google.com with SMTP id p8so6024074wrw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 10:55:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qmy+/DcMDdUSTfHqKJLRQ4XAfLyXoIHclUXkSdOie50=;
+        b=MlyVP28ni/poeAZaE5Fjn47vOxgIekNPtQTmX95iw3fh8AhrhTERI+fR3N9vAOhuqw
+         PNm4ZKNeG9gPjRwPN+HW/WDrArV3U3+s4RqOjVMBsWCCuj45bJWNcTRCG7wYyf0yNmf6
+         23bDH/X9bBqnhAEpOMWP4gn+N+NjGgDOAV5UyLZ7muZ67YBhlVfT23sVRv6PowCcbhkR
+         Bmyh/dRGidksRv8OqfkQQUrt6sNQsNt9FQoDuTpySPPKY1zf07587TnZRNEVwH2C8rMr
+         lm9qo7cZIVsVz2gqSWiXwMK2BEpKgMHfx3DL5/I65KmAHSiXdz8jsN0obUH6bOaPRVgh
+         v6xw==
+X-Gm-Message-State: APjAAAVungzGErIZhFpCOTU7RjH71VfGhysHAVebme+ao3RE6VBpK/AG
+        Dlf/atPkz2TlDmXrv8+WYYixSY1lZfJygJ20ye1G9qFRFTSKHetK8IFgpfRRXuROtNmyzgzvCth
+        a2nU6vLW7TlBFo5SxQS4svlDz
+X-Received: by 2002:a1c:f712:: with SMTP id v18mr231890wmh.155.1582570547365;
+        Mon, 24 Feb 2020 10:55:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzLfrB7CCT2bx+Wtk4qiWRW9LrVB55nuO7bRVFcYHNgHZmNeHEgXbVGS3DRcBeETJNyhQeCjg==
+X-Received: by 2002:a1c:f712:: with SMTP id v18mr231880wmh.155.1582570547171;
+        Mon, 24 Feb 2020 10:55:47 -0800 (PST)
+Received: from raver.teknoraver.net (net-47-53-225-50.cust.vodafonedsl.it. [47.53.225.50])
+        by smtp.gmail.com with ESMTPSA id c15sm19949531wrt.1.2020.02.24.10.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 10:55:46 -0800 (PST)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>
+Subject: [PATCH nf] netfilter: ensure rcu_read_lock() in ipv4_find_option()
+Date:   Mon, 24 Feb 2020 19:55:29 +0100
+Message-Id: <20200224185529.50530-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfHAS46-kMyg7Ky4jn7zmkht6wd9ayCfn+rrO0R6aNr6A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_07:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- adultscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240137
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As in commit c543cb4a5f07 ("ipv4: ensure rcu_read_lock() in ipv4_link_failure()")
+and commit 3e72dfdf8227 ("ipv4: ensure rcu_read_lock() in cipso_v4_error()"),
+__ip_options_compile() must be called under rcu protection.
 
-On 2/4/20 5:05 AM, Andy Shevchenko wrote:
-> On Tue, Feb 4, 2020 at 12:30 AM Eddie James <eajames@linux.ibm.com> wrote:
->> There exists a set of SPI controllers on some POWER processors that may
->> be accessed through the FSI bus. Add a driver to traverse the FSI CFAM
->> engine that can access and drive the SPI controllers. This driver would
->> typically be used by a baseboard management controller (BMC).
->>
->> The SPI controllers operate by means of programming a sequencing engine
->> which automatically manages the usual SPI protocol buses. The driver
->> programs each transfer into the sequencer as various operations
->> specifying the slave chip and shifting data in and out on the lines.
-> Some comments left unsettled in v1, thus applicable here.
+Fixes: dbb5281a1f84 ("netfilter: nf_tables: add support for matching IPv4 options")
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ net/netfilter/nft_exthdr.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/net/netfilter/nft_exthdr.c b/net/netfilter/nft_exthdr.c
+index a5e8469859e3..752264b3043a 100644
+--- a/net/netfilter/nft_exthdr.c
++++ b/net/netfilter/nft_exthdr.c
+@@ -77,6 +77,7 @@ static int ipv4_find_option(struct net *net, struct sk_buff *skb,
+ 	bool found = false;
+ 	__be32 info;
+ 	int optlen;
++	int ret;
+ 
+ 	iph = skb_header_pointer(skb, 0, sizeof(_iph), &_iph);
+ 	if (!iph)
+@@ -95,7 +96,11 @@ static int ipv4_find_option(struct net *net, struct sk_buff *skb,
+ 		return -EBADMSG;
+ 	opt->optlen = optlen;
+ 
+-	if (__ip_options_compile(net, opt, NULL, &info))
++	rcu_read_lock();
++	ret = __ip_options_compile(net, opt, NULL, &info);
++	rcu_read_unlock();
++
++	if (ret)
+ 		return -EBADMSG;
+ 
+ 	switch (target) {
+-- 
+2.24.1
 
-I think I addressed all of Andy's comments on v1 now, if Andy agreed 
-about leaving the byte shifting as-is in fsi_spi_data_in/out.
-
-
-Thanks,
-
-Eddie
-
-
->
