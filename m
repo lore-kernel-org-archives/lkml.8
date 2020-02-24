@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6130C34055
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A98C11D3D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848EA2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C93220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgBXX0w (ORCPT
+        id S1728506AbgBXX1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:26:52 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:40046 "EHLO
+        Mon, 24 Feb 2020 18:27:01 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40060 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbgBXX0v (ORCPT
+        with ESMTP id S1727976AbgBXX1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:26:51 -0500
+        Mon, 24 Feb 2020 18:27:00 -0500
 Received: from localhost (unknown [50.226.181.18])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C814B124CE3CD;
-        Mon, 24 Feb 2020 15:26:50 -0800 (PST)
-Date:   Mon, 24 Feb 2020 15:26:50 -0800 (PST)
-Message-Id: <20200224.152650.373598525223766968.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4C73F124CE3D2;
+        Mon, 24 Feb 2020 15:27:00 -0800 (PST)
+Date:   Mon, 24 Feb 2020 15:26:59 -0800 (PST)
+Message-Id: <20200224.152659.2089389057946004178.davem@davemloft.net>
 To:     gustavo@embeddedor.com
-Cc:     kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        oss-drivers@netronome.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] netronome: Replace zero-length array with
+Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] intel: Replace zero-length array with
  flexible-array member
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200224163652.GA31089@embeddedor>
-References: <20200224163652.GA31089@embeddedor>
+In-Reply-To: <20200224164106.GA1787@embeddedor>
+References: <20200224164106.GA1787@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 15:26:51 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 15:27:00 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Mon, 24 Feb 2020 10:36:52 -0600
+Date: Mon, 24 Feb 2020 10:41:06 -0600
 
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
