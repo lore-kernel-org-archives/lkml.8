@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EF9C35DE4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70552C35DE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B9220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495F220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgBXXcB (ORCPT
+        id S1728698AbgBXXcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:32:01 -0500
-Received: from ozlabs.org ([203.11.71.1]:48109 "EHLO ozlabs.org"
+        Mon, 24 Feb 2020 18:32:10 -0500
+Received: from ozlabs.org ([203.11.71.1]:48545 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbgBXXb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:31:57 -0500
+        id S1728593AbgBXXbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 18:31:55 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48RJHb119Pz9sRJ; Tue, 25 Feb 2020 10:31:54 +1100 (AEDT)
+        id 48RJHX3jXFz9sRG; Tue, 25 Feb 2020 10:31:52 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1582587115;
-        bh=wp7h+M9HoWPZWX7BCN8CXFDtNUVtpljsdviaDf+1Kxc=;
+        s=201909; t=1582587112;
+        bh=njTLi7D5ip7n3f03+M5bR2JYHfPVMZZ1e3nNXFT2Clg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKKOQ3bBR579xJqEBl/dcm8Lo0JAAfVJCLJiISuRwB6rKkWsE16irKWVwZFJKpW7f
-         dW8loKpixifSmErEyk0BBbBNyfapCU9qUK31/Alx4ZVD9hdXnEdZs5CCAB0rGuhBeU
-         iKAhV4binLoYtdBAbmSfEejadC8YT3Xpw9Dr5HnOXkPv3DaRti0F5Y2oc1pebAw289
-         FR0XU8M+zxb7qVx2fS9Vcn2oPv2FBPAAoq/P17v6hIhJOIvgXz3UsgMUJWjqKeva4t
-         1yGKMcZgORwTRwXiDR2sm2XaE2epW3jwTifecU0vFFVSS13sABNcBeajc7Lx8exqUS
-         fKg4EFwyck21Q==
+        b=TSLzswJTlkFp3AllxzJXzByQVXuFj0PSpuq0gzkClTXPsZFbmhhdwicQWtFtbyDzk
+         kAQs+o2OMCOj9RYOyvfNEO5mgUXz8LZ+HlJ94wvJLFYZQKxFoxuGHDLCwLwy1rB/H4
+         D3hIop/r6BJx0im8ft/ZoJS9cyICkAmQv4oMLYX5G+a7X9+O4uXHOfsEkSY2+9whqm
+         Ppt5oBOiGhToEzTTIW4m1ntbYHadpVWEjCyzBfYoUr4Js+4mT7ciSOnIc6U/y8VILB
+         YATymtBYz7dyW9kSR+i3OC1CgX3PpKeIfH5Nh1DGgBCsudmPudBncsk/9EejcVP4jZ
+         sTQ7YtSi0M8nA==
 From:   Michael Ellerman <mpe@ellerman.id.au>
 To:     linuxppc-dev@ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH 7/8] powerpc: Update powermac MAINTAINERS entry
-Date:   Tue, 25 Feb 2020 10:31:45 +1100
-Message-Id: <20200224233146.23734-7-mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, Grant Likely <grant.likely@arm.com>
+Subject: [PATCH 5/8] powerpc: Drop XILINX MAINTAINERS entry
+Date:   Tue, 25 Feb 2020 10:31:43 +1100
+Message-Id: <20200224233146.23734-5-mpe@ellerman.id.au>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200224233146.23734-1-mpe@ellerman.id.au>
 References: <20200224233146.23734-1-mpe@ellerman.id.au>
@@ -49,32 +48,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ben is no longer actively maintaining the powermac code, but we know
-where to find him if something really needs attention.
+This has been orphaned for ~7 years, remove it.
 
-The www.penguinppc.org link is dead so remove it.
-
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Grant Likely <grant.likely@arm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
- MAINTAINERS | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ MAINTAINERS | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a46e19aadcbc..febffee28d00 100644
+index 939da2ac08db..d5db5cac5a39 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9594,9 +9594,8 @@ F:	include/uapi/linux/lightnvm.h
+@@ -9668,12 +9668,6 @@ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Maintained
+ F:	arch/powerpc/platforms/8xx/
  
- LINUX FOR POWER MACINTOSH
- M:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
--W:	http://www.penguinppc.org/
- L:	linuxppc-dev@lists.ozlabs.org
--S:	Maintained
-+S:	Odd Fixes
- F:	arch/powerpc/platforms/powermac/
- F:	drivers/macintosh/
- 
+-LINUX FOR POWERPC EMBEDDED XILINX VIRTEX
+-L:	linuxppc-dev@lists.ozlabs.org
+-S:	Orphan
+-F:	arch/powerpc/*/*virtex*
+-F:	arch/powerpc/*/*/*virtex*
+-
+ LINUX KERNEL DUMP TEST MODULE (LKDTM)
+ M:	Kees Cook <keescook@chromium.org>
+ S:	Maintained
 -- 
 2.21.1
 
