@@ -2,111 +2,107 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E283C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43664C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C0E2187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Ta29z0+G"
+	by mail.kernel.org (Postfix) with ESMTP id 1AE0B2192A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582534423;
+	bh=jLtAPhwXKRIYi8hoepp1P4IjkM/yEjLYulzEjNIxRGk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wRS8ZTl5GFaafQK0DJwZ5wO2VBIZQTqyT3JrZ4MDeI/Z3n/5nguNdoohYIqt1actX
+	 Oh30qipAIEcd0pXmHT9ctLtYrXW1Rs+aw4RcrtaQSjD9zAh68m2AqqG0HGn6LTBSob
+	 +6U+ceklYGJ7bzO4ZxeKIZXWVNPDm+WHk3Udi5SQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgBXIxj (ORCPT
+        id S1727648AbgBXIxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:53:39 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:57057 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbgBXIxh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:53:37 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Mon, 24 Feb 2020 03:53:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727553AbgBXIxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:53:38 -0500
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B794923059;
-        Mon, 24 Feb 2020 09:53:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582534414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yGHRW3l5rCA287QCNNdGXSdyqq9QPHkLJ+IpgLfP+T0=;
-        b=Ta29z0+G9GOKfOY5pEnNbXDdYrHts1jhuNXUK+UU5pGYZYKRousrquA57hOniFUq4neRJv
-        CWF0Ds23phwNWukPNrMpGKwE0OE5mmUIhqM0t2PymJhANWOk8Jh/P/Ff1ecxm+VF0nYmBQ
-        +xZno6FiY9P/UzW4OQIkZlENAnPp3wU=
+        by mail.kernel.org (Postfix) with ESMTPSA id 440D520880;
+        Mon, 24 Feb 2020 08:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582534418;
+        bh=jLtAPhwXKRIYi8hoepp1P4IjkM/yEjLYulzEjNIxRGk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zOsEW4IkEySlpKnb+omU7upJ/n3o+YVnJdQAlFCltuNHSYGo24LD6X9lQzg2l2f7+
+         9FEIZVW7B7RzvsHVAZp7u7D+k+JQ+9scK+PChBYFZYVRuSQ41KrEDHMqkuWLJwO2SD
+         XG4pyBDFae1Zi5ccsI3yazBlOvx7NpMoa9ZWbde4=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Don Fry <pcnet32@frontier.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mark Einon <mark.einon@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        David Dillow <dave@thedillows.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Andreas Larsson <andreas@gaisler.com>,
+        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Jes Sorensen <jes@trained-monkey.org>,
+        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH net-next v1 06/18] net/aeroflex: Don't assign FW if it is not available
+Date:   Mon, 24 Feb 2020 10:52:59 +0200
+Message-Id: <20200224085311.460338-7-leon@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200224085311.460338-1-leon@kernel.org>
+References: <20200224085311.460338-1-leon@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 24 Feb 2020 09:53:34 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     xiaowei.bao@nxp.com, Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
-        devicetree@vger.kernel.org, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
-        roy.zang@nxp.com
-Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-In-Reply-To: <20200224084307.GD27688@dragon>
-References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
- <20200224081105.13878-1-michael@walle.cc> <20200224084307.GD27688@dragon>
-Message-ID: <a3aeabddc82ca86e3dca9c26081a0077@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: B794923059
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[16];
-         NEURAL_HAM(-0.00)[-0.572];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn, all,
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Am 2020-02-24 09:43, schrieb Shawn Guo:
-> On Mon, Feb 24, 2020 at 09:11:05AM +0100, Michael Walle wrote:
->> Hi Xiaowei, Hi Shawn,
->> 
->> > LS1028a implements 2 PCIe 3.0 controllers.
->> 
->> Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about 
->> this patch
->> anymore :(
->> 
->> This doesn't work well with the IOMMU, because the iommu-map property 
->> is
->> missing. The bootloader needs the &smmu phandle to fixup the entry. 
->> See
->> below.
->> 
->> Shawn, will you add this patch to your tree once its fixed, 
->> considering it
->> just adds the device tree node for the LS1028A?
-> 
-> The patch/thread is a bit aged.  You may want to send an updated patch
-> for discussion.
+If FW version is not available, it is enough to leave that field as
+empty, there is no need to write N/A.
 
-So should I just pick up the patch add my two fixes and send it again? 
-What about
-the Signed-off-by tags? Leave them? Replace them? Add mine?
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+---
+ drivers/net/ethernet/aeroflex/greth.c | 1 -
+ 1 file changed, 1 deletion(-)
 
--michael
+diff --git a/drivers/net/ethernet/aeroflex/greth.c b/drivers/net/ethernet/aeroflex/greth.c
+index 198f1544e271..bf546118dbc6 100644
+--- a/drivers/net/ethernet/aeroflex/greth.c
++++ b/drivers/net/ethernet/aeroflex/greth.c
+@@ -1115,7 +1115,6 @@ static void greth_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *in
+ 	strlcpy(info->driver, dev_driver_string(greth->dev),
+ 		sizeof(info->driver));
+ 	strlcpy(info->bus_info, greth->dev->bus->name, sizeof(info->bus_info));
+-	strlcpy(info->fw_version, "N/A", sizeof(info->fw_version));
+ }
+
+ static void greth_get_regs(struct net_device *dev, struct ethtool_regs *regs, void *p)
+--
+2.24.1
+
