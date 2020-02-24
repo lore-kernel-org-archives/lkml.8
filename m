@@ -2,159 +2,301 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FE6C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624DCC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475CF2084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F81420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nO3hmZKq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouLsOvGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgBXSPj (ORCPT
+        id S1727958AbgBXSPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:15:39 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52362 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBXSPg (ORCPT
+        Mon, 24 Feb 2020 13:15:50 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50524 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBXSPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:15:36 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep11so103925pjb.2;
-        Mon, 24 Feb 2020 10:15:36 -0800 (PST)
+        Mon, 24 Feb 2020 13:15:49 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so108930pjb.0;
+        Mon, 24 Feb 2020 10:15:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fJhsYyg52KEQFxdF5LUz4fdLllNaM/cKk6C26PfTras=;
-        b=nO3hmZKq4+B+N1ySv7dfrjSYxJzMtGz6ApdSURpYzbEFua6YJtLiCFGdPghlKL5TYX
-         H9QOi3Xph8IlAxdwhAakkoBhsG/BpW6P06xsmQGj0OiIuSR8Ec38lr5bB7Czbrl51TVH
-         FcxNJ2yll87ADXPLveTzxTYftSjHdSub7chQPtAe28+QYqOVvlSiqUx45BFqmWITwTD0
-         TXeL6Fa+VHynNKcFQES82l8jY9A7G4RFsehrrb0MXLdlpeSBrsI6jgeuOBeMufHb2ik5
-         RUGYimxLX0o7zHCrhJ7qNgykckEZ9BrfIEqWV28E8xMj73hSTg7O477TUApr8wEbCmH3
-         MItg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=brxB6nCVv+i2GwW72Eq2fyarSjv5ai+2kowRw2SjOU8=;
+        b=ouLsOvGqngOPnCX+NoCeZeOcq4G8jRayZietQRdBBmgLWMHq2prNQiPPByuBN+pFho
+         WJV5sx+jYbwLbHGVzP8A0AqeARIAyjNGs55zXn9veB1jrD6XZ02YGcDsKx6hzwkd+4hw
+         NeVlmYuIz+/D/3IXbZvwooRnNhFFdI8LdwkTzDefnmAwM+ZLKAOuuZg2lT9aS2rwypVX
+         On+vtpTJ49G6KXdfg+m4jqJV4D5Rfr9Szs43CvChSIbXvR9aaYsc0XFpiEyfEvgHAQjA
+         pNwQSzQtFLAAs2+efXjcG+AgamIslHnI6cwPu8o/40uInAaUgU5T9/l/27ZwkCUdlJA6
+         fu1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fJhsYyg52KEQFxdF5LUz4fdLllNaM/cKk6C26PfTras=;
-        b=SulUxRpqnxzfhfTkq6EYguXP/6dCQmacPGn95v2corPvTZ+mv6Nty+7ZdPAPMNUyw6
-         AjEvfoVh0k3pMyakMGQWrztKv3Egzxi1RReXFqZB06pkF75+OdpJ1DJSgiBUp9MmRSGb
-         5SdYYYta6DytWbYdfn5hVZk/n6zFghYn4jphNvGfFNThAlbFlpSZipBuop3vyukY4i4L
-         Q5IHbEPFfp6KoicZURNTaN/zbgovRyolUY1fsQQAQXSemo1bCwPAEu0ACnephiWtOjg7
-         ahOAa+oqpVojp8kFifSp5IVH3vlhA67qWviS29WIltOj9/xQb00GnsDK41+qVI4pFaD5
-         n5lQ==
-X-Gm-Message-State: APjAAAXQxQejg6NJXTfoMJVyr/6A6i+qyZXcHR8zxkml5ST+8iBpVdgX
-        l6uWX9gZYto7RSmsGjIFFyM0Ry3d
-X-Google-Smtp-Source: APXvYqwgLTBfB+f6ozUIqoz0L93wvs95kxHBkO3CFa+IDQQBb/6V/+oRBUOKnAMlknf0pX5yrmgQmg==
-X-Received: by 2002:a17:90b:941:: with SMTP id dw1mr377657pjb.21.1582568135602;
-        Mon, 24 Feb 2020 10:15:35 -0800 (PST)
-Received: from [10.67.50.18] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o19sm476208pjr.2.2020.02.24.10.15.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 10:15:35 -0800 (PST)
-Subject: Re: [PATCH 22/89] clk: bcm: rpi: Discover the firmware clocks
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <d197ab836d84b89b94ff1927872126767d921e94.1582533919.git-series.maxime@cerno.tech>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
- S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
- 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
- r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
- IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
- Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
- b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
- JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
- cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
- +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
- BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
- Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
- WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
- P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
- 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
- C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
- es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
- 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
- zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
- 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
- skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
- 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
- 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
- SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
- PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
- WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
- nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
- gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
- rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
- QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
- BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
- PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
- hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
- OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
- Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
- LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
- RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
- k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
- uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
- 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
- HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
- TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <2814be76-4006-4651-0a84-6dfaf2064e4a@gmail.com>
-Date:   Mon, 24 Feb 2020 10:15:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=brxB6nCVv+i2GwW72Eq2fyarSjv5ai+2kowRw2SjOU8=;
+        b=kb9RQQakbz+fC+NV6M81RKwmCOHolwiK2RvWb9A5SIjc8JX326WG4hSmIuV8i11xaN
+         JorkVaynpYe2z1TJDsszJbC4KD8Qb9C4+bCy2T7/Bd1SYfqxpNEJhPRZFzh2Qh1LwpBC
+         A6koC2t3sQ693sSgpbwBIVO0HAwC3tCSzVHW048NYNomqFRn/ONvc1GDAHfkQIOc7JCl
+         xVSWFGLb7v4hCYtar6o9PrfHqaP9BNKOFPu0H0LZkLnNpbuGxYGEFCJnrvczSDz/a9Ge
+         yfKogm7sh2ZtIzhyNPG3nAXdlClD6cAAxKMOm4JpOnf1mmewWHLn+0cSgKPnlcBzErYm
+         S2DQ==
+X-Gm-Message-State: APjAAAWtni8QbPYaH6mZETQjgEPM908/15Cj3EGJxml8MC4npxMuEhu8
+        JvFZeklAyo1sp0Jig86WlOu+Qj4/AF3r+aVmSZg=
+X-Google-Smtp-Source: APXvYqy/xKyh4Es8oCnQr3N2M/8mM1I4KcLcr+jhkxUygwPZHZAtShiUO3SlywSEJ02eRrDniadWuFWmpWVn7bqmLU8=
+X-Received: by 2002:a17:902:bd43:: with SMTP id b3mr47960058plx.230.1582568148037;
+ Mon, 24 Feb 2020 10:15:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <d197ab836d84b89b94ff1927872126767d921e94.1582533919.git-series.maxime@cerno.tech>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200224085311.460338-1-leon@kernel.org> <20200224085311.460338-19-leon@kernel.org>
+In-Reply-To: <20200224085311.460338-19-leon@kernel.org>
+From:   Chris Snook <chris.snook@gmail.com>
+Date:   Mon, 24 Feb 2020 10:15:36 -0800
+Message-ID: <CAMXMK6um=B+bL0vjL-65chjEvfNoU0qfbCAwDnRSD_18_Z5ODA@mail.gmail.com>
+Subject: Re: [PATCH net-next v1 18/18] net/atheros: Clean atheros code from
+ driver version
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Don Fry <pcnet32@frontier.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mark Einon <mark.einon@gmail.com>,
+        linux-rockchip@lists.infradead.org,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        David Dillow <dave@thedillows.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Andreas Larsson <andreas@gaisler.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        netdev <netdev@vger.kernel.org>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ion Badulescu <ionut@badula.org>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Jes Sorensen <jes@trained-monkey.org>,
+        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 1:06 AM, Maxime Ripard wrote:
-> The firmware has an interface to discover the clocks it exposes.
-> 
-> Let's use it to discover, register the clocks in the clocks framework and
-> then expose them through the device tree for consumers to use them.
-> 
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Acked-by: Chris Snook <chris.snook@gmail.com>
 
-That seems like a re-implementaiton of SCMI without all of its
-protocols, without being able to use the existing drivers, maybe a
-firmware update should be considered so standard drivers can be leveraged?
--- 
-Florian
+On Mon, Feb 24, 2020 at 12:54 AM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> From: Leon Romanovsky <leonro@mellanox.com>
+>
+> Use linux kernel version for ethtool and module versions.
+>
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> ---
+>  drivers/net/ethernet/atheros/atl1c/atl1c.h         |  1 -
+>  drivers/net/ethernet/atheros/atl1c/atl1c_ethtool.c |  2 --
+>  drivers/net/ethernet/atheros/atl1c/atl1c_main.c    |  5 -----
+>  drivers/net/ethernet/atheros/atl1e/atl1e.h         |  1 -
+>  drivers/net/ethernet/atheros/atl1e/atl1e_ethtool.c |  2 --
+>  drivers/net/ethernet/atheros/atl1e/atl1e_main.c    |  4 ----
+>  drivers/net/ethernet/atheros/atlx/atl1.c           |  6 ------
+>  drivers/net/ethernet/atheros/atlx/atl2.c           | 10 ----------
+>  8 files changed, 31 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c.h b/drivers/net/ethernet/atheros/atl1c/atl1c.h
+> index 60b2febd7315..a0562a90fb6d 100644
+> --- a/drivers/net/ethernet/atheros/atl1c/atl1c.h
+> +++ b/drivers/net/ethernet/atheros/atl1c/atl1c.h
+> @@ -583,7 +583,6 @@ struct atl1c_adapter {
+>                 readl(((a)->hw_addr + reg) + ((offset) << 2)))
+>
+>  extern char atl1c_driver_name[];
+> -extern char atl1c_driver_version[];
+>
+>  void atl1c_reinit_locked(struct atl1c_adapter *adapter);
+>  s32 atl1c_reset_hw(struct atl1c_hw *hw);
+> diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c_ethtool.c b/drivers/net/ethernet/atheros/atl1c/atl1c_ethtool.c
+> index b5a70a36fa04..e2eb7b8c63a0 100644
+> --- a/drivers/net/ethernet/atheros/atl1c/atl1c_ethtool.c
+> +++ b/drivers/net/ethernet/atheros/atl1c/atl1c_ethtool.c
+> @@ -221,8 +221,6 @@ static void atl1c_get_drvinfo(struct net_device *netdev,
+>         struct atl1c_adapter *adapter = netdev_priv(netdev);
+>
+>         strlcpy(drvinfo->driver,  atl1c_driver_name, sizeof(drvinfo->driver));
+> -       strlcpy(drvinfo->version, atl1c_driver_version,
+> -               sizeof(drvinfo->version));
+>         strlcpy(drvinfo->bus_info, pci_name(adapter->pdev),
+>                 sizeof(drvinfo->bus_info));
+>  }
+> diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
+> index 0d67b951c0b2..00bd7bd55794 100644
+> --- a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
+> +++ b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
+> @@ -8,9 +8,7 @@
+>
+>  #include "atl1c.h"
+>
+> -#define ATL1C_DRV_VERSION "1.0.1.1-NAPI"
+>  char atl1c_driver_name[] = "atl1c";
+> -char atl1c_driver_version[] = ATL1C_DRV_VERSION;
+>
+>  /*
+>   * atl1c_pci_tbl - PCI Device ID Table
+> @@ -37,7 +35,6 @@ MODULE_AUTHOR("Jie Yang");
+>  MODULE_AUTHOR("Qualcomm Atheros Inc., <nic-devel@qualcomm.com>");
+>  MODULE_DESCRIPTION("Qualcomm Atheros 100/1000M Ethernet Network Driver");
+>  MODULE_LICENSE("GPL");
+> -MODULE_VERSION(ATL1C_DRV_VERSION);
+>
+>  static int atl1c_stop_mac(struct atl1c_hw *hw);
+>  static void atl1c_disable_l0s_l1(struct atl1c_hw *hw);
+> @@ -2642,8 +2639,6 @@ static int atl1c_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>                 goto err_register;
+>         }
+>
+> -       if (netif_msg_probe(adapter))
+> -               dev_info(&pdev->dev, "version %s\n", ATL1C_DRV_VERSION);
+>         cards_found++;
+>         return 0;
+>
+> diff --git a/drivers/net/ethernet/atheros/atl1e/atl1e.h b/drivers/net/ethernet/atheros/atl1e/atl1e.h
+> index e9893da50995..9fcad783c939 100644
+> --- a/drivers/net/ethernet/atheros/atl1e/atl1e.h
+> +++ b/drivers/net/ethernet/atheros/atl1e/atl1e.h
+> @@ -482,7 +482,6 @@ struct atl1e_adapter {
+>                 readl(((a)->hw_addr + reg) + ((offset) << 2)))
+>
+>  extern char atl1e_driver_name[];
+> -extern char atl1e_driver_version[];
+>
+>  void atl1e_check_options(struct atl1e_adapter *adapter);
+>  int atl1e_up(struct atl1e_adapter *adapter);
+> diff --git a/drivers/net/ethernet/atheros/atl1e/atl1e_ethtool.c b/drivers/net/ethernet/atheros/atl1e/atl1e_ethtool.c
+> index c6b9e7ea8e38..0cbde352d1ba 100644
+> --- a/drivers/net/ethernet/atheros/atl1e/atl1e_ethtool.c
+> +++ b/drivers/net/ethernet/atheros/atl1e/atl1e_ethtool.c
+> @@ -307,8 +307,6 @@ static void atl1e_get_drvinfo(struct net_device *netdev,
+>         struct atl1e_adapter *adapter = netdev_priv(netdev);
+>
+>         strlcpy(drvinfo->driver,  atl1e_driver_name, sizeof(drvinfo->driver));
+> -       strlcpy(drvinfo->version, atl1e_driver_version,
+> -               sizeof(drvinfo->version));
+>         strlcpy(drvinfo->fw_version, "L1e", sizeof(drvinfo->fw_version));
+>         strlcpy(drvinfo->bus_info, pci_name(adapter->pdev),
+>                 sizeof(drvinfo->bus_info));
+> diff --git a/drivers/net/ethernet/atheros/atl1e/atl1e_main.c b/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+> index e0d89942d537..223ef846123e 100644
+> --- a/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+> +++ b/drivers/net/ethernet/atheros/atl1e/atl1e_main.c
+> @@ -8,10 +8,7 @@
+>
+>  #include "atl1e.h"
+>
+> -#define DRV_VERSION "1.0.0.7-NAPI"
+> -
+>  char atl1e_driver_name[] = "ATL1E";
+> -char atl1e_driver_version[] = DRV_VERSION;
+>  #define PCI_DEVICE_ID_ATTANSIC_L1E      0x1026
+>  /*
+>   * atl1e_pci_tbl - PCI Device ID Table
+> @@ -33,7 +30,6 @@ MODULE_DEVICE_TABLE(pci, atl1e_pci_tbl);
+>  MODULE_AUTHOR("Atheros Corporation, <xiong.huang@atheros.com>, Jie Yang <jie.yang@atheros.com>");
+>  MODULE_DESCRIPTION("Atheros 1000M Ethernet Network Driver");
+>  MODULE_LICENSE("GPL");
+> -MODULE_VERSION(DRV_VERSION);
+>
+>  static void atl1e_setup_mac_ctrl(struct atl1e_adapter *adapter);
+>
+> diff --git a/drivers/net/ethernet/atheros/atlx/atl1.c b/drivers/net/ethernet/atheros/atlx/atl1.c
+> index b498fd6a47d0..271e7034fa70 100644
+> --- a/drivers/net/ethernet/atheros/atlx/atl1.c
+> +++ b/drivers/net/ethernet/atheros/atlx/atl1.c
+> @@ -65,12 +65,10 @@
+>
+>  #include "atl1.h"
+>
+> -#define ATLX_DRIVER_VERSION "2.1.3"
+>  MODULE_AUTHOR("Xiong Huang <xiong.huang@atheros.com>, "
+>               "Chris Snook <csnook@redhat.com>, "
+>               "Jay Cliburn <jcliburn@gmail.com>");
+>  MODULE_LICENSE("GPL");
+> -MODULE_VERSION(ATLX_DRIVER_VERSION);
+>
+>  /* Temporary hack for merging atl1 and atl2 */
+>  #include "atlx.c"
+> @@ -2965,8 +2963,6 @@ static int atl1_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>         /* get device revision number */
+>         adapter->hw.dev_rev = ioread16(adapter->hw.hw_addr +
+>                 (REG_MASTER_CTRL + 2));
+> -       if (netif_msg_probe(adapter))
+> -               dev_info(&pdev->dev, "version %s\n", ATLX_DRIVER_VERSION);
+>
+>         /* set default ring resource counts */
+>         adapter->rfd_ring.count = adapter->rrd_ring.count = ATL1_DEFAULT_RFD;
+> @@ -3344,8 +3340,6 @@ static void atl1_get_drvinfo(struct net_device *netdev,
+>         struct atl1_adapter *adapter = netdev_priv(netdev);
+>
+>         strlcpy(drvinfo->driver, ATLX_DRIVER_NAME, sizeof(drvinfo->driver));
+> -       strlcpy(drvinfo->version, ATLX_DRIVER_VERSION,
+> -               sizeof(drvinfo->version));
+>         strlcpy(drvinfo->bus_info, pci_name(adapter->pdev),
+>                 sizeof(drvinfo->bus_info));
+>  }
+> diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
+> index b81a4e0c5b57..7c52b92b599d 100644
+> --- a/drivers/net/ethernet/atheros/atlx/atl2.c
+> +++ b/drivers/net/ethernet/atheros/atlx/atl2.c
+> @@ -36,18 +36,13 @@
+>
+>  #include "atl2.h"
+>
+> -#define ATL2_DRV_VERSION "2.2.3"
+> -
+>  static const char atl2_driver_name[] = "atl2";
+>  static const char atl2_driver_string[] = "Atheros(R) L2 Ethernet Driver";
+> -static const char atl2_copyright[] = "Copyright (c) 2007 Atheros Corporation.";
+> -static const char atl2_driver_version[] = ATL2_DRV_VERSION;
+>  static const struct ethtool_ops atl2_ethtool_ops;
+>
+>  MODULE_AUTHOR("Atheros Corporation <xiong.huang@atheros.com>, Chris Snook <csnook@redhat.com>");
+>  MODULE_DESCRIPTION("Atheros Fast Ethernet Network Driver");
+>  MODULE_LICENSE("GPL");
+> -MODULE_VERSION(ATL2_DRV_VERSION);
+>
+>  /*
+>   * atl2_pci_tbl - PCI Device ID Table
+> @@ -1688,9 +1683,6 @@ static struct pci_driver atl2_driver = {
+>   */
+>  static int __init atl2_init_module(void)
+>  {
+> -       printk(KERN_INFO "%s - version %s\n", atl2_driver_string,
+> -               atl2_driver_version);
+> -       printk(KERN_INFO "%s\n", atl2_copyright);
+>         return pci_register_driver(&atl2_driver);
+>  }
+>  module_init(atl2_init_module);
+> @@ -2011,8 +2003,6 @@ static void atl2_get_drvinfo(struct net_device *netdev,
+>         struct atl2_adapter *adapter = netdev_priv(netdev);
+>
+>         strlcpy(drvinfo->driver,  atl2_driver_name, sizeof(drvinfo->driver));
+> -       strlcpy(drvinfo->version, atl2_driver_version,
+> -               sizeof(drvinfo->version));
+>         strlcpy(drvinfo->fw_version, "L2", sizeof(drvinfo->fw_version));
+>         strlcpy(drvinfo->bus_info, pci_name(adapter->pdev),
+>                 sizeof(drvinfo->bus_info));
+> --
+> 2.24.1
+>
