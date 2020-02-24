@@ -2,117 +2,109 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0373EC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BC9C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5FF20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D75920732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5AcVu9P"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FLoKPcyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgBXKi1 (ORCPT
+        id S1727494AbgBXKii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:38:27 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42907 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXKi1 (ORCPT
+        Mon, 24 Feb 2020 05:38:38 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40495 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727256AbgBXKii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:38:27 -0500
-Received: by mail-ed1-f65.google.com with SMTP id e10so11288449edv.9;
-        Mon, 24 Feb 2020 02:38:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Uw+EFVoa4I93GT2kj8Y5Rr/8NCWuvO6exBhY+QuuAk=;
-        b=c5AcVu9PctAre5ABV75TS3znJyeDih2j1yHWb4Wfz/I/N1JpBKbK4dNfH2npBrnLnw
-         IEQtZlIcQjmb0e/SMBt2xU46exTD4aA0NrjeDJfOz2dVMd2ad4zP7nzUacFVNyQWDiYH
-         XNwbISsZTcUWTwPlQwL8SrZD416ykM+ccxrjrD5ee5rlPF0iMsdQ5p46Q7GGN6M+jjjb
-         zGlhE+OCHvQy6b8sHfh8kJre4M2NlvfHrwzrUngGyukcrAMDkB1q1XL4JtNs0Z+iAbuz
-         pV+OEi22T/RMZHB4Dk9dGs7XZH9j+0mu02SiNyc14s8a9LCyVzbCByAJ1NmEdl2SPqm7
-         cc0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Uw+EFVoa4I93GT2kj8Y5Rr/8NCWuvO6exBhY+QuuAk=;
-        b=BTaoHkiLuntczZN7/MOVzwFrLnkPieaLb9sPQB5cEyPhiTUJHaamRKjV4WGkuaz6fv
-         V7E75R2vRnX30TSod0/AY9dUGnEUF4FwUa31ns/F6La6u2ftLjvsnSLGoaxqi2KJryKK
-         8mRoRpTpUsyMHfNIJrlQym1mMf4WDh7Ao+g6WVS3hDLf34bHhdboi5cOTTFMEjiFVRqt
-         Yd/8SYBWW894K61Xw6V7yUKlguYJJvjJaQo/eB8bsH2/iLJA2vZGknX0M2qAGxfuRRjx
-         owAci2GSv+h2hwsBDFsvq/tKCBJFTD9SpyxbSGg5OVpa2Cb5VPc2GOPKLg44t7xq6dmj
-         FFbg==
-X-Gm-Message-State: APjAAAXw4dPdCEsOmk7W9Ydj5+c2CZHO5v4dXqlEFe1D6H1kO6il9TPk
-        IKVSQqmxjMFg3VFXX8YmZmgh7jQ34yzCtubJvR7uFCr8
-X-Google-Smtp-Source: APXvYqwLc8EpHY93rVYt2IJXVaFijY0IR4REiDEXSkA+bIixGeASRBQOWvOJJG9DFOsEdRQdFnuPVT/PZvPS8ELwr50=
-X-Received: by 2002:aa7:d3cb:: with SMTP id o11mr46199101edr.145.1582540704910;
- Mon, 24 Feb 2020 02:38:24 -0800 (PST)
-MIME-Version: 1.0
-References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com> <1559287017-32397-2-git-send-email-horatiu.vultur@microchip.com>
-In-Reply-To: <1559287017-32397-2-git-send-email-horatiu.vultur@microchip.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 24 Feb 2020 12:38:14 +0200
-Message-ID: <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 1/2] net: mscc: ocelot: Add support for tcam
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Feb 2020 05:38:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582540717; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=R5AIy/A5PL1N7PAHZLRZopj0vackVgP3eXL6MXjiCxo=; b=FLoKPcyiKH9+zStQU5py8nt7NIK/LT/nAzPRP+yhKCI7fzvRxhScxD6ZVxIURfkO38Mf7t9d
+ l8bhglNDeLTdSCcnU/C5373JsdSWt4H0N2cDL45Cj8yvC7yBVz7Zo7dWMf6XaJM100cH9lnk
+ Ue5XOIa081aDNR9YVXJmd+MuEXY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e53a7ac.7f27a0a107d8-smtp-out-n03;
+ Mon, 24 Feb 2020 10:38:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A8C13C4479D; Mon, 24 Feb 2020 10:38:35 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B807C43383;
+        Mon, 24 Feb 2020 10:38:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B807C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v5 0/5] Add modem Clock controller (MSS CC) driver for SC7180
+Date:   Mon, 24 Feb 2020 16:08:18 +0530
+Message-Id: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu,
+[v5]
+ * Update the clock ID for GCC_MSS_NAV_AXIS_CLK to GCC_MSS_NAV_AXI_CLK
 
-On Fri, 31 May 2019 at 10:18, Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
->
-> Add ACL support using the TCAM. Using ACL it is possible to create rules
-> in hardware to filter/redirect frames.
->
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  arch/mips/boot/dts/mscc/ocelot.dtsi      |   5 +-
->  drivers/net/ethernet/mscc/Makefile       |   2 +-
->  drivers/net/ethernet/mscc/ocelot.c       |  13 +
->  drivers/net/ethernet/mscc/ocelot.h       |   8 +
->  drivers/net/ethernet/mscc/ocelot_ace.c   | 777 +++++++++++++++++++++++++++++++
->  drivers/net/ethernet/mscc/ocelot_ace.h   | 227 +++++++++
->  drivers/net/ethernet/mscc/ocelot_board.c |   1 +
->  drivers/net/ethernet/mscc/ocelot_regs.c  |  11 +
->  drivers/net/ethernet/mscc/ocelot_s2.h    |  64 +++
->  drivers/net/ethernet/mscc/ocelot_vcap.h  | 403 ++++++++++++++++
->  10 files changed, 1508 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.c
->  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.h
->  create mode 100644 drivers/net/ethernet/mscc/ocelot_s2.h
->  create mode 100644 drivers/net/ethernet/mscc/ocelot_vcap.h
->
+[v4]
+ * Split the GCC MSS clocks and Modem clock driver.
+ * Update mss_regmap_config to const.
+ * Rename the Documentation binding as per the latest convention.
+ * Minor comments of clock-names/clocks properties updated.
 
-I was testing this functionality and it looks like the MAC_ETYPE keys
-(src_mac, dst_mac) only match non-IP frames.
-Example, this rule doesn't drop ping traffic:
+[v3]
+  * Add clocks/clock-names required for the MSS clock controller.
+  * Add pm_ops to enable/disable the required dependent clock.
+  * Add parent_data for the MSS clocks.
+  * Update the GCC MSS clocks from _CBCR to _CLK.
 
-tc qdisc add dev swp0 clsact
-tc filter add dev swp0 ingress flower skip_sw dst_mac
-96:e1:ef:64:1b:44 action drop
+[v2]
+  * Update the license for the documentation and fix minor comments in the
+    YAML bindings.
 
-Would it be possible to do anything about that?
+[v1]
+  * Add driver support for Modem clock controller for SC7180 and also
+    update device tree bindings for the various clocks supported in the
+    clock controller.
 
-Thanks,
--Vladimir
+Taniya Das (5):
+  dt-bindings: clock: Add support for Modem clocks in GCC
+  clk: qcom: gcc: Add support for modem clocks in GCC
+  dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
+  dt-bindings: clock: Introduce QCOM Modem clock bindings
+  clk: qcom: Add modem clock controller driver for SC7180
+
+ .../devicetree/bindings/clock/qcom,sc7180-mss.yaml |  62 +++++++++
+ drivers/clk/qcom/Kconfig                           |   9 ++
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/gcc-sc7180.c                      |  70 ++++++++++
+ drivers/clk/qcom/mss-sc7180.c                      | 143 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-sc7180.h        |   5 +
+ include/dt-bindings/clock/qcom,mss-sc7180.h        |  12 ++
+ 7 files changed, 302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+ create mode 100644 drivers/clk/qcom/mss-sc7180.c
+ create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
