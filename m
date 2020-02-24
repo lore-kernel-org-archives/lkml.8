@@ -2,149 +2,164 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14A0C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58873C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784C62072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2618F2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="nZYC8M/a"
+	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="MhAaKCxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgBXLic (ORCPT
+        id S1727464AbgBXLin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:38:32 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:35573 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLib (ORCPT
+        Mon, 24 Feb 2020 06:38:43 -0500
+Received: from mail.inango-systems.com ([178.238.230.57]:52694 "EHLO
+        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:38:31 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8123C22F00;
-        Mon, 24 Feb 2020 12:38:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582544309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ATJ7FEy8mNyFSf7mhjpZz7vvqF1vlw/dfVmlo7ml+8I=;
-        b=nZYC8M/aCrC+rIryhmGaMHYYKK0YbOA2Ghg3VEpxrmxItu0RVkt5amPnhs4SEW9Mcrqvol
-        EZdxmg2J5fXFTfjYW3LznIRbxzlQNJydD/3VqQSqpvff3Fi18WH69ka3ldWbJBw6hLueNQ
-        Nc9a1Vzkrfnl/KKUa/RLAelYQeGNuKM=
+        Mon, 24 Feb 2020 06:38:43 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id C89711080215;
+        Mon, 24 Feb 2020 13:38:40 +0200 (IST)
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Tk_QqCuKFQR9; Mon, 24 Feb 2020 13:38:40 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id D147B10808D5;
+        Mon, 24 Feb 2020 13:38:39 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com D147B10808D5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1582544319;
+        bh=+tskScq4uIA9/TPrFKSW1RmSTzCHD1HXtfjqxrFsbFE=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=MhAaKCxKw3wcjYk2jSTLQEqlUfJjL0pDFFhUxpYohYorUAybcha+kbxcRw3jeMCkH
+         CJoZ2PVhyqs/Gss/Dqf0nH3u+4Sbs9kog60cuP3O5kSYBLJr/rJBKoGYPWfodQ1/G+
+         Km34EfwPHjpqI+52fz4LUVu7qHh2yWG9ejCE6TPTKzM3CzOTwNz3gfze14GgLWWcGW
+         /e1+ui1AdXK1rHtMAjPfuwZOSOVDE3T9AtxSFHb9EH88PfM8dgnH2NqdO28srur5hI
+         KJaW70RSa9HuivPsaoJyoATUvgN60y/Gscqly6wsbyPPOG/yrgkP1X5ri8IpPmwNtK
+         xvp34tyPd6s3Q==
+X-Virus-Scanned: amavisd-new at inango-sw.com
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6d9Agr_Au4KF; Mon, 24 Feb 2020 13:38:39 +0200 (IST)
+Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
+        by mail.inango-sw.com (Postfix) with ESMTP id A834F1080215;
+        Mon, 24 Feb 2020 13:38:39 +0200 (IST)
+Date:   Mon, 24 Feb 2020 13:38:39 +0200 (IST)
+From:   Nikolai Merinov <n.merinov@inango-systems.com>
+To:     hch <hch@infradead.org>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <797777312.1324734.1582544319435.JavaMail.zimbra@inango-systems.com>
+In-Reply-To: <20200218185336.GA14242@infradead.org>
+References: <20181124162123.21300-1-n.merinov@inango-systems.com> <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org> <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com> <20200218185336.GA14242@infradead.org>
+Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
+ partition entry
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 24 Feb 2020 12:38:26 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
- LS1028A
-In-Reply-To: <20200224112026.GF27688@dragon>
-References: <20200223204716.26170-1-olteanv@gmail.com>
- <20200224112026.GF27688@dragon>
-Message-ID: <f92f01d60589d94bb25a38dd828200b0@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 8123C22F00
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[13];
-         NEURAL_HAM(-0.00)[-0.684];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[gmail.com,kernel.org,arm.com,vger.kernel.org,lunn.ch,nxp.com,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[]
+Content-Type: multipart/mixed; 
+        boundary="----=_Part_1324732_122210119.1582544319433"
+X-Originating-IP: [172.17.220.3]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3890)
+Thread-Topic: partitions/efi: Fix partition name parsing in GUID partition entry
+Thread-Index: RHN8sBujnu07ZUv014i9wZGHW1Y/bw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+------=_Part_1324732_122210119.1582544319433
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Am 2020-02-24 12:20, schrieb Shawn Guo:
-> On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
->> This series officializes the device tree bindings for the embedded
->> Ethernet switch on NXP LS1028A (and for the reference design board).
->> The driver has been in the tree since v5.4-rc6.
->> 
->> It also performs some DT binding changes and minor cleanup, as per
->> feedback received in v1 and v2:
->> 
->> - I've changed the DT bindings for the internal ports from "gmii" to
->>   "internal". This means changing the ENETC phy-mode as well, for
->>   uniformity. So I would like the entire series to be merged through a
->>   single tree, probably the devicetree one - something which David
->>   Miller has aggreed to, here [0].
->> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
->>   means not only the newly introduced switch ports, but also RGMII
->>   standalone port 1.
->> 
->> [0]: https://lkml.org/lkml/2020/2/19/973
->> 
->> Claudiu Manoil (2):
->>   arm64: dts: fsl: ls1028a: add node for Felix switch
->>   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
->> 
->> Vladimir Oltean (4):
->>   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for 
->> ENETC
->>     RCIE
->>   arm64: dts: fsl: ls1028a: disable all enetc ports by default
-> 
-> I applied these 4 DTS patches with changing prefix to 'arm64: dts: 
-> ls1028a: '.
+Hi Christoph, 
 
-Oh, then the kontron-sl28 boards won't have ethernet because the nodes 
-are
-disabled now. I'll send a patch shortly which explicitly sets the status 
-to
-"okay", hopefully you can pick it up so it'll end up in the same pull 
-request
-as this one:
+> I'd rather use plain __le16 and le16_to_cpu here. Also the be 
+> variants seems to be entirely unused. 
 
-   arm64: dts: fsl: ls1028a: disable all enetc ports by default
+Looks like I misunderstood your comment from https://patchwork.kernel.org/patch/11309223/: 
 
--michael
+> Please add a an efi_char_from_cpu or similarly named helper 
+> to encapsulate this logic. 
 
-> 
-> Shawn
-> 
->>   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
->>   dt-bindings: net: dsa: ocelot: document the vsc9959 core
->> 
->>  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 
->> ++++++++++++++++++
->>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
->>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
->>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
->>  drivers/net/dsa/ocelot/felix.c                |   3 +-
->>  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
->>  6 files changed, 265 insertions(+), 8 deletions(-)
->>  create mode 100644 
->> Documentation/devicetree/bindings/net/dsa/ocelot.txt
->> 
->> --
->> 2.17.1
->> 
+The "le16_to_cpu(ptes[i].partition_name[label_count])" call is the 
+full implementation of the "efi_char_from_cpu" logic. Do you want 
+to encapsulate "utf16_le_to_7bit_string" logic entirely like in
+the attached version?
+
+Regards,
+Nikolai
+
+------=_Part_1324732_122210119.1582544319433
+Content-Type: text/x-patch;
+ name=v4-0001-partitions-efi-Fix-partition-name-parsing-in-GUID.patch
+Content-Disposition: attachment;
+ filename=v4-0001-partitions-efi-Fix-partition-name-parsing-in-GUID.patch
+Content-Transfer-Encoding: base64
+
+RnJvbSA4NDJjZjIyZDZmNmY5MTg3MmJjYjA0YWM2YWJlNzc5NGZlZGUyM2ZkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBOaWtvbGFpIE1lcmlub3YgPG4ubWVyaW5vdkBpbmFuZ28tc3lz
+dGVtcy5jb20+CkRhdGU6IFNhdCwgMjQgTm92IDIwMTggMjA6NDI6MjcgKzA1MDAKU3ViamVjdDog
+W1BBVENIIHY0XSBwYXJ0aXRpb25zL2VmaTogRml4IHBhcnRpdGlvbiBuYW1lIHBhcnNpbmcgaW4g
+R1VJRAogcGFydGl0aW9uIGVudHJ5CgpHVUlEIHBhcnRpdGlvbiBlbnRyeSBkZWZpbmVkIHRvIGhh
+dmUgYSBwYXJ0aXRpb24gbmFtZSBhcyAzNiBVVEYtMTZMRQpjb2RlIHVuaXRzLiBUaGlzIG1lYW5z
+IHRoYXQgb24gYmlnLWVuZGlhbiBwbGF0Zm9ybXMgQVNDSUkgc3ltYm9scwp3b3VsZCBiZSByZWFk
+IHdpdGggMHhYWDAwIGVmaV9jaGFyMTZfdCBjaGFyYWN0ZXIgY29kZS4gSW4gb3JkZXIgdG8KY29y
+cmVjdGx5IGV4dHJhY3QgQVNDSUkgY2hhcmFjdGVycyBmcm9tIGEgcGFydGl0aW9uIG5hbWUgZmll
+bGQgd2UKc2hvdWxkIGJlIGNvbnZlcnRlZCBmcm9tIDE2TEUgdG8gQ1BVIGFyY2hpdGVjdHVyZS4K
+ClRoZSBwcm9ibGVtIGV4aXN0cyBvbiBhbGwgYmlnIGVuZGlhbiBwbGF0Zm9ybXMuCgpTaWduZWQt
+b2ZmLWJ5OiBOaWtvbGFpIE1lcmlub3YgPG4ubWVyaW5vdkBpbmFuZ28tc3lzdGVtcy5jb20+CkZp
+eGVzOiBlZWM3ZWNmZWRlNzQgKCJnZW5oZCwgZWZpOiBhZGQgZWZpIHBhcnRpdGlvbiBtZXRhZGF0
+YSB0byBoZF9zdHJ1Y3RzIikKLS0tCiBibG9jay9wYXJ0aXRpb25zL2VmaS5jIHwgMzUgKysrKysr
+KysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0KIGJsb2NrL3BhcnRpdGlvbnMvZWZpLmggfCAg
+MiArLQogMiBmaWxlcyBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkK
+CmRpZmYgLS1naXQgYS9ibG9jay9wYXJ0aXRpb25zL2VmaS5jIGIvYmxvY2svcGFydGl0aW9ucy9l
+ZmkuYwppbmRleCBkYjJmZWY3ZGZjNDcuLmQyNmEwNjU0ZDdjYSAxMDA2NDQKLS0tIGEvYmxvY2sv
+cGFydGl0aW9ucy9lZmkuYworKysgYi9ibG9jay9wYXJ0aXRpb25zL2VmaS5jCkBAIC02NTYsNiAr
+NjU2LDMwIEBAIHN0YXRpYyBpbnQgZmluZF92YWxpZF9ncHQoc3RydWN0IHBhcnNlZF9wYXJ0aXRp
+b25zICpzdGF0ZSwgZ3B0X2hlYWRlciAqKmdwdCwKICAgICAgICAgcmV0dXJuIDA7CiB9CiAKKy8q
+KgorICogdXRmMTZfbGVfdG9fN2JpdCgpOiBOYWl2ZWx5IGNvbnZlcnRzIFVURi0xNkxFIHN0cmlu
+ZyB0byA3Yml0IGNoYXJhY3RlcnMKKyAqIEBpbjogaW5wdXQgVVRGLTE2TEUgc3RyaW5nCisgKiBA
+c2l6ZTogc2l6ZSBvZiB0aGUgaW5wdXQgc3RyaW5nCisgKiBAb3V0OiBvdXRwdXQgc3RyaW5nIHB0
+ciwgc2hvdWxkIGJlIGNhcGFibGUgdG8gc3RvcmUgQHNpemUrMSBjaGFyYWN0ZXJzCisgKgorICog
+RGVzY3JpcHRpb246IENvbnZlcnRzIEBzaXplIFVURjE2LUxFIHN5bWJvbHMgZnJvbSBAaW4gc3Ry
+aW5nIHRvIDdiaXQKKyAqIGNoYXJhY3RlcnMgYW5kIHN0b3JlIHRoZW0gdG8gQG91dC4gQWRkcyB0
+cmFpbGluZyB6ZXJvIHRvIEBvdXQgYXJyYXkuCisgKi8KK3N0YXRpYyB2b2lkIHV0ZjE2X2xlX3Rv
+XzdiaXQoY29uc3QgX19sZTE2ICppbiwgdW5zaWduZWQgaW50IHNpemUsIHU4ICpvdXQpCit7CisJ
+dW5zaWduZWQgaW50IGkgPSAwOworCisJb3V0W3NpemVdID0gMDsKKwl3aGlsZSAoaSA8IHNpemUp
+IHsKKwkJdTggYyA9IGxlMTZfdG9fY3B1KGluW2ldKSAmIDB4ZmY7CisKKwkJaWYgKGMgJiYgIWlz
+cHJpbnQoYykpCisJCQljID0gJyEnOworCQlvdXRbaV0gPSBjOworCQlpKys7CisJfQorfQorCiAv
+KioKICAqIGVmaV9wYXJ0aXRpb24oc3RydWN0IHBhcnNlZF9wYXJ0aXRpb25zICpzdGF0ZSkKICAq
+IEBzdGF0ZTogZGlzayBwYXJzZWQgcGFydGl0aW9ucwpAQCAtNjkyLDcgKzcxNiw2IEBAIGludCBl
+ZmlfcGFydGl0aW9uKHN0cnVjdCBwYXJzZWRfcGFydGl0aW9ucyAqc3RhdGUpCiAKIAlmb3IgKGkg
+PSAwOyBpIDwgbGUzMl90b19jcHUoZ3B0LT5udW1fcGFydGl0aW9uX2VudHJpZXMpICYmIGkgPCBz
+dGF0ZS0+bGltaXQtMTsgaSsrKSB7CiAJCXN0cnVjdCBwYXJ0aXRpb25fbWV0YV9pbmZvICppbmZv
+OwotCQl1bnNpZ25lZCBsYWJlbF9jb3VudCA9IDA7CiAJCXVuc2lnbmVkIGxhYmVsX21heDsKIAkJ
+dTY0IHN0YXJ0ID0gbGU2NF90b19jcHUocHRlc1tpXS5zdGFydGluZ19sYmEpOwogCQl1NjQgc2l6
+ZSA9IGxlNjRfdG9fY3B1KHB0ZXNbaV0uZW5kaW5nX2xiYSkgLQpAQCAtNzEzLDE0ICs3MzYsOCBA
+QCBpbnQgZWZpX3BhcnRpdGlvbihzdHJ1Y3QgcGFyc2VkX3BhcnRpdGlvbnMgKnN0YXRlKQogCQkv
+KiBOYWl2ZWx5IGNvbnZlcnQgVVRGMTYtTEUgdG8gNyBiaXRzLiAqLwogCQlsYWJlbF9tYXggPSBt
+aW4oQVJSQVlfU0laRShpbmZvLT52b2xuYW1lKSAtIDEsCiAJCQkJQVJSQVlfU0laRShwdGVzW2ld
+LnBhcnRpdGlvbl9uYW1lKSk7Ci0JCWluZm8tPnZvbG5hbWVbbGFiZWxfbWF4XSA9IDA7Ci0JCXdo
+aWxlIChsYWJlbF9jb3VudCA8IGxhYmVsX21heCkgewotCQkJdTggYyA9IHB0ZXNbaV0ucGFydGl0
+aW9uX25hbWVbbGFiZWxfY291bnRdICYgMHhmZjsKLQkJCWlmIChjICYmICFpc3ByaW50KGMpKQot
+CQkJCWMgPSAnISc7Ci0JCQlpbmZvLT52b2xuYW1lW2xhYmVsX2NvdW50XSA9IGM7Ci0JCQlsYWJl
+bF9jb3VudCsrOwotCQl9CisJCXV0ZjE2X2xlX3RvXzdiaXQocHRlc1tpXS5wYXJ0aXRpb25fbmFt
+ZSwgbGFiZWxfbWF4LAorCQkJCSBpbmZvLT52b2xuYW1lKTsKIAkJc3RhdGUtPnBhcnRzW2kgKyAx
+XS5oYXNfaW5mbyA9IHRydWU7CiAJfQogCWtmcmVlKHB0ZXMpOwpkaWZmIC0tZ2l0IGEvYmxvY2sv
+cGFydGl0aW9ucy9lZmkuaCBiL2Jsb2NrL3BhcnRpdGlvbnMvZWZpLmgKaW5kZXggM2U4NTc2MTU3
+NTc1Li4wYjZkNWI3YmUxMTEgMTAwNjQ0Ci0tLSBhL2Jsb2NrL3BhcnRpdGlvbnMvZWZpLmgKKysr
+IGIvYmxvY2svcGFydGl0aW9ucy9lZmkuaApAQCAtODgsNyArODgsNyBAQCB0eXBlZGVmIHN0cnVj
+dCBfZ3B0X2VudHJ5IHsKIAlfX2xlNjQgc3RhcnRpbmdfbGJhOwogCV9fbGU2NCBlbmRpbmdfbGJh
+OwogCWdwdF9lbnRyeV9hdHRyaWJ1dGVzIGF0dHJpYnV0ZXM7Ci0JZWZpX2NoYXIxNl90IHBhcnRp
+dGlvbl9uYW1lWzcyIC8gc2l6ZW9mIChlZmlfY2hhcjE2X3QpXTsKKwlfX2xlMTYgcGFydGl0aW9u
+X25hbWVbNzIgLyBzaXplb2YgKF9fbGUxNildOwogfSBfX3BhY2tlZCBncHRfZW50cnk7CiAKIHR5
+cGVkZWYgc3RydWN0IF9ncHRfbWJyX3JlY29yZCB7Ci0tIAoyLjE3LjEKCg==
+------=_Part_1324732_122210119.1582544319433--
