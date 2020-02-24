@@ -2,239 +2,182 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4809DC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A9FC11D25
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164132072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D1320828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:07:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e7mRrdlu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cDCZIlzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgBXGGw (ORCPT
+        id S1727308AbgBXGHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:06:52 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55901 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725895AbgBXGGw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:06:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582524409;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iQDzxX80bgi0m3zVo97LJaYr2snJfMVwzytXMvJXGx0=;
-        b=e7mRrdluNWtxUy6PUJW3LFO63Q1PJ1LTxOXnCN99OXcdgyPQhxCEpT9+9bp5xAZ3l23so2
-        GmfnJVq8S65AdfdnE6f5+LFdRs88e1P/aDs6aN497f5GqU9DsSCsUw9bzyQW0E01A7pw0E
-        oyELqVhswvbcf7aNRUTHveKAvr9QbZ8=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-mqINSJpePXCNNR0vwHMn2w-1; Mon, 24 Feb 2020 01:06:48 -0500
-X-MC-Unique: mqINSJpePXCNNR0vwHMn2w-1
-Received: by mail-qt1-f197.google.com with SMTP id o18so9519769qtt.19
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 22:06:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iQDzxX80bgi0m3zVo97LJaYr2snJfMVwzytXMvJXGx0=;
-        b=gNvLVcM8DNITqNXjjsfEgcL152d8znbgUBwztY3MAqoU9Uhk1LCPCUvHhZI7q2QPtD
-         XEWMFT/9PDAXK9gudoqbjhfqpGpVbXIvK95aeE7J3RWraVjINsVW6YFibjPKTmxYRxY6
-         OQKIm+DOTtpvUTKl9oxjwyhxpmhYjSxWwzryaJWs3f4X8wNiD4ezNHkrWGrA+mIcUhkS
-         4AwZ7XTkyZD/unIoml0MPJrF312m1lws6eLb36JMITQmjj0DUCaBEEwpQC1rTpD/4Fln
-         76tduftgXCWSX84Kkek/uCQSSeQWarc+XuMUNteCUe8zqbD0V5XFOZ7JwFarEwr92gS7
-         1pPw==
-X-Gm-Message-State: APjAAAXT9MAxp8zHp3rO2lnrYpZ4gD10wYVdwblFLkrxD9tRZQyK7nYF
-        gZKH/CWLi63nL71M8NbFz2ZcuYNPLsTtC5a7By/xYs28OgbOGEydDVHcvCCbyurQpuKA3aShKES
-        gSeKKCqdcPpjD8rU1rj4r8wxY
-X-Received: by 2002:ac8:163c:: with SMTP id p57mr46466543qtj.106.1582524407966;
-        Sun, 23 Feb 2020 22:06:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqykDKEpss3i5i8vBB8m0HPf3fYLIwD7rYykaWBLVU93KmwpbULId+7HvrnmVegAoy26B2QAmQ==
-X-Received: by 2002:ac8:163c:: with SMTP id p57mr46466517qtj.106.1582524407682;
-        Sun, 23 Feb 2020 22:06:47 -0800 (PST)
-Received: from redhat.com (bzq-79-178-2-214.red.bezeqint.net. [79.178.2.214])
-        by smtp.gmail.com with ESMTPSA id g11sm5616483qtc.48.2020.02.23.22.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 22:06:46 -0800 (PST)
-Date:   Mon, 24 Feb 2020 01:06:40 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-Message-ID: <20200224010607-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
- <20200221155602.4de41fa7.pasic@linux.ibm.com>
- <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
+        Mon, 24 Feb 2020 01:07:09 -0500
+Received: from mail-eopbgr130051.outbound.protection.outlook.com ([40.107.13.51]:2182
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725895AbgBXGHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:07:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dpVmtrAuUrUtHyEWUrwxV4sfxKrmm8tENPtazFyP6JM5HTmau8XXBZE5QfSMCKPSGufK/w+HCW5frkKA8sjRm2SkwhwPaYdO1As593GpkmvTcXKEjwYXjsoXzDPlM02Pwi+cg1fX1YzNlPsqtzYEA9U5UWGVE6y9S2M80NftrIZzdTeDj1f0x5eqZCBOXegmnRFaeslAo86WS5E6uOTSsBIgOQEkbeXlkdNVCXSlGBeDQX3/19/Kkhf4i9hZMybMq5IMfbvU9p1imUYxzD+QiLBY4v9YAkpkuAIccdTVHSXmmdqxVqwccx7mUMsFYfrO0k85yh3RuGGLY6bhJM1+YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mF5IRLeilON0cG/ZwJJe34yb0pfH65qycOHgxuHlpN4=;
+ b=TRFrGayvjOlm2koBpJ3Dw9cMjiWhc63DXyHC83ltiSa1IMJSpbufJa7BS5fVyVdiqLFthQ0wMDyBE8NLICyqwD4GM/j4YF01rl647GZ4IWSWuLyqDtjVRZDuZM8D29KFE1MWHnyzdWf7ZArU37VueMoJyI7pPomx6EOQ/5vdrMXS345gaKayl7jSc0qwCvvX3TmDs567ielwkK3NUIBEHzEg36X1NXwW/BOK+vRWq09/M9pR9VXS0EiluyZfI2l5/bG1tRFQ1RGvXcA5W7r0TGxkA5nPbIt5HF45ObncoSThkK/zHPLe2rLnvh8SFeEXHEKEVsPMNcEFWNyXowItrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mF5IRLeilON0cG/ZwJJe34yb0pfH65qycOHgxuHlpN4=;
+ b=cDCZIlzVYU4rjr2sI+tYaQTN5UmcJ28FVomXIy3Ofnj7MTlTAkzjiHxCMnE3mBgB7S2VrNXsPm+Bv3dJK7/vWP0fZ2Is61ASFlMpWtsWeAzHFjs6u0MeCQHYHKXdr8S1sCUL8jhKdFZcunC/yEbRWjtHAUTn1DOJILlM6boWJsA=
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
+ DB8PR04MB6714.eurprd04.prod.outlook.com (20.179.251.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Mon, 24 Feb 2020 06:07:03 +0000
+Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa]) by DB8PR04MB6747.eurprd04.prod.outlook.com
+ ([fe80::104b:e88b:b0d3:cdaa%4]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 06:07:03 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv10 00/13] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Topic: [PATCHv10 00/13] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHV4iNpQqKrUDxfhEGgXrza4vQEPqglni0AgARNvwA=
+Date:   Mon, 24 Feb 2020 06:07:03 +0000
+Message-ID: <DB8PR04MB67475A29B09B85F9628FFCE084EC0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+ <20200221121956.GC12711@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200221121956.GC12711@e121166-lin.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: aba7d090-696f-40c3-9c42-08d7b8efc4c6
+x-ms-traffictypediagnostic: DB8PR04MB6714:|DB8PR04MB6714:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB67149074A39E8047BCBAB91184EC0@DB8PR04MB6714.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 032334F434
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(376002)(396003)(366004)(136003)(346002)(39860400002)(199004)(189003)(6916009)(2906002)(86362001)(81166006)(8936002)(186003)(26005)(8676002)(81156014)(478600001)(4326008)(54906003)(53546011)(6506007)(66476007)(66946007)(64756008)(316002)(5660300002)(7416002)(66556008)(71200400001)(33656002)(55016002)(76116006)(66446008)(7696005)(52536014)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6714;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8AzsnILkO6VbjXnbRO06sJr95cTVSKv5cqd5fKV5UagzInIyqvCuY2Qt3vacOH+q678vjh+WfSRZG3aWsN6fdgVFB5sC89niZQDmbheHW9f2EPn9Suu7e9MwlNY2Ft0bPUDjgZ5skLfLwYliApArq4wxCTJGIW/DCQPhjIEQfkx1HrS1wD4JrcDFmGz2DAtxJpYpl6pLru5SgopbgpD+8JhIn1gX6pcz0ppfgEYT52KBomOOImXDoDHoP4EU2eDlfMQqi1uZJfvqqZFvwSLq1e7P4REpY2rCOxW9QOITR4r796bMn3nd5Pxl9G4TaD9kPK/o6pSbqnh5R9UhLplt95iqoqjIKcsfszThjXaeMUQ9lOBn+wY9ePN8uqJIugzLZOyNw8KcjstXu5KMAE8gyWKejYWGwLjDPMpicYeYS44GEHIYQwgc2OCFDYZykGS3
+x-ms-exchange-antispam-messagedata: 8Kz8DmlnBbRxe+iEdm4mZGT00OcogtIp6+74w+vdYFu4eMBuMsSaTjXwJ6fqbIHvBK5R0PI3dwAv1hw4tssShrT8EXsn5l5F8rkgEE//OOv9PVighcBQ+KIuYFoyK4G1IzBC2Vi3Alv7GD277+yolw==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aba7d090-696f-40c3-9c42-08d7b8efc4c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 06:07:03.2670
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Fpu7ONttSKSjGjAkInRzY7y+kb58NwdjEBS0hYWoUDviBDzrsJT3yZBNhE9566cByZ0QBxj6gFrvA3ceoQM7nA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6714
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:01:57PM +0800, Jason Wang wrote:
-> 
-> On 2020/2/21 下午10:56, Halil Pasic wrote:
-> > On Fri, 21 Feb 2020 14:22:26 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> > 
-> > > On 2020/2/21 上午12:06, Halil Pasic wrote:
-> > > > Currently if one intends to run a memory protection enabled VM with
-> > > > virtio devices and linux as the guest OS, one needs to specify the
-> > > > VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
-> > > > linux use the DMA API, which in turn handles the memory
-> > > > encryption/protection stuff if the guest decides to turn itself into
-> > > > a protected one. This however makes no sense due to multiple reasons:
-> > > > * The device is not changed by the fact that the guest RAM is
-> > > > protected. The so called IOMMU bypass quirk is not affected.
-> > > > * This usage is not congruent with  standardised semantics of
-> > > > VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
-> > > > for using DMA API in virtio (orthogonal with respect to what is
-> > > > expressed by VIRTIO_F_IOMMU_PLATFORM).
-> > > > 
-> > > > This series aims to decouple 'have to use DMA API because my (guest) RAM
-> > > > is protected' and 'have to use DMA API because the device told me
-> > > > VIRTIO_F_IOMMU_PLATFORM'.
-> > > > 
-> > > > Please find more detailed explanations about the conceptual aspects in
-> > > > the individual patches. There is however also a very practical problem
-> > > > that is addressed by this series.
-> > > > 
-> > > > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
-> > > > effect The vhost code assumes it the addresses on the virtio descriptor
-> > > > ring are not guest physical addresses but iova's, and insists on doing a
-> > > > translation of these regardless of what transport is used (e.g. whether
-> > > > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
-> > > > "vhost: new device IOTLB API".) On s390 this results in severe
-> > > > performance degradation (c.a. factor 10).
-> > > 
-> > > Do you see a consistent degradation on the performance, or it only
-> > > happen when for during the beginning of the test?
-> > > 
-> > AFAIK the degradation is consistent.
-> > 
-> > > > BTW with ccw I/O there is
-> > > > (architecturally) no IOMMU, so the whole address translation makes no
-> > > > sense in the context of virtio-ccw.
-> > > 
-> > > I suspect we can do optimization in qemu side.
-> > > 
-> > > E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
-> > > 
-> > > If this makes sense, I can draft patch to see if there's any difference.
-> > Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
-> > then necessary translation) for virtio-ccw altogether. But Michael
-> > voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
-> > that could be used with guests running in protected mode. I don't share
-> > his opinion, but that's an ongoing discussion.
-> > 
-> > Should we end up having to do translation from IOVA in vhost, we are
-> > very interested in that translation being fast and efficient.
-> > 
-> > In that sense we would be very happy to test any optimization that aim
-> > into that direction.
-> > 
-> > Thank you very much for your input!
-> 
-> 
-> Using IOTLB API on platform without IOMMU support is not intended. Please
-> try the attached patch to see if it helps.
-> 
-> Thanks
-> 
-> 
-> > 
-> > Regards,
-> > Halil
-> > 
-> > > Thanks
-> > > 
-> > > 
-> > > > Halil Pasic (2):
-> > > >     mm: move force_dma_unencrypted() to mem_encrypt.h
-> > > >     virtio: let virtio use DMA API when guest RAM is protected
-> > > > 
-> > > >    drivers/virtio/virtio_ring.c |  3 +++
-> > > >    include/linux/dma-direct.h   |  9 ---------
-> > > >    include/linux/mem_encrypt.h  | 10 ++++++++++
-> > > >    3 files changed, 13 insertions(+), 9 deletions(-)
-> > > > 
-> > > > 
-> > > > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-
-> >From 66fa730460875ac99e81d7db2334cd16bb1d2b27 Mon Sep 17 00:00:00 2001
-> From: Jason Wang <jasowang@redhat.com>
-> Date: Mon, 24 Feb 2020 12:00:10 +0800
-> Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
-> 
-> When transport does not support IOMMU, we should clear IOMMU_PLATFORM
-> even if the device and vhost claims to support that. This help to
-> avoid the performance overhead caused by unnecessary IOTLB miss/update
-> transactions on such platform.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  hw/virtio/virtio-bus.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
-> index d6332d45c3..2741b9fdd2 100644
-> --- a/hw/virtio/virtio-bus.c
-> +++ b/hw/virtio/virtio-bus.c
-> @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
->      VirtioBusState *bus = VIRTIO_BUS(qbus);
->      VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
->      VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
-> -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
->      Error *local_err = NULL;
->  
->      DPRINTF("%s: plug device.\n", qbus->name);
-> @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
->          return;
->      }
->  
-> -    if (klass->get_dma_as != NULL && has_iommu) {
-> -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
-> +    if (false && klass->get_dma_as != NULL &&
-> +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
->          vdev->dma_as = klass->get_dma_as(qbus->parent);
->      } else {
-> +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
->          vdev->dma_as = &address_space_memory;
->      }
->  }
-
-
-This seems to clear it unconditionally. I guess it's just a debugging
-patch, the real one will come later?
-
-> -- 
-> 2.19.1
-> 
-
+SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
+bnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4NCj4gU2VudDogMjAyMMTq
+MtTCMjHI1SAyMDoyMA0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBD
+YzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsNCj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3Jn
+OyBhbmRyZXcubXVycmF5QGFybS5jb207DQo+IGFybmRAYXJuZGIuZGU7IG1hcmsucnV0bGFuZEBh
+cm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNvLmluOw0KPiBzaGF3bmd1b0BrZXJuZWwu
+b3JnOyBtLmthcnRoaWtleWFuQG1vYml2ZWlsLmNvLmluOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlA
+bnhwLmNvbT47IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOw0K
+PiBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxp
+YW5AbnhwLmNvbT47DQo+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIdjEwIDAwLzEzXSBQQ0k6IFJlY29kZSBNb2JpdmVpbCBkcml2ZXIgYW5k
+IGFkZCBQQ0llDQo+IEdlbjQgZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2FwZSBTb0NzDQo+IA0KPiBP
+biBUaHUsIEZlYiAxMywgMjAyMCBhdCAxMjowNjozMVBNICswODAwLCBaaGlxaWFuZyBIb3Ugd3Jv
+dGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0K
+PiA+IFRoaXMgcGF0Y2ggc2V0IGlzIHRvIHJlY29kZSB0aGUgTW9iaXZlaWwgZHJpdmVyIGFuZCBh
+ZGQgUENJZSBzdXBwb3J0DQo+ID4gZm9yIE5YUCBMYXllcnNjYXBlIHNlcmllcyBTb0NzIGludGVn
+cmF0ZWQgTW9iaXZlaWwncyBQQ0llIEdlbjQNCj4gPiBjb250cm9sbGVyLg0KPiA+DQo+ID4gSG91
+IFpoaXFpYW5nICgxMyk6DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBJbnRyb2R1Y2UgYSBuZXcgc3Ry
+dWN0dXJlIG1vYml2ZWlsX3Jvb3RfcG9ydA0KPiA+ICAgUENJOiBtb2JpdmVpbDogTW92ZSB0aGUg
+aG9zdCBpbml0aWFsaXphdGlvbiBpbnRvIGEgZnVuY3Rpb24NCj4gPiAgIFBDSTogbW9iaXZlaWw6
+IENvbGxlY3QgdGhlIGludGVycnVwdCByZWxhdGVkIG9wZXJhdGlvbnMgaW50byBhDQo+ID4gICAg
+IGZ1bmN0aW9uDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBNb2R1bGFyaXplIHRoZSBNb2JpdmVpbCBQ
+Q0llIEhvc3QgQnJpZGdlIElQIGRyaXZlcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogQWRkIGNhbGxi
+YWNrIGZ1bmN0aW9uIGZvciBpbnRlcnJ1cHQgaW5pdGlhbGl6YXRpb24NCj4gPiAgIFBDSTogbW9i
+aXZlaWw6IEFkZCBjYWxsYmFjayBmdW5jdGlvbiBmb3IgbGluayB1cCBjaGVjaw0KPiA+ICAgUENJ
+OiBtb2JpdmVpbDogQWxsb3cgbW9iaXZlaWxfaG9zdF9pbml0KCkgdG8gYmUgdXNlZCB0byByZS1p
+bml0IGhvc3QNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEFkZCA4LWJpdCBhbmQgMTYtYml0IENTUiBy
+ZWdpc3RlciBhY2Nlc3NvcnMNCj4gPiAgIFBDSTogbW9iaXZlaWw6IEFkZCBIZWFkZXIgVHlwZSBm
+aWVsZCBjaGVjaw0KPiA+ICAgZHQtYmluZGluZ3M6IFBDSTogQWRkIE5YUCBMYXllcnNjYXBlIFNv
+Q3MgUENJZSBHZW40IGNvbnRyb2xsZXINCj4gPiAgIFBDSTogbW9iaXZlaWw6IEFkZCBQQ0llIEdl
+bjQgUkMgZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2FwZSBTb0NzDQo+ID4gICBhcm02NDogZHRzOiBs
+eDIxNjBhOiBBZGQgUENJZSBjb250cm9sbGVyIERUIG5vZGVzDQo+ID4gICBhcm02NDogZGVmY29u
+ZmlnOiBFbmFibGUgQ09ORklHX1BDSUVfTEFZRVJTQ0FQRV9HRU40DQo+ID4NCj4gPiAgLi4uL2Jp
+bmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaWUtZ2VuNC50eHQgICAgIHwgIDUyICsrDQo+ID4gIE1B
+SU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCArLQ0KPiA+
+ICAuLi4vYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1seDIxNjBhLmR0c2kgfCAxNjMgKysr
+KysNCj4gPiAgYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwg
+ICAxICsNCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9LY29uZmlnICAgICAgICAgICAgICAg
+IHwgIDExICstDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvTWFrZWZpbGUgICAgICAgICAg
+ICAgICB8ICAgMiArLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25m
+aWcgICAgICAgfCAgMzMgKw0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01h
+a2VmaWxlICAgICAgfCAgIDUgKw0KPiA+ICAuLi4vbW9iaXZlaWwvcGNpZS1sYXllcnNjYXBlLWdl
+bjQuYyAgICAgICAgICAgfCAyNjcgKysrKysrKysrDQo+ID4gIC4uLi9wY2llLW1vYml2ZWlsLWhv
+c3QuY30gICAgICAgICAgICAgICAgICAgICB8IDU2NCArKysrLS0tLS0tLS0tLS0tLS0NCj4gPiAg
+Li4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1wbGF0LmMgIHwgIDYxICsrDQo+
+ID4gIC4uLi9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmMgICB8IDIzMCAr
+KysrKysrDQo+ID4gIC4uLi9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmgg
+ICB8IDIyNiArKysrKysrDQo+ID4gIDEzIGZpbGVzIGNoYW5nZWQsIDExNzAgaW5zZXJ0aW9ucygr
+KSwgNDU1IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUNCj4gPiAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaWUtZ2VuNC50eHQNCj4gPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZp
+Zw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVp
+bC9NYWtlZmlsZQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJzL3BjaS9jb250
+cm9sbGVyL21vYml2ZWlsL3BjaWUtbGF5ZXJzY2FwZS1nZW40LmMNCj4gPiAgcmVuYW1lIGRyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIve3BjaWUtbW9iaXZlaWwuYyA9Pg0KPiA+IG1vYml2ZWlsL3BjaWUt
+bW9iaXZlaWwtaG9zdC5jfSAoNTQlKSAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gZHJpdmVycy9w
+Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLXBsYXQuYw0KPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWls
+LmMNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZl
+aWwvcGNpZS1tb2JpdmVpbC5oDQo+IA0KPiBJIGRyb3BwZWQgdGhlIGxhc3QgdHdvIHBhdGNoZXMg
+c2luY2UgdGhleSBtdXN0IGJlIHJlLXJvdXRlZCB2aWEgYXJtLXNvYw0KPiAoZGVmY29uZmlnIHVw
+ZGF0ZSBhbmQgZHRzKSwgSSB0d2Vha2VkIG1vc3Qgb2YgY29tbWl0IGxvZ3MgYW5kIGFwcGxpZWQg
+dGhlDQo+IHNlcmllcyB0byBwY2kvbW9iaXZlaWwsIHBsZWFzZSBjaGVjayBldmVyeXRoaW5nIGlz
+IGluIG9yZGVyLg0KIA0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGhlbHAgb24gdGhlIGNvbW1pdCBs
+b2dzIQ0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBUaGFua3MsDQo+IExvcmVuem8NCg==
