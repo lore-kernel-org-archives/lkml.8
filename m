@@ -2,171 +2,125 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0458C38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D82C38BE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDF2218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356CC218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRHSZE7c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjAGpPe2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgBXUqE (ORCPT
+        id S1727619AbgBXUrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 15:46:04 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43701 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgBXUqD (ORCPT
+        Mon, 24 Feb 2020 15:47:07 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48155 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726722AbgBXUrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:46:03 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s1so5946104pfh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 12:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MEUjVJOmmnH8Vpry0d5ts1AnA+rtuK/pfVKzn69oCns=;
-        b=ZRHSZE7cvsR8ZpuUv+0O/R6CEbotxvDzUTKr58Hu5rzAVvhc5byGevQLVKGfr3WYRS
-         X7rvaAMMuyAAy11+scG8MQkejq/RMoDBKrT/gsnwHzc4uSHxtILLLZczYt7kQ4OvzxsV
-         Z0S8qIe4VtwkrnPbdsFsKXclLTRiVLxYNgwlHkeS9YiaTk8xbH8o6VPHtX5q0b+HCWL8
-         4xcQpSkdnZwJNj1veGMZSfm4m91IDsNo0htOJ0kCV1y9Qr6c7rbIRiXBpDoPjOYwKTUz
-         MUIvnH/WP6X3u6A2SuRGG1vyXqfECTLIi7+bQC959qaY7FpXvMEgH5M/iznKjfT23Rrs
-         3+2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MEUjVJOmmnH8Vpry0d5ts1AnA+rtuK/pfVKzn69oCns=;
-        b=Ue4FvMeV0D7zlTrUI9UPXnZ+QZe2M6iJvdrGJ6cVdIIJBAqi+33oaf6Eb8s7frd895
-         j3GlMkP/dXcQfzkjUfMJa9C6bUa3cMTT4KSZfz+E8lyuxtHSCg7dFmeUZ66UYkVCOWZ+
-         W2DRwCBi6Oj2ElS4mnnJAWXoMFJsWF3pXTx2RvTdk2N8b4m3b0wNARDjy3D2hHaOy7A4
-         sJ/Fm1LwSfbh6FHcULrOUuleOUebBocUC7mvTF0HijVl1xQf06qItN6JwJ/3lXHRHndp
-         LVr8r/Ewp59URrYnQHHQgLOs5skfwLm0RkPoZmpy91nl9mi1QPdVs9+17hJLRi8sgUcG
-         hAkw==
-X-Gm-Message-State: APjAAAUGrWLJcxDHRn6RQsOnKQuZ0tfkfdt8z3eUE1CRCxYAX4j+MC2F
-        nL/YSxY/w5ABC15lKHN8bJSojEwqAC4hVkfwihVv/Q==
-X-Google-Smtp-Source: APXvYqwYY1dqclugRmuGNa9VUAWt9QQ0+AQN7P4Oqc84Wto02XmTfN071m89dZO+NSy0VOc5Eu6L5g9dOb3pNc4TVUU=
-X-Received: by 2002:a62:37c7:: with SMTP id e190mr53707489pfa.165.1582577162505;
- Mon, 24 Feb 2020 12:46:02 -0800 (PST)
+        Mon, 24 Feb 2020 15:47:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582577225;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IFb+JCg9fvYWv5+TRl87E0pCWdLFykFOxMEyimKBu0o=;
+        b=LjAGpPe2iUW9s22G7Kz69Xx0kykV3W/C5QrOgBdyDRGKuuKPOGDCX4Z+oNmBiZfL5J2zEr
+        4VsjQd2dECITwQufh3yKTL62cbXsPcPu+naIaZcTFYNfa+11UFysQhF/o+WKn8ZDVfCz3K
+        D6JsBLWSyXUD53ugGFSPaWCt1CF0wZQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-qc6Bg33hOUu4BiiD38JGXQ-1; Mon, 24 Feb 2020 15:47:01 -0500
+X-MC-Unique: qc6Bg33hOUu4BiiD38JGXQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D917802562;
+        Mon, 24 Feb 2020 20:47:00 +0000 (UTC)
+Received: from krava (ovpn-204-48.brq.redhat.com [10.40.204.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C93C560BF3;
+        Mon, 24 Feb 2020 20:46:57 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 21:46:55 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v3 2/2] Support interactive annotation of code without
+ symbols
+Message-ID: <20200224204655.GB100468@krava>
+References: <20200224022225.30264-1-yao.jin@linux.intel.com>
+ <20200224022225.30264-3-yao.jin@linux.intel.com>
+ <20200224123526.GF16664@krava>
+ <ed9fea55-1568-ab55-cf4a-52fef7c429bf@linux.intel.com>
 MIME-Version: 1.0
-References: <20200222235709.GA3786197@rani.riverdale.lan> <20200223193715.83729-3-nivedita@alum.mit.edu>
-In-Reply-To: <20200223193715.83729-3-nivedita@alum.mit.edu>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 24 Feb 2020 12:45:51 -0800
-Message-ID: <CAKwvOdmqM5aHnDCyL62gmWV5wFrKwAEdkHq+HPnvp3ZYA=dtbg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arch/x86: Drop unneeded linker script discard of .eh_frame
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed9fea55-1568-ab55-cf4a-52fef7c429bf@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 11:37 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Now that we don't generate .eh_frame sections for the files in setup.elf
-> and realmode.elf, the linker scripts don't need the /DISCARD/ any more.
->
-> Also remove the one in the main kernel linker script, since there are no
-> .eh_frame sections already.
+On Mon, Feb 24, 2020 at 11:39:43PM +0800, Jin, Yao wrote:
 
-Yep, we could go even further and validate the object files post link
-such that $(READELF) reported no .eh_frame section, suggesting the use
-of -fno-asynchronous-unwind-tables in KBUILD_CFLAGS.
+SNIP
 
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  arch/x86/boot/setup.ld              | 1 -
->  arch/x86/kernel/vmlinux.lds.S       | 3 ---
->  arch/x86/realmode/rm/realmode.lds.S | 1 -
->  3 files changed, 5 deletions(-)
->
-> diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
-> index 3da1c37c6dd5..24c95522f231 100644
-> --- a/arch/x86/boot/setup.ld
-> +++ b/arch/x86/boot/setup.ld
-> @@ -52,7 +52,6 @@ SECTIONS
->         _end = .;
->
->         /DISCARD/       : {
-> -               *(.eh_frame)
->                 *(.note*)
->         }
->
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index e3296aa028fe..54f7b9f46446 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -412,9 +412,6 @@ SECTIONS
->         DWARF_DEBUG
->
->         DISCARDS
-> -       /DISCARD/ : {
-> -               *(.eh_frame)
-> -       }
->  }
+> > > +	sym = symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
+> > > +	if (sym) {
+> > > +		src = symbol__hists(sym, 1);
+> > > +		if (!src) {
+> > > +			symbol__delete(sym);
+> > > +			return NULL;
+> > > +		}
+> > 
+> > hi,
+> > I like the patchset:
+> > 
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > 
+> > could you please also check if we can do this earlier,
+> > so the dummy symbol is actualy collecting all the hits?
+> > 
+> > like within the symbol__inc_addr_samples function,
+> > but I mght be missing something..
+> > 
+> > thanks,
+> > jirka
+> > 
+> 
+> Thanks so much for like and ack this patchset!
+> 
+> For your suggestion, I had thought about the similar idea before. Maybe we
+> can, but we need to process some cases.
+> 
+> Say the first address is 0x1000 and the dummy symbol size is 256. We create
+> a new dummy symbol for this address (start address is 0x1000 and end address
+> is 0x1100).
+> 
+> If the second address is 0x1010, we can't create a new dummy symbol for this
+> address directly. On the contrary, we need to search the dummy symbol list
+> by the address first. If the dummy symbol is found then reuse this symbol.
+> 
+> This idea is a bit more complicated than current patchset in implementation
+> but it can collect the hits for the dummy symbols, that's the advantage. The
+> advantage of current patchset is it's very simple. :)
 
-grepping for eh_frame in arch/x86/ there's a comment in
-arch/x86/include/asm/dwarf2.h:
- 40 #ifndef BUILD_VDSO
- 41   /*
- 42    * Emit CFI data in .debug_frame sections, not .eh_frame
-sections.
- 43    * The latter we currently just discard since we don't do DWARF
- 44    * unwinding at runtime.  So only the offline DWARF information is
- 45    * useful to anyone.  Note we should not use this directive if
- 46    * vmlinux.lds.S gets changed so it doesn't discard .eh_frame.
- 47    */
- 48   .cfi_sections .debug_frame
+ah right, we dont know the symbol's size.. perhaps we could hold
+histogram of unresolved addresses and use it later on when displaying
+the annotation for the particular unresolved address.. but then
+how to bucket the counts for accounting.. yep, it seems tricky ;-)
 
-add via:
-commit 7b956f035a9ef ("x86/asm: Re-add parts of the manual CFI infrastructure")
+> 
+> Accept current patchset or rewrite for the new idea, both OK for me. :)
 
-https://sourceware.org/binutils/docs/as/CFI-directives.html#g_t_002ecfi_005fsections-section_005flist
-is the manual's section on .cfi_sections directives, and states `The
-default if this directive is not used is .cfi_sections .eh_frame.`.
-So the comment is slightly stale since we're no longer explicitly
-discarding .eh_frame in arch/x86/kernel/vmlinux.lds.S, rather
-preventing the generation via -fno-asynchronous-unwind-tables in
-KBUILD_CFLAGS (across a few different Makefiles).  Would you mind also
-updating the comment in arch/x86/include/asm/dwarf2.h in a V2? The
-rest of this patch LGTM.
+I think you it can be build on top of this
 
->
->
-> diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
-> index 64d135d1ee63..63aa51875ba0 100644
-> --- a/arch/x86/realmode/rm/realmode.lds.S
-> +++ b/arch/x86/realmode/rm/realmode.lds.S
-> @@ -71,7 +71,6 @@ SECTIONS
->         /DISCARD/ : {
->                 *(.note*)
->                 *(.debug*)
-> -               *(.eh_frame*)
->         }
->
->  #include "pasyms.h"
-> --
-> 2.24.1
->
+thanks,
+jirka
 
-
--- 
-Thanks,
-~Nick Desaulniers
