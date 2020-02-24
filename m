@@ -2,262 +2,225 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3734C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F5C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C01620675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2C120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lCZcMwQ8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="z0Pw8W/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgBXJHN (ORCPT
+        id S1727267AbgBXJI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:07:13 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46381 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgBXJHN (ORCPT
+        Mon, 24 Feb 2020 04:08:59 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:53407 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727000AbgBXJI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:07:13 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j69hj-0000fq-GO; Mon, 24 Feb 2020 10:07:07 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j69hi-00070c-HT; Mon, 24 Feb 2020 10:07:06 +0100
-Date:   Mon, 24 Feb 2020 10:07:06 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 4/4] pwm: omap-dmtimer: Implement .apply callback
-Message-ID: <20200224090706.xsujpc3yiqlmmrmm@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-5-lokeshvutla@ti.com>
+        Mon, 24 Feb 2020 04:08:58 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.west.internal (Postfix) with ESMTP id 4CD3B4AB;
+        Mon, 24 Feb 2020 04:08:56 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:08:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=MWuEelg9MTdO9
+        PYjQ6DDeRPe8i75Vlfg90HjY3N5/Co=; b=lCZcMwQ8ILSRfPlSVJhwU2gCbZjpL
+        wkiphS3LaiM8ihe7gPFmTMrSKM582Qz1BF9aMLBwzewJ9Ls70izbCJ8+pFK1DL4l
+        6OLtC5EJE8kMxviGr8kjAY5/bRkfPRP8g54b8S4LejYJDzs1e5NTUEo0G4yR1YkS
+        hr2MEr1Fzd8O3NnCB7rwl/j2B3YTeL8E3f8mtrJegYmmUmq/T3HYvcQWInJsulDL
+        MfYy9zQaIiRYbKBNH6KGY+zEY3UBL2CyQo3aJXAMPewaX+BBDudaa0C4cz5wz4dm
+        6Pb5wqUo4r2fvFMxAmV//1EzYo/seAcBxZPFWA9ikr8NyvMLY3AGXlD9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=MWuEelg9MTdO9PYjQ6DDeRPe8i75Vlfg90HjY3N5/Co=; b=z0Pw8W/v
+        JV+34kCfgps/S4Xac0oXvJR1N/jnjlsE0CQ/y6Jn3MTR1DdnTZyioa8xdP4kV+qH
+        FrejhIdSm8YDMkHqblP77PxYUJMX9Y6s79Xzhk9PGyewZqMz9oV5APN/hB5TmRhe
+        JgdLekuAYB+QlPVMzUzm6teTjpTnMQXgVav/faGrWMIttPtoOxmM2p9/QD/7i8xC
+        QlPgYNvrKGQHZw9bn3Qd+akoXLdRfY9+d3AtcyHSMsT5xwwlvwxnrIzMypiGF1Aq
+        aQY3AgXQgUGvEOf3+t/cjnpudUnjMokMO3GuyJKBIopqQCyVuMI03gyDcN/Lc6Ms
+        TkRNLkc4aWYp3Q==
+X-ME-Sender: <xms:o5JTXkhx-72TTdKGljILwh9TJ9YBki3SG5ECNXL4nG0DQ55TObhjXw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegovehorg
+    hsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgjfhgggfes
+    tdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvg
+    estggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhg
+    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:o5JTXnFLg_wvUzlKlyjZViXjdSy5sePp4-Qol9_rlunLIa4keSujVg>
+    <xmx:o5JTXr8AtXffe_r6y8WebYzR1e2bTW-3Lct8AJYfTT_Jbu9qAdOQFA>
+    <xmx:o5JTXmzmOXeIon-rNgQtuRTp-Mhb6coOA1fV_queZ1DfzHWHd0hd8w>
+    <xmx:p5JTXolrE6rnd5x55Znx-r0HqXNSpSAHfpjcmjNV3Mm8XxFzu3_-8Ai3J2g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0D3803060FCB;
+        Mon, 24 Feb 2020 04:08:50 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 01/89] dt-bindings: i2c: brcmstb: Convert the BRCMSTB binding to a schema
+Date:   Mon, 24 Feb 2020 10:06:03 +0100
+Message-Id: <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224052135.17278-5-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:51:35AM +0530, Lokesh Vutla wrote:
-> Implement .apply callback and drop the legacy callbacks(enable, disable,
-> config, set_polarity).
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  drivers/pwm/pwm-omap-dmtimer.c | 141 +++++++++++++++++++--------------
->  1 file changed, 80 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-> index 58c61559e72f..aeda4ab12385 100644
-> --- a/drivers/pwm/pwm-omap-dmtimer.c
-> +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> @@ -31,8 +31,18 @@
->  #define DM_TIMER_LOAD_MIN 0xfffffffe
->  #define DM_TIMER_MAX      0xffffffff
->  
-> +/**
-> + * struct pwm_omap_dmtimer_chip - Structure representing a pwm chip
-> + *				  corresponding to omap dmtimer.
-> + * @chip:		PWM chip structure representing PWM controller
-> + * @mutex:		Mutex to protect pwm apply state
-> + * @dm_timer:		Pointer to omap dm timer.
-> + * @pdata:		Pointer to omap dm timer ops.
-> + * dm_timer_pdev:	Pointer to omap dm timer platform device
-> + */
->  struct pwm_omap_dmtimer_chip {
->  	struct pwm_chip chip;
-> +	/* Mutex to protect pwm apply state */
->  	struct mutex mutex;
->  	struct omap_dm_timer *dm_timer;
->  	const struct omap_dm_timer_ops *pdata;
-> @@ -45,11 +55,22 @@ to_pwm_omap_dmtimer_chip(struct pwm_chip *chip)
->  	return container_of(chip, struct pwm_omap_dmtimer_chip, chip);
->  }
->  
-> +/**
-> + * pwm_omap_dmtimer_get_clock_cycles() - Get clock cycles in a time frame
-> + * @clk_rate:	pwm timer clock rate
-> + * @ns:		time frame in nano seconds.
-> + *
-> + * Return number of clock cycles in a given period(ins ns).
-> + */
->  static u32 pwm_omap_dmtimer_get_clock_cycles(unsigned long clk_rate, int ns)
->  {
->  	return DIV_ROUND_CLOSEST_ULL((u64)clk_rate * ns, NSEC_PER_SEC);
->  }
->  
-> +/**
-> + * pwm_omap_dmtimer_start() - Start the pwm omap dm timer in pwm mode
-> + * @omap:	Pointer to pwm omap dm timer chip
-> + */
->  static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
->  {
->  	/*
-> @@ -67,32 +88,16 @@ static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
->  	omap->pdata->start(omap->dm_timer);
->  }
->  
-> -static int pwm_omap_dmtimer_enable(struct pwm_chip *chip,
-> -				   struct pwm_device *pwm)
-> -{
-> -	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-> -
-> -	mutex_lock(&omap->mutex);
-> -	omap->pdata->set_pwm(omap->dm_timer,
-> -			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> -			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> -
-> -	pwm_omap_dmtimer_start(omap);
-> -	mutex_unlock(&omap->mutex);
-> -
-> -	return 0;
-> -}
-> -
-> -static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
-> -				     struct pwm_device *pwm)
-> -{
-> -	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-> -
-> -	mutex_lock(&omap->mutex);
-> -	omap->pdata->stop(omap->dm_timer);
-> -	mutex_unlock(&omap->mutex);
-> -}
-> -
-> +/**
-> + * pwm_omap_dmtimer_config() - Update the configuration of pwm omap dm timer
-> + * @chip:	Pointer to PWM controller
-> + * @pwm:	Pointer to PWM channel
-> + * @duty_ns:	New duty cycle in nano seconds
-> + * @period_ns:	New period in nano seconds
-> + *
-> + * Return 0 if successfully changed the period/duty_cycle else appropriate
-> + * error.
-> + */
->  static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  				   struct pwm_device *pwm,
->  				   int duty_ns, int period_ns)
-> @@ -100,30 +105,26 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
->  	u32 period_cycles, duty_cycles;
->  	u32 load_value, match_value;
-> -	struct clk *fclk;
->  	unsigned long clk_rate;
-> +	struct clk *fclk;
->  
->  	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
->  		duty_ns, period_ns);
->  
-> -	mutex_lock(&omap->mutex);
->  	if (duty_ns == pwm_get_duty_cycle(pwm) &&
-> -	    period_ns == pwm_get_period(pwm)) {
-> -		/* No change - don't cause any transients. */
-> -		mutex_unlock(&omap->mutex);
-> +	    period_ns == pwm_get_period(pwm))
->  		return 0;
-> -	}
->  
->  	fclk = omap->pdata->get_fclk(omap->dm_timer);
->  	if (!fclk) {
->  		dev_err(chip->dev, "invalid pmtimer fclk\n");
-> -		goto err_einval;
-> +		return -EINVAL;
->  	}
->  
->  	clk_rate = clk_get_rate(fclk);
->  	if (!clk_rate) {
->  		dev_err(chip->dev, "invalid pmtimer fclk rate\n");
-> -		goto err_einval;
-> +		return -EINVAL;
->  	}
->  
->  	dev_dbg(chip->dev, "clk rate: %luHz\n", clk_rate);
-> @@ -151,7 +152,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  		dev_info(chip->dev,
->  			 "period %d ns too short for clock rate %lu Hz\n",
->  			 period_ns, clk_rate);
-> -		goto err_einval;
-> +		return -EINVAL;
->  	}
->  
->  	if (duty_cycles < 1) {
-> @@ -183,54 +184,72 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
->  		load_value, load_value,	match_value, match_value);
->  
-> -	mutex_unlock(&omap->mutex);
-> -
->  	return 0;
-> -
-> -err_einval:
-> -	mutex_unlock(&omap->mutex);
-> -
-> -	return -EINVAL;
->  }
->  
-> -static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
-> -					 struct pwm_device *pwm,
-> -					 enum pwm_polarity polarity)
-> +/**
-> + * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
-> + * @chip:	Pointer to PWM controller
-> + * @pwm:	Pointer to PWM channel
-> + * @state:	New sate to apply
-> + *
-> + * Return 0 if successfully changed the state else appropriate error.
-> + */
-> +static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
-> +				  struct pwm_device *pwm,
-> +				  const struct pwm_state *state)
->  {
->  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-> +	int ret = 0;
->  
-> -	/*
-> -	 * PWM core will not call set_polarity while PWM is enabled so it's
-> -	 * safe to reconfigure the timer here without stopping it first.
-> -	 */
->  	mutex_lock(&omap->mutex);
-> -	omap->pdata->set_pwm(omap->dm_timer,
-> -			     polarity == PWM_POLARITY_INVERSED,
-> -			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> +
-> +	if (pwm_is_enabled(pwm) && !state->enabled) {
+Switch the DT binding to a YAML schema to enable the DT validation.
 
-In my book calling PWM API functions (designed for PWM consumers) is not
-so nice. I would prefer you checking the hardware registers or cache the
-state locally instead of relying on the core here.
+Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 59 +++++++-
+ Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt       | 26 +---
+ MAINTAINERS                                                 |  2 +-
+ 3 files changed, 60 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
 
-It would be great to have a general description at the top of the driver
-(like for example drivers/pwm/pwm-sifive.c) that answers things like:
-
- - Does calling .stop completes the currently running period (it
-   should)?
- - Does changing polarity, duty_cycle and period complete the running
-   period?
- - How does the hardware behave on disable? (i.e. does it output the
-   state the pin is at in that moment? Does it go High-Z?)
-
-Best regards
-Uwe
-
+diff --git a/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+new file mode 100644
+index 000000000000..3189d74096e8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/brcm,brcmstb-i2c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom STB BSC IIC Master Controller
++
++maintainers:
++  - Kamal Dasu <kdasu.kdev@gmail.com>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - brcm,brcmstb-i2c
++      - brcm,brcmper-i2c
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-names:
++    maxItems: 1
++
++  clock-frequency:
++    enum:
++      - 46875
++      - 50000
++      - 93750
++      - 97500
++      - 187500
++      - 200000
++      - 375000
++      - 390000
++
++required:
++  - compatible
++  - reg
++  - clock-frequency
++
++unevaluatedProperties: false
++
++examples:
++  - |
++      bsca: i2c@f0406200 {
++          clock-frequency = <390000>;
++          compatible = "brcm,brcmstb-i2c";
++          interrupt-parent = <&irq0_intc>;
++          reg = <0xf0406200 0x58>;
++          interrupts = <0x18>;
++          interrupt-names = "upg_bsca";
++      };
++
++...
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt b/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
+deleted file mode 100644
+index 0380609b177a..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Broadcom stb bsc iic master controller
+-
+-Required properties:
+-
+-- compatible: should be "brcm,brcmstb-i2c" or "brcm,brcmper-i2c"
+-- clock-frequency: 32-bit decimal value of iic master clock freqency in Hz
+-		   valid values are 375000, 390000, 187500, 200000
+-		   93750, 97500, 46875 and 50000
+-- reg: specifies the base physical address and size of the registers
+-
+-Optional properties :
+-
+-- interrupts: specifies the interrupt number, the irq line to be used
+-- interrupt-names: Interrupt name string
+-
+-Example:
+-
+-bsca: i2c@f0406200 {
+-      clock-frequency = <390000>;
+-      compatible = "brcm,brcmstb-i2c";
+-      interrupt-parent = <&irq0_intc>;
+-      reg = <0xf0406200 0x58>;
+-      interrupts = <0x18>;
+-      interrupt-names = "upg_bsca";
+-};
+-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 38fe2f3f7b6f..9e45ed8be540 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3431,7 +3431,7 @@ L:	linux-i2c@vger.kernel.org
+ L:	bcm-kernel-feedback-list@broadcom.com
+ S:	Supported
+ F:	drivers/i2c/busses/i2c-brcmstb.c
+-F:	Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
++F:	Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+ 
+ BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
+ M:	Al Cooper <alcooperx@gmail.com>
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+git-series 0.9.1
