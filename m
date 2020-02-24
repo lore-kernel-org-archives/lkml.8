@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DE3C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B750AC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FF32080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886702080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pRocBaZe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uxJRQgOo"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="W76T6gjD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RKzivMKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgBXJNZ (ORCPT
+        id S1727893AbgBXJJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:13:25 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:48367 "EHLO
+        Mon, 24 Feb 2020 04:09:45 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:33021 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727909AbgBXJJr (ORCPT
+        by vger.kernel.org with ESMTP id S1727168AbgBXJJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:09:47 -0500
+        Mon, 24 Feb 2020 04:09:35 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 311C3640;
-        Mon, 24 Feb 2020 04:09:46 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:46 -0500
+        by mailnew.west.internal (Postfix) with ESMTP id 42B9162B;
+        Mon, 24 Feb 2020 04:09:33 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=zRF5ZuWKr/e6D
-        YwghNlUC5QVmO4Cx56P+mAHk10mMDw=; b=pRocBaZe76G5nf0FZbQjVNP2Fk93Z
-        HdY+HHqS3ffoHUJdQK39xJ826BNMUkV5kG8SN4IOYl+o6VlPKmnvzjqrpFSGQIo+
-        ZRez8RiTUAr0Y3fU/zWiLPVeMUE4qHCAvnFYbxVIROWLGNbAOuwnY1lH5xGzG9mp
-        flXEHDYA8vuhE1Ya56ySmcKAAHtI1ixr52z5TLa+n/Z7vKdYX0HYSaQKp2y4jtly
-        eKPUuaXi3UViIquD7kGItVHaJLGsyzRrpzYXWF9Ea623gZi5S/729mh3SFkBPHBc
-        qeUebrsYXzwnX2WTb3+PrWDJ8RUt5sEq29GPR5wV+j7o5pgFjGCKzYuqg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=CbU6f6ZrrpRWQ
+        5qiZhenLgFrNL32RR24Q5O8MBsSZvU=; b=W76T6gjD+sG5x7IbekSRVdLvYieY4
+        0tMN/Qq1LQA8/98MKWgeqgmo+9AIL7z8LUwDt5cQBrzcA6KymtAMYeuV2Ufk3+jV
+        OO455hMj7nz1fbRpTPUDRlAm0IuWuKAQ0Wi8TqcSk4FtXqjehlrt/3/uOWDh1c0z
+        Y0O+m8ULJaojxWUiNRK4gdMRLh7m9G/iP2fOg+DAaZ1Pofy9gYqPHMmY3ZzftXuu
+        eXiXqnWmH3oOU27yO7tBpd3O2szkIh3301nwnZ5AbzUQDZ1HtZZwxFzT173WjjY3
+        yv4t99V8s0Rp2YgaDoE7JUzUQBbNCf6KlhlSQiK88iugXBLd44MPsY3Kg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=zRF5ZuWKr/e6DYwghNlUC5QVmO4Cx56P+mAHk10mMDw=; b=uxJRQgOo
-        jKmJPywOSqFVGfW6OZC8U1zgwz7CRhHKZu/p7wniY7Hh6xNGiKO4cW58L4ltbYZj
-        RouSkQQ9eroRiEU8B7F8vkMa/05Z/6W7fx5ctYwjBqwzSt1NbviEL+MKkEsP4yQ8
-        Yk9CVUEiBibdSJWoEJhqvewOkf6JBr2AL9ZT3McZ7agwG9FuzsA0cSldah+wWbCc
-        3dQuc1zT7cbIANA2mhETJn0XLC2EP51h5TEocIXDr4wuvN//O+JyD95vIryDgftb
-        e4zTveonvqH5kKhZTmaTXXoz+/YH7kgG4Rq8KQROBZD6rL4EZvcjwRgEZ3xDdsma
-        mx5u8nNuxOqZqw==
-X-ME-Sender: <xms:2ZJTXgLgqMud6483wbayhXgQNbecoEbjf-LwmiRSDdZcEMnRJXET4Q>
+        fm2; bh=CbU6f6ZrrpRWQ5qiZhenLgFrNL32RR24Q5O8MBsSZvU=; b=RKzivMKy
+        IQkX23piS/y2KwMA99ZW0TY+5SRbg4EinBkDfV+PiQXYEr0h9+zds8OQeHCmAIxP
+        wQczdVgEGfBQ6Bqnts4qCLlJLYHmut8X80HdctAI6JskCQwXKvytevID6tzbNHbx
+        cGxHJlcpQkZBGfH2UZXyw2CpbVCDDUmFNI9ydIYZguV5h6S/2BWeAYYpNvM4SRdL
+        pOvR8W0hitW1A4DVREBSpD11cBwHuEGz64fBEcYh+C2hFXctcGerL7MhIhfOqIId
+        hKH3IHeh+dr9mzyB01qS/e3dP6hxbdLuqz+2N9AxeUjsEeRwlYIOpeORcweakXCo
+        WbnMb8CGWJEmOA==
+X-ME-Sender: <xms:zJJTXgYA3KOAgVDKHdets8P1tOwZ0fTR-xPvmXsWcszeDVUNcjiO1g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepfedunecurfgrrhgrmhepmhgrihhlfhhr
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepvdegnecurfgrrhgrmhepmhgrihhlfhhr
     ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:2ZJTXsFCLicWYL7Kc1NSff0P8O1Gy7Sd4kbmd4JmVPFVOzGyMMlY9Q>
-    <xmx:2ZJTXjzvKMRIk4uUpBejSw2xC02qrw-AxZxEVaHxuV_Pp0prCEcWQg>
-    <xmx:2ZJTXox0fQ-pATlsDrUh4DKRSv3LesOBL8ppxzGW4SIul9u-T7kcoA>
-    <xmx:2ZJTXsL9OW7ZfeOKHZEPW2eZjL_HHkmEAcM9Gp7Z3g7fxdebq4QTKLWtyvs>
+X-ME-Proxy: <xmx:zJJTXiXEHLsjUhY8NMC6KWUNJq2o0A3JEeyhIxxbIRKE4pBJxlDAmw>
+    <xmx:zJJTXgAUhB0WVorQIzALKP5zIVVyIZZeDWaIHpTMfoMnseuXUxS1Jg>
+    <xmx:zJJTXhy86s8Ketq3N1zcox58fE7uiG28WP2OeyE5KR5NzpMbyyc8FQ>
+    <xmx:zJJTXntbuq4xgKgCV9oiEPx5LN3QcXLPEsVThr0AZdszfRIuGq6HD5giWH8>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 706573060BD1;
-        Mon, 24 Feb 2020 04:09:45 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8691B3280066;
+        Mon, 24 Feb 2020 04:09:32 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -74,10 +74,11 @@ Cc:     dri-devel@lists.freedesktop.org,
         Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 39/89] drm/vc4: plane: Move additional planes creation to driver
-Date:   Mon, 24 Feb 2020 10:06:41 +0100
-Message-Id: <241b4bd3bf572fee8abf231fe4514ce3784de9d5.1582533919.git-series.maxime@cerno.tech>
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 30/89] dt-bindings: display: vc4: dpi: Add missing clock-names property
+Date:   Mon, 24 Feb 2020 10:06:32 +0100
+Message-Id: <042c8f676d3d863b55092bb58c1f15db95370782.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -88,78 +89,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far the plane creation was done when each CRTC was bound, and those
-planes were only tied to the CRTC that was registering them.
+While the device tree and the driver expected a clock-names property, it
+wasn't explicitly documented in the previous binding. Make sure it is now.
 
-This causes two main issues:
-  - The planes in the vc4 hardware are actually not tied to any CRTC, but
-    can be used with every combination
-
-  - More importantly, so far, we allocate 10 planes per CRTC, with 3 CRTCs.
-    However, the next generation of hardware will have 5 CRTCs, putting us
-    well above the maximum of 32 planes currently allowed by DRM.
-
-This patch is the first one in a series of patches that will take down both
-of these issues so that we can support the next generation of hardware
-while keeping a good amount of planes.
-
-We start by changing the way the planes are registered to first registering
-the primary planes for each CRTC in the CRTC bind function as we used to,
-but moving the overlay and cursor creation to the main driver bind
-function, after all the CRTCs have been bound.
-
-This will slightly change the ID order of the planes, since the primary
-planes of all CRTCs will be first, and then a pattern of 8 overlays, 1
-cursor plane for each CRTC.
-
-This shouldn't cause any trouble since the ordering between the planes is
-preserved though.
-
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 4 ----
- drivers/gpu/drm/vc4/vc4_drv.c  | 7 +++++++
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 43cfc9ba18ba..fc9977bdf347 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -1189,10 +1189,6 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
- 	 */
- 	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+index 288494b70e82..58213c564e03 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+@@ -21,6 +21,11 @@ properties:
+       - description: The core clock the unit runs on
+       - description: The pixel clock that feeds the pixelvalve
  
--	ret = vc4_plane_create_additional_planes(drm, crtc);
--	if (ret)
--		goto err_destroy_planes;
--
- 	vc4_crtc_get_cob_allocation(vc4_crtc);
- 
- 	CRTC_WRITE(PV_INTEN, 0);
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-index 4aa6e4747346..d23e2ba86727 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.c
-+++ b/drivers/gpu/drm/vc4/vc4_drv.c
-@@ -253,6 +253,7 @@ static int vc4_drm_bind(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm;
-+	struct drm_crtc *crtc;
- 	struct vc4_dev *vc4;
- 	struct device_node *node;
- 	int ret = 0;
-@@ -291,6 +292,12 @@ static int vc4_drm_bind(struct device *dev)
- 	if (ret)
- 		goto gem_destroy;
- 
-+	drm_for_each_crtc(crtc, drm) {
-+		ret = vc4_plane_create_additional_planes(drm, crtc);
-+		if (ret)
-+			continue;
-+	}
++  clock-names:
++    items:
++      - const: core
++      - const: pixel
 +
- 	drm_fb_helper_remove_conflicting_framebuffers(NULL, "vc4drmfb", false);
+   port:
+     type: object
+     description: >
+@@ -31,6 +36,7 @@ required:
+   - compatible
+   - reg
+   - clocks
++  - clock-names
+   - port
  
- 	ret = vc4_kms_load(drm);
+ additionalProperties: false
 -- 
 git-series 0.9.1
