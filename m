@@ -2,190 +2,262 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1118FC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C50C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D030C2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A2F2084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UQK3K2Gl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r6ksCCt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBXPTM (ORCPT
+        id S1727936AbgBXPTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:19:12 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35320 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgBXPTM (ORCPT
+        Mon, 24 Feb 2020 10:19:17 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:44360 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbgBXPTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:19:12 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b17so9825008wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 07:19:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p4JyKYMLcjkuhV880m1VVxSJ3o0/QSXYlmmHZLgGbBs=;
-        b=UQK3K2Gl/itI8chGjYgrXBownF6wnW9i5V2SNuFZs/dNrGM09ZLSX64aMdnnzAgutA
-         oKrfRbKXeF9+zXYd6vTkLgovyaOd/UvfhCcK2jz4u67rgtx3i7C5MF6xQmeeu8mLXw3T
-         V/RfAUDa17bi8dtDDSuyWYIJs9Vo3e2Jjxg/tRAMlouup31lB5OU/n0CDDCpeg4bTO//
-         RHbtjC8qHrmaa+oZzOgOG39hq5X36XK4oq/suw3ucXjuzlJMRpF88FmRjITsJO82QOZR
-         sU7dYEbon/yAkTxssRVtqgRGXVGB13EW77sbti1/nnUn+Xk3rwiIg2iC2ahSTFPqaABV
-         JHWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p4JyKYMLcjkuhV880m1VVxSJ3o0/QSXYlmmHZLgGbBs=;
-        b=OweiXzPoE/i/QqaThVn7c1/GoCwTdMrAz4ZsDtSC8hOThHnF/Z/HtXASBofp8vVbJ9
-         5DZSz4uPjTqhWVENPjkkiHoKI4QAH/Ik1SYgoMGPTpHr7Gr3TvgWtFXzEiYdCR5d8vuz
-         RIgD1fPg261DbCAp7LSgdiEc/ICCXSoZwAGx7Gzj8VAzcziJn8HzFU0lwBH9GCpLaIFU
-         tEbOTlDdx6AVElF4o/X8GlCImLUp159J1DuM4kXjrFsmP6j8bVKLhZ7LlKEvh4rWOquh
-         HD7qzyvzg22UmAzRYKLPWtDEFC+uxcbTKpQtee8kh/ZpWbpK2PHhunf9TO/PQ1L20/eq
-         1nyQ==
-X-Gm-Message-State: APjAAAW1LF7p72G4SSDTwF9Ijw42BVATLaZgpmSC+Sz9e4i5H1cn5NOw
-        G/vO8+gV88E+key/hmpz8+ELsenOAUSdWwF1JLe1wg==
-X-Google-Smtp-Source: APXvYqyNLkwLtxz573uyNilTmTW64flEKaMcDZCZ2l6skMIlgyJjf9Fo58D2tGc5jJ9ztdftX1d6XORKQphA8ltIw5A=
-X-Received: by 2002:a1c:282:: with SMTP id 124mr21977917wmc.62.1582557549834;
- Mon, 24 Feb 2020 07:19:09 -0800 (PST)
-MIME-Version: 1.0
-References: <1582555661-25737-1-git-send-email-clabbe@baylibre.com>
-In-Reply-To: <1582555661-25737-1-git-send-email-clabbe@baylibre.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 24 Feb 2020 16:18:58 +0100
-Message-ID: <CAKv+Gu9qyAov1mrOVH+fWizFk-a-MtbC4a95k21qG2cZaFD0Sg@mail.gmail.com>
-Subject: Re: [PATCH v2] crypto: arm64: CE: implement export/import
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Will Deacon <will@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Feb 2020 10:19:16 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OFI2E5034195;
+        Mon, 24 Feb 2020 15:18:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=IZBlZqW/RTIQGv1FMd6NnbDpL+mTPRKQpYdPDi5jwus=;
+ b=r6ksCCt2e4/RgzmgGoAcRpkSgLDZXQXUKG2kQWz3v9wQVSYbOP8YIzNLL8FMj+Q3h9SO
+ RYu8sYQnS+gJNnVVWzPh0LLZIUsp8wjj+Bg9iKwwatCvXhNlitWpWRhAWjd3M8nEzLUL
+ EhPgp8xTK4SrO5H+/QVRTYlchvWuF2IsQqOIiX8+yQi4a3Sma7mOmPMwlcLCZ3v6guaI
+ bA/EatcXahT7rsk1IQe511iwYmyiCwpdadA8g1eyGjKfqbKn8rI97HYBlOKr6dDlLJpH
+ 11nVSGWAbWFUcr3/VnSfQqpMfBQnqNzWC76wfvITuS/ew26+Vi+hrcTjzBPP5TmULmwz 9Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2ybvr4m8cs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 15:18:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OFIZN9096434;
+        Mon, 24 Feb 2020 15:18:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2yby5cdxtr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 15:18:39 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01OFIbDD019108;
+        Mon, 24 Feb 2020 15:18:37 GMT
+Received: from [10.39.217.189] (/10.39.217.189)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Feb 2020 07:18:37 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH v7 0/4] support reserving crashkernel above 4G on arm64
+ kdump
+From:   John Donnelly <john.p.donnelly@oracle.com>
+In-Reply-To: <52102118-9b61-5978-3213-062e9c758dcf@Oracle.com>
+Date:   Mon, 24 Feb 2020 09:18:27 -0600
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BF198E9B-2A9B-4325-A2CA-BB164729704B@oracle.com>
+References: <20191223152349.180172-1-chenzhou10@huawei.com>
+ <52102118-9b61-5978-3213-062e9c758dcf@Oracle.com>
+To:     kexec mailing list <kexec@lists.infradead.org>,
+        linux-kernel@vger.kernel.org
+X-Mailer: Apple Mail (2.3445.9.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002240125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 adultscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 at 15:47, Corentin Labbe <clabbe@baylibre.com> wrote:
->
-> When an ahash algorithm fallback to another ahash and that fallback is
-> shaXXX-CE, doing export/import lead to error like this:
-> alg: ahash: sha1-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\"
->
-> This is due to the descsize of shaxxx-ce being larger than struct shaxxx_state
-> off by an u32.
-> For fixing this, let's implement export/import which rip the finalize
-> variant instead of using generic export/import.
->
-> Fixes: 6ba6c74dfc6b ("arm64/crypto: SHA-224/SHA-256 using ARMv8 Crypto Extensions")
-> Fixes: 2c98833a42cd ("arm64/crypto: SHA-1 using ARMv8 Crypto Extensions")
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-> ---
-> Changes since v1:
-> - memcpy directly &sctx->sst instead of sctx. As suggested by Eric Biggers
->
->  arch/arm64/crypto/sha1-ce-glue.c | 20 ++++++++++++++++++++
->  arch/arm64/crypto/sha2-ce-glue.c | 23 +++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
->
-> diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
-> index 63c875d3314b..565ef604ca04 100644
-> --- a/arch/arm64/crypto/sha1-ce-glue.c
-> +++ b/arch/arm64/crypto/sha1-ce-glue.c
-> @@ -91,12 +91,32 @@ static int sha1_ce_final(struct shash_desc *desc, u8 *out)
->         return sha1_base_finish(desc, out);
->  }
->
-> +static int sha1_ce_export(struct shash_desc *desc, void *out)
-> +{
-> +       struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-> +
-> +       memcpy(out, &sctx->sst, sizeof(struct sha1_state));
-> +       return 0;
-> +}
-> +
-> +static int sha1_ce_import(struct shash_desc *desc, const void *in)
-> +{
-> +       struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-> +
-> +       memcpy(&sctx->sst, in, sizeof(struct sha1_state));
-> +       sctx->finalize = 0;
-> +       return 0;
-> +}
-> +
->  static struct shash_alg alg = {
->         .init                   = sha1_base_init,
->         .update                 = sha1_ce_update,
->         .final                  = sha1_ce_final,
->         .finup                  = sha1_ce_finup,
-> +       .import                 = sha1_ce_import,
-> +       .export                 = sha1_ce_export,
->         .descsize               = sizeof(struct sha1_ce_state),
-> +       .statesize              = sizeof(struct sha1_state),
->         .digestsize             = SHA1_DIGEST_SIZE,
->         .base                   = {
->                 .cra_name               = "sha1",
-> diff --git a/arch/arm64/crypto/sha2-ce-glue.c b/arch/arm64/crypto/sha2-ce-glue.c
-> index a8e67bafba3d..9450d19b9e6e 100644
-> --- a/arch/arm64/crypto/sha2-ce-glue.c
-> +++ b/arch/arm64/crypto/sha2-ce-glue.c
-> @@ -109,12 +109,32 @@ static int sha256_ce_final(struct shash_desc *desc, u8 *out)
->         return sha256_base_finish(desc, out);
->  }
->
-> +static int sha256_ce_export(struct shash_desc *desc, void *out)
-> +{
-> +       struct sha256_ce_state *sctx = shash_desc_ctx(desc);
-> +
-> +       memcpy(out, &sctx->sst, sizeof(struct sha256_state));
-> +       return 0;
-> +}
-> +
-> +static int sha256_ce_import(struct shash_desc *desc, const void *in)
-> +{
-> +       struct sha256_ce_state *sctx = shash_desc_ctx(desc);
-> +
-> +       memcpy(&sctx->sst, in, sizeof(struct sha256_state));
-> +       sctx->finalize = 0;
-> +       return 0;
-> +}
-> +
->  static struct shash_alg algs[] = { {
->         .init                   = sha224_base_init,
->         .update                 = sha256_ce_update,
->         .final                  = sha256_ce_final,
->         .finup                  = sha256_ce_finup,
-> +       .export                 = sha256_ce_export,
-> +       .import                 = sha256_ce_import,
->         .descsize               = sizeof(struct sha256_ce_state),
-> +       .statesize              = sizeof(struct sha256_state),
->         .digestsize             = SHA224_DIGEST_SIZE,
->         .base                   = {
->                 .cra_name               = "sha224",
-> @@ -128,7 +148,10 @@ static struct shash_alg algs[] = { {
->         .update                 = sha256_ce_update,
->         .final                  = sha256_ce_final,
->         .finup                  = sha256_ce_finup,
-> +       .export                 = sha256_ce_export,
-> +       .import                 = sha256_ce_import,
->         .descsize               = sizeof(struct sha256_ce_state),
-> +       .statesize              = sizeof(struct sha256_state),
->         .digestsize             = SHA256_DIGEST_SIZE,
->         .base                   = {
->                 .cra_name               = "sha256",
-> --
-> 2.24.1
->
+> On Feb 12, 2020, at 7:20 AM, John Donnelly =
+<John.P.Donnelly@Oracle.com> wrote:
+>=20
+> On 12/23/19 9:23 AM, Chen Zhou wrote:
+>> This patch series enable reserving crashkernel above 4G in arm64.
+>> There are following issues in arm64 kdump:
+>> 1. We use crashkernel=3DX to reserve crashkernel below 4G, which will =
+fail
+>> when there is no enough low memory.
+>> 2. Currently, crashkernel=3DY@X can be used to reserve crashkernel =
+above 4G,
+>> in this case, if swiotlb or DMA buffers are required, crash dump =
+kernel
+>> will boot failure because there is no low memory available for =
+allocation.
+>> To solve these issues, introduce crashkernel=3DX,low to reserve =
+specified
+>> size low memory.
+>> Crashkernel=3DX tries to reserve memory for the crash dump kernel =
+under
+>> 4G. If crashkernel=3DY,low is specified simultaneously, reserve =
+spcified
+>> size low memory for crash kdump kernel devices firstly and then =
+reserve
+>> memory above 4G.
+>=20
+>=20
+> Hi Chen,
+>=20
+>=20
+> I've applied your V7 patches to 5.4.17 test kernel and I am still =
+seeing
+> failures when I use a kdump kernel .
+>=20
+>=20
+> On the kernel boot I see:
+>=20
+> Reserving 250MB of low memory at 3618MB for crashkernel (System low =
+RAM: 2029MB)
+> crashkernel reserved: 0x00000008c0000000 - 0x0000000940000000 (2048 =
+MB)
+>=20
+> # cat /proc/iomem  | grep -i cras
+>  e2200000-f1bfffff : Crash kernel (low)
+>  8c0000000-93fffffff : Crash kernel
+>=20
+>=20
+> When kdump kernel is started I see what appears to be DMA initialized =
+:
+>=20
+> NUMA: NODE_DATA(1) on node 0
+> Zone ranges:
+> DMA32    [mem 0x00000000802f0000-0x00000000ffffffff]
+> Normal   [mem 0x0000000100000000-0x000000093fffffff]
+>=20
+> But the sas driver still fails :
+>=20
+>=20
+> [   12.092769] CPU: 0 PID: 149 Comm: kworker/0:13 Not tainted =
+5.4.17-4-uek6m_ol8-jpdonnel+ #2
+> [   12.101019] Hardware name: To be filled by O.E.M. Saber/Saber, BIOS =
+0ACKL028 09/09/2019
+> [   12.109019] Workqueue: events work_for_cpu_fn
+> [   12.113363] Call trace:
+> [   12.115803]  dump_backtrace+0x0/0x19c
+> [   12.119453]  show_stack+0x24/0x2c
+> [   12.122769]  dump_stack+0xcc/0xf8
+> [   12.126078]  warn_alloc+0x108/0x11c
+> [   12.129554]  __alloc_pages_slowpath+0x8fc/0xa10
+> [   12.134071]  __alloc_pages_nodemask+0x2ec/0x334
+> [   12.138597]  __dma_direct_alloc_pages+0x19c/0x238
+> [   12.143288]  dma_direct_alloc_pages+0x48/0xf8
+> [   12.147632]  dma_direct_alloc+0x4c/0x6c
+> [   12.151455]  dma_alloc_attrs+0x88/0xf4
+> [   12.155196]  dma_pool_alloc+0x11c/0x2ec
+> [   12.159053]  _base_allocate_memory_pools+0x2ec/0x1078 [mpt3sas]
+> [   12.164978]  mpt3sas_base_attach+0x444/0x748 [mpt3sas]
+> [   12.170121]  _scsih_probe+0x554/0x848 [mpt3sas]
+> [   12.174648]  local_pci_probe+0x4c/0x98
+>=20
+> And the kdump fails to find local storage:
+>=20
+>=20
+> mpt3sas_cm0: reply_post_free pool: dma_pool_alloc failed
+> mpt3sas_cm0: failure at =
+../drivers/scsi/mpt3sas/mpt3sas_scsih.c:10626/_scsih_probe()!
+
+ Hi Chen,
+
+
+I was able to unit test these series of kernel  patches  applied to a =
+5.4.17 test kernel  along with the kexec CLI  change :
+
+0001-arm64-kdump-add-another-DT-property-to-crash-dump-ke.patch
+
+ Applied to :
+
+kexec-tools-2.0.19-12.0.4.el8.src.rpm
+
+And obtained a vmcore using this cmdline :
+
+BOOT_IMAGE=3D(hd6,gpt2)/vmlinuz-5.4.17-4-uek6m_ol8-jpdonnel+ =
+root=3D/dev/mapper/ol01-root ro crashkernel=3D2048M@35G =
+crashkernel=3D250M,low rd.lvm.lv=3Dol01/root rd.lvm.lv=3Dol01/swap =
+console=3DttyS4 loglevel=3D7
+
+Can you add :
+
+Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+
+
+How can we  get these changes included into an rc kernel release  ?
+
+Thanks,
+
+John.
+
+
+
+
+
+
+>=20
+>=20
+>=20
+>=20
+>> When crashkernel is reserved above 4G in memory, that is, =
+crashkernel=3DX,low
+>> is specified simultaneously, kernel should reserve specified size low =
+memory
+>> for crash dump kernel devices. So there may be two crash kernel =
+regions, one
+>> is below 4G, the other is above 4G.
+>> In order to distinct from the high region and make no effect to the =
+use of
+>> kexec-tools, rename the low region as "Crash kernel (low)", and add =
+DT property
+>> "linux,low-memory-range" to crash dump kernel's dtb to pass the low =
+region.
+>> Besides, we need to modify kexec-tools:
+>> arm64: kdump: add another DT property to crash dump kernel's dtb(see =
+[1])
+>=20
+>=20
+> Can you explain what needs done to kexec tools  in more detail ?
+>=20
+> I'd like to understand why the Arm kdump boot images are so large ( =
+1024M+ ) as compared to x86 that can take a vmcore using a 512M kdump =
+image .
+>=20
+>=20
+>=20
+> =3D=3D=3D=3D=3D=3D=3D <clipped>=3D=3D=3D=3D=3D=3D=3D
+
+
+   I was able to unit test these series of patches along with the kexec =
+CLI  change :
+
+0001-arm64-kdump-add-another-DT-property-to-crash-dump-ke.patch
+
+ Applied to :
+
+kexec-tools-2.0.19-12.0.4.el8.src.rpm
+
+
+And was able to get a vmcore dump=20
+
+>=20
+>=20
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> =
+https://urldefense.com/v3/__http://lists.infradead.org/mailman/listinfo/ke=
+xec__;!!GqivPVa7Brio!PTJ8J3z7crIzNbPXZr99_vgRkany0mRuHvQqzUIK_4QoWqLEcdWLX=
+fjsdyw3vIntYsG7$=20
+
