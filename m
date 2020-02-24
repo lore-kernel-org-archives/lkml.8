@@ -2,321 +2,303 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072F1C38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93CDC38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B379D20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF84C20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:17:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1bBNyI8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tmAuv/68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgBXTRC (ORCPT
+        id S1727252AbgBXTRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:17:02 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39646 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgBXTRC (ORCPT
+        Mon, 24 Feb 2020 14:17:09 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38310 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgBXTRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 14:17:02 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so7073504oij.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 11:16:59 -0800 (PST)
+        Mon, 24 Feb 2020 14:17:08 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a9so504268wmj.3;
+        Mon, 24 Feb 2020 11:17:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qwV+u3WOm9LRc51C8OUh4HjW6YnKJQYbrX5gdSJFQPg=;
-        b=M1bBNyI8DdOUCkQRYPRr1f7VEpubmZhuMLCMOqvXRXJ97uk9QJX4A8X3SO4tvcGM7/
-         jrVM/jxGlNcQeQvN8rumnaE87Pd2f7GyFq0aIxVbO6LBPnBvVHQP2D3sCNBnGQPhX8Kv
-         fXVjtjkSvPVISpSw+9PPOV61+WKzRpitkPq1qyFkGa28lOKGFACNqRC397AzO0775MsZ
-         iX7Ulp7VRKK4cVeNT1G82IRX2cdyXvQoma55Skx6PGHcoHrh7sA3wqS0x2A/HILsDZp6
-         C+JD6+yPLDMd2reywGQ8B5k1hVpokSBIL/Ejeo0WzWMQX/UA7qkz47ddm/sYfrBI184T
-         s7IQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3sjrxqELhrwy8WgDXBV+GtpKg4K8/rsGrMchFYXjGWE=;
+        b=tmAuv/68pB2FNi75lGd2A6lZ9BKsvou1ot8j8TicWriKiF+FVBaxtHkebW24BdutYy
+         lXqMr/FOXgMCKXj40gh+KAGcyldBG40JV6I8O+tGG+5ZK7pCIPNgPRiywAoRcVoIslLq
+         dls9mBhYwEve0LHjsxUmMdM0kKEvr7SbuYC1vBC85xxzkovCZw0tGHfmx1GfZ6qL+KAP
+         Shp7zR3SMVR1bzLWA1dssbIv5knSvP57ceGj2NqdFNzaM6sFn0QUlvqg/t5YYIiGydAC
+         hXuYliWuDdpssvzJyDXbOEz81nylssV2w4OPNomVGSg5YyOHevscXLC3L3QvM52QRaRY
+         QoaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwV+u3WOm9LRc51C8OUh4HjW6YnKJQYbrX5gdSJFQPg=;
-        b=Xas5VgB+MvbQPPGvANZCGP3GA58HogNG5KOqxz/n4P6cW2NFVCzUwNAj78GYLrEQqS
-         JO8ZVPSxpii4ScxnLa7NcJM5YQZKFT7RqxB62W7ZWZw/hshd2nRV8MNcLjN1zgYvPIAF
-         FpCA444a43YbOUf+PSJkQGrD69rM7D/OVNNmuu6nDlUd0X1GQkt792BZrnB9L3a78v1R
-         o2fg/gJpFk4OH/YJxrky5Xn0zB5dvWCNBQjtfxA1T6FkHDGjLRn76KILz9an4Ma8x45H
-         +PlQ9EXTRooNGorblkHd499bXHDcKWOOyThBc6ExFMWc96Z9qEYLtxm8X/5P/RZ7HHgW
-         Zh/w==
-X-Gm-Message-State: APjAAAV5faJ5A+EHmPV394obDNoYeUfxH9JPy5R4BFqIPbMlPSamaiCy
-        yKw3OEOFc+DDVPWG6ENHMgFbYr6lRZjrilUvuNStgQ==
-X-Google-Smtp-Source: APXvYqzROexC+r5Qkukn5Vm4o44tIgdihc8RdU1ZtRYdSsIHUCAX5xfFtKN65lPVHC+RIMVYSUvgd7T7a4DXEAKsQSY=
-X-Received: by 2002:aca:d4c1:: with SMTP id l184mr480740oig.172.1582571819031;
- Mon, 24 Feb 2020 11:16:59 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3sjrxqELhrwy8WgDXBV+GtpKg4K8/rsGrMchFYXjGWE=;
+        b=jBV5dOiZ/6Sr7okAYOhTdWtsRjAg+BZGYqJsV9X1DnGih7pBGvF1w381oNNu9BCL6H
+         cXsTE0c85lALjSjf7TiWjxC6D4FyTgLhOXNbodlZe8P+AOYhpw2iiUGBW2s8IIo3LMk2
+         LoL+O64+9ne/hj6RwbkUx+B3iFQbDN7PQ5OtAooysnF2W882EI244MLs1vP0SoME1S5I
+         mTKDVS934z2NHN7KClSs826kqaLEjIqWIFIIeOHJExp8NTqnaJHy808aEDh+E0TGWTVT
+         4ZYyiIoB6jpyCLYUyreKWjTdJvvJkUWqiK8mH6fT998vwlRZEKGJPZK82HzdiGj0uCbz
+         XbqQ==
+X-Gm-Message-State: APjAAAUv3/4WCc+RuqEhL1VUJfcYU6Li1UsolkMtafn2fQcDkBubUR1J
+        3LvhrV55iNMJ3pS2ZaA5uukElkSA
+X-Google-Smtp-Source: APXvYqxluC8k01P82sC8wEOfLJhlmbwZOHd/mG2w52h7DNHbisaLr1BEeIoy4q1USKGnRPYlAsvCBQ==
+X-Received: by 2002:a7b:c3d1:: with SMTP id t17mr483182wmj.27.1582571825201;
+        Mon, 24 Feb 2020 11:17:05 -0800 (PST)
+Received: from [192.168.1.23] (affg206.neoplus.adsl.tpnet.pl. [95.49.136.206])
+        by smtp.gmail.com with ESMTPSA id h128sm524987wmh.33.2020.02.24.11.17.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 11:17:04 -0800 (PST)
+Subject: Re: [PATCH v5] leds: add SGI IP30 led support
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+References: <20200224111733.10320-1-tbogendoerfer@suse.de>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0a3146ff-95c5-9f57-7c7c-0abbf13e2da4@gmail.com>
+Date:   Mon, 24 Feb 2020 20:17:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200221231027.230147-1-elver@google.com> <20200222013642.GQ2935@paulmck-ThinkPad-P72>
-In-Reply-To: <20200222013642.GQ2935@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 24 Feb 2020 20:16:47 +0100
-Message-ID: <CANpmjNMVczXfr98LTTd4hYBXakq1uGZ14Wfs66pDB=e4JPGjwA@mail.gmail.com>
-Subject: Re: [PATCH v3] kcsan: Add option for verbose reporting
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200224111733.10320-1-tbogendoerfer@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Feb 2020 at 02:36, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Sat, Feb 22, 2020 at 12:10:27AM +0100, Marco Elver wrote:
-> > Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
-> > Currently information about the reporting task's held locks and IRQ
-> > trace events are shown, if they are enabled.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > Suggested-by: Qian Cai <cai@lca.pw>
->
-> Applied in place of v1, thank you!  Please check -rcu's "dev" branch
-> to make sure that I have correct ordering and versions.
+Hi Thomas,
 
-(Missed this.) Checked, and all looks good. Thank you!
+Thank you for the update.
 
-I hope the new version of this patch now does what you'd expect.
+On 2/24/20 12:17 PM, Thomas Bogendoerfer wrote:
+> This patch implemenets a driver to support the front panel LEDs of
+> SGI Octane (IP30) workstations.
+> 
+> Reviewed-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+> Changes in v5:
+>   - use defines for led enumaration
+>   - name red led fault and white led system
+> 
+> Changes in v4:
+>   - simplified ip30led_set by using gated value from led framework
+> 
+> Changes in v3:
+>   - rebased to 5.6-rc2
+> 
+> Changes in v2:
+>   - use led names conforming to include/dt-bindings/leds/common.h
+>   - read LED state from firmware
+>   - leave setting up to user
+> 
+>  drivers/leds/Kconfig     | 11 +++++
+>  drivers/leds/Makefile    |  1 +
+>  drivers/leds/leds-ip30.c | 86 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 98 insertions(+)
+>  create mode 100644 drivers/leds/leds-ip30.c
+> 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index d82f1dea3711..c664d84e1667 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -846,6 +846,17 @@ config LEDS_TPS6105X
+>  	  It is a single boost converter primarily for white LEDs and
+>  	  audio amplifiers.
+>  
+> +config LEDS_IP30
+> +	tristate "LED support for SGI Octane machines"
+> +	depends on LEDS_CLASS
+> +	depends on SGI_MFD_IOC3
+> +	help
+> +	  This option enables support for the Red and White LEDs of
+> +	  SGI Octane machines.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called leds-ip30.
+> +
+>  comment "LED Triggers"
+>  source "drivers/leds/trigger/Kconfig"
+>  
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index d7e1107753fb..46bd611a03a9 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+>  obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+>  obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
+>  obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
+> +obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
+>  
+>  # LED SPI Drivers
+>  obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+> diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
+> new file mode 100644
+> index 000000000000..e95ea786a43e
+> --- /dev/null
+> +++ b/drivers/leds/leds-ip30.c
+> @@ -0,0 +1,86 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LED Driver for SGI Octane machines
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/leds.h>
+> +
+> +#define IP30_LED_SYSTEM	0
+> +#define IP30_LED_FAULT	1
+> +
+> +struct ip30_led {
+> +	struct led_classdev cdev;
+> +	u32 __iomem *reg;
+> +};
+> +
+> +static void ip30led_set(struct led_classdev *led_cdev,
+> +			enum led_brightness value)
+> +{
+> +	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
+> +
+> +	writel(value, led->reg);
+> +}
+> +
+> +static int ip30led_create(struct platform_device *pdev, int num)
+> +{
+> +	struct resource *res;
+> +	struct ip30_led *data;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, num);
+> +	if (!res)
+> +		return -EBUSY;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->reg = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(data->reg))
+> +		return PTR_ERR(data->reg);
+> +
+> +
+> +	switch (num) {
+> +	case IP30_LED_SYSTEM:
+> +		data->cdev.name = "white:system";
+> +		break;
+> +	case IP30_LED_FAULT:
+> +		data->cdev.name = "red:fault";
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	data->cdev.brightness = readl(data->reg);
+> +	data->cdev.max_brightness = 1;
+> +	data->cdev.brightness_set = ip30led_set;
+> +
+> +	return devm_led_classdev_register(&pdev->dev, &data->cdev);
+> +}
+> +
+> +static int ip30led_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret = ip30led_create(pdev, IP30_LED_SYSTEM);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return ip30led_create(pdev, IP30_LED_FAULT);
+> +}
+> +
+> +static struct platform_driver ip30led_driver = {
+> +	.probe		= ip30led_probe,
+> +	.driver		= {
+> +		.name		= "ip30-leds",
+> +	},
+> +};
+> +
+> +module_platform_driver(ip30led_driver);
+> +
+> +MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
+> +MODULE_DESCRIPTION("SGI Octane LED driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:ip30-leds");
 
-Thanks,
--- Marco
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
->
-> > ---
-> > v3:
-> > * Typos
-> > v2:
-> > * Rework obtaining 'current' for the "other thread" -- it now passes
-> >   'current' and ensures that we stall until the report was printed, so
-> >   that the lockdep information contained in 'current' is accurate. This
-> >   was non-trivial but testing so far leads me to conclude this now
-> >   reliably prints the held locks for the "other thread" (please test
-> >   more!).
-> > ---
-> >  kernel/kcsan/core.c   |   4 +-
-> >  kernel/kcsan/kcsan.h  |   3 ++
-> >  kernel/kcsan/report.c | 103 +++++++++++++++++++++++++++++++++++++++++-
-> >  lib/Kconfig.kcsan     |  13 ++++++
-> >  4 files changed, 120 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> > index e7387fec66795..065615df88eaa 100644
-> > --- a/kernel/kcsan/core.c
-> > +++ b/kernel/kcsan/core.c
-> > @@ -18,8 +18,8 @@
-> >  #include "kcsan.h"
-> >
-> >  static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
-> > -static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
-> > -static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
-> > +unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
-> > +unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
-> >  static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
-> >  static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
-> >
-> > diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-> > index 892de5120c1b6..e282f8b5749e9 100644
-> > --- a/kernel/kcsan/kcsan.h
-> > +++ b/kernel/kcsan/kcsan.h
-> > @@ -13,6 +13,9 @@
-> >  /* The number of adjacent watchpoints to check. */
-> >  #define KCSAN_CHECK_ADJACENT 1
-> >
-> > +extern unsigned int kcsan_udelay_task;
-> > +extern unsigned int kcsan_udelay_interrupt;
-> > +
-> >  /*
-> >   * Globally enable and disable KCSAN.
-> >   */
-> > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> > index 11c791b886f3c..7bdb515e3662f 100644
-> > --- a/kernel/kcsan/report.c
-> > +++ b/kernel/kcsan/report.c
-> > @@ -1,5 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >
-> > +#include <linux/debug_locks.h>
-> > +#include <linux/delay.h>
-> >  #include <linux/jiffies.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/lockdep.h>
-> > @@ -31,7 +33,26 @@ static struct {
-> >       int                     cpu_id;
-> >       unsigned long           stack_entries[NUM_STACK_ENTRIES];
-> >       int                     num_stack_entries;
-> > -} other_info = { .ptr = NULL };
-> > +
-> > +     /*
-> > +      * Optionally pass @current. Typically we do not need to pass @current
-> > +      * via @other_info since just @task_pid is sufficient. Passing @current
-> > +      * has additional overhead.
-> > +      *
-> > +      * To safely pass @current, we must either use get_task_struct/
-> > +      * put_task_struct, or stall the thread that populated @other_info.
-> > +      *
-> > +      * We cannot rely on get_task_struct/put_task_struct in case
-> > +      * release_report() races with a task being released, and would have to
-> > +      * free it in release_report(). This may result in deadlock if we want
-> > +      * to use KCSAN on the allocators.
-> > +      *
-> > +      * Since we also want to reliably print held locks for
-> > +      * CONFIG_KCSAN_VERBOSE, the current implementation stalls the thread
-> > +      * that populated @other_info until it has been consumed.
-> > +      */
-> > +     struct task_struct      *task;
-> > +} other_info;
-> >
-> >  /*
-> >   * Information about reported races; used to rate limit reporting.
-> > @@ -245,6 +266,16 @@ static int sym_strcmp(void *addr1, void *addr2)
-> >       return strncmp(buf1, buf2, sizeof(buf1));
-> >  }
-> >
-> > +static void print_verbose_info(struct task_struct *task)
-> > +{
-> > +     if (!task)
-> > +             return;
-> > +
-> > +     pr_err("\n");
-> > +     debug_show_held_locks(task);
-> > +     print_irqtrace_events(task);
-> > +}
-> > +
-> >  /*
-> >   * Returns true if a report was generated, false otherwise.
-> >   */
-> > @@ -319,6 +350,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
-> >                                 other_info.num_stack_entries - other_skipnr,
-> >                                 0);
-> >
-> > +             if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> > +                 print_verbose_info(other_info.task);
-> > +
-> >               pr_err("\n");
-> >               pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
-> >                      get_access_type(access_type), ptr, size,
-> > @@ -340,6 +374,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
-> >       stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
-> >                         0);
-> >
-> > +     if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> > +             print_verbose_info(current);
-> > +
-> >       /* Print report footer. */
-> >       pr_err("\n");
-> >       pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
-> > @@ -357,6 +394,67 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
-> >       spin_unlock_irqrestore(&report_lock, *flags);
-> >  }
-> >
-> > +/*
-> > + * Sets @other_info.task and awaits consumption of @other_info.
-> > + *
-> > + * Precondition: report_lock is held.
-> > + * Postcondition: report_lock is held.
-> > + */
-> > +static void
-> > +set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
-> > +{
-> > +     /*
-> > +      * We may be instrumenting a code-path where current->state is already
-> > +      * something other than TASK_RUNNING.
-> > +      */
-> > +     const bool is_running = current->state == TASK_RUNNING;
-> > +     /*
-> > +      * To avoid deadlock in case we are in an interrupt here and this is a
-> > +      * race with a task on the same CPU (KCSAN_INTERRUPT_WATCHER), provide a
-> > +      * timeout to ensure this works in all contexts.
-> > +      *
-> > +      * Await approximately the worst case delay of the reporting thread (if
-> > +      * we are not interrupted).
-> > +      */
-> > +     int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
-> > +
-> > +     other_info.task = current;
-> > +     do {
-> > +             if (is_running) {
-> > +                     /*
-> > +                      * Let lockdep know the real task is sleeping, to print
-> > +                      * the held locks (recall we turned lockdep off, so
-> > +                      * locking/unlocking @report_lock won't be recorded).
-> > +                      */
-> > +                     set_current_state(TASK_UNINTERRUPTIBLE);
-> > +             }
-> > +             spin_unlock_irqrestore(&report_lock, *flags);
-> > +             /*
-> > +              * We cannot call schedule() since we also cannot reliably
-> > +              * determine if sleeping here is permitted -- see in_atomic().
-> > +              */
-> > +
-> > +             udelay(1);
-> > +             spin_lock_irqsave(&report_lock, *flags);
-> > +             if (timeout-- < 0) {
-> > +                     /*
-> > +                      * Abort. Reset other_info.task to NULL, since it
-> > +                      * appears the other thread is still going to consume
-> > +                      * it. It will result in no verbose info printed for
-> > +                      * this task.
-> > +                      */
-> > +                     other_info.task = NULL;
-> > +                     break;
-> > +             }
-> > +             /*
-> > +              * If @ptr nor @current matches, then our information has been
-> > +              * consumed and we may continue. If not, retry.
-> > +              */
-> > +     } while (other_info.ptr == ptr && other_info.task == current);
-> > +     if (is_running)
-> > +             set_current_state(TASK_RUNNING);
-> > +}
-> > +
-> >  /*
-> >   * Depending on the report type either sets other_info and returns false, or
-> >   * acquires the matching other_info and returns true. If other_info is not
-> > @@ -388,6 +486,9 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
-> >               other_info.cpu_id               = cpu_id;
-> >               other_info.num_stack_entries    = stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
-> >
-> > +             if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> > +                     set_other_info_task_blocking(flags, ptr);
-> > +
-> >               spin_unlock_irqrestore(&report_lock, *flags);
-> >
-> >               /*
-> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > index 081ed2e1bf7b1..0f1447ff8f558 100644
-> > --- a/lib/Kconfig.kcsan
-> > +++ b/lib/Kconfig.kcsan
-> > @@ -20,6 +20,19 @@ menuconfig KCSAN
-> >
-> >  if KCSAN
-> >
-> > +config KCSAN_VERBOSE
-> > +     bool "Show verbose reports with more information about system state"
-> > +     depends on PROVE_LOCKING
-> > +     help
-> > +       If enabled, reports show more information about the system state that
-> > +       may help better analyze and debug races. This includes held locks and
-> > +       IRQ trace events.
-> > +
-> > +       While this option should generally be benign, we call into more
-> > +       external functions on report generation; if a race report is
-> > +       generated from any one of them, system stability may suffer due to
-> > +       deadlocks or recursion.  If in doubt, say N.
-> > +
-> >  config KCSAN_DEBUG
-> >       bool "Debugging of KCSAN internals"
-> >
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
+-- 
+Best regards,
+Jacek Anaszewski
