@@ -2,237 +2,116 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB539C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2556BC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A25720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOpNRt8e"
+	by mail.kernel.org (Postfix) with ESMTP id 0009B20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgBXRar (ORCPT
+        id S1727940AbgBXRcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:30:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50897 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728079AbgBXRaq (ORCPT
+        Mon, 24 Feb 2020 12:32:02 -0500
+Received: from smtprelay0065.hostedemail.com ([216.40.44.65]:43667 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727440AbgBXRcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:30:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582565445;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jBUQXvyIT0NRGeVlKfYzxCNd6VTs5c/rTotbnjQlyHg=;
-        b=SOpNRt8eWVIPHGZDDKgm7F13CQR+wUNSBgIQyqgDbz61GQT9G+KR+pqvF2DrC1kQLVytVY
-        M2qLqHrPFobhwIAyb9beYeKGZruLJDsO4U4dIxzww/cdNz7qLq70j/5Uy/w6qjS5LLZO8E
-        ubSsQN8GdMzblGuodHeWEP9Y86f8TGM=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-He28CbMBOsyOeHndDL3GGQ-1; Mon, 24 Feb 2020 12:30:44 -0500
-X-MC-Unique: He28CbMBOsyOeHndDL3GGQ-1
-Received: by mail-il1-f200.google.com with SMTP id k9so19521305ili.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:30:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jBUQXvyIT0NRGeVlKfYzxCNd6VTs5c/rTotbnjQlyHg=;
-        b=bckP0Ya2Jw+6Tp5kW0ZJzW9pFEwCUJry7rxxY3RebaiTzKCHfPY7DgHx/ujVjvGah4
-         yvXZY6J5llsqUipJmnr3KDG7czzZ4hId2WOgkt5/w6TmaGGECz4l+51aD7Y3zTFQh3hk
-         1VgDrhgTtJ2o8pndYg900GJcsoq7aCFxEhSWbMkqPVkAxsVkdV3+fY4KcL124D/Jn23k
-         UbluJNB8Bq3zl9GYycfFad1BI13dZtqH4yMhbDyGrMIhZeMPSHPag3E6UHwsxeyS3N82
-         /Cgnb32SKuqAVC1zG0PCxgYBWWs+28xHmqO9Pr24OHGgxYg0X5orRaOmrjO7oHF4p2rx
-         Tq6g==
-X-Gm-Message-State: APjAAAVUw89sg4nZkb1pOYza3TGe4mD0qAbBkr7XxKXmuU154SfnmJEE
-        CVXvhq3Ir0Mu/6ZXMC5tpqQVib4z/9HhvsEezlGREKOc4drTckmnR0wiPzfCi0J3AAbhqGi1ek+
-        b+GhQr+GpJ4CWd7PQ9gJ7epK59SVTJT9FySl28xtx
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr62650035ilf.249.1582565442499;
-        Mon, 24 Feb 2020 09:30:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyqzh9CyJ1U9k2mrY0h0+BdZxlgI3BRos8HplHL7d4dWc2+DjxZb0RyDzWWanrk9NL3aDvaxkGg8UaqFzTR+WU=
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr62649926ilf.249.1582565441513;
- Mon, 24 Feb 2020 09:30:41 -0800 (PST)
+        Mon, 24 Feb 2020 12:32:02 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 47AD1182CED28;
+        Mon, 24 Feb 2020 17:32:01 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: honey37_4bab943b00d12
+X-Filterd-Recvd-Size: 3626
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 24 Feb 2020 17:31:59 +0000 (UTC)
+Message-ID: <6f2e9e5f19ca97c09b29b08256d45d3ff58ec188.camel@perches.com>
+Subject: Re: [PATCH v4] staging: qlge: emit debug and dump at same level
+From:   Joe Perches <joe@perches.com>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Feb 2020 09:30:31 -0800
+In-Reply-To: <20200224171823.GA8240@kaaira-HP-Pavilion-Notebook>
+References: <20200224082448.GA6826@kaaira-HP-Pavilion-Notebook>
+         <84410699e6acbffca960aa2944e9f5869478b178.camel@perches.com>
+         <20200224164721.GA7214@kaaira-HP-Pavilion-Notebook>
+         <9f0d39d5972553b86123873294fc9f9566130036.camel@perches.com>
+         <20200224171823.GA8240@kaaira-HP-Pavilion-Notebook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
-In-Reply-To: <20200222165631.GA213225@google.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Tue, 25 Feb 2020 01:30:30 +0800
-Message-ID: <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
-        Myron Stowe <myron.stowe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 2020-02-24 at 22:48 +0530, Kaaira Gupta wrote:
+> On Mon, Feb 24, 2020 at 08:54:43AM -0800, Joe Perches wrote:
+> > On Mon, 2020-02-24 at 22:17 +0530, Kaaira Gupta wrote:
+> > > On Mon, Feb 24, 2020 at 05:38:09AM -0800, Joe Perches wrote:
+> > > > On Mon, 2020-02-24 at 13:54 +0530, Kaaira Gupta wrote:
+> > > > > Simplify code in ql_mpi_core_to_log() by calling print_hex_dump()
+> > > > > instead of existing functions so that the debug and dump are
+> > > > > emitted at the same KERN_<LEVEL>
+> > > > []
+> > > > > diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> > > > []
+> > > > > @@ -1324,27 +1324,10 @@ void ql_mpi_core_to_log(struct work_struct *work)
+> > > > >  {
+> > > > >  	struct ql_adapter *qdev =
+> > > > >  		container_of(work, struct ql_adapter, mpi_core_to_log.work);
+> > > > > -	u32 *tmp, count;
+> > > > > -	int i;
+> > > > >  
+> > > > > -	count = sizeof(struct ql_mpi_coredump) / sizeof(u32);
+> > > > > -	tmp = (u32 *)qdev->mpi_coredump;
+> > > > > -	netif_printk(qdev, drv, KERN_DEBUG, qdev->ndev,
+> > > > > -		     "Core is dumping to log file!\n");
+> > > > 
+> > > > There is no real need to delete this line.
+> > > > 
+> > > > And if you really want to, it'd be better to mention
+> > > > the removal in the commit message description.
+> > > > 
+> > > > As is for this change, there is no "debug" and "dump"
+> > > > as the commit message description shows, just "dump".
+> > > 
+> > > This patch has already been added to the tree,
+> > 
+> > What tree is that?
+> > It's not in -next as of right now.
+> 
+> Its in staging-next right now.
+> This is the link: https://lore.kernel.org/driverdev-devel/cba75ee4d88afdf118631510ad0f971e42c1a31c.camel@perches.com/
+> 
+> > >  if I amend the commit now
+> > > using git rebase, won't it affect the upstream as the SHA-1 of the
+> > > commit and it's children will change?
+> > 
+> > You are sending patches not pull requests.
+> > 
+> > If it's really in an actual tree that people
+> > care about, send another patch putting the
+> > netif_printk back.
+> 
+> I'll submit a patch, but can you please explain me why this function is
+> still needed when we are already using print_hex_dump()?
 
-Thanks for the reply, I don't have any better idea than this RFC patch
-yet. The patch is hold as previous discussion suggests this just work
-around the problem, the real fix should be let crash kernel load every
-required kernel module and reset whichever hardware that is not in a
-good status. However, user may struggle to find out which driver is
-actually needed, and it's not practical to load all drivers in kdump
-kernel. (actually kdump have been trying to load as less driver as
-possible to save memory).
+Your commit message did not match the code.
 
-So as Dave Y suggested in another reply, will it better to apply this
-quirk with a kernel param controlling it? If such problem happens, the
-option could be turned on as a fix.
+You are changing the code and the output without explanation.
 
+It's fine to both change the code and the output when appropriate.
+it's not fine to do so by misstating what you are doing.
 
-On Sun, Feb 23, 2020 at 12:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Khalid, Deepa, Randy, Dave, Myron]
->
-> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
-> > There are reports about kdump hang upon reboot on some HPE machines,
-> > kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-> > error occurred and crashed the system.
->
-> Did we ever make progress on this?  This definitely sounds like a
-> problem that needs to be fixed, but I don't see a resolution here.
->
-> > On the machine I can reproduce this issue, part of the topology
-> > looks like this:
-> >
-> > [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-> >           +-01.0-[02]--
-> >           +-01.1-[05]--
-> >           +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           +-02.1-[0f]--
-> >           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 Controllers
-> >
-> > When shuting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
-> > will hang, depend on which device is reinitialized in kdump kernel.
-> >
-> > If force remove unused device then trigger kdump, the problem will never
-> > happen:
-> >
-> >     echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
-> >     echo c > /proc/sysrq-trigger
-> >
-> >     ... Kdump save vmcore through network, the NIC get reinitialized and
-> >     hpsa is untouched. Then reboot with no problem. (If hpsa is used
-> >     instead, shutdown the NIC in first kernel will help)
-> >
-> > The cause is that some devices are enabled by the first kernel, but it
-> > don't have the chance to shutdown the device, and kdump kernel is not
-> > aware of it, unless it reinitialize the device.
-> >
-> > Upon reboot, kdump kernel will skip downstream device shutdown and
-> > clears its bridge's master bit directly. The downstream device could
-> > error out as it can still send requests but upstream refuses it.
-> >
-> > So for kdump, let kernel read the correct hardware power state on boot,
-> > and always clear the bus master bit of PCI device upon shutdown if the
-> > device is on. PCIe port driver will always shutdown all downstream
-> > devices first, so this should ensure all downstream devices have bus
-> > master bit off before clearing the bridge's bus master bit.
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >  drivers/pci/pci-driver.c | 11 ++++++++---
-> >  drivers/pci/quirks.c     | 20 ++++++++++++++++++++
-> >  2 files changed, 28 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 0454ca0e4e3f..84a7fd643b4d 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/kexec.h>
-> >  #include <linux/of_device.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/crash_dump.h>
-> >  #include "pci.h"
-> >  #include "pcie/portdrv.h"
-> >
-> > @@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
-> >        * If this is a kexec reboot, turn off Bus Master bit on the
-> >        * device to tell it to not continue to do DMA. Don't touch
-> >        * devices in D3cold or unknown states.
-> > -      * If it is not a kexec reboot, firmware will hit the PCI
-> > -      * devices with big hammer and stop their DMA any way.
-> > +      * If this is kdump kernel, also turn off Bus Master, the device
-> > +      * could be activated by previous crashed kernel and may block
-> > +      * it's upstream from shutting down.
-> > +      * Else, firmware will hit the PCI devices with big hammer
-> > +      * and stop their DMA any way.
-> >        */
-> > -     if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> > +     if ((kexec_in_progress || is_kdump_kernel()) &&
-> > +                     pci_dev->current_state <= PCI_D3hot)
-> >               pci_clear_master(pci_dev);
-> >  }
-> >
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 4937a088d7d8..c65d11ab3939 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -28,6 +28,7 @@
-> >  #include <linux/platform_data/x86/apple.h>
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/switchtec.h>
-> > +#include <linux/crash_dump.h>
-> >  #include <asm/dma.h> /* isa_dma_bridge_buggy */
-> >  #include "pci.h"
-> >
-> > @@ -192,6 +193,25 @@ static int __init pci_apply_final_quirks(void)
-> >  }
-> >  fs_initcall_sync(pci_apply_final_quirks);
-> >
-> > +/*
-> > + * Read the device state even if it's not enabled. The device could be
-> > + * activated by previous crashed kernel, this will read and correct the
-> > + * cached state.
-> > + */
-> > +static void quirk_read_pm_state_in_kdump(struct pci_dev *dev)
-> > +{
-> > +     u16 pmcsr;
-> > +
-> > +     if (!is_kdump_kernel())
-> > +             return;
-> > +
-> > +     if (dev->pm_cap) {
-> > +             pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > +             dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> > +     }
-> > +}
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_read_pm_state_in_kdump);
-> > +
-> >  /*
-> >   * Decoding should be disabled for a PCI device during BAR sizing to avoid
-> >   * conflict. But doing so may cause problems on host bridge and perhaps other
-> > --
-> > 2.24.1
-> >
->
-
-
---
-Best Regards,
-Kairui Song
 
