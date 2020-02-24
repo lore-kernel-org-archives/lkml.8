@@ -2,72 +2,104 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F04C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C77C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A32B218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UH81cZnw"
+	by mail.kernel.org (Postfix) with ESMTP id 73FC820CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgBXVyo (ORCPT
+        id S1728116AbgBXVzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:54:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39946 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbgBXVyn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:54:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5MRTbwLPWhsz+OCfhc7KfndlpxpBjNwdciDoRgQ9Kiw=; b=UH81cZnwNAU0qj0U69UGyTcrTv
-        s3U/2WEoUZteazt25hpIrP9mx2czSA73w1KKBo7jGQ2t7egu9fl8mN83EDjcSVbHFMPIlC0nz0jrE
-        /sHO9tWieo1tWKMbYptvT/SEf3+uUhXvREH+sjpmBlq0Ix+GchDHn+n+UAer2XM6ls7irhVTLYsw4
-        dfhQXNPHta9xRzxr9BLoaH+QyGz14ciyXbQ/Bf67V8Mwsvu0zvUzAj17rcatmJ0byo4OM++Tk9PJC
-        fnSZ2gijdW6WE7VdnNAWYFBO6aYhYQh8JMyM4jVzhoj3AKirlrfCJSKYf4NtObVE2kjUhSCTXIPzv
-        kIxJP4xQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6LgY-0004om-8r; Mon, 24 Feb 2020 21:54:42 +0000
-Date:   Mon, 24 Feb 2020 13:54:42 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [Cluster-devel] [PATCH v7 13/24] fs: Convert mpage_readpages to
- mpage_readahead
-Message-ID: <20200224215442.GB16051@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-14-willy@infradead.org>
+        Mon, 24 Feb 2020 16:55:53 -0500
+Received: from mga05.intel.com ([192.55.52.43]:22185 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727421AbgBXVzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:55:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 13:55:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="226127573"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 13:55:51 -0800
+Date:   Mon, 24 Feb 2020 13:55:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/61] KVM: x86: Encapsulate CPUID entries and metadata
+ in struct
+Message-ID: <20200224215551.GL29865@linux.intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-17-sean.j.christopherson@intel.com>
+ <87y2swq95k.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219210103.32400-14-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <87y2swq95k.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:00:52PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Fri, Feb 21, 2020 at 03:58:47PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> Implement the new readahead aop and convert all callers (block_dev,
-> exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qnx6,
-> reiserfs & udf).  The callers are all trivial except for GFS2 & OCFS2.
+> > @@ -539,7 +549,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  		entry->flags |= KVM_CPUID_FLAG_STATE_READ_NEXT;
+> >  
+> >  		for (i = 1, max_idx = entry->eax & 0xff; i < max_idx; ++i) {
+> > -			if (!do_host_cpuid(&entry[i], nent, maxnent, function, 0))
+> > +			entry = do_host_cpuid(array, 2, 0);
+> 
+> I'd change this to 
+>                         entry = do_host_cpuid(array, function, 0);
+> 
+> to match other call sites.
 
-Looks sensible:
+Done.  That did look weird, no idea why I decided to hardcode only this one.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > +			if (!entry)
+> >  				goto out;
+> >  		}
+> >  		break;
+> > @@ -802,22 +814,22 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  	return r;
+> >  }
+> >  
+> > -static int do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 func,
+> > -			 int *nent, int maxnent, unsigned int type)
+> > +static int do_cpuid_func(struct kvm_cpuid_array *array, u32 func,
+> > +			 unsigned int type)
+> >  {
+> > -	if (*nent >= maxnent)
+> > +	if (array->nent >= array->maxnent)
+> >  		return -E2BIG;
+> >  
+> >  	if (type == KVM_GET_EMULATED_CPUID)
+> > -		return __do_cpuid_func_emulated(entry, func, nent, maxnent);
+> > +		return __do_cpuid_func_emulated(array, func);
+> 
+> Would it make sense to move 'if (array->nent >= array->maxnent)' check
+> to __do_cpuid_func_emulated() to match do_host_cpuid()?
+
+I considered doing exactly that.  IIRC, I opted not to because at this
+point in the series, the initial call to do_host_cpuid() is something like
+halfway down the massive __do_cpuid_func(), and eliminating the early check
+didn't feel quite right, e.g. there is a fair amount of unnecessary code
+that runs before hitting the first do_host_cpuid().
+
+What if I add a patch towards the end of the series to move this check into
+__do_cpuid_func_emulated(), i.e. after __do_cpuid_func() has been trimmed
+down to size and the early check really is superfluous.
