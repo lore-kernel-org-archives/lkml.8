@@ -2,107 +2,111 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3868C11D2D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4386C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A046020726
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wOJl5Cgb"
+	by mail.kernel.org (Postfix) with ESMTP id 8F46820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgBXKAI (ORCPT
+        id S1727311AbgBXKBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:00:08 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39723 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgBXKAI (ORCPT
+        Mon, 24 Feb 2020 05:01:22 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37244 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXKBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:00:08 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so799293wrn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5kMWKYrh992GZWTACf9amzemAuduDOlF955KN5EwvQw=;
-        b=wOJl5CgbQy6U3aWnwofJi51rIVWN4K+Ld9+tffFieiVlVfi2/dHqXF40Cq3T1kb4Hd
-         JUNcqOCZ8LswILeUgNcr8bP9l5VvdXg6prdZboDZ0FklYR/nEO/5G5+SLS2xyvII0M8O
-         MyPUv37S1xPx4szsummDjBD7YuBDtftwpdc1a/douez9IdwrT/1qWH81PPr5mWk5S5ZX
-         Dr6JVrft/D6igiJSAztEKvVYmr3wkssu/UxOPrnYXEYS1jrqH3t1kEYNrzRLZy50NY+k
-         2LTdsT4gZ8wC7Xunm8aJACAx3yBq5deU3CkCN7mubwdZRtAB9YKvzKBmufAgRjdi8ydd
-         L/nQ==
+        Mon, 24 Feb 2020 05:01:22 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q84so8405608oic.4;
+        Mon, 24 Feb 2020 02:01:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5kMWKYrh992GZWTACf9amzemAuduDOlF955KN5EwvQw=;
-        b=ESjUYaheMTCX3XM36zTqLWhozBy+ui7ekgBq20v8w/ZZ5M7wSWzmet0/R8XX1pz7rf
-         ILMShMPjbcZTypPVQQUq7CNfI5UFA7D58tvhe5yOWEIFwewgnT25/xyw0JWM0N6cavV9
-         xNDcAt9eqZoNL+0HhCaGi1tg8po9nyPC3Pjgqyi2A2/ZyulOScou85b3zuA3mFDoCqnA
-         Qo6HN6aSZiQIGjCwWXOu8bKUcv/FBkW9VwvNwq6cCBBkQN5BUMfFASPL9ZWP5yP6RH/y
-         +vCy+11l5FjWW0bU//goty1v5U0q70/b16VJW/Bf+5rFd2fpYi9ng+Eng0ro0PvCDNM5
-         IDXA==
-X-Gm-Message-State: APjAAAXhLD3m90f/PZ1Ei9J7gaHpmXiVJS9CtaoUcyz1g6vA7fhVAOOj
-        JmeABLZcqaaSYm51T82w5ynIYQ==
-X-Google-Smtp-Source: APXvYqw+eVT/ekOFVzqh6k7LzKVEDiUtf7y1cMrybh2fcleVG3PtFkiVzf5QhVfc93XqXI91aPlTag==
-X-Received: by 2002:a5d:45ca:: with SMTP id b10mr9472914wrs.250.1582538406847;
-        Mon, 24 Feb 2020 02:00:06 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id v1sm11105968wrp.16.2020.02.24.02.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 02:00:06 -0800 (PST)
-Date:   Mon, 24 Feb 2020 10:00:37 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
-Message-ID: <20200224100037.GK3494@dell>
-References: <20200127231208.1443-1-s-anna@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xH/4bfRiAQSsYGbm2WsnrGFLe85wgXomw2HN69oKdU4=;
+        b=E7SfETV+bcvhUeBbnhT8sFa1bzi7tfwWxqE5ckEcPbZPtYRVLZj/jGcVf0M4kBvSes
+         rWQidJkhSjPL0WpiQ6ABGMRhrPQ8tk3tVTHcnT6iPHtYI/0gnIvgmu64zBJOXOReJuyJ
+         d7exmLg+Kbr1qbFawEk+/i7tGWzPZj8TH0J7eTp5HwTEWbRMlFa0BvXmXyRvdcKoGtxV
+         oalOhofklmUVOVIMejt2+gMznd9bFv+nUVNF0z1wtg10VqJ43VZmscdFe2aNSRXEIhVi
+         wMxFEbiCKPBeiivpLH9DcsBcJ82/LtzSNw6I4SHaHzVyj1UpQk14ASakwb3+QDDojoMJ
+         Dp4w==
+X-Gm-Message-State: APjAAAUsHxKedjXK5PLVux4itqt5tqxh0mhmHDBo9vGpL7jmNtNqQNZM
+        9xE44S899wNEaw7y4XBsc34j36WXL41q8SXjxFo=
+X-Google-Smtp-Source: APXvYqwzMAEzBbDwvEqcefvZHvI9wJCBcHykUrsFr202mAK37+smqg1qZ4iQBAyEcB94K+mwTpTkZ9WVT1H6qjxXqeU=
+X-Received: by 2002:aca:b4c3:: with SMTP id d186mr11610969oif.131.1582538480986;
+ Mon, 24 Feb 2020 02:01:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200127231208.1443-1-s-anna@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20150624.063911.1220157256743743341.davem@davemloft.net> <CA+55aFybr6Fjti5WSm=FQpfwdwgH1Pcfg6L81M-Hd9MzuSHktg@mail.gmail.com>
+In-Reply-To: <CA+55aFybr6Fjti5WSm=FQpfwdwgH1Pcfg6L81M-Hd9MzuSHktg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 24 Feb 2020 11:01:09 +0100
+Message-ID: <CAMuHMdViacgi1W8acma7GhWaaVj92z6pg-g7ByvYOQL-DToacA@mail.gmail.com>
+Subject: Re: [GIT] Networking
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020, Suman Anna wrote:
+Hi Linus,
 
-> The DT node full name is currently being used in regmap_config
-> which in turn is used to create the regmap debugfs directories.
-> This name however is not guaranteed to be unique and the regmap
-> debugfs registration can fail in the cases where the syscon nodes
-> have the same unit-address but are present in different DT node
-> hierarchies. Replace this logic using the syscon reg resource
-> address instead (inspired from logic used while creating platform
-> devices) to ensure a unique name is given for each syscon.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> v2: Fix build warning reported by kbuild test bot
-> v1: https://patchwork.kernel.org/patch/11346363/
-> 
->  drivers/mfd/syscon.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+On Thu, Jun 25, 2015 at 1:38 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Wed, Jun 24, 2015 at 6:39 AM, David Miller <davem@davemloft.net> wrote:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git master
+>
+> On the *other* side of the same conflict, I find an even more
+> offensive commit, namely commit 4cd7c9479aff ("IB/mad: Add support for
+> additional MAD info to/from drivers") which adds a BUG_ON() for a
+> sanity check, rather than just returning -EINVAL or something sane
+> like that.
+>
+> I'm getting *real* tired of that BUG_ON() shit. I realize that
+> infiniband is a niche market, and those "commercial grade" niche
+> markets are more-than-used-to crap code and horrible hacks, but this
+> is still the kernel. We don't add random machine-killing debug checks
+> when it is *so* simple to just do
+>
+>         if (WARN_ON_ONCE(..))
+>                 return -EINVAL;
+>
+> instead.
 
-Waiting for Arnd to review.
+And if we follow that advice, friendly Greg will respond with:
+"We really do not want WARN_ON() anywhere, as that causes systems with
+ panic-on-warn to reboot."
+https://lore.kernel.org/lkml/20191121135743.GA552517@kroah.com/
+
+> Killing the machine for idiotic things like that is truly offensive,
+> and truly horrible horrible code. Why do I keep on having to tell
+> people off for doing these things? Why do people keep thinking that
+> debugging-by-killing-the-machine is a good idea?
+>
+> Either that BUG_ON() cannot possibly happen, in which case it should
+> damn well not exist in the first place. Or it's a valuable debug aid,
+> in which case it should damn well not be a BUG_ON. You can't have it
+> both ways.
+
+Agreed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
