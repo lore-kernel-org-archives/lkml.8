@@ -2,119 +2,73 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=MAILING_LIST_MULTI,
-	SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EC0C38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC27C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2553220CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A33220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgBXVTi (ORCPT
+        id S1727740AbgBXVTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:19:38 -0500
-Received: from mail.archive.org ([207.241.224.6]:55240 "EHLO mail.archive.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgBXVTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:19:38 -0500
-Received: from mail.archive.org (localhost [127.0.0.1])
-        by mail.archive.org (Postfix) with ESMTP id 97A571FCA5;
-        Mon, 24 Feb 2020 21:19:35 +0000 (UTC)
-Received: from [0.0.0.0] (a82-161-36-93.adsl.xs4all.nl [82.161.36.93])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: merlijn@archive.org)
-        by mail.archive.org (Postfix) with ESMTPSA id 2F49A1FCA0;
-        Mon, 24 Feb 2020 21:19:34 +0000 (UTC)
-Subject: Re: [PATCH v2] scsi: sr: get rid of sr global mutex
-To:     "Merlijn B.W. Wajer" <merlijn@wizzup.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <jejb@linux.ibm.com>
-Cc:     linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-References: <20200218143918.30267-1-merlijn@archive.org>
- <20200218171259.GA6724@infradead.org>
- <1582046428.16681.7.camel@linux.ibm.com>
- <20200218172347.GA3020@infradead.org>
- <1582046914.16681.11.camel@linux.ibm.com>
- <20200218173158.GA18386@infradead.org>
- <33da5f81-ad37-05fd-d765-8bd997995dd2@archive.org>
-From:   "Merlijn B.W. Wajer" <merlijn@archive.org>
-Message-ID: <9d50ecd4-9fd1-6865-5509-a5ef119828df@archive.org>
-Date:   Mon, 24 Feb 2020 22:20:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <33da5f81-ad37-05fd-d765-8bd997995dd2@archive.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+        Mon, 24 Feb 2020 16:19:43 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:38564 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBXVTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:19:42 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B142A121A82C6;
+        Mon, 24 Feb 2020 13:19:41 -0800 (PST)
+Date:   Mon, 24 Feb 2020 13:19:41 -0800 (PST)
+Message-Id: <20200224.131941.1864899496346758786.davem@davemloft.net>
+To:     frextrite@gmail.com
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com,
+        paulmck@kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] ip6mr: Fix RCU list debugging warning
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200222165726.9330-1-frextrite@gmail.com>
+References: <20200222165726.9330-1-frextrite@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Envelope-From: <merlijn@archive.org>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 13:19:42 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+From: Amol Grover <frextrite@gmail.com>
+Date: Sat, 22 Feb 2020 22:27:27 +0530
 
-Just wanted to check if you planned to apply this v2 (you tried to apply
-v1 but it didn't compile, so I rebased it onto 5.7/scsi-queue as you
-requested). Please let me know if there's anything you'd like to see
-changed.
+> ip6mr_for_each_table() macro uses list_for_each_entry_rcu()
+> for traversing outside an RCU read side critical section
+> but under the protection of rtnl_mutex. Hence add the
+> corresponding lockdep expression to silence the following
+> false-positive warnings:
+> 
+> [    4.319479] =============================
+> [    4.319480] WARNING: suspicious RCU usage
+> [    4.319482] 5.5.4-stable #17 Tainted: G            E
+> [    4.319483] -----------------------------
+> [    4.319485] net/ipv6/ip6mr.c:1243 RCU-list traversed in non-reader section!!
+> 
+> [    4.456831] =============================
+> [    4.456832] WARNING: suspicious RCU usage
+> [    4.456834] 5.5.4-stable #17 Tainted: G            E
+> [    4.456835] -----------------------------
+> [    4.456837] net/ipv6/ip6mr.c:1582 RCU-list traversed in non-reader section!!
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 
-Regards,
-Merlijn
-
-On 18/02/2020 20:21, Merlijn B.W. Wajer wrote:
-> Hi,
-> 
-> On 18/02/2020 18:31, Christoph Hellwig wrote:
->> On Tue, Feb 18, 2020 at 09:28:34AM -0800, James Bottomley wrote:
->>> On Tue, 2020-02-18 at 09:23 -0800, Christoph Hellwig wrote:
->>>> On Tue, Feb 18, 2020 at 09:20:28AM -0800, James Bottomley wrote:
->>>>>>> Replace the global mutex with per-sr-device mutex.
->>>>>>
->>>>>> Do we actually need the lock at all?  What is protected by it?
->>>>>
->>>>> We do at least for cdrom_open.  It modifies the cdi structure with
->>>>> no other protection and concurrent modification would at least
->>>>> screw up the use counter which is not atomic.  Same reasoning for
->>>>> cdrom_release.
->>>>
->>>> Wouldn't the right fix to add locking to cdrom_open/release instead
->>>> of having an undocumented requirement for the callers?
->>>
->>> Yes ... but that's somewhat of a bigger patch because you now have to
->>> reason about the callbacks within cdrom.  There's also the question of
->>> whether you can assume ops->generic_packet() has its own concurrency
->>> protections ... it's certainly true for SCSI, but is it for anything
->>> else?  Although I suppose you can just not care and run the internal
->>> lock over it anyway.
->>
->> We have 4 instances of struct cdrom_device_ops in the kernel, one of
->> which has a no-op generic_packet.  So I don't think this should be a
->> huge project.
-> 
-> The are two reasons I decided to make minor changes to fix the
-> performance regression.
-> 
-> First, being able to send the patch to the various stable branches once
-> merged. For people working with many CD drives attached to one station,
-> this is a pretty big deal, so I tried to keep the patch simple. It fixes
-> the regression introduced in another commit.
-> 
-> Secondly, I don't have the hardware to test sophisticated or old setups,
-> like some of the issues linked from my patch. I have SATA CD drives with
-> USB->SATA bridges, no IDE, no PATA, etc. So the testing I can do is
-> relatively limited.
-> 
-> Perhaps I or someone else can work on removing the usage of the locks,
-> but as it stands I think this addresses the performance issue present in
-> the current kernel, and removing locks and the associated testing
-> required with that is something I am not entirely comfortable doing.
-> 
-> Cheers,
-> Merlijn
-> 
+Applied, thanks.
