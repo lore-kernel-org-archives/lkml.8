@@ -2,116 +2,142 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D9DC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C749FC11D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7C420836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:46:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hr23lqTt"
+	by mail.kernel.org (Postfix) with ESMTP id A70D720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgBXJqW (ORCPT
+        id S1727275AbgBXJrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:46:22 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62083 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726628AbgBXJqW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:46:22 -0500
-X-UUID: 15efe623feed440a82ff83e29f541fd1-20200224
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JJObHOiFNWZrMDB8kq3sMti+Ri6V2M0iYaOtSYj8HuU=;
-        b=hr23lqTthINWXnyqH4FlJZ93clckrD8c2YBD5KQCbAwl1+cMWaGGMF3XqR8jIgyEIQ4ESiynsunRR/peYZmkPZvdQevHMU7s9jWu3khE9ievaw3b0LSAgAFiNMwlYyn3V3uCt9CB5Zq/z+Frm0e33tQA2eZvSaA7HFGoVNyfd2Y=;
-X-UUID: 15efe623feed440a82ff83e29f541fd1-20200224
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 81929236; Mon, 24 Feb 2020 17:46:15 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n2.mediatek.inc
- (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 24 Feb
- 2020 17:45:26 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 24 Feb 2020 17:44:58 +0800
-Message-ID: <1582537569.859.14.camel@mhfsdcap03>
-Subject: Re: [PATCH v6 1/5] media: platform: Fix jpeg dec driver bug and
- improve code quality
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <srv_heupstream@mediatek.com>
-Date:   Mon, 24 Feb 2020 17:46:09 +0800
-In-Reply-To: <20200214093506.GA193786@chromium.org>
-References: <20200121095320.32258-1-xia.jiang@mediatek.com>
-         <20200121095320.32258-2-xia.jiang@mediatek.com>
-         <20200214093506.GA193786@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 24 Feb 2020 04:47:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34338 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbgBXJrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 04:47:05 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 346BAAE64;
+        Mon, 24 Feb 2020 09:47:02 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Qian Cai <cai@lca.pw>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] mm, hotplug: fix page online with DEBUG_PAGEALLOC compiled but not enabled
+Date:   Mon, 24 Feb 2020 10:46:51 +0100
+Message-Id: <20200224094651.18257-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAyLTE0IGF0IDE4OjM1ICswOTAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
-SGkgWGlhLA0KPiANCj4gT24gVHVlLCBKYW4gMjEsIDIwMjAgYXQgMDU6NTM6MTdQTSArMDgwMCwg
-WGlhIEppYW5nIHdyb3RlOg0KPiA+IEZpeCB2NGwyLWNvbXBsaWFuY2UgdGVzdCBidWcgYW5kIGlt
-cHJvdmUgY29kZSBxdWFsaXR5IG9mIGpwZWcgZGVjb2RlDQo+ID4gZHJpdmVyLCBiZWNhdXNlIHRo
-ZSBqcGVnIGVuY29kZSBkcml2ZXIgd2lsbCBiYXNlIG9uIGl0Lg0KPiA+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFhpYSBKaWFuZyA8eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiB2
-NjogYWxpZ25tZW50ICdNVEtfSlBFR19EQ1RTSVpFJyBtYXRjaCBvcGVuIHBhcmVudGhlc2lzLg0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiB2NTog
-VXNlIGNsYW1wKCl0byByZXBsYWNlIG10a19qcGVnX2JvdW5kX2FsaWduX2ltYWdlKCkgYW5kIHJv
-dW5kX3VwKCkNCj4gPiAgICAgdG8gcmVwbGFjZSBtdGtfanBlZ19hbGlnbigpLg0KPiA+ICAgICBH
-ZXQgY29ycmVjdCBjb21wb3NlIHZhbHVlIGluIG10a19qcGVnX3NlbGVjdGlvbigpLg0KPiA+ICAg
-ICBDYW5jZWwgc3BpbiBsb2NrIGFuZCB1bmxvY2sgb3BlcmF0aW9uIGluIGRldmljZSBydW4gZnVu
-Y3Rpb24uDQo+ID4gICAgIENoYW5nZSByZWdpc3RlciBvZmZzZXQgaGV4IG51bWJlcmFscyBmcm9t
-IHVwZXJjYXNlIHRvIGxvd2VyY2FzZS4NCj4gPiANCj4gPiB2NDogbmV3IGFkZCBwYXRjaCBmb3Ig
-djRsMi1jb21wbGlhbmNlIHRlc3QgYnVnIGZpeC4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBhdGNo
-LiBUaGUgY2hhbmdlcyBsb29rIGdvb2QgdG8gbWUsIGJ1dCBlYWNoIG9mIHRoZQ0KPiB1bnJlbGF0
-ZWQgY2hhbmdlcyBzaG91bGQgYmUgc3BsaXQgaW50byBpdHMgb3duIHBhdGNoLCB3aXRoIHByb3Bl
-cg0KPiBleHBsYW5hdGlvbiBpbiBpdHMgY29tbWl0IG1lc3NhZ2UuIEVzcGVjaWFsbHkgdGhlIG9u
-ZXMgdGhhdCBpbnRyb2R1Y2UNCj4gYmVoYXZpb3IgY2hhbmdlcywgc3VjaCBhcyB0aGUgU19TRUxF
-Q1RJT04gb3IgbG9ja2luZyBjaGFuZ2UuDQo+IA0KPiBBbHNvIHBsZWFzZSBzZWUgb25lIGNvbW1l
-bnQgaW5saW5lLg0KPiANCj4gW3NuaXBdDQo+IA0KPiA+IEBAIC04MDEsNyArNzc4LDYgQEAgc3Rh
-dGljIHZvaWQgbXRrX2pwZWdfZGV2aWNlX3J1bih2b2lkICpwcml2KQ0KPiA+ICAJc3RydWN0IG10
-a19qcGVnX2RldiAqanBlZyA9IGN0eC0+anBlZzsNCj4gPiAgCXN0cnVjdCB2YjJfdjRsMl9idWZm
-ZXIgKnNyY19idWYsICpkc3RfYnVmOw0KPiA+ICAJZW51bSB2YjJfYnVmZmVyX3N0YXRlIGJ1Zl9z
-dGF0ZSA9IFZCMl9CVUZfU1RBVEVfRVJST1I7DQo+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdzOw0K
-PiA+ICAJc3RydWN0IG10a19qcGVnX3NyY19idWYgKmpwZWdfc3JjX2J1ZjsNCj4gPiAgCXN0cnVj
-dCBtdGtfanBlZ19icyBiczsNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19mYiBmYjsNCj4gPiBAQCAt
-ODI5LDEzICs4MDUsMTEgQEAgc3RhdGljIHZvaWQgbXRrX2pwZWdfZGV2aWNlX3J1bih2b2lkICpw
-cml2KQ0KPiA+ICAJaWYgKG10a19qcGVnX3NldF9kZWNfZHN0KGN0eCwgJmpwZWdfc3JjX2J1Zi0+
-ZGVjX3BhcmFtLCAmZHN0X2J1Zi0+dmIyX2J1ZiwgJmZiKSkNCj4gPiAgCQlnb3RvIGRlY19lbmQ7
-DQo+ID4gIA0KPiA+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmpwZWctPmh3X2xvY2ssIGZsYWdzKTsN
-Cj4gDQo+IFdoeSBpcyBpdCBzYWZlIHRvIHJlbW92ZSB0aGUgbG9ja2luZyBoZXJlPw0KRGVhciBU
-b21hc3osDQoNCkkgd2lsbCBzcGxpdCB1bnJlbGF0ZWQgY2hhbmdlcyBpbnRvIGRpZmZlcmVudCBw
-YXRjaGVzLg0KDQpNeSBvcGluaW9uIGFib3V0IHJlbW92ZSBsb2NraW5nIGlzIGZvbGxvd2luZyhh
-ZnRlciBkZWVwIHRoaW5raW5nKToNCg0KVGhlIGRldmljZV9ydW4gZnVuY3Rpb24gY2FuIGJlIG9u
-bHkgY2FsbGVkIG9uY2UgZm9yIG9uZSBpbnN0YW5jZS4NCkZvciBtdWx0aS1pbnN0YW5jZSxpcyB0
-aGVyZSBhbnkgcG9zc3NpYmlsaXR5IG9mIGh3IG92ZXJyaWRlIGlmIHJlbW92aW5nIGxvY2tpbmc/
-SSB0aGluayBzby4NCldoYXQgYWJvdXQgeW91ciBmdXJ0aGVyIG9waW5pb24/DQoNCkJlc3QgUmVn
-YXJkcywNClhpYSBKaWFuZw0KPiA+ICAJbXRrX2pwZWdfZGVjX3Jlc2V0KGpwZWctPmRlY19yZWdf
-YmFzZSk7DQo+ID4gIAltdGtfanBlZ19kZWNfc2V0X2NvbmZpZyhqcGVnLT5kZWNfcmVnX2Jhc2Us
-DQo+ID4gIAkJCQkmanBlZ19zcmNfYnVmLT5kZWNfcGFyYW0sICZicywgJmZiKTsNCj4gPiAgDQo+
-ID4gIAltdGtfanBlZ19kZWNfc3RhcnQoanBlZy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAtCXNwaW5f
-dW5sb2NrX2lycXJlc3RvcmUoJmpwZWctPmh3X2xvY2ssIGZsYWdzKTsNCj4gPiAgCXJldHVybjsN
-Cj4gPiAgDQo+ID4gIGRlY19lbmQ6DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KPiAN
-Cg0K
+Commit cd02cf1aceea ("mm/hotplug: fix an imbalance with DEBUG_PAGEALLOC") fixed
+memory hotplug with debug_pagealloc enabled, where onlining a page goes through
+page freeing, which removes the direct mapping. Some arches don't like when the
+page is not mapped in the first place, so generic_online_page() maps it first.
+This is somewhat wasteful, but better than special casing page freeing fast
+paths.
+
+The commit however missed that DEBUG_PAGEALLOC configured doesn't mean it's
+actually enabled. One has to test debug_pagealloc_enabled() since 031bc5743f15
+("mm/debug-pagealloc: make debug-pagealloc boottime configurable"), or alternatively
+debug_pagealloc_enabled_static() since 8e57f8acbbd1 ("mm, debug_pagealloc:
+don't rely on static keys too early"), but this is not done.
+
+As a result, a s390 kernel with DEBUG_PAGEALLOC configured but not enabled
+will crash:
+
+Unable to handle kernel pointer dereference in virtual kernel address space
+Failing address: 0000000000000000 TEID: 0000000000000483
+Fault in home space mode while using kernel ASCE.
+AS:0000001ece13400b R2:000003fff7fd000b R3:000003fff7fcc007 S:000003fff7fd7000 P:000000000000013d
+Oops: 0004 ilc:2 [#1] SMP
+CPU: 1 PID: 26015 Comm: chmem Kdump: loaded Tainted: GX 5.3.18-5-default #1 SLE15-SP2 (unreleased)
+Krnl PSW : 0704e00180000000 0000001ecd281b9e (__kernel_map_pages+0x166/0x188)
+R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+Krnl GPRS: 0000000000000000 0000000000000800 0000400b00000000 0000000000000100
+0000000000000001 0000000000000000 0000000000000002 0000000000000100
+0000001ece139230 0000001ecdd98d40 0000400b00000100 0000000000000000
+000003ffa17e4000 001fffe0114f7d08 0000001ecd4d93ea 001fffe0114f7b20
+Krnl Code: 0000001ecd281b8e: ec17ffff00d8 ahik %r1,%r7,-1
+0000001ecd281b94: ec111dbc0355 risbg %r1,%r1,29,188,3
+>0000001ecd281b9e: 94fb5006 ni 6(%r5),251
+0000001ecd281ba2: 41505008 la %r5,8(%r5)
+0000001ecd281ba6: ec51fffc6064 cgrj %r5,%r1,6,1ecd281b9e
+0000001ecd281bac: 1a07 ar %r0,%r7
+0000001ecd281bae: ec03ff584076 crj %r0,%r3,4,1ecd281a5e
+Call Trace:
+[<0000001ecd281b9e>] __kernel_map_pages+0x166/0x188
+[<0000001ecd4d9516>] online_pages_range+0xf6/0x128
+[<0000001ecd2a8186>] walk_system_ram_range+0x7e/0xd8
+[<0000001ecda28aae>] online_pages+0x2fe/0x3f0
+[<0000001ecd7d02a6>] memory_subsys_online+0x8e/0xc0
+[<0000001ecd7add42>] device_online+0x5a/0xc8
+[<0000001ecd7d0430>] state_store+0x88/0x118
+[<0000001ecd5b9f62>] kernfs_fop_write+0xc2/0x200
+[<0000001ecd5064b6>] vfs_write+0x176/0x1e0
+[<0000001ecd50676a>] ksys_write+0xa2/0x100
+[<0000001ecda315d4>] system_call+0xd8/0x2c8
+
+Fix this by checking debug_pagealloc_enabled_static() before calling
+kernel_map_pages(). Backports for kernel before 5.5 should use
+debug_pagealloc_enabled() instead. Also add comments.
+
+Fixes: cd02cf1aceea ("mm/hotplug: fix an imbalance with DEBUG_PAGEALLOC")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reported-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: <stable@vger.kernel.org>
+---
+ include/linux/mm.h  | 4 ++++
+ mm/memory_hotplug.c | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git include/linux/mm.h include/linux/mm.h
+index 52269e56c514..c54fb96cb1e6 100644
+--- include/linux/mm.h
++++ include/linux/mm.h
+@@ -2715,6 +2715,10 @@ static inline bool debug_pagealloc_enabled_static(void)
+ #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
+ extern void __kernel_map_pages(struct page *page, int numpages, int enable);
+ 
++/*
++ * When called in DEBUG_PAGEALLOC context, the call should most likely be
++ * guarded by debug_pagealloc_enabled() or debug_pagealloc_enabled_static()
++ */
+ static inline void
+ kernel_map_pages(struct page *page, int numpages, int enable)
+ {
+diff --git mm/memory_hotplug.c mm/memory_hotplug.c
+index 0a54ffac8c68..19389cdc16a5 100644
+--- mm/memory_hotplug.c
++++ mm/memory_hotplug.c
+@@ -574,7 +574,13 @@ EXPORT_SYMBOL_GPL(restore_online_page_callback);
+ 
+ void generic_online_page(struct page *page, unsigned int order)
+ {
+-	kernel_map_pages(page, 1 << order, 1);
++	/*
++	 * Freeing the page with debug_pagealloc enabled will try to unmap it,
++	 * so we should map it first. This is better than introducing a special
++	 * case in page freeing fast path.
++	 */
++	if (debug_pagealloc_enabled_static())
++		kernel_map_pages(page, 1 << order, 1);
+ 	__free_pages_core(page, order);
+ 	totalram_pages_add(1UL << order);
+ #ifdef CONFIG_HIGHMEM
+-- 
+2.25.0
 
