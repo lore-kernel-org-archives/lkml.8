@@ -2,211 +2,181 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3752C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFF8C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B9C20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B63F20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Gck8h7+B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vwkro33J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgBXRxD (ORCPT
+        id S1727689AbgBXRz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:53:03 -0500
-Received: from mail-bn7nam10on2072.outbound.protection.outlook.com ([40.107.92.72]:6162
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727867AbgBXRwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:52:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MXbXzo6hToWz32seZn+8nsKwirXIb7AU7j3xUYTDOGc1RiXm31F2ThXVR+iX75y6pwERzR/JRwskt3LBQReNoeGjUO9gAWHJ8614zNlfFu+DeTOxjC6gZ3D3yps6NPj9XugjaL9s43WcwFGshsrv1WN1WFoOJdtI+S3dENaBtQpzwgfcKYHuaBbdcdYAfV+eAjHns2Hpnur6I3An6sco1+ZHab/2Et7rPsJdn60qO5JNOlvghvmsopv0f4/C82JHmrkpPCH7TBc2V1TARvDhW9s92XofWa+W+qEvc6cLyPXgc/3nW2ylrGkCxJENTlu5XqtA73nb8NtK7/MVW5Fkog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=11XDYm6UWIwtSXXZurQJReOgCig6+1VQ+tT/cbFAWzU=;
- b=COA80ukOakGQVNIuThHVKKgd062lel5Vgnai4R+Gop/KiSwNjw7LUcJWIGpPZMaeoPLUOD7WuOYJEbZoKOKKPHKCqrMSvtKeAtCoUM8AvRixVzQO2YLvdCRz3VJLcd02rDFPFl7uNdc9B5rpFZQPmnHBs1obTa0Exft0ixPiNWT1DQObgwsL29GmmQQMxaUzT9TMdLK3GtWikRhqzHgWuenTv85HFConq/wHQZnw0EDxNLqp/W2aGkFcV+KqrpvRIyb/SRs7mQDcJ5tDiyc2ZAX59aYxTfzaXsGz5lNixAaF9fqqyVvo9XRuv3VKj6iYnij1vUpkUILZRxjF/InJdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 24 Feb 2020 12:55:26 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51320 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbgBXRzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:55:25 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t23so237310wmi.1;
+        Mon, 24 Feb 2020 09:55:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=11XDYm6UWIwtSXXZurQJReOgCig6+1VQ+tT/cbFAWzU=;
- b=Gck8h7+BRi1qsVC0IMdP6YVs4S3N3M0gP/GJAt1bS74mrbKRkvojmLUTPPgfsYVcFOwPeir6Neg1cwqrds7Dsqs0Lm2tWEmu7YyC2a0wD34UfJNrOR3UCxpFVMC/0EM7jRn+eo8kv8A2eRRpi+lfTo+pKB/ssCTPd8G561xfFc4=
-Received: from BYAPR02CA0054.namprd02.prod.outlook.com (2603:10b6:a03:54::31)
- by BYAPR02MB5655.namprd02.prod.outlook.com (2603:10b6:a03:a0::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Mon, 24 Feb
- 2020 17:52:41 +0000
-Received: from BL2NAM02FT020.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::202) by BYAPR02CA0054.outlook.office365.com
- (2603:10b6:a03:54::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21 via Frontend
- Transport; Mon, 24 Feb 2020 17:52:41 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT020.mail.protection.outlook.com (10.152.77.162) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
- via Frontend Transport; Mon, 24 Feb 2020 17:52:41 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1j6HuK-0006VD-Kd; Mon, 24 Feb 2020 09:52:40 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1j6HuF-0007aa-Hq; Mon, 24 Feb 2020 09:52:35 -0800
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01OHqVfZ015188;
-        Mon, 24 Feb 2020 09:52:31 -0800
-Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1j6HuB-0007aE-Ko; Mon, 24 Feb 2020 09:52:31 -0800
-From:   Ben Levinsky <ben.levinsky@xilinx.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] firmware: xilinx: Add shutdown/wakeup APIs
-Date:   Mon, 24 Feb 2020 09:52:28 -0800
-Message-Id: <1582566751-13118-3-git-send-email-ben.levinsky@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
-References: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39850400004)(346002)(396003)(199004)(189003)(26005)(4326008)(5660300002)(336012)(186003)(426003)(36756003)(478600001)(70206006)(7696005)(70586007)(8676002)(8936002)(316002)(2906002)(356004)(6666004)(9786002)(44832011)(81156014)(81166006)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5655;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=98hkSdEFZYYm7ue/qKLU11DJOrIsjwH9kzLWsOMOGoQ=;
+        b=Vwkro33JPZEjGumCkuOvUlXTzL/fDauJkqYW8YDyhgcyZDvc9+xMMcMOp48V0SqDew
+         NtZUkEKblDHV8EvfvK5BMWroYkI+HmgUETvMBfgEvKXitmgQ7Q17y7t3jbtzZVMUfsVV
+         2q+nx/5gFgfqeKXnYe26ES5rnCgKJ0zRS9NoP/lHphqkoWgjMOMf8N8/5ou/BHKyduSO
+         EXsoKJqN/LfLHO2l/qdzEDlohe3shxKYZ6B+aPP0xIOdEclw/+Y1DRRXEi7oX0dgIBAH
+         zB3Xaxk8XQnRDP6nozRFtcBs+u9kZ/tEPdwEyTkYXbNnNHclyKJVgsX5VOyr8TkORgHs
+         RPlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=98hkSdEFZYYm7ue/qKLU11DJOrIsjwH9kzLWsOMOGoQ=;
+        b=Y5IiOE4LLchXd85N0or0eR7qizY9Ym6foC5grB+tFOQ5WppPvQgXc1yNtbflfsRadZ
+         8NXGvPkvqy4eMit0maJ6+lgWZZSiXVQd9T+mf19h5Y2SumtPsohInEhGlQgPLmCGcO5a
+         jw6P5DAjekgxppebKpG+TlKQ5FFWELq+9M88Ce0T51n2oBVLwrE8WbxEoCPThOEI9tnF
+         JN7MGb3BZVUr/a8CJqChDVxkiL3guoroTusAkOcDKFGPQLMUTxNpDQhRRlDzs2rznX3Z
+         8lN1g+hjO3Urj7LxPc3MYAWBo2qDgciFQLTMly5wIZXSXWxIOd4saZXApX1bfjmuTC1H
+         C1sQ==
+X-Gm-Message-State: APjAAAXac9hzKJnSdhvaMShT4w2xern07MGB6Ziru916d8jiDEHV6Dy+
+        LtPlDOb7oLDN1PsSeIZpea6amc8=
+X-Google-Smtp-Source: APXvYqxm0NJVyiy1qW3kAmbakTqJFJUOQ0dfkTq8hktodIEO2WpsI8z91rO0JnAJZ5HXpylenvl3GA==
+X-Received: by 2002:a1c:990b:: with SMTP id b11mr211208wme.15.1582566923445;
+        Mon, 24 Feb 2020 09:55:23 -0800 (PST)
+Received: from avx2 ([46.53.250.94])
+        by smtp.gmail.com with ESMTPSA id s8sm20772193wrt.57.2020.02.24.09.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 09:55:22 -0800 (PST)
+Date:   Mon, 24 Feb 2020 20:55:20 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3] proc: faster open/read/close with "permanent" files
+Message-ID: <20200224175520.GA3401@avx2>
+References: <20200222201539.GA22576@avx2>
+ <7c30fd26941948fa1aedd1e73bdc2ebb8efec477.camel@perches.com>
+ <20200223113024.GA4941@avx2>
+ <dc93d5299169a33e00fc35a4c5f29ea72764bce0.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 180d51a3-8b9e-47ab-5189-08d7b952582a
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5655:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB565518D45F0DA59B19CA088DB5EC0@BYAPR02MB5655.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 032334F434
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rp0MjG951sRbhwv+Mz1QbAe4Img8tkYZoBjB2++tU6eDiE6yhiDp7OyPy6QWRyd2xyAvp8XGSrd89WInUdnqZf9IYVjdu3DDCxl1obkho0g3EYTrZxslp4Jj5uPefAuR4oCcN2MO3WgVPJALmxgsRa6fhPCnvaTonq5YFq79T7+LCuARI9Ff5BnX8Q9gVQr3FIVJ365pWEaKZEGA8jkid6ojstCGbx/uHg8lN8+tlU+bAvaIeeGOd3LaMkJQ6ilTB+eANTR67Rx1YbapXHSIP8jn/xdJyMW/0ecsDcJrUImkZBvkZ5Y40HyjLnvBPUlRU0vMI5MY5RTqoKkrUSzhJj1M7u9lxy19lYVxqD6T2yE4xzfk1iK9xmO8W76ONy5ufmF49nGoXerAJqevOd/sMbvqotcmZtQtSHqfzRXIfBnsKzFQi89ocr+Y2zIu6BsU
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 17:52:41.1447
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 180d51a3-8b9e-47ab-5189-08d7b952582a
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5655
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dc93d5299169a33e00fc35a4c5f29ea72764bce0.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add shutdown/wakeup a resource eemi operations to shutdown
-or bringup a resource.
+On Sun, Feb 23, 2020 at 06:48:38PM -0800, Joe Perches wrote:
+> On Sun, 2020-02-23 at 14:30 +0300, Alexey Dobriyan wrote:
+> > On Sat, Feb 22, 2020 at 12:39:39PM -0800, Joe Perches wrote:
+> > > On Sat, 2020-02-22 at 23:15 +0300, Alexey Dobriyan wrote:
+> > > > Now that "struct proc_ops" exist we can start putting there stuff which
+> > > > could not fly with VFS "struct file_operations"...
+> > > > 
+> > > > Most of fs/proc/inode.c file is dedicated to make open/read/.../close reliable
+> > > > in the event of disappearing /proc entries which usually happens if module is
+> > > > getting removed. Files like /proc/cpuinfo which never disappear simply do not
+> > > > need such protection.
+> > > > 
+> > > > Save 2 atomic ops, 1 allocation, 1 free per open/read/close sequence for such
+> > > > "permanent" files.
+> > > > 
+> > > > Enable "permanent" flag for
+> > > > 
+> > > > 	/proc/cpuinfo
+> > > > 	/proc/kmsg
+> > > > 	/proc/modules
+> > > > 	/proc/slabinfo
+> > > > 	/proc/stat
+> > > > 	/proc/sysvipc/*
+> > > > 	/proc/swaps
+> > > > 
+> > > > More will come once I figure out foolproof way to prevent out module
+> > > > authors from marking their stuff "permanent" for performance reasons
+> > > > when it is not.
+> > > > 
+> > > > This should help with scalability: benchmark is "read /proc/cpuinfo R times
+> > > > by N threads scattered over the system".
+> > > 
+> > > Is this an actual expected use-case?
+> > 
+> > Yes.
+> > 
+> > > Is there some additional unnecessary memory consumption
+> > > in the unscaled systems?
+> > 
+> > No, it's the opposite. Less memory usage for everyone and noticeable
+> > performance improvement for contented case.
+> > 
+> > > >  static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+> > > >  {
+> > > >  	struct proc_dir_entry *pde = PDE(file_inode(file));
+> > > >  	ssize_t rv = -EIO;
+> > > > -	if (use_pde(pde)) {
+> > > > -		typeof_member(struct proc_ops, proc_read) read;
+> > > >  
+> > > > -		read = pde->proc_ops->proc_read;
+> > > > -		if (read)
+> > > > -			rv = read(file, buf, count, ppos);
+> > > > +	if (pde_is_permanent(pde)) {
+> > > > +		return pde_read(pde, file, buf, count, ppos);
+> > > > +	} else if (use_pde(pde)) {
+> > > > +		rv = pde_read(pde, file, buf, count, ppos);
+> > > >  		unuse_pde(pde);
+> > > 
+> > > Perhaps all the function call duplication could be minimized
+> > > by using code without direct returns like:
+> > > 
+> > > 	rv = pde_read(pde, file, buf, count, pos);
+> > > 	if (!pde_is_permanent(pde))
+> > > 		unuse_pde(pde);
+> > > 
+> > > 	return rv;
+> > 
+> > Function call non-duplication is false goal.
+> 
+> Depends, copy/paste errors are common and object code
+> size generally increases.
+> 
+> > Surprisingly it makes code bigger:
+> 
+> Not so far as I can tell.  Are you sure?
+> 
+> > 	$ ./scripts/bloat-o-meter ../vmlinux-000 ../obj/vmlinux
+> > 	add/remove: 0/0 grow/shrink: 1/0 up/down: 10/0 (10)
+> > 	Function                                     old     new   delta
+> > 	proc_reg_read                                108     118     +10
+> > 
+> > and worse too: "rv" is carried on stack through "unuse_pde" call.
+> 
+> With gcc 9.2.1 x86-64 defconfig:
+> 
+> Changing just proc_reg_read to:
+> 
+> static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+> {
+> 	struct proc_dir_entry *pde = PDE(file_inode(file));
+> 	ssize_t rv;
+> 
+> 	rv = pde_read(pde, file, buf, count, ppos);
+> 	if (use_pde(pde))
+> 		unuse_pde(pde);
 
-Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 35 +++++++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  8 ++++++++
- 2 files changed, 43 insertions(+)
+What?
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 20e4574..486dcb1 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -692,6 +692,39 @@ static int zynqmp_pm_release_node(const u32 node)
- }
- 
- /**
-+ * zynqmp_pm_force_powerdown - PM call to request for another PU or subsystem to
-+ *             be powered down forcefully
-+ * @target:    Node ID of the targeted PU or subsystem
-+ * @ack:   Flag to specify whether acknowledge is requested
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_force_powerdown(const u32 target,
-+				   const enum zynqmp_pm_request_ack ack)
-+{
-+	return zynqmp_pm_invoke_fn(PM_FORCE_POWERDOWN, target, ack, 0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_request_wakeup - PM call to wake up selected master or subsystem
-+ * @node:  Node ID of the master or subsystem
-+ * @set_addr:  Specifies whether the address argument is relevant
-+ * @address:   Address from which to resume when woken up
-+ * @ack:   Flag to specify whether acknowledge requested
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_request_wakeup(const u32 node,
-+				   const bool set_addr,
-+				   const u64 address,
-+				   const enum zynqmp_pm_request_ack ack)
-+{
-+	/* set_addr flag is encoded into 1st bit of address */
-+	return zynqmp_pm_invoke_fn(PM_REQUEST_WAKEUP, node, address | set_addr,
-+					address >> 32, ack, NULL);
-+}
-+
-+/**
-  * zynqmp_pm_set_requirement() - PM call to set requirement for PM slaves
-  * @node:		Node ID of the slave
-  * @capabilities:	Requested capabilities of the slave
-@@ -731,6 +764,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.set_suspend_mode = zynqmp_pm_set_suspend_mode,
- 	.request_node = zynqmp_pm_request_node,
- 	.release_node = zynqmp_pm_release_node,
-+	.force_powerdown = zynqmp_pm_force_powerdown,
-+	.request_wakeup = zynqmp_pm_request_wakeup,
- 	.set_requirement = zynqmp_pm_set_requirement,
- 	.fpga_load = zynqmp_pm_fpga_load,
- 	.fpga_get_status = zynqmp_pm_fpga_get_status,
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index b8ca118..0a68849 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -82,6 +82,8 @@ enum pm_api_id {
- 	PM_CLOCK_GETRATE,
- 	PM_CLOCK_SETPARENT,
- 	PM_CLOCK_GETPARENT,
-+	PM_FORCE_POWERDOWN = 8,
-+	PM_REQUEST_WAKEUP = 10,
- 	PM_FEATURE_CHECK = 63,
- 	PM_API_MAX,
- };
-@@ -330,6 +332,12 @@ struct zynqmp_eemi_ops {
- 			    const u32 qos,
- 			    const enum zynqmp_pm_request_ack ack);
- 	int (*release_node)(const u32 node);
-+	int (*force_powerdown)(const u32 target,
-+				const enum zynqmp_pm_request_ack ack);
-+	int (*request_wakeup)(const u32 node,
-+				const bool set_addr,
-+				const u64 address,
-+				const enum zynqmp_pm_request_ack ack);
- 	int (*set_requirement)(const u32 node,
- 			       const u32 capabilities,
- 			       const u32 qos,
--- 
-2.7.4
+Please make non-racy patch before doing anything.
 
+> 
+> 	return rv;
+> }
