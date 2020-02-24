@@ -2,109 +2,114 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CED8C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA7FC11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D18920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582561998;
-	bh=E4OC7Vt1SAJ3s4FEPYn8lscavIq6DIL8BmttAab8sCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z48n3ICcCvl+HXfaZ0AjYis2NmYDnhd/+21ICr/JqIfYn7nUnpW/bN/zmahuCSmT/
-	 brbyRKkfErUSc6hPAUxJ1b7IHJQdhGlMgYsPp5hBYru/ZgmqO6b3zG6UBIdVidaE2K
-	 2uoVTY6A6o2aUdUntPatvbUFHkF4u4EBZUrPHbX0=
+	by mail.kernel.org (Postfix) with ESMTP id B250A20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="arQmCp17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgBXQdR (ORCPT
+        id S1727994AbgBXQd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:33:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727706AbgBXQdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:33:16 -0500
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Feb 2020 11:33:57 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50375 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727746AbgBXQd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:33:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582562036;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5+HqvnuYHetNq0Tag+VCE9fiZvP0g50u+wKBNq+GatA=;
+        b=arQmCp17B/dZTVXyFzAWFOjbaEXKQgvBpoZiqnccfUhqg8/dm4aF2IoyKmWOnoxyIN/4Hr
+        zbmTBWjOTRIfzQE8/MolLjKgi/IsFNr5BscN534yy1oNLkII4oJNv9z0apBpNLVuDvJ8+N
+        GZcPmmQI0ag5ElshYhEDODRWiQJAXo4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-481-_Vnof5yyNVuKsYY80tP8XQ-1; Mon, 24 Feb 2020 11:33:52 -0500
+X-MC-Unique: _Vnof5yyNVuKsYY80tP8XQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB8F2080D;
-        Mon, 24 Feb 2020 16:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582561996;
-        bh=E4OC7Vt1SAJ3s4FEPYn8lscavIq6DIL8BmttAab8sCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hLs946VYAUhcHFyxS2neXmgb8qjiUcglzrjWDjPh5Oz4PWe03gai85zvalXMBP8Uf
-         LtNoLqJkpU6Udux1YQS8oTabkx9A5gnbqqtR5lHoDGS6+PLtUm27lVXW6w17Gml7a5
-         yCqJpVuHtCGPLkbz+32/3iIRCwB02nUKpCnRc6gE=
-Date:   Mon, 24 Feb 2020 18:33:12 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Doug Ledford <dledford@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT] Networking
-Message-ID: <20200224163312.GC4526@unreal>
-References: <20150624.063911.1220157256743743341.davem@davemloft.net>
- <CA+55aFybr6Fjti5WSm=FQpfwdwgH1Pcfg6L81M-Hd9MzuSHktg@mail.gmail.com>
- <CAMuHMdViacgi1W8acma7GhWaaVj92z6pg-g7ByvYOQL-DToacA@mail.gmail.com>
- <20200224124732.GA694161@kroah.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A37C107BAAA;
+        Mon, 24 Feb 2020 16:33:49 +0000 (UTC)
+Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C91E5D9E5;
+        Mon, 24 Feb 2020 16:33:45 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 17:33:42 +0100
+From:   Karel Zak <kzak@redhat.com>
+To:     Stephen Warren <swarren@wwwdotorg.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Colin Cross <ccross@android.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-efi@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline
+ parameter
+Message-ID: <20200224163342.d4acf224b56celup@ws.net.home>
+References: <20200219162339.16192-1-digetx@gmail.com>
+ <20200219162738.GA10644@infradead.org>
+ <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224124732.GA694161@kroah.com>
+In-Reply-To: <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:47:32PM +0100, Greg KH wrote:
-> On Mon, Feb 24, 2020 at 11:01:09AM +0100, Geert Uytterhoeven wrote:
-> > Hi Linus,
-> >
-> > On Thu, Jun 25, 2015 at 1:38 AM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > > On Wed, Jun 24, 2015 at 6:39 AM, David Miller <davem@davemloft.net> wrote:
-> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git master
-> > >
-> > > On the *other* side of the same conflict, I find an even more
-> > > offensive commit, namely commit 4cd7c9479aff ("IB/mad: Add support for
-> > > additional MAD info to/from drivers") which adds a BUG_ON() for a
-> > > sanity check, rather than just returning -EINVAL or something sane
-> > > like that.
-> > >
-> > > I'm getting *real* tired of that BUG_ON() shit. I realize that
-> > > infiniband is a niche market, and those "commercial grade" niche
-> > > markets are more-than-used-to crap code and horrible hacks, but this
-> > > is still the kernel. We don't add random machine-killing debug checks
-> > > when it is *so* simple to just do
-> > >
-> > >         if (WARN_ON_ONCE(..))
-> > >                 return -EINVAL;
-> > >
-> > > instead.
-> >
-> > And if we follow that advice, friendly Greg will respond with:
-> > "We really do not want WARN_ON() anywhere, as that causes systems with
-> >  panic-on-warn to reboot."
-> > https://lore.kernel.org/lkml/20191121135743.GA552517@kroah.com/
->
-> Yes, we should not have any WARN_ON calls for something that userspace
-> can trigger, because then syzbot will trigger it and we will get an
-> annoying report saying to fix it :)
+On Wed, Feb 19, 2020 at 09:59:54AM -0700, Stephen Warren wrote:
+> On 2/19/20 9:27 AM, Christoph Hellwig wrote:
+> > On Wed, Feb 19, 2020 at 07:23:39PM +0300, Dmitry Osipenko wrote:
+> > > The gpt_sector=<sector> causes the GPT partition search to look at the
+> > > specified sector for a valid GPT header if the GPT is not found at the
+> > > beginning or the end of block device.
+> > > 
+> > > In particular this is needed for NVIDIA Tegra consumer-grade Android
+> > > devices in order to make them usable with the upstream kernel because
+> > > these devices use a proprietary / closed-source partition table format
+> > > for the EMMC and it's impossible to change the partition's format. Luckily
+> > > there is a GPT table in addition to the proprietary table, which is placed
+> > > in uncommon location of the EMMC storage and bootloader passes the
+> > > location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
+> > > 
+> > > This patch is based on the original work done by Colin Cross for the
+> > > downstream Android kernel.
+> > 
+> > I don't think a magic command line is the way to go.  The best would be
+> > to reverse-engineer the proprietary partition table format.  If that is
+> > too hard we can at least key off the odd GPT location based of it's
+> > magic number.
 
-Impressive backlog :)
-Geert, you replied on original discussion from 2015.
+ +1
 
-Thanks
+> I thought that the backup GPT was always present in the standard location;
 
->
-> thanks,
->
-> greg k-h
+If they have proprietary stuff on begin of the device and valid backup
+GPT at the end of the device then designer of this junk is crazy, because
+many GPT fdisk-like tools will try to recover from the backup header and 
+overwrite the unknown (invalid) stuff at the begin of the device...
+
+    Karel
+
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
