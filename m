@@ -2,131 +2,95 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3ACC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319C8C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F37820637
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h5bFUu77"
+	by mail.kernel.org (Postfix) with ESMTP id E73F32072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582529688;
+	bh=NDSfGAZJkI2k4YRiySz/EZUqqWywWhOvsrbaf1qAO24=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tJcMRswexIG+JWydUfXqADnB6JkZZv5vE0GNhD+9I3D4wScLJ5t67dVhEJrml4ydP
+	 i17WXFUcDv14zeygXN5bQcx/Dk3tC0i9/ZBmcg2H+lWUjlkHU2x5xZR9dY/zoDVwpA
+	 g4OWbaH96tkVakXJ+2+Arm8qtl1cZiWwjGJwcMOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgBXHcn (ORCPT
+        id S1727197AbgBXHeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:32:43 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:57500 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgBXHcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:32:42 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O7VL7i053525;
-        Mon, 24 Feb 2020 07:32:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=ctgNwyDsGErJORzON8g3jp9u7VQvJRVglKKheMnzkkU=;
- b=h5bFUu77Tdpq7K6YcUFW/6O4hLpE73MsWFyh9w4MrdE0V4+wivoFHCxCP8oTouXgs3qA
- oOlexsdjkR9v5E/7QDKns/Ma8KiqUA8jnAtfbpwJmfjLWOIFdYT1+KL9qH8uD8J+1GpX
- PsNboxUAIqwRoBjNifdVjVhhQlsFsO07gYgWywQ5MOt9B3WHsIit5Ok4rdXba8gGCVLb
- 1YjHM4VscAqNv2BnyyPq60MTgaujJVZKMyKAIXOXAj1qMmKyqsC9FL43rSAO5M8GoWvc
- N2tQWhWrmDoXh66/Ih8FuPrYpB/k7y5lCRBCX5zPD1I4vEUNv0OXXEvPDMBBI5rk/D8s 2Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2yauqu5f6b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 07:32:13 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O7SLXe162686;
-        Mon, 24 Feb 2020 07:32:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2yby5anfs9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 07:32:12 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01O7W9o4007023;
-        Mon, 24 Feb 2020 07:32:10 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 23 Feb 2020 23:32:09 -0800
-Date:   Mon, 24 Feb 2020 10:31:57 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH][next] clone3: fix an unsigned args.cgroup comparison to
- less than zero
-Message-ID: <20200224073157.GB3286@kadam>
-References: <20200222001513.43099-1-colin.king@canonical.com>
- <20200222121801.cu4dfnk4z5xd5uc2@wittgenstein>
+        Mon, 24 Feb 2020 02:34:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbgBXHeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:34:46 -0500
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E0120637;
+        Mon, 24 Feb 2020 07:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582529686;
+        bh=NDSfGAZJkI2k4YRiySz/EZUqqWywWhOvsrbaf1qAO24=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FAmLxyGoTTVz+50p3SKuwseMvxLgDnn3ypXIC5tRP5yPoKvLykQSgOfeKYK15HHXr
+         WzyOxgh6JVf8cpEekCSCARyR/YfUrLV5q0kowovT5JQ07Qmpse3kw9dXj04XLTiZk8
+         zwk4k6rw6MMxwxzFkAfjN3OeioDlDUJkoxT+Q2HY=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: drop outdated comments about release_tty() locking
+Date:   Sun, 23 Feb 2020 23:33:59 -0800
+Message-Id: <20200224073359.292795-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222121801.cu4dfnk4z5xd5uc2@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240065
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- clxscore=1011 malwarescore=0 impostorscore=0 adultscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240065
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 01:18:01PM +0100, Christian Brauner wrote:
-> On Sat, Feb 22, 2020 at 12:15:13AM +0000, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > The less than zero comparison of args.cgroup is aways false because
-> > args.cgroup is a u64 and can never be less than zero.  I believe the
-> > correct check is to cast args.cgroup to a s64 first to ensure an
-> > invalid value is not copied to kargs->cgroup.
-> > 
-> > Addresses-Coverity: ("Unsigned compared against 0")
-> > Fixes: ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> Thanks, Colin.
-> Dan has reported this issue a few days prior on the janitors list so he
-> likely should get a 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> too.
+From: Eric Biggers <ebiggers@google.com>
 
-Colin found it independently so no need for a Reported-by.
+The current version of the TTY code unlocks the tty_struct(s) before
+release_tty() rather than after.  Moreover, tty_unlock_pair() no longer
+exists.  Thus, remove the outdated comments regarding tty_unlock_pair().
 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 2diff --git a/kernel/fork.c b/kernel/fork.c
-> index 2853e258fe1f..dca4dde3b5b2 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2618,7 +2618,8 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->                      !valid_signal(args.exit_signal)))
->                 return -EINVAL;
-> 
-> -       if ((args.flags & CLONE_INTO_CGROUP) && args.cgroup < 0)
-> +       if ((args.flags & CLONE_INTO_CGROUP) &&
-> +           (args.cgroup > INT_MAX || (s64)args.cgroup < 0))
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ drivers/tty/tty_io.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-If we're capping it at INT_MAX then the check for negative isn't
-required and static analysis tools know it's not so they might complain.
-
-regards,
-dan carpenter
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index a1453fe108621..1fcf7ad83dfa0 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1589,9 +1589,7 @@ void tty_kclose(struct tty_struct *tty)
+ 	tty_debug_hangup(tty, "freeing structure\n");
+ 	/*
+ 	 * The release_tty function takes care of the details of clearing
+-	 * the slots and preserving the termios structure. The tty_unlock_pair
+-	 * should be safe as we keep a kref while the tty is locked (so the
+-	 * unlock never unlocks a freed tty).
++	 * the slots and preserving the termios structure.
+ 	 */
+ 	mutex_lock(&tty_mutex);
+ 	tty_port_set_kopened(tty->port, 0);
+@@ -1621,9 +1619,7 @@ void tty_release_struct(struct tty_struct *tty, int idx)
+ 	tty_debug_hangup(tty, "freeing structure\n");
+ 	/*
+ 	 * The release_tty function takes care of the details of clearing
+-	 * the slots and preserving the termios structure. The tty_unlock_pair
+-	 * should be safe as we keep a kref while the tty is locked (so the
+-	 * unlock never unlocks a freed tty).
++	 * the slots and preserving the termios structure.
+ 	 */
+ 	mutex_lock(&tty_mutex);
+ 	release_tty(tty, idx);
+-- 
+2.25.1
 
