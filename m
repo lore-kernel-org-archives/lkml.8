@@ -2,136 +2,240 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72509C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E42EC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B9420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D5420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lZ4OE2YE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r57KjA79"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="TDJptg4x";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fTHAN0Yh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgBXJLT (ORCPT
+        id S1728385AbgBXJK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:11:19 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36727 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727794AbgBXJLD (ORCPT
+        Mon, 24 Feb 2020 04:10:58 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37963 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728298AbgBXJKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:11:03 -0500
+        Mon, 24 Feb 2020 04:10:50 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 34D407698;
-        Mon, 24 Feb 2020 04:11:02 -0500 (EST)
+        by mailnew.west.internal (Postfix) with ESMTP id E4D44637;
+        Mon, 24 Feb 2020 04:10:47 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:11:02 -0500
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=P6NSWkrKZ4ycnvFOSuy67yShL4e
-        kMBsFHiAL05968xc=; b=lZ4OE2YE954qYDC16RXXOtM/qnFZraFfeQ0BPlrNAQt
-        GXa5BRrgjuoMXO09Hj3a+SRn3OWbiJfp1i7iHeX49HvPtvYKGj2ka60gIk6QygsS
-        xOedDCFBmF5v3PSXS+L3NxwVtIqE9RznUlMhphBxtmlaexBZKMCsLbsXEtmnyWFY
-        pEHkRiCnYtzef/iZ9FYqOK2PmauywfwotGSDS2ZUzSt7Y+pIb5q+qAQYlq5a9+4S
-        4EP5CiPaANupbgvtbAquupThLnPHIfavvUMjae8bB/oPE3uGTWNm4571hPnqzcdV
-        tIp44pxnFoVzlNbG6lpp5aNwDIpEsxcIGB/g47CMCuw==
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=ePSwFAV7DRtlr
+        76mxS9zFF6e55K7eAc8K3mofqokv7o=; b=TDJptg4xq2c0LjIhAcLhpV9oMW2I0
+        vgyQocboU1qqOMCESoKYuvQybeVxJjWB2S/Oe0K5LtuH2KB+lt5MJUQidpaAt+Sr
+        Ti7M38tl0dRufUt+whQ+k4RWr/kUEVSeweD/C9hxp8y99VOBBe4JK+FIrOcYIqZd
+        0LtC69pZjTBGmF96KB3WuYy2CxbpA9xLmYTpbjuf3jpalX4yw/cbCH0oXoOHbkJp
+        YDf9o4h7nmz3XtxoJIeIaCCcMFNPbcwtgVSo4qREHZTKuVYrIsnGGdgHtMLm0WEU
+        OpL3q55DIfvNyaHYXDBl1dpj9rzptovRZQMHQGwPGbqIyHeMx9pTCyHXA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=P6NSWk
-        rKZ4ycnvFOSuy67yShL4ekMBsFHiAL05968xc=; b=r57KjA79/p5plmAAJXNv/J
-        hnoNbfH/Fm5PIKdb1WwapcoQy4JZwmrTAKiYdDrU1xmPe7YO7cg67fWW48x/8Fg0
-        W26pjrXMh+5qpMVxoKbHogk903GtPfV8zMhdIYPCRS2I4WRgLVL9zN0dmtKVcK+i
-        +nFZkhg/lAgAR/F4y/hcFeDm10hT/erEAES/h79aAY8bMLzzV6UcDsBWX01txzKi
-        9J3KqrQ01PWX26AWkYE4nz7E7TgV/YUQHv3e2RlERTMoj0olsRWysMp3i+g4zilC
-        ikqMBqw87Ow0nRPMkSim4j0vTFLFbDC0hjG/xkHYH/Scm6XVExWWXkLkrNQgbz8w
-        ==
-X-ME-Sender: <xms:JJNTXoeASscD0ZE79XXdYIUaj_4HERRURm8t60DN_w_LZdOkXgefiQ>
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=ePSwFAV7DRtlr76mxS9zFF6e55K7eAc8K3mofqokv7o=; b=fTHAN0Yh
+        xTfRd0Oz42BU8G3EH6F4Ta9KnZ73aGuEaY+d/aVzsVKAxWttQY4QTDokE0qjFbkp
+        oB1drXf5pEY7DOKn4CWyFDCcjA5Ihsz/+zjAfk+GKP80n8RhjL4IZlGqkxWqK7nn
+        N5kkVMyksec8Jo7uk1uLUzmPqlcsJVG1TbP+Vfb98Qss8kKUmmCUEMFFSpdCf2b1
+        Z9m3NGq+94M7wLozPM+uTrPQ0AOBiM3yn5LVOQziLUHF0h7MAAAI8J9A5faJ6NIp
+        xemn2oja4UNfQUI6/OXmnzapm57mowsBap5tX8RczRbNaz3AwCOrBtJk+9/ktD82
+        ah/TDng8gaja/Q==
+X-ME-Sender: <xms:F5NTXkIfGvbustICxS6ZsYcQ5MxyZsEr645F3xaIB1w0pQh_LYcVdg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhmvgcutfhi
+    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:JJNTXluWuPtuGN1waXd_JiswnG4e7u-fVcy7PczKJAgHSvNxt3tqQg>
-    <xmx:JJNTXv_wMhB5XVyVpuBZBac9XmYEjBsod6Y6Tlf2Dk6TfKZoM0gR_w>
-    <xmx:JJNTXo1zXyyBSNGeEc12xnIp9_AK21g3yWfN8SJAGvtSF8hQMAa4Sg>
-    <xmx:JpNTXugmknZ6EKgtv52oiyQ9y3cZAT18nBrpAmieETp8hBTU8RsCag>
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepudeknecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:F5NTXqI6oCbVPb21dORPilu-mUx9PFsMTT16RFvt2odW8Pg8i8Xbrg>
+    <xmx:F5NTXiV5hyRnhmwVuSPaVPZfIKeM-GI0OfWUzOSdiLaTN0Ja20YSxg>
+    <xmx:F5NTXsgbfDDc5f_tljAcfnvVt2VDsOhhaBRr1ZRE683w7K-s_uCMng>
+    <xmx:F5NTXpNHgi7ggZER5lzLlgMdUgx_APHdRDYJ3h2It2tGL8N2p30ZZ926wUg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 421BA328005A;
-        Mon, 24 Feb 2020 04:11:00 -0500 (EST)
-Date:   Mon, 24 Feb 2020 10:10:59 +0100
+        by mail.messagingengine.com (Postfix) with ESMTPA id 357AA328005E;
+        Mon, 24 Feb 2020 04:10:47 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for the
- vibrator motor
-Message-ID: <20200224091059.lljffogofbexhudt@gilmour.lan>
-References: <20200222231428.233621-1-megous@megous.com>
- <20200222231428.233621-4-megous@megous.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 82/89] drm/vc4: hdmi: Move CEC init to its own function
+Date:   Mon, 24 Feb 2020 10:07:24 +0100
+Message-Id: <57e5450645ea8cba8bf862bed89f9d053eb50fa7.1582533919.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rf2uuzktvcqtstk3"
-Content-Disposition: inline
-In-Reply-To: <20200222231428.233621-4-megous@megous.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The CEC init code was put directly into the bind function, which was quite
+inconsistent with how the audio support was done, and would prevent us from
+further changes to skip that initialisation entirely.
 
---rf2uuzktvcqtstk3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 102 +++++++++++++++++++++-------------
+ 1 file changed, 64 insertions(+), 38 deletions(-)
 
-Hi,
-
-On Sun, Feb 23, 2020 at 12:14:27AM +0100, Ondrej Jirman wrote:
-> The board has a vibrator mottor. Hook it to the input subsystem.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> index 2fd31a0a0b344..a22920275e99b 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> @@ -99,6 +99,11 @@ panel_input: endpoint {
->  		};
->  	};
->
-> +	vibrator {
-> +		compatible = "gpio-vibrator";
-> +		vcc-supply = <&reg_ldo_io1>;
-> +	};
-> +
-
-LDO IO1 can also be muxed in as a GPIO iirc, why did you choose the
-regulator instead?
-
-Maxime
-
---rf2uuzktvcqtstk3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOTIwAKCRDj7w1vZxhR
-xVFTAQDQJHOWWsog4Y0l4mRxEOjNKPwakKZYlCWd4M50UL9jDAEArb1p2WwTIOaO
-jt5TR3xH+He9Bb3uaRGhWtWZpIcV9Aw=
-=/rlr
------END PGP SIGNATURE-----
-
---rf2uuzktvcqtstk3--
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index a98661c12c24..f7fd1914aec7 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -1163,6 +1163,64 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
+ 	.adap_log_addr = vc4_hdmi_cec_adap_log_addr,
+ 	.adap_transmit = vc4_hdmi_cec_adap_transmit,
+ };
++
++static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
++{
++	int ret;
++
++	vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
++					      vc4, "vc4",
++					      CEC_CAP_DEFAULTS |
++					      CEC_CAP_CONNECTOR_INFO, 1);
++	ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
++	if (ret < 0)
++		return ret;
++
++	cec_fill_conn_info_from_drm(&conn_info, hdmi->connector);
++	cec_s_conn_info(hdmi->cec_adap, &conn_info);
++
++	HDMI_WRITE(HDMI_CPU_MASK_SET, 0xffffffff);
++	value = HDMI_READ(HDMI_CEC_CNTRL_1);
++	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
++	/*
++	 * Set the logical address to Unregistered and set the clock
++	 * divider: the hsm_clock rate and this divider setting will
++	 * give a 40 kHz CEC clock.
++	 */
++	value |= VC4_HDMI_CEC_ADDR_MASK |
++		 (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
++	HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
++	ret = devm_request_threaded_irq(dev, platform_get_irq(pdev, 0),
++					vc4_cec_irq_handler,
++					vc4_cec_irq_handler_thread, 0,
++					"vc4 hdmi cec", vc4_hdmi);
++	if (ret)
++		goto err_delete_cec_adap;
++
++	ret = cec_register_adapter(vc4_hdmi->cec_adap, vc4_hdmi);
++	if (ret < 0)
++		goto err_delete_cec_adap;
++
++	return 0;
++
++err_delete_cec_adap:
++	cec_delete_adapter(vc4_hdmi->cec_adap);
++
++	return ret;
++}
++
++static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi)
++{
++	cec_unregister_adapter(vc4_hdmi->cec_adap);
++}
++#else
++static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
++{
++	return 0;
++}
++
++static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi) {};
++
+ #endif
+ 
+ static int vc4_hdmi_build_regset(struct vc4_hdmi *vc4_hdmi,
+@@ -1330,43 +1388,13 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	if (ret)
+ 		goto err_destroy_encoder;
+ 
+-#ifdef CONFIG_DRM_VC4_HDMI_CEC
+-	vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
+-					      vc4, "vc4",
+-					      CEC_CAP_DEFAULTS |
+-					      CEC_CAP_CONNECTOR_INFO, 1);
+-	ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
+-	if (ret < 0)
+-		goto err_destroy_conn;
+-
+-	cec_fill_conn_info_from_drm(&conn_info, hdmi->connector);
+-	cec_s_conn_info(hdmi->cec_adap, &conn_info);
+-
+-	HDMI_WRITE(HDMI_CPU_MASK_SET, 0xffffffff);
+-	value = HDMI_READ(HDMI_CEC_CNTRL_1);
+-	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
+-	/*
+-	 * Set the logical address to Unregistered and set the clock
+-	 * divider: the hsm_clock rate and this divider setting will
+-	 * give a 40 kHz CEC clock.
+-	 */
+-	value |= VC4_HDMI_CEC_ADDR_MASK |
+-		 (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
+-	HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
+-	ret = devm_request_threaded_irq(dev, platform_get_irq(pdev, 0),
+-					vc4_cec_irq_handler,
+-					vc4_cec_irq_handler_thread, 0,
+-					"vc4 hdmi cec", vc4_hdmi);
++	ret = vc4_hdmi_cec_init(vc4_hdmi);
+ 	if (ret)
+-		goto err_delete_cec_adap;
+-	ret = cec_register_adapter(vc4_hdmi->cec_adap, vc4_hdmi);
+-	if (ret < 0)
+-		goto err_delete_cec_adap;
+-#endif
++		goto err_destroy_conn;
+ 
+ 	ret = vc4_hdmi_audio_init(vc4_hdmi);
+ 	if (ret)
+-		goto err_destroy_encoder;
++		goto err_free_cec;
+ 
+ 	vc4_debugfs_add_file(drm,
+ 			     variant->id ? "hdmi1_regs" : "hdmi_regs",
+@@ -1375,12 +1403,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	return 0;
+ 
+-#ifdef CONFIG_DRM_VC4_HDMI_CEC
+-err_delete_cec_adap:
+-	cec_delete_adapter(vc4_hdmi->cec_adap);
++err_free_cec:
++	vc4_hdmi_cec_exit(vc4_hdmi);
+ err_destroy_conn:
+ 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
+-#endif
+ err_destroy_encoder:
+ 	vc4_hdmi_encoder_destroy(encoder);
+ err_unprepare_hsm:
+@@ -1405,7 +1431,7 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
+ 	kfree(vc4_hdmi->hdmi_regset.regs);
+ 	kfree(vc4_hdmi->hd_regset.regs);
+ 
+-	cec_unregister_adapter(vc4_hdmi->cec_adap);
++	vc4_hdmi_cec_exit(vc4_hdmi);
+ 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
+ 	vc4_hdmi_encoder_destroy(&vc4_hdmi->encoder.base.base);
+ 
+-- 
+git-series 0.9.1
