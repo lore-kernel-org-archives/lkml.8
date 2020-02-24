@@ -2,110 +2,118 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B78BC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA44FC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1255F20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B2320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgBXRWx (ORCPT
+        id S1728354AbgBXRW5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:22:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgBXRVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:21:19 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Feb 2020 12:22:57 -0500
+Received: from skedge04.snt-world.com ([91.208.41.69]:49414 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727758AbgBXRWv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:22:51 -0500
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0DF622527;
-        Mon, 24 Feb 2020 17:21:18 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1j6HPx-001Agm-NB; Mon, 24 Feb 2020 12:21:17 -0500
-Message-Id: <20200224172117.582148505@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Mon, 24 Feb 2020 12:20:33 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Subject: [for-linus][PATCH 11/15] tools/bootconfig: Remove unneeded error message silencer
-References: <20200224172022.330525468@goodmis.org>
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 2B61C67A860;
+        Mon, 24 Feb 2020 18:22:47 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 24 Feb
+ 2020 18:22:46 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.005; Mon, 24 Feb 2020 18:22:46 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.ml.walleij@gmail.com>,
+        "NXP Linux Team" <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "Vinod Koul" <vkoul@kernel.org>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dma: imx-sdma: Fix the event id check to include RX event for
+ UART6
+Thread-Topic: [PATCH] dma: imx-sdma: Fix the event id check to include RX
+ event for UART6
+Thread-Index: AQHV6zcHvJnYHLnVJki1UPp7vKjn9Q==
+Date:   Mon, 24 Feb 2020 17:22:46 +0000
+Message-ID: <20200224172236.22478-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 2B61C67A860.AF1C6
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        festevam@gmail.com, kernel@pengutronix.de,
+        linus.ml.walleij@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel.org,
+        vkoul@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Remove error message silent knob, we don't need it anymore
-because we can check if there is a bootconfig by checking
-the magic word.
-If there is a magic word, but failed to load a bootconfig
-from initrd, there is a real problem.
+On i.MX6 the DMA event for the RX channel of UART6 is '0'. To fix
+the broken DMA support for UART6, we change the check for event_id0
+to include '0' as a valid id.
 
-Link: http://lkml.kernel.org/r/158220113256.26565.14264598654427773104.stgit@devnote2
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- tools/bootconfig/include/linux/printk.h | 5 +----
- tools/bootconfig/main.c                 | 8 --------
- 2 files changed, 1 insertion(+), 12 deletions(-)
+ drivers/dma/imx-sdma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/bootconfig/include/linux/printk.h b/tools/bootconfig/include/linux/printk.h
-index e978a63d3222..036e667596eb 100644
---- a/tools/bootconfig/include/linux/printk.h
-+++ b/tools/bootconfig/include/linux/printk.h
-@@ -4,10 +4,7 @@
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 066b21a32232..3d4aac97b1fc 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1331,7 +1331,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
  
- #include <stdio.h>
+ 	sdma_channel_synchronize(chan);
  
--/* controllable printf */
--extern int pr_output;
--#define printk(fmt, ...)	\
--	(pr_output ? printf(fmt, ##__VA_ARGS__) : 0)
-+#define printk(fmt, ...) printf(fmt, ##__VA_ARGS__)
+-	if (sdmac->event_id0)
++	if (sdmac->event_id0 >= 0)
+ 		sdma_event_disable(sdmac, sdmac->event_id0);
+ 	if (sdmac->event_id1)
+ 		sdma_event_disable(sdmac, sdmac->event_id1);
+@@ -1631,7 +1631,7 @@ static int sdma_config(struct dma_chan *chan,
+ 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
  
- #define pr_err printk
- #define pr_warn	printk
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 742271f019a9..a9b97814d1a9 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -14,8 +14,6 @@
- #include <linux/kernel.h>
- #include <linux/bootconfig.h>
- 
--int pr_output = 1;
--
- static int xbc_show_array(struct xbc_node *node)
- {
- 	const char *val;
-@@ -227,13 +225,7 @@ int delete_xbc(const char *path)
- 		return -errno;
- 	}
- 
--	/*
--	 * Suppress error messages in xbc_init() because it can be just a
--	 * data which concidentally matches the size and checksum footer.
--	 */
--	pr_output = 0;
- 	size = load_xbc_from_initrd(fd, &buf);
--	pr_output = 1;
- 	if (size < 0) {
- 		ret = size;
- 		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 	/* Set ENBLn earlier to make sure dma request triggered after that */
+-	if (sdmac->event_id0) {
++	if (sdmac->event_id0 >= 0) {
+ 		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
+ 			return -EINVAL;
+ 		sdma_event_enable(sdmac, sdmac->event_id0);
 -- 
-2.25.0
-
-
+2.17.1
