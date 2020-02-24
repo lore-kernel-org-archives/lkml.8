@@ -2,122 +2,155 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A69C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B25EC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77F62072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3186B20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BKZdz9HM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yf0kUD+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgBXLvB (ORCPT
+        id S1727368AbgBXLxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:51:01 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:36193 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbgBXLvB (ORCPT
+        Mon, 24 Feb 2020 06:53:09 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40554 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:51:01 -0500
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DEA2422F00;
-        Mon, 24 Feb 2020 12:50:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582545059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=AGoftlXtPDkl6tdoN4g4nLlzfqZ5fb+l68Uc8F12Pnk=;
-        b=BKZdz9HMC+by7IJBwDLcq7etejsomdPgSJDWZUxFdRgtDW0aDmVaBErBhsFLyj3TSlE5Bb
-        8a56/4veaOOn1UewHFAjIdg/LNkByuC5W8LUxW/xxd7Rcay78IUz6ipCIjKTGsqmBwhOjf
-        LEYZg2/Lv0btJqKLwKgtXgths71xFCk=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] arm64: dts: ls1028: sl28: explicitly enable network ports
-Date:   Mon, 24 Feb 2020 12:50:52 +0100
-Message-Id: <20200224115052.27328-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Mon, 24 Feb 2020 06:53:08 -0500
+Received: by mail-ed1-f67.google.com with SMTP id p3so11556957edx.7;
+        Mon, 24 Feb 2020 03:53:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nyV3Tq0pbVzV0gOMvCwpDS2Frt9VsoTq/4jG3RQtfPQ=;
+        b=Yf0kUD+Jf23zw3msaO/I5H1ErHEq9z9/So6oCcVT+LyB2NCVoDn5jQxCu2h1HPgEqu
+         uxDqZN4ifX12CEFAYEPonXwHrzi+7Pys9cplcPUl7rUWaqMFgddugEcX1miUpnhE1Epu
+         UcpmnwYE0s58jMQoi8QblEyO1ECx6LScGvKTj15SVBc9dJnNMJGeCfbNQ002fwUHIMa3
+         C0YOE+x2yPdA7ATwJ29mRh5rfCVd4K8rEALFaCM6UgaSleHf8PFDKJ+g+o+8oaWq2ISg
+         OkuYMfWOcDmFP6JCjlJz8F10upx6WmkUwDD3og5mY7bv+qrr7hrMyIfO0KFEF70kq00q
+         ElFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nyV3Tq0pbVzV0gOMvCwpDS2Frt9VsoTq/4jG3RQtfPQ=;
+        b=fWbOrUmcfkMiol2WbJEZXLWn1nhJMOOk+PAmCCGU8KqbXGDN+tRG0qbCFRPcZmC09H
+         A04d+WgMKisHvDWECP/WQV0AObT3l4fqDzjMRiDAZLxeh2yf3DN2Wntjf0+9coBfJNMp
+         Bqmsoytjiu5p7//9VdqotaCJHiX8kkcAAAnqB7gGxap3VCshdRSWmmsFQpywZp/miECm
+         ypxmpn3DNGvOKLujjz5S8UkTqfq6GcuwPtRmg9lNmB88MM3PzdWsZRz7EPiVzP5h4Nk6
+         Od/l3fXZKmzxoeoa1ofqT6UQCq1l3lJP7VQkCYNFFN9T0xnihWKOX4tV0FeK2wXcavud
+         19ng==
+X-Gm-Message-State: APjAAAUYmIomvHUZ+eQ7IvCpBCBOjOkQX/Fw9aEj0y2osJ2bpWO+2VtM
+        S5AWF83Ud/AdD/cBMQoaA9bEZP+/DdMgn99udwo=
+X-Google-Smtp-Source: APXvYqwfEc6CcVi5zjK3yPIzHvFMK/TsN3Eb5YXaRVfL+xDHIBwYeS7232DrblT4/eUf1bN238+W+21rz4w1S8ZUctw=
+X-Received: by 2002:a05:6402:3046:: with SMTP id bu6mr46559357edb.139.1582545187071;
+ Mon, 24 Feb 2020 03:53:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: DEA2422F00
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.776];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+References: <20200223204716.26170-1-olteanv@gmail.com> <20200224112026.GF27688@dragon>
+ <f92f01d60589d94bb25a38dd828200b0@walle.cc>
+In-Reply-To: <f92f01d60589d94bb25a38dd828200b0@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 24 Feb 2020 13:52:56 +0200
+Message-ID: <CA+h21hqjXedxha9_qncGQK-mzMxLZa6Jqs3q1P8rqy29wZmBkA@mail.gmail.com>
+Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on LS1028A
+To:     Michael Walle <michael@walle.cc>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit b9213899d2b0 ("arm64: dts: ls1028a: disable all enetc ports
-by default") all the network ports are disabled by default. This makes
-sense, but now we have to enable them explicitly in the boards. Do so
-for the sl28 module.
+Hi Michael,
 
-Since we are at it. Make sure the second port is only enabled for the
-variant 4 of the module. Variant 3 has only one network port.
+On Mon, 24 Feb 2020 at 13:38, Michael Walle <michael@walle.cc> wrote:
+>
+> Hi Shawn,
+>
+> Am 2020-02-24 12:20, schrieb Shawn Guo:
+> > On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
+> >> This series officializes the device tree bindings for the embedded
+> >> Ethernet switch on NXP LS1028A (and for the reference design board).
+> >> The driver has been in the tree since v5.4-rc6.
+> >>
+> >> It also performs some DT binding changes and minor cleanup, as per
+> >> feedback received in v1 and v2:
+> >>
+> >> - I've changed the DT bindings for the internal ports from "gmii" to
+> >>   "internal". This means changing the ENETC phy-mode as well, for
+> >>   uniformity. So I would like the entire series to be merged through a
+> >>   single tree, probably the devicetree one - something which David
+> >>   Miller has aggreed to, here [0].
+> >> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
+> >>   means not only the newly introduced switch ports, but also RGMII
+> >>   standalone port 1.
+> >>
+> >> [0]: https://lkml.org/lkml/2020/2/19/973
+> >>
+> >> Claudiu Manoil (2):
+> >>   arm64: dts: fsl: ls1028a: add node for Felix switch
+> >>   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+> >>
+> >> Vladimir Oltean (4):
+> >>   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for
+> >> ENETC
+> >>     RCIE
+> >>   arm64: dts: fsl: ls1028a: disable all enetc ports by default
+> >
+> > I applied these 4 DTS patches with changing prefix to 'arm64: dts:
+> > ls1028a: '.
+>
+> Oh, then the kontron-sl28 boards won't have ethernet because the nodes
+> are
+> disabled now. I'll send a patch shortly which explicitly sets the status
+> to
+> "okay", hopefully you can pick it up so it'll end up in the same pull
+> request
+> as this one:
+>
+>    arm64: dts: fsl: ls1028a: disable all enetc ports by default
+>
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
+Sorry, I didn't notice your board.
 
-This patch actually superseeds the following:
-  https://lore.kernel.org/linux-devicetree/20200220180919.6069-1-michael@walle.cc/
+> -michael
+>
+> >
+> > Shawn
+> >
+> >>   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+> >>   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+> >>
+> >>  .../devicetree/bindings/net/dsa/ocelot.txt    | 116
+> >> ++++++++++++++++++
+> >>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
+> >>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
+> >>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
+> >>  drivers/net/dsa/ocelot/felix.c                |   3 +-
+> >>  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+> >>  6 files changed, 265 insertions(+), 8 deletions(-)
+> >>  create mode 100644
+> >> Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> >>
+> >> --
+> >> 2.17.1
+> >>
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts      | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
-index f659e89face8..df212ed5bb94 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
-@@ -21,6 +21,7 @@
- &enetc_port1 {
- 	phy-handle = <&phy1>;
- 	phy-connection-type = "rgmii-id";
-+	status = "okay";
- 
- 	mdio {
- 		#address-cells = <1>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-index d221ed471cde..e6ad2f64e64e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-@@ -35,6 +35,7 @@
- &enetc_port0 {
- 	phy-handle = <&phy0>;
- 	phy-connection-type = "sgmii";
-+	status = "okay";
- 
- 	mdio {
- 		#address-cells = <1>;
--- 
-2.20.1
-
+Regards,
+-Vladimir
