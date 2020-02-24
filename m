@@ -3,150 +3,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0783EC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8745AC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEDF20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F1D20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgBXN4T (ORCPT
+        id S1727589AbgBXN5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:56:19 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727339AbgBXN4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:56:19 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ODtdkr004386
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:56:17 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yb1c69bwn-1
+        Mon, 24 Feb 2020 08:57:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57904 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727339AbgBXN5P (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:57:15 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ODtJAK105770
+        for <Linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:57:14 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb18uq7qj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:56:17 -0500
+        for <Linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:57:13 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Mon, 24 Feb 2020 13:56:15 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <Linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Mon, 24 Feb 2020 13:57:11 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 13:56:10 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01ODu9Cv32571682
+        Mon, 24 Feb 2020 13:57:08 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01ODuAf442271048
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 13:56:09 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1746B52057;
-        Mon, 24 Feb 2020 13:56:09 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.149])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9201452054;
-        Mon, 24 Feb 2020 13:56:08 +0000 (GMT)
-Date:   Mon, 24 Feb 2020 14:56:07 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-In-Reply-To: <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
-        <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
-        <20200221155602.4de41fa7.pasic@linux.ibm.com>
-        <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
-        <20200224010607-mutt-send-email-mst@kernel.org>
-        <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
-        <20200224024641-mutt-send-email-mst@kernel.org>
-        <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 24 Feb 2020 13:56:10 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F9334C04A;
+        Mon, 24 Feb 2020 13:57:07 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 21AA64C050;
+        Mon, 24 Feb 2020 13:57:00 +0000 (GMT)
+Received: from [9.199.54.250] (unknown [9.199.54.250])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 13:56:59 +0000 (GMT)
+Subject: Re: [PATCH v3 2/2] Support interactive annotation of code without
+ symbols
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200224022225.30264-1-yao.jin@linux.intel.com>
+ <20200224022225.30264-3-yao.jin@linux.intel.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Mon, 24 Feb 2020 19:26:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200224022225.30264-3-yao.jin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022413-0008-0000-0000-00000355F424
+x-cbid: 20022413-4275-0000-0000-000003A4FEFB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022413-0009-0000-0000-00004A770CC7
-Message-Id: <20200224145607.2729f47b.pasic@linux.ibm.com>
+x-cbparentid: 20022413-4276-0000-0000-000038B9121B
+Message-Id: <ec14c25e-e868-a073-2799-55d55ae23e1f@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-24_04:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=860 impostorscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002240115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 17:26:20 +0800
-Jason Wang <jasowang@redhat.com> wrote:
 
-> That's better.
+
+On 2/24/20 7:52 AM, Jin Yao wrote:
+> For perf report on stripped binaries it is currently impossible to do
+> annotation. The annotation state is all tied to symbols, but there are
+> either no symbols, or symbols are not covering all the code.
 > 
-> How about attached?
+> We should support the annotation functionality even without symbols.
 > 
-> Thanks
+> This patch fakes a symbol and the symbol name is the string of address.
+> After that, we just follow current annotation working flow.
+> 
+> For example,
+> 
+> 1. perf report
+> 
+> Overhead  Command  Shared Object     Symbol
+>    20.67%  div      libc-2.27.so      [.] __random_r
+>    17.29%  div      libc-2.27.so      [.] __random
+>    10.59%  div      div               [.] 0x0000000000000628
+>     9.25%  div      div               [.] 0x0000000000000612
+>     6.11%  div      div               [.] 0x0000000000000645
+> 
+> 2. Select the line of "10.59%  div      div               [.] 0x0000000000000628" and ENTER.
+> 
+> Annotate 0x0000000000000628
+> Zoom into div thread
+> Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
+> Browse map details
+> Run scripts for samples of symbol [0x0000000000000628]
+> Run scripts for all samples
+> Switch to another data file in PWD
+> Exit
+> 
+> 3. Select the "Annotate 0x0000000000000628" and ENTER.
+> 
+> Percent│
+>         │
+>         │
+>         │     Disassembly of section .text:
+>         │
+>         │     0000000000000628 <.text+0x68>:
+>         │       divsd %xmm4,%xmm0
+>         │       divsd %xmm3,%xmm1
+>         │       movsd (%rsp),%xmm2
+>         │       addsd %xmm1,%xmm0
+>         │       addsd %xmm2,%xmm0
+>         │       movsd %xmm0,(%rsp)
+This might be an add on...
 
-Thanks Jason! It does avoid the translation overhead in vhost.
+Even though there are samples on a particular instruction, 'Percent' column
+is empty, I guess, because we don't have symbol length?
 
-Tested-by: Halil Pasic <pasic@linux.ibm.com>
+Should we show 'global percent'? Or nr samples? Will it be useful?
 
-Regarding the code, you fence it in virtio-net.c, but AFAIU this feature
-has relevance for other vhost devices as well. E.g. what about vhost
-user? Would it be the responsibility of each virtio device to fence this
-on its own?
-
-I'm also a bit confused about the semantics of the vhost feature bit
-F_ACCESS_PLATFORM. What we have specified on virtio level is:
-"""
-This feature indicates that the device can be used on a platform where
-device access to data in memory is limited and/or translated. E.g. this
-is the case if the device can be located behind an IOMMU that translates
-bus addresses from the device into physical addresses in memory, if the
-device can be limited to only access certain memory addresses or if
-special commands such as a cache flush can be needed to synchronise data
-in memory with the device. Whether accesses are actually limited or
-translated is described by platform-specific means. If this feature bit
-is set to 0, then the device has same access to memory addresses
-supplied to it as the driver has. In particular, the device will always
-use physical addresses matching addresses used by the driver (typically
-meaning physical addresses used by the CPU) and not translated further,
-and can access any address supplied to it by the driver. When clear,
-this overrides any platform-specific description of whether device
-access is limited or translated in any way, e.g. whether an IOMMU may be
-present.
-"""
-
-I read this like the addresses may be IOVAs which require
-IMMU translation or GPAs which don't.
-
-On the vhost level however, it seems that F_IOMMU_PLATFORM means that
-vhost has to do the translation (via IOTLB API).
-
-Do I understand this correctly? If yes, I believe we should document
-this properly.
-
-BTW I'm still not 100% on the purpose and semantics of the
-F_ACCESS_PLATFORM feature bit. But that is a different problem.
-
-Regards,
-Halil
+Ravi
 
