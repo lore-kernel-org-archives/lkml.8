@@ -2,184 +2,165 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A33C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE7C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C35222C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D196F21927
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582579403;
+	bh=XnkYOmulZ8/lTR2roVqGnBGPNTBbKp8TG7sz+XwMTDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IFt54IMh22Xk012z556FIr5NpxuOrRxqZ5SFJj8h1QwwXdQJeuMKbKEVyN+AclbyO
+	 1lpB6MnTDoSmrJQ6c7AIDakqNjVvoPlolHLrcD3MOQ25WfdXy83iSmOIh+TPruaaG7
+	 Gjr1ROdpbSP4mzL46iHB6Ng6PUz2LepNa2W2RTCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgBXVWi (ORCPT
+        id S1727910AbgBXVXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:22:38 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:46662 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbgBXVWh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:22:37 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j6LBT-0007lJ-1K; Mon, 24 Feb 2020 14:22:35 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j6LBR-0002HL-BN; Mon, 24 Feb 2020 14:22:34 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        andi.kleen@intel.com, "Huang\, Ying" <ying.huang@intel.com>
-References: <20200205123216.GO12867@shao2-debian>
-        <20200205125804.GM14879@hirez.programming.kicks-ass.net>
-        <20200221080325.GA67807@shbuild999.sh.intel.com>
-        <20200221132048.GE652992@krava>
-        <20200223141147.GA53531@shbuild999.sh.intel.com>
-        <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
-        <20200224003301.GA5061@shbuild999.sh.intel.com>
-        <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
-        <20200224021915.GC5061@shbuild999.sh.intel.com>
-        <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
-        <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
-        <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
-Date:   Mon, 24 Feb 2020 15:20:26 -0600
-In-Reply-To: <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 24 Feb 2020 12:47:14 -0800")
-Message-ID: <87a757znqd.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 24 Feb 2020 16:23:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727322AbgBXVXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:23:22 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1758C218AC;
+        Mon, 24 Feb 2020 21:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582579401;
+        bh=XnkYOmulZ8/lTR2roVqGnBGPNTBbKp8TG7sz+XwMTDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YEBbehGBXvp3CPzembrHbTI7ud/HJbKPdfdL/5pEC9w0esFKdekF03AbMqJimpl3v
+         GyNxtEab/KQ7pvDrxIQLOiihaSlLV3ofzr6lxx3lXS8nfHcuHYlg/ojkeQRf93SlxT
+         WILXyi0OKIOmyLdmAOyEDENKwyzUFskZ0DxFhC4c=
+Date:   Mon, 24 Feb 2020 16:23:19 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Andreas Tobler <andreas.tobler@onway.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
+Message-ID: <20200224212319.GE26320@sasha-vm>
+References: <20200221072349.335551332@linuxfoundation.org>
+ <20200221072403.369335694@linuxfoundation.org>
+ <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
+ <20200224145718.GD3335@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j6LBR-0002HL-BN;;;mid=<87a757znqd.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/SSyf6yZIP/k5uVMtCOs9svimc0568GaY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops -5.5% regression
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200224145718.GD3335@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> [ Adding a few more people that tend to be involved in signal
-> handling. Just in case - even if they probably don't care ]
->
-> On Mon, Feb 24, 2020 at 12:09 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
+On Mon, Feb 24, 2020 at 03:57:18PM +0100, Sascha Hauer wrote:
+>On Mon, Feb 24, 2020 at 01:24:04PM +0000, Andreas Tobler wrote:
+>> Hi all,
 >>
->> TOTALLY UNTESTED patch attached. It may be completely buggy garbage,
->> but it _looks_ trivial enough.
+>> On 21.02.20 08:39, Greg Kroah-Hartman wrote:
+>> > From: Sascha Hauer <s.hauer@pengutronix.de>
+>> >
+>> > [ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
+>> >
+>> > The current descriptor is not on any list of the virtual DMA channel.
+>> > Once sdma_terminate_all() is called when a descriptor is currently
+>> > in flight then this one is forgotten to be freed. We have to call
+>> > vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
+>> > Now that we also free the currently running descriptor we can (and
+>> > actually have to) remove the current descriptor from its list also
+>> > for the cyclic case.
+>> >
+>> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+>> > Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+>> > Tested-by: Robin Gong <yibin.gong@nxp.com>
+>> > Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
+>> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > ---
+>> >   drivers/dma/imx-sdma.c | 19 +++++++++++--------
+>> >   1 file changed, 11 insertions(+), 8 deletions(-)
+>> >
+>> > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+>> > index c27e206a764c3..66f1b2ac5cde4 100644
+>> > --- a/drivers/dma/imx-sdma.c
+>> > +++ b/drivers/dma/imx-sdma.c
+>> > @@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+>> >   		return;
+>> >   	}
+>> >   	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+>> > -	/*
+>> > -	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
+>> > -	 * the desc allocated will never be freed in vchan_dma_desc_free_list
+>> > -	 */
+>> > -	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
+>> > -		list_del(&vd->node);
+>> > +
+>> > +	list_del(&vd->node);
+>> >
+>> >   	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+>> >   	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+>> > @@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+>> >
+>> >   	spin_lock_irqsave(&sdmac->vc.lock, flags);
+>> >   	vchan_get_all_descriptors(&sdmac->vc, &head);
+>> > -	sdmac->desc = NULL;
+>> >   	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+>> >   	vchan_dma_desc_free_list(&sdmac->vc, &head);
+>> >   	sdmac->context_loaded = false;
+>> > @@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+>> >   static int sdma_disable_channel_async(struct dma_chan *chan)
+>> >   {
+>> >   	struct sdma_channel *sdmac = to_sdma_chan(chan);
+>> > +	unsigned long flags;
+>> > +
+>> > +	spin_lock_irqsave(&sdmac->vc.lock, flags);
+>> >
+>> >   	sdma_disable_channel(chan);
+>> >
+>> > -	if (sdmac->desc)
+>> > +	if (sdmac->desc) {
+>> > +		vchan_terminate_vdesc(&sdmac->desc->vd);
+>> > +		sdmac->desc = NULL;
+>> >   		schedule_work(&sdmac->terminate_worker);
+>> > +	}
+>> > +
+>> > +	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+>> >
+>> >   	return 0;
+>> >   }
+>> >
+>>
+>> This patch breaks our imx6 board with the attached trace.  Reverting the
+>> patch makes it boot again.
+>> I tried also 5.6-rc3 and it booted too. A closer look into imx-sdma.c
+>> from 5.6-rc3 showed me some details which might have to be backported as
+>> well to make this patch work.
+>> I tried a1ff6a07f5a3951fcac84f064a76d1ad79c10e40 and was somehow
+>> successful. I still have one trace but the board boots now.
+>>
+>> Any insights from the experts?
 >
-> I've tested it, and the profiles on the silly microbenchmark look much
-> nicer. Now it's just the sigpending update shows up, the refcount case
-> clearly still occasionally happens, but it's now in the noise.
+>This series should be applied as a whole or not, only 7/9 is optional.
 >
-> I made slight changes to the __sigqueue_alloc() case to generate
-> better code: since we now use that atomic_inc_return() anyway, we
-> might as well then use the value that is returned for the
-> RLIMIT_SIGPENDING check too, instead of reading it again.
->
-> That might avoid another potential cacheline bounce, plus the
-> generated code just looks better.
->
-> Updated (and now slightly tested!) patch attached.
->
-> It would be interesting if this is noticeable on your benchmark
-> numbers. I didn't actually _time_ anything, I just looked at profiles.
->
-> But my setup clearly isn't going to see the horrible contention case
-> anyway, so my timing numbers wouldn't be all that interesting.
->
->              Linus
+>It seems I have to avoid the trigger word "fix" in my commit messages or
+>make sure these patches won't apply without their dependencies :-/
 
-I keep looking at your patch and wondering if there isn't a way
-to remove the uid refcount entirely on this path.
+Or you could just tag the dependencies so that we could take all of them
+as well? We have a nice "Depends-on:" tag that makes it easy.
 
-Linus I might be wrong but I have this sense that your change will only
-help when signal delivery is backed up.  I expect in the common case
-there won't be any pending signals outstanding for the user.
+As with everything in life, you want to communicate more effectively
+rather than not communicate at all.
 
-Not that I see anything bad jumping out at me from your patch.
-
-Eric
-
-
-
->  kernel/signal.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
->
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 9ad8dea93dbb..5b2396350dd1 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -413,27 +413,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
->  {
->  	struct sigqueue *q = NULL;
->  	struct user_struct *user;
-> +	int sigpending;
->  
->  	/*
->  	 * Protect access to @t credentials. This can go away when all
->  	 * callers hold rcu read lock.
-> +	 *
-> +	 * NOTE! A pending signal will hold on to the user refcount,
-> +	 * and we get/put the refcount only when the sigpending count
-> +	 * changes from/to zero.
->  	 */
->  	rcu_read_lock();
-> -	user = get_uid(__task_cred(t)->user);
-> -	atomic_inc(&user->sigpending);
-> +	user = __task_cred(t)->user;
-> +	sigpending = atomic_inc_return(&user->sigpending);
-> +	if (sigpending == 1)
-> +		get_uid(user);
->  	rcu_read_unlock();
->  
-> -	if (override_rlimit ||
-> -	    atomic_read(&user->sigpending) <=
-> -			task_rlimit(t, RLIMIT_SIGPENDING)) {
-> +	if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
->  		q = kmem_cache_alloc(sigqueue_cachep, flags);
->  	} else {
->  		print_dropped_signal(sig);
->  	}
->  
->  	if (unlikely(q == NULL)) {
-> -		atomic_dec(&user->sigpending);
-> -		free_uid(user);
-> +		if (atomic_dec_and_test(&user->sigpending))
-> +			free_uid(user);
->  	} else {
->  		INIT_LIST_HEAD(&q->list);
->  		q->flags = 0;
-> @@ -447,8 +452,8 @@ static void __sigqueue_free(struct sigqueue *q)
->  {
->  	if (q->flags & SIGQUEUE_PREALLOC)
->  		return;
-> -	atomic_dec(&q->user->sigpending);
-> -	free_uid(q->user);
-> +	if (atomic_dec_and_test(&q->user->sigpending))
-> +		free_uid(q->user);
->  	kmem_cache_free(sigqueue_cachep, q);
->  }
->  
+-- 
+Thanks,
+Sasha
