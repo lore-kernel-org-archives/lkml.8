@@ -2,136 +2,332 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36411C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B47C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1358E2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673A820836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DIhFa3aj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgBXQ1Y (ORCPT
+        id S1727883AbgBXQ1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:27:24 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:48850 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbgBXQ1X (ORCPT
+        Mon, 24 Feb 2020 11:27:40 -0500
+Received: from gateway22.websitewelcome.com ([192.185.46.225]:46130 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727506AbgBXQ1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:27:23 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j6GZk-0004Dy-PN; Mon, 24 Feb 2020 09:27:20 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j6GZk-0007ND-2p; Mon, 24 Feb 2020 09:27:20 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
-        <87v9odlxbr.fsf@x220.int.ebiederm.org>
-        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
-        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
-        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
-        <87v9obipk9.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
-        <20200212200335.GO23230@ZenIV.linux.org.uk>
-        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
-        <20200212203833.GQ23230@ZenIV.linux.org.uk>
-        <20200212204124.GR23230@ZenIV.linux.org.uk>
-        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-        <87lfp7h422.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
-        <87pnejf6fz.fsf@x220.int.ebiederm.org>
-        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 24 Feb 2020 10:25:16 -0600
-In-Reply-To: <871rqpaswu.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Thu, 20 Feb 2020 14:46:25 -0600")
-Message-ID: <871rqk2brn.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 24 Feb 2020 11:27:39 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 10F33A4F4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 10:27:38 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6Ga0jS5Lv8vkB6Ga1jNdKu; Mon, 24 Feb 2020 10:27:38 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=eERgKM5oKr/xria19xzaa6uu8WoxY0LDppBY2y6tpC8=; b=DIhFa3aj1agmdLvg3GKSIuWGLQ
+        vfKBppUp97ltm4HaDnPO4t6nNeRHQP9eTEOgKE6cwe8GDHkCyq9B+dYw68FsKKhwLSO/mhpafNgDl
+        R+1BG75FdOkOLxJopW7HN3ManworJDdfNxZzj5uDpWMYZcWc43/2hpinEVXghbAnytVvcRsGSzRB4
+        KmtnM6ToGqXMtZJSGPDnDl0JpjnwWdCwF7w9/IKfh1ZWcyiI4jvOQ+8sBhhwfZEorpTYHPkgL2P9p
+        jmgTQRyTQroFN9Ge7+2sRVl+tswIZEAZgBZd21d+tRYpEYTQFIXfSsy26lutEw+4yeBdxnhziRKAj
+        9N33kbhQ==;
+Received: from [200.68.140.135] (port=22740 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6GZy-002myu-V2; Mon, 24 Feb 2020 10:27:35 -0600
+Date:   Mon, 24 Feb 2020 10:30:24 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vishal Kulkarni <vishal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH net-next] chelsio: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200224163024.GA27867@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j6GZk-0007ND-2p;;;mid=<871rqk2brn.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18r19JNQj7E6kX0G2mdhpQOxD8W+HrcR10=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 0/6] proc: Dentry flushing without proc_mnt
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.135
+X-Source-L: No
+X-Exim-ID: 1j6GZy-002myu-V2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.135]:22740
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 40
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I have addressed all of the review comments as I understand them,
-and fixed the small oversight the kernel test robot was able to
-find. (I had failed to initialize the new field pid->inodes).
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-I did not hear any concerns from the 10,000 foot level last time
-so I am assuming this set of changes (baring bugs) is good to go.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Unless some new issues appear my plan is to put this in my tree
-and get this into linux-next.  Which will give Alexey something
-to build his changes on.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-I tested this set of changes by running:
- (while ls -1 -f /proc > /dev/null ; do :; done ) &
-And monitoring the amount of free memory.
+This issue was found with the help of Coccinelle.
 
-With the flushing disabled I saw the used memory in the system grow by
-20M before the shrinker would bring it back down to where it started.
-With the patch applied I saw the memory usage stay essentially fixed.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-So flushing definitely keeps things working better.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_ioctl.h        | 2 +-
+ drivers/net/ethernet/chelsio/cxgb3/t3_cpl.h             | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h           | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h       | 8 ++++----
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c      | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.h      | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c                | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/sched.h              | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/smt.h                | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/t4_msg.h             | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/t4fw_api.h           | 2 +-
+ drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.h      | 4 ++--
+ 13 files changed, 17 insertions(+), 17 deletions(-)
 
-
-If anyone sees any problems with this code please let me know.
-
-Thank you,
-
-Eric W. Biederman (6):
-      proc: Rename in proc_inode rename sysctl_inodes sibling_inodes
-      proc: Generalize proc_sys_prune_dcache into proc_prune_siblings_dcache
-      proc: In proc_prune_siblings_dcache cache an aquired super block
-      proc: Use d_invalidate in proc_prune_siblings_dcache
-      proc: Clear the pieces of proc_inode that proc_evict_inode cares about
-      proc: Use a list of inodes to flush from proc
-
- fs/proc/base.c          | 111 ++++++++++++++++--------------------------------
- fs/proc/inode.c         |  73 ++++++++++++++++++++++++++++---
- fs/proc/internal.h      |   4 +-
- fs/proc/proc_sysctl.c   |  45 +++-----------------
- include/linux/pid.h     |   1 +
- include/linux/proc_fs.h |   4 +-
- kernel/exit.c           |   4 +-
- kernel/pid.c            |   1 +
- 8 files changed, 120 insertions(+), 123 deletions(-)
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_ioctl.h b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_ioctl.h
+index b19e4376ba76..401827b82aa1 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_ioctl.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_ioctl.h
+@@ -79,7 +79,7 @@ struct ch_mem_range {
+ 	uint32_t addr;
+ 	uint32_t len;
+ 	uint32_t version;
+-	uint8_t buf[0];
++	uint8_t buf[];
+ };
+ 
+ struct ch_qset_params {
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/t3_cpl.h b/drivers/net/ethernet/chelsio/cxgb3/t3_cpl.h
+index 852c399a8b0a..68bb5f39f3f1 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/t3_cpl.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/t3_cpl.h
+@@ -1448,7 +1448,7 @@ struct cpl_rdma_terminate {
+ #endif
+ 	__be32 msn;
+ 	__be32 mo;
+-	__u8 data[0];
++	__u8 data[];
+ };
+ 
+ /* cpl_rdma_terminate.tid_len fields */
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h b/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
+index a0e0ae19649f..290c1058069a 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
+@@ -29,7 +29,7 @@ struct clip_tbl {
+ 	atomic_t nfree;
+ 	struct list_head ce_free_head;
+ 	void *cl_list;
+-	struct list_head hash_list[0];
++	struct list_head hash_list[];
+ };
+ 
+ enum {
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h b/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h
+index f5be3ee1bdb4..dcab94cc2dee 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h
+@@ -82,7 +82,7 @@ struct cudbg_ulprx_la {
+ struct cudbg_tp_la {
+ 	u32 size;
+ 	u32 mode;
+-	u8 data[0];
++	u8 data[];
+ };
+ 
+ static const char * const cudbg_region[] = {
+@@ -134,7 +134,7 @@ struct cudbg_meminfo {
+ 
+ struct cudbg_cim_pif_la {
+ 	int size;
+-	u8 data[0];
++	u8 data[];
+ };
+ 
+ struct cudbg_clk_info {
+@@ -339,13 +339,13 @@ struct cudbg_qdesc_entry {
+ 	u32 qid;
+ 	u32 desc_size;
+ 	u32 num_desc;
+-	u8 data[0]; /* Must be last */
++	u8 data[]; /* Must be last */
+ };
+ 
+ struct cudbg_qdesc_info {
+ 	u32 qdesc_entry_size;
+ 	u32 num_queues;
+-	u8 data[0]; /* Must be last */
++	u8 data[]; /* Must be last */
+ };
+ 
+ #define IREG_NUM_ELEM 4
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index de30d61af065..fe883cb1a7af 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -984,7 +984,7 @@ static const char * const devlog_facility_strings[] = {
+ struct devlog_info {
+ 	unsigned int nentries;		/* number of entries in log[] */
+ 	unsigned int first;		/* first [temporal] entry in log[] */
+-	struct fw_devlog_e log[0];	/* Firmware Device Log */
++	struct fw_devlog_e log[];	/* Firmware Device Log */
+ };
+ 
+ /* Dump a Firmaware Device Log entry.
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.h
+index ba95e13d52da..1471cf0deb58 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.h
+@@ -49,7 +49,7 @@ struct seq_tab {
+ 	unsigned int rows;        /* # of entries */
+ 	unsigned char width;      /* size in bytes of each entry */
+ 	unsigned char skip_first; /* whether the first line is a header */
+-	char data[0];             /* the table data */
++	char data[];             /* the table data */
+ };
+ 
+ static inline unsigned int hex2val(char c)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+index a4b99edcc339..125868c6770a 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+@@ -289,6 +289,6 @@ struct cxgb4_link {
+ 
+ struct cxgb4_tc_u32_table {
+ 	unsigned int size;          /* number of entries in table */
+-	struct cxgb4_link table[0]; /* Jump table */
++	struct cxgb4_link table[]; /* Jump table */
+ };
+ #endif /* __CXGB4_TC_U32_PARSE_H */
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index 1a16449e9deb..12c3354172cd 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -59,7 +59,7 @@ struct l2t_data {
+ 	rwlock_t lock;
+ 	atomic_t nfree;             /* number of free entries */
+ 	struct l2t_entry *rover;    /* starting point for next allocation */
+-	struct l2t_entry l2tab[0];  /* MUST BE LAST */
++	struct l2t_entry l2tab[];  /* MUST BE LAST */
+ };
+ 
+ static inline unsigned int vlan_prio(const struct l2t_entry *e)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.h b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+index 5cc74a5a1774..5f8b871d79af 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+@@ -82,7 +82,7 @@ struct sched_class {
+ 
+ struct sched_table {      /* per port scheduling table */
+ 	u8 sched_size;
+-	struct sched_class tab[0];
++	struct sched_class tab[];
+ };
+ 
+ static inline bool can_sched(struct net_device *dev)
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/smt.h b/drivers/net/ethernet/chelsio/cxgb4/smt.h
+index 1268d6e93a47..541249d78914 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/smt.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/smt.h
+@@ -66,7 +66,7 @@ struct smt_entry {
+ struct smt_data {
+ 	unsigned int smt_size;
+ 	rwlock_t lock;
+-	struct smt_entry smtab[0];
++	struct smt_entry smtab[];
+ };
+ 
+ struct smt_data *t4_init_smt(void);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
+index 575c6abcdae7..7d874f03d6c5 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_msg.h
+@@ -1511,7 +1511,7 @@ struct ulptx_sgl {
+ 	__be32 cmd_nsge;
+ 	__be32 len0;
+ 	__be64 addr0;
+-	struct ulptx_sge_pair sge[0];
++	struct ulptx_sge_pair sge[];
+ };
+ 
+ struct ulptx_idata {
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4fw_api.h b/drivers/net/ethernet/chelsio/cxgb4/t4fw_api.h
+index accad1101ad1..703effc00a05 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4fw_api.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4fw_api.h
+@@ -737,7 +737,7 @@ struct fw_flowc_mnemval {
+ struct fw_flowc_wr {
+ 	__be32 op_to_nparams;
+ 	__be32 flowid_len16;
+-	struct fw_flowc_mnemval mnemval[0];
++	struct fw_flowc_mnemval mnemval[];
+ };
+ 
+ #define FW_FLOWC_WR_NPARAMS_S           0
+diff --git a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.h b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.h
+index 7b02c200dd1e..1b4156461ba1 100644
+--- a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.h
++++ b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.h
+@@ -122,7 +122,7 @@ struct cxgbi_ppm_pool {
+ 	unsigned int base;		/* base index */
+ 	unsigned int next;		/* next possible free index */
+ 	spinlock_t lock;		/* ppm pool lock */
+-	unsigned long bmap[0];
++	unsigned long bmap[];
+ } ____cacheline_aligned_in_smp;
+ 
+ struct cxgbi_ppm {
+@@ -145,7 +145,7 @@ struct cxgbi_ppm {
+ 	unsigned int next;
+ 	unsigned int max_index_in_edram;
+ 	unsigned long *ppod_bmap;
+-	struct cxgbi_ppod_data ppod_data[0];
++	struct cxgbi_ppod_data ppod_data[];
+ };
+ 
+ #define DDP_THRESHOLD		512
+-- 
+2.25.0
 
