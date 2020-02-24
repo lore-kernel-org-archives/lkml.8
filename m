@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DDAC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DEBC11D34
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D25120838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2022082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBXPUv (ORCPT
+        id S1728090AbgBXPUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:20:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50338 "EHLO
+        Mon, 24 Feb 2020 10:20:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50348 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgBXPUt (ORCPT
+        with ESMTP id S1727701AbgBXPUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:20:49 -0500
+        Mon, 24 Feb 2020 10:20:51 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6FXA-0005r6-Ca; Mon, 24 Feb 2020 16:20:36 +0100
+        id 1j6FX5-0005q4-DG; Mon, 24 Feb 2020 16:20:31 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F12721C213D;
-        Mon, 24 Feb 2020 16:20:32 +0100 (CET)
-Date:   Mon, 24 Feb 2020 15:20:32 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 115EF1C213A;
+        Mon, 24 Feb 2020 16:20:31 +0100 (CET)
+Date:   Mon, 24 Feb 2020 15:20:30 -0000
+From:   "tip-bot2 for Mel Gorman" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/numa: Replace runnable_load_avg by load_avg
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
+Subject: [tip: sched/core] sched/numa: Prefer using an idle CPU as a migration
+ target instead of comparing tasks
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
         Ingo Molnar <mingo@kernel.org>,
-        "Dietmar Eggemann" <dietmar.eggemann@arm.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200224095223.13361-6-mgorman@techsingularity.net>
-References: <20200224095223.13361-6-mgorman@techsingularity.net>
+In-Reply-To: <20200224095223.13361-11-mgorman@techsingularity.net>
+References: <20200224095223.13361-11-mgorman@techsingularity.net>
 MIME-Version: 1.0
-Message-ID: <158255763273.28353.4606148712630409487.tip-bot2@tip-bot2>
+Message-ID: <158255763082.28353.16689616186297155982.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,189 +64,244 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     6499b1b2dd1b8d404a16b9fbbf1af6b9b3c1d83d
-Gitweb:        https://git.kernel.org/tip/6499b1b2dd1b8d404a16b9fbbf1af6b9b3c1d83d
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Mon, 24 Feb 2020 09:52:15 
+Commit-ID:     ff7db0bf24db919f69121bf5df8f3cb6d79f49af
+Gitweb:        https://git.kernel.org/tip/ff7db0bf24db919f69121bf5df8f3cb6d79f49af
+Author:        Mel Gorman <mgorman@techsingularity.net>
+AuthorDate:    Mon, 24 Feb 2020 09:52:20 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 24 Feb 2020 11:36:34 +01:00
+CommitterDate: Mon, 24 Feb 2020 11:36:38 +01:00
 
-sched/numa: Replace runnable_load_avg by load_avg
+sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks
 
-Similarly to what has been done for the normal load balancer, we can
-replace runnable_load_avg by load_avg in numa load balancing and track the
-other statistics like the utilization and the number of running tasks to
-get to better view of the current state of a node.
+task_numa_find_cpu() can scan a node multiple times. Minimally it scans to
+gather statistics and later to find a suitable target. In some cases, the
+second scan will simply pick an idle CPU if the load is not imbalanced.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+This patch caches information on an idle core while gathering statistics
+and uses it immediately if load is not imbalanced to avoid a second scan
+of the node runqueues. Preference is given to an idle core rather than an
+idle SMT sibling to avoid packing HT siblings due to linearly scanning the
+node cpumask.
+
+As a side-effect, even when the second scan is necessary, the importance
+of using select_idle_sibling is much reduced because information on idle
+CPUs is cached and can be reused.
+
+Note that this patch actually makes is harder to move to an idle CPU
+as multiple tasks can race for the same idle CPU due to a race checking
+numa_migrate_on. This is addressed in the next patch.
+
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
 Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <valentin.schneider@arm.com>
 Cc: Phil Auld <pauld@redhat.com>
 Cc: Hillf Danton <hdanton@sina.com>
-Link: https://lore.kernel.org/r/20200224095223.13361-6-mgorman@techsingularity.net
+Link: https://lore.kernel.org/r/20200224095223.13361-11-mgorman@techsingularity.net
 ---
- kernel/sched/fair.c | 102 +++++++++++++++++++++++++++++--------------
- 1 file changed, 70 insertions(+), 32 deletions(-)
+ kernel/sched/fair.c | 119 ++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 102 insertions(+), 17 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a6c7f8b..bc3d651 100644
+index 87521ac..2da21f4 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
- 	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
- }
- 
--static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
--
--static unsigned long cpu_runnable_load(struct rq *rq)
--{
--	return cfs_rq_runnable_load_avg(&rq->cfs);
--}
-+/*
-+ * 'numa_type' describes the node at the moment of load balancing.
-+ */
-+enum numa_type {
-+	/* The node has spare capacity that can be used to run more tasks.  */
-+	node_has_spare = 0,
-+	/*
-+	 * The node is fully used and the tasks don't compete for more CPU
-+	 * cycles. Nevertheless, some tasks might wait before running.
-+	 */
-+	node_fully_busy,
-+	/*
-+	 * The node is overloaded and can't provide expected CPU cycles to all
-+	 * tasks.
-+	 */
-+	node_overloaded
-+};
- 
- /* Cached statistics for all CPUs within a node */
- struct numa_stats {
- 	unsigned long load;
--
-+	unsigned long util;
- 	/* Total compute capacity of CPUs on a node */
- 	unsigned long compute_capacity;
-+	unsigned int nr_running;
-+	unsigned int weight;
-+	enum numa_type node_type;
+@@ -1500,8 +1500,29 @@ struct numa_stats {
+ 	unsigned int nr_running;
+ 	unsigned int weight;
+ 	enum numa_type node_type;
++	int idle_cpu;
  };
  
--/*
-- * XXX borrowed from update_sg_lb_stats
-- */
--static void update_numa_stats(struct numa_stats *ns, int nid)
--{
--	int cpu;
--
--	memset(ns, 0, sizeof(*ns));
--	for_each_cpu(cpu, cpumask_of_node(nid)) {
--		struct rq *rq = cpu_rq(cpu);
--
--		ns->load += cpu_runnable_load(rq);
--		ns->compute_capacity += capacity_of(cpu);
--	}
--
--}
--
++static inline bool is_core_idle(int cpu)
++{
++#ifdef CONFIG_SCHED_SMT
++	int sibling;
++
++	for_each_cpu(sibling, cpu_smt_mask(cpu)) {
++		if (cpu == sibling)
++			continue;
++
++		if (!idle_cpu(cpu))
++			return false;
++	}
++#endif
++
++	return true;
++}
++
++/* Forward declarations of select_idle_sibling helpers */
++static inline bool test_idle_cores(int cpu, bool def);
++
  struct task_numa_env {
  	struct task_struct *p;
  
-@@ -1521,6 +1518,47 @@ struct task_numa_env {
- 	int best_cpu;
- };
+@@ -1537,15 +1558,39 @@ numa_type numa_classify(unsigned int imbalance_pct,
+ 	return node_fully_busy;
+ }
  
-+static unsigned long cpu_load(struct rq *rq);
-+static unsigned long cpu_util(int cpu);
-+
-+static inline enum
-+numa_type numa_classify(unsigned int imbalance_pct,
-+			 struct numa_stats *ns)
++static inline int numa_idle_core(int idle_core, int cpu)
 +{
-+	if ((ns->nr_running > ns->weight) &&
-+	    ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
-+		return node_overloaded;
++#ifdef CONFIG_SCHED_SMT
++	if (!static_branch_likely(&sched_smt_present) ||
++	    idle_core >= 0 || !test_idle_cores(cpu, false))
++		return idle_core;
 +
-+	if ((ns->nr_running < ns->weight) ||
-+	    ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
-+		return node_has_spare;
++	/*
++	 * Prefer cores instead of packing HT siblings
++	 * and triggering future load balancing.
++	 */
++	if (is_core_idle(cpu))
++		idle_core = cpu;
++#endif
 +
-+	return node_fully_busy;
++	return idle_core;
 +}
 +
-+/*
-+ * XXX borrowed from update_sg_lb_stats
-+ */
-+static void update_numa_stats(struct task_numa_env *env,
-+			      struct numa_stats *ns, int nid)
-+{
-+	int cpu;
-+
-+	memset(ns, 0, sizeof(*ns));
-+	for_each_cpu(cpu, cpumask_of_node(nid)) {
-+		struct rq *rq = cpu_rq(cpu);
-+
-+		ns->load += cpu_load(rq);
-+		ns->util += cpu_util(cpu);
-+		ns->nr_running += rq->cfs.h_nr_running;
-+		ns->compute_capacity += capacity_of(cpu);
-+	}
-+
-+	ns->weight = cpumask_weight(cpumask_of_node(nid));
-+
-+	ns->node_type = numa_classify(env->imbalance_pct, ns);
-+}
-+
- static void task_numa_assign(struct task_numa_env *env,
- 			     struct task_struct *p, long imp)
+ /*
+- * XXX borrowed from update_sg_lb_stats
++ * Gather all necessary information to make NUMA balancing placement
++ * decisions that are compatible with standard load balancer. This
++ * borrows code and logic from update_sg_lb_stats but sharing a
++ * common implementation is impractical.
+  */
+ static void update_numa_stats(struct task_numa_env *env,
+-			      struct numa_stats *ns, int nid)
++			      struct numa_stats *ns, int nid,
++			      bool find_idle)
  {
-@@ -1556,6 +1594,11 @@ static bool load_too_imbalanced(long src_load, long dst_load,
- 	long orig_src_load, orig_dst_load;
- 	long src_capacity, dst_capacity;
+-	int cpu;
++	int cpu, idle_core = -1;
  
+ 	memset(ns, 0, sizeof(*ns));
++	ns->idle_cpu = -1;
 +
-+	/* If dst node has spare capacity, there is no real load imbalance */
-+	if (env->dst_stats.node_type == node_has_spare)
-+		return false;
+ 	for_each_cpu(cpu, cpumask_of_node(nid)) {
+ 		struct rq *rq = cpu_rq(cpu);
+ 
+@@ -1553,11 +1598,25 @@ static void update_numa_stats(struct task_numa_env *env,
+ 		ns->util += cpu_util(cpu);
+ 		ns->nr_running += rq->cfs.h_nr_running;
+ 		ns->compute_capacity += capacity_of(cpu);
 +
++		if (find_idle && !rq->nr_running && idle_cpu(cpu)) {
++			if (READ_ONCE(rq->numa_migrate_on) ||
++			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
++				continue;
++
++			if (ns->idle_cpu == -1)
++				ns->idle_cpu = cpu;
++
++			idle_core = numa_idle_core(idle_core, cpu);
++		}
+ 	}
+ 
+ 	ns->weight = cpumask_weight(cpumask_of_node(nid));
+ 
+ 	ns->node_type = numa_classify(env->imbalance_pct, ns);
++
++	if (idle_core >= 0)
++		ns->idle_cpu = idle_core;
+ }
+ 
+ static void task_numa_assign(struct task_numa_env *env,
+@@ -1566,7 +1625,7 @@ static void task_numa_assign(struct task_numa_env *env,
+ 	struct rq *rq = cpu_rq(env->dst_cpu);
+ 
+ 	/* Bail out if run-queue part of active NUMA balance. */
+-	if (xchg(&rq->numa_migrate_on, 1))
++	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1))
+ 		return;
+ 
  	/*
- 	 * The load is corrected for the CPU capacity available on each node.
- 	 *
-@@ -1788,10 +1831,10 @@ static int task_numa_migrate(struct task_struct *p)
+@@ -1730,19 +1789,39 @@ static void task_numa_compare(struct task_numa_env *env,
+ 		goto unlock;
+ 
+ assign:
+-	/*
+-	 * One idle CPU per node is evaluated for a task numa move.
+-	 * Call select_idle_sibling to maybe find a better one.
+-	 */
++	/* Evaluate an idle CPU for a task numa move. */
+ 	if (!cur) {
++		int cpu = env->dst_stats.idle_cpu;
++
++		/* Nothing cached so current CPU went idle since the search. */
++		if (cpu < 0)
++			cpu = env->dst_cpu;
++
+ 		/*
+-		 * select_idle_siblings() uses an per-CPU cpumask that
+-		 * can be used from IRQ context.
++		 * If the CPU is no longer truly idle and the previous best CPU
++		 * is, keep using it.
+ 		 */
+-		local_irq_disable();
+-		env->dst_cpu = select_idle_sibling(env->p, env->src_cpu,
++		if (!idle_cpu(cpu) && env->best_cpu >= 0 &&
++		    idle_cpu(env->best_cpu)) {
++			cpu = env->best_cpu;
++		}
++
++		/*
++		 * Use select_idle_sibling if the previously found idle CPU is
++		 * not idle any more.
++		 */
++		if (!idle_cpu(cpu)) {
++			/*
++			 * select_idle_siblings() uses an per-CPU cpumask that
++			 * can be used from IRQ context.
++			 */
++			local_irq_disable();
++			cpu = select_idle_sibling(env->p, env->src_cpu,
+ 						   env->dst_cpu);
+-		local_irq_enable();
++			local_irq_enable();
++		}
++
++		env->dst_cpu = cpu;
+ 	}
+ 
+ 	task_numa_assign(env, cur, imp);
+@@ -1776,8 +1855,14 @@ static void task_numa_find_cpu(struct task_numa_env *env,
+ 		imbalance = adjust_numa_imbalance(imbalance, src_running);
+ 
+ 		/* Use idle CPU if there is no imbalance */
+-		if (!imbalance)
++		if (!imbalance) {
+ 			maymove = true;
++			if (env->dst_stats.idle_cpu >= 0) {
++				env->dst_cpu = env->dst_stats.idle_cpu;
++				task_numa_assign(env, NULL, 0);
++				return;
++			}
++		}
+ 	} else {
+ 		long src_load, dst_load, load;
+ 		/*
+@@ -1850,10 +1935,10 @@ static int task_numa_migrate(struct task_struct *p)
  	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
  	taskweight = task_weight(p, env.src_nid, dist);
  	groupweight = group_weight(p, env.src_nid, dist);
--	update_numa_stats(&env.src_stats, env.src_nid);
-+	update_numa_stats(&env, &env.src_stats, env.src_nid);
+-	update_numa_stats(&env, &env.src_stats, env.src_nid);
++	update_numa_stats(&env, &env.src_stats, env.src_nid, false);
  	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
  	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
--	update_numa_stats(&env.dst_stats, env.dst_nid);
-+	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
+-	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
++	update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
  
  	/* Try to find a spot on the preferred nid. */
  	task_numa_find_cpu(&env, taskimp, groupimp);
-@@ -1824,7 +1867,7 @@ static int task_numa_migrate(struct task_struct *p)
+@@ -1886,7 +1971,7 @@ static int task_numa_migrate(struct task_struct *p)
  
  			env.dist = dist;
  			env.dst_nid = nid;
--			update_numa_stats(&env.dst_stats, env.dst_nid);
-+			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
+-			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
++			update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
  			task_numa_find_cpu(&env, taskimp, groupimp);
  		}
  	}
-@@ -3686,11 +3729,6 @@ static void remove_entity_load_avg(struct sched_entity *se)
- 	raw_spin_unlock_irqrestore(&cfs_rq->removed.lock, flags);
- }
- 
--static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq)
--{
--	return cfs_rq->avg.runnable_load_avg;
--}
--
- static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
- {
- 	return cfs_rq->avg.load_avg;
