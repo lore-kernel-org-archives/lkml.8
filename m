@@ -2,137 +2,116 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A86C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D9DC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E20B20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7C420836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QyiSrbuZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CP7WwY69"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hr23lqTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgBXJoF (ORCPT
+        id S1727229AbgBXJqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:44:05 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:34465 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727252AbgBXJoE (ORCPT
+        Mon, 24 Feb 2020 04:46:22 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62083 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726628AbgBXJqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:44:04 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 403056F45;
-        Mon, 24 Feb 2020 04:44:03 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:44:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=8D6LuRxaoCzIVrsMtMaDax+b3gC
-        RwpjTTxEPY3vi8sw=; b=QyiSrbuZDxmS0/3x848Zpki0l0UZmW5Yf8y/ybpvHvj
-        abrv3S7nodrCGVcZ3sQDUk43E61bIuadELNRNr7dUd5PxzKA7gZj3Gm3FYNewMjI
-        QIXGP958QZhd1d9S4+yYbBuCzjvQdcatRjxyC6PK6+tJlb96xbrFbyzWlfxb9oYx
-        z7U64L8WPHFmS/Iq9JrZKGlCIIzFoUMpicsXbAHwLivvm94QhX2Bwbqjaof4+TjT
-        D/7ZvO3hyLDFcnCyPGHQRkanznRYHRGd5h0n0YPd5gj2OtnYEirxnAmfWwfy89oY
-        Qy8t+zwMPxBE7yqIwjvLO7068uWs7nMCkKFoDjNWuEg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=8D6LuR
-        xaoCzIVrsMtMaDax+b3gCRwpjTTxEPY3vi8sw=; b=CP7WwY699l786hOUiAf6by
-        x+rtB9SqF4VItFWahkIJvBCFerSGh96TPZBN/xlAlZHdGfNu7co/Sdtv7QbjH3Vn
-        PjJGuwmCWIxTLxmVNQlt92ACsrOrji6++jG9UXrHIXH5hPC9Qt1AfZzUR71He+MD
-        +BD/xi2ZZSAVmEAmet6mlzjZxYDBE1A372+B5qbNOp+/eYk6LBnAy4vP5Hk5PaBd
-        OvlzhHu7Hu2XLO7TRUCY29tQ/3quEhJA+ZB5DDBNXl8BDnwpult6ZPsKMDuEVOoW
-        b47LhPXTDhFttduUuL/GBfA0f9vICjcQL/z7eWCY9wqJOzYcy75KYKTQekD6peuA
-        ==
-X-ME-Sender: <xms:4JpTXrBS8PvxoPN3aNrnvWeIr6vKHF5DhVRlbmO1vLTtzSaDaSHHfA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddtjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:4JpTXuOghxf55SQ45Xzn2t26MYdJiU5nBulwT8t8eIChzKP6rdHjNA>
-    <xmx:4JpTXqdVfYQUWKMrIzWesJaxoUkspZQTqu91Rps0AxTOaVTTOcoE_Q>
-    <xmx:4JpTXn51C2oCOSGhVLu1wrcmiaPQsRMBbGzBhWUWMddKZobl_qHEJQ>
-    <xmx:45pTXpHYENYFLJ05uceH-qzs201WXROOgFkCY2-ug9XZqkeAMOglMg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7FF6A3280059;
-        Mon, 24 Feb 2020 04:44:00 -0500 (EST)
-Date:   Mon, 24 Feb 2020 10:43:59 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Don Fry <pcnet32@frontier.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>, linux-acenic@sunsite.dk,
-        Heiko Stuebner <heiko@sntech.de>,
-        Mark Einon <mark.einon@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        David Dillow <dave@thedillows.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Andreas Larsson <andreas@gaisler.com>,
-        Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ion Badulescu <ionut@badula.org>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Jes Sorensen <jes@trained-monkey.org>,
-        nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next v1 09/18] net/allwinner: Remove driver version
-Message-ID: <20200224094359.t2qevsxzilgq3faj@gilmour.lan>
-References: <20200224085311.460338-1-leon@kernel.org>
- <20200224085311.460338-10-leon@kernel.org>
+        Mon, 24 Feb 2020 04:46:22 -0500
+X-UUID: 15efe623feed440a82ff83e29f541fd1-20200224
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JJObHOiFNWZrMDB8kq3sMti+Ri6V2M0iYaOtSYj8HuU=;
+        b=hr23lqTthINWXnyqH4FlJZ93clckrD8c2YBD5KQCbAwl1+cMWaGGMF3XqR8jIgyEIQ4ESiynsunRR/peYZmkPZvdQevHMU7s9jWu3khE9ievaw3b0LSAgAFiNMwlYyn3V3uCt9CB5Zq/z+Frm0e33tQA2eZvSaA7HFGoVNyfd2Y=;
+X-UUID: 15efe623feed440a82ff83e29f541fd1-20200224
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 81929236; Mon, 24 Feb 2020 17:46:15 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n2.mediatek.inc
+ (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 24 Feb
+ 2020 17:45:26 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 24 Feb 2020 17:44:58 +0800
+Message-ID: <1582537569.859.14.camel@mhfsdcap03>
+Subject: Re: [PATCH v6 1/5] media: platform: Fix jpeg dec driver bug and
+ improve code quality
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        <srv_heupstream@mediatek.com>
+Date:   Mon, 24 Feb 2020 17:46:09 +0800
+In-Reply-To: <20200214093506.GA193786@chromium.org>
+References: <20200121095320.32258-1-xia.jiang@mediatek.com>
+         <20200121095320.32258-2-xia.jiang@mediatek.com>
+         <20200214093506.GA193786@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3l2hq75myvlmy434"
-Content-Disposition: inline
-In-Reply-To: <20200224085311.460338-10-leon@kernel.org>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gRnJpLCAyMDIwLTAyLTE0IGF0IDE4OjM1ICswOTAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
+SGkgWGlhLA0KPiANCj4gT24gVHVlLCBKYW4gMjEsIDIwMjAgYXQgMDU6NTM6MTdQTSArMDgwMCwg
+WGlhIEppYW5nIHdyb3RlOg0KPiA+IEZpeCB2NGwyLWNvbXBsaWFuY2UgdGVzdCBidWcgYW5kIGlt
+cHJvdmUgY29kZSBxdWFsaXR5IG9mIGpwZWcgZGVjb2RlDQo+ID4gZHJpdmVyLCBiZWNhdXNlIHRo
+ZSBqcGVnIGVuY29kZSBkcml2ZXIgd2lsbCBiYXNlIG9uIGl0Lg0KPiA+IA0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IFhpYSBKaWFuZyA8eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiB2
+NjogYWxpZ25tZW50ICdNVEtfSlBFR19EQ1RTSVpFJyBtYXRjaCBvcGVuIHBhcmVudGhlc2lzLg0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiB2NTog
+VXNlIGNsYW1wKCl0byByZXBsYWNlIG10a19qcGVnX2JvdW5kX2FsaWduX2ltYWdlKCkgYW5kIHJv
+dW5kX3VwKCkNCj4gPiAgICAgdG8gcmVwbGFjZSBtdGtfanBlZ19hbGlnbigpLg0KPiA+ICAgICBH
+ZXQgY29ycmVjdCBjb21wb3NlIHZhbHVlIGluIG10a19qcGVnX3NlbGVjdGlvbigpLg0KPiA+ICAg
+ICBDYW5jZWwgc3BpbiBsb2NrIGFuZCB1bmxvY2sgb3BlcmF0aW9uIGluIGRldmljZSBydW4gZnVu
+Y3Rpb24uDQo+ID4gICAgIENoYW5nZSByZWdpc3RlciBvZmZzZXQgaGV4IG51bWJlcmFscyBmcm9t
+IHVwZXJjYXNlIHRvIGxvd2VyY2FzZS4NCj4gPiANCj4gPiB2NDogbmV3IGFkZCBwYXRjaCBmb3Ig
+djRsMi1jb21wbGlhbmNlIHRlc3QgYnVnIGZpeC4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBhdGNo
+LiBUaGUgY2hhbmdlcyBsb29rIGdvb2QgdG8gbWUsIGJ1dCBlYWNoIG9mIHRoZQ0KPiB1bnJlbGF0
+ZWQgY2hhbmdlcyBzaG91bGQgYmUgc3BsaXQgaW50byBpdHMgb3duIHBhdGNoLCB3aXRoIHByb3Bl
+cg0KPiBleHBsYW5hdGlvbiBpbiBpdHMgY29tbWl0IG1lc3NhZ2UuIEVzcGVjaWFsbHkgdGhlIG9u
+ZXMgdGhhdCBpbnRyb2R1Y2UNCj4gYmVoYXZpb3IgY2hhbmdlcywgc3VjaCBhcyB0aGUgU19TRUxF
+Q1RJT04gb3IgbG9ja2luZyBjaGFuZ2UuDQo+IA0KPiBBbHNvIHBsZWFzZSBzZWUgb25lIGNvbW1l
+bnQgaW5saW5lLg0KPiANCj4gW3NuaXBdDQo+IA0KPiA+IEBAIC04MDEsNyArNzc4LDYgQEAgc3Rh
+dGljIHZvaWQgbXRrX2pwZWdfZGV2aWNlX3J1bih2b2lkICpwcml2KQ0KPiA+ICAJc3RydWN0IG10
+a19qcGVnX2RldiAqanBlZyA9IGN0eC0+anBlZzsNCj4gPiAgCXN0cnVjdCB2YjJfdjRsMl9idWZm
+ZXIgKnNyY19idWYsICpkc3RfYnVmOw0KPiA+ICAJZW51bSB2YjJfYnVmZmVyX3N0YXRlIGJ1Zl9z
+dGF0ZSA9IFZCMl9CVUZfU1RBVEVfRVJST1I7DQo+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdzOw0K
+PiA+ICAJc3RydWN0IG10a19qcGVnX3NyY19idWYgKmpwZWdfc3JjX2J1ZjsNCj4gPiAgCXN0cnVj
+dCBtdGtfanBlZ19icyBiczsNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19mYiBmYjsNCj4gPiBAQCAt
+ODI5LDEzICs4MDUsMTEgQEAgc3RhdGljIHZvaWQgbXRrX2pwZWdfZGV2aWNlX3J1bih2b2lkICpw
+cml2KQ0KPiA+ICAJaWYgKG10a19qcGVnX3NldF9kZWNfZHN0KGN0eCwgJmpwZWdfc3JjX2J1Zi0+
+ZGVjX3BhcmFtLCAmZHN0X2J1Zi0+dmIyX2J1ZiwgJmZiKSkNCj4gPiAgCQlnb3RvIGRlY19lbmQ7
+DQo+ID4gIA0KPiA+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmpwZWctPmh3X2xvY2ssIGZsYWdzKTsN
+Cj4gDQo+IFdoeSBpcyBpdCBzYWZlIHRvIHJlbW92ZSB0aGUgbG9ja2luZyBoZXJlPw0KRGVhciBU
+b21hc3osDQoNCkkgd2lsbCBzcGxpdCB1bnJlbGF0ZWQgY2hhbmdlcyBpbnRvIGRpZmZlcmVudCBw
+YXRjaGVzLg0KDQpNeSBvcGluaW9uIGFib3V0IHJlbW92ZSBsb2NraW5nIGlzIGZvbGxvd2luZyhh
+ZnRlciBkZWVwIHRoaW5raW5nKToNCg0KVGhlIGRldmljZV9ydW4gZnVuY3Rpb24gY2FuIGJlIG9u
+bHkgY2FsbGVkIG9uY2UgZm9yIG9uZSBpbnN0YW5jZS4NCkZvciBtdWx0aS1pbnN0YW5jZSxpcyB0
+aGVyZSBhbnkgcG9zc3NpYmlsaXR5IG9mIGh3IG92ZXJyaWRlIGlmIHJlbW92aW5nIGxvY2tpbmc/
+SSB0aGluayBzby4NCldoYXQgYWJvdXQgeW91ciBmdXJ0aGVyIG9waW5pb24/DQoNCkJlc3QgUmVn
+YXJkcywNClhpYSBKaWFuZw0KPiA+ICAJbXRrX2pwZWdfZGVjX3Jlc2V0KGpwZWctPmRlY19yZWdf
+YmFzZSk7DQo+ID4gIAltdGtfanBlZ19kZWNfc2V0X2NvbmZpZyhqcGVnLT5kZWNfcmVnX2Jhc2Us
+DQo+ID4gIAkJCQkmanBlZ19zcmNfYnVmLT5kZWNfcGFyYW0sICZicywgJmZiKTsNCj4gPiAgDQo+
+ID4gIAltdGtfanBlZ19kZWNfc3RhcnQoanBlZy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAtCXNwaW5f
+dW5sb2NrX2lycXJlc3RvcmUoJmpwZWctPmh3X2xvY2ssIGZsYWdzKTsNCj4gPiAgCXJldHVybjsN
+Cj4gPiAgDQo+ID4gIGRlY19lbmQ6DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KPiAN
+Cg0K
 
---3l2hq75myvlmy434
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Feb 24, 2020 at 10:53:02AM +0200, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
->
-> There is no need in custom driver version for in-tree code.
->
-> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
-
---3l2hq75myvlmy434
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOa3wAKCRDj7w1vZxhR
-xcbKAQD34RQIuVr/Eh3rqW6wAmdRFzMj82wPjjPCwVxOnFdvRgEA5ad/HOXd1R53
-M1v0PShtjx6kM890phDjQwlRq6EvWAE=
-=V9ws
------END PGP SIGNATURE-----
-
---3l2hq75myvlmy434--
