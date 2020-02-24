@@ -2,123 +2,651 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A216C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D3EC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE8720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7015A20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jH5m216K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgBXMb2 (ORCPT
+        id S1727495AbgBXMbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:31:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:36500 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgBXMb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:31:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82CCD1063;
-        Mon, 24 Feb 2020 04:31:27 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30FA53F534;
-        Mon, 24 Feb 2020 04:31:26 -0800 (PST)
-Date:   Mon, 24 Feb 2020 12:31:23 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] sched/rt: Remove unnecessary assignment in
- inc/dec_rt_migration
-Message-ID: <20200224123123.gbox3tcqcist7bbg@e107158-lin.cambridge.arm.com>
-References: <20200223184001.14248-1-qais.yousef@arm.com>
- <20200223184001.14248-7-qais.yousef@arm.com>
- <a000f6b4-7548-1964-ba30-e8396c727d31@arm.com>
+        Mon, 24 Feb 2020 07:31:37 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:25997 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXMbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:31:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582547495; x=1614083495;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6GHj7rDQqtqbgtSw4dTFHKM5z0BbvIffuFWAI3ahAB0=;
+  b=jH5m216Kk9RlZ150mi4IfbcFMq9uEk5hjIUkuwJBR0VXTymNoZ+yvwmw
+   PL+OgqxOByKbc6hRVH3cREm2aNCJJ4FO76u3UB9OkAXMYJcC+062QbL1g
+   CvTfaQRjtKxvKSOa06ak2RUIQJeTwttM/W8wuFgHgX5BBzdBZnV+nikCe
+   c=;
+IronPort-SDR: avNuTuvlGJhvohzdCysezTdRfuzje41dKr0HXlOWrlvjmI099VaDajpharcFY3DUp3JN5jgMRZ
+ vv2KBXummN+w==
+X-IronPort-AV: E=Sophos;i="5.70,480,1574121600"; 
+   d="scan'208";a="27075812"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 24 Feb 2020 12:31:32 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 4B62CA06D4;
+        Mon, 24 Feb 2020 12:31:30 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 24 Feb 2020 12:31:29 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 24 Feb 2020 12:31:17 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <aarcange@redhat.com>,
+        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 00/14] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 24 Feb 2020 13:30:33 +0100
+Message-ID: <20200224123047.32506-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a000f6b4-7548-1964-ba30-e8396c727d31@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D19UWC003.ant.amazon.com (10.43.162.184) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/24/20 00:16, Dietmar Eggemann wrote:
-> On 23.02.20 19:40, Qais Yousef wrote:
-> > The statement
-> > 
-> > 	rt_rq = &rq_of_rt_rq(rt_rq)->rt
-> > 
-> > Was just dereferencing rt_rq to get a pointer to itself. Which is a NOP.
-> > Remove it.
-> > 
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > ---
-> >  kernel/sched/rt.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > index b35e49cdafcc..520e84993fe7 100644
-> > --- a/kernel/sched/rt.c
-> > +++ b/kernel/sched/rt.c
-> > @@ -343,7 +343,6 @@ static void inc_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
-> >  		return;
-> >  
-> >  	p = rt_task_of(rt_se);
-> > -	rt_rq = &rq_of_rt_rq(rt_rq)->rt;
-> 
-> IMHO, this is here to get the root rt_rq from any rt_rq (task_groups).
-> Looks like that e.g rt_nr_total is only maintained on root rt_rq's.
-> 
-> Similar to CFS' &rq_of(cfs_rq)->cfs (cfs_rq_util_change()) to get root
-> cfs_rq.
-> 
-> Not sure where CONFIG_RT_GROUP_SCHED=y is used but it's part of the rt
-> class implementation.
+From: SeongJae Park <sjpark@amazon.de>
 
-Ah I see. That was obvious.. How about the below comment?
+Introduction
+============
 
-This code is executed only if rt_entity_is_task(), I don't think this grantees
-that the rt_rq isn't for a group?
+Memory management decisions can be improved if finer data access information is
+available.  However, because such finer information usually comes with higher
+overhead, most systems including Linux forgives the potential improvement and
+rely on only coarse information or some light-weight heuristics.  The
+pseudo-LRU and the aggressive THP promotions are such examples.
 
-I need to go and unravel the layers maybe.
+A number of experimental data access pattern awared memory management
+optimizations (refer to 'Appendix A' for more details) say the sacrifices are
+huge.  However, none of those has successfully adopted to Linux kernel mainly
+due to the absence of a scalable and efficient data access monitoring
+mechanism.  Refer to 'Appendix B' to see the limitations of existing memory
+monitoring mechanisms.
 
-Thanks!
+DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
+enough to be used for the DRAM level memory management (a straightforward
+DAMON-based optimization achieved up to 2.55x speedup), 2) light-weight enough
+to be applied online (compared to a straightforward access monitoring scheme,
+DAMON is up to 94.242.42x lighter) and 3) keeps predefined upper-bound overhead
+regardless of the size of target workloads (thus scalable).  Refer to 'Appendix
+C' if you interested in how it is possible.
 
---
-Qais Yousef
+DAMON has mainly designed for the kernel's memory management mechanisms.
+However, because it is implemented as a standalone kernel module and provides
+several interfaces, it can be used by a wide range of users including kernel
+space programs, user space programs, programmers, and administrators.  DAMON
+is now supporting the monitoring only, but it will also provide simple and
+convenient data access pattern awared memory managements by itself.  Refer to
+'Appendix D' for more detailed expected usages of DAMON.
 
--->8--
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index b35e49cdafcc..f929867215c4 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -343,6 +343,8 @@ static void inc_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
-                return;
+Visualized Outputs of DAMON
+===========================
 
-        p = rt_task_of(rt_se);
-+
-+       /* get the root rt_rq if this is the rt_rq of a group */
-        rt_rq = &rq_of_rt_rq(rt_rq)->rt;
+For intuitively understanding of DAMON, I made web pages[1-8] showing the
+visualized dynamic data access pattern of various realistic workloads, which I
+picked up from PARSEC3 and SPLASH-2X bechmark suites.  The figures are
+generated using the user space tool in 10th patch of this patchset.
 
-        rt_rq->rt_nr_total++;
-@@ -368,6 +370,8 @@ static void dec_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
-                return;
+There are pages showing the heatmap format dynamic access pattern of each
+workload for heap area[1], mmap()-ed area[2], and stack[3] area.  I splitted
+the entire address space to the three area because there are huge unmapped
+regions between the areas.
 
-        p = rt_task_of(rt_se);
-+
-+       /* get the root rt_rq if this is the rt_rq of a group */
-        rt_rq = &rq_of_rt_rq(rt_rq)->rt;
+You can also show how the dynamic working set size of each workload is
+distributed[4], and how it is chronologically changing[5].
 
-        rt_rq->rt_nr_total--;
+The most important characteristic of DAMON is its promise of the upperbound of
+the monitoring overhead.  To show whether DAMON keeps the promise well, I
+visualized the number of monitoring operations required for each 5
+milliseconds, which is configured to not exceed 1000.  You can show the
+distribution of the numbers[6] and how it changes chronologically[7].
 
+[1] https://damonitor.github.io/reports/latest/by_image/heatmap.0.png.html
+[2] https://damonitor.github.io/reports/latest/by_image/heatmap.1.png.html
+[3] https://damonitor.github.io/reports/latest/by_image/heatmap.2.png.html
+[4] https://damonitor.github.io/reports/latest/by_image/wss_sz.png.html
+[5] https://damonitor.github.io/reports/latest/by_image/wss_time.png.html
+[6] https://damonitor.github.io/reports/latest/by_image/nr_regions_sz.png.html
+[7] https://damonitor.github.io/reports/latest/by_image/nr_regions_time.png.html
+
+
+Data Access Monitoring-based Operation Schemes
+==============================================
+
+As 'Appendix D' describes, DAMON can be used for data access monitoring-based
+operation schemes (DAMOS).  RFC patchsets for DAMOS are already available
+(https://lore.kernel.org/linux-mm/20200218085309.18346-1-sjpark@amazon.com/).
+
+By applying a very simple scheme for THP promotion/demotion with a latest
+version of the patchset (not posted yet), DAMON achieved 18x lower memory space
+overhead compared to THP while preserving about 50% of the THP performance
+benefit with SPLASH-2X benchmark suite.
+
+The detailed setup and number will be posted soon with the next RFC patchset
+for DAMOS.  The posting is currently scheduled for tomorrow.
+
+
+Frequently Asked Questions
+==========================
+
+Q: Why DAMON is not integrated with perf?
+A: From the perspective of perf like profilers, DAMON can be thought of as a
+data source in kernel, like the tracepoints, the pressure stall information
+(psi), or the idle page tracking.  Thus, it is easy to integrate DAMON with the
+profilers.  However, this patchset doesn't provide a fancy perf integration
+because current step of DAMON development is focused on its core logic only.
+That said, DAMON already provides two interfaces for user space programs, which
+based on debugfs and tracepoint, respectively.  Using the tracepoint interface,
+you can use DAMON with perf.  This patchset also provides a debugfs interface
+based user space tool for DAMON.  It can be used to record, visualize, and
+analyze data access patterns of target processes in a convenient way.
+
+Q: Why a new module, instead of extending perf or other tools?
+A: First, DAMON aims to be used by other programs including the kernel.
+Therefore, having dependency to specific tools like perf is not desirable.
+Second, because it need to be lightweight as much as possible so that it can be
+used online, any unnecessary overhead such as kernel - user space context
+switching cost should be avoided.  These are the two most biggest reasons why
+DAMON is implemented in the kernel space.  The idle page tracking subsystem
+would be the kernel module that most seems similar to DAMON.  However, its own
+interface is not compatible with DAMON.  Also, the internal implementation of
+it has no common part to be reused by DAMON.
+
+Q: Can 'perf mem' provide the data required for DAMON?
+A: On the systems supporting 'perf mem', yes.  DAMON is using the PTE Accessed
+bits in low level.  Other H/W or S/W features that can be used for the purpose
+could be used.  However, as explained with above question, DAMON need to be
+implemented in the kernel space.
+
+
+Evaluations
+===========
+
+A prototype of DAMON has evaluated on an Intel Xeon E7-8837 machine using 20
+benchmarks that picked from SPEC CPU 2006, NAS, Tensorflow Benchmark,
+SPLASH-2X, and PARSEC 3 benchmark suite.  Nonethless, this section provides
+only summary of the results.  For more detail, please refer to the slides used
+for the introduction of DAMON at the Linux Plumbers Conference 2019[1] or the
+MIDDLEWARE'19 industrial track paper[2].
+
+
+Quality
+-------
+
+We first traced and visualized the data access pattern of each workload.  We
+were able to confirm that the visualized results are reasonably accurate by
+manually comparing those with the source code of the workloads.
+
+To see the usefulness of the monitoring, we optimized 9 memory intensive
+workloads among them for memory pressure situations using the DAMON outputs.
+In detail, we identified frequently accessed memory regions in each workload
+based on the DAMON results and protected them with ``mlock()`` system calls.
+The optimized versions consistently show speedup (2.55x in best case, 1.65x in
+average) under memory pressure.
+
+
+Overhead
+--------
+
+We also measured the overhead of DAMON.  It was not only under the upperbound
+we set, but was much lower (0.6 percent of the bound in best case, 13.288
+percent of the bound in average).  This reduction of the overhead is mainly
+resulted from its core mechanism called adaptive regions adjustment.  Refer to
+'Appendix D' for more detail about the mechanism.  We also compared the
+overhead of DAMON with that of a straightforward periodic access check-based
+monitoring.  DAMON's overhead was smaller than it by 94,242.42x in best case,
+3,159.61x in average.
+
+The latest version of DAMON running with its default configuration consumes
+only up to 1% of CPU time when applied to realistic workloads in PARSEC3 and
+SPLASH-2X and makes no visible slowdown to the target processes.
+
+
+References
+==========
+
+Prototypes of DAMON have introduced by an LPC kernel summit track talk[1] and
+two academic papers[2,3].  Please refer to those for more detailed information,
+especially the evaluations.  The latest version of the patchsets has also
+introduced by an LWN artice[4].
+
+[1] SeongJae Park, Tracing Data Access Pattern with Bounded Overhead and
+    Best-effort Accuracy. In The Linux Kernel Summit, September 2019.
+    https://linuxplumbersconf.org/event/4/contributions/548/
+[2] SeongJae Park, Yunjae Lee, Heon Y. Yeom, Profiling Dynamic Data Access
+    Patterns with Controlled Overhead and Quality. In 20th ACM/IFIP
+    International Middleware Conference Industry, December 2019.
+    https://dl.acm.org/doi/10.1145/3366626.3368125
+[3] SeongJae Park, Yunjae Lee, Yunhee Kim, Heon Y. Yeom, Profiling Dynamic Data
+    Access Patterns with Bounded Overhead and Accuracy. In IEEE International
+    Workshop on Foundations and Applications of Self- Systems (FAS 2019), June
+    2019.
+[4] Jonathan Corbet, Memory-management optimization with DAMON. In Linux Weekly
+    News (LWN), Feb 2020. https://lwn.net/Articles/812707/
+
+
+Sequence Of Patches
+===================
+
+The patches are organized in the following sequence.  The first patch
+introduces DAMON module, it's data structures, and data structure related
+common functions.  Following three patches (2nd to 4th) implement the core
+logics of DAMON, namely regions based sampling, adaptive regions adjustment,
+and dynamic memory mapping chage adoption, one by one.
+
+Following five patches are for low level users of DAMON.  The 5th patch
+implements callbacks for each of monitoring steps so that users can do whatever
+they want with the access patterns.  The 6th one implements recording of access
+patterns in DAMON for better convenience and efficiency.  Each of next three
+patches (7th to 9th) respectively adds a programmable interface for other
+kernel code, a debugfs interface for privileged people and/or programs in user
+space, and a tracepoint for other tracepoints supporting tracers such as perf.
+
+Two patches for high level users of DAMON follows.  To provide a minimal
+reference to the debugfs interface and for high level use/tests of the DAMON,
+the next patch (10th) implements an user space tool.  The 11th patch adds a
+document for administrators of DAMON.
+
+Next two patches are for tests.  The 12th and 13th patches provide unit tests
+(based on kunit) and user space tests (based on kselftest) respectively.
+
+Finally, the last patch (14th) updates the MAINTAINERS file.
+
+The patches are based on the v5.5.  You can also clone the complete git
+tree:
+
+    $ git clone git://github.com/sjp38/linux -b damon/patches/v6
+
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/damon/patches/v6
+
+
+Patch History
+=============
+
+Changes from v5
+(https://lore.kernel.org/linux-mm/20200217103110.30817-1-sjpark@amazon.com/)
+ - Fix minor bugs (sampling, record attributes, debugfs and user space tool)
+ - selftests: Add debugfs interface tests for the bugs
+ - Modify the user space tool to use its self default values for parameters
+ - Fix pmg huge page access check
+
+Changes from v4
+(https://lore.kernel.org/linux-mm/20200210144812.26845-1-sjpark@amazon.com/)
+ - Add 'Reviewed-by' for the kunit tests patch (Brendan Higgins)
+ - Make the unit test to depedns on 'DAMON=y' (Randy Dunlap and kbuild bot)
+   Reported-by: kbuild test robot <lkp@intel.com>
+ - Fix m68k module build issue
+   Reported-by: kbuild test robot <lkp@intel.com>
+ - Add selftests
+ - Seperate patches for low level users from core logics for better reading
+ - Clean up debugfs interface
+ - Trivial nitpicks
+
+Changes from v3
+(https://lore.kernel.org/linux-mm/20200204062312.19913-1-sj38.park@gmail.com/)
+ - Fix i386 build issue
+   Reported-by: kbuild test robot <lkp@intel.com>
+ - Increase the default size of the monitoring result buffer to 1 MiB
+ - Fix misc bugs in debugfs interface
+
+Changes from v2
+(https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/)
+ - Move MAINTAINERS changes to last commit (Brendan Higgins)
+ - Add descriptions for kunittest: why not only entire mappings and what the 4
+   input sets are trying to test (Brendan Higgins)
+ - Remove 'kdamond_need_stop()' test (Brendan Higgins)
+ - Discuss about the 'perf mem' and DAMON (Peter Zijlstra)
+ - Make CV clearly say what it actually does (Peter Zijlstra)
+ - Answer why new module (Qian Cai)
+ - Diable DAMON by default (Randy Dunlap)
+ - Change the interface: Seperate recording attributes
+   (attrs, record, rules) and allow multiple kdamond instances
+ - Implement kernel API interface
+
+Changes from v1
+(https://lore.kernel.org/linux-mm/20200120162757.32375-1-sjpark@amazon.com/)
+ - Rebase on v5.5
+ - Add a tracepoint for integration with other tracers (Kirill A. Shutemov)
+ - document: Add more description for the user space tool (Brendan Higgins)
+ - unittest: Improve readability (Brendan Higgins)
+ - unittest: Use consistent name and helpers function (Brendan Higgins)
+ - Update PG_Young to avoid reclaim logic interference (Yunjae Lee)
+
+Changes from RFC
+(https://lore.kernel.org/linux-mm/20200110131522.29964-1-sjpark@amazon.com/)
+ - Specify an ambiguous plan of access pattern based mm optimizations
+ - Support loadable module build
+ - Cleanup code
+
+SeongJae Park (14):
+  mm: Introduce Data Access MONitor (DAMON)
+  mm/damon: Implement region based sampling
+  mm/damon: Adaptively adjust regions
+  mm/damon: Apply dynamic memory mapping changes
+  mm/damon: Implement callbacks
+  mm/damon: Implement access pattern recording
+  mm/damon: Implement kernel space API
+  mm/damon: Add debugfs interface
+  mm/damon: Add a tracepoint for result writing
+  tools: Add a minimal user-space tool for DAMON
+  Documentation/admin-guide/mm: Add a document for DAMON
+  mm/damon: Add kunit tests
+  mm/damon: Add user selftests
+  MAINTAINERS: Update for DAMON
+
+ .../admin-guide/mm/data_access_monitor.rst    |  414 +++++
+ Documentation/admin-guide/mm/index.rst        |    1 +
+ MAINTAINERS                                   |   12 +
+ include/linux/damon.h                         |   71 +
+ include/trace/events/damon.h                  |   32 +
+ mm/Kconfig                                    |   23 +
+ mm/Makefile                                   |    1 +
+ mm/damon-test.h                               |  604 +++++++
+ mm/damon.c                                    | 1427 +++++++++++++++++
+ mm/page_ext.c                                 |    1 +
+ tools/damon/.gitignore                        |    1 +
+ tools/damon/_dist.py                          |   36 +
+ tools/damon/bin2txt.py                        |   64 +
+ tools/damon/damo                              |   37 +
+ tools/damon/heats.py                          |  358 +++++
+ tools/damon/nr_regions.py                     |   89 +
+ tools/damon/record.py                         |  212 +++
+ tools/damon/report.py                         |   45 +
+ tools/damon/wss.py                            |   95 ++
+ tools/testing/selftests/damon/Makefile        |    7 +
+ .../selftests/damon/_chk_dependency.sh        |   28 +
+ tools/testing/selftests/damon/_chk_record.py  |   89 +
+ .../testing/selftests/damon/debugfs_attrs.sh  |  139 ++
+ .../testing/selftests/damon/debugfs_record.sh |   50 +
+ 24 files changed, 3836 insertions(+)
+ create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
+ create mode 100644 include/linux/damon.h
+ create mode 100644 include/trace/events/damon.h
+ create mode 100644 mm/damon-test.h
+ create mode 100644 mm/damon.c
+ create mode 100644 tools/damon/.gitignore
+ create mode 100644 tools/damon/_dist.py
+ create mode 100644 tools/damon/bin2txt.py
+ create mode 100755 tools/damon/damo
+ create mode 100644 tools/damon/heats.py
+ create mode 100644 tools/damon/nr_regions.py
+ create mode 100644 tools/damon/record.py
+ create mode 100644 tools/damon/report.py
+ create mode 100644 tools/damon/wss.py
+ create mode 100644 tools/testing/selftests/damon/Makefile
+ create mode 100644 tools/testing/selftests/damon/_chk_dependency.sh
+ create mode 100644 tools/testing/selftests/damon/_chk_record.py
+ create mode 100755 tools/testing/selftests/damon/debugfs_attrs.sh
+ create mode 100755 tools/testing/selftests/damon/debugfs_record.sh
+
+-- 
+2.17.1
+
+============================= 8< ======================================
+
+Appendix A: Related Works
+=========================
+
+There are a number of researches[1,2,3,4,5,6] optimizing memory management
+mechanisms based on the actual memory access patterns that shows impressive
+results.  However, most of those has no deep consideration about the monitoring
+of the accesses itself.  Some of those focused on the overhead of the
+monitoring, but does not consider the accuracy scalability[6] or has additional
+dependencies[7].  Indeed, one recent research[5] about the proactive
+reclamation has also proposed[8] to the kernel community but the monitoring
+overhead was considered a main problem.
+
+[1] Subramanya R Dulloor, Amitabha Roy, Zheguang Zhao, Narayanan Sundaram,
+    Nadathur Satish, Rajesh Sankaran, Jeff Jackson, and Karsten Schwan. 2016.
+    Data tiering in heterogeneous memory systems. In Proceedings of the 11th
+    European Conference on Computer Systems (EuroSys). ACM, 15.
+[2] Youngjin Kwon, Hangchen Yu, Simon Peter, Christopher J Rossbach, and Emmett
+    Witchel. 2016. Coordinated and efficient huge page management with ingens.
+    In 12th USENIX Symposium on Operating Systems Design and Implementation
+    (OSDI).  705–721.
+[3] Harald Servat, Antonio J Peña, Germán Llort, Estanislao Mercadal,
+    HansChristian Hoppe, and Jesús Labarta. 2017. Automating the application
+    data placement in hybrid memory systems. In 2017 IEEE International
+    Conference on Cluster Computing (CLUSTER). IEEE, 126–136.
+[4] Vlad Nitu, Boris Teabe, Alain Tchana, Canturk Isci, and Daniel Hagimont.
+    2018. Welcome to zombieland: practical and energy-efficient memory
+    disaggregation in a datacenter. In Proceedings of the 13th European
+    Conference on Computer Systems (EuroSys). ACM, 16.
+[5] Andres Lagar-Cavilla, Junwhan Ahn, Suleiman Souhlal, Neha Agarwal, Radoslaw
+    Burny, Shakeel Butt, Jichuan Chang, Ashwin Chaugule, Nan Deng, Junaid
+    Shahid, Greg Thelen, Kamil Adam Yurtsever, Yu Zhao, and Parthasarathy
+    Ranganathan.  2019. Software-Defined Far Memory in Warehouse-Scale
+    Computers.  In Proceedings of the 24th International Conference on
+    Architectural Support for Programming Languages and Operating Systems
+    (ASPLOS).  ACM, New York, NY, USA, 317–330.
+    DOI:https://doi.org/10.1145/3297858.3304053
+[6] Carl Waldspurger, Trausti Saemundsson, Irfan Ahmad, and Nohhyun Park.
+    2017. Cache Modeling and Optimization using Miniature Simulations. In 2017
+    USENIX Annual Technical Conference (ATC). USENIX Association, Santa
+    Clara, CA, 487–498.
+    https://www.usenix.org/conference/atc17/technical-sessions/
+[7] Haojie Wang, Jidong Zhai, Xiongchao Tang, Bowen Yu, Xiaosong Ma, and
+    Wenguang Chen. 2018. Spindle: Informed Memory Access Monitoring. In 2018
+    USENIX Annual Technical Conference (ATC). USENIX Association, Boston, MA,
+    561–574.  https://www.usenix.org/conference/atc18/presentation/wang-haojie
+[8] Jonathan Corbet. 2019. Proactively reclaiming idle memory. (2019).
+    https://lwn.net/Articles/787611/.
+
+
+Appendix B: Limitations of Other Access Monitoring Techniques
+=============================================================
+
+The memory access instrumentation techniques which are applied to
+many tools such as Intel PIN is essential for correctness required cases such
+as memory access bug detections or cache level optimizations.  However, those
+usually incur exceptionally high overhead which is unacceptable.
+
+Periodic access checks based on access counting features (e.g., PTE Accessed
+bits or PG_Idle flags) can reduce the overhead.  It sacrifies some of the
+quality but it's still ok to many of this domain.  However, the overhead
+arbitrarily increase as the size of the target workload grows.  Miniature-like
+static region based sampling can set the upperbound of the overhead, but it
+will now decrease the quality of the output as the size of the workload grows.
+
+DAMON is another solution that overcomes the limitations.  It is 1) accurate
+enough for this domain, 2) light-weight so that it can be applied online, and
+3) allow users to set the upper-bound of the overhead, regardless of the size
+of target workloads.  It is implemented as a simple and small kernel module to
+support various users in both of the user space and the kernel space.  Refer to
+'Evaluations' section below for detailed performance of DAMON.
+
+For the goals, DAMON utilizes its two core mechanisms, which allows lightweight
+overhead and high quality of output, repectively.  To show how DAMON promises
+those, refer to 'Mechanisms of DAMON' section below.
+
+
+Appendix C: Mechanisms of DAMON
+===============================
+
+
+Basic Access Check
+------------------
+
+DAMON basically reports what pages are how frequently accessed.  The report is
+passed to users in binary format via a ``result file`` which users can set it's
+path.  Note that the frequency is not an absolute number of accesses, but a
+relative frequency among the pages of the target workloads.
+
+Users can also control the resolution of the reports by setting two time
+intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
+DAMON checks access to each page per ``sampling interval``, aggregates the
+results (counts the number of the accesses to each page), and reports the
+aggregated results per ``aggregation interval``.  For the access check of each
+page, DAMON uses the Accessed bits of PTEs.
+
+This is thus similar to the previously mentioned periodic access checks based
+mechanisms, which overhead is increasing as the size of the target process
+grows.
+
+
+Region Based Sampling
+---------------------
+
+To avoid the unbounded increase of the overhead, DAMON groups a number of
+adjacent pages that assumed to have same access frequencies into a region.  As
+long as the assumption (pages in a region have same access frequencies) is
+kept, only one page in the region is required to be checked.  Thus, for each
+``sampling interval``, DAMON randomly picks one page in each region and clears
+its Accessed bit.  After one more ``sampling interval``, DAMON reads the
+Accessed bit of the page and increases the access frequency of the region if
+the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
+by setting the number of regions.  DAMON allows users to set the minimal and
+maximum number of regions for the trade-off.
+
+Except the assumption, this is almost same with the above-mentioned
+miniature-like static region based sampling.  In other words, this scheme
+cannot preserve the quality of the output if the assumption is not guaranteed.
+
+
+Adaptive Regions Adjustment
+---------------------------
+
+At the beginning of the monitoring, DAMON constructs the initial regions by
+evenly splitting the memory mapped address space of the process into the
+user-specified minimal number of regions.  In this initial state, the
+assumption is normally not kept and thus the quality could be low.  To keep the
+assumption as much as possible, DAMON adaptively merges and splits each region.
+For each ``aggregation interval``, it compares the access frequencies of
+adjacent regions and merges those if the frequency difference is small.  Then,
+after it reports and clears the aggregated access frequency of each region, it
+splits each region into two regions if the total number of regions is smaller
+than the half of the user-specified maximum number of regions.
+
+In this way, DAMON provides its best-effort quality and minimal overhead while
+keeping the bounds users set for their trade-off.
+
+
+Applying Dynamic Memory Mappings
+--------------------------------
+
+Only a number of small parts in the super-huge virtual address space of the
+processes is mapped to physical memory and accessed.  Thus, tracking the
+unmapped address regions is just wasteful.  However, tracking every memory
+mapping change might incur an overhead.  For the reason, DAMON applies the
+dynamic memory mapping changes to the tracking regions only for each of an
+user-specified time interval (``regions update interval``).
+
+
+Appendix D: Expected Use-cases
+==============================
+
+A straightforward usecase of DAMON would be the program behavior analysis.
+With the DAMON output, users can confirm whether the program is running as
+intended or not.  This will be useful for debuggings and tests of design
+points.
+
+The monitored results can also be useful for counting the dynamic working set
+size of workloads.  For the administration of memory overcommitted systems or
+selection of the environments (e.g., containers providing different amount of
+memory) for your workloads, this will be useful.
+
+If you are a programmer, you can optimize your program by managing the memory
+based on the actual data access pattern.  For example, you can identify the
+dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
+data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
+reclaim cold data.  Even though your program is guaranteed to not encounter
+memory pressure, you can still improve the performance by applying the DAMON
+outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
+optimizations would be possible.  Our evaluations of DAMON includes a
+straightforward optimization using the ``mlock()``.  Please refer to the below
+Evaluation section for more detail.
+
+As DAMON incurs very low overhead, such optimizations can be applied not only
+offline, but also online.  Also, there is no reason to limit such optimizations
+to the user space.  Several parts of the kernel's memory management mechanisms
+could be also optimized using DAMON. The reclamation, the THP (de)promotion
+decisions, and the compaction would be such a candidates.  DAMON will continue
+its development to be highly optimized for the online/in-kernel uses.
+
+
+A Future Plan: Data Access Monitoring-based Operation Schemes
+-------------------------------------------------------------
+
+As described in the above section, DAMON could be helpful for actual access
+based memory management optimizations.  Nevertheless, users who want to do such
+optimizations should run DAMON, read the traced data (either online or
+offline), analyze it, plan a new memory management scheme, and apply the new
+scheme by themselves.  It must be easier than the past, but could still require
+some level of efforts.  In its next development stage, DAMON will reduce some
+of such efforts by allowing users to specify some access based memory
+management rules for their specific processes.
+
+Because this is just a plan, the specific interface is not fixed yet, but for
+example, users will be allowed to write their desired memory management rules
+to a special file in a DAMON specific format.  The rules will be something like
+'if a memory region of size in a range is keeping a range of hotness for more
+than a duration, apply specific memory management rule using madvise() or
+mlock() to the region'.  For example, we can imagine rules like below:
+
+    # format is: <min/max size> <min/max frequency (0-99)> <duration> <action>
+
+    # if a region of a size keeps a very high access frequency for more than
+    # 100ms, lock the region in the main memory (call mlock()). But, if the
+    # region is larger than 500 MiB, skip it. The exception might be helpful
+    # if the system has only, say, 600 MiB of DRAM, a region of size larger
+    # than 600 MiB cannot be locked in the DRAM at all.
+    na 500M 90 99 100ms mlock
+
+    # if a region keeps a high access frequency for more than 100ms, put the
+    # region on the head of the LRU list (call madvise() with MADV_WILLNEED).
+    na na 80 90 100ms madv_willneed
+
+    # if a region keeps a low access frequency for more than 100ms, put the
+    # region on the tail of the LRU list (call madvise() with MADV_COLD).
+    na na 10 20 100ms madv_cold
+
+    # if a region keeps a very low access frequency for more than 100ms, swap
+    # out the region immediately (call madvise() with MADV_PAGEOUT).
+    na na 0 10 100ms madv_pageout
+
+    # if a region of a size bigger than 2MB keeps a very high access frequency
+    # for more than 100ms, let the region to use huge pages (call madvise()
+    # with MADV_HUGEPAGE).
+    2M na 90 99 100ms madv_hugepage
+
+    # If a regions of a size bigger than > 2MB keeps no high access frequency
+    # for more than 100ms, avoid the region from using huge pages (call
+    # madvise() with MADV_NOHUGEPAGE).
+    2M na 0 25 100ms madv_nohugepage
+
+An RFC patchset for this is available:
+https://lore.kernel.org/linux-mm/20200218085309.18346-1-sjpark@amazon.com/
