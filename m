@@ -2,190 +2,526 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD79C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78023C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981362072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3EC2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P8411zTk"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="onaO792p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgBXMfm (ORCPT
+        id S1727592AbgBXMgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:35:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21187 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726778AbgBXMfm (ORCPT
+        Mon, 24 Feb 2020 07:36:03 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:52650 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbgBXMgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:35:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582547741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A76EGrw49ZVRKmkTyfyUNvOOyxmLePhddhz/3ngCACc=;
-        b=P8411zTkx7ua9nNUfDHH5ePnNeMRrUvF5H15dlDWtJWO4muTsBxe5Hcn+iLJdGAyd3Nna0
-        dGPCHtKs/fRK5BotpT3qd9m+ptwZtb09qoIhcmHSlnzyxsTdtFjAUkvz8dRvPUvPCiLzfW
-        njY590SLV71BRFrv8LfCcUUqtU1aeiw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-Vn3EV3SMO1yNpkDnjwMgZw-1; Mon, 24 Feb 2020 07:35:33 -0500
-X-MC-Unique: Vn3EV3SMO1yNpkDnjwMgZw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5E74DB60;
-        Mon, 24 Feb 2020 12:35:31 +0000 (UTC)
-Received: from krava (ovpn-204-56.brq.redhat.com [10.40.204.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C28B1001B2C;
-        Mon, 24 Feb 2020 12:35:28 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 13:35:26 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v3 2/2] Support interactive annotation of code without
- symbols
-Message-ID: <20200224123526.GF16664@krava>
-References: <20200224022225.30264-1-yao.jin@linux.intel.com>
- <20200224022225.30264-3-yao.jin@linux.intel.com>
+        Mon, 24 Feb 2020 07:36:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582547761; x=1614083761;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=q4ty0pzfJ+WscJxvxrLr30bAdkgkalMTglWMjPRmads=;
+  b=onaO792p/N3SH5N5EdRdnv0hkQjOvYV0NrvyBqFr78v4t8FtnWX4yF7O
+   itdBQ2o5e92kWtQob5JC7ce6M6l9CbHEhN2BEUyRdBPcvB1iFdZujbVlO
+   oqPr5BOQiqZLsrz2wiHwZ+ydt9T3Qg4MurGXFfn1nkW72QEf7VRbMNEjK
+   o=;
+IronPort-SDR: /h9iycM2nUR3HiUkpw2hWlTm2/e007h2wLkBruttORTS/HrTGbLcMdoWwmVO8NT3MM3PZT3VX5
+ T8rHMY6s+6cg==
+X-IronPort-AV: E=Sophos;i="5.70,480,1574121600"; 
+   d="scan'208";a="18593858"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Feb 2020 12:35:47 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 2224EC5638;
+        Mon, 24 Feb 2020 12:35:44 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Mon, 24 Feb 2020 12:35:43 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 24 Feb 2020 12:35:31 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <aarcange@redhat.com>,
+        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 11/14] Documentation/admin-guide/mm: Add a document for DAMON
+Date:   Mon, 24 Feb 2020 13:30:44 +0100
+Message-ID: <20200224123047.32506-12-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200224123047.32506-1-sjpark@amazon.com>
+References: <20200224123047.32506-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200224022225.30264-3-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D19UWC003.ant.amazon.com (10.43.162.184) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:22:25AM +0800, Jin Yao wrote:
-> For perf report on stripped binaries it is currently impossible to do
-> annotation. The annotation state is all tied to symbols, but there are
-> either no symbols, or symbols are not covering all the code.
->=20
-> We should support the annotation functionality even without symbols.
->=20
-> This patch fakes a symbol and the symbol name is the string of address.
-> After that, we just follow current annotation working flow.
->=20
-> For example,
->=20
-> 1. perf report
->=20
-> Overhead  Command  Shared Object     Symbol
->   20.67%  div      libc-2.27.so      [.] __random_r
->   17.29%  div      libc-2.27.so      [.] __random
->   10.59%  div      div               [.] 0x0000000000000628
->    9.25%  div      div               [.] 0x0000000000000612
->    6.11%  div      div               [.] 0x0000000000000645
->=20
-> 2. Select the line of "10.59%  div      div               [.] 0x0000000=
-000000628" and ENTER.
->=20
-> Annotate 0x0000000000000628
-> Zoom into div thread
-> Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
-> Browse map details
-> Run scripts for samples of symbol [0x0000000000000628]
-> Run scripts for all samples
-> Switch to another data file in PWD
-> Exit
->=20
-> 3. Select the "Annotate 0x0000000000000628" and ENTER.
->=20
-> Percent=E2=94=82
->        =E2=94=82
->        =E2=94=82
->        =E2=94=82     Disassembly of section .text:
->        =E2=94=82
->        =E2=94=82     0000000000000628 <.text+0x68>:
->        =E2=94=82       divsd %xmm4,%xmm0
->        =E2=94=82       divsd %xmm3,%xmm1
->        =E2=94=82       movsd (%rsp),%xmm2
->        =E2=94=82       addsd %xmm1,%xmm0
->        =E2=94=82       addsd %xmm2,%xmm0
->        =E2=94=82       movsd %xmm0,(%rsp)
->=20
-> Now we can see the dump of object starting from 0x628.
->=20
->  v3:
->  ---
->  Keep just the ANNOTATION_DUMMY_LEN, and remove the
->  opts->annotate_dummy_len since it's the "maybe in future
->  we will provide" feature.
->=20
->  v2:
->  ---
->  Fix a crash issue when annotating an address in "unknown" object.
->=20
->  The steps to reproduce this issue:
->=20
->  perf record -e cycles:u ls
->  perf report
->=20
->     75.29%  ls       ld-2.27.so        [.] do_lookup_x
->     23.64%  ls       ld-2.27.so        [.] __GI___tunables_init
->      1.04%  ls       [unknown]         [k] 0xffffffff85c01210
->      0.03%  ls       ld-2.27.so        [.] _start
->=20
->  When annotating 0xffffffff85c01210, the crash happens.
->=20
->  v2 adds checking for ms->map in add_annotate_opt(). If the object is
->  "unknown", ms->map is NULL.
->=20
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  tools/perf/ui/browsers/hists.c | 43 +++++++++++++++++++++++++++++-----
->  tools/perf/util/annotate.h     |  1 +
->  2 files changed, 38 insertions(+), 6 deletions(-)
->=20
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hi=
-sts.c
-> index f36dee499320..2f07680559c4 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -2465,13 +2465,41 @@ do_annotate(struct hist_browser *browser, struc=
-t popup_action *act)
->  	return 0;
->  }
-> =20
-> +static struct symbol *new_annotate_sym(u64 addr, struct map *map)
-> +{
-> +	struct symbol *sym;
-> +	struct annotated_source *src;
-> +	char name[64];
-> +
-> +	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
-> +
-> +	sym =3D symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
-> +	if (sym) {
-> +		src =3D symbol__hists(sym, 1);
-> +		if (!src) {
-> +			symbol__delete(sym);
-> +			return NULL;
-> +		}
+From: SeongJae Park <sjpark@amazon.de>
 
-hi,
-I like the patchset:
+This commit adds a simple document for DAMON under
+`Documentation/admin-guide/mm`.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ .../admin-guide/mm/data_access_monitor.rst    | 414 ++++++++++++++++++
+ Documentation/admin-guide/mm/index.rst        |   1 +
+ 2 files changed, 415 insertions(+)
+ create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
 
-could you please also check if we can do this earlier,
-so the dummy symbol is actualy collecting all the hits?
-
-like within the symbol__inc_addr_samples function,
-but I mght be missing something..
-
-thanks,
-jirka
+diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
+new file mode 100644
+index 000000000000..4d836c3866e2
+--- /dev/null
++++ b/Documentation/admin-guide/mm/data_access_monitor.rst
+@@ -0,0 +1,414 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==========================
++DAMON: Data Access MONitor
++==========================
++
++Introduction
++============
++
++Memory management decisions can normally be more efficient if finer data access
++information is available.  However, because finer information usually comes
++with higher overhead, most systems including Linux made a tradeoff: Forgive
++some wise decisions and use coarse information and/or light-weight heuristics.
++
++A number of experimental data access pattern awared memory management
++optimizations say the sacrifices are
++huge (2.55x slowdown).  However, none of those has successfully adopted to
++Linux kernel mainly due to the absence of a scalable and efficient data access
++monitoring mechanism.
++
++DAMON is a data access monitoring solution for the problem.  It is 1) accurate
++enough for the DRAM level memory management, 2) light-weight enough to be
++applied online, and 3) keeps predefined upper-bound overhead regardless of the
++size of target workloads (thus scalable).
++
++DAMON is implemented as a standalone kernel module and provides several simple
++interfaces.  Owing to that, though it has mainly designed for the kernel's
++memory management mechanisms, it can be also used for a wide range of user
++space programs and people.
++
++
++Frequently Asked Questions
++==========================
++
++Q: Why not integrated with perf?
++A: From the perspective of perf like profilers, DAMON can be thought of as a
++data source in kernel, like tracepoints, pressure stall information (psi), or
++idle page tracking.  Thus, it can be easily integrated with those.  However,
++this patchset doesn't provide a fancy perf integration because current step of
++DAMON development is focused on its core logic only.  That said, DAMON already
++provides two interfaces for user space programs, which based on debugfs and
++tracepoint, respectively.  Using the tracepoint interface, you can use DAMON
++with perf.  This patchset also provides the debugfs interface based user space
++tool for DAMON.  It can be used to record, visualize, and analyze data access
++pattern of target processes in a convenient way.
++
++Q: Why a new module, instead of extending perf or other tools?
++A: First, DAMON aims to be used by other programs including the kernel.
++Therefore, having dependency to specific tools like perf is not desirable.
++Second, because it need to be lightweight as much as possible so that it can be
++used online, any unnecessary overhead such as kernel - user space context
++switching cost should be avoided.  These are the two most biggest reasons why
++DAMON is implemented in the kernel space.  The idle page tracking subsystem
++would be the kernel module that most seems similar to DAMON.  However, it's own
++interface is not compatible with DAMON.  Also, the internal implementation of
++it has no common part to be reused by DAMON.
++
++Q: Can 'perf mem' provide the data required for DAMON?
++A: On the systems supporting 'perf mem', yes.  DAMON is using the PTE Accessed
++bits in low level.  Other H/W or S/W features that can be used for the purpose
++could be used.  However, as explained with above question, DAMON need to be
++implemented in the kernel space.
++
++
++Expected Use-cases
++==================
++
++A straightforward usecase of DAMON would be the program behavior analysis.
++With the DAMON output, users can confirm whether the program is running as
++intended or not.  This will be useful for debuggings and tests of design
++points.
++
++The monitored results can also be useful for counting the dynamic working set
++size of workloads.  For the administration of memory overcommitted systems or
++selection of the environments (e.g., containers providing different amount of
++memory) for your workloads, this will be useful.
++
++If you are a programmer, you can optimize your program by managing the memory
++based on the actual data access pattern.  For example, you can identify the
++dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
++data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
++reclaim cold data.  Even though your program is guaranteed to not encounter
++memory pressure, you can still improve the performance by applying the DAMON
++outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
++optimizations would be possible.  Our evaluations of DAMON includes a
++straightforward optimization using the ``mlock()``.  Please refer to the below
++Evaluation section for more detail.
++
++As DAMON incurs very low overhead, such optimizations can be applied not only
++offline, but also online.  Also, there is no reason to limit such optimizations
++to the user space.  Several parts of the kernel's memory management mechanisms
++could be also optimized using DAMON. The reclamation, the THP (de)promotion
++decisions, and the compaction would be such a candidates.
++
++
++Mechanisms of DAMON
++===================
++
++
++Basic Access Check
++------------------
++
++DAMON basically reports what pages are how frequently accessed.  The report is
++passed to users in binary format via a ``result file`` which users can set it's
++path.  Note that the frequency is not an absolute number of accesses, but a
++relative frequency among the pages of the target workloads.
++
++Users can also control the resolution of the reports by setting two time
++intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
++DAMON checks access to each page per ``sampling interval``, aggregates the
++results (counts the number of the accesses to each page), and reports the
++aggregated results per ``aggregation interval``.  For the access check of each
++page, DAMON uses the Accessed bits of PTEs.
++
++This is thus similar to the previously mentioned periodic access checks based
++mechanisms, which overhead is increasing as the size of the target process
++grows.
++
++
++Region Based Sampling
++---------------------
++
++To avoid the unbounded increase of the overhead, DAMON groups a number of
++adjacent pages that assumed to have same access frequencies into a region.  As
++long as the assumption (pages in a region have same access frequencies) is
++kept, only one page in the region is required to be checked.  Thus, for each
++``sampling interval``, DAMON randomly picks one page in each region and clears
++its Accessed bit.  After one more ``sampling interval``, DAMON reads the
++Accessed bit of the page and increases the access frequency of the region if
++the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
++by setting the number of regions.  DAMON allows users to set the minimal and
++maximum number of regions for the trade-off.
++
++Except the assumption, this is almost same with the above-mentioned
++miniature-like static region based sampling.  In other words, this scheme
++cannot preserve the quality of the output if the assumption is not guaranteed.
++
++
++Adaptive Regions Adjustment
++---------------------------
++
++At the beginning of the monitoring, DAMON constructs the initial regions by
++evenly splitting the memory mapped address space of the process into the
++user-specified minimal number of regions.  In this initial state, the
++assumption is normally not kept and thus the quality could be low.  To keep the
++assumption as much as possible, DAMON adaptively merges and splits each region.
++For each ``aggregation interval``, it compares the access frequencies of
++adjacent regions and merges those if the frequency difference is small.  Then,
++after it reports and clears the aggregated access frequency of each region, it
++splits each region into two regions if the total number of regions is smaller
++than the half of the user-specified maximum number of regions.
++
++In this way, DAMON provides its best-effort quality and minimal overhead while
++keeping the bounds users set for their trade-off.
++
++
++Applying Dynamic Memory Mappings
++--------------------------------
++
++Only a number of small parts in the super-huge virtual address space of the
++processes is mapped to physical memory and accessed.  Thus, tracking the
++unmapped address regions is just wasteful.  However, tracking every memory
++mapping change might incur an overhead.  For the reason, DAMON applies the
++dynamic memory mapping changes to the tracking regions only for each of an
++user-specified time interval (``regions update interval``).
++
++
++``debugfs`` Interface
++=====================
++
++DAMON exports four files, ``attrs``, ``pids``, ``record``, and ``monitor_on``
++under its debugfs directory, ``<debugfs>/damon/``.
++
++Attributes
++----------
++
++Users can read and write the ``sampling interval``, ``aggregation interval``,
++``regions update interval``, and min/max number of monitoring target regions by
++reading from and writing to the ``attrs`` file.  For example, below commands
++set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000 and check it again::
++
++    # cd <debugfs>/damon
++    # echo 5000 100000 1000000 10 1000 > attrs
++    # cat attrs
++    5000 100000 1000000 10 1000
++
++Target PIDs
++-----------
++
++Users can read and write the pids of current monitoring target processes by
++reading from and writing to the ``pids`` file.  For example, below commands set
++processes having pids 42 and 4242 as the processes to be monitored and check it
++again::
++
++    # cd <debugfs>/damon
++    # echo 42 4242 > pids
++    # cat pids
++    42 4242
++
++Note that setting the pids doesn't starts the monitoring.
++
++Record
++------
++
++DAMON support direct monitoring result record feature.  The recorded results
++are first written to a buffer and flushed to a file in batch.  Users can set
++the size of the buffer and the path to the result file by reading from and
++writing to the ``record`` file.  For example, below commands set the buffer to
++be 4 KiB and the result to be saved in ``/damon.data``.
++
++    # cd <debugfs>/damon
++    # echo "4096 /damon.data" > pids
++    # cat record
++    4096 /damon.data
++
++Turning On/Off
++--------------
++
++You can check current status, start and stop the monitoring by reading from and
++writing to the ``monitor_on`` file.  Writing ``on`` to the file starts DAMON to
++monitor the target processes with the attributes.  Writing ``off`` to the file
++stops DAMON.  DAMON also stops if every target processes is be terminated.
++Below example commands turn on, off, and check status of DAMON::
++
++    # cd <debugfs>/damon
++    # echo on > monitor_on
++    # echo off > monitor_on
++    # cat monitor_on
++    off
++
++Please note that you cannot write to the ``attrs`` and ``pids`` files while the
++monitoring is turned on.  If you write to the files while DAMON is running,
++``-EINVAL`` will be returned.
++
++
++User Space Tool for DAMON
++=========================
++
++There is a user space tool for DAMON, ``/tools/damon/damo``.  It provides
++another user interface which more convenient than the debugfs interface.
++Nevertheless, note that it is only aimed to be used for minimal reference of
++the DAMON's debugfs interfaces and for tests of the DAMON itself.  Based on the
++debugfs interface, you can create another cool and more convenient user space
++tools.
++
++The interface of the tool is basically subcommand based.  You can almost always
++use ``-h`` option to get help of the use of each subcommand.  Currently, it
++supports two subcommands, ``record`` and ``report``.
++
++
++Recording Data Access Pattern
++-----------------------------
++
++The ``record`` subcommand records the data access pattern of target process in
++a file (``./damon.data`` by default) using DAMON.  You can specifies the target
++as either pid or a command for an execution of the process.  Below example
++shows a command target usage::
++
++    # cd <kernel>/tools/damon/
++    # ./damo record "sleep 5"
++
++The tool will execute ``sleep 5`` by itself and record the data access patterns
++of the process.  Below example shows a pid target usage::
++
++    # sleep 5 &
++    # ./damo record `pidof sleep`
++
++You can set more detailed attributes and path to the recorded data file using
++optional arguments to the subcommand.  Use the ``-h`` option for more help.
++
++
++Analyzing Data Access Pattern
++-----------------------------
++
++The ``report`` subcommand reads a data access pattern record file (if not
++explicitly specified, reads ``./damon.data`` file if exists) and generates
++reports of various types.  You can specify what type of report you want using
++sub-subcommand to ``report`` subcommand.  For supported types, pass the ``-h``
++option to ``report`` subcommand.
++
++
++raw
++~~~
++
++``raw`` sub-subcommand simply transforms the record, which is storing the data
++access patterns in binary format to human readable text.  For example::
++
++    $ ./damo report raw
++    start_time:  193485829398
++    rel time:                0
++    nr_tasks:  1
++    pid:  1348
++    nr_regions:  4
++    560189609000-56018abce000(  22827008):  0
++    7fbdff59a000-7fbdffaf1a00(   5601792):  0
++    7fbdffaf1a00-7fbdffbb5000(    800256):  1
++    7ffea0dc0000-7ffea0dfd000(    249856):  0
++
++    rel time:        100000731
++    nr_tasks:  1
++    pid:  1348
++    nr_regions:  6
++    560189609000-56018abce000(  22827008):  0
++    7fbdff59a000-7fbdff8ce933(   3361075):  0
++    7fbdff8ce933-7fbdffaf1a00(   2240717):  1
++    7fbdffaf1a00-7fbdffb66d99(    480153):  0
++    7fbdffb66d99-7fbdffbb5000(    320103):  1
++    7ffea0dc0000-7ffea0dfd000(    249856):  0
++
++The first line shows recording started timestamp (nanosecond).  Records of data
++access patterns are following this.  Each record is sperated by a blank line.
++Each record first specifies the recorded time (``rel time``), number of
++monitored tasks in this record (``nr_tasks``).  Multiple number of records of
++data access pattern for each task continue.  Each data access pattern for each
++task shows first it's pid (``pid``) and number of monitored virtual address
++regions in this access pattern (``nr_regions``).  After that, each line shows
++start/end address, size, and number of monitored accesses to the region for
++each of the regions.
++
++
++heats
++~~~~~
++
++The ``raw`` type shows detailed information but it is exhaustive to manually
++read and analyzed.  For the reason, ``heats`` plots the data in heatmap form,
++using time as x-axis, virtual address as y-axis, and access frequency as
++z-axis.  Also, users set the resolution and start/end point of each axis via
++optional arguments.  For example::
++
++    $ ./damo report heats --tres 3 --ares 3
++    0               0               0.0
++    0               7609002         0.0
++    0               15218004        0.0
++    66112620851     0               0.0
++    66112620851     7609002         0.0
++    66112620851     15218004        0.0
++    132225241702    0               0.0
++    132225241702    7609002         0.0
++    132225241702    15218004        0.0
++
++This command shows the recorded access pattern of the ``sleep`` command using 3
++data points for each of time axis and address axis.  Therefore, it shows 9 data
++points in total.
++
++Users can easily converts this text output into heatmap image or other 3D
++representation using various tools such as 'gnuplot'.  ``raw`` sub-subcommand
++also provides 'gnuplot' based heatmap image creation.  For this, you can use
++``--heatmap`` option.  Also, note that because it uses 'gnuplot' internally, it
++will fail if 'gnuplot' is not installed on your system.  For example::
++
++    $ ./damo report heats --heatmap heatmap.png
++
++Creates ``heatmap.png`` file containing the heatmap image.  It supports
++``pdf``, ``png``, ``jpeg``, and ``svg``.
++
++For proper zoom in / zoom out, you need to see the layout of the record.  For
++that, use '--guide' option.  If the option is given, it will provide useful
++information about the records in the record file.  For example::
++
++    $ ./damo report heats --guide
++    pid:1348
++    time: 193485829398-198337863555 (4852034157)
++    region   0: 00000094564599762944-00000094564622589952 (22827008)
++    region   1: 00000140454009610240-00000140454016012288 (6402048)
++    region   2: 00000140731597193216-00000140731597443072 (249856)
++
++The output shows monitored regions (start and end addresses in byte) and
++monitored time duration (start and end time in nanosecond) of each target task.
++Therefore, it would be wise to plot only each region rather than plotting
++entire address space in one heatmap because the gaps between the regions are so
++huge in this case.
++
++
++wss
++~~~
++
++The ``wss`` type shows the distribution or time-varying working set sizes of
++the recorded workload using the records.  For example::
++
++    $ ./damo report wss
++    # <percentile> <wss>
++    # pid   1348
++    # avr:  66228
++    0       0
++    25      0
++    50      0
++    75      0
++    100     1920615
++
++Without any option, it shows the distribution of the working set sizes as
++above.  Basically it shows 0th, 25th, 50th, 75th, and 100th percentile and
++average of the measured working set sizes in the access pattern records.  In
++this case, the working set size was zero for 75th percentile but 1,920,615
++bytes in max and 66,228 in average.
++
++By setting the sort key of the percentile using '--sortby', you can also see
++how the working set size is chronologically changed.  For example::
++
++    $ ./damo report wss --sortby time
++    # <percentile> <wss>
++    # pid   1348
++    # avr:  66228
++    0       0
++    25      0
++    50      0
++    75      0
++    100     0
++
++The average is still 66,228.  And, because we sorted the working set using
++recorded time and the access is very short, we cannot show when the access
++made.
++
++Users can specify the resolution of the distribution (``--range``).  It also
++supports 'gnuplot' based simple visualization (``--plot``) of the distribution.
+diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+index 11db46448354..d3d0ba373eb6 100644
+--- a/Documentation/admin-guide/mm/index.rst
++++ b/Documentation/admin-guide/mm/index.rst
+@@ -27,6 +27,7 @@ the Linux memory management.
+ 
+    concepts
+    cma_debugfs
++   data_access_monitor
+    hugetlbpage
+    idle_page_tracking
+    ksm
+-- 
+2.17.1
 
