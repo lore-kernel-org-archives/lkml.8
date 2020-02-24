@@ -2,119 +2,122 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5685BC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A69C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5762072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77F62072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ugYQv4c3"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BKZdz9HM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgBXLtx (ORCPT
+        id S1727450AbgBXLvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:49:53 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47118 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbgBXLtx (ORCPT
+        Mon, 24 Feb 2020 06:51:01 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:36193 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgBXLvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:49:53 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 12C21E89;
-        Mon, 24 Feb 2020 12:49:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1582544991;
-        bh=VVerRb6P9n4J0byG4RDsnhoDAwB4cAvUJUyugM/0Jkc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ugYQv4c39w/BkPop3ddbphnw7qyYCMDbqcgPLKuDgjGcZC5LoOJius+czrFIHnrb+
-         u816peG8yGigqAo9ygdzkTC9q7i8yW3GmL2ZSQlkPVa5pSTcbXErFNcBc5VMpcR6Cd
-         Zk0y5c8XWW8nPgbWZw6H0KcjPP3rblcv841JCdU8=
-Date:   Mon, 24 Feb 2020 13:49:29 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Vaibhav Agarwal <vaibhav.sr@gmail.com>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [greybus-dev] [PATCH] staging: greybus: match parenthesis
- alignment
-Message-ID: <20200224114929.GB4827@pendragon.ideasonboard.com>
-References: <20200219195651.GA485@kaaira-HP-Pavilion-Notebook>
+        Mon, 24 Feb 2020 06:51:01 -0500
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DEA2422F00;
+        Mon, 24 Feb 2020 12:50:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582545059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AGoftlXtPDkl6tdoN4g4nLlzfqZ5fb+l68Uc8F12Pnk=;
+        b=BKZdz9HMC+by7IJBwDLcq7etejsomdPgSJDWZUxFdRgtDW0aDmVaBErBhsFLyj3TSlE5Bb
+        8a56/4veaOOn1UewHFAjIdg/LNkByuC5W8LUxW/xxd7Rcay78IUz6ipCIjKTGsqmBwhOjf
+        LEYZg2/Lv0btJqKLwKgtXgths71xFCk=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] arm64: dts: ls1028: sl28: explicitly enable network ports
+Date:   Mon, 24 Feb 2020 12:50:52 +0100
+Message-Id: <20200224115052.27328-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200219195651.GA485@kaaira-HP-Pavilion-Notebook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: DEA2422F00
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.776];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kaaira,
+Since commit b9213899d2b0 ("arm64: dts: ls1028a: disable all enetc ports
+by default") all the network ports are disabled by default. This makes
+sense, but now we have to enable them explicitly in the boards. Do so
+for the sl28 module.
 
-Thank you for the patch.
+Since we are at it. Make sure the second port is only enabled for the
+variant 4 of the module. Variant 3 has only one network port.
 
-On Thu, Feb 20, 2020 at 01:26:51AM +0530, Kaaira Gupta wrote:
-> Fix checkpatch.pl warning of alignment should match open parenthesis in
-> audio_codec.c
-> 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> ---
->  drivers/staging/greybus/audio_codec.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
-> index 08746c85dea6..d62f91f4e9a2 100644
-> --- a/drivers/staging/greybus/audio_codec.c
-> +++ b/drivers/staging/greybus/audio_codec.c
-> @@ -70,7 +70,7 @@ static int gbaudio_module_enable_tx(struct gbaudio_codec_info *codec,
->  		i2s_port = 0;	/* fixed for now */
->  		cportid = data->connection->hd_cport_id;
->  		ret = gb_audio_apbridgea_register_cport(data->connection,
-> -						i2s_port, cportid,
-> +							i2s_port, cportid,
->  						AUDIO_APBRIDGEA_DIRECTION_TX);
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
 
-I'm curious to know why you think the line you changed deserves a
-modification, while the next one doesn't :-)
+This patch actually superseeds the following:
+  https://lore.kernel.org/linux-devicetree/20200220180919.6069-1-michael@walle.cc/
 
->  		if (ret) {
->  			dev_err_ratelimited(module->dev,
-> @@ -160,7 +160,7 @@ static int gbaudio_module_disable_tx(struct gbaudio_module_info *module, int id)
->  		i2s_port = 0;	/* fixed for now */
->  		cportid = data->connection->hd_cport_id;
->  		ret = gb_audio_apbridgea_unregister_cport(data->connection,
-> -						i2s_port, cportid,
-> +							  i2s_port, cportid,
->  						AUDIO_APBRIDGEA_DIRECTION_TX);
->  		if (ret) {
->  			dev_err_ratelimited(module->dev,
-> @@ -205,7 +205,7 @@ static int gbaudio_module_enable_rx(struct gbaudio_codec_info *codec,
->  		i2s_port = 0;	/* fixed for now */
->  		cportid = data->connection->hd_cport_id;
->  		ret = gb_audio_apbridgea_register_cport(data->connection,
-> -						i2s_port, cportid,
-> +							i2s_port, cportid,
->  						AUDIO_APBRIDGEA_DIRECTION_RX);
->  		if (ret) {
->  			dev_err_ratelimited(module->dev,
-> @@ -295,7 +295,7 @@ static int gbaudio_module_disable_rx(struct gbaudio_module_info *module, int id)
->  		i2s_port = 0;	/* fixed for now */
->  		cportid = data->connection->hd_cport_id;
->  		ret = gb_audio_apbridgea_unregister_cport(data->connection,
-> -						i2s_port, cportid,
-> +							  i2s_port, cportid,
->  						AUDIO_APBRIDGEA_DIRECTION_RX);
->  		if (ret) {
->  			dev_err_ratelimited(module->dev,
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts      | 1 +
+ 2 files changed, 2 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
+index f659e89face8..df212ed5bb94 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
+@@ -21,6 +21,7 @@
+ &enetc_port1 {
+ 	phy-handle = <&phy1>;
+ 	phy-connection-type = "rgmii-id";
++	status = "okay";
+ 
+ 	mdio {
+ 		#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+index d221ed471cde..e6ad2f64e64e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
+@@ -35,6 +35,7 @@
+ &enetc_port0 {
+ 	phy-handle = <&phy0>;
+ 	phy-connection-type = "sgmii";
++	status = "okay";
+ 
+ 	mdio {
+ 		#address-cells = <1>;
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
