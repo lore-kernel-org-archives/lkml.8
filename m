@@ -8,168 +8,165 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C13AC35677
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A32C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA1E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3202067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SD4asOnc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gySB25Dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbgBXAxj (ORCPT
+        id S1727183AbgBXA53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:53:39 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45960 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXAxj (ORCPT
+        Sun, 23 Feb 2020 19:57:29 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41657 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXA52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:53:39 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so3324267pls.12
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 16:53:38 -0800 (PST)
+        Sun, 23 Feb 2020 19:57:28 -0500
+Received: by mail-pf1-f194.google.com with SMTP id j9so4453506pfa.8;
+        Sun, 23 Feb 2020 16:57:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oRM6UBdbATulHnQYcsdVIGDvoGaSAWtDaTsLfdNkwSk=;
-        b=SD4asOncXpzZUWKu8pM3OL1iaBkAB7eFBXDvx4syXI+Fzkw0v3by0EuSDZt8wXqPAF
-         crfkBNTX8hYdEhaqjLaSnXLlJKfDQ9nJvUUhUMrbyTr1DvKZhgiVwIq2q8Xu8c1Q/XrR
-         lOcBViln2Ur7C+BfFdE0obzc0AiXzTqEjfmHJDW8SJg+7Xy71rXF1KK6uG7opqLjUc8e
-         RQY3dV/N0845afjYyj2hUaNkGggFZLL8+lD7xYjAcEkk6rsHsVFs3I7Pmh5V/5uEt3n+
-         ltfkQLL/9y5gqAEYbXKeQccHsCBamw6s7UAd6tIPKJp0hHgLSGWrEVO2rmAM+sADXGiS
-         jqWg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Aysh99lYJb0QB28h4UkvEdDsB5SZxGmd9sP09+ztSKE=;
+        b=gySB25DcqzWbfLwJ7ohcOp1/pIixZ1PNNyctooFBRKlDqn6YlsTfvTZo9ANX9C63O0
+         fbABfRUPdqH1LAQxZvdk13lKjGiFuxPOaqgwStuTHzVpKEh19g2ODfg5VmQ20OM7iC7i
+         VrQOJF8f7OLHc/apkdxzyw3/peC+a6zRJVPZ6287K8lmOt2Ja5dK6Apb1PSNBYOtb9VR
+         TK+zj8BnTM0AoPFZiMBXMXH0Gg0aLSOLfo20RJuruUDUZv62cV8nWB57XSgRvKzlFbdS
+         rXEHJU7MBwk1KCHO4SMmCuqCeMHIzVMeuk1Y+a7L1u7TVsVnEibSj1K2kO6tEdABop/n
+         s3NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oRM6UBdbATulHnQYcsdVIGDvoGaSAWtDaTsLfdNkwSk=;
-        b=b+4U0XA+nAdKCLwPvhri9zjeHxgudQVFFq7PSpkXN9n0LuTrdS1wjKaRVl06Qrg1xN
-         PIsshpMXKKlQpgv1PaShj0KqLv3L7idTWvr1fzjct4VHMMLjdCZ21e+vbPANnirwf0hA
-         LGTZylFI58OJyCbpB9BnPKKMpzUE7Dho36OAm/XnpJdL7lP8EaDpO5dt7WV28GFC0P9q
-         rYoLpCAZdDbDGd5LjY2V211bPKPeTuJRSHC1fpD/On3EkV+ST1ZKPs5Jv0nLztvpIfw9
-         mLcRrXB3NP1JsiLKUvwg1pe6JWfgAdK19rTdFAoNd5CrVz9jyFcanz20Bg9IIs3aknYo
-         3kJw==
-X-Gm-Message-State: APjAAAW/q+G5qeNV86b3hxlpvFYVp6DwPb6qRwL1xUqcEED27qO3fOPA
-        Z+aRS7Ekqi160bP8/XI1FZpWBKXkjLQ=
-X-Google-Smtp-Source: APXvYqx+a7z8Y1LyL8WKts/CuTer3QBtkOzG1k3rgY+gEmOjfGiHKumDDZGoyXYkwEmfY3kcWrTBvQ==
-X-Received: by 2002:a17:90a:8b82:: with SMTP id z2mr17826184pjn.59.1582505618293;
-        Sun, 23 Feb 2020 16:53:38 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id r9sm10584489pfl.136.2020.02.23.16.53.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Feb 2020 16:53:37 -0800 (PST)
-Date:   Mon, 24 Feb 2020 06:23:36 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Peter Xu <peterx@redhat.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v2 18/18] genirq: Remove setup_irq() and remove_irq()
-Message-ID: <dc400fd159374a38ea69f742fb67ca5df01a7ec6.1582471508.git.afzal.mohd.ma@gmail.com>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Aysh99lYJb0QB28h4UkvEdDsB5SZxGmd9sP09+ztSKE=;
+        b=GbRkf5gWlSzA6Kr9MD96t+i8WtI3tQ0VPSJtuA8HrETpXVZsicQ0w/22o7RnRxop21
+         gSyioII9p5s8q7c+extJtSr6viDGo725LQ6rrXQygiVZTWD3LdLK0NHqChUXhAQej8b2
+         W6HsjUPdYwayX79iEhfB/wqvHn07ULKRJNeTNIuFJfQDa8kyu3UjvSW3MYt9DM9fG0x9
+         xz2QKLzVADhYAEhZd6fzrocs2tB9a9ujzpKdjpbGeg+zHOwU17glO6i86cPNmUCbQhWA
+         cVI/bsgbcOH77XY/aCDNolOvrdR+6qFvrQ3zV26MaEMEyGjJTO5/9yW4/fc7bxEDiQOh
+         lijA==
+X-Gm-Message-State: APjAAAVaZrfJWI3UcCqYKl3sYzgameceee2N6CVfRnaXy/fOmChC1DIV
+        dtizDZiTPNfKNt70BM393mc=
+X-Google-Smtp-Source: APXvYqyTUJlxELEbxm86weJqlQilHU3okCeuY1dsnmFf6p7qnYUJjYoigi4EfsVi3ANhXRQyh/xkjA==
+X-Received: by 2002:aa7:95a3:: with SMTP id a3mr23494287pfk.193.1582505847947;
+        Sun, 23 Feb 2020 16:57:27 -0800 (PST)
+Received: from [192.168.1.56] ([173.195.191.75])
+        by smtp.gmail.com with ESMTPSA id s125sm10165591pgc.53.2020.02.23.16.57.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Feb 2020 16:57:27 -0800 (PST)
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+ <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+ <20200223215936.GB1751@umbus.fritz.box>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <9e77ace1-6821-1094-85e0-a68228b2609d@gmail.com>
+Date:   Sun, 23 Feb 2020 18:57:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <20200223215936.GB1751@umbus.fritz.box>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all the users of setup_irq() & remove_irq() has been replaced
-by request_irq() & free_irq() respectively, delete them.
+On 2/23/20 3:59 PM, David Gibson wrote:
+> On Fri, Feb 21, 2020 at 11:52:34AM -0600, Frank Rowand wrote:
+>> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+>>> This commit adds a new script to create a file (in dts file directory) with
+>>> some information (date, Linux version, user). This file could then be used
+>>> to populate "build-info" property in every dts file that would use this
+>>> build information:
+>>>
+>>> Example:
+>>>
+>>> / {
+>>> 	...
+>>> 	build-info = /incbin/("dtb-build.txt");
+>>
+>> s/.txt/.dtsi/
+> 
+> I don't think that makes sense.  This is an /incbin/ not an /include/
+> so the text file is *not* dts information.
 
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
+You are right, thanks for catching that.
 
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
+-Frank
 
- include/linux/irq.h |  2 --
- kernel/irq/manage.c | 44 --------------------------------------------
- 2 files changed, 46 deletions(-)
-
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 3ed5a055b5f4..29f5bad87eb3 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -560,8 +560,6 @@ enum {
- #define IRQ_DEFAULT_INIT_FLAGS	ARCH_IRQ_INIT_FLAGS
- 
- struct irqaction;
--extern int setup_irq(unsigned int irq, struct irqaction *new);
--extern void remove_irq(unsigned int irq, struct irqaction *act);
- extern int setup_percpu_irq(unsigned int irq, struct irqaction *new);
- extern void remove_percpu_irq(unsigned int irq, struct irqaction *act);
- 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 3089a60ea8f9..aa03b64605d3 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1697,34 +1697,6 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
- 	return ret;
- }
- 
--/**
-- *	setup_irq - setup an interrupt
-- *	@irq: Interrupt line to setup
-- *	@act: irqaction for the interrupt
-- *
-- * Used to statically setup interrupts in the early boot process.
-- */
--int setup_irq(unsigned int irq, struct irqaction *act)
--{
--	int retval;
--	struct irq_desc *desc = irq_to_desc(irq);
--
--	if (!desc || WARN_ON(irq_settings_is_per_cpu_devid(desc)))
--		return -EINVAL;
--
--	retval = irq_chip_pm_get(&desc->irq_data);
--	if (retval < 0)
--		return retval;
--
--	retval = __setup_irq(irq, desc, act);
--
--	if (retval)
--		irq_chip_pm_put(&desc->irq_data);
--
--	return retval;
--}
--EXPORT_SYMBOL_GPL(setup_irq);
--
- /*
-  * Internal function to unregister an irqaction - used to free
-  * regular and special interrupts that are part of the architecture.
-@@ -1865,22 +1837,6 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 	return action;
- }
- 
--/**
-- *	remove_irq - free an interrupt
-- *	@irq: Interrupt line to free
-- *	@act: irqaction for the interrupt
-- *
-- * Used to remove interrupts statically setup by the early boot process.
-- */
--void remove_irq(unsigned int irq, struct irqaction *act)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
--
--	if (desc && !WARN_ON(irq_settings_is_per_cpu_devid(desc)))
--		__free_irq(desc, act->dev_id);
--}
--EXPORT_SYMBOL_GPL(remove_irq);
--
- /**
-  *	free_irq - free an interrupt allocated with request_irq
-  *	@irq: Interrupt line to free
--- 
-2.25.1
+> 
+>> and same wherever the file name is used.
+>>
+>>
+>>> 	...
+>>> };
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>>
+>>> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+>>> index bae62549e3d2..a5af84ef4ffc 100644
+>>> --- a/scripts/Makefile.lib
+>>> +++ b/scripts/Makefile.lib
+>>> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+>>>  # DTC
+>>>  # ---------------------------------------------------------------------------
+>>>  DTC ?= $(objtree)/scripts/dtc/dtc
+>>> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
+>>>  
+>>>  # Disable noisy checks by default
+>>>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+>>> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>>>  
+>>>  quiet_cmd_dtc = DTC     $@
+>>>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>>> +	$(DTB_GEN_INFO) $(src) ; \
+>>>  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>>>  	$(DTC) -O $(2) -o $@ -b 0 \
+>>>  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+>>> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+>>> new file mode 100755
+>>> index 000000000000..0cd8bd98e410
+>>> --- /dev/null
+>>> +++ b/scripts/gen_dtb_build_info.sh
+>>> @@ -0,0 +1,10 @@
+>>> +#!/bin/bash
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +set -o nounset
+>>> +
+>>> +DTB_DIR=$1
+>>> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+>>> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+>>
+>> I would remove the filler words "From", "by", "the", and the trailing
+>> period ('.').
+>>
+>> <bikeshed>
+>> You might consider using a format more like the Linux
+>> kernel version line, which puts parenthesis around the
+>> compiled by info.
+>> </bikeshed>
+>>
+>> -Frank
+>>
+>>> +
+>>> +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
+>>>
+>>
+> 
 
