@@ -2,177 +2,368 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_RHS_DOB autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE47C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6775CC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1DA20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="d4xZ5EoR"
+	by mail.kernel.org (Postfix) with ESMTP id 2DD2120732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgBXMLJ (ORCPT
+        id S1727401AbgBXMLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:11:09 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.1]:34516 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727185AbgBXMLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:11:09 -0500
-Received: from [100.113.3.112] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-a.eu-central-1.aws.symcld.net id C5/9B-28499-95DB35E5; Mon, 24 Feb 2020 12:11:05 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRWlGSWpSXmKPExsWSoc9qoRu5Nzj
-  O4MVyEYv7X48yWlzeNYfNgcnjzrU9bB6fN8kFMEWxZuYl5VcksGZMOnKbuWCOVMX2d7MYGxg/
-  SHYxcnEwCixllpg3eRYzhHOMReLusc1sEM5mRonfvT/BHBaBE8wSG3csZwdxhAT6mSQuz3/NC
-  OHcZZQ4/fYYSxcjJwebgIXE5BMP2EBsEYFIiR1fTzKC2MwC5RL7f3xjB7GFBZIkdn45AhTnAK
-  pJljjTJwdR7iZxYst5JhCbRUBVYubDXWwgJbwCsRI/t7JArNrMJPF/5zqwGk4BTYkfTTvBVjE
-  KyEp8aVzNDLFKXOLWk/lgNRICAhJL9pxnhrBFJV4+/scKUZ8qcbLpBiNEXEfi7PUnULaixJ5z
-  C6F6ZSUuze+GivtK7J1xHWqOlsTn9m1QtoXEku5WFpA7JQRUJP4dqoQI50jc6djCDmGrSWy/d
-  h5qpIzEtldrwcEmIbCdReLNy/0sExgNZiE5exbQKGag19bv0ocIK0pM6X7IDmLzCghKnJz5hG
-  UBI8sqRsukosz0jJLcxMwcXUMDA11DQ2NdEGmgl1ilm6iXWqqbnJpXUpQIlNVLLC/WK67MTc5
-  J0ctLLdnECEw4KYUMeTsYG+e/1zvEKMnBpCTKy7UpOE6ILyk/pTIjsTgjvqg0J7X4EKMMB4eS
-  BO+MPUA5waLU9NSKtMwcYPKDSUtw8CiJ8IrtBkrzFhck5hZnpkOkTjFackx4OXcRM8fOo/OA5
-  JG5SxcxC7Hk5eelSonzBoLMEwBpyCjNgxsHS9CXGGWlhHkZGRgYhHgKUotyM0tQ5V8xinMwKg
-  nzGoFM4cnMK4Hb+groICagg5Q5AkAOKklESEk1MKXFdLZKef7OM+A9eizm6e2kmpuHf/j3W2Z
-  GfLM/Wui3MarWYuqxDIZ9l5jl74ZnfWk0kb4q3xZ6/Z20TYjutbCMXU5fmi98mVO4n+lax/Tq
-  HfkL2y5OZp9c/Ojok4iOgzVmPyfb/XgfVsTjUhO6+Hv7zdPid9re3egK35sxaUWp8+xt6ptms
-  Jnu5/bivL7nnmSHgU35ofAv+h+myd6Ns0vVTUpaocChc312nLez2YGteTIz1l5/8tXntnJrxM
-  4nun+vxyberT135KDEp32Pp07RvvLKee+h32+utJVHTzj8ahdjnYbmvIJLFooaGirfH81Z9KS
-  2foLRRv5/AZyWSUvaf9olROwLaF2y8qiOD4sSS3FGoqEWc1FxIgCNoxcXSwQAAA==
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-4.tower-233.messagelabs.com!1582546264!2319049!1
-X-Originating-IP: [104.47.5.56]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 28931 invoked from network); 24 Feb 2020 12:11:05 -0000
-Received: from mail-he1eur02lp2056.outbound.protection.outlook.com (HELO EUR02-HE1-obe.outbound.protection.outlook.com) (104.47.5.56)
-  by server-4.tower-233.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 24 Feb 2020 12:11:05 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oPMi+Bb/l7z5mPog0PmWT0hBZuuIW1utrybYiX7Psd4FQSnHtZX13meKK2LKqIZKvWGJIBowLQdbfDbPzsSy1awfVUtMlMhvcZCxTdnuZxU+QjX8PSbu1AFZDwPp3MiwAlBTO3TipZllnaX6Kyl5oEvEdcqufDy6VLHX0ajIV34FAr4rbAUJ2b17Gx3BSdg3YYdSDeiOLiFH8XFihSzvSwlMXcTS0ksGDx6EsNG05Zi8KmyxIDb0iLwRD/HhEXs+w9zEctERoK7fAdr29SQqQ4tpX/Logr941/C3Lx5XyH3Bh/id069RW4aGzTto8G+D82YX0B6k7xvjcNMKODD8tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QXI8jAjtfnbgWHKYklmIWpCQ7gGjsvRytWMQICB/5YI=;
- b=FLpVtGovcF7o2Z27vKsfWgnWvieBHbRqcO78f2g0llUkYH1IJwITHT3ulMUvnuIHWOx2WB2V3P2NO+cPG14oLYVrlDz2NF4wqsU03O7KwYjmS9HZvJmZSbdiW/CFrCGdZUElr3OZW93MocwwPRW+jzXnJXJkzZGdSGvTz7jkURHblwzomoUbs7hNTDXmEPsVl9XFIfKz8vJgzmrDX4QGUOZp/PH9Hz4yTo78dJkKyvCyDz6sIK55tXzuIVCU7hKzaxfZXp9Fk77ZzkmU19w7DAU5uZZ0PFH3T2gb8ZGfJ1orBPFK6ZPspAOSeNwS8OViYjaOn81UTafKvwDBWAmiEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QXI8jAjtfnbgWHKYklmIWpCQ7gGjsvRytWMQICB/5YI=;
- b=d4xZ5EoRSCEANqYXkrBjrPFwjYF7OP+1v0SpD0Ypxlulh3vP9ZIiVmDpTbWUSkgs3o1E69PAt0kLB6yMek5bO8fMsXB6diPAl9nsF7IM2DtXDedXETCr5fvOTwTrJuCk5n8CXrbbFtkshCxz+Ie1ZuCuv7cCxHL/ULMI3HF/xZQ=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2806.EURPRD10.PROD.OUTLOOK.COM (20.179.0.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Mon, 24 Feb 2020 12:11:03 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
- 12:11:03 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [RESEND PATCH 1/2] mfd: da9063: Fix revision handling to
- correctly select reg tables
-Thread-Topic: [RESEND PATCH 1/2] mfd: da9063: Fix revision handling to
- correctly select reg tables
-Thread-Index: AQHV0qj+Kh78pvF+10az+5Z3RzvBLKgqTCoAgAANAuCAAAw7AIAAC5Bg
-Date:   Mon, 24 Feb 2020 12:11:03 +0000
-Message-ID: <AM6PR10MB226325120B64509E3372C21980EC0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
- <c75e6e04281fd8da78cd209a888664c35a6fb8c1.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
- <20200224095654.GI3494@dell>
- <AM6PR10MB22638EDDDDFABB34D0DFC21B80EC0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <20200224112714.GT3494@dell>
-In-Reply-To: <20200224112714.GT3494@dell>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.85]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47c21509-94f2-4bdf-cb63-08d7b9229e8b
-x-ms-traffictypediagnostic: AM6PR10MB2806:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB28064260281DC5B77EAD4009A7EC0@AM6PR10MB2806.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 032334F434
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(376002)(39850400004)(136003)(199004)(189003)(5660300002)(81156014)(55236004)(53546011)(81166006)(71200400001)(6506007)(316002)(4326008)(966005)(2906002)(478600001)(86362001)(55016002)(33656002)(64756008)(66446008)(107886003)(7696005)(26005)(110136005)(54906003)(66476007)(8936002)(66946007)(8676002)(186003)(9686003)(76116006)(66556008)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2806;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mp3mp9XMfmj1pqaEAkhUJV1P/+F28P6hgIzBIIleTizza4SgVU2sUmkX73oUZ7jxFzZPMcgXAW2TXLEE3eLLacSsfFh02BghFPCimbKhKypnqbcGmXmybOucKPinBkweDLGw/+wlEaNb1k5LbQ5XiXb5gPLZoHSycMlFYFP64NtPjZlLth8ADgPIjsS6d+8WA4grPwi2OqrUuy6pi/T0goab7or3iHFHa7Yf+MxgAXXQmk3Bmn7JsXa7Dej9U6TulzgAAZ2sbP5dy00qgO73lcktsdD6SmtIOXFlD6o+deBfO28ud2g9FHnmryOfrn0+nd51+fyUMsGqXh5/48/ErBnOn+6UJjL+a80LgX9qTiVFXx1YZtoSwoNBvJbS/y+Hij+n66y8OeuqCO+U3NRzDpeW1eAJvKAfsFLCHfJdiEK7eKNSKvzh8Zk5VkdvRGkqRsA0rqveLE46pI+r1oM/9iyfjHwyIjK9A9hxFF7WbyHJ/56WUsedo4B7ZZUrg1sxOrYpf7WmyBnRO3BafQkxow==
-x-ms-exchange-antispam-messagedata: 5F7W6zEQPDXoAmTiheyKzSODbgAziJkIBvU8SWi5rZBoeWX9VWtOt4DAbeGWSq/TkFMckkJiWdVLsIssTtWaDko7B87FlD6xMHdBgFszdFzYfnAVEu5aVygaNkZ9V03Hi03i82TSP06RY4EiuCCkPA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Feb 2020 07:11:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:36186 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727185AbgBXMLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:11:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FE7630E;
+        Mon, 24 Feb 2020 04:11:43 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10B0B3F534;
+        Mon, 24 Feb 2020 04:11:41 -0800 (PST)
+Date:   Mon, 24 Feb 2020 12:11:39 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] sched/rt: Better manage pushing unfit tasks on
+ wakeup
+Message-ID: <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
+References: <20200223184001.14248-1-qais.yousef@arm.com>
+ <20200223184001.14248-6-qais.yousef@arm.com>
+ <20200224061004.GH28029@codeaurora.org>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47c21509-94f2-4bdf-cb63-08d7b9229e8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 12:11:03.5219
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JncSL6zpiByGVbnLpk6luO0rOCcqFus8oyZvTEBN721j2Jhn1qJa3D+ogRUfxeRQi/a+OaVkxheS1xksBoUVFaLUCN9AEFHVgQiUB3Wh0DM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2806
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200224061004.GH28029@codeaurora.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjQgRmVicnVhcnkgMjAyMCAxMToyNywgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwg
-MjQgRmViIDIwMjAsIEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gDQo+ID4gT24gMjQgRmVicnVhcnkg
-MjAyMCAwOTo1NywgTGVlIEpvbmVzIHdyb3RlOg0KPiA+DQo+ID4gPiBPbiBGcmksIDI0IEphbiAy
-MDIwLCBBZGFtIFRob21zb24gd3JvdGU6DQo+ID4gPg0KPiA+ID4gPiBUaGUgY3VycmVudCBpbXBs
-ZW1lbnRhdGlvbiBwZXJmb3JtcyBjaGVja2luZyBpbiB0aGUgaTJjX3Byb2JlKCkNCj4gPiA+ID4g
-ZnVuY3Rpb24gb2YgdGhlIHZhcmlhbnRfY29kZSBidXQgZG9lcyB0aGlzIGltbWVkaWF0ZWx5IGFm
-dGVyIHRoZQ0KPiA+ID4gPiBjb250YWluaW5nIHN0cnVjdCBoYXMgYmVlbiBpbml0aWFsaXNlZCBh
-cyBhbGwgemVyby4gVGhpcyBtZWFucyB0aGUNCj4gPiA+ID4gY2hlY2sgZm9yIHZhcmlhbnQgY29k
-ZSB3aWxsIGFsd2F5cyBkZWZhdWx0IHRvIHVzaW5nIHRoZSBCQiB0YWJsZXMNCj4gPiA+ID4gYW5k
-IHdpbGwgbmV2ZXIgc2VsZWN0IEFELiBUaGUgdmFyaWFudCBjb2RlIGlzIHN1YnNlcXVlbnRseSBz
-ZXQNCj4gPiA+ID4gYnkgZGV2aWNlX2luaXQoKSBhbmQgbGF0ZXIgdXNlZCBieSB0aGUgUlRDIHNv
-IHJlYWxseSBpdCdzIGEgbGl0dGxlDQo+ID4gPiA+IGZvcnR1bmF0ZSB0aGlzIG1pc21hdGNoIHdv
-cmtzLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGlzIHVwZGF0ZSBjcmVhdGVzIGFuIGluaXRpYWwgdGVt
-cG9yYXJ5IHJlZ21hcCBpbnN0YW50aWF0aW9uIHRvDQo+ID4gPiA+IHNpbXBseSByZWFkIHRoZSBj
-aGlwIGFuZCB2YXJpYW50L3JldmlzaW9uIGluZm9ybWF0aW9uIChjb21tb24gdG8NCj4gPiA+ID4g
-YWxsIHJldmlzaW9ucykgc28gdGhhdCBpdCBjYW4gc3Vic2VxdWVudGx5IGNvcnJlY3RseSBjaG9v
-c2UgdGhlDQo+ID4gPiA+IHByb3BlciByZWdtYXAgdGFibGVzIGZvciByZWFsIGluaXRpYWxpc2F0
-aW9uLg0KPiA+ID4NCj4gPiA+IElJVUMsIHlvdSBoYXZlIGEgZGVwZW5kZW5jeSBpc3N1ZSB3aGVy
-ZWJ5IHRoZSBkZXZpY2UgdHlwZSBpcyByZXF1aXJlZA0KPiA+ID4gYmVmb3JlIHlvdSBjYW4gc2Vs
-ZWN0IHRoZSBjb3JyZWN0IFJlZ21hcCBjb25maWd1cmF0aW9uLiAgSXMgdGhhdA0KPiA+ID4gY29y
-cmVjdD8NCj4gPg0KPiA+IFllcCwgc3BvdCBvbi4NCj4gPg0KPiA+ID4gSWYgc28sIHVzaW5nIFJl
-Z21hcCBmb3IgdGhlIGluaXRpYWwgcmVnaXN0ZXIgcmVhZHMgc291bmRzIGxpa2UNCj4gPiA+IG92
-ZXIta2lsbC4gIFdoYXQncyBzdG9wcGluZyB5b3Ugc2ltcGx5IHVzaW5nIHJhdyByZWFkcyBiZWZv
-cmUgdGhlDQo+ID4gPiBSZWdtYXAgaXMgaW5zdGFudGlhdGVkPw0KPiA+DQo+ID4gQWN0dWFsbHkg
-bm90aGluZyBhbmQgSSBkaWQgY29uc2lkZXIgdGhpcyBhdCB0aGUgc3RhcnQuIE5pY2UgdGhpbmcg
-d2l0aCByZWdtYXANCj4gPiBpcyBpdCdzIGFsbCB0aWRpbHkgY29udGFpbmVkIGFuZCBwcm92aWRl
-cyB0aGUgcGFnZSBzd2FwcGluZyBtZWNoYW5pc20gdG8gYWNjZXNzDQo+ID4gaGlnaGVyIHBhZ2Ug
-cmVnaXN0ZXJzIGxpa2UgdGhlIHZhcmlhbnQgaW5mb3JtYXRpb24uIEdpdmVuIHRoaXMgaXMgb25s
-eSBvbmNlIGF0DQo+ID4gcHJvYmUgdGltZSBpdCBmZWx0IGxpa2UgdGhpcyB3YXMgYSByZWFzb25h
-YmxlIHNvbHV0aW9uLiBIb3dldmVyIGlmIHlvdSdyZSBub3QNCj4gPiBrZWVuIEkgY2FuIHVwZGF0
-ZSB0byB1c2UgcmF3IGFjY2VzcyBpbnN0ZWFkLg0KPiANCj4gSXQgd291bGQgYmUgbmljZSB0byBj
-b21wYXJlIHRoZSAyIHNvbHV0aW9ucyBzaWRlIGJ5IHNpZGUuICBJIGNhbid0IHNlZQ0KPiB0aGUg
-cmF3IHJlYWRzIG9mIGEgZmV3IGRldmljZS1JRCByZWdpc3RlcnMgYmVpbmcgYW55d2hlcmUgbmVh
-ciAxNzANCj4gbGluZXMgdGhvdWdoLg0KDQpUbyBiZSBmYWlyIHRoZSByZWdtYXAgc3BlY2lmaWMg
-YWRkaXRpb25zIGZvciB0aGUgdGVtcG9yYXJ5IHJlZ2lzdGVyIGFjY2VzcywgYXJlDQptYXliZSA1
-MCAtIDYwIGxpbmVzLiBUaGUgcmVzdCBpcyB0byBkbyB3aXRoIGhhbmRsaW5nIHRoZSByZXN1bHQg
-d2hpY2ggeW91J2xsDQpuZWVkIGFueXdheSB0byBzZWxlY3QgdGhlIGNvcnJlY3QgcmVnaXN0ZXIg
-bWFwLiBJIHJlY2tvbiB0byBwcm92aWRlIHJhdyByZWFkIGFuZA0Kd3JpdGUgYWNjZXNzIHdlJ3Jl
-IGdvaW5nIHRvIHByb2JhYmx5IGJlIHNpbWlsYXIgb3IgbW9yZSBhcyB3ZSdsbCBuZWVkIHRvIHdy
-aXRlDQp0aGUgcGFnZSByZWdpc3RlciB0aGVuIHJlYWQgZnJvbSB0aGUgcmVsZXZhbnQgSUQgcmVn
-aXN0ZXJzLiBVc2luZyB0aGlzIGFuDQpleGFtcGxlIGZvciB0aGUgbGluZXMgY291bnQ6DQoNCmh0
-dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvZHJpdmVycy9tZmQv
-dHBzNjUwN3guYyNMMzcNCg0KSSBjYW4ga25vY2sgc29tZXRoaW5nIHRvZ2V0aGVyIHRob3VnaCBq
-dXN0IHRvIHNlZSB3aGF0IGl0IGxvb2tzIGxpa2UuDQo=
+On 02/24/20 11:40, Pavan Kondeti wrote:
+> Hi Qais,
+> 
+> On Sun, Feb 23, 2020 at 06:40:00PM +0000, Qais Yousef wrote:
+> > On wakeup, if a task doesn't fit the CPU it is running on (due to its
+> > uclamp_min value), then we trigger the push mechanism to try to find a
+> > more suitable CPU.
+> > 
+> > But the logic introduced in commit 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
+> > was incomplete. If the rq isn't overloaded, push_rt_task() will bail out
+> > immediately.
+> > 
+> > Steve suggested using the overloaded flag to force the push, but as
+> > Pavan pointed out this could cause a lot of unnecessary IPIs in case of
+> > HAVE_RT_PUSH_IPI.
+> > 
+> > To still allow pushing unfitting task ASAP, but without causing a lot of
+> > disturbance in case this is not possible (no available CPU that is
+> > running at a lower priority level), introduce a new rt_nr_unfitting in
+> > struct rt_rq and use that to manage how hard we try to push an unfitting
+> > task in push_rt_task().
+> > 
+> 
+> The 1-4 patches in this series are looking good to me.
+> 
+> At this point (after applying 4 patches), removing rt_task_fits_capacity()
+> check from switched_to_rt() and task_woken_rt() would be sufficient, I think.
+> i.e no changes to push/pull logic and we have a fallback for wakeup time cpu
+> selection.
+> 
+> It is not clear what you meant by pushing the unfit task ASAP. A running
+> task on a little CPU can not be pushed to BIG CPU. That would require waking
+> a migration task to do the migration. The other problem is if CPU has more
+> than 2 tasks (excluding running task) which one to be pushed. Are you trying
+> to solve this problem?
+
+Not that's not the problem I'm trying to solve.
+
+Without this patch, spawning 2 tasks in Juno, I see a delay in one of the tasks
+to move to a big CPU, despite the CPU not having any tasks running on it.
+
+> 
+> 
+> > If the task is pinned to a single CPU, we won't inc rt_nr_unfitting,
+> > hence skipping the push in this case.
+> > 
+> > Also there's no need to force a push on switched_to_rt(). On the next
+> > wakeup we should handle it which should suffice.
+> > 
+> > Fixes: 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
+> > LINK: https://lore.kernel.org/lkml/20200221080701.GF28029@codeaurora.org/
+> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > ---
+> >  kernel/sched/rt.c    | 100 +++++++++++++++++++++++++++++++++++++++----
+> >  kernel/sched/sched.h |   3 ++
+> >  2 files changed, 95 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> > index 9ae8a9fabe8b..b35e49cdafcc 100644
+> > --- a/kernel/sched/rt.c
+> > +++ b/kernel/sched/rt.c
+> > @@ -11,6 +11,7 @@ int sched_rr_timeslice = RR_TIMESLICE;
+> >  int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
+> >  
+> >  static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
+> > +static bool rt_task_fits_capacity(struct task_struct *p, int cpu);
+> >  
+> >  struct rt_bandwidth def_rt_bandwidth;
+> >  
+> > @@ -313,6 +314,27 @@ static void update_rt_migration(struct rt_rq *rt_rq)
+> >  	}
+> >  }
+> >  
+> > +#ifdef CONFIG_UCLAMP_TASK
+> > +static void inc_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq)
+> > +{
+> > +	int cpu = cpu_of(rq_of_rt_rq(rt_rq));
+> > +
+> > +	if (!rt_task_fits_capacity(p, cpu))
+> > +		rt_rq->rt_nr_unfit++;
+> > +}
+> > +
+> > +static void dec_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq)
+> > +{
+> > +	int cpu = cpu_of(rq_of_rt_rq(rt_rq));
+> > +
+> > +	if (!rt_task_fits_capacity(p, cpu))
+> > +		rt_rq->rt_nr_unfit--;
+> > +}
+> > +#else
+> > +static void inc_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq) {}
+> > +static void dec_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq) {}
+> > +#endif
+> > +
+> >  static void inc_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
+> >  {
+> >  	struct task_struct *p;
+> > @@ -324,9 +346,17 @@ static void inc_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
+> >  	rt_rq = &rq_of_rt_rq(rt_rq)->rt;
+> >  
+> >  	rt_rq->rt_nr_total++;
+> > -	if (p->nr_cpus_allowed > 1)
+> > +	if (p->nr_cpus_allowed > 1) {
+> >  		rt_rq->rt_nr_migratory++;
+> >  
+> > +		/*
+> > +		 * The task is dequeued and queue again on set_cpus_allowed(),
+> > +		 * so we can't end up with a unbalanced inc/dec if
+> > +		 * p->nr_cpus_allowed has changed.
+> > +		 */
+> > +		inc_rt_unfit_tasks(p, rt_rq);
+> > +	}
+> > +
+> >  	update_rt_migration(rt_rq);
+> >  }
+> >  
+> > @@ -341,12 +371,29 @@ static void dec_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
+> >  	rt_rq = &rq_of_rt_rq(rt_rq)->rt;
+> >  
+> >  	rt_rq->rt_nr_total--;
+> > -	if (p->nr_cpus_allowed > 1)
+> > +	if (p->nr_cpus_allowed > 1) {
+> >  		rt_rq->rt_nr_migratory--;
+> >  
+> > +		/*
+> > +		 * The task is dequeued and queue again on set_cpus_allowed(),
+> > +		 * so we can't end up with a unbalanced inc/dec if
+> > +		 * p->nr_cpus_allowed has changed.
+> > +		 */
+> > +		dec_rt_unfit_tasks(p, rt_rq);
+> > +	}
+> > +
+> 
+> When uclamp values are changed via cgroups or global sysctl knobs, we don't
+> enqueue/dequeue all tasks similar to sched_setattr. So a task that was fit
+> at enqueue time can become unfit if uclamp values are changed in between.
+
+Hmm good point.
+
+> 
+> >  	update_rt_migration(rt_rq);
+> >  }
+> >  
+> > +static inline int has_unfit_tasks(struct rq *rq)
+> > +{
+> > +#ifdef CONFIG_UCLAMP_TASK
+> > +	return rq->rt.rt_nr_unfit;
+> > +#else
+> > +	return 0;
+> > +#endif
+> > +}
+> > +
+> >  static inline int has_pushable_tasks(struct rq *rq)
+> >  {
+> >  	return !plist_head_empty(&rq->rt.pushable_tasks);
+> > @@ -1862,8 +1909,9 @@ static int push_rt_task(struct rq *rq)
+> >  	struct task_struct *next_task;
+> >  	struct rq *lowest_rq;
+> >  	int ret = 0;
+> > +	bool fit;
+> >  
+> > -	if (!rq->rt.overloaded)
+> > +	if (!rq->rt.overloaded && !has_unfit_tasks(rq))
+> >  		return 0;
+> >  
+> 
+> When there is one unfit RT task, are we setting overloaded anywhere due
+> to fitness check? I don't see that in this patch.
+
+No. I abandoned tinkering with the overloaded flag, it'd make things more
+complex than I'd like them to.
+
+> Even if we set overload condition, we can't push the running task.
+
+This gives me the desired effect. I do see the task moving to the right CPU in
+2 RT tasks test. Without it, if an RT task was spawned on little CPU I could
+see a big delay for it to move to a big CPU although the big CPU is free.
+
+> 
+> >  	next_task = pick_next_pushable_task(rq);
+> > @@ -1874,12 +1922,21 @@ static int push_rt_task(struct rq *rq)
+> >  	if (WARN_ON(next_task == rq->curr))
+> >  		return 0;
+> >  
+> > +	/*
+> > +	 * The rq could be overloaded because it has unfitting task, if that's
+> > +	 * the case then we need to try harder to find a better fitting CPU.
+> > +	 */
+> > +	fit = rt_task_fits_capacity(next_task, cpu_of(rq));
+> > +
+> >  	/*
+> >  	 * It's possible that the next_task slipped in of
+> >  	 * higher priority than current. If that's the case
+> >  	 * just reschedule current.
+> > +	 *
+> > +	 * Unless next_task doesn't fit in this cpu, then continue with the
+> > +	 * attempt to push it.
+> >  	 */
+> > -	if (unlikely(next_task->prio < rq->curr->prio)) {
+> > +	if (unlikely(next_task->prio < rq->curr->prio && fit)) {
+> >  		resched_curr(rq);
+> >  		return 0;
+> >  	}
+> > @@ -1922,6 +1979,35 @@ static int push_rt_task(struct rq *rq)
+> >  		goto retry;
+> >  	}
+> >  
+> > +	/*
+> > +	 * Bail out if the task doesn't fit on either CPUs.
+> > +	 *
+> > +	 * Unless..
+> > +	 *
+> > +	 * * The rq is already overloaded, then push anyway.
+> > +	 *
+> > +	 * * The priority of next_task is higher than current, then we
+> > +	 *   resched_curr(). We forced skipping this condition above if the rq
+> > +	 *   was overloaded but the task didn't fit.
+> > +	 */
+> > +	if (!fit && !rt_task_fits_capacity(next_task, cpu_of(lowest_rq))) {
+> > +
+> > +		/*
+> > +		 * If the system wasn't overloaded, then pretend we didn't run.
+> > +		 */
+> > +		if (!rq->rt.overloaded)
+> > +			goto out_unlock;
+> > +
+> > +		/*
+> > +		 * If the system is overloaded, we forced skipping this
+> > +		 * condition, so re-evaluate it.
+> > +		 */
+> > +		if (unlikely(next_task->prio < rq->curr->prio)) {
+> > +			resched_curr(rq);
+> > +			goto out_unlock;
+> > +		}
+> > +	}
+> > +
+> >  	deactivate_task(rq, next_task, 0);
+> >  	set_task_cpu(next_task, lowest_rq->cpu);
+> >  	activate_task(lowest_rq, next_task, 0);
+> > @@ -1929,6 +2015,7 @@ static int push_rt_task(struct rq *rq)
+> >  
+> >  	resched_curr(lowest_rq);
+> >  
+> > +out_unlock:
+> >  	double_unlock_balance(rq, lowest_rq);
+> >  
+> >  out:
+> > @@ -2297,10 +2384,7 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
+> >  	 */
+> >  	if (task_on_rq_queued(p) && rq->curr != p) {
+> >  #ifdef CONFIG_SMP
+> > -		bool need_to_push = rq->rt.overloaded ||
+> > -				    !rt_task_fits_capacity(p, cpu_of(rq));
+> > -
+> > -		if (p->nr_cpus_allowed > 1 && need_to_push)
+> > +		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
+> >  			rt_queue_push_tasks(rq);
+> 
+> Right. What about the check in task_woken_rt()? We should remove it
+> from there too.
+
+We could do, temporarily, to get these fixes into 5.6. But I do think
+select_task_rq_rt() doesn't do a good enough job into pushing unfit tasks to
+the right CPUs.
+
+I don't understand the reasons behind your objection. It seems you think that
+select_task_rq_rt() should be enough, but not AFAICS. Can you be a bit more
+detailed please?
+
+FWIW, here's a screenshot of what I see
+
+	https://imgur.com/a/peV27nE
+
+After the first activation, select_task_rq_rt() fails to find the right CPU
+(due to the same move all tasks to the cpumask_fist()) - but when the task
+wakes up on 4, the logic I put causes it to migrate to CPU2, which is the 2nd
+big core. CPU1 and CPU2 are the big cores on Juno.
+
+Now maybe we should fix select_task_rq_rt() to better balance tasks, but not
+sure how easy is that.
+
+Steve suggested the overload idea, so I assumed it's okay. But given the IPI
+issue you highlighted, I thought better not make overloaded conditions more
+complex and just a take a simpler approach which I think should be fine - bar
+the uclamp caveat you highlighted. Which should be solvable..
+
+Thanks
+
+--
+Qais Yousef
+
+> 
+> >  #endif /* CONFIG_SMP */
+> >  		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index 1a88dc8ad11b..7dea81ccd49a 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -603,6 +603,9 @@ struct rt_rq {
+> >  #ifdef CONFIG_SMP
+> >  	unsigned long		rt_nr_migratory;
+> >  	unsigned long		rt_nr_total;
+> > +#ifdef CONFIG_UCLAMP_TASK
+> > +	unsigned long		rt_nr_unfit;
+> > +#endif
+> >  	int			overloaded;
+> >  	struct plist_head	pushable_tasks;
+> >  
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
