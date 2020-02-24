@@ -2,177 +2,213 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CBCC11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F7C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DC620836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA99620836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:52:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O7yCyLmD"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="gZzHaEcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgBXRwQ (ORCPT
+        id S1727939AbgBXRwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:52:16 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:49658 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgBXRwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:52:15 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OHnQiC003213;
-        Mon, 24 Feb 2020 17:51:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=IdkzpILR6vBAHlc8aaDsjs8ao4gxJyHcYNKDq6bhgwo=;
- b=O7yCyLmDlRlL/snRdEAddiBsq1jhkdE9wiqNbDoUTEDtecDQWq6VkCb1+YyrS1GwXLIS
- HprZ9WYRHvgv6jPkWi/y2+LjjsP4D/3vpDmc49xUSNF6GiA7+nEfeh1UcGRe3zRKEK6l
- qvDGNWCKMNfKdXew0ROWHV4OEKjNabhGWQFlv4IQT5At2z64qv9owVFxZP/zw5LyejsO
- ILir0ngDtThZdKM83zD3Enanw+GJENgzFHuiiXaIwVwHzX04WnteVakYiwpgTWR1x9z7
- xoQ2xR/HueUuWqt2X3EVfWo+zwXuvHq1uofgM/HZZgnfk2wCEsETXtfHpPahYvwL+IEi ww== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2yauqu909w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 17:51:05 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OHltqr121370;
-        Mon, 24 Feb 2020 17:51:05 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2ybe11rqn0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Feb 2020 17:51:05 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01OHp4kg130076;
-        Mon, 24 Feb 2020 17:51:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2ybe11rqm6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 17:51:04 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01OHp2fW012446;
-        Mon, 24 Feb 2020 17:51:02 GMT
-Received: from [10.209.227.41] (/10.209.227.41)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 09:51:02 -0800
-Subject: Re: general protection fault in rds_ib_add_one
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+274094e62023782eeb17@syzkaller.appspotmail.com>,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        rds-devel@oss.oracle.com, syzkaller-bugs@googlegroups.com
-References: <20200224103913.2776-1-hdanton@sina.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <8c0a6d58-fd96-ded0-d5ad-a8ffc8d7a620@oracle.com>
-Date:   Mon, 24 Feb 2020 09:51:01 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Mon, 24 Feb 2020 12:52:45 -0500
+Received: from mail-bn7nam10on2060.outbound.protection.outlook.com ([40.107.92.60]:20128
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727426AbgBXRwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:52:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H0aSU9sT1abNs7RUC+zpaWpVZwbE2EyOzZbKIS8xGGPEZHl23JsQRYxnFNqOKgTnu3WLvHB2BK4P6fI5XWQtj5SeT5kqunAaJU+/RERPRfUhg7WAPY/9PfbP+YzdsJnMHipuZBzadF6oOsoo+09TwHBqOB7S+I3ZJQI37M3cScxIwc7w+ZNpQCYEzQVK3OJLAvoeGDhGH+txw6w8mbCRXb/uQxVWgXHQB/+uY8oCZsdDRjsUStP0zRAOulM/xlTwyPgCU5arFVH0zhsyd5Opxo28LRT1CfMMx/tcNVHrfMvD409WnVUfy8R+Lwn9bgli1KZblDvP4r86vPizpKVM7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TlOLxhheTmJ7VFpAza6SiAmhY+0TDqWub//Lg7ORgyg=;
+ b=Ftfc7whG4TeXb00vMWU8B81izpfgE4JIXB9yoGnTz0PPaPt2Vlv73lTHECsc18M2AhNUl4lyvgQmvKpoNGKsZhs2ig+qOjhJ3uat5KxYPHWORp5I+8RoZhp2epi/E/i4ireFTyqxUkH/zVZO935G7xboe/WJs3Ux34UISZBncVNI06GNa1lloHHcQNtWiZm9fV5JIGVhl2R/LRvwobMq0MFqxgqx8s3vLOjyf84coYUnNppcImjTnsD7zNXsXsrYjKoduC8tkyxK1QlPIh+CXiYsKz+3DVfU2qfFi8Lx0DuceX/Jsbba2ngTGFiVwLd946SQZShitPXPQGGtkx9Hrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TlOLxhheTmJ7VFpAza6SiAmhY+0TDqWub//Lg7ORgyg=;
+ b=gZzHaEcyAXIl/taHiV03/xMAYgeLiqGysG6quLLfVaTyd7leC40+iQblKLJStywM0jMW6ehAk32TeLxTs9B5IDroA1TZAgM5kBTvNEzR0theyaOakr2gPCh9QS2cMPsEG8AbRCo1ruPnIZuTCCjFVX7kgxvRTK0m/SlgjLL8LSo=
+Received: from BL0PR02CA0105.namprd02.prod.outlook.com (2603:10b6:208:51::46)
+ by CH2PR02MB6760.namprd02.prod.outlook.com (2603:10b6:610:7f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17; Mon, 24 Feb
+ 2020 17:52:42 +0000
+Received: from BL2NAM02FT006.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::206) by BL0PR02CA0105.outlook.office365.com
+ (2603:10b6:208:51::46) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
+ Transport; Mon, 24 Feb 2020 17:52:41 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT006.mail.protection.outlook.com (10.152.76.239) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
+ via Frontend Transport; Mon, 24 Feb 2020 17:52:41 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1j6HuL-0006VH-09; Mon, 24 Feb 2020 09:52:41 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1j6HuF-0007aa-TS; Mon, 24 Feb 2020 09:52:35 -0800
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01OHqV0I001813;
+        Mon, 24 Feb 2020 09:52:31 -0800
+Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1j6HuB-0007aE-LD; Mon, 24 Feb 2020 09:52:31 -0800
+From:   Ben Levinsky <ben.levinsky@xilinx.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/5] firmware: xilinx: Add zynqmp_get_node_status API
+Date:   Mon, 24 Feb 2020 09:52:29 -0800
+Message-Id: <1582566751-13118-4-git-send-email-ben.levinsky@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
+References: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39850400004)(376002)(396003)(136003)(199004)(189003)(44832011)(426003)(336012)(36756003)(478600001)(70206006)(70586007)(7696005)(9786002)(5660300002)(2906002)(356004)(26005)(316002)(8936002)(2616005)(186003)(4326008)(8676002)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6760;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-In-Reply-To: <20200224103913.2776-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- clxscore=1011 malwarescore=0 impostorscore=0 adultscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240132
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 66bb1543-414f-4b26-72e3-08d7b9525863
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6760:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB676003BA3B7CA8DCC9606AA6B5EC0@CH2PR02MB6760.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-Forefront-PRVS: 032334F434
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EUbnVppEtPYRWfOZR1ky/YB94mw8FwQgbaEWv0Li6uYpi9mMh5yG4ReA9GmhdAp4XNocgtOry0srifFnCYXeAobte2mrLYLInzSPelhQe1tBs1pXOSfbrrlD1v3jbWu+8O/oRDckScFvMRAADvP+OFByxgtY25a6gGr2fcBb5Nb+4gWY1frUUn6MAJNdGS6IH7JFaGynZxHk2rkkXzdCmFm+49b+o9DPJXvki9n8qTb+X3RP/aphiCDavqQ2C/5u+pZ7950ZFpnr06YM940n9/9CdOjgK6HA+RFNov1HtZv3iLrTEhJyFMk1QJZ1jUz4l25nMyc/LHVWB0Jdmt/kYHF7+qiO32HatshjdCSQ47T0K27nbTKa/SVKutYNXmaaXkH9jUJD5QjnpvKhoFXiOxQPUw9w2nL/pC8pI8G0dy/t9DVFSi3DBTlkjUtq1cFF
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 17:52:41.5181
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66bb1543-414f-4b26-72e3-08d7b9525863
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6760
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 2:39 AM, Hillf Danton wrote:
-> 
-> On Mon, 24 Feb 2020 00:38:13 -0800
->> syzbot found the following crash on:
->>
->> HEAD commit:    b0dd1eb2 Merge branch 'akpm' (patches from Andrew)
->> git tree:       upstream
->> console output: https://urldefense.com/v3/__https://syzkaller.appspot.com/x/log.txt?x=13db9de9e00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauXTR6PmUg$
->> kernel config:  https://urldefense.com/v3/__https://syzkaller.appspot.com/x/.config?x=a6001be4097ab13c__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauUIjkEraA$
->> dashboard link: https://urldefense.com/v3/__https://syzkaller.appspot.com/bug?extid=274094e62023782eeb17__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauXEUExfYg$
->> compiler:       clang version 10.0.0 (https://urldefense.com/v3/__https://github.com/llvm/llvm-project/__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauUcUeVf2A$  c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->> syz repro:      https://urldefense.com/v3/__https://syzkaller.appspot.com/x/repro.syz?x=10ad6a7ee00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauX2w5ISoA$
->> C reproducer:   https://urldefense.com/v3/__https://syzkaller.appspot.com/x/repro.c?x=13da7a29e00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauUf3qIVeQ$
->>
->> Bisection is inconclusive: the first bad commit could be any of:
+This patch adds a new API to provide access to the
+current power state of a sub-system on Zynqmp sub-system.
 
-[...]
+Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+---
+ drivers/firmware/xilinx/zynqmp.c     | 42 ++++++++++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  3 +++
+ 2 files changed, 45 insertions(+)
 
->> 868df536 Merge branch 'odp_fixes' into rdma.git for-next
->>
->> bisection log:  https://urldefense.com/v3/__https://syzkaller.appspot.com/x/bisect.txt?x=1542127ee00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauVrB3NY9g$
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+274094e62023782eeb17@syzkaller.appspotmail.com
->>
->> batman_adv: batadv0: Interface activated: batadv_slave_1
->> infiniband syz1: set active
->> infiniband syz1: added vlan0
->> general protection fault, probably for non-canonical address 0xdffffc0000000086: 0000 [#1] PREEMPT SMP KASAN
->> KASAN: null-ptr-deref in range [0x0000000000000430-0x0000000000000437]
->> CPU: 0 PID: 8852 Comm: syz-executor043 Not tainted 5.6.0-rc2-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> RIP: 0010:dev_to_node include/linux/device.h:663 [inline]
->> RIP: 0010:rds_ib_add_one+0x81/0xe50 net/rds/ib.c:140
->> Code: b7 a8 06 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 28 00 74 08 4c 89 f7 e8 0e e4 1d fa bb 30 04 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <42> 8a 04 28 84 c0 0f 85 f0 0a 00 00 8b 1b 48 c7 c0 28 0c 09 89 48
->> RSP: 0018:ffffc90003087298 EFLAGS: 00010202
->> RAX: 0000000000000086 RBX: 0000000000000430 RCX: 0000000000000000
->> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000001
->> RBP: ffffc900030872f0 R08: ffffffff87964c3c R09: ffffed1014fd109c
->> R10: ffffed1014fd109c R11: 0000000000000000 R12: 0000000000000000
->> R13: dffffc0000000000 R14: ffff8880a7e886a8 R15: ffff8880a7e88000
->> FS:  0000000000c3d880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007f0318ed0000 CR3: 00000000a3167000 CR4: 00000000001406f0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
->>   add_client_context+0x482/0x660 drivers/infiniband/core/device.c:681
->>   enable_device_and_get+0x15b/0x370 drivers/infiniband/core/device.c:1316
->>   ib_register_device+0x124d/0x15b0 drivers/infiniband/core/device.c:1382
->>   rxe_register_device+0x3f6/0x530 drivers/infiniband/sw/rxe/rxe_verbs.c:1231
->>   rxe_add+0x1373/0x14f0 drivers/infiniband/sw/rxe/rxe.c:302
->>   rxe_net_add+0x79/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:539
->>   rxe_newlink+0x31/0x90 drivers/infiniband/sw/rxe/rxe.c:318
->>   nldev_newlink+0x403/0x4a0 drivers/infiniband/core/nldev.c:1538
->>   rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
->>   rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
->>   rdma_nl_rcv+0x701/0xa20 drivers/infiniband/core/netlink.c:259
->>   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
->>   netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
->>   netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
->>   sock_sendmsg_nosec net/socket.c:652 [inline]
->>   sock_sendmsg net/socket.c:672 [inline]
->>   ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
->>   ___sys_sendmsg net/socket.c:2397 [inline]
->>   __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
->>   __do_sys_sendmsg net/socket.c:2439 [inline]
->>   __se_sys_sendmsg net/socket.c:2437 [inline]
->>   __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
->>   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
->>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Fall back to NUMA_NO_NODE if needed.
-> 
-> --- a/net/rds/ib.c
-> +++ b/net/rds/ib.c
-> @@ -137,7 +137,8 @@ static void rds_ib_add_one(struct ib_dev
->   		return;
->   
->   	rds_ibdev = kzalloc_node(sizeof(struct rds_ib_device), GFP_KERNEL,
-> -				 ibdev_to_node(device));
-> +				 device->dev.parent ?
-> +				 ibdev_to_node(device) : NUMA_NO_NODE);
->   	if (!rds_ibdev)
->   		return;
->   
-> 
-This seems good. Can you please post it as properly formatted patch ?
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 486dcb1..98e35d4 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -725,6 +725,47 @@ static int zynqmp_pm_request_wakeup(const u32 node,
+ }
+ 
+ /**
++ * zynqmp_pm_get_node_status - PM call to request a node's current power state
++ * @node:		ID of the component or sub-system in question
++ * @status:		Current operating state of the requested node
++ * @requirements:	Current requirements asserted on the node,
++ *			used for slave nodes only.
++ * @usage:		Usage information, used for slave nodes only:
++ *			PM_USAGE_NO_MASTER	- No master is currently using
++ *						  the node
++ *			PM_USAGE_CURRENT_MASTER	- Only requesting master is
++ *						  currently using the node
++ *			PM_USAGE_OTHER_MASTER	- Only other masters are
++ *						  currently using the node
++ *			PM_USAGE_BOTH_MASTERS	- Both the current and at least
++ *						  one other master is currently
++ *						  using the node
++ *
++ * Return:		Returns status, either success or error+reason
++ */
++static int zynqmp_pm_get_node_status(const u32 node, u32 *const status,
++				     u32 *const requirements, u32 *const usage)
++{
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	int ret;
++
++	if (!status)
++		return -EINVAL;
++
++	ret = zynqmp_pm_invoke_fn(PM_GET_NODE_STATUS, node, 0, 0,
++				  0, ret_payload);
++	if (ret_payload[0] == XST_PM_SUCCESS) {
++		*status = ret_payload[1];
++		if (requirements)
++			*requirements = ret_payload[2];
++		if (usage)
++			*usage = ret_payload[3];
++	}
++
++	return ret;
++}
++
++/**
+  * zynqmp_pm_set_requirement() - PM call to set requirement for PM slaves
+  * @node:		Node ID of the slave
+  * @capabilities:	Requested capabilities of the slave
+@@ -769,6 +810,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.set_requirement = zynqmp_pm_set_requirement,
+ 	.fpga_load = zynqmp_pm_fpga_load,
+ 	.fpga_get_status = zynqmp_pm_fpga_get_status,
++	.get_node_status = zynqmp_pm_get_node_status,
+ };
+ 
+ /**
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 0a68849..fb4efc9 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -62,6 +62,7 @@
+ 
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
++	PM_GET_NODE_STATUS = 3,
+ 	PM_REQUEST_NODE = 13,
+ 	PM_RELEASE_NODE,
+ 	PM_SET_REQUIREMENT,
+@@ -309,6 +310,8 @@ struct zynqmp_pm_query_data {
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
+ 	int (*get_chipid)(u32 *idcode, u32 *version);
++	int (*get_node_status)(const u32 node, u32 *const status,
++			       u32 *const requirements, u32 *const usage);
+ 	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
+ 	int (*fpga_get_status)(u32 *value);
+ 	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+-- 
+2.7.4
+
