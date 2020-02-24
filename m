@@ -2,312 +2,182 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37808C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4B5C38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27C220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EE22176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KArzp0kX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYCq0ynf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgBXWnj (ORCPT
+        id S1728584AbgBXWnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:43:39 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32854 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbgBXWmn (ORCPT
+        Mon, 24 Feb 2020 17:43:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48606 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728583AbgBXWnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:42:43 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y6so11959272lji.0;
-        Mon, 24 Feb 2020 14:42:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mNTSRzMaQ2UbGYIC3fZaKYVXL+B/KF6OMp2TYd5kH80=;
-        b=KArzp0kX6NBuriaza/6wmiBjwU+IJeXe9vEiQ0QWWTCM3tOFHHaD+OlQ9x5e6quhyM
-         Zetl3UPEnbQyzBn0tDK2/BrmP96cvdxsvl9MAQHRQpQSb701qDOqMoJiSBSuP/JLHns1
-         jalcjaNGtH1Pqxu6b2hTXDsiAnKUM0Nhw8gPyQunaK+jT4ADZAJyVu59hQxz9L1VhtkB
-         yNRjT+G9++UT08SIDYyXKy9MBc8AumIIraelFn5qjMh9CTbVQo7vp7XPuU2Zzh4gVAbc
-         t1VR5XyOCdDp0mmIDqBLmb8+ViAYpVZS5usUlrlFC4hr0FfACjAJ9osA8AKqCykDIwxB
-         VPNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mNTSRzMaQ2UbGYIC3fZaKYVXL+B/KF6OMp2TYd5kH80=;
-        b=Dj+a73TDsiOU9MMTrldCb5N3z9YHYWQNR4KkHo09yIz6bfFrv9ULi/BTxwWMBqHSoW
-         zYdqhTkwcm98Dfe8YQJgXstQ8T3C37rPdL3yEe418aNdgQ0OsndYqHC+IBbUSbI0ZQ0C
-         xJrFlsnXkaSbFs8IgHT6zId1Omk0KbohQQaPbn9/LJVITiNar7RzOZoVkMOsLEb50afZ
-         HX3bFXpyWm+o00Zh9FAsgX1oDRh3USWoEnw/KfDckRp9F4mdSs8dFSnj6EeBdEfcCxOc
-         R2gwV8gGTyoZ2EU6W/4iHhwysYc054cHA0NuVM3UqkRryjQvymOle1iCGFZXTx221v/l
-         0Exw==
-X-Gm-Message-State: APjAAAVH+HGsUn48qHkLVqXhbJGRfyk735dDu1ju6+ZsZZWr0Qt/K1sT
-        zVJf6gQI2KxUEcR9a6ryTno=
-X-Google-Smtp-Source: APXvYqykOX3uJzwtNL4Jz94+Y7bW7PblXBP+xCR7WVET0O+oU0BlzIE84GzVKLOrhzXQQ81zQQugdw==
-X-Received: by 2002:a2e:800b:: with SMTP id j11mr31969341ljg.126.1582584160470;
-        Mon, 24 Feb 2020 14:42:40 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j7sm6264833lfh.25.2020.02.24.14.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 14:42:40 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v11 06/17] ARM: tegra: Expose PM functions required for new cpuidle driver
-Date:   Tue, 25 Feb 2020 01:40:46 +0300
-Message-Id: <20200224224057.21877-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200224224057.21877-1-digetx@gmail.com>
-References: <20200224224057.21877-1-digetx@gmail.com>
+        Mon, 24 Feb 2020 17:43:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582584218;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+oclofHchw/GDHhS/ehFkqV0QdXivh6ncK51lEL/8AU=;
+        b=PYCq0ynf6ygmC8xtwT9ceffeGa64uK+tzrtUaNGC107xKi+rBmDaukre9XeVwhaPsKjydN
+        8ZbDXDf2hj/H+sxzqr9+x+BG1MDrBQcRQIxoD14+bkjKA1vepP9KP0R00U2k5IYVbuUs7Y
+        JrGCWOtIFQmlcvVoCrItB54CHyi6w4M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-GpfJUv9pOg-tSLx_ZMzHLA-1; Mon, 24 Feb 2020 17:43:35 -0500
+X-MC-Unique: GpfJUv9pOg-tSLx_ZMzHLA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A5F618C8C01;
+        Mon, 24 Feb 2020 22:43:32 +0000 (UTC)
+Received: from ovpn-121-250.rdu2.redhat.com (ovpn-121-250.rdu2.redhat.com [10.10.121.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F3009078A;
+        Mon, 24 Feb 2020 22:43:27 +0000 (UTC)
+Message-ID: <17916d0509978e14d9a5e9eb52d760fa57460542.camel@redhat.com>
+Subject: Re: kernel panic: audit: backlog limit exceeded
+From:   Eric Paris <eparis@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>,
+        syzbot <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com>
+Cc:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        dan.carpenter@oracle.com, davem@davemloft.net, fzago@cray.com,
+        gregkh@linuxfoundation.org, john.hammond@intel.com,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
+Date:   Mon, 24 Feb 2020 17:43:27 -0500
+In-Reply-To: <CAHC9VhQVXk5ucd3=7OC=BxEkZGGLfXv9bESX67Mr-TRmTwxjEg@mail.gmail.com>
+References: <0000000000003cbb40059f4e0346@google.com>
+         <CAHC9VhQVXk5ucd3=7OC=BxEkZGGLfXv9bESX67Mr-TRmTwxjEg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The upcoming unified CPUIDLE driver will be added to the drivers/cpuidle/
-directory and it will require all these exposed Tegra PM-core functions.
+https://syzkaller.appspot.com/x/repro.syz?x=151b1109e00000 (the
+reproducer listed) looks like it is literally fuzzing the AUDIT_SET.
+Which seems like this is working as designed if it is setting the
+failure mode to 2.
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Tested-by: Jasper Korten <jja2000@gmail.com>
-Tested-by: David Heidelberg <david@ixit.cz>
-Tested-by: Nicolas Chauvet <kwizart@gmail.com>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/mach-tegra/cpuidle-tegra114.c        |  3 +-
- arch/arm/mach-tegra/cpuidle-tegra20.c         |  2 +-
- arch/arm/mach-tegra/cpuidle-tegra30.c         |  3 +-
- arch/arm/mach-tegra/irq.c                     |  3 +-
- arch/arm/mach-tegra/pm.h                      |  8 -----
- arch/arm/mach-tegra/sleep.h                   |  1 -
- arch/arm/mach-tegra/tegra.c                   |  1 -
- .../mach-tegra => include/soc/tegra}/irq.h    |  8 +++--
- include/soc/tegra/pm.h                        | 31 +++++++++++++++++++
- 9 files changed, 43 insertions(+), 17 deletions(-)
- rename {arch/arm/mach-tegra => include/soc/tegra}/irq.h (59%)
-
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra114.c b/arch/arm/mach-tegra/cpuidle-tegra114.c
-index 5118f777fd66..2d8527837aeb 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra114.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra114.c
-@@ -12,13 +12,14 @@
- 
- #include <linux/firmware/trusted_foundations.h>
- 
-+#include <soc/tegra/pm.h>
-+
- #include <asm/cpuidle.h>
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
- #include <asm/psci.h>
- 
- #include "cpuidle.h"
--#include "pm.h"
- #include "sleep.h"
- 
- #ifdef CONFIG_PM_SLEEP
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
-index b3087ece9421..aa54a76dbaa2 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra20.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- 
- #include <soc/tegra/flowctrl.h>
-+#include <soc/tegra/pm.h>
- 
- #include <asm/cpuidle.h>
- #include <asm/smp_plat.h>
-@@ -26,7 +27,6 @@
- #include "cpuidle.h"
- #include "iomap.h"
- #include "irq.h"
--#include "pm.h"
- #include "reset.h"
- #include "sleep.h"
- 
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index 17cbd118abee..3e91c29891f7 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -17,12 +17,13 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- 
-+#include <soc/tegra/pm.h>
-+
- #include <asm/cpuidle.h>
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
- 
- #include "cpuidle.h"
--#include "pm.h"
- #include "sleep.h"
- 
- #ifdef CONFIG_PM_SLEEP
-diff --git a/arch/arm/mach-tegra/irq.c b/arch/arm/mach-tegra/irq.c
-index ace7a390b5fe..4e1ee70b2a3f 100644
---- a/arch/arm/mach-tegra/irq.c
-+++ b/arch/arm/mach-tegra/irq.c
-@@ -18,9 +18,10 @@
- #include <linux/of.h>
- #include <linux/syscore_ops.h>
- 
-+#include <soc/tegra/irq.h>
-+
- #include "board.h"
- #include "iomap.h"
--#include "irq.h"
- 
- #define SGI_MASK 0xFFFF
- 
-diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
-index 7d72f31dee77..81525f5f4a44 100644
---- a/arch/arm/mach-tegra/pm.h
-+++ b/arch/arm/mach-tegra/pm.h
-@@ -23,20 +23,12 @@ void tegra20_sleep_core_init(void);
- void tegra30_lp1_iram_hook(void);
- void tegra30_sleep_core_init(void);
- 
--void tegra_clear_cpu_in_lp2(void);
--void tegra_set_cpu_in_lp2(void);
--int tegra_idle_lp2_last(void);
- extern void (*tegra_tear_down_cpu)(void);
- 
- #ifdef CONFIG_PM_SLEEP
- void tegra_init_suspend(void);
--int tegra_pm_park_secondary_cpu(unsigned long cpu);
- #else
- static inline void tegra_init_suspend(void) {}
--static inline int tegra_pm_park_secondary_cpu(unsigned long cpu)
--{
--	return -ENOTSUPP;
--}
- #endif
- 
- #endif /* _MACH_TEGRA_PM_H_ */
-diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
-index 4978def9db46..4718a3cb45a1 100644
---- a/arch/arm/mach-tegra/sleep.h
-+++ b/arch/arm/mach-tegra/sleep.h
-@@ -122,7 +122,6 @@ void tegra20_hotplug_shutdown(void);
- void tegra30_hotplug_shutdown(void);
- 
- void tegra20_tear_down_cpu(void);
--int tegra30_sleep_cpu_secondary_finish(unsigned long);
- void tegra30_tear_down_cpu(void);
- 
- #endif
-diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
-index 1e3b85923ca3..79184a077c84 100644
---- a/arch/arm/mach-tegra/tegra.c
-+++ b/arch/arm/mach-tegra/tegra.c
-@@ -42,7 +42,6 @@
- #include "common.h"
- #include "cpuidle.h"
- #include "iomap.h"
--#include "irq.h"
- #include "pm.h"
- #include "reset.h"
- #include "sleep.h"
-diff --git a/arch/arm/mach-tegra/irq.h b/include/soc/tegra/irq.h
-similarity index 59%
-rename from arch/arm/mach-tegra/irq.h
-rename to include/soc/tegra/irq.h
-index 7a94cf121448..8eb11a7109e4 100644
---- a/arch/arm/mach-tegra/irq.h
-+++ b/include/soc/tegra/irq.h
-@@ -3,9 +3,11 @@
-  * Copyright (c) 2012, NVIDIA Corporation. All rights reserved.
-  */
- 
--#ifndef __TEGRA_IRQ_H
--#define __TEGRA_IRQ_H
-+#ifndef __SOC_TEGRA_IRQ_H
-+#define __SOC_TEGRA_IRQ_H
- 
-+#if defined(CONFIG_ARM)
- bool tegra_pending_sgi(void);
--
- #endif
-+
-+#endif /* __SOC_TEGRA_IRQ_H */
-diff --git a/include/soc/tegra/pm.h b/include/soc/tegra/pm.h
-index 951fcd738d55..1974e8405098 100644
---- a/include/soc/tegra/pm.h
-+++ b/include/soc/tegra/pm.h
-@@ -6,6 +6,8 @@
- #ifndef __SOC_TEGRA_PM_H__
- #define __SOC_TEGRA_PM_H__
- 
-+#include <linux/errno.h>
-+
- enum tegra_suspend_mode {
- 	TEGRA_SUSPEND_NONE = 0,
- 	TEGRA_SUSPEND_LP2, /* CPU voltage off */
-@@ -20,6 +22,12 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode);
- 
- /* low-level resume entry point */
- void tegra_resume(void);
-+
-+int tegra30_sleep_cpu_secondary_finish(unsigned long arg);
-+void tegra_clear_cpu_in_lp2(void);
-+void tegra_set_cpu_in_lp2(void);
-+int tegra_idle_lp2_last(void);
-+int tegra_pm_park_secondary_cpu(unsigned long cpu);
- #else
- static inline enum tegra_suspend_mode
- tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
-@@ -30,6 +38,29 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
- static inline void tegra_resume(void)
- {
- }
-+
-+static inline int tegra30_sleep_cpu_secondary_finish(unsigned long arg)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline void tegra_clear_cpu_in_lp2(void)
-+{
-+}
-+
-+static inline void tegra_set_cpu_in_lp2(void)
-+{
-+}
-+
-+static inline int tegra_idle_lp2_last(void)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int tegra_pm_park_secondary_cpu(unsigned long cpu)
-+{
-+	return -ENOTSUPP;
-+}
- #endif /* CONFIG_PM_SLEEP */
- 
- #endif /* __SOC_TEGRA_PM_H__ */
--- 
-2.24.0
+On Mon, 2020-02-24 at 17:38 -0500, Paul Moore wrote:
+> On Mon, Feb 24, 2020 at 3:18 AM syzbot
+> <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com> wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-
+> > kdump-re..
+> > git tree:       net
+> > console output: 
+> > https://syzkaller.appspot.com/x/log.txt?x=148bfdd9e00000
+> > kernel config:  
+> > https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
+> > dashboard link: 
+> > https://syzkaller.appspot.com/bug?extid=9a5e789e4725b9ef1316
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      
+> > https://syzkaller.appspot.com/x/repro.syz?x=151b1109e00000
+> > C reproducer:   
+> > https://syzkaller.appspot.com/x/repro.c?x=128bfdd9e00000
+> > 
+> > The bug was bisected to:
+> > 
+> > commit 0c1b9970ddd4cc41002321c3877e7f91aacb896d
+> > Author: Dan Carpenter <dan.carpenter@oracle.com>
+> > Date:   Fri Jul 28 14:42:27 2017 +0000
+> > 
+> >     staging: lustre: lustre: Off by two in lmv_fid2path()
+> > 
+> > bisection log:  
+> > https://syzkaller.appspot.com/x/bisect.txt?x=17e6c3e9e00000
+> > final crash:    
+> > https://syzkaller.appspot.com/x/report.txt?x=1416c3e9e00000
+> > console output: 
+> > https://syzkaller.appspot.com/x/log.txt?x=1016c3e9e00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the
+> > commit:
+> > Reported-by: syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com
+> > Fixes: 0c1b9970ddd4 ("staging: lustre: lustre: Off by two in
+> > lmv_fid2path()")
+> > 
+> > audit: audit_backlog=13 > audit_backlog_limit=7
+> > audit: audit_lost=1 audit_rate_limit=0 audit_backlog_limit=7
+> > Kernel panic - not syncing: audit: backlog limit exceeded
+> > CPU: 1 PID: 9913 Comm: syz-executor024 Not tainted 5.6.0-rc1-
+> > syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine,
+> > BIOS Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x197/0x210 lib/dump_stack.c:118
+> >  panic+0x2e3/0x75c kernel/panic.c:221
+> >  audit_panic.cold+0x32/0x32 kernel/audit.c:307
+> >  audit_log_lost kernel/audit.c:377 [inline]
+> >  audit_log_lost+0x8b/0x180 kernel/audit.c:349
+> >  audit_log_start kernel/audit.c:1788 [inline]
+> >  audit_log_start+0x70e/0x7c0 kernel/audit.c:1745
+> >  audit_log+0x95/0x120 kernel/audit.c:2345
+> >  xt_replace_table+0x61d/0x830 net/netfilter/x_tables.c:1413
+> >  __do_replace+0x1da/0x950 net/ipv6/netfilter/ip6_tables.c:1084
+> >  do_replace net/ipv6/netfilter/ip6_tables.c:1157 [inline]
+> >  do_ip6t_set_ctl+0x33a/0x4c8 net/ipv6/netfilter/ip6_tables.c:1681
+> >  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
+> >  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
+> >  ipv6_setsockopt net/ipv6/ipv6_sockglue.c:949 [inline]
+> >  ipv6_setsockopt+0x147/0x180 net/ipv6/ipv6_sockglue.c:933
+> >  tcp_setsockopt net/ipv4/tcp.c:3165 [inline]
+> >  tcp_setsockopt+0x8f/0xe0 net/ipv4/tcp.c:3159
+> >  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
+> >  __sys_setsockopt+0x261/0x4c0 net/socket.c:2130
+> >  __do_sys_setsockopt net/socket.c:2146 [inline]
+> >  __se_sys_setsockopt net/socket.c:2143 [inline]
+> >  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2143
+> >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x44720a
+> > Code: 49 89 ca b8 37 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 1a e0
+> > fb ff c3 66 0f 1f 84 00 00 00 00 00 49 89 ca b8 36 00 00 00 0f 05
+> > <48> 3d 01 f0 ff ff 0f 83 fa df fb ff c3 66 0f 1f 84 00 00 00 00 00
+> > RSP: 002b:00007ffd032dec78 EFLAGS: 00000286 ORIG_RAX:
+> > 0000000000000036
+> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000044720a
+> > RDX: 0000000000000040 RSI: 0000000000000029 RDI: 0000000000000003
+> > RBP: 00007ffd032deda0 R08: 00000000000003b8 R09: 0000000000004000
+> > R10: 00000000006d7b40 R11: 0000000000000286 R12: 00007ffd032deca0
+> > R13: 00000000006d9d60 R14: 0000000000000029 R15: 00000000006d7ba0
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> > 
+> > 
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > For information about bisection process see: 
+> > https://goo.gl/tpsmEJ#bisection
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+> 
+> Similar to syzbot report 72461ac44b36c98f58e5, see my comments there.
+> 
 
