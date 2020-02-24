@@ -6,152 +6,135 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE08C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBC3C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C4420727
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582506417;
-	bh=TpPXfqAvidZXmEFGEiTlgiOr6hgutCz0Pj755Kcpc0Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AUjqKeCa6raLSLtSxY8fer+Nu8Brd/ee7Aeo7yhrLJVcadIGs/5+8IKf8QvxXtzmV
-	 l1xAz4witkDF0c4Ro1HKyo8l2J0FhXSVEd0Vhx7OwtTMaiawmV6G4317AS13HbcyUV
-	 e25n1GLG+M5eC9y0cwO5eBkGwLTY9fJUN5LilM44=
+	by mail.kernel.org (Postfix) with ESMTP id 5817020675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:11:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n8isivMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgBXBG4 (ORCPT
+        id S1727210AbgBXBLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:06:56 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35381 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbgBXBGz (ORCPT
+        Sun, 23 Feb 2020 20:11:08 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34087 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgBXBLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:06:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so8171666ljb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:06:54 -0800 (PST)
+        Sun, 23 Feb 2020 20:11:08 -0500
+Received: by mail-ua1-f67.google.com with SMTP id 1so2658237uao.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:11:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JOQFZKJ09bR9GxrGCRAILlsxRe+Mkc5csmWcmUCoQJc=;
-        b=eH7EfBrSugBS2PBkWUhZ4dkDBlqTxzT/hIcYkayplTOGh12dCJk04xf7jP//eYR9ZI
-         kHKZkQSaevFs5P/Hy0T+Hr7Ji5ufteDTEbskZaR+/74RZsfyA0ebu0ARSD4F1Rl/MqDR
-         iCnhEBp/bW1S4feHHsBCHNc8LYAGNEzJNxzPo=
+        bh=zT10dhFzTQfQk4qZLNGzW74d8YteQDI8/eIgEFfv+OM=;
+        b=n8isivMfbvLTUE8W5OF33bsEQHbC9GWAfYDMGxgEsCd67xnLu5gDVB9DXvZR6Rsx1O
+         55Mu59uQZ9ycLOFST2i7wZ7g5Hz2Km/BWEoh8CuZd9UfD8ypdnoG0zR2phZcKA7ScuyY
+         3/UoFGfVGlgcXlM70PiZd0OSnnRxK7cvW1Uw4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JOQFZKJ09bR9GxrGCRAILlsxRe+Mkc5csmWcmUCoQJc=;
-        b=g9gMC8ZwMn3KFl17g5J5KuIPO3ISIhKA4mg4SexFT6wrIb2DjsWY57dRhRpFTknASd
-         ut6W0fx3KPRjI6nu4lrMGCvn/sreEoGxioRsXFk6zOShDgfr2HegyWmue+WRY1kpB03j
-         Z+Cs0CIFroI9EyXYP3brnk3Ph59iJ9GYx1TREKfG562darXobSYR7H5T4x7SHqJUMM7j
-         9JC/0cg0rJ0UK9uL966bXjjLjhW3A7TNAXmG/t85QiPJulUbsrlOOmnEtmBsS9CBqjMn
-         iP3jpGbSS+d+aDI1pkEA/T07Hy+riusEGeSugWxvIQYKzGiKRgYc+6tbNc+EvYcvvpKY
-         St3Q==
-X-Gm-Message-State: APjAAAX5ThiVoh+AtkgQDCkOQndd21faoKKFxl5x1x60nvfCuxUBE81h
-        zvZDU/E2XdT2w9BrF+hAREyXcqvia+4=
-X-Google-Smtp-Source: APXvYqyOeDpOVuT/YmZXbbDSIl93Jg50NpPifrYufNuNtO/IUrQQ0IbNJmaqMYGuZgNZuBlR4zPdUg==
-X-Received: by 2002:a2e:8eda:: with SMTP id e26mr29205802ljl.65.1582506412832;
-        Sun, 23 Feb 2020 17:06:52 -0800 (PST)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id v15sm1352977lfg.51.2020.02.23.17.06.50
+        bh=zT10dhFzTQfQk4qZLNGzW74d8YteQDI8/eIgEFfv+OM=;
+        b=BIRkTyvj9Q6NgFEyOO6eCrgJeJYMek5B2ecpKpZhk5zYOzXY8ljGuhtWndFiHSCQi+
+         7gOoHI5WABUANm2BfM/8NbZFcr5dDSipV8NKL/5hyKIEXBSAyvvOh3jtUGc5NBYUyq7h
+         bhDq3x8RD1SL29QrHg9QMfcAzlGRGwG5xXlUD3CJkZ5Cv4dkLXbTKr78DHWI/0PigiRA
+         BouSdzzaVVsFzXq+eW8ipIFuJ63ohdYRw3uG+VfnEHh1rt5EL7H9Og9iV58IGzXnuCYF
+         e4mJBbbEkiYzw0aYXbkdMtwLokl8Ir8dT5HDK2pCadlxUVmava1PRq3xpAwVJfRZxZy9
+         TjSQ==
+X-Gm-Message-State: APjAAAXRO3DNohB8JhjhWtIi9MLx3thgo4gjC+e0PiwpgboNP7Pk7FSk
+        HHYOmf6zl5qpjp24/HQoJry6CvR5Kts=
+X-Google-Smtp-Source: APXvYqyDEU4mIsfyeJyeNNxvv/qwl5K09vXRIIE8KVlCA7s10aKMXwxQDp5mptOd4FFJzxG2o4q5mw==
+X-Received: by 2002:ab0:4e0e:: with SMTP id g14mr23324642uah.20.1582506665247;
+        Sun, 23 Feb 2020 17:11:05 -0800 (PST)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id i22sm2678602uap.17.2020.02.23.17.11.03
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 17:06:52 -0800 (PST)
-Received: by mail-lf1-f53.google.com with SMTP id 7so5564233lfz.11
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:06:50 -0800 (PST)
-X-Received: by 2002:a19:f514:: with SMTP id j20mr25977951lfb.31.1582506408850;
- Sun, 23 Feb 2020 17:06:48 -0800 (PST)
+        Sun, 23 Feb 2020 17:11:04 -0800 (PST)
+Received: by mail-vk1-f175.google.com with SMTP id t129so2092878vkg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:11:03 -0800 (PST)
+X-Received: by 2002:a1f:add3:: with SMTP id w202mr22215488vke.30.1582506662987;
+ Sun, 23 Feb 2020 17:11:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20200205123216.GO12867@shao2-debian> <20200205125804.GM14879@hirez.programming.kicks-ass.net>
- <20200221080325.GA67807@shbuild999.sh.intel.com> <20200221132048.GE652992@krava>
- <20200223141147.GA53531@shbuild999.sh.intel.com> <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
- <20200224003301.GA5061@shbuild999.sh.intel.com>
-In-Reply-To: <20200224003301.GA5061@shbuild999.sh.intel.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 23 Feb 2020 17:06:33 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
-Message-ID: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net> <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com> <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+In-Reply-To: <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+From:   Evan Benn <evanbenn@chromium.org>
+Date:   Mon, 24 Feb 2020 12:10:37 +1100
+X-Gmail-Original-Message-ID: <CAKz_xw3z7uXtK1SQKYLu_oP3GmqKR7RXvWj2b1cfyZO-Q-ZxQw@mail.gmail.com>
+Message-ID: <CAKz_xw3z7uXtK1SQKYLu_oP3GmqKR7RXvWj2b1cfyZO-Q-ZxQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-watchdog@vger.kernel.org,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 4:33 PM Feng Tang <feng.tang@intel.com> wrote:
+Hello,
+
+I think the intention is that this driver talks to a 'standard' arm
+smc firmware watchdog call:
+
+https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+
+Each device could re-implement that ATF driver to talk to the specific hardware,
+and could perhaps use a custom SMCWD_FUNC_ID, defined in the dts.
+
+The goal was to provide an ATF patch and linux driver patch that would
+be generic. But the above ATF patch
+is only for mt8173. Right now it just specifies an interface. It has
+less functionality than your meson driver Xingyu.
+If it is not suitable, that is fine.
+
+The above ATF patch is deployed on oak, elm, and hana mt8173
+chromebook devices, this driver is intended to support those devices.
+
+Evan
+
+
+On Sat, Feb 22, 2020 at 3:01 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
 >
-> From the perf c2c data, and the source code checking, the conflicts
-> only happens for root_user.__count, and root_user.sigpending, as
-> all running tasks are accessing this global data for get/put and
-> other operations.
-
-That's odd.
-
-Why? Because those two would be guaranteed to be in the same cacheline
-_after_ you've aligned that user_struct.
-
-So if it were a false sharing issue between those two, it would
-actually get _worse_ with alignment. Those two fields are basically
-next to each other.
-
-But maybe it was straddling a cacheline before, and it caused two
-cache accesses each time?
-
-I find this as confusing as you do.
-
-If it's sigpending vs the __refcount, then we almost always change
-them together. sigpending gets incremented by __sigqueue_alloc() -
-which also does a "get_uid()", and then we decrement it in
-__sigqueue_free() - which also does a "free_uid().
-
-That said, exactly *because* they get incremented and decremented
-together, maybe we could do something clever: make the "sigpending" be
-a separate user counter, kind of how we do mm->user vs mm-.count.
-
-And we'd only increment __refcount as the sigpending goes from zero to
-non-zero, and decrement it as sigpending goes back to zero. Avoiding
-the double atomics for the case of "lots of signals".
-
->      ffffffff8225b580 d types__ptrace
->      ffffffff8225b5c0 D root_user
->      ffffffff8225b680 D init_user_ns
-
-I'm assuming this is after the alignment patch (since that's 64-byte
-aligned there).
-
-What was it without the alignment?
-
-> No, it's not the biggest, I tried another machine 'Xeon Phi(TM) CPU 7295',
-> which has 72C/288T, and the regression is not seen. This is the part
-> confusing me :)
-
-Hmm.
-
-Humor me - what  happens if you turn off SMT on that Cascade Lake
-system?  Maybe it's about the thread ID bit in the L1? Although again,
-I'd have expected things to get _worse_ if it's the two fields that
-are now in the same cachline thanks to alignment.
-
-The Xeon Phi is the small-core setup, right? They may be slow enough
-to not show the issue as clearly despite having more cores. And it
-wouldn't show effects of some out-of-order speculative cache accesses.
-
-                Linus
+> Hi, Julius
+>
+> On 2020/2/22 3:41, Julius Werner wrote:
+> >> Because the ATF does not define standard wdt index, each vendor defines
+> >> its own index.
+> >> So I don't think that the current driver[0] can fully cover my usecases.
+> > I think the best way to solve this would be to put the SMC function ID
+> > as another field into the device tree, so that multiple vendors could
+> > share the same driver even if their firmware interface uses a
+> > different SMC. But they still have to implement the same API for that
+> > SMC, of course, not sure if the Meson driver is suitable for that (but
+> > if it is then I think merging those drivers would be a good idea).
+> The SMC function ID may be solved by the DTS, but the wdt indexs(Eg:
+> SMCWD_INFO) are also different
+> for each vendor. The imx_sc_wdt.c is also use the SMC to operate the
+> WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
+> are different from ours. IMO, If the ATF can implement a common hal
+> interface and index for watchdog, then writing a
+> common smc wdt driver will be easier to compatible with all vendors.
+>
+> Best Regards
+> >
+> > .
