@@ -2,152 +2,224 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB46C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71931C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC77520836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C11F20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vfKbFpt/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Uhl8WNmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgBXJLb (ORCPT
+        id S1728312AbgBXJKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:11:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42758 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgBXJKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:10:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7C1D9AC92;
-        Mon, 24 Feb 2020 09:10:50 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 6BBFA1E0E33; Mon, 24 Feb 2020 10:10:51 +0100 (CET)
-Date:   Mon, 24 Feb 2020 10:10:51 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Qian Cai <cai@lca.pw>
-Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/jbd2: fix data races at struct journal_head
-Message-ID: <20200224091051.GC27857@quack2.suse.cz>
-References: <20200222043111.2227-1-cai@lca.pw>
+        Mon, 24 Feb 2020 04:10:43 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:60409 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727619AbgBXJKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 04:10:39 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.west.internal (Postfix) with ESMTP id 03A37647;
+        Mon, 24 Feb 2020 04:10:37 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=k5rHIZCQqyFit
+        FdSYMhQftJVPXYFXpjC9sqwflJAvrE=; b=vfKbFpt/wSMF5Cuc3sQRodFF330Rq
+        QyYFOEbijd/PKuP47iU8FW1VmO0fmQF05H0caJMiCrQiMzBl7wmUlnSYMjD85s6h
+        dwJjOmtKYgkuNfRExmpw8FNTvss2GT3LyRPEU++gakuJwvkL0Ztq4KcVEciZfgOX
+        F8xMyh3rGV+1z6rJgHmWmd2oKbbd5fUfYuX78u6aFfWuiIMTW1eZA1l5zkfbDz7C
+        CHcTP+hbp3ZUIqdeSZ2NNUbInIWZrho5SNXe4KQnAgbGXwy7EwLrKuz+I2YQZWZY
+        sdyRwxykQXZ+eeaOXfYW6FJ4SE5jpzHWD7DFevnKTPD2xcy2DHeKtK5Tg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=k5rHIZCQqyFitFdSYMhQftJVPXYFXpjC9sqwflJAvrE=; b=Uhl8WNmV
+        4sbAQbKWOGkTMx1lZjdhdYQjOZ5yAq4SCAutJ+MAWvzLnpccYf0B7fLfMbEMaj+T
+        Vhfig7mCQLvCgVRwSgYitr7He4EpeYgmlP7+HbA2tM2+RxDRkY2Sle3kAAcKJ1LU
+        eCrjSslycjR5h6Vhbw7tWAhpeP4rr2OXc36ky1b9WsTaonUAkxTOukba0IOFR8je
+        WYoIn2ipeR2qiwEC0gNbRaVmOHT3SPhlazqUl2xPSjK8Dj8VvC5c16fdpoebs2TC
+        x1c4tzs0NsAHYc1UXUX8okA99rwywZoqL9GVgiU3Y0acYmf6l4MKeTyNZxuEDWho
+        KvD1Y/N7Ixsp2g==
+X-ME-Sender: <xms:DZNTXhVqTcP8bnqGDYRBIo-jrBnJQ-rsMfguCt9yfWirFnSMIuEeig>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
+    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepudegnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:DZNTXtBWNwXKE-T2Zer4WUqL48sQW88so1baWZ77jFWKe8fPfXzV_Q>
+    <xmx:DZNTXg7qOeC0eag1QO8ZdXG9HOqtZUqfAZxb3qH3QZ2A6q5QXgvc4g>
+    <xmx:DZNTXowiBoVEhOuqAz-NWH6HWF6Ja7uNRqtm2K2K53VHwcrgC0K_1A>
+    <xmx:DZNTXsiHuNrC066C20bDe9vVCyyS6t1SNNsbQdzHSCxNQY3YIazFp1OOQMs>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 44E523060FCB;
+        Mon, 24 Feb 2020 04:10:37 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 75/89] drm/vc4: hdmi: Add PHY init and disable function
+Date:   Mon, 24 Feb 2020 10:07:17 +0100
+Message-Id: <2ebcffada98f6a900b6c0651eb4c35ae6f75f901.1582533919.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222043111.2227-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 21-02-20 23:31:11, Qian Cai wrote:
-> journal_head::b_transaction and journal_head::b_next_transaction could
-> be accessed concurrently as noticed by KCSAN,
-> 
->  LTP: starting fsync04
->  /dev/zero: Can't open blockdev
->  EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
->  EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
->  ==================================================================
->  BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
-> 
->  write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
->   __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
->   __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
->   jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
->   (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
->   kjournald2+0x13b/0x450 [jbd2]
->   kthread+0x1cd/0x1f0
->   ret_from_fork+0x27/0x50
-> 
->  read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
->   jbd2_write_access_granted+0x1b2/0x250 [jbd2]
->   jbd2_write_access_granted at fs/jbd2/transaction.c:1155
->   jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
->   __ext4_journal_get_write_access+0x50/0x90 [ext4]
->   ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
->   ext4_mb_new_blocks+0x54f/0xca0 [ext4]
->   ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
->   ext4_map_blocks+0x3b4/0x950 [ext4]
->   _ext4_get_block+0xfc/0x270 [ext4]
->   ext4_get_block+0x3b/0x50 [ext4]
->   __block_write_begin_int+0x22e/0xae0
->   __block_write_begin+0x39/0x50
->   ext4_write_begin+0x388/0xb50 [ext4]
->   generic_perform_write+0x15d/0x290
->   ext4_buffered_write_iter+0x11f/0x210 [ext4]
->   ext4_file_write_iter+0xce/0x9e0 [ext4]
->   new_sync_write+0x29c/0x3b0
->   __vfs_write+0x92/0xa0
->   vfs_write+0x103/0x260
->   ksys_write+0x9d/0x130
->   __x64_sys_write+0x4c/0x60
->   do_syscall_64+0x91/0xb05
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
->  5 locks held by fsync04/25724:
->   #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
->   #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
->   #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
->   #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
->   #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
->  irq event stamp: 1407125
->  hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
->  hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
->  softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
->  softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-> 
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> 
-> The plain reads are outside of jh->b_state_lock critical section which result
-> in data races. Fix them by adding pairs of READ|WRITE_ONCE().
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+The HDMI PHY in the BCM2711 HDMI controller is significantly more
+complicated to setup than in the older BCM283x SoCs.
 
-Yeah, makes sense. You can add:
+Let's add hooks to enable and disable the PHY.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/Makefile       |  1 +
+ drivers/gpu/drm/vc4/vc4_hdmi.c     | 14 +++++++-------
+ drivers/gpu/drm/vc4/vc4_hdmi.h     | 14 ++++++++++++++
+ drivers/gpu/drm/vc4/vc4_hdmi_phy.c | 25 +++++++++++++++++++++++++
+ 4 files changed, 47 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/gpu/drm/vc4/vc4_hdmi_phy.c
 
-								Honza
-
-> ---
->  fs/jbd2/transaction.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-> index 2dd848a743ed..c5f7f6d0f33b 100644
-> --- a/fs/jbd2/transaction.c
-> +++ b/fs/jbd2/transaction.c
-> @@ -1152,8 +1152,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
->  	/* For undo access buffer must have data copied */
->  	if (undo && !jh->b_committed_data)
->  		goto out;
-> -	if (jh->b_transaction != handle->h_transaction &&
-> -	    jh->b_next_transaction != handle->h_transaction)
-> +	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
-> +	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
->  		goto out;
->  	/*
->  	 * There are two reasons for the barrier here:
-> @@ -2565,8 +2565,8 @@ bool __jbd2_journal_refile_buffer(struct journal_head *jh)
->  	 * our jh reference and thus __jbd2_journal_file_buffer() must not
->  	 * take a new one.
->  	 */
-> -	jh->b_transaction = jh->b_next_transaction;
-> -	jh->b_next_transaction = NULL;
-> +	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
-> +	WRITE_ONCE(jh->b_next_transaction, NULL);
->  	if (buffer_freed(bh))
->  		jlist = BJ_Forget;
->  	else if (jh->b_modified)
-> -- 
-> 2.21.0 (Apple Git-122.2)
-> 
+diff --git a/drivers/gpu/drm/vc4/Makefile b/drivers/gpu/drm/vc4/Makefile
+index b303703bc7f3..d0163e18e9ca 100644
+--- a/drivers/gpu/drm/vc4/Makefile
++++ b/drivers/gpu/drm/vc4/Makefile
+@@ -12,6 +12,7 @@ vc4-y := \
+ 	vc4_kms.o \
+ 	vc4_gem.o \
+ 	vc4_hdmi.o \
++	vc4_hdmi_phy.o \
+ 	vc4_vec.o \
+ 	vc4_hvs.o \
+ 	vc4_irq.o \
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index 29e94eee9f23..14c5ce4e7010 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -323,7 +323,9 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
+ 
+ 	HDMI_WRITE(HDMI_RAM_PACKET_CONFIG, 0);
+ 
+-	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
++	if (vc4_hdmi->variant->phy_disable)
++		vc4_hdmi->variant->phy_disable(vc4_hdmi);
++
+ 	HDMI_WRITE(HDMI_VID_CTL,
+ 		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+ 
+@@ -383,12 +385,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 	if (vc4_hdmi->variant->reset)
+ 		vc4_hdmi->variant->reset(vc4_hdmi);
+ 
+-	/* PHY should be in reset, like
+-	 * vc4_hdmi_encoder_disable() does.
+-	 */
+-	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
+-
+-	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0);
++	if (vc4_hdmi->variant->phy_init)
++		vc4_hdmi->variant->phy_init(vc4_hdmi, mode);
+ 
+ 	if (debug_dump_regs) {
+ 		struct drm_printer p = drm_info_printer(&vc4_hdmi->pdev->dev);
+@@ -1413,6 +1411,8 @@ struct vc4_hdmi_variant bcm2835_variant = {
+ 
+ 	.init_resources		= vc4_hdmi_init_resources,
+ 	.reset			= vc4_hdmi_reset,
++	.phy_init		= vc4_hdmi_phy_init,
++	.phy_disable		= vc4_hdmi_phy_disable,
+ };
+ 
+ static const struct of_device_id vc4_hdmi_dt_match[] = {
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+index 270397c9e800..39ae5273f36b 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.h
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+@@ -21,6 +21,9 @@ to_vc4_hdmi_encoder(struct drm_encoder *encoder)
+ 	return container_of(encoder, struct vc4_hdmi_encoder, base.base);
+ }
+ 
++struct drm_display_mode;
++
++struct vc4_hdmi;
+ struct vc4_hdmi_register;
+ 
+ struct vc4_hdmi_variant {
+@@ -37,6 +40,13 @@ struct vc4_hdmi_variant {
+ 
+ 	/* Callback to reset the HDMI block */
+ 	void (*reset)(struct vc4_hdmi *vc4_hdmi);
++
++	/* Callback to initialize the PHY according to the mode */
++	void (*phy_init)(struct vc4_hdmi *vc4_hdmi,
++			 struct drm_display_mode *mode);
++
++	/* Callback to disable the PHY */
++	void (*phy_disable)(struct vc4_hdmi *vc4_hdmi);
+ };
+ 
+ /* HDMI audio information */
+@@ -94,4 +104,8 @@ encoder_to_vc4_hdmi(struct drm_encoder *encoder)
+ 	return container_of(_encoder, struct vc4_hdmi, encoder);
+ }
+ 
++void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi,
++		       struct drm_display_mode *mode);
++void vc4_hdmi_phy_disable(struct vc4_hdmi *vc4_hdmi);
++
+ #endif /* _VC4_HDMI_H_ */
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi_phy.c b/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
+new file mode 100644
+index 000000000000..26d6ee08edcf
+--- /dev/null
++++ b/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2015 Broadcom
++ * Copyright (c) 2014 The Linux Foundation. All rights reserved.
++ * Copyright (C) 2013 Red Hat
++ * Author: Rob Clark <robdclark@gmail.com>
++ */
++
++#include "vc4_hdmi.h"
++#include "vc4_hdmi_regs.h"
++
++void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi, struct drm_display_mode *mode)
++{
++	/* PHY should be in reset, like
++         * vc4_hdmi_encoder_disable() does.
++         */
++
++	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
++	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0);
++}
++
++void vc4_hdmi_phy_disable(struct vc4_hdmi *vc4_hdmi)
++{
++	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
++}
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+git-series 0.9.1
