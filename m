@@ -2,135 +2,63 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE49C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2CFC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A283720675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212742071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgBXAfD (ORCPT
+        id S1727215AbgBXAl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:35:03 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43679 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727151AbgBXAfD (ORCPT
+        Sun, 23 Feb 2020 19:41:56 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:58066 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXAlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:35:03 -0500
-Received: from dread.disaster.area (pa49-195-185-106.pa.nsw.optusnet.com.au [49.195.185.106])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B52CD3A211E;
-        Mon, 24 Feb 2020 11:34:57 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j61i4-0004s8-0Y; Mon, 24 Feb 2020 11:34:56 +1100
-Date:   Mon, 24 Feb 2020 11:34:55 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 09/13] fs/xfs: Add write aops lock to xfs layer
-Message-ID: <20200224003455.GY10776@dread.disaster.area>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-10-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221004134.30599-10-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=bkRQb8bsQZKWSSj4M57YXw==:117 a=bkRQb8bsQZKWSSj4M57YXw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=jzfXMxHasCwLGlr9pT0A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Sun, 23 Feb 2020 19:41:55 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F1465158E0671;
+        Sun, 23 Feb 2020 16:41:54 -0800 (PST)
+Date:   Sun, 23 Feb 2020 16:41:54 -0800 (PST)
+Message-Id: <20200223.164154.1411149705613568241.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     netanel@amazon.com, akiyano@amazon.com, gtzalik@amazon.com,
+        saeedb@amazon.com, zorik@amazon.com, sameehj@amazon.com,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: ena: ethtool: remove redundant non-zero check on
+ rc
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200221232653.33134-1-colin.king@canonical.com>
+References: <20200221232653.33134-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Feb 2020 16:41:55 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:41:30PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> XFS requires the use of the aops of an inode to quiesced prior to
-> changing it to/from the DAX aops vector.
-> 
-> Take the aops write lock while changing DAX state.
-> 
-> We define a new XFS_DAX_EXCL lock type to carry the lock through to
-> transaction completion.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from v3:
-> 	Change locking function names to reflect changes in previous
-> 	patches.
-> 
-> Changes from V2:
-> 	Change name of patch (WAS: fs/xfs: Add lock/unlock state to xfs)
-> 	Remove the xfs specific lock and move to the vfs layer.
-> 		We still use XFS_LOCK_DAX_EXCL to be able to pass this
-> 		flag through to the transaction code.  But we no longer
-> 		have a lock specific to xfs.  This removes a lot of code
-> 		from the XFS layer, preps us for using this in ext4, and
-> 		is actually more straight forward now that all the
-> 		locking requirements are better known.
-> 
-> 	Fix locking order comment
-> 	Rework for new 'state' names
-> 	(Other comments on the previous patch are not applicable with
-> 	new patch as much of the code was removed in favor of the vfs
-> 	level lock)
-> ---
->  fs/xfs/xfs_inode.c | 22 ++++++++++++++++++++--
->  fs/xfs/xfs_inode.h |  7 +++++--
->  2 files changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 35df324875db..5b014c428f0f 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
->   *
->   * Basic locking order:
->   *
-> - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> + * s_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
->   *
->   * mmap_sem locking order:
->   *
->   * i_rwsem -> page lock -> mmap_sem
-> - * mmap_sem -> i_mmap_lock -> page_lock
-> + * s_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
->   *
->   * The difference in mmap_sem locking order mean that we cannot hold the
->   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
-> @@ -182,6 +182,9 @@ xfs_ilock(
->  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
->  
-> +	if (lock_flags & XFS_DAX_EXCL)
-> +		inode_aops_down_write(VFS_I(ip));
+From: Colin King <colin.king@canonical.com>
+Date: Fri, 21 Feb 2020 23:26:53 +0000
 
-I largely don't see the point of adding this to xfs_ilock/iunlock.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The non-zero check on rc is redundant as a previous non-zero
+> check on rc will always return and the second check is never
+> reached, hence it is redundant and can be removed.  Also
+> remove a blank line.
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-It's only got one caller, so I don't see much point in adding it to
-an interface that has over a hundred other call sites that don't
-need or use this lock. just open code it where it is needed in the
-ioctl code.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Applied to net-next.
