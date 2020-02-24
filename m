@@ -2,112 +2,203 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E761EC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0C1C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45BC20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA87A20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582560038;
+	bh=4bZlsRj0hgQUg+Tv7wdAFMT4O5Wpzs211V073yPBVYg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p47SiywzPFDbnmcBZele8GHr0Pg40dbBTzgRXuHOGlhTsDt5z50fyKHBSvdCB7uYX
+	 j3XFXM2trZtzbAAg95qcs85tjljOIJb1P67mwVACHKzPyS0imu8ZZ7lj71OPQfPRmC
+	 6X4tofIMkF6QUz+36/5Ct8kcX2CAuKqN2ac0/cOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgBXP5k (ORCPT
+        id S1727939AbgBXQAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:57:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:39180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727693AbgBXP5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:57:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68E031FB;
-        Mon, 24 Feb 2020 07:57:39 -0800 (PST)
-Received: from [10.1.195.59] (ifrit.cambridge.arm.com [10.1.195.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E68813F703;
-        Mon, 24 Feb 2020 07:57:37 -0800 (PST)
-Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <20200214152729.6059-5-vincent.guittot@linaro.org>
- <20200219125513.8953-1-vincent.guittot@linaro.org>
- <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
- <CAKfTPtD4kz07hikCuU2_cm67ntruopN9CdJEP+fg5L4_N=qEgg@mail.gmail.com>
- <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com>
- <CAKfTPtAQ_09wVM7zjrHDB+gJXpb5OH6CBvfKC7OB_Bo0Hd41vA@mail.gmail.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <e4def999-b784-6b26-3748-a2ad57f79c6d@arm.com>
-Date:   Mon, 24 Feb 2020 15:57:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 11:00:38 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:27349 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbgBXQAh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:00:37 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 01OG0UlE011600;
+        Tue, 25 Feb 2020 01:00:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01OG0UlE011600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582560031;
+        bh=rh6OBdUNfww3vfiDk7WD78TGBu735cgnzCKrnQQSFwk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=frP9VDGV+IdXmi+d2H1VLwqNi9TOUHIUpDWaGV0WsA9WBVGXo82zaO7VQ9ZV7l7lB
+         cNqERuRmFO09j53hlRurJ0XJlIsdtcWE7jKsB5bLXjjxush2tHAF9DtHSnvzcD6Twb
+         tfW7AnOy8BNvd+nN+Drt2gopc8j1zZZRrPTuiB8+VmO005XNNQDsqRzsRan/r29dp2
+         FzopPo/MpG/p5iMhHqrK7o9Bw0Og+koZWMhRfasK0aOLol+6Gm1E1ceEAVb4pHplCe
+         tonTF8rzDZBl8mHk/8qSJPQ4XB0+IcKvR39Ojwue3IKWhISkDYYqVdJa0SNdtPesZg
+         qYM+IR2xN68+A==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id 7so5975443vsr.10;
+        Mon, 24 Feb 2020 08:00:30 -0800 (PST)
+X-Gm-Message-State: APjAAAVPy1Sba5M+aIwFGx953Qg95Uxoj38z6fOnY5i6+1JbcHP0Xo3j
+        7+TO4ZLQVuleD3aS0wLGzDjPC2Yz9pxwYUdCRaI=
+X-Google-Smtp-Source: APXvYqxrUculoOzlOLP1qyhLbdIH9BNbNU6LljUdGNKtFWdx+eGRpP3R6f5HAN/+ktdJA4PyOAMI8Mb0oQ0eTgUkzOM=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr27414888vsq.155.1582560029807;
+ Mon, 24 Feb 2020 08:00:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtAQ_09wVM7zjrHDB+gJXpb5OH6CBvfKC7OB_Bo0Hd41vA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
+ <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com> <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 25 Feb 2020 00:59:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASLaEX_Ocph88ZYMyi03KPQmr6-3mMhrZeAZCoAgUrEtQ@mail.gmail.com>
+Message-ID: <CAK7LNASLaEX_Ocph88ZYMyi03KPQmr6-3mMhrZeAZCoAgUrEtQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I somehow lost track of that email, sorry for the delayed response.
+Hi Rob,
 
-On 2/21/20 8:56 AM, Vincent Guittot wrote:
-> On Thu, 20 Feb 2020 at 17:11, Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
->>
->> On 20/02/2020 14:36, Vincent Guittot wrote:
->>> I agree that setting by default to SCHED_CAPACITY_SCALE is too much
->>> for little core.
->>> The problem for little core can be fixed by using the cpu capacity instead
->>>
->>
->> So that's indeed better for big.LITTLE & co. Any reason however for not
->> aligning with the initialization of util_avg ?
-> 
-> The runnable_avg is the unweighted version of the load_avg so they
-> should both be sync at init and SCHED_CAPACITY_SCALE is in fact the
-> right value. Using cpu_scale is the same for smp and big core so we
-> can use it instead.
-> 
-> Then, the initial value of util_avg has never reflected some kind of
-> realistic value for the utilization of a new task, especially if those
-> tasks will become big ones. Runnable_avg now balances this effect to
-> say that we don't know what will be the behavior of the new task,
-> which might end up using all spare capacity although current
-> utilization is low and CPU is not "fully used".
+On Mon, Feb 24, 2020 at 11:52 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Feb 21, 2020 at 11:33 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> > > > Convert the UniPhier GPIO controller binding to DT schema format.
+> > > >
+> > > > I omitted the 'gpio-ranges' property because it is defined in the
+> > > > dt-schema project (/schemas/gpio/gpio.yaml).
+> > > >
+> > > > As of writing, the 'gpio-ranges-group-names' is not defined in that
+> > > > file despite it is a common property described in
+> > > > Documentation/devicetree/bindings/gpio/gpio.txt
+> > > > So, I defined it in this schema.
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > ---
+> > > >
+> > > > I have a question about the range about 'ngpio'.
+> > > >
+> > > >   ngpios:
+> > > >     minimum: 0
+> > > >     maximum: 512
+> > > >
+> > > > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> > > > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> > > >
+> > > > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> > > >
+> > > > I cannot omit the minimum because minimum and maximum depend on each other.
+> > > > I just put a sensible number, 512, in maximum.
+> > > >
+> > > > If this range is entirely unneeded, I will delete it.
+> > >
+> > > This property is generally for when you can have some number less
+> > > than a maximum number implied by the compatible string.
+> > >
+> > > If there is really no max (e.g. 2^32 - 1 is valid), then just do
+> > > 'ngpios: true'
+> >
+> >
+> > What does ': true' mean?
+>
+> It's a schema that always passes validation. It's purpose here is just
+> to say you are using this common property for this binding.
 
-I'd argue that the init values we pick for either runnable_avg or util_avg
-are both equally bogus.
 
-> In fact, this is
-> exactly the purpose of runnable: highlight that there is maybe no
-> spare capacity even if CPU's utilization is low because of external
-> event like task migration or having new tasks with most probably wrong
-> utilization.
-> 
-> That being said, there is a bigger problem with the current version of
-> this patch, which is that I forgot to use runnable in
-> update_sg_wakeup_stats(). I have a patch that fixes this problem.
-> 
-> Also, I have tested both proposals with hackbench on my octo cores and
-> using cpu_scale gives slightly better results than util_avg, which
-> probably reflects the case I mentioned above.
-> 
-> grp     cpu_scale            util_avg               improvement
-> 1       1,191(+/-0.77 %)     1,204(+/-1.16 %)       -1.07 %
-> 4       1,147(+/-1.14 %)     1,195(+/-0.52 %)       -4.21 %
-> 8       1,112(+/-1,52 %)     1,124(+/-1,45 %)       -1.12 %
-> 16      1,163(+/-1.72 %)     1,169(+/-1.58 %)       -0,45 %
-> 
 
-Interesting, thanks for providing the numbers. I'd be curious to figure out
-where the difference really stems from, but in the meantime consider me
-convinced ;)
+OK, I see two useful cases:
+
+[1]
+Documenting purpose in order to clarify
+that you are using this property
+
+[2]
+You need to explicitly specify ': true'
+if you have 'additionalProperties: false' .
+Otherwise, the following warning is displayed:
+... do not match any of the regexes: 'pinctrl-[0-9]+'
+
+
+
+For [1], it is already clear that this binding
+is using ngpios from 'require'
+
+
+require:
+  - ngpios
+
+
+
+> >
+> > If it is documented somewhere,
+> > could you point me to the reference?
+>
+> https://github.com/devicetree-org/dt-schema/blob/master/schemas/gpio/gpio.yaml
+>
+> >
+> > Even if I remove the 'ngpio' entirely
+> > from my dt-schema, the 'ngpio' is checked
+> > correctly.
+>
+> Yes, if you change it to a string value for example, it should fail.
+> (Only if DT_SCHEMA_FILES is not set without my kbuild changes)
+>
+> You should also add 'additionalProperties: false' at the top level of
+> your schema and then it will also fail if you don't list ngpios in
+> properties.
+
+Hmm, I am confused.
+
+'require: - ngpios' will warn if you don't list ngpios.
+
+'additionalProperties: false' will warn if you list
+other properties than what is explicitly specified.
+
+
+
+BTW, I will not add 'additionalProperties: false'
+in this binding.
+
+
+The real DT files have
+
+ interrupt-parent = <&aidet>;
+(arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi line 324)
+
+but, commit 791d3ef2e11100449837dc0b6fe884e60ca3a484
+removed interrupt-parent from bindings.
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
