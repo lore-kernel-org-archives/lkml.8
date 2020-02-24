@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B956C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B349C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5A720828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C6D2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgBXLUm (ORCPT
+        id S1727463AbgBXLUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:20:42 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35974 "EHLO huawei.com"
+        Mon, 24 Feb 2020 06:20:39 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35948 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727440AbgBXLUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:20:40 -0500
+        id S1727429AbgBXLUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:20:38 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 868F4C071FC789CF4F46;
+        by Forcepoint Email with ESMTP id 7472383E962AEED00A5C;
         Mon, 24 Feb 2020 19:20:36 +0800 (CST)
 Received: from szvp000203569.huawei.com (10.120.216.130) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
@@ -30,9 +30,9 @@ To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 5/5] f2fs: add missing function name in kernel message
-Date:   Mon, 24 Feb 2020 19:20:19 +0800
-Message-ID: <20200224112019.93829-5-yuchao0@huawei.com>
+Subject: [PATCH 4/5] f2fs: recycle unused compress_data.chksum feild
+Date:   Mon, 24 Feb 2020 19:20:18 +0800
+Message-ID: <20200224112019.93829-4-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.18.0.rc1
 In-Reply-To: <20200224112019.93829-1-yuchao0@huawei.com>
 References: <20200224112019.93829-1-yuchao0@huawei.com>
@@ -45,44 +45,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise, we can not distinguish the exact location of messages,
-when there are more than one places printing same message.
+In Struct compress_data, chksum field was never used, remove it.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- fs/f2fs/f2fs.h | 2 +-
- fs/f2fs/node.c | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ fs/f2fs/compress.c | 1 -
+ fs/f2fs/f2fs.h     | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 864035549329..e8b88f7bb7a5 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -380,7 +380,6 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 	}
+ 
+ 	cc->cbuf->clen = cpu_to_le32(cc->clen);
+-	cc->cbuf->chksum = cpu_to_le32(0);
+ 
+ 	for (i = 0; i < COMPRESS_DATA_RESERVED_SIZE; i++)
+ 		cc->cbuf->reserved[i] = cpu_to_le32(0);
 diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index bd264d8cddaf..4a02edc2454b 100644
+index 468f807fd917..bd264d8cddaf 100644
 --- a/fs/f2fs/f2fs.h
 +++ b/fs/f2fs/f2fs.h
-@@ -2231,7 +2231,7 @@ static inline void dec_valid_node_count(struct f2fs_sb_info *sbi,
- 		dquot_free_inode(inode);
- 	} else {
- 		if (unlikely(inode->i_blocks == 0)) {
--			f2fs_warn(sbi, "Inconsistent i_blocks, ino:%lu, iblocks:%llu",
-+			f2fs_warn(sbi, "dec_valid_node_count: inconsistent i_blocks, ino:%lu, iblocks:%llu",
- 				  inode->i_ino,
- 				  (unsigned long long)inode->i_blocks);
- 			set_sbi_flag(sbi, SBI_NEED_FSCK);
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 040ffb09a126..951c66d63350 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1187,8 +1187,9 @@ int f2fs_remove_inode_page(struct inode *inode)
- 	}
+@@ -1233,10 +1233,9 @@ enum compress_algorithm_type {
+ 	COMPRESS_MAX,
+ };
  
- 	if (unlikely(inode->i_blocks != 0 && inode->i_blocks != 8)) {
--		f2fs_warn(F2FS_I_SB(inode), "Inconsistent i_blocks, ino:%lu, iblocks:%llu",
--			  inode->i_ino, (unsigned long long)inode->i_blocks);
-+		f2fs_warn(F2FS_I_SB(inode),
-+			"f2fs_remove_inode_page: inconsistent i_blocks, ino:%lu, iblocks:%llu",
-+			inode->i_ino, (unsigned long long)inode->i_blocks);
- 		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
- 	}
- 
+-#define COMPRESS_DATA_RESERVED_SIZE		4
++#define COMPRESS_DATA_RESERVED_SIZE		5
+ struct compress_data {
+ 	__le32 clen;			/* compressed data size */
+-	__le32 chksum;			/* checksum of compressed data */
+ 	__le32 reserved[COMPRESS_DATA_RESERVED_SIZE];	/* reserved */
+ 	u8 cdata[];			/* compressed data */
+ };
 -- 
 2.18.0.rc1
 
