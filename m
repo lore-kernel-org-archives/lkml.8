@@ -2,113 +2,135 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E00FC38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B0EC38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC9E218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMh21tWV"
+	by mail.kernel.org (Postfix) with ESMTP id 815CE21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582581019;
+	bh=SByL9yxoZU3/7NUw/JDYEsdEaf+wwkao6X+0htKhiEc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bE0Tb4Kmh1N2kQ43Fv0U5YQPrioN/rfvstZR6c4WgClGag3Lk+9n+TVv4m2FsLVzH
+	 v/W1j/JkmvSIdCwu+fFOv2we3JAElTyqOKHNVir4HUkTBDVwyzhK6CQvk9QYVMHYM8
+	 aMXlu+QPzgkzqVuXoLq8pMcu3wG+aVsoE1rE2Gpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgBXVst (ORCPT
+        id S1727895AbgBXVuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:48:49 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46263 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbgBXVst (ORCPT
+        Mon, 24 Feb 2020 16:50:18 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43254 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:48:49 -0500
-Received: by mail-qk1-f196.google.com with SMTP id u124so10077163qkh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:48:48 -0800 (PST)
+        Mon, 24 Feb 2020 16:50:18 -0500
+Received: by mail-ed1-f65.google.com with SMTP id dc19so13725804edb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:50:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rwxcsAsN75o6auj6h/UwQ4eouOT0rdFuNimYtBXVVqI=;
-        b=EMh21tWVMiKtiMX/15mlFW2bkqdUQzzSFFTAwEgTUc+9dfctVYJVnF2sKau3SsZwyd
-         rz9qJ8H6WOhD5TCqnWWhlB2a2KsmTREx1Fn1CKeeia6tqHROYd0RrQzIc4RoASmXTZpE
-         TEkdXXtrOjxqJ9Ty9jRFJCNytmMnaToeuugYwoR2CR/hkhR/X4n7HllPU+PTGZ73NdBB
-         uccc8HzbvJO3ywnozyzL3S1m7I9yN+uhXIHDuVCwIvVjLsqgV7qpJQO5N0sB3pjuO/VK
-         n1MG6Tejq9uTKlBLRW6WfBYZKe0mB1erHdHY9QSveOxTIsm8pzvGD69lrM7IiHx75lFL
-         vKQw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZpRlNJyxjURpxSeo9TgDWjOVoYB3eEWq/qH5+c8IPvQ=;
+        b=eyZAPIDtfYGAJMFSbiOA8WQ5iUhe96wmEjyfCJ34B+4o7j9kYZVEhFkBmiZl7ADo+f
+         PyP6gf2SNcUFSNj7E6uihJH7h9RPze99rK4fpnXvren68bqmdd2LQKtC1k1NOzSOjcLo
+         1YoTHieJQZU3MaTRlKUzerS3gODLbLoBhaXeo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rwxcsAsN75o6auj6h/UwQ4eouOT0rdFuNimYtBXVVqI=;
-        b=GNkIgcZ6Cm0ZSK9Ek52meN9sRFElm+T9GNGc4F8/U5Sk2jEqFqk+4KBxInWh6yNoMr
-         bWnZDr5auO+LcVFSKyZ/+uyyAoUTHq+LkuzIxWImJciAwJXBda1JhOnqWB+rl+4lOYIx
-         9vdk8fYO711cgj4tt8dwmpbjbddLgBrJUwmfJyEWkw5UjRMpxUXXkM4lDEhpIZcR2GaW
-         Gs+AzQflLZqpEVqx3oPRufXj2OFwmHa2qvpuQposrl8XXJP8zEvJuF8Y2DlSYSl+L0bh
-         3nsgpjZFz7zYPv7QIgSCRagLEvRLG165y8g7WxnoGyIx5k+XFH+NOQPVhoZzdgmPiJRn
-         3iug==
-X-Gm-Message-State: APjAAAVrqUzCOkwpO4tv1pWvP55Da5+QMdbaH9mfg+f+ye99N5QjgMYR
-        Ft5uzETj96pUBGeN9CdU2ftHM+xgQno=
-X-Google-Smtp-Source: APXvYqyytMHKYCD286xJ3ougS17+qx/IydYF3O2pRQIi7aToLTd9QIRAntsDUW4ZoTWEhicSbubAJg==
-X-Received: by 2002:a37:a78d:: with SMTP id q135mr48484895qke.158.1582580928204;
-        Mon, 24 Feb 2020 13:48:48 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id m27sm6760596qta.21.2020.02.24.13.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 13:48:47 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 24 Feb 2020 16:48:45 -0500
-To:     Fangrui Song <maskray@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
- from bzImage
-Message-ID: <20200224214845.GC409112@rani.riverdale.lan>
-References: <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
- <20200222065521.GA11284@zn.tnic>
- <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan>
- <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <alpine.LSU.2.21.2002241319150.12812@wotan.suse.de>
- <CAKwvOd=nCAyXtng1N-fvNYa=-NGD0yu+Rm6io9F1gs0FieatwA@mail.gmail.com>
- <20200224212828.xvxl3mklpvlrdtiw@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZpRlNJyxjURpxSeo9TgDWjOVoYB3eEWq/qH5+c8IPvQ=;
+        b=fH09HLc0N+ePWhTa6AHDpU7f7NC9gQZFbWbxdbhlui+28rVavz/MudSsIFY0ioSwGp
+         QrjsskxaosSfmwjx92ls/S9FT9vgyV8nCiu1FHWcNYPbTa3ZBZo/cO1Cp2SWVJUDj0Db
+         7MGa+25newOlZ1tu+3qs+yurMyAZ12/X9LIryvvltm5gDGIoiSX3KgZZLSA6xwtokxRU
+         yNOKMZroyIk3He13x3kKORPs2PF8X7zHa8d17TNrxgOaeE22MNehfOURXGf4fDExl50s
+         vOL8/A3VmAvTWITQC5IR1C5cUIPGng2qj3AWVbHswKopbV9A3wSioqW22aKVRSVpY2tL
+         7vlg==
+X-Gm-Message-State: APjAAAXOR93EdVpYAjdbXhtRSoOTAOY4lXmdiwkVLQegjRkYDeWyAcMi
+        nDgOfqJlJXQfwZqgw3DSLNxqcjAEEIo=
+X-Google-Smtp-Source: APXvYqxuh8lMpC3ktOOu/YZa4gbcXc09qkEGn3GPZbSHUSO+hbMFrF3PDo1iQbmwjXIfzOg7a83jCg==
+X-Received: by 2002:aa7:c803:: with SMTP id a3mr46470366edt.99.1582581015992;
+        Mon, 24 Feb 2020 13:50:15 -0800 (PST)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id ck19sm853924ejb.48.2020.02.24.13.50.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 13:50:15 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id r18so13772788edl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:50:15 -0800 (PST)
+X-Received: by 2002:a19:6144:: with SMTP id m4mr1561198lfk.192.1582580600346;
+ Mon, 24 Feb 2020 13:43:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200224212828.xvxl3mklpvlrdtiw@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200205123216.GO12867@shao2-debian> <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com> <20200221132048.GE652992@krava>
+ <20200223141147.GA53531@shbuild999.sh.intel.com> <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com> <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+ <20200224021915.GC5061@shbuild999.sh.intel.com> <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
+ <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+ <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com> <87a757znqd.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87a757znqd.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 24 Feb 2020 13:43:02 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh0z0LErNzwe-AqrEkv3BNzJep58Qmi2dM775UPtmq0og@mail.gmail.com>
+Message-ID: <CAHk-=wh0z0LErNzwe-AqrEkv3BNzJep58Qmi2dM775UPtmq0og@mail.gmail.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:28:28PM -0800, Fangrui Song wrote:
-> Hi Michael, please see my other reply on this thread: https://lkml.org/lkml/2020/2/24/47
-> 
-> Synthesized sections can be matched as well. For example, SECTIONS { .pltfoo : { *(.plt) }} can rename the output section .plt to .pltfoo
-> It seems that in GNU ld, the synthesized section is associated with the
-> original object file, so it can be written as:
-> 
->    SECTIONS { .pltfoo : { a.o(.plt) }}
-> 
-> In lld, you need a wildcard to match the synthesized section *(.plt)
-> 
-> .rela.dyn is another example.
-> 
+On Mon, Feb 24, 2020 at 1:22 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> I keep looking at your patch and wondering if there isn't a way
+> to remove the uid refcount entirely on this path.
 
-With the BFD toolchain, file matching doesn't actually seem to work at
-least for .rela.dyn. I've tried playing around with it in the past and
-if you try to use file-matching to capture relocations from a particular
-input file, it just doesn't work sensibly.
+I agree. I tried to come up with something, but couldn't.
+
+> Linus I might be wrong but I have this sense that your change will only
+> help when signal delivery is backed up.  I expect in the common case
+> there won't be any pending signals outstanding for the user.
+
+Again, 100% agreed.
+
+HOWEVER.
+
+The normal case where there's one only signal pending is also the case
+where we don't care about the extra atomic RMW access. By definition
+that's not going to ever going to show up as a performance issue or
+for cacheline contention.
+
+So the only case that matters from a performance standpoint is the
+"lots of signals" case, in which case you'll see that sigqueue become
+backed up.
+
+But as I said in the original thread (before you got added to the list):
+
+ "I don't know. This does not seem to be a particularly serious load."
+
+I'm not convinced this will show up outside of this kind of
+signal-sending microbenchmark.
+
+That said, I don't really see any downside to the patch either, so...
+
+                Linus
