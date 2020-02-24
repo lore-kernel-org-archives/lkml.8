@@ -2,68 +2,106 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F07C38BFF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F3EC38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B55B2084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C112084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="faavxfwY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2R+f4R/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgBXVcV (ORCPT
+        id S1728068AbgBXVc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:32:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgBXVcV (ORCPT
+        Mon, 24 Feb 2020 16:32:28 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:42534 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:32:21 -0500
+        Mon, 24 Feb 2020 16:32:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=emtDgV24Eo0XKJNO3XWaY50cgCvPe4AajCupipZ+mFM=; b=faavxfwYgJ6BV4aMG0yBGMTdvs
-        FIHOEugMta99lUrJ1bnzTZ/FRNYp6SPEABIaJ5EtGCi+eQP8a0kjK0ZbLdgXYa/37U/swNDVC13km
-        Va5rLvps0hefygpoSkbchuXiH08P6MV/rAg7EcSCaaM7QZSEw0JsM/CNamhza4du/dvIO9YVBTlnB
-        RoHdf0GoNG+qOIjDajjFjogi72piGjB1CilX1d9marpYm2pZ/fzynRHB+WFG63bofIN3ZLXSOH6JY
-        ttUElXB1HnhGmHknkGtgPrvb11HJuWiiU/SslxTdDxTUKWpXvJpAQegm1IrAR6sPxW+YVNdZRQbOd
-        Gj+d14cg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6LKu-0003kl-Dd; Mon, 24 Feb 2020 21:32:20 +0000
-Date:   Mon, 24 Feb 2020 13:32:20 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 01/24] mm: Move readahead prototypes from mm.h
-Message-ID: <20200224213220.GA13895@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-2-willy@infradead.org>
+        bh=91LwxLWvdfJmKpIkvnbgVBtKYjb/D3h4IRfL3vb9smw=; b=n2R+f4R/VQE8sdI8xxw08ZSM4s
+        2VktBF/WEtXYZWmIIdQvP5UhysH3fmG732lFdKX3UuW3KvVZxDlQrLYAgwAFu2KOyit6nHfP+FGnT
+        7Md1GgBE3FOnkz1ZuCi5cRgYkO3oRst5y4CJhT5TfCZfmXrg0xmNTm+jRKnAvlSTKMj3cMGERS3bX
+        Pv1uvCRdzjcnXlD2ECh65C6U91CA/ZbfyBabEGIqt0gpMQNKqKy9S0AudEZtcF3tW7erIgWu267bs
+        C4QD66T+Ig/yXxg891EnEeRR73Z8SX6hdCHRoWC3qLyTKtlssSdZsU09s274E7dP4NCl7uGM0v/NI
+        FbiOoWoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6LKP-0000dO-30; Mon, 24 Feb 2020 21:31:49 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 81F1C980E37; Mon, 24 Feb 2020 22:31:39 +0100 (CET)
+Date:   Mon, 24 Feb 2020 22:31:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
+        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
+Message-ID: <20200224213139.GO11457@worktop.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134215.328642621@infradead.org>
+ <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
+ <20200221202246.GA14897@hirez.programming.kicks-ass.net>
+ <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
+ <20200224112708.4f307ba3@gandalf.local.home>
+ <20200224163409.GJ18400@hirez.programming.kicks-ass.net>
+ <20200224114754.0fb798c1@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219210103.32400-2-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200224114754.0fb798c1@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:00:40PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Mon, Feb 24, 2020 at 11:47:54AM -0500, Steven Rostedt wrote:
+> On Mon, 24 Feb 2020 17:34:09 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> The readahead code is part of the page cache so should be found in the
-> pagemap.h file.  force_page_cache_readahead is only used within mm,
-> so move it to mm/internal.h instead.  Remove the parameter names where
-> they add no value, and rename the ones which were actively misleading.
+> > Looking at nmi_enter(), that leaves trace_hardirq_enter(), since we know
+> > we marked rcu_nmi_enter() as NOKPROBES, per the patches elsewhere in
+> > this series.
+> 
+> Maybe this was addressed already in the series, but I'm just looking at
+> Linus's master branch we have:
+> 
+> #define nmi_enter()                                             \
+>         do {                                                    \
+>                 arch_nmi_enter();                               \
+>                 printk_nmi_enter();                             \
+>                 lockdep_off();                                  \
+>                 ftrace_nmi_enter();                             \
+>                 BUG_ON(in_nmi());                               \
+>                 preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET); \
+>                 rcu_nmi_enter();                                \
+>                 trace_hardirq_enter();                          \
+>         } while (0)
+> 
+> 
+> Just want to confirm that printk_nmi_enter(), lockdep_off(),
+> and ftrace_nmi_enter() are all marked fully with NOKPROBE.
 
-Looks good,
+*sigh*, right you are, I only looked at notrace, not nokprobe.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+In particular the ftrace one is a bit off a mess, let me sort through
+that.
