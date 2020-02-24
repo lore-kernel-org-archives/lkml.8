@@ -2,184 +2,81 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DCAC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B331C35677
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF63D20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fa+M/SIx"
+	by mail.kernel.org (Postfix) with ESMTP id 4EA0520675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbgBXBOV (ORCPT
+        id S1727262AbgBXBOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:14:21 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42156 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbgBXBOV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:14:21 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O1ECQo043414;
-        Sun, 23 Feb 2020 19:14:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582506852;
-        bh=aCaZolvO1w+gXgM4OXSdKxdcHp5kUxbatq1qbCcKguk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Fa+M/SIx0LExWCdad6tPnLXy2XVLj1ArJOWOWhS0wskMEcr2MaZ6I8cN12Pozxmzb
-         IjOrwlcfaTcDLAaSVFvWpQoVLOx3pOroeiDXRHW/9rOo7qAWxBKuQDGYwbf+BRtz6E
-         e8/bMOLG1XmEpfqEIHDiT7tt12xKV3de5D4qEcpo=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01O1ECFO119648
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 23 Feb 2020 19:14:12 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 23
- Feb 2020 19:14:12 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 23 Feb 2020 19:14:12 -0600
-Received: from [10.250.132.7] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O1E8Xv050593;
-        Sun, 23 Feb 2020 19:14:09 -0600
-Subject: Re: [PATCH v3 1/4] dt-bindings: thermal: k3: Add VTM bindings
- documentation
-To:     Rob Herring <robh@kernel.org>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Tero Kristo <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200219074314.22829-1-j-keerthy@ti.com>
- <20200219074314.22829-2-j-keerthy@ti.com> <20200219145227.GA1317@bogus>
- <55b68963-b931-bf67-482e-146e42af4298@ti.com>
- <CAL_JsqJAdCT-xpqxYxkZO+JBHCcewhzb2ebiNJvPzSUyCcmP9g@mail.gmail.com>
-From:   "J, KEERTHY" <j-keerthy@ti.com>
-Message-ID: <3c1534b7-1ce4-8cf7-1e0a-9f566a66799f@ti.com>
-Date:   Mon, 24 Feb 2020 06:44:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 23 Feb 2020 20:14:34 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11100 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727167AbgBXBOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 20:14:33 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B8FFD31DE262BD82582E;
+        Mon, 24 Feb 2020 09:14:31 +0800 (CST)
+Received: from [127.0.0.1] (10.67.101.242) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Feb 2020
+ 09:14:27 +0800
+Subject: Re: [PATCH] crypto: hisilicon: remove redundant assignment of pointer
+ ctx
+To:     Colin King <colin.king@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>
+References: <20200222142409.141057-1-colin.king@canonical.com>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Xu Zaibo <xuzaibo@huawei.com>
+Message-ID: <e0133b58-5acc-5706-c369-6eeacf1c67a6@huawei.com>
+Date:   Mon, 24 Feb 2020 09:14:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJAdCT-xpqxYxkZO+JBHCcewhzb2ebiNJvPzSUyCcmP9g@mail.gmail.com>
+In-Reply-To: <20200222142409.141057-1-colin.king@canonical.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.67.101.242]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Yes, thank you!
 
-On 2/21/2020 1:10 AM, Rob Herring wrote:
-> On Wed, Feb 19, 2020 at 10:13 PM Keerthy <j-keerthy@ti.com> wrote:
->>
->>
->>
->> On 19/02/20 8:22 pm, Rob Herring wrote:
->>> On Wed, Feb 19, 2020 at 01:13:11PM +0530, Keerthy wrote:
->>>> Add VTM bindings documentation. In the Voltage Thermal
->>>> Management Module(VTM), K3 AM654 supplies a voltage
->>>> reference and a temperature sensor feature that are gathered in the band
->>>> gap voltage and temperature sensor (VBGAPTS) module. The band
->>>> gap provides current and voltage reference for its internal
->>>> circuits and other analog IP blocks. The analog-to-digital
->>>> converter (ADC) produces an output value that is proportional
->>>> to the silicon temperature.
->>>>
->>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
->>>> ---
->>>>
->>>> Changes in v3:
->>>>
->>>>     * Fixed errors seen with:
->>>>       dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
->>>>
->>>>    .../bindings/thermal/ti,am654-thermal.yaml    | 57 +++++++++++++++++++
->>>>    1 file changed, 57 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
->>>> new file mode 100644
->>>> index 000000000000..b6dc95c3acab
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
->>>> @@ -0,0 +1,57 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Texas Instruments AM654 VTM (DTS) binding
->>>> +
->>>> +maintainers:
->>>> +  - Keerthy <j-keerthy@ti.com>
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: ti,am654-vtm
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +
->>>> +  power-domains:
->>>> +    maxItems: 1
->>>> +    description: phandle to the associated power domain
->>>
->>> No need to redefine a standard property description.
->>
->> Okay.
->>
->>>
->>>> +
->>>> +  "#thermal-sensor-cells":
->>>> +    const: 1
->>>> +
->>>> +required:
->>>> +  - "#thermal-sensor-cells"
->>>> +  - compatible
->>>> +  - reg
->>>> +  - power-domains
->>>> +
->>>> +additionalProperties: false
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->>>> +    vtm: wkup_vtm0@42050000 {
->>>
->>> thermal-sensor@...
->>>
->>> Use generic node names and don't use '_' in node names
->>
->> vtm stands for voltage thermal manager and comprises of multiple
->> sensors. This is similar to omap bandgap. Should i replace vtm with more
->> generic name like thermal? as used in:
-> 
-> 'vtm' is a label and source construct only (until you do overlays), so
-> I don't care what you put really.
 
-Okay.
+On 2020/2/22 22:24, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Pointer ctx is being re-assigned with the same value as it
+> was initialized with. The second assignment is redundant and
+> can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/crypto/hisilicon/sec2/sec_crypto.c | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/crypto/hisilicon/sec2/sec_crypto.c b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+> index a2cfcc9ccd94..acd15507eb8a 100644
+> --- a/drivers/crypto/hisilicon/sec2/sec_crypto.c
+> +++ b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+> @@ -447,7 +447,6 @@ static int sec_skcipher_init(struct crypto_skcipher *tfm)
+>   	struct sec_ctx *ctx = crypto_skcipher_ctx(tfm);
+>   	int ret;
+>   
+> -	ctx = crypto_skcipher_ctx(tfm);
+>   	ctx->alg_type = SEC_SKCIPHER;
+>   	crypto_skcipher_set_reqsize(tfm, sizeof(struct sec_req));
+>   	ctx->c_ctx.ivsize = crypto_skcipher_ivsize(tfm);
 
-I will change in to:
 
-vtm: thermal@42050000 {
-
-Regards,
-Keerthy
-
-> 
-> Rob
-> 
