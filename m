@@ -2,102 +2,134 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F77C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF1C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D41220838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BD420838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g41PErF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgBXSWE (ORCPT
+        id S1727979AbgBXSWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:22:04 -0500
-Received: from mga17.intel.com ([192.55.52.151]:6019 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbgBXSWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:22:03 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 10:22:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="284426587"
-Received: from araj-mobl1.jf.intel.com ([10.24.11.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Feb 2020 10:22:02 -0800
-Date:   Mon, 24 Feb 2020 10:22:02 -0800
-From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v12 2/4] uacce: add uacce driver
-Message-ID: <20200224182201.GA22668@araj-mobl1.jf.intel.com>
-References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
- <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
+        Mon, 24 Feb 2020 13:22:41 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43785 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727438AbgBXSWl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:22:41 -0500
+Received: by mail-lf1-f67.google.com with SMTP id s23so7474756lfs.10;
+        Mon, 24 Feb 2020 10:22:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lO1820yXM1kR2FVVGTZ+ujBZ4C9qGvFZNasnsnO3YqI=;
+        b=g41PErF6G9DUh+x9iXgEt0exu0g4nKSFES0SiW/+ruBNlipaoJagG84+h1+ASnZVCs
+         LN4OWgy4A7rbxtoePdMfCMfGMsm92tfJ5LRcuIELnndLIRw7czgWnPEoltZUmWWsZyHb
+         AX6uq/Z8MOu8GzNIznwlX1tChE3ERvU2gScJr7geIV/7fKANCp6omuhwuJuG80rGVBJJ
+         kv3SN5dkscPUutWqgs8NPrvFUK7EoVnsG/qHlcblo194p5aU0KQjo7k0mJvwqQNJECxO
+         zHjvJAIa+aNKUG84kEjEnEf91dda1u1M1x04V6Rh93lyC79TXNQrwq4dIA519eKktNpM
+         aL0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lO1820yXM1kR2FVVGTZ+ujBZ4C9qGvFZNasnsnO3YqI=;
+        b=ps75zpI7pNkY4dHa1gO8Celc5fdtvlIGaACCGr3RRPTdg4GyyrZMtlMZqh5/LrAqJp
+         R1byctcP/HXSdbnt0alz/bKgF3BOid6SDTYcYQy1UfCKMzzz8M4t0r1Z+08eHwy7Z6MU
+         pUCxV6C1uRmEuANX4uBbmEA0NjrYRJqmAgcelnzRAxvWxZW/Ng3n/1zl7EPUML1ocjFU
+         SGzQieZyB8yRnMvST3ugVhcJdfDZUPCOv3FRVRuq2RLHOidA8nH8Yj1l1FHUmRU01FcG
+         ctEGQ0+5nMIehTQ7jFF+KC+b4C994z/ZZJfvWq6v4IKVAzFmhwI59v6WXSvOXR6wQu1U
+         ofNg==
+X-Gm-Message-State: APjAAAUt2x2/0istOtA+aqKMgN/gJa7nMbiW2TFSqNfWQEPl1vWyiyJt
+        LCYY/C+L1kliX6YG3qr4h3mV5/oN
+X-Google-Smtp-Source: APXvYqxnxim8gbAsgYo6E4n7YKceLi0CMN4LN5Qy8wdqUm37IovUbcalEUWRIr/o65enOGgrw7hAkQ==
+X-Received: by 2002:a19:2d53:: with SMTP id t19mr2250423lft.206.1582568556912;
+        Mon, 24 Feb 2020 10:22:36 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i67sm3895013lfi.11.2020.02.24.10.22.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 10:22:36 -0800 (PST)
+Subject: Re: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline
+ parameter
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Karel Zak <kzak@redhat.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Colin Cross <ccross@android.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-efi@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200219162339.16192-1-digetx@gmail.com>
+ <20200219162738.GA10644@infradead.org>
+ <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
+ <20200224163342.d4acf224b56celup@ws.net.home>
+ <9c7343eb-1b09-ffcf-cba0-11d6a26dfd77@gmail.com>
+Message-ID: <eb1e3a64-b1ac-94d0-07f7-c84a83d9b21e@gmail.com>
+Date:   Mon, 24 Feb 2020 21:22:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <9c7343eb-1b09-ffcf-cba0-11d6a26dfd77@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kenneth,
+24.02.2020 20:23, Dmitry Osipenko пишет:
+> 24.02.2020 19:33, Karel Zak пишет:
+>> On Wed, Feb 19, 2020 at 09:59:54AM -0700, Stephen Warren wrote:
+>>> On 2/19/20 9:27 AM, Christoph Hellwig wrote:
+>>>> On Wed, Feb 19, 2020 at 07:23:39PM +0300, Dmitry Osipenko wrote:
+>>>>> The gpt_sector=<sector> causes the GPT partition search to look at the
+>>>>> specified sector for a valid GPT header if the GPT is not found at the
+>>>>> beginning or the end of block device.
+>>>>>
+>>>>> In particular this is needed for NVIDIA Tegra consumer-grade Android
+>>>>> devices in order to make them usable with the upstream kernel because
+>>>>> these devices use a proprietary / closed-source partition table format
+>>>>> for the EMMC and it's impossible to change the partition's format. Luckily
+>>>>> there is a GPT table in addition to the proprietary table, which is placed
+>>>>> in uncommon location of the EMMC storage and bootloader passes the
+>>>>> location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
+>>>>>
+>>>>> This patch is based on the original work done by Colin Cross for the
+>>>>> downstream Android kernel.
+>>>>
+>>>> I don't think a magic command line is the way to go.  The best would be
+>>>> to reverse-engineer the proprietary partition table format.  If that is
+>>>> too hard we can at least key off the odd GPT location based of it's
+>>>> magic number.
+>>
+>>  +1
+>>
+>>> I thought that the backup GPT was always present in the standard location;
+>>
+>> If they have proprietary stuff on begin of the device and valid backup
+>> GPT at the end of the device then designer of this junk is crazy, because
+>> many GPT fdisk-like tools will try to recover from the backup header and 
+>> overwrite the unknown (invalid) stuff at the begin of the device...
+> 
+> It's a problem created by vendor, but these devices are assumed to run
+> Android-only. So it's not really that bad :)
+> 
 
-sorry for waking up late on this patchset.
-
-
-On Wed, Jan 15, 2020 at 10:12:46PM +0800, Zhangfei Gao wrote:
-[... trimmed]
-
-> +
-> +static int uacce_fops_open(struct inode *inode, struct file *filep)
-> +{
-> +	struct uacce_mm *uacce_mm = NULL;
-> +	struct uacce_device *uacce;
-> +	struct uacce_queue *q;
-> +	int ret = 0;
-> +
-> +	uacce = xa_load(&uacce_xa, iminor(inode));
-> +	if (!uacce)
-> +		return -ENODEV;
-> +
-> +	q = kzalloc(sizeof(struct uacce_queue), GFP_KERNEL);
-> +	if (!q)
-> +		return -ENOMEM;
-> +
-> +	mutex_lock(&uacce->mm_lock);
-> +	uacce_mm = uacce_mm_get(uacce, q, current->mm);
-
-I think having this at open time is a bit unnatural. Since when a process
-does fork, we do not inherit the PASID. Although it inherits the fd
-but cannot use the mmaped address in the child.
-
-If you move this to the mmap time, its more natural. The child could
-do a mmap() get a new PASID + mmio space to work with the hardware.
-
-
-> +	mutex_unlock(&uacce->mm_lock);
-> +	if (!uacce_mm) {
-> +		ret = -ENOMEM;
-> +		goto out_with_mem;
-> +	}
-> +
+Is there any way to mark parts of block device as read-only? Such that
+userspace couldn't write to the RO-marked sectors, I guess that could
+help to save someone's bacon.
