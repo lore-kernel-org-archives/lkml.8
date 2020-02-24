@@ -2,147 +2,189 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B1DC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5053C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E23218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582582789;
-	bh=SpqMquaLiMdlIYmgDgUBa/NScKO2YXql62ts3Rj0R9o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fRi9LpapKNO7nPjziQxrqDepAdbJ8MkopytSXrRo0SklnuhZqcDM0poSIV7s3tMYl
-	 3N8MrzHOpTw5SYr/GhXCPW8bZjSWXjRMEHCoOG9YJ7uIT+oYkTkNeSbgnxKBw7BP3Z
-	 iW7ez2/pXENfMjl2P4kYmxUOdRfuCqqtUKBdz//s=
+	by mail.kernel.org (Postfix) with ESMTP id 77B452176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:21:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TI4kigIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgBXWTs (ORCPT
+        id S1728104AbgBXWVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:19:48 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43098 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBXWTr (ORCPT
+        Mon, 24 Feb 2020 17:21:55 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58045 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726687AbgBXWVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:19:47 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dc19so13806937edb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ua04IHV/ut+warGhjtTc9FaMw6Bd0KLfUZB1G7Gfy5Q=;
-        b=ElTkCgl31gTmXuIVqXl/uPaWGalYNpP+qRWjSoF43DlMSMCKC+/cickD9VJi+HW9vS
-         stai2Vrem28ry4B9BhC8qkINuTx4zxYCZ4PdQfuoOkmReszGllzOPpNEYYLazhf7GJiq
-         wYPvn2CW4vjLZ5FQ5ISPxpeav1N9/ta9w8lbw=
+        Mon, 24 Feb 2020 17:21:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582582913;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MlgLBPA54fWuuAEYeFoGWhJfgNH9YMvWTW66al92frM=;
+        b=TI4kigIRN0rrL2w9tuK8x0JjwZgh4OVns11CTARDvOzghFEMGuItLtLQijrNFlnCHZVnZg
+        oUgfxG9QwSNc0bwunRsDOmiv1+NqEOmZYUwvAfw3ymbSPZBdPYzirHFvPtO1PhRwmTBqM7
+        /avtTPQJuqQZ9U8kDxJzXq6iI+/6HWQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-ZOGpzucaNq28w5mdfVtyKg-1; Mon, 24 Feb 2020 17:21:50 -0500
+X-MC-Unique: ZOGpzucaNq28w5mdfVtyKg-1
+Received: by mail-wr1-f72.google.com with SMTP id d9so3055788wrv.21
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:21:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ua04IHV/ut+warGhjtTc9FaMw6Bd0KLfUZB1G7Gfy5Q=;
-        b=fyMLDCBgql8Rp/Y8RIB6iK1Yq/wKuzFiDuzQjaJ/NnN8aZZxVnjMhWSALJd34RN4mw
-         JsKRLKgwPsI8SU/vMmHa3ysFo4Qon7SobJtMxYXO+7+mlmSC8ORt36y65wdQ/wz4qr/u
-         DlDRmrRf/AhkXL+/J6R+MNmNH1Rzntp8vVDx/ymUsg6Wuy1qwTMfWihVQW/imhk6RcFk
-         751Jqq6JWVWxKa9O0jDhuU20bSmzTxkzOQDr9aYoTvTQ4My9SB6exDuG8j76OnfShHVW
-         cnh2cXWmZq4BLAq58OxVMiAoqXe4eO/WVVPjxs09S46a2fdhL4ozMH7WEu1+gUL6Lrti
-         ygoQ==
-X-Gm-Message-State: APjAAAVq/yIoYQ49IsZ+QmVHt6nU3LD/cvmvxonK+C8KCMA9I6k3n7Zx
-        jIXPjfLAfo/QrVLL4eNIQLX+8jvx7mU=
-X-Google-Smtp-Source: APXvYqwYoAoSg2zlaGKLnZp8Os91SFoWr4ybIXkE4YSVBI2TFt1GhnCMjqSwUkDhGTUmYFobxQud5g==
-X-Received: by 2002:a17:906:d0d1:: with SMTP id bq17mr49722875ejb.55.1582582785492;
-        Mon, 24 Feb 2020 14:19:45 -0800 (PST)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id dc5sm1093425edb.61.2020.02.24.14.19.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 14:19:45 -0800 (PST)
-Received: by mail-wr1-f54.google.com with SMTP id m16so12279133wrx.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:19:45 -0800 (PST)
-X-Received: by 2002:a2e:9d92:: with SMTP id c18mr11413148ljj.265.1582582387885;
- Mon, 24 Feb 2020 14:13:07 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=MlgLBPA54fWuuAEYeFoGWhJfgNH9YMvWTW66al92frM=;
+        b=cg85wTCY6z251BeEMSJT+OM4dTaRA5DDBvLsxQpyPbOp+6l0RIBiExvHl/YdZY6RD/
+         mcpu/DDwuDb/G80+ww5LNMnG1Vo2Y3hX8NebvTEmuj1So/L/4v/gjaIh6dvnoSeDyvuP
+         UYl6FK3FmDgkoZx8S4cFSB5ZuqUbAHb8jS3ts8Gf/lOY5FsRgDeoRh2jPGH6zSB7qPqP
+         ye6y1AZsKRZhu8JrnGa+6pILkFvCwt95SOV7nwxQ2z6acgtmVqaI07UwNyQrLvldC8/z
+         qvsuSj3Kb12u1eSEaf+KjzwzvDdegNp7RqTVZU1hlrLXFfLj4SIUXRKdfsxQhXLztMAA
+         hjtw==
+X-Gm-Message-State: APjAAAWDc4KExoOgVoYIwwXBgYeGoNUIZGyHuERvrpzHFScCFTrDgjL+
+        x4U7L3LKCJdEGe7VzWlgnbG/ugbvXS6OGZ0KWNzElzDPPm001zaFlbNJMfLV8bP3q0Cb4v/HW2k
+        jm6KuW2tJOptKYrT1u93Kt/Ic
+X-Received: by 2002:a5d:55d2:: with SMTP id i18mr12087167wrw.287.1582582909001;
+        Mon, 24 Feb 2020 14:21:49 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwv1OrYJptTCi459Nv4K1OBAqX8b1+jzsWwgqC+Y0BdxTs1+Ttq2a4ssxOPNtqrc/4OGz6Qyg==
+X-Received: by 2002:a5d:55d2:: with SMTP id i18mr12087142wrw.287.1582582908750;
+        Mon, 24 Feb 2020 14:21:48 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id p15sm1067820wma.40.2020.02.24.14.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 14:21:48 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 45/61] KVM: x86: Fold CPUID 0x7 masking back into __do_cpuid_func()
+In-Reply-To: <20200201185218.24473-46-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-46-sean.j.christopherson@intel.com>
+Date:   Mon, 24 Feb 2020 23:21:47 +0100
+Message-ID: <87wo8bmxs4.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200205123216.GO12867@shao2-debian> <20200205125804.GM14879@hirez.programming.kicks-ass.net>
- <20200221080325.GA67807@shbuild999.sh.intel.com> <20200221132048.GE652992@krava>
- <20200223141147.GA53531@shbuild999.sh.intel.com> <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
- <20200224003301.GA5061@shbuild999.sh.intel.com> <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
- <20200224021915.GC5061@shbuild999.sh.intel.com> <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
- <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
- <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
- <87a757znqd.fsf@x220.int.ebiederm.org> <CAHk-=wh0z0LErNzwe-AqrEkv3BNzJep58Qmi2dM775UPtmq0og@mail.gmail.com>
- <8736azzlwq.fsf@x220.int.ebiederm.org>
-In-Reply-To: <8736azzlwq.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 24 Feb 2020 14:12:51 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgXr1JcW3hyomWh8Y8Kr9wNq-+6r+CocY8EfXvuW7giHg@mail.gmail.com>
-Message-ID: <CAHk-=wgXr1JcW3hyomWh8Y8Kr9wNq-+6r+CocY8EfXvuW7giHg@mail.gmail.com>
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 2:02 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+> Move the CPUID 0x7 masking back into __do_cpuid_func() now that the
+> size of the code has been trimmed down significantly.
 >
-> Other than scratching my head about why are we optimizing neither do I.
+> Tweak the WARN case, which is impossible to hit unless the CPU is
+> completely broken, to break the loop before creating the bogus entry.
+>
+> Opportunustically reorder the cpuid_entry_set() calls and shorten the
+> comment about emulation to further reduce the footprint of CPUID 0x7.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 62 ++++++++++++++++----------------------------
+>  1 file changed, 22 insertions(+), 40 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 77a6c1db138d..7362e5238799 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -456,44 +456,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
+>  	return 0;
+>  }
+>  
+> -static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+> -{
+> -	switch (entry->index) {
+> -	case 0:
+> -		entry->eax = min(entry->eax, 1u);
+> -		cpuid_entry_mask(entry, CPUID_7_0_EBX);
+> -		/* TSC_ADJUST is emulated */
+> -		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+> -		cpuid_entry_mask(entry, CPUID_7_ECX);
+> -		cpuid_entry_mask(entry, CPUID_7_EDX);
+> -		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+> -			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+> -		if (boot_cpu_has(X86_FEATURE_STIBP))
+> -			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
+> -		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+> -			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
+> -		/*
+> -		 * We emulate ARCH_CAPABILITIES in software even
+> -		 * if the host doesn't support it.
+> -		 */
+> -		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
+> -		break;
+> -	case 1:
+> -		cpuid_entry_mask(entry, CPUID_7_1_EAX);
+> -		entry->ebx = 0;
+> -		entry->ecx = 0;
+> -		entry->edx = 0;
+> -		break;
+> -	default:
+> -		WARN_ON_ONCE(1);
+> -		entry->eax = 0;
+> -		entry->ebx = 0;
+> -		entry->ecx = 0;
+> -		entry->edx = 0;
+> -		break;
+> -	}
+> -}
+> -
+>  static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  {
+>  	struct kvm_cpuid_entry2 *entry;
+> @@ -555,14 +517,34 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		break;
+>  	/* function 7 has additional index. */
+>  	case 7:
+> -		do_cpuid_7_mask(entry);
+> +		entry->eax = min(entry->eax, 1u);
+> +		cpuid_entry_mask(entry, CPUID_7_0_EBX);
+> +		cpuid_entry_mask(entry, CPUID_7_ECX);
+> +		cpuid_entry_mask(entry, CPUID_7_EDX);
+> +
+> +		/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+> +		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+> +		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
+> +
+> +		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+> +			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+> +		if (boot_cpu_has(X86_FEATURE_STIBP))
+> +			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
+> +		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+> +			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
+>  
+>  		for (i = 1, max_idx = entry->eax; i <= max_idx; i++) {
+> +			if (WARN_ON_ONCE(i > 1))
+> +				break;
+> +
+>  			entry = do_host_cpuid(array, function, i);
+>  			if (!entry)
+>  				goto out;
+>  
+> -			do_cpuid_7_mask(entry);
+> +			cpuid_entry_mask(entry, CPUID_7_1_EAX);
+> +			entry->ebx = 0;
+> +			entry->ecx = 0;
+> +			entry->edx = 0;
+>  		}
+>  		break;
+>  	case 9:
 
-You can see the background on lore
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-  https://lore.kernel.org/lkml/20200205123216.GO12867@shao2-debian/
+-- 
+Vitaly
 
-and the thread about the largely unexplained regression there. I had a
-wild handwaving theory on what's going on in
-
-  https://lore.kernel.org/lkml/CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com/
-
-but yes, the contention only happens once you have a lot of cores.
-
-That said, I suspect it actually improves performance on that
-microbenchmark even without the contention - just not as noticeably.
-I'm running a kernel with the patch right now, but I wasn't going to
-boot back into an old kernel just to test that. I was hoping that the
-kernel test robot people would just check it out.
-
-> It would help to have a comment somewhere in the code or the commit
-> message that says the issue is contetion under load.
-
-Note that even without the contention, on that "send a lot of signals"
-case it does avoid the second atomic op, and the profile really does
-look better.
-
-That profile improvement I can see even on my own machine, and I see
-how the nasty CPU bug avoidance (the "verw" on the system call exit
-path) goes from 30% to 31% cost.
-
-And that increase in the relative cost of the "verw" on the profile
-must mean that the actual real code just improved in performance (even
-if I didn't actually time it).
-
-With the contention, you get that added odd extra regression that
-seems to depend on exact cacheline placement.
-
-So I think the patch improves performance (for this "lots of queued
-signals" case) in general, and I hope it will also then get rid of
-that contention regression.
-
-                   Linus
