@@ -2,122 +2,169 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58901C11D2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB5AC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA6120658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hNX7A17R";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UB+LyOuj"
+	by mail.kernel.org (Postfix) with ESMTP id 0E96B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgBXJSN (ORCPT
+        id S1727758AbgBXJSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:18:13 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:39093 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727168AbgBXJSM (ORCPT
+        Mon, 24 Feb 2020 04:18:16 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:56921 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgBXJSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:18:12 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 758296FF4;
-        Mon, 24 Feb 2020 04:18:11 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:18:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=2VnOSy+3DXO97qhGNXt4Spz18WD
-        yHUSX81DuJnanSz8=; b=hNX7A17RBZUX4hBcqnYqP/48iwn86MHoidSrqwYYS3x
-        G7ezQglw0KIsme7t5JDgIJttVq4bmz25LTx7RQEuLXvRc2n3AeL7ABTTUVnN9THY
-        IJ1VFnTfIEcZAexmRLswPWx8L2Pq7TqMZV0lITGklUSvy8CjDEDnIAXFkFrPyinq
-        n5hECwBMFGKWZ1LZ2yWLtdqe5dqdCYFXfVBO9i00aRCNe94C6FSNYPociDLpd2qT
-        lNKcyJvVw5HD5jiiKSuq4uFJ80viZBxA2x2qTIw50Kcd/n3X0OpzEam5tc2tVnGI
-        C3Bj2saKp6Y4z1Jd01gIj7IhBSmvZMJBSIilxZzjBQA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2VnOSy
-        +3DXO97qhGNXt4Spz18WDyHUSX81DuJnanSz8=; b=UB+LyOujSuXg63CQn1Qq31
-        3VnV7fExDdzy6mqSgD1qW5Xv1ZWpuc1sd+H+zD6a+cvm9gq+AFww8jVGqrMIQ8yY
-        dDAzp6peQaQG/tUkwWjKo4CyRHSWcK464vOebPD2p9Hpdi72Sel07cFqMz8uv/uR
-        j7M/V6Wh5a2X7wl0R5bkYtOnAR/0LkweKdzj4I3ZuNBjVnolbCJnSEcmKaP/Hs0n
-        dIVVHyG5kiJevoWT+Ls0d8nCJNkpolaWCWw7TNUlkM95C0JgCQXoexnR1eGRlJNb
-        zhp6O43gzGZ7OG0Xn6W4dEsychjUfzfI5qPFtjQWhPC+tX0OG9utt70T65G50yKg
-        ==
-X-ME-Sender: <xms:05RTXv0YPnGmwVuKELFToEd_g0qRP8NQ9r7usG0QRHo9m7--3PpPWg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epmhgvghhouhhsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:05RTXoshoPK7pOxYrp0ct_K-uuwvbTrNpnSuL89eqQz4NcgReE_KRw>
-    <xmx:05RTXl7gFrS16oAeAPc3Rz1p0Nl6y5MrO3nZYhbmTQMo7EIBBei8JA>
-    <xmx:05RTXkf4AF8VryzMmEyQiq5z7VxyVom0FAxNUrFcdsfHxd5VkgrOaQ>
-    <xmx:05RTXhPMyrLR0BIG7cj9XXEnhFR4mWTC9lcgPoIuxTE49zNY7eBJRw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1547E3060FD3;
-        Mon, 24 Feb 2020 04:18:10 -0500 (EST)
-Date:   Mon, 24 Feb 2020 10:18:09 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Sunil Mohan Adapa <sunil@medhas.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Add support for PocketBook Touch Lux 3 e-book reader
-Message-ID: <20200224091809.teqbrhpzgirda4cx@gilmour.lan>
-References: <20200223031614.515563-1-megous@megous.com>
+        Mon, 24 Feb 2020 04:18:14 -0500
+Received: by mail-io1-f70.google.com with SMTP id d13so14338268ioo.23
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:18:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Mf+jlK9KZr8krnerxo+HMUq0lwL4/YXg+aLzSPa1uSo=;
+        b=b+8z42aJeGxOkzzlPu0sCX+3mcRJkBGhLuZshNkDBu2KeuT5eUQEnkHeBWOuLkhweg
+         RdeJABnH3WPX4llVJ60M0ORffuVW3TQJAIFqLnqLqHiyBA9kstjT7tojZZdZqmQTJnjB
+         hbHh5qy76w3aJ8aZdiB4kNIh5PPuN3FCEw28kxC+ntfSp0DDYHdKBswrOKWwI6ap6CKM
+         r0rQMsE4nQLAuhmuIkZeior7nA35Mt51KcnG3k3jPGTo5fKP8d6T5v6GaDHwTAy1C2ku
+         c+rfsT39jm4o2L6vBAruAPm/qN7IeO6kmCBzg8nFB0t0CWvuGrIeF8QGd/cLRySi+W7f
+         pDhw==
+X-Gm-Message-State: APjAAAUHpW4z0wFeDp4fB67cLNgqWi/5smduK19cshOh9wbBIgmoO3F9
+        ApEGVHZzJUovP13ZEV03kEEabwjQ0v1uPwHhA9lH6gbwK/xZ
+X-Google-Smtp-Source: APXvYqwwUHoOiTOqYw1Z4Rj4yUORcLtd3JosVaujD6a0RENc1EnfPrfxO/lVu+Nyd4TO4+o5xEPX3erXgcxmCWYyWyiNYH2H0L3A
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fqx3qgvmmsrljpca"
-Content-Disposition: inline
-In-Reply-To: <20200223031614.515563-1-megous@megous.com>
+X-Received: by 2002:a92:1a12:: with SMTP id a18mr57454946ila.10.1582535894205;
+ Mon, 24 Feb 2020 01:18:14 -0800 (PST)
+Date:   Mon, 24 Feb 2020 01:18:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d18d83059f4ed9ad@google.com>
+Subject: KASAN: use-after-free Read in vt_do_kdgkb_ioctl
+From:   syzbot <syzbot+a58bfd517766aef83043@syzkaller.appspotmail.com>
+To:     dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-kernel@vger.kernel.org, rei4dan@gmail.com,
+        slyfox@gentoo.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---fqx3qgvmmsrljpca
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot found the following crash on:
 
-On Sun, Feb 23, 2020 at 04:16:11AM +0100, Ondrej Jirman wrote:
-> This series adds a fairly complete support for this e-book reader.
->
-> Missing parts are eink display driver and the touch panel driver.
-> Support for both is available out-of-tree for now at:
->   https://megous.com/git/linux/log/?h=pb-5.6
->
-> The rest of the board is supported by the mainline drivers.
->
-> Please take a look.
+HEAD commit:    54dedb5b Merge tag 'for-linus-5.6-rc3-tag' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=100403d9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
+dashboard link: https://syzkaller.appspot.com/bug?extid=a58bfd517766aef83043
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Applied 2 and 3, thanks!
-Maxime
+Unfortunately, I don't have any reproducer for this crash yet.
 
---fqx3qgvmmsrljpca
-Content-Type: application/pgp-signature; name="signature.asc"
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a58bfd517766aef83043@syzkaller.appspotmail.com
 
------BEGIN PGP SIGNATURE-----
+==================================================================
+BUG: KASAN: use-after-free in vt_do_kdgkb_ioctl+0xb24/0xb50 drivers/tty/vt/keyboard.c:2025
+Read of size 1 at addr ffff8880a4a8c801 by task syz-executor.4/27890
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOU0QAKCRDj7w1vZxhR
-xW2DAQCiFvMw9EjUs7TQc7LJ2hozvZzWnmOKjgfWyMWSbkjMxwEAzDPUWCF2EBy5
-Myv7TAuzmgu4b6L9Uo+lEOlaRvkBewQ=
-=mNCG
------END PGP SIGNATURE-----
+CPU: 1 PID: 27890 Comm: syz-executor.4 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ vt_do_kdgkb_ioctl+0xb24/0xb50 drivers/tty/vt/keyboard.c:2025
+ vt_ioctl+0x47e/0x26c0 drivers/tty/vt/vt_ioctl.c:549
+ tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x123/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c429
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0f2868cc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f0f2868d6d4 RCX: 000000000045c429
+RDX: 0000000020000200 RSI: 0000000000004b48 RDI: 0000000000000003
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000041a R14: 00000000004c676d R15: 000000000076bf2c
 
---fqx3qgvmmsrljpca--
+Allocated by task 1548:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x163/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ vt_do_kdgkb_ioctl+0x3d1/0xb50 drivers/tty/vt/keyboard.c:2078
+ vt_ioctl+0x47e/0x26c0 drivers/tty/vt/vt_ioctl.c:549
+ tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x123/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 27892:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ vt_do_kdgkb_ioctl+0x5b4/0xb50 drivers/tty/vt/keyboard.c:2104
+ vt_ioctl+0x47e/0x26c0 drivers/tty/vt/vt_ioctl.c:549
+ tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x123/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a4a8c800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 1 bytes inside of
+ 1024-byte region [ffff8880a4a8c800, ffff8880a4a8cc00)
+The buggy address belongs to the page:
+page:ffffea000292a300 refcount:1 mapcount:0 mapping:ffff8880aa400c40 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00026aa6c8 ffffea000210b1c8 ffff8880aa400c40
+raw: 0000000000000000 ffff8880a4a8c000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a4a8c700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a4a8c780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880a4a8c800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8880a4a8c880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a4a8c900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
