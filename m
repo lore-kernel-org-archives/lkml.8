@@ -6,116 +6,112 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1EAC35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFC8C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178EA2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3BB2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbgBXCRM (ORCPT
+        id S1727197AbgBXCTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:17:12 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53303 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXCRM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:17:12 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so3479350pjc.3;
-        Sun, 23 Feb 2020 18:17:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=aY7a1yOVsQSkzgjtNx+4l8akXJgAh6uvUVK0XKNtpLU=;
-        b=OTJotyAZNRltBfxzeFpI0aDRMdM4fW37fsRYNezbd2oXtPTKg2mF0zGKlz4XOmpSN3
-         Nr6wiWs7NgbUS74DIv9xN/vg7r0TzufimnCslGewmZLpc+EDjbU2HPHJpYz2sCzQEivu
-         toTtb+62QQ2gKVa1iqJ+NxtF2ZHyFnpShSViJo1/Lf9t7k0Isxq7NtwgDk/tvdLJFNrn
-         f03v4kKkXxDXsnZHGFzpjrcjU86TdFklUR1Gj0JisInboI3Ui5W/eEvn5bkolueHU3Hr
-         2ZtOTr4MCMLfgQTBDcoqLWAiZx3BGYzZ+AZAnn6Z6A3B07e0A+TUCMbamlMTVL38I7MC
-         x1vw==
-X-Gm-Message-State: APjAAAX3EEITOwfFBL9oNm+rVmXjcrchMcsdYdMCBuuSFJ+mfUWeN3wQ
-        zaRMN/fUZamCo3Qqisvh0lcC8ndzfqg=
-X-Google-Smtp-Source: APXvYqxokF7ddUn8l9JrOfuXCMFi729mweHqKGCiPuypte/ivu5uJzEdqKIwtHmz5NUHwCBFHjwLKg==
-X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr17824017pjr.17.1582510631222;
-        Sun, 23 Feb 2020 18:17:11 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:e878:dc9f:85a:3cab? ([2601:647:4000:d7:e878:dc9f:85a:3cab])
-        by smtp.gmail.com with ESMTPSA id a2sm10516056pfi.30.2020.02.23.18.17.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 18:17:10 -0800 (PST)
-Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98
- (Debian)
-To:     Ondrej Zary <linux@zary.sk>
-Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <202002231929.01662.linux@zary.sk>
- <12dcd970-2aa6-2a9a-0f8c-029201ea84df@acm.org>
- <202002232057.16101.linux@zary.sk>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <336cb7b1-5e40-5830-3c1c-4389257081ea@acm.org>
-Date:   Sun, 23 Feb 2020 18:17:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 23 Feb 2020 21:19:21 -0500
+Received: from mga11.intel.com ([192.55.52.93]:28260 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727151AbgBXCTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 21:19:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 18:19:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,478,1574150400"; 
+   d="scan'208";a="435762537"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Feb 2020 18:19:16 -0800
+Date:   Mon, 24 Feb 2020 10:19:15 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Message-ID: <20200224021915.GC5061@shbuild999.sh.intel.com>
+References: <20200205123216.GO12867@shao2-debian>
+ <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com>
+ <20200221132048.GE652992@krava>
+ <20200223141147.GA53531@shbuild999.sh.intel.com>
+ <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com>
+ <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <202002232057.16101.linux@zary.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-23 11:57, Ondrej Zary wrote:
-> On Sunday 23 February 2020 20:26:39 Bart Van Assche wrote:
->> On 2020-02-23 10:29, Ondrej Zary wrote:
->>> a couple of days after upgrading a server from Debian 9 (kernel 4.9.210-1)
->>> to 10 (kernel 4.19.98), qla2xxx crashed, along with mysql.
->>>
->>> There is an EMC CX3 array connected through the fibre-channel adapter.
->>> No errors are present in EMC event log.
->>>
->>> This server was running without any problems since Debian 4.
->>> Is this a known bug?
->>
->> Please report issues encountered with Debian kernels in the Debian bug
->> tracker. If you want the upstream community to assist please retest with
->> an upstream kernel.
+On Sun, Feb 23, 2020 at 05:06:33PM -0800, Linus Torvalds wrote:
+ 
+> >      ffffffff8225b580 d types__ptrace
+> >      ffffffff8225b5c0 D root_user
+> >      ffffffff8225b680 D init_user_ns
 > 
-> Debian kernel does not have any patches related to qla2xxx driver:
-> https://salsa.debian.org/kernel-team/linux/raw/debian/4.19.98-1/debian/patches/series
+> I'm assuming this is after the alignment patch (since that's 64-byte
+> aligned there).
 > 
-> It crashed after running for 11 days. Not a quick&easy test.
+> What was it without the alignment?
 
-It would help a lot if the crash address would be translated into a
-source code line number. Something like the following commands should do
-the trick:
-$ gdb drivers/scsi/qla2xxx/qla2xxx.ko
-(gdb) list *(qla24xx_async_abort_cmd+0x1b)
+For 5.0-rc6: 
+	ffffffff8225b4c0 d types__ptrace
+	ffffffff8225b4e0 D root_user
+	ffffffff8225b580 D init_user_ns
+
+For 5.0-rc6 + 81ec3f3c4c4
+	ffffffff8225b580 d types__ptrace
+	ffffffff8225b5a0 D root_user
+	ffffffff8225b640 D init_user_ns
+
+The sigpending and __count are in the same cachline.
+
+> 
+> > No, it's not the biggest, I tried another machine 'Xeon Phi(TM) CPU 7295',
+> > which has 72C/288T, and the regression is not seen. This is the part
+> > confusing me :)
+> 
+> Hmm.
+> 
+> Humor me - what  happens if you turn off SMT on that Cascade Lake
+> system?  Maybe it's about the thread ID bit in the L1? Although again,
+> I'd have expected things to get _worse_ if it's the two fields that
+> are now in the same cachline thanks to alignment.
+
+I'll try it and report back.
+ 
+> The Xeon Phi is the small-core setup, right? They may be slow enough
+> to not show the issue as clearly despite having more cores. And it
+> wouldn't show effects of some out-of-order speculative cache accesses.
+
+Yes, seems the Xeon Phi is using 72 Silvermont cores. And the less bigger
+platform I tested was a 2 sockets 48C/96T Cascadelake platform which
+doesn't reproduce the regression.
 
 Thanks,
-
-Bart.
+Feng
