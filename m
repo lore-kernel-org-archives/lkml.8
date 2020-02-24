@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6C8C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D86C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33B420732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9F320828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d/feeFTD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s6hbGaOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgBXKit (ORCPT
+        id S1727592AbgBXKi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:38:49 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:40442 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727497AbgBXKit (ORCPT
+        Mon, 24 Feb 2020 05:38:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:16209 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727521AbgBXKiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:38:49 -0500
+        Mon, 24 Feb 2020 05:38:55 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582540728; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1582540734; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=hJeMa7XtxxBR0qJQ96WklqdiqUpuI43XchMLbpitEvA=; b=d/feeFTD2fE4n8m9Z0voZGuuR3SPwq4SrUH3MokvduQRxjF2vZwM57Vp7zwKgNWRG8y3sBqH
- ZZxCIvd4vWix5xAtINw5a4ZITkgSh/ohINM4ZYMvAPff+CXT+LaF93N1my/mx5Awx3midkos
- HjOXb3OMryzNiCZjVtqrRNp36ls=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=CIYjt4lnjoJu9GaTu0LPPzz57u8zb6c0g+zAu6aEuBU=; b=s6hbGaOjWvnxbLmIhUyAca/rs93LAHnc3cX4S0FFfZoEFZOJA6Ita7FlopwnaRY76lodw8h7
+ 8aZvB/OHpTmYwzMZjmdzSTfVdzCaapLPIUR7eOFLOIZUJxMEbWFiJcYrsbmmEDyqtzjgkkDd
+ 0jRmb10RQVvycEFv7+1Mumq1rpc=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e53a7b4.7fc054daa8b8-smtp-out-n01;
- Mon, 24 Feb 2020 10:38:44 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e53a7be.7fc05355e0a0-smtp-out-n01;
+ Mon, 24 Feb 2020 10:38:54 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CCE44C447A2; Mon, 24 Feb 2020 10:38:42 +0000 (UTC)
+        id 029DAC4479D; Mon, 24 Feb 2020 10:38:53 +0000 (UTC)
 Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 206E0C4479D;
-        Mon, 24 Feb 2020 10:38:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 206E0C4479D
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D99AC447A4;
+        Mon, 24 Feb 2020 10:38:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D99AC447A4
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
 From:   Taniya Das <tdas@codeaurora.org>
@@ -55,9 +55,9 @@ Cc:     David Brown <david.brown@linaro.org>,
         Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
         robh@kernel.org, robh+dt@kernel.org,
         Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v5 1/5] dt-bindings: clock: Add support for Modem clocks in GCC
-Date:   Mon, 24 Feb 2020 16:08:19 +0530
-Message-Id: <1582540703-6328-2-git-send-email-tdas@codeaurora.org>
+Subject: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
+Date:   Mon, 24 Feb 2020 16:08:21 +0530
+Message-Id: <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
 References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
@@ -66,31 +66,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock ids for GCC MSS clocks which are required to bring the modem
-out of reset.
+The Modem Subsystem clock provider have a bunch of generic properties
+that are needed in a device tree. Add a YAML schemas for those.
 
 Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- include/dt-bindings/clock/qcom,gcc-sc7180.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-index e8029b2e..64909ec 100644
---- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-+++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-@@ -132,6 +132,11 @@
- #define GCC_VIDEO_GPLL0_DIV_CLK_SRC				122
- #define GCC_VIDEO_THROTTLE_AXI_CLK				123
- #define GCC_VIDEO_XO_CLK					124
-+#define GCC_MSS_CFG_AHB_CLK					125
-+#define GCC_MSS_MFAB_AXIS_CLK					126
-+#define GCC_MSS_NAV_AXI_CLK					127
-+#define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
-+#define GCC_MSS_SNOC_AXI_CLK					129
-
- /* GCC resets */
- #define GCC_QUSB2PHY_PRIM_BCR					0
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+new file mode 100644
+index 0000000..72493dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-mss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Modem Clock Controller Binding
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm modem clock control module which supports the clocks.
++
++  See also dt-bindings/clock/qcom,mss-sc7180.h.
++
++properties:
++  compatible:
++    enum:
++       - qcom,sc7180-mss
++
++  clocks:
++    items:
++      - description: gcc_mss_mfab_axi clock from GCC
++      - description: gcc_mss_nav_axi clock from GCC
++      - description: gcc_mss_cfg_ahb clock from GCC
++
++  clock-names:
++    items:
++      - const: gcc_mss_mfab_axis
++      - const: gcc_mss_nav_axi
++      - const: cfg_ahb
++
++  '#clock-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++    clock-controller@41a8000 {
++      compatible = "qcom,sc7180-mss";
++      reg = <0 0x041a8000 0 0x8000>;
++      clocks = <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++               <&gcc GCC_MSS_NAV_AXI_CLK>,
++               <&gcc GCC_MSS_CFG_AHB_CLK>;
++      clock-names = "gcc_mss_mfab_axis",
++                    "gcc_mss_nav_axi",
++                    "cfg_ahb";
++      #clock-cells = <1>;
++    };
++...
 --
 Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
 of the Code Aurora Forum, hosted by the  Linux Foundation.
