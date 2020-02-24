@@ -2,196 +2,134 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B29CC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8377AC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2839220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F31820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ky1k0yEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBXPUr (ORCPT
+        id S1728114AbgBXPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:20:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50323 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgBXPUq (ORCPT
+        Mon, 24 Feb 2020 10:21:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25651 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727689AbgBXPVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:20:46 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6FX7-0005tv-QC; Mon, 24 Feb 2020 16:20:33 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 67FD01C213A;
-        Mon, 24 Feb 2020 16:20:33 +0100 (CET)
-Date:   Mon, 24 Feb 2020 15:20:33 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Reorder enqueue/dequeue_task_fair path
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Dietmar Eggemann" <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200224095223.13361-5-mgorman@techsingularity.net>
-References: <20200224095223.13361-5-mgorman@techsingularity.net>
+        Mon, 24 Feb 2020 10:21:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582557705;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IopEsTUE5lI0cUR+880LPC7mmamlm8psrnpSr2ASOkM=;
+        b=Ky1k0yElfVQ2sDSsP50Jy4r67xb1isuU9oMpdbc/pyzvCbIMXHo3XmMrcHt5Jok7aOv0Hq
+        HyzpSgmPpAP+vkHvOwS49bzy7faFOeli/PAMk4tWoKnLLsNi5aGYZtD5axzUF4ldcq66cm
+        z1rJutYVdXxv9Lt/uUUf4KRzthLmkEY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-129-xuUEZvpAOp28pOJ9K1T-PQ-1; Mon, 24 Feb 2020 10:21:44 -0500
+X-MC-Unique: xuUEZvpAOp28pOJ9K1T-PQ-1
+Received: by mail-wr1-f69.google.com with SMTP id t3so3965743wrp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 07:21:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=IopEsTUE5lI0cUR+880LPC7mmamlm8psrnpSr2ASOkM=;
+        b=IWzLdwlv71lOX/1gVXHDOWHmoow0/n1Ijljjv0iUTMjRoHGWhtb2r2JCWScZ967IEx
+         fvTxCO3HPHIWv9rUX3xpSgV30SxH3/+rsVRD2y+XPl38lfG+X2SmXTLCMDG4YjZ9zfYg
+         /yIZeEBmmpd6gGwOEwEg0s5zCyjnyXFxeSmkIhQywSgkCTo7IN5ARUljdksCMFjdEypW
+         5iRbwGh4dMEVVutOBts5pCaS8wP4g+eKYVMKCSqxvr3aqxRZzl8lDrIdsISDIqd4+HCt
+         1lz8nVnANcXmFvIzdsslhwbgGJ+txYx57bdM94dtBapFqXunHtKuRgaP+eyANPazDr04
+         6vTQ==
+X-Gm-Message-State: APjAAAXzE+9z5yV2VECUfgbBMvTEzFI1tj8DrZDyKiY6hRLV1d/3rekt
+        xD5V24/heoyKoZFiGSG0BUXizn7arwO82cSWToNzyV0LO8LmlABOLq1qtM/Zic/M14v46EbNP6Y
+        p6N4N7LGgc7UrB/ZVZAspVA3c
+X-Received: by 2002:a1c:6389:: with SMTP id x131mr23481540wmb.155.1582557703188;
+        Mon, 24 Feb 2020 07:21:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxYPhCx7IoeJSa2iQ/qLZj3RL6CoZ096gV1mztg+UbOH9RxjotR5udiQDnoBWE9fIOZLSaQqQ==
+X-Received: by 2002:a1c:6389:: with SMTP id x131mr23481524wmb.155.1582557702990;
+        Mon, 24 Feb 2020 07:21:42 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h13sm18581924wrw.54.2020.02.24.07.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 07:21:42 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 32/61] KVM: x86: Handle UMIP emulation CPUID adjustment in VMX code
+In-Reply-To: <20200201185218.24473-33-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-33-sean.j.christopherson@intel.com>
+Date:   Mon, 24 Feb 2020 16:21:41 +0100
+Message-ID: <87y2ssnh8a.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Message-ID: <158255763308.28353.12582539740202499085.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Commit-ID:     6d4d22468dae3d8757af9f8b81b848a76ef4409d
-Gitweb:        https://git.kernel.org/tip/6d4d22468dae3d8757af9f8b81b848a76ef4409d
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Mon, 24 Feb 2020 09:52:14 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 24 Feb 2020 11:36:34 +01:00
+> Move the CPUID adjustment for UMIP emulation into VMX code to eliminate
+> an instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
+> pattern in the common CPUID handling code.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c   | 2 --
+>  arch/x86/kvm/vmx/vmx.c | 2 ++
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index a5f150204d73..202a6c0f1db8 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -339,7 +339,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
+>  
+>  static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+>  {
+> -	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
+>  	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
+>  	unsigned f_la57;
+>  	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
+> @@ -382,7 +381,6 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+>  		cpuid_entry_mask(entry, CPUID_7_ECX);
+>  		/* Set LA57 based on hardware capability. */
+>  		entry->ecx |= f_la57;
+> -		entry->ecx |= f_umip;
+>  		entry->ecx |= f_pku;
+>  		/* PKU is not yet implemented for shadow paging. */
+>  		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 49ee4c600934..9d2e36a5ecb9 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7111,6 +7111,8 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+>  			cpuid_entry_set(entry, X86_FEATURE_MPX);
+>  		if (boot_cpu_has(X86_FEATURE_INVPCID) && cpu_has_vmx_invpcid())
+>  			cpuid_entry_set(entry, X86_FEATURE_INVPCID);
+> +		if (vmx_umip_emulated())
+> +			cpuid_entry_set(entry, X86_FEATURE_UMIP);
+>  		break;
+>  	default:
+>  		break;
 
-sched/fair: Reorder enqueue/dequeue_task_fair path
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-The walk through the cgroup hierarchy during the enqueue/dequeue of a task
-is split in 2 distinct parts for throttled cfs_rq without any added value
-but making code less readable.
+-- 
+Vitaly
 
-Change the code ordering such that everything related to a cfs_rq
-(throttled or not) will be done in the same loop.
-
-In addition, the same steps ordering is used when updating a cfs_rq:
-
- - update_load_avg
- - update_cfs_group
- - update *h_nr_running
-
-This reordering enables the use of h_nr_running in PELT algorithm.
-
-No functional and performance changes are expected and have been noticed
-during tests.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Phil Auld <pauld@redhat.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Link: https://lore.kernel.org/r/20200224095223.13361-5-mgorman@techsingularity.net
----
- kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5d9c23c..a6c7f8b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5260,32 +5260,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		cfs_rq = cfs_rq_of(se);
- 		enqueue_entity(cfs_rq, se, flags);
- 
--		/*
--		 * end evaluation on encountering a throttled cfs_rq
--		 *
--		 * note: in the case of encountering a throttled cfs_rq we will
--		 * post the final h_nr_running increment below.
--		 */
--		if (cfs_rq_throttled(cfs_rq))
--			break;
- 		cfs_rq->h_nr_running++;
- 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
- 
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto enqueue_throttle;
-+
- 		flags = ENQUEUE_WAKEUP;
- 	}
- 
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
--		cfs_rq->h_nr_running++;
--		cfs_rq->idle_h_nr_running += idle_h_nr_running;
- 
-+		/* end evaluation on encountering a throttled cfs_rq */
- 		if (cfs_rq_throttled(cfs_rq))
--			break;
-+			goto enqueue_throttle;
- 
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		update_cfs_group(se);
-+
-+		cfs_rq->h_nr_running++;
-+		cfs_rq->idle_h_nr_running += idle_h_nr_running;
- 	}
- 
-+enqueue_throttle:
- 	if (!se) {
- 		add_nr_running(rq, 1);
- 		/*
-@@ -5346,17 +5345,13 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		cfs_rq = cfs_rq_of(se);
- 		dequeue_entity(cfs_rq, se, flags);
- 
--		/*
--		 * end evaluation on encountering a throttled cfs_rq
--		 *
--		 * note: in the case of encountering a throttled cfs_rq we will
--		 * post the final h_nr_running decrement below.
--		*/
--		if (cfs_rq_throttled(cfs_rq))
--			break;
- 		cfs_rq->h_nr_running--;
- 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
- 
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto dequeue_throttle;
-+
- 		/* Don't dequeue parent if it has other entities besides us */
- 		if (cfs_rq->load.weight) {
- 			/* Avoid re-evaluating load for this entity: */
-@@ -5374,16 +5369,19 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
--		cfs_rq->h_nr_running--;
--		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
- 
-+		/* end evaluation on encountering a throttled cfs_rq */
- 		if (cfs_rq_throttled(cfs_rq))
--			break;
-+			goto dequeue_throttle;
- 
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		update_cfs_group(se);
-+
-+		cfs_rq->h_nr_running--;
-+		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
- 	}
- 
-+dequeue_throttle:
- 	if (!se)
- 		sub_nr_running(rq, 1);
- 
