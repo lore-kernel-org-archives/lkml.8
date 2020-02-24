@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D65BC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184D0C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 253F42084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB4B20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgBXPVK (ORCPT
+        id S1728205AbgBXPVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:21:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50376 "EHLO
+        Mon, 24 Feb 2020 10:21:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50380 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgBXPVH (ORCPT
+        with ESMTP id S1727701AbgBXPVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:21:07 -0500
+        Mon, 24 Feb 2020 10:21:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6FX4-0005pz-S8; Mon, 24 Feb 2020 16:20:31 +0100
+        id 1j6FX5-0005q1-2o; Mon, 24 Feb 2020 16:20:31 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6AF691C213D;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B65971C213E;
         Mon, 24 Feb 2020 16:20:30 +0100 (CET)
 Date:   Mon, 24 Feb 2020 15:20:30 -0000
 From:   "tip-bot2 for Mel Gorman" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/numa: Bias swapping tasks based on their
- preferred node
+Subject: [tip: sched/core] sched/numa: Find an alternative idle CPU if the CPU
+ is part of an active NUMA balance
 Cc:     Mel Gorman <mgorman@techsingularity.net>,
         Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
@@ -45,10 +45,10 @@ Cc:     Mel Gorman <mgorman@techsingularity.net>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200224095223.13361-13-mgorman@techsingularity.net>
-References: <20200224095223.13361-13-mgorman@techsingularity.net>
+In-Reply-To: <20200224095223.13361-12-mgorman@techsingularity.net>
+References: <20200224095223.13361-12-mgorman@techsingularity.net>
 MIME-Version: 1.0
-Message-ID: <158255763019.28353.11731318686961855268.tip-bot2@tip-bot2>
+Message-ID: <158255763050.28353.15038756479892807074.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,19 +64,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     88cca72c9673e631b63eca7a1dba4a9722a3f414
-Gitweb:        https://git.kernel.org/tip/88cca72c9673e631b63eca7a1dba4a9722a3f414
+Commit-ID:     5fb52dd93a2fe9a738f730de9da108bd1f6c30d0
+Gitweb:        https://git.kernel.org/tip/5fb52dd93a2fe9a738f730de9da108bd1f6c30d0
 Author:        Mel Gorman <mgorman@techsingularity.net>
-AuthorDate:    Mon, 24 Feb 2020 09:52:22 
+AuthorDate:    Mon, 24 Feb 2020 09:52:21 
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Mon, 24 Feb 2020 11:36:39 +01:00
 
-sched/numa: Bias swapping tasks based on their preferred node
+sched/numa: Find an alternative idle CPU if the CPU is part of an active NUMA balance
 
-When swapping tasks for NUMA balancing, it is preferred that tasks move
-to or remain on their preferred node. When considering an imbalance,
-encourage tasks to move to their preferred node and discourage tasks from
-moving away from their preferred node.
+Multiple tasks can attempt to select and idle CPU but fail because
+numa_migrate_on is already set and the migration fails. Instead of failing,
+scan for an alternative idle CPU. select_idle_sibling is not used because
+it requires IRQs to be disabled and it ignores numa_migrate_on allowing
+multiple tasks to stack. This scan may still fail if there are idle
+candidate CPUs due to races but if this occurs, it's best that a task
+stay on an available CPU that move to a contended one.
 
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -88,82 +91,72 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <valentin.schneider@arm.com>
 Cc: Phil Auld <pauld@redhat.com>
 Cc: Hillf Danton <hdanton@sina.com>
-Link: https://lore.kernel.org/r/20200224095223.13361-13-mgorman@techsingularity.net
+Link: https://lore.kernel.org/r/20200224095223.13361-12-mgorman@techsingularity.net
 ---
- kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 37 insertions(+), 6 deletions(-)
+ kernel/sched/fair.c | 40 ++++++++++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 18 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 050c1b1..8c1ac01 100644
+index 2da21f4..050c1b1 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1741,18 +1741,27 @@ static void task_numa_compare(struct task_numa_env *env,
- 			goto unlock;
- 	}
+@@ -1624,15 +1624,34 @@ static void task_numa_assign(struct task_numa_env *env,
+ {
+ 	struct rq *rq = cpu_rq(env->dst_cpu);
  
-+	/* Skip this swap candidate if cannot move to the source cpu. */
-+	if (!cpumask_test_cpu(env->src_cpu, cur->cpus_ptr))
-+		goto unlock;
+-	/* Bail out if run-queue part of active NUMA balance. */
+-	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1))
++	/* Check if run-queue part of active NUMA balance. */
++	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1)) {
++		int cpu;
++		int start = env->dst_cpu;
 +
-+	/*
-+	 * Skip this swap candidate if it is not moving to its preferred
-+	 * node and the best task is.
-+	 */
-+	if (env->best_task &&
-+	    env->best_task->numa_preferred_nid == env->src_nid &&
-+	    cur->numa_preferred_nid != env->src_nid) {
-+		goto unlock;
++		/* Find alternative idle CPU. */
++		for_each_cpu_wrap(cpu, cpumask_of_node(env->dst_nid), start) {
++			if (cpu == env->best_cpu || !idle_cpu(cpu) ||
++			    !cpumask_test_cpu(cpu, env->p->cpus_ptr)) {
++				continue;
++			}
++
++			env->dst_cpu = cpu;
++			rq = cpu_rq(env->dst_cpu);
++			if (!xchg(&rq->numa_migrate_on, 1))
++				goto assign;
++		}
++
++		/* Failed to find an alternative idle CPU */
+ 		return;
 +	}
-+
+ 
++assign:
  	/*
- 	 * "imp" is the fault differential for the source task between the
- 	 * source and destination node. Calculate the total differential for
- 	 * the source task and potential destination task. The more negative
- 	 * the value is, the more remote accesses that would be expected to
- 	 * be incurred if the tasks were swapped.
--	 */
--	/* Skip this swap candidate if cannot move to the source cpu */
--	if (!cpumask_test_cpu(env->src_cpu, cur->cpus_ptr))
--		goto unlock;
--
--	/*
-+	 *
- 	 * If dst and source tasks are in the same NUMA group, or not
- 	 * in any group then look only at task weights.
+ 	 * Clear previous best_cpu/rq numa-migrate flag, since task now
+ 	 * found a better CPU to move/swap.
  	 */
-@@ -1779,6 +1788,19 @@ static void task_numa_compare(struct task_numa_env *env,
- 			       task_weight(cur, env->dst_nid, dist);
+-	if (env->best_cpu != -1) {
++	if (env->best_cpu != -1 && env->best_cpu != env->dst_cpu) {
+ 		rq = cpu_rq(env->best_cpu);
+ 		WRITE_ONCE(rq->numa_migrate_on, 0);
+ 	}
+@@ -1806,21 +1825,6 @@ assign:
+ 			cpu = env->best_cpu;
+ 		}
+ 
+-		/*
+-		 * Use select_idle_sibling if the previously found idle CPU is
+-		 * not idle any more.
+-		 */
+-		if (!idle_cpu(cpu)) {
+-			/*
+-			 * select_idle_siblings() uses an per-CPU cpumask that
+-			 * can be used from IRQ context.
+-			 */
+-			local_irq_disable();
+-			cpu = select_idle_sibling(env->p, env->src_cpu,
+-						   env->dst_cpu);
+-			local_irq_enable();
+-		}
+-
+ 		env->dst_cpu = cpu;
  	}
  
-+	/* Discourage picking a task already on its preferred node */
-+	if (cur->numa_preferred_nid == env->dst_nid)
-+		imp -= imp / 16;
-+
-+	/*
-+	 * Encourage picking a task that moves to its preferred node.
-+	 * This potentially makes imp larger than it's maximum of
-+	 * 1998 (see SMALLIMP and task_weight for why) but in this
-+	 * case, it does not matter.
-+	 */
-+	if (cur->numa_preferred_nid == env->src_nid)
-+		imp += imp / 8;
-+
- 	if (maymove && moveimp > imp && moveimp > env->best_imp) {
- 		imp = moveimp;
- 		cur = NULL;
-@@ -1786,6 +1808,15 @@ static void task_numa_compare(struct task_numa_env *env,
- 	}
- 
- 	/*
-+	 * Prefer swapping with a task moving to its preferred node over a
-+	 * task that is not.
-+	 */
-+	if (env->best_task && cur->numa_preferred_nid == env->src_nid &&
-+	    env->best_task->numa_preferred_nid != env->src_nid) {
-+		goto assign;
-+	}
-+
-+	/*
- 	 * If the NUMA importance is less than SMALLIMP,
- 	 * task migration might only result in ping pong
- 	 * of tasks and also hurt performance due to cache
