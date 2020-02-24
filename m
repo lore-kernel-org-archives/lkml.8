@@ -3,62 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2CFC35670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350BBC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212742071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144CE206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbgBXAl4 (ORCPT
+        id S1727227AbgBXAmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:41:56 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:58066 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXAlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:41:55 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id F1465158E0671;
-        Sun, 23 Feb 2020 16:41:54 -0800 (PST)
-Date:   Sun, 23 Feb 2020 16:41:54 -0800 (PST)
-Message-Id: <20200223.164154.1411149705613568241.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     netanel@amazon.com, akiyano@amazon.com, gtzalik@amazon.com,
-        saeedb@amazon.com, zorik@amazon.com, sameehj@amazon.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Sun, 23 Feb 2020 19:42:55 -0500
+Received: from mga11.intel.com ([192.55.52.93]:23673 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727151AbgBXAmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 19:42:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 16:42:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,478,1574150400"; 
+   d="scan'208";a="349809813"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Feb 2020 16:42:52 -0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     mdf@kernel.org, will@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ena: ethtool: remove redundant non-zero check on
- rc
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200221232653.33134-1-colin.king@canonical.com>
-References: <20200221232653.33134-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Feb 2020 16:41:55 -0800 (PST)
+Cc:     linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
+        Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v8 0/2] add performance reporting support to FPGA DFL drivers
+Date:   Mon, 24 Feb 2020 08:21:45 +0800
+Message-Id: <1582503707-10737-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Fri, 21 Feb 2020 23:26:53 +0000
+Hi all,
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The non-zero check on rc is redundant as a previous non-zero
-> check on rc will always return and the second check is never
-> reached, hence it is redundant and can be removed.  Also
-> remove a blank line.
-> 
-> Addresses-Coverity: ("Logically dead code")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+This patchset adds performance reporting support for FPGA DFL drivers. It
+introduces one pmu to expose userspace interfaces via standard perf API.
+User could use standard perf tool to access perf events exposed via pmu.
 
-Applied to net-next.
+This patchset is generated based on 5.6-rc2.
+
+Main changes from v7:
+ - rename pmu name from "fme%d" to "dfl_fme%d".
+ - monitor cpu hotplug for cpumask sysfs and update cpumask sysfs doc.
+ - add extra read for 64bit counter registers to avoid 2-32bit readl issue.
+
+Main changes from v6:
+ - add a new ABI/testing/ sysfs documentation in patch #2.
+ - fix a warning reported by kbuild in patch #2.
+
+Main changes from v5:
+ - use dev_ext_attribute instead of fme_perf_event_attr.
+ - use is_visible function to decide which events to expose per
+   hardware capability, and add event_init checking for all events.
+
+Main changes from v4:
+ - rebase and clean up.
+ - update Kconfig for PERF_EVENTS dependency.
+
+Main changes from v3:
+ - add more descriptions in doc, including how to use perf tool for these
+   hardware counters. (patch #1)
+ - use standard perf API instead of sysfs entries. (patch #2)
+
+Wu Hao (1):
+  fpga: dfl: fme: add performance reporting support
+
+Xu Yilun (1):
+  Documentation: fpga: dfl: add description for performance reporting
+    support
+
+ .../testing/sysfs-bus-event_source-devices-dfl_fme |  104 ++
+ Documentation/fpga/dfl.rst                         |   84 ++
+ drivers/fpga/Kconfig                               |    2 +-
+ drivers/fpga/Makefile                              |    1 +
+ drivers/fpga/dfl-fme-main.c                        |    4 +
+ drivers/fpga/dfl-fme-perf.c                        | 1021 ++++++++++++++++++++
+ drivers/fpga/dfl-fme.h                             |    2 +
+ drivers/fpga/dfl.h                                 |    2 +
+ 8 files changed, 1219 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
+ create mode 100644 drivers/fpga/dfl-fme-perf.c
+
+-- 
+1.8.3.1
