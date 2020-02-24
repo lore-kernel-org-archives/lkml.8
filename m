@@ -2,451 +2,147 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3123C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B1DC38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7A0218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgjY477r"
+	by mail.kernel.org (Postfix) with ESMTP id A1E23218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582582789;
+	bh=SpqMquaLiMdlIYmgDgUBa/NScKO2YXql62ts3Rj0R9o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fRi9LpapKNO7nPjziQxrqDepAdbJ8MkopytSXrRo0SklnuhZqcDM0poSIV7s3tMYl
+	 3N8MrzHOpTw5SYr/GhXCPW8bZjSWXjRMEHCoOG9YJ7uIT+oYkTkNeSbgnxKBw7BP3Z
+	 iW7ez2/pXENfMjl2P4kYmxUOdRfuCqqtUKBdz//s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgBXWSX (ORCPT
+        id S1728020AbgBXWTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:18:23 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37111 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBXWSJ (ORCPT
+        Mon, 24 Feb 2020 17:19:48 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43098 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBXWTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:18:09 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w47so7708464qtk.4;
-        Mon, 24 Feb 2020 14:18:08 -0800 (PST)
+        Mon, 24 Feb 2020 17:19:47 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so13806937edb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:19:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=b1v8YcJ9atv6L2fYJ+yf4LHWcsSIGAxkhjtvqYdB6xk=;
-        b=UgjY477rjJ+GhCC9Za+aY8hurbF3LlS+qm8+LOwFbYpHDaNuF78LpUOR+cfJwEBJz7
-         p3Yql8WT2O0oW0L6R3Faxi67kB6Df6Aly1xafubY5jOZyqWsFNTbConnYiN8ZOJtkb/o
-         +Dwq4pjnnVLz/68Ze7ZKGnXcwBfsEvI3aq+S9RK2pj5TnJ28HXRY2pKhTS3T5XGk35vV
-         bqG7VLbsYfiGaaJkE5zptdzXSBPXaz8ai3okdySwiyPGqW29iElNAmwbTYHF++qNkXaV
-         +czBCJ2u3/WPzyc5a/Xw9wttTb8GoJ9CtwsP5ChY+zarM75+F/xKyzIWbmQmFMAX7tnn
-         ZQYw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ua04IHV/ut+warGhjtTc9FaMw6Bd0KLfUZB1G7Gfy5Q=;
+        b=ElTkCgl31gTmXuIVqXl/uPaWGalYNpP+qRWjSoF43DlMSMCKC+/cickD9VJi+HW9vS
+         stai2Vrem28ry4B9BhC8qkINuTx4zxYCZ4PdQfuoOkmReszGllzOPpNEYYLazhf7GJiq
+         wYPvn2CW4vjLZ5FQ5ISPxpeav1N9/ta9w8lbw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=b1v8YcJ9atv6L2fYJ+yf4LHWcsSIGAxkhjtvqYdB6xk=;
-        b=smh/3VY9MzH7rtBI68u0ZaRMyxZnXoyK8ECKeSfeig4khy8gjP4lHTCyjicrMn2DRD
-         Ql8Kk1HVVJ9kqr13Dehu/nXwPHPUMqp7wv1ZMevesW43g0H2DPkk+BBDqABs8UhHWd6x
-         KcTMgUWZ6Lr41PwTERsesR6ofxMWEoCMBEjSv+ECxZcIRT0/kxMEGFRJJyK+ex5bjGyO
-         r2iLco3PbLjoiNvVbQBkJK5GO4Ej0oavfHr6Xb9xYDgCMq7NDaU8M9hjEwZFap3IcQQW
-         wM6Jo6vaA6L/ORfee8HqIW0jlsjkUuW1C7UmwgFTRp0xbvUW9vPLOP0zV0zsYf69m2GN
-         B0Pw==
-X-Gm-Message-State: APjAAAXesRxr+stFJAfR4JKO24N74prun/nKlPKhDbyIoPPJM+DQ4l7C
-        Y3ZlWTJXNZehfvBrYwUQ+6A=
-X-Google-Smtp-Source: APXvYqzwfcXQtqlN4gRCWukzkdCrqnvljfVIQdnAWpaJ6pN9QzSkiauHGrI9FmxeuLt7c+MU4MOX0A==
-X-Received: by 2002:ac8:718e:: with SMTP id w14mr49910984qto.266.1582582687984;
-        Mon, 24 Feb 2020 14:18:07 -0800 (PST)
-Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:500::2:b19b])
-        by smtp.gmail.com with ESMTPSA id o17sm6648870qtj.80.2020.02.24.14.18.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 14:18:07 -0800 (PST)
-From:   Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER),
-        linux-kernel@vger.kernel.org (open list),
-        cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
-        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
-        CONTROLLER (MEMCG))
-Subject: [PATCH v3 1/3] loop: Use worker per cgroup instead of kworker
-Date:   Mon, 24 Feb 2020 17:17:45 -0500
-Message-Id: <eab018412a0c9feb573d757b1bbd5f58b33e2a8d.1582581887.git.schatzberg.dan@gmail.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <cover.1582581887.git.schatzberg.dan@gmail.com>
-References: <cover.1582581887.git.schatzberg.dan@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ua04IHV/ut+warGhjtTc9FaMw6Bd0KLfUZB1G7Gfy5Q=;
+        b=fyMLDCBgql8Rp/Y8RIB6iK1Yq/wKuzFiDuzQjaJ/NnN8aZZxVnjMhWSALJd34RN4mw
+         JsKRLKgwPsI8SU/vMmHa3ysFo4Qon7SobJtMxYXO+7+mlmSC8ORt36y65wdQ/wz4qr/u
+         DlDRmrRf/AhkXL+/J6R+MNmNH1Rzntp8vVDx/ymUsg6Wuy1qwTMfWihVQW/imhk6RcFk
+         751Jqq6JWVWxKa9O0jDhuU20bSmzTxkzOQDr9aYoTvTQ4My9SB6exDuG8j76OnfShHVW
+         cnh2cXWmZq4BLAq58OxVMiAoqXe4eO/WVVPjxs09S46a2fdhL4ozMH7WEu1+gUL6Lrti
+         ygoQ==
+X-Gm-Message-State: APjAAAVq/yIoYQ49IsZ+QmVHt6nU3LD/cvmvxonK+C8KCMA9I6k3n7Zx
+        jIXPjfLAfo/QrVLL4eNIQLX+8jvx7mU=
+X-Google-Smtp-Source: APXvYqwYoAoSg2zlaGKLnZp8Os91SFoWr4ybIXkE4YSVBI2TFt1GhnCMjqSwUkDhGTUmYFobxQud5g==
+X-Received: by 2002:a17:906:d0d1:: with SMTP id bq17mr49722875ejb.55.1582582785492;
+        Mon, 24 Feb 2020 14:19:45 -0800 (PST)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id dc5sm1093425edb.61.2020.02.24.14.19.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 14:19:45 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id m16so12279133wrx.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:19:45 -0800 (PST)
+X-Received: by 2002:a2e:9d92:: with SMTP id c18mr11413148ljj.265.1582582387885;
+ Mon, 24 Feb 2020 14:13:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200205123216.GO12867@shao2-debian> <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com> <20200221132048.GE652992@krava>
+ <20200223141147.GA53531@shbuild999.sh.intel.com> <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com> <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+ <20200224021915.GC5061@shbuild999.sh.intel.com> <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
+ <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+ <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
+ <87a757znqd.fsf@x220.int.ebiederm.org> <CAHk-=wh0z0LErNzwe-AqrEkv3BNzJep58Qmi2dM775UPtmq0og@mail.gmail.com>
+ <8736azzlwq.fsf@x220.int.ebiederm.org>
+In-Reply-To: <8736azzlwq.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 24 Feb 2020 14:12:51 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgXr1JcW3hyomWh8Y8Kr9wNq-+6r+CocY8EfXvuW7giHg@mail.gmail.com>
+Message-ID: <CAHk-=wgXr1JcW3hyomWh8Y8Kr9wNq-+6r+CocY8EfXvuW7giHg@mail.gmail.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Existing uses of loop device may have multiple cgroups reading/writing
-to the same device. Simply charging resources for I/O to the backing
-file could result in priority inversion where one cgroup gets
-synchronously blocked, holding up all other I/O to the loop device.
+On Mon, Feb 24, 2020 at 2:02 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Other than scratching my head about why are we optimizing neither do I.
 
-In order to avoid this priority inversion, we use a single workqueue
-where each work item is a "struct loop_worker" which contains a queue of
-struct loop_cmds to issue. The loop device maintains a tree mapping blk
-css_id -> loop_worker. This allows each cgroup to independently make
-forward progress issuing I/O to the backing file.
+You can see the background on lore
 
-There is also a single queue for I/O associated with the rootcg which
-can be used in cases of extreme memory shortage where we cannot allocate
-a loop_worker.
+  https://lore.kernel.org/lkml/20200205123216.GO12867@shao2-debian/
 
-The locking for the tree and queues is fairly heavy handed - we acquire
-the per-loop-device spinlock any time either is accessed. The existing
-implementation serializes all I/O through a single thread anyways, so I
-don't believe this is any worse.
+and the thread about the largely unexplained regression there. I had a
+wild handwaving theory on what's going on in
 
-Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
----
- drivers/block/loop.c | 207 +++++++++++++++++++++++++++++++++++++------
- drivers/block/loop.h |  11 ++-
- 2 files changed, 188 insertions(+), 30 deletions(-)
+  https://lore.kernel.org/lkml/CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com/
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..a9b05cacc393 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -70,7 +70,6 @@
- #include <linux/writeback.h>
- #include <linux/completion.h>
- #include <linux/highmem.h>
--#include <linux/kthread.h>
- #include <linux/splice.h>
- #include <linux/sysfs.h>
- #include <linux/miscdevice.h>
-@@ -83,6 +82,8 @@
- 
- #include <linux/uaccess.h>
- 
-+#define LOOP_IDLE_WORKER_TIMEOUT (60 * HZ)
-+
- static DEFINE_IDR(loop_index_idr);
- static DEFINE_MUTEX(loop_ctl_mutex);
- 
-@@ -891,27 +892,100 @@ static void loop_config_discard(struct loop_device *lo)
- 
- static void loop_unprepare_queue(struct loop_device *lo)
- {
--	kthread_flush_worker(&lo->worker);
--	kthread_stop(lo->worker_task);
--}
--
--static int loop_kthread_worker_fn(void *worker_ptr)
--{
--	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
--	return kthread_worker_fn(worker_ptr);
-+	destroy_workqueue(lo->workqueue);
- }
- 
- static int loop_prepare_queue(struct loop_device *lo)
- {
--	kthread_init_worker(&lo->worker);
--	lo->worker_task = kthread_run(loop_kthread_worker_fn,
--			&lo->worker, "loop%d", lo->lo_number);
--	if (IS_ERR(lo->worker_task))
-+	lo->workqueue = alloc_workqueue("loop%d",
-+					WQ_UNBOUND | WQ_FREEZABLE |
-+					WQ_MEM_RECLAIM,
-+					lo->lo_number);
-+	if (IS_ERR(lo->workqueue))
- 		return -ENOMEM;
--	set_user_nice(lo->worker_task, MIN_NICE);
-+
- 	return 0;
- }
- 
-+struct loop_worker {
-+	struct rb_node rb_node;
-+	struct work_struct work;
-+	struct list_head cmd_list;
-+	struct list_head idle_list;
-+	struct loop_device *lo;
-+	struct cgroup_subsys_state *css;
-+	unsigned long last_ran_at;
-+};
-+
-+static void loop_workfn(struct work_struct *work);
-+static void loop_rootcg_workfn(struct work_struct *work);
-+static void loop_free_idle_workers(struct timer_list *timer);
-+
-+static void loop_queue_work(struct loop_device *lo, struct loop_cmd *cmd)
-+{
-+	struct rb_node **node = &(lo->worker_tree.rb_node), *parent = NULL;
-+	struct loop_worker *cur_worker, *worker = NULL;
-+	struct work_struct *work;
-+	struct list_head *cmd_list;
-+
-+	spin_lock_irq(&lo->lo_lock);
-+
-+	if (!cmd->css)
-+		goto queue_work;
-+
-+	node = &lo->worker_tree.rb_node;
-+
-+	while (*node) {
-+		parent = *node;
-+		cur_worker = container_of(*node, struct loop_worker, rb_node);
-+		if (cur_worker->css == cmd->css) {
-+			worker = cur_worker;
-+			break;
-+		} else if ((long)cur_worker->css < (long)cmd->css) {
-+			node = &(*node)->rb_left;
-+		} else {
-+			node = &(*node)->rb_right;
-+		}
-+	}
-+	if (worker)
-+		goto queue_work;
-+
-+	worker = kzalloc(sizeof(struct loop_worker), GFP_NOWAIT | __GFP_NOWARN);
-+	/*
-+	 * In the event we cannot allocate a worker, just queue on the
-+	 * rootcg worker
-+	 */
-+	if (!worker)
-+		goto queue_work;
-+
-+	worker->css = cmd->css;
-+	css_get(worker->css);
-+	INIT_WORK(&worker->work, loop_workfn);
-+	INIT_LIST_HEAD(&worker->cmd_list);
-+	INIT_LIST_HEAD(&worker->idle_list);
-+	worker->lo = lo;
-+	rb_link_node(&worker->rb_node, parent, node);
-+	rb_insert_color(&worker->rb_node, &lo->worker_tree);
-+queue_work:
-+	if (worker) {
-+		/*
-+		 * We need to remove from the idle list here while
-+		 * holding the lock so that the idle timer doesn't
-+		 * free the worker
-+		 */
-+		if (!list_empty(&worker->idle_list))
-+			list_del_init(&worker->idle_list);
-+		work = &worker->work;
-+		cmd_list = &worker->cmd_list;
-+	} else {
-+		work = &lo->rootcg_work;
-+		cmd_list = &lo->rootcg_cmd_list;
-+	}
-+	list_add_tail(&cmd->list_entry, cmd_list);
-+	queue_work(lo->workqueue, work);
-+	spin_unlock_irq(&lo->lo_lock);
-+}
-+
- static void loop_update_rotational(struct loop_device *lo)
- {
- 	struct file *file = lo->lo_backing_file;
-@@ -993,6 +1067,12 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 
- 	set_device_ro(bdev, (lo_flags & LO_FLAGS_READ_ONLY) != 0);
- 
-+	INIT_WORK(&lo->rootcg_work, loop_rootcg_workfn);
-+	INIT_LIST_HEAD(&lo->rootcg_cmd_list);
-+	INIT_LIST_HEAD(&lo->idle_worker_list);
-+	lo->worker_tree = RB_ROOT;
-+	timer_setup(&lo->timer, loop_free_idle_workers,
-+		TIMER_DEFERRABLE);
- 	lo->use_dio = false;
- 	lo->lo_device = bdev;
- 	lo->lo_flags = lo_flags;
-@@ -1101,6 +1181,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	int err = 0;
- 	bool partscan = false;
- 	int lo_number;
-+	struct loop_worker *pos, *worker;
- 
- 	mutex_lock(&loop_ctl_mutex);
- 	if (WARN_ON_ONCE(lo->lo_state != Lo_rundown)) {
-@@ -1117,9 +1198,28 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	/* freeze request queue during the transition */
- 	blk_mq_freeze_queue(lo->lo_queue);
- 
-+	/*
-+	 * Ordering here is a bit tricky:
-+	 *
-+	 * 1) flush/destroy workqueue without lock held so outstanding
-+	 * I/O is issued and all active workers go idle
-+	 *
-+	 * 2) Grab lock, free all idle workers
-+	 *
-+	 * 3) unlock, del_timer_sync so if timer raced it will be a no-op
-+	 */
-+	loop_unprepare_queue(lo);
- 	spin_lock_irq(&lo->lo_lock);
- 	lo->lo_backing_file = NULL;
-+	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
-+				idle_list) {
-+		list_del(&worker->idle_list);
-+		rb_erase(&worker->rb_node, &lo->worker_tree);
-+		css_put(worker->css);
-+		kfree(worker);
-+	}
- 	spin_unlock_irq(&lo->lo_lock);
-+	del_timer_sync(&lo->timer);
- 
- 	loop_release_xfer(lo);
- 	lo->transfer = NULL;
-@@ -1154,7 +1254,6 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
- 	lo_number = lo->lo_number;
--	loop_unprepare_queue(lo);
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
- 	if (partscan) {
-@@ -1932,7 +2031,7 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	} else
- #endif
- 		cmd->css = NULL;
--	kthread_queue_work(&lo->worker, &cmd->work);
-+	loop_queue_work(lo, cmd);
- 
- 	return BLK_STS_OK;
- }
-@@ -1958,26 +2057,82 @@ static void loop_handle_cmd(struct loop_cmd *cmd)
- 	}
- }
- 
--static void loop_queue_work(struct kthread_work *work)
-+static void loop_set_timer(struct loop_device *lo)
-+{
-+	timer_reduce(&lo->timer, jiffies + LOOP_IDLE_WORKER_TIMEOUT);
-+}
-+
-+static void loop_process_work(struct loop_worker *worker,
-+			struct list_head *cmd_list, struct loop_device *lo)
- {
--	struct loop_cmd *cmd =
--		container_of(work, struct loop_cmd, work);
-+	int orig_flags = current->flags;
-+	struct loop_cmd *cmd;
- 
--	loop_handle_cmd(cmd);
-+	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-+	spin_lock_irq(&lo->lo_lock);
-+	while (!list_empty(cmd_list)) {
-+		cmd = container_of(
-+			cmd_list->next, struct loop_cmd, list_entry);
-+		list_del(cmd_list->next);
-+		spin_unlock_irq(&lo->lo_lock);
-+
-+		loop_handle_cmd(cmd);
-+		cond_resched();
-+
-+		spin_lock_irq(&lo->lo_lock);
-+	}
-+
-+	/*
-+	 * We only add to the idle list if there are no pending cmds
-+	 * *and* the worker will not run again which ensures that it
-+	 * is safe to free any worker on the idle list
-+	 */
-+	if (worker && !work_pending(&worker->work)) {
-+		worker->last_ran_at = jiffies;
-+		list_add_tail(&worker->idle_list, &lo->idle_worker_list);
-+		loop_set_timer(lo);
-+	}
-+	spin_unlock_irq(&lo->lo_lock);
-+	current->flags = orig_flags;
- }
- 
--static int loop_init_request(struct blk_mq_tag_set *set, struct request *rq,
--		unsigned int hctx_idx, unsigned int numa_node)
-+static void loop_workfn(struct work_struct *work)
- {
--	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
-+	struct loop_worker *worker =
-+		container_of(work, struct loop_worker, work);
-+	loop_process_work(worker, &worker->cmd_list, worker->lo);
-+}
- 
--	kthread_init_work(&cmd->work, loop_queue_work);
--	return 0;
-+static void loop_rootcg_workfn(struct work_struct *work)
-+{
-+	struct loop_device *lo =
-+		container_of(work, struct loop_device, rootcg_work);
-+	loop_process_work(NULL, &lo->rootcg_cmd_list, lo);
-+}
-+
-+static void loop_free_idle_workers(struct timer_list *timer)
-+{
-+	struct loop_device *lo = container_of(timer, struct loop_device, timer);
-+	struct loop_worker *pos, *worker;
-+
-+	spin_lock_irq(&lo->lo_lock);
-+	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
-+				idle_list) {
-+		if (time_is_after_jiffies(worker->last_ran_at +
-+						LOOP_IDLE_WORKER_TIMEOUT))
-+			break;
-+		list_del(&worker->idle_list);
-+		rb_erase(&worker->rb_node, &lo->worker_tree);
-+		css_put(worker->css);
-+		kfree(worker);
-+	}
-+	if (!list_empty(&lo->idle_worker_list))
-+		loop_set_timer(lo);
-+	spin_unlock_irq(&lo->lo_lock);
- }
- 
- static const struct blk_mq_ops loop_mq_ops = {
- 	.queue_rq       = loop_queue_rq,
--	.init_request	= loop_init_request,
- 	.complete	= lo_complete_rq,
- };
- 
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee4094..87fd0e372227 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -14,7 +14,6 @@
- #include <linux/blk-mq.h>
- #include <linux/spinlock.h>
- #include <linux/mutex.h>
--#include <linux/kthread.h>
- #include <uapi/linux/loop.h>
- 
- /* Possible states of device */
-@@ -54,8 +53,12 @@ struct loop_device {
- 
- 	spinlock_t		lo_lock;
- 	int			lo_state;
--	struct kthread_worker	worker;
--	struct task_struct	*worker_task;
-+	struct workqueue_struct *workqueue;
-+	struct work_struct      rootcg_work;
-+	struct list_head        rootcg_cmd_list;
-+	struct list_head        idle_worker_list;
-+	struct rb_root          worker_tree;
-+	struct timer_list       timer;
- 	bool			use_dio;
- 	bool			sysfs_inited;
- 
-@@ -65,7 +68,7 @@ struct loop_device {
- };
- 
- struct loop_cmd {
--	struct kthread_work work;
-+	struct list_head list_entry;
- 	bool use_aio; /* use AIO interface to handle I/O */
- 	atomic_t ref; /* only for aio */
- 	long ret;
--- 
-2.17.1
+but yes, the contention only happens once you have a lot of cores.
 
+That said, I suspect it actually improves performance on that
+microbenchmark even without the contention - just not as noticeably.
+I'm running a kernel with the patch right now, but I wasn't going to
+boot back into an old kernel just to test that. I was hoping that the
+kernel test robot people would just check it out.
+
+> It would help to have a comment somewhere in the code or the commit
+> message that says the issue is contetion under load.
+
+Note that even without the contention, on that "send a lot of signals"
+case it does avoid the second atomic op, and the profile really does
+look better.
+
+That profile improvement I can see even on my own machine, and I see
+how the nasty CPU bug avoidance (the "verw" on the system call exit
+path) goes from 30% to 31% cost.
+
+And that increase in the relative cost of the "verw" on the profile
+must mean that the actual real code just improved in performance (even
+if I didn't actually time it).
+
+With the contention, you get that added odd extra regression that
+seems to depend on exact cacheline placement.
+
+So I think the patch improves performance (for this "lots of queued
+signals" case) in general, and I hope it will also then get rid of
+that contention regression.
+
+                   Linus
