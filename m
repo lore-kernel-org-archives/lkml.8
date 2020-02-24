@@ -2,127 +2,126 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D211C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D017C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E53820658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F8020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:00:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="f419reAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgBXC5f (ORCPT
+        id S1727207AbgBXDAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:57:35 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:56216 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbgBXC5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:57:34 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7EDB020CD73;
-        Mon, 24 Feb 2020 03:57:32 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36B8C204377;
-        Mon, 24 Feb 2020 03:57:27 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8E19E402B3;
-        Mon, 24 Feb 2020 10:57:20 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] watchdog: imx2_wdt: Drop .remove callback
-Date:   Mon, 24 Feb 2020 10:51:27 +0800
-Message-Id: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 23 Feb 2020 22:00:31 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:35933 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgBXDAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 22:00:31 -0500
+Received: by mail-qv1-f66.google.com with SMTP id ff2so3571945qvb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 19:00:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=axj+zYhKgui/GRpLokmGt4hkOovhk9D4qksINrRJ1Ak=;
+        b=f419reAEsjTeJdGXZaoZyZpTiWQNTrZvDjlFHYNYo6hws9F1baASusMDFHpIAblfCn
+         MDrLtDYdBa37g4PRqNh/MPFrxz5Z85DqSVa6Dzdzins0kWeNGM++kzZ0/peBTuhv9UYm
+         aqGxFrqA+fqrkOxvGd/d+j1ZSxUtdy6ueQ5HDJ85/8FME2IJ4a9dzvWa2g8Srhpt9dSf
+         561JzE6H7EI7d1vJtVqCtT6ZWFOhOjkAtZhzDP0P1Qvn7+S9o3evgs8TcB+UVGHp4XcP
+         ATkJnrGXsGL3fYd3Qd07QCnJZ7a7tiJwhOXEUedVP4rxKZTn6s6ROrRoHLSPBHZS/RnR
+         e2mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=axj+zYhKgui/GRpLokmGt4hkOovhk9D4qksINrRJ1Ak=;
+        b=sW7gYDuvol5HR6OUXfM59aiIh6GfK1YazJxCoeEx+AI0qtS4K6npDiWX4eZ1deKM5/
+         zZajcxdMJHJTG8wyJfof6nfz98my98/9scQIzGOEIkl4FC5dxHzjbY49FRPE/hOoHpo9
+         Mca+twtY4Ix/oHywzK7HrTx0jVdtzF8t9JzuA0qGHEZL29DUNrrT5oeRMJO6yv3jN8ZD
+         XtBqzA3R6JEB/OMFpcBEjnw/EOty4XQJnwljA+VuqEssrZYezrrwvdmIyyta6TrSz/Gz
+         0P1W8EVpHZ6Rk2IUlXY7PbBUNKMBCjCxiw6YIoFkNhjCqo0cdeNAscL72eahrOuhiTh9
+         Twfg==
+X-Gm-Message-State: APjAAAUMgmOHeCeVGBajAEwzHyanGRrADClBMJvYwsq9tMTInNb8Rtew
+        qfknVLN+MPU97ygdeRBMJYMaAA==
+X-Google-Smtp-Source: APXvYqwNK5+khXEgg8ag3M7aq6QkrRCoOOzbAMD7wOmLl4yiFPdzv+V2JCKxPRHFxjSSKNReQogbeQ==
+X-Received: by 2002:a05:6214:176e:: with SMTP id et14mr40790796qvb.133.1582513230182;
+        Sun, 23 Feb 2020 19:00:30 -0800 (PST)
+Received: from ovpn-120-117.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id t2sm5219859qkc.62.2020.02.23.19.00.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Feb 2020 19:00:29 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tj@kernel.org
+Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] cgroup: fix psi_show() crash on 32bit ino archs
+Date:   Sun, 23 Feb 2020 22:00:07 -0500
+Message-Id: <20200224030007.3990-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.remove callback implementation doesn' call clk_disable_unprepare() which
-is buggy, actually, we can just use devm_watchdog_register_device() and
-devm_add_action_or_reset() to handle all necessary operations for remove
-action, then .remove callback can be dropped.
+Similar to the commit d7495343228f ("cgroup: fix incorrect
+WARN_ON_ONCE() in cgroup_setup_root()"), cgroup_id(root_cgrp) does not
+equal to 1 on 32bit ino archs which triggers all sorts of issues with
+psi_show() on s390x. For example,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+ BUG: KASAN: slab-out-of-bounds in collect_percpu_times+0x2d0/
+ Read of size 4 at addr 000000001e0ce000 by task read_all/3667
+ collect_percpu_times+0x2d0/0x798
+ psi_show+0x7c/0x2a8
+ seq_read+0x2ac/0x830
+ vfs_read+0x92/0x150
+ ksys_read+0xe2/0x188
+ system_call+0xd8/0x2b4
+
+Fix it by using cgroup_ino().
+
+Fixes: 743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/watchdog/imx2_wdt.c | 37 ++++++++++---------------------------
- 1 file changed, 10 insertions(+), 27 deletions(-)
+ kernel/cgroup/cgroup.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index f8d58bf..1fe472f 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -244,6 +244,11 @@ static const struct regmap_config imx2_wdt_regmap_config = {
- 	.max_register = 0x8,
- };
- 
-+static void imx2_wdt_action(void *data)
-+{
-+	clk_disable_unprepare(data);
-+}
-+
- static int __init imx2_wdt_probe(struct platform_device *pdev)
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 75f687301bbf..cd5f41289f7d 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -3542,21 +3542,21 @@ static int cpu_stat_show(struct seq_file *seq, void *v)
+ static int cgroup_io_pressure_show(struct seq_file *seq, void *v)
  {
- 	struct device *dev = &pdev->dev;
-@@ -292,6 +297,10 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+-	struct psi_group *psi = cgroup_id(cgrp) == 1 ? &psi_system : &cgrp->psi;
++	struct psi_group *psi = cgroup_ino(cgrp) == 1 ? &psi_system : &cgrp->psi;
  
-+	ret = devm_add_action_or_reset(dev, imx2_wdt_action, wdev->clk);
-+	if (ret)
-+		return ret;
-+
- 	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
- 	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ? WDIOF_CARDRESET : 0;
- 
-@@ -315,32 +324,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
- 	 */
- 	regmap_write(wdev->regmap, IMX2_WDT_WMCR, 0);
- 
--	ret = watchdog_register_device(wdog);
--	if (ret)
--		goto disable_clk;
--
--	dev_info(dev, "timeout %d sec (nowayout=%d)\n",
--		 wdog->timeout, nowayout);
--
--	return 0;
--
--disable_clk:
--	clk_disable_unprepare(wdev->clk);
--	return ret;
--}
--
--static int __exit imx2_wdt_remove(struct platform_device *pdev)
--{
--	struct watchdog_device *wdog = platform_get_drvdata(pdev);
--	struct imx2_wdt_device *wdev = watchdog_get_drvdata(wdog);
--
--	watchdog_unregister_device(wdog);
--
--	if (imx2_wdt_is_running(wdev)) {
--		imx2_wdt_ping(wdog);
--		dev_crit(&pdev->dev, "Device removed: Expect reboot!\n");
--	}
--	return 0;
-+	return devm_watchdog_register_device(dev, wdog);
+ 	return psi_show(seq, psi, PSI_IO);
  }
+ static int cgroup_memory_pressure_show(struct seq_file *seq, void *v)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+-	struct psi_group *psi = cgroup_id(cgrp) == 1 ? &psi_system : &cgrp->psi;
++	struct psi_group *psi = cgroup_ino(cgrp) == 1 ? &psi_system : &cgrp->psi;
  
- static void imx2_wdt_shutdown(struct platform_device *pdev)
-@@ -417,7 +401,6 @@ static const struct of_device_id imx2_wdt_dt_ids[] = {
- MODULE_DEVICE_TABLE(of, imx2_wdt_dt_ids);
+ 	return psi_show(seq, psi, PSI_MEM);
+ }
+ static int cgroup_cpu_pressure_show(struct seq_file *seq, void *v)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+-	struct psi_group *psi = cgroup_id(cgrp) == 1 ? &psi_system : &cgrp->psi;
++	struct psi_group *psi = cgroup_ino(cgrp) == 1 ? &psi_system : &cgrp->psi;
  
- static struct platform_driver imx2_wdt_driver = {
--	.remove		= __exit_p(imx2_wdt_remove),
- 	.shutdown	= imx2_wdt_shutdown,
- 	.driver		= {
- 		.name	= DRIVER_NAME,
+ 	return psi_show(seq, psi, PSI_CPU);
+ }
 -- 
-2.7.4
+2.21.0 (Apple Git-122.2)
 
