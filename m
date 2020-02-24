@@ -2,160 +2,97 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C06C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17350C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34A420732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5DD20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="V394A3HJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgBXKhr (ORCPT
+        id S1727438AbgBXKhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:37:47 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10681 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726452AbgBXKhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:37:47 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7443657F6A9DEF15FE73;
-        Mon, 24 Feb 2020 18:37:43 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 24 Feb
- 2020 18:37:42 +0800
-Subject: Re: Writes stoped working on f2fs after the compression support was
- added
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20191209222345.1078-1-jaegeuk@kernel.org>
- <20200222044617.pfrhnz2iavkrtdn6@core.my.home>
- <20200222181721.tzrrohep5l3yklpf@core.my.home>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
-Date:   Mon, 24 Feb 2020 18:37:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 24 Feb 2020 05:37:51 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47880 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727185AbgBXKhu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:37:50 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582540669; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=qjzPp+O8tXzYCBRUzA0c7FdmKgMX92vvMqwCboWI5tU=; b=V394A3HJnqhxgXA6ar33YsRCYtv/ICamC8qMqCzkXjPiOONeOko9hWKQauCKp9b/yLU+yktP
+ ic2CyOwZyBMPpE3wSsiMaGiAAojh7omuzpKXbyP+YfG39Kj/nJKlSI/z3CnhBRERz3BgctpO
+ fkzEb8O6P0pm8o8SkRnqh8MbqDg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e53a76e.7fd75365db58-smtp-out-n01;
+ Mon, 24 Feb 2020 10:37:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BB3A1C433A2; Mon, 24 Feb 2020 10:37:32 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9C681C43383;
+        Mon, 24 Feb 2020 10:37:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9C681C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v4 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-soc-owner@vger.kernel.org
+References: <1582049733-17050-1-git-send-email-tdas@codeaurora.org>
+ <1582049733-17050-4-git-send-email-tdas@codeaurora.org>
+ <20200218230026.GA3778@bogus>
+ <6298769e-09bc-eb69-bf72-5aedd0e87f16@codeaurora.org>
+ <7cf3950b53a7b5881c840ed371e64158@codeaurora.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <bee354db-23a0-3654-dc8b-a2487ef060d4@codeaurora.org>
+Date:   Mon, 24 Feb 2020 16:07:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200222181721.tzrrohep5l3yklpf@core.my.home>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7cf3950b53a7b5881c840ed371e64158@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Thanks for the report.
 
-On 2020/2/23 2:17, Ondřej Jirman wrote:
-> Hello,
+On 2/20/2020 4:48 PM, Sibi Sankar wrote:
+> Hey Taniya,
 > 
-> I observe hung background f2fs task on 5.6-rc2+ shortly after boot, leading to
-> panics. I use f2fs as rootfs. See below for stack trace. The reads continue to
-> work (if I disable panic on hung task). But sync blocks, writes block, etc.
+> +    <&gcc GCC_MSS_NAV_AXIS_CLK>,
 > 
-> It does not happen on all my f2fs filesystems, so it may depend on workload
-> or my particular filesystem state. It happens on two separate devices though,
-> both 32-bit, and doesn't happen on a 64-bit device. (might be a false lead,
-> though)
+> error is because of ^^ typo
+> it should be GCC_MSS_NAV_AXI_CLK
+> instead, with that dt_bindings
+> check will go though.
 > 
-> I went through the f2fs-for-5.6 tag/branch and reverted each patch right
-> down to:
 > 
->   4c8ff7095bef64fc47e996a938f7d57f9e077da3 f2fs: support data compression
-> 
-> I could still reproduce the issue.
-> 
-> After reverting the data compression too, I could no longer reproduce the
-> issue. Perhaps not very helpful, since that patch is huge.
-> 
-> I tried to collect some information. Some ftrace logs, etc. Not sure what would
-> help debug this. Let me know if I can help debug this more.
-> 
-> Symptoms look the same as this issue:
-> 
->   https://www.mail-archive.com/linux-f2fs-devel@lists.sourceforge.net/msg15298.html
-> 
-> ftrace: https://megous.com/dl/tmp/f2fs-debug-info.txt
-> 
-> longer ftrace: https://megous.com/dl/tmp/f2fs-debug-info-full.txt
 
-I checked the full trace log, however I didn't find any clue to troubleshot this issue.
+Thanks Sibi for pointing the typo.
 
-[snip]
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-> dmesg:
-
-Could you dump all other task stack info via "echo "t" > /proc/sysrq-trigger"?
-
-> 
-> [  246.758021] INFO: task kworker/u16:1:58 blocked for more than 122 seconds.
-> [  246.758040]       Not tainted 5.6.0-rc2-00590-g9983bdae4974e #11
-> [  246.758044] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [  246.758052] kworker/u16:1   D    0    58      2 0x00000000
-> [  246.758090] Workqueue: writeback wb_workfn (flush-179:0)
-> [  246.758099] Backtrace:
-> [  246.758121] [<c0912b90>] (__schedule) from [<c0913234>] (schedule+0x78/0xf4)
-> [  246.758130]  r10:da644000 r9:00000000 r8:da645a60 r7:da283e10 r6:00000002 r5:da644000
-> [  246.758132]  r4:da4d3600
-> [  246.758148] [<c09131bc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
-> [  246.758152]  r5:00000001 r4:da283e00
-> [  246.758161] [<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f2c>] (down_write+0x6c/0x70)
-> [  246.758167]  r10:da283e00 r9:da645d80 r8:d9ed0000 r7:00000001 r6:00000000 r5:eff213b0
-> [  246.758169]  r4:da283e00
-> [  246.758187] [<c0915ec0>] (down_write) from [<c0435b80>] (f2fs_write_single_data_page+0x608/0x7ac)
-
-I'm not sure what is this semaphore, I suspect this is F2FS_I(inode)->i_sem, in order to make
-sure of this, can you help to add below function, and use them to replace
-all {down,up}_{write,read}(&.i_sem) invoking? then reproduce this issue and catch the log.
-
-Thanks,
-
-> [  246.758190]  r5:eff213b0 r4:da283c60
-> [  246.758198] [<c0435578>] (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
-> [  246.758204]  r10:da645c28 r9:da283d60 r8:da283c60 r7:0000000f r6:da645d80 r5:00000001
-> [  246.758206]  r4:eff213b0
-> [  246.758214] [<c0435d24>] (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
-> [  246.758220]  r10:00000000 r9:d9ed002c r8:d9ed0000 r7:00000004 r6:da283d60 r5:da283c60
-> [  246.758223]  r4:da645d80
-> [  246.758238] [<c04364e8>] (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
-> [  246.758244]  r10:0000000a r9:c0e03d00 r8:00000c00 r7:c0264ddc r6:da645d80 r5:da283d60
-> [  246.758246]  r4:da283c60
-> [  246.758254] [<c0267eac>] (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
-> [  246.758259]  r7:da283d60 r6:da645eac r5:da645d80 r4:da283c60
-> [  246.758266] [<c0310c78>] (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
-> [  246.758272]  r10:0000000a r9:c0e03d00 r8:da283cc8 r7:da283c60 r6:da645eac r5:da283d08
-> [  246.758274]  r4:d9dc9848
-> [  246.758281] [<c03110cc>] (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
-> [  246.758287]  r10:da3797a8 r9:c0e03d00 r8:d9dc985c r7:da645eac r6:00000000 r5:d9dc9848
-> [  246.758289]  r4:da5a8800
-> [  246.758296] [<c031157c>] (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
-> [  246.758302]  r10:fffbf200 r9:da644000 r8:c0e04e64 r7:d9dc9848 r6:d9dc9874 r5:da645eac
-> [  246.758305]  r4:d9dc9848
-> [  246.758312] [<c0311660>] (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
-> [  246.758318]  r10:da5f2005 r9:d9dc984c r8:d9dc9948 r7:d9dc9848 r6:00000000 r5:d9dc9954
-> [  246.758321]  r4:000031e6
-> [  246.758334] [<c0312a50>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
-> [  246.758340]  r10:da5f2005 r9:00000200 r8:00000000 r7:da5f2000 r6:ef044400 r5:da5eb000
-> [  246.758343]  r4:d9dc9954
-> [  246.758350] [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
-> [  246.758357]  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:da5eb014
-> [  246.758359]  r4:da5eb000
-> [  246.758368] [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
-> [  246.758374]  r10:ec9e5e90 r9:dabf325c r8:da5eb000 r7:da644000 r6:00000000 r5:da5fe000
-> [  246.758377]  r4:dabf3240
-> [  246.758386] [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> [  246.758391] Exception stack(0xda645fb0 to 0xda645ff8)
-> [  246.758397] 5fa0:                                     00000000 00000000 00000000 00000000
-> [  246.758402] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [  246.758407] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [  246.758413]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
-> [  246.758416]  r4:da5fe000
-> .
-> 
+--
