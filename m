@@ -2,143 +2,122 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E21C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46965C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B07C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582555926;
-	bh=XRi0OmHVHDee1GTej+sJ5OKiNNLB45ifwcR2vnGTriE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AUtOYbvdHE+hohsgIFoTXV4VECyf68Tj9kIyJWbyMFFHn3DLsYvXLFGr/Pcoe2J4n
-	 alhgbPcVojtBlf3o7HNjiBM7QZ6THeFGDoi8GzLUk3UOXFrTVacvw6YBvn7t2Er9YF
-	 adAiDzE5JrvTw8f54oND6QDxHQUzorswP4SUo9YY=
+	by mail.kernel.org (Postfix) with ESMTP id 1F1602072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:55:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Za/Ozcng";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Za/Ozcng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgBXOwF (ORCPT
+        id S1727686AbgBXOzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:52:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbgBXOwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:52:05 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 24 Feb 2020 09:55:39 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:58324 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727359AbgBXOzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:55:38 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D9AAD8EE193;
+        Mon, 24 Feb 2020 06:55:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1582556137;
+        bh=nYoNWmZAomzGgPf7q+XQUVWK7ASnTrz9ODYpmR2mpKc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Za/Ozcng988/g8wymADbE9zgdkkvaF7q2cFM+uiHjmqmZVI01eMWKGeGXj5yoZqHz
+         zW4LTM5KYvbWvLzaW9jO8C7RbNT2zgWdmQ9ZY6LelAG+ZHkW6+0wPAXJ5fIIef4uVF
+         /0z2pvIbXhGqmOrPsG3ZJLCOQ+ILDTlH0xwnz/hE=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wH3sn0ON16yB; Mon, 24 Feb 2020 06:55:37 -0800 (PST)
+Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACFC20836;
-        Mon, 24 Feb 2020 14:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582555924;
-        bh=XRi0OmHVHDee1GTej+sJ5OKiNNLB45ifwcR2vnGTriE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=emz3wz7Ro5hhDbUK45uRjE/GOzzpc3xgdSqBISPZkQrYw3cmsSjhpNfSPlXBLnwdE
-         kcewki6VbecIyeDD3mBAJWecySt85yvGUT+/ld/07q6kFoFqVchCtenkjF8QsZxBSo
-         HHcfEWbBHf1CqUCwoNQSK5oHdp8sVjA8IRaRgBf4=
-Received: by mail-qk1-f177.google.com with SMTP id h4so8919657qkm.0;
-        Mon, 24 Feb 2020 06:52:03 -0800 (PST)
-X-Gm-Message-State: APjAAAXE3OthYOmae/owoRfw3P1tJqWVVQXkFPS+db0d25c683XV4neZ
-        CwHea0iQpNgBUGgxg6qYZB1eCYskZVBEc4LaYQ==
-X-Google-Smtp-Source: APXvYqy3i2A/uaXUUl5KAquMuTkYSOzGwGzbCUu+blbmGe2ksR6g/Clz7i7XiWQ/ps6CvMEUu/w8BbbZd1N4Q9aboto=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr50756836qkg.152.1582555922990;
- Mon, 24 Feb 2020 06:52:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
- <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
- <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
-In-Reply-To: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 24 Feb 2020 08:51:50 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
-Message-ID: <CAL_Jsq+za-2VQ3uaLK0bUoziTyoNeL4T48F+hVv1Wy4b+5rAGA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1B36F8EE0E2;
+        Mon, 24 Feb 2020 06:55:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1582556137;
+        bh=nYoNWmZAomzGgPf7q+XQUVWK7ASnTrz9ODYpmR2mpKc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Za/Ozcng988/g8wymADbE9zgdkkvaF7q2cFM+uiHjmqmZVI01eMWKGeGXj5yoZqHz
+         zW4LTM5KYvbWvLzaW9jO8C7RbNT2zgWdmQ9ZY6LelAG+ZHkW6+0wPAXJ5fIIef4uVF
+         /0z2pvIbXhGqmOrPsG3ZJLCOQ+ILDTlH0xwnz/hE=
+Message-ID: <1582556135.3384.4.camel@HansenPartnership.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
+ [ver #17]
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Miklos Szeredi <mszeredi@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        christian@brauner.io, Jann Horn <jannh@google.com>,
+        darrick.wong@oracle.com, Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Mon, 24 Feb 2020 06:55:35 -0800
+In-Reply-To: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+         <1582316494.3376.45.camel@HansenPartnership.com>
+         <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:33 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Rob,
->
-> On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
-> > > Convert the UniPhier GPIO controller binding to DT schema format.
-> > >
-> > > I omitted the 'gpio-ranges' property because it is defined in the
-> > > dt-schema project (/schemas/gpio/gpio.yaml).
-> > >
-> > > As of writing, the 'gpio-ranges-group-names' is not defined in that
-> > > file despite it is a common property described in
-> > > Documentation/devicetree/bindings/gpio/gpio.txt
-> > > So, I defined it in this schema.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > ---
-> > >
-> > > I have a question about the range about 'ngpio'.
-> > >
-> > >   ngpios:
-> > >     minimum: 0
-> > >     maximum: 512
-> > >
-> > > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
-> > > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
-> > >
-> > > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
-> > >
-> > > I cannot omit the minimum because minimum and maximum depend on each other.
-> > > I just put a sensible number, 512, in maximum.
-> > >
-> > > If this range is entirely unneeded, I will delete it.
-> >
-> > This property is generally for when you can have some number less
-> > than a maximum number implied by the compatible string.
-> >
-> > If there is really no max (e.g. 2^32 - 1 is valid), then just do
-> > 'ngpios: true'
->
->
-> What does ': true' mean?
+On Mon, 2020-02-24 at 11:24 +0100, Miklos Szeredi wrote:
+> On Fri, Feb 21, 2020 at 9:21 PM James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+[...]
+> > Could I make a suggestion about how this should be done in a way
+> > that doesn't actually require the fsinfo syscall at all: it could
+> > just be done with fsconfig.  The idea is based on something I've
+> > wanted to do for configfd but couldn't because otherwise it
+> > wouldn't substitute for fsconfig, but Christian made me think it
+> > was actually essential to the ability of the seccomp and other
+> > verifier tools in the critique of configfd and I belive the same
+> > critique applies here.
+> > 
+> > Instead of making fsconfig functionally configure ... as in you
+> > pass the attribute name, type and parameters down into the fs
+> > specific handler and the handler does a string match and then
+> > verifies the parameters and then acts on them, make it table
+> > configured, so what each fstype does is register a table of
+> > attributes which can be got and optionally set (with each attribute
+> > having a get and optional set function).  We'd have multiple tables
+> > per fstype, so the generic VFS can register a table of attributes
+> > it understands for every fstype (things like name, uuid and the
+> > like) and then each fs type would register a table of fs specific
+> > attributes following the same pattern. The system would examine the
+> > fs specific table before the generic one, allowing
+> > overrides.  fsconfig would have the ability to both get and
+> > set attributes, permitting retrieval as well as setting (which is
+> > how I get rid of the fsinfo syscall), we'd have a global parameter,
+> > which would retrieve the entire table by name and type so the whole
+> > thing is introspectable because the upper layer knows a-priori all
+> > the attributes which can be set for a given fs type and what type
+> > they are (so we can make more of the parsing generic).  Any
+> > attribute which doesn't have a set routine would be read only and
+> > all attributes would have to have a get routine meaning everything
+> > is queryable.
+> 
+> And that makes me wonder: would a
+> "/sys/class/fs/$ST_DEV/options/$OPTION" type interface be feasible
+> for this?
 
-It's a schema that always passes validation. It's purpose here is just
-to say you are using this common property for this binding.
+Once it's table driven, certainly a sysfs directory becomes possible. 
+The problem with ST_DEV is filesystems like btrfs and xfs that may have
+multiple devices.  The current fsinfo takes a fspick'd directory fd so
+the input to the query is a path, which gets messy in sysfs, although I
+could see something like /sys/class/fs/mount/<path>/$OPTION working.
 
->
-> If it is documented somewhere,
-> could you point me to the reference?
+James
 
-https://github.com/devicetree-org/dt-schema/blob/master/schemas/gpio/gpio.yaml
-
->
-> Even if I remove the 'ngpio' entirely
-> from my dt-schema, the 'ngpio' is checked
-> correctly.
-
-Yes, if you change it to a string value for example, it should fail.
-(Only if DT_SCHEMA_FILES is not set without my kbuild changes)
-
-You should also add 'additionalProperties: false' at the top level of
-your schema and then it will also fail if you don't list ngpios in
-properties.
-
-Rob
