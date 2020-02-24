@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52607C35677
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9188DC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD5220675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B09D20637
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nBH5Lxzi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MkgppYUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgBXBkh (ORCPT
+        id S1727307AbgBXBkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:40:37 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:48846 "EHLO
+        Sun, 23 Feb 2020 20:40:45 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:49026 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgBXBkg (ORCPT
+        with ESMTP id S1727158AbgBXBkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:40:36 -0500
+        Sun, 23 Feb 2020 20:40:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582508426; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1582508429; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ba69q4qfJBwAZRYRQjM4kMSvZn4+EOsEiCJjiO0kjOQ=;
-        b=nBH5LxzixXKIrTZy/sAaPtG0Xpnyk05AzpOsP45FP0dFYNE0rfE8T5LQ79si+NuZBNe/Pn
-        vodoQ4+b1TW+5HypnNVo+nOkqmPls9ytvho6KgrimxwY4hbvjINTYl+6uoxy1T5snaz5u0
-        k2Gj6yAQvU+qed3lcW7E4ri5PM36WH4=
+        bh=IMkGWYSXhw/tNPFUtRSta3c/ysIRlFeCxyXP8lthelM=;
+        b=MkgppYUDEMC13a98282HoDO+pyrKcBbjoLr8cDSlXQwD6Om8wGxNS6wnpT+yJKKG9DyxVb
+        NFItuGR3SXYIWmL0+/jvh5Y31hrlu9+yZFjrirPOoaKyXsxDgMYLTf4bXlTG21gPlBIUHd
+        vHemmoLPJVbIdw9Mp127b7JonMVHl3M=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Bin Liu <b-liu@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/5] usb: musb: jz4740: Register USB role switch
-Date:   Sun, 23 Feb 2020 22:40:06 -0300
-Message-Id: <20200224014008.27114-3-paul@crapouillou.net>
+Subject: [PATCH v2 4/5] usb: musb: jz4740: Unconditionally depend on devicetree
+Date:   Sun, 23 Feb 2020 22:40:07 -0300
+Message-Id: <20200224014008.27114-4-paul@crapouillou.net>
 In-Reply-To: <20200224014008.27114-1-paul@crapouillou.net>
 References: <20200224014008.27114-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -48,9 +48,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register a USB role switch, in order to get notified by the connector
-driver when the USB role changes. The notification is then transmitted
-to the PHY.
+The jz4740-musb driver is unconditionally probed from devicetree, so we
+can add a hard dependency on devicetree. This makes the code a bit
+cleaner, and is more future-proof as the platform data is now retrieved
+using of_device_get_match_data().
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
@@ -59,115 +60,70 @@ Notes:
     v2: No change
 
  drivers/usb/musb/Kconfig  |  1 +
- drivers/usb/musb/jz4740.c | 46 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+ drivers/usb/musb/jz4740.c | 14 +++++++++-----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
-index c4b349e074c1..3268adb7d7cf 100644
+index 3268adb7d7cf..3b0d1c20ebe6 100644
 --- a/drivers/usb/musb/Kconfig
 +++ b/drivers/usb/musb/Kconfig
-@@ -113,6 +113,7 @@ config USB_MUSB_JZ4740
+@@ -110,6 +110,7 @@ config USB_MUSB_UX500
+ 
+ config USB_MUSB_JZ4740
+ 	tristate "JZ4740"
++	depends on OF
  	depends on MIPS || COMPILE_TEST
  	depends on USB_MUSB_GADGET
  	depends on USB=n || USB_OTG_BLACKLIST_HUB
-+	select USB_ROLE_SWITCH
- 
- config USB_MUSB_MEDIATEK
- 	tristate "MediaTek platforms"
 diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index aa32b5af0c1f..bbfeb9881788 100644
+index bbfeb9881788..b6747bad4fb2 100644
 --- a/drivers/usb/musb/jz4740.c
 +++ b/drivers/usb/musb/jz4740.c
-@@ -12,13 +12,16 @@
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/usb/role.h>
- #include <linux/usb/usb_phy_generic.h>
- 
- #include "musb_core.h"
- 
- struct jz4740_glue {
- 	struct platform_device	*pdev;
-+	struct musb		*musb;
- 	struct clk		*clk;
-+	struct usb_role_switch	*role_sw;
- };
- 
- static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
-@@ -72,11 +75,38 @@ static const struct musb_hdrc_config jz4740_musb_config = {
- 	.fifo_cfg_size	= ARRAY_SIZE(jz4740_musb_fifo_cfg),
- };
- 
-+static int jz4740_musb_role_switch_set(struct device *dev, enum usb_role role)
-+{
-+	struct jz4740_glue *glue = dev_get_drvdata(dev);
-+	struct usb_phy *phy = glue->musb->xceiv;
-+
-+	switch (role) {
-+	case USB_ROLE_NONE:
-+		atomic_notifier_call_chain(&phy->notifier, USB_EVENT_NONE, phy);
-+		break;
-+	case USB_ROLE_DEVICE:
-+		atomic_notifier_call_chain(&phy->notifier, USB_EVENT_VBUS, phy);
-+		break;
-+	case USB_ROLE_HOST:
-+		atomic_notifier_call_chain(&phy->notifier, USB_EVENT_ID, phy);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static int jz4740_musb_init(struct musb *musb)
+@@ -164,7 +164,7 @@ static const struct musb_hdrc_platform_data jz4740_musb_pdata = {
+ static int jz4740_probe(struct platform_device *pdev)
  {
- 	struct device *dev = musb->controller->parent;
-+	struct jz4740_glue *glue = dev_get_drvdata(dev);
-+	struct usb_role_switch_desc role_sw_desc = {
-+		.set = jz4740_musb_role_switch_set,
-+		.fwnode = dev_fwnode(dev),
-+	};
- 	int err;
+ 	struct device			*dev = &pdev->dev;
+-	const struct musb_hdrc_platform_data *pdata = &jz4740_musb_pdata;
++	const struct musb_hdrc_platform_data *pdata;
+ 	struct platform_device		*musb;
+ 	struct jz4740_glue		*glue;
+ 	struct clk			*clk;
+@@ -174,6 +174,12 @@ static int jz4740_probe(struct platform_device *pdev)
+ 	if (!glue)
+ 		return -ENOMEM;
  
-+	glue->musb = musb;
-+
- 	if (dev->of_node)
- 		musb->xceiv = devm_usb_get_phy_by_phandle(dev, "phys", 0);
- 	else
-@@ -88,6 +118,12 @@ static int jz4740_musb_init(struct musb *musb)
- 		return err;
- 	}
- 
-+	glue->role_sw = usb_role_switch_register(dev, &role_sw_desc);
-+	if (IS_ERR(glue->role_sw)) {
-+		dev_err(dev, "Failed to register USB role switch");
-+		return PTR_ERR(glue->role_sw);
++	pdata = of_device_get_match_data(dev);
++	if (!pdata) {
++		dev_err(dev, "missing platform data");
++		return -EINVAL;
 +	}
 +
- 	/*
- 	 * Silicon does not implement ConfigData register.
- 	 * Set dyn_fifo to avoid reading EP config from hardware.
-@@ -99,10 +135,20 @@ static int jz4740_musb_init(struct musb *musb)
+ 	musb = platform_device_alloc("musb-hdrc", PLATFORM_DEVID_AUTO);
+ 	if (!musb) {
+ 		dev_err(dev, "failed to allocate musb device");
+@@ -240,20 +246,18 @@ static int jz4740_remove(struct platform_device *pdev)
  	return 0;
  }
  
-+static int jz4740_musb_exit(struct musb *musb)
-+{
-+	struct jz4740_glue *glue = dev_get_drvdata(musb->controller->parent);
-+
-+	usb_role_switch_unregister(glue->role_sw);
-+
-+	return 0;
-+}
-+
- static const struct musb_platform_ops jz4740_musb_ops = {
- 	.quirks		= MUSB_DMA_INVENTRA | MUSB_INDEXED_EP,
- 	.fifo_mode	= 2,
- 	.init		= jz4740_musb_init,
-+	.exit		= jz4740_musb_exit,
- #ifdef CONFIG_USB_INVENTRA_DMA
- 	.dma_init	= musbhs_dma_controller_create_noirq,
- 	.dma_exit	= musbhs_dma_controller_destroy,
+-#ifdef CONFIG_OF
+ static const struct of_device_id jz4740_musb_of_match[] = {
+-	{ .compatible = "ingenic,jz4740-musb" },
++	{ .compatible = "ingenic,jz4740-musb", .data = &jz4740_musb_pdata },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, jz4740_musb_of_match);
+-#endif
+ 
+ static struct platform_driver jz4740_driver = {
+ 	.probe		= jz4740_probe,
+ 	.remove		= jz4740_remove,
+ 	.driver		= {
+ 		.name	= "musb-jz4740",
+-		.of_match_table = of_match_ptr(jz4740_musb_of_match),
++		.of_match_table = jz4740_musb_of_match,
+ 	},
+ };
+ 
 -- 
 2.25.0
 
