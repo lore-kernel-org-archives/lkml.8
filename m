@@ -2,121 +2,158 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD225C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D7FC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43C720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA83C20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="weB3LAGa"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="VxO9///u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBXKsT (ORCPT
+        id S1727324AbgBXKsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:48:19 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35048 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXKsT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:48:19 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b17so8842521wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:48:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=DlS9HvBeJ40C/txSt07sCwih0YUG8h5KLHioIGiWog4=;
-        b=weB3LAGarjV2WryBzxjWn93uxEzAa6HvBZ+ZsQexkSc2sZnWRUUthgdeTkLri+9MzM
-         oZMMrELL7KqxQU9+KOidn+3/LdCnUl3+xL7SFrJN1C+rsX4h1tK13srwP+BtbYuC58ID
-         jOpps72H1/OPwudWSxLhRDhzFdJi9bfmBLvvvJwCygP6DHtN6qmihvWHJJX//uD9QptP
-         Q4a6NfCee2B+PcGRRFHu9oRAXqLDVF3a0mUcCEfISNh8x0nlR8pKVVKPax6NBT8aObWE
-         hXmOTSSYJ4YCWZFQ/ta6uFjkhbygSy1IPMLWipCFgAmmcSC4w+Vl6p53tsYlt9VA6aX1
-         NvYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=DlS9HvBeJ40C/txSt07sCwih0YUG8h5KLHioIGiWog4=;
-        b=rf96ef78QYeA/pIONmP4kTq7WiXV5UXcGwcF1yhXloHquVqDVdhq9P/AlTJa4OsGEV
-         57uTkm0v/9MfFUsac14J57FdFdcvijVlwuYD1UIO3x7sw0X9WFf5Ry4pSUwad4BUc0qe
-         F8EVncuyRE8WWB2iR3PAIpM/Oldy58u/4Rt9vzf97HXHJmDZX0jvbhJdeZvvntVPKJK+
-         br/I/hzrPw3qe53gpNO8b7WMzYxABHRHZG8uniV/gZSipNyWbFl8UJgxN2TpHjjPXVel
-         tTybR6auFqb6W9ZRlWq51gSzAXVmJUEjVWbrlnQnOtXtaMSdZQi7pd0I6FmPqE1OAE+T
-         nHPg==
-X-Gm-Message-State: APjAAAXxgIbvdiJUtqz6IL6LOUyGwn1w4alsIOzbGIHkBk+FTD6GedAU
-        pgXZ3UuanORy9kSmt/uiuMPTuL+u6jQ=
-X-Google-Smtp-Source: APXvYqysLZLszWQRkkFDtdkz0vqL9kByB/8xkSBa91ZWllcVHRPpcTzSJsPfX0RQyNQTE4qG0xBX9g==
-X-Received: by 2002:a1c:3d46:: with SMTP id k67mr22204894wma.171.1582541295301;
-        Mon, 24 Feb 2020 02:48:15 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id i204sm17574955wma.44.2020.02.24.02.48.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 02:48:14 -0800 (PST)
-Date:   Mon, 24 Feb 2020 10:48:45 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: omap-usb-tll: Replace zero-length array with
- flexible-array member
-Message-ID: <20200224104845.GP3494@dell>
-References: <20200212235642.GA19206@embeddedor.com>
+        Mon, 24 Feb 2020 05:48:33 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50395 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726778AbgBXKsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:48:33 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48QzLj0yR2z9sP7;
+        Mon, 24 Feb 2020 21:48:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1582541309;
+        bh=706Vp/HHmo+lrWjl+3TUImaROxTZwoAKGRpck8URTZ0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=VxO9///uot9PqW/pBL7CbpvXKurwqJJXDD+1rHaEkqYGJbz4JApxRwSgEaG9JgiqY
+         MSCgqTqNjbWiX6c2l99XfmIGaQNylMpN1+ZkxmymBClnJPLLnJD9K7G88fx4+ZfF0y
+         ioriFn8/lOj7U6uP6L/mIsS2lTjetKpbH++Odf0j0sNcP4KV4CcQFsJniBZ1it730B
+         eIjaSQcPF6HJrEasbl825N2kn5tFd//X4L/YOjr4vi1DuxJhSx1KZ82piqRDLrdSMz
+         ZhbII0tBnxb80mqFiTlA/Uv1d5iuYPxemFVFdzdX7ANLmAmeTzi8K6WhZ9k5st/eLe
+         RWCUH81LjTiAA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, mikey@neuling.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 02/12] powerpc/ptrace: drop unnecessary #ifdefs CONFIG_PPC64
+In-Reply-To: <34af3942cd27f6b5365caae772fb8e0af44763d5.1561735587.git.christophe.leroy@c-s.fr>
+References: <cover.1561735587.git.christophe.leroy@c-s.fr> <34af3942cd27f6b5365caae772fb8e0af44763d5.1561735587.git.christophe.leroy@c-s.fr>
+Date:   Mon, 24 Feb 2020 21:48:26 +1100
+Message-ID: <878sks1csl.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200212235642.GA19206@embeddedor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020, Gustavo A. R. Silva wrote:
-
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Drop a bunch of #ifdefs CONFIG_PPC64 that are not vital.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
->  drivers/mfd/omap-usb-tll.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/powerpc/include/asm/ptrace.h      |  9 ++++-----
+>  arch/powerpc/include/uapi/asm/ptrace.h | 12 ++++--------
+>  arch/powerpc/kernel/ptrace/ptrace.c    | 24 +++---------------------
+>  3 files changed, 11 insertions(+), 34 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
+> index faa5a338ac5a..1506a9c61d50 100644
+> --- a/arch/powerpc/include/asm/ptrace.h
+> +++ b/arch/powerpc/include/asm/ptrace.h
+> @@ -36,11 +36,10 @@ struct pt_regs
+>  			unsigned long link;
+>  			unsigned long xer;
+>  			unsigned long ccr;
+> -#ifdef CONFIG_PPC64
+> -			unsigned long softe;
+> -#else
+> -			unsigned long mq;
+> -#endif
+> +			union {
+> +				unsigned long softe;
+> +				unsigned long mq;
+> +			};
+>  			unsigned long trap;
+>  			unsigned long dar;
+>  			unsigned long dsisr;
+> diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
+> index f5f1ccc740fc..37d7befbb8dc 100644
+> --- a/arch/powerpc/include/uapi/asm/ptrace.h
+> +++ b/arch/powerpc/include/uapi/asm/ptrace.h
+> @@ -43,12 +43,11 @@ struct pt_regs
+>  	unsigned long link;
+>  	unsigned long xer;
+>  	unsigned long ccr;
+> -#ifdef __powerpc64__
+> -	unsigned long softe;		/* Soft enabled/disabled */
+> -#else
+> -	unsigned long mq;		/* 601 only (not used at present) */
+> +	union {
+> +		unsigned long softe;	/* Soft enabled/disabled */
+> +		unsigned long mq;	/* 601 only (not used at present) */
+>  					/* Used on APUS to hold IPL value. */
+> -#endif
+> +	};
 
-Applied, thanks.
+As Andreas pointed out this is not safe as this is a uapi header.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>  	unsigned long trap;		/* Reason for being here */
+>  	/* N.B. for critical exceptions on 4xx, the dar and dsisr
+>  	   fields are overloaded to hold srr0 and srr1. */
+> @@ -105,11 +104,8 @@ struct pt_regs
+>  #define PT_LNK	36
+>  #define PT_XER	37
+>  #define PT_CCR	38
+> -#ifndef __powerpc64__
+>  #define PT_MQ	39
+> -#else
+>  #define PT_SOFTE 39
+> -#endif
+
+I'd also rather leave that as it is.
+
+There's a slim chance it could break some code that already has either
+of those defined.
+
+If you need them both defined to make other code work in the kernel
+that's fine, in the kernel header we can do:
+
+// Ensure these are always defined inside the kernel to avoid #ifdefs
+#ifdef CONFIG_PPC64
+#define PT_MQ	39
+#else
+#define PT_SOFTE 39
+#endif
+
+
+>  #define PT_TRAP	40
+>  #define PT_DAR	41
+>  #define PT_DSISR 42
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+> index 684b0b315c32..0afb223c4d57 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace.c
+> @@ -113,11 +113,8 @@ static const struct pt_regs_offset regoffset_table[] = {
+>  	REG_OFFSET_NAME(link),
+>  	REG_OFFSET_NAME(xer),
+>  	REG_OFFSET_NAME(ccr),
+> -#ifdef CONFIG_PPC64
+>  	REG_OFFSET_NAME(softe),
+> -#else
+>  	REG_OFFSET_NAME(mq),
+> -#endif
+
+Pretty sure that will cause breakage. The offset is ABI.
+
+
+cheers
+
