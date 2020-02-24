@@ -2,142 +2,140 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689BAC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4125C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345E720726
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="oLgLtF9A";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M6fHG36N"
+	by mail.kernel.org (Postfix) with ESMTP id D0D6720726
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbgBXLCz (ORCPT
+        id S1727401AbgBXLD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:02:55 -0500
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:48625 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726838AbgBXLCy (ORCPT
+        Mon, 24 Feb 2020 06:03:57 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:48589 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXLD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:02:54 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id C782F46F;
-        Mon, 24 Feb 2020 06:02:53 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 06:02:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=xHt2MK1heAneZjk7lxOHA207z1m
-        V+6niWv3tm6W4trM=; b=oLgLtF9Af//57lWcVGNMlOihaz1k9FQCx+lIUsnnjQf
-        XuLwscDFImI1pV3dttYo285rMu/FvYuFuZs6FcbZMZ41Ajxe0ZaXd11YM1Dv4xzR
-        HyspdQnyE4KnGUlNBXHGPlm0rhVfZO3qLoS29RYcV/siui5UgAFe9iuJH2hPgIZc
-        JmGK7VbeTWHTIgqq0ZqkHjqP/q0Kf/BnyXSu0fVj/K0BKRByJTljuRG2qhtyoqdP
-        0xRyeodSCVsshCMKRASEa6FheP4B7CCR6tdu4hVCUZN+/mwAsND79SZ7YFHj6Pap
-        nVSs0Q6oRYtuAI5H1nZour18aCD0e1sAab1uqVVBjkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=xHt2MK
-        1heAneZjk7lxOHA207z1mV+6niWv3tm6W4trM=; b=M6fHG36NgdH8xdAdDANRO5
-        F1LkjzYHOossC9uRzvXexUPrRjreGhNVVj1ikQRFTUN0TlzIoflwTDwut0/k8nRq
-        QgbITFTNV3W3yP2/mfGsykTkARfnRqEi5gW2Uq68OI4ZIg+DF24PjW8q/mlPMD9z
-        v5g7MDRwFFD17fhrb28y2k89Yrk0T1MNRANtYwLyMMP/zpA2xQffh8mLwT1y5ec7
-        vH6lZmGM7HxevW2kzoJPZIRGK++KzpuJeHiYgdZ7hgboVDJfUXhB+MA+6LiqQLFF
-        4jssje7YzJi2vUCSf014B5Zsw1faGNPWm5Q3rRvPpgNSjKFpdxEhMHp2mL2IrZpg
-        ==
-X-ME-Sender: <xms:Wq1TXnEcBlSfOhJ8C0JNkgaSpKWsoXA3_8qG11wWKLY0KO_Zhw881A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddvfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:Wq1TXlz0QizJwVtlb7NBSTi_b2j7ky9Sq2KgFgzjALWQY8YE4BvUSw>
-    <xmx:Wq1TXkjrkjETxdF64tBXJq5iHfJ3zM9-yNhEneghxHG7WVUQ_0u5tw>
-    <xmx:Wq1TXiLSr4vzEJmfeMyJbAaHLqXSre4dSUW0JC5IN-CW-z8gG8EFaw>
-    <xmx:Xa1TXkUAZW5yNro3fwZmf6i4muMubNGSs8O2zUAVHGqItmKKBeoXyg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 057D8328005E;
-        Mon, 24 Feb 2020 06:02:49 -0500 (EST)
-Date:   Mon, 24 Feb 2020 12:02:48 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] bus: sunxi-rsb: Return correct data when mixing
- 16-bit and 8-bit reads
-Message-ID: <20200224110248.hpi3dhp3t7q56hmm@gilmour.lan>
-References: <20200221202728.1583768-1-megous@megous.com>
+        Mon, 24 Feb 2020 06:03:57 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: yIjgW6gckhVxf2hH7puC/m2slZpKqfrqwurH8P1fdvPbbtz3WByCDkSjBYfeylgxBsSgS3EpH6
+ KJLSewKjs/u9f7erD8Jd/Bei1ADvWywJy89ktEYnHloYnwI8UeJ0BAthbi5W/EhoFbnG0lAK7K
+ nzjDHURrE+HfPSycBDNQIsq5cdBIRio0DyHP1i9kNOMknugU9XLh+J/qVntQzOZ9GiyeSid8Se
+ L03S4N47ZOWaVXnxI6DIVMuGyA5H7EhLpRuxeZoYJh2c+rYT5ebzoRiy8ubCrZAgQ5LI2Mav7D
+ hCE=
+X-IronPort-AV: E=Sophos;i="5.70,479,1574146800"; 
+   d="scan'208";a="3379355"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Feb 2020 04:03:56 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 24 Feb 2020 04:03:51 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 24 Feb 2020 04:04:01 -0700
+Date:   Mon, 24 Feb 2020 12:03:50 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Paul Burton" <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 1/2] net: mscc: ocelot: Add support for tcam
+Message-ID: <20200224110350.7kdzf4kml4iaem4i@soft-dev3.microsemi.net>
+References: <1559287017-32397-1-git-send-email-horatiu.vultur@microchip.com>
+ <1559287017-32397-2-git-send-email-horatiu.vultur@microchip.com>
+ <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="srx47feia3nohrm4"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200221202728.1583768-1-megous@megous.com>
+In-Reply-To: <CA+h21hoSA5DECsA+faJ91n0jBhAR5BZnkMm=Dx4JfNDp8J+xbw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vladimir,
 
---srx47feia3nohrm4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The 02/24/2020 12:38, Vladimir Oltean wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> Hi Horatiu,
+> 
+> On Fri, 31 May 2019 at 10:18, Horatiu Vultur
+> <horatiu.vultur@microchip.com> wrote:
+> >
+> > Add ACL support using the TCAM. Using ACL it is possible to create rules
+> > in hardware to filter/redirect frames.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  arch/mips/boot/dts/mscc/ocelot.dtsi      |   5 +-
+> >  drivers/net/ethernet/mscc/Makefile       |   2 +-
+> >  drivers/net/ethernet/mscc/ocelot.c       |  13 +
+> >  drivers/net/ethernet/mscc/ocelot.h       |   8 +
+> >  drivers/net/ethernet/mscc/ocelot_ace.c   | 777 +++++++++++++++++++++++++++++++
+> >  drivers/net/ethernet/mscc/ocelot_ace.h   | 227 +++++++++
+> >  drivers/net/ethernet/mscc/ocelot_board.c |   1 +
+> >  drivers/net/ethernet/mscc/ocelot_regs.c  |  11 +
+> >  drivers/net/ethernet/mscc/ocelot_s2.h    |  64 +++
+> >  drivers/net/ethernet/mscc/ocelot_vcap.h  | 403 ++++++++++++++++
+> >  10 files changed, 1508 insertions(+), 3 deletions(-)
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.c
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_ace.h
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_s2.h
+> >  create mode 100644 drivers/net/ethernet/mscc/ocelot_vcap.h
+> >
+> 
+> I was testing this functionality and it looks like the MAC_ETYPE keys
+> (src_mac, dst_mac) only match non-IP frames.
+> Example, this rule doesn't drop ping traffic:
+> 
+> tc qdisc add dev swp0 clsact
+> tc filter add dev swp0 ingress flower skip_sw dst_mac
+> 96:e1:ef:64:1b:44 action drop
+> 
+> Would it be possible to do anything about that?
 
-On Fri, Feb 21, 2020 at 09:27:26PM +0100, Ondrej Jirman wrote:
-> When doing a 16-bit read that returns data in the MSB byte, the
-> RSB_DATA register will keep the MSB byte unchanged when doing
-> the following 8-bit read. sunxi_rsb_read() will then return
-> a result that contains high byte from 16-bit read mixed with
-> the 8-bit result.
->
-> The consequence is that after this happens the PMIC's regmap will
-> look like this: (0x33 is the high byte from the 16-bit read)
->
-> % cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-> 00: 33
-> 01: 33
-> 02: 33
-> 03: 33
-> 04: 33
-> 05: 33
-> 06: 33
-> 07: 33
-> 08: 33
-> 09: 33
-> 0a: 33
-> 0b: 33
-> 0c: 33
-> 0d: 33
-> 0e: 33
-> [snip]
->
-> Fix this by masking the result of the read with the correct mask
-> based on the size of the read. There are no 16-bit users in the
-> mainline kernel, so this doesn't need to get into the stable tree.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+What you could do is to configure each port in such a way, to treat IP
+frames as MAC_ETYPE frames. Have a look in ANA:PORT[0-11]:VCAP_S2_CFG.
 
-Applied, thanks!
-Maxime
+There might be a problem with this approach. If you configure the port
+in such a way, then all your rules with the keys IP6, IP4 will not be
+match on that port.
 
---srx47feia3nohrm4
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Thanks,
+> -Vladimir
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOtWAAKCRDj7w1vZxhR
-xZ3GAQDQc1KfI9aGFO2vdN8rwe58X/8JKWbnV1gWWOW6MvI39wEAzTL/pyT7Z9hY
-YnHiJd9rQY5Llx/U60FxMs+RfZ15wAY=
-=Ggtt
------END PGP SIGNATURE-----
-
---srx47feia3nohrm4--
+-- 
+/Horatiu
