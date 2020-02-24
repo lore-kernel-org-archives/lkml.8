@@ -2,134 +2,134 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF1C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8090FC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BD420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g41PErF6"
+	by mail.kernel.org (Postfix) with ESMTP id 6082C20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgBXSWl (ORCPT
+        id S1727763AbgBXSXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:22:41 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43785 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727438AbgBXSWl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:22:41 -0500
-Received: by mail-lf1-f67.google.com with SMTP id s23so7474756lfs.10;
-        Mon, 24 Feb 2020 10:22:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lO1820yXM1kR2FVVGTZ+ujBZ4C9qGvFZNasnsnO3YqI=;
-        b=g41PErF6G9DUh+x9iXgEt0exu0g4nKSFES0SiW/+ruBNlipaoJagG84+h1+ASnZVCs
-         LN4OWgy4A7rbxtoePdMfCMfGMsm92tfJ5LRcuIELnndLIRw7czgWnPEoltZUmWWsZyHb
-         AX6uq/Z8MOu8GzNIznwlX1tChE3ERvU2gScJr7geIV/7fKANCp6omuhwuJuG80rGVBJJ
-         kv3SN5dkscPUutWqgs8NPrvFUK7EoVnsG/qHlcblo194p5aU0KQjo7k0mJvwqQNJECxO
-         zHjvJAIa+aNKUG84kEjEnEf91dda1u1M1x04V6Rh93lyC79TXNQrwq4dIA519eKktNpM
-         aL0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lO1820yXM1kR2FVVGTZ+ujBZ4C9qGvFZNasnsnO3YqI=;
-        b=ps75zpI7pNkY4dHa1gO8Celc5fdtvlIGaACCGr3RRPTdg4GyyrZMtlMZqh5/LrAqJp
-         R1byctcP/HXSdbnt0alz/bKgF3BOid6SDTYcYQy1UfCKMzzz8M4t0r1Z+08eHwy7Z6MU
-         pUCxV6C1uRmEuANX4uBbmEA0NjrYRJqmAgcelnzRAxvWxZW/Ng3n/1zl7EPUML1ocjFU
-         SGzQieZyB8yRnMvST3ugVhcJdfDZUPCOv3FRVRuq2RLHOidA8nH8Yj1l1FHUmRU01FcG
-         ctEGQ0+5nMIehTQ7jFF+KC+b4C994z/ZZJfvWq6v4IKVAzFmhwI59v6WXSvOXR6wQu1U
-         ofNg==
-X-Gm-Message-State: APjAAAUt2x2/0istOtA+aqKMgN/gJa7nMbiW2TFSqNfWQEPl1vWyiyJt
-        LCYY/C+L1kliX6YG3qr4h3mV5/oN
-X-Google-Smtp-Source: APXvYqxnxim8gbAsgYo6E4n7YKceLi0CMN4LN5Qy8wdqUm37IovUbcalEUWRIr/o65enOGgrw7hAkQ==
-X-Received: by 2002:a19:2d53:: with SMTP id t19mr2250423lft.206.1582568556912;
-        Mon, 24 Feb 2020 10:22:36 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id i67sm3895013lfi.11.2020.02.24.10.22.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 10:22:36 -0800 (PST)
-Subject: Re: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline
- parameter
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Karel Zak <kzak@redhat.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Colin Cross <ccross@android.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-efi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200219162339.16192-1-digetx@gmail.com>
- <20200219162738.GA10644@infradead.org>
- <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
- <20200224163342.d4acf224b56celup@ws.net.home>
- <9c7343eb-1b09-ffcf-cba0-11d6a26dfd77@gmail.com>
-Message-ID: <eb1e3a64-b1ac-94d0-07f7-c84a83d9b21e@gmail.com>
-Date:   Mon, 24 Feb 2020 21:22:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 24 Feb 2020 13:23:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:33650 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727426AbgBXSXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:23:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 10:23:45 -0800
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="384209626"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.134]) ([10.24.14.134])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Feb 2020 10:23:44 -0800
+Subject: Re: [PATCH v3] x86/resctrl: Preserve CDP enable over cpuhp
+To:     James Morse <james.morse@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>
+References: <20200221162105.154163-1-james.morse@arm.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <8d84868f-4045-8d69-ed45-d0f0629ba25c@intel.com>
+Date:   Mon, 24 Feb 2020 10:23:42 -0800
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <9c7343eb-1b09-ffcf-cba0-11d6a26dfd77@gmail.com>
+In-Reply-To: <20200221162105.154163-1-james.morse@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.02.2020 20:23, Dmitry Osipenko пишет:
-> 24.02.2020 19:33, Karel Zak пишет:
->> On Wed, Feb 19, 2020 at 09:59:54AM -0700, Stephen Warren wrote:
->>> On 2/19/20 9:27 AM, Christoph Hellwig wrote:
->>>> On Wed, Feb 19, 2020 at 07:23:39PM +0300, Dmitry Osipenko wrote:
->>>>> The gpt_sector=<sector> causes the GPT partition search to look at the
->>>>> specified sector for a valid GPT header if the GPT is not found at the
->>>>> beginning or the end of block device.
->>>>>
->>>>> In particular this is needed for NVIDIA Tegra consumer-grade Android
->>>>> devices in order to make them usable with the upstream kernel because
->>>>> these devices use a proprietary / closed-source partition table format
->>>>> for the EMMC and it's impossible to change the partition's format. Luckily
->>>>> there is a GPT table in addition to the proprietary table, which is placed
->>>>> in uncommon location of the EMMC storage and bootloader passes the
->>>>> location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
->>>>>
->>>>> This patch is based on the original work done by Colin Cross for the
->>>>> downstream Android kernel.
->>>>
->>>> I don't think a magic command line is the way to go.  The best would be
->>>> to reverse-engineer the proprietary partition table format.  If that is
->>>> too hard we can at least key off the odd GPT location based of it's
->>>> magic number.
->>
->>  +1
->>
->>> I thought that the backup GPT was always present in the standard location;
->>
->> If they have proprietary stuff on begin of the device and valid backup
->> GPT at the end of the device then designer of this junk is crazy, because
->> many GPT fdisk-like tools will try to recover from the backup header and 
->> overwrite the unknown (invalid) stuff at the begin of the device...
+Hi James,
+
+On 2/21/2020 8:21 AM, James Morse wrote:
+> Resctrl assumes that all CPUs are online when the filesystem is
+> mounted, and that CPUs remember their CDP-enabled state over CPU
+> hotplug.
 > 
-> It's a problem created by vendor, but these devices are assumed to run
-> Android-only. So it's not really that bad :)
+> This goes wrong when resctrl's CDP-enabled state changes while all
+> the CPUs in a domain are offline.
+> 
+> When a domain comes online, enable (or disable!) CDP to match resctrl's
+> current setting.
+> 
+> Fixes: 5ff193fbde20 ("x86/intel_rdt: Add basic resctrl filesystem support")
+> Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+>  arch/x86/kernel/cpu/resctrl/core.c     |  2 ++
+>  arch/x86/kernel/cpu/resctrl/internal.h |  1 +
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 13 +++++++++++++
+>  3 files changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index 89049b343c7a..d8cc5223b7ce 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -578,6 +578,8 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+>  	d->id = id;
+>  	cpumask_set_cpu(cpu, &d->cpu_mask);
+>  
+> +	rdt_domain_reconfigure_cdp(r);
+> +
+>  	if (r->alloc_capable && domain_setup_ctrlval(r, d)) {
+>  		kfree(d);
+>  		return;
+> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+> index 181c992f448c..3dd13f3a8b23 100644
+> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+> @@ -601,5 +601,6 @@ bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
+>  void __check_limbo(struct rdt_domain *d, bool force_free);
+>  bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+>  bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
+> +void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
+>  
+>  #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 064e9ef44cd6..1c78908ef395 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -1859,6 +1859,19 @@ static int set_cache_qos_cfg(int level, bool enable)
+>  	return 0;
+>  }
+>  
+> +/* Restore the qos cfg state when a domain comes online */
+> +void rdt_domain_reconfigure_cdp(struct rdt_resource *r)
+> +{
+> +	if (!r->alloc_capable)
+> +		return;
+> +
+> +	if (r == &rdt_resources_all[RDT_RESOURCE_L2DATA])
+> +		l2_qos_cfg_update(&r->alloc_enabled);
+> +
+> +	if (r == &rdt_resources_all[RDT_RESOURCE_L3DATA])
+> +		l3_qos_cfg_update(&r->alloc_enabled);
+> +}
+> +
+>  /*
+>   * Enable or disable the MBA software controller
+>   * which helps user specify bandwidth in MBps.
 > 
 
-Is there any way to mark parts of block device as read-only? Such that
-userspace couldn't write to the RO-marked sectors, I guess that could
-help to save someone's bacon.
+As mentioned in my response to v2 the lockdep annotation that formed
+part of this fix is welcome. It is not clear to me if you will be
+submitting again with the annotation added back. Since it is not
+required for this fix I will add my tag here and you could include it if
+you do decide to resubmit.
+
+Thank you
+
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+
+Reinette
