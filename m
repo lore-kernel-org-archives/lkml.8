@@ -2,171 +2,86 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131BCC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE86C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3E52082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:50:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R73ILrFs"
+	by mail.kernel.org (Postfix) with ESMTP id 178522080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgBXNu1 (ORCPT
+        id S1727498AbgBXNvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:50:27 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:32113 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727460AbgBXNu1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:50:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582552226; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=W628OvkNRlX9E5Eh9zzngUI5dh1s51b264AW8MC+oWY=; b=R73ILrFsCnkrfH3vy5VdaBgWbrCpH+iuRuDH7ksxFM5xR/287U2sMPhAPxMfSx/hrTNOMV8N
- 99cx0Bbf5wUVIMbgBhJ0WBEXYqbD8YQV8Iktekz/A4cRe9IevO/NlQCBkx1lG/y0iveVvRQz
- BkirgDwDL2zQpLgpN84eoNhb1/g=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e53d498.7f1382beb7d8-smtp-out-n03;
- Mon, 24 Feb 2020 13:50:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 42017C4479F; Mon, 24 Feb 2020 13:50:15 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DBA9C43383;
-        Mon, 24 Feb 2020 13:50:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9DBA9C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH RFC] mmc: sdhci-msm: Toggle fifo write clk after ungating
- sdcc clk
-To:     Sayali Lokhande <sayalil@codeaurora.org>,
-        bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        ppvk@codeaurora.org, rampraka@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org
-References: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org>
- <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <4e4f1e44-8033-94e9-641c-a74232727895@codeaurora.org>
-Date:   Mon, 24 Feb 2020 19:19:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 08:51:16 -0500
+Received: from mga07.intel.com ([134.134.136.100]:42224 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgBXNvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:51:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 05:51:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
+   d="scan'208";a="409878400"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 24 Feb 2020 05:51:12 -0800
+Subject: Re: [PATCH V2 00/13] perf/x86: Add perf text poke events
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+References: <20200212124949.3589-1-adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <80d0902f-0b38-6f03-f4a4-f6d2693d7e25@intel.com>
+Date:   Mon, 24 Feb 2020 15:50:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200212124949.3589-1-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/02/20 2:49 pm, Adrian Hunter wrote:
+> Hi
+> 
+> Here are patches to add a text poke event to record changes to kernel text
+> (i.e. self-modifying code) in order to support tracers like Intel PT
+> decoding through jump labels, kprobes and ftrace trampolines.
+> 
+> The first 8 patches make the kernel changes and the subsequent patches are
+> tools changes.
+> 
+> The next 4 patches add support for updating perf tools' data cache
+> with the changed bytes.
+> 
+> The last patch is an Intel PT specific tools change.
+> 
+> 
+> Changes in V2:
+> 
+>   perf: Add perf text poke event
+> 
+> 	Separate out x86 changes
+> 	The text poke event now has old len and new len
+> 	Revised commit message
+> 
+>   perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
+> 
+> 	New patch containing x86 changes from original first patch
 
-On 2/20/2020 2:50 PM, Sayali Lokhande wrote:
-> From: Ram Prakash Gupta <rampraka@codeaurora.org>
->
-> During GCC level clock gating of MCLK, the async FIFO
-> gets into some hang condition, such that for the next
-> transfer after MCLK ungating, first bit of CMD response
-> doesn't get written in to the FIFO. This cause the CPSM
-> to hang eventually leading to SW timeout.
->
-> To fix the issue, toggle the FIFO write clock after
-> MCLK ungated to get the FIFO pointers and flags to
-> valid states.
->
-> Change-Id: Ibef2d1d283ac0b6983c609a4abc98bc574d31fa6
-> Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> ---
->   drivers/mmc/host/sdhci-msm.c | 43 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 43 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index c3a160c..eaa3e95 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -127,6 +127,8 @@
->   #define CQHCI_VENDOR_CFG1	0xA00
->   #define CQHCI_VENDOR_DIS_RST_ON_CQ_EN	(0x3 << 13)
->   
-> +#define RCLK_TOGGLE 0x2
-> +
->   struct sdhci_msm_offset {
->   	u32 core_hc_mode;
->   	u32 core_mci_data_cnt;
-> @@ -1554,6 +1556,43 @@ static void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->   	sdhci_enable_clk(host, clk);
->   }
->   
-> +/*
-> + * After MCLK ugating, toggle the FIFO write clock to get
-> + * the FIFO pointers and flags to valid state.
-> + */
-> +static void sdhci_msm_toggle_fifo_write_clk(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
-> +	struct mmc_card *card = host->mmc->card;
-> +
-> +	if (msm_host->tuning_done ||
-> +			(card && card->ext_csd.strobe_support &&
-> +			card->host->ios.enhanced_strobe)) {
-
-This issue is present on only HS400ES mode.
-
-If(host->ios.enhanced_strob) check should be sufficient, other checks 
-are not needed.
-
-> +		/*
-> +		 * set HC_REG_DLL_CONFIG_3[1] to select MCLK as
-> +		 * DLL input clock
-> +		 */
-> +		writel_relaxed(((readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config_3))
-> +			| RCLK_TOGGLE), host->ioaddr +
-> +			msm_offset->core_dll_config_3);
-> +		/* ensure above write as toggling same bit quickly */
-> +		wmb();
-> +		udelay(2);
-> +		/*
-> +		 * clear HC_REG_DLL_CONFIG_3[1] to select RCLK as
-> +		 * DLL input clock
-> +		 */
-> +		writel_relaxed(((readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config_3))
-> +			& ~RCLK_TOGGLE), host->ioaddr +
-> +			msm_offset->core_dll_config_3);
-> +	}
-> +}
-> +
->   /* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
->   static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->   {
-> @@ -2149,6 +2188,10 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
->   				       msm_host->bulk_clks);
->   	if (ret)
->   		return ret;
-> +	if (host->mmc &&
-> +			(host->mmc->ios.timing == MMC_TIMING_MMC_HS400))
-These checks are not needed. You can have these checks within 
-sdhci_msm_toggle_fifo_write_clk
-> +		sdhci_msm_toggle_fifo_write_clk(host);
-> +
->   	/*
->   	 * Whenever core-clock is gated dynamically, it's needed to
->   	 * restore the SDR DLL settings when the clock is ungated.
+Any comments?
