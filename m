@@ -2,145 +2,249 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590A1C35677
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948D5C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F56A206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3B52071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dl3xLDMm"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AGS/HivG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgBXCI0 (ORCPT
+        id S1727260AbgBXCI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:08:26 -0500
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:42690 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgBXCIZ (ORCPT
+        Sun, 23 Feb 2020 21:08:58 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:36368 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbgBXCI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:08:25 -0500
-Received: by mail-vk1-f202.google.com with SMTP id i1so3868142vkn.9
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 18:08:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=tfMKf34rzYmaH8xdI4hD1ENek/gjKmpNdihWWrIkihY=;
-        b=dl3xLDMmDQHWYwGTPecBMrhl8cp1ubi79/y4uC7zvxw13x5kxR0hIrdzcb6mpDjnIR
-         akn7tFOCzC75LJ2U9XJBX1yKrH60zz44P5XPslfmv7fJWnv+CjXCSxIC9H0Qj+eap13U
-         b1797Qo5mdforvpT4UbfBeE3Kwe7zvdlEFiny/xDlpedod7j01y2vCVM9O1Wdm+DQDdY
-         DdqUI16njA1pwpu3TGvZTWuiHMHMU4z/1vto4Gwv59MGXnZwoueBJu8V1lHvMMEwWG63
-         3p9DXJ3CcgM+sXeYNC/XM9jp86gtz5/p+nNxrhXAKSgazBzSfBhHDwhZwBGiPwrwNWVE
-         ydSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=tfMKf34rzYmaH8xdI4hD1ENek/gjKmpNdihWWrIkihY=;
-        b=LebG7Pfthbmz1zJoSWNOIS8SyJM6g0PrgjAHuiiQxKjIub2ZQElWOpOgS0P67qC6Bz
-         tgQv0wvGbMmLuvkcJuEyNqWjq10Ab+I+0Il4Ja5MV7MvaglL90tLWCJw7g72rPt+jDjf
-         1NQrBEc6ngEvdGvea5OnBpbQPeH0SpVTcKi9XdYI0G/hKIJyIvvitmSBubSlOuV2D2b7
-         Lpaa6S734fpumEvAF91R+8ny01fVvSqCHtesifRos+6CZDHO4NFFwJytVvSNSAunYcvl
-         EPt1w8xpJjaVaAOIm9O5QdbdzvbVZhOZWtU0ICndjKd9ugIGEdAQIfmLg/iGfQ5IssIZ
-         83cg==
-X-Gm-Message-State: APjAAAUXSSa70uFOvWNBDE3hEPD3eNcPboTKael07mVc3dj3BA4P9oyn
-        gXi/WVGfgQBJsXBH4b05xz5vGQB6hp2Q5neCvFn/ykzVaBvt0PxNa1YQQ8EcjzIqw7YwT6dB1fZ
-        sjnuQ3rMrQ+qditim/hvFZ9oXEcwPPsY29QWQicwFe+HYTEOY/AKCfZStupTx9rKqu18KEg==
-X-Google-Smtp-Source: APXvYqwTsPEqq0vSJALIwRT24gVR2Zsdll9IQ6yQ0KfZKKmTVDr8mHQmzYKgR5Kxy/Fg4GEAIXU4VmCCVXc=
-X-Received: by 2002:a67:89c4:: with SMTP id l187mr24451432vsd.31.1582510103411;
- Sun, 23 Feb 2020 18:08:23 -0800 (PST)
-Date:   Sun, 23 Feb 2020 18:08:15 -0800
-In-Reply-To: <20200224020815.139570-1-adelva@google.com>
-Message-Id: <20200224020815.139570-3-adelva@google.com>
-Mime-Version: 1.0
-References: <20200224020815.139570-1-adelva@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2 3/3] dt-bindings: pmem-region: Document memory-region
-From:   Alistair Delva <adelva@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kenny Root <kroot@google.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, devicetree@vger.kernel.org,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 23 Feb 2020 21:08:57 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200224020854epoutp02b49aaa6afa65d0ebcf5eac98450f5455~2NJVLzsGg0481404814epoutp02l
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:08:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200224020854epoutp02b49aaa6afa65d0ebcf5eac98450f5455~2NJVLzsGg0481404814epoutp02l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582510134;
+        bh=f0d+C946tgK85y3SwPB2NZWOEBk9l0eSYCIjv//nEZk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AGS/HivGNfvzC4h0oaPxPaKJ6oBLdVxjzzUEtzTRV/x8oNghtdbTWa3gMT1hjaZJk
+         /MpqHTB6E8fC9FzRrQmm2UBBwqv3I4uy8/Xf+onpDsPClgmEVyQuSSHWl/7Jn3RHWp
+         QyIEzN9WlwEsjEMe2o1DJYQ8q5LXsSQMMGMfBXiQ=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200224020854epcas1p4b5259989c068f8f5627f4ccabadea350~2NJUlGOvY2397123971epcas1p4_;
+        Mon, 24 Feb 2020 02:08:54 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 48Qlq64ywVzMqYkY; Mon, 24 Feb
+        2020 02:08:50 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        93.79.51241.F20335E5; Mon, 24 Feb 2020 11:08:47 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200224020846epcas1p13eda1567e7692233438842e3c4e6afdb~2NJNo90ZL1325913259epcas1p1v;
+        Mon, 24 Feb 2020 02:08:46 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200224020846epsmtrp2d8915fa4d6e24bb36a67730fa414abd6~2NJNoLwNn1255812558epsmtrp2f;
+        Mon, 24 Feb 2020 02:08:46 +0000 (GMT)
+X-AuditID: b6c32a39-163ff7000001c829-71-5e53302f7492
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F7.5C.06569.E20335E5; Mon, 24 Feb 2020 11:08:46 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200224020846epsmtip1630cff73bd3ede82e02772a3da8076f2~2NJNaUiSx2606426064epsmtip1E;
+        Mon, 24 Feb 2020 02:08:46 +0000 (GMT)
+Subject: Re: [PATCH] Revert
+ "PM / devfreq: Modify the device name as devfreq(X) for sysfs"
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chanwoo Choi <chanwoo@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        mingmin.ling@unisoc.com, orsonzhai@gmail.com,
+        jingchao.ye@unisoc.com, Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <76f1ac9b-f130-d6f6-eb04-e81f9f06451e@samsung.com>
+Date:   Mon, 24 Feb 2020 11:17:04 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200223175422.GD488486@kroah.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJJsWRmVeSWpSXmKPExsWy7bCmga6+QXCcQUs3p8XEG1dYLJoXr2ez
+        2HLgM6PFmd+6Fmeb3rBbXN41h83ic+8RRov9k9ewWtxuXMFm8eXATDaL6R9mM1os2PiI0YHH
+        Y+esu+wem1Z1snncubaHzWP/3DXsHn1bVjF6HG4/y+7xeZNcAHtUtk1GamJKapFCal5yfkpm
+        XrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0KFKCmWJOaVAoYDE4mIlfTubovzS
+        klSFjPziElul1IKUnALLAr3ixNzi0rx0veT8XCtDAwMjU6DChOyMo1OamQumqVZM+L2OqYHx
+        uFwXIyeHhICJxIVPPxi7GLk4hAR2MErc2XOaCcL5xCjRMaEbyvnGKHHpdg8bTEvb6S52iMRe
+        Rolb19ZAOe8ZJc4/3M8KUiUsECOxZMIpZhBbRCBC4vzJH2CjmAUeMklM+vOfBSTBJqAlsf/F
+        DbCx/AKKEld/PGYEsXkF7CSuLHwFZrMIqEp8/r8LrF5UIEzi5LYWqBpBiZMzn4DFOQUMJDa3
+        XmQHsZkFxCVuPZnPBGHLS2x/O4cZZLGEwDJ2ietLN7FA/OAise3fEyhbWOLV8S3sELaUxOd3
+        e6H+rJZYefIIG0RzB6PElv0XWCESxhL7l04G2sABtEFTYv0ufYiwosTO33MZIRbzSbz72sMK
+        UiIhwCvR0SYEUaIscfnBXSYIW1JicXsn2wRGpVlI3pmF5IVZSF6YhbBsASPLKkax1ILi3PTU
+        YsMCU+T43sQITsZaljsYj53zOcQowMGoxMO74khQnBBrYllxZe4hRgkOZiURXm9GoBBvSmJl
+        VWpRfnxRaU5q8SFGU2BoT2SWEk3OB2aKvJJ4Q1MjY2NjCxNDM1NDQyVx3oeRmnFCAumJJanZ
+        qakFqUUwfUwcnFINjFWGWwpO3uMq6HrlGdOga/f8e8LSFQdcPyk5BvBH7156rkbVvUXiXvqe
+        Ze7GFd1Jzs1rd9Q7SP0rmBt34M8FFw9Bk9sFkl2sb6dZ3bSpW3nRoJQ5d3q6W+01D87tAcsE
+        vlYLpFXGR2TIvNRmnLE37lxC1eG9/11couzcPpU+m+LtceY6iyebEktxRqKhFnNRcSIAaQde
+        ItwDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsWy7bCSnK6eQXCcwbtNmhYTb1xhsWhevJ7N
+        YsuBz4wWZ37rWpxtesNucXnXHDaLz71HGC32T17DanG7cQWbxZcDM9kspn+YzWixYOMjRgce
+        j52z7rJ7bFrVyeZx59oeNo/9c9ewe/RtWcXocbj9LLvH501yAexRXDYpqTmZZalF+nYJXBlH
+        pzQzF0xTrZjwex1TA+NxuS5GTg4JAROJttNd7F2MXBxCArsZJW4sbGeHSEhKTLt4lLmLkQPI
+        FpY4fLgYouYto8Sjd30sIDXCAjESr+cvZgKxRQQiJO7e+88CUsQs8JBJ4vWiV1BTvzFL9LT9
+        YgOpYhPQktj/4gaYzS+gKHH1x2NGEJtXwE7iysJXYDaLgKrE5/+7wDaICoRJ7FzymAmiRlDi
+        5MwnYHFOAQOJza0XwS5lFlCX+DPvEjOELS5x68l8JghbXmL72znMExiFZyFpn4WkZRaSlllI
+        WhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/dxAiOSi2tHYwnTsQfYhTgYFTi4Q04
+        FBQnxJpYVlyZe4hRgoNZSYTXmxEoxJuSWFmVWpQfX1Sak1p8iFGag0VJnFc+/1ikkEB6Yklq
+        dmpqQWoRTJaJg1OqgZGv00OA3eF7ZnXirhixv3MNAwwSj3g5h32VufHu2/HCw4tkDbvsn8oU
+        C2sYLC/jPLlhZlD22cykWQEWFgVnTBbmMrt6Wr1iPZewtXgrs0Lamz8vsoRTfMNuPOGcffPH
+        BuerN3lcH2oEbJlzcLZ1b/5Uttq89/MrZz3892D7U917nHJfk9cZ31NiKc5INNRiLipOBABc
+        TxS9xgIAAA==
+X-CMS-MailID: 20200224020846epcas1p13eda1567e7692233438842e3c4e6afdb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200221070652epcas1p11e82863794f130373055c0b7bdedff23
+References: <1582220224-1904-1-git-send-email-orson.unisoc@gmail.com>
+        <20200220191513.GA3450796@kroah.com>
+        <CALAqxLViRgGE8FsukCJL+doqk_GqabLDCtXBWem+VOGf9xXZdg@mail.gmail.com>
+        <CGME20200221070652epcas1p11e82863794f130373055c0b7bdedff23@epcas1p1.samsung.com>
+        <20200221070646.GA4103708@kroah.com>
+        <1b9e510a-71bb-5aa8-ef85-a9a9c623f313@samsung.com>
+        <20200221111313.GA110504@kroah.com>
+        <CAGTfZH0Ev2sCH073WdUjZJS5MNnJ9vzgsc_ApYkg+na2Fk4J+g@mail.gmail.com>
+        <20200223175422.GD488486@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kenny Root <kroot@google.com>
+On 2/24/20 2:54 AM, Greg Kroah-Hartman wrote:
+> On Sat, Feb 22, 2020 at 08:55:22AM +0900, Chanwoo Choi wrote:
+>> On Fri, Feb 21, 2020 at 8:13 PM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> On Fri, Feb 21, 2020 at 05:11:02PM +0900, Chanwoo Choi wrote:
+>>>> On 2/21/20 4:06 PM, Greg Kroah-Hartman wrote:
+>>>>> On Thu, Feb 20, 2020 at 11:47:41AM -0800, John Stultz wrote:
+>>>>>> On Thu, Feb 20, 2020 at 11:15 AM Greg Kroah-Hartman
+>>>>>> <gregkh@linuxfoundation.org> wrote:
+>>>>>>>
+>>>>>>> On Fri, Feb 21, 2020 at 01:37:04AM +0800, Orson Zhai wrote:
+>>>>>>>> This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
+>>>>>>>>
+>>>>>>>> The name changing as devfreq(X) breaks some user space applications,
+>>>>>>>> such as Android HAL from Unisoc and Hikey [1].
+>>>>>>>> The device name will be changed unexpectly after every boot depending
+>>>>>>>> on module init sequence. It will make trouble to setup some system
+>>>>>>>> configuration like selinux for Android.
+>>>>>>>>
+>>>>>>>> So we'd like to revert it back to old naming rule before any better
+>>>>>>>> way being found.
+>>>>>>>>
+>>>>>>>> [1] https://protect2.fireeye.com/url?k=00fa721e-5d2a7af6-00fbf951-000babff32e3-95e4b92259b05656&u=https://lkml.org/lkml/2018/5/8/1042
+>>>>>>>>
+>>>>>>>> Cc: John Stultz <john.stultz@linaro.org>
+>>>>>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>>> Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+>>>>>>>>
+>>>>>>>> ---
+>>>>>>>>  drivers/devfreq/devfreq.c | 4 +---
+>>>>>>>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>>>>>>> index cceee8b..7dcf209 100644
+>>>>>>>> --- a/drivers/devfreq/devfreq.c
+>>>>>>>> +++ b/drivers/devfreq/devfreq.c
+>>>>>>>> @@ -738,7 +738,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>>>>>>>>  {
+>>>>>>>>       struct devfreq *devfreq;
+>>>>>>>>       struct devfreq_governor *governor;
+>>>>>>>> -     static atomic_t devfreq_no = ATOMIC_INIT(-1);
+>>>>>>>>       int err = 0;
+>>>>>>>>
+>>>>>>>>       if (!dev || !profile || !governor_name) {
+>>>>>>>> @@ -800,8 +799,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>>>>>>>>       devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+>>>>>>>>       atomic_set(&devfreq->suspend_count, 0);
+>>>>>>>>
+>>>>>>>> -     dev_set_name(&devfreq->dev, "devfreq%d",
+>>>>>>>> -                             atomic_inc_return(&devfreq_no));
+>>>>>>>> +     dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+>>>>>>>>       err = device_register(&devfreq->dev);
+>>>>>>>>       if (err) {
+>>>>>>>>               mutex_unlock(&devfreq->lock);
+>>>>>>>> --
+>>>>>>>> 2.7.4
+>>>>>>>>
+>>>>>>>
+>>>>>>> Thanks for this, I agree, this needs to get back to the way things were
+>>>>>>> as it seems to break too many existing systems as-is.
+>>>>>>>
+>>>>>>> I'll queue this up in my tree now, thanks.
+>>>>>>
+>>>>>> Oof this old thing. I unfortunately didn't get back to look at the
+>>>>>> devfreq name node issue or the compatibility links, since the impact
+>>>>>> of the regression (breaking the powerHAL's interactions with the gpu)
+>>>>>> wasn't as big as other problems we had. While the regression was
+>>>>>> frustrating, my only hesitancy at this point is that its been this way
+>>>>>> since 4.10, so reverting the problematic patch is likely to break any
+>>>>>> new users since then.
+>>>>>
+>>>>> Looks like most users just revert that commit in their trees:
+>>>>>     https://protect2.fireeye.com/url?k=1012ad0f-4dc2a5e7-10132640-000babff32e3-35779c5ed675ef0f&u=https://source.codeaurora.org/quic/la/kernel/msm-4.14/commit/drivers/devfreq?h=msm-4.14&id=ccf273f6d89ad0fa8032e9225305ad6f62c7770c
+>>>>>
+>>>>> So we should be ok here.
+>>>>
+>>>> I'm sorry about changing the devfreq node name.
+>>>>
+>>>> OK. Do you pick this patch to your tree?
+>>>
+>>> Yes, I can do that.
+>>
+>> If you agree, how about merging it to devfreq.git
+>> for preventing the potential merge conflict with other devfreq patches?
+> 
+> Sure, but it should go for 5.6-final, right?
 
-From: Kenny Root <kroot@google.com>
+OK.I'll send pull-request of this patch for v5.6-rc4.
 
-Add documentation and example for memory-region in pmem.
+> 
+>>>> or If not, I'll apply it to devfreq-next branch for v5.7-rc1.
+>>>>
+>>>> And do you apply it to kernel of linux-stable tree since 4.11?
+>>>
+>>> Yeah, I'll mark it for stable.
+>>
+>> Thanks.
+>>
+>>>
+>>> Can I get an ack from you for this?
+>>
+>> OK. but, if it will be merged to devfreq.git,
+>> can I get an ack from you?
+> 
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Kenny Root <kroot@google.com>
-Signed-off-by: Alistair Delva <adelva@google.com>
-Cc: "Oliver O'Halloran" <oohall@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-nvdimm@lists.01.org
-Cc: kernel-team@android.com
----
- .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Thanks. I applied it to devfreq-fixes branch for v5.6-rc4.
 
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-index 5cfa4f016a00..0ec87bd034e0 100644
---- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-@@ -29,6 +29,18 @@ Required properties:
- 		in a separate device node. Having multiple address ranges in a
- 		node implies no special relationship between the two ranges.
- 
-+		This property may be replaced or supplemented with a
-+		memory-region property. Only one of reg or memory-region
-+		properties is required.
-+
-+	- memory-region:
-+		Reference to the reserved memory node. The reserved memory
-+		node should be defined as per the bindings in
-+		reserved-memory.txt
-+
-+		This property may be replaced or supplemented with a reg
-+		property. Only one of reg or memory-region is required.
-+
- Optional properties:
- 	- Any relevant NUMA assocativity properties for the target platform.
- 
-@@ -63,3 +75,20 @@ Examples:
- 		volatile;
- 	};
- 
-+
-+	/*
-+	 * This example uses a reserved-memory entry instead of
-+	 * specifying the memory region directly in the node.
-+	 */
-+
-+	reserved-memory {
-+		pmem_1: pmem@5000 {
-+			no-map;
-+			reg = <0x00005000 0x00001000>;
-+		};
-+	};
-+
-+	pmem@1 {
-+		compatible = "pmem-region";
-+		memory-region = <&pmem_1>;
-+	};
 -- 
-2.25.0.265.gbab2e86ba0-goog
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
