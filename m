@@ -2,167 +2,84 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48ABC11D34
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B159C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE4220828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582558013;
-	bh=8N5QNPLpkgzq3RYMZ3/aBwBH9betmd6dohxLwvdK3p0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pXWahD8tL4EBg/DDDB83mtgftYZH3tPx7z7lEaj91YVJA0ee9xMQeqnWLWzzfinFG
-	 6HtXm0K379ikw3iX1MslNq9ZqgexWEW+dlnxicGuZ+cba0htLLmrBquUZJXTlLMxdp
-	 Hn9d2u4BMXPABIwtqcy3ynvlD/wb+TwmBHINYX7M=
+	by mail.kernel.org (Postfix) with ESMTP id 1437D20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgBXP0w (ORCPT
+        id S1727785AbgBXP17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:26:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727701AbgBXP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:26:52 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E7B220828;
-        Mon, 24 Feb 2020 15:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582558011;
-        bh=8N5QNPLpkgzq3RYMZ3/aBwBH9betmd6dohxLwvdK3p0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Z5MuclNp7MYxT5IBCI2G2sQzYvDTngaP6kghRjsNtUzkhhlI48hatsq9uMcvhVZ1p
-         10oI5hji875cQGXpy4YncTWGvb3G0yug8uKfvBJxxcmWe96/ifD+7r00c8N9fGetZJ
-         ZoqURztkwjfv/fenCABp992VuHUEKgzzxJ0xVWvM=
-Received: by mail-qt1-f179.google.com with SMTP id i23so6783694qtr.5;
-        Mon, 24 Feb 2020 07:26:51 -0800 (PST)
-X-Gm-Message-State: APjAAAW6rA3R3J46m9WnqgawQllvhTjkWHivOYtSmKe9OpPo4dqf8Owg
-        MomGSxWf0LkJpOTORGhMIzC0As2FTMPUktF38g==
-X-Google-Smtp-Source: APXvYqwycJnlUss4EYMa12eUzhhIhR27BPGX4l1gt+HbU1ugfbjsQcwgjLaS7LQEn4iYWXtThxlL8gmlHYkAs+wteKg=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr49052121qtg.110.1582558010446;
- Mon, 24 Feb 2020 07:26:50 -0800 (PST)
+        Mon, 24 Feb 2020 10:27:59 -0500
+Received: from cyberdimension.org ([80.67.179.20]:38336 "EHLO
+        gnutoo.cyberdimension.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbgBXP17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:27:59 -0500
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 10:27:59 EST
+Received: from gnutoo.cyberdimension.org (localhost [127.0.0.1])
+        by cyberdimension.org (OpenSMTPD) with ESMTP id a8cf2527;
+        Mon, 24 Feb 2020 15:18:57 +0000 (UTC)
+Received: from primarylaptop.localdomain (localhost.localdomain [::1])
+        by gnutoo.cyberdimension.org (OpenSMTPD) with ESMTP id e68aa2cb;
+        Mon, 24 Feb 2020 15:18:57 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 16:21:31 +0100
+From:   Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     hns@goldelico.com, j.neuschaefer@gmx.net, contact@paulk.fr,
+        josua.mayer@jm0.eu, lgirdwood@gmail.com, broonie@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] regulator: core: fix handling negative voltages
+ e.g. in EPD PMICs
+Message-ID: <20200224162131.2a4f9b01@primarylaptop.localdomain>
+In-Reply-To: <20200223153502.15306-1-andreas@kemnade.info>
+References: <20200223153502.15306-1-andreas@kemnade.info>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200217111519.29163-1-kishon@ti.com> <20200217111519.29163-3-kishon@ti.com>
- <20200219203205.GA14068@bogus> <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
-In-Reply-To: <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 24 Feb 2020 09:26:38 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
-Message-ID: <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
- Cadence platform to DT schema
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/SohBod5xoYXZ0V9Nuwu+jx6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 4:14 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Rob,
->
-> On 20/02/20 2:02 am, Rob Herring wrote:
-> > On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
-> >> Include Cadence core DT schema and define the Cadence platform DT schema
-> >> for both Host and Endpoint mode. Note: The Cadence core DT schema could
-> >> be included for other platforms using Cadence PCIe core.
-> >>
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >> ---
-> >>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
-> >>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
-> >>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
-> >>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
-> >>  MAINTAINERS                                   |  2 +-
-> >>  5 files changed, 125 insertions(+), 94 deletions(-)
-> >>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> >>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >
-> >
-> >> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >> new file mode 100644
-> >> index 000000000000..2f605297f862
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >> @@ -0,0 +1,76 @@
-> >> +# SPDX-License-Identifier: GPL-2.0-only
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Cadence PCIe host controller
-> >> +
-> >> +maintainers:
-> >> +  - Tom Joseph <tjoseph@cadence.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: /schemas/pci/pci-bus.yaml#
-> >> +  - $ref: "cdns-pcie-host.yaml#"
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: cdns,cdns-pcie-host
-> >> +
-> >> +  reg:
-> >> +    maxItems: 3
-> >> +
-> >> +  reg-names:
-> >> +    items:
-> >> +      - const: reg
-> >> +      - const: cfg
-> >> +      - const: mem
-> >> +
-> >> +  msi-parent: true
-> >> +
-> >> +required:
-> >> +  - reg
-> >> +  - reg-names
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    bus {
-> >> +        #address-cells = <2>;
-> >> +        #size-cells = <2>;
-> >> +
-> >> +        pcie@fb000000 {
-> >> +            compatible = "cdns,cdns-pcie-host";
-> >> +            device_type = "pci";
-> >> +            #address-cells = <3>;
-> >> +            #size-cells = <2>;
-> >> +            bus-range = <0x0 0xff>;
-> >> +            linux,pci-domain = <0>;
-> >> +            cdns,max-outbound-regions = <16>;
-> >> +            cdns,no-bar-match-nbits = <32>;
-> >
-> >> +            vendor-id = /bits/ 16 <0x17cd>;
-> >> +            device-id = /bits/ 16 <0x0200>;
-> >
-> > Please make these 32-bit as that is what the spec says.
->
-> Can you clarify this is mentioned in which spec? PCI spec has both of
-> these 16 bits and I checked the PCI binding doc but couldn't spot the
-> size of these fields.
->
-> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+--Sig_/SohBod5xoYXZ0V9Nuwu+jx6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Section 4.1.2.1. The key point is the type is 'encode-int' which means
-32-bit. Keep in mind, that 16-bits was not a defined type when this
-spec was written. We added that for FDT.
+On Sun, 23 Feb 2020 16:35:01 +0100
+Andreas Kemnade <andreas@kemnade.info> wrote:
 
-Also, look at other instances of reading 'vendor-id' in the kernel.
+> No idea about the "Amazon Kindle Fire (first generation)"
+> which also has a partial devicetree in mainline.
+I think that the first generation Kindle Fire (omap4-kc1.dts) are
+regular tablet and have a regular display (no e-ink).
 
-Rob
+Denis.
+
+--Sig_/SohBod5xoYXZ0V9Nuwu+jx6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEeC+d2+Nrp/PU3kkGX138wUF34mMFAl5T6fwACgkQX138wUF3
+4mNTaw/+OUdrF51FaRsvxjxd72UGdh1mBRryrrZVmNuRPeDZ4QvWLikvIN+orzsC
+7puVYev9DXQ7NzAzL9/mIvZCt1Y5ADOOs6onVmnIQO8T/gqHlcqfLvZWT4AmNEyP
+9GEErgXSTqlyHSRpEAtNxn+wVP4tB91TgC+HCAHDJc1wPIRZUijARMsQjQyochFD
+g0deK+S3TajeMJqx7it5dAz/IqnL641fCYo7CjhR+/U8A4/SBIuxpCpK5W1BPjeg
+KwTQWo9lKSDU7oXmZN6b/m9VjDaz3dzCOYXrX1vawW6/lLuDyEWv7FVEenouxC2S
+fmVxR03Cff0TPpikd0YM7wgcdPOnlrcgg4M9YoiP2pAU9zxGxR13S371zKKeVikc
+FqDe+x8lEOKx39KydRMz5SicmWbpc0EG7R/4HBwFKbB1bNWBjm5zBnwMOsmFj9uL
+h3St3tOFNqMkyuwqpkr5djj7CEti6SfXOV9UI06ysHt1mvhHr5uuG+K0rdQ7kaCL
+ttjZbc7wQROlK/RrCVi4q3PwGON5johSqNt8jmlQh3uqY+PNr+HlNBfJ4/BGkO88
+ZASGxfxI7rFTzxDoPqkz/Xrk2XemLaucsgtZ5i4DGrFxuzNEckOD0FYmviCYNE67
+gM1efcEv0M7jSH5QUA0ZPjHNn/mVMTb50WZjzYZKnBjj8fi7HkI=
+=lc2S
+-----END PGP SIGNATURE-----
+
+--Sig_/SohBod5xoYXZ0V9Nuwu+jx6--
