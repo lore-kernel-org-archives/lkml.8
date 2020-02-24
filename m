@@ -2,229 +2,161 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB77C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB52C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A4F20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD23B20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJ/3CloF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUS3pY1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgBXRkn (ORCPT
+        id S1728039AbgBXRkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:40:43 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33594 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgBXRkm (ORCPT
+        Mon, 24 Feb 2020 12:40:53 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44329 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgBXRkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:40:42 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y6so11122690lji.0;
-        Mon, 24 Feb 2020 09:40:40 -0800 (PST)
+        Mon, 24 Feb 2020 12:40:53 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y5so5699315pfb.11;
+        Mon, 24 Feb 2020 09:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oYSDYsVmOE1ofyKCdsVTaZRSTPTtkyk4gWDHGpw72g4=;
-        b=BJ/3CloFdHRUl2DMdP2n77pbfp8FUHh1kbEOMNUsWeYgnnCyOn3Avbhp7BIiyfdWnC
-         fOH6Jqm6Vsy9YNoBs38GKnkDrZVMClKoDTqHKtmZ+q6Ja4WT9LFim3w7SpnlbX3IqrAM
-         BnSaEZY5MJgBaoSozWlwtlGXBGZyRVIj7nxe6TEqkGfqDcfNFQqEQifSBQGofwHKFQGd
-         SOVj+cnJiidpSu08Ue3sQjBES0IUmRgszW+8yC9KNCgXZYZOrlMiYPz+oNYPn3E3HKjB
-         ShwgaEGsnO4bkqYpWbnv46g0HXI6L+7mE6oTJjWx3OPcsEvX+6YJC90fKnyNt5cH3y5+
-         3rGQ==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+MzVlJLpy0Myu6XtjU+oJu/3L77UvEbkJbcHWndy0Mw=;
+        b=IUS3pY1l9zVYZ+tFKN38Bpv8qVINuwxCKkZ39IQeABEv+SgMtv+eR41iYTi/zjUU/P
+         xqy7G8pn/unCdRYHZIug7nIzZkzKltl1TioC0e0H02pDmuNcyi2JKoKQlsZzkfVpEUNa
+         5Umm3QFfkTxgUyTsFpCteaha9/THoo5jwWJz46pfrCeaZD++PYj9OUrE45vleWZzaoDR
+         wlUWfupYOAXJDreZQaDuaoOJLov3xsSj/37Jyj1g6KZg94YI2RP+es+D1BAAGMwcGYrt
+         2ieoMuqR36kyPu/gcgAx4bCFRrgfFfl3aZjVqNm1gZ0b5hXaN1hgAED9Dnn4eEfeIzmf
+         7TBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oYSDYsVmOE1ofyKCdsVTaZRSTPTtkyk4gWDHGpw72g4=;
-        b=osO28vCm+2acKMhUjxWO+SckYbfrgQL1JGm9+1JroS1izkEEQ6GzxAak+LsRvfA8UP
-         JAM7FagkRtlOWvVpKV20nXgCXgOvA2QQZkTHWqp49N6MrJ7GQmNEMjoHcXHRpNIHc7jL
-         QCeYJSxoEhzRjGE/l0PeXwaKivH/lI2tkM9IXzheOmtKiCg15bgOcw/K9si0qY9RraFp
-         4Fxrjg9aqWh0Rvn+cbVFTPmXLwxMeFpC6VRYzovRTJZs/+d9E5pb1ytRIn5wy2Ucwkjb
-         6dNsixhCc2WFKflivRk2rnASIiLNudeCqQuSrrvuyeyf2/Da6hQe69xDGCu+9CTTal4g
-         U2LQ==
-X-Gm-Message-State: APjAAAU8Unr6Zr9G0ZM5eSDbvgf9lnfNocJDc3X7xp536G+4Eog0E+m4
-        nwLlmiy6PgfzOr89QwqDjvI=
-X-Google-Smtp-Source: APXvYqwOzWPvbR9vHawikUu7D7pznrK2FlvMUTTyhV8xT5SOTaMbxzzTpG9ZMpzd5SSfXQPTSLkUTw==
-X-Received: by 2002:a2e:9118:: with SMTP id m24mr31125400ljg.105.1582566039664;
-        Mon, 24 Feb 2020 09:40:39 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id s17sm7913330ljo.18.2020.02.24.09.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 09:40:39 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 24 Feb 2020 18:40:30 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200224174030.GA22138@pc636>
-References: <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200220045233.GC476845@mit.edu>
- <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com>
- <20200223011018.GB2935@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=+MzVlJLpy0Myu6XtjU+oJu/3L77UvEbkJbcHWndy0Mw=;
+        b=lO08hn5jKXTAOOiIO1SVZWWeLvi0yQGbFRDarob7kn1hxZ1Go2rtNreYPkzcJKMg1p
+         YSFPkD6lHU3TSjEpUcZcLwLrpaFWaikcw5R8fKXIUsFJ86MDiC63IRYlK0AOcnlKr6LP
+         zmHzNYEYqaB/hK1byxJVY0BH9oTxrNoemavsJKSm9IGChBOK79TrzzB2YvnP8B4jl/vr
+         Z6H+Eew66ffClMT9xANkjVdnHw23lIY7lu1ihhQTr4emfx3wEiCroPXt//4dX33evy8I
+         2Q35fv3l0hycfRn8fZ/JDDbXqlbNQGzn/5MpywiIsGkNQ8PV9i1XifW5tdHN/x/M3w0Q
+         d2eg==
+X-Gm-Message-State: APjAAAXLVZvfCTb5EioYWZISab9BlSoHglCbBghq2DJZnXkVzd1JwmyW
+        OORucheUTcbR985dMI9wVy3ZgZ+E
+X-Google-Smtp-Source: APXvYqxRc5TdrIdfYjLIUgdJXNPXUlnhYtY2UdOofyCCjYFE+t0Aixa7rsG+uPt36ghvj2a76AQiMg==
+X-Received: by 2002:a63:2ad7:: with SMTP id q206mr51629358pgq.194.1582566051946;
+        Mon, 24 Feb 2020 09:40:51 -0800 (PST)
+Received: from [10.67.50.18] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id e28sm3038730pgn.21.2020.02.24.09.40.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 09:40:51 -0800 (PST)
+Subject: Re: [PATCH 01/89] dt-bindings: i2c: brcmstb: Convert the BRCMSTB
+ binding to a schema
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <eb977d8f-66ee-ae71-bf5c-2a187bde6874@gmail.com>
+Date:   Mon, 24 Feb 2020 09:40:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223011018.GB2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6649111e9c585f267762bb6c6dd96128e5cfb4ba.1582533919.git-series.maxime@cerno.tech>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 05:10:18PM -0800, Paul E. McKenney wrote:
-> On Sat, Feb 22, 2020 at 05:24:15PM -0500, Joel Fernandes wrote:
-> > On Fri, Feb 21, 2020 at 12:22:50PM -0800, Paul E. McKenney wrote:
-> > > On Fri, Feb 21, 2020 at 02:14:55PM +0100, Uladzislau Rezki wrote:
-> > > > On Thu, Feb 20, 2020 at 04:30:35PM -0800, Paul E. McKenney wrote:
-> > > > > On Wed, Feb 19, 2020 at 11:52:33PM -0500, Theodore Y. Ts'o wrote:
-> > > > > > On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
-> > > > > > > now it becomes possible to use it like: 
-> > > > > > > 	...
-> > > > > > > 	void *p = kvmalloc(PAGE_SIZE);
-> > > > > > > 	kvfree_rcu(p);
-> > > > > > > 	...
-> > > > > > > also have a look at the example in the mm/list_lru.c diff.
-> > > > > > 
-> > > > > > I certainly like the interface, thanks!  I'm going to be pushing
-> > > > > > patches to fix this using ext4_kvfree_array_rcu() since there are a
-> > > > > > number of bugs in ext4's online resizing which appear to be hitting
-> > > > > > multiple cloud providers (with reports from both AWS and GCP) and I
-> > > > > > want something which can be easily backported to stable kernels.
-> > > > > > 
-> > > > > > But once kvfree_rcu() hits mainline, I'll switch ext4 to use it, since
-> > > > > > your kvfree_rcu() is definitely more efficient than my expedient
-> > > > > > jury-rig.
-> > > > > > 
-> > > > > > I don't feel entirely competent to review the implementation, but I do
-> > > > > > have one question.  It looks like the rcutiny implementation of
-> > > > > > kfree_call_rcu() isn't going to do the right thing with kvfree_rcu(p).
-> > > > > > Am I missing something?
-> > > > > 
-> > > > > Good catch!  I believe that rcu_reclaim_tiny() would need to do
-> > > > > kvfree() instead of its current kfree().
-> > > > > 
-> > > > > Vlad, anything I am missing here?
-> > > > >
-> > > > Yes something like that. There are some open questions about
-> > > > realization, when it comes to tiny RCU. Since we are talking
-> > > > about "headless" kvfree_rcu() interface, i mean we can not link
-> > > > freed "objects" between each other, instead we should place a
-> > > > pointer directly into array that will be drained later on.
-> > > > 
-> > > > It would be much more easier to achieve that if we were talking
-> > > > about the interface like: kvfree_rcu(p, rcu), but that is not our
-> > > > case :)
-> > > > 
-> > > > So, for CONFIG_TINY_RCU we should implement very similar what we
-> > > > have done for CONFIG_TREE_RCU or just simply do like Ted has done
-> > > > with his
-> > > > 
-> > > > void ext4_kvfree_array_rcu(void *to_free)
-> > > > 
-> > > > i mean:
-> > > > 
-> > > >    local_irq_save(flags);
-> > > >    struct foo *ptr = kzalloc(sizeof(*ptr), GFP_ATOMIC);
-> > > > 
-> > > >    if (ptr) {
-> > > >            ptr->ptr = to_free;
-> > > >            call_rcu(&ptr->rcu, kvfree_callback);
-> > > >    }
-> > > >    local_irq_restore(flags);
-> > > 
-> > > We really do still need the emergency case, in this case for when
-> > > kzalloc() returns NULL.  Which does indeed mean an rcu_head in the thing
-> > > being freed.  Otherwise, you end up with an out-of-memory deadlock where
-> > > you could free memory only if you had memor to allocate.
-> > 
-> > Can we rely on GFP_ATOMIC allocations for these? These have emergency memory
-> > pools which are reserved.
+On 2/24/20 1:06 AM, Maxime Ripard wrote:
+> Switch the DT binding to a YAML schema to enable the DT validation.
 > 
-> You can, at least until the emergency memory pools are exhausted.
-> 
-> > I was thinking a 2 fold approach (just thinking out loud..):
-> > 
-> > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
-> > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
-> > queue that.
-> > 
-I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
-gets failed in atomic context? Or we can just consider it as out of
-memory and another variant is to say that headless object can be called
-from preemptible context only.
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-> >
-> > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
-> > synchronize_rcu() inline with it.
-> > 
-> >
-What do you mean here, Joel? "grow an rcu_head on the stack"?
-
-> >
-> > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
-> > between the 2 cases.
-> > 
-If the current context is preemptable then we can inline synchronize_rcu()
-together with freeing to handle such corner case, i mean when we are run
-out of memory.
-
-As for "task_struct's rcu_read_lock_nesting". Will it be enough just
-have a look at preempt_count of current process? If we have for example
-nested rcu_read_locks:
-
-<snip>
-rcu_read_lock()
-    rcu_read_lock()
-        rcu_read_lock()
-<snip>
-
-the counter would be 3.
-
-> 
-> How much are we really losing by having an rcu_head in the structure,
-> either separately or unioned over other fields?
-> 
-> > > > Also there is one more open question what to do if GFP_ATOMIC
-> > > > gets failed in case of having low memory condition. Probably
-> > > > we can make use of "mempool interface" that allows to have
-> > > > min_nr guaranteed pre-allocated pages. 
-> > > 
-> > > But we really do still need to handle the case where everything runs out,
-> > > even the pre-allocated pages.
-> > 
-> > If *everything* runs out, you are pretty much going to OOM sooner or later
-> > anyway :D. But I see what you mean. But the 'tradeoff' is RCU can free
-> > head-less objects where possible.
-> 
-> Would you rather pay an rcu_head tax (in cases where it cannot share
-> with other fields), or would you rather have states where you could free
-> a lot of memory if only there was some memory to allocate to track the
-> memory to be freed?
-> 
-> But yes, as you suggested above, there could be an API similar to the
-> userspace RCU library's API that usually just queues the callback but
-> sometimes sleeps for a full grace period.  If enough people want this,
-> it should not be hard to set up.
-> 
-
---
-Vlad Rezki
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
