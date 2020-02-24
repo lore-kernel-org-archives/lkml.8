@@ -2,82 +2,56 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE9DC35669
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6763C35641
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1BC20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="s9a5Tg56"
+	by mail.kernel.org (Postfix) with ESMTP id A0B8720661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBXEjx (ORCPT
+        id S1727321AbgBXEm7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:39:53 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:26486 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727242AbgBXEjw (ORCPT
+        Sun, 23 Feb 2020 23:42:59 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:58980 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbgBXEm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:39:52 -0500
-X-UUID: 750066f1849f4e64a762aaa0b2ce19e2-20200224
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FqzRRGkBPzJNmllxyKwuxmHigUaOX+q9iziFNeWmVkk=;
-        b=s9a5Tg565TH17pkZsCK14EBj4FratBhAm+LMZg9XwZpumqkTuR7yrZGXgYgEar1JmanOXf5XE93AYvMnBkxNNORyI2zeuCFS4lK3agttR9qWtLECQNYTVBJUPHvzdiAfYLv1zUu4zLEyGGVhDMLyoKPD24ziGdtb8mdoTVotckM=;
-X-UUID: 750066f1849f4e64a762aaa0b2ce19e2-20200224
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 639562518; Mon, 24 Feb 2020 12:39:43 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 24 Feb 2020 12:39:39 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 24 Feb 2020 12:39:57 +0800
-Message-ID: <1582519179.26304.72.camel@mtksdccf07>
-Subject: Re: [PATCH v2 1/2] scsi: ufs: Allow vendor apply device quirks in
- advance
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
-        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
-        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
-        <saravanak@google.com>, <salyzyn@google.com>,
-        "Alim Akhtar" <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "open list" <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 Feb 2020 12:39:39 +0800
-In-Reply-To: <1582517363-11536-2-git-send-email-cang@codeaurora.org>
-References: <1582517363-11536-1-git-send-email-cang@codeaurora.org>
-         <1582517363-11536-2-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 941886056E767A9B3BBD2E75D7652BDBCE7A7B6AE233C6AE2659D8022B1819A92000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 23 Feb 2020 23:42:59 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 67AF114E88DB2;
+        Sun, 23 Feb 2020 20:42:58 -0800 (PST)
+Date:   Sun, 23 Feb 2020 20:42:58 -0800 (PST)
+Message-Id: <20200223.204258.1848303157853778664.davem@davemloft.net>
+To:     j.neuschaefer@gmx.net
+Cc:     linux-doc@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, kuba@kernel.org,
+        corbet@lwn.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: networking: phy: Rephrase paragraph for clarity
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200223174631.4734-1-j.neuschaefer@gmx.net>
+References: <20200223174631.4734-1-j.neuschaefer@gmx.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Feb 2020 20:42:58 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBTdW4sIDIwMjAtMDItMjMgYXQgMjA6MDkgLTA4MDAsIENhbiBHdW8gd3Jv
-dGU6DQo+IEN1cnJlbnRseSB1ZnNoY2Rfdm9wc19hcHBseV9kZXZfcXVpcmtzKCkgY29tZXMgYWZ0
-ZXIgYWxsIFVuaVBybyBwYXJhbWV0ZXJzDQo+IGhhdmUgYmVlbiB0dW5lZC4gTW92ZSBpdCB1cCBz
-byB0aGF0IHZlbmRvcnMgaGF2ZSBhIGNoYW5jZSB0byBhcHBseSBkZXZpY2UNCj4gcXVpcmtzIGlu
-IGFkdmFuY2UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDYW4gR3VvIDxjYW5nQGNvZGVhdXJvcmEu
-b3JnPg0KDQpBcyBkaXNjdXNzZWQsIHVmcy1tZWRpYXRlayBuZWVkcyB0byBkbyBjb3JyZXNwb25k
-aW5nIHBhdGNoIGFuZCBJIHdpbGwNCnN1Ym1pdCBpdCBvbmNlIHRoaXMgY29tbWl0IGlzIG1lcmdl
-ZC4NCg0KUmV2aWV3ZWQtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+
-DQoNCg==
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Date: Sun, 23 Feb 2020 18:46:31 +0100
 
+> Let's make it a little easier to read.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+
+Applied, thank you.
