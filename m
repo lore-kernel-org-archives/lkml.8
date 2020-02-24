@@ -2,98 +2,94 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF9FC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131A9C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821AC20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFB520732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3mXP28Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBXMOl (ORCPT
+        id S1727463AbgBXMQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:14:41 -0500
-Received: from mga03.intel.com ([134.134.136.65]:3613 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbgBXMOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:14:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 04:14:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
-   d="scan'208";a="349909448"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Feb 2020 04:14:20 -0800
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH v2 6/9] usb: roles: Allow the role switches to be named
-Date:   Mon, 24 Feb 2020 15:14:03 +0300
-Message-Id: <20200224121406.2419-7-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200224121406.2419-1-heikki.krogerus@linux.intel.com>
-References: <20200224121406.2419-1-heikki.krogerus@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Feb 2020 07:16:18 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35209 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXMQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:16:18 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b17so9140315wmb.0;
+        Mon, 24 Feb 2020 04:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XPjzytM7w1uClSMXbpEVkJXmp/8+ZSQb5PcZcXLELJQ=;
+        b=V3mXP28Q4ffq50vDSoTlF1xSkdSeXspgnCERbp4VKruiPhhPb1PATphkbe8v8MTmFB
+         1Z2OQkCefIgGokn0lQlj355TEpu/DNnzY5NOtRyHGWHK0YjYnqsx/VYBP9JL3LMJOkaP
+         Oq9+4WkFS7c3ShMNGOSHcE4m8R02MQ6orB+dgCAcgj9IyV1Zl7DmaN9wejVVoNnGMNCi
+         yxh4x4B3hnSCkV0zgAcfOzSy3hCrDcL2ok4ImoqAHxBWizIxTbyuAh7ePNa0YuecRDgF
+         DbzOdkVShGZdeez0ZJOM0gepvjHYy9vQPadBwVAGHBG6E7ipThPzF4AoTO6fm4Wf1mTj
+         U0vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XPjzytM7w1uClSMXbpEVkJXmp/8+ZSQb5PcZcXLELJQ=;
+        b=JcP3NwV4LaFYf9UmJapkyO70PvLnDSSJnIM23fhE4ANbpaRPoPz/7L8PZ5t0VG7hLQ
+         m30Llfjb0GSJqwDWWF/8vKEG3CdnGZHdf7GtilNF3xddaEGxh3VryBrsHhx+HUSVJGSU
+         KyFxcWgi4ValoXdj1GXrDiLwfHbc+VmN0HXtmHVdzuwnUqk5CY64YTDMHQSj3f5mNGyB
+         pOM0PYU1SdMK/NU2gvu86craGa16iYnUQi4VPXlxvTvBNHtsZHHfR4ewDHWzku//5qbd
+         E571MeCSCJC1ZQhol94NcoUfsqrhitGuwTaIYw+FXA4w1/5bCrV3IhNz5qBSlfDPomO1
+         hEQw==
+X-Gm-Message-State: APjAAAVqU5tKDH2RGH8jb4u6i7oG4U7jmQJQDkVxkaNdWWlwccP+EaSI
+        /FSksir3D7Y4DBGdMRE8arM=
+X-Google-Smtp-Source: APXvYqwfE04voGa/UTraT7VXsY2989dxXkN06vIHcnN9MmyG1I8v6qCn78HSk/853GR5U0U0ZgLrVA==
+X-Received: by 2002:a1c:9c52:: with SMTP id f79mr22028359wme.30.1582546576736;
+        Mon, 24 Feb 2020 04:16:16 -0800 (PST)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id a13sm8450456wrv.62.2020.02.24.04.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 04:16:16 -0800 (PST)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
+        michael@walle.cc, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 net-next 0/2] Remainder for "DT bindings for Felix DSA switch on LS1028A"
+Date:   Mon, 24 Feb 2020 14:15:32 +0200
+Message-Id: <20200224121534.29679-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The switch devices have been named by using the name of the
-parent device as base for now, but if for example the
-parent device controls multiple muxes, that will not work.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Adding an optional member "name" to the switch descriptor
-that can be used for naming the switch during registration.
+This series is the remainder of patchset [0] which has been merged
+through Shawn Guo's devicetree tree.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/usb/roles/class.c | 3 ++-
- include/linux/usb/role.h  | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+It contains changes to the PHY mode validation in the Felix driver
+("gmii" to "internal") and the documentation for the DT bindings.
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 11e49213176f..c05a0caa5ee9 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -330,7 +330,8 @@ usb_role_switch_register(struct device *parent,
- 	sw->dev.class = role_class;
- 	sw->dev.type = &usb_role_dev_type;
- 	dev_set_drvdata(&sw->dev, desc->driver_data);
--	dev_set_name(&sw->dev, "%s-role-switch", dev_name(parent));
-+	dev_set_name(&sw->dev, "%s-role-switch",
-+		     desc->name ? desc->name : dev_name(parent));
- 
- 	ret = device_register(&sw->dev);
- 	if (ret) {
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index c028ba8029ad..0164fed31b06 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -27,6 +27,7 @@ typedef enum usb_role (*usb_role_switch_get_t)(struct usb_role_switch *sw);
-  * @get: Callback for getting the role (optional)
-  * @allow_userspace_control: If true userspace may change the role through sysfs
-  * @driver_data: Private data pointer
-+ * @name: Name for the switch (optional)
-  *
-  * @usb2_port and @usb3_port will point to the USB host port and @udc to the USB
-  * device controller behind the USB connector with the role switch. If
-@@ -43,6 +44,7 @@ struct usb_role_switch_desc {
- 	usb_role_switch_get_t get;
- 	bool allow_userspace_control;
- 	void *driver_data;
-+	const char *name;
- };
- 
- 
+[0]: https://patchwork.ozlabs.org/cover/1242716/
+
+Vladimir Oltean (2):
+  net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+  dt-bindings: net: dsa: ocelot: document the vsc9959 core
+
+ .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
+ drivers/net/dsa/ocelot/felix.c                |   3 +-
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+ 3 files changed, 118 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+
 -- 
-2.25.0
+2.17.1
 
