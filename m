@@ -2,153 +2,115 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9482C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABD0C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5FD20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55F920714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZOmGdk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgBXHRo (ORCPT
+        id S1727189AbgBXHUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:17:44 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10679 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725792AbgBXHRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:17:44 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8238FEBECE607EF86A2F;
-        Mon, 24 Feb 2020 15:17:36 +0800 (CST)
-Received: from [127.0.0.1] (10.67.101.242) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 24 Feb 2020
- 15:17:28 +0800
-Subject: Re: [PATCH] uacce: unmap remaining mmapping from user space
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-        <grant.likely@arm.com>, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        <ilias.apalodimas@linaro.org>, <francois.ozog@linaro.org>,
-        <kenneth-lee-2012@foxmail.com>, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        <guodong.xu@linaro.org>
-References: <1582528016-2873-1-git-send-email-zhangfei.gao@linaro.org>
-CC:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-accelerators@lists.ozlabs.org>,
-        <linux-crypto@vger.kernel.org>
-From:   Xu Zaibo <xuzaibo@huawei.com>
-Message-ID: <a4716453-0607-d613-e632-173d1ebc424e@huawei.com>
-Date:   Mon, 24 Feb 2020 15:17:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 24 Feb 2020 02:20:34 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50375 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgBXHUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:20:34 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so3781326pjb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pp4OJKlkTUP/JKWBsfGX5IGPygvYeWUCLyYPIlFud78=;
+        b=IZOmGdk3jvbALg78q+Ogcc/os8rR7kNvGziTpMuqqxVshDSb7T0/n5kLOgxiYvrD6L
+         FsaIT/opnfyAbJqctDkl/nSg+/poz+r/XpgrWrCj0upAr29DF+L7hRl6W4XhxLudNiZy
+         mQLaah2Y3ds1XjtYfOSm9hQLGA8Fp+1cwAg+ZoVnIAJkSf+i0RN6yxwnEfj9WAoj1QP9
+         3cCkaSDjwRYAy9gTaNUU81Rp+oHJn4ppYGFivh0T0knTRTQnKpNsuGoto8fVCwI2NNKS
+         N78wCh30Yi+vNrdi6ujUkU1bDTZ7+FjVlQRwtYpE3nNUngzpsG5Jp9vpFUfwl1Z8H12w
+         8FnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pp4OJKlkTUP/JKWBsfGX5IGPygvYeWUCLyYPIlFud78=;
+        b=oiFjbJ4UCR8GjQKVcfcXVZe+WPcuOzMzuJRdQox7HOrZTY19My+ElfvE69U4zlZArr
+         X8LaHS65v8+grb4BT1BA019U5L/yYgsgesZu/Ru5v3XMBXmQkNyOulQ1SMRoI9iR/uKu
+         4M640sQjflQyY0+TAPGNjahcVWXM4hbRFy98BY3FJB8FlJ2SNUodhjzxvXM7JVEBws5l
+         98JzWVvKqHWkCqZJ9p2ZBFrdU10AZ8UxUvF7KXYdrzLOeuGwAvNwiXWfycuXpmv3KsHx
+         bq+b7lRxUX21zC/7UlfP1tXwpPkWP2Tu/bohrAJjLjQ3+lap1TRRJl9tuOM4+E+JEPQR
+         U+og==
+X-Gm-Message-State: APjAAAXSTD28LUgDqCb11MoKsuXrHeW4/qdwYw2M0zOCp08WwBoIisjE
+        oON2z3r/jdy9rgR8VVRGZbbV/38tBXI=
+X-Google-Smtp-Source: APXvYqy3jXvJE7VyZtpKH6rIFhGNbXxpgKh1xaZZt9uPKJ3Z6xLRb6oa+wLz4XgROfrFkfGKGYes3Q==
+X-Received: by 2002:a17:90b:4396:: with SMTP id in22mr18082228pjb.83.1582528831644;
+        Sun, 23 Feb 2020 23:20:31 -0800 (PST)
+Received: from localhost ([45.127.44.57])
+        by smtp.gmail.com with ESMTPSA id p23sm11452767pgn.92.2020.02.23.23.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 23:20:30 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [RFC PATCH v5 0/3] Convert thermal bindings to yaml
+Date:   Mon, 24 Feb 2020 12:50:24 +0530
+Message-Id: <cover.1582527752.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1582528016-2873-1-git-send-email-zhangfei.gao@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.242]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhangfei,
+Hi all,
+
+Here is a series splitting up the thermal bindings into 3 separate bindings
+in YAML, one each of the sensor, cooling-device and the thermal zones.
+Since I was learning about YAML parsers while creating these bindings,
+there are bound to be some issues.
+
+I have to add that the bindings as they exist today, don't really follow
+the "describe the hardware" model of devicetree. e.g. the entire
+thermal-zone binding is a software abstraction to tie arbitrary,
+board-specific trip points to cooling strategies. This doesn't fit well
+into the model where the same SoC in two different form-factor devices e.g.
+mobile and laptop, will have fairly different thermal profiles and might
+benefit from different trip points and mitigation heuristics. I've started
+some experiments with moving the thermal zone data to a board-specific
+platform data that is used to initialise a "thermal zone driver".
+
+In any case, if we ever move down that path, it'll probably end up being v2
+of the binding, so this series is still relevant.
+
+Please help review.
+
+Regards,
+Amit
 
 
-On 2020/2/24 15:06, Zhangfei Gao wrote:
-> When uacce parent device module is removed, user app may
-> still keep the mmaped area, which can be accessed unsafely.
-> When rmmod, Parent device drvier will call uacce_remove,
-> which unmap all remaining mapping from user space for safety.
-> VM_FAULT_SIGBUS is also reported to user space accordingly.
->
-> Suggested-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->   drivers/misc/uacce/uacce.c | 17 +++++++++++++++++
->   include/linux/uacce.h      |  2 ++
->   2 files changed, 19 insertions(+)
->
-> diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-> index ffced4d..1bcc5e6 100644
-> --- a/drivers/misc/uacce/uacce.c
-> +++ b/drivers/misc/uacce/uacce.c
-> @@ -224,6 +224,7 @@ static int uacce_fops_open(struct inode *inode, struct file *filep)
->   
->   	init_waitqueue_head(&q->wait);
->   	filep->private_data = q;
-> +	uacce->inode = inode;
->   	q->state = UACCE_Q_INIT;
->   
->   	return 0;
-> @@ -253,6 +254,14 @@ static int uacce_fops_release(struct inode *inode, struct file *filep)
->   	return 0;
->   }
->   
-> +static vm_fault_t uacce_vma_fault(struct vm_fault *vmf)
-> +{
-> +	if (vmf->flags & (FAULT_FLAG_MKWRITE | FAULT_FLAG_WRITE))
-> +		return VM_FAULT_SIGBUS;
-> +
-> +	return 0;
-> +}
-> +
->   static void uacce_vma_close(struct vm_area_struct *vma)
->   {
->   	struct uacce_queue *q = vma->vm_private_data;
-> @@ -265,6 +274,7 @@ static void uacce_vma_close(struct vm_area_struct *vma)
->   }
->   
->   static const struct vm_operations_struct uacce_vm_ops = {
-> +	.fault = uacce_vma_fault,
->   	.close = uacce_vma_close,
->   };
->   
-> @@ -585,6 +595,13 @@ void uacce_remove(struct uacce_device *uacce)
->   		cdev_device_del(uacce->cdev, &uacce->dev);
->   	xa_erase(&uacce_xa, uacce->dev_id);
->   	put_device(&uacce->dev);
-> +
-> +	/*
-> +	 * unmap remainning mapping from user space, preventing user still
-> +	 * access the mmaped area while parent device is already removed
-> +	 */
-> +	if (uacce->inode)
-> +		unmap_mapping_range(uacce->inode->i_mapping, 0, 0, 1);
-Should we unmap them at the first of 'uacce_remove',  and before 
-'uacce_put_queue'?
+Amit Kucheria (3):
+  dt-bindings: thermal: Add yaml bindings for thermal sensors
+  dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
+  dt-bindings: thermal: Add yaml bindings for thermal zones
 
-Thanks,
-Zaibo
+ .../thermal/thermal-cooling-devices.yaml      | 114 +++++++
+ .../bindings/thermal/thermal-sensor.yaml      |  70 ++++
+ .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+ 3 files changed, 486 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
 
-.
->   }
->   EXPORT_SYMBOL_GPL(uacce_remove);
->   
-> diff --git a/include/linux/uacce.h b/include/linux/uacce.h
-> index 904a461..0e215e6 100644
-> --- a/include/linux/uacce.h
-> +++ b/include/linux/uacce.h
-> @@ -98,6 +98,7 @@ struct uacce_queue {
->    * @priv: private pointer of the uacce
->    * @mm_list: list head of uacce_mm->list
->    * @mm_lock: lock for mm_list
-> + * @inode: core vfs
->    */
->   struct uacce_device {
->   	const char *algs;
-> @@ -113,6 +114,7 @@ struct uacce_device {
->   	void *priv;
->   	struct list_head mm_list;
->   	struct mutex mm_lock;
-> +	struct inode *inode;
->   };
->   
->   /**
-
+-- 
+2.20.1
 
