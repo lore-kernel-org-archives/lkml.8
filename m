@@ -2,114 +2,123 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D0BC35DEA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50095C35DEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8182176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skRHFhdE"
+	by mail.kernel.org (Postfix) with ESMTP id 233C3218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582588067;
+	bh=/n/ld7pGO6VfKm6KFJGv3owq/0ZZ5rbRhDEektoQtMg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Lwnw8nOBN59jJ1lxohovJlwUXtbPZ6He00EOwL+SmPpvGIo/zoMCvVUrDi8nBcIrN
+	 hokYYtdUqrcr2/wQlaBjFbYSP2IuErIEiRYp/qJMayAQu8e0OW4As6NUYLDFCFxh70
+	 fsX83jgOIwa5Vq0GcjO0st02Pi0maHIQe5/qVJ24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgBXXpP (ORCPT
+        id S1728359AbgBXXrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:45:15 -0500
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:54336 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgBXXpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:45:15 -0500
-Received: by mail-wm1-f42.google.com with SMTP id z12so1115882wmi.4;
-        Mon, 24 Feb 2020 15:45:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XQ6eIa2wiDB1DP4Ns8nniAL5OvDLQpxBQOfpTu4sj3A=;
-        b=skRHFhdEj7ZwR3Bv/P8yPBSVbJndUUgSZPSs2Vj4J+OmjjnYK8dF+Iw8RenCChTbRW
-         OetwNpiW8PiNNUfo/iEDK25Jlhahfq98KX6a68O7jV+bTGCQ6Lz1Ts8KrdBiusjcEzpN
-         vyckGR2BPAr3VuJpDj4Nix6nHOFVpgqpelNhpCkOIsYpTqnXcMe2jAvnbzOISHf6yMQ+
-         w+D6VXshzyPtmT50f5fgWsxJI9aIJaReqsKEDwuvmSLbHdqXv3asv1jIlxV8O3PTN6EM
-         uiwILQ38VME3oKxbXdhieG/JT1xBViCuYsvyOJvc9lRLauOCcuo4Xvubc/PKlEOIKwDA
-         Pnyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XQ6eIa2wiDB1DP4Ns8nniAL5OvDLQpxBQOfpTu4sj3A=;
-        b=Y1c2/YZ2Kr80qqZhu3VsJ7yB+Xo1Lv7IoAtNy7joNcn0e8BWpSm40FYvjTmWhFS0Zb
-         AWyozIBwOcisJqKMzckPHqtjLXSzJfJpefA1ShYikCI86LZxeOjkFZYhrR6urSYX8ihI
-         pnChbGcrFU7B4VHmOEJQ3W+yr5YPYnIh62YyF2mpvJkB9fiPaAsZIs8fGZU4eRtp6JeA
-         A82WMy/pBamLo82PPBWmPECmmueCT2cS//fgyMlDc6i6ye5BgZEnnhg9gaL6tSt/ZARQ
-         zbijzt1SGZ2nnI6fyGSDNc9RfB/MDritDRYpvCySVwnHIgUNj6cAYTqEZs7K7jmhd7xV
-         6yfA==
-X-Gm-Message-State: APjAAAVuDYRpwsnZa0EhKD/Rq2s4RlR5WS2qIlx1s2R3nDpx+veDi786
-        WABdL/hhufSqxWKGwrnNFgQzMT+C
-X-Google-Smtp-Source: APXvYqyrpySeKDATHMSflKxO0Op6nmlp1zXoB5YcDWGtn+DjBJNY1E3sFZxpaoZSClA+Kx8RadcDdw==
-X-Received: by 2002:a05:600c:21c4:: with SMTP id x4mr1395211wmj.147.1582587912353;
-        Mon, 24 Feb 2020 15:45:12 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l2sm1475946wme.1.2020.02.24.15.45.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 15:45:11 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] Revert "net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278"
-Date:   Mon, 24 Feb 2020 15:44:26 -0800
-Message-Id: <20200224234427.12736-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Feb 2020 18:47:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbgBXXrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 18:47:45 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B20512176D;
+        Mon, 24 Feb 2020 23:47:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582588064;
+        bh=/n/ld7pGO6VfKm6KFJGv3owq/0ZZ5rbRhDEektoQtMg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=d4bdpUEoxsXsiOQwhLaGxmXFFebooW84w5sMWUW8znmIGzDsOaI88EsxYF44NM13U
+         q7OEU/H1tCMzwPy7WHbjkKF1Qd9nlG2XUYTqep75eN7KMri4pkcx2TKryMrmQs31ER
+         mh42sauNuo7wznRqeE2QFiVMxWc5c55Qr50pxu9s=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j6NRu-007gKg-QY; Mon, 24 Feb 2020 23:47:42 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 24 Feb 2020 23:47:42 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com,
+        Yanlei Jia <jiayanlei@huawei.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Clear Valid before writing any bits
+ else in VPENDBASER
+In-Reply-To: <20200224025029.92-1-yuzenghui@huawei.com>
+References: <20200224025029.92-1-yuzenghui@huawei.com>
+Message-ID: <bb7cdb29eda9cf160bcf85a58a9fc63d@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, jiayanlei@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ("net: dsa:
-bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278") as it causes
-advanced congestion buffering issues with 7278 switch devices when using
-their internal Giabit PHY. While this is being debugged, continue with
-conservative defaults that work and do not cause packet loss.
+Hi Zenghui,
 
-Fixes: 7458bd540fa0 ("net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/bcm_sf2.c      | 3 ---
- drivers/net/dsa/bcm_sf2_regs.h | 1 -
- 2 files changed, 4 deletions(-)
+On 2020-02-24 02:50, Zenghui Yu wrote:
+> The Valid bit must be cleared before changing anything else when 
+> writing
+> GICR_VPENDBASER to avoid the UNPREDICTABLE behavior. This is exactly 
+> what
+> we've done on 32bit arm, but not on arm64.
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 6feaf8cb0809..d1955543acd1 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -616,9 +616,6 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
- 	if (state->duplex == DUPLEX_FULL)
- 		reg |= DUPLX_MODE;
- 
--	if (priv->type == BCM7278_DEVICE_ID && dsa_is_cpu_port(ds, port))
--		reg |= GMIIP_SPEED_UP_2G;
--
- 	core_writel(priv, reg, offset);
- }
- 
-diff --git a/drivers/net/dsa/bcm_sf2_regs.h b/drivers/net/dsa/bcm_sf2_regs.h
-index 784478176335..d8a5e6269c0e 100644
---- a/drivers/net/dsa/bcm_sf2_regs.h
-+++ b/drivers/net/dsa/bcm_sf2_regs.h
-@@ -178,7 +178,6 @@ enum bcm_sf2_reg_offs {
- #define  RXFLOW_CNTL			(1 << 4)
- #define  TXFLOW_CNTL			(1 << 5)
- #define  SW_OVERRIDE			(1 << 6)
--#define  GMIIP_SPEED_UP_2G		(1 << 7)
- 
- #define CORE_WATCHDOG_CTRL		0x001e4
- #define  SOFTWARE_RESET			(1 << 7)
+I'm not quite sure how you decide that Valid must be cleared before 
+changing
+anything else. The reason why we do it on 32bit is that we cannot update
+the full 64bit register at once, so we start by clearing Valid so that
+we can update the rest. arm64 doesn't require that.
+
+For the rest of discussion, let's ignore GICv4.1 32bit support (I'm
+pretty sure nobody cares about that).
+
+> This works fine on GICv4 where we only clear Valid for a vPE 
+> deschedule.
+> With the introduction of GICv4.1, we might also need to talk something 
+> else
+> (e.g., PendingLast, Doorbell) to the redistributor when clearing the 
+> Valid.
+> Let's port the 32bit gicr_write_vpendbaser() to arm64 so that hardware 
+> can
+> do the right thing after descheduling the vPE.
+
+The spec says that:
+
+"For a write that writes GICR_VPENDBASER.Valid from 1 to 0, if
+GICR_VPENDBASER.PendingLast is written as 1 then 
+GICR_VPENDBASER.PendingLast
+takes an UNKNOWN value and GICR_VPENDBASER.Doorbell is treated as being 
+0."
+
+and
+
+"When GICR_VPENDBASER.Valid is written from 1 to 0, if there are 
+outstanding
+enabled pending interrupts GICR_VPENDBASER.Doorbell is treated as 0."
+
+which indicate that PendingLast/Doorbell have to be written at the same 
+time
+as we clear Valid. Can you point me to the bit of the v4.1 spec that 
+makes
+this "clear Valid before doing anything else" requirement explicit?
+
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
