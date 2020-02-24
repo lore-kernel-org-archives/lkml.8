@@ -2,292 +2,303 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA3BC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49356C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794B020838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD0820838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="S5BqXaDh";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZDHVku9D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVFJJZhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgBXRBf (ORCPT
+        id S1727795AbgBXRCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:01:35 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:3982 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726806AbgBXRBe (ORCPT
+        Mon, 24 Feb 2020 12:02:32 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42869 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgBXRCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:01:34 -0500
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OGvDjZ014287;
-        Mon, 24 Feb 2020 09:01:17 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type :
- content-transfer-encoding : in-reply-to : mime-version; s=facebook;
- bh=PZKky4MDqFoN13eMlb4EK8/YNe35GigjAbaJBYlp+QQ=;
- b=S5BqXaDhybUtcYTuKAp7YHOWCxmuUVTafGLwxA7uydqxuCY2SuSGdhapKX/XqoaIOOJI
- 8Wu84//3/ksT/8xggapPr5ADqYk1/7Ar7wAljrOWu0BqI4rdMQiIpXCLjNXv/WnE2/Qx
- Xu35xcaSztAaenqzvpHSE8UpV+Q/hxg0Shc= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ybmvkdyr2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 24 Feb 2020 09:01:17 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 24 Feb 2020 09:01:16 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M3p3+3655aGR5zzGxzjWidTGrN+3QexZ2F95/x5WpnWUYOEa0JjQJJhWIY524TSZTOwd/AadTJQIqDKua/4DxreVsjJ/f8ScRM+HyLXKescN5oRmQ6NvrD183m4ukXiTAIFyz4kuP9Pgyr8SvTNyKPAr1o8p3nMrrM/7dM5kbL0dsKT5+gpEl43B020jGR6XObX4ZJ8uJBPDejgQBcJpjuY53faDFtzz93Q4TmyHIjdOtn39E5sbLB2Kx3Ed12/DOvj2Nzyt7NKVjxCk/yfrwdCQnhrmjHIxxBaEi30C3dwrvftcvVaZNj7LRXoOIjA+QCFGr2jkrk5c4UgBJjf1Hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PZKky4MDqFoN13eMlb4EK8/YNe35GigjAbaJBYlp+QQ=;
- b=a01tLtMkTLHzq9PV3/1xPwgOnBD9ucc2LzDitvhwHFaGZDqKhtKs+inuCIV08dLHn95uHmZpGjy3yxAhqwyLXCsKJkfEapKjWqdUa0AQbY4QSuxwDhJFs3q27aq0/1wEOgup8LUiQ7XPIEeGagW3I2RFxKFW+BR03JQ8PnMOSxsjxaKmgdASIfzJgx4moHkCJgN1Jkt2HLVh5jWNTx3SC5HuVNcns/leqto02OqMkjbZ7mToFTTFUQCnK5laQ04QCLWPpAGRRQbKTxatHRVXRnj9ZqZtkUceHzT8r9csF+hIklk0sfJAlK8DiVA0+c3WncWx+6oztesuAnLC17K7kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PZKky4MDqFoN13eMlb4EK8/YNe35GigjAbaJBYlp+QQ=;
- b=ZDHVku9DABzSZ5aDP7Pdt0ntfCjdqeQITIth+4WWzIppjnlXLkTRbmFKmEh5cByoAdxXJZ45814aWNsRH1tcxDqFcteNWBWcEJQ1VjPSYsyY/212/3K9EoYKUn89MBIaaoWyrRhuy57VJGGNqaYVtNtP6MSDFxGn6TFST5oYPzY=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:150::19)
- by BYAPR15MB2472.namprd15.prod.outlook.com (2603:10b6:a02:8b::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
- 2020 17:01:14 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
- 17:01:14 +0000
-Date:   Mon, 24 Feb 2020 09:01:09 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Wen Yang <wenyang@linux.alibaba.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Xunlei Pang <xlpang@linux.alibaba.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/slub: Detach node lock from counting free objects
-Message-ID: <20200224170109.GA484928@carbon.dhcp.thefacebook.com>
-References: <20200201031502.92218-1-wenyang@linux.alibaba.com>
- <20200212145247.bf89431272038de53dd9d975@linux-foundation.org>
- <b42f7daa-4aea-1cf8-5bbb-2cd5d48b4e9a@linux.alibaba.com>
- <20200218205312.GA3156@carbon>
- <cb36f3e5-c01c-a99d-9230-af52f806e227@linux.alibaba.com>
- <20200220154036.GA191388@carbon.dhcp.thefacebook.com>
- <98c84f23-0636-a877-a96d-d6e58d540aa4@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98c84f23-0636-a877-a96d-d6e58d540aa4@linux.alibaba.com>
-X-ClientProxiedBy: MWHPR18CA0032.namprd18.prod.outlook.com
- (2603:10b6:320:31::18) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
+        Mon, 24 Feb 2020 12:02:32 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d10so10903756ljl.9;
+        Mon, 24 Feb 2020 09:02:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kEZH26El7LbHnMTCcKjSEmfN6drHvY8nyMRzI4reNIs=;
+        b=TVFJJZhRdJI/fSpjbpdQI6bDcDel+iw/0zQxxDld08Aw7jS9pkaP4S7gL1KIXRjASt
+         IbOLcxu6H2RcJ6EhPZgJYr6jyABFDcyr0bdqIs+CC1sUGQrneulNbqxpWvuMk1xJ2+IO
+         73n9p7WAYPuQq4FGB0sW5NsV6xrCjWyTYZHMcisUd4x5qazjyHpVogWe4fPs8E0Omg4l
+         29UDjr9Z++QrwGIM+MyK4jpZ4c3ljaSb2Ikhfx/Ol/Uu8VvAQYl2SYAqqyDVEN61YCel
+         HE7uKpBY6Y8ztwyTnSOB4gOuZFoBkFh2W7c6h5QG4skYoEU5vB31CStaMV36CHsOFXcL
+         sEtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kEZH26El7LbHnMTCcKjSEmfN6drHvY8nyMRzI4reNIs=;
+        b=pBt7hCBmqM60sK6WlPP5w0Gzr8MFgXHZ5xQjEHuOZPR8786NYXmMBdcV1N0XXjoy38
+         mVZNPLnoIusBfsoYcxx6cI6a8VbFwrT+5LsMlCEpRUBG65c2ANUq6yug6wskAsaI/HV1
+         1W9qvUazySa1DxMn/lFl7BTI+Q6Ns7SpEOoxLDW0eogHo5lRm7IF3KrhRJv85/dzreB4
+         CGWCcjTnHvYSHl8wNnMtLpCGbrVLaygX5TCHqIV2IhUb12kBqAvgUKLa3Qi/VvvltSTw
+         yEBcSgJA7LRaipzARjY6B3GBg/a4O+8eSaL61uC7znD1xtQGf8FKS+Yurp8lEVweyCQO
+         V86g==
+X-Gm-Message-State: APjAAAWJvRfw0yQnTJ02rZonzlWa7x0252tVoX0zlULukoM/RcHjVmA4
+        cO9X4Gd9Bma9pM800SSbUAY=
+X-Google-Smtp-Source: APXvYqzWqTNwBzK9Dk1MDN+1y6ZvXjDdggeT6iZFk+01Ar9QCsAhmWLggU3WTMMdR/dDkpakCvGi8A==
+X-Received: by 2002:a2e:a490:: with SMTP id h16mr31419432lji.115.1582563748614;
+        Mon, 24 Feb 2020 09:02:28 -0800 (PST)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id w3sm6549715ljo.66.2020.02.24.09.02.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 09:02:27 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 24 Feb 2020 18:02:19 +0100
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200224170219.GA21229@pc636>
+References: <20200215233817.GA670792@mit.edu>
+ <20200216121246.GG2935@paulmck-ThinkPad-P72>
+ <20200217160827.GA5685@pc636>
+ <20200217193314.GA12604@mit.edu>
+ <20200218170857.GA28774@pc636>
+ <20200221120618.GA194360@google.com>
+ <20200221132817.GB194360@google.com>
+ <20200221192152.GA6306@pc636>
+ <20200222221253.GB191380@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:500::5:ee6) by MWHPR18CA0032.namprd18.prod.outlook.com (2603:10b6:320:31::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 17:01:12 +0000
-X-Originating-IP: [2620:10d:c090:500::5:ee6]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 841b19a0-e382-48af-aa4b-08d7b94b2810
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2472:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB247258B3F3E2B9D56304B31FBEEC0@BYAPR15MB2472.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 032334F434
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(39860400002)(136003)(376002)(189003)(199004)(33656002)(6666004)(6916009)(2906002)(316002)(81166006)(8676002)(54906003)(81156014)(4326008)(86362001)(5660300002)(8936002)(16526019)(186003)(6506007)(9686003)(53546011)(55016002)(1076003)(66556008)(478600001)(66476007)(66946007)(52116002)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2472;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: G0QG3Gy0tu+80FAdn07zZhlDTFvcIbRMVI04c6cmI0lFzenvt1e36H1uYFNItdWkrm/r64gX8rQvNMAwDnTlaTKuQ6OPTJ37ak023PtEQBgXf4Un69BKlMKMar2iOrBtnnUP0pVKatPP+Qlo20ZC8hYmEkxrThJYcc+5307VNQuHjfGNN1dVLYUuSnVvg2RPah/Zrypaxc1bF3Hy5c8PRTq5QRPeObTYcENMS3s3LwMcGuwz/iUrmeGMmibTsNOKmEE6g72u1qdU1X1e8ojs93wsbKue6JMqP4832YvbfFcgYK9UFUmvLlslw6lrnz63IPKcLvVOPu4JqnkfejGB01LRR4N932qSl6rTntTdkUcTtG4ITQuyigyG99BKHKubrhq4juL2KhrAD1nGdj3bBE2IgnzzRRuoAWpSOPneE/uDFAk6kpt/x0xO2QoWpR9I
-X-MS-Exchange-AntiSpam-MessageData: ZP/dcLs0UQBusDGtK8YF8CnS0Zzs/5U/BYTlluVeeGUI5hORJRE46iqEtZam+B1MEWxzjYHJ+qRR9sMWUbX+RaaUZ/riO29KR8DozyvimAmbh9huY1s1NCZRcqlBsFW09ZhdCifC+AZdmqleAZDMWd/DQ+dw+cFsfyg9mPUyopntYv3n86rSuH4Al1sTABtJ
-X-MS-Exchange-CrossTenant-Network-Message-Id: 841b19a0-e382-48af-aa4b-08d7b94b2810
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 17:01:14.4979
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hp5/jkqvrcioMvr4Qoob5LP4MpZUFmf+0wRV5YVlLRAyFOeIFGAn8qYzDolWAkY8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2472
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_07:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- clxscore=1015 spamscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
- suspectscore=5 priorityscore=1501 mlxlogscore=999 bulkscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002240130
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222221253.GB191380@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 02:55:39PM +0800, Wen Yang wrote:
+> > > > 
+> > > > Overall this implementation is nice. You are basically avoiding allocating
+> > > > rcu_head like Ted did by using the array-of-pointers technique we used for
+> > > > the previous kfree_rcu() work.
+> > > > 
+> > > > One thing stands out, the path where we could not allocate a page for the new
+> > > > block node:
+> > > > 
+> > > > > @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > > > >         if (krcp->initialized)
+> > > > >                 spin_unlock(&krcp->lock);
+> > > > >         local_irq_restore(flags);
+> > > > > +
+> > > > > +       if (!skip_call_rcu) {
+> > > > > +               synchronize_rcu();
+> > > > > +               kvfree(ptr_to_free);
+> > > > 
+> > > > We can't block, it has to be async otherwise everything else blocks, and I
+> > > > think this can also be used from interrupt handlers which would at least be
+> > > > an SWA violation. So perhaps it needs to allocate an rcu_head wrapper object
+> > > > itself for the 'emergeny case' and use the regular techniques.
+> > > > 
+> > > > Another thing that stands out is the code duplication, if we can make this
+> > > > reuse as much as of the previous code as possible, that'd be great. I'd like
+> > > > to avoid bvcached and bvhead if possible. Maybe we can store information
+> > > > about the fact that this is a 'special object' in some of the lower-order
+> > > > bits of the pointer. Then we can detect that it is 'special' and free it
+> > > > using kvfree() during the reclaim
+> > > 
+> > > Basically what I did different is:
+> > > 1. Use the existing kfree_rcu_bulk_data::records array to store the
+> > >    to-be-freed array.
+> > > 2. In case of emergency, allocate a new wrapper and tag the pointer.
+> > >    Read the tag later to figure its an array wrapper and do additional kvfree.
+> > >
+> > I see your point and agree that duplication is odd and we should avoid
+> > it as much as possible. Also, i like the idea of using the wrapper as
+> > one more chance to build a "head" for headless object.
+> > 
+> > I did not mix pointers because then you will need to understand what is what.
 > 
+> Well that's why I brought up the whole tagging idea. Then you don't need
+> separate pointers to manage either (edit: but maybe you do as you mentioned
+> vfree below..).
 > 
-> On 2020/2/20 11:40 下午, Roman Gushchin wrote:
-> > On Thu, Feb 20, 2020 at 09:53:26PM +0800, Wen Yang wrote:
-> > > 
-> > > 
-> > > On 2020/2/19 4:53 上午, Roman Gushchin wrote:
-> > > > On Sun, Feb 16, 2020 at 12:15:54PM +0800, Wen Yang wrote:
-> > > > > 
-> > > > > 
-> > > > > On 2020/2/13 6:52 上午, Andrew Morton wrote:
-> > > > > > On Sat,  1 Feb 2020 11:15:02 +0800 Wen Yang <wenyang@linux.alibaba.com> wrote:
-> > > > > > 
-> > > > > > > The lock, protecting the node partial list, is taken when couting the free
-> > > > > > > objects resident in that list. It introduces locking contention when the
-> > > > > > > page(s) is moved between CPU and node partial lists in allocation path
-> > > > > > > on another CPU. So reading "/proc/slabinfo" can possibily block the slab
-> > > > > > > allocation on another CPU for a while, 200ms in extreme cases. If the
-> > > > > > > slab object is to carry network packet, targeting the far-end disk array,
-> > > > > > > it causes block IO jitter issue.
-> > > > > > > 
-> > > > > > > This fixes the block IO jitter issue by caching the total inuse objects in
-> > > > > > > the node in advance. The value is retrieved without taking the node partial
-> > > > > > > list lock on reading "/proc/slabinfo".
-> > > > > > > 
-> > > > > > > ...
-> > > > > > > 
-> > > > > > > @@ -1768,7 +1774,9 @@ static void free_slab(struct kmem_cache *s, struct page *page)
-> > > > > > >     static void discard_slab(struct kmem_cache *s, struct page *page)
-> > > > > > >     {
-> > > > > > > -	dec_slabs_node(s, page_to_nid(page), page->objects);
-> > > > > > > +	int inuse = page->objects;
-> > > > > > > +
-> > > > > > > +	dec_slabs_node(s, page_to_nid(page), page->objects, inuse);
-> > > > > > 
-> > > > > > Is this right?  dec_slabs_node(..., page->objects, page->objects)?
-> > > > > > 
-> > > > > > If no, we could simply pass the page* to inc_slabs_node/dec_slabs_node
-> > > > > > and save a function argument.
-> > > > > > 
-> > > > > > If yes then why?
-> > > > > > 
-> > > > > 
-> > > > > Thanks for your comments.
-> > > > > We are happy to improve this patch based on your suggestions.
-> > > > > 
-> > > > > 
-> > > > > When the user reads /proc/slabinfo, in order to obtain the active_objs
-> > > > > information, the kernel traverses all slabs and executes the following code
-> > > > > snippet:
-> > > > > static unsigned long count_partial(struct kmem_cache_node *n,
-> > > > >                                           int (*get_count)(struct page *))
-> > > > > {
-> > > > >           unsigned long flags;
-> > > > >           unsigned long x = 0;
-> > > > >           struct page *page;
-> > > > > 
-> > > > >           spin_lock_irqsave(&n->list_lock, flags);
-> > > > >           list_for_each_entry(page, &n->partial, slab_list)
-> > > > >                   x += get_count(page);
-> > > > >           spin_unlock_irqrestore(&n->list_lock, flags);
-> > > > >           return x;
-> > > > > }
-> > > > > 
-> > > > > It may cause performance issues.
-> > > > > 
-> > > > > Christoph suggested "you could cache the value in the userspace application?
-> > > > > Why is this value read continually?", But reading the /proc/slabinfo is
-> > > > > initiated by the user program. As a cloud provider, we cannot control user
-> > > > > behavior. If a user program inadvertently executes cat /proc/slabinfo, it
-> > > > > may affect other user programs.
-> > > > > 
-> > > > > As Christoph said: "The count is not needed for any operations. Just for the
-> > > > > slabinfo output. The value has no operational value for the allocator
-> > > > > itself. So why use extra logic to track it in potentially performance
-> > > > > critical paths?"
-> > > > > 
-> > > > > In this way, could we show the approximate value of active_objs in the
-> > > > > /proc/slabinfo?
-> > > > > 
-> > > > > Based on the following information:
-> > > > > In the discard_slab() function, page->inuse is equal to page->total_objects;
-> > > > > In the allocate_slab() function, page->inuse is also equal to
-> > > > > page->total_objects (with one exception: for kmem_cache_node, page-> inuse
-> > > > > equals 1);
-> > > > > page->inuse will only change continuously when the obj is constantly
-> > > > > allocated or released. (This should be the performance critical path
-> > > > > emphasized by Christoph)
-> > > > > 
-> > > > > When users query the global slabinfo information, we may use total_objects
-> > > > > to approximate active_objs.
-> > > > 
-> > > > Well, from one point of view, it makes no sense, because the ratio between
-> > > > these two numbers is very meaningful: it's the slab utilization rate.
-> > > > 
-> > > > On the other side, with enabled per-cpu partial lists active_objs has
-> > > > nothing to do with the reality anyway, so I agree with you, calling
-> > > > count_partial() is almost useless.
-> > > > 
-> > > > That said, I wonder if the right thing to do is something like the patch below?
-> > > > 
-> > > > Thanks!
-> > > > 
-> > > > Roman
-> > > > 
-> > > > --
-> > > > 
-> > > > diff --git a/mm/slub.c b/mm/slub.c
-> > > > index 1d644143f93e..ba0505e75ecc 100644
-> > > > --- a/mm/slub.c
-> > > > +++ b/mm/slub.c
-> > > > @@ -2411,14 +2411,16 @@ static inline unsigned long node_nr_objs(struct kmem_cache_node *n)
-> > > >    static unsigned long count_partial(struct kmem_cache_node *n,
-> > > >                                           int (*get_count)(struct page *))
-> > > >    {
-> > > > -       unsigned long flags;
-> > > >           unsigned long x = 0;
-> > > > +#ifdef CONFIG_SLUB_CPU_PARTIAL
-> > > > +       unsigned long flags;
-> > > >           struct page *page;
-> > > >           spin_lock_irqsave(&n->list_lock, flags);
-> > > >           list_for_each_entry(page, &n->partial, slab_list)
-> > > >                   x += get_count(page);
-> > > >           spin_unlock_irqrestore(&n->list_lock, flags);
-> > > > +#endif
-> > > >           return x;
-> > > >    }
-> > > >    #endif /* CONFIG_SLUB_DEBUG || CONFIG_SYSFS */
-> > > > 
-> > > 
-> > > Hi Roman,
-> > > 
-> > > Thanks for your comments.
-> > > 
-> > > In the server scenario, SLUB_CPU_PARTIAL is turned on by default, and can
-> > > improve the performance of the cloud server, as follows:
-> > 
-> > Hello, Wen!
-> > 
-> > That's exactly my point: if CONFIG_SLUB_CPU_PARTIAL is on, count_partial() is useless
-> > anyway because the returned number is far from the reality. So if we define
-> > active_objects == total_objects, as you basically suggest, we do not introduce any
-> > regression. Actually I think it's even preferable to show the unrealistic uniform 100%
-> > slab utilization rather than some very high but incorrect value.
-> > 
-> > And on real-time systems uncontrolled readings of /proc/slabinfo is less
-> > of a concern, I hope.
-> > 
-> > Thank you!
-> > 
-> 
-> Great！
-> We only need to correct a typo to achieve this goal, as follows:
-> Change #ifdef CONFIG_SLUB_CPU_PARTIAL to #ifndef CONFIG_SLUB_CPU_PARTIAL
+Right. We can use tagging idea to separate kmalloc/vmalloc pointers to
+place them into different arrays. Because kvmalloc() can return either
+SLAB pointer or vmalloc one.
 
-Yes, you're obviously right.
+> > It is OK for "emergency" path, because we simply can just serialize it by kvfree()
+> > call, it checks inside what the ptr address belong to:
+> > 
+> > <snip>
+> > void kvfree(const void *addr)
+> > {
+> >     if (is_vmalloc_addr(addr))
+> >         vfree(addr);
+> >     else
+> >         kfree(addr);
+> > }
+> > <snip>
+> > 
+> > whereas normal path, i mean "bulk one" where we store pointers into array
+> > would be broken. We can not call kfree_bulk(array, nr_entries) if the passed
+> > array contains "vmalloc" pointers, because it is different allocator. Therefore,
+> > i deliberately have made it as a special case.
+> 
+> Ok, it would be nice if you can verify that ptr_to_free passed to
+> kfree_call_rcu() is infact a vmalloc pointer.
+> 
+We can do that. We can check it by calling is_vmalloc_addr() on ptr. 
+So it is possible to differentiate.
 
-Thanks!
+> > > Perhaps the synchronize_rcu() should be done from a workqueue handler
+> > > to prevent IRQ crapping out?
+> > >
+> > I think so. For example one approach would be:
+> > 
+> > <snip>
+> > struct free_deferred {
+> >  struct llist_head list;
+> >  struct work_struct wq;
+> > };
+> > static DEFINE_PER_CPU(struct free_deferred, free_deferred);
+> > 
+> > static void free_work(struct work_struct *w)
+> > {
+> >   struct free_deferred *p = container_of(w, struct free_deferred, wq);
+> >   struct llist_node *t, *llnode;
+> > 
+> >   synchronize_rcu();
+> > 
+> >   llist_for_each_safe(llnode, t, llist_del_all(&p->list))
+> >      vfree((void *)llnode, 1);
+> > }
+> > 
+> > static inline void free_deferred_common(void *ptr_to_free)
+> > {
+> >     struct free_deferred *p = raw_cpu_ptr(&free_deferred);
+> > 
+> >     if (llist_add((struct llist_node *)ptr_to_free, &p->list))
+> 
+> Would this not corrupt the ptr_to_free pointer which readers might still be
+> accessing since grace period has not yet ended?
+> 
+> We cannot touch the ptr_to_free pointer until after the grace period has
+> ended.
+> 
+Right you are. We can do that only after grace period is passed, 
+after synchronize_rcu(). Good point :)
+
+> > }
+> > <snip>
+> > 
+> > and it seems it should work. Because we know that KMALLOC_MIN_SIZE
+> > can not be less then machine word:
+> > 
+> > /*
+> >  * Kmalloc subsystem.
+> >  */
+> >  #ifndef KMALLOC_MIN_SIZE
+> >  #define KMALLOC_MIN_SIZE (1 << KMALLOC_SHIFT_LOW)
+> >  #endif
+> > 
+> > when it comes to vmalloc pointer it can not be less then one PAGE_SIZE :)
+> > 
+> > Another thing:
+> > 
+> > we are talking about "headless" variant that is special, therefore it
+> > implies to have some restrictions, since we need a dynamic memory to
+> > drive it. For example "headless" object can be freed from preemptible
+> > context only, because freeing can be inlined:
+> > 
+> > <snip>
+> > +   // NOT SURE if permitted due to IRQ. Maybe we
+> > +   // should try doing this from WQ?
+> > +   synchronize_rcu();
+> > +   kvfree(ptr);
+> > <snip>
+> > 
+> > Calling synchronize_rcu() from the IRQ context will screw the system up :)
+> > Because the current CPU will never pass the QS state if i do not miss something.
+> 
+> Yes are you right, calling synchronize_rcu() from IRQ context is a strict no-no.
+> 
+> I believe we could tap into the GFP_ATOMIC emergency memory pool for this
+> emergency situation. This pool is used for emergency cases. I think in
+> emergency we can grow an rcu_head on this pool.
+> 
+> > Also kvfree() itself can be called from the preemptible context only, excluding IRQ,
+> > there is a special path for it, otherwise vfree() can sleep. 
+> 
+> Ok that's good to know.
+> 
+> > > debug_objects bits wouldn't work obviously for the !emergency kvfree case,
+> > > not sure what we can do there.
+> > >
+> > Agree.
+> > 
+> > Thank you, Joel, for your comments!
+> 
+> No problem, I think we have a couple of ideas here.
+> 
+> What I also wanted to do was (may be after all this), see if we can create an
+> API for head-less kfree based on the same ideas. Not just for arrays for for
+> any object. Calling it, say, kfree_rcu_headless() and then use the bulk array
+> as we have been doing. That would save any users from having an rcu_head --
+> of course with all needed warnings about memory allocation failure. Vlad,
+> What do you think? Paul, any thoughts on this?
+> 
+I like it. It would be more clean interface. Also there are places where
+people do not embed the rcu_head into their stuctures for some reason
+and do like:
+
+
+<snip>
+    synchronize_rcu();
+    kfree(p);
+<snip>
+
+<snip>
+urezki@pc636:~/data/ssd/coding/linux-rcu$ find ./ -name "*.c" | xargs grep -C 1 -rn "synchronize_rcu" | grep kfree
+./arch/x86/mm/mmio-mod.c-314-           kfree(found_trace);
+./kernel/module.c-3910- kfree(mod->args);
+./kernel/trace/ftrace.c-5078-                   kfree(direct);
+./kernel/trace/ftrace.c-5155-                   kfree(direct);
+./kernel/trace/trace_probe.c-1087-      kfree(link);
+./fs/nfs/sysfs.c-113-           kfree(old);
+./fs/ext4/super.c-1701- kfree(old_qname);
+./net/ipv4/gre.mod.c-36-        { 0xfc3fcca2, "kfree_skb" },
+./net/core/sysctl_net_core.c-143-                               kfree(cur);
+./drivers/crypto/nx/nx-842-pseries.c-1010-      kfree(old_devdata);
+./drivers/misc/vmw_vmci/vmci_context.c-692-             kfree(notifier);
+./drivers/misc/vmw_vmci/vmci_event.c-213-       kfree(s);
+./drivers/infiniband/core/device.c:2162:                         * synchronize_rcu before the netdev is kfreed, so we
+./drivers/infiniband/hw/hfi1/sdma.c-1337-       kfree(dd->per_sdma);
+./drivers/net/ethernet/myricom/myri10ge/myri10ge.c-3582-        kfree(mgp->ss);
+./drivers/net/ethernet/myricom/myri10ge/myri10ge.mod.c-156-     { 0x37a0cba, "kfree" },
+./drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c:286:       synchronize_rcu(); /* before kfree(flow) */
+./drivers/net/ethernet/mellanox/mlxsw/core.c-1504-      kfree(rxl_item);
+./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6648- kfree(adapter->mbox_log);
+./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6650- kfree(adapter);
+./drivers/block/drbd/drbd_receiver.c-3804-      kfree(old_net_conf);
+./drivers/block/drbd/drbd_receiver.c-4176-                      kfree(old_disk_conf);
+./drivers/block/drbd/drbd_state.c-2074-         kfree(old_conf);
+./drivers/block/drbd/drbd_nl.c-1689-    kfree(old_disk_conf);
+./drivers/block/drbd/drbd_nl.c-2522-    kfree(old_net_conf);
+./drivers/block/drbd/drbd_nl.c-2935-            kfree(old_disk_conf);
+./drivers/mfd/dln2.c-178-               kfree(i);
+./drivers/staging/fwserial/fwserial.c-2122-     kfree(peer);
+<snip>
+
+--
+Vlad Rezki
