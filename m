@@ -2,159 +2,95 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64BFC35641
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C016C35641
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8348720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E15F20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYJPWxRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgBXEzT (ORCPT
+        id S1727186AbgBXE4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:55:19 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30530 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727186AbgBXEzT (ORCPT
+        Sun, 23 Feb 2020 23:56:41 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40720 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727189AbgBXE4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:55:19 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O4oL2W050797;
-        Sun, 23 Feb 2020 23:55:10 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb008tudv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 23 Feb 2020 23:55:10 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01O4pL9W005423;
-        Mon, 24 Feb 2020 04:55:09 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 2yaux6cqjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 04:55:09 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O4t9rY45023654
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 04:55:09 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1847FB2064;
-        Mon, 24 Feb 2020 04:55:09 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDCB5B205F;
-        Mon, 24 Feb 2020 04:55:08 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 04:55:08 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 39DCC2E3231; Mon, 24 Feb 2020 10:25:06 +0530 (IST)
-Date:   Mon, 24 Feb 2020 10:25:06 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH v2 1/5] powerpc: Move idle_loop_prolog()/epilog()
- functions to header file
-Message-ID: <20200224045506.GA12846@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
- <1582262314-8319-2-git-send-email-ego@linux.vnet.ibm.com>
- <87lfowt22z.fsf@linux.ibm.com>
+        Sun, 23 Feb 2020 23:56:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582520199;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ma1EjT0/cgYKBYRBzJpsYw4qpXSIefQrEzpAraMKVJo=;
+        b=JYJPWxROw4M5h7p65s8rRYiZQcVOSwKtpa9w3TDQP9sTJ73sdbLfxwZ8Hm2ZTgcgy6qW05
+        /SStKzzLas7tYjLJbkSr3BBbePnjRqBao80wvfVXGb0SbPeH5APsroaRwMpSW9i6sFnNe7
+        ZHJ2qHh53AkQI/aSIuoeZ6L1A4XJLFs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-vRlxWOaAPRG_qk-QUfcrmg-1; Sun, 23 Feb 2020 23:56:37 -0500
+X-MC-Unique: vRlxWOaAPRG_qk-QUfcrmg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1099800D54;
+        Mon, 24 Feb 2020 04:56:35 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-44.pek2.redhat.com [10.72.13.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 02CB55D9C9;
+        Mon, 24 Feb 2020 04:56:22 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 12:56:18 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Baoquan He <bhe@redhat.com>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Randy Wright <rwright@hpe.com>,
+        Myron Stowe <myron.stowe@redhat.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+Message-ID: <20200224045618.GA16543@dhcp-128-65.nay.redhat.com>
+References: <20191225192118.283637-1-kasong@redhat.com>
+ <20200222165631.GA213225@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87lfowt22z.fsf@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-23_07:2020-02-21,2020-02-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 impostorscore=0
- suspectscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240040
+In-Reply-To: <20200222165631.GA213225@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nathan,
-
-On Fri, Feb 21, 2020 at 09:03:16AM -0600, Nathan Lynch wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+Hi Bjorn,
+On 02/22/20 at 10:56am, Bjorn Helgaas wrote:
+> [+cc Khalid, Deepa, Randy, Dave, Myron]
 > 
-> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> >
-> > Currently prior to entering an idle state on a Linux Guest, the
-> > pseries cpuidle driver implement an idle_loop_prolog() and
-> > idle_loop_epilog() functions which ensure that idle_purr is correctly
-> > computed, and the hypervisor is informed that the CPU cycles have been
-> > donated.
-> >
-> > These prolog and epilog functions are also required in the default
-> > idle call, i.e pseries_lpar_idle(). Hence move these accessor
-> > functions to a common header file and call them from
-> > pseries_lpar_idle(). Since the existing header files such as
-> > asm/processor.h have enough clutter, create a new header file
-> > asm/idle.h.
-> >
-> > Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> > ---
-> >  arch/powerpc/include/asm/idle.h        | 27 +++++++++++++++++++++++++++
-> >  arch/powerpc/platforms/pseries/setup.c |  7 +++++--
-> >  drivers/cpuidle/cpuidle-pseries.c      | 24 +-----------------------
-> >  3 files changed, 33 insertions(+), 25 deletions(-)
-> >  create mode 100644 arch/powerpc/include/asm/idle.h
-> >
-> > diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
-> > new file mode 100644
-> > index 0000000..f32a7d8
-> > --- /dev/null
-> > +++ b/arch/powerpc/include/asm/idle.h
-> > @@ -0,0 +1,27 @@
-> > +#ifndef _ASM_POWERPC_IDLE_H
-> > +#define _ASM_POWERPC_IDLE_H
-> > +#include <asm/runlatch.h>
-> > +
-> > +static inline void idle_loop_prolog(unsigned long *in_purr)
-> > +{
-> > +	ppc64_runlatch_off();
-> > +	*in_purr = mfspr(SPRN_PURR);
-> > +	/*
-> > +	 * Indicate to the HV that we are idle. Now would be
-> > +	 * a good time to find other work to dispatch.
-> > +	 */
-> > +	get_lppaca()->idle = 1;
-> > +}
-> > +
-> > +static inline void idle_loop_epilog(unsigned long in_purr)
-> > +{
-> > +	u64 wait_cycles;
-> > +
-> > +	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
-> > +	wait_cycles += mfspr(SPRN_PURR) - in_purr;
-> > +	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-> > +	get_lppaca()->idle = 0;
-> > +
-> > +	ppc64_runlatch_on();
-> > +}
-> > +#endif
+> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
+> > There are reports about kdump hang upon reboot on some HPE machines,
+> > kernel hanged when trying to shutdown a PCIe port, an uncorrectable
+> > error occurred and crashed the system.
 > 
-> Looks fine and correct as a cleanup, but asm/include/idle.h and
-> idle_loop_prolog, idle_loop_epilog, strike me as too generic for
-> pseries-specific code.
+> Did we ever make progress on this?  This definitely sounds like a
+> problem that needs to be fixed, but I don't see a resolution here.
+> 
 
-Should it be prefixed with pseries , i.e pseries_idle_prolog()
-and pseries_idle_epilog() ?
+I'm not familar with the PCI details,  but if this only adds a quirk for
+kdump use and no other risks added then it should be good to have.
 
-Also, I am planning another round of cleanup to move all the
-idle-related declaration from asm/include/processor.h to
-asm/include/idle.h
+Or we can provide a kernel parameter for the quirk?  Then it is even
+limited to only be effective when in-kdump && the-param-is-used
 
+Anyway still prefer to people who know more about this area to evaluate
+the risk.
+
+Thanks
+Dave
 
