@@ -2,96 +2,88 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A06C35669
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD763C35641
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FC72067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:31:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3wDz0iS"
+	by mail.kernel.org (Postfix) with ESMTP id 99C6520828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582515564;
+	bh=JkrEc2MaNepQNF9f/dnwBAADKS3nNGfp1NS3WsPz978=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fDGd9sG8zRTsHKkQsS/ZUG01IzPw90ScEH/hDRmC/9WsjE8Q27tZUioF6w5Z40vOf
+	 MSVXzls2MlESlYH1JuYazO18W7/SM/J+zIlFa9FmhAXtLnVIAWU0UScQvf7m1h/ogf
+	 QYHQ8NU3qIcLt5Didqnvpb4Qz9yYSJxaHZzKpx80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgBXDbC (ORCPT
+        id S1727221AbgBXDjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 22:31:02 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34058 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbgBXDbC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 22:31:02 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j7so3476211plt.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 19:31:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Yejd20Vwzkjy8wctsJA53OKjv5gxUU+XuqGntcv4+CU=;
-        b=M3wDz0iS7qqef+rCSuMgCtuEz2fPfB0i2PQQPSDRrzLM71oR9VagSgkgIIH+/fmtyz
-         nAYbPEAUaPwa9yyiFLjrIpWiSBWdYHu/m3TZp+4X0zsnhc9mTl2kKrWWYSa+rQQ80JGa
-         fpnMuz2cYu8X/YaJeCZfLCxS+WM1p+5qYQWdUun8bDZP4JkFcH/8P0kH/zYLUTwWt/4Q
-         aVbZd81IuRb2N0kJYgAH9EDE3gGkbKembOjzSZJnTuQcNFlm/exeO+Js8Ja6Fbwv4gCp
-         reNy+jVi2UL3rY3pSzx4MKRU+TN2dxWEC2SVuJdif0mzpGS+M6otQ3oTIbAqqPMAUISj
-         4ZkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Yejd20Vwzkjy8wctsJA53OKjv5gxUU+XuqGntcv4+CU=;
-        b=TK+7l+8kZJIiGDc9gMKy7+3cCiBsNLNioik2db+VYrJ9/zX9u8zYi/7v62MB+l0diE
-         YaKMv6NW7Odk3Fmz6DPudWVVLyl80YSJPzn0d2payuVWTczObA9yXVLzFa9Ka7TYXxLa
-         O2Vw1XrJq9UWNazNloRFv4untV2kiTr+GOT0LfS0p2QEMgqGhyjd2gcWohWdKsAk85Dg
-         Z+LIJfxxe6JRNXr5bkqyWiftWEmPMjBjpvXgDQ21LCDN51ozC8nOV3a3WQf3owG612ha
-         3ZhVO9EHmdMxZhWoe+ArPesnp6IfkRyQCPoerRQJIRH/zsu2345rC38CRyZlC+jtAeKx
-         OPvA==
-X-Gm-Message-State: APjAAAV1njAtK8Csxb9P+dyRNJZQBYfxUhYLqoi/xEu5QLu5ugAu4211
-        BQ2643dEkOGeYQhFtg4fl0GBNJBPsZA=
-X-Google-Smtp-Source: APXvYqz09B0TtrBg/YMiwim1nibuNRPTxkXazNNiOqJVMtuRX4OI6AZ22CCf2Ygv2e3wRNdpB+zIAw==
-X-Received: by 2002:a17:90a:7f93:: with SMTP id m19mr17247993pjl.92.1582515061569;
-        Sun, 23 Feb 2020 19:31:01 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id a17sm10375623pfo.146.2020.02.23.19.31.00
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 23 Feb 2020 19:31:01 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] sched/pelt: use shift operation instead of division operation
-Date:   Mon, 24 Feb 2020 11:30:55 +0800
-Message-Id: <1582515055-14515-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sun, 23 Feb 2020 22:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727166AbgBXDjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 22:39:23 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8711620658;
+        Mon, 24 Feb 2020 03:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582515562;
+        bh=JkrEc2MaNepQNF9f/dnwBAADKS3nNGfp1NS3WsPz978=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hRRB/vVqLw+c4mdGgtuPTPGB088ciHEohbGC1mZe9LVWhf5auaqrw0Yw9DLW+eVNY
+         azTqZg+KuarjySjwk3i8iVbDsApgXZNFWanZ2ISkdUfTdCEOSOPsT1cR1zd6O6FuLK
+         hh9ISC3IqCMHsrWn+E+2dmI+qjOMk2TCgXgLMkog=
+Date:   Mon, 24 Feb 2020 11:39:11 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     sboyd@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        abel.vesa@nxp.com, leonard.crestez@nxp.com, kernel@pengutronix.de,
+        linux-imx@nxp.com, aisheng.dong@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anson.huang@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de
+Subject: Re: [PATCH RESEND v3 0/4] clk: imx: imx8m: fix a53 cpu clock
+Message-ID: <20200224033911.GH27688@dragon>
+References: <1582107429-21123-1-git-send-email-peng.fan@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582107429-21123-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+On Wed, Feb 19, 2020 at 06:17:05PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> V3:
+>  Rebased to Shawn's for-next branch
+>  Typo fix
+> 
+> V2:
+>  Fix i.MX8MP build
+>  Update cover letter, i.MX7D not have this issue 
+> 
+> The A53 CCM clk root only accepts input up to 1GHz, CCM A53 root
+> signoff timing is 1Ghz, however the A53 core which sources from CCM
+> root could run above 1GHz which voilates the CCM.
+> 
+> There is a CORE_SEL slice before A53 core, we need configure the
+> CORE_SEL slice source from ARM PLL, not A53 CCM clk root.
+> 
+> The A53 CCM clk root should only be used when need to change ARM PLL
+> frequency.
+> 
+> Peng Fan (4):
+>   clk: imx: imx8mq: fix a53 cpu clock
+>   clk: imx: imx8mm: fix a53 cpu clock
+>   clk: imx: imx8mn: fix a53 cpu clock
+>   clk: imx: imx8mp: fix a53 cpu clock
 
-Use shift operation to calculate the periods instead of division,
-since shift operation is more efficient than division operation.
-
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- kernel/sched/pelt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index bd006b7..ac79f8e 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -114,7 +114,7 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
- 	u64 periods;
- 
- 	delta += sa->period_contrib;
--	periods = delta / 1024; /* A period is 1024us (~1ms) */
-+	periods = delta >> 10; /* A period is 1024us (~1ms) */
- 
- 	/*
- 	 * Step 1: decay old *_sum if we crossed period boundaries.
--- 
-1.9.1
-
+Applied all, thanks.
