@@ -2,163 +2,106 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A30C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A81FC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B63620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A96520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vt4uH1X7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UwKpSGkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgBXHJe (ORCPT
+        id S1727185AbgBXHOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:09:34 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52895 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgBXHJe (ORCPT
+        Mon, 24 Feb 2020 02:14:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20298 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725792AbgBXHOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:09:34 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep11so3764969pjb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:09:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=/uPpAa8jWLyAfBp8dYHRA7/+Um011bRC49XujdAf5Gw=;
-        b=Vt4uH1X74Vz34W4kXqEU9GjpdIZaRNOAYiAWTOQ1UMED+e4JPXHiBpOaVyjcaVd6Xr
-         mwMnRNpFFPHTP7Gh8z4MbfmYwCoLizdEfNCeHaaBFRVzWWW3uAGRXaHOh8xOlsePS3Xk
-         KJndJ4aA72+df4iyDsnn1aOnF+Q9uxP6u4F5HkUf+K6q1mKovKBf66+1zFlqN1LyzOa8
-         LbMnvdTdK3XIXzEvXZjgnMxWI/yQ+gXwotfTyHJ3RLQEjWJPxj5t+Egdz+lUhJo9dRfa
-         u/D2StJKNQqVIu12NKg5SEGQNT5MF+9ByQWsSxLoCgpc2V2hImqq6MQgaUExsrNZq+iP
-         F8Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/uPpAa8jWLyAfBp8dYHRA7/+Um011bRC49XujdAf5Gw=;
-        b=VBBvNo+j4WGMs1bUPXmENXV8I5DXnirIsfHbB/g0w8PzJ+CQu8TbX0HNsNLa9scA2B
-         DJwPkZMyoDagHdYn0oeANG+qcnFIKCHwQRR982YDh8jUBDWTJWdxkysaMd5E2QOkTZA1
-         8ZtCPS0wtuFVeYFu8vgHxtmAQprat9w8Gw2CI0wc4Ar9ycRjEAbAcyVWq3NTAIsK0CHn
-         3MKXpys0MDRe9FCSaZ9BF/oegUvInBYvLwsuifhh9LD9FjqFEVUmjXzBFmmLNQgX3rbd
-         0iNrTmnh5pmpUimB0uDn5O9s3eyQ6mSTj0TZwkQgJQkW8JU+B2U+jmZQ8YoB69TdRU5A
-         LPtQ==
-X-Gm-Message-State: APjAAAXwwtzhNUTVzBPbtqEkwL9ic8c6PNc5JGQ8JmgSgKDUSJFmBeGG
-        y9oHAMfDoq3x1dYmeWMDLEE0bg==
-X-Google-Smtp-Source: APXvYqx0OSRTVCSeiYO1FV+Igbe6EP8kYjyMiN+xj3uIr/PdSbQKLLUBdVhv8Rkb7x00XxnT3mbpQA==
-X-Received: by 2002:a17:90a:d789:: with SMTP id z9mr18855684pju.5.1582528173696;
-        Sun, 23 Feb 2020 23:09:33 -0800 (PST)
-Received: from localhost.localdomain (li1566-229.members.linode.com. [139.162.86.229])
-        by smtp.gmail.com with ESMTPSA id d24sm11522905pfq.75.2020.02.23.23.09.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 23 Feb 2020 23:09:32 -0800 (PST)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH] uacce: unmap remaining mmapping from user space
-Date:   Mon, 24 Feb 2020 15:06:56 +0800
-Message-Id: <1582528016-2873-1-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 24 Feb 2020 02:14:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582528470;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=shbhF5QPWUZF4FXtBT/Y7FxOTeIlf15w2VQZ89Q+vRY=;
+        b=UwKpSGkPGh7UNxT74qJIn4FObT7Wn/jQ1aIzuxUWRXWRnUHq3XnFxTlfjQ4DabZcXo6bfY
+        2mU1CRKQiuKw5872w2bUqTEiOkfyserutaJ48qHePvl7vR5uQgptb1iqDGe5iWCZHv+rOB
+        m6/v2bZIVfpsuaqi+1peTzwWhWoQhu4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-OTADVYNTP1KgIKmAqwLMEg-1; Mon, 24 Feb 2020 02:14:28 -0500
+X-MC-Unique: OTADVYNTP1KgIKmAqwLMEg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC3CE185734F;
+        Mon, 24 Feb 2020 07:14:26 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-44.pek2.redhat.com [10.72.13.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 336B15C105;
+        Mon, 24 Feb 2020 07:14:23 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 15:14:19 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: Re: [PATCH] x86/kexec: do not reserve kexec setup_data in kexec e820
+ table
+Message-ID: <20200224071419.GA18237@dhcp-128-65.nay.redhat.com>
+References: <20200212110424.GA2938@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212110424.GA2938@dhcp-128-65.nay.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When uacce parent device module is removed, user app may
-still keep the mmaped area, which can be accessed unsafely.
-When rmmod, Parent device drvier will call uacce_remove,
-which unmap all remaining mapping from user space for safety.
-VM_FAULT_SIGBUS is also reported to user space accordingly.
+On 02/12/20 at 07:04pm, Dave Young wrote:
+> The e820 table for kexec kernel always takes setup_data as reserved.
+> It is reasonable for the setup_data passed by the 1st kernel boot loader,
+> for example SETUP_PCI etc.  But SETUP_EFI is used by kexec itself to
+> enable EFI in 2nd kernel, also kexec setups it every time. Thus it
+> is pointless to reserve kexec prepared setup_data.
+> 
+> 1st physical boot: no SETUP_EFI
+> kexec load new kernel and prepare a SETUP_EFI setup_data, then reboot
+>  -> 2nd kernel sees SETUP_EFI, reserves in both e820 and kexec e820
+>     another kexec load prepare a new SETUP_EFI, then reboot
+>     -> 3rd kernel has two SETUP_EFI ranges reserved
+>        -> and so on..
+> 
+> Thus skip SETUP_EFI while reserving setup_data for kexec kernel.
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  arch/x86/kernel/e820.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> --- linux-x86.orig/arch/x86/kernel/e820.c
+> +++ linux-x86/arch/x86/kernel/e820.c
+> @@ -999,7 +999,9 @@ void __init e820__reserve_setup_data(voi
+>  	while (pa_data) {
+>  		data = early_memremap(pa_data, sizeof(*data));
+>  		e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+> -		e820__range_update_kexec(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+> +		/* Skip kexec passed setup_data */
+> +		if (data->type != SETUP_EFI)
+> +			e820__range_update_kexec(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+>  
+>  		if (data->type == SETUP_INDIRECT &&
+>  		    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT) {
 
-Suggested-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/misc/uacce/uacce.c | 17 +++++++++++++++++
- include/linux/uacce.h      |  2 ++
- 2 files changed, 19 insertions(+)
+Ping, can someone review this? It caused fragmented memory in kexec
+kernel also waste memory.
 
-diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-index ffced4d..1bcc5e6 100644
---- a/drivers/misc/uacce/uacce.c
-+++ b/drivers/misc/uacce/uacce.c
-@@ -224,6 +224,7 @@ static int uacce_fops_open(struct inode *inode, struct file *filep)
- 
- 	init_waitqueue_head(&q->wait);
- 	filep->private_data = q;
-+	uacce->inode = inode;
- 	q->state = UACCE_Q_INIT;
- 
- 	return 0;
-@@ -253,6 +254,14 @@ static int uacce_fops_release(struct inode *inode, struct file *filep)
- 	return 0;
- }
- 
-+static vm_fault_t uacce_vma_fault(struct vm_fault *vmf)
-+{
-+	if (vmf->flags & (FAULT_FLAG_MKWRITE | FAULT_FLAG_WRITE))
-+		return VM_FAULT_SIGBUS;
-+
-+	return 0;
-+}
-+
- static void uacce_vma_close(struct vm_area_struct *vma)
- {
- 	struct uacce_queue *q = vma->vm_private_data;
-@@ -265,6 +274,7 @@ static void uacce_vma_close(struct vm_area_struct *vma)
- }
- 
- static const struct vm_operations_struct uacce_vm_ops = {
-+	.fault = uacce_vma_fault,
- 	.close = uacce_vma_close,
- };
- 
-@@ -585,6 +595,13 @@ void uacce_remove(struct uacce_device *uacce)
- 		cdev_device_del(uacce->cdev, &uacce->dev);
- 	xa_erase(&uacce_xa, uacce->dev_id);
- 	put_device(&uacce->dev);
-+
-+	/*
-+	 * unmap remainning mapping from user space, preventing user still
-+	 * access the mmaped area while parent device is already removed
-+	 */
-+	if (uacce->inode)
-+		unmap_mapping_range(uacce->inode->i_mapping, 0, 0, 1);
- }
- EXPORT_SYMBOL_GPL(uacce_remove);
- 
-diff --git a/include/linux/uacce.h b/include/linux/uacce.h
-index 904a461..0e215e6 100644
---- a/include/linux/uacce.h
-+++ b/include/linux/uacce.h
-@@ -98,6 +98,7 @@ struct uacce_queue {
-  * @priv: private pointer of the uacce
-  * @mm_list: list head of uacce_mm->list
-  * @mm_lock: lock for mm_list
-+ * @inode: core vfs
-  */
- struct uacce_device {
- 	const char *algs;
-@@ -113,6 +114,7 @@ struct uacce_device {
- 	void *priv;
- 	struct list_head mm_list;
- 	struct mutex mm_lock;
-+	struct inode *inode;
- };
- 
- /**
--- 
-2.7.4
+Thanks
+Dave
 
