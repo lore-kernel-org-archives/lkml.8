@@ -2,236 +2,77 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B008AC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65187C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7690620828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBD820828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:03:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="g1I9RIlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgBXMBa (ORCPT
+        id S1727429AbgBXMDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:01:30 -0500
-Received: from mga12.intel.com ([192.55.52.136]:52215 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgBXMBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:01:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 04:01:29 -0800
-X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
-   d="scan'208";a="230626314"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.151]) ([10.249.174.151])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Feb 2020 04:01:26 -0800
-Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
- specific VM EXIT
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200224020751.1469-1-xiaoyao.li@intel.com>
- <20200224020751.1469-2-xiaoyao.li@intel.com>
- <87lfosp9xs.fsf@vitty.brq.redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
-Date:   Mon, 24 Feb 2020 20:01:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 07:03:14 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39532 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbgBXMDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:03:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t5KPllfCzU4AasIlRCx7IzfWUIVfM/xDWS4+N7wn5YA=; b=g1I9RIlPEPLzZWdOSbIZxCjpj
+        LpMV7CqOwjfFjrIcnMazJf2/Mmg90x8pv9//qmp8jQeSXfZjcEgb41hEb0Cpa+JHdndB/RDrHMXEl
+        kWz02pgsYVHwIV4OEGIvsFv7Zm5QioaBlb2MUhpFH7eu7fQoVzymGUxZZ0fMCIkyqDk1cT36KuBGE
+        iO73eFzbLIc6kluM0d8NpnNsm0iSbUFe1j3WLJFgVwOe69LzYFiPwTvkfQdqP98jFOyoqtFohXZQJ
+        NGcvXqREeIXSER4KikTrW7pnujpKNi56cCH2F1FGoJqfsDl2o/y/N349pCffazDf2+vgVaH715U5T
+        EkbTycHjg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56262)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j6CS5-0002Xr-Ky; Mon, 24 Feb 2020 12:03:09 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j6CRz-0006P7-9v; Mon, 24 Feb 2020 12:03:03 +0000
+Date:   Mon, 24 Feb 2020 12:03:03 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     yifeng wu <y1feng.wu1234@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: Subject: [PATCH] arm/kernel/head.S: optimize
+ __create_page_tables function
+Message-ID: <20200224120303.GQ25745@shell.armlinux.org.uk>
+References: <CAKy1Xqcnkfm7Dn9UvJ7Ufio-szQ75kbGS+GurBjuUFBydi21GA@mail.gmail.com>
+ <20200224110508.GP25745@shell.armlinux.org.uk>
+ <CAKy1XqdBt=LNpk-7Rt2LXU3tky=fS9jHxD0DV5CKh4wYWxFVRQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87lfosp9xs.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKy1XqdBt=LNpk-7Rt2LXU3tky=fS9jHxD0DV5CKh4wYWxFVRQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/2020 6:16 PM, Vitaly Kuznetsov wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> 
->> Current kvm uses the 32-bit exit reason to check if it's any specific VM
->> EXIT, however only the low 16-bit of VM EXIT REASON acts as the basic
->> exit reason.
->>
->> Introduce Macro basic(exit_reaso)
-> 
-> "exit_reason"
+Hi,
 
-Ah, will correct it in v2.
+On Mon, Feb 24, 2020 at 07:54:07PM +0800, yifeng wu wrote:
+> Thank you very much for your reply.
+> I have tested on my machine. It takes about 0.5 seconds to copy the memory
+> (16M size) with "str" instruction, and only 0.1 seconds with "stmia"
 
->>   to help retrieve the basic exit reason
->> from VM EXIT REASON, and use the basic exit reason for checking and
->> indexing the exit hanlder.
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/kvm/vmx/vmx.c | 44 ++++++++++++++++++++++--------------------
->>   arch/x86/kvm/vmx/vmx.h |  2 ++
->>   2 files changed, 25 insertions(+), 21 deletions(-)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 9a6664886f2e..85da72d4dc92 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -1584,7 +1584,7 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
->>   	 * i.e. we end up advancing IP with some random value.
->>   	 */
->>   	if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
->> -	    to_vmx(vcpu)->exit_reason != EXIT_REASON_EPT_MISCONFIG) {
->> +	    basic(to_vmx(vcpu)->exit_reason) != EXIT_REASON_EPT_MISCONFIG) {
-> 
-> "basic" word is probably 'too basic' to be used for this purpose. Even
-> if we need a macro for it (I'm not really convinced it improves the
-> readability), I'd suggest we name it 'basic_exit_reason()' instead.
+ITYM 16k.  You say "copy" but we're setting memory to zero.  I'm quite
+surprised by that difference, which CPU was this measured on?
 
-Agreed.
-
->>   		rip = kvm_rip_read(vcpu);
->>   		rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
->>   		kvm_rip_write(vcpu, rip);
->> @@ -5797,6 +5797,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
->>   {
->>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
->>   	u32 exit_reason = vmx->exit_reason;
->> +	u16 basic_exit_reason = basic(exit_reason);
-> 
-> I don't think renaming local variable is needed, let's just do
-> 
-> 'u16 exit_reason = basic_exit_reason(vmx->exit_reason)' and keep the
-> rest of the code as-is.
-
-No, we can't do this.
-
-It's not just renaming local variable, the full 32-bit exit reason is 
-used elsewhere in this function that needs the upper 16-bit.
-
-Here variable basic_exit_reason is added for the cases where only basic 
-exit reason number is needed.
-
->>   	u32 vectoring_info = vmx->idt_vectoring_info;
->>   
->>   	trace_kvm_exit(exit_reason, vcpu, KVM_ISA_VMX);
->> @@ -5842,17 +5843,17 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
->>   	 * will cause infinite loop.
->>   	 */
->>   	if ((vectoring_info & VECTORING_INFO_VALID_MASK) &&
->> -			(exit_reason != EXIT_REASON_EXCEPTION_NMI &&
->> -			exit_reason != EXIT_REASON_EPT_VIOLATION &&
->> -			exit_reason != EXIT_REASON_PML_FULL &&
->> -			exit_reason != EXIT_REASON_TASK_SWITCH)) {
->> +			(basic_exit_reason != EXIT_REASON_EXCEPTION_NMI &&
->> +			 basic_exit_reason != EXIT_REASON_EPT_VIOLATION &&
->> +			 basic_exit_reason != EXIT_REASON_PML_FULL &&
->> +			 basic_exit_reason != EXIT_REASON_TASK_SWITCH)) {
->>   		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
->>   		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_DELIVERY_EV;
->>   		vcpu->run->internal.ndata = 3;
->>   		vcpu->run->internal.data[0] = vectoring_info;
->>   		vcpu->run->internal.data[1] = exit_reason;
->>   		vcpu->run->internal.data[2] = vcpu->arch.exit_qualification;
->> -		if (exit_reason == EXIT_REASON_EPT_MISCONFIG) {
->> +		if (basic_exit_reason == EXIT_REASON_EPT_MISCONFIG) {
->>   			vcpu->run->internal.ndata++;
->>   			vcpu->run->internal.data[3] =
->>   				vmcs_read64(GUEST_PHYSICAL_ADDRESS);
->> @@ -5884,32 +5885,32 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
->>   		return 1;
->>   	}
->>   
->> -	if (exit_reason >= kvm_vmx_max_exit_handlers)
->> +	if (basic_exit_reason >= kvm_vmx_max_exit_handlers)
->>   		goto unexpected_vmexit;
->>   #ifdef CONFIG_RETPOLINE
->> -	if (exit_reason == EXIT_REASON_MSR_WRITE)
->> +	if (basic_exit_reason == EXIT_REASON_MSR_WRITE)
->>   		return kvm_emulate_wrmsr(vcpu);
->> -	else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
->> +	else if (basic_exit_reason == EXIT_REASON_PREEMPTION_TIMER)
->>   		return handle_preemption_timer(vcpu);
->> -	else if (exit_reason == EXIT_REASON_INTERRUPT_WINDOW)
->> +	else if (basic_exit_reason == EXIT_REASON_INTERRUPT_WINDOW)
->>   		return handle_interrupt_window(vcpu);
->> -	else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
->> +	else if (basic_exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
->>   		return handle_external_interrupt(vcpu);
->> -	else if (exit_reason == EXIT_REASON_HLT)
->> +	else if (basic_exit_reason == EXIT_REASON_HLT)
->>   		return kvm_emulate_halt(vcpu);
->> -	else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
->> +	else if (basic_exit_reason == EXIT_REASON_EPT_MISCONFIG)
->>   		return handle_ept_misconfig(vcpu);
->>   #endif
->>   
->> -	exit_reason = array_index_nospec(exit_reason,
->> +	basic_exit_reason = array_index_nospec(basic_exit_reason,
->>   					 kvm_vmx_max_exit_handlers);
->> -	if (!kvm_vmx_exit_handlers[exit_reason])
->> +	if (!kvm_vmx_exit_handlers[basic_exit_reason])
->>   		goto unexpected_vmexit;
->>   
->> -	return kvm_vmx_exit_handlers[exit_reason](vcpu);
->> +	return kvm_vmx_exit_handlers[basic_exit_reason](vcpu);
->>   
->>   unexpected_vmexit:
->> -	vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n", exit_reason);
->> +	vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n", basic_exit_reason);
->>   	dump_vmcs();
->>   	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
->>   	vcpu->run->internal.suberror =
->> @@ -6241,13 +6242,14 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
->>   	enum exit_fastpath_completion *exit_fastpath)
->>   {
->>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
->> +	u16 basic_exit_reason = basic(vmx->exit_reason);
-> 
-> Here I'd suggest we also use the same
-> 
-> 'u16 exit_reason = basic_exit_reason(vmx->exit_reason)'
-> 
-> as above.
-> 
->>   
->> -	if (vmx->exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
->> +	if (basic_exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
->>   		handle_external_interrupt_irqoff(vcpu);
->> -	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
->> +	else if (basic_exit_reason == EXIT_REASON_EXCEPTION_NMI)
->>   		handle_exception_nmi_irqoff(vmx);
->>   	else if (!is_guest_mode(vcpu) &&
->> -		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
->> +		 basic_exit_reason == EXIT_REASON_MSR_WRITE)
->>   		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
->>   }
->>   
->> @@ -6621,7 +6623,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>   	vmx->idt_vectoring_info = 0;
->>   
->>   	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
->> -	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
->> +	if (basic(vmx->exit_reason) == EXIT_REASON_MCE_DURING_VMENTRY)
->>   		kvm_machine_check();
->>   
->>   	if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
->> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->> index 7f42cf3dcd70..c6ba33eedb59 100644
->> --- a/arch/x86/kvm/vmx/vmx.h
->> +++ b/arch/x86/kvm/vmx/vmx.h
->> @@ -22,6 +22,8 @@ extern u32 get_umwait_control_msr(void);
->>   
->>   #define X2APIC_MSR(r) (APIC_BASE_MSR + ((r) >> 4))
->>   
->> +#define basic(exit_reason) ((u16)(exit_reason))
->> +
->>   #ifdef CONFIG_X86_64
->>   #define NR_SHARED_MSRS	7
->>   #else
-> 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
