@@ -2,147 +2,327 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0394C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC363C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F072080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:42:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ORqQndiu"
+	by mail.kernel.org (Postfix) with ESMTP id B84FC2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgBXNma (ORCPT
+        id S1727393AbgBXNob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:42:30 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:25765 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbgBXNm2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:42:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582551748; x=1614087748;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=my/Ok6JPA42HLxZspCT15M0BUA+/ezeccCHn6qhmTlM=;
-  b=ORqQndiuBEDA9UyCYxVu0G7Z5s+udc9tGnNdB1gNvepoZexLZ9k57nv1
-   YS28Br046u8Gfo9Ni7WxjSJutlHH2dKxtxBDH0mHvyqlzY7izdxsk6u9J
-   1dxL/oWznhq/Rkd2yAViWAgI4giHAQ0SyPgEU3u9NoorfJcj9xKZPv0DB
-   U=;
-IronPort-SDR: 92By6bVHUuyFbMYjsjp3guiM2f9wJzCpSQCIiWb35ygw2NxszMLBYZYvmEnYNwv3StgEXzfo+T
- 6tHEuDQmmwpA==
-X-IronPort-AV: E=Sophos;i="5.70,480,1574121600"; 
-   d="scan'208";a="17903947"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 24 Feb 2020 13:42:13 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id F0C87A1954;
-        Mon, 24 Feb 2020 13:42:11 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 24 Feb 2020 13:42:11 +0000
-Received: from uf25486d27d2d5b.ant.amazon.com (10.43.161.8) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 24 Feb 2020 13:42:01 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
-        <talel@amazon.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <eitan@amazon.com>
-Subject: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory Controller EDAC
-Date:   Mon, 24 Feb 2020 15:41:31 +0200
-Message-ID: <20200224134132.23924-2-talel@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200224134132.23924-1-talel@amazon.com>
-References: <20200224134132.23924-1-talel@amazon.com>
+        Mon, 24 Feb 2020 08:44:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47080 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgBXNob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:44:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 02C22AC67;
+        Mon, 24 Feb 2020 13:44:28 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH v2] ceph: re-org copy_file_range and fix some error paths
+Date:   Mon, 24 Feb 2020 13:44:32 +0000
+Message-Id: <20200224134432.25888-1-lhenriques@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.8]
-X-ClientProxiedBy: EX13D35UWC002.ant.amazon.com (10.43.162.218) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+This patch re-organizes copy_file_range, trying to fix a few issues in the
+error handling.  Here's the summary:
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+- Abort copy if initial do_splice_direct() returns fewer bytes than
+  requested.
+
+- Move the 'size' initialization (with i_size_read()) further down in the
+  code, after the initial call to do_splice_direct().  This avoids issues
+  with a possibly stale value if a manual copy is done.
+
+- Move the object copy loop into a separate function.  This makes it
+  easier to handle errors (e.g, dirtying caps and updating the MDS
+  metadata if only some objects have been copied before an error has
+  occurred).
+
+- Added calls to ceph_oloc_destroy() to avoid leaking memory with src_oloc
+  and dst_oloc
+
+- After the object copy loop, the new file size to be reported to the MDS
+  (if there's file size change) is now the actual file size, and not the
+  size after an eventual extra manual copy.
+
+- Added a few dout() to show the number of bytes copied in the two manual
+  copies and in the object copy loop.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 ---
- .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-new file mode 100644
-index 000000000000..20505f37c9f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amazon's Annapurna Labs Memory Controller EDAC
-+
-+maintainers:
-+  - Talel Shenhar <talel@amazon.com>
-+  - Talel Shenhar <talelshenhar@gmail.com>
-+
-+description: |
-+  EDAC node is defined to describe on-chip error detection and correction for
-+  Amazon's Annapurna Labs Memory Controller.
-+
-+properties:
-+
-+  compatible:
-+    const: amazon,al-mc-edac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: uncorrectable error interrupt
-+      - description: correctable error interrupt
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ue
-+      - const: ce
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    edac@f0080000 {
-+      compatible = "amazon,al-mc-edac";
-+      reg = <0x0 0xf0080000 0x0 0x00010000>;
-+      interrupt-parent = <&amazon_al_system_fabric>;
-+      interrupt-names = "ue";
-+      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+    };
--- 
-2.17.1
+Just a respin including Jeff's suggestions from initial post.
 
+Changes since v1:
+
+- Don't bother trying a second splice once we fail during the remote
+  object copies; let user-space retry instead.
+
+Cheers,
+--
+Luis
+
+ fs/ceph/file.c | 173 ++++++++++++++++++++++++++++---------------------
+ 1 file changed, 100 insertions(+), 73 deletions(-)
+
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index c3b8e8e0bf17..e0bae6b71d7b 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1931,6 +1931,71 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+ 	return 0;
+ }
+ 
++static ssize_t ceph_do_objects_copy(struct ceph_inode_info *src_ci, u64 *src_off,
++				    struct ceph_inode_info *dst_ci, u64 *dst_off,
++				    struct ceph_fs_client *fsc,
++				    size_t len, unsigned int flags)
++{
++	struct ceph_object_locator src_oloc, dst_oloc;
++	struct ceph_object_id src_oid, dst_oid;
++	size_t bytes = 0;
++	u64 src_objnum, src_objoff, dst_objnum, dst_objoff;
++	u32 src_objlen, dst_objlen;
++	u32 object_size = src_ci->i_layout.object_size;
++	int ret;
++
++	src_oloc.pool = src_ci->i_layout.pool_id;
++	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
++	dst_oloc.pool = dst_ci->i_layout.pool_id;
++	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
++
++	while (len >= object_size) {
++		ceph_calc_file_object_mapping(&src_ci->i_layout, *src_off,
++					      object_size, &src_objnum,
++					      &src_objoff, &src_objlen);
++		ceph_calc_file_object_mapping(&dst_ci->i_layout, *dst_off,
++					      object_size, &dst_objnum,
++					      &dst_objoff, &dst_objlen);
++		ceph_oid_init(&src_oid);
++		ceph_oid_printf(&src_oid, "%llx.%08llx",
++				src_ci->i_vino.ino, src_objnum);
++		ceph_oid_init(&dst_oid);
++		ceph_oid_printf(&dst_oid, "%llx.%08llx",
++				dst_ci->i_vino.ino, dst_objnum);
++		/* Do an object remote copy */
++		ret = ceph_osdc_copy_from(&fsc->client->osdc,
++					  src_ci->i_vino.snap, 0,
++					  &src_oid, &src_oloc,
++					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
++					  CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
++					  &dst_oid, &dst_oloc,
++					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
++					  CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
++					  dst_ci->i_truncate_seq,
++					  dst_ci->i_truncate_size,
++					  CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
++		if (ret) {
++			if (ret == -EOPNOTSUPP) {
++				fsc->have_copy_from2 = false;
++				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
++			}
++			dout("ceph_osdc_copy_from returned %d\n", ret);
++			if (!bytes)
++				bytes = ret;
++			goto out;
++		}
++		len -= object_size;
++		bytes += object_size;
++		*src_off += object_size;
++		*dst_off += object_size;
++	}
++
++out:
++	ceph_oloc_destroy(&src_oloc);
++	ceph_oloc_destroy(&dst_oloc);
++	return bytes;
++}
++
+ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 				      struct file *dst_file, loff_t dst_off,
+ 				      size_t len, unsigned int flags)
+@@ -1941,14 +2006,11 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+-	struct ceph_object_locator src_oloc, dst_oloc;
+-	struct ceph_object_id src_oid, dst_oid;
+-	loff_t endoff = 0, size;
+-	ssize_t ret = -EIO;
++	loff_t size;
++	ssize_t ret = -EIO, bytes;
+ 	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+-	u32 src_objlen, dst_objlen, object_size;
++	u32 src_objlen, dst_objlen;
+ 	int src_got = 0, dst_got = 0, err, dirty;
+-	bool do_final_copy = false;
+ 
+ 	if (src_inode->i_sb != dst_inode->i_sb) {
+ 		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+@@ -2026,22 +2088,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	if (ret < 0)
+ 		goto out_caps;
+ 
+-	size = i_size_read(dst_inode);
+-	endoff = dst_off + len;
+-
+ 	/* Drop dst file cached pages */
+ 	ret = invalidate_inode_pages2_range(dst_inode->i_mapping,
+ 					    dst_off >> PAGE_SHIFT,
+-					    endoff >> PAGE_SHIFT);
++					    (dst_off + len) >> PAGE_SHIFT);
+ 	if (ret < 0) {
+ 		dout("Failed to invalidate inode pages (%zd)\n", ret);
+ 		ret = 0; /* XXX */
+ 	}
+-	src_oloc.pool = src_ci->i_layout.pool_id;
+-	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
+-	dst_oloc.pool = dst_ci->i_layout.pool_id;
+-	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
+-
+ 	ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+ 				      src_ci->i_layout.object_size,
+ 				      &src_objnum, &src_objoff, &src_objlen);
+@@ -2060,6 +2114,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	 * starting at the src_off
+ 	 */
+ 	if (src_objoff) {
++		dout("Initial partial copy of %u bytes\n", src_objlen);
++
+ 		/*
+ 		 * we need to temporarily drop all caps as we'll be calling
+ 		 * {read,write}_iter, which will get caps again.
+@@ -2067,8 +2123,9 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 		put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+ 		ret = do_splice_direct(src_file, &src_off, dst_file,
+ 				       &dst_off, src_objlen, flags);
+-		if (ret < 0) {
+-			dout("do_splice_direct returned %d\n", err);
++		/* Abort on short copies or on error */
++		if (ret < src_objlen) {
++			dout("Failed partial copy (%zd)\n", ret);
+ 			goto out;
+ 		}
+ 		len -= ret;
+@@ -2081,62 +2138,29 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 		if (err < 0)
+ 			goto out_caps;
+ 	}
+-	object_size = src_ci->i_layout.object_size;
+-	while (len >= object_size) {
+-		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+-					      object_size, &src_objnum,
+-					      &src_objoff, &src_objlen);
+-		ceph_calc_file_object_mapping(&dst_ci->i_layout, dst_off,
+-					      object_size, &dst_objnum,
+-					      &dst_objoff, &dst_objlen);
+-		ceph_oid_init(&src_oid);
+-		ceph_oid_printf(&src_oid, "%llx.%08llx",
+-				src_ci->i_vino.ino, src_objnum);
+-		ceph_oid_init(&dst_oid);
+-		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+-				dst_ci->i_vino.ino, dst_objnum);
+-		/* Do an object remote copy */
+-		err = ceph_osdc_copy_from(
+-			&src_fsc->client->osdc,
+-			src_ci->i_vino.snap, 0,
+-			&src_oid, &src_oloc,
+-			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+-			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+-			&dst_oid, &dst_oloc,
+-			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+-			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+-			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+-			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+-		if (err) {
+-			if (err == -EOPNOTSUPP) {
+-				src_fsc->have_copy_from2 = false;
+-				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
+-			}
+-			dout("ceph_osdc_copy_from returned %d\n", err);
+-			if (!ret)
+-				ret = err;
+-			goto out_caps;
+-		}
+-		len -= object_size;
+-		src_off += object_size;
+-		dst_off += object_size;
+-		ret += object_size;
+-	}
+ 
+-	if (len)
+-		/* We still need one final local copy */
+-		do_final_copy = true;
++	size = i_size_read(dst_inode);
++	bytes = ceph_do_objects_copy(src_ci, &src_off, dst_ci, &dst_off,
++				     src_fsc, len, flags);
++	if (bytes <= 0) {
++		if (!ret)
++			ret = bytes;
++		goto out_caps;
++	}
++	dout("Copied %zu bytes out of %zu\n", bytes, len);
++	len -= bytes;
++	ret += bytes;
+ 
+ 	file_update_time(dst_file);
+ 	inode_inc_iversion_raw(dst_inode);
+ 
+-	if (endoff > size) {
++	if (dst_off > size) {
+ 		int caps_flags = 0;
+ 
+ 		/* Let the MDS know about dst file size change */
+-		if (ceph_quota_is_max_bytes_approaching(dst_inode, endoff))
++		if (ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
+ 			caps_flags |= CHECK_CAPS_NODELAY;
+-		if (ceph_inode_set_size(dst_inode, endoff))
++		if (ceph_inode_set_size(dst_inode, dst_off))
+ 			caps_flags |= CHECK_CAPS_AUTHONLY;
+ 		if (caps_flags)
+ 			ceph_check_caps(dst_ci, caps_flags, NULL);
+@@ -2152,15 +2176,18 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ out_caps:
+ 	put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+ 
+-	if (do_final_copy) {
+-		err = do_splice_direct(src_file, &src_off, dst_file,
+-				       &dst_off, len, flags);
+-		if (err < 0) {
+-			dout("do_splice_direct returned %d\n", err);
+-			goto out;
+-		}
+-		len -= err;
+-		ret += err;
++	/*
++	 * Do the final manual copy if we still have some bytes left, unless
++	 * there were errors in remote object copies (len >= object_size).
++	 */
++	if (len && (len < src_ci->i_layout.object_size)) {
++		dout("Final partial copy of %zu bytes\n", len);
++		bytes = do_splice_direct(src_file, &src_off, dst_file,
++					 &dst_off, len, flags);
++		if (bytes > 0)
++			ret += bytes;
++		else
++			dout("Failed partial copy (%zd)\n", bytes);
+ 	}
+ 
+ out:
