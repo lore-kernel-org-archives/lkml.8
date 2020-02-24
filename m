@@ -2,129 +2,135 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3AFC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9E7C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59BD20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cT1aVW9a"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD0920637
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgBXH3U (ORCPT
+        id S1727242AbgBXHbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:29:20 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42070 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgBXH3T (ORCPT
+        Mon, 24 Feb 2020 02:31:15 -0500
+Received: from eddie.linux-mips.org ([148.251.95.138]:52176 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgBXHbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:29:19 -0500
-Received: by mail-yw1-f68.google.com with SMTP id b81so4793901ywe.9
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:29:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pu7YZUk9S4E/pNGkKq9v6WlWWKovjGT+ogGtMRUpTlY=;
-        b=cT1aVW9aEmNffyJsbSnpD1pePBSTJmnbrzeS1G1xYMa+f/EI6Ix7TCrDA2k7COPesT
-         nCNnqeSTzMOzj9Dop4WbLhHHv4N6u/cpIlGFjewYNHHviMvEopaL5JfcJWNiNYOy828a
-         5q0KS5TdQWwz9hJAk7r952F3mLit5GROR1edHOg1LGu+yE8oWQ3LB3TLurElJ+N/IUhS
-         yJOqnGyl9XxLMZrwR8wmW/j6Hkht8FySi7RJe6fJtKM5dYhMdn9bTuo8r9THb3skjq7K
-         /3mYHGC5MFfzeDS085t/m1H8wI9bVvbmxd3lRfq7AH9PkcpWJXQWmBQKz0NmH5Zm2SVy
-         CC+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pu7YZUk9S4E/pNGkKq9v6WlWWKovjGT+ogGtMRUpTlY=;
-        b=d+NpYbbZqS3CeC6wEK1c1f1ijCJ7yPoK1NohuHdKquiiOwApxBGTXrDy9t7Hf+cw3+
-         4sNEgLgm1a/Qz58AUDyhXk4YXrvC7CmOAuEmHwqDzPIu327A9PA1IFYg6EERqVyhDy3Z
-         NCCk3HjuohPFyN/PSMDyKH/QdMQ/PljFpvhOCzzmD1o0VtKrsUkwmzXp9FL8YDXh6ROw
-         0xhSSOFnV2aTVL/fZ+H/Lv9UvoUfMhfnrxt8SRpQnYScMsid3dxXtSEv2b0FbHyBFpGU
-         zgoamkiANOqQ44+E1YrLBsiowon29Zs2FT6aevleFOOXPlE3VR4aGgcVxwU0VE94ie6j
-         5c9A==
-X-Gm-Message-State: APjAAAX5BFl30e/sziUgiiEQv4zSryBI0jfioOuUMv+NLuqXdWsEnv7V
-        b68+IfTqwPUgpM1KM5AmhnjEhiF8+2/LK0nzBhZ2ZQ==
-X-Google-Smtp-Source: APXvYqxZIwuqqBEDmmlfQUkUBgpzYL2C3CpS2lE4a1qMVtMJH7Paj2i9si0t8xcdBW8R0TX6IMVC8K2dWXRjAM3RHXU=
-X-Received: by 2002:a81:3a06:: with SMTP id h6mr39722556ywa.170.1582529356484;
- Sun, 23 Feb 2020 23:29:16 -0800 (PST)
+        Mon, 24 Feb 2020 02:31:14 -0500
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23990678AbgBXHbLbR4t8 (ORCPT <rfc822;linux-omap@vger.kernel.org>
+        + 1 other); Mon, 24 Feb 2020 08:31:11 +0100
+Date:   Mon, 24 Feb 2020 08:31:10 +0100
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-omap@vger.kernel.org
+Subject: Re: [PATCH v3] extcon: palmas: hide error messages if gpio returns
+ -EPROBE_DEFER
+Message-ID: <20200224073110.GA58786@lenoch>
+References: <CGME20200217133832epcas1p329af393e88fa76189ca141d2534f9ad2@epcas1p3.samsung.com>
+ <d5c2826a5f00fcaee62f00662ae2a44dc4a5395d.1581946695.git.hns@goldelico.com>
+ <b2655a58-6541-a2c9-c44d-536e5cef1ee3@samsung.com>
+ <20200218102140.GA193069@lenoch>
+ <cbee6f0b-f268-2e77-f7b7-f19114fdf178@samsung.com>
+ <20200218104810.GA194120@lenoch>
+ <34f3cd11-321b-9aab-31a7-a3fb03691980@samsung.com>
+ <20200221074740.GA44103@lenoch>
+ <1cf484d9-572c-ea19-49d6-cd4cf61c9965@samsung.com>
 MIME-Version: 1.0
-References: <20200222010456.40635-1-shakeelb@google.com>
-In-Reply-To: <20200222010456.40635-1-shakeelb@google.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Sun, 23 Feb 2020 23:29:04 -0800
-Message-ID: <CANn89iJ2CWSeLp-+mfBLWKNdS2vw=r1iLFtWhyzav_SYcjFrAg@mail.gmail.com>
-Subject: Re: [PATCH] net: memcg: late association of sock to memcg
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        netdev <netdev@vger.kernel.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        linux-mm <linux-mm@kvack.org>, Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1cf484d9-572c-ea19-49d6-cd4cf61c9965@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 5:05 PM Shakeel Butt <shakeelb@google.com> wrote:
->
-> If a TCP socket is allocated in IRQ context or cloned from unassociated
-> (i.e. not associated to a memcg) in IRQ context then it will remain
-> unassociated for its whole life. Almost half of the TCPs created on the
-> system are created in IRQ context, so, memory used by suck sockets will
-> not be accounted by the memcg.
->
-> This issue is more widespread in cgroup v1 where network memory
-> accounting is opt-in but it can happen in cgroup v2 if the source socket
-> for the cloning was created in root memcg.
->
-> To fix the issue, just do the late association of the unassociated
-> sockets at accept() time in the process context and then force charge
-> the memory buffer already reserved by the socket.
->
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
->  net/ipv4/inet_connection_sock.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-> index a4db79b1b643..df9c8ef024a2 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
-> @@ -482,6 +482,13 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
->                 }
->                 spin_unlock_bh(&queue->fastopenq.lock);
->         }
-> +
-> +       if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
-> +               mem_cgroup_sk_alloc(newsk);
-> +               if (newsk->sk_memcg)
-> +                       mem_cgroup_charge_skmem(newsk->sk_memcg,
-> +                                       sk_mem_pages(newsk->sk_forward_alloc));
+On Mon, Feb 24, 2020 at 11:12:08AM +0900, Chanwoo Choi wrote:
+> On 2/21/20 4:47 PM, Ladislav Michl wrote:
+> > On Tue, Feb 18, 2020 at 08:09:16PM +0900, Chanwoo Choi wrote:
+> >> On 2/18/20 7:48 PM, Ladislav Michl wrote:
+> >>> On Tue, Feb 18, 2020 at 07:35:47PM +0900, Chanwoo Choi wrote:
+> >>>> On 2/18/20 7:21 PM, Ladislav Michl wrote:
+> >>>>> On Tue, Feb 18, 2020 at 12:28:25PM +0900, Chanwoo Choi wrote:
+> >>>>>> On 2/17/20 10:38 PM, H. Nikolaus Schaller wrote:
+> >>>>>>> If the gpios are probed after this driver (e.g. if they
+> >>>>>>> come from an i2c expander) there is no need to print an
+> >>>>>>> error message.
+> >>>>>>>
+> >>>>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >>>>>>> ---
+> >>>>>>>  drivers/extcon/extcon-palmas.c | 8 ++++++--
+> >>>>>>>  1 file changed, 6 insertions(+), 2 deletions(-)
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+> >>>>>>> index edc5016f46f1..cea58d0cb457 100644
+> >>>>>>> --- a/drivers/extcon/extcon-palmas.c
+> >>>>>>> +++ b/drivers/extcon/extcon-palmas.c
+> >>>>>>> @@ -205,14 +205,18 @@ static int palmas_usb_probe(struct platform_device *pdev)
+> >>>>>>>  
+> >>>>>>>  	palmas_usb->id_gpiod = devm_gpiod_get_optional(&pdev->dev, "id",
+> >>>>>>>  							GPIOD_IN);
+> >>>>>>> -	if (IS_ERR(palmas_usb->id_gpiod)) {
+> >>>>>>> +	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
+> >>>>>>> +		return -EPROBE_DEFER;
+> >>>
+> >>> Here we returned...
+> >>
+> >> hmm. you better to suggest the result of cocci script
+> >> to understand why it is matter.
+> > 
+> > You can browse similar fixes online :)
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=else+after+return
+> > 
+> 
+> As you commented, please share the result
+> of cocci or checkpatch warning. It is simple to finish
+> this discussion. 
 
-I am not sure what you  are trying to do here.
+What is happening here? Do we really need tools to see the obvious?
+See for example commit 09971adc33b ("staging: iio: addac: Remove unnecessary
+else after return"). Running script mentioned in above commit with
+"[PATCH v3] extcon: palmas: hide error messages if gpio returns"
+applied gives:
+~/src/linux$ spatch -sp_file s.cocci -in_place drivers/extcon/extcon-palmas.c
+init_defs_builtins: /usr/lib/coccinelle/standard.h
+HANDLING: drivers/extcon/extcon-palmas.c
+diff = 
+--- drivers/extcon/extcon-palmas.c
++++ /tmp/cocci-output-67907-55371b-extcon-palmas.c
+@@ -207,7 +207,7 @@ static int palmas_usb_probe(struct platf
+ 							GPIOD_IN);
+ 	if (PTR_ERR(palmas_usb->id_gpiod) == -EPROBE_DEFER) {
+ 		return -EPROBE_DEFER;
+-	} else if (IS_ERR(palmas_usb->id_gpiod)) {
++	} if (IS_ERR(palmas_usb->id_gpiod)) {
+ 		dev_err(&pdev->dev, "failed to get id gpio\n");
+ 		return PTR_ERR(palmas_usb->id_gpiod);
+ 	}
+@@ -216,7 +216,7 @@ static int palmas_usb_probe(struct platf
+ 							GPIOD_IN);
+ 	if (PTR_ERR(palmas_usb->vbus_gpiod) == -EPROBE_DEFER) {
+ 		return -EPROBE_DEFER;
+-	} else if (IS_ERR(palmas_usb->vbus_gpiod)) {
++	} if (IS_ERR(palmas_usb->vbus_gpiod)) {
+ 		dev_err(&pdev->dev, "failed to get vbus gpio\n");
+ 		return PTR_ERR(palmas_usb->vbus_gpiod);
+ 	}
 
-sk->sk_forward_alloc is not the total amount of memory used by a TCP socket.
-It is only some part that has been reserved, but not yet consumed.
+That's why I wrote previously: "Then it is matter of time it triggers
+someones cocci script pointing to else after return."
+Linux git history proves there are people running such a scripts
+and results of such a scripts gets applied.
 
-For example, every skb that has been stored in TCP receive queue or
-out-of-order queue might have
-used memory.
+I do not care too much, you are the one adding more work for
+yourself ;-)
 
-I guess that if we assume that  a not yet accepted socket can not have
-any outstanding data in its transmit queue,
-you need to use sk->sk_rmem_alloc as well.
-
-To test this patch, make sure to add a delay before accept(), so that
-2MB worth of data can be queued before accept() happens.
-
-Thanks.
+	ladis
