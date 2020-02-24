@@ -2,108 +2,86 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276F9C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9587CC11D27
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093E9206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6327620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582530910;
+	bh=sLHq/C+ADYQPzbcKchD17zBFD/RAFeYaBYz25/Cd+iI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S+Bz/cgCs1eWCFSuo0SXOemB0fg3QoqupNOsuKQ97aM733BgAzYDqrOX6dLmfEI1n
+	 2+Jqyc002fWaL4UtJ/O/XGospql+uvqD2rHMZtJPZfPmB7iBz08MDkmU8T0cSMAJbX
+	 KNjziIlrIh46d/TUgOxVpuyXvzsSBHFHxgp/ERBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbgBXHxG (ORCPT
+        id S1727249AbgBXHzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:53:06 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53391 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbgBXHxG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:53:06 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j68Y3-00081w-Ej; Mon, 24 Feb 2020 08:53:03 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j68Y2-000422-7S; Mon, 24 Feb 2020 08:53:02 +0100
-Date:   Mon, 24 Feb 2020 08:53:02 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 1/4] pwm: omap-dmtimer: Drop unused header file
-Message-ID: <20200224075302.jd3vcrdl6fuqrkpb@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-2-lokeshvutla@ti.com>
+        Mon, 24 Feb 2020 02:55:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgBXHzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:55:09 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01ED0206E2;
+        Mon, 24 Feb 2020 07:55:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582530908;
+        bh=sLHq/C+ADYQPzbcKchD17zBFD/RAFeYaBYz25/Cd+iI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CBb8ieRWuiHplAg8mlEHhySrDPGXK4OxZ/1m+vKBXw94Ggqse8kQYdfySHAMvF249
+         Gq9qGVa99ptUtPu7hgLEmpiHE6Xq3++U7intUb3XyRZDSvuYd+uEI/ffvBRQw4v8cF
+         KrJ+ryPBhyzgbtEy/A0mjkGty3ZWelnSOISLmqO0=
+Date:   Mon, 24 Feb 2020 15:55:01 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, linux-imx@nxp.com, Anson.Huang@nxp.com,
+        devicetree@vger.kernel.org, kernel@puri.sm,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] arm64: dts: librem5-devkit: description updates
+Message-ID: <20200224075500.GC27688@dragon>
+References: <20200224062917.4895-1-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224052135.17278-2-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200224062917.4895-1-martin.kepplinger@puri.sm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Feb 24, 2020 at 07:29:09AM +0100, Martin Kepplinger wrote:
+> These are additions to the imx8mq-librem5-devkit devicetree description
+> we are running for quite some time. All users should have them:
+> 
+> revision history
+> ----------------
+> v3: review by Show: newline / hyphen issues; squashed related ones.
+>     thanks a lot.
+> v2: review by Shawn and Guido: remove a battery description
+>     add SoB tags, coding style fixes, squash and reorder audio
+>     descritions, remove redundant and unneeded changes.
+>     https://lore.kernel.org/linux-arm-kernel/20200218084942.4884-1-martin.kepplinger@puri.sm/
+> v1: https://lore.kernel.org/linux-arm-kernel/20200205143003.28408-1-martin.kepplinger@puri.sm/
+> 
+> 
+> Angus Ainslie (Purism) (7):
+>   arm64: dts: librem5-devkit: enable sai2 and sai6 audio interface
+>   arm64: dts: librem5-devkit: add the simcom 7100 modem and sgtl5000
+>     audio codec
+>   arm64: dts: librem5-devkit: allow modem to wake the system from
+>     suspend
+>   arm64: dts: librem5-devkit: add a vbus supply to usb0
+>   arm64: dts: librem5-devkit: add the regulators for DVFS
+>   arm64: dts: librem5-devkit: allow the redpine card to be removed
+>   arm64: dts: librem5-devkit: increase the VBUS current in the kernel
 
-On Mon, Feb 24, 2020 at 10:51:32AM +0530, Lokesh Vutla wrote:
-> @@ -190,9 +190,8 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  		load_value, load_value,	match_value, match_value);
->  
->  	omap->pdata->set_pwm(omap->dm_timer,
-> -			      pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> -			      true,
-> -			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-
-This is unrelated.
-
->  
->  	/* If config was called while timer was running it must be reenabled. */
->  	if (timer_active)
-> @@ -220,9 +219,8 @@ static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
->  	 */
->  	mutex_lock(&omap->mutex);
->  	omap->pdata->set_pwm(omap->dm_timer,
-> -			      polarity == PWM_POLARITY_INVERSED,
-> -			      true,
-> -			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> +			     polarity == PWM_POLARITY_INVERSED,
-> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-
-ditto
-
->  	mutex_unlock(&omap->mutex);
->  
->  	return 0;
-> @@ -244,7 +242,7 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
->  	struct pwm_omap_dmtimer_chip *omap;
->  	struct dmtimer_platform_data *timer_pdata;
->  	const struct omap_dm_timer_ops *pdata;
-> -	pwm_omap_dmtimer *dm_timer;
-> +	struct omap_dm_timer *dm_timer;
->  	u32 v;
->  	int ret = 0;
->  
-
-Other than that looks fine.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Applied all, thanks.
