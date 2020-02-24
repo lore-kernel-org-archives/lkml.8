@@ -2,63 +2,107 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9739EC38BE7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA6BC38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DE121D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEED821D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBXVDM (ORCPT
+        id S1727716AbgBXVFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:03:12 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38324 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgBXVDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:03:11 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BBEDA12199AC7;
-        Mon, 24 Feb 2020 13:03:10 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:03:10 -0800 (PST)
-Message-Id: <20200224.130310.385940338036895521.davem@davemloft.net>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] net: 802: psnap.c: Use built-in RCU list checking
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200221161947.11536-1-madhuparnabhowmik10@gmail.com>
-References: <20200221161947.11536-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 13:03:11 -0800 (PST)
+        Mon, 24 Feb 2020 16:05:11 -0500
+Received: from mga03.intel.com ([134.134.136.65]:40405 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726996AbgBXVFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:05:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 13:05:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="226113254"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 13:05:09 -0800
+Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 24 Feb 2020 13:05:09 -0800
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.107]) by
+ ORSMSX125.amr.corp.intel.com ([169.254.3.208]) with mapi id 14.03.0439.000;
+ Mon, 24 Feb 2020 13:05:08 -0800
+From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bp@alien8.de" <bp@alien8.de>
+CC:     "hpa@zytor.com" <hpa@zytor.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Subject: Re: [PATCH] x86/mce/therm_throt: Handle case where
+ throttle_active_work() is called on behalf of an offline CPU
+Thread-Topic: [PATCH] x86/mce/therm_throt: Handle case where
+ throttle_active_work() is called on behalf of an offline CPU
+Thread-Index: AQHV61YYXKHnouzZ302AwVkmqxKOXg==
+Date:   Mon, 24 Feb 2020 21:05:08 +0000
+Message-ID: <093f3f8665f72937548665099b7eb9b805fc5ac7.camel@intel.com>
+References: <20200222162432.497201-1-srinivas.pandruvada@linux.intel.com>
+         <20200222175151.GD11284@zn.tnic>
+         <40989625ca5496a986ca3e595957da83723777f4.camel@linux.intel.com>
+         <20200224125525.GA29318@zn.tnic> <87y2ssm0sz.fsf@nanos.tec.linutronix.de>
+         <87lforn5xr.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87lforn5xr.fsf@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+x-originating-ip: [10.54.75.21]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <55200E206ACD1648AB90B8896125ED20@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: madhuparnabhowmik10@gmail.com
-Date: Fri, 21 Feb 2020 21:49:47 +0530
-
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> list_for_each_entry_rcu() has built-in RCU and lock checking.
-> 
-> Pass cond argument to list_for_each_entry_rcu() to silence
-> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-> by default.
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-
-Applied.
+T24gTW9uLCAyMDIwLTAyLTI0IGF0IDIwOjI1ICswMTAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
+DQo+IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPiB3cml0ZXM6DQo+ID4gV2hp
+Y2ggaXMgd3JvbmcgYXMgd2VsbC4gVHJ5aW5nIHRvICJmaXgiIGl0IGluIHRoZSB3b3JrIHF1ZXVl
+DQo+ID4gY2FsbGJhY2sgaXMNCj4gPiBwYXBlcmluZyBvdmVyIHRoZSByb290IGNhdXNlLg0KPiA+
+IA0KPiA+IFdoeSBpcyBhbnkgd29yayBzY2hlZHVsZWQgb24gYW4gb3V0Z29pbmcgQ1BVIGFmdGVy
+IHRoaXMgQ1BVDQo+ID4gZXhlY3V0ZWQNCj4gPiB0aGVybWFsX3Rocm90dGxlX29mZmxpbmUoKT8N
+Cj4gPiANCj4gPiBXaGVuIHRoZXJtYWxfdGhyb3R0bGVfb2ZmbGluZSgpIGlzIGludm9rZWQgdGhl
+IGNwdSBib3VuZCB3b3JrDQo+ID4gcXVldWVzIGFyZQ0KPiA+IHN0aWxsIGZ1bmN0aW9uYWwgYW5k
+IHRoZXJtYWxfdGhyb3R0bGVfb2ZmbGluZSgpIGNhbmNlbHMgb3V0c3RhbmRpbmcNCj4gPiB3b3Jr
+Lg0KPiA+IA0KPiA+IFNvIG5vLCBwbGVhc2UgZml4IHRoZSByb290IGNhdXNlIG5vdCB0aGUgc3lt
+cHRvbS4NCj4gDQo+IEFuZCBpZiB5b3UgbG9vayBhdCB0aGVybWFsX3Rocm90dGxlX29ubGluZSgp
+IHRoZW4geW91J2xsIG5vdGljZSB0aGF0DQo+IGl0DQo+IGlzIGFzeW1ldHJpYyB2cy4gdGhlcm1h
+bF90aHJvdHRsZV9vZmZsaW5lKCkuDQo+IA0KPiBBbHNvIHlvdSB3YW50IHRvIGRvIGNhbmNlbF9k
+ZWxheWVkX3dvcmtfc3luYygpIGFuZCBub3QganVzdA0KPiBjYW5jZWxfZGVsYXllZF93b3JrKCkg
+YmVjYXVzZSBvbmx5IHRoZSBsYXR0ZXIgZ3VhcmFudGVlcyB0aGF0IHRoZQ0KPiB3b3JrDQo+IGlz
+IG5vdCBlbnF1ZXVlZCBhbnltb3JlIHdoaWxlIHRoZSBmb3JtZXIgZG9lcyBub3QgdGFrZSBydW5u
+aW5nIG9yDQo+IHNlbGYNCj4gcmVxdWV1ZWluZyB3b3JrIGludG8gYWNjb3VudC4NCj4gDQo+IFNv
+bWV0aGluZyBsaWtlIHRoZSB1bnRlc3RlZCBwYXRjaCBiZWxvdy4NClRoYW5rcyBUaG9tYXMuIEkg
+YW0gdGVzdGluZyB0aGlzIHBhdGNoLg0KDQotU3Jpbml2YXMNCg0KPiANCj4gVGhhbmtzLA0KPiAN
+Cj4gICAgICAgICB0Z2x4DQo+IC0tLQ0KPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L21jZS90
+aGVybV90aHJvdC5jDQo+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvbWNlL3RoZXJtX3Rocm90
+LmMNCj4gQEAgLTQ4Nyw4ICs0ODcsMTIgQEAgc3RhdGljIGludCB0aGVybWFsX3Rocm90dGxlX29m
+ZmxpbmUodW5zaQ0KPiAgCXN0cnVjdCB0aGVybWFsX3N0YXRlICpzdGF0ZSA9ICZwZXJfY3B1KHRo
+ZXJtYWxfc3RhdGUsIGNwdSk7DQo+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gZ2V0X2NwdV9kZXZp
+Y2UoY3B1KTsNCj4gIA0KPiAtCWNhbmNlbF9kZWxheWVkX3dvcmsoJnN0YXRlLT5wYWNrYWdlX3Ro
+cm90dGxlLnRoZXJtX3dvcmspOw0KPiAtCWNhbmNlbF9kZWxheWVkX3dvcmsoJnN0YXRlLT5jb3Jl
+X3Rocm90dGxlLnRoZXJtX3dvcmspOw0KPiArCS8qIE1hc2sgdGhlIHRoZXJtYWwgdmVjdG9yIGJl
+Zm9yZSBkcmFpbmluZyBldnRsLiBwZW5kaW5nIHdvcmsNCj4gKi8NCj4gKwlsID0gYXBpY19yZWFk
+KEFQSUNfTFZUVEhNUik7DQo+ICsJYXBpY193cml0ZShBUElDX0xWVFRITVIsIGwgfCBBUElDX0xW
+VF9NQVNLRUQpOw0KPiArDQo+ICsJY2FuY2VsX2RlbGF5ZWRfd29ya19zeW5jKCZzdGF0ZS0+cGFj
+a2FnZV90aHJvdHRsZS50aGVybV93b3JrKTsNCj4gKwljYW5jZWxfZGVsYXllZF93b3JrX3N5bmMo
+JnN0YXRlLT5jb3JlX3Rocm90dGxlLnRoZXJtX3dvcmspOw0KPiAgDQo+ICAJc3RhdGUtPnBhY2th
+Z2VfdGhyb3R0bGUucmF0ZV9jb250cm9sX2FjdGl2ZSA9IGZhbHNlOw0KPiAgCXN0YXRlLT5jb3Jl
+X3Rocm90dGxlLnJhdGVfY29udHJvbF9hY3RpdmUgPSBmYWxzZTsNCg==
