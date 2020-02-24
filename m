@@ -2,315 +2,163 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E383C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D9BC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681B72072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:22:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yO34SfAW"
+	by mail.kernel.org (Postfix) with ESMTP id 624F620661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgBXFWv (ORCPT
+        id S1726810AbgBXFZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:22:51 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56678 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbgBXFWs (ORCPT
+        Mon, 24 Feb 2020 00:25:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23354 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbgBXFZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 00:22:48 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O5MfFx100141;
-        Sun, 23 Feb 2020 23:22:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582521761;
-        bh=c+TSU2VKsV1GOCyljmgSnVXQNNv9UK9i28iQ3u+0Znc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=yO34SfAWzCPD8K/7Q5cYYtlRw5oXZYh1lplIHDBtgi2s61y3s4+USbIC6CZpWjBVX
-         Tdn3idTRHpu6BqonP7DVh8NvYUydYvL0HNRZyEFqvc7HFE0bzprfY2miTa6Xx9wj+S
-         NcdQ1UeCF2KTpH/8GMjD+UgVajCsPu46p3oToBEM=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01O5Mfve089247
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 23 Feb 2020 23:22:41 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 23
- Feb 2020 23:22:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 23 Feb 2020 23:22:41 -0600
-Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O5MPN8012421;
-        Sun, 23 Feb 2020 23:22:38 -0600
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 4/4] pwm: omap-dmtimer: Implement .apply callback
-Date:   Mon, 24 Feb 2020 10:51:35 +0530
-Message-ID: <20200224052135.17278-5-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200224052135.17278-1-lokeshvutla@ti.com>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
+        Mon, 24 Feb 2020 00:25:34 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O5NIQH038226
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:25:33 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1b6t784-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:25:33 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Mon, 24 Feb 2020 05:25:30 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 05:25:22 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O5PMZK59179238
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 05:25:22 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F40E84C044;
+        Mon, 24 Feb 2020 05:25:21 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 534144C04A;
+        Mon, 24 Feb 2020 05:25:21 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 05:25:21 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 89CE7A00E5;
+        Mon, 24 Feb 2020 16:25:15 +1100 (AEDT)
+Subject: Re: [PATCH v3 06/27] ocxl: Tally up the LPC memory on a link & allow
+ it to be mapped
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-7-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Mon, 24 Feb 2020 16:25:18 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200221032720.33893-7-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022405-0028-0000-0000-000003DD5D6E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022405-0029-0000-0000-000024A27116
+Message-Id: <8a6eaedd-d806-9111-84ac-c4961227d69c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_01:2020-02-21,2020-02-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement .apply callback and drop the legacy callbacks(enable, disable,
-config, set_polarity).
+On 21/2/20 2:26 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/pwm/pwm-omap-dmtimer.c | 141 +++++++++++++++++++--------------
- 1 file changed, 80 insertions(+), 61 deletions(-)
+This commit message is a bit short and could do with some further 
+explanation.
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 58c61559e72f..aeda4ab12385 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -31,8 +31,18 @@
- #define DM_TIMER_LOAD_MIN 0xfffffffe
- #define DM_TIMER_MAX      0xffffffff
- 
-+/**
-+ * struct pwm_omap_dmtimer_chip - Structure representing a pwm chip
-+ *				  corresponding to omap dmtimer.
-+ * @chip:		PWM chip structure representing PWM controller
-+ * @mutex:		Mutex to protect pwm apply state
-+ * @dm_timer:		Pointer to omap dm timer.
-+ * @pdata:		Pointer to omap dm timer ops.
-+ * dm_timer_pdev:	Pointer to omap dm timer platform device
-+ */
- struct pwm_omap_dmtimer_chip {
- 	struct pwm_chip chip;
-+	/* Mutex to protect pwm apply state */
- 	struct mutex mutex;
- 	struct omap_dm_timer *dm_timer;
- 	const struct omap_dm_timer_ops *pdata;
-@@ -45,11 +55,22 @@ to_pwm_omap_dmtimer_chip(struct pwm_chip *chip)
- 	return container_of(chip, struct pwm_omap_dmtimer_chip, chip);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_get_clock_cycles() - Get clock cycles in a time frame
-+ * @clk_rate:	pwm timer clock rate
-+ * @ns:		time frame in nano seconds.
-+ *
-+ * Return number of clock cycles in a given period(ins ns).
-+ */
- static u32 pwm_omap_dmtimer_get_clock_cycles(unsigned long clk_rate, int ns)
- {
- 	return DIV_ROUND_CLOSEST_ULL((u64)clk_rate * ns, NSEC_PER_SEC);
- }
- 
-+/**
-+ * pwm_omap_dmtimer_start() - Start the pwm omap dm timer in pwm mode
-+ * @omap:	Pointer to pwm omap dm timer chip
-+ */
- static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
- {
- 	/*
-@@ -67,32 +88,16 @@ static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
- 	omap->pdata->start(omap->dm_timer);
- }
- 
--static int pwm_omap_dmtimer_enable(struct pwm_chip *chip,
--				   struct pwm_device *pwm)
--{
--	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
--
--	mutex_lock(&omap->mutex);
--	omap->pdata->set_pwm(omap->dm_timer,
--			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
--			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
--
--	pwm_omap_dmtimer_start(omap);
--	mutex_unlock(&omap->mutex);
--
--	return 0;
--}
--
--static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
--				     struct pwm_device *pwm)
--{
--	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
--
--	mutex_lock(&omap->mutex);
--	omap->pdata->stop(omap->dm_timer);
--	mutex_unlock(&omap->mutex);
--}
--
-+/**
-+ * pwm_omap_dmtimer_config() - Update the configuration of pwm omap dm timer
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @duty_ns:	New duty cycle in nano seconds
-+ * @period_ns:	New period in nano seconds
-+ *
-+ * Return 0 if successfully changed the period/duty_cycle else appropriate
-+ * error.
-+ */
- static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 				   struct pwm_device *pwm,
- 				   int duty_ns, int period_ns)
-@@ -100,30 +105,26 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
- 	u32 period_cycles, duty_cycles;
- 	u32 load_value, match_value;
--	struct clk *fclk;
- 	unsigned long clk_rate;
-+	struct clk *fclk;
- 
- 	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
- 		duty_ns, period_ns);
- 
--	mutex_lock(&omap->mutex);
- 	if (duty_ns == pwm_get_duty_cycle(pwm) &&
--	    period_ns == pwm_get_period(pwm)) {
--		/* No change - don't cause any transients. */
--		mutex_unlock(&omap->mutex);
-+	    period_ns == pwm_get_period(pwm))
- 		return 0;
--	}
- 
- 	fclk = omap->pdata->get_fclk(omap->dm_timer);
- 	if (!fclk) {
- 		dev_err(chip->dev, "invalid pmtimer fclk\n");
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	clk_rate = clk_get_rate(fclk);
- 	if (!clk_rate) {
- 		dev_err(chip->dev, "invalid pmtimer fclk rate\n");
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	dev_dbg(chip->dev, "clk rate: %luHz\n", clk_rate);
-@@ -151,7 +152,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 		dev_info(chip->dev,
- 			 "period %d ns too short for clock rate %lu Hz\n",
- 			 period_ns, clk_rate);
--		goto err_einval;
-+		return -EINVAL;
- 	}
- 
- 	if (duty_cycles < 1) {
-@@ -183,54 +184,72 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
- 		load_value, load_value,	match_value, match_value);
- 
--	mutex_unlock(&omap->mutex);
--
- 	return 0;
--
--err_einval:
--	mutex_unlock(&omap->mutex);
--
--	return -EINVAL;
- }
- 
--static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
--					 struct pwm_device *pwm,
--					 enum pwm_polarity polarity)
-+/**
-+ * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
-+ * @chip:	Pointer to PWM controller
-+ * @pwm:	Pointer to PWM channel
-+ * @state:	New sate to apply
-+ *
-+ * Return 0 if successfully changed the state else appropriate error.
-+ */
-+static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
-+				  struct pwm_device *pwm,
-+				  const struct pwm_state *state)
- {
- 	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-+	int ret = 0;
- 
--	/*
--	 * PWM core will not call set_polarity while PWM is enabled so it's
--	 * safe to reconfigure the timer here without stopping it first.
--	 */
- 	mutex_lock(&omap->mutex);
--	omap->pdata->set_pwm(omap->dm_timer,
--			     polarity == PWM_POLARITY_INVERSED,
--			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+
-+	if (pwm_is_enabled(pwm) && !state->enabled) {
-+		omap->pdata->stop(omap->dm_timer);
-+		goto unlock_mutex;
-+	}
-+
-+	if (pwm_get_polarity(pwm) != state->polarity)
-+		omap->pdata->set_pwm(omap->dm_timer,
-+				     state->polarity == PWM_POLARITY_INVERSED,
-+				     true,
-+				     OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+
-+	ret = pwm_omap_dmtimer_config(chip, pwm, state->duty_cycle,
-+				      state->period);
-+	if (ret)
-+		goto unlock_mutex;
-+
-+	if (!pwm_is_enabled(pwm) && state->enabled) {
-+		omap->pdata->set_pwm(omap->dm_timer,
-+				     state->polarity == PWM_POLARITY_INVERSED,
-+				     true,
-+				     OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+		pwm_omap_dmtimer_start(omap);
-+	}
-+
-+unlock_mutex:
- 	mutex_unlock(&omap->mutex);
- 
--	return 0;
-+	return ret;
- }
- 
- static const struct pwm_ops pwm_omap_dmtimer_ops = {
--	.enable	= pwm_omap_dmtimer_enable,
--	.disable = pwm_omap_dmtimer_disable,
--	.config	= pwm_omap_dmtimer_config,
--	.set_polarity = pwm_omap_dmtimer_set_polarity,
-+	.apply = pwm_omap_dmtimer_apply,
- 	.owner = THIS_MODULE,
- };
- 
- static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct device_node *timer;
--	struct platform_device *timer_pdev;
--	struct pwm_omap_dmtimer_chip *omap;
- 	struct dmtimer_platform_data *timer_pdata;
- 	const struct omap_dm_timer_ops *pdata;
-+	struct platform_device *timer_pdev;
-+	struct pwm_omap_dmtimer_chip *omap;
- 	struct omap_dm_timer *dm_timer;
--	u32 v;
-+	struct device_node *timer;
- 	int ret = 0;
-+	u32 v;
- 
- 	timer = of_parse_phandle(np, "ti,timers", 0);
- 	if (!timer)
+In particular - it's worth explaining why the tracking of available LPC 
+memory needs to be done at a link level, because a single OpenCAPI card 
+can have multiple PCI functions, each with multiple AFUs which define an 
+amount of LPC memory they have, even if the common case is expected to 
+be a single function with a single AFU and thus one LPC area per link.
+
+Snowpatch has a few checkpatch issues to report:
+
+https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/11800//artifact/linux/checkpatch.log
+
+The code generally looks okay to me.
+
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index 198e4e4bc51d..d0c8c4838f42 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -142,4 +142,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset);
+>   u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+>   void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+>   
+> +/**
+> + * ocxl_link_add_lpc_mem() - Increment the amount of memory required by an OpenCAPI link
+> + *
+> + * @link_handle: The OpenCAPI link handle
+> + * @offset: The offset of the memory to add
+> + * @size: The amount of memory to increment by
+> + *
+> + * Returns 0 on success, negative on overflow
+> + */
+
+I think "amount of memory required" isn't the best way to express this.
+
+Might as well explicitly say -EINVAL on overflow.
+
 -- 
-2.23.0
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
