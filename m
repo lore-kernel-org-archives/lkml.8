@@ -2,114 +2,125 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF67C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675AEC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE662192A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CC122525
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgBXIzg (ORCPT
+        id S1727636AbgBXI4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:55:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35779 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbgBXIzf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:55:35 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j69WW-00077v-B4; Mon, 24 Feb 2020 09:55:32 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j69WV-0006J8-IS; Mon, 24 Feb 2020 09:55:31 +0100
-Date:   Mon, 24 Feb 2020 09:55:31 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200224085531.zab5ewr2nfi2shem@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-4-lokeshvutla@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224052135.17278-4-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 24 Feb 2020 03:56:09 -0500
+Received: from mga12.intel.com ([192.55.52.136]:40096 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726925AbgBXI4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:56:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 00:56:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,479,1574150400"; 
+   d="scan'208";a="231068681"
+Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Feb 2020 00:56:06 -0800
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     alex.williamson@redhat.com
+Cc:     zhenyuw@linux.intel.com, intel-gvt-dev@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
+        Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH v3 1/7] vfio: allow external user to get vfio group from device
+Date:   Mon, 24 Feb 2020 03:46:41 -0500
+Message-Id: <20200224084641.31696-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200224084350.31574-1-yan.y.zhao@intel.com>
+References: <20200224084350.31574-1-yan.y.zhao@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+external user is able to
+1. add a device into an vfio group
+2. call vfio_group_get_external_user_from_dev() with the device pointer
+to get vfio_group associated with this device and increments the container
+user counter to prevent the VFIO group from disposal before KVM exits.
+3. When the external KVM finishes, it calls vfio_group_put_external_user()
+to release the VFIO group.
 
-On Mon, Feb 24, 2020 at 10:51:34AM +0530, Lokesh Vutla wrote:
-> Only the Timer control register(TCLR) can be updated only when the timer
-> is stopped. Registers like Counter register(TCRR), loader register(TLDR),
-> match register(TMAR) can be updated when the counter is running. Since
-> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> timer for period/duty_cycle update.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  drivers/pwm/pwm-omap-dmtimer.c | 14 --------------
->  1 file changed, 14 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-> index f13be7216847..58c61559e72f 100644
-> --- a/drivers/pwm/pwm-omap-dmtimer.c
-> +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> @@ -102,7 +102,6 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  	u32 load_value, match_value;
->  	struct clk *fclk;
->  	unsigned long clk_rate;
-> -	bool timer_active;
->  
->  	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
->  		duty_ns, period_ns);
-> @@ -178,25 +177,12 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
->  	load_value = (DM_TIMER_MAX - period_cycles) + 1;
->  	match_value = load_value + duty_cycles - 1;
->  
-> -	/*
-> -	 * We MUST stop the associated dual-mode timer before attempting to
-> -	 * write its registers, but calls to omap_dm_timer_start/stop must
-> -	 * be balanced so check if timer is active before calling timer_stop.
-> -	 */
-> -	timer_active = pm_runtime_active(&omap->dm_timer_pdev->dev);
-> -	if (timer_active)
-> -		omap->pdata->stop(omap->dm_timer);
-> -
->  	omap->pdata->set_load(omap->dm_timer, true, load_value);
->  	omap->pdata->set_match(omap->dm_timer, true, match_value);
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ drivers/vfio/vfio.c  | 37 +++++++++++++++++++++++++++++++++++++
+ include/linux/vfio.h |  2 ++
+ 2 files changed, 39 insertions(+)
 
-(Without having looked into the depths of the driver I assume
-.set_load() sets the period of the PWM and .set_match() the duty cycle.)
-
-What happens on a running PWM if you change the period? Consider you
-change from duty_cycle = 1000, period = 5000 to duty_cycle = 4000,
-period = 10000. As you set the period first, can it happen the hardware
-produces a cycle with duty_cycle = 1000, period = 10000?
-
-Best regards
-Uwe
-
+diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+index c8482624ca34..914bdf4b9d73 100644
+--- a/drivers/vfio/vfio.c
++++ b/drivers/vfio/vfio.c
+@@ -1720,6 +1720,43 @@ struct vfio_group *vfio_group_get_external_user(struct file *filep)
+ }
+ EXPORT_SYMBOL_GPL(vfio_group_get_external_user);
+ 
++/**
++ * External user API, exported by symbols to be linked dynamically.
++ *
++ * The protocol includes:
++ * 1. External user add a device into a vfio group
++ *
++ * 2. The external user calls vfio_group_get_external_user_from_dev()
++ * with the device pointer
++ * to verify that:
++ *	- there's a vfio group associated with it and is initialized;
++ *	- IOMMU is set for the vfio group.
++ * If both checks passed, vfio_group_get_external_user_from_dev()
++ * increments the container user counter to prevent
++ * the VFIO group from disposal before KVM exits.
++ *
++ * 3. When the external KVM finishes, it calls
++ * vfio_group_put_external_user() to release the VFIO group.
++ * This call decrements the container user counter.
++ */
++
++struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev)
++{
++	struct vfio_group *group;
++	int ret;
++
++	group = vfio_group_get_from_dev(dev);
++	if (!group)
++		return ERR_PTR(-ENODEV);
++
++	ret = vfio_group_add_container_user(group);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return group;
++}
++EXPORT_SYMBOL_GPL(vfio_group_get_external_user_from_dev);
++
+ void vfio_group_put_external_user(struct vfio_group *group)
+ {
+ 	vfio_group_try_dissolve_container(group);
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index e42a711a2800..2e1fa0c7396f 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -94,6 +94,8 @@ extern void vfio_unregister_iommu_driver(
+  */
+ extern struct vfio_group *vfio_group_get_external_user(struct file *filep);
+ extern void vfio_group_put_external_user(struct vfio_group *group);
++extern
++struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev);
+ extern bool vfio_external_group_match_file(struct vfio_group *group,
+ 					   struct file *filep);
+ extern int vfio_external_user_iommu_id(struct vfio_group *group);
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
