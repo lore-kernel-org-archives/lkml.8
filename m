@@ -2,211 +2,196 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20595C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948A8C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E406D20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCprhKuf"
+	by mail.kernel.org (Postfix) with ESMTP id 7299920828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgBXLR0 (ORCPT
+        id S1727359AbgBXLRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:17:26 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:44012 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgBXLR0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:17:26 -0500
-Received: by mail-vs1-f66.google.com with SMTP id 7so5427553vsr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:17:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OUODaV4g/LRsT9laa1RfS2Gjv8Ee9++UWwJ4Sw725dw=;
-        b=qCprhKufyO3XeXF1Aqp29azedeaBSklsvi974/pSi6i0bchDKMA4QiFMab5B21GrAe
-         aPoY6lwFLf7Gw2xanmYW4sxSuFHgY4Xq8xejK43M4UWJXLiCyVhfobC/upBKa5N439Rh
-         UrZkuSPo2w3vO+tp2Qmhv6CnKM9kdSkH+cU4BnfswdYciN8+EQDHPABtp4NjjVlp7/ic
-         xYvgFba8E2IQfqzX74vKJdfmnIi94LtAwbuxmCOWrwXmDlG8oFC+0EpJuWcbvIOSb1EQ
-         Z8MidMnV4IMTNouaTbNpnRGhV/z2LCi6ucZfAAdWcx2wW9juODo9RHEIz6Jw7SSBG2Ve
-         Y+CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OUODaV4g/LRsT9laa1RfS2Gjv8Ee9++UWwJ4Sw725dw=;
-        b=N3pxO3ozLk/idl2IE6LtfzlRmbmsQ0oT5a004aHjW+mCMPurjCi+y6l3Trq2+fnFCL
-         t88dU7uMB4dXI1taPcWP4ykiJu/69RYhpIWQcDVWD+x1On5FiuAeOWlgmW6/7Dwn+7Y+
-         lUtivWfBv47z6hMK9RaZI1cmmmLuVh9KhVmiM8m8AsdGcp0jiztjgd4eGQcSoVjWAbbN
-         INfyGcPNtZ+Atl9eDF72+omo7JY1kBStXU24r/W0eRHtySuYSJTkxfVettHntSlW5sxJ
-         Kw1dCq87zrIRy0M+XJDfiGALWwgd1wvf45ClEhpXZPamnMPW3Q7L1firRMohJ+G9Q61L
-         AeQQ==
-X-Gm-Message-State: APjAAAWWacqfrla9mc9etBdzwB6BkSXPcgnRQBabyqtturxelCKBRwAI
-        BypDysSjyF2X27snSfYvdrzns18H6xLXNi5nvm5aeA==
-X-Google-Smtp-Source: APXvYqykuSBIrbPM5IWUnabFpOFy1So7ym0Ta+33qTdsbP9AdXLucE6bZY92p+EYmu6x3IjSyvP9hqD43SlDiqCcj/g=
-X-Received: by 2002:a05:6102:757:: with SMTP id v23mr26694580vsg.35.1582543045041;
- Mon, 24 Feb 2020 03:17:25 -0800 (PST)
+        Mon, 24 Feb 2020 06:17:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56648 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgBXLRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:17:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1E2D0ACE0;
+        Mon, 24 Feb 2020 11:17:40 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v5] leds: add SGI IP30 led support
+Date:   Mon, 24 Feb 2020 12:17:33 +0100
+Message-Id: <20200224111733.10320-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com> <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
-In-Reply-To: <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 24 Feb 2020 12:16:48 +0100
-Message-ID: <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Adrian
+This patch implemenets a driver to support the front panel LEDs of
+SGI Octane (IP30) workstations.
 
-On Fri, 21 Feb 2020 at 20:44, Bitan Biswas <bbiswas@nvidia.com> wrote:
->
-> On 2/21/20 1:48 AM, Ulf Hansson wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > On Thu, 20 Feb 2020 at 18:54, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >>
-> >> On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >>>
-> >>> On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >>>>
-> >>>
-> >>> Try to restore the value for the cache flush timeout, by updating the
-> >>> define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
-> >>
-> >> I have increased the timeout to 10 minutes but it did not help.
-> >> Same error found.
-> >> [  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
-> >> [  608.684964] mmc1: cache flush error -110
-> >> [  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
-> >> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
-> >>
-> >> OTOH, What best i could do for my own experiment to revert all three patches and
-> >> now the reported error gone and device mount successfully [1].
-> >>
-> >> List of patches reverted,
-> >>    mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
-> >>    mmc: block: Use generic_cmd6_time when modifying
-> >>      INAND_CMD38_ARG_EXT_CSD
-> >>    mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
-> >>
-> >> [1] https://lkft.validation.linaro.org/scheduler/job/1238275#L4346
-> >>
-> >> - Naresh
-> >
-> > Thanks for testing!
-> >
-> > This sounds a bit weird, I must say. Also, while looking into the
-> > logs, it seems like you are comparing a v5.5 kernel with v5.6-rc2, but
-> > maybe I didn't read the logs carefully enough.
-> >
-> >   In any case, I am looking into creating a debug patch so we can
-> > narrow down the problem a bit further.
-> >
-> > Kind regards
-> > Uffe
-> >
->
-> Hi Ulf,
->
->   I see that Jetson-TX2 / Jetson-Xavier suspend test is aborted and
-> below error is seen due to the commit
-> 24ed3bd01d6a844fd5e8a75f48d0a3d10ed71bf9  ("mmc: core: Specify timeouts
-> for BKOPS and CACHE_FLUSH for eMMC"):
->
-> ##
-> [  268.976197] Freezing user space processes ... (elapsed 0.001 seconds)
-> done.
-> [  268.984414] OOM killer disabled.
-> [  268.987635] Freezing remaining freezable tasks ... (elapsed 0.000
-> seconds) done.
-> [  269.217471] PM: dpm_run_callback(): mmc_bus_suspend+0x0/0x58 returns -110
-> [  269.224255] PM: Device mmc1:0001 failed to suspend: error -110
-> [  269.230080] PM: Some devices failed to suspend, or early wake event
-> detected
-
-Is there also a print in the log about "Card stuck being busy!"?
-
-In any case, it seems like the timeout error (-110) is happening way
-too soon. The cache flush timeout is now 30s, but the timeout seems to
-fire only a few hundred ms (at most) after the cache flush command has
-been sent.
-
-> ##
->
->   I find that from the commit the changes in mmc_flush_cache below is
-> the cause.
->
-> ##
-> @@ -961,7 +963,8 @@ int mmc_flush_cache(struct mmc_card *card)
->                          (card->ext_csd.cache_size > 0) &&
->                          (card->ext_csd.cache_ctrl & 1)) {
->                  err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-> -                               EXT_CSD_FLUSH_CACHE, 1, 0);
-> +                                EXT_CSD_FLUSH_CACHE, 1,
-> +                                MMC_CACHE_FLUSH_TIMEOUT_MS);
->
-> ##
->
->   Do you have suggestion to try for the suspend errors ?
-
-Just as a quick sanity test, please try the below patch, which
-restores the old cache flush timeout to 10min.
-
-However, as I indicated above, this seems to be a problem that needs
-to be fixed at in the host driver side. For the sdhci driver, there is
-a bit of a tricky logic around how to deal with timeouts in
-sdhci_send_command(). My best guess is that's where we should look
-more closely (and I am doing that).
-
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 24 Feb 2020 11:43:33 +0100
-Subject: [PATCH] mmc: core: Restore busy timeout for eMMC cache flushing
-
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/mmc/core/mmc_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v5:
+  - use defines for led enumaration
+  - name red led fault and white led system
 
-diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-index da425ee2d9bf..713e7dd6d028 100644
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -21,7 +21,7 @@
+Changes in v4:
+  - simplified ip30led_set by using gated value from led framework
 
- #define MMC_OPS_TIMEOUT_MS             (10 * 60 * 1000) /* 10min*/
- #define MMC_BKOPS_TIMEOUT_MS           (120 * 1000) /* 120s */
--#define MMC_CACHE_FLUSH_TIMEOUT_MS     (30 * 1000) /* 30s */
-+#define MMC_CACHE_FLUSH_TIMEOUT_MS     (10 * 60 * 1000) /* 10min */
+Changes in v3:
+  - rebased to 5.6-rc2
 
- static const u8 tuning_blk_pattern_4bit[] = {
-        0xff, 0x0f, 0xff, 0x00, 0xff, 0xcc, 0xc3, 0xcc,
+Changes in v2:
+  - use led names conforming to include/dt-bindings/leds/common.h
+  - read LED state from firmware
+  - leave setting up to user
+
+ drivers/leds/Kconfig     | 11 +++++
+ drivers/leds/Makefile    |  1 +
+ drivers/leds/leds-ip30.c | 86 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 98 insertions(+)
+ create mode 100644 drivers/leds/leds-ip30.c
+
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index d82f1dea3711..c664d84e1667 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -846,6 +846,17 @@ config LEDS_TPS6105X
+ 	  It is a single boost converter primarily for white LEDs and
+ 	  audio amplifiers.
+ 
++config LEDS_IP30
++	tristate "LED support for SGI Octane machines"
++	depends on LEDS_CLASS
++	depends on SGI_MFD_IOC3
++	help
++	  This option enables support for the Red and White LEDs of
++	  SGI Octane machines.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called leds-ip30.
++
+ comment "LED Triggers"
+ source "drivers/leds/trigger/Kconfig"
+ 
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index d7e1107753fb..46bd611a03a9 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+ obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
+ obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
++obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
+ 
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
+new file mode 100644
+index 000000000000..e95ea786a43e
+--- /dev/null
++++ b/drivers/leds/leds-ip30.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * LED Driver for SGI Octane machines
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/platform_device.h>
++#include <linux/leds.h>
++
++#define IP30_LED_SYSTEM	0
++#define IP30_LED_FAULT	1
++
++struct ip30_led {
++	struct led_classdev cdev;
++	u32 __iomem *reg;
++};
++
++static void ip30led_set(struct led_classdev *led_cdev,
++			enum led_brightness value)
++{
++	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
++
++	writel(value, led->reg);
++}
++
++static int ip30led_create(struct platform_device *pdev, int num)
++{
++	struct resource *res;
++	struct ip30_led *data;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, num);
++	if (!res)
++		return -EBUSY;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->reg = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(data->reg))
++		return PTR_ERR(data->reg);
++
++
++	switch (num) {
++	case IP30_LED_SYSTEM:
++		data->cdev.name = "white:system";
++		break;
++	case IP30_LED_FAULT:
++		data->cdev.name = "red:fault";
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	data->cdev.brightness = readl(data->reg);
++	data->cdev.max_brightness = 1;
++	data->cdev.brightness_set = ip30led_set;
++
++	return devm_led_classdev_register(&pdev->dev, &data->cdev);
++}
++
++static int ip30led_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	ret = ip30led_create(pdev, IP30_LED_SYSTEM);
++	if (ret < 0)
++		return ret;
++
++	return ip30led_create(pdev, IP30_LED_FAULT);
++}
++
++static struct platform_driver ip30led_driver = {
++	.probe		= ip30led_probe,
++	.driver		= {
++		.name		= "ip30-leds",
++	},
++};
++
++module_platform_driver(ip30led_driver);
++
++MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
++MODULE_DESCRIPTION("SGI Octane LED driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:ip30-leds");
 -- 
+2.25.0
 
-Kind regards
-Uffe
