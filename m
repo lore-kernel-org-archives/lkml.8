@@ -2,178 +2,96 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389B3C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED3C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ECB20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A641A20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MeEGm8yd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zzlQpzty"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVJhfUQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgBXJI6 (ORCPT
+        id S1727351AbgBXJJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:08:58 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37871 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726925AbgBXJI6 (ORCPT
+        Mon, 24 Feb 2020 04:09:03 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35913 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgBXJJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:08:58 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 5AF454CD;
-        Mon, 24 Feb 2020 04:08:56 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:08:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=8vrsYnMg3+xlG
-        wkxA2xqTXt5S7dQQOBwNLJokfKT5TI=; b=MeEGm8ydYTSDljDyxAs5wLbVVWQrV
-        ZLc+D4bpc6kIWpyJTtjbRUZAdIm7Ho4neycCK2r7oX5b2WQI9O4AzKdlL+6zzD9z
-        eMCb0E8IAaRikxxmmaHPI7zNa6oaMXBPgho3XFDnZPz+B8muLWHE+JnIAtPMbST2
-        WdqreU0RTYMSF5vcnSBLgUTYhP/FTo9lRBtqt90SUajuBoeWphrqja3NHLAtJTS6
-        h7BL0HGfEE9KUUfOTuOmIcUYR/6dd0cEJCF8Ta6jc0hmC+3Ms+YXvSxbbY5WV129
-        By0cqCutzcXGKC8E2by+EnNBJlvoqtgGMjR9FE0Y/cHbnHh0twqb1BtjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=8vrsYnMg3+xlGwkxA2xqTXt5S7dQQOBwNLJokfKT5TI=; b=zzlQpzty
-        TQi+s9EWJWK2dZJ3xg6Rrr/ChaWBFHaPKGXqTxduw6vEWfblw87uof8xbmFmV0gL
-        OIMvoutCNzlimhGippaMJBNmnY4cpX/eoQuovotdlX2c581aEfwKruTrQfnQm5zc
-        VRMs8gUwP9ELDykd49fk7oJrrN3rCYShYffseJQvf9ARD4xiVlohsb9/KoVgWg8A
-        WJLsLegxr3un88Js5NBTyDIjCvOoIa7f7xf1PHhBg5ljrEFHe40tB9riscSvmK+2
-        YZax7iskHT1iH3bBjKnTujW1TF/Nw4wxjMvde5xhVebtGILX5orSXl7ffljcDmsu
-        Zsvn3NTHszT1qA==
-X-ME-Sender: <xms:ppJTXjTmQpTuM8_FjJ4Lcv_wIY6cYU5OJjn656Dm8k2QC7jyeh2s4w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
-    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
-    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhho
-    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:ppJTXsWL0OGsKJoUQUu_qHB-GBs4IF5zq4_afrl4OfY2LE01e5Y-uQ>
-    <xmx:ppJTXoeLpU0IHK2dJP-nL9wOWpJ8K7n9H_DjmfWma_018eFICKL2-A>
-    <xmx:ppJTXvwR_zBnusltx-lZlhZShIXI-9zuW-QuSh6E4tbH3lE8Vzjxww>
-    <xmx:qJJTXsdgiH4mN_Q1Y_kAZwvirdItS31sFpZWycjD-4YKr5qjkm-WTw22ksI>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E275F3060F9B;
-        Mon, 24 Feb 2020 04:08:53 -0500 (EST)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Subject: [PATCH 03/89] i2c: brcmstb: Support BCM2711 HDMI BSC controllers
-Date:   Mon, 24 Feb 2020 10:06:05 +0100
-Message-Id: <1ed75ec6dc9310afd768c0bbfd8e73268e8cdfa9.1582533919.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Feb 2020 04:09:01 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d9so4813515pgu.3;
+        Mon, 24 Feb 2020 01:09:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GajakFXyxMUa9GNvnGruzNckL7Z3CRJUy+Vqs4Yc4uI=;
+        b=TVJhfUQoGV593qut6pCiS/bCkZgzc7RtJeAtWE9Uz5zqFFd/b42P0f30AVI6Im20JL
+         1tBQogDqHgVi7A5ig4oxX7GqP0XCnzhojJuQf5koMb6hCIn6do0B/LWBg04MQOBl5JX2
+         Y0bC36gaebvgxHMiGB3cb0z63mbBon8aauz9PipRLcZ/2sPgIx5+Yx7V3pFxiA23G0X7
+         Td5RIFboO9BnaKISaPlgxt6yyucrPy8EKg917V9LwjH4BziziPEYp6AXOTRKWJW1aqDW
+         PdWOdKtS8owG/JSWK/VqeTd0pNUW8rEl92PNYpwTxhOhK2S/0JQo2my3V/E/J16PwJlp
+         RwDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GajakFXyxMUa9GNvnGruzNckL7Z3CRJUy+Vqs4Yc4uI=;
+        b=juJwC3Gut22hji8QD8o6xPzxkAKTN3KbratDkA90E+BlrNybaMdjDbrcjWhvKlv7OA
+         FJr5GCopPTVbpjBS7DbXlCHYLACwOzkTS6mmEAaKNiAoTEOZE5Y26Fr2jC9GiCafiHJt
+         YjG3cr5qF5iDaagZ0JGE81ueZYihvA4kA0r4mspQcOmOkcaGEmo8YPwmyq3q8d6T18AR
+         jhIWZ/IHp/XwvHVD8121h4DJ9DDnnl0L270FZDioUdUHBPtmuz+KgRS9yPRo2rcKW7q2
+         BZ6dTKfGmFvO2GS2ceYBA7on3t1vd5qalLjavbgEZcwNDwNLNzAeUPje3UQVrHUBfcyZ
+         EeqQ==
+X-Gm-Message-State: APjAAAWkUQlgW5HIXJJvSDBSoAZxN3aWByYrowqZyDvMyYR4h6NGGnPa
+        WBbOqqpFO6v8Rgr3Rtdt7vc=
+X-Google-Smtp-Source: APXvYqy+7zLvfzNMJy6gcXf74WOA+gfoYUuV3jX3LYG4EOi+ogkHGDKa2vIarB4A5dQhlzlKd9EnCg==
+X-Received: by 2002:a62:1a09:: with SMTP id a9mr50691454pfa.64.1582535341020;
+        Mon, 24 Feb 2020 01:09:01 -0800 (PST)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id t17sm4521674pgn.94.2020.02.24.01.08.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Feb 2020 01:09:00 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: host: sdhci-sprd: Set the missing MMC_CAP_WAIT_WHILE_BUSY flag
+Date:   Mon, 24 Feb 2020 17:08:49 +0800
+Message-Id: <96f16647f6a6e8cb058c44e46c61b122df027059.1582535202.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
-EDID. This block is split into two parts, the BSC and the AUTO_I2C,
-lying in two separate register areas.
+The Spreadtrum host controller supports HW busy detection for I/O
+operations, which means when the host gets a transfer complete event,
+that always indicates the busy signal is released. Thus we can set
+the MMC_CAP_WAIT_WHILE_BUSY flag to remove some redundant software
+busy polling.
 
-The AUTO_I2C block has a mailbox-like interface and will take away the
-BSC control from the CPU if enabled. However, the BSC is the actually
-the same controller than the one supported by the brcmstb driver, and
-the AUTO_I2C doesn't really bring any immediate benefit.
-
-Let's use the BSC then, but let's also tie the AUTO_I2C registers with a
-separate compatible so that we can enable AUTO_I2C if needed in the
-future.
-
-The AUTO_I2C is enabled by default at boot though, so we first need to
-release the BSC from the AUTO_I2C control.
-
-Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-i2c@vger.kernel.org
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/i2c/busses/i2c-brcmstb.c | 33 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+)
+ drivers/mmc/host/sdhci-sprd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-brcmstb.c b/drivers/i2c/busses/i2c-brcmstb.c
-index 506991596b68..169a2836922d 100644
---- a/drivers/i2c/busses/i2c-brcmstb.c
-+++ b/drivers/i2c/busses/i2c-brcmstb.c
-@@ -580,6 +580,31 @@ static void brcmstb_i2c_set_bsc_reg_defaults(struct brcmstb_i2c_dev *dev)
- 	brcmstb_i2c_set_bus_speed(dev);
- }
+diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+index d346223..2ab42c5 100644
+--- a/drivers/mmc/host/sdhci-sprd.c
++++ b/drivers/mmc/host/sdhci-sprd.c
+@@ -556,7 +556,7 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
+ 		sdhci_sprd_voltage_switch;
  
-+#define AUTOI2C_CTRL0		0x26c
-+#define AUTOI2C_CTRL0_RELEASE_BSC	BIT(1)
-+
-+static int bcm2711_release_bsc(struct brcmstb_i2c_dev *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev->device);
-+	struct resource *iomem;
-+	void __iomem *autoi2c;
-+
-+	/* Map hardware registers */
-+	iomem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "auto-i2c");
-+	autoi2c = devm_ioremap_resource(&pdev->dev, iomem);
-+	if (IS_ERR(autoi2c))
-+		return PTR_ERR(autoi2c);
-+
-+	writel(AUTOI2C_CTRL0_RELEASE_BSC, autoi2c + AUTOI2C_CTRL0);
-+	devm_iounmap(&pdev->dev, autoi2c);
-+
-+	/* We need to reset the controller after the release */
-+	dev->bsc_regmap->iic_enable = 0;
-+	bsc_writel(dev, dev->bsc_regmap->iic_enable, iic_enable);
-+
-+	return 0;
-+}
-+
- static int brcmstb_i2c_probe(struct platform_device *pdev)
- {
- 	int rc = 0;
-@@ -609,6 +634,13 @@ static int brcmstb_i2c_probe(struct platform_device *pdev)
- 		goto probe_errorout;
- 	}
- 
-+	if (of_device_is_compatible(dev->device->of_node,
-+				    "brcm,bcm2711-hdmi-i2c")) {
-+		rc = bcm2711_release_bsc(dev);
-+		if (rc)
-+			goto probe_errorout;
-+	}
-+
- 	rc = of_property_read_string(dev->device->of_node, "interrupt-names",
- 				     &int_name);
- 	if (rc < 0)
-@@ -705,6 +737,7 @@ static SIMPLE_DEV_PM_OPS(brcmstb_i2c_pm, brcmstb_i2c_suspend,
- static const struct of_device_id brcmstb_i2c_of_match[] = {
- 	{.compatible = "brcm,brcmstb-i2c"},
- 	{.compatible = "brcm,brcmper-i2c"},
-+	{.compatible = "brcm,bcm2711-hdmi-i2c"},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, brcmstb_i2c_of_match);
+ 	host->mmc->caps = MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED |
+-		MMC_CAP_ERASE | MMC_CAP_CMD23;
++		MMC_CAP_ERASE | MMC_CAP_CMD23 | MMC_CAP_WAIT_WHILE_BUSY;
+ 	ret = mmc_of_parse(host->mmc);
+ 	if (ret)
+ 		goto pltfm_free;
 -- 
-git-series 0.9.1
+1.9.1
+
