@@ -2,204 +2,494 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F65C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A074C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2F02080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3107A2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="hldjLpzc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYX4W8rQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgBXQcT (ORCPT
+        id S1727926AbgBXQdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:32:19 -0500
-Received: from sonic309-27.consmr.mail.ne1.yahoo.com ([66.163.184.153]:41840
-        "EHLO sonic309-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727701AbgBXQcS (ORCPT
+        Mon, 24 Feb 2020 11:33:01 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48876 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727689AbgBXQdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:32:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1582561936; bh=jEdYHQfjEPk7Ub9OADMJTPn8R+rCgiglI9as12qrm30=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=hldjLpzcwV3BY5rdmK9yZGAUGjYZfPHOoZqCw0XhDH2KncJH37Pzx2ZkTM9xdDyqqc2V4yKvoMqO+uMmN+sfUeqP7LgmLWzyG846uxylbwkhY6evSGTY78wk791BzhlXAOFDCJSK5HCXOMP4MFCQWChWYbH/0pi+VTS7FPhGmp6AkSisZ7a4FJ4GBcyplhEgji0PaG98IiRd6lDZBz8aA1+/LEcM0Y7sKpuQISE4VaOD0MXOFCbmYhsN34YnSNRKJb/ei91iuZeNFve3Ub4GwLllYF6R8/HBTBI+5dwtPuCSYY9vwzjcJYK8FNGZzQrDY83c29Vrk45mJDgEN62qYg==
-X-YMail-OSG: xJ_GdC4VM1l5kxxnBl0Lney9fsdvankXxCcLb.xZurXxr.JqokefUWynnPrVAXv
- vINYCXn0cjIA7RWXbbyOT7B_nIX1cJcSNP1Tl_Lfw_cB91PI1QwXFQ2SMliu3c51ureMiDH4h9Qy
- pK1w2dP2khkXe0rmFELSQ60X.HVogs2ujgrNlhaccLtNk9byg5losin4piTH5DxzygZGN6n7BtnV
- A98BE430XdsXDhAcEwTnpnCDaaachAqWRucc8mDZgd0._ZpjTp.wpJjZd_s7_yZdP1GSyG9Rzg8m
- BIoOC.YN9fEZnjccoakDuiejWMGFa93A7DYxKXHHvgupWqoAw8jfdxP_B5brxDylvsbT75AGDkEb
- UyAJveC.txTTWM8unBWaj7zrMRhDtuARwWR_0qj1WVjqgkCpzJaaOzp2sfBQmEllQxsHhGBdEp0.
- E5RSEsxTMHaOlD50GoCmmXtkwNou1CYMMFHx6j29h2oVC_obQAqxIH.Ur8Fkl_nD38URUI0VtPl8
- kMZVM6loixSvYLCxIO8l3b9bi4oBQLfjs38aWC0hMGF9gAhY83s5SOjfdoGfvzmbRkowT7jmWP96
- eqNw13NgJI8OATaz9uymx5E6mzhfqzG2V.bA91MbjNADBO20fS4w0M4ibLFOJif5YbtCqj9XrEPT
- 0DeZ9W9qsr98U1Z5fS3Gj_TBCSH_vnq4sRdneC8hILGwVHFhns298ZNHABVs7ZwyfTUenDPWHPX6
- KyT_tpsO01_qHHHnw.D3k9n70urEAlEI8Nmj364y1Lw2nTCJ3t08s9i0t7JWyI.OXFnt37Af08t.
- 6muE8JEHqztrhq1LZbgtxgb5KpZcn2k0hPOcbNFV.ut0CIyguBhyiqoEEP_OW7aE_Qdc6D9Ogh4B
- YcaxGlR7CDGILlhvxv1gdXCWPXPrTQmDbUtJYqpdnEEIfTrm4rrHS5nflqT2T0cYw4jF_hHTM4.D
- 58gvUaVnj7uIKxEZH3jymzOaV2nmuXZOsvqVh4SYiOhhOyPjftBZcH2uJmxN6OOmc6c4I_WArFLW
- K596dICTfcvzw_wfanuhqHesRIDHt2GyKskkGWm9PHt2AEjz7UMOMPfMXlrDrs_EP4soPrRhCAZb
- jyXghOT00D0p.QkM9DDefp1V7OhaG90mHM_N_PP8zu9W5fTNbzS0xUk62WRUxAcMvE_dEVonwspV
- rUyF1ae9Pf4kbPLFCEmC6GHlv7.Wm.omK6K6rWY3YG_BYFHtHQ1k9k8eYTNQ7zDdwbHOBfSPaecl
- kOJBDjVuAfxjBhPqGxpxVfoN23nouMR9f9_LuvZ6Kb6pkyf1_6iP956ZcexfRUFjfoqcO6_OaQGx
- Zvt.yG8orifnc8h_C23cQvexXUVjThQWyyKx8pturKdHIwxHhYWkOI2Z63YSH1mwtU3H6IH0JPss
- kiek8TZ7EfF0lk5qxHKTNgaO_McVkyjmikQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Feb 2020 16:32:16 +0000
-Received: by smtp411.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c12ff2e79bd6414a6c59430047e9d2d0;
-          Mon, 24 Feb 2020 16:32:11 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <20200220175250.10795-4-kpsingh@chromium.org>
- <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
- <202002211946.A23A987@keescook> <20200223220833.wdhonzvven7payaw@ast-mbp>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- mQINBFzV9HABEAC/mmv3jeJyF7lR7QhILYg1+PeBLIMZv7KCzBSc/4ZZipoWdmr77Lel/RxQ
- 1PrNx0UaM5r6Hj9lJmJ9eg4s/TUBSP67mTx+tsZ1RhG78/WFf9aBe8MSXxY5cu7IUwo0J/CG
- vdSqACKyYPV5eoTJmnMxalu8/oVUHyPnKF3eMGgE0mKOFBUMsb2pLS/enE4QyxhcZ26jeeS6
- 3BaqDl1aTXGowM5BHyn7s9LEU38x/y2ffdqBjd3au2YOlvZ+XUkzoclSVfSR29bomZVVyhMB
- h1jTmX4Ac9QjpwsxihT8KNGvOM5CeCjQyWcW/g8LfWTzOVF9lzbx6IfEZDDoDem4+ZiPsAXC
- SWKBKil3npdbgb8MARPes2DpuhVm8yfkJEQQmuLYv8GPiJbwHQVLZGQAPBZSAc7IidD2zbf9
- XAw1/SJGe1poxOMfuSBsfKxv9ba2i8hUR+PH7gWwkMQaQ97B1yXYxVEkpG8Y4MfE5Vd3bjJU
- kvQ/tOBUCw5zwyIRC9+7zr1zYi/3hk+OG8OryZ5kpILBNCo+aePeAJ44znrySarUqS69tuXd
- a3lMPHUJJpUpIwSKQ5UuYYkWlWwENEWSefpakFAIwY4YIBkzoJ/t+XJHE1HTaJnRk6SWpeDf
- CreF3+LouP4njyeLEjVIMzaEpwROsw++BX5i5vTXJB+4UApTAQARAQABtChDYXNleSBTY2hh
- dWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+iQJUBBMBCAA+FiEEC+9tH1YyUwIQzUIe
- OKUVfIxDyBEFAlzV9HACGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQOKUV
- fIxDyBG6ag/6AiRl8yof47YOEVHlrmewbpnlBTaYNfJ5cZflNRKRX6t4bp1B2YV1whlDTpiL
- vNOwFkh+ZE0eI5M4x8Gw2Oiok+4Q5liA9PHTozQYF+Ia+qdL5EehfbLGoEBqklpGvG3h8JsO
- 7SvONJuFDgvab/U/UriDYycJwzwKZuhVtK9EMpnTtUDyP3DY+Q8h7MWsniNBLVXnh4yBIEJg
- SSgDn3COpZoFTPGKE+rIzioo/GJe8CTa2g+ZggJiY/myWTS3quG0FMvwvNYvZ4I2g6uxSl7n
- bZVqAZgqwoTAv1HSXIAn9muwZUJL03qo25PFi2gQmX15BgJKQcV5RL0GHFHRThDS3IyadOgK
- P2j78P8SddTN73EmsG5OoyzwZAxXfck9A512BfVESqapHurRu2qvMoUkQaW/2yCeRQwGTsFj
- /rr0lnOBkyC6wCmPSKXe3dT2mnD5KnCkjn7KxLqexKt4itGjJz4/ynD/qh+gL7IPbifrQtVH
- JI7cr0fI6Tl8V6efurk5RjtELsAlSR6fKV7hClfeDEgLpigHXGyVOsynXLr59uE+g/+InVic
- jKueTq7LzFd0BiduXGO5HbGyRKw4MG5DNQvC//85EWmFUnDlD3WHz7Hicg95D+2IjD2ZVXJy
- x3LTfKWdC8bU8am1fi+d6tVEFAe/KbUfe+stXkgmfB7pxqW5Ag0EXNX0cAEQAPIEYtPebJzT
- wHpKLu1/j4jQcke06Kmu5RNuj1pEje7kX5IKzQSs+CPH0NbSNGvrA4dNGcuDUTNHgb5Be9hF
- zVqRCEvF2j7BFbrGe9jqMBWHuWheQM8RRoa2UMwQ704mRvKr4sNPh01nKT52ASbWpBPYG3/t
- WbYaqfgtRmCxBnqdOx5mBJIBh9Q38i63DjQgdNcsTx2qS7HFuFyNef5LCf3jogcbmZGxG/b7
- yF4OwmGsVc8ufvlKo5A9Wm+tnRjLr/9Mn9vl5Xa/tQDoPxz26+aWz7j1in7UFzAarcvqzsdM
- Em6S7uT+qy5jcqyuipuenDKYF/yNOVSNnsiFyQTFqCPCpFihOnuaWqfmdeUOQHCSo8fD4aRF
- emsuxqcsq0Jp2ODq73DOTsdFxX2ESXYoFt3Oy7QmIxeEgiHBzdKU2bruIB5OVaZ4zWF+jusM
- Uh+jh+44w9DZkDNjxRAA5CxPlmBIn1OOYt1tsphrHg1cH1fDLK/pDjsJZkiH8EIjhckOtGSb
- aoUUMMJ85nVhN1EbU/A3DkWCVFEA//Vu1+BckbSbJKE7Hl6WdW19BXOZ7v3jo1q6lWwcFYth
- esJfk3ZPPJXuBokrFH8kqnEQ9W2QgrjDX3et2WwZFLOoOCItWxT0/1QO4ikcef/E7HXQf/ij
- Dxf9HG2o5hOlMIAkJq/uLNMvABEBAAGJAjwEGAEIACYWIQQL720fVjJTAhDNQh44pRV8jEPI
- EQUCXNX0cAIbDAUJEswDAAAKCRA4pRV8jEPIEWkzEACKFUnpp+wIVHpckMfBqN8BE5dUbWJc
- GyQ7wXWajLtlPdw1nNw0Wrv+ob2RCT7qQlUo6GRLcvj9Fn5tR4hBvR6D3m8aR0AGHbcC62cq
- I7LjaSDP5j/em4oVL2SMgNTrXgE2w33JMGjAx9oBzkxmKUqprhJomPwmfDHMJ0t7y39Da724
- oLPTkQDpJL1kuraM9TC5NyLe1+MyIxqM/8NujoJbWeQUgGjn9uxQAil7o/xSCjrWCP3kZDID
- vd5ZaHpdl8e1mTExQoKr4EWgaMjmD/a3hZ/j3KfTVNpM2cLfD/QwTMaC2fkK8ExMsz+rUl1H
- icmcmpptCwOSgwSpPY1Zfio6HvEJp7gmDwMgozMfwQuT9oxyFTxn1X3rn1IoYQF3P8gsziY5
- qtTxy2RrgqQFm/hr8gM78RhP54UPltIE96VywviFzDZehMvuwzW//fxysIoK97Y/KBZZOQs+
- /T+Bw80Pwk/dqQ8UmIt2ffHEgwCTbkSm711BejapWCfklxkMZDp16mkxSt2qZovboVjXnfuq
- wQ1QL4o4t1hviM7LyoflsCLnQFJh6RSBhBpKQinMJl/z0A6NYDkQi6vEGMDBWX/M2vk9Jvwa
- v0cEBfY3Z5oFgkh7BUORsu1V+Hn0fR/Lqq/Pyq+nTR26WzGDkolLsDr3IH0TiAVH5ZuPxyz6
- abzjfg==
-Message-ID: <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
-Date:   Mon, 24 Feb 2020 08:32:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 11:33:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582561979;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yujg2WJh022n2Av/aDpvy071zDfgljr6qFBy0yuGLSA=;
+        b=XYX4W8rQzK7wSb+7X5jW91nbzZeAuD+MmptA34zM9CUX5pEmoaRVHPmsqha7umRhYCwWVG
+        8/krmkEub8FqSVg6gz1TPfkKQPf9+yZ0lZJwzjBla8pi7+R8Sf4DiI16fzmA0lFPD6QaGj
+        GkWWCn2HcjEHi70moAjF2SM9X5nLBPA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-eDuGjJjHMe6QO2xM_EzXUA-1; Mon, 24 Feb 2020 11:32:57 -0500
+X-MC-Unique: eDuGjJjHMe6QO2xM_EzXUA-1
+Received: by mail-wm1-f72.google.com with SMTP id y125so100754wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:32:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=yujg2WJh022n2Av/aDpvy071zDfgljr6qFBy0yuGLSA=;
+        b=ahLR39V19NL6nsSFuIk/ZKWmiR1Aq9yvMevlD+PSgmANtApQ+NXAjP0y4n+2cITusG
+         jBcxb7U6iPXt49/e+nK5DtREr8Ls22z1WbEjTpy600E1zn38GLb2SUDF0ceKpKc/sSJP
+         +bekcyJzk4F2UnBJ5kfQEkSfhozjCT457j5LEkfDp7/EryGoKh491FV+WoMYAqFv19Rm
+         mzONsWJvzFqcwKBfXJljwwLfT4Nb0YsagSAQVAI6Pu+Axwgm+1zILkVdECgXpkPTn7y8
+         KfBzlnnJ5PBL+11I0K54ZnY8iWxkvyJ0gEFSqEM6D08dVVYLCsHjs5SivV/AS7Z2zcUo
+         /k+A==
+X-Gm-Message-State: APjAAAW8YBimX1a5fI8DTIigTCvnAOZMFUtI6kkUIgl0IZ3JIstOzMVj
+        vs95kFL9MsR0LhlKRc3UYIN3xfdS0GuMTD87ifwheERa0QGYhEmUqQOj35I0aQbw7eahQ3YCUpU
+        lAH+F7PUQX66cYiV4Ndcbh7Xi
+X-Received: by 2002:a5d:4a0f:: with SMTP id m15mr68213204wrq.415.1582561976231;
+        Mon, 24 Feb 2020 08:32:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzvFGwibVSDrP8AcTkfG6GGaZZ4iMGyxYIdKVa/WlNn8lcezeJjH/hEy3BhblH/SWMiHGYhvg==
+X-Received: by 2002:a5d:4a0f:: with SMTP id m15mr68213174wrq.415.1582561975843;
+        Mon, 24 Feb 2020 08:32:55 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id y6sm19124263wrl.17.2020.02.24.08.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 08:32:55 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 38/61] KVM: x86: Introduce kvm_cpu_caps to replace runtime CPUID masking
+In-Reply-To: <20200201185218.24473-39-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-39-sean.j.christopherson@intel.com>
+Date:   Mon, 24 Feb 2020 17:32:54 +0100
+Message-ID: <87h7zgndxl.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200223220833.wdhonzvven7payaw@ast-mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Mailer: WebService/1.1.15199 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_241)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/23/2020 2:08 PM, Alexei Starovoitov wrote:
-> On Fri, Feb 21, 2020 at 08:22:59PM -0800, Kees Cook wrote:
->> If I'm understanding this correctly, there are two issues:
->>
->> 1- BPF needs to be run last due to fexit trampolines (?)
-> no.
-> The placement of nop call can be anywhere.
-> BPF trampoline is automagically converting nop call into a sequence
-> of directly invoked BPF programs.
-> No link list traversals and no indirect calls in run-time.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Then why the insistence that it be last?
+> Calculate the CPUID masks for KVM_GET_SUPPORTED_CPUID at load time using
+> what is effectively a KVM-adjusted copy of boot_cpu_data, or more
+> precisely, the x86_capability array in boot_cpu_data.
+>
+> In terms of KVM support, the vast majority of CPUID feature bits are
+> constant, and *all* feature support is known at KVM load time.  Rather
+> than apply boot_cpu_data, which is effectively read-only after init,
+> at runtime, copy it into a KVM-specific array and use *that* to mask
+> CPUID registers.
+>
+> In additional to consolidating the masking, kvm_cpu_caps can be adjusted
+> by SVM/VMX at load time and thus eliminate all feature bit manipulation
+> in ->set_supported_cpuid().
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 229 +++++++++++++++++++++++--------------------
+>  arch/x86/kvm/cpuid.h |  19 ++++
+>  arch/x86/kvm/x86.c   |   2 +
+>  3 files changed, 142 insertions(+), 108 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 20a7af320291..c2a4c9df49a9 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -24,6 +24,13 @@
+>  #include "trace.h"
+>  #include "pmu.h"
+>  
+> +/*
+> + * Unlike "struct cpuinfo_x86.x86_capability", kvm_cpu_caps doesn't need to be
+> + * aligned to sizeof(unsigned long) because it's not accessed via bitops.
+> + */
+> +u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
+> +EXPORT_SYMBOL_GPL(kvm_cpu_caps);
+> +
+>  static u32 xstate_required_size(u64 xstate_bv, bool compacted)
+>  {
+>  	int feature_bit = 0;
+> @@ -259,7 +266,119 @@ static __always_inline void cpuid_entry_mask(struct kvm_cpuid_entry2 *entry,
+>  {
+>  	u32 *reg = cpuid_entry_get_reg(entry, leaf * 32);
+>  
+> -	*reg &= boot_cpu_data.x86_capability[leaf];
+> +	BUILD_BUG_ON(leaf > ARRAY_SIZE(kvm_cpu_caps));
 
->> 2- BPF hooks don't know what may be attached at any given time, so
->>    ALL LSM hooks need to be universally hooked. THIS turns out to crea=
-te
->>    a measurable performance problem in that the cost of the indirect c=
-all
->>    on the (mostly/usually) empty BPF policy is too high.
-> also no.
+Should this be '>=' ?
 
-Um, then why not use the infrastructure as is?
+> +	*reg &= kvm_cpu_caps[leaf];
+> +}
+> +
+> +static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
+> +{
+> +	reverse_cpuid_check(leaf);
+> +	kvm_cpu_caps[leaf] &= mask;
+> +}
+> +
+> +void kvm_set_cpu_caps(void)
+> +{
+> +	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+> +#ifdef CONFIG_X86_64
+> +	unsigned f_gbpages = F(GBPAGES);
+> +	unsigned f_lm = F(LM);
+> +#else
+> +	unsigned f_gbpages = 0;
+> +	unsigned f_lm = 0;
+> +#endif
 
->> So, trying to avoid the indirect calls is, as you say, an optimization=
-,
->> but it might be a needed one due to the other limitations.
-> I'm convinced that avoiding the cost of retpoline in critical path is a=
+Three too many bare 'unsinged's :-)
 
-> requirement for any new infrastructure in the kernel.
+> +
+> +	BUILD_BUG_ON(sizeof(kvm_cpu_caps) >
+> +		     sizeof(boot_cpu_data.x86_capability));
+> +
+> +	memcpy(&kvm_cpu_caps, &boot_cpu_data.x86_capability,
+> +	       sizeof(kvm_cpu_caps));
+> +
+> +	kvm_cpu_cap_mask(CPUID_1_EDX,
+> +		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> +		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+> +		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SEP) |
+> +		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+> +		F(PAT) | F(PSE36) | 0 /* PSN */ | F(CLFLUSH) |
+> +		0 /* Reserved, DS, ACPI */ | F(MMX) |
+> +		F(FXSR) | F(XMM) | F(XMM2) | F(SELFSNOOP) |
+> +		0 /* HTT, TM, Reserved, PBE */
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_8000_0001_EDX,
+> +		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> +		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+> +		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+> +		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+> +		F(PAT) | F(PSE36) | 0 /* Reserved */ |
+> +		f_nx | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
+> +		F(FXSR) | F(FXSR_OPT) | f_gbpages | F(RDTSCP) |
+> +		0 /* Reserved */ | f_lm | F(3DNOWEXT) | F(3DNOW)
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_1_ECX,
+> +		/* NOTE: MONITOR (and MWAIT) are emulated as NOP,
+> +		 * but *not* advertised to guests via CPUID ! */
+> +		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
+> +		0 /* DS-CPL, VMX, SMX, EST */ |
+> +		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+> +		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
+> +		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+> +		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+> +		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+> +		F(F16C) | F(RDRAND)
+> +	);
 
-Sorry, I haven't gotten that memo.
+I would suggest we order things by CPUID_NUM here, i.e.
 
-> Not only for security, but for any new infra.
+CPUID_1_ECX
+CPUID_1_EDX
+CPUID_7_1_EAX
+CPUID_7_0_EBX
+CPUID_7_ECX
+CPUID_7_EDX
+CPUID_D_1_EAX
+...
 
-The LSM infrastructure ain't new.
+> +
+> +	kvm_cpu_cap_mask(CPUID_7_0_EBX,
+> +		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
+> +		F(BMI2) | F(ERMS) | 0 /*INVPCID*/ | F(RTM) | 0 /*MPX*/ | F(RDSEED) |
+> +		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
+> +		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
+> +		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | 0 /*INTEL_PT*/
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_7_ECX,
+> +		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
+> +		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+> +		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+> +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/
+> +	);
+> +	/* Set LA57 based on hardware capability. */
+> +	if (cpuid_ecx(7) & F(LA57))
+> +		kvm_cpu_cap_set(X86_FEATURE_LA57);
+> +
+> +	kvm_cpu_cap_mask(CPUID_7_EDX,
+> +		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+> +		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> +		F(MD_CLEAR)
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_7_1_EAX,
+> +		F(AVX512_BF16)
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_D_1_EAX,
+> +		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES)
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_8000_0001_ECX,
+> +		F(LAHF_LM) | F(CMP_LEGACY) | 0 /*SVM*/ | 0 /* ExtApicSpace */ |
+> +		F(CR8_LEGACY) | F(ABM) | F(SSE4A) | F(MISALIGNSSE) |
+> +		F(3DNOWPREFETCH) | F(OSVW) | 0 /* IBS */ | F(XOP) |
+> +		0 /* SKINIT, WDT, LWP */ | F(FMA4) | F(TBM) |
+> +		F(TOPOEXT) | F(PERFCTR_CORE)
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_8000_0008_EBX,
+> +		F(CLZERO) | F(XSAVEERPTR) |
+> +		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+> +		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
+> +	);
+> +
+> +	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
+> +		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
+> +		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
+> +		F(PMM) | F(PMM_EN)
+> +	);
+>  }
+>  
+>  struct kvm_cpuid_array {
+> @@ -339,48 +458,13 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
+>  
+>  static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+>  {
+> -	unsigned f_la57;
+> -
+> -	/* cpuid 7.0.ebx */
+> -	const u32 kvm_cpuid_7_0_ebx_x86_features =
+> -		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
+> -		F(BMI2) | F(ERMS) | 0 /*INVPCID*/ | F(RTM) | 0 /*MPX*/ | F(RDSEED) |
+> -		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
+> -		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
+> -		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | 0 /*INTEL_PT*/;
+> -
+> -	/* cpuid 7.0.ecx*/
+> -	const u32 kvm_cpuid_7_0_ecx_x86_features =
+> -		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
+> -		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+> -		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+> -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+> -
+> -	/* cpuid 7.0.edx*/
+> -	const u32 kvm_cpuid_7_0_edx_x86_features =
+> -		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+> -		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+> -		F(MD_CLEAR);
+> -
+> -	/* cpuid 7.1.eax */
+> -	const u32 kvm_cpuid_7_1_eax_x86_features =
+> -		F(AVX512_BF16);
+> -
+>  	switch (entry->index) {
+>  	case 0:
+>  		entry->eax = min(entry->eax, 1u);
+> -		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_7_0_EBX);
+>  		/* TSC_ADJUST is emulated */
+>  		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+> -
+> -		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+> -		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
+>  		cpuid_entry_mask(entry, CPUID_7_ECX);
+> -		/* Set LA57 based on hardware capability. */
+> -		entry->ecx |= f_la57;
+> -
+> -		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_7_EDX);
+>  		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+>  			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+> @@ -395,7 +479,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+>  		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
+>  		break;
+>  	case 1:
+> -		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
+> +		cpuid_entry_mask(entry, CPUID_7_1_EAX);
+>  		entry->ebx = 0;
+>  		entry->ecx = 0;
+>  		entry->edx = 0;
+> @@ -414,72 +498,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  {
+>  	struct kvm_cpuid_entry2 *entry;
+>  	int r, i, max_idx;
+> -	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+> -#ifdef CONFIG_X86_64
+> -	unsigned f_gbpages = F(GBPAGES);
+> -	unsigned f_lm = F(LM);
+> -#else
+> -	unsigned f_gbpages = 0;
+> -	unsigned f_lm = 0;
+> -#endif
+>  	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
+>  
+> -	/* cpuid 1.edx */
+> -	const u32 kvm_cpuid_1_edx_x86_features =
+> -		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> -		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+> -		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SEP) |
+> -		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+> -		F(PAT) | F(PSE36) | 0 /* PSN */ | F(CLFLUSH) |
+> -		0 /* Reserved, DS, ACPI */ | F(MMX) |
+> -		F(FXSR) | F(XMM) | F(XMM2) | F(SELFSNOOP) |
+> -		0 /* HTT, TM, Reserved, PBE */;
+> -	/* cpuid 0x80000001.edx */
+> -	const u32 kvm_cpuid_8000_0001_edx_x86_features =
+> -		F(FPU) | F(VME) | F(DE) | F(PSE) |
+> -		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
+> -		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
+> -		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
+> -		F(PAT) | F(PSE36) | 0 /* Reserved */ |
+> -		f_nx | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
+> -		F(FXSR) | F(FXSR_OPT) | f_gbpages | F(RDTSCP) |
+> -		0 /* Reserved */ | f_lm | F(3DNOWEXT) | F(3DNOW);
+> -	/* cpuid 1.ecx */
+> -	const u32 kvm_cpuid_1_ecx_x86_features =
+> -		/* NOTE: MONITOR (and MWAIT) are emulated as NOP,
+> -		 * but *not* advertised to guests via CPUID ! */
+> -		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
+> -		0 /* DS-CPL, VMX, SMX, EST */ |
+> -		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+> -		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
+> -		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+> -		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+> -		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+> -		F(F16C) | F(RDRAND);
+> -	/* cpuid 0x80000001.ecx */
+> -	const u32 kvm_cpuid_8000_0001_ecx_x86_features =
+> -		F(LAHF_LM) | F(CMP_LEGACY) | 0 /*SVM*/ | 0 /* ExtApicSpace */ |
+> -		F(CR8_LEGACY) | F(ABM) | F(SSE4A) | F(MISALIGNSSE) |
+> -		F(3DNOWPREFETCH) | F(OSVW) | 0 /* IBS */ | F(XOP) |
+> -		0 /* SKINIT, WDT, LWP */ | F(FMA4) | F(TBM) |
+> -		F(TOPOEXT) | F(PERFCTR_CORE);
+> -
+> -	/* cpuid 0x80000008.ebx */
+> -	const u32 kvm_cpuid_8000_0008_ebx_x86_features =
+> -		F(CLZERO) | F(XSAVEERPTR) |
+> -		F(WBNOINVD) | F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
+> -		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON);
+> -
+> -	/* cpuid 0xC0000001.edx */
+> -	const u32 kvm_cpuid_C000_0001_edx_x86_features =
+> -		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
+> -		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
+> -		F(PMM) | F(PMM_EN);
+> -
+> -	/* cpuid 0xD.1.eax */
+> -	const u32 kvm_cpuid_D_1_eax_x86_features =
+> -		F(XSAVEOPT) | F(XSAVEC) | F(XGETBV1) | F(XSAVES);
+> -
+>  	/* all calls to cpuid_count() should be made on the same cpu */
+>  	get_cpu();
+>  
+> @@ -495,9 +515,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		entry->eax = min(entry->eax, 0x1fU);
+>  		break;
+>  	case 1:
+> -		entry->edx &= kvm_cpuid_1_edx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_1_EDX);
+> -		entry->ecx &= kvm_cpuid_1_ecx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_1_ECX);
+>  		/* we support x2apic emulation even if host does not support
+>  		 * it since we emulate x2apic in software */
+> @@ -607,7 +625,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		if (!entry)
+>  			goto out;
+>  
+> -		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_D_1_EAX);
+>  
+>  		if (!kvm_x86_ops->xsaves_supported())
+> @@ -691,9 +708,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		entry->eax = min(entry->eax, 0x8000001f);
+>  		break;
+>  	case 0x80000001:
+> -		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
+> -		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
+>  		break;
+>  	case 0x80000007: /* Advanced power management */
+> @@ -712,7 +727,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  			g_phys_as = phys_as;
+>  		entry->eax = g_phys_as | (virt_as << 8);
+>  		entry->edx = 0;
+> -		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_8000_0008_EBX);
+>  		/*
+>  		 * AMD has separate bits for each SPEC_CTRL bit.
+> @@ -755,7 +769,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		entry->eax = min(entry->eax, 0xC0000004);
+>  		break;
+>  	case 0xC0000001:
+> -		entry->edx &= kvm_cpuid_C000_0001_edx_x86_features;
+>  		cpuid_entry_mask(entry, CPUID_C000_0001_EDX);
+>  		break;
+>  	case 3: /* Processor serial number */
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 41ff94a7d3e0..c64283582d96 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -6,6 +6,9 @@
+>  #include <asm/cpu.h>
+>  #include <asm/processor.h>
+>  
+> +extern u32 kvm_cpu_caps[NCAPINTS] __read_mostly;
+> +void kvm_set_cpu_caps(void);
+> +
+>  int kvm_update_cpuid(struct kvm_vcpu *vcpu);
+>  struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+>  					      u32 function, u32 index);
+> @@ -255,4 +258,20 @@ static inline bool cpuid_fault_enabled(struct kvm_vcpu *vcpu)
+>  		  MSR_MISC_FEATURES_ENABLES_CPUID_FAULT;
+>  }
+>  
+> +static __always_inline void kvm_cpu_cap_clear(unsigned x86_feature)
+> +{
+> +	unsigned x86_leaf = x86_feature / 32;
+> +
+> +	reverse_cpuid_check(x86_leaf);
+> +	kvm_cpu_caps[x86_leaf] &= ~__feature_bit(x86_feature);
+> +}
+> +
+> +static __always_inline void kvm_cpu_cap_set(unsigned x86_feature)
+> +{
+> +	unsigned x86_leaf = x86_feature / 32;
+> +
+> +	reverse_cpuid_check(x86_leaf);
+> +	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
+> +}
+> +
+>  #endif
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index f90c56c0c64a..c5ed199d6cd9 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9591,6 +9591,8 @@ int kvm_arch_hardware_setup(void)
+>  {
+>  	int r;
+>  
+> +	kvm_set_cpu_caps();
+> +
+>  	r = kvm_x86_ops->hardware_setup();
+>  	if (r != 0)
+>  		return r;
 
-> Networking stack converted all such places to conditional calls.
-> In BPF land we converted indirect calls to direct jumps and direct call=
-s.
-> It took two years to do so. Adding new indirect calls is not an option.=
+Apart from the BUILD_BUG_ON() condition in cpuid_entry_mask()
 
-> I'm eagerly waiting for Peter's static_call patches to land to convert
-> a lot more indirect calls. May be existing LSMs will take advantage
-> of static_call patches too, but static_call is not an option for BPF.
-> That's why we introduced BPF trampoline in the last kernel release.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Sorry, but I don't see how BPF is so overwhelmingly special.
-
->> b) Would there actually be a global benefit to using the static keys
->>    optimization for other LSMs?
-> Yes. Just compiling with CONFIG_SECURITY adds "if (hlist_empty)" check
-> for every hook.
-
-Err, no, it doesn't. It does an hlish_for_each_entry(), which
-may be the equivalent on an empty list, but let's not go around
-spreading misinformation.
-
->  Some of those hooks are in critical path. This load+cmp
-> can be avoided with static_key optimization. I think it's worth doing.
-
-I admit to being unfamiliar with the static_key implementation,
-but if it would work for a list of hooks rather than a singe hook,
-I'm all ears.
-
->> If static keys are justified for KRSI
-> I really like that KRSI costs absolutely zero when it's not enabled.
-
-And I dislike that there's security module specific code in security.c,
-security.h and/or lsm_hooks.h. KRSI *is not that special*.
-
-> Attaching BPF prog to one hook preserves zero cost for all other hooks.=
-
-> And when one hook is BPF powered it's using direct call instead of
-> super expensive retpoline.
-
-I'm not objecting to the good it does for KRSI.
-I am *strongly* objecting to special casing KRSI.
-
-> Overall this patch set looks good to me. There was a minor issue with p=
-rog
-> accounting. I expect only that bit to be fixed in v5.
+-- 
+Vitaly
 
