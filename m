@@ -2,297 +2,152 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87111C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB46C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FA52086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LRMoYV/K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NF5oUwDg"
+	by mail.kernel.org (Postfix) with ESMTP id AC77520836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgBXJLY (ORCPT
+        id S1728463AbgBXJLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:11:24 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37505 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728298AbgBXJK7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:10:59 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 1C799648;
-        Mon, 24 Feb 2020 04:10:58 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=B52jsyVmTXygr
-        78dQDAoJEvEls8jV0jAU4I4CCulLxc=; b=LRMoYV/KRcEHJNOyHqqiZ9A7WD7sK
-        DtJHaaw04LZFG/P5Q+6fQv+BbROcPNOYM5IAqiL9ilhsZsgmvydRzqLYra6f8uBU
-        N3/DVNYdryAyD2HoE+DlFoZvU+Ef00CYSs9HcyrroctOtXozmlJTYbcg4+hy6TMV
-        KJcZX/nPTpbkKLTBes8PXiLTbGQaYVqTp2iKeRDgbk29BesnGfsq2xIWwkOO8SKJ
-        QaQ7U3iwk2UpkUEfCDtsOd4Q6OaZPd411AL9z7MLQnagLU4PcEx66gm7n2m2fBjs
-        ihiqnfrNvf6VZYvzBjiTbHm6d14KodhMxFSHrxnQtCz1Ekkt3cbUjwSJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=B52jsyVmTXygr78dQDAoJEvEls8jV0jAU4I4CCulLxc=; b=NF5oUwDg
-        VjNbU3jOHePE30DeYeCnZt+JG+qes61RaKajUGY64FSkg0Zel5uZd4JKWD9uMV78
-        fh1x73uauqNtDv7qc4ywgZhR0aFqer98jCiwqc0sdTVHo59b1yXt3isTejpC7dGD
-        2IwHOeZR5P0RIvrrN615X9XBpIML8V8NktPrHvY4KHL4DH94lVa6507C08AP8dza
-        7omeYvPZ9SXlXgJSDlzG1Pq2TOH2mleprgdiRHBc5a1OmBKUUozy6lHsA47ATSwV
-        mLky+uizaa1NMo+aWeg3xtaua0KHn61VxTtBTFBsA1Rau7Qv3B8N8sVEzlmGlV+x
-        LrrkoS011B/B8A==
-X-ME-Sender: <xms:IZNTXhbMdskEF-E8e1a1ctXhtApEpQdhj98Ow8MKS61A_2RgoPPWLA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
-    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
-    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepvdejnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:IZNTXl3vEg5rUXy9xNGUM2Vtd0wAdOpjuMlfUNcs9frdX3zwFLxPIw>
-    <xmx:IZNTXj40Km_V-m_U88kRcxUb8sjObsSiiLUdAD5ZEo-N9ksadPOCYw>
-    <xmx:IZNTXhSLVJcGzbk826Loq5ZQOmkWztsrMo29nUyB-HV3f4DyLTFBrA>
-    <xmx:IZNTXu6uYh_9TC4XPWUDIh4WMzNi6DzQrsL8hFDMnZs3BqFW7XHxeiU55gc>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5DD873060D1A;
-        Mon, 24 Feb 2020 04:10:57 -0500 (EST)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 89/89] ARM: dts: bcm2711: Enable the display pipeline
-Date:   Mon, 24 Feb 2020 10:07:31 +0100
-Message-Id: <80651ac7f73e3af8744c16efa0f83bed2cb14678.1582533919.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+        Mon, 24 Feb 2020 04:11:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42758 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728355AbgBXJKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 04:10:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7C1D9AC92;
+        Mon, 24 Feb 2020 09:10:50 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6BBFA1E0E33; Mon, 24 Feb 2020 10:10:51 +0100 (CET)
+Date:   Mon, 24 Feb 2020 10:10:51 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Qian Cai <cai@lca.pw>
+Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/jbd2: fix data races at struct journal_head
+Message-ID: <20200224091051.GC27857@quack2.suse.cz>
+References: <20200222043111.2227-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222043111.2227-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all the drivers have been adjusted for it, let's bring in the
-necessary device tree changes.
+On Fri 21-02-20 23:31:11, Qian Cai wrote:
+> journal_head::b_transaction and journal_head::b_next_transaction could
+> be accessed concurrently as noticed by KCSAN,
+> 
+>  LTP: starting fsync04
+>  /dev/zero: Can't open blockdev
+>  EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
+>  EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
+>  ==================================================================
+>  BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
+> 
+>  write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
+>   __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
+>   __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
+>   jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
+>   (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
+>   kjournald2+0x13b/0x450 [jbd2]
+>   kthread+0x1cd/0x1f0
+>   ret_from_fork+0x27/0x50
+> 
+>  read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
+>   jbd2_write_access_granted+0x1b2/0x250 [jbd2]
+>   jbd2_write_access_granted at fs/jbd2/transaction.c:1155
+>   jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
+>   __ext4_journal_get_write_access+0x50/0x90 [ext4]
+>   ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
+>   ext4_mb_new_blocks+0x54f/0xca0 [ext4]
+>   ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
+>   ext4_map_blocks+0x3b4/0x950 [ext4]
+>   _ext4_get_block+0xfc/0x270 [ext4]
+>   ext4_get_block+0x3b/0x50 [ext4]
+>   __block_write_begin_int+0x22e/0xae0
+>   __block_write_begin+0x39/0x50
+>   ext4_write_begin+0x388/0xb50 [ext4]
+>   generic_perform_write+0x15d/0x290
+>   ext4_buffered_write_iter+0x11f/0x210 [ext4]
+>   ext4_file_write_iter+0xce/0x9e0 [ext4]
+>   new_sync_write+0x29c/0x3b0
+>   __vfs_write+0x92/0xa0
+>   vfs_write+0x103/0x260
+>   ksys_write+0x9d/0x130
+>   __x64_sys_write+0x4c/0x60
+>   do_syscall_64+0x91/0xb05
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+>  5 locks held by fsync04/25724:
+>   #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
+>   #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
+>   #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
+>   #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
+>   #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
+>  irq event stamp: 1407125
+>  hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
+>  hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
+>  softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
+>  softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
+> 
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> 
+> The plain reads are outside of jh->b_state_lock critical section which result
+> in data races. Fix them by adding pairs of READ|WRITE_ONCE().
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  40 ++++++++++-
- arch/arm/boot/dts/bcm2711.dtsi        | 110 +++++++++++++++++++++++++++-
- 2 files changed, 150 insertions(+)
+Yeah, makes sense. You can add:
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1b5a835f66bd..db96319b3a40 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -138,3 +138,43 @@
- &vchiq {
- 	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- };
-+
-+&vc4 {
-+	status = "okay";
-+};
-+
-+&pixelvalve0 {
-+	status = "okay";
-+};
-+
-+&pixelvalve1 {
-+	status = "okay";
-+};
-+
-+&pixelvalve2 {
-+	status = "okay";
-+};
-+
-+&pixelvalve3 {
-+	status = "okay";
-+};
-+
-+&pixelvalve4 {
-+	status = "okay";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+};
-+
-+&ddc0 {
-+	status = "okay";
-+};
-+
-+&hdmi1 {
-+	status = "okay";
-+};
-+
-+&ddc1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index 1e89f2a810f3..98fb36c35033 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -13,6 +13,11 @@
- 	interrupt-parent = <&gicv2>;
- 
- 
-+	vc4: gpu {
-+		compatible = "brcm,bcm2711-vc5";
-+		status = "disabled";
-+	};
-+
- 	clk_108MHz: clk-108M {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -245,6 +250,27 @@
- 			status = "disabled";
- 		};
- 
-+		pixelvalve0: pixelvalve@7e206000 {
-+			compatible = "brcm,bcm2711-pixelvalve0";
-+			reg = <0x7e206000 0x100>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		pixelvalve1: pixelvalve@7e207000 {
-+			compatible = "brcm,bcm2711-pixelvalve1";
-+			reg = <0x7e207000 0x100>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		pixelvalve2: pixelvalve@7e20a000 {
-+			compatible = "brcm,bcm2711-pixelvalve2";
-+			reg = <0x7e20a000 0x100>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		pwm1: pwm@7e20c800 {
- 			compatible = "brcm,bcm2835-pwm";
- 			reg = <0x7e20c800 0x28>;
-@@ -255,6 +281,13 @@
- 			status = "disabled";
- 		};
- 
-+		pixelvalve4: pixelvalve@7e216000 {
-+			compatible = "brcm,bcm2711-pixelvalve4";
-+			reg = <0x7e216000 0x100>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		emmc2: emmc2@7e340000 {
- 			compatible = "brcm,bcm2711-emmc2";
- 			reg = <0x7e340000 0x100>;
-@@ -267,6 +300,13 @@
- 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		pixelvalve3: pixelvalve@7ec12000 {
-+			compatible = "brcm,bcm2711-pixelvalve3";
-+			reg = <0x7ec12000 0x100>;
-+			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		dvp: clock@7ef00000 {
- 			compatible = "brcm,brcm2711-dvp";
- 			reg = <0x7ef00000 0x10>;
-@@ -274,6 +314,76 @@
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 		};
-+
-+		hdmi0: hdmi@7ef00700 {
-+			compatible = "brcm,bcm2711-hdmi0";
-+			reg = <0x7ef00700 0x300>,
-+			      <0x7ef00300 0x200>,
-+			      <0x7ef00f00 0x80>,
-+			      <0x7ef00f80 0x80>,
-+			      <0x7ef01b00 0x200>,
-+			      <0x7ef01f00 0x400>,
-+			      <0x7ef00200 0x80>,
-+			      <0x7ef04300 0x100>,
-+			      <0x7ef20000 0x100>;
-+			reg-names = "hdmi",
-+				    "dvp",
-+				    "phy",
-+				    "rm",
-+				    "packet",
-+				    "metadata",
-+				    "csc",
-+				    "cec",
-+				    "hd";
-+			clocks = <&firmware_clocks 13>;
-+			clock-names = "hdmi";
-+			resets = <&dvp 0>;
-+			ddc = <&ddc0>;
-+			status = "disabled";
-+		};
-+
-+		ddc0: i2c@7ef04500 {
-+			compatible = "brcm,bcm2711-hdmi-i2c";
-+			reg = <0x7ef04500 0x100>, <0x7ef00b00 0x300>;
-+			reg-names = "bsc", "auto-i2c";
-+			clock-frequency = <390000>;
-+			status = "disabled";
-+		};
-+
-+		hdmi1: hdmi@7ef05700 {
-+			compatible = "brcm,bcm2711-hdmi1";
-+			reg = <0x7ef05700 0x300>,
-+			      <0x7ef05300 0x200>,
-+			      <0x7ef05f00 0x80>,
-+			      <0x7ef05f80 0x80>,
-+			      <0x7ef06b00 0x200>,
-+			      <0x7ef06f00 0x400>,
-+			      <0x7ef00280 0x80>,
-+			      <0x7ef09300 0x100>,
-+			      <0x7ef20000 0x100>;
-+			reg-names = "hdmi",
-+				    "dvp",
-+				    "phy",
-+				    "rm",
-+				    "packet",
-+				    "metadata",
-+				    "csc",
-+				    "cec",
-+				    "hd";
-+			ddc = <&ddc1>;
-+			clocks = <&firmware_clocks 13>;
-+			clock-names = "hdmi";
-+			resets = <&dvp 1>;
-+			status = "disabled";
-+		};
-+
-+		ddc1: i2c@7ef09500 {
-+			compatible = "brcm,bcm2711-hdmi-i2c";
-+			reg = <0x7ef09500 0x100>, <0x7ef05b00 0x300>;
-+			reg-names = "bsc", "auto-i2c";
-+			clock-frequency = <390000>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	arm-pmu {
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/jbd2/transaction.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+> index 2dd848a743ed..c5f7f6d0f33b 100644
+> --- a/fs/jbd2/transaction.c
+> +++ b/fs/jbd2/transaction.c
+> @@ -1152,8 +1152,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
+>  	/* For undo access buffer must have data copied */
+>  	if (undo && !jh->b_committed_data)
+>  		goto out;
+> -	if (jh->b_transaction != handle->h_transaction &&
+> -	    jh->b_next_transaction != handle->h_transaction)
+> +	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
+> +	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
+>  		goto out;
+>  	/*
+>  	 * There are two reasons for the barrier here:
+> @@ -2565,8 +2565,8 @@ bool __jbd2_journal_refile_buffer(struct journal_head *jh)
+>  	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+>  	 * take a new one.
+>  	 */
+> -	jh->b_transaction = jh->b_next_transaction;
+> -	jh->b_next_transaction = NULL;
+> +	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
+> +	WRITE_ONCE(jh->b_next_transaction, NULL);
+>  	if (buffer_freed(bh))
+>  		jlist = BJ_Forget;
+>  	else if (jh->b_modified)
+> -- 
+> 2.21.0 (Apple Git-122.2)
+> 
 -- 
-git-series 0.9.1
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
