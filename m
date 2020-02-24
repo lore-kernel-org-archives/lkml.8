@@ -2,144 +2,133 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0BCC35677
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1FDC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A452067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E+uXnhSN"
+	by mail.kernel.org (Postfix) with ESMTP id 2EB562071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgBXCKk (ORCPT
+        id S1727252AbgBXCLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:10:40 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:54169 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbgBXCKi (ORCPT
+        Sun, 23 Feb 2020 21:11:19 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727151AbgBXCLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:10:38 -0500
-Received: by mail-pf1-f202.google.com with SMTP id c17so5651494pfi.20
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 18:10:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=em6XcUN6Sgd77WYEtwG8AuT1olj7PL/gGgbDqoXx92w=;
-        b=E+uXnhSNXf534z3GjUH2lwNEjBXcWXn9RZ44ynGBLyGFBh6B4SCJ3rTdzfHM+o+Bno
-         VxKLCAHwsdkWJHskFoD9Vkuqmf8sv3ORr03b21RmM6sK4B1dNgs7kHUsncaBgQsK20aP
-         fSSiL3sHi6ZuSaLSU/ac+vt4cTkZWsOgFrQbnhYdCv8sXcHJm4YWmse1gk9vJvta74Pz
-         CtGwlNEpDNXJrKiIYC7aOyrG6lp7JHG+ot6FFt32MXr6s5mwt6uR9xa3rNnYf88dZifz
-         0PMFwNS6V8oJBOtSVNut319Ez0TbFHLd2ElURqTOriDU/ubyPYQu44SBgjdg9OpeV/wF
-         pVDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=em6XcUN6Sgd77WYEtwG8AuT1olj7PL/gGgbDqoXx92w=;
-        b=F/ttBhHZv7sHEXRn8rPxqwhK9KoATiEmsoywe9JFrCgfKZlAqxe/Xv86QGSo0FTjzb
-         SD3dYOf5mJOwM4lJavcX+6dYF4ypt3eCd5fzhh93kg2uZtsGj7fkB2oaP+qTLBM4shEh
-         YYoLt9glBeRDh51LJ0i5/GY3v64LJErrUoSe3sQcuHGljl898zJw9E0PwbS28F3raXoE
-         XyOHTWDIlOBTUxnVKh62la8hUK7xZTPm37nBjqoRujDvIGofB7xsP7xVv9ED5I/IECx6
-         71/bvNaEDRbhvW3E1vcdzCwc5yvb95Eb8pKKLqPnB8txj6x+bvitQW9nY3m7A75Joy2k
-         oK2w==
-X-Gm-Message-State: APjAAAWYbnYhzPq2bWc8gJvKGk8YwqI8vg4gRLKFH1WmSKYPF3dP/H4j
-        9gKWCY7+vS+hRrsrTRhTPRxlbBneE67bYHFszf132aZFw64qCteNZfLG0UR9FzZDKAll6WXQ4qb
-        DlZhxWX+/yR+BypdT8QBSXTaYbnomHNDm2AVixkZwJbS6iY7TlhH9siQFEC2UkFJb0MAjzw==
-X-Google-Smtp-Source: APXvYqz6s2e3jF7ohEb8JyMCoEHwTugiFEQk/Az/WnyXRnhPy25meta77iWUNz38j1pNY9KX9r6A5JnI984=
-X-Received: by 2002:a63:3407:: with SMTP id b7mr23541684pga.163.1582510236455;
- Sun, 23 Feb 2020 18:10:36 -0800 (PST)
-Date:   Sun, 23 Feb 2020 18:10:29 -0800
-In-Reply-To: <20200224021029.142701-1-adelva@google.com>
-Message-Id: <20200224021029.142701-3-adelva@google.com>
-Mime-Version: 1.0
-References: <20200224021029.142701-1-adelva@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v3 3/3] dt-bindings: pmem-region: Document memory-region
-From:   Alistair Delva <adelva@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kenny Root <kroot@google.com>,
+        Sun, 23 Feb 2020 21:11:18 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O29J6h032642
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 21:11:17 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1pfwhgc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 21:11:17 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Mon, 24 Feb 2020 02:11:14 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 02:11:07 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O2B6LF27000902
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 02:11:06 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17C76A405C;
+        Mon, 24 Feb 2020 02:11:06 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3B92A405B;
+        Mon, 24 Feb 2020 02:11:05 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 02:11:05 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 08C47A00E5;
+        Mon, 24 Feb 2020 13:11:01 +1100 (AEDT)
+Subject: Re: [PATCH v3 05/27] ocxl: Address kernel doc errors & warnings
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         "Oliver O'Halloran" <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, devicetree@vger.kernel.org,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-6-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Mon, 24 Feb 2020 13:11:04 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200221032720.33893-6-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022402-0016-0000-0000-000002E99DB3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022402-0017-0000-0000-0000334CC2CC
+Message-Id: <acb1ea38-8a91-075a-4eb4-73e6ddbfe7a9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-23_07:2020-02-21,2020-02-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=659
+ clxscore=1015 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 malwarescore=0 phishscore=0 impostorscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kenny Root <kroot@google.com>
+On 21/2/20 2:26 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This patch addresses warnings and errors from the kernel doc scripts for
+> the OpenCAPI driver.
+> 
+> It also makes minor tweaks to make the docs more consistent.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Add documentation and example for memory-region in pmem.
+Looks good, fixes all the kerneldoc warnings I get.
 
-Signed-off-by: Kenny Root <kroot@google.com>
-Signed-off-by: Alistair Delva <adelva@google.com>
-Cc: "Oliver O'Halloran" <oohall@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-nvdimm@lists.01.org
-Cc: kernel-team@android.com
----
-[v3: adelva: remove duplicate "From:"]
- .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-index 5cfa4f016a00..0ec87bd034e0 100644
---- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-@@ -29,6 +29,18 @@ Required properties:
- 		in a separate device node. Having multiple address ranges in a
- 		node implies no special relationship between the two ranges.
- 
-+		This property may be replaced or supplemented with a
-+		memory-region property. Only one of reg or memory-region
-+		properties is required.
-+
-+	- memory-region:
-+		Reference to the reserved memory node. The reserved memory
-+		node should be defined as per the bindings in
-+		reserved-memory.txt
-+
-+		This property may be replaced or supplemented with a reg
-+		property. Only one of reg or memory-region is required.
-+
- Optional properties:
- 	- Any relevant NUMA assocativity properties for the target platform.
- 
-@@ -63,3 +75,20 @@ Examples:
- 		volatile;
- 	};
- 
-+
-+	/*
-+	 * This example uses a reserved-memory entry instead of
-+	 * specifying the memory region directly in the node.
-+	 */
-+
-+	reserved-memory {
-+		pmem_1: pmem@5000 {
-+			no-map;
-+			reg = <0x00005000 0x00001000>;
-+		};
-+	};
-+
-+	pmem@1 {
-+		compatible = "pmem-region";
-+		memory-region = <&pmem_1>;
-+	};
+
 -- 
-2.25.0.265.gbab2e86ba0-goog
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
