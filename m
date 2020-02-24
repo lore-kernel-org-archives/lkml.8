@@ -2,121 +2,139 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD83C38BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8997BC38BE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD3F20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D0420CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LD7UkEVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgBXT6p (ORCPT
+        id S1727327AbgBXT7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:58:45 -0500
-Received: from 9.mo68.mail-out.ovh.net ([46.105.78.111]:48022 "EHLO
-        9.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgBXT6o (ORCPT
+        Mon, 24 Feb 2020 14:59:52 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33992 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgBXT7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 14:58:44 -0500
-Received: from player698.ha.ovh.net (unknown [10.110.115.188])
-        by mo68.mail-out.ovh.net (Postfix) with ESMTP id 1030415AA38
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 20:58:42 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player698.ha.ovh.net (Postfix) with ESMTPSA id 3A332FB0C78D;
-        Mon, 24 Feb 2020 19:58:34 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 20:58:33 +0100
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: sysctl/kernel: document acpi_video_flags
-Message-ID: <20200224205833.3016789f@heffalump.sk2.org>
-In-Reply-To: <20200221165502.31770-1-steve@sk2.org>
-References: <20200221165502.31770-1-steve@sk2.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 24 Feb 2020 14:59:52 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so5688267pgi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 11:59:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=8cle6FmbDb89jzrGhTz6Cfv64lMjzYvvlKlpjrjSc90=;
+        b=LD7UkEVnWYtjbAEFsWGmA8GKCjrtpc0lyPmTM8VxYWF8oCcYQu2iGetGy/nkiJuCNp
+         FiYj7LadGa2h1DpKPJJlxlNmhF761uq+vkok4cx9VYt/IbkgbBh/T1pZF9qVBCG21oZH
+         CBtaqrurZ8jrjB/j9OiPFXD8NPnMJZtXSdgtlM6SzEQTo3kp3uTUE6QJnYtZeEtBSkbj
+         0FStMzXtcrsgss9eyQ2encwCCVtUITNChpdUWhmkFfbvEJSe1FnRrLr1eOwIOR9TQdAm
+         1dBmU+UYLN6FWiPGz26Ci2Mk1SFtxNnygtxiYkC8XgZHfGX8/O6uGPe0UApIA/yplPVU
+         ArWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=8cle6FmbDb89jzrGhTz6Cfv64lMjzYvvlKlpjrjSc90=;
+        b=Zh5Jx3faepm4m1uvYVeTv7iLYEOBAyqgQSclZcbWYQdyg/uhLGL8PeOuiYCS1td/Nw
+         BOEX3dV0H34ArXUPAOSyRUnbuxasGevLcSzJz9Vyt8E1K2RMpKwKp8qptpaXnqu+8Bn2
+         ylXJbiM4wW6C2ceIAujYLAa9ZQxQ9Wv99sD24uoM8td+NowydwMeIQbdG1f2eChS55jH
+         6I6uevPT4tIL59Y5uf1uNgujISxX7lLdwKmwQoujeeBz2ZTgree5nMGQUTs/5iq2Fi1g
+         2+dG2u+6BhI4JRmx6aOQ+8hhVqHgnkgVOf6CdcOVzxNENKhUAeJ2QcYpVggTY/AJZ8aG
+         7vaQ==
+X-Gm-Message-State: APjAAAXyNfHCwDwxvhJBykFBjl0TbYGX0lVdo3XyV1UI+ZfWWDhe2CZT
+        wOt48IfKKDoXBYfU1zn45uwWAw==
+X-Google-Smtp-Source: APXvYqx6ZBKJM5xOsEMNoHeqwFTTiZsYugC3HTFOB2sN6LRNFH3whHanvzIo4xFKtfkPH8oWIHUgBw==
+X-Received: by 2002:a63:ec0c:: with SMTP id j12mr52450477pgh.78.1582574391510;
+        Mon, 24 Feb 2020 11:59:51 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id j125sm13845759pfg.160.2020.02.24.11.59.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 11:59:50 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:59:43 -0800
+From:   Benson Leung <bleung@google.com>
+To:     sre@kernel.org
+Cc:     bleung@kernel.org, bleung@chromium.org, bleung@google.com,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org,
+        sre@kernel.org, sebastian.reichel@collabora.com,
+        pmalani@chromium.org
+Subject: [GIT PULL] IB between chrome-platform/power_supply for v5.7
+Message-ID: <20200224195943.GA30398@google.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/m24mW9PsjW.9ELm8gJu.TnZ"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 3094254422545550725
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddufeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertddvnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieelkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/m24mW9PsjW.9ELm8gJu.TnZ
-Content-Type: text/plain; charset=US-ASCII
+
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 21 Feb 2020 17:55:02 +0100, Stephen Kitt <steve@sk2.org> wrote:
-> Based on the implementation in arch/x86/kernel/acpi/sleep.c, in
-> particular the acpi_sleep_setup() function.
->=20
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst
-> b/Documentation/admin-guide/sysctl/kernel.rst index
-> 534781ba3eac..1c48ab4bfe30 100644 ---
-> a/Documentation/admin-guide/sysctl/kernel.rst +++
-> b/Documentation/admin-guide/sysctl/kernel.rst @@ -54,8 +54,15 @@ free spa=
-ce
-> valid for 30 seconds. acpi_video_flags
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
-> -See Documentation/kernel/power/video.txt, it allows mode of video boot
-> -to be set during run time.
-> +See :doc:`/power/video`. This allows the video resume mode to be set,
-> +in a similar fashion to the ``acpi_sleep`` kernel parameter, by
-> +combining the following values:
-> +
-> +=3D =3D=3D=3D=3D=3D=3D=3D
-> +1 s3_bios
-> +2 s3_mode
-> +4 s3_beep
-> +=3D =3D=3D=3D=3D=3D=3D=3D
-> =20
-> =20
->  auto_msgmni
-> --=20
-> 2.20.1
->=20
+Hi Sebastian,
 
-I forgot to include the base commit information; this is against 8f21f54b8a=
-95
-in docs-next.
+The immutable branch ib-chrome-platform-power-supply-cros-usbpd-notify
+is now ready. Please merge for v5.7.
 
-Regards,
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-Stephen
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
---Sig_/m24mW9PsjW.9ELm8gJu.TnZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git i=
+b-chrome-platform-power-supply-cros-usbpd-notify
+
+for you to fetch changes up to f2437e48ac7ae0e99b8e76d88aaf24a9b2e6d3e2:
+
+  power: supply: cros-ec-usbpd-charger: Fix host events (2020-02-10 11:01:3=
+3 -0800)
+
+----------------------------------------------------------------
+Jon Flatley (2):
+      platform: chrome: Add cros-usbpd-notify driver
+      power: supply: cros-ec-usbpd-charger: Fix host events
+
+ drivers/platform/chrome/Kconfig                 |  14 ++
+ drivers/platform/chrome/Makefile                |   1 +
+ drivers/platform/chrome/cros_usbpd_notify.c     | 169 ++++++++++++++++++++=
+++++
+ drivers/power/supply/Kconfig                    |   2 +-
+ drivers/power/supply/cros_usbpd-charger.c       |  50 +++----
+ include/linux/platform_data/cros_usbpd_notify.h |  17 +++
+ 6 files changed, 220 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
+ create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5UKukACgkQgNMC9Yht
-g5ykHw//dc4KmvEg8tU/J/gP9UfZFugohw/U4tRXGpht45fnHCnDg+ldFiMAewKA
-29VYEKg5M/KlEKz0yVTvTh+/XTa41TN/Iz3GQpBLPCZaJs/ZfTncX1rpmzjQVLev
-nOIuM8wHkGiQ7SPkn2OE4tZAr+4p15204+0GlQESvyiRBFH4Z4CSyAPWwlQxGol4
-dG4j5yRq3FWp9dTGn3BjtykOJmnyy506d32CQLB4lCjOGK57DV8fdK6kCwDXzi+4
-/0nO4Sx8xQQ8sWAh/VUOoSlaNUfMLExHXQY26lXGJ4ozxohegZQkhxM+mAz7V3AQ
-oWIOMRNnBZA+sSp7d+lCmnVxNt2NkC/7A9foqTzKLe2CjXMhfvJ6o3KLvBuS5H1r
-IixsZ8f6GjJuIG7PHqTyB/A2d6OwUGw20pEuFFCrUVwF2Gdiz+FIpMFCfJ4mAbTS
-qhO7PZG42HC7rrajkysI44/+HOEve7XT55euYDIZOorsj7P6Anh+yUwgWPgiU+zF
-gath9A8FCEq6VqvvjVNot9KAM/rhzGkfTEd2ZAJVntl3bAA/use291hpTCvqapVH
-NvJsHFeLku1rWfHWN0a233Qx0ENho8FZdbyj8uENwBmyBxTzR2J8ngbVr89qYjV5
-8RfTZUe+GckQOHrikkI2EbojMrCRf4iyA6dfJv93GzZG0YOq5s8=
-=m/8w
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXlQrLwAKCRBzbaomhzOw
+wsW6AQCiQwv3nbMrcYA4r09kSGBHW/FfRYpz99u88LC/vtoNCwEA76winASDD5nJ
+floO1hr1/Wgahu7MarUwpSJnjX2GKwE=
+=23Ly
 -----END PGP SIGNATURE-----
 
---Sig_/m24mW9PsjW.9ELm8gJu.TnZ--
+--0F1p//8PRICkK4MW--
