@@ -2,102 +2,77 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB01BC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88294C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11732072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:22:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="KTnt4RV/"
+	by mail.kernel.org (Postfix) with ESMTP id 691D42072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgBXMWf (ORCPT
+        id S1727448AbgBXMZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:22:35 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:36619 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXMWf (ORCPT
+        Mon, 24 Feb 2020 07:25:17 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:48310 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgBXMZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:22:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582546951;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=TYqSvUHnKRu+yShrvah+Qsj8w8sJdF2qEWjg9EH8XEI=;
-        b=KTnt4RV/JVk3nNkt58WHNTdwKfvnzq+EJ8Sy1hPROU5AFtFTQCApM7YTk4/9ClpUSH
-        NtZ1/JJcwXI9JRztXtjD7BMDXRPWVs8TKjBxwubnpK5o5Z+sMTrLTFvi0Xe9eqaTROo3
-        rc6Mlgow680OfsWXrAenAaKT+rYXljRekpoQLytiBDgfNtrCAKatvAyF8VTRisDqmnsZ
-        PYv8F/Abu3i00cgN1mIGhqc7uuPMeNjG3Wg+cTGl8MigRddXB2xEbgWNe4s3cMMNt61B
-        A9o8exNXqKBr3ORD9ibBrP5+wsiKcG7djmrRPO59x2iei0AD0b3k4vHBMrl0m6pYj5w3
-        GS1w==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXA0N0JQ="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1OCMMojH
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Mon, 24 Feb 2020 13:22:22 +0100 (CET)
-Subject: Re: [PATCH RFC] regulator: core: fix handling negative voltages e.g. in EPD PMICs
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Mon, 24 Feb 2020 07:25:16 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j6CnI-0002AG-1u; Mon, 24 Feb 2020 12:25:04 +0000
+Date:   Mon, 24 Feb 2020 13:25:03 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH][next] clone3: fix an unsigned args.cgroup comparison to
+ less than zero
+Message-ID: <20200224122503.2m4oc5wgg2oqpjsi@wittgenstein>
+References: <20200222001513.43099-1-colin.king@canonical.com>
+ <20200222121801.cu4dfnk4z5xd5uc2@wittgenstein>
+ <20200224073157.GB3286@kadam>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200224120512.GG6215@sirena.org.uk>
-Date:   Mon, 24 Feb 2020 13:22:21 +0100
-Cc:     Andreas Kemnade <andreas@kemnade.info>, j.neuschaefer@gmx.net,
-        contact@paulk.fr, GNUtoo@cyberdimension.org, josua.mayer@jm0.eu,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1548203B-9D64-4128-9BED-D3BC30F9DC49@goldelico.com>
-References: <20200223153502.15306-1-andreas@kemnade.info> <20200224120512.GG6215@sirena.org.uk>
-To:     Mark Brown <broonie@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20200224073157.GB3286@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 10:31:57AM +0300, Dan Carpenter wrote:
+> On Sat, Feb 22, 2020 at 01:18:01PM +0100, Christian Brauner wrote:
+> > On Sat, Feb 22, 2020 at 12:15:13AM +0000, Colin King wrote:
+> > > From: Colin Ian King <colin.king@canonical.com>
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 2diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 2853e258fe1f..dca4dde3b5b2 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -2618,7 +2618,8 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> >                      !valid_signal(args.exit_signal)))
+> >                 return -EINVAL;
+> > 
+> > -       if ((args.flags & CLONE_INTO_CGROUP) && args.cgroup < 0)
+> > +       if ((args.flags & CLONE_INTO_CGROUP) &&
+> > +           (args.cgroup > INT_MAX || (s64)args.cgroup < 0))
+> 
+> If we're capping it at INT_MAX then the check for negative isn't
+> required and static analysis tools know it's not so they might complain.
 
-> Am 24.02.2020 um 13:05 schrieb Mark Brown <broonie@kernel.org>:
->=20
-> On Sun, Feb 23, 2020 at 04:35:01PM +0100, Andreas Kemnade wrote:
->=20
->> An alternative would be to handle voltages as absolute values.
->> There are probably no regulators with support both negative
->> and positive output.
->=20
-> This is what'd be needed, your approach here is a bit of a hack and
-> leaves some values unrepresentable if they overlap with errnos which
-> obviously has issues if someone has a need for those values.
+It isn't, but it's easier to understand for the reader. But I don't care
+that much and if it's trouble for tools than fine.
 
-Negative ERRNOs have BIT(31) set.
-
-Since voltage integers on a 32 bit architecture represent =C2=B5V this =
-would
-still allow voltages up to (2^31 - 1) =C2=B5V i.e. 2 kV with BIT(31) not =
-set.
-
-Therefore it seems very unlikely that anyone needs to represent voltages
-above 2 kV within a Linux system through a regulator.
-
-So I'd say any negative return value got regulator_get_voltage() can be
-treated as an error.
-
-And regulators for negative voltages could be represented by
-their absolute value (and maybe a _neg component in the regulator
-name).
-
-But then it seems to be a little inconsistent that the voltage
-parameters of regulator_set_voltage_unlocked() are signed integers
-and not unsigned.
-
-So shouldn't that be protected against attempting to set negative =
-voltages?
-
-Just my 2 cts.
-
-BR,
-Nikolaus=
+Christian
