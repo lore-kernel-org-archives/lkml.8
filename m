@@ -2,112 +2,118 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCA1C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD82FC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D6320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F41420732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxUsAPPG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrHu6pp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgBXSRF (ORCPT
+        id S1727795AbgBXSSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:17:05 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34574 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBXSRE (ORCPT
+        Mon, 24 Feb 2020 13:18:14 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:44862 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBXSSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:17:04 -0500
-Received: by mail-pl1-f195.google.com with SMTP id j7so4382636plt.1;
-        Mon, 24 Feb 2020 10:17:04 -0800 (PST)
+        Mon, 24 Feb 2020 13:18:14 -0500
+Received: by mail-yb1-f194.google.com with SMTP id g206so4123901ybg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 10:18:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fpxGh78lri+FF2jGJPwT3ROkxj1dx52IpBbpwJRlISM=;
-        b=hxUsAPPGZfuohNO9aKjobjWrDuyWd9hhWCIqdJ6bukofPpfOrnRfiY6tljv+cPE1bc
-         MXUDGwhLCe/ZSEU2vUKlauVgol4jfkhwxeUZRN78R4zHAoM0OdqJadlLPwbn56bOtp8L
-         ahZDiVMf+2sO4s6QkjK6NrXx+34AdtUvqdMeEDit0IJeP+N/H1G0kC4rPeH1kqTqaImn
-         wgHXw3hzRWf3fFHU5BrdZJV9Qtbw6bOhirujA8XTMIJrSGuCe1aOsQsPsWl8srQzDX5K
-         pUx9Ag6X35ChLEl9A+vqLmBz9hYBkQV8HNMfXCXa0mqDapY1QeFfci0KS1lAQVwrhEcD
-         rhSg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o+SFPaw3C1NfsYD07E9fToSs6hUMFU4silGa9zhvCjA=;
+        b=DrHu6pp8Rsg5dQgaE63XTn2Maj1ZH+Jqw/XbaPAZiPOOHF5uCwPhQQvEOeK0gX9BY/
+         mOjUvWXmvah2S5EPLqQGTYRqurXPIH66E8trucw0AyWmR4SnoYkDRIfRYCBl/Yn+NyAp
+         hMFaVLgOY5lr0lw7hEloAb76dkXN/JAriWXoLYspGiCZbwgh47rEuzz3HiDfM9+HqTb1
+         YACZ/FSrpm8DT9LMKODBZIkYd7/QGj+lvSaRucbtR3yxFMuWN9UU1v6/UP9Vbu0A7DsR
+         CbGA4eaYdjGiQpU4eqPk1rFdWFv4MubuO2l0vXKF+V6NfwepAEytcwzzjvUmgn5qRtSR
+         4hUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fpxGh78lri+FF2jGJPwT3ROkxj1dx52IpBbpwJRlISM=;
-        b=giCLQMpln8v5/FcJr1UYV8sDm6SibazjOXHxecEF1FTg4Y7eaYa3YWNPCVL/WN5ifm
-         KaerdLr7zhtppBSYpf1YbvGGi6ocXIBZHbI6t4cWtNgm/kQasKlt51Fj8aNBkwlcNnvH
-         soRjaN/9jNRhqTNIWfGrheAxWLOyAeTjdd4CjufXI28ab7jaM0h88nv0RcBZ+AWyw0B9
-         3xJxKaPfNQctB4gTnxfW+h7alW+lPWVWrc0LpXPLwH+Lzmxz95DMT2ygaX8gKDhSuPku
-         DMIbLYq0DeiDOxy6Gj8HBDfFw5Hv+WroDRc8KzyfGya5oJ3coGSIdNx/L6n4PSFMrX/k
-         376Q==
-X-Gm-Message-State: APjAAAVJ/dI/6mo1xJZRDBWpmXZ3VHSWud1QBEIH5KDwF0W4awfiZPjd
-        WGVjlywBeen+NglPCBT6pao=
-X-Google-Smtp-Source: APXvYqysaQpDCQSEdFlZ2E82ILbvhKOsJAvGz4FeCn4Y1Tpz3wfedxfkwQeYuwsAfOUSRGimH/rP6Q==
-X-Received: by 2002:a17:902:7797:: with SMTP id o23mr47821945pll.298.1582568223676;
-        Mon, 24 Feb 2020 10:17:03 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::6:2457])
-        by smtp.gmail.com with ESMTPSA id g24sm13545782pfk.92.2020.02.24.10.17.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Feb 2020 10:17:02 -0800 (PST)
-Date:   Mon, 24 Feb 2020 10:16:59 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [patch V3 05/22] bpf/trace: Remove EXPORT from trace_call_bpf()
-Message-ID: <20200224181657.ndgtotm3abigaqs5@ast-mbp>
-References: <20200224140131.461979697@linutronix.de>
- <20200224145642.953923067@linutronix.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o+SFPaw3C1NfsYD07E9fToSs6hUMFU4silGa9zhvCjA=;
+        b=Tq9ZGM52tWvvYGyzN7eC6dC6IaAlmD9okr0LFyu4uj+jx4oB67ipDq+Hy8DwY6jC2M
+         +wBi/sUsItvrRgH04GLGgmwsXtY2QF+PNCz3jqzxxjnpZHmZ5OCA4VpuXlP9WoPBcCnF
+         pk8CJz0AiYdWRmKTtaYaP3ye7o1lC+Tw6pDSnsxK1SO3v38HUED3FBCqqc2QSFhs/0vU
+         Rlcoka6BvxhEr+VIf7uRB6VHoBBFi3nnuQ6W+Q5IqK2dfHZnwltdbWPyTMPaQWiYz88O
+         +EIbzYQYe80Dcd4I6lBypwG5jcBzJGpALkSpfL9BM19o4D+OlqG0E68ZDLvHXDVZxLxG
+         +3kA==
+X-Gm-Message-State: APjAAAWi7nXLWe6pyKhgVtWB3rhp0Isc9Qt7nw0qSuflwo1tEY06KMGL
+        HVK9W8Yxin/VK0ypPAX47uTwQvk=
+X-Google-Smtp-Source: APXvYqzEyLWHIEFbIC467NfMXpzRw9b//z49nkZV1gJuZDkPFl43J04CiCiNR9nbAZxiGdoai1kLYw==
+X-Received: by 2002:a5b:d05:: with SMTP id y5mr2863274ybp.255.1582568293236;
+        Mon, 24 Feb 2020 10:18:13 -0800 (PST)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id i66sm5632383ywa.74.2020.02.24.10.18.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 10:18:12 -0800 (PST)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v2 0/8] Enable pt_regs based syscalls for x86-32 native
+Date:   Mon, 24 Feb 2020 13:17:49 -0500
+Message-Id: <20200224181757.724961-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224145642.953923067@linutronix.de>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:01:36PM +0100, Thomas Gleixner wrote:
-> All callers are built in. No point to export this.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V3: New patch 
-> ---
->  kernel/trace/bpf_trace.c |    1 -
->  1 file changed, 1 deletion(-)
-> 
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -119,7 +119,6 @@ unsigned int trace_call_bpf(struct trace
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(trace_call_bpf);
+This patch series cleans up the x86 syscall wrapper code and converts
+the 32-bit native kernel over to pt_regs based syscalls.  This makes
+the 32-bit syscall interface consistent with 64-bit, and a bit more
+effecient by not blindly pushing all 6 potential arguments onto the
+stack.
 
-Thanks for catching this.
-Looking at my old commit 2541517c32be ("tracing, perf: Implement BPF programs attached to kprobes")
-where I added this line I cannot figure out why I did so five years ago.
-I'm guessing some earlier versions of the patches were calling it from
-tracepoint macro and since tracepoints can be in modules I exported it.
-Definitely shouldn't be an export symbol.
+Changes since v1:
+- Split patch 1 into multiple patches
+- Updated comments and patch notes to clarify changes
+
+Brian Gerst (8):
+  x86, syscalls: Refactor SYSCALL_DEFINEx macros
+  x86, syscalls: Refactor SYSCALL_DEFINE0 macros
+  x86, syscalls: Refactor COND_SYSCALL macros
+  x86, syscalls: Refactor SYS_NI macros
+  x86: Move 32-bit compat syscalls to common location
+  x86-32: Enable syscall wrappers
+  x86-64: Use syscall wrappers for x32_rt_sigreturn
+  x86: Drop asmlinkage from syscalls
+
+ arch/x86/Kconfig                       |   2 +-
+ arch/x86/entry/common.c                |  20 +-
+ arch/x86/entry/syscall_32.c            |  13 +-
+ arch/x86/entry/syscall_64.c            |   9 +-
+ arch/x86/entry/syscalls/syscall_32.tbl | 818 ++++++++++++-------------
+ arch/x86/entry/syscalls/syscall_64.tbl |   2 +-
+ arch/x86/entry/syscalls/syscalltbl.sh  |  33 +-
+ arch/x86/ia32/Makefile                 |   2 +-
+ arch/x86/include/asm/sighandling.h     |   5 -
+ arch/x86/include/asm/syscall.h         |   8 +-
+ arch/x86/include/asm/syscall_wrapper.h | 317 +++++-----
+ arch/x86/include/asm/syscalls.h        |  29 -
+ arch/x86/kernel/Makefile               |   2 +
+ arch/x86/kernel/signal.c               |   2 +-
+ arch/x86/{ia32 => kernel}/sys_ia32.c   | 130 ++--
+ arch/x86/um/sys_call_table_32.c        |  10 +
+ 16 files changed, 690 insertions(+), 712 deletions(-)
+ rename arch/x86/{ia32 => kernel}/sys_ia32.c (83%)
+
+-- 
+2.24.1
+
