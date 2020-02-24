@@ -2,86 +2,83 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE28C38C02
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2A4C38BE7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3ADF20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:24:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582568698;
-	bh=Tez6VX6xj5AysVwOY/ouD5bKxQQHd3DxSyG5pRnK4MM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hDg2mMN6zpPy9wgtrbtx3UOkR+WTZlfI6HjGzV5rfuAdtYgZxyRMqMP8Fu+0rf8vm
-	 YhnouPFmKnONdlu+W1EOo6gzqW5HgchXwBD11RTfKd3zo0HOpeV6H6maZKzXeesD7z
-	 9p6JPzcUYhTwiCDzSgeJw7m3rSnGjjoj/LSMm+c8=
+	by mail.kernel.org (Postfix) with ESMTP id 12D7C20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgBXSY5 (ORCPT
+        id S1727935AbgBXSZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:24:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgBXSYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:24:55 -0500
-Received: from localhost.localdomain (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E3842084E;
-        Mon, 24 Feb 2020 18:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582568694;
-        bh=Tez6VX6xj5AysVwOY/ouD5bKxQQHd3DxSyG5pRnK4MM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FMc+w+gf7P1GiCySSc4erFIiTujZ4kop3vcHYUX2gFuUS170V31br0JigVd3d2RER
-         gpwMOJYYXJc+Wx26QDuxVUWkyHqE1diK/dAw51lHwsz9HOjPF1uuJeSIIcumBtKlJO
-         Z+Cib+3BU7Vvofl1MkoVIt67u9WQVNTs9mlNNNe0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jiri Slaby <jirislaby@gmail.com>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ath5k: Add proper dependency for ATH5K_AHB
-Date:   Mon, 24 Feb 2020 19:24:47 +0100
-Message-Id: <20200224182447.4054-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Feb 2020 13:25:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36899 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgBXSZe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:25:34 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6IQ0-0002cD-Bx; Mon, 24 Feb 2020 19:25:24 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6IPy-00016N-Ke; Mon, 24 Feb 2020 19:25:22 +0100
+Date:   Mon, 24 Feb 2020 19:25:22 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] watchdog: imx2_wdt: Drop .remove callback
+Message-ID: <20200224182522.33qeusb4xbxxt3o3@pengutronix.de>
+References: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
+ <20200224102211.clzqw4vtzc4nz5df@pengutronix.de>
+ <DB3PR0402MB391637EB54A1FD37059FBE47F5EC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <33c3778f-fc7e-8564-f767-91aafae03122@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <33c3778f-fc7e-8564-f767-91aafae03122@roeck-us.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CONFIG_ATH5K_AHB could be enabled on ATH25 system without enabling
-ATH5K driver itself.  This does not make sense because CONFIG_ATH5K_AHB
-controls object build within drivers/net/wireless/ath/ath5k/ so enabling
-it without CONFIG_ATH5K brings nothing.
+On Mon, Feb 24, 2020 at 06:15:17AM -0800, Guenter Roeck wrote:
+> How would you expect the watchdog core to stop the watchdog
+> with no stop function in the driver ?
 
-Add proper dependency to CONFIG_ATH5K_AHB.
+I'm not 100% sure, but I think the situation is that you cannot stop the
+watchdog in the watchdog register range, but if you stop the clock it
+will never expire.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/net/wireless/ath/ath5k/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's why I asked if the devm action callback stops the watchdog.
 
-diff --git a/drivers/net/wireless/ath/ath5k/Kconfig b/drivers/net/wireless/ath/ath5k/Kconfig
-index 802f8f87773a..96010d4b00e7 100644
---- a/drivers/net/wireless/ath/ath5k/Kconfig
-+++ b/drivers/net/wireless/ath/ath5k/Kconfig
-@@ -54,7 +54,7 @@ config ATH5K_TRACER
- 
- config ATH5K_AHB
- 	bool "Atheros 5xxx AHB bus support"
--	depends on ATH25
-+	depends on ATH25 && ATH5K
- 	---help---
- 	  This adds support for WiSoC type chipsets of the 5xxx Atheros
- 	  family.
+Didn't look into the details though ...
+
+Best regards
+Uwe
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
