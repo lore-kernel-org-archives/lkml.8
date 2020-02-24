@@ -2,122 +2,152 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D181C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ACAC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C7320578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="uXt0JYDx"
+	by mail.kernel.org (Postfix) with ESMTP id E484520578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgBXHWV (ORCPT
+        id S1727282AbgBXHWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:22:21 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:37858 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgBXHWU (ORCPT
+        Mon, 24 Feb 2020 02:22:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36628 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXHWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:22:20 -0500
-Received: by mail-ua1-f67.google.com with SMTP id h32so2876961uah.4
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:22:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=51VpaiWfXJd1ONeSEUuEOWBMV41ZnSSRJG+n3jg+2Ko=;
-        b=uXt0JYDxbDwwvUxezeC7a0GwQS/QoUKiPOOvCcnibKZADVlU20s696uVOrhCwyJ9uD
-         ebeOhCAu+glMcm8JwQJc7NynJr6maQvt/Q3W1Z5FHboIMkw8LjWT34FT6FQBmtYQBkBD
-         tiilg+lE6Q4YmUCeFq2D3+IM2habtm/yvHnQgOp93Fa+jZYMQ3P/iQX4xncguVgs+htm
-         84nedT0uT3cWK+EDwKjY1/aEEGrdU+W3RZNLcFTmBI130iA3UiUI4gSNQYqtSwzaM5rZ
-         NpQieeMXPKgyy0DFkcErj60rJbMjRQ+02CXK8W06u7EMIwEidMCys6BU9Ss+clceXT8u
-         5AGw==
+        Mon, 24 Feb 2020 02:22:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so9047051wru.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:22:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=51VpaiWfXJd1ONeSEUuEOWBMV41ZnSSRJG+n3jg+2Ko=;
-        b=Kgo8j4HBKB/BIJKNBW4VzG95+W4UCSqOcyKe7rG+/EBxJyB2Zt3BkwBgtF0/ja4MF2
-         4eFp5Vr21NfKydNMzOneSi/2Wd1o0Lavsj+1TMtDNXAdsgDFKG3/NkbWhAVnYdOaGxB6
-         MuPOv2ngaZ4Es+w4O4jLSPki4kr0qUT9O1TND9d0JFnsvyyvcuOcCTbc0go9fhY6xHR1
-         QCvov1h1P0CsGRWSBTwD1DvfyRq56/7tZLJQWHTScunUdTK6UN3wvMD3YKm00yK/hxVf
-         2MKGkw2bDi8eGzdwetU7CHvxcZCdKZn40vW/fQd4tCuMWbLyEWvXPJMEVt44y9Odj7KX
-         nZTg==
-X-Gm-Message-State: APjAAAXqLB0OH5fKX1gHKnVBBRuH4tGE3BOMZiht8+rTsc5f7ej/mYex
-        NwFkQkJqfkx5SqJumMrwGrxRZLDi0hI1j+T/i9TY4Is3
-X-Google-Smtp-Source: APXvYqwotp7wpK2rG0V2qY5vEm6T/AGJnDE4PrXlDeoCMmvRzQPnX9+w+hVrp1Rer4U4wdebA3lwWbaWut3U5wqk+kk=
-X-Received: by 2002:ab0:634c:: with SMTP id f12mr24202339uap.48.1582528938687;
- Sun, 23 Feb 2020 23:22:18 -0800 (PST)
+        bh=3uWqpH0FizNQxnodtS0BMO7C44y4V2HGUhMB2HUYwPs=;
+        b=l36brtc6N6grQqiI/XIhTNCTkjvrohQdVQZ4U4Nt/Sc3i/qX9xbXbkkm5epeSq4szh
+         a6ZDIParg6uHmSwMEZGeNvO2Zb6Q1ev9L8cP5lrvaVRf6ff7BaUuYH9Ksr5spVCzeF4M
+         FdUXrNoTyzZvAGXAfryBQ2o+dlBwnZk47EJCboMyFyRkKTSgfYQEi9E8XIHiDSQ18Jlc
+         gSgJy9TNhkyNpiFInUhX33shINgCLNYHaydJu5fLKJs0WAXA8DbVX0fuOaskYMM9Kqoz
+         zaUwKXAIMSQl7sC8PNIx8++HwxgnETYopSxzoh2TMt4c+tV6UN842wlNYiQbtPX++OWG
+         Qzug==
+X-Gm-Message-State: APjAAAXkimYavSUNCy5ALndlwFrNIQvR/7TvjtoN7GSvoeOrifIr0qqD
+        I3HCLgFUs6tMS4FccDxcdO9F4rx9uf0hcrQFLrY=
+X-Google-Smtp-Source: APXvYqxdjZnbif7bpRaQNJiBwyEsuJs/aB/6ns4Tb7r8+8Jic7+2DM/05pAk/J8TW1lgRsRDnMiyVJDa+sjcJk6tMd4=
+X-Received: by 2002:adf:eec3:: with SMTP id a3mr61552115wrp.337.1582528970137;
+ Sun, 23 Feb 2020 23:22:50 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1582527752.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1582527752.git.amit.kucheria@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Mon, 24 Feb 2020 12:52:07 +0530
-Message-ID: <CAHLCerPQ1MhxHPYx9sODTf25MFzEYO7W8rREdarTUCGHJzZ2LQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/3] Convert thermal bindings to yaml
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+References: <20200212202236.13095-1-robh@kernel.org>
+In-Reply-To: <20200212202236.13095-1-robh@kernel.org>
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date:   Mon, 24 Feb 2020 08:22:38 +0100
+Message-ID: <CAAObsKB8e2MN-VJKYSeX1iibmA4d4i+GL+SWYiLHpg3g_Qby7g@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/panfrost: Don't try to map on error faults
+To:     Rob Herring <robh@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Robin Murphy <robin.murphy@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sigh, typo on my part with the version of the series. Will resend with
-corrections.
+On Wed, 12 Feb 2020 at 21:22, Rob Herring <robh@kernel.org> wrote:
+>
+> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>
+> If the exception type isn't a translation fault, don't try to map and
+> instead go straight to a terminal fault.
+>
+> Otherwise, we can get flooded by kernel warnings and further faults.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> I rewrote this some simplifying the code and somewhat following Steven's
+> suggested. Still not using defines though. No defines here was good
+> enough before IMO.
+>
+> Only compile tested.
 
-On Mon, Feb 24, 2020 at 12:50 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+Looks good, I also tested it on RK3399.
+
+Reviewed-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+
+Thanks,
+
+Tomeu
+
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c | 44 +++++++++++--------------
+>  1 file changed, 19 insertions(+), 25 deletions(-)
 >
-> Hi all,
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> index 763cfca886a7..4f2836bd9215 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> @@ -596,33 +596,27 @@ static irqreturn_t panfrost_mmu_irq_handler_thread(int irq, void *data)
+>                 source_id = (fault_status >> 16);
 >
-> Here is a series splitting up the thermal bindings into 3 separate bindings
-> in YAML, one each of the sensor, cooling-device and the thermal zones.
-> Since I was learning about YAML parsers while creating these bindings,
-> there are bound to be some issues.
+>                 /* Page fault only */
+> -               if ((status & mask) == BIT(i)) {
+> -                       WARN_ON(exception_type < 0xC1 || exception_type > 0xC4);
+> -
+> +               ret = -1;
+> +               if ((status & mask) == BIT(i) && (exception_type & 0xF8) == 0xC0)
+>                         ret = panfrost_mmu_map_fault_addr(pfdev, i, addr);
+> -                       if (!ret) {
+> -                               mmu_write(pfdev, MMU_INT_CLEAR, BIT(i));
+> -                               status &= ~mask;
+> -                               continue;
+> -                       }
+> -               }
 >
-> I have to add that the bindings as they exist today, don't really follow
-> the "describe the hardware" model of devicetree. e.g. the entire
-> thermal-zone binding is a software abstraction to tie arbitrary,
-> board-specific trip points to cooling strategies. This doesn't fit well
-> into the model where the same SoC in two different form-factor devices e.g.
-> mobile and laptop, will have fairly different thermal profiles and might
-> benefit from different trip points and mitigation heuristics. I've started
-> some experiments with moving the thermal zone data to a board-specific
-> platform data that is used to initialise a "thermal zone driver".
+> -               /* terminal fault, print info about the fault */
+> -               dev_err(pfdev->dev,
+> -                       "Unhandled Page fault in AS%d at VA 0x%016llX\n"
+> -                       "Reason: %s\n"
+> -                       "raw fault status: 0x%X\n"
+> -                       "decoded fault status: %s\n"
+> -                       "exception type 0x%X: %s\n"
+> -                       "access type 0x%X: %s\n"
+> -                       "source id 0x%X\n",
+> -                       i, addr,
+> -                       "TODO",
+> -                       fault_status,
+> -                       (fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
+> -                       exception_type, panfrost_exception_name(pfdev, exception_type),
+> -                       access_type, access_type_name(pfdev, fault_status),
+> -                       source_id);
+> +               if (ret)
+> +                       /* terminal fault, print info about the fault */
+> +                       dev_err(pfdev->dev,
+> +                               "Unhandled Page fault in AS%d at VA 0x%016llX\n"
+> +                               "Reason: %s\n"
+> +                               "raw fault status: 0x%X\n"
+> +                               "decoded fault status: %s\n"
+> +                               "exception type 0x%X: %s\n"
+> +                               "access type 0x%X: %s\n"
+> +                               "source id 0x%X\n",
+> +                               i, addr,
+> +                               "TODO",
+> +                               fault_status,
+> +                               (fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
+> +                               exception_type, panfrost_exception_name(pfdev, exception_type),
+> +                               access_type, access_type_name(pfdev, fault_status),
+> +                               source_id);
 >
-> In any case, if we ever move down that path, it'll probably end up being v2
-> of the binding, so this series is still relevant.
->
-> Please help review.
->
-> Regards,
-> Amit
->
->
-> Amit Kucheria (3):
->   dt-bindings: thermal: Add yaml bindings for thermal sensors
->   dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
->   dt-bindings: thermal: Add yaml bindings for thermal zones
->
->  .../thermal/thermal-cooling-devices.yaml      | 114 +++++++
->  .../bindings/thermal/thermal-sensor.yaml      |  70 ++++
->  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
->  3 files changed, 486 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+>                 mmu_write(pfdev, MMU_INT_CLEAR, mask);
 >
 > --
 > 2.20.1
 >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
