@@ -7,44 +7,41 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA29C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A967CC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB3D2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804562080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582551713;
-	bh=ZOzVybOYVC4CBHM5d8bpe9dlvbOWYAWyUT4hQNsoR7M=;
+	s=default; t=1582551717;
+	bh=JFOPdMiC6entIkTxbyo8ghyjVFdPt0mqYJqGB1xCFN0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=MJi+g8FKYcAX5EZnHX/qREZRtIsNIuKpJ/Vs7Z1Ji/Lv91SW5gHw1Yqmngt2cNMlH
-	 ANvrCz54wJTiouqKVT2oWlnlRJl9CMhu5igfLll6jGDhVRv+EQv3955mOXtOaEIhXi
-	 7wQo1AXuXbCDMKWByyr0XFg6+dvM7GctuVdlzoEA=
+	b=HX5QGrIpgNgFyjEMjiNwNpZDWU67b7l62/90b0q7b3LfWgi2qDlCARmIbhY7yVVI+
+	 fq79fTpQMZlA+lS0aU0Vk+FdCqjaQbwG65Y+muSFz5JiFojH/xOwQTATjxbRNF6oZt
+	 MyJ5JLuP5BQV3cyKP3uMiSusMKUvdNGcFQC3XOQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgBXNlw (ORCPT
+        id S1727510AbgBXNl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:41:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:37184 "EHLO foss.arm.com"
+        Mon, 24 Feb 2020 08:41:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:37200 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgBXNlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:41:51 -0500
+        id S1727108AbgBXNl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:41:56 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E909D30E;
-        Mon, 24 Feb 2020 05:41:50 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 591F831B;
+        Mon, 24 Feb 2020 05:41:55 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EC433F534;
-        Mon, 24 Feb 2020 05:41:50 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:41:48 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D28513F534;
+        Mon, 24 Feb 2020 05:41:54 -0800 (PST)
+Date:   Mon, 24 Feb 2020 13:41:53 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout" to the asoc tree
-In-Reply-To:  <20200224112537.14483-1-geert@linux-m68k.org>
-Message-Id:  <applied-20200224112537.14483-1-geert@linux-m68k.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: tlv320adcx140: Add decimation filter support" to the asoc tree
+In-Reply-To:  <20200221181358.22526-2-dmurphy@ti.com>
+Message-Id:  <applied-20200221181358.22526-2-dmurphy@ti.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,7 +50,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout
+   ASoC: tlv320adcx140: Add decimation filter support
 
 has been applied to the asoc tree at
 
@@ -78,54 +75,65 @@ to this mail.
 Thanks,
 Mark
 
-From 5a309875787db47d69610e45f00a727ef9e62aa0 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 24 Feb 2020 12:25:37 +0100
-Subject: [PATCH] ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout
+From 8101d76253f6d1032ca79e937e45b837cb4bf0e0 Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Fri, 21 Feb 2020 12:13:58 -0600
+Subject: [PATCH] ASoC: tlv320adcx140: Add decimation filter support
 
-On i386 randconfig:
+Add decimation filter selection support.
+Per Section 8.3.6.7 the Digital Decimation Filter is selectable between
+a Linear Phase, Low Latency, and Ultra Low Latency filer.
 
-    sound/soc/codecs/wm9705.o: In function `wm9705_soc_resume':
-    wm9705.c:(.text+0x128): undefined reference to `snd_ac97_reset'
-    sound/soc/codecs/wm9712.o: In function `wm9712_soc_resume':
-    wm9712.c:(.text+0x2d1): undefined reference to `snd_ac97_reset'
-    sound/soc/codecs/wm9713.o: In function `wm9713_soc_resume':
-    wm9713.c:(.text+0x820): undefined reference to `snd_ac97_reset'
-
-Fix this by adding the missing dependencies on SND_SOC_AC97_BUS.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Link: https://lore.kernel.org/r/20200224112537.14483-1-geert@linux-m68k.org
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Link: https://lore.kernel.org/r/20200221181358.22526-2-dmurphy@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/codecs/tlv320adcx140.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 9e9d54e4576c..a7e89567edbe 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1610,16 +1610,19 @@ config SND_SOC_WM9090
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 105e51be6fe6..93a0cb8e662c 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -169,6 +169,17 @@ static DECLARE_TLV_DB_SCALE(agc_thresh_tlv, -3600, 200, 0);
+ /* AGC Max Gain. From 3 dB to 42 dB in 3 dB steps */
+ static DECLARE_TLV_DB_SCALE(agc_gain_tlv, 300, 300, 0);
  
- config SND_SOC_WM9705
- 	tristate
-+	depends on SND_SOC_AC97_BUS
- 	select REGMAP_AC97
- 	select AC97_BUS_COMPAT if AC97_BUS_NEW
++static const char * const decimation_filter_text[] = {
++	"Linear Phase", "Low Latency", "Ultra-low Latency"
++};
++
++static SOC_ENUM_SINGLE_DECL(decimation_filter_enum, ADCX140_DSP_CFG0, 4,
++			    decimation_filter_text);
++
++static const struct snd_kcontrol_new decimation_filter_controls[] = {
++	SOC_DAPM_ENUM("Decimation Filter", decimation_filter_enum),
++};
++
+ static const char * const resistor_text[] = {
+ 	"2.5 kOhm", "10 kOhm", "20 kOhm"
+ };
+@@ -404,6 +415,9 @@ static const struct snd_soc_dapm_widget adcx140_dapm_widgets[] = {
+ 			in3_resistor_controls),
+ 	SND_SOC_DAPM_MUX("IN4 Analog Mic Resistor", SND_SOC_NOPM, 0, 0,
+ 			in4_resistor_controls),
++
++	SND_SOC_DAPM_MUX("Decimation Filter", SND_SOC_NOPM, 0, 0,
++			decimation_filter_controls),
+ };
  
- config SND_SOC_WM9712
- 	tristate
-+	depends on SND_SOC_AC97_BUS
- 	select REGMAP_AC97
- 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+@@ -418,6 +432,10 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+ 	{"CH3_ASI_EN", "Switch", "CH3_ADC"},
+ 	{"CH4_ASI_EN", "Switch", "CH4_ADC"},
  
- config SND_SOC_WM9713
- 	tristate
-+	depends on SND_SOC_AC97_BUS
- 	select REGMAP_AC97
- 	select AC97_BUS_COMPAT if AC97_BUS_NEW
- 
++	{"Decimation Filter", "Linear Phase", "DRE_ENABLE"},
++	{"Decimation Filter", "Low Latency", "DRE_ENABLE"},
++	{"Decimation Filter", "Ultra-low Latency", "DRE_ENABLE"},
++
+ 	{"DRE_ENABLE", "Switch", "CH1_DRE_EN"},
+ 	{"DRE_ENABLE", "Switch", "CH2_DRE_EN"},
+ 	{"DRE_ENABLE", "Switch", "CH3_DRE_EN"},
 -- 
 2.20.1
 
