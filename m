@@ -2,59 +2,60 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B700C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F55DC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230F22082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39C42082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="L26uxfUs"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0YBu5nh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbgBXJmE (ORCPT
+        id S1727345AbgBXJmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:42:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36152 "EHLO
+        Mon, 24 Feb 2020 04:42:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45489 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgBXJmD (ORCPT
+        with ESMTP id S1727314AbgBXJmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:42:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so9537328wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:42:02 -0800 (PST)
+        Mon, 24 Feb 2020 04:42:05 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g3so9497924wrs.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:42:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BDw9QNweqb8Crta/jUlU1isRq0T1j9Nt5ppyUp7U7FY=;
-        b=L26uxfUsLo4EeQiOs+5bVkIce/bMLQNW5Vtw9VHZW2aU9Vao8LzNmUsFPwX8BezftQ
-         MMSh8Pc7lHpx1HXSj1aAWjFqHy3jmYdK3S5UUW/c12PDui27zl5Uhk17ghpBhDpJoDb4
-         LfDSVZ9mLJUJJiedxP7TKYGWJtTm1X7M1GRk0AAyWkGXqFnfnI6NqqT+m0Sn4FuQtIy0
-         qH+smPMth3Wue1/bleFMlKbWtRZCWU1xN661hKylmYwBePU49c4A92W6oDdzT7VBlvqB
-         ridJzWCbHOB3sJY+ZtO89r8gjhzjJz/MlJrqXFbdk1wTALGsy7i7sPMQzfZFF8QSLK4P
-         Cpyg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Kc3RH6cl8PrURMVC2HcOMEqzVbKCqch6ndQPKF/V66A=;
+        b=0YBu5nh7EwE0owIXSnCrf8JvY5+QrQDh3tlr/FACK7Kk/A5xfIV2CCrb7w7qcZoBJe
+         CGVCX7By6mMfAtyy6KB/llK3WxNoXh8q36XqRmC08YtCHQaEGoPHSFt3yMgETa618fFf
+         hd3zZojj95yUICFQI/GuITP83ur8BC+R+LsOos9rqNTwuslJsZ4g2HvHBCUo/HQlIRdK
+         6AIDYJNEUIGU4o9IaB42XitaT93J3Tf9qtEHAfI48+HOcxl6gVyw+2QkeRh+vLMtGVVk
+         lxdwKibT8n+BfAduR5BlRGAEzaQ76n+Az+2fKfX+VIg5Sf0tU5IeRtQ5ZfCqQExoxRX1
+         Msaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BDw9QNweqb8Crta/jUlU1isRq0T1j9Nt5ppyUp7U7FY=;
-        b=iKxcZtA2oFGZw74yeceSBLXRD8nfu1W0rSjhkhn/Ef2p9Lsk6O7UCnSmUsXWn1KgGs
-         xDxr3Rjw9h5qGBR3gS/DP3g8USa0vc7HHUMP0KsTdzvbIlr0OXzXYaBSU6eVufvwm+pD
-         g2QuAlfolUiAq8ovFW2zRRpmfWdsWlExm1xeArmiLBltEVsmG6d/im2xh/JYmzoPPvx4
-         m8axdTJcHWmVEpZlsfn5X13gS7EpdWg00WhUoaDJ24kfB7mAjpAJ0J8R83pDh6JsxVlb
-         oQunzLYxg18PG8qgHvgao2T55Y/WyG4BJZh0VO8ievt94n8wgYrcK8GDJoQCuKh5gb6I
-         toYQ==
-X-Gm-Message-State: APjAAAUEvU//WqWhOSY9pzz7PZ2OsP2hTWLCA6FArMhdcfwwIsxRQpxJ
-        UWgQ06/EF1wK377eUiyA4uDbFA==
-X-Google-Smtp-Source: APXvYqwRsWCIn+gAgBdNY6yBK4Jnp2qIU7Kjr2E4c7OlOXGTYpWkjwokdTZ9bXKrry542I0OIXrWZA==
-X-Received: by 2002:a5d:5044:: with SMTP id h4mr62492872wrt.4.1582537322303;
-        Mon, 24 Feb 2020 01:42:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Kc3RH6cl8PrURMVC2HcOMEqzVbKCqch6ndQPKF/V66A=;
+        b=PxSj7mADXSOxjCTvL5a+rOUbuPUJ/TOqtJZKgtCGgWXf46Qhccn5KBHZGn0Lbhi0t6
+         CknpTUii13ckM8piEEB/IxGoq1ufOfbARKD6H62p41PtX1cVqxo5a7qal99vzpz257PD
+         F0s8w01CaeLWL1o3GnhVZwg7K5tMlxa2lLhtIXc6jiEtWCAV4U9Z6WKhL/TMDTBoLmZL
+         6ZN6H2RUiYJGwNPiShywO5I6NhK87nVG9F9JU0pXeBjj1hxcoOWIjJ6Mz1srTB4+vmiO
+         crQykZin7Y5rICY3PrpuO+PwoMeIg+XPgGJI3DADqvgFy0yzyt/7yQd1SdnvVvS1XAzJ
+         MMsA==
+X-Gm-Message-State: APjAAAV5zMonrZaDp7CyLphUO6X844o7r7LNWY56y/86Le/7hZd5MWFX
+        G8xgCeM0hMkgIpTdmc4KCaWgDg==
+X-Google-Smtp-Source: APXvYqxZ3HxmXrwssMNqpiLFkVCqb97GUflqayOJ0zf7Ob3MpyGGefF2z+IZSNgNrmgmJhlsrnw9ig==
+X-Received: by 2002:adf:facc:: with SMTP id a12mr37775788wrs.100.1582537323534;
+        Mon, 24 Feb 2020 01:42:03 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id t10sm16920730wmi.40.2020.02.24.01.42.01
+        by smtp.gmail.com with ESMTPSA id t10sm16920730wmi.40.2020.02.24.01.42.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 01:42:01 -0800 (PST)
+        Mon, 24 Feb 2020 01:42:03 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -62,10 +63,12 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 0/3] gpiolib: add reference counting to GPIO descriptors
-Date:   Mon, 24 Feb 2020 10:41:55 +0100
-Message-Id: <20200224094158.28761-1-brgl@bgdev.pl>
+Subject: [PATCH 1/3] gpiolib: provide VALIDATE_DESC_PTR() macro
+Date:   Mon, 24 Feb 2020 10:41:56 +0100
+Message-Id: <20200224094158.28761-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200224094158.28761-1-brgl@bgdev.pl>
+References: <20200224094158.28761-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,35 +78,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This was: nvmem/gpio: fix resource management.
+We're about to add a public GPIO function that takes a descriptor as
+argument and returns a pointer. Add a corresponding macro wrapping the
+validate_desc() function that returns an ERR_PTR() on error.
 
-These are the remaining patches from the series aimed at fixing resource
-management problems in nvmem.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpiolib.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-The first one adds a new descriptor validation macro. The second uses kref to
-add reference counting to GPIO descriptors. The last one fixes a potential
-use-after-free problem in nvmem.
-
-The last change should actually go into v5.6 but it depends on a new feature.
-I'm not sure how to go about applying this.
-
-Changes in patch 2/3 since the last submission:
-- add a stub for when GPIOLIB is not selected
-- use might_sleep() in gpiod_put() as we may not necessarily call gpiod_free()
-  every time now (where it would have been called normally) depending on the
-  reference count
-
-Bartosz Golaszewski (3):
-  gpiolib: provide VALIDATE_DESC_PTR() macro
-  gpiolib: use kref in gpio_desc
-  nvmem: increase the reference count of a gpio passed over config
-
- drivers/gpio/gpiolib.c        | 48 ++++++++++++++++++++++++++++++++---
- drivers/gpio/gpiolib.h        |  1 +
- drivers/nvmem/core.c          |  2 +-
- include/linux/gpio/consumer.h |  9 +++++++
- 4 files changed, 55 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4d0106ceeba7..da8ffd40aa97 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2864,6 +2864,14 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
+ 		return; \
+ 	} while (0)
+ 
++#define VALIDATE_DESC_PTR(desc) do { \
++	int __valid = validate_desc(desc, __func__); \
++	if (__valid < 0) \
++		return ERR_PTR(__valid); \
++	if (__valid == 0) \
++		return NULL; \
++	} while (0)
++
+ int gpiod_request(struct gpio_desc *desc, const char *label)
+ {
+ 	int ret = -EPROBE_DEFER;
 -- 
 2.25.0
 
