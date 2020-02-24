@@ -2,173 +2,177 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C1CC11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CBCC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F28120838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DC620836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVGCobCq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O7yCyLmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgBXRsi (ORCPT
+        id S1727736AbgBXRwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:48:38 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43699 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgBXRsi (ORCPT
+        Mon, 24 Feb 2020 12:52:16 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:49658 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbgBXRwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:48:38 -0500
-Received: by mail-ed1-f65.google.com with SMTP id dc19so12892926edb.10;
-        Mon, 24 Feb 2020 09:48:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z+KZXMS6j42BojKvkiav0VXiRWw9IxLJElIvzW43DQY=;
-        b=aVGCobCqf2sWOQzEqSAW4JCob1J7OcSBugENcmhWXqcxmbGYgDGSNfhSXqmI+CwcC3
-         8MFcWUm1lUF2elGspd9V4ho3/PSJyrbxne/tvLbSSuquR4g9E3ewd2pYFCr+sjfVY4Or
-         RKikPQnAVCt8I5bsPK3oBfqDpfAAo4pH3PDDQQjlbitXoGI2VKApwyBl8vJRBDTeGkf3
-         eREbdkPlC9V4DF34hslgPZHOGiGK76X6sDpIAibkbtEyvemgIY1SuRDFT9eJFQ3oK4Aw
-         AThy3HQjCuUhBNXF+ONKGv1OapczKnW2nBMe+xE5S57PiH8SVB1Vd3OjL5CrADQPInLp
-         s7cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Z+KZXMS6j42BojKvkiav0VXiRWw9IxLJElIvzW43DQY=;
-        b=eKdiYkXQCgpbZCwVcuM/mU7Q8EMbSiRw2BBbvkz14O4hqnO0FmsVaQUPWfGGl/3pwm
-         X7kAbtFk87kAEmdaIM+/JxhrUt1pSOTlFOg4Bg9sQCymlrBY8mw9oxyWsaPLfUs15fiC
-         FmdVCZgSYe4yRVHZ4dF8C6B088o8RMGBuXt9UxtfER7bWBwE1vxtyrPNz3Oahw/0A2K2
-         qEH+4LwfbcMNviLf/3XCUTpRaFKabFQxMU0oyX1Bn0YpYZfB3+6zaDqSzJ+xEBOZ1npx
-         nDvspfIbVmihsKKFQqffgX0WIyjNYZ/TQ//Llh9Hneqd3MboPh5JfWJbzxJ+z9BY8IlE
-         fkKg==
-X-Gm-Message-State: APjAAAUK4QUD5IEX+yfYPPPNQU3SSKShVl24r2ksFSjhtFGOCj09qCgJ
-        edobAN7mCtOIzcMyRMW5tpAji9Yi
-X-Google-Smtp-Source: APXvYqz7i5Pc/5H53tWitQMIaIwBEIzHzproXsr4EugsBJJuMu/ktD2Wu69Zq4vnQ09DUeWodGqgSw==
-X-Received: by 2002:a50:875c:: with SMTP id 28mr48180095edv.271.1582566515662;
-        Mon, 24 Feb 2020 09:48:35 -0800 (PST)
-Received: from [10.67.50.18] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id f13sm1016733edq.26.2020.02.24.09.48.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 09:48:34 -0800 (PST)
-Subject: Re: [PATCH 02/89] dt-bindings: i2c: brcmstb: Add BCM2711 BSC/AUTO-I2C
- binding
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <fb3e10e0-9d87-66c0-ad4c-fa8474f6fac0@gmail.com>
-Date:   Mon, 24 Feb 2020 09:48:17 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 12:52:15 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OHnQiC003213;
+        Mon, 24 Feb 2020 17:51:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=IdkzpILR6vBAHlc8aaDsjs8ao4gxJyHcYNKDq6bhgwo=;
+ b=O7yCyLmDlRlL/snRdEAddiBsq1jhkdE9wiqNbDoUTEDtecDQWq6VkCb1+YyrS1GwXLIS
+ HprZ9WYRHvgv6jPkWi/y2+LjjsP4D/3vpDmc49xUSNF6GiA7+nEfeh1UcGRe3zRKEK6l
+ qvDGNWCKMNfKdXew0ROWHV4OEKjNabhGWQFlv4IQT5At2z64qv9owVFxZP/zw5LyejsO
+ ILir0ngDtThZdKM83zD3Enanw+GJENgzFHuiiXaIwVwHzX04WnteVakYiwpgTWR1x9z7
+ xoQ2xR/HueUuWqt2X3EVfWo+zwXuvHq1uofgM/HZZgnfk2wCEsETXtfHpPahYvwL+IEi ww== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2yauqu909w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 17:51:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OHltqr121370;
+        Mon, 24 Feb 2020 17:51:05 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2ybe11rqn0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Feb 2020 17:51:05 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01OHp4kg130076;
+        Mon, 24 Feb 2020 17:51:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ybe11rqm6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 17:51:04 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01OHp2fW012446;
+        Mon, 24 Feb 2020 17:51:02 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Feb 2020 09:51:02 -0800
+Subject: Re: general protection fault in rds_ib_add_one
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+274094e62023782eeb17@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, syzkaller-bugs@googlegroups.com
+References: <20200224103913.2776-1-hdanton@sina.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <8c0a6d58-fd96-ded0-d5ad-a8ffc8d7a620@oracle.com>
+Date:   Mon, 24 Feb 2020 09:51:01 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200224103913.2776-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ clxscore=1011 malwarescore=0 impostorscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 1:06 AM, Maxime Ripard wrote:
-> The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
-> EDID. This block is split into two parts, the BSC and the AUTO_I2C,
-> lying in two separate register areas.
+On 2/24/20 2:39 AM, Hillf Danton wrote:
 > 
-> The AUTO_I2C block has a mailbox-like interface and will take away the
-> BSC control from the CPU if enabled. However, the BSC is the actually
-> the same controller than the one supported by the brcmstb driver, and
-> the AUTO_I2C doesn't really bring any immediate benefit.
-> 
-> We can model it in the DT as a single device with two register range,
-> which will allow us to use or or the other in the driver without
-> changing anything in the DT.
-> 
-> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-i2c@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> On Mon, 24 Feb 2020 00:38:13 -0800
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    b0dd1eb2 Merge branch 'akpm' (patches from Andrew)
+>> git tree:       upstream
+>> console output: https://urldefense.com/v3/__https://syzkaller.appspot.com/x/log.txt?x=13db9de9e00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauXTR6PmUg$
+>> kernel config:  https://urldefense.com/v3/__https://syzkaller.appspot.com/x/.config?x=a6001be4097ab13c__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauUIjkEraA$
+>> dashboard link: https://urldefense.com/v3/__https://syzkaller.appspot.com/bug?extid=274094e62023782eeb17__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauXEUExfYg$
+>> compiler:       clang version 10.0.0 (https://urldefense.com/v3/__https://github.com/llvm/llvm-project/__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauUcUeVf2A$  c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>> syz repro:      https://urldefense.com/v3/__https://syzkaller.appspot.com/x/repro.syz?x=10ad6a7ee00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauX2w5ISoA$
+>> C reproducer:   https://urldefense.com/v3/__https://syzkaller.appspot.com/x/repro.c?x=13da7a29e00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauUf3qIVeQ$
+>>
+>> Bisection is inconclusive: the first bad commit could be any of:
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+[...]
+
+>> 868df536 Merge branch 'odp_fixes' into rdma.git for-next
+>>
+>> bisection log:  https://urldefense.com/v3/__https://syzkaller.appspot.com/x/bisect.txt?x=1542127ee00000__;!!GqivPVa7Brio!O9xt2mwp7Vb5SndsHmi1c7ynTdDMNXebFTWfSklgQdlUqRdC218qPSAXMuDUauVrB3NY9g$
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+274094e62023782eeb17@syzkaller.appspotmail.com
+>>
+>> batman_adv: batadv0: Interface activated: batadv_slave_1
+>> infiniband syz1: set active
+>> infiniband syz1: added vlan0
+>> general protection fault, probably for non-canonical address 0xdffffc0000000086: 0000 [#1] PREEMPT SMP KASAN
+>> KASAN: null-ptr-deref in range [0x0000000000000430-0x0000000000000437]
+>> CPU: 0 PID: 8852 Comm: syz-executor043 Not tainted 5.6.0-rc2-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> RIP: 0010:dev_to_node include/linux/device.h:663 [inline]
+>> RIP: 0010:rds_ib_add_one+0x81/0xe50 net/rds/ib.c:140
+>> Code: b7 a8 06 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 28 00 74 08 4c 89 f7 e8 0e e4 1d fa bb 30 04 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <42> 8a 04 28 84 c0 0f 85 f0 0a 00 00 8b 1b 48 c7 c0 28 0c 09 89 48
+>> RSP: 0018:ffffc90003087298 EFLAGS: 00010202
+>> RAX: 0000000000000086 RBX: 0000000000000430 RCX: 0000000000000000
+>> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000001
+>> RBP: ffffc900030872f0 R08: ffffffff87964c3c R09: ffffed1014fd109c
+>> R10: ffffed1014fd109c R11: 0000000000000000 R12: 0000000000000000
+>> R13: dffffc0000000000 R14: ffff8880a7e886a8 R15: ffff8880a7e88000
+>> FS:  0000000000c3d880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007f0318ed0000 CR3: 00000000a3167000 CR4: 00000000001406f0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Call Trace:
+>>   add_client_context+0x482/0x660 drivers/infiniband/core/device.c:681
+>>   enable_device_and_get+0x15b/0x370 drivers/infiniband/core/device.c:1316
+>>   ib_register_device+0x124d/0x15b0 drivers/infiniband/core/device.c:1382
+>>   rxe_register_device+0x3f6/0x530 drivers/infiniband/sw/rxe/rxe_verbs.c:1231
+>>   rxe_add+0x1373/0x14f0 drivers/infiniband/sw/rxe/rxe.c:302
+>>   rxe_net_add+0x79/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:539
+>>   rxe_newlink+0x31/0x90 drivers/infiniband/sw/rxe/rxe.c:318
+>>   nldev_newlink+0x403/0x4a0 drivers/infiniband/core/nldev.c:1538
+>>   rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+>>   rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+>>   rdma_nl_rcv+0x701/0xa20 drivers/infiniband/core/netlink.c:259
+>>   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>>   netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
+>>   netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
+>>   sock_sendmsg_nosec net/socket.c:652 [inline]
+>>   sock_sendmsg net/socket.c:672 [inline]
+>>   ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
+>>   ___sys_sendmsg net/socket.c:2397 [inline]
+>>   __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
+>>   __do_sys_sendmsg net/socket.c:2439 [inline]
+>>   __se_sys_sendmsg net/socket.c:2437 [inline]
+>>   __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
+>>   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Fall back to NUMA_NO_NODE if needed.
+> 
+> --- a/net/rds/ib.c
+> +++ b/net/rds/ib.c
+> @@ -137,7 +137,8 @@ static void rds_ib_add_one(struct ib_dev
+>   		return;
+>   
+>   	rds_ibdev = kzalloc_node(sizeof(struct rds_ib_device), GFP_KERNEL,
+> -				 ibdev_to_node(device));
+> +				 device->dev.parent ?
+> +				 ibdev_to_node(device) : NUMA_NO_NODE);
+>   	if (!rds_ibdev)
+>   		return;
+>   
+> 
+This seems good. Can you please post it as properly formatted patch ?
