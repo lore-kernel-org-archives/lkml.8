@@ -2,171 +2,281 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E6C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79402C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D53D21927
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7D0218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EqPXuqQK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ul+tuP8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBXV2d (ORCPT
+        id S1727843AbgBXV2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:28:33 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33824 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgBXV2d (ORCPT
+        Mon, 24 Feb 2020 16:28:41 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37774 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgBXV2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:28:33 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j7so4575526plt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:28:32 -0800 (PST)
+        Mon, 24 Feb 2020 16:28:40 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q23so11767964ljm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:28:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8BGinAzlZOhZ+617u+1B0XdFYhcPHGy2MPB2MaSFIV8=;
-        b=EqPXuqQKGmG4j9on8S0Mxv9iBKtuHM0hbrqRuguBP/pGCrYWHh3SLhkegOKyJhVatu
-         vJ0rapmcKWPkbojbh25KTjRHE+PWqo26hpzHlBLZKUiyFMd13Sz/UiYQ7L3Y4a/2a9qK
-         2usToCRw5saVeYvjfTgOKBAAIbEf0n/28HwNfbqaQOXev8O/LfsJNPYMh27rw/H/5w9n
-         b1Gz/qe2fKg7cetV/POL2YZhDfHX+evKEYIt/O1lHghPXgBMgXtUMbht7uRBskAeEgzN
-         EAHpq5paVz747f55QMbNmoTRBNirAFN3NfE2bcmLzSNHdPiT+tHaPsztpI7ZwczVhQk7
-         /LQw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wMq54bZLHLBxwerxfl5UdZbeQNMpBUzRLZDC5/TbRIY=;
+        b=ul+tuP8hNyxbq61sLOa5xbwQ7/XPUTNhLBUIsVq9THoGlu5au+JstGRYswaXd/MUTw
+         hu9d5BAJPb4t+0cMGSZwpXvVh6Pey7rjt0uIgLftfaXUf66ZMhVvdPqDMUodI6W9/zce
+         1Ago9YPv5KrEGabrnWcoa4YoekrXCq2VOt8t7hTf1vVpAmYaHShQjJPVmrLX2PyW24GM
+         hL0R9NYz8TJbeJwoww5veP3k7M812CxhUm2IG0CJyX8lcmA/uvRYE9hLLIRaD3/Lx4Mq
+         5oneJ47hRL2HUUltE44vFewYmAhzAXZNIb9C2vm7nz8eSn+Tbes3K+fpCtir3k677MW7
+         iAJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8BGinAzlZOhZ+617u+1B0XdFYhcPHGy2MPB2MaSFIV8=;
-        b=WTQQlwZJdpK/9Y5W/Si91Y8ZPPIG4FyYSUsDlLp+AG+7OW+z6E8doZpkW14NiQqNWv
-         UPdSvjZ4grosHiT7nezcHYa/ewsPMhfwJUbaIUU3HPj2swr6+g/Sx69fNq2NuInnUSwg
-         JfTwEHvwYmA+RmlwrV5MCyI5itvGa+4zT4g6NGLYjdTvG2ARVGB2X0y3gZ3OArc0fY4C
-         FBuniwPojr9jJ3u3NZdrJwu32vbOolkq1dnh0gaGZh1PXzrVwJYrs+xDxVPBjs31592R
-         7epf9nk3H9Tde0W5+jFmGf/mTYFRgHH0u6Tq3O0n5bDh5UvrtnFdAYwaXoMjoeVSHT1B
-         u1kA==
-X-Gm-Message-State: APjAAAUA5JA9Oean14j3JZVHvCVQoKjlePqFD12XfmsFomtHOqcBmjWc
-        dCqtWtwRPAEO+E7LjJeP8+WnYw==
-X-Google-Smtp-Source: APXvYqw5zI7KEt8xzuzQf+9IJsjMGPhubY3G9WIDxG92nZ+obDLokstq+UohGfgNB8yhPk1vtvnWCA==
-X-Received: by 2002:a17:90b:289:: with SMTP id az9mr1183242pjb.23.1582579711848;
-        Mon, 24 Feb 2020 13:28:31 -0800 (PST)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id x7sm14173473pfp.93.2020.02.24.13.28.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 13:28:31 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:28:28 -0800
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
- from bzImage
-Message-ID: <20200224212828.xvxl3mklpvlrdtiw@google.com>
-References: <20200109150218.16544-2-nivedita@alum.mit.edu>
- <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
- <20200222065521.GA11284@zn.tnic>
- <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan>
- <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <alpine.LSU.2.21.2002241319150.12812@wotan.suse.de>
- <CAKwvOd=nCAyXtng1N-fvNYa=-NGD0yu+Rm6io9F1gs0FieatwA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wMq54bZLHLBxwerxfl5UdZbeQNMpBUzRLZDC5/TbRIY=;
+        b=PxnKcGW34gcy1Zd7Nz3S6KQhcbpdh4zppS8ItNu0oT4kJjuOAg4uCeb3URIxFMLhoU
+         SkFpvdsOCOcUGCYv/BMTssGAPsNPUFU27GdfK+slBwEwVIoMxaVyEcRmdSmBbL1IU0P5
+         d1Ourljuy/ebEEQE7BFdx7ZghPjBpF49iKR9HliGENyEnOFJuVKwkTBoiyWRs3EnOeSm
+         7DRGp0aizOOJVhfzxk4rTt5ZgRFHvoPQQ8C/fuGOSa1HdtZJrvc/lHj0nimUaWrh+Wj+
+         XOGeTUuG2qEIR6YFrkLQur3sauHkJJ+8+NjpdKIe8FQpbba5GH4XPcCUj4IGOSfrSane
+         vQOA==
+X-Gm-Message-State: APjAAAX81TYypbBLsQgOJrgIsn/cDs/vZ3QVBvssODUhI8c+sQkKZLT/
+        mdd6JF4MR0YdBFfYBpD9eau8th1VpUlotZil7B58EA==
+X-Google-Smtp-Source: APXvYqyMq9T/Fn06rswpyz1B/AfyB+fUsnls6uep+5LChqSuZ6hFNZZLf/LdzRRYS6HbAYOSrOhxs7mPuYEtE8MwsxM=
+X-Received: by 2002:a2e:e12:: with SMTP id 18mr32538691ljo.123.1582579718004;
+ Mon, 24 Feb 2020 13:28:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=nCAyXtng1N-fvNYa=-NGD0yu+Rm6io9F1gs0FieatwA@mail.gmail.com>
+References: <CB4ED07B85D6BB40B8B44F6D5442E4F6572C1523@BGSMSX101.gar.corp.intel.com>
+In-Reply-To: <CB4ED07B85D6BB40B8B44F6D5442E4F6572C1523@BGSMSX101.gar.corp.intel.com>
+From:   Evan Green <evgreen@google.com>
+Date:   Mon, 24 Feb 2020 13:28:01 -0800
+Message-ID: <CAE=gft5JOwvha6e0RC+6=e444QUxfYyjNs7uq=3bhHMwFmCfmw@mail.gmail.com>
+Subject: Re: Re: [PATCH] spi: pxa2xx: Add CS control clock quirk
+To:     "Srivastava, Shobhit" <shobhit.srivastava@intel.com>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Rajat Jain <rajatja@google.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rajatxjain@gmail.com" <rajatxjain@gmail.com>,
+        "Muthukrishnan, Porselvan" <porselvan.muthukrishnan@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-24, Nick Desaulniers wrote:
->On Mon, Feb 24, 2020 at 5:28 AM Michael Matz <matz@suse.de> wrote:
->>
->> Hello,
->>
->> On Sat, 22 Feb 2020, Nick Desaulniers wrote:
->>
->> > > > > In GNU ld, it seems that .shstrtab .symtab and .strtab are special
->> > > > > cased. Neither the input section description *(.shstrtab) nor *(*)
->> > > > > discards .shstrtab . I feel that this is a weird case (probably even a bug)
->> > > > > that lld should not implement.
->> > > >
->> > > > Ok, forget what the tools do for a second: why is .shstrtab special and
->> > > > why would one want to keep it?
->> > > >
->> > > > Because one still wants to know what the section names of an object are
->> > > > or other tools need it or why?
->> > > >
->> > > > Thx.
->> > > >
->> > > > --
->> > > > Regards/Gruss,
->> > > >     Boris.
->> > > >
->> > > > https://people.kernel.org/tglx/notes-about-netiquette
->> > >
->> > > .shstrtab is required by the ELF specification. The e_shstrndx field in
->> > > the ELF header is the index of .shstrtab, and each section in the
->> > > section table is required to have an sh_name that points into the
->> > > .shstrtab.
->> >
->> > Yeah, I can see it both ways.  That `*` doesn't glob all remaining
->> > sections is surprising to me, but bfd seems to be "extra helpful" in
->> > not discarding sections that are required via ELF spec.
->>
->> In a way the /DISCARD/ assignment should be thought of as applying to
->> _input_ sections (as all such section references on the RHS), not
->> necessarily to output sections.  What this then means for sections that
->> are synthesized by the link editor is less clear.  Some of them are
->> generated regardless (as you noted, e.g. the symbol table and associated
->> string sections, including section name string table), some of them are
->> suppressed, and either lead to an followup error (e.g. with .gnu.hash), or
->> to invalid output (e.g. missing .dynsym for executables simply lead to
->> segfaults when running them).
+ 0x
 
-Hi Michael, please see my other reply on this thread: https://lkml.org/lkml/2020/2/24/47
+On Thu, Feb 13, 2020 at 8:57 AM Srivastava, Shobhit
+<shobhit.srivastava@intel.com> wrote:
+>
+>
+> > Hi
+> >
+> > + Andy
+> >
+> > On 2/12/20 12:34 AM, Rajat Jain wrote:
+> > > From: Evan Green <evgreen@chromium.org>
+> > >
+> > > Date: Wed, 29 Jan 2020 13:54:16 -0800
+> > > Subject: [PATCH] spi: pxa2xx: Add CS control clock quirk
+> > >
+> > This patch subject is missing from mail subject.
+> >
+> Added
+>
+> > > In some circumstances on Intel LPSS controllers, toggling the LPSS CS
+> > > control register doesn't actually cause the CS line to toggle.
+> > > This seems to be failure of dynamic clock gating that occurs after
+> > > going through a suspend/resume transition, where the controller is
+> > > sent through a reset transition. This ruins SPI transactions that
+> > > either rely on delay_usecs, or toggle the CS line without sending
+> > > data.
+> > >
+> > > Whenever CS is toggled, momentarily set the clock gating register to
+> > > "Force On" to poke the controller into acting on CS.
+> > >
+> > Could you share the test case how to trigger this? What's the platform =
+here?
+> > I'd like to check does this reproduce on other Intel LPSS platforms so =
+is there
+> > need to add quirk for them too.
+> >
+> This is on a CometLake platform. We are probing the SPI_CS line on a scop=
+e.
+> Even though the writes to SPI_CS_CONTROL register are successful, it does=
+n=E2=80=99t toggle the CS line.
+> Hence checking on a scope is better.
+>
+> Easy way to test this is to program the cs control register via iotools a=
+nd see if the CS line toggles.
 
-Synthesized sections can be matched as well. For example, SECTIONS { .pltfoo : { *(.plt) }} can rename the output section .plt to .pltfoo
-It seems that in GNU ld, the synthesized section is associated with the
-original object file, so it can be written as:
+Yes, as Shobhit says, this can be observed by watching the voltage of
+the CS line during a SPI transaction with no data (but a delay set).
+For us, this happens when we toggle the CS line to our security chip
+as a way to wake it up before talking to it [1]:
 
-   SECTIONS { .pltfoo : { a.o(.plt) }}
+/* Assert CS, wait 1 msec, deassert CS */
+struct spi_transfer spi_cs_wake =3D { .delay_usecs =3D 1000 };
+spi_sync_transfer(phy->spi_device, &spi_cs_wake, 1);
 
-In lld, you need a wildcard to match the synthesized section *(.plt)
+[1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/=
+heads/chromeos-4.19/drivers/char/tpm/cr50_spi.c#151
 
-.rela.dyn is another example.
+We're finding that the line does not in fact toggle in this
+transaction, even though the register changes appear to stick.
 
->> That's the reason for the perceived inconsistency with behaviour on '*':
->> it's application to synthesized sections.  Arguably bfd should be fixed to
->> also not discard the other essential sections (or alternatively to give an
->> error when an essential section is discarded).  The lld behaviour of e.g.
->> discarding .shstrtab (or other synthesized sections necessary for valid
->> ELF output) doesn't make much sense either, though.
+> This has to be done after one cycle of S0ix.
 
-I think most input section descriptions *(*) are misuse. They really
-should be INPUT_SECTION_FLAGS(SHF_ALLOC) *(*)
+I don't know about runtime S0ix, but for me this is more related to
+runtime PM of the device. For instance, I do this to experiment:
 
->Hi Michael, thank you for the precise feedback.  Do you have a list of
->"synthesized sections necessary for valid ELF output?" Also, could you
->point me to the documentation about `*` and its relation to
->"synthesized sections necessary for valid ELF output?"  This will help
->me file a precise bug against LLD.
+# echo on > /sys/devices/pci0000\:00/0000\:00\:1e.2/power/control
+# mem_read32 0xd1226224
+0x00001003
+# mem_write32 0xd1226224 0x1001 ## This write sticks in the register,
+but CS doesn't toggle.
+# mem_write32 0xd1226238 0x3 ## Force clock gating on
+# mem_write32 0xd1226224 0x1001
+# mem_write32 0xd1226224 0x1003 ## Now the writes will both stick and
+make it to the CS line.
 
-https://sourceware.org/binutils/docs/ld/Output-Section-Discarding.html#Output-Section-Discarding
+Interestingly, I can switch clock gating back to auto (0), and writes
+continue to make it to the CS line until I re-enable runtime PM.
 
-has a few words on this topic. A large part is implementation defined.
-In GNU ld, the implementation is mostly in ld/ldlang.c and ld/ldexp.c
-(very long).
+Shobhit submitted a patch here for the same bug:
+https://patchwork.kernel.org/patch/11388471/
+
+Interestingly, I notice that the effect seems the same: once you flip
+the _SSE bit on, you can also flip it back off and writes will
+continue to work until runtime PM is re-enabled.
+
+I don't have the in-depth knowledge of how this controller works, but
+my gut says my patch more accurately addresses the underlying problem
+by briefly forcing the controller to clock, whereas the other patch
+pokes the _SSE enable bit, which forces clocking more as a side
+effect. Although, the fact that I can set clock gating back to auto
+and things still work until the next runtime suspend makes me feel
+like I don't fully understand the issue either. I'm hoping someone
+with more internal knowledge can weigh in as to the right approach.
+
+Andy, to answer your other question, I'm unsure whether or not this
+needs a delay of a device clock cycle or two to be observed, though in
+my experiments it seems like that's not needed. I'm also not sure if
+this affects other LPSS blocks, though maybe SPI is special since it
+has this externally observable but out-of-band CS line that's not
+directly tied to the serial engine.
+-Evan
+
+
+>
+> > > Signed-off-by: Evan Green <evgreen@chromium.org>
+> > > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > > ---
+> > >   drivers/spi/spi-pxa2xx.c | 23 +++++++++++++++++++++++
+> > >   1 file changed, 23 insertions(+)
+> > >
+> > > diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c inde=
+x
+> > > 4c7a71f0fb3e..2e318158fca9 100644
+> > > --- a/drivers/spi/spi-pxa2xx.c
+> > > +++ b/drivers/spi/spi-pxa2xx.c
+> > > @@ -70,6 +70,10 @@ MODULE_ALIAS("platform:pxa2xx-spi");
+> > >   #define LPSS_CAPS_CS_EN_SHIFT                     9
+> > >   #define LPSS_CAPS_CS_EN_MASK                      (0xf <<
+> > LPSS_CAPS_CS_EN_SHIFT)
+> > >
+> > > +#define LPSS_PRIV_CLOCK_GATE 0x38
+> > > +#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK 0x3 #define
+> > > +LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON 0x3
+> > > +
+> > >   struct lpss_config {
+> > >     /* LPSS offset from drv_data->ioaddr */
+> > >     unsigned offset;
+> > > @@ -86,6 +90,8 @@ struct lpss_config {
+> > >     unsigned cs_sel_shift;
+> > >     unsigned cs_sel_mask;
+> > >     unsigned cs_num;
+> > > +   /* Quirks */
+> > > +   unsigned cs_clk_stays_gated : 1;
+> > >   };
+> > >
+> > >   /* Keep these sorted with enum pxa_ssp_type */ @@ -156,6 +162,7 @@
+> > > static const struct lpss_config lpss_platforms[] =3D {
+> > >             .tx_threshold_hi =3D 56,
+> > >             .cs_sel_shift =3D 8,
+> > >             .cs_sel_mask =3D 3 << 8,
+> > > +           .cs_clk_stays_gated =3D true,
+> > >     },
+> > >   };
+> > >
+> > > @@ -383,6 +390,22 @@ static void lpss_ssp_cs_control(struct spi_devic=
+e
+> > *spi, bool enable)
+> > >     else
+> > >             value |=3D LPSS_CS_CONTROL_CS_HIGH;
+> > >     __lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
+> > > +   if (config->cs_clk_stays_gated) {
+> > > +           u32 clkgate;
+> > > +
+> > > +           /*
+> > > +            * Changing CS alone when dynamic clock gating is on won'=
+t
+> > > +            * actually flip CS at that time. This ruins SPI transfer=
+s
+> > > +            * that specify delays, or have no data. Toggle the clock=
+ mode
+> > > +            * to force on briefly to poke the CS pin to move.
+> > > +            */
+> > > +           clkgate =3D __lpss_ssp_read_priv(drv_data,
+> > LPSS_PRIV_CLOCK_GATE);
+> > > +           value =3D (clkgate & ~LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK)
+> > |
+> > > +                   LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON;
+> > > +
+> > > +           __lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE,
+> > value);
+> > > +           __lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE,
+> > clkgate);
+> > > +   }
+> > >   }
+> > >
+> > I wonder is it enough to have this quick toggling only or is time or ac=
+tually
+> > number of clock cycles dependent? Now there is no delay between but I'm
+> > thinking if it needs certain number cycles does this still work when us=
+ing low
+> > ssp_clk rates similar than in commit d0283eb2dbc1 ("spi:
+> > pxa2xx: Add output control for multiple Intel LPSS chip selects").
+> >
+> > I'm thinking can this be done only once after resume and may other LPSS
+> > blocks need the same? I.e. should this be done in drivers/mfd/intel-lps=
+s.c?
+> >
+> This behavior is seen after S0ix resume, but it is not seen after S3 resu=
+me.
+> I am thinking that it happens because we are not enabling the SSP after r=
+esume.
+> It is deferred until we need to send data. By enabling the SSP in resume,=
+ I don=E2=80=99t see the issue.
+> For S3, I think BIOS re-enables the SSP in resume flow.
+>
+> > Jarkko
+>
+> Regards,
+> Shobhit
