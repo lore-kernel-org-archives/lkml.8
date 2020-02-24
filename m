@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F55DC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CE8C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39C42082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC14A20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0YBu5nh7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MR4PxrVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgBXJmH (ORCPT
+        id S1727382AbgBXJmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:42:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45489 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbgBXJmF (ORCPT
+        Mon, 24 Feb 2020 04:42:09 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33247 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbgBXJmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:42:05 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g3so9497924wrs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:42:04 -0800 (PST)
+        Mon, 24 Feb 2020 04:42:07 -0500
+Received: by mail-wr1-f65.google.com with SMTP id u6so9558166wrt.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:42:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Kc3RH6cl8PrURMVC2HcOMEqzVbKCqch6ndQPKF/V66A=;
-        b=0YBu5nh7EwE0owIXSnCrf8JvY5+QrQDh3tlr/FACK7Kk/A5xfIV2CCrb7w7qcZoBJe
-         CGVCX7By6mMfAtyy6KB/llK3WxNoXh8q36XqRmC08YtCHQaEGoPHSFt3yMgETa618fFf
-         hd3zZojj95yUICFQI/GuITP83ur8BC+R+LsOos9rqNTwuslJsZ4g2HvHBCUo/HQlIRdK
-         6AIDYJNEUIGU4o9IaB42XitaT93J3Tf9qtEHAfI48+HOcxl6gVyw+2QkeRh+vLMtGVVk
-         lxdwKibT8n+BfAduR5BlRGAEzaQ76n+Az+2fKfX+VIg5Sf0tU5IeRtQ5ZfCqQExoxRX1
-         Msaw==
+        bh=neyVk7RV4OtR4xz1BjORPRhapgH6pG8UY6Ux3fjGOFc=;
+        b=MR4PxrVDnc11dgXc3VKdsrLqF9uj/yQxIojpZo+q77djYlG4zSeosEurwIhQWSE35B
+         nylE3fSNnevJfrjvHDqkg4vBdRlsrPMcFA/qDcKdfOwjhEzcScdcl9yrMkikDlu4vREi
+         H3sQWPNWfo/4/Gr1sMR7gfXYUGYyCSyIa32ZBVhJsH78gnq5Q9qSJysaeKV8whGAgpgx
+         Pb0eHwyIdjlP3fiu/2TU7izxtZIA0lajVoR93lEWMsBPeGRjVeVOeCVmZ6vPLwvyzw7o
+         h2WzV40No0uYN/ec/HB5E8HdS4w8IoVCK94AuO17SCplfuxnh64cbOF3kqkD/v3bo3Ww
+         gY7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Kc3RH6cl8PrURMVC2HcOMEqzVbKCqch6ndQPKF/V66A=;
-        b=PxSj7mADXSOxjCTvL5a+rOUbuPUJ/TOqtJZKgtCGgWXf46Qhccn5KBHZGn0Lbhi0t6
-         CknpTUii13ckM8piEEB/IxGoq1ufOfbARKD6H62p41PtX1cVqxo5a7qal99vzpz257PD
-         F0s8w01CaeLWL1o3GnhVZwg7K5tMlxa2lLhtIXc6jiEtWCAV4U9Z6WKhL/TMDTBoLmZL
-         6ZN6H2RUiYJGwNPiShywO5I6NhK87nVG9F9JU0pXeBjj1hxcoOWIjJ6Mz1srTB4+vmiO
-         crQykZin7Y5rICY3PrpuO+PwoMeIg+XPgGJI3DADqvgFy0yzyt/7yQd1SdnvVvS1XAzJ
-         MMsA==
-X-Gm-Message-State: APjAAAV5zMonrZaDp7CyLphUO6X844o7r7LNWY56y/86Le/7hZd5MWFX
-        G8xgCeM0hMkgIpTdmc4KCaWgDg==
-X-Google-Smtp-Source: APXvYqxZ3HxmXrwssMNqpiLFkVCqb97GUflqayOJ0zf7Ob3MpyGGefF2z+IZSNgNrmgmJhlsrnw9ig==
-X-Received: by 2002:adf:facc:: with SMTP id a12mr37775788wrs.100.1582537323534;
-        Mon, 24 Feb 2020 01:42:03 -0800 (PST)
+        bh=neyVk7RV4OtR4xz1BjORPRhapgH6pG8UY6Ux3fjGOFc=;
+        b=rGMbB9Zyd2IFSic0ZTC/Ex7niCOdBQ8wXKZcrceX+JwGWOhn3RhzeTJqxQ/zMrrxuC
+         UlEXejFVCWLzefHUCJpDTHjtYRu7bbCz6vxgGKKtd1Wctjh+IY2dt0njxhoHjRhOL2SC
+         zll3Qg0iZlZOJlcd4Ls/TP1J+TCykwzB8mtVfdbhrVRZZHOFzaQUPQPTgSsISmDL7p2l
+         vFCuusexQ+j3zJpsV2eD7UZRGgyICAfbmqQd/0xMoXOkKGtcjSfjaJG2uyd8BNOVUeua
+         Y71J+tOZQP5IvsI02kOUoZ1Lp64b83tUXnz7jYBOW/ScQ1vLGYYLbRUX+I5s1Y4ZSiI6
+         UGUA==
+X-Gm-Message-State: APjAAAU4/2gnw8e67rKcM17kX+RlRFzqEiAnEo8WrunIJnFvjxxxPPlM
+        wHlHuT9hwV//oisTv2ZXgwpiZQ==
+X-Google-Smtp-Source: APXvYqxL+aCG2wMJPp+XrNvvfAKcfdqb0x0Dm729ywFQYAHCElqUCZQkzGYMYSOnlsA0AlTLZqOS9g==
+X-Received: by 2002:a5d:4fce:: with SMTP id h14mr71182804wrw.60.1582537324674;
+        Mon, 24 Feb 2020 01:42:04 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id t10sm16920730wmi.40.2020.02.24.01.42.02
+        by smtp.gmail.com with ESMTPSA id t10sm16920730wmi.40.2020.02.24.01.42.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 01:42:03 -0800 (PST)
+        Mon, 24 Feb 2020 01:42:04 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -63,9 +63,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/3] gpiolib: provide VALIDATE_DESC_PTR() macro
-Date:   Mon, 24 Feb 2020 10:41:56 +0100
-Message-Id: <20200224094158.28761-2-brgl@bgdev.pl>
+Subject: [PATCH 2/3] gpiolib: use kref in gpio_desc
+Date:   Mon, 24 Feb 2020 10:41:57 +0100
+Message-Id: <20200224094158.28761-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200224094158.28761-1-brgl@bgdev.pl>
 References: <20200224094158.28761-1-brgl@bgdev.pl>
@@ -78,34 +78,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We're about to add a public GPIO function that takes a descriptor as
-argument and returns a pointer. Add a corresponding macro wrapping the
-validate_desc() function that returns an ERR_PTR() on error.
+GPIO descriptors are freed by consumers using gpiod_put(). The name of
+this function suggests some reference counting is going on but it's not
+true.
+
+Use kref to actually introduce reference counting for gpio_desc objects.
+Add a corresponding gpiod_get() helper for increasing the reference count.
+
+This doesn't change anything for already existing (correct) drivers but
+allows us to keep track of GPIO descs used by multiple users.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpiolib.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpiolib.c        | 40 +++++++++++++++++++++++++++++++----
+ drivers/gpio/gpiolib.h        |  1 +
+ include/linux/gpio/consumer.h |  9 ++++++++
+ 3 files changed, 46 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4d0106ceeba7..da8ffd40aa97 100644
+index da8ffd40aa97..e97ea1e113a1 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -2864,6 +2864,14 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
- 		return; \
- 	} while (0)
+@@ -2798,6 +2798,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ 		goto done;
+ 	}
  
-+#define VALIDATE_DESC_PTR(desc) do { \
-+	int __valid = validate_desc(desc, __func__); \
-+	if (__valid < 0) \
-+		return ERR_PTR(__valid); \
-+	if (__valid == 0) \
-+		return NULL; \
-+	} while (0)
++	kref_init(&desc->ref);
 +
- int gpiod_request(struct gpio_desc *desc, const char *label)
+ 	if (chip->request) {
+ 		/* chip->request may sleep */
+ 		spin_unlock_irqrestore(&gpio_lock, flags);
+@@ -2941,6 +2943,13 @@ void gpiod_free(struct gpio_desc *desc)
+ 	}
+ }
+ 
++static void gpiod_free_kref(struct kref *ref)
++{
++	struct gpio_desc *desc = container_of(ref, struct gpio_desc, ref);
++
++	gpiod_free(desc);
++}
++
+ /**
+  * gpiochip_is_requested - return string iff signal was requested
+  * @chip: controller managing the signal
+@@ -5075,18 +5084,41 @@ struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
+ EXPORT_SYMBOL_GPL(gpiod_get_array_optional);
+ 
+ /**
+- * gpiod_put - dispose of a GPIO descriptor
+- * @desc:	GPIO descriptor to dispose of
++ * gpiod_put - decrease the reference count of a GPIO descriptor
++ * @desc:	GPIO descriptor to unref
+  *
+  * No descriptor can be used after gpiod_put() has been called on it.
+  */
+ void gpiod_put(struct gpio_desc *desc)
  {
- 	int ret = -EPROBE_DEFER;
+-	if (desc)
+-		gpiod_free(desc);
++	might_sleep();
++
++	VALIDATE_DESC_VOID(desc);
++
++	kref_put(&desc->ref, gpiod_free_kref);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_put);
+ 
++/**
++ * gpiod_ref - increase the reference count of a GPIO descriptor
++ * @desc:	GPIO descriptor to reference
++ *
++ * Returns the same gpio_desc after increasing the reference count.
++ */
++struct gpio_desc *gpiod_ref(struct gpio_desc *desc)
++{
++	VALIDATE_DESC_PTR(desc);
++
++	if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
++		pr_warn("gpiolib: unable to increase the reference count of unrequested GPIO descriptor\n");
++		return desc;
++	}
++
++	kref_get(&desc->ref);
++	return desc;
++}
++EXPORT_SYMBOL_GPL(gpiod_ref);
++
+ /**
+  * gpiod_put_array - dispose of multiple GPIO descriptors
+  * @descs:	struct gpio_descs containing an array of descriptors
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 3e0aab2945d8..51a92c43dd55 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -119,6 +119,7 @@ struct gpio_desc {
+ 	const char		*label;
+ 	/* Name of the GPIO */
+ 	const char		*name;
++	struct kref		ref;
+ };
+ 
+ int gpiod_request(struct gpio_desc *desc, const char *label);
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index bf2d017dd7b7..02b136884923 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -81,6 +81,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
+ 							const char *con_id,
+ 							enum gpiod_flags flags);
++struct gpio_desc *gpiod_ref(struct gpio_desc *desc);
+ void gpiod_put(struct gpio_desc *desc);
+ void gpiod_put_array(struct gpio_descs *descs);
+ 
+@@ -237,6 +238,14 @@ gpiod_get_array_optional(struct device *dev, const char *con_id,
+ 	return NULL;
+ }
+ 
++static inline struct gpio_desc *gpiod_ref(struct gpio_desc *desc)
++{
++	/* GPIO can never have been requested */
++	WARN_ON(desc);
++
++	return NULL;
++}
++
+ static inline void gpiod_put(struct gpio_desc *desc)
+ {
+ 	might_sleep();
 -- 
 2.25.0
 
