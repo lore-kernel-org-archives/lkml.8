@@ -2,130 +2,136 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA29C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD154C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD4C20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6F92067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582512788;
+	bh=yVkuU9V841ix1fFjroZlF2lRi1LQ89gDQoAPV/sfzNg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=DuQGmEeZkjB7GrzGeGl1HhVXJ1RZiBu+nnLIGdlzUOyGV+kDXvyyOw4L2dk+M2R9e
+	 jJpZ66yztYEL9UndyWU+U4wEiY5z075WIRI+bEnrNURgVYSViBY+2/gXCgHYRnPNG+
+	 FXCExvf2fB9T5vnkDWuihYn7/Ueg6CXt9UJiljNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgBXCvo (ORCPT
+        id S1727188AbgBXCxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:51:44 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62260 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727156AbgBXCvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:51:44 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O2niYG106474
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 21:51:42 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb16176rv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 21:51:42 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Mon, 24 Feb 2020 02:51:40 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 02:51:32 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O2pVLd49676454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 02:51:31 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D97AAA405C;
-        Mon, 24 Feb 2020 02:51:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FC2CA405B;
-        Mon, 24 Feb 2020 02:51:31 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 02:51:31 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Sun, 23 Feb 2020 21:53:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbgBXCxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 21:53:07 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 9F4A9A00E5;
-        Mon, 24 Feb 2020 13:51:26 +1100 (AEDT)
-Subject: Re: [PATCH v3 03/27] powerpc: Map & release OpenCAPI LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-4-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Mon, 24 Feb 2020 13:51:29 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 89E9620658;
+        Mon, 24 Feb 2020 02:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582512786;
+        bh=yVkuU9V841ix1fFjroZlF2lRi1LQ89gDQoAPV/sfzNg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ph640y11De0Q/2uQE9cOsxGxAdnLnzQrKA3g8172EQideqSf2Py47xLXEU5lMhTwY
+         ZUdX2clBRLcOJf9Zbz0BENZ5lOKAJOa/2ZZNpuriG2ZGwQYqku8m4sd2iMZv34y5eV
+         MXPLDgshEqVgSJpHnV+qJk4iihkAuc97/k8c9CFE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9723C3521885; Sun, 23 Feb 2020 18:53:03 -0800 (PST)
+Date:   Sun, 23 Feb 2020 18:53:03 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 13/15] torture: Replace cpu_up/down with add/remove_cpu
+Message-ID: <20200224025303.GH2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200223192942.18420-1-qais.yousef@arm.com>
+ <20200223192942.18420-14-qais.yousef@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-4-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022402-0020-0000-0000-000003ACF11B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022402-0021-0000-0000-000022050039
-Message-Id: <61e2b75b-334e-9eec-d14d-7dfdb4654415@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-23_07:2020-02-21,2020-02-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- bulkscore=0 impostorscore=0 adultscore=0 phishscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 mlxlogscore=527 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240022
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223192942.18420-14-qais.yousef@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:26 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Sun, Feb 23, 2020 at 07:29:40PM +0000, Qais Yousef wrote:
+> The core device API performs extra housekeeping bits that are missing
+> from directly calling cpu_up/down.
 > 
-> This patch adds platform support to map & release LPC memory.
+> See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+> serialization during LPM") for an example description of what might go
+> wrong.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> This also prepares to make cpu_up/down a private interface for anything
+> but the cpu subsystem.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> CC: Davidlohr Bueso <dave@stgolabs.net>
+> CC: "Paul E. McKenney" <paulmck@kernel.org>
+> CC: Josh Triplett <josh@joshtriplett.org>
+> CC: linux-kernel@vger.kernel.org
 
-Nothing seems obviously wrong here.
+From a torture-test perspective:
 
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+> ---
+>  kernel/torture.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/torture.c b/kernel/torture.c
+> index 7c13f5558b71..a479689eac73 100644
+> --- a/kernel/torture.c
+> +++ b/kernel/torture.c
+> @@ -97,7 +97,7 @@ bool torture_offline(int cpu, long *n_offl_attempts, long *n_offl_successes,
+>  			 torture_type, cpu);
+>  	starttime = jiffies;
+>  	(*n_offl_attempts)++;
+> -	ret = cpu_down(cpu);
+> +	ret = remove_cpu(cpu);
+>  	if (ret) {
+>  		if (verbose)
+>  			pr_alert("%s" TORTURE_FLAG
+> @@ -148,7 +148,7 @@ bool torture_online(int cpu, long *n_onl_attempts, long *n_onl_successes,
+>  			 torture_type, cpu);
+>  	starttime = jiffies;
+>  	(*n_onl_attempts)++;
+> -	ret = cpu_up(cpu);
+> +	ret = add_cpu(cpu);
+>  	if (ret) {
+>  		if (verbose)
+>  			pr_alert("%s" TORTURE_FLAG
+> @@ -192,17 +192,18 @@ torture_onoff(void *arg)
+>  	for_each_online_cpu(cpu)
+>  		maxcpu = cpu;
+>  	WARN_ON(maxcpu < 0);
+> -	if (!IS_MODULE(CONFIG_TORTURE_TEST))
+> +	if (!IS_MODULE(CONFIG_TORTURE_TEST)) {
+>  		for_each_possible_cpu(cpu) {
+>  			if (cpu_online(cpu))
+>  				continue;
+> -			ret = cpu_up(cpu);
+> +			ret = add_cpu(cpu);
+>  			if (ret && verbose) {
+>  				pr_alert("%s" TORTURE_FLAG
+>  					 "%s: Initial online %d: errno %d\n",
+>  					 __func__, torture_type, cpu, ret);
+>  			}
+>  		}
+> +	}
+>  
+>  	if (maxcpu == 0) {
+>  		VERBOSE_TOROUT_STRING("Only one CPU, so CPU-hotplug testing is disabled");
+> -- 
+> 2.17.1
+> 
