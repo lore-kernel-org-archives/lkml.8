@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BCBC38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48E4C38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0CE20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838F320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgBXXVd (ORCPT
+        id S1728469AbgBXXVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:21:33 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:42535 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727960AbgBXXVd (ORCPT
+        Mon, 24 Feb 2020 18:21:35 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44430 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728432AbgBXXVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 18:21:33 -0500
-Received: by mail-qv1-f67.google.com with SMTP id dc14so4916123qvb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 15:21:32 -0800 (PST)
+Received: by mail-qt1-f196.google.com with SMTP id j23so7786716qtr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 15:21:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8qgdvNENjdppslkpYoe+OSQTy4MavzCmuXPJ3KTJBw0=;
-        b=eBST/fs+fCe9gKckuo0Rcp0KtSuTiZvs5aJSRzHUOPdiWkWkOw34ODZcia458ZEt/O
-         GG0SIP030dxjC9/h2HNhIy2h9Gz8CQ15I+eT3rkwuBAatMLqekvNxcz8Iuye/GDaONqg
-         47wUWEUMdboYJlU3cMtnMsmZeBRZEDktW1/kIEJv3lej/RvvTcyq2uNi43N8jGAsUB5/
-         PyZn1l0g/J6Rg712zihSi9ZhGcFMNldwtmzcqclV+IquL53AN7sHmQsZ/AjGyhVBoLDu
-         er+IdWD1hTy+3daVbrOikWeWaUxEJmfn4VffuWu7nkr4xLQ1YU0ykaq9SaKXEZFgRisB
-         Wp+Q==
-X-Gm-Message-State: APjAAAWrD8WwCJvc0LUx5KwWvZS+PJGsA42j1MCcvzIS87o025gSeAl2
-        RhIg+AxeIHsLvc8nPjN5z28=
-X-Google-Smtp-Source: APXvYqx9dlzhwA0Zu/OkbSFwDKwfHZa4kgk1b/nDyIrtx81FRgNfJ9soihwo8X3+nmwoI0E1osR36Q==
-X-Received: by 2002:a0c:ab13:: with SMTP id h19mr46293624qvb.243.1582586491902;
-        Mon, 24 Feb 2020 15:21:31 -0800 (PST)
+        bh=dV6KOm+5xGU5Fmvg1Yr6S6y1zc/vzXFOAFt08+WthgA=;
+        b=m0bXc9iU3025kiRW/zZjI4AHtpGqnPDVrvT76l6lBRbXl611pzzso6MtT2rLsBKo3A
+         yfMAPOQHSbyjrSnuB5wPnLOrtgxnHj6BmR2cNb2bOcA8jMjhLkrenCizh75wFuQVjjzv
+         RxRmFpkXA8iPedJ8Rs1mFLYr5/6uplx4qkfwU/CV4gqooY8vjip0ufMx8ZpWJcYZsguw
+         VgFgun9fIko2IvS9gfEBR+0657gCXh73rlFuwdQE6ODg5NuaHaTnvXYXdIVkfJcbNP0u
+         20ceS+QFzd3EDy+rW6E3YNZb/xoIWJSWUW5UTrw8YfpY5Y0J8puA/+09CAxAEOUi7PgM
+         0zCg==
+X-Gm-Message-State: APjAAAWEpI9CNupr53QLV0phrP2uQOxwSEiYEADDLzbMcKKFk6GZS+Dx
+        uiy6kZoIbLVLMK30tkZqXFo=
+X-Google-Smtp-Source: APXvYqwzjiEdJSCtQN0uWeuS+nLM4wOfpUHiwi8ohS+H86cVpr85z8lnfiQC7w8HvqxzlhbpVk8FgA==
+X-Received: by 2002:ac8:2784:: with SMTP id w4mr195974qtw.218.1582586492814;
+        Mon, 24 Feb 2020 15:21:32 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 202sm3757849qkg.132.2020.02.24.15.21.31
+        by smtp.gmail.com with ESMTPSA id 202sm3757849qkg.132.2020.02.24.15.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 15:21:31 -0800 (PST)
+        Mon, 24 Feb 2020 15:21:32 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Nick Desaulniers <ndesaulniers@google.com>
 Cc:     Borislav Petkov <bp@alien8.de>,
@@ -54,9 +54,9 @@ Cc:     Borislav Petkov <bp@alien8.de>,
         Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
         Kees Cook <keescook@chromium.org>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 1/2] arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
-Date:   Mon, 24 Feb 2020 18:21:28 -0500
-Message-Id: <20200224232129.597160-2-nivedita@alum.mit.edu>
+Subject: [PATCH v2 2/2] arch/x86: Drop unneeded linker script discard of .eh_frame
+Date:   Mon, 24 Feb 2020 18:21:29 -0500
+Message-Id: <20200224232129.597160-3-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <CAKwvOdn6cxm9EpB7A9kLasttPwLY2csnhqgNAdkJ6_s2DP1-HA@mail.gmail.com>
 References: <CAKwvOdn6cxm9EpB7A9kLasttPwLY2csnhqgNAdkJ6_s2DP1-HA@mail.gmail.com>
@@ -67,81 +67,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While discussing a patch to discard .eh_frame from the compressed
-vmlinux using the linker script, Fangrui Song pointed out [1] that these
-sections shouldn't exist in the first place because arch/x86/Makefile
-uses -fno-asynchronous-unwind-tables.
+Now that we don't generate .eh_frame sections for the files in setup.elf
+and realmode.elf, the linker scripts don't need the /DISCARD/ any more.
 
-It turns out this is because the Makefiles used to build the compressed
-kernel redefine KBUILD_CFLAGS, dropping this flag.
+Remove the one in the main kernel linker script as well, since there are
+no .eh_frame sections already, and fix up a comment referencing .eh_frame.
 
-Add the flag to the Makefile for the compressed kernel, as well as the
-EFI stub Makefile to fix this.
-
-Also add the flag to boot/Makefile and realmode/rm/Makefile so that the
-kernel's boot code (boot/setup.elf) and realmode trampoline
-(realmode/rm/realmode.elf) won't be compiled with .eh_frame sections,
-since their linker scripts also just discard it.
+Update the comment in asm/dwarf2.h referring to .eh_frame so it continues
+to make sense, as well as being more specific.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Suggested-By: Fangrui Song <maskray@google.com>
-[1] https://lore.kernel.org/lkml/20200222185806.ywnqhfqmy67akfsa@google.com/
 ---
- arch/x86/boot/Makefile                | 1 +
- arch/x86/boot/compressed/Makefile     | 1 +
- arch/x86/realmode/rm/Makefile         | 1 +
- drivers/firmware/efi/libstub/Makefile | 3 ++-
- 4 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/boot/compressed/vmlinux.lds.S | 5 -----
+ arch/x86/boot/setup.ld                 | 1 -
+ arch/x86/include/asm/dwarf2.h          | 4 ++--
+ arch/x86/kernel/vmlinux.lds.S          | 7 ++-----
+ arch/x86/realmode/rm/realmode.lds.S    | 1 -
+ 5 files changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 012b82fc8617..24f011e0adf1 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -68,6 +68,7 @@ clean-files += cpustr.h
- KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
- KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
- KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
-+KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 469dcf800a2c..508cfa6828c5 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -73,9 +73,4 @@ SECTIONS
+ #endif
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
+-
+-	/* Discard .eh_frame to save some space */
+-	/DISCARD/ : {
+-		*(.eh_frame)
+-	}
+ }
+diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+index 3da1c37c6dd5..24c95522f231 100644
+--- a/arch/x86/boot/setup.ld
++++ b/arch/x86/boot/setup.ld
+@@ -52,7 +52,6 @@ SECTIONS
+ 	_end = .;
  
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 26050ae0b27e..c33111341325 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -39,6 +39,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
- KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
- KBUILD_CFLAGS += -Wno-pointer-sign
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
-+KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+ 	/DISCARD/	: {
+-		*(.eh_frame)
+ 		*(.note*)
+ 	}
  
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index 99b6332ba540..b11ec5d8f8ac 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -71,5 +71,6 @@ $(obj)/realmode.relocs: $(obj)/realmode.elf FORCE
- KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -D_WAKEUP \
- 		   -I$(srctree)/arch/x86/boot
- KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
-+KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 98a81576213d..a1140c4ee478 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -12,7 +12,8 @@ cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -O2 \
- 				   -mno-mmx -mno-sse -fshort-wchar \
- 				   -Wno-pointer-sign \
- 				   $(call cc-disable-warning, address-of-packed-member) \
--				   $(call cc-disable-warning, gnu)
-+				   $(call cc-disable-warning, gnu) \
-+				   -fno-asynchronous-unwind-tables
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index ae391f609840..f71a0cce9373 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -42,8 +42,8 @@
+ 	 * Emit CFI data in .debug_frame sections, not .eh_frame sections.
+ 	 * The latter we currently just discard since we don't do DWARF
+ 	 * unwinding at runtime.  So only the offline DWARF information is
+-	 * useful to anyone.  Note we should not use this directive if
+-	 * vmlinux.lds.S gets changed so it doesn't discard .eh_frame.
++	 * useful to anyone.  Note we should not use this directive if we
++	 * ever decide to enable DWARF unwinding at runtime.
+ 	 */
+ 	.cfi_sections .debug_frame
+ #else
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index e3296aa028fe..5cab3a29adcb 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -313,8 +313,8 @@ SECTIONS
  
- # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
- # disable the stackleak plugin
+ 	. = ALIGN(8);
+ 	/*
+-	 * .exit.text is discard at runtime, not link time, to deal with
+-	 *  references from .altinstructions and .eh_frame
++	 * .exit.text is discarded at runtime, not link time, to deal with
++	 *  references from .altinstructions
+ 	 */
+ 	.exit.text : AT(ADDR(.exit.text) - LOAD_OFFSET) {
+ 		EXIT_TEXT
+@@ -412,9 +412,6 @@ SECTIONS
+ 	DWARF_DEBUG
+ 
+ 	DISCARDS
+-	/DISCARD/ : {
+-		*(.eh_frame)
+-	}
+ }
+ 
+ 
+diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
+index 64d135d1ee63..63aa51875ba0 100644
+--- a/arch/x86/realmode/rm/realmode.lds.S
++++ b/arch/x86/realmode/rm/realmode.lds.S
+@@ -71,7 +71,6 @@ SECTIONS
+ 	/DISCARD/ : {
+ 		*(.note*)
+ 		*(.debug*)
+-		*(.eh_frame*)
+ 	}
+ 
+ #include "pasyms.h"
 -- 
 2.24.1
 
