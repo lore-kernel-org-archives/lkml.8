@@ -2,83 +2,233 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4C9C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F1C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F1D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582526381;
-	bh=E75ambiZWtDC8+PzuPEM8PwrEqFHtP0j+JO70AOquzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t7LFWdJ/Ghz12JmeFpHk1L8hPRS4oaffkbRC36EDC0Qrlo5VT+zmN9Cdq7W9aW/Ml
-	 s5J4pc/ZgEWPyXj5kohdnQtPCOFWtQvX/UHkFqyR/fSxi61/VPI9O1sAS+eFa8yOZB
-	 l8VRcNEmQC/84Kii+jd2LBJ0nHOLCpLsoGPuQMlo=
+	by mail.kernel.org (Postfix) with ESMTP id 9203520661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EFR8Y73l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgBXGjk (ORCPT
+        id S1727242AbgBXGmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:39:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgBXGjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:39:40 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Feb 2020 01:42:02 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46897 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727202AbgBXGmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:42:01 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582526520; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ZfQGMbPq3WH0A2TQD2P6hS1/SkCmFAZG5KtLl2FUbIE=; b=EFR8Y73lbdecf7HylDU0wXtkiHV/n9R5RKyWKVLtWze+2PJ7nXI87mdA2hlHwTBymMBGDovY
+ FVlgdaEeYXzmESL7nCCsX44+8eKL7BK/VAAYjvPvKRqqZHNxXwXWXesOaeA+PeUS2n5b3op9
+ 5s+qAAea9Zv6rR9p9sQJvc8cHzY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e53702f.7f0c08e9a8b8-smtp-out-n01;
+ Mon, 24 Feb 2020 06:41:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D800FC4479C; Mon, 24 Feb 2020 06:41:49 +0000 (UTC)
+Received: from [10.206.12.145] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BC9820661;
-        Mon, 24 Feb 2020 06:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582526379;
-        bh=E75ambiZWtDC8+PzuPEM8PwrEqFHtP0j+JO70AOquzo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VVGC9XIfm/Ss6rxMN8hoMIyaU6Mbgjg2qJU69VxnHI7Ms0QJQvAtUG/3GAPo/X/jH
-         oCZi/v+bq0pWYxbA82xUjWibhiPKwuRq88DwYHiIA0KBP3S9srMb5tqDXTlSBEZL1U
-         7+9zNlk+NF02H24zKGrNunIVRbPZ/y8CYnxi9V7c=
-Date:   Mon, 24 Feb 2020 14:39:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        netdev <netdev@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH v2 net-next/devicetree 5/5] arm64: dts: fsl: ls1028a:
- enable switch PHYs on RDB
-Message-ID: <20200224063933.GN27688@dragon>
-References: <20200219151259.14273-6-olteanv@gmail.com>
- <20200222114136.595-1-michael@walle.cc>
- <CA+h21hrXAFWfjcKfj+QAcQauDqvLS0Vzp9Uvv6ewqxDSF7yRpg@mail.gmail.com>
+        (Authenticated sender: lsrao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E356C43383;
+        Mon, 24 Feb 2020 06:41:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E356C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=lsrao@codeaurora.org
+Subject: Re: [PATCH v6 1/3] arm64: dts: qcom: sc7180: Add cpuidle low power
+ states
+To:     Maulik Shah <mkshah@codeaurora.org>, swboyd@chromium.org,
+        mka@chromium.org, evgreen@chromium.org, bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, devicetree@vger.kernel.org
+References: <1582277527-19638-1-git-send-email-mkshah@codeaurora.org>
+ <1582277527-19638-2-git-send-email-mkshah@codeaurora.org>
+From:   Srinivas Rao L <lsrao@codeaurora.org>
+Message-ID: <bc99547e-4f9a-a959-fb59-fe0b19216eb0@codeaurora.org>
+Date:   Mon, 24 Feb 2020 12:11:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hrXAFWfjcKfj+QAcQauDqvLS0Vzp9Uvv6ewqxDSF7yRpg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1582277527-19638-2-git-send-email-mkshah@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 02:17:54PM +0200, Vladimir Oltean wrote:
-> Hi Michael,
-> 
-> On Sat, 22 Feb 2020 at 13:41, Michael Walle <michael@walle.cc> wrote:
-> >
-> > Hi,
-> >
-> > status should be the last property, correct?
-> >
-> > -michael
-> 
-> I know of no such convention to exist.
+Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
 
-Hmm, it's a convention for DTS files that I'm looking after.
+Regards,
 
-Shawn
+Srinivas.
+
+On 2/21/2020 3:02 PM, Maulik Shah wrote:
+> Add device bindings for cpuidle states for cpu devices.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 78 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index cc5a94f..2941a7e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -86,6 +86,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x0>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_0>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+> @@ -103,6 +106,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x100>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_100>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+> @@ -117,6 +123,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x200>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_200>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+> @@ -131,6 +140,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x300>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_300>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+> @@ -145,6 +157,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x400>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_400>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+> @@ -159,6 +174,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x500>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +					   &LITTLE_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_500>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+> @@ -173,6 +191,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x600>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
+> +					   &BIG_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_600>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 1>;
+> @@ -187,6 +208,9 @@
+>   			compatible = "arm,armv8";
+>   			reg = <0x0 0x700>;
+>   			enable-method = "psci";
+> +			cpu-idle-states = <&BIG_CPU_SLEEP_0
+> +					   &BIG_CPU_SLEEP_1
+> +					   &CLUSTER_SLEEP_0>;
+>   			next-level-cache = <&L2_700>;
+>   			#cooling-cells = <2>;
+>   			qcom,freq-domain = <&cpufreq_hw 1>;
+> @@ -195,6 +219,60 @@
+>   				next-level-cache = <&L3_0>;
+>   			};
+>   		};
+> +
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "little-power-down";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <549>;
+> +				exit-latency-us = <901>;
+> +				min-residency-us = <1774>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "little-rail-power-down";
+> +				arm,psci-suspend-param = <0x40000004>;
+> +				entry-latency-us = <702>;
+> +				exit-latency-us = <915>;
+> +				min-residency-us = <4001>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "big-power-down";
+> +				arm,psci-suspend-param = <0x40000003>;
+> +				entry-latency-us = <523>;
+> +				exit-latency-us = <1244>;
+> +				min-residency-us = <2207>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "big-rail-power-down";
+> +				arm,psci-suspend-param = <0x40000004>;
+> +				entry-latency-us = <526>;
+> +				exit-latency-us = <1854>;
+> +				min-residency-us = <5555>;
+> +				local-timer-stop;
+> +			};
+> +
+> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "cluster-power-down";
+> +				arm,psci-suspend-param = <0x40003444>;
+> +				entry-latency-us = <3263>;
+> +				exit-latency-us = <6562>;
+> +				min-residency-us = <9926>;
+> +				local-timer-stop;
+> +			};
+> +		};
+>   	};
+>   
+>   	memory@80000000 {
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
