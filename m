@@ -2,138 +2,129 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A37C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0824EC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE6020732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pP7ckkOr"
+	by mail.kernel.org (Postfix) with ESMTP id D704320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgBXKoQ (ORCPT
+        id S1727461AbgBXKo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:44:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33670 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXKoQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:44:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NdeRTgFFacaSdHt4nuX6tbLuXugUsK+Xct/DkGyNEjM=; b=pP7ckkOreRST4w3O2H8Ddh5czq
-        FOgLeSwZ2T/7wIMWPVRzGIfiZYM/mtuIi+QFFVluts17heN/06s61qeHUQi3WFq9ptOEgX242J9Hb
-        pnSqyZQ+x3DZU+mj6tG4xRr6cx9t/XYCli0L11/g421tVhqpdqI9g8gg09uxiZ5tu+943Fv3yX9Bl
-        GOKK1YQcSrnY23yJKcjgnLe0v5zeibJVfHfOWQCsaeOYr+KXC9EJGDMPc9LESpn/ctHGSgSKfvE+G
-        gXco9MQXlfNHRjLX5yms++w7KV4h2yPPlbDudXVXUTn85n8dOfhGu/mUeC3JiPiCCdQdjzFoKNQIi
-        bCsTywVg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6BDI-0001nh-Sl; Mon, 24 Feb 2020 10:43:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0DB89300F7A;
-        Mon, 24 Feb 2020 11:41:51 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 705CF29B4DB4E; Mon, 24 Feb 2020 11:43:46 +0100 (CET)
-Date:   Mon, 24 Feb 2020 11:43:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
-Message-ID: <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.328642621@infradead.org>
- <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
- <20200221202246.GA14897@hirez.programming.kicks-ass.net>
+        Mon, 24 Feb 2020 05:44:57 -0500
+Received: from verein.lst.de ([213.95.11.211]:37269 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgBXKo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:44:57 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 18C1568AFE; Mon, 24 Feb 2020 11:44:53 +0100 (CET)
+Date:   Mon, 24 Feb 2020 11:44:52 +0100
+From:   Torsten Duwe <duwe@lst.de>
+To:     Icenowy Zheng <icenowy@aosc.io>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
+Message-ID: <20200224104452.GA31184@lst.de>
+References: <20200221165127.813325-1-icenowy@aosc.io> <20200221171328.GC6928@lst.de> <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200221202246.GA14897@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:22:46PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 21, 2020 at 11:05:36AM -0800, Andy Lutomirski wrote:
+On Sat, Feb 22, 2020 at 10:43:02AM +0800, Icenowy Zheng wrote:
 > 
-> > > -       /*
-> > > -        * Use ist_enter despite the fact that we don't use an IST stack.
-> > > -        * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
-> > > -        * mode or even during context tracking state changes.
-> > > -        *
-> > > -        * This means that we can't schedule.  That's okay.
-> > > -        */
-> > > -       ist_enter(regs);
-> > > +       nmi_enter();
-> > 
-> > I agree with the change, but some commentary might be nice.  Maybe
-> > copy from here:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/idtentry&id=061eaa900b4f63601ab6381ab431fcef8dfd84be
 > 
-> Fair enough; I'll add something to #DB and #BP for that.
+> 于 2020年2月22日 GMT+08:00 上午1:13:28, Torsten Duwe <duwe@lst.de> 写到:
+> >On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
+> >> Current code tries to store the link rate (in bps, which is a big
+> >> number) in a u8, which surely overflow. Then it's converted back to
+> >> bandwidth code (which is thus 0) and written to the chip.
+> >> 
+> >> The code sometimes works because the chip will automatically fallback
+> >to
+> >> the lowest possible DP link rate (1.62Gbps) when get the invalid
+> >value.
+> >> However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps
+> >link,
+> >> it failed.
+> >> 
+> >> As we had already read the link bandwidth as bandwidth code in
+> >earlier
+> >> code (to check whether it is supported), use it when setting
+> >bandwidth,
+> >> instead of converting it to link rate and then converting back.
+> >> 
+> >> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
+> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >> ---
+> >>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
+> >>  1 file changed, 1 insertion(+), 2 deletions(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> >b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> >> index 56f55c53abfd..2dfa2fd2a23b 100644
+> >> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> >> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> >> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct
+> >anx6345 *anx6345)
+> >>  	if (err)
+> >>  		return err;
+> >>  
+> >> -	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
+> >> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+> >> +	dpcd[0] = dp_bw;
+> >
+> >Why do you make this assignment and not use dp_bw directly in the call?
+> 
+> Because the dpcd array is then written as a continous array
+> back to DPCD.
 
-do_int3() is now like:
+But the current code never changes this value?
+Anyway, as this might change in the future, I support your version;
+I want to see this fixed.
 
-@@ -529,19 +497,18 @@ dotraplinkage void do_general_protection
- }
- NOKPROBE_SYMBOL(do_general_protection);
- 
--dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
-+dotraplinkage notrace void do_int3(struct pt_regs *regs, long error_code)
- {
- 	if (poke_int3_handler(regs))
- 		return;
- 
- 	/*
--	 * Use ist_enter despite the fact that we don't use an IST stack.
--	 * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
--	 * mode or even during context tracking state changes.
--	 *
--	 * This means that we can't schedule.  That's okay.
-+	 * Unlike any other non-IST entry, we can be called from pretty much
-+	 * any location in the kernel through kprobes -- text_poke() will most
-+	 * likely be handled by poke_int3_handler() above. This means this
-+	 * handler is effectively NMI-like.
- 	 */
--	ist_enter(regs);
-+	nmi_enter();
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- #ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
- 	if (kgdb_ll_trap(DIE_INT3, "int3", regs, error_code, X86_TRAP_BP,
-@@ -563,7 +530,7 @@ dotraplinkage void notrace do_int3(struc
- 	cond_local_irq_disable(regs);
- 
- exit:
--	ist_exit(regs);
-+	nmi_exit();
- }
- NOKPROBE_SYMBOL(do_int3);
- 
+Reviewed-by: Torsten Duwe <duwe@suse.de>
+Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
+Cc: Maxime Ripard <maxime@cerno.tech>
+Cc: Torsten Duwe <duwe@lst.de>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Icenowy Zheng <icenowy@aosc.io>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 
-And I'm going to have to do another (few) patches for do_debug(),
-because that comment it has it patently false and I remember we had a
-bunch of crud for that. Let me dig those out.
+> >
+> >>  	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+> >>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
+> >                                                       ^^^^^^
+> >>  	if (err)
+> >> -- 
+> >> 2.24.1
+> >
+> >BTW, my version is only a bit more verbose:
+> >
+> >https://patchwork.freedesktop.org/patch/354344/
+> >
+> >	Torsten
+> 
+> -- 
+> 使用 K-9 Mail 发送自我的Android设备。
