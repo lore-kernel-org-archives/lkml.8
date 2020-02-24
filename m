@@ -2,102 +2,121 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08919C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA303C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF26420836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9305220838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582563450;
-	bh=eAFdJ/GHOBZ8JOWQZMrpGy2jHaGViHZs8DzzU5E/LqU=;
+	s=default; t=1582563478;
+	bh=/1bbEbIQcOxdlPPRg6xaUyuKQtDYNCF5hHOF4bi9Dvw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LsqYBUOlSCDPt3FeENyRuthnaeak3Z0amt5BQVLcFv/SGLJ24C1mYgeECSxU+gUIk
-	 J28EY+QV6/RlcMO5vH/hnZZ9dxYrYB6wDH/1fHOtqeel/fkhzwARVFIHPXhBFnafsH
-	 DfuPpXzpbNAnHTZR68CsqAWmcxKrCOWq5Vrmz9Z0=
+	b=LiEVsl0kuU4+jjhZHrsxmmgI2MUhQ2qRcDLVqKiey0wVb/m25wFwkAkmbpC5iw8cy
+	 dBwT7DEyW7oQShUWBWAIfbQO07sk1kdg/dWqnN8bkONLLUKgHgEmir9SWzRWSvtyO1
+	 NLdcm00Vvbmf2I3KZq4RrdIt33VP1f4fq+wrHTQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgBXQ53 (ORCPT
+        id S1728002AbgBXQ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:57:29 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38685 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgBXQ53 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:57:29 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so9327833oth.5;
-        Mon, 24 Feb 2020 08:57:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6g/0/6uHeJ9SHvtHOygjn4v068gQNv45K/NSYSZDP4E=;
-        b=U4bVxMHNwJ6W7JIAPFLUPteLmJJA0QGPR31VfFdSP8+ZGFAdgDOYzlj0ym5qD1aIJM
-         Bmib+pRnAW4kq0/k8psdKx5rpJLLXoV8zu5Qv6C5XJPUuHov3HldBPDZwnhZVekqAkfy
-         aQymTIFOScZk02GEXFHyuE75t4Zhw0GfDZCgFqSD+Z//bMVDFVmUS5Hyc4GPJkISlo2u
-         VTf962Unq7aK78r8TtxckMzbAf7f0I4aJKmv4nco3IKg8Y8POpM5s+xspmcX5WZII3q9
-         CkHNZBug1qUSRBzuSut9u2erF2aRNolrksI7E4U6j7w9nf8Mp1s/CF5ZSwK4kaOP5hIL
-         Sq/g==
-X-Gm-Message-State: APjAAAXpeCOe1ykqxhRx9rHz7u29dcVf1xT9Zuap25zZ3IkYOHbr/NW7
-        /jPesK7HPXFUGqWp4eDsgg==
-X-Google-Smtp-Source: APXvYqzBSMqtk4LzoxQnFIH5IwbuCE4Q4g+OfNbeilXK0aQ5gXGWn1SAYGX3ICKI7wCB5mXfcqXu7A==
-X-Received: by 2002:a05:6830:1d8b:: with SMTP id y11mr42737812oti.4.1582563448155;
-        Mon, 24 Feb 2020 08:57:28 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a1sm4610066oti.2.2020.02.24.08.57.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 08:57:27 -0800 (PST)
-Received: (nullmailer pid 27821 invoked by uid 1000);
-        Mon, 24 Feb 2020 16:57:26 -0000
-Date:   Mon, 24 Feb 2020 10:57:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     David Daney <david.daney@cavium.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
-Message-ID: <20200224165726.GA27161@bogus>
-References: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+        Mon, 24 Feb 2020 11:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbgBXQ55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:57:57 -0500
+Received: from localhost (unknown [122.182.199.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D8E720836;
+        Mon, 24 Feb 2020 16:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582563476;
+        bh=/1bbEbIQcOxdlPPRg6xaUyuKQtDYNCF5hHOF4bi9Dvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MSIX1bCxbpk+2AJam2QywGeWlRX7OxLdOc3qL45tSA1QX24QoNZL0tomMGZHpGM7U
+         Qj360wozS445bx4ySv6JlYcQH9rp+Dqs6e45ssdEkA6fJ7ZxSPNw++9qtgXSG/Bi2w
+         RRR5AbGfS7xFkUkGKe8pxQz05FGdm9WvBtMw/rQA=
+Date:   Mon, 24 Feb 2020 22:27:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        dmaengine@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
+Message-ID: <20200224165752.GE2618@vkoul-mobl>
+References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+ <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 10:09:50AM +0100, Lukas Bulwahn wrote:
-> Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
-> DT schema") combines all information from pci-thunder-{pem,ecam}.txt
-> into host-generic-pci.yaml, and deleted the two files in
-> Documentation/devicetree/bindings/pci/.
+On 29-01-20, 17:19, Fabio Estevam wrote:
+> Hi Martin,
 > 
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> Thanks for the fix.
 > 
->   no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+> On Wed, Jan 29, 2020 at 10:41 AM Martin Fuzzey
+> <martin.fuzzey@flowbird.group> wrote:
+> >
+> > There is a DMA problem with the serial ports on i.MX6.
+> >
+> > When the following sequence is performed:
+> >
+> > 1) Open a port
+> > 2) Write some data
+> > 3) Close the port
+> > 4) Open a *different* port
+> > 5) Write some data
+> > 6) Close the port
+> >
+> > The second write sends nothing and the second close hangs.
+> > If the first close() is omitted it works.
+> >
+> > Adding logs to the the UART driver shows that the DMA is being setup but
+> > the callback is never invoked for the second write.
+> >
+> > This used to work in 4.19.
+> >
+> > Git bisect leads to:
+> >         ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+> >
+> > This commit adds a "context_loaded" flag used to avoid unnecessary context
+> > setups.
+> > However the flag is only reset in sdma_channel_terminate_work(),
+> > which is only invoked in a worker triggered by sdma_terminate_all() IF
+> > there is an active descriptor.
+> >
+> > So, if no active descriptor remains when the channel is terminated, the
+> > flag is not reset and, when the channel is later reused the old context
+> > is used.
+> >
+> > Fix the problem by always resetting the flag in sdma_free_chan_resources().
+> >
+> > Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
 > 
-> As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
-> small part of the host-generic-pci.yaml, do not add this file to the
-> PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
-> the removed files.
+> Nit: in the Fixes tag we use 12 digits for the commit ID and the
+> Subject is enclosed by parenthesis.
 > 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Robert, are you still the maintainer of this driver?
-> Rob Herring, please pick this patch.
-> applies cleanly on current master and next-20200221
+> The preferred format would be:
+> 
+> Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
+> 
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Applied, thanks.
+Applied, with updated Fixes line. Thanks
 
-Rob
+-- 
+~Vinod
