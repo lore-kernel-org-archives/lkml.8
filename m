@@ -2,118 +2,68 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF55C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22140C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED2F20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0048C20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBXRQE convert rfc822-to-8bit (ORCPT
+        id S1727854AbgBXRQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:16:04 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:42874 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgBXRQE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:16:04 -0500
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id AAE8367A7D5;
-        Mon, 24 Feb 2020 18:16:01 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 24 Feb
- 2020 18:16:01 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Mon, 24 Feb 2020 18:16:01 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "Vinod Koul" <vkoul@kernel.org>
-CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "stable@vger.kernel" <stable@vger.kernel>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dma: imx-sdma: Fix the event id check to include RX event for
- UART6
-Thread-Topic: [PATCH] dma: imx-sdma: Fix the event id check to include RX
- event for UART6
-Thread-Index: AQHV6zYWVmd7WYLi20CvYMo8u04O/w==
-Date:   Mon, 24 Feb 2020 17:16:01 +0000
-Message-ID: <20200224171531.22204-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 24 Feb 2020 12:16:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47482 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgBXRQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:16:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BC40BAC44;
+        Mon, 24 Feb 2020 17:16:24 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 18:16:18 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [tip: x86/boot] x86/boot/compressed: Remove .eh_frame section
+ from bzImage
+Message-ID: <20200224171618.GA29636@zn.tnic>
+References: <20200109150218.16544-2-nivedita@alum.mit.edu>
+ <158254422067.28353.10866888120950973607.tip-bot2@tip-bot2>
+ <20200224164129.GA312716@rani.riverdale.lan>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: AAE8367A7D5.A05BA
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linus.ml.walleij@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel,
-        vkoul@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224164129.GA312716@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Mon, Feb 24, 2020 at 11:41:29AM -0500, Arvind Sankar wrote:
+> Hi Boris, apologies for the confusion and unnecessary work I've created,
+> but I think the preference is to merge the 2-patch series I posted
+> yesterday [1] instead of this.
+> 
+> [1] https://lore.kernel.org/lkml/20200223193715.83729-1-nivedita@alum.mit.edu/
 
-On i.MX6 the DMA event for the RX channel of UART6 is '0'. To fix
-the broken DMA support for UART6, we change the check for event_id0
-to include '0' as a valid id.
+What guarantees this would work and we won't hit some corner case or
+toolchain configuration this hasn't been tested on?
 
-Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-Cc: stable@vger.kernel
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- drivers/dma/imx-sdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If that happens, I need to have a state to revert back to, i.e., this
+patch, discarding .eh_frame explicitly.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 066b21a32232..3d4aac97b1fc 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1331,7 +1331,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
- 
- 	sdma_channel_synchronize(chan);
- 
--	if (sdmac->event_id0)
-+	if (sdmac->event_id0 >= 0)
- 		sdma_event_disable(sdmac, sdmac->event_id0);
- 	if (sdmac->event_id1)
- 		sdma_event_disable(sdmac, sdmac->event_id1);
-@@ -1631,7 +1631,7 @@ static int sdma_config(struct dma_chan *chan,
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
- 
- 	/* Set ENBLn earlier to make sure dma request triggered after that */
--	if (sdmac->event_id0) {
-+	if (sdmac->event_id0 >= 0) {
- 		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
- 			return -EINVAL;
- 		sdma_event_enable(sdmac, sdmac->event_id0);
+So I'll pick up [1] too, but give people a couple of days - a chance to
+complain about. :)
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
