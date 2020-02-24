@@ -2,122 +2,161 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46965C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D35C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1602072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:55:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Za/Ozcng";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Za/Ozcng"
+	by mail.kernel.org (Postfix) with ESMTP id 0D5442072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgBXOzj (ORCPT
+        id S1727709AbgBXO5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:55:39 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:58324 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727359AbgBXOzi (ORCPT
+        Mon, 24 Feb 2020 09:57:22 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51151 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbgBXO5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:55:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D9AAD8EE193;
-        Mon, 24 Feb 2020 06:55:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582556137;
-        bh=nYoNWmZAomzGgPf7q+XQUVWK7ASnTrz9ODYpmR2mpKc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Za/Ozcng988/g8wymADbE9zgdkkvaF7q2cFM+uiHjmqmZVI01eMWKGeGXj5yoZqHz
-         zW4LTM5KYvbWvLzaW9jO8C7RbNT2zgWdmQ9ZY6LelAG+ZHkW6+0wPAXJ5fIIef4uVF
-         /0z2pvIbXhGqmOrPsG3ZJLCOQ+ILDTlH0xwnz/hE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wH3sn0ON16yB; Mon, 24 Feb 2020 06:55:37 -0800 (PST)
-Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1B36F8EE0E2;
-        Mon, 24 Feb 2020 06:55:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582556137;
-        bh=nYoNWmZAomzGgPf7q+XQUVWK7ASnTrz9ODYpmR2mpKc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Za/Ozcng988/g8wymADbE9zgdkkvaF7q2cFM+uiHjmqmZVI01eMWKGeGXj5yoZqHz
-         zW4LTM5KYvbWvLzaW9jO8C7RbNT2zgWdmQ9ZY6LelAG+ZHkW6+0wPAXJ5fIIef4uVF
-         /0z2pvIbXhGqmOrPsG3ZJLCOQ+ILDTlH0xwnz/hE=
-Message-ID: <1582556135.3384.4.camel@HansenPartnership.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
- [ver #17]
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Miklos Szeredi <mszeredi@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        christian@brauner.io, Jann Horn <jannh@google.com>,
-        darrick.wong@oracle.com, Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 Feb 2020 06:55:35 -0800
-In-Reply-To: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-         <1582316494.3376.45.camel@HansenPartnership.com>
-         <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 24 Feb 2020 09:57:21 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1j6FAe-0003ni-2e; Mon, 24 Feb 2020 15:57:20 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1j6FAc-00051T-CF; Mon, 24 Feb 2020 15:57:18 +0100
+Date:   Mon, 24 Feb 2020 15:57:18 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Andreas Tobler <andreas.tobler@onway.ch>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
+Message-ID: <20200224145718.GD3335@pengutronix.de>
+References: <20200221072349.335551332@linuxfoundation.org>
+ <20200221072403.369335694@linuxfoundation.org>
+ <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:50:25 up 4 days, 22:20, 54 users,  load average: 2.13, 1.11, 0.58
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-24 at 11:24 +0100, Miklos Szeredi wrote:
-> On Fri, Feb 21, 2020 at 9:21 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-[...]
-> > Could I make a suggestion about how this should be done in a way
-> > that doesn't actually require the fsinfo syscall at all: it could
-> > just be done with fsconfig.  The idea is based on something I've
-> > wanted to do for configfd but couldn't because otherwise it
-> > wouldn't substitute for fsconfig, but Christian made me think it
-> > was actually essential to the ability of the seccomp and other
-> > verifier tools in the critique of configfd and I belive the same
-> > critique applies here.
-> > 
-> > Instead of making fsconfig functionally configure ... as in you
-> > pass the attribute name, type and parameters down into the fs
-> > specific handler and the handler does a string match and then
-> > verifies the parameters and then acts on them, make it table
-> > configured, so what each fstype does is register a table of
-> > attributes which can be got and optionally set (with each attribute
-> > having a get and optional set function).  We'd have multiple tables
-> > per fstype, so the generic VFS can register a table of attributes
-> > it understands for every fstype (things like name, uuid and the
-> > like) and then each fs type would register a table of fs specific
-> > attributes following the same pattern. The system would examine the
-> > fs specific table before the generic one, allowing
-> > overrides.  fsconfig would have the ability to both get and
-> > set attributes, permitting retrieval as well as setting (which is
-> > how I get rid of the fsinfo syscall), we'd have a global parameter,
-> > which would retrieve the entire table by name and type so the whole
-> > thing is introspectable because the upper layer knows a-priori all
-> > the attributes which can be set for a given fs type and what type
-> > they are (so we can make more of the parsing generic).  Any
-> > attribute which doesn't have a set routine would be read only and
-> > all attributes would have to have a get routine meaning everything
-> > is queryable.
+On Mon, Feb 24, 2020 at 01:24:04PM +0000, Andreas Tobler wrote:
+> Hi all,
 > 
-> And that makes me wonder: would a
-> "/sys/class/fs/$ST_DEV/options/$OPTION" type interface be feasible
-> for this?
+> On 21.02.20 08:39, Greg Kroah-Hartman wrote:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > 
+> > [ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
+> > 
+> > The current descriptor is not on any list of the virtual DMA channel.
+> > Once sdma_terminate_all() is called when a descriptor is currently
+> > in flight then this one is forgotten to be freed. We have to call
+> > vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
+> > Now that we also free the currently running descriptor we can (and
+> > actually have to) remove the current descriptor from its list also
+> > for the cyclic case.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+> > Tested-by: Robin Gong <yibin.gong@nxp.com>
+> > Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >   drivers/dma/imx-sdma.c | 19 +++++++++++--------
+> >   1 file changed, 11 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> > index c27e206a764c3..66f1b2ac5cde4 100644
+> > --- a/drivers/dma/imx-sdma.c
+> > +++ b/drivers/dma/imx-sdma.c
+> > @@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+> >   		return;
+> >   	}
+> >   	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+> > -	/*
+> > -	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
+> > -	 * the desc allocated will never be freed in vchan_dma_desc_free_list
+> > -	 */
+> > -	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
+> > -		list_del(&vd->node);
+> > +
+> > +	list_del(&vd->node);
+> >   
+> >   	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+> >   	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+> > @@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+> >   
+> >   	spin_lock_irqsave(&sdmac->vc.lock, flags);
+> >   	vchan_get_all_descriptors(&sdmac->vc, &head);
+> > -	sdmac->desc = NULL;
+> >   	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+> >   	vchan_dma_desc_free_list(&sdmac->vc, &head);
+> >   	sdmac->context_loaded = false;
+> > @@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+> >   static int sdma_disable_channel_async(struct dma_chan *chan)
+> >   {
+> >   	struct sdma_channel *sdmac = to_sdma_chan(chan);
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&sdmac->vc.lock, flags);
+> >   
+> >   	sdma_disable_channel(chan);
+> >   
+> > -	if (sdmac->desc)
+> > +	if (sdmac->desc) {
+> > +		vchan_terminate_vdesc(&sdmac->desc->vd);
+> > +		sdmac->desc = NULL;
+> >   		schedule_work(&sdmac->terminate_worker);
+> > +	}
+> > +
+> > +	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+> >   
+> >   	return 0;
+> >   }
+> > 
+> 
+> This patch breaks our imx6 board with the attached trace.  Reverting the 
+> patch makes it boot again.
+> I tried also 5.6-rc3 and it booted too. A closer look into imx-sdma.c 
+> from 5.6-rc3 showed me some details which might have to be backported as 
+> well to make this patch work.
+> I tried a1ff6a07f5a3951fcac84f064a76d1ad79c10e40 and was somehow 
+> successful. I still have one trace but the board boots now.
+> 
+> Any insights from the experts?
 
-Once it's table driven, certainly a sysfs directory becomes possible. 
-The problem with ST_DEV is filesystems like btrfs and xfs that may have
-multiple devices.  The current fsinfo takes a fspick'd directory fd so
-the input to the query is a path, which gets messy in sysfs, although I
-could see something like /sys/class/fs/mount/<path>/$OPTION working.
+This series should be applied as a whole or not, only 7/9 is optional.
 
-James
+It seems I have to avoid the trigger word "fix" in my commit messages or
+make sure these patches won't apply without their dependencies :-/
 
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
