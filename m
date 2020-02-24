@@ -2,111 +2,108 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9002C11D24
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB22C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F586206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861FB20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hamShx2C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWrpZPkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBXF35 (ORCPT
+        id S1727218AbgBXFce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:29:57 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53196 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726709AbgBXF34 (ORCPT
+        Mon, 24 Feb 2020 00:32:34 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34665 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgBXFcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 00:29:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582522196; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=gPFSRWjhwAw28i80R20gawLJ6dnAWyyyj5ws/7ZwfPY=; b=hamShx2CPVOhixhPwaQunnhP8kUxDMvTK7ZCwdUyhicQw4q/XJOwsDWYeH8hXHsI3+ZhSjWU
- zBPe39LmWRuzMbTUzsmP2gUh1ASf/xRcZtztwww8NNJZdy0ScgZ9swlI+q7gei/tug1kcp/B
- 5+OYPm1CjYoUEPSryBhcJhFHKqg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e535f41.7fb8060e0ed8-smtp-out-n03;
- Mon, 24 Feb 2020 05:29:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 685FFC447A2; Mon, 24 Feb 2020 05:29:37 +0000 (UTC)
-Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bgodavar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E736C43383;
-        Mon, 24 Feb 2020 05:29:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E736C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, hemantg@codeaurora.org, mka@chromium.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Matthias Kaehlcke <matthias@chromium.org>
-Subject: [RESEND v3] arm64: dts: qcom: sc7180: Add bluetooth node on SC7180 IDP board
-Date:   Mon, 24 Feb 2020 10:59:26 +0530
-Message-Id: <20200224052926.1391-1-bgodavar@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        Mon, 24 Feb 2020 00:32:33 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so4530887pgi.1;
+        Sun, 23 Feb 2020 21:32:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gmAc8ivr/C7d+QzZGVBXrbDmIH8je8z/sIj0mHBkKGA=;
+        b=ZWrpZPkwcspILxRqZCPH6tehznrkWPgVYfNG0SD2upeoyUXb2JLfL7V8pdTjmALv0S
+         +JADJ8tHoCASKaF0JZPZDYLtP+dyWdjrRL9md1pi6U2CvIaiBRLL2/oulbtKziwqEpEX
+         jfDoCmYscWwSCtgfxTLf0hfKSbWa0RlcjEFt9n5ZZ89ECzhLBm6S97D5Q3hGtHH3mbi7
+         q2lLJCeowTs88oR0wkYSShUwFfqhe8HymVHK+F1khjwVYT+fdB6q7ZLc5dLEnMw+RCIb
+         pWLlzM2EP5kESxosnQWxBnEcv1ESO7Ld7CkPd6VltMfOI0r77iMlOrXSMsIhaqzR84CJ
+         zE8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gmAc8ivr/C7d+QzZGVBXrbDmIH8je8z/sIj0mHBkKGA=;
+        b=h9OmwCGixfXUVNbS1LvSazBcPhb0hL2GwK5Vkp2wz2VGRL7BNMrGIJ/ZUSo3qncVFB
+         AFMA0V/AqEcC8RWUMT5ctEYSu+m4pIOrj5wAMCOiq4v4qbsv/VbaHT3mDhAAYpGbMSrF
+         TbKDnFPQ4APmta9U8Ma1SBodKKEdTJUCjgACe/NKUTyCihhTr4OijBHdASTlZ3ITjq1T
+         fwf2tfEiU9QBYoLUmdT215cMA8z2GdmuEHn5BBzzZtr+xdggG+oMFllIGuEH5dOitZE3
+         uSxpHFis+opBhsI6seMu/gx4vAUq5mqghuS/CY72Yt6AbHA2b6jz6wJNMlZWG44x4SdR
+         I/5Q==
+X-Gm-Message-State: APjAAAWq2BhN76jEyMtd9BTltn5U2DnqKQQ7TtYoT8MD4hR89gusQXYK
+        jrd+nuk5vm+LdlDhq3K7cAs=
+X-Google-Smtp-Source: APXvYqw2+OoNUwC+DHYLkIWINIDRLfS6iaF7yKwT/NrQkJuKpO0+htrhpSkg4MTKvnr4RSsOJ2K1Xg==
+X-Received: by 2002:aa7:8804:: with SMTP id c4mr50981283pfo.214.1582522352952;
+        Sun, 23 Feb 2020 21:32:32 -0800 (PST)
+Received: from f3 (ag119225.dynamic.ppp.asahi-net.or.jp. [157.107.119.225])
+        by smtp.gmail.com with ESMTPSA id z10sm10489746pgf.35.2020.02.23.21.32.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 21:32:31 -0800 (PST)
+Date:   Mon, 24 Feb 2020 14:32:25 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: add braces around macro arguments
+Message-ID: <20200224053225.GB312634@f3>
+References: <20200221195649.GA18450@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221195649.GA18450@kaaira-HP-Pavilion-Notebook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bluetooth SoC WCN3990 node for SC7180 IDP board.
-
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <matthias@chromium.org>
----
-v3:
-  * Updated subject.
-  * added reviewed by tag
-v2:
-  * updated commit text
-  * removed status form dts node
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50ad4fde..d76e83c0a8e1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -17,6 +17,7 @@
- 	compatible = "qcom,sc7180-idp", "qcom,sc7180";
- 
- 	aliases {
-+		bluetooth0 = &bluetooth;
- 		hsuart0 = &uart3;
- 		serial0 = &uart8;
- 	};
-@@ -256,6 +257,16 @@
- 
- &uart3 {
- 	status = "okay";
-+
-+	bluetooth: wcn3990-bt {
-+		compatible = "qcom,wcn3990-bt";
-+		vddio-supply = <&vreg_l10a_1p8>;
-+		vddxo-supply = <&vreg_l1c_1p8>;
-+		vddrf-supply = <&vreg_l2c_1p3>;
-+		vddch0-supply = <&vreg_l10c_3p3>;
-+		max-speed = <3200000>;
-+		clocks = <&rpmhcc RPMH_RF_CLK2>;
-+	};
- };
- 
- &uart8 {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 2020/02/22 01:26 +0530, Kaaira Gupta wrote:
+> Fix checkpatch.pl warnings of adding braces around macro arguments to
+> prevent precedence issues by adding braces in qlge_dbg.c
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  drivers/staging/qlge/qlge_dbg.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> index 8cf39615c520..c7af2548d119 100644
+> --- a/drivers/staging/qlge/qlge_dbg.c
+> +++ b/drivers/staging/qlge/qlge_dbg.c
+> @@ -1525,7 +1525,7 @@ void ql_dump_regs(struct ql_adapter *qdev)
+>  #ifdef QL_STAT_DUMP
+>  
+>  #define DUMP_STAT(qdev, stat)	\
+> -	pr_err("%s = %ld\n", #stat, (unsigned long)qdev->nic_stats.stat)
+> +	pr_err("%s = %ld\n", #stat, (unsigned long)(qdev)->nic_stats.stat)
+>  
+>  void ql_dump_stat(struct ql_adapter *qdev)
+>  {
+> @@ -1578,12 +1578,12 @@ void ql_dump_stat(struct ql_adapter *qdev)
+>  #ifdef QL_DEV_DUMP
+>  
+>  #define DUMP_QDEV_FIELD(qdev, type, field)		\
+> -	pr_err("qdev->%-24s = " type "\n", #field, qdev->field)
+> +	pr_err("qdev->%-24s = " type "\n", #field, (qdev)->(field))
+>  #define DUMP_QDEV_DMA_FIELD(qdev, field)		\
+>  	pr_err("qdev->%-24s = %llx\n", #field, (unsigned long long)qdev->field)
+                                                                   ^^^^
+You missed one.
