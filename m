@@ -2,121 +2,129 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B45C38BFF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F28C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206CB218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EF32465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6SIpBLM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SSKlPPTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgBXWQE (ORCPT
+        id S1728095AbgBXWRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:16:04 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54251 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726651AbgBXWQD (ORCPT
+        Mon, 24 Feb 2020 17:17:08 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37237 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBXWRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:16:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582582562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DNSD66ImMoPsjxgik/kryHw2+qoaM+eMsRblP5sq1ko=;
-        b=Q6SIpBLMhyaRHyfEj/r2uUb7ZLrmPCsvQA9MgfjwhFai7t22B+v8UR7rnCBmjJFivgJaI9
-        /mszhL+yNZi14GV0hFM5UtJ6wCXQT8Q4q3hn9X5s9IBCmD4zAmqHFLTFDL35rdEmCqRr/o
-        jRWQHRPDLwgY5PhRPcZMb/tk0ttz1V0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-laDNQN88PKGHPbLLdvhBnQ-1; Mon, 24 Feb 2020 17:15:54 -0500
-X-MC-Unique: laDNQN88PKGHPbLLdvhBnQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B14E100DFC7;
-        Mon, 24 Feb 2020 22:15:52 +0000 (UTC)
-Received: from ovpn-118-56.phx2.redhat.com (ovpn-118-56.phx2.redhat.com [10.3.118.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B4687393;
-        Mon, 24 Feb 2020 22:15:50 +0000 (UTC)
-Message-ID: <4f7ecfa4034463892e2d211d3cba2b9c8f6449c7.camel@redhat.com>
-Subject: Re: [PATCH RT 15/25] sched: migrate_enable: Use select_fallback_rq()
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Zanussi <zanussi@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Mon, 24 Feb 2020 17:17:07 -0500
+Received: by mail-pl1-f193.google.com with SMTP id q4so486681pls.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:17:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4+q1hPU+vBxz37Lq9CoAPE294r5aS1T2lyZxNwgE7xE=;
+        b=SSKlPPTCLk+ZA4hJeCNpQagaJofineoLXz01RYCuKFEzavebiZvXMe7yqp4UxCm7hR
+         ebFQty2zUoBZEgZ4uXFMEWn1kJgSkOcXVzXdJ9ptz5l8HG/Z7HkrE9VdJHyBvDQfd07Z
+         mpYsHoTXbnCbxN125vQht/V1PsSvLr2lSxM6P5ADJi0xOVftEOzTdjWSIGRNFCc+PlPK
+         XX9OI/HDJitZM4JRHLJHXLdfBZw7430jgt9H4CprGyScaBqx8OowhuLlEVuQRUPPLLFa
+         1W2V0AHXCniZb3GE1yCFYnS6gaP2y17y8w+nOPrt82XkCLyexiV37RlWT6YhqrD3NYJM
+         3KgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4+q1hPU+vBxz37Lq9CoAPE294r5aS1T2lyZxNwgE7xE=;
+        b=RQU1NsapcP/3O5lOauZnSLtwVbGUH6DnXTXrGUIdirdhcb9gfbaTB2/Luy2pgY7GZL
+         0DyGjm7A2UmD9VDIoolYV6yNSHTJT/kfw9f6NbmjYT3eB8VWwpyGAID6ArxvyLPhSXnn
+         m0a076rF0wTiZYrdkqp9wve8Hx6vs6oXMBqXFRO5ulrGmRn84v6AMS5Mp6/iySqA32vg
+         Bb/4U5TOw3kMsCBhXQ5agZIJuqPBhuie1vEyVhHkF40cXNf5G99CHygJFJiyUfpWZkHK
+         OmOHyJpVeZBtIYrkJTRYmUvx+4092fRGqkRgVZvBzDVzDk6U7JWj7WQ+xdZgwa4C5fW8
+         iTLQ==
+X-Gm-Message-State: APjAAAWy1mNRmDn7GcuLDRCzKfNKWZFcv3UOV4E8KHlkFCTiSTkJpznh
+        6/xFGZ0eNkmG9ghsOpfbwVY05g==
+X-Google-Smtp-Source: APXvYqyJp0jJZy0SVYCYgXu6yTVkflUbMiRTojWG9+eJ5dOvf6ludw3tkwGKFpguV/1vuiPul5Y/4w==
+X-Received: by 2002:a17:90a:fe8:: with SMTP id 95mr1411740pjz.98.1582582626875;
+        Mon, 24 Feb 2020 14:17:06 -0800 (PST)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id l2sm10574403pgp.0.2020.02.24.14.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 14:17:06 -0800 (PST)
+Date:   Mon, 24 Feb 2020 14:17:03 -0800
+From:   Fangrui Song <maskray@google.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Matz <matz@suse.de>, Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>
-Date:   Mon, 24 Feb 2020 16:15:49 -0600
-In-Reply-To: <20200224160529.f5lg44gyk2mgayd4@linutronix.de>
-References: <cover.1582320278.git.zanussi@kernel.org>
-         <eb183ce95bb3d92b426bdadf36f0648cda474379.1582320278.git.zanussi@kernel.org>
-         <20200224094349.5x6dca4tggtmmbnq@linutronix.de>
-         <1582558266.12738.32.camel@kernel.org>
-         <20200224160529.f5lg44gyk2mgayd4@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
+ from bzImage
+Message-ID: <20200224221703.eqql5hrx4ccngwa5@google.com>
+References: <20200222065521.GA11284@zn.tnic>
+ <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
+ <20200222072144.asqaxlv364s6ezbv@google.com>
+ <20200222074254.GB11284@zn.tnic>
+ <20200222162225.GA3326744@rani.riverdale.lan>
+ <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
+ <alpine.LSU.2.21.2002241319150.12812@wotan.suse.de>
+ <CAKwvOd=nCAyXtng1N-fvNYa=-NGD0yu+Rm6io9F1gs0FieatwA@mail.gmail.com>
+ <20200224212828.xvxl3mklpvlrdtiw@google.com>
+ <20200224214845.GC409112@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200224214845.GC409112@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-24 at 17:05 +0100, Sebastian Andrzej Siewior wrote:
-> On 2020-02-24 09:31:06 [-0600], Tom Zanussi wrote:
-> > On Mon, 2020-02-24 at 10:43 +0100, Sebastian Andrzej Siewior wrote:
-> > > On 2020-02-21 15:24:43 [-0600], zanussi@kernel.org wrote:
-> > > > From: Scott Wood <swood@redhat.com>
-> > > > 
-> > > > v4.14.170-rt75-rc1 stable review patch.
-> > > > If anyone has any objections, please let me know.
-> > > 
-> > > This creates bug which is stuffed later via
-> > > 	sched: migrate_enable: Busy loop until the migration request is
-> > > completed
-> > > 
-> > > So if apply this, please take the bug fix, too. This is Stevens queue
-> > > for reference:
-> > > > [PATCH RT 22/30] sched: migrate_enable: Use select_fallback_rq()
-> > > 
-> > > ^^ bug introduced
-> > > 
-> > 
-> > Hmm, it seemed from the comment on the 4.19 series that it was '24/32
-> > sched: migrate_enable: Use stop_one_cpu_nowait()' that required 'sched:
-> > migrate_enable: Busy loop until the migration request is
-> > completed' as a bug fix.
-> > 
-> >   
-> > https://lore.kernel.org/linux-rt-users/20200122083130.kuu3yppckhyjrr4u@linutronix.de/#t
-> > 
-> > I didn't take the stop_one_cpu_nowait() one, so didn't take the busy
-> > loop one either.
-> 
-> Ach, it was the different WARN_ON() then. So this might not introduce
-> any bug then. *Might*. 
-> Steven backported the whole pile and you took just this one patch. The
-> whole set was tested in devel and uncovered a problem which was fixed
-> later. Taking only a part *may* expose other problems it *may* be fine.
+On 2020-02-24, Arvind Sankar wrote:
+>On Mon, Feb 24, 2020 at 01:28:28PM -0800, Fangrui Song wrote:
+>> Hi Michael, please see my other reply on this thread: https://lkml.org/lkml/2020/2/24/47
+>>
+>> Synthesized sections can be matched as well. For example, SECTIONS { .pltfoo : { *(.plt) }} can rename the output section .plt to .pltfoo
+>> It seems that in GNU ld, the synthesized section is associated with the
+>> original object file, so it can be written as:
+>>
+>>    SECTIONS { .pltfoo : { a.o(.plt) }}
+>>
+>> In lld, you need a wildcard to match the synthesized section *(.plt)
+>>
+>> .rela.dyn is another example.
+>>
+>
+>With the BFD toolchain, file matching doesn't actually seem to work at
+>least for .rela.dyn. I've tried playing around with it in the past and
+>if you try to use file-matching to capture relocations from a particular
+>input file, it just doesn't work sensibly.
 
-Taking up to this patch should be OK (well, you still have the 
-current->state clobbering, but it shouldn't introduce any new known bugs). 
-The busy loop patch itself has a followup fix though (in theory the busy
-loop could deadlock): 2dcd94b443c5dcbc ("sched: migrate_enable: Use per-cpu
-cpu_stop_work") which should be considered for v4.19 rt stable which has the
-busy loop patch.
+I think most things are working in GNU ld...
 
--Scott
+/* a.x */
+SECTIONS {
+   .rela.pltfoo : { a.o(.rela.plt) }  /* *(.rela.plt) with lld */
+   .rela.dynfoo : { a.o(.rela.data) } /* *(.rela.dyn) with lld */
+}
 
-
+% cat <<e > a.s
+  .globl foo
+  foo:
+    call bar
+  .data
+  .quad quz
+e
+% as a.s -o a.o
+% ld.bfd -T a.x a.o -shared -o a.so
