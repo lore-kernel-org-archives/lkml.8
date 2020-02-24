@@ -2,163 +2,113 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6FDC38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E00FC38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF4221556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC9E218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B6tD71Oa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMh21tWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgBXVsG (ORCPT
+        id S1728186AbgBXVst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:48:06 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57811 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727421AbgBXVsF (ORCPT
+        Mon, 24 Feb 2020 16:48:49 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46263 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbgBXVst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:48:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582580884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y3mparikf9DdIUeIjvvwXQ1Z1K4Cli1iz2ALnY2BpjQ=;
-        b=B6tD71OayeJ+8SGSYHcZ9H3eICc8ljwbIm80SzjfWqWSg6nFhq9qnt0CcG0UsoFjeJLaGI
-        2kevA5KT5+C42W3nCnZfcOFPStcd/NjBVTAt6NHTL1vIVwGMaHCzbCLqak3L61dlfdPGkR
-        uK+0em3pV4MlPvi5v3+FL05Y5ckyvJc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-gusilmOBPDi1yVW9oGKMmg-1; Mon, 24 Feb 2020 16:48:02 -0500
-X-MC-Unique: gusilmOBPDi1yVW9oGKMmg-1
-Received: by mail-wr1-f70.google.com with SMTP id p8so6228443wrw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:48:01 -0800 (PST)
+        Mon, 24 Feb 2020 16:48:49 -0500
+Received: by mail-qk1-f196.google.com with SMTP id u124so10077163qkh.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rwxcsAsN75o6auj6h/UwQ4eouOT0rdFuNimYtBXVVqI=;
+        b=EMh21tWVMiKtiMX/15mlFW2bkqdUQzzSFFTAwEgTUc+9dfctVYJVnF2sKau3SsZwyd
+         rz9qJ8H6WOhD5TCqnWWhlB2a2KsmTREx1Fn1CKeeia6tqHROYd0RrQzIc4RoASmXTZpE
+         TEkdXXtrOjxqJ9Ty9jRFJCNytmMnaToeuugYwoR2CR/hkhR/X4n7HllPU+PTGZ73NdBB
+         uccc8HzbvJO3ywnozyzL3S1m7I9yN+uhXIHDuVCwIvVjLsqgV7qpJQO5N0sB3pjuO/VK
+         n1MG6Tejq9uTKlBLRW6WfBYZKe0mB1erHdHY9QSveOxTIsm8pzvGD69lrM7IiHx75lFL
+         vKQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=y3mparikf9DdIUeIjvvwXQ1Z1K4Cli1iz2ALnY2BpjQ=;
-        b=lDqoJRDb4/rQ2K3ZJzmvK7/R1xY64mSWU52UG3DiU6iuOaO3+n256b08K4SsDUkXS3
-         CxD8feJUVoi7P9d9U0uiiRCXkrAkBX13DJLEg03Iu+wWlFuYagUqkbbjheWZ5fxwGFAl
-         SokSlSOLPgBtiUpvm8bALI9plmSFzxalJPaP7oBq0O2YIXMuEj99p5V5hONfQtui6ZVH
-         vPJ71Po6YPY1/nNwpivFWWbt81Nv7OF/cJiM/JkaggIe7+SJ1ruOuOWjUEJ/IJtPPlCR
-         qPeGLwyIW7GLqg8nkQ3iWT+8DAZsAS0270j7TP/zhXywEGeDqx34Jj/WfduLcERWJmbS
-         U0Hw==
-X-Gm-Message-State: APjAAAUvd25ev9i10suYp6ikYaiEgoGzPsYNsHWmBQAEJnseRl/7OEDZ
-        WJUbVPzP7h4KXgqbL2zf8lxtNO63OpZWpFfrMOX2VG7dMJFiQytcymumXzjDICzxguxha+2G868
-        UwTJIMJRmZvtOOjQ47YtpkMhz
-X-Received: by 2002:a1c:5419:: with SMTP id i25mr1036345wmb.150.1582580880344;
-        Mon, 24 Feb 2020 13:48:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxcGJyPEiNp1nOJTpE1947zCHRS0Mdf/QuU39ULake55oSamxvw9KPNbmzyW5qp2oa0/4ydHA==
-X-Received: by 2002:a1c:5419:: with SMTP id i25mr1036324wmb.150.1582580880079;
-        Mon, 24 Feb 2020 13:48:00 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id z21sm1026315wml.5.2020.02.24.13.47.58
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rwxcsAsN75o6auj6h/UwQ4eouOT0rdFuNimYtBXVVqI=;
+        b=GNkIgcZ6Cm0ZSK9Ek52meN9sRFElm+T9GNGc4F8/U5Sk2jEqFqk+4KBxInWh6yNoMr
+         bWnZDr5auO+LcVFSKyZ/+uyyAoUTHq+LkuzIxWImJciAwJXBda1JhOnqWB+rl+4lOYIx
+         9vdk8fYO711cgj4tt8dwmpbjbddLgBrJUwmfJyEWkw5UjRMpxUXXkM4lDEhpIZcR2GaW
+         Gs+AzQflLZqpEVqx3oPRufXj2OFwmHa2qvpuQposrl8XXJP8zEvJuF8Y2DlSYSl+L0bh
+         3nsgpjZFz7zYPv7QIgSCRagLEvRLG165y8g7WxnoGyIx5k+XFH+NOQPVhoZzdgmPiJRn
+         3iug==
+X-Gm-Message-State: APjAAAVrqUzCOkwpO4tv1pWvP55Da5+QMdbaH9mfg+f+ye99N5QjgMYR
+        Ft5uzETj96pUBGeN9CdU2ftHM+xgQno=
+X-Google-Smtp-Source: APXvYqyytMHKYCD286xJ3ougS17+qx/IydYF3O2pRQIi7aToLTd9QIRAntsDUW4ZoTWEhicSbubAJg==
+X-Received: by 2002:a37:a78d:: with SMTP id q135mr48484895qke.158.1582580928204;
+        Mon, 24 Feb 2020 13:48:48 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id m27sm6760596qta.21.2020.02.24.13.48.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 13:47:59 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 42/61] KVM: x86: Add a helper to check kernel support when setting cpu cap
-In-Reply-To: <20200201185218.24473-43-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-43-sean.j.christopherson@intel.com>
-Date:   Mon, 24 Feb 2020 22:47:58 +0100
-Message-ID: <875zfvodwx.fsf@vitty.brq.redhat.com>
+        Mon, 24 Feb 2020 13:48:47 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 24 Feb 2020 16:48:45 -0500
+To:     Fangrui Song <maskray@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Matz <matz@suse.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
+ from bzImage
+Message-ID: <20200224214845.GC409112@rani.riverdale.lan>
+References: <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
+ <20200222065521.GA11284@zn.tnic>
+ <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
+ <20200222072144.asqaxlv364s6ezbv@google.com>
+ <20200222074254.GB11284@zn.tnic>
+ <20200222162225.GA3326744@rani.riverdale.lan>
+ <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
+ <alpine.LSU.2.21.2002241319150.12812@wotan.suse.de>
+ <CAKwvOd=nCAyXtng1N-fvNYa=-NGD0yu+Rm6io9F1gs0FieatwA@mail.gmail.com>
+ <20200224212828.xvxl3mklpvlrdtiw@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200224212828.xvxl3mklpvlrdtiw@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Mon, Feb 24, 2020 at 01:28:28PM -0800, Fangrui Song wrote:
+> Hi Michael, please see my other reply on this thread: https://lkml.org/lkml/2020/2/24/47
+> 
+> Synthesized sections can be matched as well. For example, SECTIONS { .pltfoo : { *(.plt) }} can rename the output section .plt to .pltfoo
+> It seems that in GNU ld, the synthesized section is associated with the
+> original object file, so it can be written as:
+> 
+>    SECTIONS { .pltfoo : { a.o(.plt) }}
+> 
+> In lld, you need a wildcard to match the synthesized section *(.plt)
+> 
+> .rela.dyn is another example.
+> 
 
-> Add a helper, kvm_cpu_cap_check_and_set(), to query boot_cpu_has() as
-> part of setting a KVM cpu capability.  VMX in particular has a number of
-> features that are dependent on both a VMCS capability and kernel
-> support.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/cpuid.h   |  6 ++++++
->  arch/x86/kvm/svm.c     |  3 +--
->  arch/x86/kvm/vmx/vmx.c | 18 ++++++++----------
->  3 files changed, 15 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index c64283582d96..7b71ae0ca05e 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -274,4 +274,10 @@ static __always_inline void kvm_cpu_cap_set(unsigned x86_feature)
->  	kvm_cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
->  }
->  
-> +static __always_inline void kvm_cpu_cap_check_and_set(unsigned x86_feature)
-> +{
-> +	if (boot_cpu_has(x86_feature))
-> +		kvm_cpu_cap_set(x86_feature);
-> +}
-> +
->  #endif
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 7cb05945162e..defb2c0dbf8a 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1362,8 +1362,7 @@ static __init void svm_set_cpu_caps(void)
->  
->  	/* CPUID 0x8000000A */
->  	/* Support next_rip if host supports it */
-> -	if (boot_cpu_has(X86_FEATURE_NRIPS))
-> -		kvm_cpu_cap_set(X86_FEATURE_NRIPS);
-> +	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
->  
->  	if (npt_enabled)
->  		kvm_cpu_cap_set(X86_FEATURE_NPT);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index cfd0ef314176..cecf59225136 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7118,18 +7118,16 @@ static __init void vmx_set_cpu_caps(void)
->  		kvm_cpu_cap_set(X86_FEATURE_VMX);
->  
->  	/* CPUID 0x7 */
-> -	if (boot_cpu_has(X86_FEATURE_MPX) && kvm_mpx_supported())
-> -		kvm_cpu_cap_set(X86_FEATURE_MPX);
-> -	if (boot_cpu_has(X86_FEATURE_INVPCID) && cpu_has_vmx_invpcid())
-> -		kvm_cpu_cap_set(X86_FEATURE_INVPCID);
-> -	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-> -	    vmx_pt_mode_is_host_guest())
-> -		kvm_cpu_cap_set(X86_FEATURE_INTEL_PT);
-> +	if (kvm_mpx_supported())
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_MPX);
-> +	if (cpu_has_vmx_invpcid())
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_INVPCID);
-> +	if (vmx_pt_mode_is_host_guest())
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_INTEL_PT);
->  
->  	/* PKU is not yet implemented for shadow paging. */
-> -	if (enable_ept && boot_cpu_has(X86_FEATURE_PKU) &&
-> -	    boot_cpu_has(X86_FEATURE_OSPKE))
-> -		kvm_cpu_cap_set(X86_FEATURE_PKU);
-> +	if (enable_ept && boot_cpu_has(X86_FEATURE_OSPKE))
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
->  
->  	/* CPUID 0xD.1 */
->  	if (!vmx_xsaves_supported())
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+With the BFD toolchain, file matching doesn't actually seem to work at
+least for .rela.dyn. I've tried playing around with it in the past and
+if you try to use file-matching to capture relocations from a particular
+input file, it just doesn't work sensibly.
