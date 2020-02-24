@@ -2,126 +2,161 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1B0C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5484C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FDC20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776332080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:20:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F+KXVqLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgBXMU1 (ORCPT
+        id S1727494AbgBXMUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:20:27 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:62798 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXMU1 (ORCPT
+        Mon, 24 Feb 2020 07:20:35 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1262 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXMUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:20:27 -0500
-X-AuditID: c0a8fbf4-473ff70000004419-86-5e53bf889afe
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 53.8E.17433.88FB35E5; Mon, 24 Feb 2020 13:20:24 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Mon, 24 Feb 2020 13:20:12 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "sbkim73@samsung.com" <sbkim73@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rf@opensource.cirrus.com" <rf@opensource.cirrus.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "tony@atomide.com" <tony@atomide.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "milo.kim@ti.com" <milo.kim@ti.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "ckeepax@opensource.cirrus.com" <ckeepax@opensource.cirrus.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrei.stefanescu@microchip.com" <andrei.stefanescu@microchip.com>,
-        "support.opensource@diasemi.com" <support.opensource@diasemi.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
-Subject: Re: [RFC PATCH v3 4/8] regulator: rename regulator_linear_range to
- linear_range
-Thread-Topic: [RFC PATCH v3 4/8] regulator: rename regulator_linear_range to
- linear_range
-Thread-Index: AQHV58Bw3BR2Lobf/kermjlWXvyueKgqMeKAgAAHZAA=
-Date:   Mon, 24 Feb 2020 12:20:11 +0000
-Message-ID: <d66373944b9afa9e2387d7bf95deb9d997906396.camel@fi.rohmeurope.com>
-References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
-         <f66749295e07448012c80c2054b1f14506d17d76.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200224115349.GD6215@sirena.org.uk>
-In-Reply-To: <20200224115349.GD6215@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7667C38386FA7740BDE72887EC73452E@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 24 Feb 2020 07:20:34 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53bf450000>; Mon, 24 Feb 2020 04:19:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 24 Feb 2020 04:20:33 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 24 Feb 2020 04:20:33 -0800
+Received: from [10.24.47.202] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 12:20:29 +0000
+Subject: Re: [PATCH V3 4/5] PCI: dwc: Add API to notify core initialization
+ completion
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
+        <thierry.reding@gmail.com>, <Jisheng.Zhang@synaptics.com>,
+        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+ <20200217121036.3057-5-vidyas@nvidia.com>
+ <20200224113217.GA11120@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <77748536-4f9a-1357-8180-91c1da2e912e@nvidia.com>
+Date:   Mon, 24 Feb 2020 17:50:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tb0wTZxzH89xd747ibY+1yCPub5fFiOGf+uLJQogme3HbkmnGiyVugFc4
-        KbG05Noa2Zs1w27SRUAZwipVBBoZENGyTAVKXdNlYB1dB1SMzqQrMdNkkGHFAU52107h1f3u
-        +f75PC9+D0tqLjBZbJXJKkomwaij1dT1nhVvznF/cWn+D6u78UR8hcINC50kvtw2oMIJ9w0K
-        h/xzFG6JzdJ4yuEF+FxwQoXrugZoHA5fYvDi1HECe+NRFT7p/4XBk0PtNJ6siwB8pruRwo9O
-        BAFuC48S2HMrQuAvju3C7Z4xCl9YviiL834VdidaSBxpC5PY4QsyONKTIHBo2Ip9jgiJ/VPv
-        46VAmNjzOt9/th/wi49PUfz8jIPhL/3Rp+J7FvL4a67fGd7bW0/zd6MjNO939zP8YPfn/N1/
-        PIBvbV8FfMP3vYD/eeYKwT/yvrb/5QPphXrBeqS4qtKUV3Qw3dDdllHTkH50NvqUsYM/1U6Q
-        xiK4G/XdmaGcQM1q4DRAk+5jIPUzBlDr/VbSCViWhoXIeZtRAlqYg1qWu2jFQ8JlDj2eeKJS
-        hE3wAJq7EqQVvxZ+ghyNh1P+d9DZrtGkhYJvo/HBWLKSgx+if1ffTaFuArR4ejrZnwZ3ossz
-        p5N+AF9F9fY5QplJmIm891MoBCHqHgmTqTkDPYg/+/9ch3xLMUrpJ+F2NDCUl4ruQcP2eyA1
-        v4m++TqWRHFwIxr/dpZqAptd6wiutbRrXdq1Lu1al+4Aql6AqoUqY6VgFQtyJdGWK5kN1fKn
-        3FztBanFS1wFq4H3AoBgQQBsYQldBqf2FpdqXtKbK2oNgsVQJtmMoiUAEEvqtNwH4KNSDVch
-        1H4mSubn0laW0mVy22InSzRQYR0WxRpReq6+wrI6xMV8culGSawUjx6qMlrXZIJNU8rVWVqL
-        aKoQJcFmNZQp21FmkddDkTbI3M3Dcpyz1AjV8mkqegPsYJseuDtJNuj2dJIaymQ2iVmZXP2o
-        bIWK1WAzvQA9BJks0G3iFpR7bJBf34uehzKCkBFvsfsVhFVYk7LsQK/5bf5Ts62vSN8y7zwX
-        iv1kJLNzDy1amOjHJy66Coo6/oruaN6S8Fj/3lo8XapvivOFX9bubT7fHIJPtu9cao0P7WuX
-        6mD+CvjunnH5oKD9MXT1iHbEcHNXdmPwq6e+kvzEeEflG+XPfCX8nUZP/hm9vXzf3pyxwQ7L
-        r6ZT6us6ymIQCrJJySL8B5/2GPU6BAAA
+In-Reply-To: <20200224113217.GA11120@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582546758; bh=yBaGSW1tBg/TBcMPrMVU3SdLiOlKXH9yWql7w5S0VZ0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=F+KXVqLQfjPEj9ipmfMVbfvaXuVy8HnlqbSojs68TnUtUAwYqLtjhUVe00jBFuMPE
+         +zVsseHf4zIjZOibRY+rSBBCbezsnYgL5/r8RKb4mP4ttL8EQ6I8DMVThfCzxcMBUd
+         dwmdYARtalyO1s0aTKOz0fB5WiI160feH+JF3uHjJNeMxCE9j7t0AHyS1NC+YY51cP
+         egF2FQA0PVEN8nqjZnP/JvKME9/ODY15Bft5JvJeI9g2sklHwV5QKw7FMTdliIib8p
+         U6eKyy1si+vG5zRx+VsuAaaPogZM47E8q7IDlLNST3GAAovGGPjJNIZI4FLLminUar
+         NSVPJuo7AqpmA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTWFyaywNCg0KT24gTW9uLCAyMDIwLTAyLTI0IGF0IDExOjUzICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiBPbiBUaHUsIEZlYiAyMCwgMjAyMCBhdCAwOTozNjoxMEFNICswMjAwLCBN
-YXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gUmVuYW1lIHRoZSAicmVndWxhdG9yX2xpbmVhcl9y
-YW5nZSIgdG8gbW9yZSBnZW5lcmljIGxpbmVhcl9yYW5nZQ0KPiA+IGFzIGEgZmlyc3Qgc3RlcCB0
-b3dhcmRzIGNvbnZlcnRpbmcgdGhlICJyZWd1bGF0b3JfbGluZWFyX3JhbmdlIg0KPiA+IHRvIGNv
-bW1vbiBoZWxwZXJzLg0KPiANCj4gRG9lc24ndCB0aGlzIGludHJvZHVjZSBhIGJ1aWxkIGJyZWFr
-IHdoZW4gYXBwbGllZCBieSBpdHNlbGY/ICBQYXRjaGVzDQo+IHNob3VsZCBiZSBiaXNlY3RhYmxl
-LCBpZiB5b3Ugd2FudCB0byBzcGxpdCB0aGluZ3MgdXAgeW91IHNob3VsZA0KPiBpbnRyb2R1Y2Ug
-dGhlIG5ldyBBUEkgdGhlbiB1c2UgaXQuDQoNClVoLCBJIG5lZWQgdG8gZG91YmxlIGNoZWNrIGJ1
-dCB0aGlzIHNob3VsZG4ndCBjYXVzZSBidWlsZCBicmVhayBhcyBvbmx5DQp0aGUgbmFtZSBvZiB0
-aGUgc3RydWN0IGlzIGNoYW5nZWQgLSBhbmQgSSBpbnRlbmRlZCB0byBjaGFuZ2UgaXQgYm90aCBp
-bg0KcmVndWxhdG9yIGhlYWRlciBhbmQgaW4gYWxsIG9mIHRoZSBkcml2ZXJzIHVzaW5nIGl0IGF0
-IHNhbWUgdGltZS4gT3INCmRpZCBJIGRvIHNvbWUgYnJhaW5mYXJ0IGhlcmU/DQoNCkkganVzdCB3
-YW50ZWQgdG8gbWluaW1pemUgdGhlIGNoYW5nZXMgaW4gcGF0Y2ggd2l0aCB0aGUgd2lkZXN0DQph
-dWRpZW5jZS4NCg0KT2gsIGFmdGVyIHJlYmFzaW5nIHRvIGxpbnV4ICA1LjYtcmMyIEkgc2VlIHRo
-YXQgdGhlcmUgYXJlIGZldyBuZXcgdXNlcnMNCm9mIHJlZ3VsYXRvcl9saW5lYXJfcmFuZ2UgKEkg
-c2hvdWxkIGhhdmUga25vd24gdGhhdC4uLikgLSBuYXR1YXJsbHkgYWxsDQpvZiB0aGUgdXNlcnMg
-bmVlZCB0byBiZSBjb3ZlcmVkIGJlZm9yZSBhcHBseWluZyB0aGlzLg0KDQpCciwNCglNYXR0aSBW
-YWl0dGluZW4NCg==
+
+
+On 2/24/2020 5:02 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Mon, Feb 17, 2020 at 05:40:35PM +0530, Vidya Sagar wrote:
+>> Add a new API dw_pcie_ep_init_notify() to let platform drivers
+>> call it when the core is available for initialization.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> V3:
+>> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> V2:
+>> * None
+>>
+>>   drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h    | 5 +++++
+>>   2 files changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 84a102df9f62..dfbb806c25bf 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -19,6 +19,13 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+>>        pci_epc_linkup(epc);
+>>   }
+>>
+>> +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>> +{
+>> +     struct pci_epc *epc = ep->epc;
+>> +
+>> +     pci_epc_init_notify(epc);
+>> +}
+> 
+> Do we really need this wrapper ? I would drop this code and I would
+> appreciate if you could post tegra changes benefiting from this
+> series, at the moment I don't see any user of this newly added
+> infrastructure.
+I've posted that series also for review
+@ http://patchwork.ozlabs.org/project/linux-pci/list/?series=152889
+Sorry if I have to create explicit dependency by some means. I'm not
+aware of that and would like to know if that exists. All that I did was 
+to mention this as a dependency for the other (Tegra change) series.
+
+Thanks,
+Vidya Sagar
+
+> 
+> Thanks,
+> Lorenzo
+> 
+>>   static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
+>>                                   int flags)
+>>   {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index b67b7f756bc2..aa98fbd50807 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -412,6 +412,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>>   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
+>>   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+>>   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+>> +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
+>>   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+>>   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
+>>   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>> @@ -434,6 +435,10 @@ static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>>        return 0;
+>>   }
+>>
+>> +static inline void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>> +{
+>> +}
+>> +
+>>   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>>   {
+>>   }
+>> --
+>> 2.17.1
+>>
