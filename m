@@ -2,62 +2,70 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC158C38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB97C38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81FC21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A614A21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgBXVCg (ORCPT
+        id S1727815AbgBXVDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:02:36 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38290 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgBXVCg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:02:36 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 721A012199AC5;
-        Mon, 24 Feb 2020 13:02:35 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:02:32 -0800 (PST)
-Message-Id: <20200224.130232.525260099054528171.davem@davemloft.net>
-To:     frextrite@gmail.com
-Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com,
-        paulmck@kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] tcp, ulp: Pass lockdep expression to RCU lists
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200221151537.12334-1-frextrite@gmail.com>
-References: <20200221151537.12334-1-frextrite@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 13:02:35 -0800 (PST)
+        Mon, 24 Feb 2020 16:03:10 -0500
+Received: from mga09.intel.com ([134.134.136.24]:33705 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726996AbgBXVDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:03:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 13:03:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="231243317"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Feb 2020 13:03:08 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 9004A3015F3; Mon, 24 Feb 2020 13:03:08 -0800 (PST)
+Date:   Mon, 24 Feb 2020 13:03:08 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 3/5] perf expr: Increase EXPR_MAX_OTHER
+Message-ID: <20200224210308.GQ160988@tassilo.jf.intel.com>
+References: <20200224082918.58489-1-jolsa@kernel.org>
+ <20200224082918.58489-4-jolsa@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224082918.58489-4-jolsa@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
-Date: Fri, 21 Feb 2020 20:45:38 +0530
-
-> tcp_ulp_list is traversed using list_for_each_entry_rcu
-> outside an RCU read-side critical section but under the protection
-> of tcp_ulp_list_lock.
+On Mon, Feb 24, 2020 at 09:29:16AM +0100, Jiri Olsa wrote:
+> There's no need to be greedy on allowed variables, also
+> when some of the metrics define more than 15 variables,
+> like Branch_Misprediction_Cost.
 > 
-> Hence, add corresponding lockdep expression to silence false-positive
-> warnings, and harden RCU lists.t
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> Increasing the maximum to 100.
 
-Applied.
+FWIW some of the algorithms (e.g. already_seen) have O(n^2) complexity.
+
+If you really want that many probably would need to add some hash tables.
+
+-Andi
