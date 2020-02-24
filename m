@@ -2,164 +2,123 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27537C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF6C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE69520838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95E620838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgBXPpK (ORCPT
+        id S1727936AbgBXPq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:45:10 -0500
-Received: from mga02.intel.com ([134.134.136.20]:29575 "EHLO mga02.intel.com"
+        Mon, 24 Feb 2020 10:46:56 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17026 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgBXPpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:45:10 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727734AbgBXPq4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:46:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 07:45:09 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 07:46:55 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
-   d="scan'208";a="284385389"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Feb 2020 07:45:08 -0800
-Date:   Mon, 24 Feb 2020 07:45:08 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 30/61] KVM: x86: Handle MPX CPUID adjustment in VMX code
-Message-ID: <20200224154508.GA29865@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-31-sean.j.christopherson@intel.com>
- <874kvgow3z.fsf@vitty.brq.redhat.com>
+   d="scan'208";a="349941395"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.211.36]) ([10.254.211.36])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Feb 2020 07:46:52 -0800
+Subject: Re: [PATCH v3 2/2] Support interactive annotation of code without
+ symbols
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200224022225.30264-1-yao.jin@linux.intel.com>
+ <20200224022225.30264-3-yao.jin@linux.intel.com>
+ <ec14c25e-e868-a073-2799-55d55ae23e1f@linux.ibm.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <e64bcf96-a424-42da-d38d-d9160fb102f6@linux.intel.com>
+Date:   Mon, 24 Feb 2020 23:46:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kvgow3z.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <ec14c25e-e868-a073-2799-55d55ae23e1f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 04:14:56PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+
+On 2/24/2020 9:56 PM, Ravi Bangoria wrote:
 > 
-> > Move the MPX CPUID adjustments into VMX to eliminate an instance of the
-> > undesirable "unsigned f_* = *_supported ? F(*) : 0" pattern in the
-> > common CPUID handling code.
-> >
-> > Note, VMX must manually check for kernel support via
-> > boot_cpu_has(X86_FEATURE_MPX).
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/cpuid.c   |  3 +--
-> >  arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++--
-> >  2 files changed, 13 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index cb5870a323cc..09e24d1d731c 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -340,7 +340,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
-> >  static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
-> >  {
-> >  	unsigned f_invpcid = kvm_x86_ops->invpcid_supported() ? F(INVPCID) : 0;
-> > -	unsigned f_mpx = kvm_mpx_supported() ? F(MPX) : 0;
-> >  	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
-> >  	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
-> >  	unsigned f_la57;
-> > @@ -349,7 +348,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
-> >  	/* cpuid 7.0.ebx */
-> >  	const u32 kvm_cpuid_7_0_ebx_x86_features =
-> >  		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
-> > -		F(BMI2) | F(ERMS) | f_invpcid | F(RTM) | f_mpx | F(RDSEED) |
-> > +		F(BMI2) | F(ERMS) | f_invpcid | F(RTM) | 0 /*MPX*/ | F(RDSEED) |
-> >  		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
-> >  		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
-> >  		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | f_intel_pt;
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 3ff830e2258e..143193fc178e 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -7106,8 +7106,18 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> >  
-> >  static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
-> >  {
-> > -	if (entry->function == 1 && nested)
-> > -		entry->ecx |= feature_bit(VMX);
-> > +	switch (entry->function) {
-> > +	case 0x1:
-> > +		if (nested)
-> > +			cpuid_entry_set(entry, X86_FEATURE_VMX);
-> > +		break;
-> > +	case 0x7:
-> > +		if (boot_cpu_has(X86_FEATURE_MPX) && kvm_mpx_supported())
-> > +			cpuid_entry_set(entry, X86_FEATURE_MPX);
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> >  }
-> >  
-> >  static void vmx_request_immediate_exit(struct kvm_vcpu *vcpu)
 > 
-> The word 'must' in the description seems to work like a trigger for
-> reviewers, their brains automatically turn into 'and what if not?' mode
-> :-)
-
-This is the second time that sentence has caused confusion, I definitely
-need to tweak the changelog.  It's supposed to say something like:
-
-  Note, to maintain existing behavior, VMX must manually check for kernel
-  support for MPX by querying boot_cpu_has(X86_FEATURE_MPX).  Previously,
-  do_cpuid_7_mask() masked MPX based on boot_cpu_data by invoking
-  cpuid_mask() on the associated cpufeatures word, but cpuid_mask() runs
-  prior to executing vmx_set_supported_cpuid().
- 
-> So do I understand correctly that kvm_mpx_supported() (which checks for
-> XFEATURE_MASK_BNDREGS/XFEATURE_MASK_BNDCSR) may actually return true
-> while 'boot_cpu_has(X86_FEATURE_MPX)' is false?
-
-Yes.  The VMCS capabilities and host capabilities are tracked separately.
-
-> Is this done on purpose, i.e. why don't we filter these out from vmcs_config
-> early, similar to SVM?
-
-Most (all?) SVM features that are conditionally available are enumerated
-via CPUID, and thus are naturally reflected in boot_cpu_data.
-
-VMX enumerates its features via MSRs, which, except for a few synthetic
-flags in word 8 that are maintained for ABI compatibility, aren't reflected
-in boot_cpu_data.  It would be possible to update the global vmcs_config,
-but separating vmcs_config from boot_cpu_data has a few advantages:
-
-  - Allows KVM full control over using features, e.g. EPT can be toggled
-    simply by reloading kvm_intel, whereas controlling it via boot_cpu_data
-    would require a host reboot.
-
-  - Instructions like RDSEED, RDRAND and ENCLS are exectuable in VMX
-    non-root by default, e.g. KVM needs to know that RDRAND-exiting is
-    supported in hardware even if it's "disabled" in the host so that KVM
-    can set the exiting control to intercept RDRAND and inject #UD.
-
+> On 2/24/20 7:52 AM, Jin Yao wrote:
+>> For perf report on stripped binaries it is currently impossible to do
+>> annotation. The annotation state is all tied to symbols, but there are
+>> either no symbols, or symbols are not covering all the code.
+>>
+>> We should support the annotation functionality even without symbols.
+>>
+>> This patch fakes a symbol and the symbol name is the string of address.
+>> After that, we just follow current annotation working flow.
+>>
+>> For example,
+>>
+>> 1. perf report
+>>
+>> Overhead  Command  Shared Object     Symbol
+>>    20.67%  div      libc-2.27.so      [.] __random_r
+>>    17.29%  div      libc-2.27.so      [.] __random
+>>    10.59%  div      div               [.] 0x0000000000000628
+>>     9.25%  div      div               [.] 0x0000000000000612
+>>     6.11%  div      div               [.] 0x0000000000000645
+>>
+>> 2. Select the line of "10.59%  div      div               [.] 
+>> 0x0000000000000628" and ENTER.
+>>
+>> Annotate 0x0000000000000628
+>> Zoom into div thread
+>> Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
+>> Browse map details
+>> Run scripts for samples of symbol [0x0000000000000628]
+>> Run scripts for all samples
+>> Switch to another data file in PWD
+>> Exit
+>>
+>> 3. Select the "Annotate 0x0000000000000628" and ENTER.
+>>
+>> Percent│
+>>         │
+>>         │
+>>         │     Disassembly of section .text:
+>>         │
+>>         │     0000000000000628 <.text+0x68>:
+>>         │       divsd %xmm4,%xmm0
+>>         │       divsd %xmm3,%xmm1
+>>         │       movsd (%rsp),%xmm2
+>>         │       addsd %xmm1,%xmm0
+>>         │       addsd %xmm2,%xmm0
+>>         │       movsd %xmm0,(%rsp)
+> This might be an add on...
 > 
-> The patch itself looks good, so
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Even though there are samples on a particular instruction, 'Percent' column
+> is empty, I guess, because we don't have symbol length?
 > 
-> -- 
-> Vitaly
+> Should we show 'global percent'? Or nr samples? Will it be useful?
 > 
+> Ravi
+> 
+
+As the mail I reply to Jiri, if we use the Jiri's idea, we can collect 
+the hits for dummy symbols then we can show the percent of dummy symbol 
+here.
+
+Thanks
+Jin Yao
+
