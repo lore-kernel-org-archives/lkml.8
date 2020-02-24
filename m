@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B750AC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE7C11D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886702080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EAA20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="W76T6gjD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RKzivMKy"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gA8q8QDv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Oy4IsHXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgBXJJp (ORCPT
+        id S1728284AbgBXJNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:09:45 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:33021 "EHLO
+        Mon, 24 Feb 2020 04:13:33 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:43291 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727168AbgBXJJf (ORCPT
+        by vger.kernel.org with ESMTP id S1727355AbgBXJJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:09:35 -0500
+        Mon, 24 Feb 2020 04:09:45 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 42B9162B;
-        Mon, 24 Feb 2020 04:09:33 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:34 -0500
+        by mailnew.west.internal (Postfix) with ESMTP id 54090616;
+        Mon, 24 Feb 2020 04:09:43 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=CbU6f6ZrrpRWQ
-        5qiZhenLgFrNL32RR24Q5O8MBsSZvU=; b=W76T6gjD+sG5x7IbekSRVdLvYieY4
-        0tMN/Qq1LQA8/98MKWgeqgmo+9AIL7z8LUwDt5cQBrzcA6KymtAMYeuV2Ufk3+jV
-        OO455hMj7nz1fbRpTPUDRlAm0IuWuKAQ0Wi8TqcSk4FtXqjehlrt/3/uOWDh1c0z
-        Y0O+m8ULJaojxWUiNRK4gdMRLh7m9G/iP2fOg+DAaZ1Pofy9gYqPHMmY3ZzftXuu
-        eXiXqnWmH3oOU27yO7tBpd3O2szkIh3301nwnZ5AbzUQDZ1HtZZwxFzT173WjjY3
-        yv4t99V8s0Rp2YgaDoE7JUzUQBbNCf6KlhlSQiK88iugXBLd44MPsY3Kg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=x6EiQ/3Kh9/Dc
+        ewSo4uUKE9sdgK8FyyTne2GvDeYpZw=; b=gA8q8QDvUXwCCce0Ul3XjIF7gfMVs
+        xSnev/PCxs8pLULTphFYtLzPxVAEESxnU4qE33GLje0LsqGkuJD8RAOf+M8PNhk0
+        w9bPlnw+UiD3744vMp1QJvF6T22V6QW9oLw2BuCmS3KgphU0ZTM0+BLZmsb6JXNX
+        Q6FVv9WyqMu4nZUUFDJD6Xfrhow0oQf7gOKBKwHH39kK5LBM5Bk90+xLafE11vBl
+        PaSEw/T1bL5N9gJSR4sJ2u0wks32eRIXP1Wau8LBOftRB3RqlrRxlJBTEhaZJB0Y
+        bhj4HiJousejUF25yKeZLnXKYYb1IqUGYq/IeMKAS+cm5lz5usHALkhgQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=CbU6f6ZrrpRWQ5qiZhenLgFrNL32RR24Q5O8MBsSZvU=; b=RKzivMKy
-        IQkX23piS/y2KwMA99ZW0TY+5SRbg4EinBkDfV+PiQXYEr0h9+zds8OQeHCmAIxP
-        wQczdVgEGfBQ6Bqnts4qCLlJLYHmut8X80HdctAI6JskCQwXKvytevID6tzbNHbx
-        cGxHJlcpQkZBGfH2UZXyw2CpbVCDDUmFNI9ydIYZguV5h6S/2BWeAYYpNvM4SRdL
-        pOvR8W0hitW1A4DVREBSpD11cBwHuEGz64fBEcYh+C2hFXctcGerL7MhIhfOqIId
-        hKH3IHeh+dr9mzyB01qS/e3dP6hxbdLuqz+2N9AxeUjsEeRwlYIOpeORcweakXCo
-        WbnMb8CGWJEmOA==
-X-ME-Sender: <xms:zJJTXgYA3KOAgVDKHdets8P1tOwZ0fTR-xPvmXsWcszeDVUNcjiO1g>
+        fm2; bh=x6EiQ/3Kh9/DcewSo4uUKE9sdgK8FyyTne2GvDeYpZw=; b=Oy4IsHXt
+        ftsnzRiwQL9J18o9I35EpClCV5mAJJ9ZZ1z7hNGIXRVBZ1H+06ok4hv6/IjW4eHk
+        aAPbFIIi/t/aEShEc8+NcFWm1yhOPuQX5DvvqhnPgdh7qyvZvFfbNB6cSNQS/pFJ
+        LNTQxnUS593RoV5MENWGilmp7LSSwFxPv5vR5GDzgcqIBx0bV09Wn3GoxMqs7X+R
+        nk31OXP0MWD8whuClboSRrbl0HFt5om2vXjHhoYt2OZGxAQi7kCudiDMAqq4S5hK
+        xHl+WBqZ2HDcI04nvV4DLsSs2lmOkqx4CAGqqzF5E0pH1wTk0NOscB8T3WfSZRhm
+        XcQ5aI/DBZ8SiA==
+X-ME-Sender: <xms:1pJTXkEDRADzElSafl3zJwRS26gfbl7cO25pQ94rucwHj7dZ_21JLA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepvdegnecurfgrrhgrmhepmhgrihhlfhhr
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepfedunecurfgrrhgrmhepmhgrihhlfhhr
     ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:zJJTXiXEHLsjUhY8NMC6KWUNJq2o0A3JEeyhIxxbIRKE4pBJxlDAmw>
-    <xmx:zJJTXgAUhB0WVorQIzALKP5zIVVyIZZeDWaIHpTMfoMnseuXUxS1Jg>
-    <xmx:zJJTXhy86s8Ketq3N1zcox58fE7uiG28WP2OeyE5KR5NzpMbyyc8FQ>
-    <xmx:zJJTXntbuq4xgKgCV9oiEPx5LN3QcXLPEsVThr0AZdszfRIuGq6HD5giWH8>
+X-ME-Proxy: <xmx:1pJTXu1kr1hTUvi6W8WyZhwp3c_Nd4gb5ajmb7G5om7Mf6y8IUENRA>
+    <xmx:1pJTXry_fApV8kmGUeM3-ET-G2Y-6UR0KZ3GigriHHYUTRNvmaDrIg>
+    <xmx:1pJTXtg9cGG4-RfdJUwcYC8iNmLSe8gHkvTkAXEPZ40p-E8Iu8hIfw>
+    <xmx:1pJTXmCjkM3SgB7vWBQUJvcL47cFipSlPtsiRBXYiDrgEn1t53XE4_jFBYU>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8691B3280066;
-        Mon, 24 Feb 2020 04:09:32 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9450F3060BD1;
+        Mon, 24 Feb 2020 04:09:42 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -74,11 +74,10 @@ Cc:     dri-devel@lists.freedesktop.org,
         Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 30/89] dt-bindings: display: vc4: dpi: Add missing clock-names property
-Date:   Mon, 24 Feb 2020 10:06:32 +0100
-Message-Id: <042c8f676d3d863b55092bb58c1f15db95370782.1582533919.git-series.maxime@cerno.tech>
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 37/89] drm/vc4: plane: Improve LBM usage
+Date:   Mon, 24 Feb 2020 10:06:39 +0100
+Message-Id: <155fc1ae0b330e1bb9292340096b306dfd6b6c4b.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -89,39 +88,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the device tree and the driver expected a clock-names property, it
-wasn't explicitly documented in the previous binding. Make sure it is now.
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
+LBM allocations were always taking the worst case sizing of
+max(src_width, dst_width) * 16. This is significantly over
+the required sizing, and stops us rendering multiple 4k images
+to the screen.
+
+Add some of the additional constraints to more accurately
+describe the LBM requirements.
+
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/vc4/vc4_plane.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-index 288494b70e82..58213c564e03 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-@@ -21,6 +21,11 @@ properties:
-       - description: The core clock the unit runs on
-       - description: The pixel clock that feeds the pixelvalve
+diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+index 0b8309247dec..26e96b15e9b4 100644
+--- a/drivers/gpu/drm/vc4/vc4_plane.c
++++ b/drivers/gpu/drm/vc4/vc4_plane.c
+@@ -142,9 +142,10 @@ static const struct hvs_format *vc4_get_hvs_format(u32 drm_format)
+ 	return NULL;
+ }
  
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: pixel
+-static enum vc4_scaling_mode vc4_get_scaling_mode(u32 src, u32 dst)
++static enum vc4_scaling_mode vc4_get_scaling_mode(u32 src, u32 dst,
++						  bool chroma_vrep)
+ {
+-	if (dst == src)
++	if (dst == src && !chroma_vrep)
+ 		return VC4_SCALING_NONE;
+ 	if (3 * dst >= 2 * src)
+ 		return VC4_SCALING_PPF;
+@@ -369,9 +370,11 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
+ 		return ret;
+ 
+ 	vc4_state->x_scaling[0] = vc4_get_scaling_mode(vc4_state->src_w[0],
+-						       vc4_state->crtc_w);
++						       vc4_state->crtc_w,
++						       false);
+ 	vc4_state->y_scaling[0] = vc4_get_scaling_mode(vc4_state->src_h[0],
+-						       vc4_state->crtc_h);
++						       vc4_state->crtc_h,
++						       false);
+ 
+ 	vc4_state->is_unity = (vc4_state->x_scaling[0] == VC4_SCALING_NONE &&
+ 			       vc4_state->y_scaling[0] == VC4_SCALING_NONE);
+@@ -384,10 +387,12 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
+ 
+ 		vc4_state->x_scaling[1] =
+ 			vc4_get_scaling_mode(vc4_state->src_w[1],
+-					     vc4_state->crtc_w);
++					     vc4_state->crtc_w,
++					     v_subsample == 2);
+ 		vc4_state->y_scaling[1] =
+ 			vc4_get_scaling_mode(vc4_state->src_h[1],
+-					     vc4_state->crtc_h);
++					     vc4_state->crtc_h,
++					     v_subsample == 2);
+ 
+ 		/* YUV conversion requires that horizontal scaling be enabled
+ 		 * on the UV plane even if vc4_get_scaling_mode() returned
+@@ -437,10 +442,7 @@ static void vc4_write_ppf(struct vc4_plane_state *vc4_state, u32 src, u32 dst)
+ static u32 vc4_lbm_size(struct drm_plane_state *state)
+ {
+ 	struct vc4_plane_state *vc4_state = to_vc4_plane_state(state);
+-	/* This is the worst case number.  One of the two sizes will
+-	 * be used depending on the scaling configuration.
+-	 */
+-	u32 pix_per_line = max(vc4_state->src_w[0], (u32)vc4_state->crtc_w);
++	u32 pix_per_line;
+ 	u32 lbm;
+ 
+ 	/* LBM is not needed when there's no vertical scaling. */
+@@ -448,6 +450,11 @@ static u32 vc4_lbm_size(struct drm_plane_state *state)
+ 	    vc4_state->y_scaling[1] == VC4_SCALING_NONE)
+ 		return 0;
+ 
++	if (vc4_state->x_scaling[0] == VC4_SCALING_TPZ)
++		pix_per_line = vc4_state->crtc_w;
++	else
++		pix_per_line = vc4_state->src_w[0];
 +
-   port:
-     type: object
-     description: >
-@@ -31,6 +36,7 @@ required:
-   - compatible
-   - reg
-   - clocks
-+  - clock-names
-   - port
+ 	if (!vc4_state->is_yuv) {
+ 		if (vc4_state->y_scaling[0] == VC4_SCALING_TPZ)
+ 			lbm = pix_per_line * 8;
+@@ -583,7 +590,9 @@ static int vc4_plane_allocate_lbm(struct drm_plane_state *state)
+ 		spin_lock_irqsave(&vc4->hvs->mm_lock, irqflags);
+ 		ret = drm_mm_insert_node_generic(&vc4->hvs->lbm_mm,
+ 						 &vc4_state->lbm,
+-						 lbm_size, 32, 0, 0);
++						 lbm_size,
++						 vc4->hvs->hvs5 ? 64 : 32,
++						 0, 0);
+ 		spin_unlock_irqrestore(&vc4->hvs->mm_lock, irqflags);
  
- additionalProperties: false
+ 		if (ret)
 -- 
 git-series 0.9.1
