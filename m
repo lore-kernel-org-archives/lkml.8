@@ -2,160 +2,134 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F91EC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720C6C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1D20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A682072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="m7KGt/cW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgBXM1L (ORCPT
+        id S1727368AbgBXM3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:27:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54844 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgBXM1L (ORCPT
+        Mon, 24 Feb 2020 07:29:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1502 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXM3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:27:11 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: alyssa)
-        with ESMTPSA id 00068293775
-Date:   Mon, 24 Feb 2020 07:27:05 -0500
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Steven Price <steven.price@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2] drm/panfrost: Don't try to map on error faults
-Message-ID: <20200224122705.GA3363@kevin>
-References: <20200212202236.13095-1-robh@kernel.org>
+        Mon, 24 Feb 2020 07:29:44 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53c16a0000>; Mon, 24 Feb 2020 04:28:26 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Feb 2020 04:29:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Feb 2020 04:29:42 -0800
+Received: from [10.25.72.216] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 12:29:36 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <digetx@gmail.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
+To:     Mark Brown <broonie@kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-4-git-send-email-spujar@nvidia.com>
+ <20200221130005.GD5546@sirena.org.uk>
+ <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
+ <20200221165535.GG5546@sirena.org.uk>
+ <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
+ <20200224114406.GB6215@sirena.org.uk>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
+Date:   Mon, 24 Feb 2020 17:59:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
-Content-Disposition: inline
-In-Reply-To: <20200212202236.13095-1-robh@kernel.org>
+In-Reply-To: <20200224114406.GB6215@sirena.org.uk>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582547306; bh=BkJlDeQ3uyXrk5Yxotr7FKq3o5UzwF+OuQbFVpldsnE=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=m7KGt/cW33jZxBsTvrRquBVKLgHFaOpj6cmOI1gq/8AfoWti0CfVl/UC/cKsdx2Tl
+         LPR0FyGeYqObSIHNLgTpg/bnzwkiKdHynqTk0m96C/NuinqMnu0r5xDRx5dwYt6agw
+         tCgQSj4p+W6tjaI5Xn8/IgyRug9t60KlWjGxqKSBvI+SyuQp8S3qvoypKpO9+glYu+
+         oQyMNMxCdod4dN44ZuZmGj5aW5gUlPB3uhFx4xr1xNYQpnUlZ2ZEUzSppeWSF0JXX8
+         s41KLrXdprytk/NksFqe/3VcKWs5xMpcFcJcLly5g9g2iheYHqFSBZy+BwHWFSqJDg
+         XUFRvHcAR8D1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+On 2/24/2020 5:14 PM, Mark Brown wrote:
+> On Mon, Feb 24, 2020 at 11:28:57AM +0000, Jon Hunter wrote:
+>> On 21/02/2020 16:55, Mark Brown wrote:
+>>> The ideal thing in a component model would be to represent those sample
+>>> rate convertors directly to usrspace so the routing and rewriting is
+>>> explicit.
+>> I assume that it would be OK for the sample rate converter itself to
+>> expose mixer controls to configure its input and output rates so the
+>> user could configure as needed?
+> I don't think so, I'd not expect the individual drivers to be doing
+> anything user visible here - if we know what a digital transformation
+> looks like the framework should be offering anything that's needed to
+> users (and hiding controls that don't have any practical control in a
+> given system).
 
-On Wed, Feb 12, 2020 at 02:22:36PM -0600, Rob Herring wrote:
-> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->=20
-> If the exception type isn't a translation fault, don't try to map and
-> instead go straight to a terminal fault.
->=20
-> Otherwise, we can get flooded by kernel warnings and further faults.
->=20
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> I rewrote this some simplifying the code and somewhat following Steven's=
-=20
-> suggested. Still not using defines though. No defines here was good=20
-> enough before IMO.
->=20
-> Only compile tested.
->=20
->  drivers/gpu/drm/panfrost/panfrost_mmu.c | 44 +++++++++++--------------
->  1 file changed, 19 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/pa=
-nfrost/panfrost_mmu.c
-> index 763cfca886a7..4f2836bd9215 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -596,33 +596,27 @@ static irqreturn_t panfrost_mmu_irq_handler_thread(=
-int irq, void *data)
->  		source_id =3D (fault_status >> 16);
-> =20
->  		/* Page fault only */
-> -		if ((status & mask) =3D=3D BIT(i)) {
-> -			WARN_ON(exception_type < 0xC1 || exception_type > 0xC4);
-> -
-> +		ret =3D -1;
-> +		if ((status & mask) =3D=3D BIT(i) && (exception_type & 0xF8) =3D=3D 0x=
-C0)
->  			ret =3D panfrost_mmu_map_fault_addr(pfdev, i, addr);
-> -			if (!ret) {
-> -				mmu_write(pfdev, MMU_INT_CLEAR, BIT(i));
-> -				status &=3D ~mask;
-> -				continue;
-> -			}
-> -		}
-> =20
-> -		/* terminal fault, print info about the fault */
-> -		dev_err(pfdev->dev,
-> -			"Unhandled Page fault in AS%d at VA 0x%016llX\n"
-> -			"Reason: %s\n"
-> -			"raw fault status: 0x%X\n"
-> -			"decoded fault status: %s\n"
-> -			"exception type 0x%X: %s\n"
-> -			"access type 0x%X: %s\n"
-> -			"source id 0x%X\n",
-> -			i, addr,
-> -			"TODO",
-> -			fault_status,
-> -			(fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
-> -			exception_type, panfrost_exception_name(pfdev, exception_type),
-> -			access_type, access_type_name(pfdev, fault_status),
-> -			source_id);
-> +		if (ret)
-> +			/* terminal fault, print info about the fault */
-> +			dev_err(pfdev->dev,
-> +				"Unhandled Page fault in AS%d at VA 0x%016llX\n"
-> +				"Reason: %s\n"
-> +				"raw fault status: 0x%X\n"
-> +				"decoded fault status: %s\n"
-> +				"exception type 0x%X: %s\n"
-> +				"access type 0x%X: %s\n"
-> +				"source id 0x%X\n",
-> +				i, addr,
-> +				"TODO",
-> +				fault_status,
-> +				(fault_status & (1 << 10) ? "DECODER FAULT" : "SLAVE FAULT"),
-> +				exception_type, panfrost_exception_name(pfdev, exception_type),
-> +				access_type, access_type_name(pfdev, fault_status),
-> +				source_id);
-> =20
->  		mmu_write(pfdev, MMU_INT_CLEAR, mask);
-> =20
-> --=20
-> 2.20.1
->=20
+Are you suggesting to have some alternate way of users configuring 
+sample rates (and other params) and not use mixer control method?
 
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
+This is a typical use case we see,
+- [stream-1] Lets say high resolution audio is playing (96kHz, 24-bit, 
+stereo)
+- [stream-2] Randomly system notifications of small durations come 
+(48kHz, 16-bit, stereo)
+The requirement is, both streams should be mixed and played.
 
------BEGIN PGP SIGNATURE-----
+Tegra Audio HW has Mixer module for mixing multiple streams. In above 
+case, stream-2 requires upsampling to 96kHz (employ SRC) and 24-bit. 
+Then mix with stream1 and play. This needs to be configured at runtime. 
+In another session, mixing for 192kHz and 48kHz might be required with 
+the same audio path. Idea was to allow users to setup their custom path 
+for specific audio applications. In the current series, I am focussing 
+on I/O modules (where overrides do not demonstrate the above use case) 
+and does not include other HW accelerators that Tegra Audio HW offers. 
+Things would be more complicated when user wants to use multiplexers and 
+demultiplexers. For simple use cases overrides are not used.
 
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl5TwRQACgkQ/v5QWgr1
-WA1Hog//TrLApFg1MbWFYQX8Y/weTKYo4RLc+VHaQ///TZ4caRYQ9fJ1JCjuW7Jh
-ud8LA79XswB+sdgvVxhMsWWfQcQGT5jfeSl2QXQNRXtIyXyf3R8rPBht3OQ/FyCo
-fhrwdfQDEBDZA2/rsvAmZ/UUZVGA4Dp2ph6F/6gORK6Y5fCi81INGj3SGMZQCt/A
-HO9OksOe+uV03bXo5KFnULw7Q25oPp80sMCZUFxOq0eHMZObTzMZqA13HxEYnrnb
-uCfV58MAB8fIqd2M5M0fIpgmCNfOGm/2Gkg+Kof9RLOLjPUeQqRj5ss8QunDWw1L
-EATJFXeaWQiLaoPBJx/Q4i3uuVKQ0c/QkbqLN4otFHLTaLrdsAqhkVeASFUSOdJL
-CpmEISk5pCX27hHCwcWyj22SGuzE8zDhFvQNMYquKgVqhLEZdH1CHQf1jQazyxsz
-xLr/4e74IjkwpBB6gWZduLRHAqEhsooDLGoz94W5LDvOpOR0FT5pTgxgiU2MhFf7
-aPu/nZQ7Fb/L0oqAGyyholv8KpLoTNI80LEqXdm1ntSceCQyvfTr8nMDJvC0uMiC
-xYlu9yMDwY6vvQXt4bVuFr3WoToFlvlmgD3piTKXUYShUdDN9gs7UDdCvhiB0aXo
-leDlW9VjcKbl76HNXbAOw7amcQqeTkcOSLw4kt859VeQnwVhtJE=
-=GEiC
------END PGP SIGNATURE-----
+Is there a better way for user to configure custom audio paths?
 
---LQksG6bCIzRHxTLp--
+>
+>>> Is there any *need* for these to be user configurable?  What's normally
+>>> happening at the minute is that either the external DAIs are fixed
+>>> configuration and the DSP just converts everything or there's no format
+>>> conversion done and things get passed through.
+>> I can see that in most cases there are a finite set of configurations
+>> that the end user may use. However, we would like to make the
+>> configuration flexible as possible and this also allow us to test lots
+>> of different configurations for verification purposes as well.
+> Internal testing often requires things that can't be exposed to users,
+> the extreme examples are things like battery chargers with health and
+> safety issues if the full range of control is available.
+
