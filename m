@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C61AC11D34
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058DBC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E945F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9472072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgBXPDX (ORCPT
+        id S1728079AbgBXPD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:03:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50196 "EHLO
+        Mon, 24 Feb 2020 10:03:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50210 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbgBXPDV (ORCPT
+        with ESMTP id S1727901AbgBXPDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:03:21 -0500
+        Mon, 24 Feb 2020 10:03:23 -0500
 Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6FFu-0004v8-Iz; Mon, 24 Feb 2020 16:02:46 +0100
+        id 1j6FFp-0004sE-F5; Mon, 24 Feb 2020 16:02:41 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 28A4B104090;
-        Mon, 24 Feb 2020 16:02:43 +0100 (CET)
-Message-Id: <20200224145643.785306549@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2F32710408E;
+        Mon, 24 Feb 2020 16:02:41 +0100 (CET)
+Message-Id: <20200224145642.847220186@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 24 Feb 2020 15:01:44 +0100
+Date:   Mon, 24 Feb 2020 15:01:35 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V3 13/22] bpf/tests: Use migrate disable instead of preempt disable
+Subject: [patch V3 04/22] bpf/tracing: Remove redundant preempt_disable() in __bpf_trace_run()
 References: <20200224140131.461979697@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -54,73 +54,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+__bpf_trace_run() disables preemption around the BPF_PROG_RUN() invocation.
 
-Replace the preemption disable/enable with migrate_disable/enable() to
-reflect the actual requirement and to allow PREEMPT_RT to substitute it
-with an actual migration disable mechanism which does not disable
-preemption.
+This is redundant because __bpf_trace_run() is invoked from a trace point
+via __DO_TRACE() which already disables preemption _before_ invoking any of
+the functions which are attached to a trace point.
 
-[ tglx: Switched it over to migrate disable ]
+Remove it and add a cant_sleep() check.
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- lib/test_bpf.c     |    4 ++--
- net/bpf/test_run.c |    8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+V3: Add a cant_sleep() check. 
+---
+ kernel/trace/bpf_trace.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/lib/test_bpf.c
-+++ b/lib/test_bpf.c
-@@ -6660,14 +6660,14 @@ static int __run_one(const struct bpf_pr
- 	u64 start, finish;
- 	int ret = 0, i;
- 
--	preempt_disable();
-+	migrate_disable();
- 	start = ktime_get_ns();
- 
- 	for (i = 0; i < runs; i++)
- 		ret = BPF_PROG_RUN(fp, data);
- 
- 	finish = ktime_get_ns();
--	preempt_enable();
-+	migrate_enable();
- 
- 	*duration = finish - start;
- 	do_div(*duration, runs);
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -37,7 +37,7 @@ static int bpf_test_run(struct bpf_prog
- 		repeat = 1;
- 
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1516,10 +1516,9 @@ void bpf_put_raw_tracepoint(struct bpf_r
+ static __always_inline
+ void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
+ {
++	cant_sleep();
  	rcu_read_lock();
 -	preempt_disable();
-+	migrate_disable();
- 	time_start = ktime_get_ns();
- 	for (i = 0; i < repeat; i++) {
- 		bpf_cgroup_storage_set(storage);
-@@ -54,18 +54,18 @@ static int bpf_test_run(struct bpf_prog
- 
- 		if (need_resched()) {
- 			time_spent += ktime_get_ns() - time_start;
--			preempt_enable();
-+			migrate_enable();
- 			rcu_read_unlock();
- 
- 			cond_resched();
- 
- 			rcu_read_lock();
--			preempt_disable();
-+			migrate_disable();
- 			time_start = ktime_get_ns();
- 		}
- 	}
- 	time_spent += ktime_get_ns() - time_start;
+ 	(void) BPF_PROG_RUN(prog, args);
 -	preempt_enable();
-+	migrate_enable();
  	rcu_read_unlock();
+ }
  
- 	do_div(time_spent, repeat);
 
