@@ -2,211 +2,210 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E00C11D25
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75D6C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F66220675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="KtY/Ywwr"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA7E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgBXHiO (ORCPT
+        id S1727218AbgBXHkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:38:14 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:49762 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbgBXHiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:38:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=451vApj/9D7x1KWh4ddIWyxRkUvpD9CgPV5nIaS4pg8=; b=KtY/YwwrUmK+tuG8zoyRvRTIJ
-        pq2X+lzhaJ1cHUq/lJhqBVnIzeaAxq+CaQU7AnlTTjWrQ7+89qicwrmxEDbh9YIu6rmNDHyCdy1v0
-        EWPbjWxdd53ySVmT1PJ+NCG7WHA3Ght0BVs1kdgbT7Ffmdakqn25D1iGxFOqsbY1QizTo=;
-Received: from p578b2b7d.dip0.t-ipconnect.de ([87.139.43.125] helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j68JF-00021S-3e; Mon, 24 Feb 2020 08:37:45 +0100
-Received: from localhost ([::1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j68GR-0007vf-WD; Mon, 24 Feb 2020 08:34:52 +0100
-Date:   Mon, 24 Feb 2020 08:33:35 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v5 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Message-ID: <20200224083335.06a352f8@kemnade.info>
-In-Reply-To: <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-References: <cover.1582367141.git.hns@goldelico.com>
-        <51642368a064073ab99bb3110863b5fadc382f82.1582367141.git.hns@goldelico.com>
-        <20200222165738.61cde2a0@kemnade.info>
-        <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Mon, 24 Feb 2020 02:40:14 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:44531 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgBXHkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:40:14 -0500
+Received: by mail-il1-f200.google.com with SMTP id h87so16721436ild.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:40:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=787IVEtTAp4pm7jHKW0atIbdisWqmLyVEo9pOI1dOQI=;
+        b=kArCCk23r/dY6FWhOUXKs2zGLPaR+PvspPn5G9T2x+JupUP+kciWxTMuYMbUn0eU0r
+         PaYl0U/GbzqiN3jKqj2ASA90bkYM2vBNRp1Xi4elsl8/KwCx0GoPpgmEZSg04adOVkvK
+         fDGv2DQEG9EeOCKbjM1RoJHgA0XNb0Tx4kim6pw0CEYjWuk/t5kC1PGMyrmPAfsejGtb
+         N0iZFTrZavJILQL6qsez5LuwFtLYsFH5NNWGve0/KRiDPBRyRuLMmLymgaiXhbjKhbdx
+         s+lrq3+IknAtXRoj48ZM0DhnhcKnAPoYr59kBNL7D3irHtvq6ESWzbKD4QHW24yMWquU
+         /9BA==
+X-Gm-Message-State: APjAAAVPP7sCR3b+OBO16//L73TYBNEde22EUMOcTcVa8C2TRO747o4M
+        ziii35c8tC2jO5NcYCVVDS0w5TzLXIpbgWFldGS2tQ6ttnE0
+X-Google-Smtp-Source: APXvYqzJh3mHUMyngPpafir7PkO10lHNmm+YWTAev44v4xWmcR/3wA+00HcZ0KZGFfSTw+SOGPDCV0sVulyssalTAFNQp3RgJDEj
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/jAuKxTh/ki.VbCviTA9NKWw"; protocol="application/pgp-signature"
+X-Received: by 2002:a02:a415:: with SMTP id c21mr48112323jal.45.1582530013025;
+ Sun, 23 Feb 2020 23:40:13 -0800 (PST)
+Date:   Sun, 23 Feb 2020 23:40:13 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000045dc96059f4d7b02@google.com>
+Subject: KASAN: use-after-free Read in tcp_retransmit_timer (5)
+From:   syzbot <syzbot+694120e1002c117747ed@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
+        kafai@fb.com, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jAuKxTh/ki.VbCviTA9NKWw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On Sat, 22 Feb 2020 17:34:06 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+syzbot found the following crash on:
 
-> > Am 22.02.2020 um 16:57 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> >=20
-> > On Sat, 22 Feb 2020 11:25:37 +0100
-> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> >  =20
-> >> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >>=20
-> >> This patch brings support for the JZ4780 efuse. Currently it only expo=
-ses
-> >> a read only access to the entire 8K bits efuse memory.
-> >>=20
-> >> Tested-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> [converted to yaml]
-> >> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> >> ---
-> >> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 +++++++++++++++++++
-> >> 1 file changed, 50 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4=
-780-efuse.yaml
-> >>=20
-> >> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-ef=
-use.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> new file mode 100644
-> >> index 000000000000..09a8ef937750
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> @@ -0,0 +1,50 @@
-> >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Ingenic JZ EFUSE driver bindings
-> >> +
-> >> +maintainers:
-> >> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: "nvmem.yaml#"
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - ingenic,jz4780-efuse
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  clocks:
-> >> +    # Handle for the ahb for the efuse.
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +   items:
-> >> +     - const:  ahb2 =20
-> > as Rob said: probably not needed, since it is a single
-> > clock, and the driver uses devm_clk_get(dev, NULL), so it should be pre=
-pared
-> > for that without any extra work. =20
->=20
-> The question is if a specific driver implementation should determine
-> what the DT requires or the other way round. I don't know...
->=20
-> I did interpret Rob's comment differently: there was
->=20
-> > - "clock-names"		Must be "bus_clk" =20
->=20
-> and he did say:=20
->=20
-> 	'clk' is redundant. How about 'ahb'?
->=20
-> So I thought he refers to the _clk suffix?
->=20
-> >  =20
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - clock-names =20
-> > so it is not required here (but "- clocks" (not "- clock") as said in e=
-arlier
-> > mail). =20
->=20
-> Well, this is another example where I do not yet see any improvement by y=
-aml.
-> It is the same amount of guessing what should be written where. Is this to
-> be added or not? When is it and why, when not and why?
->=20
-well, this is the list of required properties which have to be an any
-devicetree using that device, the conversion of the comments for the proper=
-ties
-in the .txt-file.
-So, if you do not declare a property before, you cannot specify that it is
-required. So if we drop the definition of clock-names we cannot declare it
-as required.=20
+HEAD commit:    41f57cfd Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1460da7ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
+dashboard link: https://syzkaller.appspot.com/bug?extid=694120e1002c117747ed
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Regards,
-Andreas
+Unfortunately, I don't have any reproducer for this crash yet.
 
---Sig_/jAuKxTh/ki.VbCviTA9NKWw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+694120e1002c117747ed@syzkaller.appspotmail.com
 
------BEGIN PGP SIGNATURE-----
+==================================================================
+BUG: KASAN: use-after-free in tcp_retransmit_timer+0x2c51/0x30e0 net/ipv4/tcp_timer.c:500
+Read of size 8 at addr ffff888062cc0338 by task syz-executor.0/18199
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5TfE8ACgkQl4jFM1s/
-ye+aFQ//eslMTAbmAQ0DqEVfmmyBhqkH057WoRaE73bxRve/4YpLAdx9IFVnaznl
-vdFg1N8Z2FAnktyM5rZJ0BUFt4U5U61DcCYrFUSg7MRWu74DxMQIhx/e0s9IMJM2
-CldWXozOxoT1sYQ/eb4e6Gu9P9F2yu1qgsSDxRn+4hriUkXLI1x8BJz0myZyp32m
-I1MTHTP9n5aVWKj1xo/FwrF2FNWRgLFAFsPwV0/Q7UWld/175hbYKnH5kcyho7sA
-sNu0RnnG3Oh1gAiHbUlWLAZIT/3hwmR8yZ6EVYTmFEwxnb3nOQrI91NomP5wHBYf
-tp+f2EDYJMZCC0Sopnzm/Vw8etxSSxMtViyVltSr7D798O9nMBhpSrqvttCNPC9o
-0v2lJcTGxsilklPXZ7cJJyoiyKTMacv6JOZk7skDtpaojCdb/tDdutsN8i1CMcYC
-yorhcdlDAHdB/JaSw0qXocir4UAwlmJHA4chSuPmhbBCpXl29QW3tMi4IGbYerCk
-iMZWJV0prIsXQRUoxsV65rnuAIhtaPNadjJvSdd4tC5YZ1KwaCg5nr1Oh+Ja8Sen
-Tx/QYAeLT5bdQYpgENgunibR7m8c+WUUhLs7sdEU6pfDGzQS2YFlR6pXAdH2bPzn
-2S8jAKo8sxOGVzAcDfBALaendEYoVDv9ElnffqemmRDhumzlnAI=
-=QwX9
------END PGP SIGNATURE-----
+CPU: 0 PID: 18199 Comm: syz-executor.0 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ tcp_retransmit_timer+0x2c51/0x30e0 net/ipv4/tcp_timer.c:500
+ tcp_write_timer_handler+0x6be/0x8d0 net/ipv4/tcp_timer.c:611
+ tcp_write_timer+0xac/0x2e0 net/ipv4/tcp_timer.c:631
+ call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
+ __do_softirq+0x262/0x98c kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1146
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
+RIP: 0010:slab_alloc mm/slab.c:3313 [inline]
+RIP: 0010:__do_kmalloc mm/slab.c:3654 [inline]
+RIP: 0010:__kmalloc+0x2b8/0x770 mm/slab.c:3665
+Code: 7e 0f 85 d6 fe ff ff e8 a7 af 4c ff e9 cc fe ff ff e8 4c 6d c7 ff 48 83 3d dc f5 ff 07 00 0f 84 4f 03 00 00 48 8b 7d c0 57 9d <0f> 1f 44 00 00 e9 5e fe ff ff 31 d2 be 35 02 00 00 48 c7 c7 de dd
+RSP: 0018:ffffc900019675a8 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: 0000000000000c40 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff8880569e29d8 RDI: 0000000000000282
+RBP: ffffc90001967620 R08: ffff8880569e2140 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000001000
+R13: 0000000000000c40 R14: ffff8880aa402000 R15: ffff8880962fa000
+ kmalloc include/linux/slab.h:560 [inline]
+ tomoyo_realpath_from_path+0xc5/0x660 security/tomoyo/realpath.c:252
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_check_open_permission+0x2a3/0x3e0 security/tomoyo/file.c:771
+ tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
+ tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
+ security_file_open+0x71/0x300 security/security.c:1529
+ do_dentry_open+0x37a/0x1380 fs/open.c:784
+ vfs_open+0xa0/0xd0 fs/open.c:914
+ do_last fs/namei.c:3490 [inline]
+ path_openat+0x12ee/0x3490 fs/namei.c:3607
+ do_filp_open+0x192/0x260 fs/namei.c:3637
+ do_sys_openat2+0x5eb/0x7e0 fs/open.c:1149
+ do_sys_open+0xf2/0x180 fs/open.c:1165
+ ksys_open include/linux/syscalls.h:1386 [inline]
+ __do_sys_open fs/open.c:1171 [inline]
+ __se_sys_open fs/open.c:1169 [inline]
+ __x64_sys_open+0x7e/0xc0 fs/open.c:1169
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4161c0
+Code: 05 48 3d 01 f0 ff ff 0f 83 2d 19 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 83 3d ad 22 87 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff
+RSP: 002b:00007ffd846aa178 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007ffd846aa1a4 RCX: 00000000004161c0
+RDX: 00007ffd846aa1aa RSI: 0000000000080001 RDI: 00000000004c1fef
+RBP: 00007ffd846aa1a0 R08: 0000000000008040 R09: 0000000000000004
+R10: 0000000000000075 R11: 0000000000000246 R12: 00000000004c1fef
+R13: 00007ffd846aa6c0 R14: 0000000000000000 R15: 00007ffd846aa6d0
 
---Sig_/jAuKxTh/ki.VbCviTA9NKWw--
+Allocated by task 2861:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ __do_kmalloc_node mm/slab.c:3616 [inline]
+ __kmalloc_node_track_caller+0x4e/0x70 mm/slab.c:3630
+ __kmalloc_reserve.isra.0+0x40/0xf0 net/core/skbuff.c:142
+ __alloc_skb+0x10b/0x5e0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ nsim_dev_trap_skb_build drivers/net/netdevsim/dev.c:324 [inline]
+ nsim_dev_trap_report drivers/net/netdevsim/dev.c:376 [inline]
+ nsim_dev_trap_report_work+0x25c/0xaf0 drivers/net/netdevsim/dev.c:415
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2861:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ skb_free_head+0x93/0xb0 net/core/skbuff.c:590
+ skb_release_data+0x43c/0x8b0 net/core/skbuff.c:610
+ skb_release_all+0x4d/0x60 net/core/skbuff.c:664
+ __kfree_skb net/core/skbuff.c:678 [inline]
+ consume_skb net/core/skbuff.c:837 [inline]
+ consume_skb+0xfb/0x410 net/core/skbuff.c:831
+ nsim_dev_trap_report drivers/net/netdevsim/dev.c:390 [inline]
+ nsim_dev_trap_report_work+0x7cb/0xaf0 drivers/net/netdevsim/dev.c:415
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888062cc0000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 824 bytes inside of
+ 4096-byte region [ffff888062cc0000, ffff888062cc1000)
+The buggy address belongs to the page:
+page:ffffea00018b3000 refcount:1 mapcount:0 mapping:ffff8880aa402000 index:0x0 compound_mapcount: 0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea00024ce208 ffffea00029a7b08 ffff8880aa402000
+raw: 0000000000000000 ffff888062cc0000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888062cc0200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888062cc0280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888062cc0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff888062cc0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888062cc0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
