@@ -2,157 +2,106 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F91CC11D35
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22C8C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E43521744
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A8420836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VqRcwZtj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgBXSAZ (ORCPT
+        id S1727745AbgBXSCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:00:25 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:58489 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBXSAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:00:25 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j6I1k-0006yQ-US; Mon, 24 Feb 2020 18:00:21 +0000
-Date:   Mon, 24 Feb 2020 19:00:20 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v4 6/9] drivers/base/power: add dpm_sysfs_change_owner()
-Message-ID: <20200224180020.tu4g22rzk6xt3zeo@wittgenstein>
-References: <20200224172110.4121492-1-christian.brauner@ubuntu.com>
- <20200224172110.4121492-7-christian.brauner@ubuntu.com>
- <CAJZ5v0gDuP33TFNocsSgTD4QFQTQeczwWUXegU2GDzMAFq5Vvg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gDuP33TFNocsSgTD4QFQTQeczwWUXegU2GDzMAFq5Vvg@mail.gmail.com>
+        Mon, 24 Feb 2020 13:02:14 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:42488 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbgBXSCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:02:14 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48R8z16g7cz9v9kQ;
+        Mon, 24 Feb 2020 19:02:05 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=VqRcwZtj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id JrN8DRE25OKN; Mon, 24 Feb 2020 19:02:05 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48R8z15d9Zz9v9kP;
+        Mon, 24 Feb 2020 19:02:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582567325; bh=CNFLih4PSoPyQOKHdwh0bZCil4LvN1c7uLrlcFFy9Dg=;
+        h=From:Subject:To:Cc:Date:From;
+        b=VqRcwZtjprMistze4TollXwv7njS+9K1lRrSm8r6JAlNw/EdWMvGMj/2pJsk70fec
+         7GT6v67BhGwXY/wQqOLOhwYI37P9DNk2D7iURtYEgO9cokdU4gN9VUITGCjj34JDtS
+         LQtEra6Bmk8g5g3ZiZOkZks+gG6KL8ZOAHMhP/A0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 29D5F8B80C;
+        Mon, 24 Feb 2020 19:02:11 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id TsW2Zfb04y9p; Mon, 24 Feb 2020 19:02:11 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB8428B7FC;
+        Mon, 24 Feb 2020 19:02:10 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B6840653B3; Mon, 24 Feb 2020 18:02:10 +0000 (UTC)
+Message-Id: <7f24b5961a6839ff01df792816807f74ff236bf6.1582567319.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/kprobes: Use probe_address() to read instructions
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        naveen.n.rao@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 24 Feb 2020 18:02:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 06:56:03PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Feb 24, 2020 at 6:21 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > Add a helper to change the owner of a device's power entries. This
-> > needs to happen when the ownership of a device is changed, e.g. when
-> > moving network devices between network namespaces.
-> > This function will be used to correctly account for ownership changes,
-> > e.g. when moving network devices between network namespaces.
-> >
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > - "Rafael J. Wysocki" <rafael@kernel.org>:
-> >   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
-> >      if (device_can_wakeup(dev)) check since the former can never be true if
-> >      the latter is false.
-> >
-> > - Christian Brauner <christian.brauner@ubuntu.com>:
-> >   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
-> >     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
-> >     when this config option is set.
-> >
-> > /* v3 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add explicit uid/gid parameters.
-> >
-> > /* v4 */
-> > - "Rafael J. Wysocki" <rafael@kernel.org>:
-> >    - Remove in-function #ifdef in favor of separate helper that is a nop
-> >      whenver !CONFIG_PM_SLEEP.
-> > ---
-> >  drivers/base/core.c        |  4 +++
-> >  drivers/base/power/power.h |  3 ++
-> >  drivers/base/power/sysfs.c | 61 +++++++++++++++++++++++++++++++++++++-
-> >  3 files changed, 67 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 988f34ce2eb0..fb8b7990f6fd 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -3552,6 +3552,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> >         if (error)
-> >                 goto out;
-> >
-> > +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
-> > +       if (error)
-> > +               goto out;
-> > +
-> >  #ifdef CONFIG_BLOCK
-> >         if (sysfs_deprecated && dev->class == &block_class)
-> >                 goto out;
-> > diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
-> > index 444f5c169a0b..54292cdd7808 100644
-> > --- a/drivers/base/power/power.h
-> > +++ b/drivers/base/power/power.h
-> > @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
-> >  extern void pm_qos_sysfs_remove_flags(struct device *dev);
-> >  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
-> >  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
-> > +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
-> >
-> >  #else /* CONFIG_PM */
-> >
-> > @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
-> >
-> >  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
-> >  static inline void dpm_sysfs_remove(struct device *dev) {}
-> > +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
-> > +                                        kgid_t kgid) { return 0; }
-> >
-> >  #endif
-> >
-> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > index d7d82db2e4bc..d2955784d98d 100644
-> > --- a/drivers/base/power/sysfs.c
-> > +++ b/drivers/base/power/sysfs.c
-> > @@ -480,6 +480,20 @@ static ssize_t wakeup_last_time_ms_show(struct device *dev,
-> >         return enabled ? sprintf(buf, "%lld\n", msec) : sprintf(buf, "\n");
-> >  }
-> >
-> > +static int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
-> > +                                        kgid_t kgid)
-> > +{
-> > +       int rc = 0;
-> > +
-> > +       if (dev->power.wakeup && dev->power.wakeup->dev) {
-> > +               rc = device_change_owner(dev->power.wakeup->dev, kuid, kgid);
-> > +               if (rc)
-> > +                       return rc;
-> > +       }
-> > +
-> > +       return rc;
-> 
-> Why not to do
-> 
-> if (dev->power.wakeup && dev->power.wakeup->dev)
->         return device_change_owner(dev->power.wakeup->dev, kuid, kgid);
-> 
-> return 0;
-> 
-> here instead?
+In order to avoid Oopses, use probe_address() to read the
+instruction at the address where the trap happened.
 
-Yeah, sure, can do.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/kprobes.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Christian
+diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
+index 84567406b53d..a35320b79e16 100644
+--- a/arch/powerpc/kernel/kprobes.c
++++ b/arch/powerpc/kernel/kprobes.c
+@@ -276,14 +276,18 @@ int kprobe_handler(struct pt_regs *regs)
+ 
+ 	p = get_kprobe(addr);
+ 	if (!p) {
+-		if (*addr != BREAKPOINT_INSTRUCTION) {
++		unsigned int instr;
++
++		if (probe_kernel_address(addr, instr))
++			goto no_kprobe;
++
++		if (instr != BREAKPOINT_INSTRUCTION) {
+ 			/*
+ 			 * PowerPC has multiple variants of the "trap"
+ 			 * instruction. If the current instruction is a
+ 			 * trap variant, it could belong to someone else
+ 			 */
+-			kprobe_opcode_t cur_insn = *addr;
+-			if (is_trap(cur_insn))
++			if (is_trap(instr))
+ 				goto no_kprobe;
+ 			/*
+ 			 * The breakpoint instruction was removed right
+-- 
+2.25.0
+
