@@ -2,109 +2,121 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFCDC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B45C38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD78021927
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:15:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582582515;
-	bh=mBp99VyT1gWuj1LiSfqrMLDvLhq0S77OYWBMqGblpHg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=UtHwONIJ3hn5d91Gszt1Zir7WiRlDXejqxnj/zVPKp2aFTW+J3br6Tw4umG7lW58T
-	 UtP5ws+m+A95rdX/twVcPzq5yiS6UA9eQ0J1LSQzzH6q8fUcjxoqzqDzmv7TDHeBqa
-	 +cl0q40vXGx+mZOpgUnHtN0KmKz7anKSx63i4eaU=
+	by mail.kernel.org (Postfix) with ESMTP id 206CB218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:16:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6SIpBLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgBXWPO (ORCPT
+        id S1728079AbgBXWQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:15:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgBXWPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:15:14 -0500
-Received: from vulkan (unknown [4.28.11.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Feb 2020 17:16:04 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54251 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726651AbgBXWQD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 17:16:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582582562;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DNSD66ImMoPsjxgik/kryHw2+qoaM+eMsRblP5sq1ko=;
+        b=Q6SIpBLMhyaRHyfEj/r2uUb7ZLrmPCsvQA9MgfjwhFai7t22B+v8UR7rnCBmjJFivgJaI9
+        /mszhL+yNZi14GV0hFM5UtJ6wCXQT8Q4q3hn9X5s9IBCmD4zAmqHFLTFDL35rdEmCqRr/o
+        jRWQHRPDLwgY5PhRPcZMb/tk0ttz1V0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-laDNQN88PKGHPbLLdvhBnQ-1; Mon, 24 Feb 2020 17:15:54 -0500
+X-MC-Unique: laDNQN88PKGHPbLLdvhBnQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27758218AC;
-        Mon, 24 Feb 2020 22:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582582513;
-        bh=mBp99VyT1gWuj1LiSfqrMLDvLhq0S77OYWBMqGblpHg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=wzYnQcV+vDk/c8c4K9MzGXjqG8mr4vD+vMJq0t7dDA9V4REd+8EsXd+29bHjir77y
-         a5Wvmd2WH8WtoEP2uEgAvIOGojtyyT4ToFraGDM84dAmMgFEdG69bsAZ0vmV3g7SGV
-         Ffuy+eWVOqnMbVZm8xY0V4//p2OGTsr6WuFJ4O7k=
-Message-ID: <c406ee08db90c1452c4ba9740b046ca9204c7239.camel@kernel.org>
-Subject: Re: [PATCH v2] ceph: re-org copy_file_range and fix some error paths
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 24 Feb 2020 14:15:12 -0800
-In-Reply-To: <20200224134432.25888-1-lhenriques@suse.com>
-References: <20200224134432.25888-1-lhenriques@suse.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B14E100DFC7;
+        Mon, 24 Feb 2020 22:15:52 +0000 (UTC)
+Received: from ovpn-118-56.phx2.redhat.com (ovpn-118-56.phx2.redhat.com [10.3.118.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4687393;
+        Mon, 24 Feb 2020 22:15:50 +0000 (UTC)
+Message-ID: <4f7ecfa4034463892e2d211d3cba2b9c8f6449c7.camel@redhat.com>
+Subject: Re: [PATCH RT 15/25] sched: migrate_enable: Use select_fallback_rq()
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tom Zanussi <zanussi@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>
+Date:   Mon, 24 Feb 2020 16:15:49 -0600
+In-Reply-To: <20200224160529.f5lg44gyk2mgayd4@linutronix.de>
+References: <cover.1582320278.git.zanussi@kernel.org>
+         <eb183ce95bb3d92b426bdadf36f0648cda474379.1582320278.git.zanussi@kernel.org>
+         <20200224094349.5x6dca4tggtmmbnq@linutronix.de>
+         <1582558266.12738.32.camel@kernel.org>
+         <20200224160529.f5lg44gyk2mgayd4@linutronix.de>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-24 at 13:44 +0000, Luis Henriques wrote:
-> This patch re-organizes copy_file_range, trying to fix a few issues in the
-> error handling.  Here's the summary:
+On Mon, 2020-02-24 at 17:05 +0100, Sebastian Andrzej Siewior wrote:
+> On 2020-02-24 09:31:06 [-0600], Tom Zanussi wrote:
+> > On Mon, 2020-02-24 at 10:43 +0100, Sebastian Andrzej Siewior wrote:
+> > > On 2020-02-21 15:24:43 [-0600], zanussi@kernel.org wrote:
+> > > > From: Scott Wood <swood@redhat.com>
+> > > > 
+> > > > v4.14.170-rt75-rc1 stable review patch.
+> > > > If anyone has any objections, please let me know.
+> > > 
+> > > This creates bug which is stuffed later via
+> > > 	sched: migrate_enable: Busy loop until the migration request is
+> > > completed
+> > > 
+> > > So if apply this, please take the bug fix, too. This is Stevens queue
+> > > for reference:
+> > > > [PATCH RT 22/30] sched: migrate_enable: Use select_fallback_rq()
+> > > 
+> > > ^^ bug introduced
+> > > 
+> > 
+> > Hmm, it seemed from the comment on the 4.19 series that it was '24/32
+> > sched: migrate_enable: Use stop_one_cpu_nowait()' that required 'sched:
+> > migrate_enable: Busy loop until the migration request is
+> > completed' as a bug fix.
+> > 
+> >   
+> > https://lore.kernel.org/linux-rt-users/20200122083130.kuu3yppckhyjrr4u@linutronix.de/#t
+> > 
+> > I didn't take the stop_one_cpu_nowait() one, so didn't take the busy
+> > loop one either.
 > 
-> - Abort copy if initial do_splice_direct() returns fewer bytes than
->   requested.
-> 
-> - Move the 'size' initialization (with i_size_read()) further down in the
->   code, after the initial call to do_splice_direct().  This avoids issues
->   with a possibly stale value if a manual copy is done.
-> 
-> - Move the object copy loop into a separate function.  This makes it
->   easier to handle errors (e.g, dirtying caps and updating the MDS
->   metadata if only some objects have been copied before an error has
->   occurred).
-> 
-> - Added calls to ceph_oloc_destroy() to avoid leaking memory with src_oloc
->   and dst_oloc
-> 
-> - After the object copy loop, the new file size to be reported to the MDS
->   (if there's file size change) is now the actual file size, and not the
->   size after an eventual extra manual copy.
-> 
-> - Added a few dout() to show the number of bytes copied in the two manual
->   copies and in the object copy loop.
-> 
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
-> Hi,
-> 
-> Just a respin including Jeff's suggestions from initial post.
-> 
-> Changes since v1:
-> 
-> - Don't bother trying a second splice once we fail during the remote
->   object copies; let user-space retry instead.
-> 
-> Cheers,
-> --
-> Luis
-> 
->  fs/ceph/file.c | 173 ++++++++++++++++++++++++++++---------------------
->  1 file changed, 100 insertions(+), 73 deletions(-)
-> 
+> Ach, it was the different WARN_ON() then. So this might not introduce
+> any bug then. *Might*. 
+> Steven backported the whole pile and you took just this one patch. The
+> whole set was tested in devel and uncovered a problem which was fixed
+> later. Taking only a part *may* expose other problems it *may* be fine.
 
-This looks good to me, Luis -- merged into ceph-client/testing.
+Taking up to this patch should be OK (well, you still have the 
+current->state clobbering, but it shouldn't introduce any new known bugs). 
+The busy loop patch itself has a followup fix though (in theory the busy
+loop could deadlock): 2dcd94b443c5dcbc ("sched: migrate_enable: Use per-cpu
+cpu_stop_work") which should be considered for v4.19 rt stable which has the
+busy loop patch.
 
-Thanks!
--- 
-Jeff Layton <jlayton@kernel.org>
+-Scott
+
 
