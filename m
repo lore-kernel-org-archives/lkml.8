@@ -2,168 +2,207 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CE0C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A155BC11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D632080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:35:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YguDYx8K"
+	by mail.kernel.org (Postfix) with ESMTP id 792D920836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:37:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582562234;
+	bh=EaF2MyjS2zZaaolBzvb8Q1sCIgrqXN34CG6/GRVu+iw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LjC/7UrbBX3TNNWm8wib6cIhV0qhKfvRJU20vSMmmCh95CtHccvNGUamUnP0IaugG
+	 sinZGawftMJeXz63ExiFrGV5ZZshPBgM79yiX53GoWCT/qNE1dWqvMXSzTOrTACo1q
+	 pEGit8b2KyBhtV7UktUaeC/bIs9zU4mOpNkycv80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgBXQf4 (ORCPT
+        id S1727867AbgBXQhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:35:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21781 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727673AbgBXQf4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:35:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582562153;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oPEJhsKQjaftTfxeHp3y5FL2X8//l96FQ+mWxCiZnNY=;
-        b=YguDYx8K90vyHk2Hus6W+4qpVupluoNaabhAFme6Ho/bPAwYOywTPsA8BNzcN3dDSBBuHl
-        eGmkao2aYS1cPclj0ddn9NNvKKNbmrFbbmwGte/KWS+XzxSnKfUNXDfoU59SH7J6vfu+9o
-        4IARgXn1EzLweSueUEx52DnDq8BsdJs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-Jrv0OMQ3OEWQWa77tUf6CQ-1; Mon, 24 Feb 2020 11:35:45 -0500
-X-MC-Unique: Jrv0OMQ3OEWQWa77tUf6CQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 24 Feb 2020 11:37:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727160AbgBXQhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:37:13 -0500
+Received: from localhost (unknown [122.182.199.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51961800053;
-        Mon, 24 Feb 2020 16:35:43 +0000 (UTC)
-Received: from [172.31.0.54] (ovpn-112-52.rdu2.redhat.com [10.10.112.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD5F785748;
-        Mon, 24 Feb 2020 16:35:40 +0000 (UTC)
-From:   Doug Ledford <dledford@redhat.com>
-Message-Id: <10EE986F-E1F6-44F3-A025-6F2CA820C690@redhat.com>
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [GIT] Networking
-Date:   Mon, 24 Feb 2020 11:35:38 -0500
-In-Reply-To: <20200224163312.GC4526@unreal>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-References: <20150624.063911.1220157256743743341.davem@davemloft.net>
- <CA+55aFybr6Fjti5WSm=FQpfwdwgH1Pcfg6L81M-Hd9MzuSHktg@mail.gmail.com>
- <CAMuHMdViacgi1W8acma7GhWaaVj92z6pg-g7ByvYOQL-DToacA@mail.gmail.com>
- <20200224124732.GA694161@kroah.com> <20200224163312.GC4526@unreal>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_FD6ECC63-F649-4CBF-8094-031AB9B42D08";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 009AA20637;
+        Mon, 24 Feb 2020 16:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582562232;
+        bh=EaF2MyjS2zZaaolBzvb8Q1sCIgrqXN34CG6/GRVu+iw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tPm95vGIpi/ZtZoLMfrUCE5SZ1PDT8Cqi/ELFlvHsA0J9xzr54BhKa5RXGOBckvjD
+         OEqlGIjTd8HOAwSrcTqxPCRsYsGZiQY0h4/c84ANrlzg9t/pFgFAtnM4nv/xrdDYV2
+         lhOTZmDtPZ50QYXLS/9CWV4vnFKRBxEVBXYuBZSk=
+Date:   Mon, 24 Feb 2020 22:07:07 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, geert@linux-m68k.org
+Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
+Message-ID: <20200224163707.GA2618@vkoul-mobl>
+References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205111557.24125-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Apple-Mail=_FD6ECC63-F649-4CBF-8094-031AB9B42D08
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+On 05-02-20, 13:15, Peter Ujfalusi wrote:
+> Via the /sys/kernel/debug/dmaengine users can get information about the
+> DMA devices and the used channels.
+> 
+> Example output on am654-evm with audio using two channels and after running
+> dmatest on 6 channels:
+> 
+> # cat /sys/kernel/debug/dmaengine
+> dma0 (285c0000.dma-controller): number of channels: 96
+> 
+> dma1 (31150000.dma-controller): number of channels: 267
+>  dma1chan0    | 2b00000.mcasp:tx
+>  dma1chan1    | 2b00000.mcasp:rx
+>  dma1chan2    | in-use
+>  dma1chan3    | in-use
+>  dma1chan4    | in-use
+>  dma1chan5    | in-use
+>  dma1chan6    | in-use
+>  dma1chan7    | in-use
+> 
+> For slave channels we can show the device and the channel name a given
+> channel is requested.
+> For non slave devices the only information we know is that the channel is
+> in use.
+> 
+> DMA drivers can implement the optional dbg_show callback to provide
+> controller specific information instead of the generic one.
+> 
+> It is easy to extend the generic dmaengine_dbg_show() to print additional
+> information about the used channels.
+> 
+> I have taken the idea from gpiolib.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi,
+> 
+> Changes since v2:
+> - Use dma_chan_name() for printing the channel's name
+> 
+> Changes since v1:
+> - Use much more simplified fops for the debugfs file (via DEFINE_SHOW_ATTRIBUTE)
+> - do not allow modification to dma_device_list while the debugfs file is read
+> - rename the slave_name to dbg_client_name (it is only for debugging)
+> - print information about dma_router if it is used by the channel
+> - Formating of the output slightly changed
+> 
+> Regards,
+> Peter
+> 
+>  drivers/dma/dmaengine.c   | 65 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/dmaengine.h | 12 +++++++-
+>  2 files changed, 76 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index c3b1283b6d31..37c3a4cd5b1a 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -32,6 +32,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/platform_device.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+> @@ -760,6 +761,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>  		return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>  
+>  found:
+> +#ifdef CONFIG_DEBUG_FS
+> +	chan->dbg_client_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev),
+> +					  name);
+> +#endif
+> +
+>  	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+>  	if (!chan->name)
+>  		return chan;
+> @@ -837,6 +843,11 @@ void dma_release_channel(struct dma_chan *chan)
+>  		chan->name = NULL;
+>  		chan->slave = NULL;
+>  	}
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +	kfree(chan->dbg_client_name);
+> +	chan->dbg_client_name = NULL;
+> +#endif
+>  	mutex_unlock(&dma_list_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(dma_release_channel);
+> @@ -1562,3 +1573,57 @@ static int __init dma_bus_init(void)
+>  	return class_register(&dma_devclass);
+>  }
+>  arch_initcall(dma_bus_init);
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +static void dmaengine_dbg_show(struct seq_file *s, struct dma_device *dma_dev)
+> +{
+> +	struct dma_chan *chan;
+> +
+> +	list_for_each_entry(chan, &dma_dev->channels, device_node) {
+> +		if (chan->client_count) {
+> +			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
+> +				   chan->dbg_client_name ?: "in-use");
+> +
+> +			if (chan->router)
+> +				seq_printf(s, " (via router: %s)\n",
+> +					dev_name(chan->router->dev));
+> +			else
+> +				seq_puts(s, "\n");
+> +		}
+> +	}
+> +}
+> +
+> +static int dmaengine_debugfs_show(struct seq_file *s, void *data)
+> +{
+> +	struct dma_device *dma_dev = NULL;
+> +
+> +	mutex_lock(&dma_list_mutex);
+> +	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
+> +		seq_printf(s, "dma%d (%s): number of channels: %u\n",
+> +			   dma_dev->dev_id, dev_name(dma_dev->dev),
+> +			   dma_dev->chancnt);
+> +
+> +		if (dma_dev->dbg_show)
+> +			dma_dev->dbg_show(s, dma_dev);
+ do we really want a custom dbg_show()..? Drivers can add their own
+files...
 
+> +		else
+> +			dmaengine_dbg_show(s, dma_dev);
+> +
+> +		if (!list_is_last(&dma_dev->global_node, &dma_device_list))
+> +			seq_puts(s, "\n");
+> +	}
+> +	mutex_unlock(&dma_list_mutex);
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
+> +
+> +static int __init dmaengine_debugfs_init(void)
+> +{
+> +	/* /sys/kernel/debug/dmaengine */
+> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
+> +			    &dmaengine_debugfs_fops);
 
-
-> On Feb 24, 2020, at 11:33 AM, Leon Romanovsky <leon@kernel.org> wrote:
->=20
-> On Mon, Feb 24, 2020 at 01:47:32PM +0100, Greg KH wrote:
->> On Mon, Feb 24, 2020 at 11:01:09AM +0100, Geert Uytterhoeven wrote:
->>> Hi Linus,
->>>=20
->>> On Thu, Jun 25, 2015 at 1:38 AM Linus Torvalds
->>> <torvalds@linux-foundation.org> wrote:
->>>> On Wed, Jun 24, 2015 at 6:39 AM, David Miller <davem@davemloft.net> wr=
-ote:
->>>>>  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git mas=
-ter
->>>>=20
->>>> On the *other* side of the same conflict, I find an even more
->>>> offensive commit, namely commit 4cd7c9479aff ("IB/mad: Add support for
->>>> additional MAD info to/from drivers") which adds a BUG_ON() for a
->>>> sanity check, rather than just returning -EINVAL or something sane
->>>> like that.
->>>>=20
->>>> I'm getting *real* tired of that BUG_ON() shit. I realize that
->>>> infiniband is a niche market, and those "commercial grade" niche
->>>> markets are more-than-used-to crap code and horrible hacks, but this
->>>> is still the kernel. We don't add random machine-killing debug checks
->>>> when it is *so* simple to just do
->>>>=20
->>>>        if (WARN_ON_ONCE(..))
->>>>                return -EINVAL;
->>>>=20
->>>> instead.
->>>=20
->>> And if we follow that advice, friendly Greg will respond with:
->>> "We really do not want WARN_ON() anywhere, as that causes systems with
->>> panic-on-warn to reboot."
->>> https://lore.kernel.org/lkml/20191121135743.GA552517@kroah.com/
->>=20
->> Yes, we should not have any WARN_ON calls for something that userspace
->> can trigger, because then syzbot will trigger it and we will get an
->> annoying report saying to fix it :)
->=20
-> Impressive backlog :)
-> Geert, you replied on original discussion from 2015.
-
-Yeah, that threw me for a loop too ;-).  Took several double takes on that =
-one just to make sure none of the IB comments from Linus were related to an=
-ything current!
-
---
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
-
-
-
-
-
-
-
---Apple-Mail=_FD6ECC63-F649-4CBF-8094-031AB9B42D08
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl5T+1oACgkQuCajMw5X
-L93rug//f9+2IUWpedkq72QDxAiUsyYedKyHOBfUrJ79WM3RWNIVWcsxPwRoAYTB
-Np1aTtiKCx/5cDQIhmtl4YtsyekT9JjDcc9y0xeTByhMJWrBT8QVH/oiKuq9n1RZ
-XW7n+XS0O4h6WS0HauL/1ADXxnO+QqTD0n+SSFxZD9SR3zFsOObtLaOCTU0I/aL5
-wdVX3VCdjSZoedDTtkJDf+36tvVzVyCM9mqpiCMo2A2gdZlhEysn5zswf3HL+LJz
-KkEhv0uiivy7WSKZwE70zx/2rMXtZGpQIdGmKrAHwlyOHIKwW8bNCBc/oddbzEiL
-VLIeDQWnFxBmwPGgywGu/vW6Q80K8UheY48y2K1y29WicWaeP1tbWxdMPzTI1Ugy
-FEuCY4j/YVQqN8z6AMmX6xvjkjFMwKl/polSrFWEa9EFrfG0WVIc4r87T8RK2YAh
-PxJ24l88kQxMjX0xMin9RJaz20VwqhyfdhFTWN9WauftonLIHazkc24DC4eOS+R3
-UpVBY3ybch2+/tsNdgLZf10R9OsEC+DUjUrJiKyCxFl573kUwZM2ls7MctvGj8or
-Q7Q9ziMJ+rz8lQhxat20dMl6uW+1RwgO29dmVChNcoDEblgSeKezTJOP8bnbGai9
-zugOy3ewpgER1/aM/BehT4CbOsXt3u1BIUtm9VN7RH2VLYJPkIM=
-=tadj
------END PGP SIGNATURE-----
-
---Apple-Mail=_FD6ECC63-F649-4CBF-8094-031AB9B42D08--
-
+Should we add a directory? That way we can keep adding stuff into that
+one
+-- 
+~Vinod
