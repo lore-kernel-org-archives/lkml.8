@@ -2,107 +2,209 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE1C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE883C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20CC20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFB32080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIGP89Zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgBXKFl (ORCPT
+        id S1727282AbgBXKGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:05:41 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38492 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgBXKFl (ORCPT
+        Mon, 24 Feb 2020 05:06:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28699 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726452AbgBXKGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:05:41 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OA4jlq144248
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:05:40 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax37eew5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:05:40 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 24 Feb 2020 10:05:38 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 10:05:34 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01OA5XwJ43057346
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 10:05:33 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3699A52050;
-        Mon, 24 Feb 2020 10:05:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.160])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 57B3B5204E;
-        Mon, 24 Feb 2020 10:05:31 +0000 (GMT)
-Subject: Re: [PATCH v4 4/5] sched/pelt: Add a new runnable average signal
-To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, valentin.schneider@arm.com, hdanton@sina.com
-References: <20200221132715.20648-1-vincent.guittot@linaro.org>
- <20200221132715.20648-5-vincent.guittot@linaro.org>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Mon, 24 Feb 2020 15:35:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 24 Feb 2020 05:06:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582538810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ro7hbSrhbV6QQf7iIOQlkTIE8EO1Z4s/xtlyNWIthpI=;
+        b=PIGP89ZzXIAbbeD8F7yN6Mn5Yvnz3w9cCS8TwEKR9dF81aWOYS9XTZs0eqzaQKOnTTXzgq
+        dqnUEgQAb0WfXLKeiJukbMTntv/dY3f1Jp3f4GmHsMlpqxj21ZjYq1I0AliNsm4ZySi2rY
+        ulHSjEHFIhT/kJvNmpFE5gHwPRnvYeo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-zPPPEE_hNWime0EIS9X8Gg-1; Mon, 24 Feb 2020 05:06:48 -0500
+X-MC-Unique: zPPPEE_hNWime0EIS9X8Gg-1
+Received: by mail-wm1-f70.google.com with SMTP id f207so2227060wme.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:06:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ro7hbSrhbV6QQf7iIOQlkTIE8EO1Z4s/xtlyNWIthpI=;
+        b=aaGmlkg70WlODLkZCIj/VWtyM+U33EUauP8Ge7djq5uH8mmWDGanYUOVHO9t7CEOOm
+         6Xihptor4Ga2DiHTF4CjJn1JgMf/Z3L5masiKzQ2O+StBiS5nCDl2fsy4w/m1913KwmV
+         1X7LHbW3ucSnm+giDqZfv6wO5Dw0/XYU3mtx/87kmpesMXtiaTreXoqcu+Pq82XVfp7p
+         SGgaVyTCYxT81SsZJtji8pK2HGnt5oRnFYCYI4SoQjGAx87GkkB9aruKYAjEDb/shi61
+         IOX74EemCJdRKY2MpnhcEI+umqWj3iOL5Xm+DFTBjVX86Qy/JzJwZ2VCS0wSUwwLcmF/
+         H/RA==
+X-Gm-Message-State: APjAAAUzQxfxFkfOOGyLlk6wRKlIMi/qCKB5BvZFDTGSFK/0azXo/1RU
+        HtOzN/YihGy4QRaxnYGlgRasfazyS/EyQ0xj5G6FZQhuujy6U0NeZ3qhQFaG59ljLG6Xk5m9p6e
+        6U7BocK5pHK5JoJPj23IBoksk
+X-Received: by 2002:a05:600c:291e:: with SMTP id i30mr21938668wmd.40.1582538807575;
+        Mon, 24 Feb 2020 02:06:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx2oYNyKCIkJ9tYswwTh+AP5S3FN10V3XIgU+IuB437b4pbTmM9yfG3v2DmNnjXERGuyBka/g==
+X-Received: by 2002:a05:600c:291e:: with SMTP id i30mr21938634wmd.40.1582538807266;
+        Mon, 24 Feb 2020 02:06:47 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id k16sm18277255wru.0.2020.02.24.02.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 02:06:46 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH RESEND] KVM: X86: eliminate obsolete KVM_GET_CPUID2 ioctl
+In-Reply-To: <1582516032-5161-1-git-send-email-linmiaohe@huawei.com>
+References: <1582516032-5161-1-git-send-email-linmiaohe@huawei.com>
+Date:   Mon, 24 Feb 2020 11:06:45 +0100
+Message-ID: <87o8topadm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221132715.20648-5-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022410-0020-0000-0000-000003AD0AED
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022410-0021-0000-0000-000022051B71
-Message-Id: <1bf450ee-a731-794c-452c-654a508365b5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_02:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=793 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 phishscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240087
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+linmiaohe <linmiaohe@huawei.com> writes:
 
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>
+> KVM_GET_CPUID2 ioctl is straight up broken 
 
-On 2/21/20 6:57 PM, Vincent Guittot wrote:
-> Now that runnable_load_avg has been removed, we can replace it by a new
-> signal that will highlight the runnable pressure on a cfs_rq. This signal
-> track the waiting time of tasks on rq and can help to better define the
-> state of rqs.
+It may make sense to add the gory details from your previous patch where
+you were trying to fix it.
 
-[...]
-
-> @@ -5389,6 +5444,11 @@ static unsigned long cpu_load_without(struct rq *rq, struct task_struct *p)
->  	return load;
+> and not used anywhere. Remove it directly.
+>
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/cpuid.c           | 20 --------------------
+>  arch/x86/kvm/cpuid.h           |  3 ---
+>  arch/x86/kvm/x86.c             | 17 -----------------
+>  include/uapi/linux/kvm.h       |  1 -
+>  tools/include/uapi/linux/kvm.h |  1 -
+>  5 files changed, 42 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b1c469446b07..5e041a1282b8 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -261,26 +261,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  	return r;
 >  }
 >  
-> +static unsigned long cpu_runnable(struct rq *rq)
-> +{
-> +	return cfs_rq_runnable_avg(&rq->cfs);
-> +}
+> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+> -			      struct kvm_cpuid2 *cpuid,
+> -			      struct kvm_cpuid_entry2 __user *entries)
+> -{
+> -	int r;
+> -
+> -	r = -E2BIG;
+> -	if (cpuid->nent < vcpu->arch.cpuid_nent)
+> -		goto out;
+> -	r = -EFAULT;
+> -	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
+> -			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
+> -		goto out;
+> -	return 0;
+> -
+> -out:
+> -	cpuid->nent = vcpu->arch.cpuid_nent;
+> -	return r;
+> -}
+> -
+>  static __always_inline void cpuid_mask(u32 *word, int wordnum)
+>  {
+>  	reverse_cpuid_check(wordnum);
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 7366c618aa04..76555de38e1b 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -19,9 +19,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>  int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  			      struct kvm_cpuid2 *cpuid,
+>  			      struct kvm_cpuid_entry2 __user *entries);
+> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+> -			      struct kvm_cpuid2 *cpuid,
+> -			      struct kvm_cpuid_entry2 __user *entries);
+>  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>  	       u32 *ecx, u32 *edx, bool check_limit);
+>  
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..ddcc51b89e2c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4286,23 +4286,6 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  					      cpuid_arg->entries);
+>  		break;
+>  	}
+> -	case KVM_GET_CPUID2: {
+> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
+> -		struct kvm_cpuid2 cpuid;
+> -
+> -		r = -EFAULT;
+> -		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
+> -			goto out;
+> -		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
+> -					      cpuid_arg->entries);
+> -		if (r)
+> -			goto out;
+> -		r = -EFAULT;
+> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
+> -			goto out;
+> -		r = 0;
+> -		break;
+> -	}
+>  	case KVM_GET_MSRS: {
+>  		int idx = srcu_read_lock(&vcpu->kvm->srcu);
+>  		r = msr_io(vcpu, argp, do_get_msr, 1);
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4b95f9a31a2f..b37b8c1f300e 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1380,7 +1380,6 @@ struct kvm_s390_ucas_mapping {
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+> -#define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
 
-Why not move cpu-runnable definition to Patch 5? to get rid of
-warning: ‘cpu_runnable’ defined but not used [-Wunused-function]
-static unsigned long cpu_runnable(struct rq *rq)
+Even if we decide to be strong and remove KVM_GET_CPUID2 completely, I'd
+suggest we leave a comment here saying that it was deprecated. Leaving
+the branch in case (returning the same -EINVAL as passing an unsupported
+IOCTL) may also make sense (with a 'deprecated' comment of course).
 
-[...]
+>  /* Available with KVM_CAP_VAPIC */
+>  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
+>  /* Available with KVM_CAP_VAPIC */
+> diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+> index f0a16b4adbbd..431106dedd2c 100644
+> --- a/tools/include/uapi/linux/kvm.h
+> +++ b/tools/include/uapi/linux/kvm.h
+> @@ -1379,7 +1379,6 @@ struct kvm_s390_ucas_mapping {
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+> -#define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
+>  /* Available with KVM_CAP_VAPIC */
+>  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
+>  /* Available with KVM_CAP_VAPIC */
 
-- Parth
+-- 
+Vitaly
 
