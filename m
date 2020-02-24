@@ -2,116 +2,166 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB01C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E134BC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8CB20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F3920836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/go7qa3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DlXk+F01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgBXPM7 (ORCPT
+        id S1727877AbgBXPM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:12:59 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36285 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbgBXPM6 (ORCPT
+        Mon, 24 Feb 2020 10:12:58 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38028 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbgBXPM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 10:12:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so9796941wma.1;
-        Mon, 24 Feb 2020 07:12:57 -0800 (PST)
+Received: by mail-lf1-f68.google.com with SMTP id r14so7043226lfm.5;
+        Mon, 24 Feb 2020 07:12:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gnZbIHP1FiG4btjTXRKiUHIKc8RUvypNGZo2FLgFV/4=;
-        b=e/go7qa32ZdX4cc+CxDab7Bm7aY4iwstUWnVY48pNXeX5189cQAoMKsAwlJ7LQxyt3
-         qfKF2LBp5JkxBvarSJmK8cqRuJJHmSp0Mi3PhpMVWwrOokDZCpRaHUIdu67w7bvqGp35
-         Jrkal7Qj+lXOqtsA6WWB+AH3U+119IG9qEW07/jb0jKr+abkFfH4biAxCTKV/fiMqPBp
-         YdX09+8/TLyy29nfZJov0gzXWF8Syv3hTSTjJBhUpbL6sfHinQPo9gd15Ks9B9KF96xo
-         GuAy7+DV6KLhmKSJTmALk8wH5M5UNHf32zxbww2NjJXGg/GfJxT1mMJ2Gq4WS57+eQW2
-         0+WQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NqBC/JTdN8Jhgh77Z/JOfc6onLMRt8x9FgCKxFMToSA=;
+        b=DlXk+F01D5V+hjxzKQ+R4TXFvFhnIHeH8JPudsn9Hc5uGSSnb6hL1oOwSF/UQI8/5J
+         LXgke8razdDXQKYoi13jw/YPN92bqblOlA6Y51aXxJPatFlpBnhusaYfudq1IN2rO8z/
+         N/0rwF14JLfuEjEWDdWsx6Tgq+5ZfAswCl/t3G0enpLELlMWG2rXv3Gn0wYI88eGFUDW
+         II2Pvqv05AVF2dhOocRWn2OoyrISiVGduHWJ5+WFIVWuHxxnd9mktzdNhVxRP9ZJ5yEC
+         qRcrww1aDPyEeKhtFOMb8clpAZs/VbswkCfV44DrcV9DL0a01MW4WAk/DDbrDh4Am5at
+         XGqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gnZbIHP1FiG4btjTXRKiUHIKc8RUvypNGZo2FLgFV/4=;
-        b=Fnc5yRFchbAeCfXRRCdB/xAvscLWweoRGyGtWxRbZuXIv7k6Cgd+OwCEWqo8/oUGD+
-         4k92HllBk88wxB0AYc6xBiznRZbnjsmDmXubK4AssNuPAOB0OM127h9/IgpShH+HAOit
-         DwQwx06+pPUvIwtgzfZXRTMTuNC3GPInXjR7qZntP5QsY4Ekge2gi8ncp7Z9obwicpxa
-         mva8ft+ONvtDxf/gYBIr/LXPKxlZVKv515grbckqEHjxC0+MessXfrTnmA2FrPgB0soo
-         PvlAoeYqjbslcC9GQCpglGBB0ahuaQxJW54mYE6ikGsCLayVHIuk+DmH7alH3x46upJ+
-         wLXA==
-X-Gm-Message-State: APjAAAUxn4xfDHKO5nKZ/BkdLU8nvy4UeEl/gguI+LQkTB0oidvZG+up
-        Ya4MbCTmlPsC+MUnOeKN1os=
-X-Google-Smtp-Source: APXvYqwfFWI+BQvS6TR7EcjPyz80WZgjScVqfiQjb3eIsHUvDGvzae5fd0WZcynsnvs/JAP6sI5Fwg==
-X-Received: by 2002:a7b:c10e:: with SMTP id w14mr22994395wmi.61.1582557176474;
-        Mon, 24 Feb 2020 07:12:56 -0800 (PST)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id k16sm19433486wru.0.2020.02.24.07.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NqBC/JTdN8Jhgh77Z/JOfc6onLMRt8x9FgCKxFMToSA=;
+        b=B4H0gCch1Zlvx922RNcWjmm/VNwsYGC+XPE+TWizWGymFDHX8F17c5FYH7MqLpSkht
+         i54ucI+i/VnrKfwAX8PhrxEX5yWZe7LCba6q19fCRF8F429zwRIwVYGNk67AwDeZGZw3
+         7KKj9cdoLmKCygJmabFIpDw0ykgKeiC1zCAWLko4y7qTGnzI5VH2BuTyYs3nk7h0Uke8
+         5gmFuM102jlQ9nEqgLahkW44PlGB1NnGrStEtivtUWBaCm5a+AJXAd24d17UnIYhyimw
+         mW59SLcXfUXTTd7jTIN1y67uH81UqpgmwNbmrGmlVGO9vhnHn/rGuPuOyVqIz5SHBhil
+         WB4A==
+X-Gm-Message-State: APjAAAVwtQ51s83HOA+BOTYO/FcEZglQR8mS7IW5VMCzlhrjYEJta777
+        b5dUt6fSGggIA/9BrXvW8nFLTDeb
+X-Google-Smtp-Source: APXvYqzNiy/vS3fXWyrrePfi6+dUliAV53R0cVwJ2gTrHQw97/0yz1u9lSVF6dvqPO04KR50qsFTlg==
+X-Received: by 2002:a19:488c:: with SMTP id v134mr3302748lfa.66.1582557175316;
         Mon, 24 Feb 2020 07:12:55 -0800 (PST)
-Date:   Mon, 24 Feb 2020 16:12:54 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
-Message-ID: <20200224151254.GB2570205@ulmo>
-References: <20200224144048.6587-1-jonathanh@nvidia.com>
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 23sm6428466ljw.31.2020.02.24.07.12.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 07:12:54 -0800 (PST)
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
+ <20200221154318.GO10516@linaro.org>
+ <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
+ <20200221173649.GU10516@linaro.org>
+ <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
+ <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
+ <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
+ <21e3cc35-cc6b-5452-da93-bdaac43716c5@linaro.org>
+ <c13aa8f9-092b-55ca-742e-17db0184649b@gmail.com>
+ <f27e7974-f102-f9dc-6b48-9814b88465bf@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e818e844-a3b6-1493-b4d6-3bdac28f99c6@gmail.com>
+Date:   Mon, 24 Feb 2020 18:12:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
-Content-Disposition: inline
-In-Reply-To: <20200224144048.6587-1-jonathanh@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <f27e7974-f102-f9dc-6b48-9814b88465bf@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+22.02.2020 00:11, Daniel Lezcano пишет:
+> On 21/02/2020 21:54, Dmitry Osipenko wrote:
+>> 21.02.2020 23:48, Daniel Lezcano пишет:
+>>> On 21/02/2020 21:21, Dmitry Osipenko wrote:
+>>>> 21.02.2020 23:02, Daniel Lezcano пишет:
+>>>
+>>> [ ... ]
+>>>
+>>>>>>>>>> +
+>>>>>>>>>> +		/*
+>>>>>>>>>> +		 * The primary CPU0 core shall wait for the secondaries
+>>>>>>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
+>>>>>>>>>> +		 * The timeout value depends on the current CPU frequency,
+>>>>>>>>>> +		 * it takes about 40-150us  in average and over 1000us in
+>>>>>>>>>> +		 * a worst case scenario.
+>>>>>>>>>> +		 */
+>>>>>>>>>> +		do {
+>>>>>>>>>> +			if (tegra_cpu_rail_off_ready())
+>>>>>>>>>> +				return 0;
+>>>>>>>>>> +
+>>>>>>>>>> +		} while (ktime_before(ktime_get(), timeout));
+>>>>>>>>>
+>>>>>>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+>>>>>>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+>>>>>>>>> here but the function will hang 1.5s :/
+>>>>>>>>>
+>>>>>>>>> I suggest something like:
+>>>>>>>>>
+>>>>>>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
+>>>>>>>>> 		udelay(100);
+>>>>>>>>>
+>>>>>>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+>>>>>>>>> impact.
+>>>>>>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
+>>>>>>>> what's the difference?
+>>>>>>>
+>>>>>>> busy looping instead of register reads with all the hardware things involved behind.
+>>>>>>
+>>>>>> Please notice that this code runs only on an older Cortex-A9/A15, which
+>>>>>> doesn't support WFE for the delaying, and thus, CPU always busy-loops
+>>>>>> inside udelay().
+>>>>>>
+>>>>>> What about if I'll add cpu_relax() to the loop? Do you think it it could
+>>>>>> have any positive effect?
+>>>>>
+>>>>> I think udelay() has a call to cpu_relax().
+>>>>
+>>>> Yes, my point is that udelay() doesn't bring much benefit for us here
+>>>> because:
+>>>>
+>>>> 1. we want to enter into power-gated state as quick as possible and
+>>>> udelay() just adds an unnecessary delay
+>>>>
+>>>> 2. udelay() spins in a busy-loop until delay is expired, just like we're
+>>>> doing it in this function already
+>>>
+>>> In this case why not remove ktime_get() and increase the number of retries?
+>>
+>> Because the busy-loop performance depends on CPU's frequency, so we
+>> can't rely on a bare number of the retries.
+> 
+> Why not if computed in the worst case scenario?
 
---JYK4vJDZwFMowpUq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There are always at least a few dozens of microseconds to wait, so
+something like udelay(10) should be a bit better variant anyways.
 
-On Mon, Feb 24, 2020 at 02:40:48PM +0000, Jon Hunter wrote:
-> Deferred probe is an expected return value for devm_pwm_get(). Given
-> that the driver deals with it properly, there's no need to output a
-> warning that may potentially confuse users.
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/regulator/pwm-regulator.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-
---JYK4vJDZwFMowpUq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5T5/YACgkQ3SOs138+
-s6F1tA//XZ0O/MXj5NzYNLezzQBOO9AP+EWE7TGAMZi9h9OgaOiydAtBEKusD2ds
-Wnkcuo+5xB/9HDTlLSLgsLbAtCfaxbKXJOnMiXkghKaBH1K6BSbKAGZWncgDKz8s
-c6mFgFAhUyVDxY7UHz06cqrtJ3sM2HZbsTVXA4RMC5GZDx79TR17NWAchdMOMwKt
-OAWjCFP44ycFN2yq7qwjYn3tEs9fvKMPR0Yrj233ExjadK6f8VltEGG0kWWtxRIy
-clbiI1qBTiDs5Z6NdSGD/ma0XmVUy258KlQ3pljJhaE8S8SxOWgTCd+UpgXZtlWD
-mW9kqwMrWPpbw5Wtn2P89RL+pinUWGz05HFQPNqBbakRELqcvIRKxfyZfR+gdIjl
-u+DaYU9dtk83VJZc3fwt7gMcCLpm56LhgxYmIkWRe50DHuq0s7aQklmDVZmaHv6x
-rw8kv+rca3NFQPgbivAHASGOsqqHzTB7QgHZ0T+51PJPMOaQ7SjWBZMn4s/Dgco1
-CUtFUPyI8N+MEE0FcLe1k7N2oqbrOr5e9ASpOYccbmkIBVNApNJrydhVWFI3ZE8W
-tUj6tyfqDn3PnpTw2JtjZYNLJUyccpn/RXqXi5+rHPgSVD7b611D7SBSOSR5YyvC
-k5TWAbjhI230BT9eBRYkO/vCNA2JPwd4HGZZY9Qc6tfPFvx5778=
-=mAqf
------END PGP SIGNATURE-----
-
---JYK4vJDZwFMowpUq--
+> Anyway, I'll let you give a try.
+Turned out that udelay(10) is noticeably better when system is running
+on a lower freqs in comparison to ktime_get(). I'll switch to udelay in
+v10, thank you very much for the suggestion!
