@@ -2,88 +2,240 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9943AC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B537CC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA3920836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8206420836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582566977;
+	bh=ac+i1dULKGVcyS8d9Ec65ZVoRTNa7Tk2Y/4C94DYHIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GASw1bt32ZeSrHASEH5yIXgxLjx9Jt+tCLwZhov3EIDv0zqnHXqRiK17IjpMVJr+B
+	 2JlB+QQpJpcFc7KbH4Pbg+hvjOonXfzkOacCqOMU/kH+ZvFPAF52piyK9nfYtAKspR
+	 ylziApitteTSTjdweTr9Ic5XTMTyyKAnw8R64KRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgBXR4H (ORCPT
+        id S1727903AbgBXR4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:56:07 -0500
-Received: from verein.lst.de ([213.95.11.211]:39459 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbgBXR4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:56:06 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BF32268B20; Mon, 24 Feb 2020 18:56:03 +0100 (CET)
-Date:   Mon, 24 Feb 2020 18:56:03 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, ira.weiny@intel.com,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200224175603.GE7771@lst.de>
-References: <20200221004134.30599-1-ira.weiny@intel.com> <20200221004134.30599-8-ira.weiny@intel.com> <20200221174449.GB11378@lst.de> <20200221224419.GW10776@dread.disaster.area>
+        Mon, 24 Feb 2020 12:56:16 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33607 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbgBXR4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:56:15 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q81so9818079oig.0;
+        Mon, 24 Feb 2020 09:56:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YIkdD31bYp03upGvFS6JQiE90wpfUQKAjIeFAC5gg5U=;
+        b=CeKApxK+gyenHAfGaVsHA8s4L8mN/9EF5ldvBGNmwjaepltE5w+Eah79hJoi8IZggo
+         mJJLseNRfgAV18BgzZJMKtPsotD7DslaeRyvCsxJLCqcpyHzU4Dbhoywio8TxZaz+Okg
+         4el9ZaiKuJcZA6daho4JJBKTzn2NB2MvjkrpCySPRi/VspfJR4HeLMC1ifr76Y5gDfVz
+         QV0VUR5sRIUPUikuCO+9Lif2TKiIliiKtUUhlY5GtQMGpRpwIbPddTlWo9q6kP5cUT5G
+         nwlWowvIucBO57ZqkQPQNCHeC8oVbgGpWojgW3eqG7PZtJ/QkpcO16Dv1obiqZjA3Vw/
+         5vfQ==
+X-Gm-Message-State: APjAAAWmo7WBsg2FItdbbNW7A4zIPfOPm1upi+DLhH7rkztmjBzYpGdk
+        2BhVvcv+kVHi6wkT/S2WNOYQni2kGvAm+ZHvu88=
+X-Google-Smtp-Source: APXvYqwkZyLoQysqRPUYbaGABE/a7gGjukUY/U2cDRw3W7lwKCfYD1fdCwMfodOKZda7l3h4WxMqo9fbfaGQfqXPmQA=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr231243oiy.110.1582566975064;
+ Mon, 24 Feb 2020 09:56:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221224419.GW10776@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200224172110.4121492-1-christian.brauner@ubuntu.com> <20200224172110.4121492-7-christian.brauner@ubuntu.com>
+In-Reply-To: <20200224172110.4121492-7-christian.brauner@ubuntu.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 24 Feb 2020 18:56:03 +0100
+Message-ID: <CAJZ5v0gDuP33TFNocsSgTD4QFQTQeczwWUXegU2GDzMAFq5Vvg@mail.gmail.com>
+Subject: Re: [PATCH v4 6/9] drivers/base/power: add dpm_sysfs_change_owner()
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 09:44:19AM +1100, Dave Chinner wrote:
-> > I am very much against this.  There is a reason why we don't support
-> > changes of ops vectors at runtime anywhere else, because it is
-> > horribly complicated and impossible to get right.  IFF we ever want
-> > to change the DAX vs non-DAX mode (which I'm still not sold on) the
-> > right way is to just add a few simple conditionals and merge the
-> > aops, which is much easier to reason about, and less costly in overall
-> > overhead.
-> 
-> *cough*
-> 
-> That's exactly what the original code did. And it was broken
-> because page faults call multiple aops that are dependent on the
-> result of the previous aop calls setting up the state correctly for
-> the latter calls. And when S_DAX changes between those calls, shit
-> breaks.
+On Mon, Feb 24, 2020 at 6:21 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> Add a helper to change the owner of a device's power entries. This
+> needs to happen when the ownership of a device is changed, e.g. when
+> moving network devices between network namespaces.
+> This function will be used to correctly account for ownership changes,
+> e.g. when moving network devices between network namespaces.
+>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+> /* v2 */
+> - "Rafael J. Wysocki" <rafael@kernel.org>:
+>   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
+>      if (device_can_wakeup(dev)) check since the former can never be true if
+>      the latter is false.
+>
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
+>     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
+>     when this config option is set.
+>
+> /* v3 */
+> -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+>    - Add explicit uid/gid parameters.
+>
+> /* v4 */
+> - "Rafael J. Wysocki" <rafael@kernel.org>:
+>    - Remove in-function #ifdef in favor of separate helper that is a nop
+>      whenver !CONFIG_PM_SLEEP.
+> ---
+>  drivers/base/core.c        |  4 +++
+>  drivers/base/power/power.h |  3 ++
+>  drivers/base/power/sysfs.c | 61 +++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 67 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 988f34ce2eb0..fb8b7990f6fd 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3552,6 +3552,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+>         if (error)
+>                 goto out;
+>
+> +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
+> +       if (error)
+> +               goto out;
+> +
+>  #ifdef CONFIG_BLOCK
+>         if (sysfs_deprecated && dev->class == &block_class)
+>                 goto out;
+> diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+> index 444f5c169a0b..54292cdd7808 100644
+> --- a/drivers/base/power/power.h
+> +++ b/drivers/base/power/power.h
+> @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
+>  extern void pm_qos_sysfs_remove_flags(struct device *dev);
+>  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
+>  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
+> +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
+>
+>  #else /* CONFIG_PM */
+>
+> @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
+>
+>  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
+>  static inline void dpm_sysfs_remove(struct device *dev) {}
+> +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
+> +                                        kgid_t kgid) { return 0; }
+>
+>  #endif
+>
+> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> index d7d82db2e4bc..d2955784d98d 100644
+> --- a/drivers/base/power/sysfs.c
+> +++ b/drivers/base/power/sysfs.c
+> @@ -480,6 +480,20 @@ static ssize_t wakeup_last_time_ms_show(struct device *dev,
+>         return enabled ? sprintf(buf, "%lld\n", msec) : sprintf(buf, "\n");
+>  }
+>
+> +static int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
+> +                                        kgid_t kgid)
+> +{
+> +       int rc = 0;
+> +
+> +       if (dev->power.wakeup && dev->power.wakeup->dev) {
+> +               rc = device_change_owner(dev->power.wakeup->dev, kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       return rc;
 
-No, the original code was broken because it didn't serialize between
-DAX and buffer access.
+Why not to do
 
-Take a step back and look where the problems are, and they are not
-mostly with the aops.  In fact the only aop useful for DAX is
-is ->writepages, and how it uses ->writepages is actually a bit of
-an abuse of that interface.
+if (dev->power.wakeup && dev->power.wakeup->dev)
+        return device_change_owner(dev->power.wakeup->dev, kuid, kgid);
 
-So what we really need it just a way to prevent switching the flag
-when a file is mapped, and in the normal read/write path ensure the
-flag can't be switch while I/O is going on, which could either be
-done by ensuring it is only switched under i_rwsem or equivalent
-protection, or by setting the DAX flag once in the iocb similar to
-IOCB_DIRECT.
+return 0;
 
-And they easiest way to get all this done is as a first step to
-just allowing switching the flag when no blocks are allocated at
-all, similar to how the rt flag works.  Once that works properly
-and use cases show up we can relax the requirements, and we need
-to do that in a way without bloating the inode and various VFS
-code paths, as DAX is a complete fringe feature, and ѕwitching
-the flag and runtime is the fringe of a fringe.  It just isn't worth
-bloating the inode and wasting tons of developer time on it.
+here instead?
+
+> +}
+> +
+>  static DEVICE_ATTR_RO(wakeup_last_time_ms);
+>
+>  #ifdef CONFIG_PM_AUTOSLEEP
+> @@ -501,7 +515,13 @@ static ssize_t wakeup_prevent_sleep_time_ms_show(struct device *dev,
+>
+>  static DEVICE_ATTR_RO(wakeup_prevent_sleep_time_ms);
+>  #endif /* CONFIG_PM_AUTOSLEEP */
+> -#endif /* CONFIG_PM_SLEEP */
+> +#else /* CONFIG_PM_SLEEP */
+> +static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
+> +                                               kgid_t kgid)
+> +{
+> +       return 0;
+> +}
+> +#endif
+>
+>  #ifdef CONFIG_PM_ADVANCED_DEBUG
+>  static ssize_t runtime_usage_show(struct device *dev,
+> @@ -684,6 +704,45 @@ int dpm_sysfs_add(struct device *dev)
+>         return rc;
+>  }
+>
+> +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> +{
+> +       int rc;
+> +
+> +       if (device_pm_not_required(dev))
+> +               return 0;
+> +
+> +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+> +       if (rc)
+> +               return rc;
+> +
+> +       if (pm_runtime_callbacks_present(dev)) {
+> +               rc = sysfs_group_change_owner(
+> +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       if (device_can_wakeup(dev)) {
+> +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
+> +                                             kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +
+> +               rc = dpm_sysfs_wakeup_change_owner(dev, kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       if (dev->power.set_latency_tolerance) {
+> +               rc = sysfs_group_change_owner(
+> +                       &dev->kobj, &pm_qos_latency_tolerance_attr_group, kuid,
+> +                       kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +       return 0;
+> +}
+> +
+>  int wakeup_sysfs_add(struct device *dev)
+>  {
+>         return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> --
+> 2.25.1
+>
