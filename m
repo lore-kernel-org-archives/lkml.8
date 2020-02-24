@@ -2,111 +2,205 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3EBC35669
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B541FC35669
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C6F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367820658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VfL//+FE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbgBXERv (ORCPT
+        id S1727238AbgBXEXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:17:51 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727202AbgBXERu (ORCPT
+        Sun, 23 Feb 2020 23:23:15 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43538 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgBXEXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:17:50 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O4EX5S109773
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:17:49 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1qbyvd1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:17:49 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Mon, 24 Feb 2020 04:17:47 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 04:17:45 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O4Hh3P34341226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 04:17:43 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5100B5205A;
-        Mon, 24 Feb 2020 04:17:43 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.109.208.151])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id A19D55204E;
-        Mon, 24 Feb 2020 04:17:41 +0000 (GMT)
-Subject: Re: [PATCH v2 0/5] Track and expose idle PURR and SPURR ticks
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Mon, 24 Feb 2020 09:47:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 23 Feb 2020 23:23:15 -0500
+Received: by mail-lf1-f68.google.com with SMTP id s23so5778822lfs.10
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 20:23:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Pt6X+M8P6dFxT4s+RSDntz1k7U0jYotP7Nm27O/PO30=;
+        b=VfL//+FEVZm5RDI7mmgGD7uzsh1Omu0HIAEOuDHhgNWvLikk21NIsxBl9aEjd/JInL
+         6elbKWTGq/Enx4DQP6ZZOz/iGObmPL7BaV8V2HdRPz9DKwpe9rxiHXlb7Z8GMbMpKJze
+         M8ES2O34HTz6V4DoeCrpiw3U4FOT1ShYlOsVjQYJ4EQkPj7pePt0xa1tL2sdWKnCqOmT
+         czkCZSin+DvoPDVzcoAKcjDZkPzr4Zx5EsdglKiA9m51a+UNlB0vNSpa7rHC2ayYOg+f
+         fd2h9eXR/84hfXOgzPaQf3AfZZwjAiusKj2qRb8HwLVTbZcEb8nsrAcGS9uxElEJKCRh
+         NlrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pt6X+M8P6dFxT4s+RSDntz1k7U0jYotP7Nm27O/PO30=;
+        b=l6wZhm5pNnw/wHwE60/ik61kL7T6FyEgmYqtvKZledKQM2++PCTFmtIHJQfAZ0Qkyb
+         jPw1MOXwSbdRoj+Ns7pfG6m/U2r67xv+/Bxm8fksSw5lsT5cAftmlIn2QdVBgXr7g2jT
+         wg3raaP7PSEk/uRCeH1vlbwt3M6KMOR5I8qjjeu9zd6QIwrkcmgGo6h1grCOgAu7OqcS
+         FoRk6iOj9XUhHYawY46ZaCrIBG+s7l/88nZ/GGdHRLbYzhxLNo/YJNxrNiTjt3P4dWyQ
+         MZT4OfA0uyY5bhWy9vCmxnKe8ASVdRVsDtgR6p8XkfJa6Lo/10+vunxoNe6CQcrg30t4
+         Cd+g==
+X-Gm-Message-State: APjAAAWdb5StIDTSTZ/ymozHx+WL1hzaRQbaKZpDEQwc2pasB4k4haq1
+        5iNbOVLPoe7VE9hGkYhvwcoI3c2kWrXq/+9FTxZ8Eg==
+X-Google-Smtp-Source: APXvYqyxRLzyklshoJ5tT+wQkjYce6UzqZJxkoavKgN/1M6ZmRtjIadS4T5V+aHLwy+bvzEKFyPUOcAPm6w5qow9PuU=
+X-Received: by 2002:ac2:4467:: with SMTP id y7mr3961379lfl.167.1582518192775;
+ Sun, 23 Feb 2020 20:23:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022404-0012-0000-0000-00000389A3F2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022404-0013-0000-0000-000021C641DF
-Message-Id: <ee85a602-952a-bda7-aeef-eb0cc22d091c@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-23_07:2020-02-21,2020-02-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1011 impostorscore=0 suspectscore=0 phishscore=0
- mlxlogscore=805 bulkscore=0 mlxscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240035
+References: <20200221072250.732482588@linuxfoundation.org> <20200223154121.GC131562@kroah.com>
+ <20200223173122.GA485503@kroah.com>
+In-Reply-To: <20200223173122.GA485503@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 24 Feb 2020 09:53:01 +0530
+Message-ID: <CA+G9fYuBb14Ce6TauWj-Kd3n6jy9vgf9HE93MbwgqL6B_O4Pow@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/191] 4.19.106-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 10:48 AM, Gautham R. Shenoy wrote:
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Sun, 23 Feb 2020 at 23:01, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> Ok, -rc3 is now out, hopefully now things will work:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.106-rc3.gz
 
-[...]
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> 
-> Gautham R. Shenoy (5):
->   powerpc: Move idle_loop_prolog()/epilog() functions to header file
->   powerpc/idle: Add accessor function to always read latest idle PURR
->   powerpc/pseries: Account for SPURR ticks on idle CPUs
->   powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
->   Documentation: Document sysfs interfaces purr, spurr, idle_purr,
->     idle_spurr
-> 
->  Documentation/ABI/testing/sysfs-devices-system-cpu | 39 ++++++++++
->  arch/powerpc/include/asm/idle.h                    | 88 ++++++++++++++++++++++
->  arch/powerpc/kernel/sysfs.c                        | 54 ++++++++++++-
->  arch/powerpc/platforms/pseries/setup.c             |  8 +-
->  drivers/cpuidle/cpuidle-pseries.c                  | 39 ++--------
->  5 files changed, 191 insertions(+), 37 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/idle.h
-> 
+Summary
+------------------------------------------------------------------------
 
-For the whole series:
+kernel: 4.19.106-rc3
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 119e922a87ef462ac31618f71713a252895e3f11
+git describe: v4.19.105-185-g119e922a87ef
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.105-185-g119e922a87ef
 
-Tested-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+No regressions (compared to build v4.19.105)
 
--- 
-Kamalesh
+No fixes (compared to build v4.19.105)
 
+Ran 26767 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
