@@ -2,222 +2,151 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA3BC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939BFC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D3420732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEF920732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IstCl/6q"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jkBqrT/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgBXKnv (ORCPT
+        id S1727423AbgBXKn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:43:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29367 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgBXKnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:43:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582541028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=4rv8UKgCFdqVcsiaIyB/vNEEElHAiCNnjs4DcoZCTmk=;
-        b=IstCl/6qJH4YdsI7cM0yOqvsmVWVnUn68j/nLZWSNEiwbIaSC/xUOBWOKDjqvdL9Zl243S
-        e1YBBX/JXsmLOrSQ8lkCy6UvKFwbwJg13/vHvTqAJdMI2phcjJJcXsAF7raxOe/I9+Zztf
-        qEe4h5Ssq7Xd6zQdgnMHbgC1vgcOIKo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-EFnnzn13P3alW8-0kL18Sw-1; Mon, 24 Feb 2020 05:43:45 -0500
-X-MC-Unique: EFnnzn13P3alW8-0kL18Sw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70E1518A6EC3;
-        Mon, 24 Feb 2020 10:43:43 +0000 (UTC)
-Received: from [10.36.118.193] (unknown [10.36.118.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 499BD82063;
-        Mon, 24 Feb 2020 10:43:37 +0000 (UTC)
-Subject: Re: [PATCH] mm, hotplug: fix page online with DEBUG_PAGEALLOC
- compiled but not enabled
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Qian Cai <cai@lca.pw>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        stable@vger.kernel.org
-References: <20200224094651.18257-1-vbabka@suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <48d481b7-3acd-3cf0-e27f-17755272df9e@redhat.com>
-Date:   Mon, 24 Feb 2020 11:43:35 +0100
+        Mon, 24 Feb 2020 05:43:56 -0500
+Received: from mail-bn8nam11on2077.outbound.protection.outlook.com ([40.107.236.77]:6143
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726509AbgBXKnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:43:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=InIcyf/f3h0uKiAwqciaV8WgDFr2Ah9dwUedCSA1fRKEVlLc4vIUGICxEqnfujncwUgUGacLDp92cTg4q4taRqylf/cBmcsruoyg8Dx8WgYtOeZjY2X25sEnqKfsFknL2Wokyq9du/NyXnIeXy2I+DNci34asZc7LaQJ7zyz9j2/kH3Ec3LwvRUo7fNFZuJKRzvS1/ZmZ+ULRw8/1Aq65VDL51XoTvYjUN0OtfZTOwY4XkSD4xtBvgnHlCfojg7DiZRHGngQptoBmnl4t4BUlv26dddm6yYAGaR8wZ8emu3v/lAlj6oUFC8meewqXLnwKM+24SucBycXlPrg2D9wPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xLyHCXlw0vEstX3sZEb/nCTTlRO94eC6l+z+fGiaCW0=;
+ b=eTTovClw+luNM+uCbMEYsstcl+/3bKC9kQ0BOsWvnLHCd0SmYznp14OzKtLpaUjiBYX/5UGB/vQdeIvSIc+HCci4vYDc1YoIVm8fZSeRH0/bi7El57Fj8iXU1uekj+F9hRgC7XoFRufVjayzTZ/TLm6TZmdgWXzfRvdArBBkkWVhUCRUjJtfqhM/Et52Bc2bjiePiLl54HuMX2kzO/RPgchpGXJoYudJimuvATM/aPhWIuYQ6GvYbw4V9Yqd8++pCY8AAX0tR98IPwOeAs3szI0pvFZe/evd7VLAWB4pq5gUeMgDcugV0Wq294PcTIXbZs9eMT6LV+2yar4ewTwL2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xLyHCXlw0vEstX3sZEb/nCTTlRO94eC6l+z+fGiaCW0=;
+ b=jkBqrT/S+P25tL6vf0XOF2htpbKEigWSq5SdwApU7vT8bR+ACj8QoZpES6TB2TMEO5aUcfbFmLbivR3Nv28KV06hEp/pKPDpputxcXC2dMCECXV3ETrdo5T37ABP407n9IbldT3XvfRpLvWlNkMS/6mD4AwsPi/WEwI6jT+KIuM=
+Received: from SN4PR0201CA0011.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::21) by DM6PR02MB4186.namprd02.prod.outlook.com
+ (2603:10b6:5:9a::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
+ 2020 10:43:52 +0000
+Received: from CY1NAM02FT038.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::200) by SN4PR0201CA0011.outlook.office365.com
+ (2603:10b6:803:2b::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend
+ Transport; Mon, 24 Feb 2020 10:43:52 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT038.mail.protection.outlook.com (10.152.74.217) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
+ via Frontend Transport; Mon, 24 Feb 2020 10:43:51 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j6BDL-0004JU-FA; Mon, 24 Feb 2020 02:43:51 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j6BDG-0002hQ-C0; Mon, 24 Feb 2020 02:43:46 -0800
+Received: from [172.30.17.108]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1j6BDC-0002fe-29; Mon, 24 Feb 2020 02:43:42 -0800
+Subject: Re: [PATCH 2/2] arch: arm64: xilinx: Make zynqmp_firmware driver
+ optional
+To:     Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>
+References: <1578596764-29351-1-git-send-email-jolly.shah@xilinx.com>
+ <1578596764-29351-3-git-send-email-jolly.shah@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <e17afc7e-c070-6134-29cb-9fa7b855bf96@xilinx.com>
+Date:   Mon, 24 Feb 2020 11:43:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200224094651.18257-1-vbabka@suse.cz>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <1578596764-29351-3-git-send-email-jolly.shah@xilinx.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(336012)(186003)(6666004)(5660300002)(31696002)(70586007)(7416002)(70206006)(8936002)(356004)(4326008)(36756003)(107886003)(31686004)(26005)(316002)(8676002)(2616005)(2906002)(478600001)(44832011)(81156014)(81166006)(9786002)(426003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4186;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 42b4c8c4-2eca-4577-5e9c-08d7b9167047
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4186:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB4186B7D7F569CFCA0D809E08C6EC0@DM6PR02MB4186.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-Forefront-PRVS: 032334F434
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Qcqv0Z6+k8Nm7GPxjYZhXGXbs91/G9cyFTVoxhw+aXrmgFuMSJl7Am0/Yl0djdPzg3FUOZ9Q30QdHgF5gz4BuoGGn/1lCc1DOSMH1Dm3giJiBaYdD/xivPp7mubItoeQ2fMn4pNEvUcKR4pz6KDol7/nRs3BZHn/o3BAcTIfMZEorIppLTGMl0tVcOunHWyqgi0akryjAk1VAPdN8nrKbSHcK+/Cxxf7l0H/ZLfslLGqoTahnsyV6i9A7YkJA9ACgiZX9GoNWRNqonVDZApeYZ0g3hGFBsdEnrRkkqQV9up0CFeur9CgwQlMK1MQzxWybLIUHoy2YLGNQvOybs1bWxLImqmEPr8HQxPQmNA2rBOdySPALhcqB9z3ksUgoh3OXCMdxsQ8vJJhHXW/Hca6Qo+IN4gRdkgdc3c3Nd9F8vBC6OJBTsxQPIDFFZo4O8G54fwolw5VkxxITlASaU95PeGijYKRa5/xKIXxS1grPBwRktRU5YrkQv2r7ddu9JOF
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 10:43:51.9078
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42b4c8c4-2eca-4577-5e9c-08d7b9167047
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.02.20 10:46, Vlastimil Babka wrote:
-> Commit cd02cf1aceea ("mm/hotplug: fix an imbalance with DEBUG_PAGEALLOC") fixed
-> memory hotplug with debug_pagealloc enabled, where onlining a page goes through
-> page freeing, which removes the direct mapping. Some arches don't like when the
-> page is not mapped in the first place, so generic_online_page() maps it first.
-> This is somewhat wasteful, but better than special casing page freeing fast
-> paths.
+On 09. 01. 20 20:06, Jolly Shah wrote:
+> From: Tejas Patel <tejas.patel@xilinx.com>
 > 
-> The commit however missed that DEBUG_PAGEALLOC configured doesn't mean it's
-> actually enabled. One has to test debug_pagealloc_enabled() since 031bc5743f15
-> ("mm/debug-pagealloc: make debug-pagealloc boottime configurable"), or alternatively
-> debug_pagealloc_enabled_static() since 8e57f8acbbd1 ("mm, debug_pagealloc:
-> don't rely on static keys too early"), but this is not done.
-> 
-> As a result, a s390 kernel with DEBUG_PAGEALLOC configured but not enabled
-> will crash:
-> 
-> Unable to handle kernel pointer dereference in virtual kernel address space
-> Failing address: 0000000000000000 TEID: 0000000000000483
-> Fault in home space mode while using kernel ASCE.
-> AS:0000001ece13400b R2:000003fff7fd000b R3:000003fff7fcc007 S:000003fff7fd7000 P:000000000000013d
-> Oops: 0004 ilc:2 [#1] SMP
-> CPU: 1 PID: 26015 Comm: chmem Kdump: loaded Tainted: GX 5.3.18-5-default #1 SLE15-SP2 (unreleased)
-> Krnl PSW : 0704e00180000000 0000001ecd281b9e (__kernel_map_pages+0x166/0x188)
-> R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-> Krnl GPRS: 0000000000000000 0000000000000800 0000400b00000000 0000000000000100
-> 0000000000000001 0000000000000000 0000000000000002 0000000000000100
-> 0000001ece139230 0000001ecdd98d40 0000400b00000100 0000000000000000
-> 000003ffa17e4000 001fffe0114f7d08 0000001ecd4d93ea 001fffe0114f7b20
-> Krnl Code: 0000001ecd281b8e: ec17ffff00d8 ahik %r1,%r7,-1
-> 0000001ecd281b94: ec111dbc0355 risbg %r1,%r1,29,188,3
->> 0000001ecd281b9e: 94fb5006 ni 6(%r5),251
-> 0000001ecd281ba2: 41505008 la %r5,8(%r5)
-> 0000001ecd281ba6: ec51fffc6064 cgrj %r5,%r1,6,1ecd281b9e
-> 0000001ecd281bac: 1a07 ar %r0,%r7
-> 0000001ecd281bae: ec03ff584076 crj %r0,%r3,4,1ecd281a5e
-> Call Trace:
-> [<0000001ecd281b9e>] __kernel_map_pages+0x166/0x188
-> [<0000001ecd4d9516>] online_pages_range+0xf6/0x128
-> [<0000001ecd2a8186>] walk_system_ram_range+0x7e/0xd8
-> [<0000001ecda28aae>] online_pages+0x2fe/0x3f0
-> [<0000001ecd7d02a6>] memory_subsys_online+0x8e/0xc0
-> [<0000001ecd7add42>] device_online+0x5a/0xc8
-> [<0000001ecd7d0430>] state_store+0x88/0x118
-> [<0000001ecd5b9f62>] kernfs_fop_write+0xc2/0x200
-> [<0000001ecd5064b6>] vfs_write+0x176/0x1e0
-> [<0000001ecd50676a>] ksys_write+0xa2/0x100
-> [<0000001ecda315d4>] system_call+0xd8/0x2c8
-> 
-> Fix this by checking debug_pagealloc_enabled_static() before calling
-> kernel_map_pages(). Backports for kernel before 5.5 should use
-> debug_pagealloc_enabled() instead. Also add comments.
-> 
-> Fixes: cd02cf1aceea ("mm/hotplug: fix an imbalance with DEBUG_PAGEALLOC")
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> Reported-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: <stable@vger.kernel.org>
-> ---
->  include/linux/mm.h  | 4 ++++
->  mm/memory_hotplug.c | 8 +++++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git include/linux/mm.h include/linux/mm.h
-> index 52269e56c514..c54fb96cb1e6 100644
-> --- include/linux/mm.h
-> +++ include/linux/mm.h
-> @@ -2715,6 +2715,10 @@ static inline bool debug_pagealloc_enabled_static(void)
->  #if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
->  extern void __kernel_map_pages(struct page *page, int numpages, int enable);
->  
-> +/*
-> + * When called in DEBUG_PAGEALLOC context, the call should most likely be
-> + * guarded by debug_pagealloc_enabled() or debug_pagealloc_enabled_static()
-> + */
->  static inline void
->  kernel_map_pages(struct page *page, int numpages, int enable)
->  {
-> diff --git mm/memory_hotplug.c mm/memory_hotplug.c
-> index 0a54ffac8c68..19389cdc16a5 100644
-> --- mm/memory_hotplug.c
-> +++ mm/memory_hotplug.c
-> @@ -574,7 +574,13 @@ EXPORT_SYMBOL_GPL(restore_online_page_callback);
->  
->  void generic_online_page(struct page *page, unsigned int order)
->  {
-> -	kernel_map_pages(page, 1 << order, 1);
-> +	/*
-> +	 * Freeing the page with debug_pagealloc enabled will try to unmap it,
-> +	 * so we should map it first. This is better than introducing a special
-> +	 * case in page freeing fast path.
-> +	 */
-> +	if (debug_pagealloc_enabled_static())
-> +		kernel_map_pages(page, 1 << order, 1);
->  	__free_pages_core(page, order);
->  	totalram_pages_add(1UL << order);
->  #ifdef CONFIG_HIGHMEM
-> 
+> Zynqmp firmware driver requires firmware to be present in system.
+> Zynqmp firmware driver will crash if firmware is not present in system.
+> For example single arch QEMU, may not have firmware, with such setup
+> Linux booting fails.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
 
--- 
+I think that moving it to firmware Kconfig is good solution. What it is
+wrong is that description above where I agree with Sudeep.
+It means.
+1. User should have option to disable zynqmp firmware driver which is
+what this patch allows. It means if someone decides to use different
+firmware mechanism it can do it directly by simply y/n option.
+
+2. Autodetection of PMUFW presence is another feature which could be
+implemented to have this driver enabled but different mechanism can be
+used.
+
+3. Doing this because of missing feature in QEMU is IMHO wrong. QEMU
+should be fixed and then you don't have any issue if this should be used
+or not.
+
+Just a summary. Remove that QEMU example from commit message and talk to
+Edgar to fix single QEMU solution to have that regs mapped all the time.
+
 Thanks,
-
-David / dhildenb
+Michal
 
