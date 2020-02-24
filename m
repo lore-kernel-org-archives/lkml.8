@@ -2,106 +2,140 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_RHS_DOB,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A81FC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA2BC11D24
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A96520714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UwKpSGkP"
+	by mail.kernel.org (Postfix) with ESMTP id 30D272072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgBXHOb (ORCPT
+        id S1727237AbgBXHPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:14:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20298 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725792AbgBXHOb (ORCPT
+        Mon, 24 Feb 2020 02:15:45 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37126 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgBXHPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:14:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582528470;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=shbhF5QPWUZF4FXtBT/Y7FxOTeIlf15w2VQZ89Q+vRY=;
-        b=UwKpSGkPGh7UNxT74qJIn4FObT7Wn/jQ1aIzuxUWRXWRnUHq3XnFxTlfjQ4DabZcXo6bfY
-        2mU1CRKQiuKw5872w2bUqTEiOkfyserutaJ48qHePvl7vR5uQgptb1iqDGe5iWCZHv+rOB
-        m6/v2bZIVfpsuaqi+1peTzwWhWoQhu4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-OTADVYNTP1KgIKmAqwLMEg-1; Mon, 24 Feb 2020 02:14:28 -0500
-X-MC-Unique: OTADVYNTP1KgIKmAqwLMEg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC3CE185734F;
-        Mon, 24 Feb 2020 07:14:26 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-13-44.pek2.redhat.com [10.72.13.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 336B15C105;
-        Mon, 24 Feb 2020 07:14:23 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 15:14:19 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH] x86/kexec: do not reserve kexec setup_data in kexec e820
- table
-Message-ID: <20200224071419.GA18237@dhcp-128-65.nay.redhat.com>
-References: <20200212110424.GA2938@dhcp-128-65.nay.redhat.com>
+        Mon, 24 Feb 2020 02:15:44 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so3682841plz.4;
+        Sun, 23 Feb 2020 23:15:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E3dZo4uyTHIfwZ9buqAY9fgJTMYKM8S4o+B958cH0P0=;
+        b=ehE+U/VgTg7m+pmMZp4h+iqFSuLlZSWHaLtxGJqjla6QPNjUUZuEuKw/tCz7PuBTnk
+         CBq5+x6flfuP/ns7aBp/o/P3ZMlFcU77agAVttX9uv783bO6DpT42S1SljjagYHrHdqh
+         sNZGAKrhFmMlwxDpE6qLBgN0CAAjZvZutJwUzlLqevQN6XIlptdqGbFaJBW7K38PDSet
+         rNgayJaEDUuNm29xM/l+FmDKTfR9Wh1NsmdZTyJNuuFz8PyKs3PcMch8Y5KMqw5/vJac
+         1yo7qCcNjpbmbP3/aB3Wv0mPtBQoCSwXYMAwhAyBr9weHp5ZIO/9PkDidANfLnPfUxbU
+         Fe1A==
+X-Gm-Message-State: APjAAAVX7YVV5M3o6K8yyHXRrrCNIGz3mZo/2Fqze1D3OZ4WOmcgRZqB
+        7WfyU0DBu59nnaJ9bFGsNoM=
+X-Google-Smtp-Source: APXvYqyZdO6HOxgfMd5MC+igzpT5WulQVFMxrwUSLIpPtC6nN/jtILTAjxyoe6dcCiVEJGYvwnAHVw==
+X-Received: by 2002:a17:90a:2545:: with SMTP id j63mr19008657pje.128.1582528543711;
+        Sun, 23 Feb 2020 23:15:43 -0800 (PST)
+Received: from localhost (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id w25sm11267765pfi.106.2020.02.23.23.15.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 23:15:42 -0800 (PST)
+From:   You-Sheng Yang <vicamo.yang@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Hayes Wang <hayeswang@realtek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Grant Grundler <grundler@chromium.org>,
+        You-Sheng Yang <vicamo@gmail.com>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: r8151: check disconnect status after long sleep
+Date:   Mon, 24 Feb 2020 15:15:41 +0800
+Message-Id: <20200224071541.117363-1-vicamo.yang@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212110424.GA2938@dhcp-128-65.nay.redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/12/20 at 07:04pm, Dave Young wrote:
-> The e820 table for kexec kernel always takes setup_data as reserved.
-> It is reasonable for the setup_data passed by the 1st kernel boot loader,
-> for example SETUP_PCI etc.  But SETUP_EFI is used by kexec itself to
-> enable EFI in 2nd kernel, also kexec setups it every time. Thus it
-> is pointless to reserve kexec prepared setup_data.
-> 
-> 1st physical boot: no SETUP_EFI
-> kexec load new kernel and prepare a SETUP_EFI setup_data, then reboot
->  -> 2nd kernel sees SETUP_EFI, reserves in both e820 and kexec e820
->     another kexec load prepare a new SETUP_EFI, then reboot
->     -> 3rd kernel has two SETUP_EFI ranges reserved
->        -> and so on..
-> 
-> Thus skip SETUP_EFI while reserving setup_data for kexec kernel.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  arch/x86/kernel/e820.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> --- linux-x86.orig/arch/x86/kernel/e820.c
-> +++ linux-x86/arch/x86/kernel/e820.c
-> @@ -999,7 +999,9 @@ void __init e820__reserve_setup_data(voi
->  	while (pa_data) {
->  		data = early_memremap(pa_data, sizeof(*data));
->  		e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
-> -		e820__range_update_kexec(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
-> +		/* Skip kexec passed setup_data */
-> +		if (data->type != SETUP_EFI)
-> +			e820__range_update_kexec(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
->  
->  		if (data->type == SETUP_INDIRECT &&
->  		    ((struct setup_indirect *)data->data)->type != SETUP_INDIRECT) {
+Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
 
-Ping, can someone review this? It caused fragmented memory in kexec
-kernel also waste memory.
+  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
+              Driver=r8152, 5000M
 
-Thanks
-Dave
+where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
+
+When hotplugging such dock with additional usb devices already attached on
+it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
+device is also reset. However, during r8152 device init there are several
+for-loops that, when it's unable to retrieve hardware registers due to
+being discconected from USB, may take up to 14 seconds each in practice,
+and that has to be completed before USB may re-enumerate devices on the
+bus. As a result, devices attached to the dock will only be available
+after nearly 1 minute after the dock was plugged in:
+
+  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
+  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
+  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
+  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
+  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
+
+This can be reproduced on all kernel versions up to latest v5.6-rc2, but
+after v5.5-rc7 the reproduce rate is dramatically lower to 1/30 or so
+while it was around 1/2.
+
+The time consuming for-loops are at:
+https://elixir.bootlin.com/linux/v5.5/source/drivers/net/usb/r8152.c#L3206
+https://elixir.bootlin.com/linux/v5.5/source/drivers/net/usb/r8152.c#L5400
+https://elixir.bootlin.com/linux/v5.5/source/drivers/net/usb/r8152.c#L5537
+
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+---
+ drivers/net/usb/r8152.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 78ddbaf6401b..95b19ce96513 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -3221,6 +3221,8 @@ static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
+ 		}
+ 
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	return data;
+@@ -5402,7 +5404,10 @@ static void r8153_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+@@ -5539,7 +5544,10 @@ static void r8153b_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+-- 
+2.25.0
 
