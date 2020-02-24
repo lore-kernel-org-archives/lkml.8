@@ -2,143 +2,143 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7736AC11D31
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C120C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC2F20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E71B20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgBXKSF (ORCPT
+        id S1727307AbgBXKWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:18:05 -0500
-Received: from mga11.intel.com ([192.55.52.93]:56440 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgBXKSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:18:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 02:18:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,479,1574150400"; 
-   d="scan'208";a="349891776"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Feb 2020 02:18:00 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 24 Feb 2020 12:18:00 +0200
-Date:   Mon, 24 Feb 2020 12:18:00 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Martin Volf <martin.volf.42@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
- b84398d6d7f90080
-Message-ID: <20200224101800.GJ2667@lahna.fi.intel.com>
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
- <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
- <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
- <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
- <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
- <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
+        Mon, 24 Feb 2020 05:22:25 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55547 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXKWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:22:24 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6AsO-0006AU-OD; Mon, 24 Feb 2020 11:22:12 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6AsN-00010t-EU; Mon, 24 Feb 2020 11:22:11 +0100
+Date:   Mon, 24 Feb 2020 11:22:11 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH] watchdog: imx2_wdt: Drop .remove callback
+Message-ID: <20200224102211.clzqw4vtzc4nz5df@pengutronix.de>
+References: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Andy and Jarkko
-
-On Sat, Feb 22, 2020 at 01:26:48PM -0800, Guenter Roeck wrote:
-> On 2/22/20 12:49 PM, Martin Volf wrote:
-> > Hello,
-> > 
-> > On Sat, Feb 22, 2020 at 8:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > On 2/22/20 9:55 AM, Martin Volf wrote:
-> > > > On Sat, Feb 22, 2020 at 4:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > > > On 2/22/20 3:13 AM, Martin Volf wrote:
-> > > > > > hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
-> > > > > > motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
-> > > > > > kernels, the driver nct6775 does not load.
-> > > > > > 
-> > > > > > It is working OK in version 5.3. I have used almost all released stable
-> > > > > > versions from 5.3.8 to 5.3.16; I didn't try older kernels.
-> > > > ...
-> > > > > My wild guess would be that the i801 driver is a bit aggressive with
-> > > > > reserving memory spaces, but I don't immediately see what it does
-> > > > > differently in that regard after the offending patch. Does it work
-> > > > > if you unload the i2c_i801 driver first ?
-> > > > 
-> > > > Yes, after unloading i2c_i801, the nct6775 works.
-> > ...
-> > > > This is diff of /proc/ioports in 5.3.18 with loaded nct6775 and in
-> > > > 5.4.21 without:
-> > > > 
-> > > > --- ioports-5.3.18
-> > > > +++ ioports-5.4.21
-> > > > @@ -2,6 +2,7 @@
-> > > >      0000-001f : dma1
-> > > >      0020-0021 : pic1
-> > > >      002e-0031 : iTCO_wdt
-> > > > +    002e-0031 : iTCO_wdt
-> > > >      0040-0043 : timer0
-> > > >      0050-0053 : timer1
-> > ...
-> > > > So 0x2e is the resource the two drivers are fighting for.
-> > ...
-> > > Yes, and it should not do that, since the range can be used to access
-> > > different segments of the same chip from multiple drivers. This region
-> > > should only be reserved temporarily, using request_muxed_region() when
-> > > needed and release_region() after the access is complete. Either case,
-> > > I don't immediately see why that region would be interesting for the
-> > > iTCO watchdog driver.
-> > > 
-> > > Can you add some debugging into the i801 driver to see what memory regions
-> > > it reserves, and how it gets to reserve 0x2e..0x31 ? That range really
-> > > doesn't make any sense to me.
-> > 
-> > in the function i801_add_tco() in drivers/i2c/busses/i2c-i801.c
-> > (line 1601 in 5.4.21), there is this code:
-> > 
-> >          /*
-> >           * Power Management registers.
-> >           */
-> >          devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
-> >          pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
-> > 
-> >          res = &tco_res[ICH_RES_IO_SMI];
-> >          res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
-> >          res->end = res->start + 3;
-> >          res->flags = IORESOURCE_IO;
-> > 
-> > base_addr is 0xffffffff after pci_bus_read_config_dword() call.
-> > ACPIBASE_SMI_OFF is 0x030, therefore res->start is 0x2e.
-> > Not that I understand even a bit of this...
-> > 
+On Mon, Feb 24, 2020 at 10:51:27AM +0800, Anson Huang wrote:
+> .remove callback implementation doesn' call clk_disable_unprepare() which
+> is buggy, actually, we can just use devm_watchdog_register_device() and
+> devm_add_action_or_reset() to handle all necessary operations for remove
+> action, then .remove callback can be dropped.
 > 
-> Outch. This means that the code is broken. ACPIBASE is not configured,
-> or disabled, or the code reads from the wrong PCI configuration register.
-> What I don't understand is why this works with v5.3 kernels; the code
-> looks just as bad there for me. I must be missing something. Either case,
-> the only thing you can really do at this point is to blacklist the
-> iTCO_wdt driver.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/watchdog/imx2_wdt.c | 37 ++++++++++---------------------------
+>  1 file changed, 10 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> index f8d58bf..1fe472f 100644
+> --- a/drivers/watchdog/imx2_wdt.c
+> +++ b/drivers/watchdog/imx2_wdt.c
+> @@ -244,6 +244,11 @@ static const struct regmap_config imx2_wdt_regmap_config = {
+>  	.max_register = 0x8,
+>  };
+>  
+> +static void imx2_wdt_action(void *data)
+> +{
+> +	clk_disable_unprepare(data);
 
-Indeed it looks like the code reads from a register that is not there
-anymore in this generation hardware, or something like that. It tries to
-read the PMC (1f.2) register add address 0x40 which is supposed to be
-base of ACPI PM registers but that does not seem to exist any more in
-newer chipset.
+Does this have the effect of stopping the watchdog? Maybe we can have a
+more expressive function name here (imx2_wdt_stop_clk or similar)?
 
-We'll look into this more and return back.
+Is there some watchdog core policy that tells if the watchdog should be
+stopped on unload?
+
+> +}
+> +
+>  static int __init imx2_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -292,6 +297,10 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = devm_add_action_or_reset(dev, imx2_wdt_action, wdev->clk);
+> +	if (ret)
+> +		return ret;
+> +
+>  	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
+>  	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ? WDIOF_CARDRESET : 0;
+>  
+> @@ -315,32 +324,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>  	 */
+>  	regmap_write(wdev->regmap, IMX2_WDT_WMCR, 0);
+>  
+> -	ret = watchdog_register_device(wdog);
+> -	if (ret)
+> -		goto disable_clk;
+> -
+> -	dev_info(dev, "timeout %d sec (nowayout=%d)\n",
+> -		 wdog->timeout, nowayout);
+
+Does the core put this info in the kernel log? If not dropping it isn't
+obviously right enough to be done en passant.
+
+> -	return 0;
+> -
+> -disable_clk:
+> -	clk_disable_unprepare(wdev->clk);
+> -	return ret;
+> -}
+> -
+> -static int __exit imx2_wdt_remove(struct platform_device *pdev)
+> -{
+> -	struct watchdog_device *wdog = platform_get_drvdata(pdev);
+> -	struct imx2_wdt_device *wdev = watchdog_get_drvdata(wdog);
+> -
+> -	watchdog_unregister_device(wdog);
+> -
+> -	if (imx2_wdt_is_running(wdev)) {
+> -		imx2_wdt_ping(wdog);
+> -		dev_crit(&pdev->dev, "Device removed: Expect reboot!\n");
+> -	}
+
+I also wonder about this one. This changes the timing behaviour and so
+IMHO shouldn't be done as a side effect of a cleanup patch.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
