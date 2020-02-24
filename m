@@ -2,121 +2,124 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17D4C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560C5C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8057920838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264FC20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XyvGvgkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBXLYr (ORCPT
+        id S1727378AbgBXLZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:24:47 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54156 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLYq (ORCPT
+        Mon, 24 Feb 2020 06:25:41 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38270 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:24:46 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 13F10292B4E;
-        Mon, 24 Feb 2020 11:24:45 +0000 (GMT)
-Date:   Mon, 24 Feb 2020 12:24:42 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
-Subject: Re: [PATCH v3 0/5] Introduce i3c device userspace interface
-Message-ID: <20200224122442.7cb6e8d8@collabora.com>
-In-Reply-To: <CH2PR12MB4216F86F6820CC5247B89BA8AEEC0@CH2PR12MB4216.namprd12.prod.outlook.com>
-References: <cover.1582069402.git.vitor.soares@synopsys.com>
-        <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
-        <20200219091658.7506e7bd@collabora.com>
-        <CH2PR12MB4216ECDC745C8255DF8106A3AE120@CH2PR12MB4216.namprd12.prod.outlook.com>
-        <20200221184116.1d8f0677@collabora.com>
-        <CH2PR12MB4216F86F6820CC5247B89BA8AEEC0@CH2PR12MB4216.namprd12.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 24 Feb 2020 06:25:40 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O87YYb160437;
+        Mon, 24 Feb 2020 08:09:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=6qKJx4gzfpljmcOcHGiZyzYN7Uu40KJ6LMB+X9Hu3pM=;
+ b=XyvGvgkMuU4oe4Kzr5MzIxqxC+MueWnjd1wupeXsL9K9hXTjjJ6cIu4lDsnEob+ZeSLO
+ bAazjaqCAshQfY2xw1WvrBuTF54mzLT8+JRflg74v7DZCg6dJnLBBU0TN7y8p9tZ0UN3
+ yPWVNQHZltckspOi/qND1jd7zQw0PDfhL20h482qprLNvVhTjFutQ1eWB46kc22OhSeB
+ 4RfxIcLwMZHi3bNkQuV3LoLYsAclXmH9jfdJa3f1fv3zX5ok+ATBKwRBNKJLfn0eXdAh
+ NJxkNQ33cwRn1beht/VJWiNTl5fP1UIyZZc2HIGo/ScUc490uAZP21v0Xzbux6HIAZTy nw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2ybvr4hw5m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 08:09:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O87q9q182572;
+        Mon, 24 Feb 2020 08:09:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2ybe10nc98-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 08:09:03 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01O88xmR024337;
+        Mon, 24 Feb 2020 08:08:59 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Feb 2020 00:08:59 -0800
+Date:   Mon, 24 Feb 2020 11:08:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 3/7] test_firmware: add partial read support for
+ request_firmware_into_buf
+Message-ID: <20200224080842.GA3308@kadam>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-4-scott.branden@broadcom.com>
+ <20200220084255.GW7838@kadam>
+ <9afab7f8-1b5f-a7bb-6b76-f7b19efb2979@broadcom.com>
+ <4a666590-461d-17f9-5580-31a41869383f@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a666590-461d-17f9-5580-31a41869383f@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240071
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 adultscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 10:53:25 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+On Fri, Feb 21, 2020 at 05:13:08PM -0800, Scott Branden wrote:
+> > > > +static ssize_t test_dev_config_show_size_t(char *buf, int cfg)
+> > > > +{
+> > > > +    size_t val;
+> > > > +
+> > > > +    mutex_lock(&test_fw_mutex);
+> > > > +    val = cfg;
+> > > > +    mutex_unlock(&test_fw_mutex);
+> > > Both val and cfg are stack variables so there is no need for locking.
+> > > Probably you meant to pass a pointer to cfg?
+> I am following the existing code as was done for
+> test_dev_config_show_bool(),
+> test_dev_config_show_int(),
+> test_dev_config_show_u8()
 
-> Hi Boris,
-> 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Fri, Feb 21, 2020 at 17:41:16
-> 
-> > > > > 
-> > > > > I want to make you know that none of your previous comments was ignored 
-> > > > > and  I would like to start the discussion from this point.    
-> > > > 
-> > > > Sure, np. I'll probably wait for a v4 exploring the option I proposed
-> > > > then.    
-> > > 
-> > > I would like to check with you:
-> > >   - How can we prioritize the device driver over the i3cdev driver if the 
-> > > driver is loaded after i3cdev? Currently, this is done automatically 
-> > > without any command, and for me, this is a requirement.  
-> > 
-> > No devs would be bound to the i3cdev driver by default, it would have
-> > to be done explicitly through a sysfs knob. Which makes me realize
-> > we can't use the generic bind knob since it doesn't let the subsystem
-> > know that it's a manual bind. I thought there was a way to distinguish
-> > between manual and auto-bind.
-> >   
-> > >   - For the ioctl command structure, there is no rule about the way I did 
-> > > or what you proposed, both are currently used in the kernel. For me it is 
-> > > one more structure to deal with, can you point the advantages of your 
-> > > purpose?  
-> > 
-> > I don't have a strong opinion on that one, though I find it a bit
-> > easier to follow when the number of xfers is encoded in a separate
-> > struct rather than extracted from the data size passed through the cmd
-> > argument.  
-> 
-> I will change it then. Do you have any suggestion for the naming to keep 
-> it short?
+Heh.  Yes.  Those are buggy as well.  Good eyes.  Could you send a patch
+to fix them?
 
-I named it i3cdev_priv_xfers in the patch I sent, but you can pick a
-different name if you don't like this one.
+regards,
+dan caprnter
 
-> 
-> >   
-> > >   - Regarding the ioctl codes, I tried to use those after I2C.  
-> > 
-> > Why start from 0x30? It doesn't make sense to me. Just because you base
-> > your code on something that already exists doesn't mean you have to
-> > copy all of it.  
-> 
-> I might be wrong but last I2C command is 0x20 and I tried to let some 
-> free space in case they need.
-> Also I think that make sense I2C and I3C share the same 'magic number'.
-
-Hm, I'm not sure that's a good idea. The set of ioctls for I2C and I3C
-are likely to be completely different, so I'd recommend using a
-separate namespace (AKA ioctl magic number). Wolfram, any opinion?
-
-> 
-> BTW, in ioctl-numbers documentation there is no reference for code 0x07.
-
-Indeed, looks like it's not documented.
