@@ -2,73 +2,151 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9086AC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3717C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682E520836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582561690;
-	bh=6SBywWytE60ZAELPFUndIoheBRs0SIEAwmcaQ/Ves78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bBluy/95+9XXpqWIV61n3Vl8hAlNCxS0QdAbQOTPrh7J6Q0/Mq42oDJTK1wsYFo+E
-	 xWJREm/UvgabtWunUNqx9EaSK/HX5n0Pahlhwc9ZzzD8qLhfuy0wa8TSLz7fkZRobb
-	 0urtQ2n8fboGGUq6y0WNJZniK2Y4KizxgfqvpTqo=
+	by mail.kernel.org (Postfix) with ESMTP id B8FDA20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:28:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="WDKWj//9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgBXQ2J (ORCPT
+        id S1727903AbgBXQ2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:28:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 11:28:42 -0500
+Received: from vps.xff.cz ([195.181.215.36]:59288 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbgBXQ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:28:08 -0500
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98AE42080D;
-        Mon, 24 Feb 2020 16:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582561688;
-        bh=6SBywWytE60ZAELPFUndIoheBRs0SIEAwmcaQ/Ves78=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a/V0EDlpq0YTVwHVkthZGj4bvoDTDsHugS03iiJXHMHDijhRfVxmJmK7bKKvqcigJ
-         b37YMnWgLqWJzLnpjuNEcPCwOyPzv9Tk61h0K4OqR0Dhk8mL/jU+CJuCFIc8hUraf3
-         q0bD/PQbYpwQjGvuJcGIFz/Jdeake2AvQcp10LR8=
-Date:   Mon, 24 Feb 2020 18:28:04 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL
- when not needed
-Message-ID: <20200224162804.GB4526@unreal>
-References: <20200224153609.24948-1-nsaenzjulienne@suse.de>
+        id S1727299AbgBXQ2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:28:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582561720; bh=wkV253iNdu34zWLZa2QqrlFlrBm18YkIXQNR8JlEGXc=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=WDKWj//9hWJyzQ+9eJs8ZC/lnXAkW5HiOq9ChU8ruQvc7s2a8caBEhBu0EBTqedJL
+         oF0QzLdL5peysOVfOP4s0H2nZXya9z8FBi6xQQZP8L8Am/AvpCoJXQZQq6M2YpXbpR
+         Z5xeQIUsADukIZgVk853toibAnc2nrgeVvxDR+jk=
+Date:   Mon, 24 Feb 2020 17:28:40 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [linux-sunxi] Re: [PATCH 0/4] Add support for charger LED for
+ AXP813 and TBS A711 Tablet
+Message-ID: <20200224162840.z7csqagz2frwvmf3@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Stefan Mavrodiev <stefan@olimex.com>, linux-sunxi@googlegroups.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200223131435.681620-1-megous@megous.com>
+ <20200223132730.6g7tnm2f263oubhv@core.my.home>
+ <20200223133517.hfqrg5dta2xk4zj3@core.my.home>
+ <1464324b-2b69-c20e-4af8-f32ae5451ea6@olimex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200224153609.24948-1-nsaenzjulienne@suse.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1464324b-2b69-c20e-4af8-f32ae5451ea6@olimex.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 04:36:09PM +0100, Nicolas Saenz Julienne wrote:
-> Outdated Raspberry Pi 4 firmware might configure the external PHY as
-> rgmii although the kernel currently sets it as rgmii-rxid. This makes
-> connections unreliable as ID_MODE_DIS is left enabled. To avoid this,
-> explicitly clear that bit whenever we don't need it.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Fixes: da38802211cc ("net: bcmgenet: Add RGMII_RXID support")
+On Mon, Feb 24, 2020 at 08:31:06AM +0200, Stefan Mavrodiev wrote:
+> 
+> On 2/23/20 3:35 PM, Ondřej Jirman wrote:
+> > On Sun, Feb 23, 2020 at 02:27:30PM +0100, megous hlavni wrote:
+> > > On Sun, Feb 23, 2020 at 02:14:31PM +0100, megous hlavni wrote:
+> > > > The tablet has a charger LED exposed on the top. This LED is controlled
+> > > > by AXP813 PMIC. Add support for enabling the LED and using it either
+> > > > for charging indication (handled by PMIC automatically) or for other uses
+> > > > via user control.
+> > > Dang, I just noticed someone sent a similar driver recently, although I had this
+> > > one prepared for quite some time (since 2017) in my tree. I guess I should have
+> > > sent it earlier.
+> > > 
+> > > Please ignore.
+> > Though the meaning of "recently" is a bit relative. The other work was sent in
+> > a year ago. Here's a reference:
+> > 
+> >    https://lore.kernel.org/patchwork/cover/1042764/
+> 
+> Hi,
+> 
+> I'm the author of the 'other' work. I don't know the full story here, but I
+> don't
+> mind someone else submitting this patch as his.
 
-The expectation is that Fixes line comes before SOB line.
+Hello Stefan,
 
-Thanks
+There's really no story. Just me being a bit anoyed at myself, for not checking
+the mailing lists prior to spending some time cleaning up and extending some old
+patches to upstream them, and wasting quite a bit of time in the process.
+
+https://megous.com/git/linux/commit/?h=linux-tbs&id=737eec64565d328cab98b75879e3f9eb1cf2f609
+
+> When I submitted the last patch, there was the proposal to use the
+> ledtrig-pattern instead
+> of sysfs entries. Also AXP209 has inverted CTRL bit.
+> 
+> Please read the the 'other' discussion.
+
+Thanks, I'll check it out.
+
+regards,
+	o.
+
+> Best regards,
+> Stefan Mavrodiev
+> 
+> > 
+> > > regards,
+> > > 	o.
+> > > 
+> > > 
+> > > > Please take a look.
+> > > > 
+> > > > thank you and regards,
+> > > >    Ondrej Jirman
+> > > > 
+> > > > Ondrej Jirman (4):
+> > > >    dt-bindings: leds: Add a binding for AXP813 charger led
+> > > >    leds: axp20x: Support charger LED on AXP20x like PMICs
+> > > >    ARM: dts: axp813: Add charger LED
+> > > >    ARM: dts: sun8i-a83t-tbs-a711: Enable charging LED
+> > > > 
+> > > >   .../devicetree/bindings/leds/leds-axp20x.yaml |  24 ++
+> > > >   arch/arm/boot/dts/axp81x.dtsi                 |   5 +
+> > > >   arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     |   4 +
+> > > >   drivers/leds/Kconfig                          |   7 +
+> > > >   drivers/leds/Makefile                         |   1 +
+> > > >   drivers/leds/leds-axp20x.c                    | 240 ++++++++++++++++++
+> > > >   drivers/mfd/axp20x.c                          |   3 +
+> > > >   7 files changed, 284 insertions(+)
+> > > >   create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+> > > >   create mode 100644 drivers/leds/leds-axp20x.c
+> > > > 
+> > > > -- 
+> > > > 2.25.1
+> > > > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
