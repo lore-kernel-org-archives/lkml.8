@@ -2,125 +2,111 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EECBC35669
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3EBC35669
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35E720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubxAfdRS"
+	by mail.kernel.org (Postfix) with ESMTP id 06C6F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgBXEPp (ORCPT
+        id S1727247AbgBXERv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:15:45 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:47083 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbgBXEPp (ORCPT
+        Sun, 23 Feb 2020 23:17:51 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727202AbgBXERu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:15:45 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a22so7703085oid.13
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 20:15:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FtOOndOWZSDXybYasUpcnffIRI9DWgK6w/MiME7iIyA=;
-        b=ubxAfdRSx4t292O11yEtyiS45hr76kV1ZivVX31imh2sVv75jLafbyUz7Sk1vhKyxp
-         U13Q/QyCrb1aj+hIbtw0GbB38ZxZTf8ujH/gF/AoxXfgmJIQZRUmNB+wz9ovq7qGobWp
-         G44SlHNyrlhH9etlitz8Coe5/JG8nsbDkfJCXZEdB2d57vC+27jxfoP7pvkjpGMwE2tv
-         UKWS3Qba+HfkFV3b9bj1Lw+a0LCULnCBDhQAcmEbJZatno/M2G5bGIAYZAF+xe3JMZSb
-         MpBmk1MgsDydiP+3bWDi+e8VGZtDdj2UKTO7P8FWNWodW+Olv4cSOHD49ywVJrYVUDsr
-         1ksA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FtOOndOWZSDXybYasUpcnffIRI9DWgK6w/MiME7iIyA=;
-        b=Fgb0QQb6Ak7phZ9iF1Ap2MbPUnik/uBW7+qgY8558YjtblooxzZBn16aTvyGYzfO+p
-         ufuzWmaRKG4l6GICczxaQUWWuxPGiL3eBQMXnuDNf7OaQ2GMJERTuzbZsTHfD5Ccaljp
-         Q/q06w/Crno/gQRhtN9uC3zuk3tmVInpL7zUyECq58+HtuMT4zgZX5R0EHuyOXVYUhwc
-         9Yjj1gyvfyKGjaptMxaZezjuVaj7+bZaZjC4XkotfOqbUDFUL8V33CvL4BAU0O9PK4/W
-         YhJ4p1d9vsYLO/KiIVXusj9zvXea0RC2MWzrFdgCkbfX6mq6jGlvlGszFqcxwzyMXAFj
-         SEtQ==
-X-Gm-Message-State: APjAAAXq3TVJ4AQiB9uNbF1bLOD9nTgGwY9anLhC0tK02sHhrKX2MbhW
-        y+5Zqvw1e6m7ih6qhZNzGW0=
-X-Google-Smtp-Source: APXvYqzq2PcrTKVvsY8h4Bm2ZVrzilS6ewqvNS0QEaJ85ba/Rqs8yck9S9qvBi4qg2zbS1IE0l8juQ==
-X-Received: by 2002:aca:5f87:: with SMTP id t129mr11397800oib.36.1582517744531;
-        Sun, 23 Feb 2020 20:15:44 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id j13sm3701944oii.14.2020.02.23.20.15.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Feb 2020 20:15:43 -0800 (PST)
-Date:   Sun, 23 Feb 2020 21:15:42 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 0/2] Stop generating .eh_frame sections
-Message-ID: <20200224041542.GA55909@ubuntu-m2-xlarge-x86>
-References: <20200222235709.GA3786197@rani.riverdale.lan>
- <20200223193715.83729-1-nivedita@alum.mit.edu>
+        Sun, 23 Feb 2020 23:17:50 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O4EX5S109773
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:17:49 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1qbyvd1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:17:49 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Mon, 24 Feb 2020 04:17:47 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 04:17:45 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O4Hh3P34341226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 04:17:43 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5100B5205A;
+        Mon, 24 Feb 2020 04:17:43 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.109.208.151])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id A19D55204E;
+        Mon, 24 Feb 2020 04:17:41 +0000 (GMT)
+Subject: Re: [PATCH v2 0/5] Track and expose idle PURR and SPURR ticks
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Mon, 24 Feb 2020 09:47:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223193715.83729-1-nivedita@alum.mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022404-0012-0000-0000-00000389A3F2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022404-0013-0000-0000-000021C641DF
+Message-Id: <ee85a602-952a-bda7-aeef-eb0cc22d091c@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-23_07:2020-02-21,2020-02-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 clxscore=1011 impostorscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=805 bulkscore=0 mlxscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 02:37:13PM -0500, Arvind Sankar wrote:
-> In three places in the x86 kernel we are currently generating .eh_frame
-> sections only to discard them later via linker script. This is in the
-> boot code (setup.elf), the realmode trampoline (realmode.elf) and the
-> compressed kernel.
+On 2/21/20 10:48 AM, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+
+[...]
+
 > 
-> Implement Fangrui and Nick's suggestion [1] to fix KBUILD_CFLAGS by
-> adding -fno-asynchronous-unwind-tables to avoid generating .eh_frame
-> sections in the first place, rather than discarding it in the linker
-> script.
+> Gautham R. Shenoy (5):
+>   powerpc: Move idle_loop_prolog()/epilog() functions to header file
+>   powerpc/idle: Add accessor function to always read latest idle PURR
+>   powerpc/pseries: Account for SPURR ticks on idle CPUs
+>   powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
+>   Documentation: Document sysfs interfaces purr, spurr, idle_purr,
+>     idle_spurr
 > 
-> Arvind Sankar (2):
->   arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
->   arch/x86: Drop unneeded linker script discard of .eh_frame
-> 
->  arch/x86/boot/Makefile                | 1 +
->  arch/x86/boot/compressed/Makefile     | 1 +
->  arch/x86/boot/setup.ld                | 1 -
->  arch/x86/kernel/vmlinux.lds.S         | 3 ---
->  arch/x86/realmode/rm/Makefile         | 1 +
->  arch/x86/realmode/rm/realmode.lds.S   | 1 -
->  drivers/firmware/efi/libstub/Makefile | 3 ++-
->  7 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 2.24.1
+>  Documentation/ABI/testing/sysfs-devices-system-cpu | 39 ++++++++++
+>  arch/powerpc/include/asm/idle.h                    | 88 ++++++++++++++++++++++
+>  arch/powerpc/kernel/sysfs.c                        | 54 ++++++++++++-
+>  arch/powerpc/platforms/pseries/setup.c             |  8 +-
+>  drivers/cpuidle/cpuidle-pseries.c                  | 39 ++--------
+>  5 files changed, 191 insertions(+), 37 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/idle.h
 > 
 
-With both of these patches applied on top of next-20200221 and a revert
-of commit e11831d0ada3 ("x86/boot/compressed: Remove unnecessary
-sections from bzImage"), I do not see any .eh_frame sections in the
-following files:
+For the whole series:
 
-$ readelf -S arch/x86/boot/setup.elf \
-arch/x86/realmode/rm/realmode.elf \
-arch/x86/boot/compressed/vmlinux \
-vmlinux |& grep eh_frame
+Tested-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
-Additionally, I can see -fno-asynchronous-unwind-tables get added to
-files that didn't previously have it.
+-- 
+Kamalesh
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
