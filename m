@@ -2,240 +2,165 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FD2C35669
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC51C35641
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0672086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E7720675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fwSMQHR5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXwEtF0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbgBXECV (ORCPT
+        id S1727253AbgBXEEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:02:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52204 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727202AbgBXECU (ORCPT
+        Sun, 23 Feb 2020 23:04:36 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55272 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbgBXEEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:02:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582516939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jMt7aQ9pDIFoF8MXPWrUB8nziLJeM4YhEWRgKCHSf8Q=;
-        b=fwSMQHR5qAm6l4Q8qCx9b0y+TskObdabEDJ+T571U3OGfO6fUE6DnqlUjk5Y/hPFJXnU6i
-        eI96yMWqwm3EA2F7KUW8QNFY0uPRhVZPrsvtimNWG+9cxLWMheeNEPXynjRBkkgsctqkuw
-        j3TekEp7pT6er/vb/NuJO0oI26XCt2U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-8HLUA13KPguNUh1BEEJjqA-1; Sun, 23 Feb 2020 23:02:11 -0500
-X-MC-Unique: 8HLUA13KPguNUh1BEEJjqA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DDA213E2;
-        Mon, 24 Feb 2020 04:02:09 +0000 (UTC)
-Received: from [10.72.13.147] (ovpn-13-147.pek2.redhat.com [10.72.13.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 13BB460BF4;
-        Mon, 24 Feb 2020 04:01:58 +0000 (UTC)
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
- <20200221155602.4de41fa7.pasic@linux.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
-Date:   Mon, 24 Feb 2020 12:01:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 23 Feb 2020 23:04:36 -0500
+Received: by mail-pj1-f66.google.com with SMTP id dw13so3573647pjb.4;
+        Sun, 23 Feb 2020 20:04:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pCSYBBOwT+fM6P/sllrr2JTwBl3qxoctfKfCeZ8ANVo=;
+        b=MXwEtF0NnFJ836tt6ik56UlRufY7+qvx4HKXebaqTBIZGGIniU8oKZ7XKVGLvli3Xa
+         zKbs1k8Ezqz+u0VQuOb6EDcHxLPATsf6xKxeHtBmRZ5e7Sc9p5/P4ES522WuKh1LM/+H
+         G0JZBF39WCgbj+3y9HwpIsTvABCXcZ4nKgbdUXyUFrGjpGF59/2sE/hu9+JCXcSpE0l8
+         9DCOX489rimBU0THzjGfxsZAhIR8HBGZ2EEIigYmVquqSDArErjwcsPyrg91G26N1twm
+         pMNk9M1qxh7d2bJWlnyMS/kkjoImcTjMrFa8M9XgDxkkd3tdT3Yel1K2JFQ6cOnsWs0q
+         28PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pCSYBBOwT+fM6P/sllrr2JTwBl3qxoctfKfCeZ8ANVo=;
+        b=G0ev+zFQxR5QPGE32Om+0hPRqN5UFmf/c3jkHHnTrltDaoLumhP3pyhOJQPEnR1T3F
+         +9vDfR6HxH6Fy234RbDP1qEgnTLVfS6ELe4wN7+bdd25mt0PdzRRqT5biWDeXyqHwPxU
+         BvZ3oayZzjZcCIi9hOq4O8fuPj6X0xFZWWWTSMcJvj/Xd5l4qTa4Kni+0p8wLGM/m98D
+         GnlGCsX4VKgfWaeEDN00UCmt0qrpQITR3cQXPucEhDu4TPdF4SPPsPqGNoVyOZke1A1z
+         wvHHZadPbMPLxsQnbfhjS5bWwH52WjZ5ppQWqOdNhgS9lSHWZrHzIqLUX5hQsFrCeChg
+         XERg==
+X-Gm-Message-State: APjAAAUxCEPTfrN9LO9Ci6KM7jkdWGaDxDGm2mOaVmoP3cjnktcJKREV
+        37GzLoCUcC0n0sclr7+iNlM=
+X-Google-Smtp-Source: APXvYqzm5v7u9jGJAuBoo8Ra2wrfZ43pgyQPxXoH0WQUF3JOVLIgK3hktuxAFaB+uatphbCwIYK1AQ==
+X-Received: by 2002:a17:902:6a88:: with SMTP id n8mr47670525plk.265.1582517075508;
+        Sun, 23 Feb 2020 20:04:35 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 188sm10321695pgf.24.2020.02.23.20.04.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 20:04:34 -0800 (PST)
+Subject: Re: [PATCH] watchdog: imx2_wdt: Drop .remove callback
+To:     Anson Huang <Anson.Huang@nxp.com>, wim@linux-watchdog.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <968aab4e-50ed-83d2-cac1-d0a216060628@roeck-us.net>
+Date:   Sun, 23 Feb 2020 20:04:32 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200221155602.4de41fa7.pasic@linux.ibm.com>
-Content-Type: multipart/mixed;
- boundary="------------323EAFF568B452B8B5C3BA24"
+In-Reply-To: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------323EAFF568B452B8B5C3BA24
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+On 2/23/20 6:51 PM, Anson Huang wrote:
+> .remove callback implementation doesn' call clk_disable_unprepare() which
+> is buggy, actually, we can just use devm_watchdog_register_device() and
+> devm_add_action_or_reset() to handle all necessary operations for remove
+> action, then .remove callback can be dropped.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-On 2020/2/21 =E4=B8=8B=E5=8D=8810:56, Halil Pasic wrote:
-> On Fri, 21 Feb 2020 14:22:26 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> On 2020/2/21 =E4=B8=8A=E5=8D=8812:06, Halil Pasic wrote:
->>> Currently if one intends to run a memory protection enabled VM with
->>> virtio devices and linux as the guest OS, one needs to specify the
->>> VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
->>> linux use the DMA API, which in turn handles the memory
->>> encryption/protection stuff if the guest decides to turn itself into
->>> a protected one. This however makes no sense due to multiple reasons:
->>> * The device is not changed by the fact that the guest RAM is
->>> protected. The so called IOMMU bypass quirk is not affected.
->>> * This usage is not congruent with  standardised semantics of
->>> VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reas=
-on
->>> for using DMA API in virtio (orthogonal with respect to what is
->>> expressed by VIRTIO_F_IOMMU_PLATFORM).
->>>
->>> This series aims to decouple 'have to use DMA API because my (guest) =
-RAM
->>> is protected' and 'have to use DMA API because the device told me
->>> VIRTIO_F_IOMMU_PLATFORM'.
->>>
->>> Please find more detailed explanations about the conceptual aspects i=
-n
->>> the individual patches. There is however also a very practical proble=
-m
->>> that is addressed by this series.
->>>
->>> For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following s=
-ide
->>> effect The vhost code assumes it the addresses on the virtio descript=
-or
->>> ring are not guest physical addresses but iova's, and insists on doin=
-g a
->>> translation of these regardless of what transport is used (e.g. wheth=
-er
->>> we emulate a PCI or a CCW device). (For details see commit 6b1e6cc785=
-5b
->>> "vhost: new device IOTLB API".) On s390 this results in severe
->>> performance degradation (c.a. factor 10).
->>
->> Do you see a consistent degradation on the performance, or it only
->> happen when for during the beginning of the test?
->>
-> AFAIK the degradation is consistent.
->
->>> BTW with ccw I/O there is
->>> (architecturally) no IOMMU, so the whole address translation makes no
->>> sense in the context of virtio-ccw.
->>
->> I suspect we can do optimization in qemu side.
->>
->> E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
->>
->> If this makes sense, I can draft patch to see if there's any differenc=
-e.
-> Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
-> then necessary translation) for virtio-ccw altogether. But Michael
-> voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
-> that could be used with guests running in protected mode. I don't share
-> his opinion, but that's an ongoing discussion.
->
-> Should we end up having to do translation from IOVA in vhost, we are
-> very interested in that translation being fast and efficient.
->
-> In that sense we would be very happy to test any optimization that aim
-> into that direction.
->
-> Thank you very much for your input!
-
-
-Using IOTLB API on platform without IOMMU support is not intended.=20
-Please try the attached patch to see if it helps.
-
-Thanks
-
-
->
-> Regards,
-> Halil
->
->> Thanks
->>
->>
->>> Halil Pasic (2):
->>>     mm: move force_dma_unencrypted() to mem_encrypt.h
->>>     virtio: let virtio use DMA API when guest RAM is protected
->>>
->>>    drivers/virtio/virtio_ring.c |  3 +++
->>>    include/linux/dma-direct.h   |  9 ---------
->>>    include/linux/mem_encrypt.h  | 10 ++++++++++
->>>    3 files changed, 13 insertions(+), 9 deletions(-)
->>>
->>>
->>> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-
---------------323EAFF568B452B8B5C3BA24
-Content-Type: text/x-patch;
- name="0001-virtio-turn-on-IOMMU_PLATFORM-properly.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-virtio-turn-on-IOMMU_PLATFORM-properly.patch"
-
-From 66fa730460875ac99e81d7db2334cd16bb1d2b27 Mon Sep 17 00:00:00 2001
-From: Jason Wang <jasowang@redhat.com>
-Date: Mon, 24 Feb 2020 12:00:10 +0800
-Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
-
-When transport does not support IOMMU, we should clear IOMMU_PLATFORM
-even if the device and vhost claims to support that. This help to
-avoid the performance overhead caused by unnecessary IOTLB miss/update
-transactions on such platform.
-
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- hw/virtio/virtio-bus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
-index d6332d45c3..2741b9fdd2 100644
---- a/hw/virtio/virtio-bus.c
-+++ b/hw/virtio/virtio-bus.c
-@@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
-     VirtioBusState *bus = VIRTIO_BUS(qbus);
-     VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
-     VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
--    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
-     Error *local_err = NULL;
- 
-     DPRINTF("%s: plug device.\n", qbus->name);
-@@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
-         return;
-     }
- 
--    if (klass->get_dma_as != NULL && has_iommu) {
--        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
-+    if (false && klass->get_dma_as != NULL &&
-+        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
-         vdev->dma_as = klass->get_dma_as(qbus->parent);
-     } else {
-+        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
-         vdev->dma_as = &address_space_memory;
-     }
- }
--- 
-2.19.1
-
-
---------------323EAFF568B452B8B5C3BA24--
+> ---
+>   drivers/watchdog/imx2_wdt.c | 37 ++++++++++---------------------------
+>   1 file changed, 10 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> index f8d58bf..1fe472f 100644
+> --- a/drivers/watchdog/imx2_wdt.c
+> +++ b/drivers/watchdog/imx2_wdt.c
+> @@ -244,6 +244,11 @@ static const struct regmap_config imx2_wdt_regmap_config = {
+>   	.max_register = 0x8,
+>   };
+>   
+> +static void imx2_wdt_action(void *data)
+> +{
+> +	clk_disable_unprepare(data);
+> +}
+> +
+>   static int __init imx2_wdt_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -292,6 +297,10 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>   	if (ret)
+>   		return ret;
+>   
+> +	ret = devm_add_action_or_reset(dev, imx2_wdt_action, wdev->clk);
+> +	if (ret)
+> +		return ret;
+> +
+>   	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
+>   	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ? WDIOF_CARDRESET : 0;
+>   
+> @@ -315,32 +324,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>   	 */
+>   	regmap_write(wdev->regmap, IMX2_WDT_WMCR, 0);
+>   
+> -	ret = watchdog_register_device(wdog);
+> -	if (ret)
+> -		goto disable_clk;
+> -
+> -	dev_info(dev, "timeout %d sec (nowayout=%d)\n",
+> -		 wdog->timeout, nowayout);
+> -
+> -	return 0;
+> -
+> -disable_clk:
+> -	clk_disable_unprepare(wdev->clk);
+> -	return ret;
+> -}
+> -
+> -static int __exit imx2_wdt_remove(struct platform_device *pdev)
+> -{
+> -	struct watchdog_device *wdog = platform_get_drvdata(pdev);
+> -	struct imx2_wdt_device *wdev = watchdog_get_drvdata(wdog);
+> -
+> -	watchdog_unregister_device(wdog);
+> -
+> -	if (imx2_wdt_is_running(wdev)) {
+> -		imx2_wdt_ping(wdog);
+> -		dev_crit(&pdev->dev, "Device removed: Expect reboot!\n");
+> -	}
+> -	return 0;
+> +	return devm_watchdog_register_device(dev, wdog);
+>   }
+>   
+>   static void imx2_wdt_shutdown(struct platform_device *pdev)
+> @@ -417,7 +401,6 @@ static const struct of_device_id imx2_wdt_dt_ids[] = {
+>   MODULE_DEVICE_TABLE(of, imx2_wdt_dt_ids);
+>   
+>   static struct platform_driver imx2_wdt_driver = {
+> -	.remove		= __exit_p(imx2_wdt_remove),
+>   	.shutdown	= imx2_wdt_shutdown,
+>   	.driver		= {
+>   		.name	= DRIVER_NAME,
+> 
 
