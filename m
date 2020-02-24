@@ -2,162 +2,104 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2042BC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E0BC38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40A220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD872176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgBXWtV (ORCPT
+        id S1728104AbgBXWui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:49:21 -0500
-Received: from mga12.intel.com ([192.55.52.136]:37327 "EHLO mga12.intel.com"
+        Mon, 24 Feb 2020 17:50:38 -0500
+Received: from mga02.intel.com ([134.134.136.20]:60338 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgBXWtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:49:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726651AbgBXWuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 17:50:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 14:49:21 -0800
-X-ExtLoop1: 1
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 14:50:37 -0800
 X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="231269244"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Feb 2020 14:49:20 -0800
-Date:   Mon, 24 Feb 2020 14:49:20 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Alistair Delva <adelva@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kenny Root <kroot@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, devicetree@vger.kernel.org,
-        linux-nvdimm@lists.01.org, kernel-team@android.com
-Subject: Re: [PATCH v2 1/3] libnvdimm/of_pmem: factor out region registration
-Message-ID: <20200224224920.GA8867@iweiny-DESK2.sc.intel.com>
-References: <20200224020815.139570-1-adelva@google.com>
+   d="scan'208";a="241143929"
+Received: from jbrandeb-desk.jf.intel.com ([10.166.244.152])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 14:50:37 -0800
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        andriy.shevchenko@intel.com, dan.j.williams@intel.com,
+        peterz@infradead.org
+Subject: [PATCH v5 1/2] x86: fix bitops.h warning with a moved cast
+Date:   Mon, 24 Feb 2020 14:50:19 -0800
+Message-Id: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224020815.139570-1-adelva@google.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 06:08:13PM -0800, Alistair Delva wrote:
-> From: Kenny Root <kroot@google.com>
-> 
-> From: Kenny Root <kroot@google.com>
-> 
-> Factor out region registration for 'reg' node. A follow-up change will
-> use of_pmem_register_region() to handle memory-region nodes too.
+Fix many sparse warnings when building with C=1.
 
-Thanks!
+When the kernel is compiled with C=1, there are lots of messages like:
+  arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+CONST_MASK() is using a signed integer "1" to create the mask which
+is later cast to (u8) when used, in order to yield an 8-bit value
+for the assembly instructions to use. Simplify the expressions used to
+clearly indicate they are working on 8-bit values only, which still
+keeps sparse happy without an accidental promotion to a 32 bit integer.
 
-> 
-> Signed-off-by: Kenny Root <kroot@google.com>
-> Signed-off-by: Alistair Delva <adelva@google.com>
-> Reviewed-by: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-nvdimm@lists.01.org
-> Cc: kernel-team@android.com
-> ---
->  drivers/nvdimm/of_pmem.c | 60 +++++++++++++++++++++++-----------------
->  1 file changed, 35 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-> index 8224d1431ea9..fdf54494e8c9 100644
-> --- a/drivers/nvdimm/of_pmem.c
-> +++ b/drivers/nvdimm/of_pmem.c
-> @@ -14,6 +14,39 @@ struct of_pmem_private {
->  	struct nvdimm_bus *bus;
->  };
->  
-> +static void of_pmem_register_region(struct platform_device *pdev,
-> +				    struct nvdimm_bus *bus,
-> +				    struct device_node *np,
-> +				    struct resource *res, bool is_volatile)
-> +{
-> +	struct nd_region_desc ndr_desc;
-> +	struct nd_region *region;
-> +
-> +	/*
-> +	 * NB: libnvdimm copies the data from ndr_desc into it's own
-> +	 * structures so passing a stack pointer is fine.
-> +	 */
-> +	memset(&ndr_desc, 0, sizeof(ndr_desc));
-> +	ndr_desc.numa_node = dev_to_node(&pdev->dev);
-> +	ndr_desc.target_node = ndr_desc.numa_node;
-> +	ndr_desc.res = res;
-> +	ndr_desc.of_node = np;
-> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> +
-> +	if (is_volatile)
-> +		region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> +	else
-> +		region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> +
-> +	if (!region)
-> +		dev_warn(&pdev->dev,
-> +			 "Unable to register region %pR from %pOF\n",
-> +			 ndr_desc.res, np);
-> +	else
-> +		dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> +			ndr_desc.res, np);
-> +}
-> +
->  static int of_pmem_region_probe(struct platform_device *pdev)
->  {
->  	struct of_pmem_private *priv;
-> @@ -46,31 +79,8 @@ static int of_pmem_region_probe(struct platform_device *pdev)
->  			is_volatile ? "volatile" : "non-volatile",  np);
->  
->  	for (i = 0; i < pdev->num_resources; i++) {
-> -		struct nd_region_desc ndr_desc;
-> -		struct nd_region *region;
-> -
-> -		/*
-> -		 * NB: libnvdimm copies the data from ndr_desc into it's own
-> -		 * structures so passing a stack pointer is fine.
-> -		 */
-> -		memset(&ndr_desc, 0, sizeof(ndr_desc));
-> -		ndr_desc.numa_node = dev_to_node(&pdev->dev);
-> -		ndr_desc.target_node = ndr_desc.numa_node;
-> -		ndr_desc.res = &pdev->resource[i];
-> -		ndr_desc.of_node = np;
-> -		set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> -
-> -		if (is_volatile)
-> -			region = nvdimm_volatile_region_create(bus, &ndr_desc);
-> -		else
-> -			region = nvdimm_pmem_region_create(bus, &ndr_desc);
-> -
-> -		if (!region)
-> -			dev_warn(&pdev->dev, "Unable to register region %pR from %pOF\n",
-> -					ndr_desc.res, np);
-> -		else
-> -			dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> -					ndr_desc.res, np);
-> +		of_pmem_register_region(pdev, bus, np, &pdev->resource[i],
-> +					is_volatile);
->  	}
->  
->  	return 0;
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
+The reason the warning was occurring is because certain bitmasks that
+end with a mask next to a natural boundary like 7, 15, 23, 31, end up
+with a mask like 0x7f, which then results in sign extension when doing
+an invert (but I'm not a compiler expert). It was really only
+"clear_bit" that was having problems, and it was only on bit checks next
+to a byte boundary (top bit).
+
+Verified with a test module (see next patch) and assembly inspection
+that the patch doesn't introduce any change in generated code.
+
+Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+---
+v5: changed code to use simple AND and XOR, updated commit message
+v4: reverse argument order as suggested by David Laight, added reviewed-by
+v3: Clean up the header file changes as per peterz.
+v2: use correct CC: list
+---
+ arch/x86/include/asm/bitops.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 062cdecb2f24..53f246e9df5a 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+ 	if (__builtin_constant_p(nr)) {
+ 		asm volatile(LOCK_PREFIX "orb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" ((u8)CONST_MASK(nr))
++			: "iq" (CONST_MASK(nr) & 0xff)
+ 			: "memory");
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+ 	if (__builtin_constant_p(nr)) {
+ 		asm volatile(LOCK_PREFIX "andb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" ((u8)~CONST_MASK(nr)));
++			: "iq" (CONST_MASK(nr) ^ 0xff));
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+ 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+
+base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+-- 
+2.24.1
+
