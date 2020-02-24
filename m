@@ -2,171 +2,237 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7B7C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB539C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF0A22464
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A25720732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4ZViU/9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOpNRt8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgBXRad (ORCPT
+        id S1728104AbgBXRar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:30:33 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38564 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbgBXRad (ORCPT
+        Mon, 24 Feb 2020 12:30:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50897 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728079AbgBXRaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:30:33 -0500
-Received: by mail-il1-f193.google.com with SMTP id f5so8413928ilq.5;
-        Mon, 24 Feb 2020 09:30:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SKj57E8UaKSzcr5YZePGtfiP1UB+Fu3gym2CoICZfHk=;
-        b=M4ZViU/9h3Z6JjGtIU3UxjU+RHzCZ9+DjaoBCgJTI1glOFKFQ+LDnU8i4iyTFkdcjP
-         EAOkuBDaaTKfppOeOqKrBblOA6SgnQI64RFELJ+Rc06MX6K2K778F1zk+EedbH1dV7+W
-         fcn0iJxHQVaHyC2p2xTYBcgDbrfWErrBPmVRoeftMPQkwD126cNlwBMdQ3UXdgo+mehf
-         KXK9xV4Q4yRREwGDZvYvZcrMGo+p4kW74LPJKW1bImxR0DAV5UM5FIj3I1TKhxmjlOu7
-         irpMjCg/R5qTrP9AYzSlaLUzwzgrPkCWGkpdhxd+/seohPk0yKaWVopaJtg0g1krFDxK
-         0zjQ==
+        Mon, 24 Feb 2020 12:30:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582565445;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jBUQXvyIT0NRGeVlKfYzxCNd6VTs5c/rTotbnjQlyHg=;
+        b=SOpNRt8eWVIPHGZDDKgm7F13CQR+wUNSBgIQyqgDbz61GQT9G+KR+pqvF2DrC1kQLVytVY
+        M2qLqHrPFobhwIAyb9beYeKGZruLJDsO4U4dIxzww/cdNz7qLq70j/5Uy/w6qjS5LLZO8E
+        ubSsQN8GdMzblGuodHeWEP9Y86f8TGM=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-He28CbMBOsyOeHndDL3GGQ-1; Mon, 24 Feb 2020 12:30:44 -0500
+X-MC-Unique: He28CbMBOsyOeHndDL3GGQ-1
+Received: by mail-il1-f200.google.com with SMTP id k9so19521305ili.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:30:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SKj57E8UaKSzcr5YZePGtfiP1UB+Fu3gym2CoICZfHk=;
-        b=ht5Bz+/MykOjK6jimFauaiG9ELOfhdG10H00bTAnYiQNSxKYxUUv/6Xzs20Emk+ea0
-         sTpR0L5pxzAkE6MKE6v6ptPr7SkjBQI9e/JbxxffUQvvdsUnwEq1RoXSRJaldhbDWu7L
-         eutoM25tSVI+wsF6XhUvOCpFyCX59XZOV8xVXImgJFOvmK3JRdC+Lk8aG1CKyXTD6OjO
-         tGIINa5zOdOC25SeEiLH0ZZO7mC40twVh0Fv0JykVAKPW4V2YLBkhGNjYC+vSq2XuSXq
-         iNyFF6qOqOQMDB5Zl1bqc2CvJ5lt15bvtFR2WpgyXjg9cXewehVMmiNAWP/Izdw+gblf
-         m5Jg==
-X-Gm-Message-State: APjAAAW4B7jQvpPyq0skzyDrpbkTu0NoO5ahDlQcajPoeAkRXGzm/oVk
-        93y/LOHT2QA5qJN7ZQ9Rxe6P0LkSHKqBgi35FGA=
-X-Google-Smtp-Source: APXvYqxd9lL1OgyFEkdy2Qzj4Dk2yTwPFtckG9T0XASSlIkyyGL7t5TDIFJhsrj9l/n/RJCex6W2aSpuDJ1r9ndHDyc=
-X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr59682046ilj.298.1582565432229;
- Mon, 24 Feb 2020 09:30:32 -0800 (PST)
+        bh=jBUQXvyIT0NRGeVlKfYzxCNd6VTs5c/rTotbnjQlyHg=;
+        b=bckP0Ya2Jw+6Tp5kW0ZJzW9pFEwCUJry7rxxY3RebaiTzKCHfPY7DgHx/ujVjvGah4
+         yvXZY6J5llsqUipJmnr3KDG7czzZ4hId2WOgkt5/w6TmaGGECz4l+51aD7Y3zTFQh3hk
+         1VgDrhgTtJ2o8pndYg900GJcsoq7aCFxEhSWbMkqPVkAxsVkdV3+fY4KcL124D/Jn23k
+         UbluJNB8Bq3zl9GYycfFad1BI13dZtqH4yMhbDyGrMIhZeMPSHPag3E6UHwsxeyS3N82
+         /Cgnb32SKuqAVC1zG0PCxgYBWWs+28xHmqO9Pr24OHGgxYg0X5orRaOmrjO7oHF4p2rx
+         Tq6g==
+X-Gm-Message-State: APjAAAVUw89sg4nZkb1pOYza3TGe4mD0qAbBkr7XxKXmuU154SfnmJEE
+        CVXvhq3Ir0Mu/6ZXMC5tpqQVib4z/9HhvsEezlGREKOc4drTckmnR0wiPzfCi0J3AAbhqGi1ek+
+        b+GhQr+GpJ4CWd7PQ9gJ7epK59SVTJT9FySl28xtx
+X-Received: by 2002:a92:3a95:: with SMTP id i21mr62650035ilf.249.1582565442499;
+        Mon, 24 Feb 2020 09:30:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyqzh9CyJ1U9k2mrY0h0+BdZxlgI3BRos8HplHL7d4dWc2+DjxZb0RyDzWWanrk9NL3aDvaxkGg8UaqFzTR+WU=
+X-Received: by 2002:a92:3a95:: with SMTP id i21mr62649926ilf.249.1582565441513;
+ Mon, 24 Feb 2020 09:30:41 -0800 (PST)
 MIME-Version: 1.0
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
- <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net> <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
- <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net> <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
- <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net> <20200224101800.GJ2667@lahna.fi.intel.com>
- <20200224103731.GA10400@smile.fi.intel.com> <20200224105121.GK2667@lahna.fi.intel.com>
- <20200224112740.GL2667@lahna.fi.intel.com>
-In-Reply-To: <20200224112740.GL2667@lahna.fi.intel.com>
-From:   Martin Volf <martin.volf.42@gmail.com>
-Date:   Mon, 24 Feb 2020 18:30:21 +0100
-Message-ID: <CAM1AHpQW_=vvcjXHa8UOrdOohABm0sE2UPr4sfK2AtfWHsm4Ag@mail.gmail.com>
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to b84398d6d7f90080
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
+In-Reply-To: <20200222165631.GA213225@google.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Tue, 25 Feb 2020 01:30:30 +0800
+Message-ID: <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Khalid Aziz <khalid@gonehiking.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Baoquan He <bhe@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
+        Myron Stowe <myron.stowe@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:27 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+Hi,
+
+Thanks for the reply, I don't have any better idea than this RFC patch
+yet. The patch is hold as previous discussion suggests this just work
+around the problem, the real fix should be let crash kernel load every
+required kernel module and reset whichever hardware that is not in a
+good status. However, user may struggle to find out which driver is
+actually needed, and it's not practical to load all drivers in kdump
+kernel. (actually kdump have been trying to load as less driver as
+possible to save memory).
+
+So as Dave Y suggested in another reply, will it better to apply this
+quirk with a kernel param controlling it? If such problem happens, the
+option could be turned on as a fix.
+
+
+On Sun, Feb 23, 2020 at 12:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Mon, Feb 24, 2020 at 12:51:25PM +0200, Mika Westerberg wrote:
-> > > I'm wondering if
-> > >
-> > >             pci_dev_is_present(...);
-> > >
-> > > returns false here.
+> [+cc Khalid, Deepa, Randy, Dave, Myron]
+>
+> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
+> > There are reports about kdump hang upon reboot on some HPE machines,
+> > kernel hanged when trying to shutdown a PCIe port, an uncorrectable
+> > error occurred and crashed the system.
+>
+> Did we ever make progress on this?  This definitely sounds like a
+> problem that needs to be fixed, but I don't see a resolution here.
+>
+> > On the machine I can reproduce this issue, part of the topology
+> > looks like this:
 > >
-> > Well that might also be the case since lspci shows this:
+> > [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
+> >           +-01.0-[02]--
+> >           +-01.1-[05]--
+> >           +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
+> >           +-02.1-[0f]--
+> >           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 Controllers
 > >
-> > 00:1f.0 ISA bridge: Intel Corporation Z390 Chipset LPC/eSPI Controller (rev 10)
-> > 00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
-> > 00:1f.4 SMBus: Intel Corporation Cannon Lake PCH SMBus Controller (rev 10)
+> > When shuting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
+> > will hang, depend on which device is reinitialized in kdump kernel.
 > >
-> > PMC is 1f.2 and not present here. However, it may be that the PMC is
-> > still there it just does not "enumerate" because its devid/vendorid are
-> > set to 0xffff. Similar hiding was done for the P2SB bridge.
+> > If force remove unused device then trigger kdump, the problem will never
+> > happen:
+> >
+> >     echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
+> >     echo c > /proc/sysrq-trigger
+> >
+> >     ... Kdump save vmcore through network, the NIC get reinitialized and
+> >     hpsa is untouched. Then reboot with no problem. (If hpsa is used
+> >     instead, shutdown the NIC in first kernel will help)
+> >
+> > The cause is that some devices are enabled by the first kernel, but it
+> > don't have the chance to shutdown the device, and kdump kernel is not
+> > aware of it, unless it reinitialize the device.
+> >
+> > Upon reboot, kdump kernel will skip downstream device shutdown and
+> > clears its bridge's master bit directly. The downstream device could
+> > error out as it can still send requests but upstream refuses it.
+> >
+> > So for kdump, let kernel read the correct hardware power state on boot,
+> > and always clear the bus master bit of PCI device upon shutdown if the
+> > device is on. PCIe port driver will always shutdown all downstream
+> > devices first, so this should ensure all downstream devices have bus
+> > master bit off before clearing the bridge's bus master bit.
+> >
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > ---
+> >  drivers/pci/pci-driver.c | 11 ++++++++---
+> >  drivers/pci/quirks.c     | 20 ++++++++++++++++++++
+> >  2 files changed, 28 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 0454ca0e4e3f..84a7fd643b4d 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/kexec.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/acpi.h>
+> > +#include <linux/crash_dump.h>
+> >  #include "pci.h"
+> >  #include "pcie/portdrv.h"
+> >
+> > @@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
+> >        * If this is a kexec reboot, turn off Bus Master bit on the
+> >        * device to tell it to not continue to do DMA. Don't touch
+> >        * devices in D3cold or unknown states.
+> > -      * If it is not a kexec reboot, firmware will hit the PCI
+> > -      * devices with big hammer and stop their DMA any way.
+> > +      * If this is kdump kernel, also turn off Bus Master, the device
+> > +      * could be activated by previous crashed kernel and may block
+> > +      * it's upstream from shutting down.
+> > +      * Else, firmware will hit the PCI devices with big hammer
+> > +      * and stop their DMA any way.
+> >        */
+> > -     if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+> > +     if ((kexec_in_progress || is_kdump_kernel()) &&
+> > +                     pci_dev->current_state <= PCI_D3hot)
+> >               pci_clear_master(pci_dev);
+> >  }
+> >
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 4937a088d7d8..c65d11ab3939 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -28,6 +28,7 @@
+> >  #include <linux/platform_data/x86/apple.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/switchtec.h>
+> > +#include <linux/crash_dump.h>
+> >  #include <asm/dma.h> /* isa_dma_bridge_buggy */
+> >  #include "pci.h"
+> >
+> > @@ -192,6 +193,25 @@ static int __init pci_apply_final_quirks(void)
+> >  }
+> >  fs_initcall_sync(pci_apply_final_quirks);
+> >
+> > +/*
+> > + * Read the device state even if it's not enabled. The device could be
+> > + * activated by previous crashed kernel, this will read and correct the
+> > + * cached state.
+> > + */
+> > +static void quirk_read_pm_state_in_kdump(struct pci_dev *dev)
+> > +{
+> > +     u16 pmcsr;
+> > +
+> > +     if (!is_kdump_kernel())
+> > +             return;
+> > +
+> > +     if (dev->pm_cap) {
+> > +             pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > +             dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> > +     }
+> > +}
+> > +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_read_pm_state_in_kdump);
+> > +
+> >  /*
+> >   * Decoding should be disabled for a PCI device during BAR sizing to avoid
+> >   * conflict. But doing so may cause problems on host bridge and perhaps other
+> > --
+> > 2.24.1
+> >
 >
-> Actually I think this is the case here.
->
-> I don't know the iTCO_wdt well enough to say if it could live without
-> the ICH_RES_IO_SMI. It looks like this register is used to disable SMI
-> generation but not sure how well it works if it is left to BIOS to
-> configure. I suppose these systems should use WDAT instead.
->
-> Martin, can you try the below patch?
->
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index ba87305f4332..c16e5ad08641 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -1593,7 +1593,7 @@ i801_add_tco_cnl(struct i801_priv *priv, struct pci_dev *pci_dev,
->  static void i801_add_tco(struct i801_priv *priv)
->  {
->         u32 base_addr, tco_base, tco_ctl, ctrl_val;
-> -       struct pci_dev *pci_dev = priv->pci_dev;
-> +       struct pci_dev *pmc_dev, *pci_dev = priv->pci_dev;
->         struct resource tco_res[3], *res;
->         unsigned int devfn;
->
-> @@ -1620,7 +1620,12 @@ static void i801_add_tco(struct i801_priv *priv)
->          * Power Management registers.
->          */
->         devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
-> -       pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
-> +       pmc_dev = pci_get_slot(pci_dev->bus, devfn);
-> +       if (!pmc_dev) {
-> +               dev_info(&pci_dev->dev, "PMC device disabled, not enabling iTCO\n");
-> +               return;
-> +       }
-> +       pci_read_config_dword(pmc_dev, ACPIBASE, &base_addr);
->
->         res = &tco_res[ICH_RES_IO_SMI];
->         res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
-> @@ -1630,15 +1635,17 @@ static void i801_add_tco(struct i801_priv *priv)
->         /*
->          * Enable the ACPI I/O space.
->          */
-> -       pci_bus_read_config_dword(pci_dev->bus, devfn, ACPICTRL, &ctrl_val);
-> +       pci_read_config_dword(pmc_dev, ACPICTRL, &ctrl_val);
->         ctrl_val |= ACPICTRL_EN;
-> -       pci_bus_write_config_dword(pci_dev->bus, devfn, ACPICTRL, ctrl_val);
-> +       pci_write_config_dword(pmc_dev, ACPICTRL, ctrl_val);
->
->         if (priv->features & FEATURE_TCO_CNL)
->                 priv->tco_pdev = i801_add_tco_cnl(priv, pci_dev, tco_res);
->         else
->                 priv->tco_pdev = i801_add_tco_spt(priv, pci_dev, tco_res);
->
-> +       pci_dev_put(pmc_dev);
-> +
->         if (IS_ERR(priv->tco_pdev))
->                 dev_warn(&pci_dev->dev, "failed to create iTCO device\n");
->  }
 
-Hello,
 
-with the patch applied, the sensors are working, dmesg says:
-...
-[    2.804423] i801_smbus 0000:00:1f.4: SPD Write Disable is set
-[    2.804478] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
-[    2.804491] i801_smbus 0000:00:1f.4: PMC device disabled, not enabling iTCO
-...
-[    2.826373] nct6775: Enabling hardware monitor logical device mappings.
-[    2.826447] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-...
+--
+Best Regards,
+Kairui Song
 
-and there is no "002e-0031" line in /proc/ioports.
-
-Martin
