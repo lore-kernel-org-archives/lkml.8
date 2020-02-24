@@ -5,71 +5,75 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98834C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80AC38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F61321927
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9C321927
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKaXURfZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wsb1P9jQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgBXV3s (ORCPT
+        id S1728343AbgBXV3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:29:48 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40607 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgBXV3o (ORCPT
+        Mon, 24 Feb 2020 16:29:53 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51317 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbgBXV3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:29:44 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so891771wmi.5;
-        Mon, 24 Feb 2020 13:29:43 -0800 (PST)
+        Mon, 24 Feb 2020 16:29:49 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so846657wmi.1;
+        Mon, 24 Feb 2020 13:29:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E9/8+yaqRvrAtgc15Q6xGgpo7ZqTiVPb7l/6H6m7t5Q=;
-        b=NKaXURfZ1NqkGkQxTkR2n9fqQBrq9+jibXeSJpxwl573MInYBFnVXqncS4vCeGwfJb
-         CEL+dWVBeljqEiJQiQCHw2PAK5YFI989FTKqVYOG37zNldMa9Z5Ka2fNfB87YKIDusKe
-         1ZUSR7DIIEbQEjn37yQHSZm+7OOCFB45tbekmmy3j2Fds/Kq/1htSxXBzsEc+70O/Iv6
-         SqleS/u/K7t1VW08LzIvNVT0h1hwY7XZw/RDiNFoUul2asLJphUNp5VknyCGdvKXtHr3
-         rtHqjm7F7jGPmi6uhbuKE6mKt7vTagMbsL0RB5AEpxy/wu0XgQ8jTprhjUuS614eKB6+
-         LtdQ==
+        bh=4ePoQM9FMGKqv4Tet944qGjHoWr4YdITdi8WCr48XQE=;
+        b=Wsb1P9jQEiF1IO2n76fs9xq4T9QbIj9YXd6SI/DA4Y8j8BTYxfPy+wrh2QxV4WjHBx
+         34rvlUTboSsZUi4H79FEYfym43FdNTOfMsuUcOGvWMFZdrYjf5zJW2OTODXD7AZ9+Ane
+         aPdroTgvj3vfXzspmGpHDEnAKRlOfb/GHjyYKawYHj7gTX17Ue1VkFzhHYSgJVPqCNzX
+         vgi/6n88QKy9NiwuFt3N7qgD0PU7/bg/6CuTEX8ABVV5FWMI0PlK30uVbf9CnN6H8GPO
+         82gds9gHr4hufC1K4u+H/4ABcZdp1IxfQwD79fU0FM2Jtpug3uq7G2JxQ98D1w6Cw14B
+         TubA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=E9/8+yaqRvrAtgc15Q6xGgpo7ZqTiVPb7l/6H6m7t5Q=;
-        b=spoiul36vtl6smEjodHHnja7FNFgCz1sJmW5U8nc8obyLrOoZ/2DFRjQCroo3Q8ew1
-         lS2bLOHPN2SVlVCz8oxSSK/ckrbRwgwlH6BQSI8Q4jzdpU+MEHP+h2QfL/csbCT4tgv1
-         vTxKXKEZSu0yVkL2s2j/E+qxq/z86qzkmX+kFE56ECzciudBs9BfGOaV882OzUDXIOZQ
-         AMg446SgMbEayQq6LHUi3xz6I3pZGLb8gySNn6pkPsICuLRKkiY13nGRkDblsrbJ7R/D
-         GN2j+9lkCPpq29uBet3bocQIKlBWQyBmNvyC8NnR5/+RFmPZTzD00/dssXQlovwJRjC3
-         ezfA==
-X-Gm-Message-State: APjAAAXWrVGoJCaoNzPWJdvsrtNOpzhDhGKhmBRJdOkIV4xuKuznFXlQ
-        ZSdMe0aOmbrneFLL1XMYriPhRUlk
-X-Google-Smtp-Source: APXvYqxruEH1sHYvFUjylGwTeW642aO6q6BjVx/Msh+bTzEzlkZWlryBOCDvfSOwyOr70XLRs3JCoQ==
-X-Received: by 2002:a7b:ce0b:: with SMTP id m11mr1020524wmc.4.1582579782522;
-        Mon, 24 Feb 2020 13:29:42 -0800 (PST)
+        bh=4ePoQM9FMGKqv4Tet944qGjHoWr4YdITdi8WCr48XQE=;
+        b=hRsEUfpA0mxSBbsqxoRXwgg+a4ZvUZF41AP9WGepOOFhuDB4cNpHeSHiCTsRIrNzZ1
+         FmE6Jxdlbzf8ignyWuXdVbbDTEPT72a8lQaJJE8Ebuz6bGH+b5FHIKbfMbDq4vDHmSpE
+         So4qEXOnbGY4I1L+wtWkTvZawo+VFuqGAjQ2Q7W87uDdLvhCAn1DIddOryRpk2J7cLzl
+         virF1aC6xh7+fnGAz5KFdhSweQ+sRSnRGBvTp2VZKSynShPr5VlJbGWFT1bNsW4zQEIR
+         GPkg1CmglO70PalYwYlo937zKDc7yI1fWVdhacoIe7YwXJkk23qAaEUZRk/v3n9UvH0R
+         ySMA==
+X-Gm-Message-State: APjAAAXC7F4L6WVh+t4pFNb4duyeptmiUKItZ4VFrTo8dslcBQWb3yMO
+        iKnwh+6GBrRKQBSts0HfHlkJkmy+
+X-Google-Smtp-Source: APXvYqxbfXTP6O46zvXnsmgQaL9+Uu+XGMcGZo8uQYQDFGZv8m9jO7d9kHr2VszACwNX16y6av14Fw==
+X-Received: by 2002:a1c:4d03:: with SMTP id o3mr919880wmh.164.1582579787655;
+        Mon, 24 Feb 2020 13:29:47 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:3d90:eff:31bc:c6a9? (p200300EA8F2960003D900EFF31BCC6A9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:3d90:eff:31bc:c6a9])
-        by smtp.googlemail.com with ESMTPSA id e8sm13925652wrr.69.2020.02.24.13.29.41
+        by smtp.googlemail.com with ESMTPSA id b11sm20510727wrx.89.2020.02.24.13.29.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 13:29:42 -0800 (PST)
+        Mon, 24 Feb 2020 13:29:47 -0800 (PST)
+Subject: [PATCH 5/8] net: sungem: use pci_status_get_and_clear_errors
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 1/8] PCI: add constant PCI_STATUS_ERROR_BITS
 To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
         David Miller <davem@davemloft.net>,
         Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
 References: <5939f711-92aa-e7ed-2a26-4f1e4169f786@gmail.com>
-Message-ID: <d61cddab-785b-7a57-4b2d-2fbdd34766d7@gmail.com>
-Date:   Mon, 24 Feb 2020 22:22:49 +0100
+Message-ID: <e88effc4-bd85-9734-533d-60e3d40d27f2@gmail.com>
+Date:   Mon, 24 Feb 2020 22:26:35 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -82,68 +86,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This constant is used (with different names) in more than one driver,
-so move it to the PCI core.
+Use new helper pci_status_get_and_clear_errors() to simplify the code.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/marvell/skge.h | 6 ------
- drivers/net/ethernet/marvell/sky2.h | 6 ------
- include/uapi/linux/pci_regs.h       | 7 +++++++
- 3 files changed, 7 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/sun/sungem.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
-index 6fa7b6a34..e149bdfe1 100644
---- a/drivers/net/ethernet/marvell/skge.h
-+++ b/drivers/net/ethernet/marvell/skge.h
-@@ -15,12 +15,6 @@
- #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
- #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
+diff --git a/drivers/net/ethernet/sun/sungem.c b/drivers/net/ethernet/sun/sungem.c
+index 8358064fb..2d392a7b1 100644
+--- a/drivers/net/ethernet/sun/sungem.c
++++ b/drivers/net/ethernet/sun/sungem.c
+@@ -545,37 +545,25 @@ static int gem_pci_interrupt(struct net_device *dev, struct gem *gp, u32 gem_sta
+ 	}
  
--#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
--			       PCI_STATUS_SIG_SYSTEM_ERROR | \
--			       PCI_STATUS_REC_MASTER_ABORT | \
--			       PCI_STATUS_REC_TARGET_ABORT | \
--			       PCI_STATUS_PARITY)
+ 	if (pci_estat & GREG_PCIESTAT_OTHER) {
+-		u16 pci_cfg_stat;
++		int pci_errs;
+ 
+ 		/* Interrogate PCI config space for the
+ 		 * true cause.
+ 		 */
+-		pci_read_config_word(gp->pdev, PCI_STATUS,
+-				     &pci_cfg_stat);
+-		netdev_err(dev, "Read PCI cfg space status [%04x]\n",
+-			   pci_cfg_stat);
+-		if (pci_cfg_stat & PCI_STATUS_PARITY)
++		pci_errs = pci_status_get_and_clear_errors(gp->pdev);
++		netdev_err(dev, "PCI status errors[%04x]\n", pci_errs);
++		if (pci_errs & PCI_STATUS_PARITY)
+ 			netdev_err(dev, "PCI parity error detected\n");
+-		if (pci_cfg_stat & PCI_STATUS_SIG_TARGET_ABORT)
++		if (pci_errs & PCI_STATUS_SIG_TARGET_ABORT)
+ 			netdev_err(dev, "PCI target abort\n");
+-		if (pci_cfg_stat & PCI_STATUS_REC_TARGET_ABORT)
++		if (pci_errs & PCI_STATUS_REC_TARGET_ABORT)
+ 			netdev_err(dev, "PCI master acks target abort\n");
+-		if (pci_cfg_stat & PCI_STATUS_REC_MASTER_ABORT)
++		if (pci_errs & PCI_STATUS_REC_MASTER_ABORT)
+ 			netdev_err(dev, "PCI master abort\n");
+-		if (pci_cfg_stat & PCI_STATUS_SIG_SYSTEM_ERROR)
++		if (pci_errs & PCI_STATUS_SIG_SYSTEM_ERROR)
+ 			netdev_err(dev, "PCI system error SERR#\n");
+-		if (pci_cfg_stat & PCI_STATUS_DETECTED_PARITY)
++		if (pci_errs & PCI_STATUS_DETECTED_PARITY)
+ 			netdev_err(dev, "PCI parity error\n");
 -
- enum csr_regs {
- 	B0_RAP	= 0x0000,
- 	B0_CTST	= 0x0004,
-diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
-index b02b65230..851d8ed34 100644
---- a/drivers/net/ethernet/marvell/sky2.h
-+++ b/drivers/net/ethernet/marvell/sky2.h
-@@ -252,12 +252,6 @@ enum {
- };
+-		/* Write the error bits back to clear them. */
+-		pci_cfg_stat &= (PCI_STATUS_PARITY |
+-				 PCI_STATUS_SIG_TARGET_ABORT |
+-				 PCI_STATUS_REC_TARGET_ABORT |
+-				 PCI_STATUS_REC_MASTER_ABORT |
+-				 PCI_STATUS_SIG_SYSTEM_ERROR |
+-				 PCI_STATUS_DETECTED_PARITY);
+-		pci_write_config_word(gp->pdev,
+-				      PCI_STATUS, pci_cfg_stat);
+ 	}
  
- 
--#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
--			       PCI_STATUS_SIG_SYSTEM_ERROR | \
--			       PCI_STATUS_REC_MASTER_ABORT | \
--			       PCI_STATUS_REC_TARGET_ABORT | \
--			       PCI_STATUS_PARITY)
--
- enum csr_regs {
- 	B0_RAP		= 0x0000,
- 	B0_CTST		= 0x0004,
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 543769048..9b84a1278 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -68,6 +68,13 @@
- #define  PCI_STATUS_SIG_SYSTEM_ERROR	0x4000 /* Set when we drive SERR */
- #define  PCI_STATUS_DETECTED_PARITY	0x8000 /* Set on parity error */
- 
-+#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
-+			       PCI_STATUS_SIG_SYSTEM_ERROR | \
-+			       PCI_STATUS_REC_MASTER_ABORT | \
-+			       PCI_STATUS_REC_TARGET_ABORT | \
-+			       PCI_STATUS_SIG_TARGET_ABORT | \
-+			       PCI_STATUS_PARITY)
-+
- #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
- #define PCI_REVISION_ID		0x08	/* Revision ID */
- #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
+ 	/* For all PCI errors, we should reset the chip. */
 -- 
 2.25.1
 
