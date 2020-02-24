@@ -2,299 +2,147 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D68C38BFF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36533C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5811721556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582586093;
-	bh=C9/oTP4B7JB25f5LZxwiUeI7VtguZDG9CwTqtdqeInM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=coEtq4zwqSttbHfSrD3F1ag8Kqkp6asMk1pVXu7xTzYma0yL8E2HdeOLmKs8ug5Ff
-	 ibbn+ki2sSzECln3OIOmq028EduyfU7cKS0X0ddd3qcIu4P5pmExxqTbOZs/GHYAI0
-	 NKeHh15yNo/KaqamoCu63BKiS4XY2y/pINC7gRQo=
+	by mail.kernel.org (Postfix) with ESMTP id 033F624649
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgBXXOw (ORCPT
+        id S1728135AbgBXXRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:14:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 18:17:54 -0500
+Received: from mga07.intel.com ([134.134.136.100]:15611 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727081AbgBXXOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:14:51 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 393592051A;
-        Mon, 24 Feb 2020 23:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582586090;
-        bh=C9/oTP4B7JB25f5LZxwiUeI7VtguZDG9CwTqtdqeInM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0inq5WFAv4bmRdaNWcvS06rGNsoxwslMU3m0Ka8IB9cwUs9+kJYCFud7jpfCvwLyv
-         wiUoyiGD8T/muQZd5eUuWD+AINyzkWadg7Hi/ItPQX7gkqDWPWHiWQOkEDNJSl1pEH
-         /M+m7vtwe/x5Gmpl+40pEYXTWIYGY7EH9Gdg/v4A=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1A5FE35226D4; Mon, 24 Feb 2020 15:14:49 -0800 (PST)
-Date:   Mon, 24 Feb 2020 15:14:49 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200224231449.GS2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200221120618.GA194360@google.com>
- <20200221132817.GB194360@google.com>
- <20200221192152.GA6306@pc636>
- <20200222221253.GB191380@google.com>
- <20200224170219.GA21229@pc636>
+        id S1726651AbgBXXRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 18:17:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 15:17:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="410039160"
+Received: from wtczc53028gn.jf.intel.com (HELO skl-build) ([10.54.87.17])
+  by orsmga005.jf.intel.com with ESMTP; 24 Feb 2020 15:17:53 -0800
+Date:   Mon, 24 Feb 2020 15:17:42 -0800
+From:   "Christopher S. Hall" <christopher.s.hall@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        jacob.e.keller@intel.com,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, sean.v.kelley@intel.com
+Subject: Re: [Intel PMC TGPIO Driver 5/5] drivers/ptp: Add PMC Time-Aware
+ GPIO Driver
+Message-ID: <20200224231742.GD1508@skl-build>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <20191211214852.26317-6-christopher.s.hall@intel.com>
+ <CACRpkdbi7q5Vr2Lt12eirs3Z8GLL2AuLLrAARCHkYEYgKbYkHg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224170219.GA21229@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACRpkdbi7q5Vr2Lt12eirs3Z8GLL2AuLLrAARCHkYEYgKbYkHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 06:02:19PM +0100, Uladzislau Rezki wrote:
-> > > > > 
-> > > > > Overall this implementation is nice. You are basically avoiding allocating
-> > > > > rcu_head like Ted did by using the array-of-pointers technique we used for
-> > > > > the previous kfree_rcu() work.
-> > > > > 
-> > > > > One thing stands out, the path where we could not allocate a page for the new
-> > > > > block node:
-> > > > > 
-> > > > > > @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> > > > > >         if (krcp->initialized)
-> > > > > >                 spin_unlock(&krcp->lock);
-> > > > > >         local_irq_restore(flags);
-> > > > > > +
-> > > > > > +       if (!skip_call_rcu) {
-> > > > > > +               synchronize_rcu();
-> > > > > > +               kvfree(ptr_to_free);
-> > > > > 
-> > > > > We can't block, it has to be async otherwise everything else blocks, and I
-> > > > > think this can also be used from interrupt handlers which would at least be
-> > > > > an SWA violation. So perhaps it needs to allocate an rcu_head wrapper object
-> > > > > itself for the 'emergeny case' and use the regular techniques.
-> > > > > 
-> > > > > Another thing that stands out is the code duplication, if we can make this
-> > > > > reuse as much as of the previous code as possible, that'd be great. I'd like
-> > > > > to avoid bvcached and bvhead if possible. Maybe we can store information
-> > > > > about the fact that this is a 'special object' in some of the lower-order
-> > > > > bits of the pointer. Then we can detect that it is 'special' and free it
-> > > > > using kvfree() during the reclaim
-> > > > 
-> > > > Basically what I did different is:
-> > > > 1. Use the existing kfree_rcu_bulk_data::records array to store the
-> > > >    to-be-freed array.
-> > > > 2. In case of emergency, allocate a new wrapper and tag the pointer.
-> > > >    Read the tag later to figure its an array wrapper and do additional kvfree.
-> > > >
-> > > I see your point and agree that duplication is odd and we should avoid
-> > > it as much as possible. Also, i like the idea of using the wrapper as
-> > > one more chance to build a "head" for headless object.
-> > > 
-> > > I did not mix pointers because then you will need to understand what is what.
-> > 
-> > Well that's why I brought up the whole tagging idea. Then you don't need
-> > separate pointers to manage either (edit: but maybe you do as you mentioned
-> > vfree below..).
-> > 
-> Right. We can use tagging idea to separate kmalloc/vmalloc pointers to
-> place them into different arrays. Because kvmalloc() can return either
-> SLAB pointer or vmalloc one.
-> 
-> > > It is OK for "emergency" path, because we simply can just serialize it by kvfree()
-> > > call, it checks inside what the ptr address belong to:
-> > > 
-> > > <snip>
-> > > void kvfree(const void *addr)
-> > > {
-> > >     if (is_vmalloc_addr(addr))
-> > >         vfree(addr);
-> > >     else
-> > >         kfree(addr);
-> > > }
-> > > <snip>
-> > > 
-> > > whereas normal path, i mean "bulk one" where we store pointers into array
-> > > would be broken. We can not call kfree_bulk(array, nr_entries) if the passed
-> > > array contains "vmalloc" pointers, because it is different allocator. Therefore,
-> > > i deliberately have made it as a special case.
-> > 
-> > Ok, it would be nice if you can verify that ptr_to_free passed to
-> > kfree_call_rcu() is infact a vmalloc pointer.
-> > 
-> We can do that. We can check it by calling is_vmalloc_addr() on ptr. 
-> So it is possible to differentiate.
-> 
-> > > > Perhaps the synchronize_rcu() should be done from a workqueue handler
-> > > > to prevent IRQ crapping out?
-> > > >
-> > > I think so. For example one approach would be:
-> > > 
-> > > <snip>
-> > > struct free_deferred {
-> > >  struct llist_head list;
-> > >  struct work_struct wq;
-> > > };
-> > > static DEFINE_PER_CPU(struct free_deferred, free_deferred);
-> > > 
-> > > static void free_work(struct work_struct *w)
-> > > {
-> > >   struct free_deferred *p = container_of(w, struct free_deferred, wq);
-> > >   struct llist_node *t, *llnode;
-> > > 
-> > >   synchronize_rcu();
-> > > 
-> > >   llist_for_each_safe(llnode, t, llist_del_all(&p->list))
-> > >      vfree((void *)llnode, 1);
-> > > }
-> > > 
-> > > static inline void free_deferred_common(void *ptr_to_free)
-> > > {
-> > >     struct free_deferred *p = raw_cpu_ptr(&free_deferred);
-> > > 
-> > >     if (llist_add((struct llist_node *)ptr_to_free, &p->list))
-> > 
-> > Would this not corrupt the ptr_to_free pointer which readers might still be
-> > accessing since grace period has not yet ended?
-> > 
-> > We cannot touch the ptr_to_free pointer until after the grace period has
-> > ended.
-> > 
-> Right you are. We can do that only after grace period is passed, 
-> after synchronize_rcu(). Good point :)
-> 
-> > > }
-> > > <snip>
-> > > 
-> > > and it seems it should work. Because we know that KMALLOC_MIN_SIZE
-> > > can not be less then machine word:
-> > > 
-> > > /*
-> > >  * Kmalloc subsystem.
-> > >  */
-> > >  #ifndef KMALLOC_MIN_SIZE
-> > >  #define KMALLOC_MIN_SIZE (1 << KMALLOC_SHIFT_LOW)
-> > >  #endif
-> > > 
-> > > when it comes to vmalloc pointer it can not be less then one PAGE_SIZE :)
-> > > 
-> > > Another thing:
-> > > 
-> > > we are talking about "headless" variant that is special, therefore it
-> > > implies to have some restrictions, since we need a dynamic memory to
-> > > drive it. For example "headless" object can be freed from preemptible
-> > > context only, because freeing can be inlined:
-> > > 
-> > > <snip>
-> > > +   // NOT SURE if permitted due to IRQ. Maybe we
-> > > +   // should try doing this from WQ?
-> > > +   synchronize_rcu();
-> > > +   kvfree(ptr);
-> > > <snip>
-> > > 
-> > > Calling synchronize_rcu() from the IRQ context will screw the system up :)
-> > > Because the current CPU will never pass the QS state if i do not miss something.
-> > 
-> > Yes are you right, calling synchronize_rcu() from IRQ context is a strict no-no.
-> > 
-> > I believe we could tap into the GFP_ATOMIC emergency memory pool for this
-> > emergency situation. This pool is used for emergency cases. I think in
-> > emergency we can grow an rcu_head on this pool.
-> > 
-> > > Also kvfree() itself can be called from the preemptible context only, excluding IRQ,
-> > > there is a special path for it, otherwise vfree() can sleep. 
-> > 
-> > Ok that's good to know.
-> > 
-> > > > debug_objects bits wouldn't work obviously for the !emergency kvfree case,
-> > > > not sure what we can do there.
-> > > >
-> > > Agree.
-> > > 
-> > > Thank you, Joel, for your comments!
-> > 
-> > No problem, I think we have a couple of ideas here.
-> > 
-> > What I also wanted to do was (may be after all this), see if we can create an
-> > API for head-less kfree based on the same ideas. Not just for arrays for for
-> > any object. Calling it, say, kfree_rcu_headless() and then use the bulk array
-> > as we have been doing. That would save any users from having an rcu_head --
-> > of course with all needed warnings about memory allocation failure. Vlad,
-> > What do you think? Paul, any thoughts on this?
-> > 
-> I like it. It would be more clean interface. Also there are places where
-> people do not embed the rcu_head into their stuctures for some reason
-> and do like:
-> 
-> 
-> <snip>
->     synchronize_rcu();
->     kfree(p);
-> <snip>
-> 
-> <snip>
-> urezki@pc636:~/data/ssd/coding/linux-rcu$ find ./ -name "*.c" | xargs grep -C 1 -rn "synchronize_rcu" | grep kfree
-> ./arch/x86/mm/mmio-mod.c-314-           kfree(found_trace);
-> ./kernel/module.c-3910- kfree(mod->args);
-> ./kernel/trace/ftrace.c-5078-                   kfree(direct);
-> ./kernel/trace/ftrace.c-5155-                   kfree(direct);
-> ./kernel/trace/trace_probe.c-1087-      kfree(link);
-> ./fs/nfs/sysfs.c-113-           kfree(old);
-> ./fs/ext4/super.c-1701- kfree(old_qname);
-> ./net/ipv4/gre.mod.c-36-        { 0xfc3fcca2, "kfree_skb" },
-> ./net/core/sysctl_net_core.c-143-                               kfree(cur);
-> ./drivers/crypto/nx/nx-842-pseries.c-1010-      kfree(old_devdata);
-> ./drivers/misc/vmw_vmci/vmci_context.c-692-             kfree(notifier);
-> ./drivers/misc/vmw_vmci/vmci_event.c-213-       kfree(s);
-> ./drivers/infiniband/core/device.c:2162:                         * synchronize_rcu before the netdev is kfreed, so we
-> ./drivers/infiniband/hw/hfi1/sdma.c-1337-       kfree(dd->per_sdma);
-> ./drivers/net/ethernet/myricom/myri10ge/myri10ge.c-3582-        kfree(mgp->ss);
-> ./drivers/net/ethernet/myricom/myri10ge/myri10ge.mod.c-156-     { 0x37a0cba, "kfree" },
-> ./drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c:286:       synchronize_rcu(); /* before kfree(flow) */
-> ./drivers/net/ethernet/mellanox/mlxsw/core.c-1504-      kfree(rxl_item);
-> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6648- kfree(adapter->mbox_log);
-> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6650- kfree(adapter);
-> ./drivers/block/drbd/drbd_receiver.c-3804-      kfree(old_net_conf);
-> ./drivers/block/drbd/drbd_receiver.c-4176-                      kfree(old_disk_conf);
-> ./drivers/block/drbd/drbd_state.c-2074-         kfree(old_conf);
-> ./drivers/block/drbd/drbd_nl.c-1689-    kfree(old_disk_conf);
-> ./drivers/block/drbd/drbd_nl.c-2522-    kfree(old_net_conf);
-> ./drivers/block/drbd/drbd_nl.c-2935-            kfree(old_disk_conf);
-> ./drivers/mfd/dln2.c-178-               kfree(i);
-> ./drivers/staging/fwserial/fwserial.c-2122-     kfree(peer);
-> <snip>
+Hi Linus,
 
-That certainly is enough use cases to justify a new API.  And given that
-they are already calling synchronize_rcu(), having a function that only
-sometimes calls synchronize_rcu() should be OK from a latency viewpoint.
+Thanks for the review.
 
-The trick will be verifying that the existing calls to synchronize_rcu()
-aren't providing some other guarantee...  But submitting the patch and
-seeing if the maintainers are willing to ack is not without merit.
+On Fri, Feb 07, 2020 at 06:10:46PM +0100, Linus Walleij wrote:
+> Hi Christopher,
+> 
+> thanks for your patch!
+> 
+> On Fri, Jan 31, 2020 at 7:41 AM <christopher.s.hall@intel.com> wrote:
+> 
+> > From: Christopher Hall <christopher.s.hall@intel.com>
+> >
 
-Plus, the cases where both the synchronize_rcu() and the kfree() are
-under some "if" should be easier to verify as safe.
+> > The driver implements to the expanded PHC interface. Input requires use of
+> > the user-polling interface. Also, since the ART clock can't be adjusted,
+> > modulating the output frequency uses the edge timestamp interface
+> > (EVENT_COUNT_TSTAMP2) and the PEROUT2 ioctl output frequency adjustment
+> > interface.
+> >
+> > Acknowledgment: Portions of the driver code were authored by Felipe
+> > Balbi <balbi@kernel.org>
+> >
+> > Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
 
-							Thanx, Paul
+> This driver becomes a big confusion for the GPIO maintainer...
+
+I see your concern. TGPIO is Intel's internal name for the device, but
+there's no reason we can't use some other terminology in the context of
+the Linux kernel. How about removing the GP? We could refer to the device
+as "timed I/O". I think that is still fairly descriptive, but removes the
+confusion. Does this help the problem?
+
+> > +config PTP_INTEL_PMC_TGPIO
+> > +       tristate "Intel PMC Timed GPIO"
+> > +       depends on X86
+> > +       depends on ACPI
+> > +       depends on PTP_1588_CLOCK
+> (...)
+> > +#include <linux/gpio.h>
+> 
+> Don't use this header in new code, use <linux/gpio/driver.h>
+> 
+> But it looks like you should just drop it because there is no GPIO
+> of that generic type going on at all?
+
+Yes. You're correct. Removed.
+
+> > +/* Control Register */
+> > +#define TGPIOCTL_EN                    BIT(0)
+> > +#define TGPIOCTL_DIR                   BIT(1)
+> > +#define TGPIOCTL_EP                    GENMASK(3, 2)
+> > +#define TGPIOCTL_EP_RISING_EDGE                (0 << 2)
+> > +#define TGPIOCTL_EP_FALLING_EDGE       (1 << 2)
+> > +#define TGPIOCTL_EP_TOGGLE_EDGE                (2 << 2)
+> > +#define TGPIOCTL_PM                    BIT(4)
+> 
+> OK this looks like some GPIO registers...
+> 
+> Then there is a bunch of PTP stuff I don't understand I suppose
+> related to the precision time protocol.
+> 
+> Could you explain to a simple soul like me what is going on?
+> Should I bother myself with this or is this "some other GPIO,
+> not what you work on" or could it be that it's something I should
+> review?
+
+The Timed GPIO device has some GPIO-like features, but is mostly used to
+import/export a clock signal. It doesn't implement PWM or some other "GP"
+features like reading/setting pin state. I think you can safely ignore
+the feature.
+
+> I get the impression that this so-called "general purpose I/O"
+> isn't very general purpose at all, it seems to be very PTP-purpose
+
+Yes. It is missing many of general purpose features.
+
+> rather, so this confusion needs to be explained in the commit
+> message and possibly in the code as well.
+> 
+> What is it for really?
+
+For import/export system clock, primarily.
+
+> Yours,
+> Linus Walleij
+
+Thanks,
+Christopher
