@@ -2,113 +2,109 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87107C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BE3C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B21B20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WsFM4RR2"
+	by mail.kernel.org (Postfix) with ESMTP id F00F92082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582543236;
+	bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NXKa8hlkEd6pq4/hJSMX88lm6Pe4RtQIbUJKzuKrCUBMBxjtQMStelUUhyoo0xvGy
+	 p1s/X0y+aRJmK9zCCHiNGAjbrQyu9mZjlGIMzJGv5/PKHs7JtUO7j1CaHFnOX2M/U4
+	 hExeg5aaUqHSgSNDrN1D65gi9G74I8Hq0ecwsTk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgBXLUD (ORCPT
+        id S1727425AbgBXLUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:20:03 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18171 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:20:03 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e53b1160000>; Mon, 24 Feb 2020 03:18:46 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 24 Feb 2020 03:20:02 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 24 Feb 2020 03:20:02 -0800
-Received: from [10.26.11.229] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
- 2020 11:19:59 +0000
-Subject: Re: [PATCH 5.4 000/344] 5.4.22-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "tony@atomide.com" <tony@atomide.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, <patches@kernelci.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        <lkft-triage@lists.linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20200221072349.335551332@linuxfoundation.org>
- <529a5a4a-974e-995a-9556-c2a14d09bb5d@nvidia.com>
- <CA+G9fYv-KC0v++YsyXR-rhC2JBGUfhNGD+XYaZjN3fJSX1x_mg@mail.gmail.com>
- <f671fbf6-1cd5-ae8a-82e7-d3aba63e9840@ti.com>
- <20200223172604.GC349989@kroah.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1a6e640e-6d6f-26f8-d24d-025f32aa042e@nvidia.com>
-Date:   Mon, 24 Feb 2020 11:19:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 06:20:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727185AbgBXLUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:20:34 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8CB220828;
+        Mon, 24 Feb 2020 11:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582543234;
+        bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FnM2JMMOaqo3jU/7fznFVD+LadG9PBNNBtKfvwkV4jblDtsqK1/uqVUVQqc7uf1cF
+         AAD2elF8e05a0Y47WScHvQyp8eLtZPQjLNNyAs2WFWXTmnoZ0n8u6n4uKUhFe6G1Ja
+         VH+gdhqHJxRWBqUuU4vEgOzijzhE7+Zx+uBTI0Ng=
+Date:   Mon, 24 Feb 2020 19:20:26 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
+        michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
+ LS1028A
+Message-ID: <20200224112026.GF27688@dragon>
+References: <20200223204716.26170-1-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200223172604.GC349989@kroah.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582543126; bh=M12K3ln0ZRl8ICjqGSGcQ6TS1TJ9suo88Zt6Lzh4uBs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WsFM4RR2evbiGP5UvmA8WvBObaUVn/r+IfHwnWNzPk1VY1lGSlBcAzKQCWsKntGce
-         cwiRxgJhGT4/S0RChgjUcwlNp3YGgi2zXaMT9Ttf5r/GyYVyqgCN3/hge9X8Yc/KAD
-         jrNc6WE5GeikFkQkIH3i/YEWx0JMt0xwhKHFcAvUJSIllGm02NPNtLLH1Z3Ff5KPta
-         8L03oIz0baFSxOWouyH4yAViPPFh4bhV89O81FR5DQizlQJF8cfoDaC5PrDhCpw4fB
-         uZBSgJ4HYsLSpK4zWagy2dfRUOlCSofciVC1aNmIAxGSabiYTZZpzifl/ZlyCFHIIS
-         DDoA3zTG4U0JA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 23/02/2020 17:26, Greg Kroah-Hartman wrote:
-
-...
-
-> I've dropped the offending patch now, sorry about that.
+On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
+> This series officializes the device tree bindings for the embedded
+> Ethernet switch on NXP LS1028A (and for the reference design board).
+> The driver has been in the tree since v5.4-rc6.
 > 
-> greg k-h
+> It also performs some DT binding changes and minor cleanup, as per
+> feedback received in v1 and v2:
+> 
+> - I've changed the DT bindings for the internal ports from "gmii" to
+>   "internal". This means changing the ENETC phy-mode as well, for
+>   uniformity. So I would like the entire series to be merged through a
+>   single tree, probably the devicetree one - something which David
+>   Miller has aggreed to, here [0].
+> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
+>   means not only the newly introduced switch ports, but also RGMII
+>   standalone port 1.
+> 
+> [0]: https://lkml.org/lkml/2020/2/19/973
+> 
+> Claudiu Manoil (2):
+>   arm64: dts: fsl: ls1028a: add node for Felix switch
+>   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+> 
+> Vladimir Oltean (4):
+>   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
+>     RCIE
+>   arm64: dts: fsl: ls1028a: disable all enetc ports by default
 
+I applied these 4 DTS patches with changing prefix to 'arm64: dts: ls1028a: '.
 
-Thanks. I know that it is already out but FWIW, looks good to me ...
+Shawn
 
-
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    40 tests:	40 pass, 0 fail
-
-Linux version:	5.4.22-gf22dcb31727e
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+>   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+>   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+> 
+>  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
+>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
+>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
+>  drivers/net/dsa/ocelot/felix.c                |   3 +-
+>  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+>  6 files changed, 265 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> 
+> -- 
+> 2.17.1
+> 
