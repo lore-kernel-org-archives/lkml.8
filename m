@@ -2,141 +2,97 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE265C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7578AC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9418620838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD622080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IkyaGR4E"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MlFeKYpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbgBXQUn (ORCPT
+        id S1727673AbgBXQXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:20:43 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45024 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727378AbgBXQUn (ORCPT
+        Mon, 24 Feb 2020 11:23:16 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34584 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727378AbgBXQXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:20:43 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OGCfam007873;
-        Mon, 24 Feb 2020 17:20:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=WOrB9zjTn0T7PtrYAJ4aCW7Dq+zTAEPFOtROr7XMOzo=;
- b=IkyaGR4EFtaiGt7dPLgTYVNiT5WVp0abgnGKHqvs5vb7jFPFo9CCfx7MR6GyWcYI94Pp
- vDjJlFTZxwfD7MgR7i+gIVXHFor29lRKAnyWX72QDjXyARdthSLlyUVR7OhnZdcm96nU
- gTLUdZkFVPS5qIqh+Kj+IHMY/TYLweul/f3DeoUbZbvsSXdVHpxWJe+L39GKH8vDCd5E
- jedIymmRP6bmhuo8z2+i2nkgF/8fGKuf3BH/8v2ZEcTYD0xQr72wxqPTBx6HiIdZArCU
- J864vOCt2r1/Ct0L3qydZ6kIHJVk9s2gQc3505UGe7Onar2sg6qbeYX9cf1t0eD9ltPv Lw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yatn5ts7a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 17:20:28 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D7BD410002A;
-        Mon, 24 Feb 2020 17:20:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C73DE2A7B2C;
-        Mon, 24 Feb 2020 17:20:23 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.45) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
- 2020 17:20:23 +0100
-Subject: Re: [PATCH V2 0/9] mmc: mmci: sdmmc: add sdr104 support
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200128090636.13689-1-ludovic.barre@st.com>
- <CAPDyKFr+7SvRasPPjFDA2kwG0ERS-Qp3FGbVbRGLrscz5N=L2g@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <86464a0a-d830-465e-b35b-8dd2e766db70@st.com>
-Date:   Mon, 24 Feb 2020 17:20:22 +0100
+        Mon, 24 Feb 2020 11:23:16 -0500
+Received: by mail-io1-f66.google.com with SMTP id 13so10305085iou.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:23:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cdH1MvvC7rUuS4KMjyzC13eGx35pprvSgBak/SE0yDY=;
+        b=MlFeKYpdGaZT6w34tn6UFiEg5Qu4hA9w7O6A9cIiaoRQtKmhSi2DoL/6YteNJlg9YE
+         NgHRstjBoCMp2W8rfpiMDU4KbItudyyg4ytb79MSCjGDGDRRvZzvDYecDvaczbeslPJG
+         ApTtFYFtGhY70jJFfyAFPuvg4WmY24LXDJ5YXmiZArOovzz84VmKp4OppNCjMNF/vwcd
+         FcvV1jIapAwYuxO21y88pG/KN98bbsuiO4xF/gq7+XoIymUrffXa/0s5rijokVIBefHd
+         vvil+w87/K6Imf7715nhMQhuh0DHonMpPezoW7cLQZBe0d0bEAgl/YgPpozox1sV3n+l
+         Tjgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cdH1MvvC7rUuS4KMjyzC13eGx35pprvSgBak/SE0yDY=;
+        b=DNF/dMiqvGuPCom8G5c6Y4WNBnVXkFBUvycgg+nZIo15F7UIaRCASqpsj1qHl/gVaa
+         8XQX18OaFRPuoWIywy6YistxMupbgYa8I66akpt+BOBB36zgSgCUcSFwHYiiuQ44FfUh
+         zrk4fIQlS8NDFNtQbXn2qgthGtLx/CeF0qM8fzLPf3JZcCGL6Q/TCPrhpSjaJcaovLZ5
+         joxJP0+xo4PVjsV0O9qIcfGtEqk5TPEIRqep3F0xd/4/U2Z8325OM6OfWn5kVovm4pDn
+         ++R8IQjRPfyd9x+OZpro5lck8bLBKnokCNF+60DM1nP+lBSW2RxKvLNgQp1ULhebvkwV
+         jexQ==
+X-Gm-Message-State: APjAAAW6BuY9DvPVTGwiqxVMTHqu00LNDONNKhP0VPTtRMvPIUbD5cQX
+        ZF6LuMssSKE7FAbx0J93YtZZeKJ4q+o=
+X-Google-Smtp-Source: APXvYqwlY2sK74rRUwE66MTs9Vld2g2g6L09aji8FUtw894gQCIG22oW4xtpGFOq9D4DS8+9Glemdw==
+X-Received: by 2002:a6b:6108:: with SMTP id v8mr50420904iob.210.1582561394387;
+        Mon, 24 Feb 2020 08:23:14 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id w15sm3115476iow.61.2020.02.24.08.23.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 08:23:13 -0800 (PST)
+Subject: Re: [PATCH] sr_vendor: remove references to BLK_DEV_SR_VENDOR, leave
+ it enabled.
+To:     =?UTF-8?Q?Diego_Elio_Petten=c3=b2?= <flameeyes@flameeyes.com>
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+References: <20200223191144.726-1-flameeyes@flameeyes.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <28e56c52-1f36-eaf5-0a92-2ffd494472ac@kernel.dk>
+Date:   Mon, 24 Feb 2020 09:23:10 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFr+7SvRasPPjFDA2kwG0ERS-Qp3FGbVbRGLrscz5N=L2g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
+In-Reply-To: <20200223191144.726-1-flameeyes@flameeyes.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_04:2020-02-21,2020-02-24 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
-
-Le 2/19/20 à 11:28 AM, Ulf Hansson a écrit :
-> On Tue, 28 Jan 2020 at 10:06, Ludovic Barre <ludovic.barre@st.com> wrote:
->>
->> To support the sdr104 mode, sdmmc variant needs:
->> -Hardware delay block support for sdmmc variant
->>   with tuning procedure
->> -Voltage switch callbacks
->> -sdmmc revision 2.0
->>
->> V2:
->> -regroup host->mmc_ops & mmc->ops assignment
->> -add timeout define
->> -rename prep_volt_switch to pre_sig_volt_switch
->> -rename volt_switch to post_sig_volt_switch
->> -add 'why' comment for "mmc: mmci: add volt_switch callbacks"
->>
->> Ludovic Barre (9):
->>    mmc: mmci: sdmmc: replace sg_dma_xxx macros
->>    mmc: mmci: sdmmc: rename sdmmc_priv struct to sdmmc_idma
->>    mmc: mmci: add a reference at mmc_host_ops in mmci struct
->>    mmc: mmci: add private pointer for variant
->>    dt-bindings: mmc: mmci: add delay block base register for sdmmc
->>    mmc: mmci: sdmmc: add execute tuning with delay block
->>    mmc: mmci: add volt_switch callbacks
->>    mmc: mmci: sdmmc: add voltage switch functions
->>    mmc: mmci: add sdmmc variant revision 2.0
->>
->>   .../devicetree/bindings/mmc/mmci.txt          |   2 +
->>   drivers/mmc/host/mmci.c                       |  42 +++-
->>   drivers/mmc/host/mmci.h                       |   8 +
->>   drivers/mmc/host/mmci_stm32_sdmmc.c           | 204 +++++++++++++++++-
->>   4 files changed, 248 insertions(+), 8 deletions(-)
->>
->> --
->> 2.17.1
->>
+On 2/23/20 12:11 PM, Diego Elio Pettenò wrote:
+> This kernel configuration is basically enabling/disabling sr driver quirks
+> detection. While these quirks are for fairly rare devices (very old CD
+> burners, and a glucometer), the additional detection of these models is a
+> very minimal amount of code.
 > 
-> Applied for next, thanks!
-
-thanks Ulf.
-
+> The logic behind the quirks is always built into the sr driver.
 > 
-> I took the liberty to do minor amendments to some of the changelogs,
-> but in particular I have change some of prefixes for the commit
-> message headers into "mmc: mmci_sdmmc:".
+> This also removes the config from all the defconfig files that are enabling
+> this already.
 
-Ok, I use this prefixe for next commit.
+Looks fine to me, kind of silly to have that option.
 
-> 
-> Please tell, if there is anything that you want me to update.
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-I tested your next branch, and it's ok for me.
-sdmmc upstream is almost finished, I just some recent fixes to send.
+Assuming the SCSI tree will pick this up.
 
-> 
-> Kind regards
-> Uffe
-> 
+-- 
+Jens Axboe
+
