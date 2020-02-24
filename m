@@ -2,115 +2,123 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F1DC11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D427C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C7D20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45FF20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wBY/3vVu"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tfQ1X2cS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgBXPIW (ORCPT
+        id S1727756AbgBXPLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:08:22 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38021 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgBXPIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:08:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so9782239wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 07:08:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pWfBy6ev6bbSxjpQcvH0AV343qtHu4C4U0cUi6UfZnU=;
-        b=wBY/3vVubkI7wxLcoajaYhVvS0G5LexVcmABjQthWDix3gsSnXfBj57nUUKNiAdOZI
-         ApytnEuNGJdnemV7SgbbXHVI29sskaIY5Sp71/cGYPVtRutWuzjnZHEI41duu8JmINSD
-         BsefERmeChNIxs17rlV5BrsRcKPqRoeQXB4NASw88ZC0tlTGK3eD0wdDIBdYGUO5pXtn
-         /KlIZQQ63kYj/ATt0gQMlltG/BwYGJ3h57mK12AJcbkomZw/gIShztQVjxWdJuH+wDYG
-         A2yxvRv+BK5kvKdGXe2IZVUGtAnOuLFRzRA+aJ3VNAQhFR57pvJ6suNb0Xyaz3fpre4Q
-         alvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pWfBy6ev6bbSxjpQcvH0AV343qtHu4C4U0cUi6UfZnU=;
-        b=bRennurKxkKdObDzgGEZ2I7BA2j9pRPGsG8LV6OexwFoqZ7h4iGGSkxYmXtUvEzMl2
-         h/TZhW8kje5rxwJImxMYWJA621My20aH849IjQ6qQfYUwkmDSE6NMUfxsLXUMtPnHgkL
-         smvE54ScIDfomwU/oygX7tObJhkMA42Xmd+qCfepa7CVaKaMFTMFLcsiTBeufc0sYeWr
-         mVv+Xc1RNJSaB2dnYuVj/fX2jZK62CpeJy85zgPyumsUyo9ZyMuW6suFsZ5kCPoBg4xZ
-         2TU5zwrR2puoDxkY2y7bT572cngfl3tdN+eNMu7BGfKsP+veNBFSgsHQhoTGKr/NnRxN
-         ZgfA==
-X-Gm-Message-State: APjAAAWxC51SDpIAO5gBVGm5CZAFX/+EWOHoXMkafXKR5KTB43lgRzcb
-        y3HLuW+UkkUX0W4XkVGvJaI9fg==
-X-Google-Smtp-Source: APXvYqzDcFZ2YpuRUbGwu9xnZqepU2+kvnw7xrdYxp4hFRnTqNy7SXx1rJu4+siAQs7rix6lsB+m4w==
-X-Received: by 2002:a05:600c:3d1:: with SMTP id z17mr23480791wmd.90.1582556899192;
-        Mon, 24 Feb 2020 07:08:19 -0800 (PST)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id c15sm19074794wrt.1.2020.02.24.07.08.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 07:08:18 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] arm64: dts: meson: s400: fix sound card codec nodes
-Date:   Mon, 24 Feb 2020 16:08:11 +0100
-Message-Id: <20200224150812.263980-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200224150812.263980-1-jbrunet@baylibre.com>
-References: <20200224150812.263980-1-jbrunet@baylibre.com>
+        Mon, 24 Feb 2020 10:11:33 -0500
+Received: from vps.xff.cz ([195.181.215.36]:58468 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727299AbgBXPLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:11:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582557091; bh=9aE+a8E4LVEOkt4HFGQF11TSms2VZ1eBDyNQaeKqK74=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=tfQ1X2cSGvWyWkk8cfn533l5XKTK8qIsCqHpeifhVET6YwxrfV/c4HQ7kAgDyZtg1
+         EemSNHRmabcJvOtTSMSP1I33wJwaxrfobg/YeZItZIRq2JW7elPmz3bbDuCsibqTVH
+         aM1WXmMSCOmobj2LdNFrUK8MQqCd/7ErnT0+zGIU=
+Date:   Mon, 24 Feb 2020 16:11:31 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: sun50i-h5-orange-pi-pc2: Add CPUX voltage
+ regulator
+Message-ID: <20200224151131.fw7to7pmegj5ylqy@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime@cerno.tech>,
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200223104019.527587-1-megous@megous.com>
+ <20200224092704.gnnjwds3zmmravrw@gilmour.lan>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224092704.gnnjwds3zmmravrw@gilmour.lan>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some codec nodes of the s400 sound card are numbered with the pattern
-codec@XX. This pattern should be used only if there is a reg property in
-the node which is not case here. Change this to something acceptable.
+On Mon, Feb 24, 2020 at 10:27:04AM +0100, Maxime Ripard wrote:
+> On Sun, Feb 23, 2020 at 11:40:19AM +0100, Ondrej Jirman wrote:
+> > Orange Pi PC2 features sy8106a regulator just like Orange Pi PC.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Reviewed-by: Samuel Holland <samuel@sholland.org>
+> > ---
+> >  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 20 +++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> 
+> Having a changelog would be great
+> 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> > index 70b5f09984218..7b2572dc84857 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> > @@ -93,6 +93,10 @@ &codec {
+> >  	status = "okay";
+> >  };
+> >
+> > +&cpu0 {
+> > +	cpu-supply = <&reg_vdd_cpux>;
+> > +};
+> > +
+> >  &de {
+> >  	status = "okay";
+> >  };
+> > @@ -168,6 +172,22 @@ &ohci3 {
+> >  	status = "okay";
+> >  };
+> >
+> > +&r_i2c {
+> > +	status = "okay";
+> > +
+> > +	reg_vdd_cpux: regulator@65 {
+> > +		compatible = "silergy,sy8106a";
+> > +		reg = <0x65>;
+> > +		regulator-name = "vdd-cpux";
+> > +		silergy,fixed-microvolt = <1100000>;
+> > +		regulator-min-microvolt = <1000000>;
+> > +		regulator-max-microvolt = <1400000>;
+> > +		regulator-ramp-delay = <200>;
+> > +		regulator-boot-on;
+> > +		regulator-always-on;
+> > +	};
+> > +};
+> > +
+> 
+> Looks like you fixed the issues reported by Samuel though. I've
+> applied it.
 
-This change is only to better comply with the DT spec. No functional
-changes expected.
+Sorry, yes, I just did that. Re-ordering + removing a comment and changing the
+fixed voltage.
 
-Fixes: 6f59dc1afbb2 ("arm64: dts: meson-axg: s400: add sound card")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thank you,
+	o.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 4cd2d5951822..cb1360ae1211 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -313,15 +313,15 @@ dai-link-6 {
- 			dai-tdm-slot-rx-mask-1 = <1 1>;
- 			mclk-fs = <256>;
- 
--			codec@0 {
-+			codec-0 {
- 				sound-dai = <&lineout>;
- 			};
- 
--			codec@1 {
-+			codec-1 {
- 				sound-dai = <&speaker_amp1>;
- 			};
- 
--			codec@2 {
-+			codec-2 {
- 				sound-dai = <&linein>;
- 			};
- 
--- 
-2.24.1
+> Maxime
+
 
