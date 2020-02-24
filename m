@@ -2,131 +2,98 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB79C35641
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED168C35641
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3B020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EC672arn"
+	by mail.kernel.org (Postfix) with ESMTP id CCE2820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgBXFDN (ORCPT
+        id S1727186AbgBXFDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:03:13 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44100 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgBXFDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 00:03:12 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O52XSZ041807;
-        Sun, 23 Feb 2020 23:02:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582520553;
-        bh=xCQiqyco8FjikJzeNK9YjdUZlBW8NrFqs3TYqY6Z+qo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EC672arnkn2ROdFSdIJjgyB91xBsSJouqUB1oY0d1lodk606FQEOdygQN2uo94BPj
-         Y8X9yS+rYcBH0LIfToT98GpEHTRtUOTbdRmjUnEF3d5JniZq+WoTaowhlQq8DN2DN0
-         qw8Pk9Sh9kxBtsixQROUSX6+xiIiQLEhnSNdjoiw=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O52XvJ089117;
-        Sun, 23 Feb 2020 23:02:33 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 23
- Feb 2020 23:02:32 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 23 Feb 2020 23:02:32 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O52Sb1128124;
-        Sun, 23 Feb 2020 23:02:29 -0600
-Subject: Re: [PATCH] clocksource: timer-ti-dm: Drop bogus
- omap_dm_timer_of_set_source()
-To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-References: <20200213053504.22638-1-s-anna@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <26208b83-32fa-a855-ddbb-715cd7bf8dde@ti.com>
-Date:   Mon, 24 Feb 2020 10:31:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200213053504.22638-1-s-anna@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 24 Feb 2020 00:03:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:57634 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgBXFDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 00:03:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66CBD1FB;
+        Sun, 23 Feb 2020 21:03:36 -0800 (PST)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.16.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6C51A3F534;
+        Sun, 23 Feb 2020 21:03:33 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH V2 0/4] mm/vma: Use all available wrappers when possible
+Date:   Mon, 24 Feb 2020 10:33:09 +0530
+Message-Id: <1582520593-30704-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Apart from adding a VMA flag readable name for trace purpose, this series
+does some open encoding replacements with availabe VMA specific wrappers.
+This skips VM_HUGETLB check in vma_migratable() as its already being done
+with another patch (https://patchwork.kernel.org/patch/11347831/) which
+is yet to be merged.
 
+This series applies on 5.6-rc3. This has been build tested on multiple
+platforms, though boot and runtime testing was limited to arm64 and x86.
 
-On 13/02/20 11:05 AM, Suman Anna wrote:
-> The function omap_dm_timer_of_set_source() was originally added in
-> commit 31a7448f4fa8a ("ARM: OMAP: dmtimer: Add clock source from DT"),
-> and is designed to set a clock source from DT using the clocks property
-> of a timer node. This design choice is okay for clk provider nodes but
-> otherwise is a bad design as typically the clocks property is used to
-> specify the functional clocks for a device, and not its parents.
-> 
-> The timer nodes now all define a timer functional clock after the
-> conversion to ti-sysc and the new clkctrl layout, and this results
-> in an attempt to set the same functional clock as its parent when a
-> consumer driver attempts to acquire any of these timers in the
-> omap_dm_timer_prepare() function. This was masked and worked around
-> in commit 983a5a43ec25 ("clocksource: timer-ti-dm: Fix pwm dmtimer
-> usage of fck reparenting"). Fix all of this by simply dropping the
-> entire function.
-> 
-> Any DT configuration of clock sources should be achieved using
-> assigned-clocks and assigned-clock-parents properties provided
-> by the Common Clock Framework.
-> 
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Keerthy <j-keerthy@ti.com>
-> Cc: Ladislav Michl <ladis@linux-mips.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> Hi Tony,
-> 
-> Do you have the history of why the 32 KHz source is set as parent during
-> prepare? One of the current side-affects of this patch is that now instead
-> of bailing out, the 32 KHz source is set, and consumers will still need
-> to select their appropriate parent. Dropping that call should actually
-> allow us to select the parents in the consumer nodes in dts files using
-> the assigned-clocks and assigned-clock-parents properties. I prefer to
-> drop it if you do not foresee any issues. For now, I do not anticipate
-> any issues with omap-pwm-dmtimer with this patch.
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-sh@vger.kernel.org
+Cc: kvm-ppc@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-mm@kvack.org
 
-Without this patch, pwm is not being generated at all on my BBB. After applying
-this patch I am able to see pwm being generated on the scope.
+Changes in V2:
 
-FWIW:
-Tested-by: Lokesh Vutla <lokeshvutla@ti.com>
+- Dropped patch [PATCH 4/5] mm/vma: Replace....vma_set_anonymous() per Kirril
+- Dropped braces around is_vm_hugetlb_page() in kvmppc_e500_shadow_map()
+- Replaced two open encodings in mm/mmap.c with vma_is_accessible()
+- Added hugetlb headers to prevent build failures wrt is_vm_hugetlb_page()
 
-Thanks and regards,
-Lokesh
+Changes in V1: (https://patchwork.kernel.org/cover/11385219/)
+
+Anshuman Khandual (4):
+  mm/vma: Add missing VMA flag readable name for VM_SYNC
+  mm/vma: Make vma_is_accessible() available for general use
+  mm/vma: Replace all remaining open encodings with is_vm_hugetlb_page()
+  mm/vma: Replace all remaining open encodings with vma_is_anonymous()
+
+ arch/csky/mm/fault.c             | 2 +-
+ arch/m68k/mm/fault.c             | 2 +-
+ arch/mips/mm/fault.c             | 2 +-
+ arch/powerpc/kvm/e500_mmu_host.c | 2 +-
+ arch/powerpc/mm/fault.c          | 2 +-
+ arch/sh/mm/fault.c               | 2 +-
+ arch/x86/mm/fault.c              | 2 +-
+ fs/binfmt_elf.c                  | 3 ++-
+ include/asm-generic/tlb.h        | 3 ++-
+ include/linux/mm.h               | 5 +++++
+ include/trace/events/mmflags.h   | 1 +
+ kernel/events/core.c             | 3 ++-
+ kernel/sched/fair.c              | 2 +-
+ mm/gup.c                         | 5 +++--
+ mm/memory.c                      | 5 -----
+ mm/mempolicy.c                   | 3 +--
+ mm/mmap.c                        | 5 ++---
+ 17 files changed, 26 insertions(+), 23 deletions(-)
+
+-- 
+2.20.1
+
