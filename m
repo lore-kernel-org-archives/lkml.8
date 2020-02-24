@@ -2,109 +2,149 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC93CC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14A0C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C476920836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784C62072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="nZYC8M/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgBXLhG (ORCPT
+        id S1727393AbgBXLic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:37:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49584 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLhG (ORCPT
+        Mon, 24 Feb 2020 06:38:32 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:35573 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:37:06 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6C2n-0000qe-AV; Mon, 24 Feb 2020 12:37:01 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ED6F21C2134;
-        Mon, 24 Feb 2020 12:37:00 +0100 (CET)
-Date:   Mon, 24 Feb 2020 11:37:00 -0000
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/boot/compressed: Remove .eh_frame section from bzImage
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200109150218.16544-2-nivedita@alum.mit.edu>
-References: <20200109150218.16544-2-nivedita@alum.mit.edu>
+        Mon, 24 Feb 2020 06:38:31 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8123C22F00;
+        Mon, 24 Feb 2020 12:38:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582544309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ATJ7FEy8mNyFSf7mhjpZz7vvqF1vlw/dfVmlo7ml+8I=;
+        b=nZYC8M/aCrC+rIryhmGaMHYYKK0YbOA2Ghg3VEpxrmxItu0RVkt5amPnhs4SEW9Mcrqvol
+        EZdxmg2J5fXFTfjYW3LznIRbxzlQNJydD/3VqQSqpvff3Fi18WH69ka3ldWbJBw6hLueNQ
+        Nc9a1Vzkrfnl/KKUa/RLAelYQeGNuKM=
 MIME-Version: 1.0
-Message-ID: <158254422067.28353.10866888120950973607.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Date:   Mon, 24 Feb 2020 12:38:26 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
+ LS1028A
+In-Reply-To: <20200224112026.GF27688@dragon>
+References: <20200223204716.26170-1-olteanv@gmail.com>
+ <20200224112026.GF27688@dragon>
+Message-ID: <f92f01d60589d94bb25a38dd828200b0@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: /
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 8123C22F00
+X-Spamd-Result: default: False [-0.10 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[13];
+         NEURAL_HAM(-0.00)[-0.684];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[gmail.com,kernel.org,arm.com,vger.kernel.org,lunn.ch,nxp.com,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/boot branch of tip:
+Hi Shawn,
 
-Commit-ID:     0eea39a234dc52063d14541fabcb2c64516a2328
-Gitweb:        https://git.kernel.org/tip/0eea39a234dc52063d14541fabcb2c64516a2328
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Thu, 09 Jan 2020 10:02:18 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 24 Feb 2020 12:30:28 +01:00
+Am 2020-02-24 12:20, schrieb Shawn Guo:
+> On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
+>> This series officializes the device tree bindings for the embedded
+>> Ethernet switch on NXP LS1028A (and for the reference design board).
+>> The driver has been in the tree since v5.4-rc6.
+>> 
+>> It also performs some DT binding changes and minor cleanup, as per
+>> feedback received in v1 and v2:
+>> 
+>> - I've changed the DT bindings for the internal ports from "gmii" to
+>>   "internal". This means changing the ENETC phy-mode as well, for
+>>   uniformity. So I would like the entire series to be merged through a
+>>   single tree, probably the devicetree one - something which David
+>>   Miller has aggreed to, here [0].
+>> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
+>>   means not only the newly introduced switch ports, but also RGMII
+>>   standalone port 1.
+>> 
+>> [0]: https://lkml.org/lkml/2020/2/19/973
+>> 
+>> Claudiu Manoil (2):
+>>   arm64: dts: fsl: ls1028a: add node for Felix switch
+>>   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+>> 
+>> Vladimir Oltean (4):
+>>   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for 
+>> ENETC
+>>     RCIE
+>>   arm64: dts: fsl: ls1028a: disable all enetc ports by default
+> 
+> I applied these 4 DTS patches with changing prefix to 'arm64: dts: 
+> ls1028a: '.
 
-x86/boot/compressed: Remove .eh_frame section from bzImage
+Oh, then the kontron-sl28 boards won't have ethernet because the nodes 
+are
+disabled now. I'll send a patch shortly which explicitly sets the status 
+to
+"okay", hopefully you can pick it up so it'll end up in the same pull 
+request
+as this one:
 
-Discarding unnecessary sections with "*(*)" (see thread at Link: below)
-works fine with the bfd linker but fails with lld:
+   arm64: dts: fsl: ls1028a: disable all enetc ports by default
 
-  $ make -j$(nproc) -s CC=clang LD=ld.lld O=out.x86_64 distclean defconfig bzImage
-  ld.lld: error: discarding .shstrtab section is not allowed
+-michael
 
-lld tries to also discard essential sections like .shstrtab, .symtab and
-.strtab, which results in the link failing since .shstrtab is required
-by the ELF specification: the e_shstrndx field in the ELF header is the
-index of .shstrtab, and each section in the section table is required to
-have an sh_name that points into the .shstrtab.
-
-.symtab and .strtab are also necessary to generate the zoffset.h file
-for the bzImage header.
-
-Since the only sizeable section that can be discarded is .eh_frame,
-restrict the discard to only .eh_frame to be safe.
-
- [ bp: Flesh out commit message and replace offending commit with this one. ]
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lkml.kernel.org/r/20200109150218.16544-2-nivedita@alum.mit.edu
----
- arch/x86/boot/compressed/vmlinux.lds.S | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 508cfa6..469dcf8 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -73,4 +73,9 @@ SECTIONS
- #endif
- 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
- 	_end = .;
-+
-+	/* Discard .eh_frame to save some space */
-+	/DISCARD/ : {
-+		*(.eh_frame)
-+	}
- }
+> 
+> Shawn
+> 
+>>   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+>>   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+>> 
+>>  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 
+>> ++++++++++++++++++
+>>  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
+>>  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
+>>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
+>>  drivers/net/dsa/ocelot/felix.c                |   3 +-
+>>  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+>>  6 files changed, 265 insertions(+), 8 deletions(-)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/net/dsa/ocelot.txt
+>> 
+>> --
+>> 2.17.1
+>> 
