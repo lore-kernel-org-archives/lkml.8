@@ -7,72 +7,102 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70552C35DE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC45C35DE4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495F220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E65520732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgBXXcK (ORCPT
+        id S1728708AbgBXXcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:32:10 -0500
+        Mon, 24 Feb 2020 18:32:11 -0500
 Received: from ozlabs.org ([203.11.71.1]:48545 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728593AbgBXXbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:31:55 -0500
+        id S1727843AbgBXXbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 18:31:52 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48RJHX3jXFz9sRG; Tue, 25 Feb 2020 10:31:52 +1100 (AEDT)
+        id 48RJHV2RF7z9sRJ; Tue, 25 Feb 2020 10:31:50 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1582587112;
-        bh=njTLi7D5ip7n3f03+M5bR2JYHfPVMZZ1e3nNXFT2Clg=;
+        s=201909; t=1582587110;
+        bh=iMhwIn4qZ6J9t/aXW+vFOqz6zFFtCUD/Scd2rEKsk6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSLzswJTlkFp3AllxzJXzByQVXuFj0PSpuq0gzkClTXPsZFbmhhdwicQWtFtbyDzk
-         kAQs+o2OMCOj9RYOyvfNEO5mgUXz8LZ+HlJ94wvJLFYZQKxFoxuGHDLCwLwy1rB/H4
-         D3hIop/r6BJx0im8ft/ZoJS9cyICkAmQv4oMLYX5G+a7X9+O4uXHOfsEkSY2+9whqm
-         Ppt5oBOiGhToEzTTIW4m1ntbYHadpVWEjCyzBfYoUr4Js+4mT7ciSOnIc6U/y8VILB
-         YATymtBYz7dyW9kSR+i3OC1CgX3PpKeIfH5Nh1DGgBCsudmPudBncsk/9EejcVP4jZ
-         sTQ7YtSi0M8nA==
+        b=X0VLEUMqCZTTFakFDK0QSpyidvf//x3QQ8H+dKeS57KHmsX8U24xBpGITYIBPutAC
+         /Pc4T5VbukMx8OsMy/+DJC+Jc7QFxZKNuLNnCmpDgA3hz8HS4LZXx1MExfE474IgQ/
+         XG6jHlyCucjU+yzfdgzMjt0+xTlOD1utjCC9nuVLxtqB8hRW45Dg4Xj4IWqBaMyywc
+         aSQs5vUFCcLD7Z1CC8VUSRY5xe+yMBo2NReQ9yU1qh5Nwtoj7BmEwdxqRyWme7i7OT
+         V27rNh0Ij6pD1Pt06Y/vlQUT745n7tywAGDKyjMVACy5AdoIB6QDK2eEtS1eeUeSO5
+         BIYCjYUo2uEqA==
 From:   Michael Ellerman <mpe@ellerman.id.au>
 To:     linuxppc-dev@ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Grant Likely <grant.likely@arm.com>
-Subject: [PATCH 5/8] powerpc: Drop XILINX MAINTAINERS entry
-Date:   Tue, 25 Feb 2020 10:31:43 +1100
-Message-Id: <20200224233146.23734-5-mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>
+Subject: [PATCH 3/8] powerpc: Remove PA SEMI MAINTAINERS entries
+Date:   Tue, 25 Feb 2020 10:31:41 +1100
+Message-Id: <20200224233146.23734-3-mpe@ellerman.id.au>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200224233146.23734-1-mpe@ellerman.id.au>
 References: <20200224233146.23734-1-mpe@ellerman.id.au>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This has been orphaned for ~7 years, remove it.
+The PA SEMI entries have been orphaned for 3 ½ years, so fold them
+into the main POWERPC entry. The result of get_maintainer.pl is more
+or less unchanged.
 
-Cc: Grant Likely <grant.likely@arm.com>
+Cc: Olof Johansson <olof@lixom.net>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
- MAINTAINERS | 6 ------
- 1 file changed, 6 deletions(-)
+ MAINTAINERS | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 939da2ac08db..d5db5cac5a39 100644
+index 435e4efc9a32..5c4f37c41188 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9668,12 +9668,6 @@ L:	linuxppc-dev@lists.ozlabs.org
- S:	Maintained
- F:	arch/powerpc/platforms/8xx/
+@@ -9621,6 +9621,8 @@ F:	drivers/crypto/vmx/
+ F:	drivers/i2c/busses/i2c-opal.c
+ F:	drivers/net/ethernet/ibm/ibmveth.*
+ F:	drivers/net/ethernet/ibm/ibmvnic.*
++F:	drivers/*/*/*pasemi*
++F:	drivers/*/*pasemi*
+ F:	drivers/pci/hotplug/pnv_php.c
+ F:	drivers/pci/hotplug/rpa*
+ F:	drivers/rtc/rtc-opal.c
+@@ -9675,13 +9677,6 @@ S:	Orphan
+ F:	arch/powerpc/*/*virtex*
+ F:	arch/powerpc/*/*/*virtex*
  
--LINUX FOR POWERPC EMBEDDED XILINX VIRTEX
+-LINUX FOR POWERPC PA SEMI PWRFICIENT
 -L:	linuxppc-dev@lists.ozlabs.org
 -S:	Orphan
--F:	arch/powerpc/*/*virtex*
--F:	arch/powerpc/*/*/*virtex*
+-F:	arch/powerpc/platforms/pasemi/
+-F:	drivers/*/*pasemi*
+-F:	drivers/*/*/*pasemi*
 -
  LINUX KERNEL DUMP TEST MODULE (LKDTM)
  M:	Kees Cook <keescook@chromium.org>
  S:	Maintained
+@@ -12541,16 +12536,6 @@ W:	http://wireless.kernel.org/en/users/Drivers/p54
+ S:	Maintained
+ F:	drivers/net/wireless/intersil/p54/
+ 
+-PA SEMI ETHERNET DRIVER
+-L:	netdev@vger.kernel.org
+-S:	Orphan
+-F:	drivers/net/ethernet/pasemi/*
+-
+-PA SEMI SMBUS DRIVER
+-L:	linux-i2c@vger.kernel.org
+-S:	Orphan
+-F:	drivers/i2c/busses/i2c-pasemi.c
+-
+ PACKING
+ M:	Vladimir Oltean <olteanv@gmail.com>
+ L:	netdev@vger.kernel.org
 -- 
 2.21.1
 
