@@ -2,96 +2,90 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBADEC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5033C11D2D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC77320836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F8E2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgBXKKE (ORCPT
+        id S1727376AbgBXKKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 24 Feb 2020 05:10:05 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36760 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbgBXKKE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 05:10:04 -0500
-Received: from wind.enjellic.com ([76.10.64.91]:58030 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgBXKKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:10:04 -0500
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 01OA9XFG015606;
-        Mon, 24 Feb 2020 04:09:33 -0600
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 01OA9Wqx015605;
-        Mon, 24 Feb 2020 04:09:32 -0600
-Date:   Mon, 24 Feb 2020 04:09:32 -0600
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v27 00/22] Intel SGX foundations
-Message-ID: <20200224100932.GA15526@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200223172559.6912-1-jarkko.sakkinen@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223172559.6912-1-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 24 Feb 2020 04:09:33 -0600 (CST)
+Received: by mail-ot1-f67.google.com with SMTP id j20so8218131otq.3;
+        Mon, 24 Feb 2020 02:10:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Om7nrQID6FlX5mnR8/K/zRP8xkeIh57Aql009khB7UA=;
+        b=QwD/RMvhWiOiK4id1MLqkGh3lbx3VjXs8lj5y8sF6Wj3NZ20Wx6cWasU7F6I4mo5H0
+         03PLhV/GaN2Ypp7gTSQu9ZaVs9+Z1MwMY7k9PYh1B68Ph8Zj7gQeArFlthUfczMHdcl2
+         SNUG8uOc+sEDY/XX28Foia7Sxjp4hSkQqmepq39AYpi/kbFuWum0WgvmKoDVMjlijr0t
+         E2iausk9rL0Cf08R/D1YBymPGkiD6BcSXaxRt9GHcYO5ZnpBKP1rlEjnaUl+qkJo93CP
+         qqt8llm5dgp+Tbju8hEQ29uUWWuHKcGdIn70VtuXJg1BNCbGpUnpIhK5XhKO/Gu3uWfB
+         4c9A==
+X-Gm-Message-State: APjAAAWJOUl2uMmEdvUacUrUjMQKr2feoHkH3cYqT1KNca1ff8Oczsur
+        tNsSX12OXRGcjTxBQbZDJl4uCF3Bb+ODPh2yKkY=
+X-Google-Smtp-Source: APXvYqy+o+XiQlh0QOaMvapvhpar/cq7MfutM+nGBFLIiCFASeVH1V3juGWAUqxFnDRUGQgq4DrqTaiwZyWthqnvpxI=
+X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr24550265ota.107.1582539003523;
+ Mon, 24 Feb 2020 02:10:03 -0800 (PST)
+MIME-Version: 1.0
+References: <1582525304-32113-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1582525304-32113-1-git-send-email-anshuman.khandual@arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 24 Feb 2020 11:09:52 +0100
+Message-ID: <CAMuHMdXMSTLevTH1gkM8B53LtRUQ80o=t+W27z0QT-dNKkkYgQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/vma: Append unlikely() while testing VMA access permissions
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux MM <linux-mm@kvack.org>, Guo Ren <guoren@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, linux-csky@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 07:25:37PM +0200, Jarkko Sakkinen wrote:
+Hi Anshuman,
 
-Good morning, I hope the week is starting well for everyone.
+Thanks for your patch!
 
-> Intel(R) SGX is a set of CPU instructions that can be used by
-> applications to set aside private regions of code and data. The code
-> outside the enclave is disallowed to access the memory inside the
-> enclave by the CPU access control.
+On Mon, Feb 24, 2020 at 7:22 AM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+> It is unlikely that an inaccessible VMA without required permission flags
+> will get a page fault. Hence lets just append unlikely() directive to such
 
-Do we misinterpret or is the driver not capable of being built in
-modular form?
+Why? Isn't it the idea that you get a page fault when the page is not
+accessible?
 
-If not, it would appear that this functionality has been lost since
-version 19 of the driver, admittedly some time ago.
+> checks in order to improve performance while also standardizing it across
+> various platforms.
 
-> v19:
->
-> ... [ deleted ] ...
->
-> * Allow the driver to be compiled as a module now that it no code is using
->   its routines and it only uses exported symbols. Now the driver is
->   essentially just a thin ioctl layer.
+Does it make a difference to add these? Have you benchmarked this?
+https://lwn.net/Articles/420019/
 
-Not having the driver available in modular form obviously makes work
-on the driver a bit more cumbersome.
+Gr{oetje,eeting}s,
 
-I'm assuming that the lack of module support is secondary to some
-innate architectural issues with the driver?
-
-Have a good day.
-
-Dr. Greg
+                        Geert
 
 
-As always,
-Dr. Greg Wettstein, Ph.D, Worker
-IDfusion, LLC               SGX secured infrastructure and
-4206 N. 19th Ave.           autonomously self-defensive platforms.
-Fargo, ND  58102
-PH: 701-281-1686            EMAIL: greg@idfusion.net
-------------------------------------------------------------------------------
-"If you get to thinkin' you're a person of some influence, try
- orderin' somebody else's dog around."
-                                -- Cowboy Wisdom
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
