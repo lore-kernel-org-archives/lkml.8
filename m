@@ -2,100 +2,119 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFE0C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C82C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6C820732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5705320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ULPqMWuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgBXR1d (ORCPT
+        id S1727972AbgBXR2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:27:33 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41593 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbgBXR1d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:27:33 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j6HVu-0003xW-G0; Mon, 24 Feb 2020 18:27:26 +0100
-Message-ID: <1515559adebe3a6206e9b8e84692b7818709890b.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/4] drm/imx: Add initial support for DCSS on iMX8MQ
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Mon, 24 Feb 2020 12:28:50 -0500
+Received: from mail-eopbgr1410133.outbound.protection.outlook.com ([40.107.141.133]:2673
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727644AbgBXR2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:28:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QY7DxX0iJqZ+tsukUf3WyrbGnQ+tnBt3FLk2UY4KCQsR5GitR8DJOub+HCsUIJpJWSoL1MS2j8xMUXaw3vMPUUPxjR/2N91gfNiqHZTPoiPaDvEnzdubj464AW9ESU1clOT8JBlY4kEh0n2ZHkeNBU5q1D3St8g7PGkNuor5TEbp/r4QDYaIo+zWVYpq2SXItoLl+pF5cL4mLURMrv6Rnmot0h0JMP6sgTt9p/yv0oIbz+b/uMWC9OppjquApK/AC1UR/L3unKi0GM2VNODf8zcypDi0vAZOGQkQa69hFNc5nO1V8Z5QD5DUlpFEvr8Poi5K+yG1g1ybtjAjljUFpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AFlFCTTda4chxHpUkvyeAlQH+voauOQTNgW+C8lL0VM=;
+ b=oIkqj8JbTG+OmjEzlnH/vPl/b2BVxu7DTuC0VwcT6frRVOSZKe4sAEz1kJ+Sk6V7aZJHnR7hjDPSGzTLw3clyVO/TpMoauG0ibuJmGNSK3oVOn7mEQM7i5yEt9zZuwAT1rUYopG2PLQUXpdKDhd6GMnC5lBzReVNLvwVUBq0HKr5bfIwXfzOpqO8NYWgorZ9pw9URuyvUTrhrWI/nQ/7iMJWMsIZlccMwtxcp1p19WqM5j+MObC021psn/6oK/Ycbn91jfi0ExOwj4s7xnmvEwPjX6w6sP7u/xHHjUIzWxNeHMKZye6f5r+ieuNsampA0VD+vyzFI5E/jRGJMwFzmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AFlFCTTda4chxHpUkvyeAlQH+voauOQTNgW+C8lL0VM=;
+ b=ULPqMWuXSNFx7ipohxo8gC6lHmD6elyYxskUk71n42Wkd1rUL9i8HVOoHdgHRh6EErI58ja+fnR9Gz5/MA6S37zEXK1t0CwHAfu0WA28Snkpk7zkTYwi4qkrvkL1DnQW8+sZ813YBmw/ngI49I9twXWn/ubaT5yEhbd3ubBcxXw=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1612.jpnprd01.prod.outlook.com (52.133.160.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Mon, 24 Feb 2020 17:28:44 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::8870:97e4:a63c:67ea]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::8870:97e4:a63c:67ea%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 17:28:44 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     "REE dirk.behme@de.bosch.com" <dirk.behme@de.bosch.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     agx@sigxcpu.org, lukas@mntmn.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 24 Feb 2020 18:27:25 +0100
-In-Reply-To: <1575625964-27102-3-git-send-email-laurentiu.palcu@nxp.com>
-References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
-         <1575625964-27102-3-git-send-email-laurentiu.palcu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mason Yang <masonccyang@mxic.com.tw>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
+Thread-Topic: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
+Thread-Index: AQHVr5Gax3utlknyaU2JKDcLrJZnRqgUmJAAgBOJewCAAipPgIAAwo8w
+Date:   Mon, 24 Feb 2020 17:28:44 +0000
+Message-ID: <TY1PR01MB15620153764A0D4035080B638AEC0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
+ <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
+ <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
+ <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
+In-Reply-To: <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMTllNjBiYmUtNTcyYi0xMWVhLWFhNWQtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDE5ZTYwYmJmLTU3MmItMTFlYS1hYTVkLTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iNjQ1IiB0PSIxMzIyNzAzODkyMjg3MjYyNDkiIGg9ImQ1TTk1L3RaVFVoS216a2lqbGFkRkxEUDZIYz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [24.206.39.126]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9d978d6b-821c-4919-e4a4-08d7b94effbb
+x-ms-traffictypediagnostic: TY1PR01MB1612:|TY1PR01MB1612:
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-microsoft-antispam-prvs: <TY1PR01MB16128BA4CAFDA845C48F84A38AEC0@TY1PR01MB1612.jpnprd01.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 032334F434
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(189003)(199004)(33656002)(4326008)(71200400001)(8936002)(478600001)(81166006)(2906002)(26005)(52536014)(81156014)(8676002)(4744005)(6506007)(9686003)(55016002)(316002)(64756008)(7696005)(186003)(66946007)(5660300002)(76116006)(86362001)(110136005)(66476007)(66556008)(66446008)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1612;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Yq3Bv3KLR/vQuXiUOJCDl46Vg8h35RZg0iAwqslVmlPoFMdDbWLnMAIjiSEL5MwyNXjIA7BZyvo34EOBeMYg2cmGfTBHREhxwymrP67l7GO7xdTLN6xWAo/vuHZNTKbp4IgYfrWnUOtNMnjItyXyo/QZO9DXi85lWFHKxvCi3vXfFj9HnA/7EHSbq4BqEi0VAnt8CUD1ENvZux7Gh/AZfZO/v7JzzOIsvqtEkaxe4zITvlSCfzqUbdhyO2ZCIw7GqGXmoN5k6bk6WjbLHBrxNzaVhy/j6FZWq1/al5acPT6tw8tcXGrXH7E7apfy+9UV2HhvMqXgvnAytf3UcIvKJkPIwslp4qd91KeqrjP4xKSZgZQO2FKO7gGHWEgkx1IrfScQKOlnOJds0UnakxK2IhVGTn8rkMlivSz6Ut0iInv0qpqgH8+LMbapn/w0+/Rp
+x-ms-exchange-antispam-messagedata: G0MEB7gEM9YB2PuO3JuBfeJtNIDCgDjg1WbVKKDib0Kuo7Nuwf9dT3OttQ6OKiiKVED1v2O2A8GUHn+55AURDE3oBnpAV9/AboL98kVmfIt3A7cObO6GktCjbqiKT3YJivElWZHMrozZC1AQgDfkHQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d978d6b-821c-4919-e4a4-08d7b94effbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 17:28:44.4216
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: x1/B7uR99zlAfGMHgZaisWmB/5u6jbiiUi+nZTKpDUKtsjpf3RExw/H82rLClptOAhv/6Oyv9lh4AsTJJFuaMN36vRYqDrhHnlv0txD1ZrY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1612
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurentiu,
-
-just a first drive-by comment, more in-depth review tomorrow.
-
-On Fr, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
-> This adds initial support for iMX8MQ's Display Controller Subsystem (DCSS).
-> Some of its capabilities include:
->  * 4K@60fps;
->  * HDR10;
->  * one graphics and 2 video pipelines;
->  * on-the-fly decompression of compressed video and graphics;
-> 
-> The reference manual can be found here:
-> https://www.nxp.com/webapp/Download?colCode=IMX8MDQLQRM
-> 
-> The current patch adds only basic functionality: one primary plane for
-> graphics, linear, tiled and super-tiled buffers support (no graphics
-> decompression yet), no HDR10 and no video planes.
-> 
-> Video planes support and HDR10 will be added in subsequent patches once
-> per-plane de-gamma/CSC/gamma support is in.
-> 
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> ---
-[...]
-> diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-> new file mode 100644
-> index 00000000..a189dac
-> --- /dev/null
-> +++ b/drivers/gpu/drm/imx/dcss/Kconfig
-> @@ -0,0 +1,8 @@
-> +config DRM_IMX_DCSS
-> +	tristate "i.MX8MQ DCSS"
-> +	select RESET_CONTROLLER
-> +	select IMX_IRQSTEER
-
-This driver has no build time dependency on the IRQSTEER driver. It
-needs it at runtime, but those dependencies are normally not described
-in Kconfig.
-
-On the other hand this is missing a "select DRM_KMS_CMA_HELPER".
-
-Regards,
-Lucas
-
+T24gTW9uLCBGZWIgMjQsIDIwMjAgMSwgQmVobWUgRGlyayAoQ00vRVNPMikgd3JvdGU6DQo+ID4g
+ICAgIEJUVywgeW91ciBwYXRjaCBoYWQgd2hpdGVzcGFjZSBydWluZWQsIEkgaGFkIHRvIGFwcGx5
+IGl0IGJ5IGhhbmQsIHlvdSdkDQo+IGJldHRlcg0KPiA+IGF0dGFjaCB0aGUgcGF0Y2hlcywgbm90
+IHBhc3RlLiA6LS8NCj4gDQo+IA0KPiBPay4gVGhlcmUgYXJlIG90aGVyIG1haWxpbmcgbGlzdHMg
+Y29tcGxhaW5pbmcgYWJvdXQgYXR0YWNobWVudHMgOykNCj4gDQo+IEV2ZW4gYmV0dGVyLCBtYXli
+ZSB3ZSBzaG91bGQgcHV0IHdoYXQgd2UgaGF2ZSBzbyBmYXIgcHVibGljbHkgYW55d2hlcmUsDQo+
+IGUuZy4gZ2l0aHViLg0KDQpUaGF0IHdvdWxkIGJlIGdvb2QgZm9yIG1lIGFzIHdlbGwgc2luY2Ug
+SSdtIGFsc28gdHJ5aW5nIHRvIG1ha2Ugc3VyZSB0aGUNClNQSSBtb2RlIHdvcmtzIHdpdGggdGhl
+IFJaL0EgZGV2aWNlcywgYW5kIEkndmUgYWxyZWFkeSBwb2ludGVkIG91dCBzb21lDQpjaGFuZ2Vz
+IHRoYXQgYXJlIG5lZWRlZCBpbiB0aGUgY29kZSBmb3IgdGhhdC4NCg0KQ2hyaXMNCg==
