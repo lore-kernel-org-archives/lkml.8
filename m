@@ -2,97 +2,109 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0D1C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC93CC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4745720866
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582544221;
-	bh=r2PiGWSmrETgWx2LEGxivHnEQxtJCs3wPIZoGPYxoyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1TqoZlIqQRRJUMlP4M2tFtaBxf9v/07QDa+eF27alUg50eGYJSOvZvIndFTS9pVrQ
-	 uJnV+jwyDcRpdtoTMB6NiLzUDxtnfBqlJ5lbAD2t6a9kS+Jcl+8X75GqCg9N80vmxa
-	 M6hTauldwwjVlCYJguYjln0SIb/8rhhAZQMMU0VM=
+	by mail.kernel.org (Postfix) with ESMTP id C476920836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgBXLhA (ORCPT
+        id S1727357AbgBXLhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:37:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:35634 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgBXLg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:36:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1234E30E;
-        Mon, 24 Feb 2020 03:36:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 897CF3F703;
-        Mon, 24 Feb 2020 03:36:58 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:36:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
-Message-ID: <20200224113657.GA6215@sirena.org.uk>
-References: <20200221222711.15973-1-robh@kernel.org>
+        Mon, 24 Feb 2020 06:37:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49584 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLhG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:37:06 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j6C2n-0000qe-AV; Mon, 24 Feb 2020 12:37:01 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ED6F21C2134;
+        Mon, 24 Feb 2020 12:37:00 +0100 (CET)
+Date:   Mon, 24 Feb 2020 11:37:00 -0000
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/boot/compressed: Remove .eh_frame section from bzImage
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200109150218.16544-2-nivedita@alum.mit.edu>
+References: <20200109150218.16544-2-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
-X-Cookie: How you look depends on where you go.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158254422067.28353.10866888120950973607.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/boot branch of tip:
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Commit-ID:     0eea39a234dc52063d14541fabcb2c64516a2328
+Gitweb:        https://git.kernel.org/tip/0eea39a234dc52063d14541fabcb2c64516a2328
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Thu, 09 Jan 2020 10:02:18 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 24 Feb 2020 12:30:28 +01:00
 
-On Fri, Feb 21, 2020 at 04:27:10PM -0600, Rob Herring wrote:
-> Fix all the warnings in the DT binding schema examples when built with
-> 'W=1'. This is in preparation to make that the default for examples.
+x86/boot/compressed: Remove .eh_frame section from bzImage
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Discarding unnecessary sections with "*(*)" (see thread at Link: below)
+works fine with the bfd linker but fails with lld:
 
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
+  $ make -j$(nproc) -s CC=clang LD=ld.lld O=out.x86_64 distclean defconfig bzImage
+  ld.lld: error: discarding .shstrtab section is not allowed
 
------BEGIN PGP SIGNATURE-----
+lld tries to also discard essential sections like .shstrtab, .symtab and
+.strtab, which results in the link failing since .shstrtab is required
+by the ELF specification: the e_shstrndx field in the ELF header is the
+index of .shstrtab, and each section in the section table is required to
+have an sh_name that points into the .shstrtab.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5TtVYACgkQJNaLcl1U
-h9CNEAf/eNHuOKO9UX+XLz39Z16Ulv5iko14dyR+Uci0d4nowFtBZ1253dv32wRW
-pDpU9iu7Ha04MkvyNDFgz5RsgR/jyLE8/t30zbbaJZWwc6XGVI/KCZkvfdNYrAsq
-J4NEjRnt/M+HN0ZUsu30SS95/X50PMTLNJ8gU4OwsohVranbzKRqFcoCbbGvpXUw
-yP6W5MiCrd3LpU1sG20gJK1ZJQHPO4R3U/sUwyEbJmhvZYJB+KOC2Jl+paUbHrSO
-DLZeZ+w3AOroZ5oxxzPMO5033k7K6NI0mA449VtZ6BXgjGuhlMaQCbJFE8aAGWJi
-eajjwC/Ufgc8Il8KswwWGa5j9e6ZZQ==
-=f6dA
------END PGP SIGNATURE-----
+.symtab and .strtab are also necessary to generate the zoffset.h file
+for the bzImage header.
 
---2oS5YaxWCcQjTEyO--
+Since the only sizeable section that can be discarded is .eh_frame,
+restrict the discard to only .eh_frame to be safe.
+
+ [ bp: Flesh out commit message and replace offending commit with this one. ]
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lkml.kernel.org/r/20200109150218.16544-2-nivedita@alum.mit.edu
+---
+ arch/x86/boot/compressed/vmlinux.lds.S | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 508cfa6..469dcf8 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -73,4 +73,9 @@ SECTIONS
+ #endif
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
++
++	/* Discard .eh_frame to save some space */
++	/DISCARD/ : {
++		*(.eh_frame)
++	}
+ }
