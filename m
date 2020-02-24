@@ -2,119 +2,132 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD22C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07F5C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF74B2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CF92080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XP9Yx0Zc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qaXmMS83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgBXNEw (ORCPT
+        id S1727589AbgBXNFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:04:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34939 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727329AbgBXNEw (ORCPT
+        Mon, 24 Feb 2020 08:05:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59064 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBXNFd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:04:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582549491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mIKqdTyz5+ImR2nkZFVBhUc+4BM9OsRtqGi03fmbSvE=;
-        b=XP9Yx0ZcPx5DtFhJBUfphXai0X6xqvj23DsbkEJGQOHzCeOrbHtMDTSmilMrKRxBAD53Je
-        E+XxmZQFXTNMrreG3cQOiZr0JQxYeeOay0EWjeOpHXCWy0rVgNEOmAbX/GaW2gFny0N/Ba
-        DvHv0T14zDxSVLjPgVGK97FeNxLDvCU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-MBVb_VALNl-hjEOpCPDz1w-1; Mon, 24 Feb 2020 08:04:49 -0500
-X-MC-Unique: MBVb_VALNl-hjEOpCPDz1w-1
-Received: by mail-wr1-f70.google.com with SMTP id o9so5578851wrw.14
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:04:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=mIKqdTyz5+ImR2nkZFVBhUc+4BM9OsRtqGi03fmbSvE=;
-        b=hhBLO+JM7zSzvLUGaOAr4gz13ycljQaegpxjqBA3VszbOnvTJZWB4ax3hs6dwkExzE
-         b0Mm3ihUlBXuHVdFwxLFyanyO4J4uYHfKXmdPrfrZAkZ4LLAP8E+l/rJdp/0cI1eqLE7
-         cRx6uvuiF0m/FWfVkMR096U4SbwOcSc+uhPvG+F15thBUjXl1pMRE67Ouu+2uxbYvFFh
-         CdGs+tWkl8iPt8dRlK0AqZfAr8cr/vTiGc3Izqd+MKxcgLMpfI4gtfETje9vgqJ5B9jS
-         MDFmJnAPaP2/j5cc2n27N+4GjN2jGkH4kmSS2aGMr5gKPNnyzt9bBgpbjm6lAumF1Ufv
-         UThA==
-X-Gm-Message-State: APjAAAUcpPPIxOidOe9JcUZAwSC2wJIeyeo1cREaYeyjquaK6dLknS58
-        Jn9kWcaRsMB6Xyei/c8hl5IO8Qj8LdhKjnjpyId5x9LANAPf954P5LlgFUTIydQiNzqU8sfIgir
-        at8QoMgMezHYaFbwuEFoXpbZ1
-X-Received: by 2002:adf:e401:: with SMTP id g1mr11153801wrm.165.1582549488599;
-        Mon, 24 Feb 2020 05:04:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxG1YTc0sc80OFrDGBo0TAMpvdqkU5rb8GaSOHzb9RQKL5aY4N4+m+dNRLG71F1VA35nN64NA==
-X-Received: by 2002:adf:e401:: with SMTP id g1mr11153777wrm.165.1582549488312;
-        Mon, 24 Feb 2020 05:04:48 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c9sm18385475wme.41.2020.02.24.05.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 05:04:46 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the specific VM EXIT
-In-Reply-To: <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
-References: <20200224020751.1469-1-xiaoyao.li@intel.com> <20200224020751.1469-2-xiaoyao.li@intel.com> <87lfosp9xs.fsf@vitty.brq.redhat.com> <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
-Date:   Mon, 24 Feb 2020 14:04:46 +0100
-Message-ID: <87imjwp24x.fsf@vitty.brq.redhat.com>
+        Mon, 24 Feb 2020 08:05:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5QSX086053;
+        Mon, 24 Feb 2020 07:05:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582549526;
+        bh=SYBU5pE8qnsxWqM4agBgkitC2zqD/Vs7Rlu+vfpZ/Ho=;
+        h=From:To:CC:Subject:Date;
+        b=qaXmMS83KZP/tQwPkjqI+cxGanvDxPNW5OPXVqIlt3rIKoW/oLGjdfE8zSCwiGXyJ
+         zMx6Pwgmz8SHLEQEiO/ReNuzlX0G3vpR8rT3VI7d0CcGPTTfm5s1DdQFJKlC2QHfFO
+         tvyr/eoFJlcKfrWpoo367AhsiuXndgqbB8gRuTGY=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5Q6L109411;
+        Mon, 24 Feb 2020 07:05:26 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 07:05:25 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 07:05:25 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5M7N017839;
+        Mon, 24 Feb 2020 07:05:23 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v3 0/4] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
+Date:   Mon, 24 Feb 2020 18:39:01 +0530
+Message-ID: <20200224130905.952-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
+Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
+themselves have a validation platform for validating the PCIe IP which
+is already in the upstream kernel. Right now the binding only exists for
+Cadence platform and this will result in adding redundant binding schema
+for any platform using Cadence PCIe core.
 
-> On 2/24/2020 6:16 PM, Vitaly Kuznetsov wrote:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->> 
+This series:
+1) Create cdns-pcie.yaml which includes properties that are applicable
+   to both host mode and endpoint mode of Cadence PCIe core.
+2) Create cdns-pcie-host.yaml to include properties that are specific to
+   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
+   cdns-pcie.yaml.
+3) Create cdns-pcie-ep.yaml to include properties that are specific to
+   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
+   cdns-pcie.yaml.
+4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
+   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
+   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
+   for Cadence platform then includes schema for Cadence PCIe core.
 
-...
+Changes from v2:
+*) Created "pci-ep.yaml" for common endpoint controller bindings
+*) Deprecate "cdns,max-outbound-regions" and "cdns,no-bar-match-nbits"
+   binding
 
->>>   		rip = kvm_rip_read(vcpu);
->>>   		rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
->>>   		kvm_rip_write(vcpu, rip);
->>> @@ -5797,6 +5797,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
->>>   {
->>>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
->>>   	u32 exit_reason = vmx->exit_reason;
->>> +	u16 basic_exit_reason = basic(exit_reason);
->> 
->> I don't think renaming local variable is needed, let's just do
->> 
->> 'u16 exit_reason = basic_exit_reason(vmx->exit_reason)' and keep the
->> rest of the code as-is.
->
-> No, we can't do this.
->
-> It's not just renaming local variable, the full 32-bit exit reason is 
-> used elsewhere in this function that needs the upper 16-bit.
->
-> Here variable basic_exit_reason is added for the cases where only basic 
-> exit reason number is needed.
->
+Changes from v1:
+*) Fix maximum values of num-lanes and cdns,no-bar-match-nbits
+*) Fix example DT node for PCIe Endpoint.
 
-Can we do the other way around, i.e. introduce 'extended_exit_reason'
-and use it where all 32 bits are needed? I'm fine with the change, just
-trying to minimize the (unneeded) code churn.
+Ref: Patches to convert Cadence driver to library
+     https://lkml.org/lkml/2019/11/11/317
+
+Some of this was initially part of [1], but to accelerate it getting
+into upstream, sending this as a separate series.
+
+[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+
+Kishon Vijay Abraham I (4):
+  dt-bindings: PCI: Add PCI Endpoint Controller Schema
+  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
+  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
+    schema
+  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+    bindings
+
+ .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 49 ++++++++++++
+ .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     | 75 +++++++++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 28 +++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 ++++++++
+ .../devicetree/bindings/pci/pci-ep.yaml       | 41 ++++++++++
+ MAINTAINERS                                   |  2 +-
+ 8 files changed, 226 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
 
 -- 
-Vitaly
+2.17.1
 
