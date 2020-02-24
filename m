@@ -2,95 +2,65 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C016C35641
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8C7C35641
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E15F20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JYJPWxRO"
+	by mail.kernel.org (Postfix) with ESMTP id 709A220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgBXE4l (ORCPT
+        id S1727283AbgBXE7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:56:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40720 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727189AbgBXE4k (ORCPT
+        Sun, 23 Feb 2020 23:59:13 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:59044 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgBXE7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:56:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582520199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ma1EjT0/cgYKBYRBzJpsYw4qpXSIefQrEzpAraMKVJo=;
-        b=JYJPWxROw4M5h7p65s8rRYiZQcVOSwKtpa9w3TDQP9sTJ73sdbLfxwZ8Hm2ZTgcgy6qW05
-        /SStKzzLas7tYjLJbkSr3BBbePnjRqBao80wvfVXGb0SbPeH5APsroaRwMpSW9i6sFnNe7
-        ZHJ2qHh53AkQI/aSIuoeZ6L1A4XJLFs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-vRlxWOaAPRG_qk-QUfcrmg-1; Sun, 23 Feb 2020 23:56:37 -0500
-X-MC-Unique: vRlxWOaAPRG_qk-QUfcrmg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E1099800D54;
-        Mon, 24 Feb 2020 04:56:35 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-13-44.pek2.redhat.com [10.72.13.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 02CB55D9C9;
-        Mon, 24 Feb 2020 04:56:22 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 12:56:18 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>,
-        Myron Stowe <myron.stowe@redhat.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200224045618.GA16543@dhcp-128-65.nay.redhat.com>
-References: <20191225192118.283637-1-kasong@redhat.com>
- <20200222165631.GA213225@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222165631.GA213225@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Sun, 23 Feb 2020 23:59:13 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 26C301502D628;
+        Sun, 23 Feb 2020 20:59:12 -0800 (PST)
+Date:   Sun, 23 Feb 2020 20:59:11 -0800 (PST)
+Message-Id: <20200223.205911.1667092059432885700.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, yoshihiro.shimoda.uh@renesas.com,
+        andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        B38611@freescale.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200220233454.31514-1-f.fainelli@gmail.com>
+References: <20200220233454.31514-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Feb 2020 20:59:12 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-On 02/22/20 at 10:56am, Bjorn Helgaas wrote:
-> [+cc Khalid, Deepa, Randy, Dave, Myron]
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Thu, 20 Feb 2020 15:34:53 -0800
+
+> It is currently possible for a PHY device to be suspended as part of a
+> network device driver's suspend call while it is still being attached to
+> that net_device, either via phy_suspend() or implicitly via phy_stop().
 > 
-> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
-> > There are reports about kdump hang upon reboot on some HPE machines,
-> > kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-> > error occurred and crashed the system.
+> Later on, when the MDIO bus controller get suspended, we would attempt
+> to suspend again the PHY because it is still attached to a network
+> device.
 > 
-> Did we ever make progress on this?  This definitely sounds like a
-> problem that needs to be fixed, but I don't see a resolution here.
+> This is both a waste of time and creates an opportunity for improper
+> clock/power management bugs to creep in.
 > 
+> Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-I'm not familar with the PCI details,  but if this only adds a quirk for
-kdump use and no other risks added then it should be good to have.
-
-Or we can provide a kernel parameter for the quirk?  Then it is even
-limited to only be effective when in-kdump && the-param-is-used
-
-Anyway still prefer to people who know more about this area to evaluate
-the risk.
-
-Thanks
-Dave
-
+Applied, and queued up for -stable, thanks Florian.
