@@ -2,70 +2,148 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4A4C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388BEC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D09D20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CC22084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgBXQR0 (ORCPT
+        id S1727834AbgBXQRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:17:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33850 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 11:17:31 -0500
+Received: from mga04.intel.com ([192.55.52.120]:33402 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbgBXQR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:17:26 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CEFA20714;
-        Mon, 24 Feb 2020 16:17:25 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 11:17:23 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     zanussi@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>
-Subject: Re: [PATCH RT 19/25] userfaultfd: Use a seqlock instead of seqcount
-Message-ID: <20200224111723.415a940d@gandalf.local.home>
-In-Reply-To: <20200224090317.shfeuxfukkvxvqaf@linutronix.de>
-References: <cover.1582320278.git.zanussi@kernel.org>
-        <889f5b989b28eb7b29f21092432948cd12d97c48.1582320278.git.zanussi@kernel.org>
-        <20200224090317.shfeuxfukkvxvqaf@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727177AbgBXQR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:17:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 08:17:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
+   d="scan'208";a="384179330"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 24 Feb 2020 08:17:28 -0800
+Date:   Mon, 24 Feb 2020 08:17:28 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
+ specific VM EXIT
+Message-ID: <20200224161728.GC29865@linux.intel.com>
+References: <20200224020751.1469-1-xiaoyao.li@intel.com>
+ <20200224020751.1469-2-xiaoyao.li@intel.com>
+ <87lfosp9xs.fsf@vitty.brq.redhat.com>
+ <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
+ <87imjwp24x.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imjwp24x.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 10:03:17 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-
-> On 2020-02-21 15:24:47 [-0600], zanussi@kernel.org wrote:
-> > From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > 
-> > v4.14.170-rt75-rc1 stable review patch.
-> > If anyone has any objections, please let me know.  
+On Mon, Feb 24, 2020 at 02:04:46PM +0100, Vitaly Kuznetsov wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
 > 
-> This is required but it is not part of the next "higher" tree
-> (v4.19-RT). Which means if someone moves from v4.14-RT to the next tree
-> (v4.19-RT in this case) that someone would have the bug again.
+> > On 2/24/2020 6:16 PM, Vitaly Kuznetsov wrote:
+> >> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> >> 
 > 
-> Could you please wait with such patches or did the I miss the v4.19-RT
-> tree with this change?
+> ...
 > 
+> >>>   		rip = kvm_rip_read(vcpu);
+> >>>   		rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+> >>>   		kvm_rip_write(vcpu, rip);
+> >>> @@ -5797,6 +5797,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+> >>>   {
+> >>>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> >>>   	u32 exit_reason = vmx->exit_reason;
+> >>> +	u16 basic_exit_reason = basic(exit_reason);
+> >> 
+> >> I don't think renaming local variable is needed, let's just do
+> >> 
+> >> 'u16 exit_reason = basic_exit_reason(vmx->exit_reason)' and keep the
+> >> rest of the code as-is.
+> >
+> > No, we can't do this.
+> >
+> > It's not just renaming local variable, the full 32-bit exit reason is 
+> > used elsewhere in this function that needs the upper 16-bit.
+> >
+> > Here variable basic_exit_reason is added for the cases where only basic 
+> > exit reason number is needed.
+> >
+> 
+> Can we do the other way around, i.e. introduce 'extended_exit_reason'
+> and use it where all 32 bits are needed? I'm fine with the change, just
+> trying to minimize the (unneeded) code churn.
 
-No, I'm just behind in backporting patches.
+100% agree.  Even better than adding a second field to vcpu_vmx would be
+to make it a union, though we'd probably want to call it something like
+full_exit_reason in that case.  That should give us compile-time checks on
+exit_reason, e.g. if we try to query one of the upper bits using a u16, e.g.
 
-We need to work on synchronizing better what gets backported. :-/
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5818,7 +5818,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+        if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
+                return nested_vmx_reflect_vmexit(vcpu, exit_reason);
 
--- Steve
+-       if (exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
++       if (vmx->full_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
+                dump_vmcs();
+                vcpu->run->exit_reason = KVM_EXIT_FAIL_ENTRY;
+                vcpu->run->fail_entry.hardware_entry_failure_reason
+@@ -6620,11 +6620,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+        vmx->nested.nested_run_pending = 0;
+        vmx->idt_vectoring_info = 0;
+
+-       vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+-       if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
++       vmx->full_exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
++       if (vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+                kvm_machine_check();
+
+-       if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
++       if (vmx->fail ||
++           (vmx->full_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+                return;
+
+        vmx->loaded_vmcs->launched = 1;
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 7f42cf3dcd70..60c09640ea59 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -260,7 +260,10 @@ struct vcpu_vmx {
+        int vpid;
+        bool emulation_required;
+
+-       u32 exit_reason;
++       union {
++               u16 exit_reason;
++               u32 full_exit_reason;
++       }
+
+        /* Posted interrupt descriptor */
+        struct pi_desc pi_desc;
+
+
+
+
+
+> -- 
+> Vitaly
+> 
