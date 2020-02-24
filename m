@@ -2,146 +2,178 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C115C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C86CC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265E52072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7A82072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:08:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lDOz9L58"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bnwYpe6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgBXOII (ORCPT
+        id S1727627AbgBXOIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:08:08 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35043 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbgBXOII (ORCPT
+        Mon, 24 Feb 2020 09:08:18 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5063 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgBXOIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:08:08 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200224140806euoutp02d3710206594cdf1f0aeaf736604e26d1~2W9RUOPoQ0971309713euoutp02E
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:08:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200224140806euoutp02d3710206594cdf1f0aeaf736604e26d1~2W9RUOPoQ0971309713euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582553286;
-        bh=F6LcwmwJuCoUGp60qGZo5dj9ozdjL1efjDoXk9YAcWQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=lDOz9L58JB0iLTsppl08OGRUtYqTQo/zb1tUiQj+nfa8VQ5NRwLbU3urVynQf1Vej
-         YVx8dHJRBTO7V9p5PFmb+/JsJv3oZRYlqyHhcox7VID0346TuIqKsYaELOlJ8D/u1Y
-         str3ci1AcZcdXTl0AJmjSszGw1MYIBHI/xHR4cng=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200224140806eucas1p23b445f5dcea4e466f8499d74f1ab93a6~2W9RIE53o2081120811eucas1p2A;
-        Mon, 24 Feb 2020 14:08:06 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5F.E0.60698.6C8D35E5; Mon, 24
-        Feb 2020 14:08:06 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200224140805eucas1p1559dcc94f7015c49681b560952a03376~2W9QxLT543163931639eucas1p1K;
-        Mon, 24 Feb 2020 14:08:05 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200224140805eusmtrp1cdde73c4d19b16e15a9516bb860d799a~2W9Qwcw7p1015510155eusmtrp1I;
-        Mon, 24 Feb 2020 14:08:05 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-34-5e53d8c6695d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B3.12.08375.5C8D35E5; Mon, 24
-        Feb 2020 14:08:05 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200224140805eusmtip1d19c8436fefaeb2e96b37b27ed639535~2W9QXYJWL1698016980eusmtip1t;
-        Mon, 24 Feb 2020 14:08:05 +0000 (GMT)
-Subject: Re: [PATCH 1/3] regulator: max14577: Add proper dt-compatible
- strings
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <61dc8192-e313-021f-9e23-928257a66984@samsung.com>
-Date:   Mon, 24 Feb 2020 15:08:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.5.0
+        Mon, 24 Feb 2020 09:08:17 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53d8840000>; Mon, 24 Feb 2020 06:07:00 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Feb 2020 06:08:16 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Feb 2020 06:08:16 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 14:08:16 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Feb 2020 14:08:15 +0000
+Received: from thunderball.nvidia.com (Not Verified[10.21.140.91]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e53d8cd0006>; Mon, 24 Feb 2020 06:08:15 -0800
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Milo Kim <milo.kim@ti.com>, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] backlight: lp855x: Ensure regulators are disabled on probe failure
+Date:   Mon, 24 Feb 2020 14:07:48 +0000
+Message-ID: <20200224140748.2182-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20200221171342.GI5546@sirena.org.uk>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djPc7rHbgTHGTzeLGyxccZ6VoupD5+w
-        WVz/8pzV4vz5DewWl3fNYbP43HuE0eJ24wo2i9a9R9gtTu8uceD02LSqk82jb8sqRo/Pm+QC
-        mKO4bFJSczLLUov07RK4Mra332IruMleceXEAdYGxslsXYycHBICJhIbv05j72Lk4hASWMEo
-        seDyCkYI5wujxN3jV5khnM9AmaO/4FomLVsI1bKcUaL/z0co5y2jxJqD05lAqoQFAiQWXLvF
-        CGKLCChLXP2+lwWkiFlgC5NE/8Z5YKPYBAwlut52gdm8AnYSTcffgTWzCKhK7Pk6gRXEFhWI
-        lZi98jALRI2gxMmZT8BsTgEjiedzNoItYBaQl9j+dg4zhC0ucevJfCaQZRIC29glvvW8Z4a4
-        20Vi1bxPUD8IS7w6voUdwpaROD25hwWioZlR4uG5tewQTg+jxOWmGYwQVdYSd86BQoADaIWm
-        xPpd+hBhR4kLU84xgYQlBPgkbrwVhDiCT2LStunMEGFeiY42IYhqNYlZx9fBrT144RLzBEal
-        WUhem4XknVlI3pmFsHcBI8sqRvHU0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwDR0+t/xrzsY
-        9/1JOsQowMGoxMMrsTc4Tog1say4MvcQowQHs5IIrzdjUJwQb0piZVVqUX58UWlOavEhRmkO
-        FiVxXuNFL2OFBNITS1KzU1MLUotgskwcnFINjGq61dvKg/ZtnzJP4kvV2Wkbv2aEVLCIsER9
-        r47NntfpsUOucf1SvgBVwcKQP25TQ77FOr7d7ezWzSNo8rOzlcNq43H3FvXSW9I3bNOC85m0
-        rF1TUtcFeUdeDunMauk/0zQvXDSnM1KYuSBF6bvfIkabkv3Gy/Ke7Hn77fkZgWeBMqGvXS4p
-        sRRnJBpqMRcVJwIAIcljzD8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xu7pHbwTHGRzvt7LYOGM9q8XUh0/Y
-        LK5/ec5qcf78BnaLy7vmsFl87j3CaHG7cQWbReveI+wWp3eXOHB6bFrVyebRt2UVo8fnTXIB
-        zFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6Gdvb
-        b7EV3GSvuHLiAGsD42S2LkZODgkBE4lJyxaydzFycQgJLGWUaHrawgKRkJE4Oa2BFcIWlvhz
-        rYsNoug1o8TpFa2MXYwcHMICfhJrZxmA1IgIKEtc/b6XBaSGWWAbk8SlpjmMEA2fmSQa/t1i
-        BqliEzCU6HrbBbaaV8BOoun4OyYQm0VAVWLP1wlg20QFYiVuzOxggqgRlDg58wnYRZwCRhLP
-        52xkBLGZBcwk5m1+yAxhy0tsfzsHyhaXuPVkPtMERqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuL
-        c9Nziw31ihNzi0vz0vWS83M3MQKjbtuxn5t3MF7aGHyIUYCDUYmHV2JvcJwQa2JZcWXuIUYJ
-        DmYlEV5vxqA4Id6UxMqq1KL8+KLSnNTiQ4ymQM9NZJYSTc4HJoS8knhDU0NzC0tDc2NzYzML
-        JXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MHBc0TGQ2iKyrYfQLyZzpE6mkdeZdwoPP7Y0X
-        XnlIMl6MOPjhueNaBtEEZTvnE8/6Jtk/TmLO4dryfrHhZJl/90+dOiHAfPUmm2J5wS6G/1cX
-        TmnY0nDfaql8harkwoayiccU3x0v2a4TdV5jt4Cm+Ckdn/X5GoEOZ0/4z1n57lzFvv9/WU+J
-        K7EUZyQaajEXFScCAJF83I7QAgAA
-X-CMS-MailID: 20200224140805eucas1p1559dcc94f7015c49681b560952a03376
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
-References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
-        <20200220145127.21273-1-m.szyprowski@samsung.com>
-        <20200220165614.GD3926@sirena.org.uk>
-        <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
-        <20200221123813.GB5546@sirena.org.uk>
-        <b52332cd-1dec-fdfe-51fc-8605d94abe7d@samsung.com>
-        <20200221171342.GI5546@sirena.org.uk>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582553220; bh=B1HKOxHeQwu3ZxgJLvSfafO1owYsd38lFNvB2Oh8gBc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=bnwYpe6isaqG2Bp36VGI0VAYjd8jtznqNulwkVw85vf5zOMSfv809Oou4taz+1W9g
+         /eTLeJozbJBXhllQfybYW8hX4fyWIjWNON8aQugt/0HrnKAjg5r9wLT5lTgmy+8n2B
+         YrCJM3gob7XIi7l0cbONUTfyGssXmyEi+0SUamN4DDOnXIFxHBentnbyQdvOQ9+11P
+         Dr5X+zeRff1B/SMt2pdNwrja2cVOPDRGAM+U4epkb2bICZZUiGv1fQLKa+KgJ7xMMS
+         AwmdVrZ/6l2MAKwM+FuIqdF/x7mpCYg64MWX7TFFRwOSCFwNeq1fcK5TWItV01qcCa
+         mFLwbcDwN/IQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+If probing the LP885x backlight fails after the regulators have been
+enabled, then the following warning is seen when releasing the
+regulators ...
 
-On 21.02.2020 18:13, Mark Brown wrote:
-> On Fri, Feb 21, 2020 at 02:23:57PM +0100, Marek Szyprowski wrote:
->> On 21.02.2020 13:38, Mark Brown wrote:
->>> We could just remove the compatible strings from the binding
->>> documentation, they won't do any harm if we don't use them.
->> Frankly I have no strong opinion on this. I've just wanted to fix the
->> broken autoloading of the drivers compiled as modules.
-> Shouldn't adding the relevant module table for the platform devices work
-> just as well for that?  Possibly also deleting the of_compatible bits in
-> the MFD as well, ISTR that's needed to make the platform device work.
+ WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
+ Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
+ CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
+ Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
 
-Right. This will work too. MFD cells will match to their drivers by the 
-name and modalias strings will be correct. The question is which 
-approach is preffered? Krzysztof? I've checked other mfd drivers, but I 
-cannot find any pattern in this area.
+ ...
 
-Best regards
+ Call trace:
+  _regulator_put.part.28+0x158/0x160
+  regulator_put+0x34/0x50
+  devm_regulator_release+0x10/0x18
+  release_nodes+0x12c/0x230
+  devres_release_all+0x34/0x50
+  really_probe+0x1c0/0x370
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x78
+  __driver_attach+0xb0/0xf0
+  bus_for_each_dev+0x68/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x160/0x1f0
+  driver_register+0x60/0x110
+  i2c_register_driver+0x40/0x80
+  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
+  do_one_initcall+0x58/0x1a0
+  do_init_module+0x54/0x1d0
+  load_module+0x1d80/0x21c8
+  __do_sys_finit_module+0xe8/0x100
+  __arm64_sys_finit_module+0x18/0x20
+  el0_svc_common.constprop.3+0xb0/0x168
+  do_el0_svc+0x20/0x98
+  el0_sync_handler+0xf4/0x1b0
+  el0_sync+0x140/0x180
+
+Fix this by ensuring that the regulators are disabled, if enabled, on
+probe failure.
+
+Finally, ensure that the vddio regulator is disabled in the driver
+remove handler.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+index f68920131a4a..e94932c69f54 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -456,7 +456,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 		ret = regulator_enable(lp->enable);
+ 		if (ret < 0) {
+ 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
+-			return ret;
++			goto disable_supply;
+ 		}
+ 
+ 		/*
+@@ -471,24 +471,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 	ret = lp855x_configure(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev, "device config err: %d", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = lp855x_backlight_register(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev,
+ 			"failed to register backlight. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
+ 	if (ret) {
+ 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	backlight_update_status(lp->bl);
++
+ 	return 0;
++
++disable_vddio:
++	if (lp->enable)
++		regulator_disable(lp->enable);
++disable_supply:
++	if (lp->supply)
++		regulator_disable(lp->supply);
++
++	return ret;
+ }
+ 
+ static int lp855x_remove(struct i2c_client *cl)
+@@ -497,6 +507,8 @@ static int lp855x_remove(struct i2c_client *cl)
+ 
+ 	lp->bl->props.brightness = 0;
+ 	backlight_update_status(lp->bl);
++	if (lp->enable)
++		regulator_disable(lp->enable);
+ 	if (lp->supply)
+ 		regulator_disable(lp->supply);
+ 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.17.1
 
