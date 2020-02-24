@@ -2,150 +2,98 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB1C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCA7C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128C82067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582503180;
-	bh=Vbzy1EcOquFHvTqzOzQC+gU9JXZnvbZ5bJcf12Ri5wc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FATwv4TGaKVs8Cje9JVfILepnbYwHMs0a9unCkVz/TnglE761an8i1LLyMETm1QV+
-	 vSRl1JFbcy3zkyFT611upqCGXUKw8Fb3BkVmbGTJjKvAj+3nI4llA2OYXeoDpno94Y
-	 AWUAJ4ELhuka1cE+ZZZDbHZZyX/XTHDdiSj4mU6I=
+	by mail.kernel.org (Postfix) with ESMTP id 6380B2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qv9sP1+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgBXAM4 (ORCPT
+        id S1727187AbgBXARt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:12:56 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34433 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgBXAM4 (ORCPT
+        Sun, 23 Feb 2020 19:17:49 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45022 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgBXARt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:12:56 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so7378951oig.1;
-        Sun, 23 Feb 2020 16:12:56 -0800 (PST)
+        Sun, 23 Feb 2020 19:17:49 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y5so4406383pfb.11;
+        Sun, 23 Feb 2020 16:17:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H6q7nfEV4MDtglth++K8H942rxEUO2n9ZdDpRmR3CaA=;
+        b=qv9sP1+2rCe5A5ByzXj7U3d42Sq5tlW/gJUmlG8P5dE9sgDfAnfEYaqiOn/8yns1qt
+         cB/W4fPT09JsAssTLveLv3OzfQPBYFnf0qaO94nJAbUOZU7u4TPSOFqu+Wq6iYTUVTrZ
+         nKFJBLcDwjbnexi8TRXXeRyyKnqsci1l/Du8k7Rna/gRvG+63O/GFikQlF1tyFlPXIel
+         K9Trx5qplViS+b3NxpcPoAxFm1A9K6o1g8ckRLyH9dT7s+iEkyJSykMTp/1tvgfU47Bk
+         XKr7VxuZzFtDO3CXZwE+2UoTcDiiXEx7X2cf6RpfxiO3lLOwsZYeP8wE/BDavkohqdzA
+         e/oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dXtF/HmMIrcd+cQtmXxs/T7lgY990MkWtsdCks/TALQ=;
-        b=n1y0GFsabmOGSPdsWZwUCkx5zUH6EwT/QM3R2QhUuCiDi3yzz+PlNtyUy0TyjkaW2z
-         0UXfQNjTXmYZoELA1HAxUQAJLNjYNY39B8SSw1qtR/Cqi/xKT2FFUKwGb4qakt8texD1
-         edAMrtAmNF4Sj0eT4p4yVi/E7U96+SFVo695gqCUl3zp/ufLB857dk4BhGP2ojxdNTeu
-         sdZnAq0wGuvcG783Ra8g15VheMBuZu+3T/i2ZAdMaV7dEcMcm0uBLSzpNj0Yh228rE53
-         eoVqjUwO8HOcdq3BR66pH5P9r1PCCjFKfh6XDdi7fOqtSjygDUrlxhS89HckN2/1s9vI
-         DMlA==
-X-Gm-Message-State: APjAAAUY7HY0fwsDVAp/1y9UjrNXKl7d/BQGrMtUQhIpE4or/3pTYyF1
-        NZCivzGDXntTznKoRJ2k6vTFf8FpkvFWt1z7LDbfOw==
-X-Google-Smtp-Source: APXvYqzdpH/FefyGNd/m5kE+ZaANP4jSIXHMUatJ93J6tlevnB7xPSMTV256Cq9jT+92l+vsHgJ3g0osYRVYlYV+4is=
-X-Received: by 2002:a54:4e96:: with SMTP id c22mr11067116oiy.110.1582503175589;
- Sun, 23 Feb 2020 16:12:55 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H6q7nfEV4MDtglth++K8H942rxEUO2n9ZdDpRmR3CaA=;
+        b=joVmjcpyAXyNztEBSzyczwFVmgtmg1hZORvkbNhcs6q5M/fU/XUsbxqSqZ0Ef7xweq
+         qEMcCKJztsJXDt36Qkne3wUQ+G6OBdxa+QRYJ3Pd0PUY1jRv7Seo3SBdxkXN2X4ZZD0N
+         7X388gVB/FIGhhFDxui1NL+mgrzmcahrioQYYUaK2Ac6HL/UI7hGHnNZqZZ8LG/lgiUg
+         hhUyVMObPEuE4EYSnOu2TDjJRcKziikZQcsLXLiTbC4QPLSUqf4BPiIIsoupL0tpGNa/
+         O1DWMouYs39tqjdGGAHhXNEr0JN9+s3mJhhHrGe1lS9QQWCyXbwjUbD6U3hbZYRsb3fr
+         J4IA==
+X-Gm-Message-State: APjAAAWSyxLRDvaHKzQFxsNPw1xvnFnnEG9Yo+9PxaPfJMYWH1SVvoZb
+        MJr9PMLC0DV7ltuP3XbASBXMaZ+c
+X-Google-Smtp-Source: APXvYqxItSynldxNjs+x2zPko9C0F3Uij0BrGNxNiPT3DuaA8vr/eIvgEgeQcRL6MjtP/7as7arhoA==
+X-Received: by 2002:a63:340c:: with SMTP id b12mr45413623pga.180.1582503467147;
+        Sun, 23 Feb 2020 16:17:47 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p21sm10144764pfn.103.2020.02.23.16.17.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 16:17:46 -0800 (PST)
+Subject: Re: [PATCH 5.4 000/344] 5.4.22-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200221072349.335551332@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <2cc32a95-b781-41aa-b343-af153cd3fc8b@roeck-us.net>
+Date:   Sun, 23 Feb 2020 16:17:45 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1582319350-23515-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1582319350-23515-1-git-send-email-cai@lca.pw>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 24 Feb 2020 01:12:41 +0100
-Message-ID: <CAJZ5v0iSEV9S=zTa9++vUCO6GTfBE2sxNY+b4mMMt4Y6RCRvjA@mail.gmail.com>
-Subject: Re: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, elver@google.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:09 PM Qian Cai <cai@lca.pw> wrote:
->
-> cpu_latency_constraints.target_value could be accessed concurrently as
-> noticed by KCSAN,
+On 2/20/20 11:36 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.22 release.
+> There are 344 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
+> Anything received after that time might be too late.
+> 
 
-Yes, they could, pretty much by design.
+For v5.4.21-338-g3b5dde2478ad:
 
-So why *exactly* is this a problem?
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 411 pass: 411 fail: 0
 
->  LTP: starting ppoll01
->  BUG: KCSAN: data-race in cpu_latency_qos_limit / pm_qos_update_target
-
-It may be a bug under certain conditions, but you don't mention what
-conditions they are.  Reporting it as a general bug is not accurate at
-the very least.
-
->  write to 0xffffffff99081470 of 4 bytes by task 27532 on cpu 2:
->   pm_qos_update_target+0xa4/0x370
->   pm_qos_set_value at kernel/power/qos.c:78
->   cpu_latency_qos_apply+0x3b/0x50
->   cpu_latency_qos_remove_request+0xea/0x270
->   cpu_latency_qos_release+0x4b/0x70
->   __fput+0x187/0x3d0
->   ____fput+0x1e/0x30
->   task_work_run+0xbf/0x130
->   do_exit+0xa78/0xfd0
->   do_group_exit+0x8b/0x180
->   __x64_sys_exit_group+0x2e/0x30
->   do_syscall_64+0x91/0xb05
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
->  read to 0xffffffff99081470 of 4 bytes by task 0 on cpu 41:
->   cpu_latency_qos_limit+0x1f/0x30
->   pm_qos_read_value at kernel/power/qos.c:55
->   cpuidle_governor_latency_req+0x4f/0x80
->   cpuidle_governor_latency_req at drivers/cpuidle/governor.c:114
->   menu_select+0x6b/0xc29
->   cpuidle_select+0x50/0x70
->   do_idle+0x214/0x280
->   cpu_startup_entry+0x1d/0x1f
->   start_secondary+0x1b2/0x230
->   secondary_startup_64+0xb6/0xc0
->
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 41 PID: 0 Comm: swapper/41 Tainted: G L 5.6.0-rc2-next-20200221+ #7
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
->
-> The read is outside pm_qos_lock critical section which results in a data
-> race.
-
-This is purely theoretical AFAICS and so it should be presented this way.
-
-Also the call traces above don't add much value to the changelog, so
-maybe try to explain what the problem is in English.
-
-> Fix it by adding a pair of READ|WRITE_ONCE().
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  kernel/power/qos.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-> index 32927682bcc4..db0bed2cae26 100644
-> --- a/kernel/power/qos.c
-> +++ b/kernel/power/qos.c
-> @@ -52,7 +52,7 @@
->   */
->  s32 pm_qos_read_value(struct pm_qos_constraints *c)
->  {
-> -       return c->target_value;
-> +       return READ_ONCE(c->target_value);
->  }
->
->  static int pm_qos_get_value(struct pm_qos_constraints *c)
-> @@ -75,7 +75,7 @@ static int pm_qos_get_value(struct pm_qos_constraints *c)
->
->  static void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
->  {
-> -       c->target_value = value;
-> +       WRITE_ONCE(c->target_value, value);
->  }
->
->  /**
-> --
-> 1.8.3.1
->
+Guenter
