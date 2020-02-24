@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E0DC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6518C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8B120836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE2320838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582563018;
-	bh=GUn4MNd/CYw0+WpEjK/beMt3O/nBhBrB0RzoGtzcI8E=;
+	s=default; t=1582563181;
+	bh=+BKg+9ltuyXskzUKcp22gQ/z3orass0x9uHtufnBFpQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PQWPVBWNsgFnLHeB5Aj8JcvC4dZu21AwVO2HNWsgmC6i6VmiEGABKA8+v/Un94CzQ
-	 A0JH3R5Subl61UuF7gO22XzpRl1BdzYTvFcBujxOg3b+cu5/lN7V57DuDjNa/gASyw
-	 fdAfuC+94Vc3oR8gbACuV+fGJ7gLV1McV+W3WhBY=
+	b=k5FckMjbHJfGhK60nAeZP2Rj6/VuWCz8/i1uVl4EF9JnLzcb/EHFHX+8DRcTvR//5
+	 hpfCcuMkWK3j1c3+Y55fQVn3kIytvgkXXe2fors5d40UwFL13fTtFi7uSZq70W1YQv
+	 QME8gUqABWsRwrOVJkGy8YiXpq1l9sCcd/CXOh0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbgBXQuR (ORCPT
+        id S1727460AbgBXQxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:50:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 11:53:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbgBXQuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:50:16 -0500
+        id S1727090AbgBXQw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:52:59 -0500
 Received: from localhost (unknown [122.182.199.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E0F20637;
-        Mon, 24 Feb 2020 16:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A3820836;
+        Mon, 24 Feb 2020 16:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582563016;
-        bh=GUn4MNd/CYw0+WpEjK/beMt3O/nBhBrB0RzoGtzcI8E=;
+        s=default; t=1582563179;
+        bh=+BKg+9ltuyXskzUKcp22gQ/z3orass0x9uHtufnBFpQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JF4umC8CRxfeuYkpdniHpcft7/Jjj5SFyBNEyJJI0OQX2Vtn6yqOvqNnG1KebGkyu
-         UwBybDebLapoJuPaZ5eh9raqocKdq8+ey1hVmwZQdZneolm3YIGA8FLPGBtEfrtdDk
-         Rrfh/v71QseZ5QGSxWrsF3XHXXjWedXhOm7hbA8A=
-Date:   Mon, 24 Feb 2020 22:20:12 +0530
+        b=kn/iCHRYniCjGtSCaGsKiFYWh1Ke7ajdlj2I59KwyP9Fq8RJa7U29becT7gHJE0aS
+         P9roAjpb1/PZi5nJdRyuXiLRk/tKs2BRkPjZvT3VDpsUZT34Ju5B1xnqoUfWny6V98
+         sVdAS0Bzfc+vNBbXjSkbOFdt7qcwpAV9hnPEv9Ow=
+Date:   Mon, 24 Feb 2020 22:22:55 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Amelie Delaunay <amelie.delaunay@st.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -48,22 +48,21 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH 0/6] STM32 MDMA driver fixes and improvements
-Message-ID: <20200224165012.GB2618@vkoul-mobl>
-References: <20200127085334.13163-1-amelie.delaunay@st.com>
+Subject: Re: [PATCH 0/4] STM32 DMAMUX driver fixes and improvements
+Message-ID: <20200224165255.GC2618@vkoul-mobl>
+References: <20200128094158.20361-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127085334.13163-1-amelie.delaunay@st.com>
+In-Reply-To: <20200128094158.20361-1-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-01-20, 09:53, Amelie Delaunay wrote:
-> This series brings improvements to the MDMA driver, with support of power
-> management and descriptor reuse. Probe function gets a cleanup and to avoid
-> a race with vchan_complete, driver now adopts vchan_terminate_vdesc().
+On 28-01-20, 10:41, Amelie Delaunay wrote:
+> This series brings improvements to the DMAMUX driver with support of power
+> management and probe function gets a cleanup.
 
 Applied, thanks
 
