@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C7AC11D2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33798C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72252086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACFA2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="iH5+T9km";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qt3Z8nS6"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pTcRE/I0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gczqBYVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBXJKD (ORCPT
+        id S1728092AbgBXJKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:10:03 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:48057 "EHLO
+        Mon, 24 Feb 2020 04:10:06 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:44179 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728028AbgBXJJ7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726765AbgBXJKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:09:59 -0500
+        Mon, 24 Feb 2020 04:10:05 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 90566616;
-        Mon, 24 Feb 2020 04:09:57 -0500 (EST)
+        by mailnew.west.internal (Postfix) with ESMTP id 542BC640;
+        Mon, 24 Feb 2020 04:10:03 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:58 -0500
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=3rltT13G+L+1c
-        57hjhCuMYYG1tpoQkl5+Nulwk8ESAE=; b=iH5+T9kmTb1qcPe/I4o9A3KT1RSZF
-        3rqgbO1TIsr+k5BMkcOc85XBAQ+eQ3sO46SRJY2TCN/36NTS7T7z9sddTyhbGc3r
-        35+FcJp2Kr2Z8Imwc9p6trul17aIlTm7eEd0vEW6gy0CSvbvgKUKnJk0bAibSgM5
-        E5TEi9t0d8syAAw7fTS5R+7QlTZ0ZJHvFhf3ogHibuG/CcsRcKeE8rnndI7tV5AW
-        RBwNDCoQgL+1QnrPo8JXROkFi3q8bHdEphY+U4AQ+YCoIFd7hp2plB3+Kb9oBrCb
-        K8OQKVobNmidy+X/KUc1JwoQ716D5pxEf2rX+FnjaOAdzn0adRLnmbcjA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=6D5T1d7y5fxMd
+        S6cnWRcbbrJasqKee8D3owRLLLLrU4=; b=pTcRE/I04R4ix2OVkDLGLJIX0Id6A
+        vjodw6TlPQJvnvI9F4NIwqcsN2fkOgBwSGQCSLCmvM6PLsVdRV5OY/6c8SGPpESK
+        aavZ9L1AyeJ9qUHeu8SWw03/dxkCAhZ1g2eEHa5wWzBESqa9ssbqX1H7RtbL9GQL
+        pQqD+nmzbxsYN2cfUCwo0q7vDvXUJvF2QurTcqaxsppiW/TRSJU/5LP2dTqNLOJS
+        0o2VvDe0/vBCTLc4U/xniSPPJqzHARI+OTHW2fFdQRKQcn63AFlB8fYpRu+FeFVz
+        mg6/NG/+nhM5AF1AWFeXc8shUy/Uq02fyzwbON8baxnulQXcheftikKPQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=3rltT13G+L+1c57hjhCuMYYG1tpoQkl5+Nulwk8ESAE=; b=qt3Z8nS6
-        nBgFfZZuTQVtchxhEjJ1Unu04oQqhZfNnegQOKP3c6/SoFan3cxrKPODh2x7RYmp
-        xBJZfUjRILt7wywb0Ki6Sj0oPo+wr2IXrpzfUN5x4KfOveMDuWg4v+WP47dmQEaq
-        NxbN31mmNbA5bqn7CVVqz7uscuu3lRj3KswMpr58gGGrfD7a9H/1hLeMy28O0n6M
-        3/DgX5+R07oJBQjbv1WZxkpjnMxswn6DEaXf8hYm8qpu66zrAxgIo43zX3tBlIHX
-        hBnxZ68pwjeEAmhYBHwb4dvwzMpiaJNjUsQgF18xbkcdL5lUrvZStks19axA64Cz
-        dT5z1T0z7NM3Rw==
-X-ME-Sender: <xms:5ZJTXo20TGsxtUHTVz6QBQfJAJ-7C9uNbfd9LXKG44Bv-bvAWbS-0w>
+        fm2; bh=6D5T1d7y5fxMdS6cnWRcbbrJasqKee8D3owRLLLLrU4=; b=gczqBYVG
+        2BZMIPNzkjV3jFcTYvtUTMobSp8zYoWzhdCDnwEuv4dPNy2TnuSkrTitNAJRZkxQ
+        V1TOw7wcv+yVH0m1smtNH/4NqzeiyJdLuNKzknBljyns4WuwVgy7KYwzrEsNgeJ1
+        QcQugDTOngYQDVFx/spwQihBuBS6KjhdDhiilkbwfMy6pPsNv1SgZY/NDgcJtAZv
+        r9HjS2Mi/RTJGYLJl1dE+62V1UR37aSzbvIJFstofsq78iSshYtmR5CQznzsgFTx
+        FV2QSnnjZ/QUpryg5QQHjloRohNQ1+LJIeLbFEEUUB9NIT/K2WRvGwXVfwOLma7W
+        C1iLS0fyiB36PQ==
+X-ME-Sender: <xms:6pJTXk5jF7nGfGgew3GNt77jywJ3W_GmrZSRa-z8z32fUuq43jQ_sA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepfeelnecurfgrrhgrmhepmhgrihhlfhhr
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepgeegnecurfgrrhgrmhepmhgrihhlfhhr
     ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:5ZJTXgk-q4FJPHHRPhkNHiCphejoaWLSs4-UsjWI-VkYYyEoWRJ5Dg>
-    <xmx:5ZJTXs-VZhjsbkDgKtiOfyvUEt-rs7G6B76YjCJVIUjnJSFER7b7lg>
-    <xmx:5ZJTXvGqislwdzjv-uqPfW2xF4l3Q-39gaCadxNBnzGhw7Wo86Thgg>
-    <xmx:5ZJTXu7ySU6_HRwaHdTGm9imRBHMGVLhPGj-m5xLEnc-m4PD-QEAb-3RrvM>
+X-ME-Proxy: <xmx:6pJTXti373Xo2X-CD8VxhYgpk2HFpzSP_FZKDESCM5SV5aeDhBYotQ>
+    <xmx:6pJTXhFSxu9hNs5787_FXBTAfvL8pWGrQS1pG-pQOlW_vp_vxLfU7Q>
+    <xmx:6pJTXjT1ZD4yKb1xt8nJddQzPAv--bKP5ctlp4-joggHeXXNiDA83A>
+    <xmx:6pJTXtIVBAJ-3LK7qX-1Ce4RzPm1GJhQHDNgq8Taqm6e-8TG7GOObAiIUSs>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CF6793060BD1;
-        Mon, 24 Feb 2020 04:09:56 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8FF1430610E8;
+        Mon, 24 Feb 2020 04:10:02 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 47/89] drm/vc4: crtc: Turn static const variable into a define
-Date:   Mon, 24 Feb 2020 10:06:49 +0100
-Message-Id: <f509208841b8d5a4cbff3bacaee4ca7fedb13969.1582533919.git-series.maxime@cerno.tech>
+Subject: [PATCH 51/89] drm/vc4: crtc: Enable and disable the PV in atomic_enable / disable
+Date:   Mon, 24 Feb 2020 10:06:53 +0100
+Message-Id: <d225a3959de98632dd5a649c1fb53978adb15f31.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -88,51 +88,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hvs_latency_pix variable doesn't need to be a variable and can just be
-defined.
+The VIDEN bit in the pixelvalve currently being used to enable or disable
+the pixelvalve seems to not be enough in some situations, which whill end
+up with the pixelvalve stalling.
+
+In such a case, even re-enabling VIDEN doesn't bring it back and we need to
+clear the FIFO. This can only be done if the pixelvalve is disabled though.
+
+In order to overcome this, we can configure the pixelvalve during
+mode_set_no_fb, but only enable it in atomic_enable and flush the FIFO
+there, and in atomic_disable disable the pixelvalve again.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 4a2ea897eb48..53ce2bbb10b5 100644
+index d3ff32daf60a..25add62080a1 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -44,6 +44,8 @@
- #include "vc4_drv.h"
- #include "vc4_regs.h"
- 
-+#define HVS_FIFO_LATENCY_PIX	6
-+
- #define CRTC_WRITE(offset, val) writel(val, vc4_crtc->regs + (offset))
- #define CRTC_READ(offset) readl(vc4_crtc->regs + (offset))
- 
-@@ -227,21 +229,21 @@ vc4_crtc_update_gamma_lut(struct drm_crtc *crtc)
- 	vc4_crtc_lut_load(crtc);
+@@ -374,9 +374,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 		   PV_CONTROL_TRIGGER_UNDERFLOW |
+ 		   PV_CONTROL_WAIT_HSTART |
+ 		   VC4_SET_FIELD(vc4_encoder->clock_select,
+-				 PV_CONTROL_CLK_SELECT) |
+-		   PV_CONTROL_FIFO_CLR |
+-		   PV_CONTROL_EN);
++				 PV_CONTROL_CLK_SELECT));
  }
  
+ static void vc4_crtc_mode_set_nofb(struct drm_crtc *crtc)
+@@ -467,6 +465,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
+ 	WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
+ 
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
 +
- static u32 vc4_get_fifo_full_level(u32 format)
- {
- 	static const u32 fifo_len_bytes = 64;
--	static const u32 hvs_latency_pix = 6;
+ 	if (HVS_READ(SCALER_DISPCTRLX(chan)) &
+ 	    SCALER_DISPCTRLX_ENABLE) {
+ 		HVS_WRITE(SCALER_DISPCTRLX(chan),
+@@ -554,6 +554,10 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
  
- 	switch (format) {
- 	case PV_CONTROL_FORMAT_DSIV_16:
- 	case PV_CONTROL_FORMAT_DSIC_16:
--		return fifo_len_bytes - 2 * hvs_latency_pix;
-+		return fifo_len_bytes - 2 * HVS_FIFO_LATENCY_PIX;
- 	case PV_CONTROL_FORMAT_DSIV_18:
- 		return fifo_len_bytes - 14;
- 	case PV_CONTROL_FORMAT_24:
- 	case PV_CONTROL_FORMAT_DSIV_24:
- 	default:
--		return fifo_len_bytes - 3 * hvs_latency_pix;
-+		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
- 	}
- }
+ 	require_hvs_enabled(dev);
  
++	/* Reset the PV fifo. */
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) |
++		   PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
++
+ 	/* Enable vblank irq handling before crtc is started otherwise
+ 	 * drm_crtc_get_vblank() fails in vc4_crtc_update_dlist().
+ 	 */
 -- 
 git-series 0.9.1
