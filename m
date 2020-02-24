@@ -2,558 +2,294 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932B9C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214C8C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2F720838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B8720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="X/v5OueX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P607In2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgBXRGV (ORCPT
+        id S1727796AbgBXRG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:06:21 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.51]:47889 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727259AbgBXRGV (ORCPT
+        Mon, 24 Feb 2020 12:06:26 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53374 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727727AbgBXRGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:06:21 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 4B1AC5FC7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 11:06:19 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6HBTjeW2rAGTX6HBTjoEwm; Mon, 24 Feb 2020 11:06:19 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=O10piskvmeldfVVJejkQxB0SXPAWTxh0tLVp0iAU9MU=; b=X/v5OueXOc3toNPFnoZwP52nNr
-        kEodOpB71BF/q04Wq29wN9ZRRSLVS1SDQrWGsMU0U56vPTWG14WHDGZL6C6EJvaD6Qhnhc9JxBfEL
-        cG1fIiOncUSB+bPPkboZ/vMQzj3sE4+2F9U7KjI+yFLqWV46hkxS7zz8qJXh++BaK0yMdOVKngtgi
-        7iov53JgBGZ1K25FdlOMRDTVffycdwMmLvBF93Nf7UBpO7RlCG7OZWlpMSL4WlDF1w/08vXNfKBxs
-        3kVFbrRZlsL4nz9Rwn3EuJgj8ZijsXiDVo1xSJr4jT5t9MnprNVohGNrgyEZmPyLvnpVd4Whkvl8c
-        PlL1EFJA==;
-Received: from [200.68.140.135] (port=5352 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j6HBR-00397R-Ea; Mon, 24 Feb 2020 11:06:17 -0600
-Date:   Mon, 24 Feb 2020 11:09:07 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] wireless: intel: Replace zero-length array with
- flexible-array member
-Message-ID: <20200224170907.GA9948@embeddedor>
+        Mon, 24 Feb 2020 12:06:25 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s10so66727wmh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:06:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FV1+URIh0vJGkDR+Y3sgl5GcK5Z91KqhxIrgPs2m0DY=;
+        b=P607In2Fd4CMWizhD2Dp+XgvX5J21OTVO3M/zrdlEnePBi1j+EdqlODhZk9VNI2RxS
+         yV9vgn07rxiOxdi1oeTea2Vsanjsmsg3bW82s/rvoJoG6SgI8ZEbs8lCrjcUghuJGmxZ
+         V68cEH3CyvgKFafmHF+ZfQH6hLLT/74AzJbQfCkCb6pjLtkw/aw7kdY6TzdqAShE7X+c
+         0JrDF8xysaCATUr3QbFX4Sgjw7bkZ0Pdd+7KA1v4/2qi8+lO84pEeNlt1IqAkMjbthoy
+         3tVV1RoKkOBtY8pQkss4G2RXfEakw1sJIPbvcIrOm544+8ebLT7GRCln9WOoLR+60HOO
+         l8AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FV1+URIh0vJGkDR+Y3sgl5GcK5Z91KqhxIrgPs2m0DY=;
+        b=FnqlzIamc074OSebidkSOfsNqv2yyJNPlE2CdluBBwRn08AV9H6mqloCTbUlLJinOf
+         Cxb0T32uh72tcKmHrzfyvR52AHoEOyFEaacMZWn/lo0xRACNOYiwruBCyCHaMwnissyP
+         elOhIsgCj8ELE87l3EZYeunTo4jVF92WzEZODXBX+2i/yXeRqDfi/djVBgmxvyjAc4kR
+         /EA+SUCTJcbsYT6rsZGiC3wm+HvoP8dPKhFWHejgMpPyuz1RCP9QHVInYQrJD/gbtqNr
+         SI1fylPtRM2gzGXyWFTque8ueCr9A7mRlXsEPa/aEX++CBIY9av61zfQ9O2pKjJ6gDcS
+         isrg==
+X-Gm-Message-State: APjAAAXpMeNcXFzIMBFCeqW2OD32qG8A6kVJMpk0llTyOA7x6wCAnbuP
+        9ztZtjVbaX2Mrdgt5jOgdzcoY/ZebMQ=
+X-Google-Smtp-Source: APXvYqyvdVU6XrIfybjn/aVZi9uPZ1QB0thGmlars9DoePVBy4bV+vuFggKy8v0x+56p9oi82M1+1g==
+X-Received: by 2002:a1c:610a:: with SMTP id v10mr50621wmb.44.1582563982624;
+        Mon, 24 Feb 2020 09:06:22 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:545a:2a71:2add:41f7? ([2a01:e34:ed2f:f020:545a:2a71:2add:41f7])
+        by smtp.googlemail.com with ESMTPSA id c77sm44829wmd.12.2020.02.24.09.06.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 09:06:21 -0800 (PST)
+Subject: Re: [PATCH v2] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
+ maps
+To:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200224165417.334617-1-megous@megous.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2e4213a6-2aaf-641c-f741-9503f3ffd5fe@linaro.org>
+Date:   Mon, 24 Feb 2020 18:06:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.135
-X-Source-L: No
-X-Exim-ID: 1j6HBR-00397R-Ea
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.135]:5352
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200224165417.334617-1-megous@megous.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On 24/02/2020 17:54, Ondrej Jirman wrote:
+> This enables passive cooling by down-regulating CPU voltage
+> and frequency.
+> 
+> For the trip points, I used values from the BSP code directly.
+> 
+> The critical trip point value is 30°C above the maximum recommended
+> ambient temperature (70°C) for the SoC from the datasheet, so there's
+> some headroom even at such a high ambient temperature.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 60 +++++++++++++++++++++++++++----
+>  1 file changed, 54 insertions(+), 6 deletions(-)
+> 
+> v2:
+> - added more detail to the commit description
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 74ac7ee9383cf..53c2b6a836f27 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -72,7 +72,7 @@ cpu0: cpu@0 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@1 {
+> +		cpu1: cpu@1 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C0CPUX>;
+> @@ -83,7 +83,7 @@ cpu@1 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@2 {
+> +		cpu2: cpu@2 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C0CPUX>;
+> @@ -94,7 +94,7 @@ cpu@2 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@3 {
+> +		cpu3: cpu@3 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C0CPUX>;
+> @@ -116,7 +116,7 @@ cpu100: cpu@100 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@101 {
+> +		cpu101: cpu@101 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C1CPUX>;
+> @@ -127,7 +127,7 @@ cpu@101 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@102 {
+> +		cpu102: cpu@102 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C1CPUX>;
+> @@ -138,7 +138,7 @@ cpu@102 {
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> -		cpu@103 {
+> +		cpu103: cpu@103 {
+>  			compatible = "arm,cortex-a7";
+>  			device_type = "cpu";
+>  			clocks = <&ccu CLK_C1CPUX>;
+> @@ -1188,12 +1188,60 @@ cpu0_thermal: cpu0-thermal {
+>  			polling-delay-passive = <0>;
+>  			polling-delay = <0>;
+>  			thermal-sensors = <&ths 0>;
+> +
+> +			trips {
+> +				cpu0_hot: cpu-hot {
+> +					temperature = <80000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu0_very_hot: cpu-very-hot {
+> +					temperature = <100000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				cpu-hot-limit {
+> +					trip = <&cpu0_hot>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+>  		cpu1_thermal: cpu1-thermal {
+>  			polling-delay-passive = <0>;
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+No polling to mitigate?
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+>  			polling-delay = <0>;
+>  			thermal-sensors = <&ths 1>;
+> +
+> +			trips {
+> +				cpu1_hot: cpu-hot {
+> +					temperature = <80000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+I'm curious, can you really reach this temperature with a cortex-a7
+running at 1.2GHz max?
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> +				};
+> +
+> +				cpu1_very_hot: cpu-very-hot {
+> +					temperature = <100000>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				cpu-hot-limit {
+> +					trip = <&cpu1_hot>;
+> +					cooling-device = <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+>  		gpu_thermal: gpu-thermal {
+> 
 
-This issue was detected with the help of Coccinelle.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/intel/ipw2x00/ipw2200.c  |  2 +-
- drivers/net/wireless/intel/ipw2x00/ipw2200.h  | 10 +++----
- drivers/net/wireless/intel/ipw2x00/libipw.h   | 28 +++++++++----------
- .../wireless/intel/iwlegacy/iwl-spectrum.h    |  4 +--
- .../wireless/intel/iwlwifi/fw/api/dbg-tlv.h   |  2 +-
- .../net/wireless/intel/iwlwifi/fw/api/debug.h |  4 +--
- .../wireless/intel/iwlwifi/fw/api/filter.h    |  2 +-
- .../wireless/intel/iwlwifi/fw/api/nvm-reg.h   |  4 +--
- .../net/wireless/intel/iwlwifi/fw/api/sta.h   |  2 +-
- .../net/wireless/intel/iwlwifi/fw/api/tdls.h  |  2 +-
- .../net/wireless/intel/iwlwifi/fw/debugfs.c   |  2 +-
- .../wireless/intel/iwlwifi/fw/error-dump.h    |  2 +-
- drivers/net/wireless/intel/iwlwifi/fw/file.h  | 12 ++++----
- .../net/wireless/intel/iwlwifi/iwl-op-mode.h  |  2 +-
- .../net/wireless/intel/iwlwifi/iwl-trans.h    |  2 +-
- 15 files changed, 40 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index 5ef6f87a48ac..f7c7b2cb73b8 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -3386,7 +3386,7 @@ struct ipw_fw {
- 	__le32 boot_size;
- 	__le32 ucode_size;
- 	__le32 fw_size;
--	u8 data[0];
-+	u8 data[];
- };
- 
- static int ipw_get_fw(struct ipw_priv *priv,
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.h b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
-index 4346520545c4..09fa7f19050f 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.h
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.h
-@@ -448,7 +448,7 @@ struct tfd_command {
- 	u8 index;
- 	u8 length;
- 	__le16 reserved;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct tfd_data {
-@@ -675,7 +675,7 @@ struct ipw_rx_frame {
- 	// is identical)
- 	u8 rtscts_seen;		// 0x1 RTS seen ; 0x2 CTS seen
- 	__le16 length;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- struct ipw_rx_header {
-@@ -1002,7 +1002,7 @@ struct ipw_cmd {	 /* XXX */
-    * Incoming parameters listed 1-st, followed by outcoming params.
-    * nParams=(len+3)/4+status_len
-    */
--	u32 param[0];
-+	u32 param[];
- } __packed;
- 
- #define STATUS_HCMD_ACTIVE      (1<<0)	/**< host command in progress */
-@@ -1108,7 +1108,7 @@ struct ipw_fw_error {	 /* XXX */
- 	u32 log_len;
- 	struct ipw_error_elem *elem;
- 	struct ipw_event *log;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- #ifdef CONFIG_IPW2200_PROMISCUOUS
-@@ -1153,7 +1153,7 @@ struct ipw_rt_hdr {
- 	s8 rt_dbmsignal;	/* signal in dbM, kluged to signed */
- 	s8 rt_dbmnoise;
- 	u8 rt_antenna;	/* antenna number */
--	u8 payload[0];  /* payload... */
-+	u8 payload[];  /* payload... */
- } __packed;
- #endif
- 
-diff --git a/drivers/net/wireless/intel/ipw2x00/libipw.h b/drivers/net/wireless/intel/ipw2x00/libipw.h
-index e4a6ab4e8391..e87538a8b88b 100644
---- a/drivers/net/wireless/intel/ipw2x00/libipw.h
-+++ b/drivers/net/wireless/intel/ipw2x00/libipw.h
-@@ -334,7 +334,7 @@ struct libipw_hdr_1addr {
- 	__le16 frame_ctl;
- 	__le16 duration_id;
- 	u8 addr1[ETH_ALEN];
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_2addr {
-@@ -342,7 +342,7 @@ struct libipw_hdr_2addr {
- 	__le16 duration_id;
- 	u8 addr1[ETH_ALEN];
- 	u8 addr2[ETH_ALEN];
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_3addr {
-@@ -352,7 +352,7 @@ struct libipw_hdr_3addr {
- 	u8 addr2[ETH_ALEN];
- 	u8 addr3[ETH_ALEN];
- 	__le16 seq_ctl;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_4addr {
-@@ -363,7 +363,7 @@ struct libipw_hdr_4addr {
- 	u8 addr3[ETH_ALEN];
- 	__le16 seq_ctl;
- 	u8 addr4[ETH_ALEN];
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct libipw_hdr_3addrqos {
-@@ -380,7 +380,7 @@ struct libipw_hdr_3addrqos {
- struct libipw_info_element {
- 	u8 id;
- 	u8 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- /*
-@@ -406,7 +406,7 @@ struct libipw_auth {
- 	__le16 transaction;
- 	__le16 status;
- 	/* challenge */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_channel_switch {
-@@ -442,7 +442,7 @@ struct libipw_disassoc {
- struct libipw_probe_request {
- 	struct libipw_hdr_3addr header;
- 	/* SSID, supported rates */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_probe_response {
-@@ -452,7 +452,7 @@ struct libipw_probe_response {
- 	__le16 capability;
- 	/* SSID, supported rates, FH params, DS params,
- 	 * CF params, IBSS params, TIM (if beacon), RSN */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- /* Alias beacon for probe_response */
-@@ -463,7 +463,7 @@ struct libipw_assoc_request {
- 	__le16 capability;
- 	__le16 listen_interval;
- 	/* SSID, supported rates, RSN */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_reassoc_request {
-@@ -471,7 +471,7 @@ struct libipw_reassoc_request {
- 	__le16 capability;
- 	__le16 listen_interval;
- 	u8 current_ap[ETH_ALEN];
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_assoc_response {
-@@ -480,7 +480,7 @@ struct libipw_assoc_response {
- 	__le16 status;
- 	__le16 aid;
- 	/* supported rates */
--	struct libipw_info_element info_element[0];
-+	struct libipw_info_element info_element[];
- } __packed;
- 
- struct libipw_txb {
-@@ -490,7 +490,7 @@ struct libipw_txb {
- 	u8 reserved;
- 	u16 frag_size;
- 	u16 payload_size;
--	struct sk_buff *fragments[0];
-+	struct sk_buff *fragments[];
- };
- 
- /* SWEEP TABLE ENTRIES NUMBER */
-@@ -594,7 +594,7 @@ struct libipw_ibss_dfs {
- 	struct libipw_info_element ie;
- 	u8 owner[ETH_ALEN];
- 	u8 recovery_interval;
--	struct libipw_channel_map channel_map[0];
-+	struct libipw_channel_map channel_map[];
- };
- 
- struct libipw_csa {
-@@ -830,7 +830,7 @@ struct libipw_device {
- 
- 	/* This must be the last item so that it points to the data
- 	 * allocated beyond this structure by alloc_libipw */
--	u8 priv[0];
-+	u8 priv[];
- };
- 
- #define IEEE_A            (1<<0)
-diff --git a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-index a3b490501a70..1e8ab704dbfb 100644
---- a/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-+++ b/drivers/net/wireless/intel/iwlegacy/iwl-spectrum.h
-@@ -53,7 +53,7 @@ struct ieee80211_measurement_params {
- struct ieee80211_info_element {
- 	u8 id;
- 	u8 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- struct ieee80211_measurement_request {
-@@ -61,7 +61,7 @@ struct ieee80211_measurement_request {
- 	u8 token;
- 	u8 mode;
- 	u8 type;
--	struct ieee80211_measurement_params params[0];
-+	struct ieee80211_measurement_params params[];
- } __packed;
- 
- struct ieee80211_measurement_report {
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/dbg-tlv.h b/drivers/net/wireless/intel/iwlwifi/fw/api/dbg-tlv.h
-index b9d7ed93311c..da84dc69dbd0 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/dbg-tlv.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/dbg-tlv.h
-@@ -77,7 +77,7 @@ struct iwl_fw_ini_hcmd {
- 	u8 id;
- 	u8 group;
- 	__le16 reserved;
--	u8 data[0];
-+	u8 data[];
- } __packed; /* FW_DEBUG_TLV_HCMD_DATA_API_S_VER_1 */
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/debug.h b/drivers/net/wireless/intel/iwlwifi/fw/api/debug.h
-index 98e957ecbeed..d3791f73b67f 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/debug.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/debug.h
-@@ -266,7 +266,7 @@ struct iwl_mfu_assert_dump_notif {
- 	__le16   index_num;
- 	__le16   parts_num;
- 	__le32   data_size;
--	__le32   data[0];
-+	__le32   data[];
- } __packed; /* MFU_DUMP_ASSERT_API_S_VER_1 */
- 
- /**
-@@ -302,7 +302,7 @@ struct iwl_mvm_marker {
- 	u8 marker_id;
- 	__le16 reserved;
- 	__le64 timestamp;
--	__le32 metadata[0];
-+	__le32 metadata[];
- } __packed; /* MARKER_API_S_VER_1 */
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/filter.h b/drivers/net/wireless/intel/iwlwifi/fw/api/filter.h
-index befc3b126041..a4064a6fb4d1 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/filter.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/filter.h
-@@ -89,7 +89,7 @@ struct iwl_mcast_filter_cmd {
- 	u8 pass_all;
- 	u8 bssid[6];
- 	u8 reserved[2];
--	u8 addr_list[0];
-+	u8 addr_list[];
- } __packed; /* MCAST_FILTERING_CMD_API_S_VER_1 */
- 
- #define MAX_BCAST_FILTERS 8
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h b/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
-index 97b49843e318..397ac89a04c2 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
-@@ -351,7 +351,7 @@ struct iwl_mcc_update_resp_v3 {
- 	__le16 time;
- 	__le16 geo_info;
- 	__le32 n_channels;
--	__le32 channels[0];
-+	__le32 channels[];
- } __packed; /* LAR_UPDATE_MCC_CMD_RESP_S_VER_3 */
- 
- /**
-@@ -380,7 +380,7 @@ struct iwl_mcc_update_resp {
- 	u8 source_id;
- 	u8 reserved[3];
- 	__le32 n_channels;
--	__le32 channels[0];
-+	__le32 channels[];
- } __packed; /* LAR_UPDATE_MCC_CMD_RESP_S_VER_4 */
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/sta.h b/drivers/net/wireless/intel/iwlwifi/fw/api/sta.h
-index 970e9e508ad0..8f9ef474f3b1 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/sta.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/sta.h
-@@ -552,7 +552,7 @@ struct iwl_mvm_wep_key_cmd {
- 	u8 decryption_type;
- 	u8 flags;
- 	u8 reserved;
--	struct iwl_mvm_wep_key wep_key[0];
-+	struct iwl_mvm_wep_key wep_key[];
- } __packed; /* SEC_CURR_WEP_KEY_CMD_API_S_VER_2 */
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
-index b089285ac466..ec2a00d6c684 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
-@@ -190,7 +190,7 @@ struct iwl_tdls_config_cmd {
- 
- 	__le32 pti_req_data_offset;
- 	struct iwl_tx_cmd pti_req_tx_cmd;
--	u8 pti_req_template[0];
-+	u8 pti_req_template[];
- } __packed; /* TDLS_CONFIG_CMD_API_S_VER_1 */
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c b/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c
-index 89f74116569d..cc1d93606d9b 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c
-@@ -261,7 +261,7 @@ struct hcmd_write_data {
- 	__be32 cmd_id;
- 	__be32 flags;
- 	__be16 length;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- static ssize_t iwl_dbgfs_send_hcmd_write(struct iwl_fw_runtime *fwrt, char *buf,
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/error-dump.h b/drivers/net/wireless/intel/iwlwifi/fw/error-dump.h
-index f008e1bbfdf4..f331a16fd940 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/error-dump.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/error-dump.h
-@@ -141,7 +141,7 @@ struct iwl_fw_error_dump_data {
- struct iwl_fw_error_dump_file {
- 	__le32 barker;
- 	__le32 file_len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-index 1554f5fdd483..92910af88666 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-@@ -165,7 +165,7 @@ enum iwl_ucode_tlv_type {
- struct iwl_ucode_tlv {
- 	__le32 type;		/* see above */
- 	__le32 length;		/* not including type/length fields */
--	u8 data[0];
-+	u8 data[];
- };
- 
- #define IWL_TLV_UCODE_MAGIC		0x0a4c5749
-@@ -191,7 +191,7 @@ struct iwl_tlv_ucode_header {
- 	 * Note that each TLV is padded to a length
- 	 * that is a multiple of 4 for alignment.
- 	 */
--	u8 data[0];
-+	u8 data[];
- };
- 
- /*
-@@ -652,7 +652,7 @@ struct iwl_fw_dbg_dest_tlv_v1 {
- 	__le32 wrap_count;
- 	u8 base_shift;
- 	u8 end_shift;
--	struct iwl_fw_dbg_reg_op reg_ops[0];
-+	struct iwl_fw_dbg_reg_op reg_ops[];
- } __packed;
- 
- /* Mask of the register for defining the LDBG MAC2SMEM buffer SMEM size */
-@@ -672,14 +672,14 @@ struct iwl_fw_dbg_dest_tlv {
- 	__le32 wrap_count;
- 	u8 base_shift;
- 	u8 size_shift;
--	struct iwl_fw_dbg_reg_op reg_ops[0];
-+	struct iwl_fw_dbg_reg_op reg_ops[];
- } __packed;
- 
- struct iwl_fw_dbg_conf_hcmd {
- 	u8 id;
- 	u8 reserved;
- 	__le16 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- /**
-@@ -754,7 +754,7 @@ struct iwl_fw_dbg_trigger_tlv {
- 	u8 flags;
- 	u8 reserved[5];
- 
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- #define FW_DBG_START_FROM_ALIVE	0
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h b/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h
-index 3008a5246be8..b35b8920941b 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h
-@@ -175,7 +175,7 @@ void iwl_opmode_deregister(const char *name);
- struct iwl_op_mode {
- 	const struct iwl_op_mode_ops *ops;
- 
--	char op_mode_specific[0] __aligned(sizeof(void *));
-+	char op_mode_specific[] __aligned(sizeof(void *));
- };
- 
- static inline void iwl_op_mode_stop(struct iwl_op_mode *op_mode)
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-index 7b3b1f4c99b4..a3fdaa9f2654 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-@@ -875,7 +875,7 @@ struct iwl_trans {
- 
- 	/* pointer to trans specific struct */
- 	/*Ensure that this pointer will always be aligned to sizeof pointer */
--	char trans_specific[0] __aligned(sizeof(void *));
-+	char trans_specific[] __aligned(sizeof(void *));
- };
- 
- const char *iwl_get_cmd_string(struct iwl_trans *trans, u32 id);
 -- 
-2.25.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
