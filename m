@@ -2,138 +2,137 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101EAC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DD6C11D25
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8A620661
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1jqTubd"
+	by mail.kernel.org (Postfix) with ESMTP id 09F4C20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbgBXFtu (ORCPT
+        id S1727327AbgBXFt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:49:50 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35986 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgBXFtu (ORCPT
+        Mon, 24 Feb 2020 00:49:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7914 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725535AbgBXFt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 00:49:50 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so6720477iln.3;
-        Sun, 23 Feb 2020 21:49:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1lY477fOyMq1q33AocdUo5Q0TUJqq9Md6rNGg2za8EE=;
-        b=s1jqTubdky1rvJE1VzZdSrkQdnbJhf7/AS1HDlM0stq5HQi88ofA5b7QhrexYrycjD
-         8RV4Xp23wk4MGhFSKuu6pTcr+i4FRRLgWuViYPEfHsIBwSKeyqcHKoBDp9R6qRPSn6iH
-         MSvT4drDFSIWPW5NGHdn+/LFotJgqLN6XiINJtgkPc5IAJiX5ifvIOYX0X5x0uE51XGF
-         +4eluDwp13rawmI3HvVZrfALBMO707xp1mnCIm6gWCRKj1gx1iBko9Cei70VyfSESeSM
-         uVghwaqmljkv3K4bmYw8F7L5H8UyxBSNVOPvTqx66oWCT+dK8E25lubaGEi5TrCXCJpm
-         T9aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1lY477fOyMq1q33AocdUo5Q0TUJqq9Md6rNGg2za8EE=;
-        b=H/BoiDNNKNf+aRIq/KjuIHQJO1aVVKvzvHx25rdwH9qj17gxbmIw2kpmVWHT3jqeBr
-         WuDs4sWjxYe9usk/eJJ0dOP6cTOv/iw9wrlKEy6TG6HOzvciohqtWPLWS+ENoggfugse
-         HhL5CmDHdKh6OKxi/75hC1O7JQe0q2O4GINhlLqHKAMQAlX2zyBgG+kx4/etGXRA2h02
-         fGAlBAHT4aUxpOzcD05ooq3Dh9Dw5HqgnbAvtkyaK48LVpdP/vz6K4d0kfHS62ncMARX
-         NB7FgwCSc9e/pkj7GUov6oWgKXOGOfODVzD1Vf9w63dmUJt4G2LTWDjcrAY4O4Qb9f8Z
-         YIbw==
-X-Gm-Message-State: APjAAAVtUzTHudzepo/R67wpFe16sEF+xT38AEeRH9q+fDlLQVZyAk/J
-        xutz+lq6/feA5ZnrOrLIMV7TNvHcZzDw8+lsedDJdk1j
-X-Google-Smtp-Source: APXvYqwMB5S+cg1wqmxDqgClIocSahfleSU/C//nzCiqKf+hfu0p+G7QBof53DaOqgFzqnvi3H6GZJ+5IkmK+CSLuB4=
-X-Received: by 2002:a92:9fdd:: with SMTP id z90mr59039789ilk.6.1582523387848;
- Sun, 23 Feb 2020 21:49:47 -0800 (PST)
+        Mon, 24 Feb 2020 00:49:57 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O5ikrr040629
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:49:56 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb18uaa4t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:49:55 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Mon, 24 Feb 2020 05:49:52 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 05:49:46 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O5mnOs42402300
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 05:48:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5C7CA4053;
+        Mon, 24 Feb 2020 05:49:45 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EECBA404D;
+        Mon, 24 Feb 2020 05:49:45 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 05:49:45 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 74BB6A00E5;
+        Mon, 24 Feb 2020 16:49:40 +1100 (AEDT)
+Subject: Re: [PATCH v3 03/27] powerpc: Map & release OpenCAPI LPC memory
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-4-alastair@au1.ibm.com>
+ <61e2b75b-334e-9eec-d14d-7dfdb4654415@linux.ibm.com>
+Date:   Mon, 24 Feb 2020 16:49:43 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200212120237.1332-1-linux.amoon@gmail.com> <20200213101744.GA11087@kozik-lap>
- <CANAwSgR+PFiE0=FEhDY__FDx+470pe0OsbUXcSG64JDuG++ccQ@mail.gmail.com> <20200213154314.GA7215@kozik-lap>
-In-Reply-To: <20200213154314.GA7215@kozik-lap>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 24 Feb 2020 11:19:36 +0530
-Message-ID: <CANAwSgS7k9sPZ6=WAVVsNUydRS_rfCa4itRvUExQBcQGuPqoDw@mail.gmail.com>
-Subject: Re: [PATCHv1 0/2] Add FSYS2 power domain for MMC driver
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <61e2b75b-334e-9eec-d14d-7dfdb4654415@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022405-0012-0000-0000-00000389A8A3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022405-0013-0000-0000-000021C646BE
+Message-Id: <390ff7a4-61ef-fcfe-337d-c4587adeb345@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_01:2020-02-21,2020-02-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=756 impostorscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On 24/2/20 1:51 pm, Andrew Donnellan wrote:
+> On 21/2/20 2:26 pm, Alastair D'Silva wrote:
+>> From: Alastair D'Silva <alastair@d-silva.org>
+>>
+>> This patch adds platform support to map & release LPC memory.
+>>
+>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> 
+> Nothing seems obviously wrong here.
+> 
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-On Thu, 13 Feb 2020 at 21:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Thu, Feb 13, 2020 at 06:58:51PM +0530, Anand Moon wrote:
-> > hi Krzysztof,
-> >
-> > On Thu, 13 Feb 2020 at 15:47, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Wed, Feb 12, 2020 at 12:02:35PM +0000, Anand Moon wrote:
-> > > > This patches add the power domain for MMC driver,
-> > > > but somehow the suspend/resume feature is broken
-> > > > so any input on how to fix this.
-> > >
-> > > I think S2R was working on XU3-family after Marek's fixes, so you mean
-> > > that these patches break it?
-> > >
-> > Yes I my testing mmc driver failed to come up after suspend.
->
-> Patches breaking systems should be clearly marked as work in progress,
-> e.g.  by using RFC instead of PATCH in the title.
->
-> This patchset cannot be applied.
->
-Ok
+Oh, commit message nitpick :)
 
-> You probably have to figure out some missing dependencies, e.g. in
-> clocks/power domains/pinctrl.
->
-I have tried to add some more missing code, but this FSYS2 power domain
-power off during suspend and their is no resume after this. Do know why.
+Summary should be powerpc/powernv. Commit message should explain that 
+this is for the powernv platform and presents an interface that drivers 
+can use to make use of the new OPAL calls.
 
-[root@alarm ~]# echo N | sudo tee /sys/module/printk/parameters/console_suspend
-N
-[root@alarm ~]# echo 1 > /sys/power/pm_debug_messages
-[root@alarm ~]# time rtcwake -s 60 -m mem
-rtcwake: assuming RTC uses UTC ...
-rtcwake: wakeup from "mem" using /dev/rtc0 at Mon Feb 24 05:18:02 2020
-[   81.955425] PM: suspend entry (deep)
-[   81.961793] Filesystems sync: 0.003 seconds
-[   81.978051] Freezing user space processes ... (elapsed 0.009 seconds) done.
-[   81.993635] OOM killer disabled.
-[   81.996531] Freezing remaining freezable tasks ... (elapsed 0.002
-seconds) done.
-[   82.229718] wake enabled for irq 160
-[   82.445441] wake enabled for irq 164
-[   82.461752] samsung-pinctrl 13400000.pinctrl: Setting external
-wakeup interrupt mask: 0xffffffe7
-[   82.481095] Disabling non-boot CPUs ...
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
-My observation, all the device get suspended and USB device come alive
-after resume.
-since mmc device is in sill in suspended state it dose not resume.
-
-So can we stop the FSYS2 power domain to getting disabled during suspend.
-Or is their any other thing I am missing.
-How to enable more debug print for power management ?
-How can I debug future ?
-
--Anand
