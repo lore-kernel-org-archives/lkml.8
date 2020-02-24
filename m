@@ -2,239 +2,120 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A4DC38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4914AC38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF8420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD4820838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:12:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZGFJpxG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgBXTMv (ORCPT
+        id S1727554AbgBXTMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:12:51 -0500
-Received: from muru.com ([72.249.23.125]:57090 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbgBXTMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 14:12:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55444 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbgBXTMt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 14:12:49 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 0F8C481DB;
-        Mon, 24 Feb 2020 19:13:31 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 3/3] bus: ti-sysc: Implement display subsystem reset quirk
-Date:   Mon, 24 Feb 2020 11:12:30 -0800
-Message-Id: <20200224191230.30972-4-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200224191230.30972-1-tony@atomide.com>
-References: <20200224191230.30972-1-tony@atomide.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=degQOaPSml+HqWvCvfRFduy79XBcMREB9313mEwFuto=; b=ZGFJpxG8B2HVpCBYFwPz72LsgY
+        wreCGOO2XyI/9YpO02ilSiGgy2P7BbsMMT0+mLsvXIbvBaNIWxNOH0g6CFuwAoEUTjBNzrdsfH1Cv
+        LFCMGjOCOF/e4u1gDEp1o1slS9wzUH025lEBFx1VxUIlg1erQWe4NiJK64HgZU2n395X4x0ny7JsW
+        5frr19gihyEk4w7ccPmj5q/g7GeONCFc8sivWw8Vid+6PY3EREOl2QQ5CoBdrOJrYDlaI+XooRprN
+        +ZeESiNKAlRnFRYx4qaga62QmZWbcu3Yh0G9AIKw8HhwShLayCIVdE1KFVq2tJ7csicASV5JuS3pr
+        qBoFsWNQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6J9s-00013g-J3; Mon, 24 Feb 2020 19:12:48 +0000
+Date:   Mon, 24 Feb 2020 11:12:48 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        linux-doc@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: process: changes.rst: Escape --version to fix
+ Sphinx output
+Message-ID: <20200224191248.GP24185@bombadil.infradead.org>
+References: <20200223222228.27089-1-j.neuschaefer@gmx.net>
+ <20200224110815.6f7561d1@lwn.net>
+ <20200224184719.GA2363@latitude>
+ <20200224185227.GO24185@bombadil.infradead.org>
+ <20200224115851.6684d516@lwn.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224115851.6684d516@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The display subsystem (DSS) needs the child outputs disabled for reset.
-In order to prepare to probe DSS without legacy platform data, let's
-implement sysc_pre_reset_quirk_dss() similar to what we have for the
-platform data with omap_dss_reset().
+On Mon, Feb 24, 2020 at 11:58:51AM -0700, Jonathan Corbet wrote:
+> On Mon, 24 Feb 2020 10:52:27 -0800
+> Matthew Wilcox <willy@infradead.org> wrote:
+> 
+> > On Mon, Feb 24, 2020 at 07:47:19PM +0100, Jonathan Neuschäfer wrote:
+> > > On Mon, Feb 24, 2020 at 11:08:15AM -0700, Jonathan Corbet wrote:  
+> > > > On Sun, 23 Feb 2020 23:22:27 +0100
+> > > > Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
+> > > >   
+> > > > > Without double-backticks, Sphinx wrongly turns "--version" into
+> > > > > "–version" with a Unicode EN DASH (U+2013), that is visually easy to
+> > > > > confuse with a single ASCII dash.
+> > > > > 
+> > > > > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>  
+> > > > 
+> > > > This certainly seems worth addressing.  But I would *really* rather find
+> > > > a way to tell Sphinx not to do that rather than making all of these
+> > > > tweaks - which we will certainly find ourselves having to do over and
+> > > > over again.  I can try to look into that in a bit, but if somebody were
+> > > > to beat me to it ... :)  
+> > > 
+> > > This seems to do the trick:
+> > > 
+> > > diff --git a/Documentation/conf.py b/Documentation/conf.py
+> > > index 3c7bdf4cd31f..8f2a7ae95184 100644
+> > > --- a/Documentation/conf.py
+> > > +++ b/Documentation/conf.py
+> > > @@ -587,6 +587,9 @@ pdf_documents = [
+> > >  kerneldoc_bin = '../scripts/kernel-doc'
+> > >  kerneldoc_srctree = '..'
+> > > 
+> > > +# Render -- as two dashes
+> > > +smartquotes = False  
+> > 
+> > I think what Jon was looking for was the ability to selectively turn
+> > smartquotes off for a section and then reenable it?
+> 
+> No that's not what I was thinking, actually.  Unless somebody can come up
+> with a good reason to the contrary, just disabling that behavior globally
+> strikes me as the right thing to do.
 
-Note that we cannot directly use the old omap_dss_reset() without
-platform data callbacks and updating omap_dss_reset() to understand
-struct device. And we will be dropping omap_dss_reset() anyways when
-all the SoCs are probing with device tree, so let's not mess with the
-legacy code at all.
+Well, sometimes -- when the time is right -- I like to use en-dashes.
+It's probably no great loss, though.
 
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c                 | 131 +++++++++++++++++++++++++-
- include/linux/platform_data/ti-sysc.h |   1 +
- 2 files changed, 129 insertions(+), 3 deletions(-)
+grep finds me these interesting examples:
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1303,11 +1303,11 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("dcan", 0x48480000, 0x20, -ENODEV, -ENODEV, 0xa3170504, 0xffffffff,
- 		   SYSC_QUIRK_CLKDM_NOAUTO),
- 	SYSC_QUIRK("dss", 0x4832a000, 0, 0x10, 0x14, 0x00000020, 0xffffffff,
--		   SYSC_QUIRK_OPT_CLKS_IN_RESET),
-+		   SYSC_QUIRK_OPT_CLKS_IN_RESET | SYSC_MODULE_QUIRK_DSS_RESET),
- 	SYSC_QUIRK("dss", 0x58000000, 0, -ENODEV, 0x14, 0x00000040, 0xffffffff,
--		   SYSC_QUIRK_OPT_CLKS_IN_RESET),
-+		   SYSC_QUIRK_OPT_CLKS_IN_RESET | SYSC_MODULE_QUIRK_DSS_RESET),
- 	SYSC_QUIRK("dss", 0x58000000, 0, -ENODEV, 0x14, 0x00000061, 0xffffffff,
--		   SYSC_QUIRK_OPT_CLKS_IN_RESET),
-+		   SYSC_QUIRK_OPT_CLKS_IN_RESET | SYSC_MODULE_QUIRK_DSS_RESET),
- 	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff,
- 		   SYSC_QUIRK_CLKDM_NOAUTO),
- 	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff,
-@@ -1468,6 +1468,128 @@ static void sysc_init_revision_quirks(struct sysc *ddata)
- 	}
- }
- 
-+/*
-+ * DSS needs dispc outputs disabled to reset modules. Returns mask of
-+ * enabled DSS interrupts. Eventually we may be able to do this on
-+ * dispc init rather than top-level DSS init.
-+ */
-+static u32 sysc_quirk_dispc(struct sysc *ddata, int dispc_offset,
-+			    bool disable)
-+{
-+	bool lcd_en, digit_en, lcd2_en = false, lcd3_en = false;
-+	const int lcd_en_mask = BIT(0), digit_en_mask = BIT(1);
-+	int manager_count;
-+	bool framedonetv_irq;
-+	u32 val, irq_mask = 0;
-+
-+	switch (sysc_soc->soc) {
-+	case SOC_2420 ... SOC_3630:
-+		manager_count = 2;
-+		framedonetv_irq = false;
-+		break;
-+	case SOC_4430 ... SOC_4470:
-+		manager_count = 3;
-+		break;
-+	case SOC_5430:
-+	case SOC_DRA7:
-+		manager_count = 4;
-+		break;
-+	case SOC_AM4:
-+		manager_count = 1;
-+		break;
-+	case SOC_UNKNOWN:
-+	default:
-+		return 0;
-+	};
-+
-+	/* Remap the whole module range to be able to reset dispc outputs */
-+	devm_iounmap(ddata->dev, ddata->module_va);
-+	ddata->module_va = devm_ioremap(ddata->dev,
-+					ddata->module_pa,
-+					ddata->module_size);
-+	if (!ddata->module_va)
-+		return -EIO;
-+
-+	/* DISP_CONTROL */
-+	val = sysc_read(ddata, dispc_offset + 0x40);
-+	lcd_en = val & lcd_en_mask;
-+	digit_en = val & digit_en_mask;
-+	if (lcd_en)
-+		irq_mask |= BIT(0);			/* FRAMEDONE */
-+	if (digit_en) {
-+		if (framedonetv_irq)
-+			irq_mask |= BIT(24);		/* FRAMEDONETV */
-+		else
-+			irq_mask |= BIT(2) | BIT(3);	/* EVSYNC bits */
-+	}
-+	if (disable & (lcd_en | digit_en))
-+		sysc_write(ddata, dispc_offset + 0x40,
-+			   val & ~(lcd_en_mask | digit_en_mask));
-+
-+	if (manager_count <= 2)
-+		return irq_mask;
-+
-+	/* DISPC_CONTROL2 */
-+	val = sysc_read(ddata, dispc_offset + 0x238);
-+	lcd2_en = val & lcd_en_mask;
-+	if (lcd2_en)
-+		irq_mask |= BIT(22);			/* FRAMEDONE2 */
-+	if (disable && lcd2_en)
-+		sysc_write(ddata, dispc_offset + 0x238,
-+			   val & ~lcd_en_mask);
-+
-+	if (manager_count <= 3)
-+		return irq_mask;
-+
-+	/* DISPC_CONTROL3 */
-+	val = sysc_read(ddata, dispc_offset + 0x848);
-+	lcd3_en = val & lcd_en_mask;
-+	if (lcd3_en)
-+		irq_mask |= BIT(30);			/* FRAMEDONE3 */
-+	if (disable && lcd3_en)
-+		sysc_write(ddata, dispc_offset + 0x848,
-+			   val & ~lcd_en_mask);
-+
-+	return irq_mask;
-+}
-+
-+/* DSS needs child outputs disabled and SDI registers cleared for reset */
-+static void sysc_pre_reset_quirk_dss(struct sysc *ddata)
-+{
-+	const int dispc_offset = 0x1000;
-+	int error;
-+	u32 irq_mask, val;
-+
-+	/* Get enabled outputs */
-+	irq_mask = sysc_quirk_dispc(ddata, dispc_offset, false);
-+	if (!irq_mask)
-+		return;
-+
-+	/* Clear IRQSTATUS */
-+	sysc_write(ddata, 0x1000 + 0x18, irq_mask);
-+
-+	/* Disable outputs */
-+	val = sysc_quirk_dispc(ddata, dispc_offset, true);
-+
-+	/* Poll IRQSTATUS */
-+	error = readl_poll_timeout(ddata->module_va + dispc_offset + 0x18,
-+				   val, val != irq_mask, 100, 50);
-+	if (error)
-+		dev_warn(ddata->dev, "%s: timed out %08x !+ %08x\n",
-+			 __func__, val, irq_mask);
-+
-+	if (sysc_soc->soc == SOC_3430) {
-+		/* Clear DSS_SDI_CONTROL */
-+		sysc_write(ddata, dispc_offset + 0x44, 0);
-+
-+		/* Clear DSS_PLL_CONTROL */
-+		sysc_write(ddata, dispc_offset + 0x48, 0);
-+	}
-+
-+	/* Clear DSS_CONTROL to switch DSS clock sources to PRCM if not */
-+	sysc_write(ddata, dispc_offset + 0x40, 0);
-+}
-+
- /* 1-wire needs module's internal clocks enabled for reset */
- static void sysc_pre_reset_quirk_hdq1w(struct sysc *ddata)
- {
-@@ -1606,6 +1728,9 @@ static void sysc_init_module_quirks(struct sysc *ddata)
- 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_AESS)
- 		ddata->module_enable_quirk = sysc_module_enable_quirk_aess;
- 
-+	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_DSS_RESET)
-+		ddata->pre_reset_quirk = sysc_pre_reset_quirk_dss;
-+
- 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_RTC_UNLOCK) {
- 		ddata->module_unlock_quirk = sysc_module_unlock_quirk_rtc;
- 		ddata->module_lock_quirk = sysc_module_lock_quirk_rtc;
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
-+#define SYSC_MODULE_QUIRK_DSS_RESET	BIT(23)
- #define SYSC_MODULE_QUIRK_RTC_UNLOCK	BIT(22)
- #define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
- #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
--- 
-2.25.1
+Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst:Tree RCU's grace--period memory-ordering guarantees rely most heavily on
+Documentation/accounting/psi.rst:scarcity aids users in sizing workloads to hardware--or provisioning
+Documentation/admin-guide/acpi/cppc_sysfs.rst:  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
+Documentation/admin-guide/mm/hugetlbpage.rst:task that modifies ``nr_hugepages``. The default for the allowed nodes--when the
+Documentation/block/null_blk.rst:home_node=[0--nr_nodes]: Default: NUMA_NO_NODE
+Documentation/admin-guide/svga.rst::Copyright: |copy| 1995--1999 Martin Mares, <mj@ucw.cz>
+Documentation/media/uapi/v4l/pixfmt-srggb10-ipu3.rst:        G\ :sub:`0108high`\ (bits 1--0)
+
+(in all, 368 lines, but they're not all in .rst files)
+
