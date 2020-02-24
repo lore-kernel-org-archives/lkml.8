@@ -6,50 +6,48 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5726C11D27
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600F5C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3E820675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB2120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgBXI21 (ORCPT
+        id S1727429AbgBXI2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:28:27 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41695 "EHLO
+        Mon, 24 Feb 2020 03:28:33 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:35440 "EHLO
         mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbgBXI2Q (ORCPT
+        with ESMTP id S1727265AbgBXI2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 03:28:16 -0500
-Received: by mail-io1-f72.google.com with SMTP id z201so14182038iof.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:28:14 -0800 (PST)
+Received: by mail-io1-f72.google.com with SMTP id x10so14242481iob.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:28:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Ki7/rIQ43NZNL7i9XZxO5j0m7be84RSH01sLpgV+brk=;
-        b=QCxYOLZInV3hJk19D74oxW+M5XQILgnLBycl2vAy3dqNAa8pS4RIjl3ZMhEI1KRT+4
-         wjR+cw7ETEhxWANWZEEEiXZcnl3llMLaLp9glE7qkI74zCVDeQIcmMWx0Nehhu/Zj7Gh
-         5d2F5sB9SNo2PX7JhHpko7RGdKmQecqJc3rJ0CwTOoa1MKi+7oZuPSZOXJsNusjxbrTm
-         dpPpiiKnvBlP+ACAD1eeE/FtgbnpHz7L/3e8RcWpiixfDYVzLUAyRe1UKWs/X9Zh3u49
-         b+FxmwL+BNdhUIc7jvLw2R2z5za5DM6geMa/vboRbks4OAvA1vglH7YrZdL4xLj93epx
-         Qo1g==
-X-Gm-Message-State: APjAAAXSdXMlTz/q7j36u+KvDx/kXGvR8Tv7yCNDTsiWTl0Fq942oqRv
-        3lu5cbkxTr5R41SVy7HiD6nnXHsMPhIgRYiDxE4B6ktz4/10
-X-Google-Smtp-Source: APXvYqx6wSbvdhrhgLyvmokd++y+Rr8y2docF4cg58sfgAgwCXjrlPkJ3+tNBtiKM07na6bLEgVBv8Ai9YVKymV9PgGfH/n4Q+Xj
+        bh=jkIHcFv+DAETasj6Ak4atc745RnMAvxgLBeQXLrAduY=;
+        b=dwDZFpJ9a4oZMKmKv580rwCBVExdOQaVPCnab2aIzwQWVurQT9EpMUlzmJftDEbyQS
+         CIsHQob//+IfsCjQidPbDFyiXClW9dl5b0lupNukW7bO7f8Uq3ceprHYlEdCoalw2K0u
+         Pi4A7GeHtR/KPfvFqL73xe4Wxg25P0A73Vds/yrhNKYaj7kjAAysttOlMKtop1BfztKN
+         YRXH9INfBKn5oqerP8aImaraKs8MAdsSe7WQvcjW9xDm0iID9jjKPkfQiaXaGRBIoGJQ
+         IGTkaSvZE0YU9yI1fB2hXjDgK7yQd1S1gfDWBFVE4otE6PTViZUGv7Q8Py8iyTOZ5177
+         6QEg==
+X-Gm-Message-State: APjAAAXBOMNE9tZ9y7adM23kRdDEElIITT+SWgFKB8JypAZJiThbBhqi
+        CXMmAZGyft9EkK4aAbRyAzkpVR4g8I7C5kbG2KFTyozVW2mJ
+X-Google-Smtp-Source: APXvYqzChRnrXRXig1dG/LpkZGbFdxMHCeQQc71jNgGiaVOKB8EIMEb8rcDbjyjIxv3RVeM8MJDV5+YpDn1CkX8ycqWRGTUurcRE
 MIME-Version: 1.0
-X-Received: by 2002:a02:c787:: with SMTP id n7mr50309193jao.85.1582532894078;
+X-Received: by 2002:a5e:d616:: with SMTP id w22mr45950888iom.57.1582532894967;
  Mon, 24 Feb 2020 00:28:14 -0800 (PST)
 Date:   Mon, 24 Feb 2020 00:28:14 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ff4686059f4e26ac@google.com>
-Subject: general protection fault in smc_ib_remove_dev
-From:   syzbot <syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, arvid.brodin@alten.se,
-        davem@davemloft.net, hch@lst.de, kgraul@linux.ibm.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        ubraun@linux.ibm.com
+Message-ID: <0000000000000cce30059f4e27e9@google.com>
+Subject: WARNING: refcount bug in l2cap_chan_put
+From:   syzbot <syzbot+198362c76088d1515529@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,97 +58,61 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-kdump-re..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=15b5774ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
-dashboard link: https://syzkaller.appspot.com/bug?extid=84484ccebdd4e5451d91
+HEAD commit:    bee46b30 Add linux-next specific files for 20200221
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1244ea7ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=10693880b4976691
+dashboard link: https://syzkaller.appspot.com/bug?extid=198362c76088d1515529
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100eda7ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c3fdd9e00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160a03d9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f8e1dde00000
 
-The bug was bisected to:
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-commit cbd34da7dc9afd521e0bea5e7d12701f4a9da7c7
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Fri Jul 12 03:57:28 2019 +0000
-
-    mm: move the powerpc hugepd code to mm/gup.c
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ea4265e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17ea4265e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ea4265e00000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f03a7ee00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=10083a7ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f03a7ee00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com
-Fixes: cbd34da7dc9a ("mm: move the powerpc hugepd code to mm/gup.c")
+Reported-by: syzbot+198362c76088d1515529@syzkaller.appspotmail.com
 
-infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
-netlink: 'syz-executor837': attribute type 1 has an invalid length.
-netlink: 21 bytes leftover after parsing attributes in process `syz-executor837'.
-general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-CPU: 0 PID: 9928 Comm: syz-executor837 Not tainted 5.6.0-rc1-syzkaller #0
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 2940 at lib/refcount.c:28 refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 2940 Comm: kworker/1:12 Not tainted 5.6.0-rc2-next-20200221-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__list_del_entry_valid+0x22/0xf5 lib/list_debug.c:42
-Code: 0e fe 48 8b 75 e8 eb b2 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49 89 fe 48 83 c7 08 48 89 fa 41 55 48 c1 ea 03 41 54 <80> 3c 02 00 0f 85 a1 00 00 00 4c 89 f2 4d 8b 66 08 48 b8 00 00 00
-RSP: 0018:ffffc900053d7440 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff87b4e490 RCX: ffffffff815c1ba9
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
-RBP: ffffc900053d7458 R08: 0000000000000004 R09: fffff52000a7ae7b
-R10: fffff52000a7ae7a R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000008 R14: 0000000000000000 R15: ffffffff8a98b880
-FS:  0000000000ea3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020003028 CR3: 0000000091874000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Workqueue: events do_enable_set
 Call Trace:
- __list_del_entry include/linux/list.h:132 [inline]
- list_del_init include/linux/list.h:204 [inline]
- smc_ib_remove_dev+0x52/0x2e0 net/smc/smc_ib.c:578
- remove_client_context+0xc7/0x120 drivers/infiniband/core/device.c:724
- disable_device+0x14c/0x230 drivers/infiniband/core/device.c:1268
- __ib_unregister_device+0x9c/0x190 drivers/infiniband/core/device.c:1435
- ib_unregister_device_and_put+0x5f/0x80 drivers/infiniband/core/device.c:1498
- nldev_dellink+0x222/0x340 drivers/infiniband/core/nldev.c:1568
- rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
- rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- __sys_sendto+0x262/0x380 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto net/socket.c:2006 [inline]
- __x64_sys_sendto+0xe1/0x1a0 net/socket.c:2006
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4404d9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdb793fb28 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404d9
-RDX: 0000000000010a73 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 4b6ae4f95a5de35b
-R10: 00000000000008c0 R11: 0000000000000246 R12: 0000000000401d60
-R13: 0000000000401df0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 79db9bfdece7383f ]---
-RIP: 0010:__list_del_entry_valid+0x22/0xf5 lib/list_debug.c:42
-Code: 0e fe 48 8b 75 e8 eb b2 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49 89 fe 48 83 c7 08 48 89 fa 41 55 48 c1 ea 03 41 54 <80> 3c 02 00 0f 85 a1 00 00 00 4c 89 f2 4d 8b 66 08 48 b8 00 00 00
-RSP: 0018:ffffc900053d7440 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff87b4e490 RCX: ffffffff815c1ba9
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
-RBP: ffffc900053d7458 R08: 0000000000000004 R09: fffff52000a7ae7b
-R10: fffff52000a7ae7a R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000008 R14: 0000000000000000 R15: ffffffff8a98b880
-FS:  0000000000ea3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020003028 CR3: 0000000091874000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Code: e9 d8 fe ff ff 48 89 df e8 81 81 10 fe e9 85 fe ff ff e8 07 54 d1 fd 48 c7 c7 00 c8 91 88 c6 05 6b f6 fc 06 01 e8 23 74 a1 fd <0f> 0b e9 ac fe ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
+RSP: 0018:ffffc9000952fbd8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ee766 RDI: fffff520012a5f6d
+RBP: ffffc9000952fbe8 R08: ffff88809e82e600 R09: ffffed1015d26661
+R10: ffffed1015d26660 R11: ffff8880ae933307 R12: 0000000000000003
+R13: ffff888095b3f018 R14: dead000000000122 R15: ffffc9000952fc98
+ refcount_sub_and_test include/linux/refcount.h:261 [inline]
+ refcount_dec_and_test include/linux/refcount.h:281 [inline]
+ kref_put include/linux/kref.h:64 [inline]
+ l2cap_chan_put+0x1d9/0x240 net/bluetooth/l2cap_core.c:501
+ do_enable_set+0x54b/0x960 net/bluetooth/6lowpan.c:1075
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2266
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2412
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
