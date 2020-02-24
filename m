@@ -2,99 +2,96 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F773C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E2AC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAE420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC78B20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCBMWYYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgBXJWH (ORCPT
+        id S1727374AbgBXJWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:22:07 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:52251 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXJWH (ORCPT
+        Mon, 24 Feb 2020 04:22:35 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35613 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgBXJWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:22:07 -0500
-Received: from [192.168.178.56] ([109.104.43.98]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MGi6m-1jA1oK1ycM-00DqDT; Mon, 24 Feb 2020 10:21:42 +0100
-Subject: Re: [PATCH v2] irqchip/bcm2835: Quiesce IRQs left enabled by
- bootloader
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Serge Schneider <serge@raspberrypi.org>,
-        Kristina Brooks <notstina@gmail.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Phil Elwell <phil@raspberrypi.org>
-References: <20200212123651.apio6kno2cqhcskb@wunner.de>
- <61cc6b74-3dd2-38d0-6da0-eb3fbd87c598@i2se.com>
- <20200223182445.n44wgrourk4cpfoq@wunner.de>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <1a5735e8-b876-92e4-9f1e-687f5abf8708@i2se.com>
-Date:   Mon, 24 Feb 2020 10:21:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 24 Feb 2020 04:22:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so9240367ljb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:22:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6IEmiaHapk6QuDqeMErumlPa8et/eIwPs40Qk1bfYgc=;
+        b=mCBMWYYqAHMR1ZOOQ/Xg/vzqfery4zqmmLRGpoYgxrjdA4Q1Uww5DUY1ykwNL5vj1m
+         dDkWZmOOO3rH78G8E2kNRcLcwSKd0xFOr4YUKvUGyDP0zzdCSV61daFqOFB2mW+OEIBI
+         MILR0t2OZ56prHlip00+fX94J2//ufdKb/XNN2fXotXNpfz3M/iTpDWO4CbzfQOosC6g
+         EwEq4ooPMgu9Ee1o3kApERx/dxtC01uuwGUYpmmT7O6ODTaCDgBS7BwXlUsmkxPaIeHp
+         TXppKl687E+BHpEod0khQ53EyzDT7CRUciYN1I+o6PXcCJTpadx2Cx6QajhJclf6sJmi
+         75ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6IEmiaHapk6QuDqeMErumlPa8et/eIwPs40Qk1bfYgc=;
+        b=Pobr2f6XJrp/DGqtxh9Z+qJiat4z4hK5wo8bWdbkQj6tAw/xAM9HXWbWBdmUrzFDdW
+         UMJ6y+t47vacCjnOxxuKORdSqQcgegnUiPcgo1hAjLERwFq6W9iOowbuC7UgOGJs/PM7
+         OsTTarxJklj2I+qHVmLzsWW2HE/drypGgS7S5pritWfi13bhsAiFCIKq6Glm7bhKgUEg
+         4MGzO9TwDJtbwB2set7INDYvpMnzXlxalUsg31PICnPZofeMJwtozVf5N5RkJps7RWiA
+         ZY8DNJa+nTqDexhOT0xffL5GrZVRsa6J5JtCxAHgDeb0gH3gmnmdtyACbRKhPkioHKRf
+         +Hxg==
+X-Gm-Message-State: APjAAAUdSWDWzj/t99eAUCnUxjIgGxMZD6PlYuP0iuUs50/Gim0NZLOA
+        TdYGQad2uC61kj1XzXgHO3sYGPdloOGj0zIBbJO6rA==
+X-Google-Smtp-Source: APXvYqxo3IaO4blkCFbL5ffJSwUgUjvv9cby45Snl6DaczaaGadZAmXHW8yRJgcNEw+v5J4YbI+kZQ+QV61O3UcyP7I=
+X-Received: by 2002:a2e:865a:: with SMTP id i26mr30176075ljj.236.1582536153013;
+ Mon, 24 Feb 2020 01:22:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200223182445.n44wgrourk4cpfoq@wunner.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:nvv+kzY7b4+AacEf0WpzQB8/RizEp3+ZM6DrnRkvntJts48S1Pw
- rOcsEq61Ufa2KgomwK6FKBjdHDbxoyzKZcaFckx5h0rSqwHToryJcMrXqIMg2baqOSOoVkL
- 7kz9+JW7d2XTEd9ZaxchbR9jPOTPlhyIPA2jNxnH30QPJXyBXfnW9aGu8ZTbKx+czIe5xYo
- vmJkkzZJOQH6cNOLp4MBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fAsX8aDpBAI=:/wSapfaezyq+vnt/TzdcWr
- HLvx64INvtF3e82wUf+qOZiYxrFUCJ/aIhLi9DTMRBxUOfcBjkk98VZVh7nwgY2plXye0Ngsv
- dRztdjzU3ZxL89f5kO6rrcSWfZ7mrg4iZK3U7SsZ1ZE/6Zi1xdZ0lWh0nweqf5KJ6tDzghp9t
- zN5V7RfjsNhus25gjZkFfecbY/PhjDbr808sukOEXuBZm8k8c7r6KnHRjAoJRVhMR8H4JP0An
- Ls4RU+jCZSCB+5zTrVKYrnORTpP4GF+eNgOFPPSnJNi7m+OmozV/Eg3PBtWitHIw3bA+PQjag
- Lx268ak1oVJHCiv6+R/dYSCbKjMnih/zEFf+sqw3//zrwNyaGkLo5uHwnuINzYZcch5p7Sl7s
- 90k9ToxqbFTaMuwG473sB8X7A33ET5NxKm9e6cB+yNHWMzIHarGPZRADS2XG46v4j/Bw+4rlq
- gpPWn7HgX+fK7BFfE4VPj7DMQGNmKtLu9ScH8FEc70oh/Y5s3RsQexbjUZKizp1U4FHLcCJXB
- CVoeATEmafQAajFSf7y1hcNF883fL7pVuFI9lq0o1GxZcn5fBOsD1+6yx3wjuBc+gYiELf0Ev
- cMrgwCAr27zyIVZqWPyycA0QQbUxuiuSABK3LnaDl0qibNur/V8xO5upivU9ZSyvWT/CNZ5u4
- Zd3gMkLljB2uJpmPiXI/S94WskRRsJILUtGI4zzn8O8e0CjwhgmKIdt5whryEji03uFePjU5P
- GObo3F7YUN4HIIKv5f92OmJZpuAUiKt+AhLjlKmTHNPyKat7ZbYr8s2IIM6ABXkStqnSXVxEn
- mwTRduyOrKY0l9tCzlBOH3ZCGWkdWAdHj5Ueur/gtT218+bEFEpjAizflyQUGn5ay3BXm7X
+References: <cover.1582048155.git.amit.kucheria@linaro.org>
+ <9fa8a4e09b6fcff4b9d4facc9f9e9f8e3c4a41d5.1582048155.git.amit.kucheria@linaro.org>
+ <158215294977.184098.9773724834739432956@swboyd.mtv.corp.google.com>
+In-Reply-To: <158215294977.184098.9773724834739432956@swboyd.mtv.corp.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 24 Feb 2020 14:52:21 +0530
+Message-ID: <CAP245DVWWN8Au4pb74rewcQ+tWR5GDdVjSCssuSf-VvQnvtnXg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] drivers: thermal: tsens: Release device in success path
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukas,
-
-On 23.02.20 19:24, Lukas Wunner wrote:
-> On Sun, Feb 23, 2020 at 06:59:56PM +0100, Stefan Wahren wrote:
->> thanks for all the investigation. Unfortunately the patch below doesn't
->> compile, since it lacks the definiton of REG_FIQ_ENABLE.
-> Ugh, I recall fixing that when compile-testing.  I must have forgotten
-> to invoke "git commit --amend" before "git format-patch".
+On Thu, Feb 20, 2020 at 4:25 AM Stephen Boyd <swboyd@chromium.org> wrote:
 >
->> Btw the name is a little bit unlucky because it defines a single flag
->> within REG_FIQ_CONTROL instead of a separate register.
-> The Foundation's repo uses that name so I stuck by it to reduce the
-> number of merge conflicts Phil will have to resolve.  Happy to change
-> though, suggestions welcome.
+> Quoting Amit Kucheria (2020-02-18 10:12:08)
+> > We don't currently call put_device in case of successfully initialising
+> > the device.
+>
+> Sure, but why is that a problem? Presumably the device is kept pinned
+> forever?
 
-readability has a higher prio. How about:
-
-#define FIQ_CONTROL_ENABLE BIT(7)
-
-Regards
-Stefan
-
+Right, we keep the reference forever. Will fix the commit message.
+>
+> >
+> > Allow control to fall through so we can use same code for success and
+> > error paths to put_device.
+> >
+> > As a part of this fixup, change devm_ioremap_resource to act on the same
+> > device pointer as that used to allocate regmap memory. That ensures that
+> > we are free to release op->dev after examining its resources.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
