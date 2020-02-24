@@ -2,496 +2,909 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0582FC35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE13C35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89B8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FkXDNS4G"
+	by mail.kernel.org (Postfix) with ESMTP id 73168205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582507182;
+	bh=ARdB6d/8tXuen3dumcUD6eCuGB6iURXWHE/sxkN/7vs=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=Pkeq+M/d6SdL29pmyly72D3U8WBZwuFqRjtjYe0pl6zOzEQL071fyqZO/Or0UG/GW
+	 cn9wGKntKxdnW0pKwo4d0Z0ZPcPQTarlaB3/zoNfkKqYiSIPj5k8ENiDcGcOiZtlH1
+	 6gRQJ8OkZHcycavK9vtqQCCEbfCWBnu27msvYNJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgBXBRI (ORCPT
+        id S1727205AbgBXBTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:17:08 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36992 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXBRI (ORCPT
+        Sun, 23 Feb 2020 20:19:41 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44898 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXBTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:17:08 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O1Gu5R079983;
-        Sun, 23 Feb 2020 19:16:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582507016;
-        bh=y6nnpuc3nFl46C5sPxEeUff54sJnsVDjqKhjAE1tLuM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FkXDNS4GZwlNQi3YapPU+n9P62EIknRxfmTxo/6Kq0Faf+tXgab7WUMFBkH3RBtyA
-         hyhNoYXyXzMAMpvz7NRHurhO6k0POx3RJvwGVnqkgpaX6pknSCat7aKn4GPypOyEG/
-         pLQROXj06eeoZ8f3KBT+x+r0mfsMjcEbtxDUaSAE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01O1GuYa127711
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 23 Feb 2020 19:16:56 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 23
- Feb 2020 19:16:55 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 23 Feb 2020 19:16:55 -0600
-Received: from [10.250.132.7] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O1Gp1p055793;
-        Sun, 23 Feb 2020 19:16:52 -0600
-Subject: Re: [PATCH 2/4] thermal: k3: Add support for bandgap sensors
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <amit.kucheria@verdurent.com>, <t-kristo@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-References: <20200213102440.20539-1-j-keerthy@ti.com>
- <20200213102440.20539-3-j-keerthy@ti.com> <20200220221334.GA7119@linaro.org>
-From:   "J, KEERTHY" <j-keerthy@ti.com>
-Message-ID: <987f9f02-151c-22a6-6afc-0c7a17e1da62@ti.com>
-Date:   Mon, 24 Feb 2020 06:46:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 23 Feb 2020 20:19:40 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so8161372ljj.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:19:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=VNDEwPNQ+b9D6JahWwSVozeOqnjHjqX04QrdJKjY1p0=;
+        b=G1CLP2ckegfsqw+jodpu1RZrUgHHjUS5xiaYP5GnbnIPNzNUUnh6Pq/1ZR/KPEG1FS
+         XQ9WQsiV0EpvOVlvnYD38pThtq3qp68JM9YjRTrW2Ogg+N+1hdBtqXh+y/ul1p6ZJLhe
+         HVRbrx7SNF/kFiVRAcI8Wlb+l/y1vcZ5ERrQg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=VNDEwPNQ+b9D6JahWwSVozeOqnjHjqX04QrdJKjY1p0=;
+        b=HajtKSUMWv3B5UnvItaWUHBdgbyuzDLgZI7kH09hX+a3rGUscFc/a9RUD76w0CqD4w
+         P7jzVoP4aRjMS7QHHMEz80RTdpl3fWzdei8FLkGaeM++OgSalTn5mVRSEV7TC54AlIRY
+         MnIXSVHACnDe06PtwMvKS2Pf6XTVT+lAwZUXLXWf49JWEDipJR90t6Yb012wDlTqNaeK
+         wyeAzePFOJh1AtdMXjGXD50r/5lcXWNupogrFUCczlTwq7C9vs5ZRVagTdK2zGSC/p0V
+         PQMX3hpG5yfPaKaMTJf5Cn1Bra/ERXKl3nK7GeAt2I3+MAiOGpyn3zAbN7BTp+TCZapn
+         6rBg==
+X-Gm-Message-State: APjAAAXTPB9JwxFxMBjSBFeoM22PAmK7rp1hzXnbaDN/WUMZbcbbCgF/
+        inMxk/l+GiHfbdy/Nnnwq/oGOA1tuqI=
+X-Google-Smtp-Source: APXvYqw9LPYW73KEvZlIIjvNfVAjdbWrqj4bCFS1P5d2zVUW4SVN564ehdr4IlIn9a703N6X/II4KA==
+X-Received: by 2002:a2e:9c85:: with SMTP id x5mr29401216lji.50.1582507175753;
+        Sun, 23 Feb 2020 17:19:35 -0800 (PST)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id y8sm5302019lji.56.2020.02.23.17.19.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 17:19:35 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id r19so8191139ljg.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:19:34 -0800 (PST)
+X-Received: by 2002:a2e:3a13:: with SMTP id h19mr29187101lja.16.1582507174110;
+ Sun, 23 Feb 2020 17:19:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200220221334.GA7119@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 23 Feb 2020 17:19:18 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whGODQBDqPGcEFU8EVkNAzMK9+gK_sGaUNHSZnB=JL+_Q@mail.gmail.com>
+Message-ID: <CAHk-=whGODQBDqPGcEFU8EVkNAzMK9+gK_sGaUNHSZnB=JL+_Q@mail.gmail.com>
+Subject: Linux 5.6-rc3
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fairly normal rc3 as far as I can tell. We've seen bigger, but we've
+seen smaller ones too. Maybe this is slightly on the low side of
+average at this time, which would make sense since this was a smaller
+merge window. Anyway, too much noise in the signal to be sure either
+way.
 
+The overall stats look fairly regular too: about 55% drivers (staging,
+sound, gpu, networking,  and usb look noticeable, with some noise
+elsewhere). The bulk of the staging diff is actually the vsoc removal,
+so that's nice.
 
-On 2/21/2020 3:43 AM, Daniel Lezcano wrote:
-> On Thu, Feb 13, 2020 at 03:54:38PM +0530, Keerthy wrote:
->> The bandgap provides current and voltage reference for its internal
->> circuits and other analog IP blocks. The analog-to-digital
->> converter (ADC) produces an output value that is proportional
->> to the silicon temperature.
->>
->> Currently reading temperatures and trend computing is supported
->> as there are no active/passive cooling agent supported.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/thermal/Kconfig      |  12 ++
->>   drivers/thermal/Makefile     |   1 +
->>   drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
->>   3 files changed, 355 insertions(+)
->>   create mode 100644 drivers/thermal/k3_bandgap.c
->>
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index 5a05db5438d6..fa598eddc7ac 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -251,6 +251,18 @@ config IMX_THERMAL
->>   	  cpufreq is used as the cooling device to throttle CPUs when the
->>   	  passive trip is crossed.
->>   
->> +config K3_THERMAL
->> +	bool "Texas Instruments K3 thermal support"
->> +	depends on THERMAL
-> 
-> All the Kconfig is under the THERMAL option, so this dependency is not
-> necessary.
+Outside of drivers, we have the usual suspects: arch fixes (powerpc,
+s390, x86, but also a late csky update that I couldn't find it in
+myself to worry about). Filesystems (ext4 and btrfs) and networking.
+And misc sprinkles of small fixes elsewhere.
 
-Okay
+See the appended shortlog for details,
 
-> 
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	help
->> +	  If you say yes here you get thermal support for the Texas Instruments
->> +	  K3 SoC family. The current chip supported is:
->> +	   - AM654
->> +
->> +	  This includes temperature reading functionality and also trend
->> +	  computation.
->> +
-> 
-> [ ... ]
-> 
->> +
->> +#define K3_VTM_ADC_BEGIN_VAL		540
->> +#define K3_VTM_ADC_END_VAL		944
->> +
->> +static const int k3_adc_to_temp[K3_VTM_ADC_END_VAL - K3_VTM_ADC_BEGIN_VAL
->> +				+ 1] = {
-> 
-> No need to specify a size for the array that can be done with:
-> 
-> static const int k3_adc_to_temp[] = {
-> 
-> And then use ARRAY_SIZE macro.
+             Linus
 
-Okay. I will address all the comments mentioned below.
+---
 
-Thanks for the review.
+Aditya Pakki (1):
+      ecryptfs: replace BUG_ON with error handling code
 
-- Keerthy
+Akhil P Oommen (1):
+      drm/msm/a6xx: Correct the highestbank configuration
 
-> 
->> +	-40000, -40000, -40000, -40000, -39800, -39400, -39000, -38600, -38200,
->> +	-37800, -37400, -37000, -36600, -36200, -35800, -35300, -34700, -34200,
->> +	-33800, -33400, -33000, -32600, -32200, -31800, -31400, -31000, -30600,
->> +	-30200, -29800, -29400, -29000, -28600, -28200, -27700, -27100, -26600,
->> +	-26200, -25800, -25400, -25000, -24600, -24200, -23800, -23400, -23000,
->> +	-22600, -22200, -21800, -21400, -21000, -20500, -19900, -19400, -19000,
->> +	-18600, -18200, -17800, -17400, -17000, -16600, -16200, -15800, -15400,
->> +	-15000, -14600, -14200, -13800, -13400, -13000, -12500, -11900, -11400,
->> +	-11000, -10600, -10200, -9800, -9400, -9000, -8600, -8200, -7800, -7400,
->> +	-7000, -6600, -6200, -5800, -5400, -5000, -4500, -3900, -3400, -3000,
->> +	-2600, -2200, -1800, -1400, -1000, -600, -200, 200, 600, 1000, 1400,
->> +	1800, 2200, 2600, 3000, 3400, 3900, 4500, 5000, 5400, 5800, 6200, 6600,
->> +	7000, 7400, 7800, 8200, 8600, 9000, 9400, 9800, 10200, 10600, 11000,
->> +	11400, 11800, 12200, 12700, 13300, 13800, 14200, 14600, 15000, 15400,
->> +	15800, 16200, 16600, 17000, 17400, 17800, 18200, 18600, 19000, 19400,
->> +	19800, 20200, 20600, 21000, 21400, 21900, 22500, 23000, 23400, 23800,
->> +	24200, 24600, 25000, 25400, 25800, 26200, 26600, 27000, 27400, 27800,
->> +	28200, 28600, 29000, 29400, 29800, 30200, 30600, 31000, 31400, 31900,
->> +	32500, 33000, 33400, 33800, 34200, 34600, 35000, 35400, 35800, 36200,
->> +	36600, 37000, 37400, 37800, 38200, 38600, 39000, 39400, 39800, 40200,
->> +	40600, 41000, 41400, 41800, 42200, 42600, 43100, 43700, 44200, 44600,
->> +	45000, 45400, 45800, 46200, 46600, 47000, 47400, 47800, 48200, 48600,
->> +	49000, 49400, 49800, 50200, 50600, 51000, 51400, 51800, 52200, 52600,
->> +	53000, 53400, 53800, 54200, 54600, 55000, 55400, 55900, 56500, 57000,
->> +	57400, 57800, 58200, 58600, 59000, 59400, 59800, 60200, 60600, 61000,
->> +	61400, 61800, 62200, 62600, 63000, 63400, 63800, 64200, 64600, 65000,
->> +	65400, 65800, 66200, 66600, 67000, 67400, 67800, 68200, 68600, 69000,
->> +	69400, 69800, 70200, 70600, 71000, 71500, 72100, 72600, 73000, 73400,
->> +	73800, 74200, 74600, 75000, 75400, 75800, 76200, 76600, 77000, 77400,
->> +	77800, 78200, 78600, 79000, 79400, 79800, 80200, 80600, 81000, 81400,
->> +	81800, 82200, 82600, 83000, 83400, 83800, 84200, 84600, 85000, 85400,
->> +	85800, 86200, 86600, 87000, 87400, 87800, 88200, 88600, 89000, 89400,
->> +	89800, 90200, 90600, 91000, 91400, 91800, 92200, 92600, 93000, 93400,
->> +	93800, 94200, 94600, 95000, 95400, 95800, 96200, 96600, 97000, 97500,
->> +	98100, 98600, 99000, 99400, 99800, 100200, 100600, 101000, 101400,
->> +	101800, 102200, 102600, 103000, 103400, 103800, 104200, 104600, 105000,
->> +	105400, 105800, 106200, 106600, 107000, 107400, 107800, 108200, 108600,
->> +	109000, 109400, 109800, 110200, 110600, 111000, 111400, 111800, 112200,
->> +	112600, 113000, 113400, 113800, 114200, 114600, 115000, 115400, 115800,
->> +	116200, 116600, 117000, 117400, 117800, 118200, 118600, 119000, 119400,
->> +	119800, 120200, 120600, 121000, 121400, 121800, 122200, 122600, 123000,
->> +	123400, 123800, 124200, 124600, 124900, 125000,
->> +};
->> +
->> +struct k3_thermal_data;
->> +
->> +struct k3_bandgap {
->> +	struct device *dev;
-> 
-> This field is useless, the function using it can use the local dev variable
-> 
->> +	void __iomem *base;
->> +	const struct k3_bandgap_data *conf;
->> +	spinlock_t lock; /* shields this struct */
-> 
-> Where is used this lock?
-> 
->> +	int ts_cnt;
-> 
-> This field is unused.
-> 
->> +	u32 errata;
->> +	struct k3_thermal_data *ts_data[K3_VTM_MAX_NUM_TS];
-> 
-> This field is unused.
-> 
->> +};
->> +
->> +struct k3_vtm_driver_data {
->> +	u32 errata;
->> +};
->> +
->> +/* common data structures */
->> +struct k3_thermal_data {
->> +	struct thermal_zone_device *ti_thermal;
->> +	struct thermal_cooling_device *cool_dev;
-> 
-> This field is unused
-> 
->> +	struct k3_bandgap *bgp;
->> +	enum thermal_device_mode mode;
-> 
-> This field is unused
-> 
->> +	struct work_struct thermal_wq;
-> 
-> Where is used this workq?
-> 
->> +	int sensor_id;
->> +	u32 ctrl_offset;
->> +	u32 stat_offset;
->> +	int prev_temp;
->> +};
->> +
->> +static unsigned int vtm_get_best_value(unsigned int s0, unsigned int s1,
->> +				       unsigned int s2)
->> +{
->> +	int d01 = abs(s0 - s1);
->> +	int d02 = abs(s0 - s2);
->> +	int d12 = abs(s1 - s2);
->> +
->> +	if (d01 <= d02 && d01 <= d12)
->> +		return (s0 + s1) / 2;
->> +
->> +	if (d02 <= d01 && d02 <= d12)
->> +		return (s0 + s2) / 2;
->> +
->> +	return (s1 + s2) / 2;
->> +}
->> +
->> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
->> +			    int *temp)
->> +{
->> +	struct k3_bandgap *bgp;
->> +	unsigned int dtemp, s0, s1, s2;
->> +
->> +	bgp = devdata->bgp;
-> 
-> nit: missing line
-> 
->> +	/**
->> +	 * Errata is applicable for am654 pg 1.0 silicon. There
->> +	 * is a variation of the order for 8-10 degree centigrade.
->> +	 * Work around that by getting the average of two closest
->> +	 * readings out of three readings everytime we want to
->> +	 * report temperatures.
->> +	 *
->> +	 * Errata workaround.
->> +	 */
-> 
-> nit: extra line
-> 
->> +	if (bgp->errata) {
-> 
-> Right now only am654 is supported and has the errata. This test is pointless
-> because no other compatible string is defined. If you want to set the scene for
-> more platforms I suggest to add a get_temp function in the drvdata which does
-> this 3 points averaging and get rid of this test (and the errata field).
-> 
->> +		s0 = readl(bgp->base + devdata->stat_offset) &
->> +			K3_VTM_TS_STAT_DTEMP_MASK;
->> +		s1 = readl(bgp->base + devdata->stat_offset) &
->> +			K3_VTM_TS_STAT_DTEMP_MASK;
->> +		s2 = readl(bgp->base + devdata->stat_offset) &
->> +			K3_VTM_TS_STAT_DTEMP_MASK;
->> +		dtemp = vtm_get_best_value(s0, s1, s2);
->> +	} else {
->> +		dtemp = readl(bgp->base + devdata->stat_offset) &
->> +				K3_VTM_TS_STAT_DTEMP_MASK;
->> +	}
->> +
->> +	if (dtemp < K3_VTM_ADC_BEGIN_VAL || dtemp > K3_VTM_ADC_END_VAL)
->> +		return -EINVAL;
->> +
->> +	*temp = k3_adc_to_temp[dtemp - K3_VTM_ADC_BEGIN_VAL];
->> +
->> +	return 0;
->> +}
->> +
->> +/* thermal zone ops */
->> +/* Get temperature callback function for thermal zone */
-> 
-> Fix comment format
-> 
-> /*
->   *
->   */
-> 
->> +static int k3_thermal_get_temp(void *devdata, int *temp)
->> +{
->> +	struct k3_thermal_data *data = devdata;
->> +	int ret = 0;
->> +
->> +	ret = k3_bgp_read_temp(data, temp);
->> +	if (ret)
->> +		return ret;
->> +
->> +	data->prev_temp = *temp;
->> +
->> +	return ret;
->> +}
->> +
->> +static int k3_thermal_get_trend(void *p, int trip, enum thermal_trend *trend)
->> +{
->> +	struct k3_thermal_data *data = p;
->> +	struct k3_bandgap *bgp;
->> +	int ret = 0, temp = 0;
->> +
->> +	bgp = data->bgp;
->> +
->> +	ret = k3_bgp_read_temp(data, &temp);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (temp > data->prev_temp)
->> +		*trend = THERMAL_TREND_RAISING;
->> +	else if (temp < data->prev_temp)
->> +		*trend = THERMAL_TREND_DROPPING;
->> +	else
->> +		*trend = THERMAL_TREND_STABLE;
->> +
->> +	return 0;
->> +}
-> 
-> This function get_trend() is not really useful, it does what the governors do.
-> 
-> It can be dropped.
-> 
->> +static const struct thermal_zone_of_device_ops k3_of_thermal_ops = {
->> +	.get_temp = k3_thermal_get_temp,
->> +	.get_trend = k3_thermal_get_trend,
->> +};
->> +
->> +static void k3_thermal_work(struct work_struct *work)
->> +{
->> +	struct k3_thermal_data *data = container_of(work,
->> +					struct k3_thermal_data, thermal_wq);
->> +
->> +	thermal_zone_device_update(data->ti_thermal, THERMAL_EVENT_UNSPECIFIED);
->> +
->> +	dev_dbg(&data->ti_thermal->device, "updated thermal zone %s\n",
->> +		data->ti_thermal->type);
->> +}
->> +
->> +static const struct of_device_id of_k3_bandgap_match[];
->> +
->> +static int k3_bandgap_probe(struct platform_device *pdev)
->> +{
->> +	int ret = 0, cnt, val, id, reg_cnt = 0;
->> +	struct resource *res;
->> +	struct device *dev = &pdev->dev;
->> +	struct k3_bandgap *bgp;
->> +	struct k3_thermal_data *data;
->> +	const struct k3_vtm_driver_data *drv_data;
->> +
->> +	bgp = devm_kzalloc(&pdev->dev, sizeof(*bgp), GFP_KERNEL);
->> +	if (!bgp)
->> +		return -ENOMEM;
->> +
->> +	drv_data = of_device_get_match_data(&pdev->dev);
->> +	if (drv_data)
->> +		bgp->errata = drv_data->errata;
->> +
->> +	bgp->dev = dev;
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	bgp->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(bgp->base))
->> +		return PTR_ERR(bgp->base);
->> +
->> +	pm_runtime_enable(dev);
->> +	ret = pm_runtime_get_sync(dev);
->> +	if (ret < 0) {
->> +		pm_runtime_put_noidle(dev);
->> +		pm_runtime_disable(dev);
->> +		return ret;
->> +	}
->> +
->> +	/* Get the sensor count in the VTM */
->> +	val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
->> +	cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
->> +	cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
->> +	bgp->ts_cnt = cnt;
->> +
->> +	data = devm_kcalloc(bgp->dev, cnt, sizeof(*data), GFP_KERNEL);
->> +	if (!data) {
->> +		ret = -ENOMEM;
->> +		goto err_alloc;
->> +	}
->> +
->> +	/* Register the thermal sensors */
->> +	for (id = 0; id < cnt; id++) {
->> +		data[id].sensor_id = id;
->> +		data[id].bgp = bgp;
->> +		data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
->> +					id * K3_VTM_REGS_PER_TS;
->> +		data[id].stat_offset = data[id].ctrl_offset + 0x8;
->> +		INIT_WORK(&data[id].thermal_wq, k3_thermal_work);
->> +
->> +		val = readl(data[id].bgp->base + data[id].ctrl_offset);
->> +		val |= (K3_VTM_TMPSENS_CTRL_SOC |
->> +			K3_VTM_TMPSENS_CTRL_CLRZ |
->> +			K3_VTM_TMPSENS_CTRL_CLKON_REQ);
->> +		val &= ~K3_VTM_TMPSENS_CTRL_CBIASSEL;
->> +		writel(val, data[id].bgp->base + data[id].ctrl_offset);
->> +
->> +		bgp->ts_data[id] = &data[id];
->> +		data[id].ti_thermal =
->> +		devm_thermal_zone_of_sensor_register(bgp->dev, id,
->> +						     &data[id],
->> +						     &k3_of_thermal_ops);
->> +		if (IS_ERR(data[id].ti_thermal)) {
->> +			dev_err(bgp->dev, "thermal zone device is NULL\n");
->> +			ret = PTR_ERR(data[id].ti_thermal);
->> +			goto err_alloc;
->> +		}
->> +
->> +		reg_cnt++;
->> +
->> +		/* Initialize Previous temp */
->> +		k3_thermal_get_temp(&data[id], &data[id].prev_temp);
->> +	}
->> +
->> +	platform_set_drvdata(pdev, bgp);
->> +
->> +	return 0;
->> +
->> +err_alloc:
->> +	pm_runtime_put_sync(&pdev->dev);
->> +	pm_runtime_disable(&pdev->dev);
->> +
->> +	return ret;
->> +}
->> +
->> +static int k3_bandgap_remove(struct platform_device *pdev)
->> +{
->> +	pm_runtime_put_sync(&pdev->dev);
->> +	pm_runtime_disable(&pdev->dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct k3_vtm_driver_data am654_data = {
->> +	.errata = 1,
->> +};
->> +
->> +static const struct of_device_id of_k3_bandgap_match[] = {
->> +	{
->> +		.compatible = "ti,am654-vtm",
->> +		.data = &am654_data,
->> +	},
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, of_k3_bandgap_match);
->> +
->> +static struct platform_driver k3_bandgap_sensor_driver = {
->> +	.probe = k3_bandgap_probe,
->> +	.remove = k3_bandgap_remove,
->> +	.driver = {
->> +		.name = "k3-soc-thermal",
->> +		.of_match_table	= of_k3_bandgap_match,
->> +	},
->> +};
->> +
->> +module_platform_driver(k3_bandgap_sensor_driver);
->> +
->> +MODULE_DESCRIPTION("K3 bandgap temperature sensor driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
->> -- 
->> 2.17.1
->>
-> 
+Alan Stern (1):
+      USB: hub: Don't record a connect-change event during reset-resume
+
+Aleksa Sarai (1):
+      selftests: openat2: fix build error on newer glibc
+
+Alex Deucher (4):
+      drm/amdgpu/soc15: fix xclk for raven
+      drm/amdgpu/gfx9: disable gfxoff when reading rlc clock
+      drm/amdgpu/gfx10: disable gfxoff when reading rlc clock
+      drm/amdgpu/display: clean up hdcp workqueue handling
+
+Alexander Potapenko (1):
+      lib/stackdepot.c: fix global out-of-bounds in stack_slabs
+
+Alexandra Winter (1):
+      s390/qeth: vnicc Fix EOPNOTSUPP precedence
+
+Alexandre Belloni (3):
+      net: macb: ensure interface is not suspended on at91rm9200
+      net: cnic: fix spelling mistake "reserverd" -> "reserved"
+      net: macb: Properly handle phylink on at91rm9200
+
+Alexandru Ardelean (1):
+      lib/string.c: update match_string() doc-strings with correct behavior
+
+Alistair Delva (1):
+      staging: android: Delete the 'vsoc' driver
+
+Amol Grover (1):
+      net: hsr: Pass lockdep expression to RCU lists
+
+Andy Shevchenko (4):
+      MAINTAINERS: Sort entries in database for USB TYPEC
+      MAINTAINERS: Sort entries in database for THUNDERBOLT
+      serial: 8250: Check UPF_IRQ_SHARED in advance
+      nvme-pci: Use single IRQ vector for old Apple models
+
+Anurag Kumar Vulisha (1):
+      usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
+
+Ard Biesheuvel (1):
+      x86/ima: use correct identifier for SetupMode variable
+
+Arnd Bergmann (4):
+      ASoC: atmel: fix atmel_ssc_set_audio link failure
+      y2038: remove ktime to/from timespec/timeval conversion
+      y2038: remove unused time32 interfaces
+      y2038: hide timeval/timespec/itimerval/itimerspec types
+
+Arun Parameswaran (1):
+      net: phy: restore mdio regs in the iproc mdio driver
+
+Aya Levin (2):
+      net/mlx5e: Reset RQ doorbell counter before moving RQ state from
+RST to RDY
+      net/mlx5e: Fix crash in recovery flow without devlink reporter
+
+Bart Van Assche (3):
+      scsi: Revert "target/core: Inline transport_lun_remove_cmd()"
+      scsi: Revert "RDMA/isert: Fix a recently introduced regression
+related to logout"
+      scsi: Revert "target: iscsi: Wait for all commands to finish
+before freeing a session"
+
+Bartosz Golaszewski (1):
+      MAINTAINERS: remove unnecessary ':' characters
+
+Ben Skeggs (2):
+      drm/nouveau/acr/tu11x: initial support
+      drm/nouveau/gr/tu11x: initial support
+
+Benjamin Poirier (2):
+      ipv6: Fix route replacement with dev-only route
+      ipv6: Fix nlmsg_flags when splitting a multipath route
+
+Bhawanpreet Lakha (2):
+      drm/amd/display: fix backwards byte order in rx_caps.
+      drm/amd/display: fix dtm unloading
+
+Boris Brezillon (1):
+      drm/panfrost: perfcnt: Reserve/use the AS attached to the
+perfcnt MMU context
+
+Borislav Petkov (1):
+      x86/mce/amd: Publish the bank pointer only after setup has succeeded
+
+Brendan Higgins (1):
+      fsi: aspeed: add unspecified HAS_IOMEM dependency
+
+Brett Creeley (2):
+      ice: Don't reject odd values of usecs set by user
+      ice: Wait for VF to be reset/ready before configuration
+
+Brian Masney (1):
+      drm/msm/mdp5: rate limit pp done timeout warnings
+
+Brian Vazquez (1):
+      bpf: Do not grab the bucket spinlock by default on htab batch ops
+
+Catalin Marinas (1):
+      mm: Avoid creating virtual address aliases in brk()/mmap()/mremap()
+
+Chris Wilson (7):
+      drm/i915/gem: Require per-engine reset support for non-persistent con=
+texts
+      drm/i915: Initialise basic fence before acquiring seqno
+      drm/i915/gt: Prevent queuing retire workers on the virtual engine
+      drm/i915/gt: Protect defer_request() from new waiters
+      drm/i915: Wean off drm_pci_alloc/drm_pci_free
+      drm/i915/execlists: Always force a context reload when rewinding RING=
+_TAIL
+      drm/i915/gt: Avoid resetting ring->head outside of its timeline mutex
+
+Christian Borntraeger (2):
+      s390/defconfig: enable CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+      include/uapi/linux/swab.h: fix userspace breakage, use
+__BITS_PER_LONG for swap
+
+Christoph Hellwig (4):
+      dma-direct: relax addressability checks in dma_direct_supported
+      dma-direct: improve swiotlb error reporting
+      dma-direct: improve DMA mask overflow reporting
+      mm/swapfile.c: fix a comment in sys_swapon()
+
+Christophe JAILLET (1):
+      NFC: pn544: Fix a typo in a debug message
+
+Christophe Leroy (7):
+      powerpc/hugetlb: Fix 512k hugepages on 8xx with 16k page size
+      powerpc/hugetlb: Fix 8M hugepages on 8xx
+      powerpc/8xx: Fix clearing of bits 20-23 in ITLB miss
+      powerpc/32s: Fix DSI and ISI exceptions for CONFIG_VMAP_STACK
+      powerpc/chrp: Fix enter_rtas() with CONFIG_VMAP_STACK
+      powerpc/6xx: Fix power_save_ppc32_restore() with CONFIG_VMAP_STACK
+      powerpc/entry: Fix an #if which should be an #ifdef in entry_32.S
+
+Colin Ian King (4):
+      staging: rtl8723bs: fix copy of overlapping memory
+      usb: dwc3: debug: fix string position formatting mixup with ret and l=
+en
+      selftests: fix spelling mistaked "chaigned" -> "chained"
+      usb: dwc3: debug: fix string position formatting mixup with ret and l=
+en
+
+Cong Wang (2):
+      netfilter: xt_hashlimit: reduce hashlimit_mutex scope for htable_put(=
+)
+      netfilter: xt_hashlimit: limit the max size of hashtable
+
+Dan Carpenter (3):
+      USB: serial: ir-usb: Silence harmless uninitialized variable warning
+      staging: greybus: use after free in gb_audio_manager_remove_all()
+      io_uring: remove unnecessary NULL checks
+
+Daniel Golle (1):
+      serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+
+Dmitry Bezrukov (1):
+      net: atlantic: checksum compat issue
+
+Dmitry Bogdanov (1):
+      net: atlantic: fix out of range usage of active_vlans array
+
+Dmitry Osipenko (3):
+      usb: phy: tegra: Add clarifying comments about the shared registers
+      tty: serial: tegra: Handle RX transfer in PIO mode if DMA wasn't star=
+ted
+      nfc: pn544: Fix occasional HW initialization failure
+
+Dmitry Safonov (1):
+      selftests: use LDLIBS for libraries instead of LDFLAGS
+
+Dmytro Linkin (1):
+      net/mlx5e: Don't clear the whole vf config when switching modes
+
+Douglas Anderson (1):
+      scripts/get_maintainer.pl: deprioritize old Fixes: addresses
+
+EJ Hsu (1):
+      usb: uas: fix a plug & unplug racing
+
+Egor Pomozov (1):
+      net: atlantic: ptp gpio adjustments
+
+Erez Shitrit (1):
+      net/mlx5: DR, Handle reformat capability over sw-steering tables
+
+Eric Biggers (2):
+      ext4: rename s_journal_flag_rwsem to s_writepages_rwsem
+      ext4: fix race between writepages and enabling EXT4_EXTENTS_FL
+
+Eric Dumazet (3):
+      vt: vt_ioctl: fix race in VT_RESIZEX
+      net: rtnetlink: fix bugs in rtnl_alt_ifname()
+      net: add strict checks in netdev_name_node_alt_destroy()
+
+Evan Quan (1):
+      drm/amd/powerplay: always refetch the enabled features status on
+dpm enablement
+
+Filipe Manana (2):
+      Btrfs: fix btrfs_wait_ordered_range() so that it waits for all
+ordered extents
+      Btrfs: fix deadlock during fast fsync when logging prealloc
+extents beyond eof
+
+Florian Fainelli (1):
+      net: dsa: b53: Ensure the default VID is untagged
+
+Florian Westphal (6):
+      netfilter: flowtable: skip offload setup if disabled
+      netfilter: conntrack: remove two args from resolve_clash
+      netfilter: conntrack: place confirm-bit setting in a helper
+      netfilter: conntrack: split resolve_clash function
+      netfilter: conntrack: allow insertion of clashing entries
+      mptcp: fix bogus socket flag values
+
+Fugang Duan (1):
+      tty: serial: imx: setup the correct sg entry for tx dma
+
+Gavin Shan (1):
+      mm/vmscan.c: don't round up scan size for online memory cgroup
+
+Geert Uytterhoeven (3):
+      drm/bridge: ti-tfp410: Update drm_connector_init_with_ddc() error mes=
+sage
+      s390/pkey/zcrypt: spelling s/crytp/crypt/
+      csky: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+
+Grant Likely (1):
+      Documentation/process: Add Arm contact for embargoed HW issues
+
+Greg Kroah-Hartman (6):
+      embargoed-hardware-issues: drop Amazon contact as the email
+address now bounces
+      COPYING: state that all contributions really are covered by this file
+      Revert "xhci: Fix memory leak when caching protocol extended
+capability PSI tables"
+      USB: misc: iowarrior: add support for 2 OEMed devices
+      USB: misc: iowarrior: add support for the 28 and 28L devices
+      USB: misc: iowarrior: add support for the 100 device
+
+Grygorii Strashko (1):
+      dt-bindings: net: mdio: remove compatible string from example
+
+Guenter Roeck (3):
+      watchdog: da9062: Add dependency on I2C
+      hwmon: (acpi_power_meter) Fix lockdep splat
+      hwmon: (w83627ehf) Fix crash seen with W83627DHG-P
+
+Guo Ren (17):
+      MAINTAINERS: csky: Add mailing list for csky
+      csky: Tightly-Coupled Memory or Sram support
+      csky: Separate fixaddr_init from highmem
+      csky/mm: Fixup export invalid_pte_table symbol
+      csky: Set regs->usp to kernel sp, when the exception is from kernel
+      csky/smp: Fixup boot failed when CONFIG_SMP
+      csky/Kconfig: Add Kconfig.platforms to support some drivers
+      csky: Support icache flush without specific instructions
+      csky: Remove unnecessary flush_icache_* implementation
+      csky: Enable defer flush_dcache_page for abiv2 cpus (807/810/860)
+      csky: Optimize abiv2 copy_to_user_page with VM_EXEC
+      csky: Add flush_icache_mm to defer flush icache all
+      csky: Fixup ftrace modify panic
+      csky: Remove unused cache implementation
+      csky: Fixup compile warning for three unimplemented syscalls
+      csky: Add setup_initrd check code
+      csky: Implement copy_thread_tls
+
+Gustavo Luiz Duarte (1):
+      powerpc/tm: Fix clearing MSR[TS] in current when reclaiming on
+signal delivery
+
+H.J. Lu (1):
+      x86/boot/compressed: Don't declare __force_order in kaslr_64.c
+
+Hamdan Igbaria (1):
+      net/mlx5: DR, Fix matching on vport gvmi
+
+Hangbin Liu (3):
+      selftests: forwarding: use proto icmp for {gretap, ip6gretap}_mac tes=
+ting
+      selftests: forwarding: vxlan_bridge_1d: fix tos value
+      selftests: forwarding: vxlan_bridge_1d: use more proper tos value
+
+Hardik Gajjar (1):
+      USB: hub: Fix the broken detection of USB3 device in SMSC hub
+
+Harigovindan P (2):
+      drm/msm/dsi: save pll state before dsi host is powered off
+      drm/msm/dsi/pll: call vco set rate explicitly
+
+Hongbo Yao (1):
+      bpf: Make btf_check_func_type_match() static
+
+Horatiu Vultur (1):
+      net: mscc: fix in frame extraction
+
+Huy Nguyen (1):
+      net/mlx5: Fix sleep while atomic in mlx5_eswitch_get_vepa
+
+Igor Russkikh (1):
+      net: atlantic: check rpc result and wait for rpc address
+
+Ioanna Alifieraki (1):
+      Revert "ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem(=
+)"
+
+Jack Pham (2):
+      usb: gadget: composite: Fix bMaxPower for SuperSpeedPlus
+      usb: gadget: composite: Support more than 500mA MaxPower
+
+Jakub Sitnicki (1):
+      selftests/bpf: Mark SYN cookie test skipped for UDP sockets
+
+James Morris (1):
+      Documentation/process: Change Microsoft contact for embargoed
+hardware issues
+
+Jan Kara (1):
+      ext4: fix mount failure with quota configured as module
+
+Jani Nikula (3):
+      MAINTAINERS: Update drm/i915 bug filing URL
+      drm/i915: Update drm/i915 bug filing URL
+      drm/i915/dsc: force full modeset whenever DSC is enabled at probe
+
+Jarkko Sakkinen (1):
+      tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
+
+Jason A. Donenfeld (4):
+      wireguard: selftests: reduce complexity and fix make races
+      wireguard: receive: reset last_under_load to zero
+      wireguard: send: account for mtu=3D0 devices
+      wireguard: socket: remove extra call to synchronize_net
+
+Jason Baron (1):
+      net: sched: correct flower port blocking
+
+Javier Martinez Canillas (1):
+      efi: Only print errors about failing to get certs if EFI vars are fou=
+nd
+
+Jeff Mahoney (1):
+      btrfs: destroy qgroup extent records on transaction abort
+
+Jethro Beekman (1):
+      net: fib_rules: Correctly set table field when table number exceeds 8=
+ bits
+
+Jiri Benc (2):
+      selftests: allow detection of build failures
+      selftests: fix too long argument
+
+Jiri Slaby (2):
+      vt: selection, handle pending signals in paste_selection
+      vt: selection, close sel_buffer race
+
+Joe Perches (1):
+      get_maintainer: remove uses of P: for maintainer name
+
+Joerg Roedel (6):
+      iommu/vt-d: Fix compile warning from intel-svm.h
+      iommu/vt-d: Add attach_deferred() helper
+      iommu/vt-d: Move deferred device attachment into helper function
+      iommu/vt-d: Do deferred attachment in iommu_need_mapping()
+      iommu/vt-d: Remove deferred_attach_domain()
+      iommu/vt-d: Simplify check in identity_mapping()
+
+Johan Hovold (5):
+      USB: serial: ch341: fix receiver regression
+      USB: core: add endpoint-blacklist quirk
+      USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
+      USB: core: clean up endpoint-descriptor parsing
+      serdev: ttyport: restore client ops on deregistration
+
+Johannes Krude (1):
+      bpf, offload: Replace bitwise AND by logical AND in
+bpf_prog_offload_info_fill
+
+John Fastabend (1):
+      bpf: Selftests build error in sockmap_basic.c
+
+John Keeping (1):
+      usb: gadget: u_audio: Fix high-speed max packet size
+
+John Stultz (1):
+      drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
+
+Jonathan Neusch=C3=A4fer (1):
+      net: phy: broadcom: Fix a typo ("firsly")
+
+Jordan Crouse (3):
+      drm/msm/a6xx: Remove unneeded GBIF unhalt
+      drm/msm/a6xx: Update the GMU bus tables for sc7180
+      drm/msm: Fix a6xx GMU shutdown sequence
+
+Josef Bacik (5):
+      btrfs: don't set path->leave_spinning for truncate
+      btrfs: reset fs_root to NULL on error in open_ctree
+      btrfs: do not check delayed items are empty for single transaction cl=
+eanup
+      btrfs: handle logged extent failure properly
+      btrfs: fix bytes_may_use underflow in prealloc error condtition
+
+Julian Wiedmann (4):
+      s390/qdio: fill SL with absolute addresses
+      s390/qdio: fill SBALEs with absolute addresses
+      s390/qeth: don't warn for napi with 0 budget
+      s390/qeth: fix off-by-one in RX copybreak check
+
+Kai Vehmanen (3):
+      ALSA: hda: do not override bus codec_mask in link_get()
+      ASoC: SOF: Intel: hda: fix ordering bug in resume flow
+      ASoC: SOF: Intel: hda: move i915 init earlier
+
+Kai-Heng Feng (1):
+      iommu/amd: Disable IOMMU on Stoney Ridge systems
+
+Kalyan Thota (1):
+      msm:disp:dpu1: add UBWC support for display on SC7180
+
+Kees Cook (4):
+      x86/xen: Distribute switch variables for initialization
+      net: core: Distribute switch variables for initialization
+      net: ip6_gre: Distribute switch variables for initialization
+      openvswitch: Distribute switch variables for initialization
+
+Keith Busch (1):
+      nvme: Fix uninitialized-variable warning
+
+Kim Phillips (1):
+      x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+
+Krzysztof Kozlowski (1):
+      csky: Cleanup old Kconfig options
+
+Larry Finger (6):
+      staging: rtl8188eu: Fix potential security hole
+      staging: rtl8723bs: Fix potential security hole
+      staging: rtl8188eu: Fix potential overuse of kernel memory
+      staging: rtl8723bs: Fix potential overuse of kernel memory
+      staging: rtl8188eu: Remove some unneeded goto statements
+      staging: rtl8723bs: Remove unneeded goto statements
+
+Lars-Peter Clausen (1):
+      usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
+
+Leon Romanovsky (1):
+      net/rds: Track user mapped pages through special API
+
+Linus Torvalds (2):
+      pipe: make sure to wake up everybody when the last reader/writer clos=
+es
+      Linux 5.6-rc3
+
+Logan Gunthorpe (1):
+      nvme-multipath: Fix memory leak with ana_log_buf
+
+Lyude Paul (1):
+      drm/nouveau/kms/gv100-: Re-set LUT after clearing for modesets
+
+Ma Jun (1):
+      csky: Minimize defconfig to support buildroot config.fragment
+
+MaJun (1):
+      csky: Add PCI support
+
+Madhuparna Bhowmik (7):
+      net: netlabel: Use built-in RCU list checking
+      netlabel_domainhash.c: Use built-in RCU list checking
+      meter.c: Use built-in RCU list checking
+      vport.c: Use built-in RCU list checking
+      datapath.c: Use built-in RCU list checking
+      flow_table.c: Use built-in RCU list checking
+      bridge: br_stp: Use built-in RCU list checking
+
+Magnus Karlsson (1):
+      xsk: Publish global consumer pointers when NAPI is finished
+
+Malcolm Priestley (1):
+      staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
+
+Mao Han (1):
+      csky: Initial stack protector support
+
+Marco Felsch (2):
+      watchdog: da9062: do not ping the hw during stop()
+      watchdog: da9062: fix power management ops
+
+Marek Vasut (3):
+      net: ks8851-ml: Remove 8-bit bus accessors
+      net: ks8851-ml: Fix 16-bit data access
+      net: ks8851-ml: Fix 16-bit IO operation
+
+Martin KaFai Lau (1):
+      selftests/bpf: Fix error checking on reading the tcp_fastopen sysctl
+
+Masahiro Yamada (1):
+      s390: make 'install' not depend on vmlinux
+
+Mat Martineau (1):
+      mptcp: Protect subflow socket options before connection completes
+
+Mathias Nyman (5):
+      xhci: Force Maximum Packet size for Full-speed bulk devices to
+valid range.
+      xhci: Fix memory leak when caching protocol extended capability PSI t=
+ables
+      xhci: fix runtime pm enabling for quirky Intel hosts
+      xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
+      xhci: Fix memory leak when caching protocol extended capability
+PSI tables - take 2
+
+Matt Roper (1):
+      drm/i915/ehl: Update port clock voltage level requirements
+
+Matthieu Baerts (1):
+      mptcp: select CRYPTO
+
+Maxime Ripard (3):
+      dt-bindings: display: sunxi: Fix compatible
+      dt-bindings: media: csi: Add interconnects properties
+      dt-bindings: media: csi: Fix clocks description
+
+Michal Kalderon (1):
+      qede: Fix race between rdma destroy workqueue and link change event
+
+Michal Kubecek (1):
+      ethtool: fix application of verbose no_mask bitset
+
+Michal Simek (1):
+      usb: gadget: udc-xilinx: Fix xudc_stop() kernel-doc format
+
+Michal Swiatkowski (1):
+      ice: Don't tell the OS that link is going down
+
+Mika Westerberg (1):
+      thunderbolt: Prevent crash if non-active NVMem file is read
+
+Minas Harutyunyan (2):
+      usb: dwc2: Fix in ISOC request length checking
+      usb: dwc2: Fix SET/CLEAR_FEATURE and GET_STATUS flows
+
+Nathan Chancellor (2):
+      s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero in
+storage_key_init_range
+      s390/kaslr: Fix casts in get_random
+
+Nicolas Ferre (1):
+      tty/serial: atmel: manage shutdown in case of RS485 or ISO7816 mode
+
+Nicolas Pitre (1):
+      vt: fix scrollback flushing on background consoles
+
+Nicolas Saenz Julienne (1):
+      dma-contiguous: CMA: give precedence to cmdline
+
+Nikita Danilov (1):
+      net: atlantic: better loopback mode handling
+
+Nikita Sobolev (1):
+      Kernel selftests: tpm2: check for tpm support
+
+Nikolay Aleksandrov (1):
+      net: netlink: cap max groups which will be considered in netlink_bind=
+()
+
+Oded Gabbay (2):
+      habanalabs: halt the engines before hard-reset
+      habanalabs: patched cb equals user cb in device memset
+
+Oleksandr Suvorov (1):
+      ASoC: fsl_sai: Fix exiting path on probing failure
+
+Oliver O'Halloran (1):
+      powerpc/xmon: Fix whitespace handling in getstring()
+
+Omer Shpigelman (1):
+      habanalabs: do not halt CoreSight during hard reset
+
+Paolo Abeni (1):
+      Revert "net: dev: introduce support for sch BYPASS for lockless qdisc=
+"
+
+Paul Blakey (1):
+      net/mlx5: Fix lowest FDB pool size
+
+Paul Cercueil (1):
+      net: ethernet: dm9000: Handle -EPROBE_DEFER in dm9000_parse_dt()
+
+Pavel Begunkov (2):
+      io_uring: add missing io_req_cancelled()
+      io_uring: fix use-after-free by io_cleanup_req()
+
+Pavel Belous (3):
+      net: atlantic: fix use after free kasan warn
+      net: atlantic: fix potential error handling
+      net: atlantic: possible fault in transition to hibernation
+
+Peter Chen (1):
+      usb: charger: assign specific number for enum value
+
+Qian Cai (1):
+      ext4: fix a data race in EXT4_I(inode)->i_disksize
+
+Rafael J. Wysocki (1):
+      ACPI: PM: s2idle: Check fixed wakeup events in acpi_s2idle_wake()
+
+Randy Dunlap (8):
+      net/sock.h: fix all kernel-doc warnings
+      skbuff: remove stale bit mask comments
+      skbuff.h: fix all kernel-doc warnings
+      watchdog: fix mtk_wdt.c RESET_CONTROLLER build error
+      Documentation/hwmon: fix xdpe12284 Sphinx warnings
+      arch/csky: fix some Kconfig typos
+      zonefs: fix documentation typos etc.
+      MAINTAINERS: use tabs for SAFESETID
+
+Rasmus Villemoes (1):
+      serial: cpm_uart: call cpm_muram_init before registering console
+
+Ravulapati Vishnu vardhan rao (2):
+      ASoC: amd: Buffer Size instead of MAX Buffer
+      ASoC: amd: ACP needs to be powered off in BIOS.
+
+Richard Dodd (1):
+      USB: Fix novation SourceControl XL after suspend
+
+Rob Clark (1):
+      drm/msm/dpu: fix BGR565 vs RGB565 confusion
+
+Roberto Sassu (1):
+      tpm: Initialize crypto_id of allocated_banks to HASH_ALGO__LAST
+
+Robin Murphy (1):
+      iommu/qcom: Fix bogus detach logic
+
+Rohit Maheshwari (1):
+      net/tls: Fix to avoid gettig invalid tls record
+
+Roman Kiryanov (1):
+      net: disable BRIDGE_NETFILTER by default
+
+Sam Bobroff (1):
+      powerpc/eeh: Fix deadlock handling dead PHB
+
+Samuel Holland (2):
+      ASoC: codec2codec: avoid invalid/double-free of pcm runtime
+      ASoC: sun8i-codec: Fix setting DAI data format
+
+Scott Branden (1):
+      docs: arm64: fix trivial spelling enought to enough in memory.rst
+
+SeongJae Park (1):
+      selftests/vm: add missed tests in run_vmtests
+
+Sergey Organov (1):
+      usb: gadget: serial: fix Tx stall after buffer overflow
+
+Shannon Nelson (1):
+      ionic: fix fw_status read
+
+Shijie Luo (1):
+      ext4: add cond_resched() to __ext4_find_entry()
+
+Shyjumon N (1):
+      nvme/pci: Add sleep quirk for Samsung and Toshiba drives
+
+Stefano Brivio (2):
+      netfilter: nft_set_pipapo: Fix mapping table example in comments
+      netfilter: nft_set_pipapo: Don't abuse unlikely() in pipapo_refill()
+
+Stefano Garzarella (1):
+      io_uring: prevent sq_thread from spinning when it should stop
+
+Stephan Gerhold (2):
+      drm/modes: Make sure to parse valid rotation value from cmdline
+      drm/modes: Allow DRM_MODE_ROTATE_0 when applying video mode parameter=
+s
+
+Stephen Kitt (1):
+      s390: remove obsolete ieee_emulation_warnings
+
+Steven Rostedt (VMware) (1):
+      selftests/ftrace: Have pid filter test use instance flag
+
+Suraj Jitindar Singh (2):
+      ext4: fix potential race between s_group_info online resizing and acc=
+ess
+      ext4: fix potential race between s_flex_groups online resizing and ac=
+cess
+
+Suren Baghdasaryan (1):
+      staging: android: ashmem: Disallow ashmem memory from being remapped
+
+Taehee Yoo (3):
+      bonding: add missing netdev_update_lockdep_key()
+      net: export netdev_next_lower_dev_rcu()
+      bonding: fix lockdep warning in bond_get_stats()
+
+Takashi Iwai (6):
+      ALSA: seq: Avoid concurrent access to queue flags
+      ALSA: seq: Fix concurrent access to queue current tick/time
+      ALSA: rawmidi: Avoid bit fields for state flags
+      ALSA: hda/realtek - Apply quirk for MSI GP63, too
+      ALSA: hda/realtek - Apply quirk for yet another MSI laptop
+      ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
+
+Theodore Ts'o (1):
+      ext4: fix potential race between online resizing and write operations
+
+Thierry Reding (1):
+      dt-bindings: memory-controller: Update example for Tegra124 EMC
+
+Thomas Gleixner (3):
+      x86/mce/amd: Fix kobject lifetime
+      genirq/proc: Reject invalid affinity masks (again)
+      xen: Enable interrupts when calling _cond_resched()
+
+Tianjia Zhang (2):
+      crypto: rename sm3-256 to sm3 in hash_algo_name
+      ima: add sm3 algorithm to hash algorithm configuration list
+
+Tim Harvey (1):
+      net: thunderx: workaround BGX TX Underflow issue
+
+Toke H=C3=B8iland-J=C3=B8rgensen (2):
+      bpf, uapi: Remove text about bpf_redirect_map() giving higher perform=
+ance
+      libbpf: Sanitise internal map names so they are not rejected by the k=
+ernel
+
+Tomas Henzl (1):
+      scsi: megaraid_sas: silence a warning
+
+Tomas Paukrt (1):
+      dt-bindings: mmc: omap-hsmmc: Fix SDIO interrupt
+
+Tomi Valkeinen (1):
+      drm/bridge: tc358767: fix poll timeouts
+
+Tyler Hicks (3):
+      Documentation/process: Swap out the ambassador for Canonical
+      MAINTAINERS: eCryptfs: Update maintainer address and downgrade status
+      eCryptfs: Replace deactivated email address
+
+Tzung-Bi Shih (3):
+      ASoC: max98090: revert invalid fix for handling SHDN
+      ASoC: dapm: remove snd_soc_dapm_put_enum_double_locked
+      ASoC: hdmi-codec: set plugged_cb to NULL when component removing
+
+Vasily Averin (2):
+      s390/cio: cio_ignore_proc_seq_next should increase position index
+      mm/memcontrol.c: lost css_put in memcg_expand_shrinker_maps()
+
+Vasundhara Volam (2):
+      bnxt_en: Improve device shutdown method.
+      bnxt_en: Issue PCIe FLR in kdump kernel to cleanup pending DMAs.
+
+Vincenzo Frascino (1):
+      arm64: lse: Fix LSE atomics with LLVM
+
+Wei Yang (1):
+      mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
+
+Wenwen Wang (2):
+      ecryptfs: fix a memory leak bug in parse_tag_1_packet()
+      ecryptfs: fix a memory leak bug in ecryptfs_init_messaging()
+
+Will Deacon (2):
+      iommu/arm-smmu: Restore naming of driver parameter prefix
+      arm64: memory: Add missing brackets to untagged_addr() macro
+
+Willem de Bruijn (1):
+      udp: rehash on disconnect
+
+Xiaoguang Wang (1):
+      io_uring: fix __io_iopoll_check deadlock in io_sq_thread
+
+Xin Long (1):
+      sctp: move the format error check out of __sctp_sf_do_9_1_abort
+
+Yonghong Song (1):
+      bpf: Fix a potential deadlock with bpf_map_do_batch
+
+YueHaibing (1):
+      drm/panfrost: Remove set but not used variable 'bo'
+
+Zenghui Yu (1):
+      genirq/irqdomain: Make sure all irq domain flags are distinct
+
+changzhu (1):
+      drm/amdgpu: add is_raven_kicker judgement for raven1
+
+chenqiwu (1):
+      s390/cio: use kobj_to_dev() API
+
+satya priya (1):
+      tty: serial: qcom_geni_serial: Fix RX cancel command failure
+
+wangyan (1):
+      jbd2: fix ocfs2 corrupt when clearing block group bits
