@@ -2,57 +2,79 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B7BC38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50ACC38BE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B6D20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B756320CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u5FEQU6i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOid8p+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgBXVUe (ORCPT
+        id S1727978AbgBXVUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:20:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57134 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgBXVUe (ORCPT
+        Mon, 24 Feb 2020 16:20:39 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32793 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgBXVUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:20:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=fkY214yexK+t/F1pQbBsYjUG330mJqrxeclx5N+mhSA=; b=u5FEQU6iNG9BXLbfGM9AoiY4eL
-        9q1wRwvkvd8uW7q+TyHg3zcHSGnN2QHfRjDIF4Lw3z+vZBoQXVukEHGV06OegODzjJWbFTdD8d85c
-        ZUrdecPw1KZ76W1qRA5cOVqDNV5qGkz/7N5sXCbV3QsQZNauW98kr0ae9e3vj+Km4liWGw8YNnaAP
-        ieABjJOuHEB8XWJ2WkkLAxcPtl5sSwfag0SKdAhzgrZsqaXCeMr24XQRYytF1176ZZg4VJe23KUka
-        PV08s8xS+7ibt5AZCUpLg79NCXA6ZoGEXYvjo+ISMWtHmRgqQCc87xzIFeuewYR+88RMFJxsKrEJk
-        ce0/30YA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6L9U-0007h1-9o; Mon, 24 Feb 2020 21:20:32 +0000
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
- Clang/LLVM
-To:     Nick Desaulniers <ndesaulniers@google.com>, corbet@lwn.net,
-        masahiroy@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200224174129.2664-1-ndesaulniers@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ab366833-3f9f-0311-3c06-d48b7dc9655f@infradead.org>
-Date:   Mon, 24 Feb 2020 13:20:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 16:20:38 -0500
+Received: by mail-wr1-f65.google.com with SMTP id u6so12181117wrt.0;
+        Mon, 24 Feb 2020 13:20:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=qscCkCYLPIYQvGQ0vp/FXoAcwoUcoJvhzgh3zcuzI6c=;
+        b=LOid8p+1VpBpxox0zBcpa3C4jmGSWxAgqiCFZ/nqlJ2r7iqyEsIl53tJ1PgxQu+wb9
+         ZOokU5+fmv6r2aEP599La6oj6x3uwdku2wNHgS6zuFkYq2wXnK9aPUfeDTvAkzAyoZuz
+         8vQ8Do61R23Bg9MIaE5IxdKzUrfPwy4h4DbHy8D/+Vwx56sepLNKOL4Bs5mDfZ+cjBOe
+         /q45gFnr9CrlCAzf4l7BqLUyN3t+tlYDk7sn4vLs0UcQD/w0ePhrt7PSBqfA4tNwwGSk
+         92s39pxazQZeZSVPMH/+7cjvSjjsLi735EsPRVf4G5uQYm82ebyMR640JuPQJzLMdRSV
+         9dQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=qscCkCYLPIYQvGQ0vp/FXoAcwoUcoJvhzgh3zcuzI6c=;
+        b=XznUBE25XuwBZWopD8owugFFQCSf1H0fRCJP8LvPTjyOWwGyVY9hmMvpk0NTAQPEiI
+         DEQm87L/74Cx+w14WoYRU1EmiBzxHpxxQKo1o9+FwDNFcNL7oKklMesYWYj9ODLSDy+K
+         ix5zt6VaSUGNCE5POrQ0DV0L9VZ24B3oUvW/YUURUQ0FZxonaTYhYrO1pnpu7Oy7kHgt
+         m0BwFgM9S4TFW9SfNKjKKDlK7IYDo+MwGZTdQhXxv1A3Bl+dGVQfwjSt2eaG3v0pO23e
+         j8GophiyBDWuf7rExnfN+3wJvB4+ErwUlGmQo8h8Q/Uq4Nz3nP5DAo0zxbT8bkVYck6R
+         2fBw==
+X-Gm-Message-State: APjAAAUQxwH5WZXJ0w+gZOfdfbYWi1pPxtEo5Ltjjz1hSFFZ1QnGevBW
+        gbsXCiNy93Sdzf8/CqabXvU=
+X-Google-Smtp-Source: APXvYqxcUPq9UhEbUhugSPEWSY77F4KTVHa1q68vrxMdTNGDidiJeqhAeANXCqtvqr51K8TKN+4eUg==
+X-Received: by 2002:adf:e686:: with SMTP id r6mr69503287wrm.177.1582579236173;
+        Mon, 24 Feb 2020 13:20:36 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:3d90:eff:31bc:c6a9? (p200300EA8F2960003D900EFF31BCC6A9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:3d90:eff:31bc:c6a9])
+        by smtp.googlemail.com with ESMTPSA id b7sm12321269wrs.97.2020.02.24.13.20.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 13:20:35 -0800 (PST)
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 0/9] PCI: add and use constant PCI_STATUS_ERROR_BITS and
+ helper pci_status_get_and_clear_errors
+Message-ID: <5939f711-92aa-e7ed-2a26-4f1e4169f786@gmail.com>
+Date:   Mon, 24 Feb 2020 22:20:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200224174129.2664-1-ndesaulniers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -61,65 +83,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 9:41 AM, Nick Desaulniers wrote:
-> Added to kbuild documentation. Provides more official info on building
-> kernels with Clang and LLVM than our wiki.
-> 
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  Documentation/kbuild/index.rst |  1 +
->  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/kbuild/llvm.rst
-> 
-> diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-> index 0f144fad99a6..3882bd5f7728 100644
-> --- a/Documentation/kbuild/index.rst
-> +++ b/Documentation/kbuild/index.rst
-> @@ -19,6 +19,7 @@ Kernel Build System
->  
->      issues
->      reproducible-builds
-> +    llvm
->  
->  .. only::  subproject and html
->  
-> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> new file mode 100644
-> index 000000000000..68ae022aebc0
-> --- /dev/null
-> +++ b/Documentation/kbuild/llvm.rst
-> @@ -0,0 +1,80 @@
-> +==============================
-> +Building Linux with Clang/LLVM
-> +==============================
-> +
-> +This document covers how to build the Linux kernel with Clang and LLVM
-> +utilities.
-> +
-> +About
-> +-----
-> +
-> +The Linux kernel has always traditionally been compiled with GNU toolchains
-> +such as GCC and binutils. On going work has allowed for `Clang
+Few drivers have own definitions for this constant, so move it to the
+PCI core. In addition there are several places where the following
+code sequence is used:
+1. Read PCI_STATUS
+2. Mask out non-error bits
+3. Action based on set error bits
+4. Write back set error bits to clear them
 
-                             Ongoing
+As this is a repeated pattern, add a helper to the PCI core.
 
-> +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
-> +used as viable substitutes. Distributions such as `Android
-> +<https://www.android.com/>`_, `ChromeOS
-> +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
-> +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
-> +collection of toolchain components implemented in terms of C++ objects
-> +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
-> +supports C and the GNU C extensions required by the kernel, and is pronounced
-> +"klang," not "see-lang."
+Most affected drivers are network drivers. But as it's about core
+PCI functionality, I suppose the series should go through the PCI
+tree.
 
+Heiner Kallweit (8):
+  PCI: add constant PCI_STATUS_ERROR_BITS
+  PCI: add pci_status_get_and_clear_errors
+  r8169: use pci_status_get_and_clear_errors
+  net: cassini: use pci_status_get_and_clear_errors
+  net: sungem: use pci_status_get_and_clear_errors
+  net: skfp: use PCI_STATUS_ERROR_BITS
+  PCI: pci-bridge-emul: use PCI_STATUS_ERROR_BITS
+  sound: bt87x: use pci_status_get_and_clear_errors
 
-Thanks for the info.
+ drivers/net/ethernet/marvell/skge.h       |  6 -----
+ drivers/net/ethernet/marvell/sky2.h       |  6 -----
+ drivers/net/ethernet/realtek/r8169_main.c | 15 +++++-------
+ drivers/net/ethernet/sun/cassini.c        | 28 ++++++++-------------
+ drivers/net/ethernet/sun/sungem.c         | 30 +++++++----------------
+ drivers/net/fddi/skfp/drvfbi.c            |  2 +-
+ drivers/net/fddi/skfp/h/skfbi.h           |  5 ----
+ drivers/pci/pci-bridge-emul.c             | 14 ++---------
+ drivers/pci/pci.c                         | 23 +++++++++++++++++
+ include/linux/pci.h                       |  1 +
+ include/uapi/linux/pci_regs.h             |  7 ++++++
+ sound/pci/bt87x.c                         |  7 +-----
+ 12 files changed, 60 insertions(+), 84 deletions(-)
 
 -- 
-~Randy
+2.25.1
+
+
 
