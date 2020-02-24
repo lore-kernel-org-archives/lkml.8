@@ -6,147 +6,125 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5369EC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA05C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3275120675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A49D20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgBXG4O (ORCPT
+        id S1727185AbgBXHDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:56:14 -0500
-Received: from mga11.intel.com ([192.55.52.93]:43282 "EHLO mga11.intel.com"
+        Mon, 24 Feb 2020 02:03:10 -0500
+Received: from mail5.windriver.com ([192.103.53.11]:53568 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgBXG4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:56:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 22:56:13 -0800
-X-IronPort-AV: E=Sophos;i="5.70,479,1574150400"; 
-   d="scan'208";a="230549576"
-Received: from unknown (HELO [10.238.4.82]) ([10.238.4.82])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 23 Feb 2020 22:56:11 -0800
-Subject: Re: [PATCH] KVM: x86: Adjust counter sample period after a wrmsr
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Eric Hankland <ehankland@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200222023413.78202-1-ehankland@google.com>
- <9adcb973-7b60-71dd-636d-1e451e664c55@redhat.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <0c66eae3-8983-0632-6d39-fd335620b76a@linux.intel.com>
-Date:   Mon, 24 Feb 2020 14:56:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726509AbgBXHDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:03:09 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 01O70LVi011567
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Sun, 23 Feb 2020 23:00:31 -0800
+Received: from [128.224.162.175] (128.224.162.175) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sun, 23 Feb
+ 2020 23:00:11 -0800
+Subject: Re: [PATCH] perf: Support Python 3.8+ in Makefile
+To:     Sam Lunt <samueljlunt@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <trivial@kernel.org>
+References: <20200131181123.tmamivhq4b7uqasr@gmail.com>
+ <30752f2a-fe0b-4150-c32d-07690fb43b82@windriver.com>
+ <CAGn10uUFJLh7J5rNcbH-Y6aGGr0vK_YN40gry9PXh_tx3sSXMg@mail.gmail.com>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <3f59e138-6f19-5419-2397-fc7d2e5f9df9@windriver.com>
+Date:   Mon, 24 Feb 2020 15:00:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <9adcb973-7b60-71dd-636d-1e451e664c55@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAGn10uUFJLh7J5rNcbH-Y6aGGr0vK_YN40gry9PXh_tx3sSXMg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [128.224.162.175]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hankland,
 
-On 2020/2/22 15:34, Paolo Bonzini wrote:
-> On 22/02/20 03:34, Eric Hankland wrote:
->> The sample_period of a counter tracks when that counter will
->> overflow and set global status/trigger a PMI. However this currently
->> only gets set when the initial counter is created or when a counter is
->> resumed; this updates the sample period after a wrmsr so running
->> counters will accurately reflect their new value.
+
+On 2/23/20 12:38 AM, Sam Lunt wrote:
+> On Sun, Feb 16, 2020 at 8:24 PM He Zhe <zhe.he@windriver.com> wrote:
+>> On 2/1/20 2:11 AM, Sam Lunt wrote:
+>>> Python 3.8 changed the output of 'python-config --ldflags' to no longer
+>>> include the '-lpythonX.Y' flag (this apparently fixed an issue loading
+>>> modules with a statically linked Python executable).  The libpython
+>>> feature check in linux/build/feature fails if the Python library is not
+>>> included in FEATURE_CHECK_LDFLAGS-libpython variable.
+>>>
+>>> This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
+>>> the '--embed' flag and passes that flag alongside '--ldflags' if so.
+>>>
+>>> tools/perf is the only place the libpython feature check is used.
+>>>
+>>> Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
+>>> ---
+>>>  tools/perf/Makefile.config | 11 ++++++++++-
+>>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>>> index c90f4146e5a2..ccf99351f058 100644
+>>> --- a/tools/perf/Makefile.config
+>>> +++ b/tools/perf/Makefile.config
+>>> @@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
+>>>
+>>>  PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
+>>>
+>>> +# Python 3.8 changed the output of `python-config --ldflags` to not include the
+>>> +# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
+>>> +# libpython fails if that flag is not included in LDFLAGS
+>>> +ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
+>>> +  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
+>>> +else
+>>> +  PYTHON_CONFIG_LDFLAGS := --ldflags
+>>> +endif
+>>> +
+>>>  ifdef PYTHON_CONFIG
+>>> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+>>> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
+>> I met the same problem. Would the following change be more simple and clear?
 >>
->> Signed-off-by: Eric Hankland <ehankland@google.com>
->> ---
->>   arch/x86/kvm/pmu.c           | 4 ++--
->>   arch/x86/kvm/pmu.h           | 8 ++++++++
->>   arch/x86/kvm/vmx/pmu_intel.c | 6 ++++++
->>   3 files changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->> index bcc6a73d6628..d1f8ca57d354 100644
->> --- a/arch/x86/kvm/pmu.c
->> +++ b/arch/x86/kvm/pmu.c
->> @@ -111,7 +111,7 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
->>   		.config = config,
->>   	};
->>   
->> -	attr.sample_period = (-pmc->counter) & pmc_bitmask(pmc);
->> +	attr.sample_period = get_sample_period(pmc, pmc->counter);
->>   
->>   	if (in_tx)
->>   		attr.config |= HSW_IN_TX;
->> @@ -158,7 +158,7 @@ static bool pmc_resume_counter(struct kvm_pmc *pmc)
->>   
->>   	/* recalibrate sample period and check if it's accepted by perf core */
->>   	if (perf_event_period(pmc->perf_event,
->> -			(-pmc->counter) & pmc_bitmask(pmc)))
->> +			      get_sample_period(pmc, pmc->counter)))
->>   		return false;
->>   
->>   	/* reuse perf_event to serve as pmc_reprogram_counter() does*/
->> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
->> index 13332984b6d5..354b8598b6c1 100644
->> --- a/arch/x86/kvm/pmu.h
->> +++ b/arch/x86/kvm/pmu.h
->> @@ -129,6 +129,15 @@ static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
->>   	return NULL;
->>   }
->>   
->> +static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
->> +{
->> +	u64 sample_period = (-counter_value) & pmc_bitmask(pmc);
->> +
->> +	if (!sample_period)
->> +		sample_period = pmc_bitmask(pmc) + 1;
->> +	return sample_period;
->> +}
->> +
->>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
->>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
->>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
->> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->> index fd21cdb10b79..e933541751fb 100644
->> --- a/arch/x86/kvm/vmx/pmu_intel.c
->> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->> @@ -263,9 +263,15 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   			if (!msr_info->host_initiated)
->>   				data = (s64)(s32)data;
->>   			pmc->counter += data - pmc_read_counter(pmc);
->> +			if (pmc->perf_event)
->> +				perf_event_period(pmc->perf_event,
->> +						  get_sample_period(pmc, data));
->>   			return 0;
->>   		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
->>   			pmc->counter += data - pmc_read_counter(pmc);
->> +			if (pmc->perf_event)
->> +				perf_event_period(pmc->perf_event,
->> +						  get_sample_period(pmc, data));
->>   			return 0;
->>   		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
->>   			if (data == pmc->eventsel)
+>> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+>> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>/dev/null || $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+> That change is nearly equivalent to the change I'd suggested, just
+> squashed into one line. I think it's certainly more terse, but I'm not
+> sure it's any clearer.
+>
+> It's also making the implicit assumption that PYTHON_CONFIG_SQ does
+> not print anything to stdout when it exits with a non-zero return
+> code. I think that's probably a safe assumption, but it seems more
+> robust not to make that assumption at all.
 
-Although resetting the running counters is allowed,
-it is not recommended to do it.
+That said, such assumption was also made in the "else" case of your change and
+in the original line. If we wanted that robustness, we'd better give a stricter
+condition and a warning like below.
 
-The motivation of this patch looks good to me.
++ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
++  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
++else ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags 2>&1 1>/dev/null; echo $$?), 0)
++  PYTHON_CONFIG_LDFLAGS := --ldflags
++else
++  $(warning Failed to get python ldflags.)
++endif
 
-However, it does hurt performance due to more frequent calls to 
-perf_event_period() and we just took the perf_event_ctx_lock in the 
-perf_event_read_value().
+Given that such kind of assumptions spread across kernel makefiles, the
+one-liner might be good enough.
 
-Thanks,
-Like Xu
 
->>
-> 
-> Queued, thanks.
-> 
-> Paolo
-> 
+Regards,
+Zhe
+
+>
+> Best,
+> Sam
 
