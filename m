@@ -2,208 +2,341 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F33C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6542C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0AB2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eBr+n6mT"
+	by mail.kernel.org (Postfix) with ESMTP id 7416E2176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgBXVlS (ORCPT
+        id S1728180AbgBXVky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:41:18 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53880 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgBXVlD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:41:03 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0A658E89;
-        Mon, 24 Feb 2020 22:41:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1582580461;
-        bh=6UaiBtvarQObo5GVB4HcCJiDttMhyMzcSXEvJoXq8XM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eBr+n6mTr9e7xtb+hpHkJCa6be4Q+cES9DbDZuI3Qcswwh317v5Em1cKrc7NAthom
-         shY1X2A1yl586f/Kn2MWmxyM92wnuE5BK1wADoDeJgQmQDhPZWSoKyFDxR3aPzpI1N
-         o3OkzkHDkThtkCJqn3fIk2QCPl3qF8sXzJPlPc20=
-Date:   Mon, 24 Feb 2020 23:40:08 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 1/3] drm/omap: Prepare DSS for probing without legacy
- platform data
-Message-ID: <20200224214008.GD16163@pendragon.ideasonboard.com>
-References: <20200224191230.30972-1-tony@atomide.com>
- <20200224191230.30972-2-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200224191230.30972-2-tony@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 24 Feb 2020 16:40:54 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31498 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728148AbgBXVkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:40:51 -0500
+X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 16:40:39 EST
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01OLO5v6008697;
+        Mon, 24 Feb 2020 22:24:05 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 06/10] floppy: cleanup: expand macro DP
+Date:   Mon, 24 Feb 2020 22:23:48 +0100
+Message-Id: <20200224212352.8640-7-w@1wt.eu>
+X-Mailer: git-send-email 2.9.0
+In-Reply-To: <20200224212352.8640-1-w@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+This macro doesn't bring much value and only slightly obfuscates the
+code by silently using global variable "current_drive", let's expand it.
 
-Thank you for the patch.
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+---
+ drivers/block/floppy.c | 84 ++++++++++++++++++++++++++++----------------------
+ 1 file changed, 47 insertions(+), 37 deletions(-)
 
-On Mon, Feb 24, 2020 at 11:12:28AM -0800, Tony Lindgren wrote:
-> In order to probe display subsystem (DSS) components with ti-sysc
-> interconnect target module without legacy platform data and using
-> devicetree, we need to update dss probing a bit.
-> 
-> In the device tree, we will be defining the data also for the interconnect
-> target modules as DSS really is a private interconnect. There is some
-> information about that in 4460 TRM in "Figure 10-3. DSS Integration" for
-> example where it mentions "32-bit interconnect (SLX)".
-> 
-> The changes we need to make are:
-> 
-> 1. Parse also device tree subnodes for the compatible property fixup
-> 
-> 2. Update the component code to consider device tree subnodes
-> 
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: Jyri Sarha <jsarha@ti.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> 
-> This is needed for dropping DSS platform data that I'll be posting
-> seprately. If this looks OK, can you guys please test and ack?
-> 
-> ---
->  drivers/gpu/drm/omapdrm/dss/dss.c             | 25 ++++++++++++++++---
->  .../gpu/drm/omapdrm/dss/omapdss-boot-init.c   | 25 +++++++++++++------
->  2 files changed, 39 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c b/drivers/gpu/drm/omapdrm/dss/dss.c
-> --- a/drivers/gpu/drm/omapdrm/dss/dss.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/dss.c
-> @@ -1339,9 +1339,15 @@ static int dss_component_compare(struct device *dev, void *data)
->  	return dev == child;
->  }
->  
-> +struct dss_component_match_data {
-> +	struct device *dev;
-> +	struct component_match **match;
-> +};
-> +
->  static int dss_add_child_component(struct device *dev, void *data)
->  {
-> -	struct component_match **match = data;
-> +	struct dss_component_match_data *cmatch = data;
-> +	struct component_match **match = cmatch->match;
->  
->  	/*
->  	 * HACK
-> @@ -1352,7 +1358,17 @@ static int dss_add_child_component(struct device *dev, void *data)
->  	if (strstr(dev_name(dev), "rfbi"))
->  		return 0;
->  
-> -	component_match_add(dev->parent, match, dss_component_compare, dev);
-> +	/*
-> +	 * Handle possible interconnect target modules defined within the DSS.
-> +	 * The DSS components can be children of an interconnect target module
-> +	 * after the device tree has been updated for the module data.
-> +	 * See also omapdss_boot_init() for compatible fixup.
-> +	 */
-> +	if (strstr(dev_name(dev), "target-module"))
-> +		return device_for_each_child(dev, cmatch,
-> +					     dss_add_child_component);
-> +
-> +	component_match_add(cmatch->dev, match, dss_component_compare, dev);
->  
->  	return 0;
->  }
-> @@ -1395,6 +1411,7 @@ static int dss_probe_hardware(struct dss_device *dss)
->  static int dss_probe(struct platform_device *pdev)
->  {
->  	const struct soc_device_attribute *soc;
-> +	struct dss_component_match_data cmatch;
->  	struct component_match *match = NULL;
->  	struct resource *dss_mem;
->  	struct dss_device *dss;
-> @@ -1472,7 +1489,9 @@ static int dss_probe(struct platform_device *pdev)
->  
->  	omapdss_gather_components(&pdev->dev);
->  
-> -	device_for_each_child(&pdev->dev, &match, dss_add_child_component);
-> +	cmatch.dev = &pdev->dev;
-> +	cmatch.match = &match;
-> +	device_for_each_child(&pdev->dev, &cmatch, dss_add_child_component);
->  
->  	r = component_master_add_with_match(&pdev->dev, &dss_component_ops, match);
->  	if (r)
-> diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-> --- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-> @@ -183,9 +183,24 @@ static const struct of_device_id omapdss_of_fixups_whitelist[] __initconst = {
->  	{},
->  };
->  
-> +static void __init omapdss_find_children(struct device_node *np)
-> +{
-> +	struct device_node *child;
-> +
-> +	for_each_available_child_of_node(np, child) {
-> +		if (!of_find_property(child, "compatible", NULL))
-> +			continue;
-> +
-> +		omapdss_walk_device(child, true);
-> +
-> +		if (of_device_is_compatible(child, "ti,sysc"))
-> +			omapdss_find_children(child);
-> +	}
-> +}
-> +
->  static int __init omapdss_boot_init(void)
->  {
-> -	struct device_node *dss, *child;
-> +	struct device_node *dss;
->  
->  	INIT_LIST_HEAD(&dss_conv_list);
->  
-> @@ -195,13 +210,7 @@ static int __init omapdss_boot_init(void)
->  		return 0;
->  
->  	omapdss_walk_device(dss, true);
-> -
-> -	for_each_available_child_of_node(dss, child) {
-> -		if (!of_find_property(child, "compatible", NULL))
-> -			continue;
-> -
-> -		omapdss_walk_device(child, true);
-> -	}
-> +	omapdss_find_children(dss);
->  
->  	while (!list_empty(&dss_conv_list)) {
->  		struct dss_conv_node *n;
-
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index a76a9bb..7744e42 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -306,7 +306,6 @@ static bool initialized;
+ 	/* reverse mapping from unit and fdc to drive */
+ #define REVDRIVE(fdc, unit) ((unit) + ((fdc) << 2))
+ 
+-#define DP	(&drive_params[current_drive])
+ #define DRS	(&drive_state[current_drive])
+ #define DRWE	(&write_errors[current_drive])
+ 
+@@ -624,7 +623,7 @@ static inline void set_debugt(void)
+ 
+ static inline void debugt(const char *func, const char *msg)
+ {
+-	if (DP->flags & DEBUGT)
++	if (drive_params[current_drive].flags & DEBUGT)
+ 		pr_info("%s:%s dtime=%lu\n", func, msg, jiffies - debugtimer);
+ }
+ #else
+@@ -824,7 +823,7 @@ static int set_dor(int fdc, char mask, char data)
+ 
+ static void twaddle(void)
+ {
+-	if (DP->select_delay)
++	if (drive_params[current_drive].select_delay)
+ 		return;
+ 	fd_outb(fdc_state[fdc].dor & ~(0x10 << UNIT(current_drive)), FD_DOR);
+ 	fd_outb(fdc_state[fdc].dor, FD_DOR);
+@@ -950,7 +949,7 @@ static void scandrives(void)
+ 	int drive;
+ 	int saved_drive;
+ 
+-	if (DP->select_delay)
++	if (drive_params[current_drive].select_delay)
+ 		return;
+ 
+ 	saved_drive = current_drive;
+@@ -1009,7 +1008,8 @@ static void cancel_activity(void)
+  * transfer */
+ static void fd_watchdog(void)
+ {
+-	debug_dcl(DP->flags, "calling disk change from watchdog\n");
++	debug_dcl(drive_params[current_drive].flags,
++		  "calling disk change from watchdog\n");
+ 
+ 	if (disk_change(current_drive)) {
+ 		DPRINT("disk removed during i/o\n");
+@@ -1310,20 +1310,23 @@ static void fdc_specify(void)
+ 	}
+ 
+ 	/* Convert step rate from microseconds to milliseconds and 4 bits */
+-	srt = 16 - DIV_ROUND_UP(DP->srt * scale_dtr / 1000, NOMINAL_DTR);
++	srt = 16 - DIV_ROUND_UP(drive_params[current_drive].srt * scale_dtr / 1000,
++				NOMINAL_DTR);
+ 	if (slow_floppy)
+ 		srt = srt / 4;
+ 
+ 	SUPBOUND(srt, 0xf);
+ 	INFBOUND(srt, 0);
+ 
+-	hlt = DIV_ROUND_UP(DP->hlt * scale_dtr / 2, NOMINAL_DTR);
++	hlt = DIV_ROUND_UP(drive_params[current_drive].hlt * scale_dtr / 2,
++			   NOMINAL_DTR);
+ 	if (hlt < 0x01)
+ 		hlt = 0x01;
+ 	else if (hlt > 0x7f)
+ 		hlt = hlt_max_code;
+ 
+-	hut = DIV_ROUND_UP(DP->hut * scale_dtr / 16, NOMINAL_DTR);
++	hut = DIV_ROUND_UP(drive_params[current_drive].hut * scale_dtr / 16,
++			   NOMINAL_DTR);
+ 	if (hut < 0x1)
+ 		hut = 0x1;
+ 	else if (hut > 0xf)
+@@ -1430,10 +1433,10 @@ static int interpret_errors(void)
+ 		} else if (ST1 & ST1_ND) {
+ 			set_bit(FD_NEED_TWADDLE_BIT, &DRS->flags);
+ 		} else if (ST1 & ST1_OR) {
+-			if (DP->flags & FTD_MSG)
++			if (drive_params[current_drive].flags & FTD_MSG)
+ 				DPRINT("Over/Underrun - retrying\n");
+ 			bad = 0;
+-		} else if (*errors >= DP->max_errors.reporting) {
++		} else if (*errors >= drive_params[current_drive].max_errors.reporting) {
+ 			print_errors();
+ 		}
+ 		if (ST2 & ST2_WC || ST2 & ST2_BC)
+@@ -1471,13 +1474,13 @@ static void setup_rw_floppy(void)
+ 		flags |= FD_RAW_INTR;
+ 
+ 	if ((flags & FD_RAW_SPIN) && !(flags & FD_RAW_NO_MOTOR)) {
+-		ready_date = DRS->spinup_date + DP->spinup;
++		ready_date = DRS->spinup_date + drive_params[current_drive].spinup;
+ 		/* If spinup will take a long time, rerun scandrives
+ 		 * again just before spinup completion. Beware that
+ 		 * after scandrives, we must again wait for selection.
+ 		 */
+-		if (time_after(ready_date, jiffies + DP->select_delay)) {
+-			ready_date -= DP->select_delay;
++		if (time_after(ready_date, jiffies + drive_params[current_drive].select_delay)) {
++			ready_date -= drive_params[current_drive].select_delay;
+ 			function = floppy_start;
+ 		} else
+ 			function = setup_rw_floppy;
+@@ -1528,9 +1531,10 @@ static void seek_interrupt(void)
+ 		return;
+ 	}
+ 	if (DRS->track >= 0 && DRS->track != ST1 && !blind_seek) {
+-		debug_dcl(DP->flags,
++		debug_dcl(drive_params[current_drive].flags,
+ 			  "clearing NEWCHANGE flag because of effective seek\n");
+-		debug_dcl(DP->flags, "jiffies=%lu\n", jiffies);
++		debug_dcl(drive_params[current_drive].flags, "jiffies=%lu\n",
++			  jiffies);
+ 		clear_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
+ 					/* effective seek */
+ 		DRS->select_date = jiffies;
+@@ -1551,9 +1555,10 @@ static void check_wp(void)
+ 		}
+ 		clear_bit(FD_VERIFY_BIT, &DRS->flags);
+ 		clear_bit(FD_NEED_TWADDLE_BIT, &DRS->flags);
+-		debug_dcl(DP->flags,
++		debug_dcl(drive_params[current_drive].flags,
+ 			  "checking whether disk is write protected\n");
+-		debug_dcl(DP->flags, "wp=%x\n", ST3 & 0x40);
++		debug_dcl(drive_params[current_drive].flags, "wp=%x\n",
++			  ST3 & 0x40);
+ 		if (!(ST3 & 0x40))
+ 			set_bit(FD_DISK_WRITABLE_BIT, &DRS->flags);
+ 		else
+@@ -1567,7 +1572,8 @@ static void seek_floppy(void)
+ 
+ 	blind_seek = 0;
+ 
+-	debug_dcl(DP->flags, "calling disk change from %s\n", __func__);
++	debug_dcl(drive_params[current_drive].flags,
++		  "calling disk change from %s\n", __func__);
+ 
+ 	if (!test_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags) &&
+ 	    disk_change(current_drive) && (raw_cmd->flags & FD_RAW_NEED_DISK)) {
+@@ -1591,7 +1597,7 @@ static void seek_floppy(void)
+ 		if (raw_cmd->track)
+ 			track = raw_cmd->track - 1;
+ 		else {
+-			if (DP->flags & FD_SILENT_DCL_CLEAR) {
++			if (drive_params[current_drive].flags & FD_SILENT_DCL_CLEAR) {
+ 				set_dor(fdc, ~(0x10 << UNIT(current_drive)), 0);
+ 				blind_seek = 1;
+ 				raw_cmd->flags |= FD_RAW_NEED_SEEK;
+@@ -1643,7 +1649,7 @@ static void recal_interrupt(void)
+ 			 * not to move at recalibration is to
+ 			 * be already at track 0.) Clear the
+ 			 * new change flag */
+-			debug_dcl(DP->flags,
++			debug_dcl(drive_params[current_drive].flags,
+ 				  "clearing NEWCHANGE flag because of second recalibrate\n");
+ 
+ 			clear_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
+@@ -1884,7 +1890,7 @@ static int start_motor(void (*function)(void))
+ 	set_dor(fdc, mask, data);
+ 
+ 	/* wait_for_completion also schedules reset if needed. */
+-	return fd_wait_for_completion(DRS->select_date + DP->select_delay,
++	return fd_wait_for_completion(DRS->select_date + drive_params[current_drive].select_delay,
+ 				      function);
+ }
+ 
+@@ -1899,9 +1905,10 @@ static void floppy_ready(void)
+ 	if (fdc_dtr())
+ 		return;
+ 
+-	debug_dcl(DP->flags, "calling disk change from floppy_ready\n");
++	debug_dcl(drive_params[current_drive].flags,
++		  "calling disk change from floppy_ready\n");
+ 	if (!(raw_cmd->flags & FD_RAW_NO_MOTOR) &&
+-	    disk_change(current_drive) && !DP->select_delay)
++	    disk_change(current_drive) && !drive_params[current_drive].select_delay)
+ 		twaddle();	/* this clears the dcl on certain
+ 				 * drive/controller combinations */
+ 
+@@ -1930,7 +1937,8 @@ static void floppy_start(void)
+ 	reschedule_timeout(current_reqD, "floppy start");
+ 
+ 	scandrives();
+-	debug_dcl(DP->flags, "setting NEWCHANGE in floppy_start\n");
++	debug_dcl(drive_params[current_drive].flags,
++		  "setting NEWCHANGE in floppy_start\n");
+ 	set_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
+ 	floppy_ready();
+ }
+@@ -2032,11 +2040,11 @@ static int next_valid_format(void)
+ 
+ 	probed_format = DRS->probed_format;
+ 	while (1) {
+-		if (probed_format >= 8 || !DP->autodetect[probed_format]) {
++		if (probed_format >= 8 || !drive_params[current_drive].autodetect[probed_format]) {
+ 			DRS->probed_format = 0;
+ 			return 1;
+ 		}
+-		if (floppy_type[DP->autodetect[probed_format]].sect) {
++		if (floppy_type[drive_params[current_drive].autodetect[probed_format]].sect) {
+ 			DRS->probed_format = probed_format;
+ 			return 0;
+ 		}
+@@ -2055,11 +2063,11 @@ static void bad_flp_intr(void)
+ 	}
+ 	err_count = ++(*errors);
+ 	INFBOUND(DRWE->badness, err_count);
+-	if (err_count > DP->max_errors.abort)
++	if (err_count > drive_params[current_drive].max_errors.abort)
+ 		cont->done(0);
+-	if (err_count > DP->max_errors.reset)
++	if (err_count > drive_params[current_drive].max_errors.reset)
+ 		fdc_state[fdc].reset = 1;
+-	else if (err_count > DP->max_errors.recal)
++	else if (err_count > drive_params[current_drive].max_errors.recal)
+ 		DRS->track = NEED_2_RECAL;
+ }
+ 
+@@ -2189,7 +2197,7 @@ static int do_format(int drive, struct format_descr *tmp_format_req)
+ 
+ 	set_floppy(drive);
+ 	if (!_floppy ||
+-	    _floppy->track > DP->tracks ||
++	    _floppy->track > drive_params[current_drive].tracks ||
+ 	    tmp_format_req->track >= _floppy->track ||
+ 	    tmp_format_req->head >= _floppy->head ||
+ 	    (_floppy->sect << 2) % (1 << FD_SIZECODE(_floppy)) ||
+@@ -2345,7 +2353,7 @@ static void rw_interrupt(void)
+ 	}
+ 
+ 	if (probing) {
+-		if (DP->flags & FTD_MSG)
++		if (drive_params[current_drive].flags & FTD_MSG)
+ 			DPRINT("Auto-detected floppy type %s in fd%d\n",
+ 			       _floppy->name, current_drive);
+ 		current_type[current_drive] = _floppy;
+@@ -2675,9 +2683,9 @@ static int make_raw_rw_request(void)
+ 		 */
+ 		if (!direct ||
+ 		    (indirect * 2 > direct * 3 &&
+-		     *errors < DP->max_errors.read_track &&
++		     *errors < drive_params[current_drive].max_errors.read_track &&
+ 		     ((!probing ||
+-		       (DP->read_track & (1 << DRS->probed_format)))))) {
++		       (drive_params[current_drive].read_track & (1 << DRS->probed_format)))))) {
+ 			max_size = blk_rq_sectors(current_req);
+ 		} else {
+ 			raw_cmd->kernel_data = bio_data(current_req->bio);
+@@ -2855,7 +2863,7 @@ static void redo_fd_request(void)
+ 			}
+ 		}
+ 		probing = 1;
+-		_floppy = floppy_type + DP->autodetect[DRS->probed_format];
++		_floppy = floppy_type + drive_params[current_drive].autodetect[DRS->probed_format];
+ 	} else
+ 		probing = 0;
+ 	errors = &(current_req->error_count);
+@@ -2934,7 +2942,8 @@ static int poll_drive(bool interruptible, int flag)
+ 	raw_cmd->track = 0;
+ 	raw_cmd->cmd_count = 0;
+ 	cont = &poll_cont;
+-	debug_dcl(DP->flags, "setting NEWCHANGE in poll_drive\n");
++	debug_dcl(drive_params[current_drive].flags,
++		  "setting NEWCHANGE in poll_drive\n");
+ 	set_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
+ 
+ 	return wait_til_done(floppy_ready, interruptible);
+@@ -3205,7 +3214,8 @@ static int raw_cmd_ioctl(int cmd, void __user *param)
+ 	raw_cmd = my_raw_cmd;
+ 	cont = &raw_cmd_cont;
+ 	ret = wait_til_done(floppy_start, true);
+-	debug_dcl(DP->flags, "calling disk change from raw_cmd ioctl\n");
++	debug_dcl(drive_params[current_drive].flags,
++		  "calling disk change from raw_cmd ioctl\n");
+ 
+ 	if (ret != -EINTR && fdc_state[fdc].reset)
+ 		ret = -EIO;
+@@ -4386,7 +4396,7 @@ static void __init set_cmos(int *ints, int dummy, int dummy2)
+ 	if (current_drive >= 4 && !FDC2)
+ 		FDC2 = 0x370;
+ #endif
+-	DP->cmos = ints[2];
++	drive_params[current_drive].cmos = ints[2];
+ 	DPRINT("setting CMOS code to %d\n", ints[2]);
+ }
+ 
 -- 
-Regards,
+2.9.0
 
-Laurent Pinchart
