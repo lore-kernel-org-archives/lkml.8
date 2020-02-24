@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6F7C11D3D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6130C34055
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFAD20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848EA2176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgBXX0p (ORCPT
+        id S1728482AbgBXX0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:26:45 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:40022 "EHLO
+        Mon, 24 Feb 2020 18:26:52 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40046 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbgBXX0o (ORCPT
+        with ESMTP id S1728226AbgBXX0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:26:44 -0500
+        Mon, 24 Feb 2020 18:26:51 -0500
 Received: from localhost (unknown [50.226.181.18])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 034AD124CE3D1;
-        Mon, 24 Feb 2020 15:26:43 -0800 (PST)
-Date:   Mon, 24 Feb 2020 15:26:43 -0800 (PST)
-Message-Id: <20200224.152643.132900697461169268.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C814B124CE3CD;
+        Mon, 24 Feb 2020 15:26:50 -0800 (PST)
+Date:   Mon, 24 Feb 2020 15:26:50 -0800 (PST)
+Message-Id: <20200224.152650.373598525223766968.davem@davemloft.net>
 To:     gustavo@embeddedor.com
-Cc:     geoff@infradead.org, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, kou.ishizaki@toshiba.co.jp,
-        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] toshiba: Replace zero-length array with
+Cc:     kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        oss-drivers@netronome.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] netronome: Replace zero-length array with
  flexible-array member
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200224163252.GA28066@embeddedor>
-References: <20200224163252.GA28066@embeddedor>
+In-Reply-To: <20200224163652.GA31089@embeddedor>
+References: <20200224163652.GA31089@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 15:26:44 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 15:26:51 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Mon, 24 Feb 2020 10:32:52 -0600
+Date: Mon, 24 Feb 2020 10:36:52 -0600
 
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
