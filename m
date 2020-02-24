@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0591C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A57FC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CA821556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DF620836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgBXOmi (ORCPT
+        id S1727795AbgBXOmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:42:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:38220 "EHLO foss.arm.com"
+        Mon, 24 Feb 2020 09:42:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:38154 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727802AbgBXOmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:42:20 -0500
+        id S1727750AbgBXOmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:42:11 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D311011B3;
-        Mon, 24 Feb 2020 06:42:19 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30112113E;
+        Mon, 24 Feb 2020 06:42:11 -0800 (PST)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D39743F534;
-        Mon, 24 Feb 2020 06:42:18 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 305743F534;
+        Mon, 24 Feb 2020 06:42:10 -0800 (PST)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com
-Subject: [RFC PATCH v3 11/13] firmware: arm_scmi: Add Sensor notifications support
-Date:   Mon, 24 Feb 2020 14:41:22 +0000
-Message-Id: <20200224144124.2008-12-cristian.marussi@arm.com>
+Subject: [RFC PATCH v3 04/13] firmware: arm_scmi: Add support for notifications message processing
+Date:   Mon, 24 Feb 2020 14:41:15 +0000
+Message-Id: <20200224144124.2008-5-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200224144124.2008-1-cristian.marussi@arm.com>
 References: <20200224144124.2008-1-cristian.marussi@arm.com>
@@ -41,139 +41,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Sensor protocol register with the notification core.
+From: Sudeep Holla <sudeep.holla@arm.com>
 
+Add the mechanisms to distinguish notifications from delayed responses and
+to properly fetch notification messages upon reception: notifications
+processing does not continue further after the fetch phase.
+
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+[Reworked/renamed scmi_handle_xfer_delayed_resp()]
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
-V2 --> V3
-- added handle awareness
 V1 --> V2
-- simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
-  logic out of protocol. ALL_SRCIDs logic is now in charge of the
-  notification core, together with proper reference counting of enables
-- switched to devres protocol-registration
+- switch the notif/delayed_resp message processing logic to use new
+  transport independent layer methods
+- reviewed logic of scmi_handle_xfer_delayed_resp() while renaming it as
+  scmi_handle_response()
+- properly relocated tracer points
 ---
- drivers/firmware/arm_scmi/sensors.c | 69 +++++++++++++++++++++++++++++
- include/linux/scmi_protocol.h       |  7 +++
- 2 files changed, 76 insertions(+)
+ drivers/firmware/arm_scmi/driver.c | 84 +++++++++++++++++++++++-------
+ 1 file changed, 64 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index db1b1ab303da..907f52ecaa32 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -6,6 +6,7 @@
-  */
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index efb660c34b57..868cc36a07c9 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -202,29 +202,42 @@ __scmi_xfer_put(struct scmi_xfers_info *minfo, struct scmi_xfer *xfer)
+ 	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
+ }
  
- #include "common.h"
-+#include "notify.h"
- 
- enum scmi_sensor_protocol_cmd {
- 	SENSOR_DESCRIPTION_GET = 0x3,
-@@ -71,6 +72,12 @@ struct scmi_msg_sensor_reading_get {
- #define SENSOR_READ_ASYNC	BIT(0)
- };
- 
-+struct scmi_sensor_trip_notify_payld {
-+	__le32 agent_id;
-+	__le32 sensor_id;
-+	__le32 trip_point_desc;
-+};
-+
- struct sensors_info {
- 	u32 version;
- 	int num_sensors;
-@@ -276,6 +283,62 @@ static struct scmi_sensor_ops sensor_ops = {
- 	.reading_get = scmi_sensor_reading_get,
- };
- 
-+static bool scmi_sensor_set_notify_enabled(const struct scmi_handle *handle,
-+					   u8 evt_id, u32 src_id, bool enable)
-+{
-+	int ret;
-+
-+	ret = scmi_sensor_trip_point_notify(handle, src_id, enable);
-+	if (ret)
-+		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
-+			SCMI_PROTOCOL_SENSOR, evt_id, src_id, ret);
-+
-+	return !ret ? true : false;
-+}
-+
-+static void *scmi_sensor_fill_custom_report(u8 evt_id, u64 timestamp,
-+					   const void *payld, size_t payld_sz,
-+					   void *report, u32 *src_id)
-+{
-+	void *rep = NULL;
-+
-+	switch (evt_id) {
-+	case SENSOR_TRIP_POINT_EVENT:
-+	{
-+		const struct scmi_sensor_trip_notify_payld *p = payld;
-+		struct scmi_sensor_trip_point_report *r = report;
-+
-+		if (sizeof(*p) != payld_sz)
-+			break;
-+
-+		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->sensor_id = le32_to_cpu(p->sensor_id);
-+		r->trip_point_desc = le32_to_cpu(p->trip_point_desc);
-+		*src_id = r->sensor_id;
-+		rep = r;
-+		break;
-+	}
-+	default:
-+		break;
-+	}
-+
-+	return rep;
-+}
-+
-+static const struct scmi_event sensor_events[] = {
-+	{
-+		.evt_id = SENSOR_TRIP_POINT_EVENT,
-+		.max_payld_sz = 12,
-+		.max_report_sz = sizeof(struct scmi_sensor_trip_point_report),
-+	},
-+};
-+
-+static const struct scmi_protocol_event_ops sensor_event_ops = {
-+	.set_notify_enabled = scmi_sensor_set_notify_enabled,
-+	.fill_custom_report = scmi_sensor_fill_custom_report,
-+};
-+
- static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+-/**
+- * scmi_rx_callback() - callback for receiving messages
+- *
+- * @cinfo: SCMI channel info
+- * @msg_hdr: Message header
+- *
+- * Processes one received message to appropriate transfer information and
+- * signals completion of the transfer.
+- *
+- * NOTE: This function will be invoked in IRQ context, hence should be
+- * as optimal as possible.
+- */
+-void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
++static void scmi_handle_notification(struct scmi_chan_info *cinfo, u32 msg_hdr)
  {
- 	u32 version;
-@@ -299,6 +362,12 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
- 
- 	scmi_sensor_description_get(handle, sinfo);
- 
-+	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_SENSOR, PAGE_SIZE,
-+				      &sensor_event_ops, sensor_events,
-+				      ARRAY_SIZE(sensor_events),
-+				      sinfo->num_sensors);
+-	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
+-	struct scmi_xfers_info *minfo = &info->tx_minfo;
+-	u16 xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
+-	u8 msg_type = MSG_XTRACT_TYPE(msg_hdr);
+-	struct device *dev = cinfo->dev;
+ 	struct scmi_xfer *xfer;
++	struct device *dev = cinfo->dev;
++	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
++	struct scmi_xfers_info *minfo = &info->rx_minfo;
 +
- 	sinfo->version = version;
- 	handle->sensor_ops = &sensor_ops;
- 	handle->sensor_priv = sinfo;
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 5e7c28c8bcac..23408dacc69d 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -407,4 +407,11 @@ struct scmi_perf_level_report {
- 	u32	performance_level;
- };
- 
-+struct scmi_sensor_trip_point_report {
-+	ktime_t	timestamp;
-+	u32	agent_id;
-+	u32	sensor_id;
-+	u32	trip_point_desc;
-+};
++	xfer = scmi_xfer_get(cinfo->handle, minfo);
++	if (IS_ERR(xfer)) {
++		dev_err(dev, "failed to get free message slot (%ld)\n",
++			PTR_ERR(xfer));
++		info->desc->ops->clear_notification(cinfo);
++		return;
++	}
 +
- #endif /* _LINUX_SCMI_PROTOCOL_H */
++	unpack_scmi_header(msg_hdr, &xfer->hdr);
++	scmi_dump_header_dbg(dev, &xfer->hdr);
++	info->desc->ops->fetch_notification(cinfo, info->desc->max_msg_size,
++					    xfer);
++
++	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
++			   xfer->hdr.protocol_id, xfer->hdr.seq,
++			   MSG_TYPE_NOTIFICATION);
+ 
+-	if (msg_type == MSG_TYPE_NOTIFICATION)
+-		return; /* Notifications not yet supported */
++	__scmi_xfer_put(minfo, xfer);
++
++	info->desc->ops->clear_notification(cinfo);
++}
++
++static void scmi_handle_response(struct scmi_chan_info *cinfo,
++				 u16 xfer_id, u8 msg_type)
++{
++	struct scmi_xfer *xfer;
++	struct device *dev = cinfo->dev;
++	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
++	struct scmi_xfers_info *minfo = &info->tx_minfo;
+ 
+ 	/* Are we even expecting this? */
+ 	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
+@@ -248,6 +261,37 @@ void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
+ 		complete(&xfer->done);
+ }
+ 
++/**
++ * scmi_rx_callback() - callback for receiving messages
++ *
++ * @cinfo: SCMI channel info
++ * @msg_hdr: Message header
++ *
++ * Processes one received message to appropriate transfer information and
++ * signals completion of the transfer.
++ *
++ * NOTE: This function will be invoked in IRQ context, hence should be
++ * as optimal as possible.
++ */
++void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr)
++{
++	u16 xfer_id = MSG_XTRACT_TOKEN(msg_hdr);
++	u8 msg_type = MSG_XTRACT_TYPE(msg_hdr);
++
++	switch (msg_type) {
++	case MSG_TYPE_NOTIFICATION:
++		scmi_handle_notification(cinfo, msg_hdr);
++		break;
++	case MSG_TYPE_COMMAND:
++	case MSG_TYPE_DELAYED_RESP:
++		scmi_handle_response(cinfo, xfer_id, msg_type);
++		break;
++	default:
++		WARN_ONCE(1, "received unknown msg_type:%d\n", msg_type);
++		break;
++	}
++}
++
+ /**
+  * scmi_xfer_put() - Release a transmit message
+  *
 -- 
 2.17.1
 
