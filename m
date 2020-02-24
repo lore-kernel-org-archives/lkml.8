@@ -2,97 +2,78 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B877BC11D27
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25260C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869AC20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582534115;
-	bh=yvIzmLig8t+2r3suHxGs4IkD4tc1IS5MA9kFdFLwcPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ImXo4K+3FzojfonDoBfJIqNIsvp1d7BHy2//zyZZVlSon2u6TTlvSRvtWp3vWdgIP
-	 S0gZfCrx5xFC+uGEh5dNrlAIDQtWxyiN6V244dU3fLVgHQwosf94MFvkxieA2oHCoT
-	 xRv4Ss/XejSMnr+iRFLKHUyx3qv4QHYPitd9csT0=
+	by mail.kernel.org (Postfix) with ESMTP id 01D312080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBXIse (ORCPT
+        id S1727189AbgBXIuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:48:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727193AbgBXIse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:48:34 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3043A2080D;
-        Mon, 24 Feb 2020 08:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582534113;
-        bh=yvIzmLig8t+2r3suHxGs4IkD4tc1IS5MA9kFdFLwcPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x1oAUQXUjY0n1B7WuYJEssdl5g/YAMYC1c/F/fL8g7/1+z1RsSdQdSWS7iJFw39fI
-         zQhQdwJ5yekwXC3pGUPLCde5o/BsCnG5Vf9JoVJelunpHRydifOjKgfoU0Ow8BRCr1
-         gGEkNf/BWHz7HYcqi2CWRYWYzidohQYcbGk00sks=
-Date:   Mon, 24 Feb 2020 16:48:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA
- switch on LS1028A
-Message-ID: <20200224084826.GE27688@dragon>
-References: <20200219151259.14273-1-olteanv@gmail.com>
- <20200224063154.GK27688@dragon>
- <CA+h21hok4V_-uarhnyBkdXqnwRdXpgRJWLSvuuVn8K3VRMtrcA@mail.gmail.com>
+        Mon, 24 Feb 2020 03:50:00 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45023 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgBXIuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:50:00 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j69R7-00066z-HS; Mon, 24 Feb 2020 09:49:57 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j69R6-00064C-As; Mon, 24 Feb 2020 09:49:56 +0100
+Date:   Mon, 24 Feb 2020 09:49:56 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/4] pwm: omap-dmtimer: Fix pwm enabling sequence
+Message-ID: <20200224084956.wwsnf2y24ragg3vf@pengutronix.de>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-3-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CA+h21hok4V_-uarhnyBkdXqnwRdXpgRJWLSvuuVn8K3VRMtrcA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224052135.17278-3-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:59:53AM +0200, Vladimir Oltean wrote:
-> Hi Shawn,
+On Mon, Feb 24, 2020 at 10:51:33AM +0530, Lokesh Vutla wrote:
+> To configure DM timer is pwm mode the following needs to be set in
+> OMAP_TIMER_CTRL_REG using set_pwm callback:
+> - Set toggle mode on PORTIMERPWM output pin
+> - Set trigger on overflow and match on PORTIMERPWM output pin.
+> - Set auto reload
 > 
-> On Mon, 24 Feb 2020 at 08:32, Shawn Guo <shawnguo@kernel.org> wrote:
-> >
-> > On Wed, Feb 19, 2020 at 05:12:54PM +0200, Vladimir Oltean wrote:
-> > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > >
-> > > As per feedback received in v1, I've changed the DT bindings for the
-> > > internal ports from "gmii" to "internal". So I would like the entire
-> > > series to be merged through a single tree, be it net-next or devicetree.
-> >
-> > Will applying the patches via different trees as normal cause any
-> > issue like build breakage or regression on either tree?  Otherwise, I do
-> > not see the series needs to go in through a single tree.
-> >
-> > Shawn
-> >
-> 
-> No, the point is that I've made some changes in the device tree
-> bindings validation in the driver, which make the driver without those
-> changes incompatible with the bindings themselves that I'm
-> introducing. So I would like the driver to be operational on the
-> actual commit that introduces the bindings, at least in your tree. I
-> don't expect merge conflicts to occur in that area of the code.
+> This is a one time configuration and needs to be set before the start of
+> the dm timer. But the current driver tries to set the same configuration
+> for every period/duty cycle update, which is not needed. So move the pwm
+> setup before enabling timer and do not update it in pwm_omap_dmtimer_config.
 
-The dt-bindings patch is supposed to go through subsystem tree together
-with driver changes by nature.  That said, patch #1 and #2 are for
-David, and I will pick up the rest (DTS ones).
+Is this change kind of moot with the conversion to .apply in the next
+patch?
 
-Shawn
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
