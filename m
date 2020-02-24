@@ -2,392 +2,186 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2640C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CB1C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2F920828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QtaeuJs1"
+	by mail.kernel.org (Postfix) with ESMTP id 1B0D020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBXJ0o (ORCPT
+        id S1727504AbgBXJ0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:26:44 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40153 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726673AbgBXJ0o (ORCPT
+        Mon, 24 Feb 2020 04:26:55 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56230 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbgBXJ0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:26:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582536402;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=A7OI57zr2blLgJ/hwa1LGfLsiQ0/JgcnoRnFk2JvkkQ=;
-        b=QtaeuJs1IVONC4AySs0fKwhwlSaTKm2as0Mfs0RYbRUrh9Uhu5p6ciNmiEEY/3pxY5t9VR
-        5SGPNAACPWdfk2dYaTjYRQ+gA4yrepGB/XWscVy9s7M0jRJu2LoCtKMBwnmKAWoNarnlme
-        AM+NRSI4j1IftBrCRdgINqlXODM/twA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-u3eLj2MsMI6Rh52UwPOX6g-1; Mon, 24 Feb 2020 04:26:35 -0500
-X-MC-Unique: u3eLj2MsMI6Rh52UwPOX6g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6EC5DB20;
-        Mon, 24 Feb 2020 09:26:31 +0000 (UTC)
-Received: from [10.72.13.147] (ovpn-13-147.pek2.redhat.com [10.72.13.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 87B9560BF7;
-        Mon, 24 Feb 2020 09:26:22 +0000 (UTC)
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
- <20200221155602.4de41fa7.pasic@linux.ibm.com>
- <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
- <20200224010607-mutt-send-email-mst@kernel.org>
- <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
- <20200224024641-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
-Date:   Mon, 24 Feb 2020 17:26:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 24 Feb 2020 04:26:54 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so8203203wmj.5;
+        Mon, 24 Feb 2020 01:26:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=20Q5cxgzoMb8nDIhMyIGzGnGFsJl1Kj/bajwVttwp08=;
+        b=TiglPdHyR8++Bmeyhr31wr8OZMcwkIrdgd7mzbbgBuCTV5GUu5oJ4H4B7GnTwKlqwH
+         FrGqaPFiWRtYMw3WIf6A38Uy9nMjuuBtq5umxRrcNpnE/q1u1EfNoUORmqZNItTd1tri
+         ijBB/DpC9TdyXBVCfOYy62dpVLEI76FWDePW/Uai8zvU9ybeovJCSvajDFucjWPDIBld
+         zuv4Kjt0ZyoVx1xwNW+c4j6616mxdWwWzlXNyD24z/H1FgMupH8ZWsiRt5TklJrdo0Ui
+         QNOH6dTjMbbveHbbi+oDOEkoxrsGErljYff9U91OaL6n1zp/IIwIzbDhnKUknVT6jvlB
+         YDYA==
+X-Gm-Message-State: APjAAAURahzsPR9VDZpqojEhtEXNs2ih+06qDT50zDVXTnZR+JFkcVIA
+        lZmFZvNgE7upgx/RG2xVEZOb7/92m7c=
+X-Google-Smtp-Source: APXvYqz/V2X9bckLbnmKWQwxtfddFxtlfDfFWc43keh3pg+X6toEDlyFZjlcTPV0FcCPyyocOHwABA==
+X-Received: by 2002:a7b:c119:: with SMTP id w25mr21591837wmi.116.1582536412413;
+        Mon, 24 Feb 2020 01:26:52 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id t3sm2752752wrx.38.2020.02.24.01.26.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 01:26:51 -0800 (PST)
+Subject: Re: [PATCH 3/9] vt: selection, remove 2 local variables from
+ set_selection_kernel
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200219073951.16151-1-jslaby@suse.cz>
+ <20200219073951.16151-3-jslaby@suse.cz> <20200221093251.GA90355@kroah.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBtKaXJpIFNsYWJ5
+ IDxqc2xhYnlAc3VzZS5jej6JAjgEEwECACIFAk6S6NgCGwMGCwkIBwMCBhUIAgkKCwQWAgMB
+ Ah4BAheAAAoJEL0lsQQGtHBJgDsP/j9wh0vzWXsOPO3rDpHjeC3BT5DKwjVN/KtP7uZttlkB
+ duReCYMTZGzSrmK27QhCflZ7Tw0Naq4FtmQSH8dkqVFugirhlCOGSnDYiZAAubjTrNLTqf7e
+ 5poQxE8mmniH/Asg4KufD9bpxSIi7gYIzaY3hqvYbVF1vYwaMTujojlixvesf0AFlE4x8WKs
+ wpk43fmo0ZLcwObTnC3Hl1JBsPujCVY8t4E7zmLm7kOB+8EHaHiRZ4fFDWweuTzRDIJtVmrH
+ LWvRDAYg+IH3SoxtdJe28xD9KoJw4jOX1URuzIU6dklQAnsKVqxz/rpp1+UVV6Ky6OBEFuoR
+ 613qxHCFuPbkRdpKmHyE0UzmniJgMif3v0zm/+1A/VIxpyN74cgwxjhxhj/XZWN/LnFuER1W
+ zTHcwaQNjq/I62AiPec5KgxtDeV+VllpKmFOtJ194nm9QM9oDSRBMzrG/2AY/6GgOdZ0+qe+
+ 4BpXyt8TmqkWHIsVpE7I5zVDgKE/YTyhDuqYUaWMoI19bUlBBUQfdgdgSKRMJX4vE72dl8BZ
+ +/ONKWECTQ0hYntShkmdczcUEsWjtIwZvFOqgGDbev46skyakWyod6vSbOJtEHmEq04NegUD
+ al3W7Y/FKSO8NqcfrsRNFWHZ3bZ2Q5X0tR6fc6gnZkNEtOm5fcWLY+NVz4HLaKrJuQINBE6S
+ 54YBEADPnA1iy/lr3PXC4QNjl2f4DJruzW2Co37YdVMjrgXeXpiDvneEXxTNNlxUyLeDMcIQ
+ K8obCkEHAOIkDZXZG8nr4mKzyloy040V0+XA9paVs6/ice5l+yJ1eSTs9UKvj/pyVmCAY1Co
+ SNN7sfPaefAmIpduGacp9heXF+1Pop2PJSSAcCzwZ3PWdAJ/w1Z1Dg/tMCHGFZ2QCg4iFzg5
+ Bqk4N34WcG24vigIbRzxTNnxsNlU1H+tiB81fngUp2pszzgXNV7CWCkaNxRzXi7kvH+MFHu2
+ 1m/TuujzxSv0ZHqjV+mpJBQX/VX62da0xCgMidrqn9RCNaJWJxDZOPtNCAWvgWrxkPFFvXRl
+ t52z637jleVFL257EkMI+u6UnawUKopa+Tf+R/c+1Qg0NHYbiTbbw0pU39olBQaoJN7JpZ99
+ T1GIlT6zD9FeI2tIvarTv0wdNa0308l00bas+d6juXRrGIpYiTuWlJofLMFaaLYCuP+e4d8x
+ rGlzvTxoJ5wHanilSE2hUy2NSEoPj7W+CqJYojo6wTJkFEiVbZFFzKwjAnrjwxh6O9/V3O+Z
+ XB5RrjN8hAf/4bSo8qa2y3i39cuMT8k3nhec4P9M7UWTSmYnIBJsclDQRx5wSh0Mc9Y/psx9
+ B42WbV4xrtiiydfBtO6tH6c9mT5Ng+d1sN/VTSPyfQARAQABiQIfBBgBAgAJBQJOkueGAhsM
+ AAoJEL0lsQQGtHBJN7UQAIDvgxaW8iGuEZZ36XFtewH56WYvVUefs6+Pep9ox/9ZXcETv0vk
+ DUgPKnQAajG/ViOATWqADYHINAEuNvTKtLWmlipAI5JBgE+5g9UOT4i69OmP/is3a/dHlFZ3
+ qjNk1EEGyvioeycJhla0RjakKw5PoETbypxsBTXk5EyrSdD/I2Hez9YGW/RcI/WC8Y4Z/7FS
+ ITZhASwaCOzy/vX2yC6iTx4AMFt+a6Z6uH/xGE8pG5NbGtd02r+m7SfuEDoG3Hs1iMGecPyV
+ XxCVvSV6dwRQFc0UOZ1a6ywwCWfGOYqFnJvfSbUiCMV8bfRSWhnNQYLIuSv/nckyi8CzCYIg
+ c21cfBvnwiSfWLZTTj1oWyj5a0PPgGOdgGoIvVjYXul3yXYeYOqbYjiC5t99JpEeIFupxIGV
+ ciMk6t3pDrq7n7Vi/faqT+c4vnjazJi0UMfYnnAzYBa9+NkfW0w5W9Uy7kW/v7SffH/2yFiK
+ 9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
+ VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
+ sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
+Message-ID: <75287ce8-d2ce-9c00-601a-486757e8860b@suse.cz>
+Date:   Mon, 24 Feb 2020 10:26:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200224024641-mutt-send-email-mst@kernel.org>
-Content-Type: multipart/mixed;
- boundary="------------BDFD2BED5C3364D3CE35012F"
+In-Reply-To: <20200221093251.GA90355@kroah.com>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------BDFD2BED5C3364D3CE35012F
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-
-
-On 2020/2/24 =E4=B8=8B=E5=8D=883:48, Michael S. Tsirkin wrote:
-> On Mon, Feb 24, 2020 at 02:45:03PM +0800, Jason Wang wrote:
->> On 2020/2/24 =E4=B8=8B=E5=8D=882:06, Michael S. Tsirkin wrote:
->>> On Mon, Feb 24, 2020 at 12:01:57PM +0800, Jason Wang wrote:
->>>> On 2020/2/21 =E4=B8=8B=E5=8D=8810:56, Halil Pasic wrote:
->>>>> On Fri, 21 Feb 2020 14:22:26 +0800
->>>>> Jason Wang <jasowang@redhat.com> wrote:
->>>>>
->>>>>> On 2020/2/21 =E4=B8=8A=E5=8D=8812:06, Halil Pasic wrote:
->>>>>>> Currently if one intends to run a memory protection enabled VM wi=
-th
->>>>>>> virtio devices and linux as the guest OS, one needs to specify th=
-e
->>>>>>> VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the g=
-uest
->>>>>>> linux use the DMA API, which in turn handles the memory
->>>>>>> encryption/protection stuff if the guest decides to turn itself i=
-nto
->>>>>>> a protected one. This however makes no sense due to multiple reas=
-ons:
->>>>>>> * The device is not changed by the fact that the guest RAM is
->>>>>>> protected. The so called IOMMU bypass quirk is not affected.
->>>>>>> * This usage is not congruent with  standardised semantics of
->>>>>>> VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal =
-reason
->>>>>>> for using DMA API in virtio (orthogonal with respect to what is
->>>>>>> expressed by VIRTIO_F_IOMMU_PLATFORM).
->>>>>>>
->>>>>>> This series aims to decouple 'have to use DMA API because my (gue=
-st) RAM
->>>>>>> is protected' and 'have to use DMA API because the device told me
->>>>>>> VIRTIO_F_IOMMU_PLATFORM'.
->>>>>>>
->>>>>>> Please find more detailed explanations about the conceptual aspec=
-ts in
->>>>>>> the individual patches. There is however also a very practical pr=
-oblem
->>>>>>> that is addressed by this series.
->>>>>>>
->>>>>>> For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the followi=
-ng side
->>>>>>> effect The vhost code assumes it the addresses on the virtio desc=
-riptor
->>>>>>> ring are not guest physical addresses but iova's, and insists on =
-doing a
->>>>>>> translation of these regardless of what transport is used (e.g. w=
-hether
->>>>>>> we emulate a PCI or a CCW device). (For details see commit 6b1e6c=
-c7855b
->>>>>>> "vhost: new device IOTLB API".) On s390 this results in severe
->>>>>>> performance degradation (c.a. factor 10).
->>>>>> Do you see a consistent degradation on the performance, or it only
->>>>>> happen when for during the beginning of the test?
->>>>>>
->>>>> AFAIK the degradation is consistent.
->>>>>
->>>>>>> BTW with ccw I/O there is
->>>>>>> (architecturally) no IOMMU, so the whole address translation make=
-s no
->>>>>>> sense in the context of virtio-ccw.
->>>>>> I suspect we can do optimization in qemu side.
->>>>>>
->>>>>> E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
->>>>>>
->>>>>> If this makes sense, I can draft patch to see if there's any diffe=
-rence.
->>>>> Frankly I would prefer to avoid IOVAs on the descriptor ring (and t=
-he
->>>>> then necessary translation) for virtio-ccw altogether. But Michael
->>>>> voiced his opinion that we should mandate F_IOMMU_PLATFORM for devi=
-ces
->>>>> that could be used with guests running in protected mode. I don't s=
-hare
->>>>> his opinion, but that's an ongoing discussion.
->>>>>
->>>>> Should we end up having to do translation from IOVA in vhost, we ar=
-e
->>>>> very interested in that translation being fast and efficient.
->>>>>
->>>>> In that sense we would be very happy to test any optimization that =
-aim
->>>>> into that direction.
->>>>>
->>>>> Thank you very much for your input!
->>>> Using IOTLB API on platform without IOMMU support is not intended. P=
-lease
->>>> try the attached patch to see if it helps.
->>>>
->>>> Thanks
->>>>
->>>>
->>>>> Regards,
->>>>> Halil
->>>>>
->>>>>> Thanks
->>>>>>
->>>>>>
->>>>>>> Halil Pasic (2):
->>>>>>>       mm: move force_dma_unencrypted() to mem_encrypt.h
->>>>>>>       virtio: let virtio use DMA API when guest RAM is protected
->>>>>>>
->>>>>>>      drivers/virtio/virtio_ring.c |  3 +++
->>>>>>>      include/linux/dma-direct.h   |  9 ---------
->>>>>>>      include/linux/mem_encrypt.h  | 10 ++++++++++
->>>>>>>      3 files changed, 13 insertions(+), 9 deletions(-)
->>>>>>>
->>>>>>>
->>>>>>> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
->>>> >From 66fa730460875ac99e81d7db2334cd16bb1d2b27 Mon Sep 17 00:00:00 2=
-001
->>>> From: Jason Wang <jasowang@redhat.com>
->>>> Date: Mon, 24 Feb 2020 12:00:10 +0800
->>>> Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
->>>>
->>>> When transport does not support IOMMU, we should clear IOMMU_PLATFOR=
-M
->>>> even if the device and vhost claims to support that. This help to
->>>> avoid the performance overhead caused by unnecessary IOTLB miss/upda=
-te
->>>> transactions on such platform.
->>>>
->>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>>> ---
->>>>    hw/virtio/virtio-bus.c | 6 +++---
->>>>    1 file changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
->>>> index d6332d45c3..2741b9fdd2 100644
->>>> --- a/hw/virtio/virtio-bus.c
->>>> +++ b/hw/virtio/virtio-bus.c
->>>> @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev,=
- Error **errp)
->>>>        VirtioBusState *bus =3D VIRTIO_BUS(qbus);
->>>>        VirtioBusClass *klass =3D VIRTIO_BUS_GET_CLASS(bus);
->>>>        VirtioDeviceClass *vdc =3D VIRTIO_DEVICE_GET_CLASS(vdev);
->>>> -    bool has_iommu =3D virtio_host_has_feature(vdev, VIRTIO_F_IOMMU=
-_PLATFORM);
->>>>        Error *local_err =3D NULL;
->>>>        DPRINTF("%s: plug device.\n", qbus->name);
->>>> @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vde=
-v, Error **errp)
->>>>            return;
->>>>        }
->>>> -    if (klass->get_dma_as !=3D NULL && has_iommu) {
->>>> -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLA=
-TFORM);
->>>> +    if (false && klass->get_dma_as !=3D NULL &&
->>>> +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
->>>>            vdev->dma_as =3D klass->get_dma_as(qbus->parent);
->>>>        } else {
->>>> +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_P=
-LATFORM);
->>>>            vdev->dma_as =3D &address_space_memory;
->>>>        }
->>>>    }
->>> This seems to clear it unconditionally. I guess it's just a debugging
->>> patch, the real one will come later?
+On 21. 02. 20, 10:32, Greg KH wrote:
+> On Wed, Feb 19, 2020 at 08:39:45AM +0100, Jiri Slaby wrote:
+>> multiplier and mode are not actually needed:
+>> * multiplier is used only in kmalloc_array, so use "use_unicode ? 4 : 1"
+>>   directly
+>> * mode is used only to assign a bool in this manner:
+>>   if (cond)
+>>     x = true;
+>>   else
+>>     x = false;
+>>   So do "x = cond" directly.
 >>
->> My bad, here's the correct one.
->>
->> Thanks
->>
->>
->>>> --=20
->>>> 2.19.1
->>>>
->> >From b8a8b582f46bb86c7a745b272db7b744779e5cc7 Mon Sep 17 00:00:00 200=
-1
->> From: Jason Wang <jasowang@redhat.com>
->> Date: Mon, 24 Feb 2020 12:00:10 +0800
->> Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
->>
->> When transport does not support IOMMU, we should clear IOMMU_PLATFORM
->> even if the device and vhost claims to support that. This help to
->> avoid the performance overhead caused by unnecessary IOTLB miss/update
->> transactions on such platform.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 >> ---
->>   hw/virtio/virtio-bus.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>  drivers/tty/vt/selection.c | 14 +++++---------
+>>  1 file changed, 5 insertions(+), 9 deletions(-)
 >>
->> diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
->> index d6332d45c3..4be64e193e 100644
->> --- a/hw/virtio/virtio-bus.c
->> +++ b/hw/virtio/virtio-bus.c
->> @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, E=
-rror **errp)
->>       VirtioBusState *bus =3D VIRTIO_BUS(qbus);
->>       VirtioBusClass *klass =3D VIRTIO_BUS_GET_CLASS(bus);
->>       VirtioDeviceClass *vdc =3D VIRTIO_DEVICE_GET_CLASS(vdev);
->> -    bool has_iommu =3D virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_P=
-LATFORM);
->>       Error *local_err =3D NULL;
->>  =20
->>       DPRINTF("%s: plug device.\n", qbus->name);
->> @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev,=
- Error **errp)
->>           return;
->>       }
->>  =20
->> -    if (klass->get_dma_as !=3D NULL && has_iommu) {
->> -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATF=
-ORM);
-> So it looks like this line is unnecessary, but it's an unrelated
-> cleanup, right?
-
-
-Yes.
-
-
->
->> +    if (klass->get_dma_as !=3D NULL &&
->> +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
->>           vdev->dma_as =3D klass->get_dma_as(qbus->parent);
->>       } else {
->> +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLA=
-TFORM);
->
-> Of course any change like that will have to affect migration compat, et=
-c.
-> Can't we clear the bit when we are sending the features to vhost
-> instead?
-
-
-That's better.
-
-How about attached?
-
-Thanks
-
-
->
->
->>           vdev->dma_as =3D &address_space_memory;
->>       }
->>   }
->> --=20
->> 2.19.1
+>> diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+>> index 714992693974..6541c09d8bba 100644
+>> --- a/drivers/tty/vt/selection.c
+>> +++ b/drivers/tty/vt/selection.c
+>> @@ -191,9 +191,9 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+>>  	struct vc_data *vc = vc_cons[fg_console].d;
+>>  	int new_sel_start, new_sel_end, spc;
+>>  	char *bp, *obp;
+>> -	int i, ps, pe, multiplier;
+>> +	int i, ps, pe;
+>>  	u32 c;
+>> -	int mode, ret = 0;
+>> +	int ret = 0;
+>>  
+>>  	poke_blanked_console();
+>>  
+>> @@ -224,11 +224,7 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+>>  		clear_selection();
+>>  		sel_cons = vc_cons[fg_console].d;
+>>  	}
+>> -	mode = vt_do_kdgkbmode(fg_console);
+>> -	if (mode == K_UNICODE)
+>> -		use_unicode = 1;
+>> -	else
+>> -		use_unicode = 0;
+>> +	use_unicode = vt_do_kdgkbmode(fg_console) == K_UNICODE;
+>>  
+>>  	switch (v->sel_mode)
+>>  	{
+>> @@ -312,8 +308,8 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
+>>  	sel_end = new_sel_end;
+>>  
+>>  	/* Allocate a new buffer before freeing the old one ... */
+>> -	multiplier = use_unicode ? 4 : 1;  /* chars can take up to 4 bytes */
+>> -	bp = kmalloc_array((sel_end - sel_start) / 2 + 1, multiplier,
+>> +	/* chars can take up to 4 bytes with unicode */
+>> +	bp = kmalloc_array((sel_end - sel_start) / 2 + 1, use_unicode ? 4 : 1,
+>>  			   GFP_KERNEL);
+>>  	if (!bp) {
+>>  		printk(KERN_WARNING "selection: kmalloc() failed\n");
+>> -- 
+>> 2.25.0
 >>
+> 
+> This patch fails to apply to my tree, so I stopped here.  Can you rebase
+> and resend the rest of these?
 
---------------BDFD2BED5C3364D3CE35012F
-Content-Type: text/x-patch;
- name="0001-vhost-do-not-set-VIRTIO_F_IOMMU_PLATFORM-when-IOMMU-.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-vhost-do-not-set-VIRTIO_F_IOMMU_PLATFORM-when-IOMMU-.pa";
- filename*1="tch"
+Could you be a little bit more specific? After the rebase, it still
+applies cleanly for me. Perhaps the tree you are applying this to was
+missing this 5.6-rc3 commit:
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5
+Author: Jiri Slaby <jslaby@suse.cz>
+Date:   Mon Feb 10 09:11:31 2020 +0100
 
-From 3177c5194c729f3056b84c67664c59b9b949bb76 Mon Sep 17 00:00:00 2001
-From: Jason Wang <jasowang@redhat.com>
-Date: Mon, 24 Feb 2020 17:24:14 +0800
-Subject: [PATCH] vhost: do not set VIRTIO_F_IOMMU_PLATFORM when IOMMU is not
- used
+    vt: selection, close sel_buffer race
+?
 
-We enable device IOTLB unconditionally when VIRTIO_F_IOMMU_PLATFORM is
-negotiated. This lead unnecessary IOTLB miss/update transactions when
-IOMMU is used. This patch fixes this.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- hw/net/virtio-net.c | 3 +++
- hw/virtio/vhost.c   | 4 +---
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/hw/net/virtio-net.c b/hw/net/virtio-net.c
-index 3627bb1717..0d50e8bd34 100644
---- a/hw/net/virtio-net.c
-+++ b/hw/net/virtio-net.c
-@@ -879,6 +879,9 @@ static void virtio_net_set_features(VirtIODevice *vdev, uint64_t features)
-         virtio_net_apply_guest_offloads(n);
-     }
- 
-+    if (vdev->dma_as == &address_space_memory)
-+        features &= ~(1ULL << VIRTIO_F_IOMMU_PLATFORM);
-+
-     for (i = 0;  i < n->max_queues; i++) {
-         NetClientState *nc = qemu_get_subqueue(n->nic, i);
- 
-diff --git a/hw/virtio/vhost.c b/hw/virtio/vhost.c
-index 9edfadc81d..711b1136f6 100644
---- a/hw/virtio/vhost.c
-+++ b/hw/virtio/vhost.c
-@@ -288,9 +288,7 @@ static inline void vhost_dev_log_resize(struct vhost_dev *dev, uint64_t size)
- 
- static int vhost_dev_has_iommu(struct vhost_dev *dev)
- {
--    VirtIODevice *vdev = dev->vdev;
--
--    return virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
-+    return virtio_has_feature(dev->acked_features, VIRTIO_F_IOMMU_PLATFORM);
- }
- 
- static void *vhost_memory_map(struct vhost_dev *dev, hwaddr addr,
+thanks,
 -- 
-2.19.1
-
-
---------------BDFD2BED5C3364D3CE35012F--
-
+js
+suse labs
