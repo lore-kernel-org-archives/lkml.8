@@ -2,375 +2,210 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EBAC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A42C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9FC20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F0120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="UPMuqG9X";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="UPMuqG9X"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WAaMkWyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgBXRIp (ORCPT
+        id S1727834AbgBXRNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:08:45 -0500
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:47296
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727090AbgBXRIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:08:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5j5EbNtXhjI/xzwoRPqJRnzcOInSJH93pw/2oaS7uNI=;
- b=UPMuqG9XjhTXkutYlN1FexM74XaFWAQ/PzjtVtdMo7Hyzmv/XX78CeqCsxkOsvtdc4IuTymPV84GkBXEAR9H8canMZdUQaJRHe2v0sNLaOzOls2NP9CMpArq0htae1aYXhOBZZHaFN0F9qov+SY1DVUTIqoPGU1XaAnZj+IlIF8=
-Received: from AM4PR08CA0076.eurprd08.prod.outlook.com (2603:10a6:205:2::47)
- by HE1PR0801MB1977.eurprd08.prod.outlook.com (2603:10a6:3:4d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
- 2020 17:08:36 +0000
-Received: from VE1EUR03FT003.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::201) by AM4PR08CA0076.outlook.office365.com
- (2603:10a6:205:2::47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
- Transport; Mon, 24 Feb 2020 17:08:36 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT003.mail.protection.outlook.com (10.152.18.108) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17 via Frontend Transport; Mon, 24 Feb 2020 17:08:36 +0000
-Received: ("Tessian outbound d1ceabc7047e:v42"); Mon, 24 Feb 2020 17:08:35 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 00ba86d25ee069a5
-X-CR-MTA-TID: 64aa7808
-Received: from cbbe8957c54d.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5B71721C-5EB2-41BD-AE96-11CC6B3453B3.1;
-        Mon, 24 Feb 2020 17:08:30 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cbbe8957c54d.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 24 Feb 2020 17:08:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cPvm5GUlh/9u85VOLTje7QRTac82iQ7ZNE8OOjomN4LKKGU3Acig6PoaXz5WabPTriw+OUuubghTYIWbax4On2cpHA1dev4S64mdOoJzFf7c1i9G0OPWjDEuCfVUaVH0aQySdXlTRNcRahqwOw+accIqBXMlV1oFsi64RBZCZFNbG9b27K66HS0hbuQ8TbEc8jr/U2ZEbtt2kvDIOcJzrw+FDZ3zTwUPh6nOqZTXHKcBQmIyPyc9VEwUqAwsvHxYuJm8H9pO7PmEF/qU6wxuKXo1oZAPw7kwsN/J7C7YtMnqqx6pSyu0xanhdr4TvMvBXwfM03Fe1D0nIXjB+5DyrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5j5EbNtXhjI/xzwoRPqJRnzcOInSJH93pw/2oaS7uNI=;
- b=G0ymCWXsK0c4GSzf6U6Nn4JRC9VAJ85j+ASg9m9Z0/WssYMb/unDxVkwygoqLi++P00ORCYdcQJPQWQGwIlWmaFPNdG4BeIbPbecfYsDVMYLESPJ2icOGFRGphpLSxS49lnG0Lwon1LjwDwAJJhfnTro1CL1mzvJHKJpOKkel43BlLjLNG0/aIJLvxxhVIuU0gsgtZA3yytwi8ZuOSx/QweWCJ5qUECyar5ry7qFlxzqc+4ME4gLd5ioVr6u5Qx5qx21ewIwB0dKSyf27s4cMyKd0e4iLFf8LKNUVEHcfIZVYeaT/qAD5MedWE90R5qVOz7zQnoJ8S9AwNaGH732zA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5j5EbNtXhjI/xzwoRPqJRnzcOInSJH93pw/2oaS7uNI=;
- b=UPMuqG9XjhTXkutYlN1FexM74XaFWAQ/PzjtVtdMo7Hyzmv/XX78CeqCsxkOsvtdc4IuTymPV84GkBXEAR9H8canMZdUQaJRHe2v0sNLaOzOls2NP9CMpArq0htae1aYXhOBZZHaFN0F9qov+SY1DVUTIqoPGU1XaAnZj+IlIF8=
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=James.Clark@arm.com; 
-Received: from DB6PR0802MB2519.eurprd08.prod.outlook.com (10.172.251.18) by
- DB6PR0802MB2198.eurprd08.prod.outlook.com (10.172.227.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Mon, 24 Feb 2020 17:08:29 +0000
-Received: from DB6PR0802MB2519.eurprd08.prod.outlook.com
- ([fe80::1d47:e75a:d449:605c]) by DB6PR0802MB2519.eurprd08.prod.outlook.com
- ([fe80::1d47:e75a:d449:605c%6]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
- 17:08:28 +0000
-Subject: Re: [PATCH v4 4/4] perf tools: Support "branch-misses:pp" on arm64
-To:     Adrian Hunter <adrian.hunter@intel.com>, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Tan Xiaojun <tanxiaojun@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
-References: <20200210122509.GA2005279@krava>
- <20200211140445.21986-1-james.clark@arm.com>
- <20200211140445.21986-5-james.clark@arm.com>
- <3114ea3a-5d9b-2c25-af41-cead352b6a02@intel.com>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <96a814b2-23b8-2ac0-9dc5-0a4b70ddf895@arm.com>
-Date:   Mon, 24 Feb 2020 17:08:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <3114ea3a-5d9b-2c25-af41-cead352b6a02@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0015.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:a6::27) To DB6PR0802MB2519.eurprd08.prod.outlook.com
- (2603:10a6:4:a0::18)
+        Mon, 24 Feb 2020 12:13:13 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51219 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbgBXRNL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:13:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t23so96687wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:13:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=djq2UzRGDZUviySA8l7HGT0qHQEYWEuCD4uLW+Pmvvs=;
+        b=WAaMkWyorUPlUuI4nRXYbnoDGL7eMtZS5tpi8LV09uUXVKFh7REQoOvUkK7e7el4rQ
+         oWWOnN2++jNfuFzKY1zTUQCyJat1fTLlATlX3vBCBeFPfbMwKhe/f+QW6XvTChbrrrtY
+         4PbOkD+89zTQLmnpGpMMS0qrKSMdfAMjGVrdM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=djq2UzRGDZUviySA8l7HGT0qHQEYWEuCD4uLW+Pmvvs=;
+        b=YhaOF8Y8kpv2aj1jBRIYgW6t+9pSEj3mGtwnJbkdtNBAwgtTdmw+757PeGP2IXFqsd
+         Zx/qPnEdl0nYWQtDyDr1bW6/PcCrF2hx4I4+RNQyxcUUR3kk73O3SejUuFzB93+ZLL5s
+         FNdOWxWKl2M5U4UdVOk7W5zB6bBYQjtfBdsE73/oDS5Th2qD5IfdhFk5pRbLSNHNDN4v
+         kw3bGcPdcSEdAwWxmyF6/+cMUUMBYzF24LKrVJK3OSN3MkX+D8K3Ag97te6Y89uAcp1f
+         sC43T7rK2QEPHmPg7wu1YvAEYtomOqQ9uxHlIH+f3y0509LBr9KDfZI//OQQ1Xe9uxae
+         nXqQ==
+X-Gm-Message-State: APjAAAUWJqfJjOa6kHeXAnvhC/ISt6nKc2NzBLlFvzfCnKlQ1sKikxsz
+        OcmlUGxm9d0mb5100edM4zZxvg==
+X-Google-Smtp-Source: APXvYqw+txJF+rLovWHEHGiqNzAcu94O+9oGuFuSTTeDeQS+cKKNh0sPeN+HaDKqz1TrcTn35uMIVQ==
+X-Received: by 2002:a1c:dc85:: with SMTP id t127mr95275wmg.16.1582564387555;
+        Mon, 24 Feb 2020 09:13:07 -0800 (PST)
+Received: from chromium.org ([2620:0:105f:fd00:d960:542a:a1d:648a])
+        by smtp.gmail.com with ESMTPSA id g29sm13919879wrb.59.2020.02.24.09.13.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 09:13:07 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Mon, 24 Feb 2020 18:13:05 +0100
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200224171305.GA21886@chromium.org>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
+ <202002211946.A23A987@keescook>
+ <20200223220833.wdhonzvven7payaw@ast-mbp>
+ <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.32.36.33] (217.140.106.40) by LO2P123CA0015.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:a6::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 17:08:28 +0000
-X-Originating-IP: [217.140.106.40]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bf89d400-4f55-4432-6186-08d7b94c2fa0
-X-MS-TrafficTypeDiagnostic: DB6PR0802MB2198:|DB6PR0802MB2198:|HE1PR0801MB1977:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR0801MB197739B84B0AE233245BFF10E2EC0@HE1PR0801MB1977.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;OLM:4941;
-X-Forefront-PRVS: 032334F434
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(53546011)(81156014)(66946007)(66476007)(4326008)(66556008)(44832011)(186003)(16526019)(16576012)(6486002)(81166006)(7416002)(54906003)(8936002)(36756003)(8676002)(5660300002)(2906002)(31696002)(31686004)(316002)(2616005)(956004)(26005)(86362001)(52116002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0802MB2198;H:DB6PR0802MB2519.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 48L+5rSr2sWjEdKsVXhE+Nk09UMySIAdf9Bbf+G6WcGHSUcyMamyXX+IKh71KkMxYdZYZqzBCKbTc721KfPdnA1wYDp4DaWdx/RgLAo6//NNH6jxX2Vrv4lESGH2liEDevbYVof831viJhS4YRnegVBHh71YeudCm3lwudHfHUx5bFGtZT9rUnLfgiktx9oIWa0k/5Xt/6+FCnKOh/aI4t47c2lI12m0OqpIuhA7rNcR4REEyL4Bwjd7dtbwCoVTNjgbi9eGZ7GVrS3cqWBwjMY829FpNTB/qXyxBBCor/0TYPAxSNFsj5AoqA1e4WxVjPZYBfYDLnpQJYfXAtHVb3ircSdHqoMXsuwQNDF/s/NIk2YRWc1+UcMTQ44EFCqpv1kN8mOKs8QxE6zk+vRhyapUd3OENmEpepnASlSZidizHG44lzjgGIeC8yRKpn/f
-X-MS-Exchange-AntiSpam-MessageData: bnXmvizNkUB8Zghv/mcmEddA6V3icJPVXzfeSPN+SaQg2iExOoPtdplccSBwrk3eDuL/mCTuf4KKE748A8nlDpcI++ylzcjdzhhsrJUXslxbjHwufE+vE/XIH+jg6f76yqnZqjeUeyrmCzBFu+o5fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2198
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=James.Clark@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT003.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(189003)(199004)(2616005)(956004)(26005)(6486002)(5660300002)(186003)(31686004)(2906002)(70586007)(70206006)(16576012)(316002)(26826003)(478600001)(44832011)(81156014)(8936002)(356004)(336012)(53546011)(54906003)(86362001)(81166006)(36906005)(16526019)(4326008)(36756003)(8676002)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1977;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 3affae31-d935-4dce-d8f2-08d7b94c2aeb
-X-Forefront-PRVS: 032334F434
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cxEm//duisuEi7Gb2O8l1PdbPJHfBLQxrlzoZlM02YKZ5V2akrMgFgvhV35zbm5KsOfilTUuy3oZ0izrErKy+HtOlu5erMk/0aWVaZnbj7JqGYP6RCW3nC0Y6JfbzQzxIDf0DP+wu9kPprYpv5eAP4Rc+Dge/e8TNdKdPWYyw9WwYiWmb0E0R5II2ZnY5/+D1bp3cSrxAb7uRKObuLY7ock4Mgfgu/SAo7GIU9ODiCWFUaJ+Lp6hRYTjweS4vhYZHJKjWqzQUM4caVfHfRHd9GOAd+NkGGQxZI20EAwhrCpd230YSiHCoj35qZWJ5/Y+syp77kGWXP53mYeJBs9axWyqZC6xEfqAstOeqiLFucFpwBaVpdF14jqZkx/uT2iXYP06/4UL60Al9Ih1Pwd/8f+7X85mnHLTwvmAP0lKtl2m3isXcsm3kPYeknKWxN7Q
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 17:08:36.2356
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf89d400-4f55-4432-6186-08d7b94c2fa0
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1977
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On 24-Feb 08:32, Casey Schaufler wrote:
+> On 2/23/2020 2:08 PM, Alexei Starovoitov wrote:
+> > On Fri, Feb 21, 2020 at 08:22:59PM -0800, Kees Cook wrote:
+> >> If I'm understanding this correctly, there are two issues:
+> >>
+> >> 1- BPF needs to be run last due to fexit trampolines (?)
+> > no.
+> > The placement of nop call can be anywhere.
+> > BPF trampoline is automagically converting nop call into a sequence
+> > of directly invoked BPF programs.
+> > No link list traversals and no indirect calls in run-time.
+> 
+> Then why the insistence that it be last?
 
-On 2/17/20 11:42 AM, Adrian Hunter wrote:
-> On 11/02/20 4:04 pm, James Clark wrote:
->> From: Tan Xiaojun <tanxiaojun@huawei.com>
->>
->> At the suggestion of James Clark, use spe to support the precise
->> ip of some events. Currently its support event is:
->> branch-misses.
->>
->> Example usage:
->>
->> $ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
->> (:p/pp/ppp is same for this case.)
->>
->> $ ./perf report --stdio
->> ("--stdio is not necessary")
->>
->> --------------------------------------------------------------------
->> ...
->>  # Samples: 14  of event 'branch-misses:pp'
->>  # Event count (approx.): 14
->>  #
->>  # Children      Self  Command  Shared Object      Symbol
->>  # ........  ........  .......  .................  ..........................
->>  #
->>     14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
->>     14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
->>      7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
->>      7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
->>      7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
->>      7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
->>      7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
->>      7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
->>      7.14%     7.14%  dd       ld-2.28.so         [.] check_match
->>      7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
->>      7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
->>      7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
->> ...
->> --------------------------------------------------------------------
->>
->> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
->> Suggested-by: James Clark <James.Clark@arm.com>
->> Tested-by: Qi Liu <liuqi115@hisilicon.com>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Jiri Olsa <jolsa@redhat.com>
->> Cc: Tan Xiaojun <tanxiaojun@huawei.com>
->> Cc: Al Grant <al.grant@arm.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> ---
->>  tools/perf/arch/arm/util/auxtrace.c | 38 +++++++++++++++++++++++++++++
->>  tools/perf/builtin-record.c         |  5 ++++
->>  tools/perf/util/arm-spe.c           |  9 +++++++
->>  tools/perf/util/arm-spe.h           |  3 +++
->>  tools/perf/util/auxtrace.h          |  6 +++++
->>  5 files changed, 61 insertions(+)
->>
->> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
->> index 0a6e75b8777a..18f0ea7556e7 100644
->> --- a/tools/perf/arch/arm/util/auxtrace.c
->> +++ b/tools/perf/arch/arm/util/auxtrace.c
->> @@ -10,11 +10,25 @@
->>  
->>  #include "../../util/auxtrace.h"
->>  #include "../../util/debug.h"
->> +#include "../../util/env.h"
->>  #include "../../util/evlist.h"
->>  #include "../../util/pmu.h"
->>  #include "cs-etm.h"
->>  #include "arm-spe.h"
->>  
->> +#define SPE_ATTR_TS_ENABLE		BIT(0)
->> +#define SPE_ATTR_PA_ENABLE		BIT(1)
->> +#define SPE_ATTR_PCT_ENABLE		BIT(2)
->> +#define SPE_ATTR_JITTER			BIT(16)
->> +#define SPE_ATTR_BRANCH_FILTER		BIT(32)
->> +#define SPE_ATTR_LOAD_FILTER		BIT(33)
->> +#define SPE_ATTR_STORE_FILTER		BIT(34)
->> +
->> +#define SPE_ATTR_EV_RETIRED		BIT(1)
->> +#define SPE_ATTR_EV_CACHE		BIT(3)
->> +#define SPE_ATTR_EV_TLB			BIT(5)
->> +#define SPE_ATTR_EV_BRANCH		BIT(7)
->> +
->>  static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
->>  {
->>  	struct perf_pmu **arm_spe_pmus = NULL;
->> @@ -108,3 +122,27 @@ struct auxtrace_record
->>  	*err = 0;
->>  	return NULL;
->>  }
->> +
->> +void auxtrace__preprocess_evlist(struct evlist *evlist)
->> +{
->> +	struct evsel *evsel;
->> +	struct perf_pmu *pmu;
->> +
->> +	evlist__for_each_entry(evlist, evsel) {
->> +		/* Currently only supports precise_ip for branch-misses on arm64 */
->> +		if (!strcmp(perf_env__arch(evlist->env), "arm64")
-> 
-> Isn't config ambiguous unless you also check type i.e.
-> 
-> 			&& evsel->core.attr.type == PERF_TYPE_HARDWARE
-> 
+I think this came out of the discussion about not being able to
+override the other LSMs and introduce a new attack vector with some
+arguments discussed at:
 
-Yes you're right I will add this.
+  https://lore.kernel.org/bpf/20200109194302.GA85350@google.com/
 
->> +			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
->> +			&& evsel->core.attr.precise_ip)
->> +		{
->> +			pmu = perf_pmu__find("arm_spe_0");
->> +			if (pmu) {
-> 
-> Changing the event seems a bit weird.
-> 
+Let's say we have SELinux + BPF runnng on the system. BPF should still
+respect any decisions made by SELinux. This hasn't got anything to
+do with the usage of fexit trampolines.
 
-This is because there is no support in the kernel for the precise_ip attribute on Arm.
-SPE can give you precise ip data for the same event, but changing the event is required.
- 
->> +				evsel->pmu_name = pmu->name;
->> +				evsel->core.attr.type = pmu->type;
->> +				evsel->core.attr.config = SPE_ATTR_TS_ENABLE
->> +							| SPE_ATTR_BRANCH_FILTER;
->> +				evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
->> +				evsel->core.attr.precise_ip = 0;
->> +			}
->> +		}
->> +	}
->> +}
->> \ No newline at end of file
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index 4c301466101b..3bc61f03d572 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -2451,6 +2451,11 @@ int cmd_record(int argc, const char **argv)
->>  
->>  	argc = parse_options(argc, argv, record_options, record_usage,
->>  			    PARSE_OPT_STOP_AT_NON_OPTION);
->> +
->> +	if (auxtrace__preprocess_evlist) {
->> +		auxtrace__preprocess_evlist(rec->evlist);
->> +	}
->> +
->>  	if (quiet)
->>  		perf_quiet_option();
->>  
->> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->> index 4ef22a0775a9..b21806c97dd8 100644
->> --- a/tools/perf/util/arm-spe.c
->> +++ b/tools/perf/util/arm-spe.c
->> @@ -778,6 +778,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->>  	attr.sample_id_all = evsel->core.attr.sample_id_all;
->>  	attr.read_format = evsel->core.attr.read_format;
->>  
->> +	/* If it is in the precise ip mode, there is no need to
->> +	 * synthesize new events. */
->> +	if (!strncmp(evsel->name, "branch-misses", 13)) {
->> +		spe->sample_branch_miss = true;
->> +		spe->branch_miss_id = evsel->core.id[0];
->> +
->> +		return 0;
->> +	}
->> +
->>  	/* create new id val to be a fixed offset from evsel id */
->>  	id = evsel->core.id[0] + 1000000000;
->>  
->> diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
->> index 98d3235781c3..8b1fb191d03a 100644
->> --- a/tools/perf/util/arm-spe.h
->> +++ b/tools/perf/util/arm-spe.h
->> @@ -20,6 +20,8 @@ enum {
->>  union perf_event;
->>  struct perf_session;
->>  struct perf_pmu;
->> +struct evlist;
->> +struct evsel;
->>  
->>  struct auxtrace_record *arm_spe_recording_init(int *err,
->>  					       struct perf_pmu *arm_spe_pmu);
->> @@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->>  				  struct perf_session *session);
->>  
->>  struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
->> +void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
->>  #endif
->> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
->> index 80617b0d044d..4f89a3a31ab2 100644
->> --- a/tools/perf/util/auxtrace.h
->> +++ b/tools/perf/util/auxtrace.h
->> @@ -584,6 +584,7 @@ void auxtrace__dump_auxtrace_sample(struct perf_session *session,
->>  int auxtrace__flush_events(struct perf_session *session, struct perf_tool *tool);
->>  void auxtrace__free_events(struct perf_session *session);
->>  void auxtrace__free(struct perf_session *session);
->> +void auxtrace__preprocess_evlist(struct evlist *evlist) __attribute__((weak));
->>  
->>  #define ITRACE_HELP \
->>  "				i:	    		synthesize instructions events\n"		\
->> @@ -728,6 +729,11 @@ void auxtrace__free(struct perf_session *session __maybe_unused)
->>  {
->>  }
->>  
->> +static inline
->> +void auxtrace__preprocess_evlist(struct evlist *evlist __maybe_unused)
->> +{
->> +}
->> +
->>  static inline
->>  int auxtrace_index__write(int fd __maybe_unused,
->>  			  struct list_head *head __maybe_unused)
->>
+> 
+> >> 2- BPF hooks don't know what may be attached at any given time, so
+> >>    ALL LSM hooks need to be universally hooked. THIS turns out to create
+> >>    a measurable performance problem in that the cost of the indirect call
+> >>    on the (mostly/usually) empty BPF policy is too high.
+> > also no.
+> 
+> Um, then why not use the infrastructure as is?
+
+I think what Kees meant is that BPF allows hooking to all the LSM
+hooks and providing static LSM hook callbacks like traditional LSMs
+has a measurable performance overhead and this is indeed correct. This
+is why we want provide with the following characteristics:
+
+- Without introducing a new attack surface, this was the reason for
+  creating a mutable security_hook_heads in v1 which ran the hook
+  after v1.
+
+  This approach still had the issues of an indirect call and an
+  extra check when not used. So this was not truly zero overhead even
+  after special casing BPF.
+
+- Having a truly zero performance overhead on the system. There are
+  other tracing / attachment mechnaisms in the kernel which provide
+  similar guarrantees (using static keys and direct calls) and it
+  seems regressive for KRSI to not leverage these known patterns and
+  sacrifice performance espeically in hotpaths. This provides users
+  to use KRSI alongside other LSMs without paying extra cost for all
+  the possible hooks.
+
+> 
+> >> So, trying to avoid the indirect calls is, as you say, an optimization,
+> >> but it might be a needed one due to the other limitations.
+> > I'm convinced that avoiding the cost of retpoline in critical path is a
+> > requirement for any new infrastructure in the kernel.
+> 
+> Sorry, I haven't gotten that memo.
+> 
+> > Not only for security, but for any new infra.
+> 
+> The LSM infrastructure ain't new.
+
+But the ability to attach BPF programs to LSM hooks is new. Also, we
+have not had the whole implementation of the LSM hook be mutable
+before and this is essentially what the KRSI provides.
+
+> 
+> > Networking stack converted all such places to conditional calls.
+> > In BPF land we converted indirect calls to direct jumps and direct calls.
+> > It took two years to do so. Adding new indirect calls is not an option.
+> > I'm eagerly waiting for Peter's static_call patches to land to convert
+> > a lot more indirect calls. May be existing LSMs will take advantage
+> > of static_call patches too, but static_call is not an option for BPF.
+> > That's why we introduced BPF trampoline in the last kernel release.
+> 
+> Sorry, but I don't see how BPF is so overwhelmingly special.
+
+My analogy here is that if every tracepoint in the kernel were of the
+type:
+
+if (trace_foo_enabled) // <-- Overhead here, solved with static key
+   trace_foo(a);  // <-- retpoline overhead, solved with fexit trampolines
+
+It would be very hard to justify enabling them on a production system,
+and the same can be said for BPF and KRSI.
+
+- KP
+
+> 
+> >> b) Would there actually be a global benefit to using the static keys
+> >>    optimization for other LSMs?
+> > Yes. Just compiling with CONFIG_SECURITY adds "if (hlist_empty)" check
+> > for every hook.
+> 
+> Err, no, it doesn't. It does an hlish_for_each_entry(), which
+> may be the equivalent on an empty list, but let's not go around
+> spreading misinformation.
+> 
+> >  Some of those hooks are in critical path. This load+cmp
+> > can be avoided with static_key optimization. I think it's worth doing.
+> 
+> I admit to being unfamiliar with the static_key implementation,
+> but if it would work for a list of hooks rather than a singe hook,
+> I'm all ears.
+> 
+> >> If static keys are justified for KRSI
+> > I really like that KRSI costs absolutely zero when it's not enabled.
+> 
+> And I dislike that there's security module specific code in security.c,
+> security.h and/or lsm_hooks.h. KRSI *is not that special*.
+> 
+> > Attaching BPF prog to one hook preserves zero cost for all other hooks.
+> > And when one hook is BPF powered it's using direct call instead of
+> > super expensive retpoline.
+> 
+> I'm not objecting to the good it does for KRSI.
+> I am *strongly* objecting to special casing KRSI.
+> 
+> > Overall this patch set looks good to me. There was a minor issue with prog
+> > accounting. I expect only that bit to be fixed in v5.
 > 
