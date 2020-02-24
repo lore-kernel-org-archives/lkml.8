@@ -2,120 +2,130 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E6C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B9AC38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5159720CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA4B22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+riR0kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgBXVxb (ORCPT
+        id S1728144AbgBXVxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:53:31 -0500
-Received: from mga06.intel.com ([134.134.136.31]:21809 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgBXVx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:53:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 13:53:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="226126679"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 13:53:28 -0800
-Date:   Mon, 24 Feb 2020 13:53:28 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] dma-direct: provide a arch_dma_clear_uncached hook
-Message-ID: <20200224215327.GB11565@iweiny-DESK2.sc.intel.com>
-References: <20200224194446.690816-1-hch@lst.de>
- <20200224194446.690816-5-hch@lst.de>
+        Mon, 24 Feb 2020 16:53:36 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:32917 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbgBXVxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:53:34 -0500
+Received: by mail-qk1-f195.google.com with SMTP id h4so10159279qkm.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oh8DgJY+ghrUGFSaCOcqO7JdsvvWMKpOwz7kUfngxiA=;
+        b=s+riR0kjynNOcpmJzcpRRAC82J0KHzMa3m4Dx/MKE+/lYxGbWiw95DcP2oYkunDzq7
+         /35hf4KjVrh/sGqoXIXpkot4E1S0vAWiXNS7WHhGBrg8fXcN0SS0VmSGgjujyCVjHCxy
+         vuxzeQDGHqO+8KYZbjb9rZG358d8T/ldz/k1ZAMVUJClwoVm/uwKGH0LkcPObHyqwTJ/
+         pdT5SmImZolkaS3HPNu9CARp5sUujn6lFv6YD0FZUiH0VCr7mxII/sSuXIOxa+HWne0i
+         JHWwEwHk0WBbm8e37/56d+d/qw32IePK1K3QjUVKsVmFhzaTpRo0Z+/J9xJX8BBlN2Im
+         CRKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oh8DgJY+ghrUGFSaCOcqO7JdsvvWMKpOwz7kUfngxiA=;
+        b=IFe+xkQ3E2y3HERnlqpcGBacEsDZj8bSZYyzk6Iw1e2CMt8n74ewxQFnqwODiLg2vd
+         ggIUskp2NjaiICbW7cDmD3iX9jePKxH7Y/Sk3rdr6NoY7b0vr1YAVvTUAGJHMSrDpfX1
+         CBLVZThU2L6t9hmWqhjyLSF2Kl9cSd4ObFNXqWClZzLYKFKhZ2C4UxMSCK2gbJ5GBcuT
+         aHp2Ncg9o+nJLDpa25CoUxixoZ62RepiWuTChV/5nqb200c5mm78i6EXKj+NtbBGXsgg
+         j3ZfvcWgqdocdXt8LB32ZQKMT6Np+M0RwSDqpU52CTEcawm3f7F2UnZ4AEHsqGO9u1NN
+         6H4A==
+X-Gm-Message-State: APjAAAWGKHHkBEwLfUyAgk4yJdyBnR3GkQaPvy8KoxOQfCcXPoEVNot7
+        kCfsHd4hSkjC1/0NurGiXas5I38yWwk=
+X-Google-Smtp-Source: APXvYqzgXJz66NRWJXvIb70aGJhRCLaL+ZakD7e8xuTWliPFXqx8yqKGtLuvV8nvtYptZkMMhhciVg==
+X-Received: by 2002:a05:620a:1235:: with SMTP id v21mr18803375qkj.44.1582581213287;
+        Mon, 24 Feb 2020 13:53:33 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g26sm6425975qkk.68.2020.02.24.13.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:53:32 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 24 Feb 2020 16:53:31 -0500
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 0/2] Stop generating .eh_frame sections
+Message-ID: <20200224215330.GA560533@rani.riverdale.lan>
+References: <20200222235709.GA3786197@rani.riverdale.lan>
+ <20200223193715.83729-1-nivedita@alum.mit.edu>
+ <CAKwvOd=qVmb7UEzUSQ5-MUhpRA9Jpu3fMmmMLGdmydLoJV-kkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200224194446.690816-5-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <CAKwvOd=qVmb7UEzUSQ5-MUhpRA9Jpu3fMmmMLGdmydLoJV-kkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:44:44AM -0800, Christoph Hellwig wrote:
-> This allows the arch code to reset the page tables to cached access when
-> freeing a dma coherent allocation that was set to uncached using
-> arch_dma_set_uncached.
+On Mon, Feb 24, 2020 at 12:49:03PM -0800, Nick Desaulniers wrote:
+> On Sun, Feb 23, 2020 at 11:37 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > In three places in the x86 kernel we are currently generating .eh_frame
+> > sections only to discard them later via linker script. This is in the
+> > boot code (setup.elf), the realmode trampoline (realmode.elf) and the
+> > compressed kernel.
+> >
+> > Implement Fangrui and Nick's suggestion [1] to fix KBUILD_CFLAGS by
+> > adding -fno-asynchronous-unwind-tables to avoid generating .eh_frame
+> > sections in the first place, rather than discarding it in the linker
+> > script.
+> >
+> > Arvind Sankar (2):
+> >   arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+> >   arch/x86: Drop unneeded linker script discard of .eh_frame
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/Kconfig                    | 7 +++++++
->  include/linux/dma-noncoherent.h | 1 +
->  kernel/dma/direct.c             | 2 ++
->  3 files changed, 10 insertions(+)
+> Thanks for the series! I've left some feedback for a v2. Would you
+> mind please including a revert of ("x86/boot/compressed: Remove
+> unnecessary sections from bzImage") in a v2 series?  Our CI being red
+> through the weekend is no bueno.
+
+Sorry about that. Boris already updated tip:x86/boot to only discard
+eh_frame, so your CI should be ok at least now.
+
 > 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 090cfe0c82a7..c26302f90c96 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -255,6 +255,13 @@ config ARCH_HAS_SET_DIRECT_MAP
->  config ARCH_HAS_DMA_SET_UNCACHED
->  	bool
->  
-> +#
-> +# Select if the architectures provides the arch_dma_clear_uncached symbol
-> +# to undo an in-place page table remap for uncached access.
-> +#
-> +config ARCH_HAS_DMA_CLEAR_UNCACHED
-> +	bool
-> +
->  # Select if arch init_task must go in the __init_task_data section
->  config ARCH_TASK_STRUCT_ON_STACK
->  	bool
-> diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
-> index 1a4039506673..b59f1b6be3e9 100644
-> --- a/include/linux/dma-noncoherent.h
-> +++ b/include/linux/dma-noncoherent.h
-> @@ -109,5 +109,6 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
->  #endif /* CONFIG_ARCH_HAS_DMA_PREP_COHERENT */
->  
->  void *arch_dma_set_uncached(void *addr, size_t size);
-> +void arch_dma_clear_uncached(void *addr, size_t size);
->  
->  #endif /* _LINUX_DMA_NONCOHERENT_H */
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index f01a8191fd59..a8560052a915 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -219,6 +219,8 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
->  
->  	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
->  		vunmap(cpu_addr);
-> +	else if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED))
-> +		arch_dma_clear_uncached(cpu_addr, size);
-
-Isn't using arch_dma_clear_uncached() before patch 5 going to break
-bisectability?
-
-Ira
-
->  
->  	dma_free_contiguous(dev, dma_direct_to_page(dev, dma_addr), size);
->  }
+> >
+> >  arch/x86/boot/Makefile                | 1 +
+> >  arch/x86/boot/compressed/Makefile     | 1 +
+> >  arch/x86/boot/setup.ld                | 1 -
+> >  arch/x86/kernel/vmlinux.lds.S         | 3 ---
+> >  arch/x86/realmode/rm/Makefile         | 1 +
+> >  arch/x86/realmode/rm/realmode.lds.S   | 1 -
+> >  drivers/firmware/efi/libstub/Makefile | 3 ++-
+> >  7 files changed, 5 insertions(+), 6 deletions(-)
+> >
+> > --
+> > 2.24.1
+> >
+> 
+> 
 > -- 
-> 2.24.1
-> 
+> Thanks,
+> ~Nick Desaulniers
