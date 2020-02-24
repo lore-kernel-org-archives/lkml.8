@@ -2,224 +2,176 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1BCC38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F258C38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7B920836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E562084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pWIKHL5p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1po6j4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgBXTej (ORCPT
+        id S1727237AbgBXTkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:34:39 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:30774 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgBXTej (ORCPT
+        Mon, 24 Feb 2020 14:40:25 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46683 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXTkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 14:34:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582572879; x=1614108879;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TaX3Wv7PyIziT4d1G8a+2bb+qyLwg4X9NtQlx1p7X3Q=;
-  b=pWIKHL5pLp3lpk75g+i8mVPHmMAb2bClf739S+9XtaBmGeHl8/LbgT+e
-   Z2d2KZzb+lW9uEPoiEzNgx8RmZR5w8TCWjFH6jjgQ9a6Izhbv9x4CZ+IP
-   0O49GCNyBPXDLmcAb2b+95jNtWtM2+drd0QTDaDgHe1GV+QRJkptQHu/B
-   RhTtBNbXaKccBrDCfQLhfojrIQvDC0rXHT57NuKMRoZH8ckv32qcCTotG
-   62IClb8BZBJBSI5Gg7VlMP4pNj1trKKUSmDf9gUDTPK5Oh+oQ05rb09Qo
-   DVFxD3WNYgTOqWULyAcm3EDab2pd2dDqVSU3H1nf6In2iDEbTl2imaroV
-   Q==;
-IronPort-SDR: /GP6jn2SwZSjRQSmLmU2MYE6e6cst6DhkMNRrDaRh9cMgd4+3qy2nRqXmDRJ81IlAOBt9P5KNx
- joPb8nzn+uVi9aNsRzXuyzUcWLaFx+z2u6JmKe1QezZlJrNTnwU6VnJYITxATe4TvJ/suxfRwp
- EhndQl1BXY/IEPB+PLzneERAEVzKahlwPSWVXT40nY2trIqiZtr+mE1Dw3ZvggaocY8flxJ4B+
- fNlFoNUbdfPI49hJUD13sZNrbbGHX74qW8KMjGdJhntHfcuR9C1h9CMk+L6LAKOp88+Nkls2/k
- nJk=
-X-IronPort-AV: E=Sophos;i="5.70,481,1574092800"; 
-   d="scan'208";a="132056460"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Feb 2020 03:34:39 +0800
-IronPort-SDR: YG2MsjojoEmZd7aWHauY9CtzTMyU/cjyZxx/I5gFLksZUld+K9jrhlVyQk8RquETIBh+5soJvH
- zMz8dpDKCYbBAKWWA7riYV3fVM1Cdg68Kk5AneZfItIpTrOTODnFiBzUqLrUC7Qywb73MQyrjX
- rXhY4vgzXCmk1QvUebRqd297jfUfm8BUjq+iqbiveZBMgmy6ViBWfDbw1jszcw236Re/xqbEz+
- yq3/ayg+KlUNXH4BSw7eUSG0jnyE5tuaQjkuAoSHgA/4GGItyjtZ59a2mkWEQqVOEAEPLRWtMG
- KNjgIFn8IexulcTKw0RTF7yC
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 11:27:06 -0800
-IronPort-SDR: LshLh2Ryp4MLHSTzrZvRnNagIEJVqT3vitq311Cg7HS3btSIzWem6KWLj2Y9gw6moLXBQD7fod
- jcDC6jdh97rNR4tF3uTDPierzwc9cnleC3BOAWeMZMjfvd9hoWCUqel08HYj3PvqoQQ0/j721I
- IfuZjo7wUx74Y1P2TBU09zonoUrf5FZ25qCiA4ecgvYJoG4c0oflw3guWuZsiAbYcKH2Zcp3Rw
- 8Dqy89EHkMLPBGLKg4KkD6Kn5R5DqpW0Epb6tsw1zBCssis/eYU7PYuLHHPF0QPklXHpmNVslL
- cic=
-WDCIronportException: Internal
-Received: from yoda.sdcorp.global.sandisk.com (HELO yoda.int.fusionio.com) ([10.196.158.80])
-  by uls-op-cesaip01.wdc.com with ESMTP; 24 Feb 2020 11:34:37 -0800
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>, stable@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv@lists.infradead.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] RISC-V: Move all address space definition macros to one place
-Date:   Mon, 24 Feb 2020 11:34:36 -0800
-Message-Id: <20200224193436.26860-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 24 Feb 2020 14:40:24 -0500
+Received: by mail-pg1-f194.google.com with SMTP id y30so5630707pga.13;
+        Mon, 24 Feb 2020 11:40:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=scSwL+/ed755uFJ90j5w37fp1jhFdhEzmUIhsR9VTAA=;
+        b=L1po6j4D2H92/hvRNB11HbAiY3p65YpajFhZyxuGdxVo5LmdthkVftmbEuFuNr2eOd
+         /qeH7F5Sdd4lzzTIwY0Qm1orxwZYM/2VYZEmrBgSbWyybZGjDTVVmtRetD1r1dYY9Lnz
+         VxBM7ZgNqfLXpuIr1ne9lX2Of44YfXAcGIAppUrf+PO/cmYH9A23xpCIn4SQEhRhvU3U
+         D1LciOrVN3MF0P7WIeTD+Uq+In2Rtt2NJMTURx9eSX3NpmArN9EnOJ1LSlCIaG3Hc3Tp
+         TwRtD2ktz0obLOPl9rAsgP0RVXoZ8fO8GZrQBdkwliHs0T9Ar3tw0y0mqVrrTvH2KyCq
+         8GyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=scSwL+/ed755uFJ90j5w37fp1jhFdhEzmUIhsR9VTAA=;
+        b=gWnLTRvbAX/d/KkvWl17s+6NqPhmi17zk65tQKWRBqari1c6gVyGn/d4SmV8rWol+O
+         bUjVJy4IaSvAHZWIgwSamqM7inlDA19JVYVVKU2LZ36Dc4Q24RJ0z/CuJVzTb/9VRXQe
+         dbFcDblIGJeV82eyZOjE3/IKodOXwYar7zGSwd2gY9jY8U2281t7fm7FdlPGA+D+IFmm
+         dWvIZAE6NIZv8nuTC0LR2lt65wghSiCBkxwttBebDWhNogCF2EPVkL/fry0u1yiIsyq+
+         +H/1IvA866SnZcNr64odP8r1EtpQ1S2Vl+FhHs1H8IIVZeSV5uPPu2xGR8KX3eWqfLF3
+         lTZQ==
+X-Gm-Message-State: APjAAAVNYBgVSW875kyzEjpMcOmiPZqkTL3BBebvAo6gsy7VKJCr8BTW
+        wzhn/ssK8TvcwIE7xA56phQ=
+X-Google-Smtp-Source: APXvYqx7VayPo9fzLuogwXiuuGdtCzqJw9WAlW/sl/zsATRzG3Aw0hYmTpG2ua/khpWVbjOkDYWeSQ==
+X-Received: by 2002:a63:cc09:: with SMTP id x9mr34807474pgf.339.1582573223430;
+        Mon, 24 Feb 2020 11:40:23 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:500::6:2457])
+        by smtp.gmail.com with ESMTPSA id w14sm13704058pgi.22.2020.02.24.11.40.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2020 11:40:22 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:40:20 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [patch V3 06/22] bpf/trace: Remove redundant preempt_disable
+ from trace_call_bpf()
+Message-ID: <20200224194017.rtwjcgjxnmltisfe@ast-mbp>
+References: <20200224140131.461979697@linutronix.de>
+ <20200224145643.059995527@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224145643.059995527@linutronix.de>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If both CONFIG_KASAN and CONFIG_SPARSEMEM_VMEMMAP are set, we get the
-following compilation error.
+On Mon, Feb 24, 2020 at 03:01:37PM +0100, Thomas Gleixner wrote:
+> Similar to __bpf_trace_run this is redundant because __bpf_trace_run() is
+> invoked from a trace point via __DO_TRACE() which already disables
+> preemption _before_ invoking any of the functions which are attached to a
+> trace point.
+> 
+> Remove it and add a cant_sleep() check.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> V3: New patch. Replaces the previous one which converted this to migrate_disable() 
+> ---
+>  kernel/trace/bpf_trace.c |    3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -83,7 +83,7 @@ unsigned int trace_call_bpf(struct trace
+>  	if (in_nmi()) /* not supported yet */
+>  		return 1;
+>  
+> -	preempt_disable();
+> +	cant_sleep();
+>  
+>  	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+>  		/*
+> @@ -115,7 +115,6 @@ unsigned int trace_call_bpf(struct trace
+>  
+>   out:
+>  	__this_cpu_dec(bpf_prog_active);
+> -	preempt_enable();
 
----------------------------------------------------------------
-./arch/riscv/include/asm/pgtable-64.h: In function ‘pud_page’:
-./include/asm-generic/memory_model.h:54:29: error: ‘vmemmap’ undeclared
-(first use in this function); did you mean ‘mem_map’?
- #define __pfn_to_page(pfn) (vmemmap + (pfn))
-                             ^~~~~~~
-./include/asm-generic/memory_model.h:82:21: note: in expansion of
-macro ‘__pfn_to_page’
+My testing uncovered that above was too aggressive:
+[   41.533438] BUG: assuming atomic context at kernel/trace/bpf_trace.c:86
+[   41.534265] in_atomic(): 0, irqs_disabled(): 0, pid: 2348, name: test_progs
+[   41.536907] Call Trace:
+[   41.537167]  dump_stack+0x75/0xa0
+[   41.537546]  __cant_sleep.cold.105+0x8b/0xa3
+[   41.538018]  ? exit_to_usermode_loop+0x77/0x140
+[   41.538493]  trace_call_bpf+0x4e/0x2e0
+[   41.538908]  __uprobe_perf_func.isra.15+0x38f/0x690
+[   41.539399]  ? probes_profile_seq_show+0x220/0x220
+[   41.539962]  ? __mutex_lock_slowpath+0x10/0x10
+[   41.540412]  uprobe_dispatcher+0x5de/0x8f0
+[   41.540875]  ? uretprobe_dispatcher+0x7c0/0x7c0
+[   41.541404]  ? down_read_killable+0x200/0x200
+[   41.541852]  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
+[   41.542356]  uprobe_notify_resume+0xacf/0x1d60
 
- #define pfn_to_page __pfn_to_page
-                     ^~~~~~~~~~~~~
-./arch/riscv/include/asm/pgtable-64.h:70:9: note: in expansion of macro
-‘pfn_to_page’
-  return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
----------------------------------------------------------------
+The following fixes it:
 
-Fix the compliation errors by moving all the address space definition
-macros before including pgtable-64.h.
+commit 7b7b71ff43cc0b15567b60c38a951c8a2cbc97f0 (HEAD -> bpf-next)
+Author: Alexei Starovoitov <ast@kernel.org>
+Date:   Mon Feb 24 11:27:15 2020 -0800
 
-Cc: stable@vger.kernel.org
-Fixes: 8ad8b72721d0 (riscv: Add KASAN support)
+    bpf: disable migration for bpf progs attached to uprobe
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/pgtable.h | 78 +++++++++++++++++---------------
- 1 file changed, 41 insertions(+), 37 deletions(-)
+    trace_call_bpf() no longer disables preemption on its own.
+    All callers of this function has to do it explicitly.
 
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 453afb0a570a..4f6ee48a42e8 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -19,6 +19,47 @@
- #include <asm/tlbflush.h>
- #include <linux/mm_types.h>
- 
-+#ifdef CONFIG_MMU
-+
-+#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-+#define VMALLOC_END      (PAGE_OFFSET - 1)
-+#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-+
-+#define BPF_JIT_REGION_SIZE	(SZ_128M)
-+#define BPF_JIT_REGION_START	(PAGE_OFFSET - BPF_JIT_REGION_SIZE)
-+#define BPF_JIT_REGION_END	(VMALLOC_END)
-+
-+/*
-+ * Roughly size the vmemmap space to be large enough to fit enough
-+ * struct pages to map half the virtual address space. Then
-+ * position vmemmap directly below the VMALLOC region.
-+ */
-+#define VMEMMAP_SHIFT \
-+	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-+#define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
-+#define VMEMMAP_END	(VMALLOC_START - 1)
-+#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
-+
-+/*
-+ * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if kernel
-+ * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
-+ */
-+#define vmemmap		((struct page *)VMEMMAP_START)
-+
-+#define PCI_IO_SIZE      SZ_16M
-+#define PCI_IO_END       VMEMMAP_START
-+#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-+
-+#define FIXADDR_TOP      PCI_IO_START
-+#ifdef CONFIG_64BIT
-+#define FIXADDR_SIZE     PMD_SIZE
-+#else
-+#define FIXADDR_SIZE     PGDIR_SIZE
-+#endif
-+#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-+
-+#endif
-+
- #ifdef CONFIG_64BIT
- #include <asm/pgtable-64.h>
- #else
-@@ -90,31 +131,6 @@ extern pgd_t swapper_pg_dir[];
- #define __S110	PAGE_SHARED_EXEC
- #define __S111	PAGE_SHARED_EXEC
- 
--#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
--#define VMALLOC_END      (PAGE_OFFSET - 1)
--#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
--
--#define BPF_JIT_REGION_SIZE	(SZ_128M)
--#define BPF_JIT_REGION_START	(PAGE_OFFSET - BPF_JIT_REGION_SIZE)
--#define BPF_JIT_REGION_END	(VMALLOC_END)
--
--/*
-- * Roughly size the vmemmap space to be large enough to fit enough
-- * struct pages to map half the virtual address space. Then
-- * position vmemmap directly below the VMALLOC region.
-- */
--#define VMEMMAP_SHIFT \
--	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
--#define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
--#define VMEMMAP_END	(VMALLOC_START - 1)
--#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
--
--/*
-- * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if kernel
-- * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
-- */
--#define vmemmap		((struct page *)VMEMMAP_START)
--
- static inline int pmd_present(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
-@@ -452,18 +468,6 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
- #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
- #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
- 
--#define PCI_IO_SIZE      SZ_16M
--#define PCI_IO_END       VMEMMAP_START
--#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
--
--#define FIXADDR_TOP      PCI_IO_START
--#ifdef CONFIG_64BIT
--#define FIXADDR_SIZE     PMD_SIZE
--#else
--#define FIXADDR_SIZE     PGDIR_SIZE
--#endif
--#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
--
- /*
-  * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
-  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
--- 
-2.25.0
+    Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 18d16f3ef980..7581f5eb6091 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1333,8 +1333,15 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+        int size, esize;
+        int rctx;
+
+-       if (bpf_prog_array_valid(call) && !trace_call_bpf(call, regs))
+-               return;
++       if (bpf_prog_array_valid(call)) {
++               u32 ret;
++
++               migrate_disable();
++               ret = trace_call_bpf(call, regs);
++               migrate_enable();
++               if (!ret)
++                       return;
++       }
+
+But looking at your patch cant_sleep() seems unnecessary strong.
+Should it be cant_migrate() instead?
+And two calls to __this_cpu*() replaced with this_cpu*() ?
+If you can ack it I can fix it up in place and apply the whole thing.
+That was the only issue I found.
