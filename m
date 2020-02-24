@@ -2,109 +2,82 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BE3C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD2CC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00F92082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582543236;
-	bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NXKa8hlkEd6pq4/hJSMX88lm6Pe4RtQIbUJKzuKrCUBMBxjtQMStelUUhyoo0xvGy
-	 p1s/X0y+aRJmK9zCCHiNGAjbrQyu9mZjlGIMzJGv5/PKHs7JtUO7j1CaHFnOX2M/U4
-	 hExeg5aaUqHSgSNDrN1D65gi9G74I8Hq0ecwsTk4=
+	by mail.kernel.org (Postfix) with ESMTP id CEE912082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgBXLUe (ORCPT
+        id S1727495AbgBXLUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:20:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgBXLUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:20:34 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CB220828;
-        Mon, 24 Feb 2020 11:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582543234;
-        bh=tfwxnUm8CTy64G41f2iMr9bjPIyqP0yFAFqjYV9SOYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FnM2JMMOaqo3jU/7fznFVD+LadG9PBNNBtKfvwkV4jblDtsqK1/uqVUVQqc7uf1cF
-         AAD2elF8e05a0Y47WScHvQyp8eLtZPQjLNNyAs2WFWXTmnoZ0n8u6n4uKUhFe6G1Ja
-         VH+gdhqHJxRWBqUuU4vEgOzijzhE7+Zx+uBTI0Ng=
-Date:   Mon, 24 Feb 2020 19:20:26 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
-        michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on
- LS1028A
-Message-ID: <20200224112026.GF27688@dragon>
-References: <20200223204716.26170-1-olteanv@gmail.com>
+        Mon, 24 Feb 2020 06:20:39 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35950 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726778AbgBXLUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:20:39 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 792044D98C522702459D;
+        Mon, 24 Feb 2020 19:20:36 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 24 Feb 2020 19:20:26 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/5] f2fs: fix to avoid potential deadlock
+Date:   Mon, 24 Feb 2020 19:20:16 +0800
+Message-ID: <20200224112019.93829-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20200224112019.93829-1-yuchao0@huawei.com>
+References: <20200224112019.93829-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 10:47:10PM +0200, Vladimir Oltean wrote:
-> This series officializes the device tree bindings for the embedded
-> Ethernet switch on NXP LS1028A (and for the reference design board).
-> The driver has been in the tree since v5.4-rc6.
-> 
-> It also performs some DT binding changes and minor cleanup, as per
-> feedback received in v1 and v2:
-> 
-> - I've changed the DT bindings for the internal ports from "gmii" to
->   "internal". This means changing the ENETC phy-mode as well, for
->   uniformity. So I would like the entire series to be merged through a
->   single tree, probably the devicetree one - something which David
->   Miller has aggreed to, here [0].
-> - Disabled all Ethernet ports in the LS1028A DTSI by default, which
->   means not only the newly introduced switch ports, but also RGMII
->   standalone port 1.
-> 
-> [0]: https://lkml.org/lkml/2020/2/19/973
-> 
-> Claudiu Manoil (2):
->   arm64: dts: fsl: ls1028a: add node for Felix switch
->   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
-> 
-> Vladimir Oltean (4):
->   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
->     RCIE
->   arm64: dts: fsl: ls1028a: disable all enetc ports by default
+Using f2fs_trylock_op() in f2fs_write_compressed_pages() to avoid potential
+deadlock like we did in f2fs_write_single_data_page().
 
-I applied these 4 DTS patches with changing prefix to 'arm64: dts: ls1028a: '.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/compress.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Shawn
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index b1bc057ee266..4ba65a3b0456 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -772,7 +772,6 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 		.encrypted_page = NULL,
+ 		.compressed_page = NULL,
+ 		.submitted = false,
+-		.need_lock = LOCK_RETRY,
+ 		.io_type = io_type,
+ 		.io_wbc = wbc,
+ 		.encrypted = f2fs_encrypted_file(cc->inode),
+@@ -785,9 +784,10 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	loff_t psize;
+ 	int i, err;
+ 
+-	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
++	if (!f2fs_trylock_op(sbi))
++		return -EAGAIN;
+ 
+-	f2fs_lock_op(sbi);
++	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
+ 
+ 	err = f2fs_get_dnode_of_data(&dn, start_idx, LOOKUP_NODE);
+ 	if (err)
+-- 
+2.18.0.rc1
 
->   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
->   dt-bindings: net: dsa: ocelot: document the vsc9959 core
-> 
->  .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
->  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
->  drivers/net/dsa/ocelot/felix.c                |   3 +-
->  drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
->  6 files changed, 265 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
-> 
-> -- 
-> 2.17.1
-> 
