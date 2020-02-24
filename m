@@ -2,113 +2,125 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B196C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4392C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C26E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:01:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R6ZspJE6"
+	by mail.kernel.org (Postfix) with ESMTP id A23B820CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgBXWBv (ORCPT
+        id S1728362AbgBXWBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:01:51 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33393 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgBXWBu (ORCPT
+        Mon, 24 Feb 2020 17:01:55 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:57726 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXWBy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:01:50 -0500
-Received: by mail-pl1-f196.google.com with SMTP id ay11so4608246plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:01:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IWLJOFGxvVMno0/8se2X6awifOIRIcp17izGUYTA88c=;
-        b=R6ZspJE6BKeyLBYb3uDCGB6uHR5kSBAGhpFj+YA6ggUG2ZOClQsLxq2H5hDhWdv1++
-         zxhxpdFAAlnEW7lBsiHuxygxgE/tAJxDARzipH13NUvi18Qgtl1uliBn6eO72WI7eu32
-         2BW6jv64X8G+aHxSlFoUZY3/QYui6aQ1eo6HyU7UkveWV2VFSF5xEGjAqrEoqISa7MVl
-         tZozoWXHvvVIoiz5YkdSHqDxhS99/qqMbqeG7rq3jDocLmHr/cMl5k1TgSxhgKzol/XV
-         pfZXXq7U8/9NZp7ctavoZ95mCuAmoTFZ2s9t0lQ18rUr4beSKmILAAnxxlGt4W1fA3Wl
-         cHgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IWLJOFGxvVMno0/8se2X6awifOIRIcp17izGUYTA88c=;
-        b=CGiviftn2hw4qhqVs9F6P/EyPtI42Ikc23aII5/WNSvf5MXfohttZyZPBRA8fI4kAS
-         6zd82LRZ8LeERnTvmKBZ2azUqb0pymE+vbELcHhY03plvq23IsNqjNdVgC1kuafbbiQE
-         82yfyGA2p6ldTn4EHFRegRmpSq40+PqYmRgNLfpPMVXwz0wLw3/GvT6wkHLV3HhmiFvB
-         fqGogbFeATpZK4qi4Ccqt7lqxplTtLGWn8nEDwXCHvB9+iYux9lj1qf9n5UYUNEHrNDg
-         rSFuMfSfRda1lEgBolBb26/+1rlit7yDGGNwiSQ2WqTPrP8B+mwotveme8EE/ekHgw5S
-         YzqA==
-X-Gm-Message-State: APjAAAU1ufkUEUbXF+DR3DHK6IeUi6g2aYlDk0gjxKG1WEoV7P0iajRd
-        8G3w+9fnBMRoFyzBfPsFesI1Oo8ye/aIKlldb/Lrnw==
-X-Google-Smtp-Source: APXvYqxKzg/oBaNl//6NNxQfT+omS7C/oZWisYiab6zxk3PPHgMQSrnjUUqPCUpzYK0+BMtWF+YBjdZj7kMWAboOC9E=
-X-Received: by 2002:a17:90a:7784:: with SMTP id v4mr1372238pjk.134.1582581709602;
- Mon, 24 Feb 2020 14:01:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20200222235709.GA3786197@rani.riverdale.lan> <20200223193715.83729-1-nivedita@alum.mit.edu>
- <CAKwvOd=qVmb7UEzUSQ5-MUhpRA9Jpu3fMmmMLGdmydLoJV-kkQ@mail.gmail.com> <20200224215330.GA560533@rani.riverdale.lan>
-In-Reply-To: <20200224215330.GA560533@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 24 Feb 2020 14:01:38 -0800
-Message-ID: <CAKwvOd=wGYRPY32P3xA-WGG5FiNYk-S6BrjLw3nRqcQ3X0oPFg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Stop generating .eh_frame sections
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Mon, 24 Feb 2020 17:01:54 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j6LnU-0002wT-Gz; Mon, 24 Feb 2020 15:01:52 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j6LnT-0001Jy-Q0; Mon, 24 Feb 2020 15:01:52 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang\, Ying" <ying.huang@intel.com>
+References: <20200205123216.GO12867@shao2-debian>
+        <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+        <20200221080325.GA67807@shbuild999.sh.intel.com>
+        <20200221132048.GE652992@krava>
+        <20200223141147.GA53531@shbuild999.sh.intel.com>
+        <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+        <20200224003301.GA5061@shbuild999.sh.intel.com>
+        <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+        <20200224021915.GC5061@shbuild999.sh.intel.com>
+        <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
+        <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+        <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
+        <87a757znqd.fsf@x220.int.ebiederm.org>
+        <CAHk-=wh0z0LErNzwe-AqrEkv3BNzJep58Qmi2dM775UPtmq0og@mail.gmail.com>
+Date:   Mon, 24 Feb 2020 15:59:49 -0600
+In-Reply-To: <CAHk-=wh0z0LErNzwe-AqrEkv3BNzJep58Qmi2dM775UPtmq0og@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 24 Feb 2020 13:43:02 -0800")
+Message-ID: <8736azzlwq.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1j6LnT-0001Jy-Q0;;;mid=<8736azzlwq.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/MXa+JssMEncMrZMpgoryMCXD2Md2TvzQ=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops -5.5% regression
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 1:53 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Feb 24, 2020 at 12:49:03PM -0800, Nick Desaulniers wrote:
-> > On Sun, Feb 23, 2020 at 11:37 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > In three places in the x86 kernel we are currently generating .eh_frame
-> > > sections only to discard them later via linker script. This is in the
-> > > boot code (setup.elf), the realmode trampoline (realmode.elf) and the
-> > > compressed kernel.
-> > >
-> > > Implement Fangrui and Nick's suggestion [1] to fix KBUILD_CFLAGS by
-> > > adding -fno-asynchronous-unwind-tables to avoid generating .eh_frame
-> > > sections in the first place, rather than discarding it in the linker
-> > > script.
-> > >
-> > > Arvind Sankar (2):
-> > >   arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
-> > >   arch/x86: Drop unneeded linker script discard of .eh_frame
-> >
-> > Thanks for the series! I've left some feedback for a v2. Would you
-> > mind please including a revert of ("x86/boot/compressed: Remove
-> > unnecessary sections from bzImage") in a v2 series?  Our CI being red
-> > through the weekend is no bueno.
->
-> Sorry about that. Boris already updated tip:x86/boot to only discard
-> eh_frame, so your CI should be ok at least now.
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-Yep: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/boot&id=0eea39a234dc52063d14541fabcb2c64516a2328
-Looks like our daily CI ran 6 hours ago just missed it:
-https://travis-ci.com/ClangBuiltLinux/continuous-integration/jobs/290435629
-Thanks for the fix!
+> On Mon, Feb 24, 2020 at 1:22 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> I keep looking at your patch and wondering if there isn't a way
+>> to remove the uid refcount entirely on this path.
+>
+> I agree. I tried to come up with something, but couldn't.
+>
+>> Linus I might be wrong but I have this sense that your change will only
+>> help when signal delivery is backed up.  I expect in the common case
+>> there won't be any pending signals outstanding for the user.
+>
+> Again, 100% agreed.
+>
+> HOWEVER.
+>
+> The normal case where there's one only signal pending is also the case
+> where we don't care about the extra atomic RMW access. By definition
+> that's not going to ever going to show up as a performance issue or
+> for cacheline contention.
+>
+> So the only case that matters from a performance standpoint is the
+> "lots of signals" case, in which case you'll see that sigqueue become
+> backed up.
+>
+> But as I said in the original thread (before you got added to the list):
+>
+>  "I don't know. This does not seem to be a particularly serious load."
+>
+> I'm not convinced this will show up outside of this kind of
+> signal-sending microbenchmark.
+>
+> That said, I don't really see any downside to the patch either, so...
 
--- 
-Thanks,
-~Nick Desaulniers
+Other than scratching my head about why are we optimizing neither do I.
+
+It would help to have a comment somewhere in the code or the commit
+message that says the issue is contetion under load.  So the next time
+someone goes through the code and goes why aren't we doing the stupid
+and simple thing it will be clear.
+
+Eric
