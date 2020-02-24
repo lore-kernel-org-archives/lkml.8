@@ -2,660 +2,173 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E8C38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E20C38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECA821556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDFB2176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582577710;
+	bh=ArPq6iVEnXCWW16uelwBG3/Y5hulYTmEjizgyn/tfsc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=g8UNmNgc/pmf5KRMxUsQddwacSiAcIURajqCJD0QjNUA4Y5Rx5U+XvhFHJnT/rqA1
+	 57UluE1Zk0Y2QpUvVxayQotAFWj7sqivXbSK5Rv6d8M5Z3fsmc8AxW3YIGEXoIrlRH
+	 SVZ0hUllHUvtx7G8F33+TvSiIY5w7Ta53LZu0uPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgBXUyv (ORCPT
+        id S1727851AbgBXUzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 15:54:51 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:58487 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgBXUyt (ORCPT
+        Mon, 24 Feb 2020 15:55:09 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44355 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgBXUzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:54:49 -0500
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1j6KlU-0005EU-8G; Mon, 24 Feb 2020 20:55:44 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>
-Cc:     Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v5 3/3] hwmon: add Gateworks System Controller support
-Date:   Mon, 24 Feb 2020 12:54:25 -0800
-Message-Id: <1582577665-13554-4-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
-References: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
+        Mon, 24 Feb 2020 15:55:08 -0500
+Received: by mail-ed1-f66.google.com with SMTP id g19so13554008eds.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 12:55:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BY1FLkZ/d5Mam22BCzbsPJxVV/PsCNt3szpo7gapUE0=;
+        b=U9jWH7Hxjj/2vLWMsWFFFd18H396h7+gcl13wkrs0AybCkyEaf5xI0TGSrxIUr/jBM
+         HS7wgbw0TF2CFGvbyu0q/YD1FoHsq9hjOzzhb1DqN5gDur9IPKgFV77IJo9TaCqIItlE
+         zya3mvHoWhjt7mAMKRpr355sHu6Tc3l9xUmQU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BY1FLkZ/d5Mam22BCzbsPJxVV/PsCNt3szpo7gapUE0=;
+        b=Uco+UMQHbyg9XIeqX4s7ulqBFALiPzgRUnwJlWZPJxehG8dvG90Zh69/J+N0GWyWzd
+         NO1smJWhk0mNcpi8db97eruZFBOM+Zw4GDMzB4zvD6+MWJrVuPrl8D6bz40uI4p7JTa9
+         EA/+udfxqXSc9XMIEQ5ORNJVKUWqEW/l2StKoBdGupnqKdZJbWuLpQKTR134JHc8xJ11
+         3wF/7+Fng5RbhyFlvkVVjHZ6H+j062WjGoYehpqukS/Kd6VmQPaHcPLpvqrd8J++rGbs
+         T7R44ByGKKseT33SNkMWlck+UjlIcBZWcfmkOWcHuyJL46i3j9S3spcQPxsOoME4sUml
+         51cQ==
+X-Gm-Message-State: APjAAAXaRWIMMtGMAEm9DWo1CcOJdiwR1soPD9XosR6GX9pQQA7WXcrd
+        Oz8J0jkmDR+dLMPVjZK0vfPOGoa7Tz0=
+X-Google-Smtp-Source: APXvYqxSu9KoHS0qoswfmygyeDH/mJ/x5zq4qUuwvvs+B6hZrIZNgP/dq25gbkyFTa0bpOKG/tihmA==
+X-Received: by 2002:aa7:dad0:: with SMTP id x16mr48917422eds.307.1582577704864;
+        Mon, 24 Feb 2020 12:55:04 -0800 (PST)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
+        by smtp.gmail.com with ESMTPSA id e3sm1106456edu.3.2020.02.24.12.55.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 12:55:04 -0800 (PST)
+Received: by mail-wr1-f48.google.com with SMTP id y17so3263773wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 12:55:04 -0800 (PST)
+X-Received: by 2002:a05:651c:555:: with SMTP id q21mr4381361ljp.241.1582577251146;
+ Mon, 24 Feb 2020 12:47:31 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205123216.GO12867@shao2-debian> <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com> <20200221132048.GE652992@krava>
+ <20200223141147.GA53531@shbuild999.sh.intel.com> <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com> <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+ <20200224021915.GC5061@shbuild999.sh.intel.com> <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
+ <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+In-Reply-To: <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 24 Feb 2020 12:47:14 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
+Message-ID: <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+To:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Content-Type: multipart/mixed; boundary="000000000000e292c5059f587a63"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Gateworks System Controller has a hwmon sub-component that exposes
-up to 16 ADC's, some of which are temperature sensors, others which are
-voltage inputs. The ADC configuration (register mapping and name) is
-configured via device-tree and varies board to board.
+--000000000000e292c5059f587a63
+Content-Type: text/plain; charset="UTF-8"
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+[ Adding a few more people that tend to be involved in signal
+handling. Just in case - even if they probably don't care ]
 
-v5:
-- fix various checkpatch issues
-- correct gsc-hwmon.rst in MAINTAINERS
-- switch to SENSOR_DEVICE_ATTR_{RW,RO}
-- use tmp value to avoid excessive pointer deference
-- simplify shift operation
-- scale voffset once
-- simplify is_visible function
-- remove empty line at end of file
+On Mon, Feb 24, 2020 at 12:09 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> TOTALLY UNTESTED patch attached. It may be completely buggy garbage,
+> but it _looks_ trivial enough.
 
-v4:
-- adjust for uV offset from device-tree
-- remove unnecessary optional write function
-- remove register range check
-- change dev_err prints to use gsc dev
-- hard-code resolution/scaling for raw adcs
-- describe units of ADC resolution
-- move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
-- ensure space before/after operators
-- remove unnecessary parens
-- remove more debugging
-- add default case and comment for type_voltage
-- remove unnecessary index bounds checks for channel
-- remove unnecessary clearing of struct fields
-- added Documentation/hwmon/gsc-hwmon.rst
+I've tested it, and the profiles on the silly microbenchmark look much
+nicer. Now it's just the sigpending update shows up, the refcount case
+clearly still occasionally happens, but it's now in the noise.
 
-v3:
-- add voltage_raw input type and supporting fields
-- add channel validation to is_visible function
-- remove unnecessary channel validation from read/write functions
+I made slight changes to the __sigqueue_alloc() case to generate
+better code: since we now use that atomic_inc_return() anyway, we
+might as well then use the value that is returned for the
+RLIMIT_SIGPENDING check too, instead of reading it again.
 
-v2:
-- change license comment style
-- remove DEBUG
-- simplify regmap_bulk_read err check
-- remove break after returns in switch statement
-- fix fan setpoint buffer address
-- remove unnecessary parens
-- consistently use struct device *dev pointer
-- change license/comment block
-- add validation for hwmon child node props
-- move parsing of of to own function
-- use strlcpy to ensure null termination
-- fix static array sizes and removed unnecessary initializers
-- dynamically allocate channels
-- fix fan input label
-- support platform data
-- fixed whitespace issues
----
- Documentation/hwmon/gsc-hwmon.rst       |  53 +++++
- Documentation/hwmon/index.rst           |   1 +
- MAINTAINERS                             |   3 +
- drivers/hwmon/Kconfig                   |   9 +
- drivers/hwmon/Makefile                  |   1 +
- drivers/hwmon/gsc-hwmon.c               | 371 ++++++++++++++++++++++++++++++++
- include/linux/platform_data/gsc_hwmon.h |  44 ++++
- 7 files changed, 482 insertions(+)
- create mode 100644 Documentation/hwmon/gsc-hwmon.rst
- create mode 100644 drivers/hwmon/gsc-hwmon.c
- create mode 100644 include/linux/platform_data/gsc_hwmon.h
+That might avoid another potential cacheline bounce, plus the
+generated code just looks better.
 
-diff --git a/Documentation/hwmon/gsc-hwmon.rst b/Documentation/hwmon/gsc-hwmon.rst
-new file mode 100644
-index 00000000..d34e508
---- /dev/null
-+++ b/Documentation/hwmon/gsc-hwmon.rst
-@@ -0,0 +1,53 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Kernel driver gsc-hwmon
-+=======================
-+
-+Supported chips: Gateworks GSC
-+Datasheet: http://trac.gateworks.com/wiki/gsc
-+Author: Tim Harvey <tharvey@gateworks.com>
-+
-+Description:
-+------------
-+
-+This driver supports hardware monitoring for the temperature sensor,
-+various ADC's connected to the GSC, and optional FAN controller available
-+on some boards.
-+
-+
-+Voltage Monitoring
-+------------------
-+
-+The voltage inputs are scaled either internally or by the driver depending
-+on the GSC version and firmware. The values returned by the driver do not need
-+further scaling. The voltage input labels provide the voltage rail name:
-+
-+inX_input                  Measured voltage (mV).
-+inX_label                  Name of voltage rail.
-+
-+
-+Temperature Monitoring
-+----------------------
-+
-+Temperatures are measured with 12-bit or 10-bit resolution and are scaled
-+either internally or by the driver depending on the GSC version and firmware.
-+The values returned by the driver reflect millidegree Celcius:
-+
-+tempX_input                Measured temperature.
-+tempX_label                Name of temperature input.
-+
-+
-+PWM Output Control
-+------------------
-+
-+The GSC features 1 PWM output that operates in automatic mode where the
-+PWM value will be scalled depending on 6 temperature boundaries.
-+The tempeature boundaries are read-write and in millidegree Celcius and the
-+read-only PWM values range from 0 (off) to 255 (full speed).
-+Fan speed will be set to minimum (off) when the temperature sensor reads
-+less than pwm1_auto_point1_temp and maximum when the temperature sensor
-+equals or exceeds pwm1_auto_point6_temp.
-+
-+pwm1_auto_point1_pwm       PWM value.
-+pwm1_auto_point1_temp      Temperature boundary.
-+
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 43cc605..a4fab69 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -58,6 +58,7 @@ Hardware Monitoring Kernel Drivers
-    ftsteutates
-    g760a
-    g762
-+   gsc-hwmon
-    gl518sm
-    hih6130
-    ibmaem
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bb79b60..3f15542 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6846,6 +6846,9 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
- F:	drivers/mfd/gateworks-gsc.c
- F:	include/linux/mfd/gsc.h
-+F:	Documentation/hwmon/gsc-hwmon.rst
-+F:	drivers/hwmon/gsc-hwmon.c
-+F:	include/linux/platform_data/gsc_hwmon.h
- 
- GCC PLUGINS
- M:	Kees Cook <keescook@chromium.org>
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 23dfe84..99dae13 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -494,6 +494,15 @@ config SENSORS_F75375S
- 	  This driver can also be built as a module. If so, the module
- 	  will be called f75375s.
- 
-+config SENSORS_GSC
-+        tristate "Gateworks System Controller ADC"
-+        depends on MFD_GATEWORKS_GSC
-+        help
-+          Support for the Gateworks System Controller A/D converters.
-+
-+	  To compile this driver as a module, choose M here:
-+	  the module will be called gsc-hwmon.
-+
- config SENSORS_MC13783_ADC
-         tristate "Freescale MC13783/MC13892 ADC"
-         depends on MFD_MC13XXX
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index 6db5db9..259cba7 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -71,6 +71,7 @@ obj-$(CONFIG_SENSORS_G760A)	+= g760a.o
- obj-$(CONFIG_SENSORS_G762)	+= g762.o
- obj-$(CONFIG_SENSORS_GL518SM)	+= gl518sm.o
- obj-$(CONFIG_SENSORS_GL520SM)	+= gl520sm.o
-+obj-$(CONFIG_SENSORS_GSC)	+= gsc-hwmon.o
- obj-$(CONFIG_SENSORS_GPIO_FAN)	+= gpio-fan.o
- obj-$(CONFIG_SENSORS_HIH6130)	+= hih6130.o
- obj-$(CONFIG_SENSORS_ULTRA45)	+= ultra45_env.o
-diff --git a/drivers/hwmon/gsc-hwmon.c b/drivers/hwmon/gsc-hwmon.c
-new file mode 100644
-index 00000000..d9164a6
---- /dev/null
-+++ b/drivers/hwmon/gsc-hwmon.c
-@@ -0,0 +1,371 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for Gateworks System Controller Hardware Monitor module
-+ *
-+ * Copyright (C) 2020 Gateworks Corporation
-+ */
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/mfd/gsc.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include <linux/platform_data/gsc_hwmon.h>
-+
-+#define GSC_HWMON_MAX_TEMP_CH	16
-+#define GSC_HWMON_MAX_IN_CH	16
-+
-+#define GSC_HWMON_RESOLUTION	12
-+#define GSC_HWMON_VREF		2500
-+
-+struct gsc_hwmon_data {
-+	struct gsc_dev *gsc;
-+	struct device *dev;
-+	struct gsc_hwmon_platform_data *pdata;
-+	const struct gsc_hwmon_channel *temp_ch[GSC_HWMON_MAX_TEMP_CH];
-+	const struct gsc_hwmon_channel *in_ch[GSC_HWMON_MAX_IN_CH];
-+	u32 temp_config[GSC_HWMON_MAX_TEMP_CH + 1];
-+	u32 in_config[GSC_HWMON_MAX_IN_CH + 1];
-+	struct hwmon_channel_info temp_info;
-+	struct hwmon_channel_info in_info;
-+	const struct hwmon_channel_info *info[4];
-+	struct hwmon_chip_info chip;
-+};
-+
-+static ssize_t pwm_auto_point_temp_show(struct device *dev,
-+					struct device_attribute *devattr,
-+					char *buf)
-+{
-+	struct gsc_hwmon_data *hwmon = dev_get_drvdata(dev);
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-+	u8 reg = hwmon->pdata->fan_base + (2 * attr->index);
-+	u8 regs[2];
-+	int ret;
-+
-+	ret = regmap_bulk_read(hwmon->gsc->regmap_hwmon, reg, regs, 2);
-+	if (ret)
-+		return ret;
-+
-+	ret = regs[0] | regs[1] << 8;
-+	return sprintf(buf, "%d\n", ret * 10);
-+}
-+
-+static ssize_t pwm_auto_point_temp_store(struct device *dev,
-+					 struct device_attribute *devattr,
-+					 const char *buf, size_t count)
-+{
-+	struct gsc_hwmon_data *hwmon = dev_get_drvdata(dev);
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-+	u8 reg = hwmon->pdata->fan_base + (2 * attr->index);
-+	u8 regs[2];
-+	long temp;
-+	int err;
-+
-+	if (kstrtol(buf, 10, &temp))
-+		return -EINVAL;
-+
-+	temp = clamp_val(temp, 0, 10000);
-+	temp = DIV_ROUND_CLOSEST(temp, 10);
-+
-+	regs[0] = temp & 0xff;
-+	regs[1] = (temp >> 8) & 0xff;
-+	err = regmap_bulk_write(hwmon->gsc->regmap_hwmon, reg, regs, 2);
-+	if (err)
-+		return err;
-+
-+	return count;
-+}
-+
-+static ssize_t pwm_auto_point_pwm_show(struct device *dev,
-+				       struct device_attribute *devattr,
-+				       char *buf)
-+{
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-+
-+	return sprintf(buf, "%d\n", 255 * (50 + (attr->index * 10)) / 100);
-+}
-+
-+static SENSOR_DEVICE_ATTR_RO(pwm1_auto_point1_pwm, pwm_auto_point_pwm, 0);
-+static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point1_temp, pwm_auto_point_temp, 0);
-+
-+static SENSOR_DEVICE_ATTR_RO(pwm1_auto_point2_pwm, pwm_auto_point_pwm, 1);
-+static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point2_temp, pwm_auto_point_temp, 1);
-+
-+static SENSOR_DEVICE_ATTR_RO(pwm1_auto_point3_pwm, pwm_auto_point_pwm, 2);
-+static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point3_temp, pwm_auto_point_temp, 2);
-+
-+static SENSOR_DEVICE_ATTR_RO(pwm1_auto_point4_pwm, pwm_auto_point_pwm, 3);
-+static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point4_temp, pwm_auto_point_temp, 3);
-+
-+static SENSOR_DEVICE_ATTR_RO(pwm1_auto_point5_pwm, pwm_auto_point_pwm, 4);
-+static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point5_temp, pwm_auto_point_temp, 4);
-+
-+static SENSOR_DEVICE_ATTR_RO(pwm1_auto_point6_pwm, pwm_auto_point_pwm, 5);
-+static SENSOR_DEVICE_ATTR_RW(pwm1_auto_point6_temp, pwm_auto_point_temp, 5);
-+
-+static struct attribute *gsc_hwmon_attributes[] = {
-+	&sensor_dev_attr_pwm1_auto_point1_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point1_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point2_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point3_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point4_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point5_temp.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_pwm.dev_attr.attr,
-+	&sensor_dev_attr_pwm1_auto_point6_temp.dev_attr.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group gsc_hwmon_group = {
-+	.attrs = gsc_hwmon_attributes,
-+};
-+__ATTRIBUTE_GROUPS(gsc_hwmon);
-+
-+static int
-+gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+	       int channel, long *val)
-+{
-+	struct gsc_hwmon_data *hwmon = dev_get_drvdata(dev);
-+	const struct gsc_hwmon_channel *ch;
-+	int sz, ret;
-+	long tmp;
-+	u8 buf[3];
-+
-+	switch (type) {
-+	case hwmon_in:
-+		ch = hwmon->in_ch[channel];
-+		break;
-+	case hwmon_temp:
-+		ch = hwmon->temp_ch[channel];
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	sz = (ch->type == type_voltage) ? 3 : 2;
-+	ret = regmap_bulk_read(hwmon->gsc->regmap_hwmon, ch->reg, buf, sz);
-+	if (ret)
-+		return ret;
-+
-+	tmp = 0;
-+	while (sz-- > 0)
-+		tmp |= (buf[sz] << (8 * sz));
-+
-+	switch (ch->type) {
-+	case type_temperature:
-+		if (tmp > 0x8000)
-+			tmp -= 0xffff;
-+		break;
-+	case type_voltage_raw:
-+		tmp = clamp_val(tmp, 0, BIT(GSC_HWMON_RESOLUTION));
-+		/* scale based on ref voltage and ADC resolution */
-+		tmp *= GSC_HWMON_VREF;
-+		tmp >>= GSC_HWMON_RESOLUTION;
-+		/* scale based on optional voltage divider */
-+		if (ch->vdiv[0] && ch->vdiv[1]) {
-+			tmp *= (ch->vdiv[0] + ch->vdiv[1]);
-+			tmp /= ch->vdiv[1];
-+		}
-+		/* adjust by uV offset */
-+		tmp += ch->mvoffset;
-+		break;
-+	case type_voltage:
-+		/* no adjustment needed */
-+		break;
-+	}
-+
-+	*val = tmp;
-+
-+	return 0;
-+}
-+
-+static int
-+gsc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+		      u32 attr, int channel, const char **buf)
-+{
-+	struct gsc_hwmon_data *hwmon = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_in:
-+		*buf = hwmon->in_ch[channel]->name;
-+		break;
-+	case hwmon_temp:
-+		*buf = hwmon->temp_ch[channel]->name;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static umode_t
-+gsc_hwmon_is_visible(const void *_data, enum hwmon_sensor_types type, u32 attr,
-+		     int ch)
-+{
-+	return 0444;
-+}
-+
-+static const struct hwmon_ops gsc_hwmon_ops = {
-+	.is_visible = gsc_hwmon_is_visible,
-+	.read = gsc_hwmon_read,
-+	.read_string = gsc_hwmon_read_string,
-+};
-+
-+static struct gsc_hwmon_platform_data *
-+gsc_hwmon_get_devtree_pdata(struct device *dev)
-+{
-+	struct gsc_hwmon_platform_data *pdata;
-+	struct gsc_hwmon_channel *ch;
-+	struct fwnode_handle *child;
-+	const char *type;
-+	int nchannels;
-+
-+	nchannels = device_get_child_node_count(dev);
-+	if (nchannels == 0)
-+		return ERR_PTR(-ENODEV);
-+
-+	pdata = devm_kzalloc(dev,
-+			     sizeof(*pdata) + nchannels * sizeof(*ch),
-+			     GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+	ch = (struct gsc_hwmon_channel *)(pdata + 1);
-+	pdata->channels = ch;
-+	pdata->nchannels = nchannels;
-+
-+	device_property_read_u32(dev, "gw,fan-base", &pdata->fan_base);
-+
-+	/* allocate structures for channels and count instances of each type */
-+	device_for_each_child_node(dev, child) {
-+		if (fwnode_property_read_string(child, "label", &ch->name)) {
-+			dev_err(dev, "channel without label\n");
-+			fwnode_handle_put(child);
-+			return ERR_PTR(-EINVAL);
-+		}
-+		if (fwnode_property_read_u32(child, "reg", &ch->reg)) {
-+			dev_err(dev, "channel without reg\n");
-+			fwnode_handle_put(child);
-+			return ERR_PTR(-EINVAL);
-+		}
-+		if (fwnode_property_read_string(child, "type", &type)) {
-+			dev_err(dev, "channel without type\n");
-+			fwnode_handle_put(child);
-+			return ERR_PTR(-EINVAL);
-+		}
-+		if (!strcasecmp(type, "temperature")) {
-+			ch->type = type_temperature;
-+		} else if (!strcasecmp(type, "voltage")) {
-+			ch->type = type_voltage;
-+		} else if (!strcasecmp(type, "voltage-raw")) {
-+			ch->type = type_voltage_raw;
-+		} else {
-+			dev_err(dev, "channel without type\n");
-+			fwnode_handle_put(child);
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		if (fwnode_property_read_u32(child, "gw,voltage-offset",
-+					     &ch->mvoffset))
-+			ch->mvoffset /= 1000;
-+		fwnode_property_read_u32_array(child, "gw,voltage-divider",
-+					       ch->vdiv, ARRAY_SIZE(ch->vdiv));
-+		ch++;
-+	}
-+
-+	return pdata;
-+}
-+
-+static int gsc_hwmon_probe(struct platform_device *pdev)
-+{
-+	struct gsc_dev *gsc = dev_get_drvdata(pdev->dev.parent);
-+	struct device *dev = &pdev->dev;
-+	struct gsc_hwmon_platform_data *pdata = dev_get_platdata(dev);
-+	struct gsc_hwmon_data *hwmon;
-+	const struct attribute_group **groups;
-+	int i, i_in, i_temp;
-+
-+	if (!pdata) {
-+		pdata = gsc_hwmon_get_devtree_pdata(dev);
-+		if (IS_ERR(pdata))
-+			return PTR_ERR(pdata);
-+	}
-+
-+	hwmon = devm_kzalloc(dev, sizeof(*hwmon), GFP_KERNEL);
-+	if (!hwmon)
-+		return -ENOMEM;
-+	hwmon->gsc = gsc;
-+	hwmon->pdata = pdata;
-+
-+	for (i = 0, i_in = 0, i_temp = 0; i < hwmon->pdata->nchannels; i++) {
-+		const struct gsc_hwmon_channel *ch = &pdata->channels[i];
-+
-+		switch (ch->type) {
-+		case type_temperature:
-+			if (i_temp == GSC_HWMON_MAX_TEMP_CH) {
-+				dev_err(gsc->dev, "too many temp channels\n");
-+				return -EINVAL;
-+			}
-+			hwmon->temp_ch[i_temp] = ch;
-+			hwmon->temp_config[i_temp] = HWMON_T_INPUT |
-+						     HWMON_T_LABEL;
-+			i_temp++;
-+			break;
-+		case type_voltage:
-+		case type_voltage_raw:
-+			if (i_in == GSC_HWMON_MAX_IN_CH) {
-+				dev_err(gsc->dev, "too many input channels\n");
-+				return -EINVAL;
-+			}
-+			hwmon->in_ch[i_in] = ch;
-+			hwmon->in_config[i_in] =
-+				HWMON_I_INPUT | HWMON_I_LABEL;
-+			i_in++;
-+			break;
-+		default:
-+			dev_err(gsc->dev, "invalid type: %d\n", ch->type);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	/* setup config structures */
-+	hwmon->chip.ops = &gsc_hwmon_ops;
-+	hwmon->chip.info = hwmon->info;
-+	hwmon->info[0] = &hwmon->temp_info;
-+	hwmon->info[1] = &hwmon->in_info;
-+	hwmon->temp_info.type = hwmon_temp;
-+	hwmon->temp_info.config = hwmon->temp_config;
-+	hwmon->in_info.type = hwmon_in;
-+	hwmon->in_info.config = hwmon->in_config;
-+
-+	groups = pdata->fan_base ? gsc_hwmon_groups : NULL;
-+	hwmon->dev = devm_hwmon_device_register_with_info(dev,
-+							  KBUILD_MODNAME, hwmon,
-+							  &hwmon->chip, groups);
-+	return PTR_ERR_OR_ZERO(hwmon->dev);
-+}
-+
-+static const struct of_device_id gsc_hwmon_of_match[] = {
-+	{ .compatible = "gw,gsc-hwmon", },
-+	{}
-+};
-+
-+static struct platform_driver gsc_hwmon_driver = {
-+	.driver = {
-+		.name = "gsc-hwmon",
-+		.of_match_table = gsc_hwmon_of_match,
-+	},
-+	.probe = gsc_hwmon_probe,
-+};
-+
-+module_platform_driver(gsc_hwmon_driver);
-+
-+MODULE_AUTHOR("Tim Harvey <tharvey@gateworks.com>");
-+MODULE_DESCRIPTION("GSC hardware monitor driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/platform_data/gsc_hwmon.h b/include/linux/platform_data/gsc_hwmon.h
-new file mode 100644
-index 00000000..09465f8
---- /dev/null
-+++ b/include/linux/platform_data/gsc_hwmon.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _GSC_HWMON_H
-+#define _GSC_HWMON_H
-+
-+enum gsc_hwmon_type {
-+	type_temperature,
-+	type_voltage,
-+	type_voltage_raw,
-+	type_fan,
-+};
-+
-+/**
-+ * struct gsc_hwmon_channel - configuration parameters
-+ * @reg:  I2C register offset
-+ * @type: channel type
-+ * @name: channel name
-+ * @mvoffset: voltage offset
-+ * @vdiv: voltage divider array (2 resistor values in ohms)
-+ */
-+struct gsc_hwmon_channel {
-+	unsigned int reg;
-+	unsigned int type;
-+	const char *name;
-+	unsigned int mvoffset;
-+	unsigned int vdiv[2];
-+};
-+
-+/**
-+ * struct gsc_hwmon_platform_data - platform data for gsc_hwmon driver
-+ * @channels:	pointer to array of gsc_hwmon_channel structures
-+ *		describing channels
-+ * @nchannels:	number of elements in @channels array
-+ * @vreference: voltage reference (mV)
-+ * @resolution: ADC bit resolution
-+ * @fan_base: register base for FAN controller
-+ */
-+struct gsc_hwmon_platform_data {
-+	const struct gsc_hwmon_channel *channels;
-+	int nchannels;
-+	unsigned int resolution;
-+	unsigned int vreference;
-+	unsigned int fan_base;
-+};
-+#endif
--- 
-2.7.4
+Updated (and now slightly tested!) patch attached.
 
+It would be interesting if this is noticeable on your benchmark
+numbers. I didn't actually _time_ anything, I just looked at profiles.
+
+But my setup clearly isn't going to see the horrible contention case
+anyway, so my timing numbers wouldn't be all that interesting.
+
+             Linus
+
+--000000000000e292c5059f587a63
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k70xjn140>
+X-Attachment-Id: f_k70xjn140
+
+IGtlcm5lbC9zaWduYWwuYyB8IDIzICsrKysrKysrKysrKysrLS0tLS0tLS0tCiAxIGZpbGUgY2hh
+bmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXJu
+ZWwvc2lnbmFsLmMgYi9rZXJuZWwvc2lnbmFsLmMKaW5kZXggOWFkOGRlYTkzZGJiLi41YjIzOTYz
+NTBkZDEgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9zaWduYWwuYworKysgYi9rZXJuZWwvc2lnbmFsLmMK
+QEAgLTQxMywyNyArNDEzLDMyIEBAIF9fc2lncXVldWVfYWxsb2MoaW50IHNpZywgc3RydWN0IHRh
+c2tfc3RydWN0ICp0LCBnZnBfdCBmbGFncywgaW50IG92ZXJyaWRlX3JsaW1pCiB7CiAJc3RydWN0
+IHNpZ3F1ZXVlICpxID0gTlVMTDsKIAlzdHJ1Y3QgdXNlcl9zdHJ1Y3QgKnVzZXI7CisJaW50IHNp
+Z3BlbmRpbmc7CiAKIAkvKgogCSAqIFByb3RlY3QgYWNjZXNzIHRvIEB0IGNyZWRlbnRpYWxzLiBU
+aGlzIGNhbiBnbyBhd2F5IHdoZW4gYWxsCiAJICogY2FsbGVycyBob2xkIHJjdSByZWFkIGxvY2su
+CisJICoKKwkgKiBOT1RFISBBIHBlbmRpbmcgc2lnbmFsIHdpbGwgaG9sZCBvbiB0byB0aGUgdXNl
+ciByZWZjb3VudCwKKwkgKiBhbmQgd2UgZ2V0L3B1dCB0aGUgcmVmY291bnQgb25seSB3aGVuIHRo
+ZSBzaWdwZW5kaW5nIGNvdW50CisJICogY2hhbmdlcyBmcm9tL3RvIHplcm8uCiAJICovCiAJcmN1
+X3JlYWRfbG9jaygpOwotCXVzZXIgPSBnZXRfdWlkKF9fdGFza19jcmVkKHQpLT51c2VyKTsKLQlh
+dG9taWNfaW5jKCZ1c2VyLT5zaWdwZW5kaW5nKTsKKwl1c2VyID0gX190YXNrX2NyZWQodCktPnVz
+ZXI7CisJc2lncGVuZGluZyA9IGF0b21pY19pbmNfcmV0dXJuKCZ1c2VyLT5zaWdwZW5kaW5nKTsK
+KwlpZiAoc2lncGVuZGluZyA9PSAxKQorCQlnZXRfdWlkKHVzZXIpOwogCXJjdV9yZWFkX3VubG9j
+aygpOwogCi0JaWYgKG92ZXJyaWRlX3JsaW1pdCB8fAotCSAgICBhdG9taWNfcmVhZCgmdXNlci0+
+c2lncGVuZGluZykgPD0KLQkJCXRhc2tfcmxpbWl0KHQsIFJMSU1JVF9TSUdQRU5ESU5HKSkgewor
+CWlmIChvdmVycmlkZV9ybGltaXQgfHwgbGlrZWx5KHNpZ3BlbmRpbmcgPD0gdGFza19ybGltaXQo
+dCwgUkxJTUlUX1NJR1BFTkRJTkcpKSkgewogCQlxID0ga21lbV9jYWNoZV9hbGxvYyhzaWdxdWV1
+ZV9jYWNoZXAsIGZsYWdzKTsKIAl9IGVsc2UgewogCQlwcmludF9kcm9wcGVkX3NpZ25hbChzaWcp
+OwogCX0KIAogCWlmICh1bmxpa2VseShxID09IE5VTEwpKSB7Ci0JCWF0b21pY19kZWMoJnVzZXIt
+PnNpZ3BlbmRpbmcpOwotCQlmcmVlX3VpZCh1c2VyKTsKKwkJaWYgKGF0b21pY19kZWNfYW5kX3Rl
+c3QoJnVzZXItPnNpZ3BlbmRpbmcpKQorCQkJZnJlZV91aWQodXNlcik7CiAJfSBlbHNlIHsKIAkJ
+SU5JVF9MSVNUX0hFQUQoJnEtPmxpc3QpOwogCQlxLT5mbGFncyA9IDA7CkBAIC00NDcsOCArNDUy
+LDggQEAgc3RhdGljIHZvaWQgX19zaWdxdWV1ZV9mcmVlKHN0cnVjdCBzaWdxdWV1ZSAqcSkKIHsK
+IAlpZiAocS0+ZmxhZ3MgJiBTSUdRVUVVRV9QUkVBTExPQykKIAkJcmV0dXJuOwotCWF0b21pY19k
+ZWMoJnEtPnVzZXItPnNpZ3BlbmRpbmcpOwotCWZyZWVfdWlkKHEtPnVzZXIpOworCWlmIChhdG9t
+aWNfZGVjX2FuZF90ZXN0KCZxLT51c2VyLT5zaWdwZW5kaW5nKSkKKwkJZnJlZV91aWQocS0+dXNl
+cik7CiAJa21lbV9jYWNoZV9mcmVlKHNpZ3F1ZXVlX2NhY2hlcCwgcSk7CiB9CiAK
+--000000000000e292c5059f587a63--
