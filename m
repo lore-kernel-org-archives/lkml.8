@@ -2,146 +2,108 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4C1C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAF4C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEF320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7852320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgBXMNg (ORCPT
+        id S1727444AbgBXMOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:13:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57982 "EHLO mx2.suse.de"
+        Mon, 24 Feb 2020 07:14:10 -0500
+Received: from mga03.intel.com ([134.134.136.65]:3613 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbgBXMNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:13:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E660CAECE;
-        Mon, 24 Feb 2020 12:13:32 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 13:13:31 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200224121331.tnkvp6mmjchm4s2i@pathway.suse.cz>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
+        id S1727183AbgBXMOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:14:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 04:14:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
+   d="scan'208";a="349909408"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Feb 2020 04:14:06 -0800
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH v2 0/9] usb: typec: Driver for Intel PMC Mux-Agent
+Date:   Mon, 24 Feb 2020 15:13:57 +0300
+Message-Id: <20200224121406.2419-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221222129.GB28251@lenoir>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-02-21 23:21:30, Frederic Weisbecker wrote:
-> On Fri, Feb 21, 2020 at 02:34:18PM +0100, Peter Zijlstra wrote:
-> > Since there are already a number of sites (ARM64, PowerPC) that
-> > effectively nest nmi_enter(), lets make the primitive support this
-> > before adding even more.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > Acked-by: Will Deacon <will@kernel.org>
-> > Acked-by: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  arch/arm64/include/asm/hardirq.h |    4 ++--
-> >  arch/arm64/kernel/sdei.c         |   14 ++------------
-> >  arch/arm64/kernel/traps.c        |    8 ++------
-> >  arch/powerpc/kernel/traps.c      |   22 ++++++----------------
-> >  include/linux/hardirq.h          |    5 ++++-
-> >  include/linux/preempt.h          |    4 ++--
-> >  kernel/printk/printk_safe.c      |    6 ++++--
-> >  7 files changed, 22 insertions(+), 41 deletions(-)
-> > 
-> > --- a/kernel/printk/printk_safe.c
-> > +++ b/kernel/printk/printk_safe.c
-> > @@ -296,12 +296,14 @@ static __printf(1, 0) int vprintk_nmi(co
-> >  
-> >  void notrace printk_nmi_enter(void)
-> >  {
-> > -	this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
-> > +	if (!in_nmi())
-> > +		this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
-> >  }
-> >  
-> >  void notrace printk_nmi_exit(void)
-> >  {
-> > -	this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
-> > +	if (!in_nmi())
-> > +		this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
-> >  }
-> 
-> If the outermost NMI is interrupted while between printk_nmi_enter()
-> and preempt_count_add(), there is still a risk that we race and clear?
+Hi,
 
-Great catch!
+I've unified the driver data handling in all drivers in patch 5/9 as
+requested by Peter, and also now using consistently dev_set_drvdata()
+in patch 4/9 as requested by Chunfeng Yun. Those were the only
+changes in this version.
 
-There is plenty of space in the printk_context variable. I would
-reserve one byte there for the NMI context to be on the safe side
-and be done with it.
+The original (v1) commit message:
 
-It should never overflow. The BUG_ON(in_nmi() == NMI_MASK)
-in nmi_enter() will trigger much earlier.
+The Intel PMC (Power Management Controller) microcontroller, which is
+available on most SOCs from Intel, has a function called mux-agent.
+The mux-agent, when visible to the operating system, makes it possible
+to control the various USB muxes on the system.
 
-Also I hope that printk_context will get removed with
-the lockless printk() implementation soon anyway.
+In practice the mux-agent is a device that controls multiple muxes.
+Unfortunately both the USB Type-C Class and the USB Role Class don't
+have proper support for that kind of devices that handle multiple
+muxes, which is why I had to tweak the APIs a bit.
+
+On top of the API changes, and the driver of course, I'm adding a
+header for the Thunderbolt 3 alt mode since the "mux-agent" supports
+it.
+
+thanks,
 
 
-diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-index c8e6ab689d42..109c5ab70a0c 100644
---- a/kernel/printk/internal.h
-+++ b/kernel/printk/internal.h
-@@ -6,9 +6,11 @@
- 
- #ifdef CONFIG_PRINTK
- 
--#define PRINTK_SAFE_CONTEXT_MASK	 0x3fffffff
--#define PRINTK_NMI_DIRECT_CONTEXT_MASK	 0x40000000
--#define PRINTK_NMI_CONTEXT_MASK		 0x80000000
-+#define PRINTK_SAFE_CONTEXT_MASK	0x007ffffff
-+#define PRINTK_NMI_DIRECT_CONTEXT_MASK	0x008000000
-+#define PRINTK_NMI_CONTEXT_MASK		0xff0000000
-+
-+#define PRINTK_NMI_CONTEXT_OFFSET	0x010000000
- 
- extern raw_spinlock_t logbuf_lock;
- 
-diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-index b4045e782743..e8989418a139 100644
---- a/kernel/printk/printk_safe.c
-+++ b/kernel/printk/printk_safe.c
-@@ -296,12 +296,12 @@ static __printf(1, 0) int vprintk_nmi(const char *fmt, va_list args)
- 
- void notrace printk_nmi_enter(void)
- {
--	this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
-+	this_cpu_add(printk_context, PRINTK_NMI_CONTEXT_OFFSET);
- }
- 
- void notrace printk_nmi_exit(void)
- {
--	this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
-+	this_cpu_sub(printk_context, PRINTK_NMI_CONTEXT_OFFSET);
- }
- 
- /*
+Heikki Krogerus (9):
+  usb: typec: mux: Allow the muxes to be named
+  usb: typec: mux: Add helpers for setting the mux state
+  usb: typec: mux: Allow the mux handles to be requested with fwnode
+  usb: roles: Leave the private driver data pointer to the drivers
+  usb: roles: Provide the switch drivers handle to the switch in the API
+  usb: roles: Allow the role switches to be named
+  device property: Export fwnode_get_name()
+  usb: typec: Add definitions for Thunderbolt 3 Alternate Mode
+  usb: typec: driver for Intel PMC mux control
 
-Best Regards,
-Petr
+ drivers/base/property.c                       |   1 +
+ drivers/usb/cdns3/core.c                      |  22 +-
+ drivers/usb/chipidea/core.c                   |  10 +-
+ drivers/usb/dwc3/dwc3-meson-g12a.c            |  10 +-
+ drivers/usb/gadget/udc/renesas_usb3.c         |  26 +-
+ drivers/usb/gadget/udc/tegra-xudc.c           |   8 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |   9 +-
+ drivers/usb/musb/mediatek.c                   |  16 +-
+ drivers/usb/roles/class.c                     |  29 +-
+ .../usb/roles/intel-xhci-usb-role-switch.c    |  26 +-
+ drivers/usb/typec/class.c                     |  10 +-
+ drivers/usb/typec/mux.c                       |  47 +-
+ drivers/usb/typec/mux/Kconfig                 |   9 +
+ drivers/usb/typec/mux/Makefile                |   1 +
+ drivers/usb/typec/mux/intel_pmc_mux.c         | 434 ++++++++++++++++++
+ include/linux/usb/role.h                      |  23 +-
+ include/linux/usb/typec_mux.h                 |  25 +-
+ include/linux/usb/typec_tbt.h                 |  53 +++
+ 18 files changed, 677 insertions(+), 82 deletions(-)
+ create mode 100644 drivers/usb/typec/mux/intel_pmc_mux.c
+ create mode 100644 include/linux/usb/typec_tbt.h
+
+-- 
+2.25.0
+
