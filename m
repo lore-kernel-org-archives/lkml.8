@@ -2,184 +2,123 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA639C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FE4C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9763E20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RVEFVPgU"
+	by mail.kernel.org (Postfix) with ESMTP id E584B20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgBXRlm (ORCPT
+        id S1728113AbgBXRlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:41:42 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:54549 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgBXRll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:41:41 -0500
-Received: by mail-pg1-f201.google.com with SMTP id l17so7077741pgh.21
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:41:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5nz7K/9gLs7EaewmF2wRn410ngVKaW83QWECedJma1o=;
-        b=RVEFVPgU+ScpyMwz7WfaB+ItQ1JnmyRVQdauoq5Hla6qBbUseznXc4uAFG7Bn9wDIQ
-         xN27LFJFYWTi2nwnRc4n2jIIiBUA8AKjhSKIsI2w6L+MLGraE8CBzpoNAY+jQj142T2c
-         GbsQkJys39l//NmYke/Dl3qt8pWth1ivhTFGoSuRmWOi7ZTEiuEwu6uqmf2+EAbN4Xwj
-         yGcx48yYsSLTF7Fs/bk88t2dE9K/MNFltYl2jSGsjdtuAIUIy3NePMj0qin8WcxIsvMK
-         KuM4AmzgvD5/9sbPJ652/5IesJ6rdo9giLLcRyRm2CxhsY9OnV2nuczIFHaSA+kRg/W7
-         /IdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5nz7K/9gLs7EaewmF2wRn410ngVKaW83QWECedJma1o=;
-        b=RNgdMIvylS+1+1IMIoljhTh4OvpRViD37z8WEuA11hjqSwtf5vfkmT8oQ8c2aTdivS
-         kuSIIyp1y+9oR1Gkw3bQD8zJNlLnV1Apl+siFyYVu38LcAeFlFt7xBZeM5RDYgGYS/FB
-         IqVMSPoXwhQJRV32lF2h5tLIJSt3Z5TcudCUvY2rB0iuT3CNgi3HXwXJbGMRyXoaB2ti
-         +9GoxohuiIW2SkZ4CKszBBVN9HxP6N6tyntPcXA2Jv1dT/HsTap2edWw+fvCkbVCU4Wj
-         dpcx+mFIjUHj2I4k3xXMJNEJCxaLKjr6fkFOQoaSYXFP/rzvXgSkSCksZPT7TBXo2mYC
-         i3vA==
-X-Gm-Message-State: APjAAAU/I6xHiDQXR89Xm5e/4/NmVCTI5yArz8G4LRBKe7LV/bmqjaKX
-        3VDtvIomCDPfDVnkfeIQvXNbccGcQXPAtDYTKBM=
-X-Google-Smtp-Source: APXvYqyH8QxNwAutG1ZN9iCwc4/0fjrPF2jacaW4sjYkH4gbhT4P+UST1Yofs3uM/wUc87c1owiFJwJcD3WtXXPUqY0=
-X-Received: by 2002:a63:ae0a:: with SMTP id q10mr53967461pgf.178.1582566100948;
- Mon, 24 Feb 2020 09:41:40 -0800 (PST)
-Date:   Mon, 24 Feb 2020 09:41:28 -0800
-Message-Id: <20200224174129.2664-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     corbet@lwn.net, masahiroy@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Feb 2020 12:41:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:40750 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728090AbgBXRln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:41:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBC701FB;
+        Mon, 24 Feb 2020 09:41:42 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C8693F703;
+        Mon, 24 Feb 2020 09:41:41 -0800 (PST)
+Date:   Mon, 24 Feb 2020 17:41:39 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/6] sched/rt: Better manage pushing unfit tasks on
+ wakeup
+Message-ID: <20200224174138.n6pmoeffqg7eqiy2@e107158-lin.cambridge.arm.com>
+References: <20200223184001.14248-1-qais.yousef@arm.com>
+ <20200223184001.14248-6-qais.yousef@arm.com>
+ <20200224061004.GH28029@codeaurora.org>
+ <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
+ <CAEU1=PncyV=-vqjkDHSJ4hUhhTfYUgVN-HAe4zXMHtFx1oc5XA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAEU1=PncyV=-vqjkDHSJ4hUhhTfYUgVN-HAe4zXMHtFx1oc5XA@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added to kbuild documentation. Provides more official info on building
-kernels with Clang and LLVM than our wiki.
+On 02/24/20 21:34, Pavan Kondeti wrote:
+> Hi Qais,
+> 
+> On Mon, Feb 24, 2020 at 5:42 PM Qais Yousef <qais.yousef@arm.com> wrote:
+> [...]
+> > We could do, temporarily, to get these fixes into 5.6. But I do think
+> > select_task_rq_rt() doesn't do a good enough job into pushing unfit tasks to
+> > the right CPUs.
+> >
+> > I don't understand the reasons behind your objection. It seems you think that
+> > select_task_rq_rt() should be enough, but not AFAICS. Can you be a bit more
+> > detailed please?
+> >
+> > FWIW, here's a screenshot of what I see
+> >
+> >         https://imgur.com/a/peV27nE
+> >
+> > After the first activation, select_task_rq_rt() fails to find the right CPU
+> > (due to the same move all tasks to the cpumask_fist()) - but when the task
+> > wakes up on 4, the logic I put causes it to migrate to CPU2, which is the 2nd
+> > big core. CPU1 and CPU2 are the big cores on Juno.
+> >
+> > Now maybe we should fix select_task_rq_rt() to better balance tasks, but not
+> > sure how easy is that.
+> >
+> 
+> Thanks for the trace. Now things are clear to me. Two RT tasks woke up
+> simultaneously and the first task got its previous CPU i.e CPU#1. The next task
+> goes through find_lowest_rq() and got the same CPU#1. Since this task priority
+> is not more than the just queued task (already queued on CPU#1), it is sent
+> to its previous CPU i.e CPU#4 in your case.
+> 
+> From task_woken_rt() path, CPU#4 attempts push_rt_tasks(). CPU#4 is
+> not overloaded,
+> but we have rt_task_fits_capacity() check which forces the push. Since the CPU
+> is not overloaded, your has_unfit_tasks() comes to rescue and push the
+> task. Since
+> the task has not scheduled in yet, it is eligible for push. You added checks
+> to skip resched_curr() in push_rt_tasks() otherwise the push won't happen.
 
-Suggested-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- Documentation/kbuild/index.rst |  1 +
- Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/kbuild/llvm.rst
+Nice summary, that's exactly what it is :)
 
-diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-index 0f144fad99a6..3882bd5f7728 100644
---- a/Documentation/kbuild/index.rst
-+++ b/Documentation/kbuild/index.rst
-@@ -19,6 +19,7 @@ Kernel Build System
- 
-     issues
-     reproducible-builds
-+    llvm
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-new file mode 100644
-index 000000000000..68ae022aebc0
---- /dev/null
-+++ b/Documentation/kbuild/llvm.rst
-@@ -0,0 +1,80 @@
-+==============================
-+Building Linux with Clang/LLVM
-+==============================
-+
-+This document covers how to build the Linux kernel with Clang and LLVM
-+utilities.
-+
-+About
-+-----
-+
-+The Linux kernel has always traditionally been compiled with GNU toolchains
-+such as GCC and binutils. On going work has allowed for `Clang
-+<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
-+used as viable substitutes. Distributions such as `Android
-+<https://www.android.com/>`_, `ChromeOS
-+<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
-+<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
-+collection of toolchain components implemented in terms of C++ objects
-+<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
-+supports C and the GNU C extensions required by the kernel, and is pronounced
-+"klang," not "see-lang."
-+
-+Clang
-+-----
-+
-+The compiler used can be swapped out via `CC=` command line argument to `make`.
-+`CC=` should be set when selecting a config and during a build.
-+
-+	make CC=clang defconfig
-+
-+	make CC=clang
-+
-+Cross Compiling
-+---------------
-+
-+A single Clang compiler binary will typically contain all supported backends,
-+which can help simplify cross compiling.
-+
-+	ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
-+
-+`CROSS_COMPILE` is not used to suffix the Clang compiler binary, instead
-+`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
-+example:
-+
-+	clang --target aarch64-linux-gnu foo.c
-+
-+LLVM Utilities
-+--------------
-+
-+LLVM has substitutes for GNU binutils utilities. These can be invoked as
-+additional parameters to `make`.
-+
-+	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
-+	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
-+	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-+	  HOSTLD=ld.lld
-+
-+Getting Help
-+------------
-+
-+- `Website <https://clangbuiltlinux.github.io/>`_
-+- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
-+- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
-+- IRC: #clangbuiltlinux on chat.freenode.net
-+- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
-+- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
-+- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
-+
-+Getting LLVM
-+-------------
-+
-+- http://releases.llvm.org/download.html
-+- https://github.com/llvm/llvm-project
-+- https://llvm.org/docs/GettingStarted.html
-+- https://llvm.org/docs/CMake.html
-+- https://apt.llvm.org/
-+- https://www.archlinux.org/packages/extra/x86_64/llvm/
-+- https://github.com/ClangBuiltLinux/tc-build
-+- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
-+- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
--- 
-2.25.0.265.gbab2e86ba0-goog
+> Finally, I understood your patch. Obviously this is not clear to me
+> before. I am not
+> sure if this patch is the right approach to solve this race. I will
+> think a bit more.
 
+I haven't been staring at this code for as long as you, but since we have
+logic at wakeup to do a push, I think we need something here anyway for unfit
+tasks.
+
+Fixing select_task_rq_rt() to better balance tasks will help a lot in general,
+but if that was enough already then why do we need to consider a push at the
+wakeup at all then?
+
+AFAIU, in SMP the whole push-pull mechanism is racy and we introduce redundancy
+at taking the decision on various points to ensure we minimize this racy nature
+of SMP systems. Anything could have happened between the time we called
+select_task_rq_rt() and the wakeup, so we double check again before we finally
+go and run. That's how I interpret it.
+
+I am open to hear about other alternatives first anyway. Your help has been
+much appreciated so far.
+
+Thanks
+
+--
+Qais Yousef
