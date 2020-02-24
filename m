@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52233C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F83C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B38F2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E360220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="F1S9LFxv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CLaSUUqd"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Rw4EK0w/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RJhZlgvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgBXJMW (ORCPT
+        id S1728157AbgBXJKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:12:22 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:51999 "EHLO
+        Mon, 24 Feb 2020 04:10:16 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:46153 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728164AbgBXJKS (ORCPT
+        by vger.kernel.org with ESMTP id S1728126AbgBXJKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:10:18 -0500
+        Mon, 24 Feb 2020 04:10:12 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 54D6064A;
-        Mon, 24 Feb 2020 04:10:16 -0500 (EST)
+        by mailnew.west.internal (Postfix) with ESMTP id 92A2064A;
+        Mon, 24 Feb 2020 04:10:10 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:17 -0500
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=bhFt34+iCjdly
-        GoD1lLG2OFFHfo9f7oDO5zfZpp28I0=; b=F1S9LFxvjDHcFvroaPQ7k6fqg37qR
-        YMxpyPdcwNWXGdn2MR/TtYJSPSYh9h+g+qIQJruvFcGYqSfQfGK+l5vl0mVVmmHP
-        nvCGxkKUWaW5PFslsGHaYPGUiGU3tpPMtL+/M6TJ3D8MaL8YdF/VmJJ7ozH0FXUN
-        pJaGGLCBaRX7AIkEeCEIPPyzH4eRMbN4cQE9f0jForJSeQjImKHyI5iTldUOLjBc
-        dnGEHsj4WI+OnH6sqhX7ZCeGQuHcarHS/+rl7kQ15iRr+4q4K6rUOgB1Rfe7X45W
-        rdhkCj94EflJDb7GKZivJPa09AdPbp7KoKhnDqvX52NXOzXLJR0L1OQqg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=dCChNX6FMZlCN
+        ueoWIvqsRwLBjCvrd5jh3HlRZlOXsQ=; b=Rw4EK0w/cbVi4eTw2OZjPh/Tclk3v
+        HCd3zmuFQoRMgTCbECzWoYvFkhawsaDpiM0P2/eAH9rkmcwGFN8daEpxtL5AiIge
+        y9Sq+VQ8H6Vdsx+9x4L6u56RuHT3ctKKAkR28bUAF3DQdYYUpPTPZmNFmsBAai5V
+        5wWSjf1qGJm5v80Qgz/kC0+NgJzLYRCSDMoqNmrPp3KdctjUsadNDEW3OvG2WlqD
+        gGkAEbLz35SOuif5QFK03RM/7GKPzzRXa4h+1ShOye83zFn3DmLZvjZZ1GWAzUOK
+        JD24tWbrSEm2SDeWVOpnYza4KCqsQ9RqTktfN9OCjbVQw1F4wlLIoU08g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=bhFt34+iCjdlyGoD1lLG2OFFHfo9f7oDO5zfZpp28I0=; b=CLaSUUqd
-        NdYk+SuOfiDeY3hO2IOJW5wBN7yl1ljGt9D61MS7I7UznDxFWie6dLupGmVcfXQv
-        bdY6eJZ8sIrsr1f91GQ6ESu1bg4krVpMhm8AoZbjCdeB01NRWzjQKnlGP3Y/7CgT
-        dvy4VTREYX9RSVTmMq/4J0o2sYX4bDw1VoKd+aOpf2DxtoiMKjqnGOG4ivVnVmlQ
-        br0EqEHnQO5X/T9rovn8SmFQnkKHVct4BqIJP4IloKi3483MeMu+JFh0OFdtS4a1
-        htebbcikJDVuNnLxi/lMQXZFVVapnvyk8Yd3jWQ4VqdK7ePwddULWOKtHO5jeAbA
-        O0YUNC2Mzw+EaQ==
-X-ME-Sender: <xms:95JTXkVgAVVEY7hQ-Gcg9-Ofc_w21FUIR35cwqMaE13SECbTr_f3kw>
+        fm2; bh=dCChNX6FMZlCNueoWIvqsRwLBjCvrd5jh3HlRZlOXsQ=; b=RJhZlgvN
+        3yfJQi8HUOrXPqRG4EsBgm1xLNp294flcOw63/ChP7VKkrCgwav6fxRbhU1Th27G
+        I060P/UvGNSGYFRgDGBwfadKl9gtYKeL0yFVpfWuPz+ew38Xs/M5RvekWAATcRtj
+        scTmVvsTS+7GvATCfpSlhkFNTPM8dFODortsOywWEewFt+wwfq8SIEbBWle2Biff
+        CfU+bUnjutH7HlSS7NypgcW0cQS6DJTvk480ogmCfBpARmmNVGbCza6/vhqhLxQl
+        7CaFctg/WR0LsmWzMn477O/2MaJ7sftOHVSeqxc6bQ5IvTP1bJuwQ9eLO2I2uE49
+        Oj4Qab7v04TYPQ==
+X-ME-Sender: <xms:8pJTXkeCB41ym8md0m3NjMjgy5JIQzSP06lZmtOJyw4koMSCj98q4A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgephedvnecurfgrrhgrmhepmhgrihhlfhhr
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepgeeknecurfgrrhgrmhepmhgrihhlfhhr
     ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:95JTXkZm4cA4Lw2rtEMRSgS6jhCB1ATfMDPMgBaMtZdBDg_qRE2rlw>
-    <xmx:95JTXjyptGbJHi5uZv16BGj7Hk3hY3tmBBlprKavhpJRQhyPEyjAig>
-    <xmx:95JTXs0z9kjPwszdSqaf4oKcPSjCLPYuSxaG_VKNsBR2RL9nCeDk7g>
-    <xmx:95JTXr7O_5YOVEWB9BDpyRTWdyC0k7S1z5BLpzkjMp3qOrmX2hw6X7BviWc>
+X-ME-Proxy: <xmx:8pJTXvCxxc2mayxuQyTRcJyJFbb1I8epe7kmRPXgKYaF1c_9Drwxkw>
+    <xmx:8pJTXscdH2afqrIfdncj5DInIN9JoqhrKzCWtNcRRpf35YGNZNpi6g>
+    <xmx:8pJTXjit5z8sEQg8vjMztB8ZeQJxkOnYPtyqpxi24AOLgpNyIp-WZA>
+    <xmx:8pJTXqsOpzCeVTSqI1LQUHly2dY43rZ7Z8zcxHEr91V5tw7el9a-DxUlcrU>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 94088328005A;
-        Mon, 24 Feb 2020 04:10:15 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D9196328005E;
+        Mon, 24 Feb 2020 04:10:09 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 60/89] drm/vc4: crtc: Add BCM2711 pixelvalves
-Date:   Mon, 24 Feb 2020 10:07:02 +0100
-Message-Id: <0369f1cccd28e89dd64869e73dab5bbcbaf5e793.1582533919.git-series.maxime@cerno.tech>
+Subject: [PATCH 56/89] drm/vc4: crtc: Add HDMI1 encoder type
+Date:   Mon, 24 Feb 2020 10:06:58 +0100
+Message-Id: <bca207588770faae4db427c729bae8da3fd6e849.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -88,156 +88,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM2711 has 5 pixelvalves, so now that our driver is ready, let's add
-support for them.
+The BCM2711 sports a second HDMI controller, so let's add that second HDMI
+encoder type.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 82 ++++++++++++++++++++++++++++++++++-
- drivers/gpu/drm/vc4/vc4_regs.h |  6 +++-
- 2 files changed, 86 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/vc4/vc4_drv.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index b10b267f56fe..82ae787fca58 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -273,6 +273,13 @@ static u32 vc4_get_fifo_full_level(struct vc4_crtc *vc4_crtc, u32 format)
- 	case PV_CONTROL_FORMAT_24:
- 	case PV_CONTROL_FORMAT_DSIV_24:
- 	default:
-+		/*
-+		 * For some reason, the pixelvalve4 doesn't work with
-+		 * the usual formula and will only work with 32.
-+		 */
-+		if (vc4_crtc->data->hvs_output == 5)
-+			return 32;
-+
- 		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
- 	}
- }
-@@ -281,8 +288,14 @@ static u32 vc4_crtc_get_fifo_full_level_bits(struct vc4_crtc *vc4_crtc,
- 					     u32 format)
- {
- 	u32 level = vc4_get_fifo_full_level(vc4_crtc, format);
--	return VC4_SET_FIELD(level & 0x3f,
--			     PV_CONTROL_FIFO_LEVEL);
-+	u32 ret = 0;
-+
-+	if (level > 0x3f)
-+		ret |= VC4_SET_FIELD((level >> 6) & 0x3,
-+				     PV5_CONTROL_FIFO_LEVEL_HIGH);
-+
-+	return ret | VC4_SET_FIELD(level & 0x3f,
-+				   PV_CONTROL_FIFO_LEVEL);
- }
- 
- /*
-@@ -328,6 +341,9 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
- 	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
- 	CRTC_WRITE(PV_CONTROL, 0);
- 
-+	CRTC_WRITE(PV_MUX_CFG,
-+		   VC4_SET_FIELD(8, PV_MUX_CFG_RGB_PIXEL_MUX_MODE));
-+
- 	CRTC_WRITE(PV_HORZA,
- 		   VC4_SET_FIELD((mode->htotal - mode->hsync_end) * pixel_rep / ppc,
- 				 PV_HORZA_HBP) |
-@@ -1114,10 +1130,72 @@ static const struct vc4_crtc_data bcm2835_pv2_data = {
- 	},
- };
- 
-+static const struct vc4_crtc_data bcm2711_pv0_data = {
-+	.debugfs_name = "crtc0_regs",
-+	.hvs_available_channels = BIT(0),
-+	.hvs_output = 0,
-+	.fifo_depth = 64,
-+	.pixels_per_clock = 1,
-+	.encoder_types = {
-+		[0] = VC4_ENCODER_TYPE_DSI0,
-+		[1] = VC4_ENCODER_TYPE_DPI,
-+	},
-+};
-+
-+static const struct vc4_crtc_data bcm2711_pv1_data = {
-+	.debugfs_name = "crtc1_regs",
-+	.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
-+	.hvs_output = 3,
-+	.fifo_depth = 64,
-+	.pixels_per_clock = 1,
-+	.encoder_types = {
-+		[0] = VC4_ENCODER_TYPE_DSI1,
-+		[1] = VC4_ENCODER_TYPE_SMI,
-+	},
-+};
-+
-+static const struct vc4_crtc_data bcm2711_pv2_data = {
-+	.debugfs_name = "crtc2_regs",
-+	.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
-+	.hvs_output = 4,
-+	.fifo_depth = 256,
-+	.pixels_per_clock = 2,
-+	.encoder_types = {
-+		[0] = VC4_ENCODER_TYPE_HDMI0,
-+	},
-+};
-+
-+static const struct vc4_crtc_data bcm2711_pv3_data = {
-+	.debugfs_name = "crtc3_regs",
-+	.hvs_available_channels = BIT(1),
-+	.hvs_output = 1,
-+	.fifo_depth = 64,
-+	.pixels_per_clock = 1,
-+	.encoder_types = {
-+		[0] = VC4_ENCODER_TYPE_VEC,
-+	},
-+};
-+
-+static const struct vc4_crtc_data bcm2711_pv4_data = {
-+	.debugfs_name = "crtc4_regs",
-+	.hvs_available_channels = BIT(0) | BIT(1) | BIT(2),
-+	.hvs_output = 5,
-+	.fifo_depth = 64,
-+	.pixels_per_clock = 2,
-+	.encoder_types = {
-+		[0] = VC4_ENCODER_TYPE_HDMI1,
-+	},
-+};
-+
- static const struct of_device_id vc4_crtc_dt_match[] = {
- 	{ .compatible = "brcm,bcm2835-pixelvalve0", .data = &bcm2835_pv0_data },
- 	{ .compatible = "brcm,bcm2835-pixelvalve1", .data = &bcm2835_pv1_data },
- 	{ .compatible = "brcm,bcm2835-pixelvalve2", .data = &bcm2835_pv2_data },
-+	{ .compatible = "brcm,bcm2711-pixelvalve0", .data = &bcm2711_pv0_data },
-+	{ .compatible = "brcm,bcm2711-pixelvalve1", .data = &bcm2711_pv1_data },
-+	{ .compatible = "brcm,bcm2711-pixelvalve2", .data = &bcm2711_pv2_data },
-+	{ .compatible = "brcm,bcm2711-pixelvalve3", .data = &bcm2711_pv3_data },
-+	{ .compatible = "brcm,bcm2711-pixelvalve4", .data = &bcm2711_pv4_data },
- 	{}
- };
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_regs.h b/drivers/gpu/drm/vc4/vc4_regs.h
-index b96ebbb1354b..35279b118d41 100644
---- a/drivers/gpu/drm/vc4/vc4_regs.h
-+++ b/drivers/gpu/drm/vc4/vc4_regs.h
-@@ -130,6 +130,8 @@
- #define V3D_ERRSTAT  0x00f20
- 
- #define PV_CONTROL				0x00
-+# define PV5_CONTROL_FIFO_LEVEL_HIGH_MASK	VC4_MASK(26, 25)
-+# define PV5_CONTROL_FIFO_LEVEL_HIGH_SHIFT	25
- # define PV_CONTROL_FORMAT_MASK			VC4_MASK(23, 21)
- # define PV_CONTROL_FORMAT_SHIFT		21
- # define PV_CONTROL_FORMAT_24			0
-@@ -209,6 +211,10 @@
- 
- #define PV_HACT_ACT				0x30
- 
-+#define PV_MUX_CFG				0x34
-+# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_MASK	VC4_MASK(5, 2)
-+# define PV_MUX_CFG_RGB_PIXEL_MUX_MODE_SHIFT	2
-+
- #define SCALER_CHANNELS_COUNT			3
- 
- #define SCALER_DISPCTRL                         0x00000000
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index c262c7a388a4..1e44a3a8c2b0 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -428,6 +428,7 @@ to_vc4_plane_state(struct drm_plane_state *state)
+ enum vc4_encoder_type {
+ 	VC4_ENCODER_TYPE_NONE,
+ 	VC4_ENCODER_TYPE_HDMI0,
++	VC4_ENCODER_TYPE_HDMI1,
+ 	VC4_ENCODER_TYPE_VEC,
+ 	VC4_ENCODER_TYPE_DSI0,
+ 	VC4_ENCODER_TYPE_DSI1,
 -- 
 git-series 0.9.1
