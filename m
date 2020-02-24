@@ -2,136 +2,133 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C9C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2DEC11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2435E2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53322082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IURSZ7Dx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgBXL1p (ORCPT
+        id S1727426AbgBXL15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:27:45 -0500
-Received: from mga12.intel.com ([192.55.52.136]:50199 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgBXL1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:27:45 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 03:27:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
-   d="scan'208";a="349902804"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Feb 2020 03:27:41 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 24 Feb 2020 13:27:40 +0200
-Date:   Mon, 24 Feb 2020 13:27:40 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Martin Volf <martin.volf.42@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
- b84398d6d7f90080
-Message-ID: <20200224112740.GL2667@lahna.fi.intel.com>
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
- <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
- <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
- <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
- <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
- <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
- <20200224101800.GJ2667@lahna.fi.intel.com>
- <20200224103731.GA10400@smile.fi.intel.com>
- <20200224105121.GK2667@lahna.fi.intel.com>
+        Mon, 24 Feb 2020 06:27:57 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:41024 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXL15 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:27:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OBRZBm049053;
+        Mon, 24 Feb 2020 11:27:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=qaLjDAIw6mSX2sA4FzFmvfhX3ybm6asvNIXeCFRRclQ=;
+ b=IURSZ7DxCuLj7ateYVeAPowimphunG2NcuDv8JhvS9K+KT4VIjSQqihH2SuWtlumEA67
+ OdGrFPFn72SUR1XpqaRQNlfpmf1oJUeQ3TLAlFGahGZ9ZBaCmaj69rHRKp2SwwnsFF3d
+ 0q0B4tvXZ2a7bkrh3h6M0Ue6Iu1iie5SAZAl+PSccntosGx0FYK8KBy9rv0gv1PaCznL
+ 5KMcpPtzT7APSVdgExiAvBkopTRbPw6j+a03uIARSGwoaJPev0wiUUQXycJBsQ3yErqI
+ 12SSKIs9BRxUO2AERQLrJIgYnpAnGzOmg4+q4Qw73kZpzNHc61AVvi1Mly9XH98o9KQm aA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2ybvr4k0ey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 11:27:47 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OBLsUx066158;
+        Mon, 24 Feb 2020 11:27:46 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ybe111758-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 11:27:46 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01OBRimX031221;
+        Mon, 24 Feb 2020 11:27:44 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Feb 2020 03:27:43 -0800
+Date:   Mon, 24 Feb 2020 14:27:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Walter Harms <wharms@bfs.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: rtl8723bs: core: remove redundant zero'ing of
+ counter variable k
+Message-ID: <20200224112735.GC3286@kadam>
+References: <20200223152840.418439-1-colin.king@canonical.com>
+ <5f875f84e6014d2bb5b78f71dc2831a2@bfs.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224105121.GK2667@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <5f875f84e6014d2bb5b78f71dc2831a2@bfs.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ clxscore=1011 adultscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:51:25PM +0200, Mika Westerberg wrote:
-> > I'm wondering if
-> > 
-> > 		pci_dev_is_present(...);
-> > 
-> > returns false here.
+On Mon, Feb 24, 2020 at 11:07:55AM +0000, Walter Harms wrote:
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_efuse.c b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> index 3b8848182221..bdb6ff8aab7d 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> @@ -244,10 +244,8 @@ u16        Address)
+>                 while (!(Bytetemp & 0x80)) {
+>                         Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+>                         k++;
+> -                       if (k == 1000) {
+> -                               k = 0;
+> +                       if (k == 1000)
+>                                 break;
+> -                       }
 > 
-> Well that might also be the case since lspci shows this:
+> IMHO this is confusing to read, i suggest:
 > 
-> 00:1f.0 ISA bridge: Intel Corporation Z390 Chipset LPC/eSPI Controller (rev 10)
-> 00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
-> 00:1f.4 SMBus: Intel Corporation Cannon Lake PCH SMBus Controller (rev 10)
+>  for(k=0;k<1000;k++) {
+>       Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+>       if ( Bytetemp & 0x80 )
+>                break;
+>       }
 > 
-> PMC is 1f.2 and not present here. However, it may be that the PMC is
-> still there it just does not "enumerate" because its devid/vendorid are
-> set to 0xffff. Similar hiding was done for the P2SB bridge.
 
-Actually I think this is the case here.
+The problem with the original code is that the variable is named "k"
+instead of "retry".  It should be:
 
-I don't know the iTCO_wdt well enough to say if it could live without
-the ICH_RES_IO_SMI. It looks like this register is used to disable SMI
-generation but not sure how well it works if it is left to BIOS to
-configure. I suppose these systems should use WDAT instead.
+	do {
+		Bytetemp = rtw_read8(Adapter, EFUSE_CTRL+3);
+	} while (!(Bytetemp & 0x80)) && ++retry < 1000);
 
-Martin, can you try the below patch?
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index ba87305f4332..c16e5ad08641 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1593,7 +1593,7 @@ i801_add_tco_cnl(struct i801_priv *priv, struct pci_dev *pci_dev,
- static void i801_add_tco(struct i801_priv *priv)
- {
- 	u32 base_addr, tco_base, tco_ctl, ctrl_val;
--	struct pci_dev *pci_dev = priv->pci_dev;
-+	struct pci_dev *pmc_dev, *pci_dev = priv->pci_dev;
- 	struct resource tco_res[3], *res;
- 	unsigned int devfn;
- 
-@@ -1620,7 +1620,12 @@ static void i801_add_tco(struct i801_priv *priv)
- 	 * Power Management registers.
- 	 */
- 	devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
--	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
-+	pmc_dev = pci_get_slot(pci_dev->bus, devfn);
-+	if (!pmc_dev) {
-+		dev_info(&pci_dev->dev, "PMC device disabled, not enabling iTCO\n");
-+		return;
-+	}
-+	pci_read_config_dword(pmc_dev, ACPIBASE, &base_addr);
- 
- 	res = &tco_res[ICH_RES_IO_SMI];
- 	res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
-@@ -1630,15 +1635,17 @@ static void i801_add_tco(struct i801_priv *priv)
- 	/*
- 	 * Enable the ACPI I/O space.
- 	 */
--	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPICTRL, &ctrl_val);
-+	pci_read_config_dword(pmc_dev, ACPICTRL, &ctrl_val);
- 	ctrl_val |= ACPICTRL_EN;
--	pci_bus_write_config_dword(pci_dev->bus, devfn, ACPICTRL, ctrl_val);
-+	pci_write_config_dword(pmc_dev, ACPICTRL, ctrl_val);
- 
- 	if (priv->features & FEATURE_TCO_CNL)
- 		priv->tco_pdev = i801_add_tco_cnl(priv, pci_dev, tco_res);
- 	else
- 		priv->tco_pdev = i801_add_tco_spt(priv, pci_dev, tco_res);
- 
-+	pci_dev_put(pmc_dev);
-+
- 	if (IS_ERR(priv->tco_pdev))
- 		dev_warn(&pci_dev->dev, "failed to create iTCO device\n");
- }
+>  NTL is am wondering what will happen if k==1000
+>  and Bytetemp is still invalid. Will rtw_read8() fail or
+>  simply return invalid data ?
+
+Yeah.  That was my thought reviewing this patch as well.
+
+It should probably return 0xff on failure.
+
+	if (retry >= 1000)
+		return 0xff;
+
+regards,
+dan carpenter
+
