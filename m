@@ -2,116 +2,91 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFC8C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5584AC35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3BB2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C872067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 02:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgBXCTV (ORCPT
+        id S1727215AbgBXCVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 21:19:21 -0500
-Received: from mga11.intel.com ([192.55.52.93]:28260 "EHLO mga11.intel.com"
+        Sun, 23 Feb 2020 21:21:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:56128 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbgBXCTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 21:19:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 18:19:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,478,1574150400"; 
-   d="scan'208";a="435762537"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Feb 2020 18:19:16 -0800
-Date:   Mon, 24 Feb 2020 10:19:15 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-Message-ID: <20200224021915.GC5061@shbuild999.sh.intel.com>
-References: <20200205123216.GO12867@shao2-debian>
- <20200205125804.GM14879@hirez.programming.kicks-ass.net>
- <20200221080325.GA67807@shbuild999.sh.intel.com>
- <20200221132048.GE652992@krava>
- <20200223141147.GA53531@shbuild999.sh.intel.com>
- <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
- <20200224003301.GA5061@shbuild999.sh.intel.com>
- <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+        id S1727151AbgBXCVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 21:21:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4954D1FB;
+        Sun, 23 Feb 2020 18:21:32 -0800 (PST)
+Received: from [10.162.16.95] (p8cg001049571a15.blr.arm.com [10.162.16.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05F473F6CF;
+        Sun, 23 Feb 2020 18:21:30 -0800 (PST)
+Subject: Re: [PATCH 3/5] mm/vma: Replace all remaining open encodings with
+ is_vm_hugetlb_page()
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1581915833-21984-4-git-send-email-anshuman.khandual@arm.com>
+ <202002190954.rWlsTEwn%lkp@intel.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <7e76e88c-e828-654b-bf2a-4573f388e7cc@arm.com>
+Date:   Mon, 24 Feb 2020 07:51:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <202002190954.rWlsTEwn%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 05:06:33PM -0800, Linus Torvalds wrote:
- 
-> >      ffffffff8225b580 d types__ptrace
-> >      ffffffff8225b5c0 D root_user
-> >      ffffffff8225b680 D init_user_ns
+
+On 02/19/2020 06:44 AM, kbuild test robot wrote:
+> Hi Anshuman,
 > 
-> I'm assuming this is after the alignment patch (since that's 64-byte
-> aligned there).
+> Thank you for the patch! Yet something to improve:
 > 
-> What was it without the alignment?
-
-For 5.0-rc6: 
-	ffffffff8225b4c0 d types__ptrace
-	ffffffff8225b4e0 D root_user
-	ffffffff8225b580 D init_user_ns
-
-For 5.0-rc6 + 81ec3f3c4c4
-	ffffffff8225b580 d types__ptrace
-	ffffffff8225b5a0 D root_user
-	ffffffff8225b640 D init_user_ns
-
-The sigpending and __count are in the same cachline.
-
+> [auto build test ERROR on mmotm/master]
+> [also build test ERROR on tip/perf/core m68k/for-next powerpc/next tip/sched/core char-misc/char-misc-testing linux/master linus/master tip/x86/mm asm-generic/master v5.6-rc2 next-20200218]
+> [cannot apply to kvm-ppc/kvm-ppc-next]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 > 
-> > No, it's not the biggest, I tried another machine 'Xeon Phi(TM) CPU 7295',
-> > which has 72C/288T, and the regression is not seen. This is the part
-> > confusing me :)
+> url:    https://github.com/0day-ci/linux/commits/Anshuman-Khandual/mm-vma-Use-available-wrappers-when-possible/20200219-065223
+> base:   git://git.cmpxchg.org/linux-mmotm.git master
+> config: nds32-allnoconfig (attached as .config)
+> compiler: nds32le-linux-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=nds32 
 > 
-> Hmm.
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> Humor me - what  happens if you turn off SMT on that Cascade Lake
-> system?  Maybe it's about the thread ID bit in the L1? Although again,
-> I'd have expected things to get _worse_ if it's the two fields that
-> are now in the same cachline thanks to alignment.
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from arch/nds32/include/asm/tlb.h:7,
+>                     from arch/nds32/mm/init.c:18:
+>    include/asm-generic/tlb.h: In function 'tlb_update_vma_flags':
+>>> include/asm-generic/tlb.h:382:18: error: implicit declaration of function 'is_vm_hugetlb_page' [-Werror=implicit-function-declaration]
+>      382 |  tlb->vma_huge = is_vm_hugetlb_page(vma);
+>          |                  ^~~~~~~~~~~~~~~~~~
+>    cc1: some warnings being treated as errors
 
-I'll try it and report back.
- 
-> The Xeon Phi is the small-core setup, right? They may be slow enough
-> to not show the issue as clearly despite having more cores. And it
-> wouldn't show effects of some out-of-order speculative cache accesses.
+Though I am unable to reproduce this build failure [1], it seems like
+explicitly adding <linux/hugetlb.h> or <linux/hugetlb_inline.h> header
+will be sufficient.
 
-Yes, seems the Xeon Phi is using 72 Silvermont cores. And the less bigger
-platform I tested was a 2 sockets 48C/96T Cascadelake platform which
-doesn't reproduce the regression.
+[1] nds32 build failure (error while loading shared libraries)
 
-Thanks,
-Feng
+/usr/lib/x86_64-linux-gnu/libfl.so.2: invalid ELF header
