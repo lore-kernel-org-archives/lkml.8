@@ -2,78 +2,96 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD89C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA5C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3599120838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4112072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IYYHtx4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgBXLqD (ORCPT
+        id S1727727AbgBXLqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:46:03 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:54577 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbgBXLqC (ORCPT
+        Mon, 24 Feb 2020 06:46:44 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:32987 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727627AbgBXLqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:46:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id t4so17805994ili.21
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:46:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=TPDa8vA3dA5ocPrn3u12l+xTYIvr8/gY5caMU69qWlU=;
-        b=ClHxSw/PS8pLWGkr7/fVhHSAqF9s1JBQbG2jE1UYyOJMzhuw+pxJx3jKV5ZkX9EP5/
-         NL0BnZ0/r3kSp1SRRaKbV+52c6V6NtTkXRJkS6Z0eJejy00jTEVBPcXXcduRyEhsN4J9
-         vCfJj+XmtiRGUuBaBKkHC41x1ntKM2jeJuRGibppRwaE1WhWJAvGSSL2yqO5DcCl77VS
-         xHmHRrhQs0dPJ/ftXozCDmeAtL+PoWucYGfo0W6j0mH/cwXbKp/V3CNKXp3S5ld/Q1nT
-         1FvYvl2pDbGPHs1QREvxFhIT4sv2QrBtVk+Gcw9zLICIjQK1jKHtWmQoLp3Nwtx+9xsQ
-         kp/g==
-X-Gm-Message-State: APjAAAXYxyFp0oHN41ZHNerdrad9SEx0loJFLflgDP9zicgHPSl1Zq4/
-        B8bRZIoz5AXErwMyLcpdwhpXzieLWZcqhejvtPt9zzb+TedU
-X-Google-Smtp-Source: APXvYqw8hJLLKQWy7t1wn0gt4p/CBTAWcz0u7a08HT32PVYseKb6Zst8oSvvhVBG6HkcXdOrZxccOixjo3lFs6l0GucGK/G5V7q9
-MIME-Version: 1.0
-X-Received: by 2002:a6b:730c:: with SMTP id e12mr48673976ioh.4.1582544761598;
- Mon, 24 Feb 2020 03:46:01 -0800 (PST)
-Date:   Mon, 24 Feb 2020 03:46:01 -0800
-In-Reply-To: <00000000000005efef059f4e27e1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005b46ba059f50ea17@google.com>
-Subject: Re: KASAN: use-after-free Read in ethnl_update_bitset32
-From:   syzbot <syzbot+709b7a64d57978247e44@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, f.fainelli@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Feb 2020 06:46:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582544803; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=RQyNQ3DFWtlsQXD4V++chr0ZTqGNZET5yxGQsVzgceo=; b=IYYHtx4HRv0jxoTXuHO1zqgAp0bHy2AhOQJKWAixhw2tK8DeqboirrecZ95PK0bqn19c0kpR
+ zF4eEGcAxtG+yOTKF6TpyM8UPami1a3YRHWXNjY2N3N9GLxJsLQxS9lnB8oID07MKzcMVk0o
+ hdpofe/xF0mh1w+VWUbchgRj0w0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e53b7a1.7f963daa67a0-smtp-out-n01;
+ Mon, 24 Feb 2020 11:46:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 475DDC4479D; Mon, 24 Feb 2020 11:46:41 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C3B6C43383;
+        Mon, 24 Feb 2020 11:46:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C3B6C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH V2] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+Date:   Mon, 24 Feb 2020 17:14:43 +0530
+Message-Id: <1582544683-9505-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+CQE feature has been enabled on sdhci-msm. Add CQE reg map
+and reg names that need to be supplied for supporting CQE feature.
 
-commit bfbcfe2032e70bd8598d680d39ac177d507e39ac
-Author: Michal Kubecek <mkubecek@suse.cz>
-Date:   Fri Dec 27 14:56:13 2019 +0000
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
 
-    ethtool: set link modes related data with LINKMODES_SET request
+Changes since V1:
+	- Dropped _mem suffix to reg names.
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16d59109e00000
-start commit:   0c0ddd6a Merge tag 'linux-watchdog-5.6-rc3' of git://www.l..
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15d59109e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d59109e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
-dashboard link: https://syzkaller.appspot.com/bug?extid=709b7a64d57978247e44
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13885de9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1518127ee00000
-
-Reported-by: syzbot+709b7a64d57978247e44@syzkaller.appspotmail.com
-Fixes: bfbcfe2032e7 ("ethtool: set link modes related data with LINKMODES_SET request")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 7ee639b..5445931 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -26,7 +26,13 @@ Required properties:
+ 
+ - reg: Base address and length of the register in the following order:
+ 	- Host controller register map (required)
+-	- SD Core register map (required for msm-v4 and below)
++	- SD Core register map (required for controllers earlier than msm-v5)
++	- CQE register map (Optional, CQE support is present on SDHC instance meant
++	                    for eMMC and version v4.2 and above)
++- reg-names: When CQE register map is supplied, below reg-names are required
++	- "hc" for Host controller register map
++	- "core" for SD core register map
++	- "cqhci" for CQE register map
+ - interrupts: Should contain an interrupt-specifiers for the interrupts:
+ 	- Host controller interrupt (required)
+ - pinctrl-names: Should contain only one value - "default".
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
