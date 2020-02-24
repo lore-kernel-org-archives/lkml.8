@@ -2,101 +2,83 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAD2C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E8AC3567A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6152520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E02820658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y9g2PMEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgBXFGW (ORCPT
+        id S1726709AbgBXFI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:06:22 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:59070 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgBXFGW (ORCPT
+        Mon, 24 Feb 2020 00:08:59 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55360 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgBXFI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 00:06:22 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::f0c])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4D22A152F3D63;
-        Sun, 23 Feb 2020 21:06:21 -0800 (PST)
-Date:   Sun, 23 Feb 2020 21:06:20 -0800 (PST)
-Message-Id: <20200223.210620.497537969860161356.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     rogerq@ti.com, t-kristo@ti.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        peter.ujfalusi@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 5/9] net: ethernet: ti: introduce am65x/j721e
- gigabit eth subsystem driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200222155752.22021-6-grygorii.strashko@ti.com>
-References: <20200222155752.22021-1-grygorii.strashko@ti.com>
-        <20200222155752.22021-6-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 23 Feb 2020 21:06:21 -0800 (PST)
+        Mon, 24 Feb 2020 00:08:58 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O58kdn097285;
+        Sun, 23 Feb 2020 23:08:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582520926;
+        bh=GXVBxGYr//34mKEFHKlSsr3qT8aa3kFUQMbfnCy2GT4=;
+        h=From:To:CC:Subject:Date;
+        b=Y9g2PMECu1EOzFKwgKCxb2TmkREIbi26rIAwW5oU47JDzUjqvrlAJ0TnhiGFjkQYX
+         l6APe7dyQqGLPPanKJyq0trOjk6bMv/Jc2XaMJGOiQ+t81b12iLy1QlbradHX71LTH
+         RUBlaalowI5zNwX1K0QRT4geupdQ2pDBHqaJV4J8=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01O58kME070348
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 23 Feb 2020 23:08:46 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 23
+ Feb 2020 23:08:46 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 23 Feb 2020 23:08:46 -0600
+Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O58g4n113272;
+        Sun, 23 Feb 2020 23:08:43 -0600
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <narmstrong@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH 0/2] clocksource: timer-ti-dm: Misc fixes for omap dm timer
+Date:   Mon, 24 Feb 2020 10:37:51 +0530
+Message-ID: <20200224050753.17784-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Sat, 22 Feb 2020 17:57:48 +0200
+This series fixes timer enabling sequence and pwm period updating
+sequence.
 
-> +/**
-> + * struct am65_cpsw_regdump_hdr - regdump record header
-> + *
-> + * @module_id: CPSW module ID
-> + * @len: CPSW module registers space length in u32
-> + */
-> +
-> +struct am65_cpsw_regdump_hdr {
-> +	u32 module_id;
-> +	u32 len;
-> +} __packed;
+Lokesh Vutla (2):
+  clocksource: timer-ti-dm: Do not restore context on every timer enable
+  clocksource: timer-ti-dm: Do not update counter on updating the period
 
-I see no reason for this __packed attribute, please remove it.
+ drivers/clocksource/timer-ti-dm.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-> +void am65_cpsw_nuss_adjust_link(struct net_device *ndev)
-> +{
-> +	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +	struct phy_device *phy = port->slave.phy;
-> +	u32 mac_control = 0;
+-- 
+2.23.0
 
-Please order the local variables in reverse christmas tree order,
-thank you.
-
-> +static void am65_cpsw_nuss_ndo_slave_set_rx_mode(struct net_device *ndev)
-> +{
-> +	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
-> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> +	u32 port_mask;
-> +	bool promisc;
-
-Likewise.
-
-> +static int am65_cpsw_nuss_rx_push(struct am65_cpsw_common *common,
-> +				  struct sk_buff *skb)
-> +{
-> +	struct cppi5_host_desc_t *desc_rx;
-> +	struct am65_cpsw_rx_chn *rx_chn = &common->rx_chns;
-> +	struct device *dev = common->dev;
-> +	dma_addr_t desc_dma;
-> +	dma_addr_t buf_dma;
-> +	u32 pkt_len = skb_tailroom(skb);
-> +	void *swdata;
-
-Likewsie.
-
-And so on, and so forth, for your entire submission.
-
-Thank you.
