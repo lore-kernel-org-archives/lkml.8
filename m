@@ -2,226 +2,281 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B2BC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5C2C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9175C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285012072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFl8sfij"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gSbmxsj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgBXOPV (ORCPT
+        id S1727744AbgBXOP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:15:21 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46185 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727489AbgBXOPV (ORCPT
+        Mon, 24 Feb 2020 09:15:26 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53484 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbgBXOPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:15:21 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y8so4100779pll.13;
-        Mon, 24 Feb 2020 06:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ubnVVT6qI7uXjPc1KQmojOU0uY/xl8NGz3VGIX5HNBc=;
-        b=SFl8sfij2SzuzRD/MqxHZCrFH3Kt3RLYSp33JZO30sqPxNMDzLj+mmvl0Ubpxv5VQH
-         WlU+ckd1Bv4C9Zmy+9fQIW4KvWcXx7izP6YMT7VuBt356HjETVFGBcYuN+xxM2KR8Zbw
-         +Re8EvV6pdushQliODKSJ90UMzSe2l8Kf2b2Zk8nd0P7e3GjNmzJQrZfBf1gAhieumS/
-         RMtAd5UrJWoRQQSrqOSozOK9aY/+5MO9mZx2gBCAodH2CwTRhf6R6TBfYzGYVN4KVcxT
-         keIz6Zoc9pzYfHet7yyntrC4X/bS5fzpY1K94cxNti1P0Ww64BOF4FdJgiFbgEwNdb5u
-         cV+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ubnVVT6qI7uXjPc1KQmojOU0uY/xl8NGz3VGIX5HNBc=;
-        b=ihYlqkGj9mEAMVhNx1hr4D9o3YOMau9uMj1YfsT1gJoHpuFHWw79XvGL29gIzy3dJY
-         36b3an46brVWP8JObd0b6LFzDn4tw6UTbUMrbavYFBzF4hWS5kWPxoABkwdLunLSIomY
-         KZWl2cZ1gECOQhsWNowAUbBwkbe/Y2Xv2C6cS1zH/cDwO3hfgU3mD3yDGAYoU/o1AmxS
-         0pCC8N6Xbn+WpSp33UySM/m1xkmVPLZ66cla6U2ilIj0odqCgUi0QDeOLat3ww6XI2XV
-         IIJV6se/Vj5riFaucwTMuJRQDo5rokeSdnRlKfG/VWwSa2VMFBqbQObEygQfhMMBWmH0
-         dqpw==
-X-Gm-Message-State: APjAAAXbz822tov+aFZnwO9coJ0bC2lFhajEtbeIn4bxPuMawvHj4tr3
-        r9YYreiVXIiPPhDK1ivqtE8=
-X-Google-Smtp-Source: APXvYqwXN5Q+WIqw9lgTr9ImuUegHgpzk3JW2OBJbZvQqEUTnnkuLgM1HXf28ZOfeWIVE3AfwuwgHQ==
-X-Received: by 2002:a17:902:bb93:: with SMTP id m19mr51549174pls.310.1582553720077;
-        Mon, 24 Feb 2020 06:15:20 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w14sm13074074pgi.22.2020.02.24.06.15.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 06:15:19 -0800 (PST)
-Subject: Re: [PATCH] watchdog: imx2_wdt: Drop .remove callback
-To:     Anson Huang <anson.huang@nxp.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
- <20200224102211.clzqw4vtzc4nz5df@pengutronix.de>
- <DB3PR0402MB391637EB54A1FD37059FBE47F5EC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <33c3778f-fc7e-8564-f767-91aafae03122@roeck-us.net>
-Date:   Mon, 24 Feb 2020 06:15:17 -0800
+        Mon, 24 Feb 2020 09:15:25 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OEFNq1097309;
+        Mon, 24 Feb 2020 08:15:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582553723;
+        bh=ichIEIUq04C6mrjG/Wgqy3ZY1uj0LzsxVmdbEqXNaxA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gSbmxsj0XbjIcynO7WKdmhAb9jaiM0I3JxaLKE0cuO3n6K71W11AxdEnyxiCtYu7t
+         ufAam7z24UGfsHf/T4v4LZBjAA4BT9Fz9NEmOi2lSrvznkNqEpcXfQJUKnrl4R1Bst
+         0L/dGNiM5iDF6MjlnaDArBHFK2rT0GYOH3xFZfoM=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OEFNEU085157;
+        Mon, 24 Feb 2020 08:15:23 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 08:15:23 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 08:15:23 -0600
+Received: from [10.250.77.18] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OEFMAN036321;
+        Mon, 24 Feb 2020 08:15:22 -0600
+Subject: Re: [PATCHv7 04/15] remoteproc/omap: Add support to parse internal
+ memories from DT
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
+        <s-anna@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200221101936.16833-1-t-kristo@ti.com>
+ <20200221101936.16833-5-t-kristo@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <7de4914a-a5c6-b108-af10-45283aabddc7@ti.com>
+Date:   Mon, 24 Feb 2020 09:15:22 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB391637EB54A1FD37059FBE47F5EC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200221101936.16833-5-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 3:44 AM, Anson Huang wrote:
-> Hi, Uwe
+On 2/21/20 5:19 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
->> Subject: Re: [PATCH] watchdog: imx2_wdt: Drop .remove callback
->>
->> On Mon, Feb 24, 2020 at 10:51:27AM +0800, Anson Huang wrote:
->>> .remove callback implementation doesn' call clk_disable_unprepare()
->>> which is buggy, actually, we can just use
->>> devm_watchdog_register_device() and
->>> devm_add_action_or_reset() to handle all necessary operations for
->>> remove action, then .remove callback can be dropped.
->>>
->>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->>> ---
->>>   drivers/watchdog/imx2_wdt.c | 37
->>> ++++++++++---------------------------
->>>   1 file changed, 10 insertions(+), 27 deletions(-)
->>>
->>> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
->>> index f8d58bf..1fe472f 100644
->>> --- a/drivers/watchdog/imx2_wdt.c
->>> +++ b/drivers/watchdog/imx2_wdt.c
->>> @@ -244,6 +244,11 @@ static const struct regmap_config
->> imx2_wdt_regmap_config = {
->>>   	.max_register = 0x8,
->>>   };
->>>
->>> +static void imx2_wdt_action(void *data) {
->>> +	clk_disable_unprepare(data);
->>
->> Does this have the effect of stopping the watchdog? Maybe we can have a
->> more expressive function name here (imx2_wdt_stop_clk or similar)?
+> The OMAP remoteproc driver has been enhanced to parse and store
+> the kernel mappings for different internal RAM memories that may
+> be present within each remote processor IP subsystem. Different
+> devices have varying memories present on current SoCs. The current
+> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+> L2 RAM memories.
 > 
-> This action is ONLY called when probe failed or device is removed, and if watchdog
-> is running, the core driver will prevent it from being removed.
+> IPUs are expected to have the L2RAM at a fixed device address of
+> 0x20000000, based on the current limitations on Attribute MMU
+> configurations.
 > 
->>
->> Is there some watchdog core policy that tells if the watchdog should be
->> stopped on unload?
+> NOTE:
+> The current logic doesn't handle the parsing of memories for DRA7
+> remoteproc devices, and will be added alongside the DRA7 support.
 > 
-> watchdog_stop_on_unregister() should be called in .probe function to make core
-> policy stop the watchdog before removing it, but I think this driver does NOT call
-> it, maybe I should add the API call, need Guenter to help confirm.
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo: converted to parse mem names / device addresses from pdata]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
 > 
-The driver doesn't have a stop function, which implies that the watchdog
-can not be stopped once started. Calling watchdog_stop_on_unregister()
-seems to be pointless.
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index 64b559caadff..4f92b069f5d0 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
+>  	unsigned int boot_reg;
+>  };
+>  
+> +/**
+> + * struct omap_rproc_mem - internal memory structure
+> + * @cpu_addr: MPU virtual address of the memory region
+> + * @bus_addr: bus address used to access the memory region
+> + * @dev_addr: device address of the memory region from DSP view
+> + * @size: size of the memory region
+> + */
+> +struct omap_rproc_mem {
+> +	void __iomem *cpu_addr;
+> +	phys_addr_t bus_addr;
+> +	u32 dev_addr;
+> +	size_t size;
+> +};
+> +
+>  /**
+>   * struct omap_rproc - omap remote processor state
+>   * @mbox: mailbox channel handle
+>   * @client: mailbox client to request the mailbox channel
+>   * @boot_data: boot data structure for setting processor boot address
+> + * @mem: internal memory regions data
+> + * @num_mems: number of internal memory regions
+>   * @rproc: rproc handle
+>   * @reset: reset handle
+>   */
+> @@ -51,16 +67,30 @@ struct omap_rproc {
+>  	struct mbox_chan *mbox;
+>  	struct mbox_client client;
+>  	struct omap_rproc_boot_data *boot_data;
+> +	struct omap_rproc_mem *mem;
+> +	int num_mems;
+>  	struct rproc *rproc;
+>  	struct reset_control *reset;
+>  };
+>  
+> +/**
+> + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
+> + * @name: name for this memory entry
+> + * @dev_addr: device address for the memory entry
+> + */
+> +struct omap_rproc_mem_data {
+> +	const char *name;
+> +	const u32 dev_addr;
+> +};
+> +
+>  /**
+>   * struct omap_rproc_dev_data - device data for the omap remote processor
+>   * @device_name: device name of the remote processor
+> + * @mems: memory definitions for this remote processor
+>   */
+>  struct omap_rproc_dev_data {
+>  	const char *device_name;
+> +	const struct omap_rproc_mem_data *mems;
+>  };
+>  
+>  /**
+> @@ -223,12 +253,18 @@ static const struct rproc_ops omap_rproc_ops = {
+>  	.kick		= omap_rproc_kick,
+>  };
+>  
+> +static const struct omap_rproc_mem_data ipu_mems[] = {
+> +	{ .name = "l2ram", .dev_addr = 0x20000000 },
+> +	{ },
+> +};
+> +
+>  static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>  	.device_name	= "dsp",
+>  };
+>  
+>  static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>  	.device_name	= "ipu",
+> +	.mems		= ipu_mems,
+>  };
+>  
+>  static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+> @@ -237,6 +273,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>  
+>  static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>  	.device_name	= "ipu",
+> +	.mems		= ipu_mems,
+>  };
+>  
+>  static const struct of_device_id omap_rproc_of_match[] = {
+> @@ -311,6 +348,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+> +					       struct rproc *rproc)
+> +{
+> +	struct omap_rproc *oproc = rproc->priv;
 
-That also implies that the watchdog can not be unloaded after it has
-been started since it can't be stopped. More on that below.
 
->>
->>> +}
->>> +
->>>   static int __init imx2_wdt_probe(struct platform_device *pdev)  {
->>>   	struct device *dev = &pdev->dev;
->>> @@ -292,6 +297,10 @@ static int __init imx2_wdt_probe(struct
->> platform_device *pdev)
->>>   	if (ret)
->>>   		return ret;
->>>
->>> +	ret = devm_add_action_or_reset(dev, imx2_wdt_action, wdev->clk);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>>   	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
->>>   	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ?
->> WDIOF_CARDRESET : 0;
->>>
->>> @@ -315,32 +324,7 @@ static int __init imx2_wdt_probe(struct
->> platform_device *pdev)
->>>   	 */
->>>   	regmap_write(wdev->regmap, IMX2_WDT_WMCR, 0);
->>>
->>> -	ret = watchdog_register_device(wdog);
->>> -	if (ret)
->>> -		goto disable_clk;
->>> -
->>> -	dev_info(dev, "timeout %d sec (nowayout=%d)\n",
->>> -		 wdog->timeout, nowayout);
->>
->> Does the core put this info in the kernel log? If not dropping it isn't obviously
->> right enough to be done en passant.
-> 
-> This is just an info for user which I think NOT unnecessary, so I drop it in this patch
-> as well.
-> 
->>
->>> -	return 0;
->>> -
->>> -disable_clk:
->>> -	clk_disable_unprepare(wdev->clk);
->>> -	return ret;
->>> -}
->>> -
->>> -static int __exit imx2_wdt_remove(struct platform_device *pdev) -{
->>> -	struct watchdog_device *wdog = platform_get_drvdata(pdev);
->>> -	struct imx2_wdt_device *wdev = watchdog_get_drvdata(wdog);
->>> -
->>> -	watchdog_unregister_device(wdog);
->>> -
->>> -	if (imx2_wdt_is_running(wdev)) {
->>> -		imx2_wdt_ping(wdog);
->>> -		dev_crit(&pdev->dev, "Device removed: Expect reboot!\n");
->>> -	}
->>
->> I also wonder about this one. This changes the timing behaviour and so
->> IMHO shouldn't be done as a side effect of a cleanup patch.
-> 
-> Guenter has a comment of "use devm_watchdog_register_device(), and the watchdog subsystem
-> should prevent removal if the watchdog is running ", so I thought no need to check the watchdog's
-> status here, but after further check the core code of watchdog_cdev_unregister() function, I ONLY
-> see it will check whether need to stop watchdog before unregister,
-> 
+'rproc' is only used to get 'oproc', why not just pass in 'oproc'?
 
-I would suggest for someone to try and trigger this message, and let me know
-how you did it. If the watchdog is running, it should not be possible to unload
-the driver; attempts to unload it should result in -EBUSY. If it is possible
-to unload the driver, there is a bug in watchdog core which will need to get
-fixed.
 
-> ...
-> 
-> 1083         if (watchdog_active(wdd) &&
-> 1084             test_bit(WDOG_STOP_ON_UNREGISTER, &wdd->status)) {
-> 1085                 watchdog_stop(wdd);
-> 1086         }
-> 
-> Hi, Guenter
-> 	Do you think watchdog_stop_on_unregister() should be called in .probe function to
-> make watchdog stop before unregister?
-> 
-How would you expect the watchdog core to stop the watchdog
-with no stop function in the driver ?
+> +	struct device *dev = &pdev->dev;
+> +	const struct omap_rproc_dev_data *data;
+> +	struct resource *res;
+> +	int num_mems;
+> +	int i;
+> +
+> +	data = of_device_get_match_data(&pdev->dev);
 
-Thanks,
-Guenter
+
+just use 'dev'
+
+
+> +	if (!data)
+> +		return -ENODEV;
+> +
+> +	if (!data->mems)
+> +		return 0;
+> +
+> +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
+> +		;
+> +
+> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+> +				  GFP_KERNEL);
+> +	if (!oproc->mem)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_mems; i++) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   data->mems[i].name);
+> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+> +			dev_err(dev, "failed to parse and map %s memory\n",
+> +				data->mems[i].name);
+> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+> +		}
+> +		oproc->mem[i].bus_addr = res->start;
+> +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
+> +		oproc->mem[i].size = resource_size(res);
+> +
+> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %pK da 0x%x\n",
+> +			data->mems[i].name, &oproc->mem[i].bus_addr,
+> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+
+
+I'm not a fan of printing kernel virtual addresses, but not a blocker.
+
+
+> +			oproc->mem[i].dev_addr);
+> +	}
+> +	oproc->num_mems = num_mems;
+> +
+> +	return 0;
+> +}
+> +
+>  static int omap_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> @@ -350,6 +435,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  	/* All existing OMAP IPU and DSP processors have an MMU */
+>  	rproc->has_iommu = true;
+>  
+> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+
+
+This only looks to be used for the da_to_va() in the next patch, could
+these be combined?
+
+As above not a big deal, so for this patch and the whole series:
+
+Reviewed-by: Andrew F. Davis <afd@ti.com>
+
+
+> +	if (ret)
+> +		goto free_rproc;
+> +
+>  	ret = omap_rproc_get_boot_data(pdev, rproc);
+>  	if (ret)
+>  		goto free_rproc;
+> 
