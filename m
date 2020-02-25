@@ -2,191 +2,162 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664CDC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFEFC35E03
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3483320658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692BA20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qoxHjOy/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jpq8Q2/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgBYO0y (ORCPT
+        id S1730755AbgBYO1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:26:54 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:33261 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730719AbgBYO0y (ORCPT
+        Tue, 25 Feb 2020 09:27:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36403 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730734AbgBYO1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:26:54 -0500
-Received: by mail-vs1-f68.google.com with SMTP id n27so8117026vsa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:26:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dc9mXVyInlW6eLNwpAGbHUKzj6s6l4zfLFOdqnVBf5M=;
-        b=qoxHjOy/GqgzD/NTmr9stfdAfFgOFFxqtrHseCckSRfapbD8ztNi/TI6LfdhPfuDqh
-         wRyW0A/z3R22Av6sYOs/oG5S6GTBj3WhCWFSEq4CehCfZOhA4uwNyfLXZOfYrdPz939X
-         8Of1AwtxaR3tKdRswTDJ1RIC42BKYFfFixgxiMS9CUU6Xg7RaCZpeMgjhYqZKDJgbZ8Q
-         8e24iEpuWoTQqPVMBorcg41tA44diEyCBFTJbqKqvcV6P+Ohrc3iIy3iumTshW8WFqBS
-         RuYsfmWm3KyvdT53cFhgTsV9EfHKdfHszyqnlg8HN9PdnP72WGy/ITmKDZzMoragPt9E
-         g1lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dc9mXVyInlW6eLNwpAGbHUKzj6s6l4zfLFOdqnVBf5M=;
-        b=XO/KMtxS/mCSJAtGvyxo3Y32k+BN7uzbpRSDInpWNtDc7KDp05a+yU6SBpT7YqFvHo
-         1fp99M8+KDUd0WuhLo/HW0kNfetKneGOghxABBxeAy+A0wY9R+DAJKl1NDCI/kHtRYVx
-         hx24wArXgwYHkS+wBaZnRrAan+MEAkdQNCJ14cinrtXEsSRC6FgCGHLCZ+tllxWbrqjG
-         +qyf7ifdwWRPRVOIjdR4Doe9CPx7Ftl6eou9z7Y8J6azAnBthrj5Qbt5pCbg6dvfwaer
-         NJA1MJxwSLoZkb7kB3JG0DlD8KLnT4iuzM9b512Z8m5otyfxP3R3KaTMVbWKNyxBW86L
-         C/0A==
-X-Gm-Message-State: APjAAAUOCjrunkHhHCZI6jgXDLZ/v/1hC4nyMPb0MYP1n2IQLPhUeeOK
-        uk3aq0kJtc+8ia+1w0+KK6QRl78/st98Dq9S1RPmnQ==
-X-Google-Smtp-Source: APXvYqzOGPKZDkx0TUAeyXUaxQ9W2P2xwrMP0XdLMV2o4KLwTAxAdwW6k9ZHpquQwNMPJVcG7wB2vdH3XsBrqb/Q2dk=
-X-Received: by 2002:a05:6102:22d6:: with SMTP id a22mr28791854vsh.191.1582640812562;
- Tue, 25 Feb 2020 06:26:52 -0800 (PST)
+        Tue, 25 Feb 2020 09:27:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582640858;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=8m/8o/+j7USR0Mno0UKhRFwST/1W4yNpinOlsgdzjBM=;
+        b=Jpq8Q2/qyEZ8h1ume1S5FUGBHmOE0CQ/6HItkOPq5SmACRffwh/+jvQLmXPngO6prUKJcr
+        azc+82s7Jtw8Rs3TZcqgAvig5pD9NfcUCZ8cwWI3/ynDh4aMrXXfM6qduLV/wnOgS+AANy
+        oo5A+ynAsCFYAFiGrvX58dDslw0uok8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-452-Vw9YVJa3PiW-tDC_Xb3jTQ-1; Tue, 25 Feb 2020 09:27:36 -0500
+X-MC-Unique: Vw9YVJa3PiW-tDC_Xb3jTQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 873FC477;
+        Tue, 25 Feb 2020 14:27:34 +0000 (UTC)
+Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D2A0927063;
+        Tue, 25 Feb 2020 14:27:28 +0000 (UTC)
+Subject: Re: [PATCH RFC v4 08/13] mm/memory_hotplug: Introduce
+ offline_and_remove_memory()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
+References: <20191212171137.13872-1-david@redhat.com>
+ <20191212171137.13872-9-david@redhat.com>
+ <20200225141134.GU22443@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <d1dbb687-7959-f4f1-6a64-33ee039782ef@redhat.com>
+Date:   Tue, 25 Feb 2020 15:27:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
- <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
- <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
-In-Reply-To: <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 25 Feb 2020 15:26:16 +0100
-Message-ID: <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Jon Hunter <jonathanh@nvidia.com>, Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225141134.GU22443@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Faiz Abbas
+On 25.02.20 15:11, Michal Hocko wrote:
+> On Thu 12-12-19 18:11:32, David Hildenbrand wrote:
+>> virtio-mem wants to offline and remove a memory block once it unplugge=
+d
+>> all subblocks (e.g., using alloc_contig_range()). Let's provide
+>> an interface to do that from a driver. virtio-mem already supports to
+>> offline partially unplugged memory blocks. Offlining a fully unplugged
+>> memory block will not require to migrate any pages. All unplugged
+>> subblocks are PageOffline() and have a reference count of 0 - so
+>> offlining code will simply skip them.
+>>
+>> All we need an interface to trigger the "offlining" and the removing i=
+n a
+>> single operation - to make sure the memory block cannot get onlined by
+>> user space again before it gets removed.
+>=20
+> Why does that matter? Is it really likely that the userspace would
+> interfere? What would be the scenario?
 
-On Tue, 25 Feb 2020 at 12:41, Jon Hunter <jonathanh@nvidia.com> wrote:
->
->
-> On 25/02/2020 10:04, Jon Hunter wrote:
->
-> ...
->
-> >>>   I find that from the commit the changes in mmc_flush_cache below is
-> >>> the cause.
-> >>>
-> >>> ##
-> >>> @@ -961,7 +963,8 @@ int mmc_flush_cache(struct mmc_card *card)
-> >>>                          (card->ext_csd.cache_size > 0) &&
-> >>>                          (card->ext_csd.cache_ctrl & 1)) {
-> >>>                  err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-> >>> -                               EXT_CSD_FLUSH_CACHE, 1, 0);
-> >>> +                                EXT_CSD_FLUSH_CACHE, 1,
-> >>> +                                MMC_CACHE_FLUSH_TIMEOUT_MS);
-> >
-> >
-> > I no longer see the issue on reverting the above hunk as Bitan suggested
-> > but now I see the following (which is expected) ...
-> >
-> >  WARNING KERN mmc1: unspecified timeout for CMD6 - use generic
->
-> For Tegra, the default timeout used when no timeout is specified for CMD6
-> is 100mS. So hard-coding the following also appears to workaround the
-> problem on Tegra ...
+I guess it's not that relevant after all (I think this comment dates
+back to the times where we didn't have try_remove_memory() and could
+actually BUG_ON() in remove_memory() if there would have been a race).
+Can drop that part.
 
-Interesting.
+>=20
+> Or is still mostly about not requiring callers to open code this genera=
+l
+> patter?
 
->
-> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-> index 868653bc1555..5155e0240fca 100644
-> --- a/drivers/mmc/core/mmc_ops.c
-> +++ b/drivers/mmc/core/mmc_ops.c
-> @@ -992,7 +992,7 @@ int mmc_flush_cache(struct mmc_card *card)
->                         (card->ext_csd.cache_size > 0) &&
->                         (card->ext_csd.cache_ctrl & 1)) {
->                 err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-> -                                EXT_CSD_FLUSH_CACHE, 1, 0);
-> +                                EXT_CSD_FLUSH_CACHE, 1, 100);
->                 if (err)
->                         pr_err("%s: cache flush error %d\n",
->                                         mmc_hostname(card->host), err);
->
-> So the problem appears to be causing by the timeout being too long rather
-> than not long enough.
->
-> Looking more at the code, I think now that we are hitting the condition
-> ...
->
-> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-> index 868653bc1555..feae82b1ff35 100644
-> --- a/drivers/mmc/core/mmc_ops.c
-> +++ b/drivers/mmc/core/mmc_ops.c
-> @@ -579,8 +579,10 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
->          * the host to avoid HW busy detection, by converting to a R1 response
->          * instead of a R1B.
->          */
-> -       if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
-> +       if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
-> +               pr_warn("%s: timeout (%d) > max busy timeout (%d)", mmc_hostname(host), timeout_ms, host->max_busy_timeout);
->                 use_r1b_resp = false;
-> +       }
->
->
-> With the above I see ...
->
->  WARNING KERN mmc1: timeout (1600) > max busy timeout (672)
->
-> So with the longer timeout we are not using/requesting the response.
+From kernel module context, I cannot get access to the actual memory
+block device (find_memory_block()) and call the device_unregister().
 
-You are most likely correct.
+Especially, also the device hotplug lock is not exported. So this is a
+clean helper function to be used from kernel module context. (e.g., also
+hyper-v showed interest for using that)
 
-However, from the core point of view, the response is still requested,
-only that we don't want the driver to wait for the card to stop
-signaling busy. Instead we want to deal with that via "polling" from
-the core.
+--=20
+Thanks,
 
-This is a rather worrying behaviour, as it seems like the host driver
-doesn't really follow this expectations from the core point of view.
-And mmc_flush_cache() is not the only case, as we have erase, bkops,
-sanitize, etc. Are all these working or not really well tested?
+David / dhildenb
 
-Earlier, before my three patches, if the provided timeout_ms parameter
-to __mmc_switch() was zero, which was the case for
-mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
-ignored validating host->max_busy_timeout, which was wrong. In any
-case, this also meant that an R1B response was always used for
-mmc_flush_cache(), as you also indicated above. Perhaps this is the
-critical part where things can go wrong.
-
-BTW, have you tried erase commands for sdhci tegra driver? If those
-are working fine, do you have any special treatments for these?
-
-I have looped in Faiz, as sdhci-omap seems to suffer from very similar
-problems. One thing I noted for sdhci-omap, is that MMC_ERASE commands
-is treated in a special manner in sdhci_omap_set_timeout(). This
-indicates that there is something fishy going on.
-
-Faiz, can you please comment on this?
-
-Kind regards
-Uffe
