@@ -2,126 +2,93 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A40C35E0B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E7AC35E0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667892082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kWdhcXQK"
+	by mail.kernel.org (Postfix) with ESMTP id 0944D2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbgBYQYq (ORCPT
+        id S1730964AbgBYQZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:24:46 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14686 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729817AbgBYQYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:24:45 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e554a3f0000>; Tue, 25 Feb 2020 08:24:31 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Feb 2020 08:24:44 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Feb 2020 08:24:44 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Feb
- 2020 16:24:41 +0000
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-CC:     Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Jens Axboe" <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
- <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
- <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
- <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
- <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
-Date:   Tue, 25 Feb 2020 16:24:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 11:25:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55112 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729206AbgBYQZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:25:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 827DFACD9;
+        Tue, 25 Feb 2020 16:25:00 +0000 (UTC)
+Message-ID: <8b703bac366d947d4af4027d93551df501a6859a.camel@suse.de>
+Subject: Re: [PATCH 16/89] clk: bcm: rpi: Add clock id to data
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Tue, 25 Feb 2020 17:24:58 +0100
+In-Reply-To: <3028e04887c7b8a6ffc150c016aa63281461b434.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <3028e04887c7b8a6ffc150c016aa63281461b434.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-kFhVNmqO+6FeO9XJjOhQ"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582647871; bh=d+k2oADQBKeJHCExPW9X42DfdEf4wTEDT/QfdHMU5IM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kWdhcXQKSJH4GXa6xSkXVhbj0mroRtOyJ6fnisSE9GfHmcEkd+fFWgatHxHs9IYib
-         TIT861jiVMWct2KGXdBFUnuz93ncHEEos7SfypX0n4Lb8z+0RL8QGT5xJWD75wupir
-         yz0sPoHdlKRuA1JlUgef7zx/r24mxhiIiuTPFFT08JwydZt+Skpkum8t5c6F2IhzXz
-         jKEYhTQyc2xHXPD8GHsN18TntYROuk+3yZd/5IUGoCfMszcdk9oFv4u+4gyjxVaEeZ
-         0EFR+RoPiIATIToqWkAMtrrtqId6IKNMS08ObahXZPI9ib6XI09J9/cGGQcqlsu8zP
-         VP3GAeLJ37K4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 25/02/2020 14:26, Ulf Hansson wrote:
+--=-kFhVNmqO+6FeO9XJjOhQ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-...
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> The driver has really only supported one clock so far and has hardcoded t=
+he
+> ID used in communications with the firmware in all the functions
+> implementing the clock framework hooks. Let's store that in the clock dat=
+a
+> structure so that we can support more clocks later on.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-> However, from the core point of view, the response is still requested,
-> only that we don't want the driver to wait for the card to stop
-> signaling busy. Instead we want to deal with that via "polling" from
-> the core.
-> 
-> This is a rather worrying behaviour, as it seems like the host driver
-> doesn't really follow this expectations from the core point of view.
-> And mmc_flush_cache() is not the only case, as we have erase, bkops,
-> sanitize, etc. Are all these working or not really well tested?
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-I don't believe that they are well tested. We have a simple test to
-mount an eMMC partition, create a file, check the contents, remove the
-file and unmount. The timeouts always occur during unmounting.
+Thanks!
+Nicolas
 
-> Earlier, before my three patches, if the provided timeout_ms parameter
-> to __mmc_switch() was zero, which was the case for
-> mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
-> ignored validating host->max_busy_timeout, which was wrong. In any
-> case, this also meant that an R1B response was always used for
-> mmc_flush_cache(), as you also indicated above. Perhaps this is the
-> critical part where things can go wrong.
-> 
-> BTW, have you tried erase commands for sdhci tegra driver? If those
-> are working fine, do you have any special treatments for these?
 
-That I am not sure, but I will check.
+--=-kFhVNmqO+6FeO9XJjOhQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Cheers
-Jon
+-----BEGIN PGP SIGNATURE-----
 
--- 
-nvpublic
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VSloACgkQlfZmHno8
+x/4D9Af/Y7Qj4X5FsF/GzS/2DBIgz6V527mtmE4PC/0JNsHVCgqGnX440QwhasIo
+NaZqxEBUI7pLHB0po3ZrIJRaNSVCIBORtaz68EIrwhtGYYK8XQbA19SOmCZonANA
+uEtLWx1YMEh6n6o8fTF9+RSYl9VzVBISP4nnmxEKFaZIBc+fs9YewL5m8fuM4Ou3
+/kiCXXOFcJyyJwsbdrWoPKBUpplYLxoW+CIZ+1+keIBm88WSa5G2TMFSVv3miiqO
+y9zVU+SPzwXByhU7lMBEvjeIosFu+NI+9//qDA6bw9rX1bQmYogTloy0qlrlF8I1
+i+ZPFj9Ye53hWmjN8N/eMX1bf2dXSA==
+=vNir
+-----END PGP SIGNATURE-----
+
+--=-kFhVNmqO+6FeO9XJjOhQ--
+
