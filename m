@@ -2,111 +2,221 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF71C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D910CC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6A021927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66CC2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:20:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HA1uGf3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbgBYUQQ (ORCPT
+        id S1731725AbgBYUUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:16:16 -0500
-Received: from smtprelay0010.hostedemail.com ([216.40.44.10]:33420 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730794AbgBYUQQ (ORCPT
+        Tue, 25 Feb 2020 15:20:55 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44829 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbgBYUUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:16:16 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id D9A14182CED2A;
-        Tue, 25 Feb 2020 20:16:14 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: lake01_706d7905ad62e
-X-Filterd-Recvd-Size: 3389
-Received: from XPS-9350 (unknown [172.58.92.58])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Feb 2020 20:16:12 +0000 (UTC)
-Message-ID: <8b25478b524f5d9de8e080edf84b2daf1313cb00.camel@perches.com>
-Subject: Re: [RFC][PATCH] checkpatch: Properly warn if Change-Id comes after
- first Signed-off-by line
-From:   Joe Perches <joe@perches.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Tue, 25 Feb 2020 12:14:39 -0800
-In-Reply-To: <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com>
-References: <20200224235824.126361-1-john.stultz@linaro.org>
-         <a8af6c423501d5d49f1d81997b3a2295c0df7b9e.camel@perches.com>
-         <CALAqxLW7xjPh8SZtZ+ES9fghdMDQZfG_ToSrX+u7DMAOixyQ1Q@mail.gmail.com>
-         <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
-         <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 25 Feb 2020 15:20:55 -0500
+Received: by mail-pg1-f194.google.com with SMTP id a14so85655pgb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:20:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ecJrZE+nb+9iK7EjMFn0xNjndpxhw1cdayIgSB3p5i8=;
+        b=HA1uGf3r8tIBz9DDwSzjRJMkmRPyGd9/avhP2uEX/NxJygCGRTKk/EQ1Z5CmtdqPfO
+         5hy2hidxEgUEkl5+IbfO5oQtv4SSwMKQSUkKZMfpoiu8ZjAZ/6EchH/Ejm5Yybk3Rzmq
+         VVcP/8ccmwrbA1YOA7oxD7hk2BXgpQievVnGs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ecJrZE+nb+9iK7EjMFn0xNjndpxhw1cdayIgSB3p5i8=;
+        b=fTZ4MffrMygHKPz/NNVbsyY89NSqXsxosaBy2QNHqyH5e8hmHbFWBv4UtTmj5lf38W
+         Lh9XdqPiYP+qaYihId7WeMoJWjZ4z87eIuMYxte0ha6f2lc4ivsMA08ggR/aGAKBNpj/
+         ouoKqsG/ogWHNTOlgE/mFp3WqoA8/pv8b2IBveDcQseQhS+Df+z612Lc7JFmh7IIWOBE
+         na0yrXs3Mt7dSB8xtC57ie5Sjl03JLVAGEi1zttKQDiFAxJs1xUmc2SoE39cmVw7SDCK
+         aXX2hZSngw5hjdXgWC8hk9t7IbpNsdGhjKdnSKSRlp5ABypecfKKeA33Ad8kYx6cYvyF
+         Qa4A==
+X-Gm-Message-State: APjAAAUaJicpMOyjlo3Y7F+/8UTxxkpqaoIEOz07JuBmsaKWkoNGYFjT
+        kC/TU7cCiWvI+cIDqVKUKyz4ug==
+X-Google-Smtp-Source: APXvYqwJvfQlrirjHI6xgTtbxSOCIrU4Jtz0j81lsjqWsZzac3ADW2cwxETxU0v3Bz3oRNLDq+nsrw==
+X-Received: by 2002:a65:56c4:: with SMTP id w4mr260251pgs.45.1582662054592;
+        Tue, 25 Feb 2020 12:20:54 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i2sm3881450pjs.21.2020.02.25.12.20.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:20:53 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:20:52 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 14/27] mm: Handle Shadow Stack page fault
+Message-ID: <202002251218.F919026@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-15-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205181935.3712-15-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 09:45 -0800, John Stultz wrote:
-> On Mon, Feb 24, 2020 at 10:50 PM Joe Perches <joe@perches.com> wrote:
-> > > Since I have a few kernel repos that I use for both upstream work and
-> > > work targeting AOSP trees, I usually have the gerrit commit hook
-> > > enabled in my tree (its easier to strip with sed then it is to re-add
-> > > after submitting to gerrit), and at least the commit-msg hook I have
-> > > will usually append a Change-Id: line at the end of the commit
-> > > message, usually after the signed-off-by line.
+On Wed, Feb 05, 2020 at 10:19:22AM -0800, Yu-cheng Yu wrote:
+> When a task does fork(), its Shadow Stack (SHSTK) must be duplicated for
+> the child.  This patch implements a flow similar to copy-on-write of an
+> anonymous page, but for SHSTK.
+> 
+> A SHSTK PTE must be RO and Dirty.  This Dirty bit requirement is used to
+> effect the copying.  In copy_one_pte(), clear the Dirty bit from a SHSTK
+> PTE to cause a page fault upon the next SHSTK access.  At that time, fix
+> the PTE and copy/re-use the page.
 
-I think this better still:
+Just to confirm, during the fork, it's really not a SHSTK for a moment
+(it's still RO, but not dirty). Can other racing threads muck this up,
+or is this bit removed only on the copied side?
 
----
- scripts/checkpatch.pl | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+-Kees
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 3d55d8a2a..d0f850e 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2343,6 +2343,7 @@ sub process {
- 	my $is_binding_patch = -1;
- 	my $in_header_lines = $file ? 0 : 1;
- 	my $in_commit_log = 0;		#Scanning lines before patch
-+	my $has_patch_separator = 0;	#Found a --- line
- 	my $has_commit_log = 0;		#Encountered lines before patch
- 	my $commit_log_lines = 0;	#Number of commit log lines
- 	my $commit_log_possible_stack_dump = 0;
-@@ -2668,6 +2669,12 @@ sub process {
- 			}
- 		}
- 
-+# Check for patch separator
-+		if ($line =~ /^---$/) {
-+			$has_patch_separator = 1;
-+			$in_commit_log = 0;
-+		}
-+
- # Check if MAINTAINERS is being updated.  If so, there's probably no need to
- # emit the "does MAINTAINERS need updating?" message on file add/move/delete
- 		if ($line =~ /^\s*MAINTAINERS\s*\|/) {
-@@ -2767,10 +2774,10 @@ sub process {
- 			     "A patch subject line should describe the change not the tool that found it\n" . $herecurr);
- 		}
- 
--# Check for unwanted Gerrit info
--		if ($in_commit_log && $line =~ /^\s*change-id:/i) {
-+# Check for Gerrit Change-Ids not in any patch context
-+		if ($realfile eq '' && !$has_patch_separator && $line =~ /^\s*change-id:/i) {
- 			ERROR("GERRIT_CHANGE_ID",
--			      "Remove Gerrit Change-Id's before submitting upstream.\n" . $herecurr);
-+			      "Remove Gerrit Change-Id's before submitting upstream\n" . $herecurr);
- 		}
- 
- # Check if the commit log is in a possible stack dump
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  arch/x86/mm/pgtable.c         | 15 +++++++++++++++
+>  include/asm-generic/pgtable.h | 17 +++++++++++++++++
+>  mm/memory.c                   |  7 ++++++-
+>  3 files changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index 7bd2c3a52297..2eb33794c08d 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -872,3 +872,18 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+>  
+>  #endif /* CONFIG_X86_64 */
+>  #endif	/* CONFIG_HAVE_ARCH_HUGE_VMAP */
+> +
+> +#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
+> +inline bool arch_copy_pte_mapping(vm_flags_t vm_flags)
+> +{
+> +	return (vm_flags & VM_SHSTK);
+> +}
+> +
+> +inline pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma)
+> +{
+> +	if (vma->vm_flags & VM_SHSTK)
+> +		return pte_mkdirty_shstk(pte);
+> +	else
+> +		return pte;
+> +}
+> +#endif /* CONFIG_X86_INTEL_SHADOW_STACK_USER */
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index 798ea36a0549..9cb2f9ba5895 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -1190,6 +1190,23 @@ static inline bool arch_has_pfn_modify_check(void)
+>  }
+>  #endif /* !_HAVE_ARCH_PFN_MODIFY_ALLOWED */
+>  
+> +#ifdef CONFIG_MMU
+> +#ifndef CONFIG_ARCH_HAS_SHSTK
+> +static inline bool arch_copy_pte_mapping(vm_flags_t vm_flags)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma)
+> +{
+> +	return pte;
+> +}
+> +#else
+> +bool arch_copy_pte_mapping(vm_flags_t vm_flags);
+> +pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma);
+> +#endif
+> +#endif /* CONFIG_MMU */
+> +
+>  /*
+>   * Architecture PAGE_KERNEL_* fallbacks
+>   *
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 45442d9a4f52..6daa28614327 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -772,7 +772,8 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+>  	 * If it's a COW mapping, write protect it both
+>  	 * in the parent and the child
+>  	 */
+> -	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
+> +	if ((is_cow_mapping(vm_flags) && pte_write(pte)) ||
+> +	    arch_copy_pte_mapping(vm_flags)) {
+>  		ptep_set_wrprotect(src_mm, addr, src_pte);
+>  		pte = pte_wrprotect(pte);
+>  	}
+> @@ -2417,6 +2418,7 @@ static inline void wp_page_reuse(struct vm_fault *vmf)
+>  	flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+>  	entry = pte_mkyoung(vmf->orig_pte);
+>  	entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> +	entry = pte_set_vma_features(entry, vma);
+>  	if (ptep_set_access_flags(vma, vmf->address, vmf->pte, entry, 1))
+>  		update_mmu_cache(vma, vmf->address, vmf->pte);
+>  	pte_unmap_unlock(vmf->pte, vmf->ptl);
+> @@ -2504,6 +2506,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+>  		entry = mk_pte(new_page, vma->vm_page_prot);
+>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> +		entry = pte_set_vma_features(entry, vma);
+>  		/*
+>  		 * Clear the pte entry and flush it first, before updating the
+>  		 * pte with the new entry. This will avoid a race condition
+> @@ -3023,6 +3026,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	pte = mk_pte(page, vma->vm_page_prot);
+>  	if ((vmf->flags & FAULT_FLAG_WRITE) && reuse_swap_page(page, NULL)) {
+>  		pte = maybe_mkwrite(pte_mkdirty(pte), vma);
+> +		pte = pte_set_vma_features(pte, vma);
+>  		vmf->flags &= ~FAULT_FLAG_WRITE;
+>  		ret |= VM_FAULT_WRITE;
+>  		exclusive = RMAP_EXCLUSIVE;
+> @@ -3165,6 +3169,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>  	entry = mk_pte(page, vma->vm_page_prot);
+>  	if (vma->vm_flags & VM_WRITE)
+>  		entry = pte_mkwrite(pte_mkdirty(entry));
+> +	entry = pte_set_vma_features(entry, vma);
+>  
+>  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+>  			&vmf->ptl);
+> -- 
+> 2.21.0
+> 
+> 
 
-
+-- 
+Kees Cook
