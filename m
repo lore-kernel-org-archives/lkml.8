@@ -2,158 +2,78 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80659C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD42C4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573D920838
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E75821D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582671680;
+	bh=dX3IH9+5MjEzzkpanrcFRcHLXK3db4PSfS7mYxOwq5I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tY1XebXLRwlhpk09BrDK9yYSzoB/OKdPDuX9wrxvUd1SFA85FgG1flTFB4gx7Z8Jp
+	 AF4JJl4hYk67g4CA1Ovwvj/o++PS0Rh4ABCEwujUvQR6ccN2M2+aWXnO2n1L01fVm3
+	 tduJYk/5hSsXyGh8fOgJMTy8UG20tOk5B11661iU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgBYW7s (ORCPT
+        id S1729247AbgBYXBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:59:48 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45885 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728806AbgBYW7r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:59:47 -0500
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A7E1D3A2C51;
-        Wed, 26 Feb 2020 09:59:42 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j6jAz-0004a5-3t; Wed, 26 Feb 2020 09:59:41 +1100
-Date:   Wed, 26 Feb 2020 09:59:41 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 09/13] fs/xfs: Add write aops lock to xfs layer
-Message-ID: <20200225225941.GO10776@dread.disaster.area>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-10-ira.weiny@intel.com>
- <20200224003455.GY10776@dread.disaster.area>
- <20200224195735.GA11565@iweiny-DESK2.sc.intel.com>
- <20200224223245.GZ10776@dread.disaster.area>
- <20200225211228.GB15810@iweiny-DESK2.sc.intel.com>
+        Tue, 25 Feb 2020 18:01:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgBYXBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 18:01:18 -0500
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE44222C2;
+        Tue, 25 Feb 2020 23:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582671677;
+        bh=dX3IH9+5MjEzzkpanrcFRcHLXK3db4PSfS7mYxOwq5I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dK7Qh1V+/6N9Ri6cBZVJJAyuxHrt62nYmzLwNHeF5eLsgRwAg0AlLDfRuabi5Ael2
+         lBw+YxKraYNgvJxltcWbxv30vto+EjhtGNF4YMhD/g598FAdKSWrYxUJsFPlYiCqHe
+         HvQXtPDf6n6Nws2JRCGkXUxKanHv1tM1potbJUio=
+Received: by mail-lj1-f173.google.com with SMTP id o15so756414ljg.6;
+        Tue, 25 Feb 2020 15:01:17 -0800 (PST)
+X-Gm-Message-State: APjAAAUAV/x1lOByHgfTvDol0laWvUaJ9Pwoi8K+zaWivxP9OY3JPCe0
+        zvHLa95BTm3Y2xVh7BA4xKJfI5zF7Uv8VDNtqA8=
+X-Google-Smtp-Source: APXvYqyWPLHEoDNa6vGMqUhEnWzOeu73cs3upPf8yYw4aW/Tm/zxrPw4BfXF/A8nCsyx+Fa3/MbFo/fS+xU0rdej0KY=
+X-Received: by 2002:a05:651c:239:: with SMTP id z25mr778144ljn.48.1582671675745;
+ Tue, 25 Feb 2020 15:01:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225211228.GB15810@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=WlU5GPDpDACU7zcM-uYA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200225205426.6975-1-scott.branden@broadcom.com>
+In-Reply-To: <20200225205426.6975-1-scott.branden@broadcom.com>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 25 Feb 2020 15:01:04 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5h9FoYxzMFmKwMOKktn_a0uej2tmmGoXXfq2RtThAF8A@mail.gmail.com>
+Message-ID: <CAPhsuW5h9FoYxzMFmKwMOKktn_a0uej2tmmGoXXfq2RtThAF8A@mail.gmail.com>
+Subject: Re: [PATCH] scripts/bpf: switch to more portable python3 shebang
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 01:12:28PM -0800, Ira Weiny wrote:
-> On Tue, Feb 25, 2020 at 09:32:45AM +1100, Dave Chinner wrote:
-> > On Mon, Feb 24, 2020 at 11:57:36AM -0800, Ira Weiny wrote:
-> > > On Mon, Feb 24, 2020 at 11:34:55AM +1100, Dave Chinner wrote:
-> > > > On Thu, Feb 20, 2020 at 04:41:30PM -0800, ira.weiny@intel.com wrote:
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > 
-> > > 
-> > > [snip]
-> > > 
-> > > > > 
-> > > > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> > > > > index 35df324875db..5b014c428f0f 100644
-> > > > > --- a/fs/xfs/xfs_inode.c
-> > > > > +++ b/fs/xfs/xfs_inode.c
-> > > > > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
-> > > > >   *
-> > > > >   * Basic locking order:
-> > > > >   *
-> > > > > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> > > > > + * s_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> > > > >   *
-> > > > >   * mmap_sem locking order:
-> > > > >   *
-> > > > >   * i_rwsem -> page lock -> mmap_sem
-> > > > > - * mmap_sem -> i_mmap_lock -> page_lock
-> > > > > + * s_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
-> > > > >   *
-> > > > >   * The difference in mmap_sem locking order mean that we cannot hold the
-> > > > >   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
-> > > > > @@ -182,6 +182,9 @@ xfs_ilock(
-> > > > >  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-> > > > >  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
-> > > > >  
-> > > > > +	if (lock_flags & XFS_DAX_EXCL)
-> > > > > +		inode_aops_down_write(VFS_I(ip));
-> > > > 
-> > > > I largely don't see the point of adding this to xfs_ilock/iunlock.
-> > > > 
-> > > > It's only got one caller, so I don't see much point in adding it to
-> > > > an interface that has over a hundred other call sites that don't
-> > > > need or use this lock. just open code it where it is needed in the
-> > > > ioctl code.
-> > > 
-> > > I know it seems overkill but if we don't do this we need to code a flag to be
-> > > returned from xfs_ioctl_setattr_dax_invalidate().  This flag is then used in
-> > > xfs_ioctl_setattr_get_trans() to create the transaction log item which can then
-> > > be properly used to unlock the lock in xfs_inode_item_release()
-> > > 
-> > > I don't know of a cleaner way to communicate to xfs_inode_item_release() to
-> > > unlock i_aops_sem after the transaction is complete.
-> > 
-> > We manually unlock inodes after transactions in many cases -
-> > anywhere we do a rolling transaction, the inode locks do not get
-> > released by the transaction. Hence for a one-off case like this it
-> > doesn't really make sense to push all this infrastructure into the
-> > transaction subsystem. Especially as we can manually lock before and
-> > unlock after the transaction context without any real complexity.
-> 
-> So does xfs_trans_commit() operate synchronously?
+On Tue, Feb 25, 2020 at 12:55 PM Scott Branden
+<scott.branden@broadcom.com> wrote:
+>
+> Change "/usr/bin/python3" to "/usr/bin/env python3" for
+> more portable solution in bpf_helpers_doc.py.
+>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 
-What do you mean by "synchronously", and what are you expecting to
-occur (a)synchronously with respect to filesystem objects and/or
-on-disk state?
-
-Keep in mid that the xfs transaction subsystem is a complex
-asynchronous IO engine full of feedback loops and resource
-management, so asking if something is "synchronous" without any
-other context is a difficult question to answer :)
-
-> I want to understand this better because I have fought with a lot of ABBA
-> issues with these locks.  So...  can I hold the lock until after
-> xfs_trans_commit() and safely unlock it there... because the XFS_MMAPLOCK_EXCL,
-> XFS_IOLOCK_EXCL, and XFS_ILOCK_EXCL will be released at that point?  Thus
-> preserving the following lock order.
-
-See how operations like xfs_create, xfs_unlink, etc work. The don't
-specify flags to xfs_ijoin(), and so the transaction commits don't
-automatically unlock the inode. This is necessary so that rolling
-transactions are executed atomically w.r.t. inode access - no-one
-can lock and access the inode while a multi-commit rolling
-transaction on the inode is on-going.
-
-In this case it's just a single commit and we don't need to keep
-it locked after the change is made, so we can unlock the inode
-on commit. So for the XFS internal locks the code is fine and
-doesn't need to change. We just need to wrap the VFS aops lock (if
-we keep it) around the outside of all the XFS locking until the
-transaction commits and unlocks the XFS locks...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Acked-by: Song Liu <songliubraving@fb.com>
