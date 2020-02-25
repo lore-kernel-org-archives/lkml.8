@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F34C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5E5C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0B32176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6DD2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t2cjymvo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7ASfSbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgBYRkI (ORCPT
+        id S1731166AbgBYRkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:40:08 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:35611 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731080AbgBYRkE (ORCPT
+        Tue, 25 Feb 2020 12:40:12 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:47598 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729510AbgBYRkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:40:04 -0500
-Received: by mail-pj1-f73.google.com with SMTP id d3so56980pjl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:40:04 -0800 (PST)
+        Tue, 25 Feb 2020 12:40:07 -0500
+Received: by mail-pf1-f202.google.com with SMTP id e62so9725669pfh.14
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:40:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tR8HWR8eyR6LK2Q8Pau54PB7Q0F7v08515rGGzIGLyo=;
-        b=t2cjymvoAu3LNnY2V+9fr1UqF1UTZQ7oaKDZV95hsccbo+Wem9ObhjTRot2oxcbV5s
-         JfHwf3EV7LvbpaOCXbv6b6KpquhcRc0DyfxTbmG8xfI0XgwDdCaXq1SsCwfJFidfJNH0
-         /1lyLaxQdfo98V3WIDBrRZyBcNTKLXgCD4k/O7fm5khTgVNWgLamopl3Y0pvahPUzGES
-         f28q5lH+lgtKGXo6iAptbVXigkwOR4L5+NG1VNse0XvPI6kiA+OwQCXooeRip2W1h5N+
-         n5U5kzyS0lZfpanYDv8d/3XVs1lgSeb9v4a97K9YEiQO+OqzbCqn5MKxr0OMervjTlWG
-         lsGg==
+        bh=QniVckAJWtqLmmFgAWqtQvDUqGmhiEDDkK5Atd0uI+w=;
+        b=B7ASfSbr6PJI1PNYuMw4AeQl2rfrBE18p50aZHmoTWWjcghaevDSqsyUvYLaGuvGEV
+         wwBpIUOA2JHt7hx+G+Ornny4GKtz9v4Eypp4NgPZ3xEK3rgMRBRBuNUqNS+ox6ACh+ZC
+         6cWbkc8+i4jYfG+umapz9k/Bm3qSztOLHJyMg8JMXVQHlKA9VuWwhJw3cIfwhzFXI03b
+         UEh9pcFUZQVWnOG6NbIAR+vAckRKiK94vNJZQ4ldnB79ldCEHyc60gKr6pHwkSc3vVOl
+         SlY8HCGuRiNp4u0S5QuDxi4DnFctp1zaF1wh2WUSCaV9cRZWkMvslEfisyUwfEbN9k+G
+         Kagg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tR8HWR8eyR6LK2Q8Pau54PB7Q0F7v08515rGGzIGLyo=;
-        b=bUDAR19vWr0z6av7voMzT9j+io304heYOEYWNHqkXeLwj4XVZNf5gUYQTPr1CKjfU1
-         0ZRGBJNaMhWMv4ntUmCAj3ecBV8x4QA8QdZSpgqatGUP8EvN39wB5f5+YF/VRAanEJJi
-         zjISLF8JAV5/A2ewT4ZoaXPuhqfo6BXCQ51HrLqSE240/XK0QVPAjcIXdNVDU6ddki6Z
-         fscMgTitM5rwFzWZ0B4cs0MfNUe/3bAvdm4Axa4oIQ2t7a+VWbgY9AYLElHd/B0OgnLB
-         V6WePvMm8U/18AFqK49q895EKWkJrggZ8AEP3KuJ+1z8iZ1M9hTXOdZhBzvw0p8HRZCn
-         63vg==
-X-Gm-Message-State: APjAAAVogAi95gaRHi4gYbUTpgQkoFAdt2ZP5Vj3qv8vHQ+DaLoO9b0D
-        +V0oiczWWX+yCpb13spR1j6TBTWpKMktOi4uLe8=
-X-Google-Smtp-Source: APXvYqzUk4s2BxWsI4JfB/KPQ9dbRtIv21dR3HjtRTMHFyoCRyFREYlh9Gc57x5jkFPGsRhM08FL9vGs5N7u7TLsbsw=
-X-Received: by 2002:a63:691:: with SMTP id 139mr62220302pgg.325.1582652403730;
- Tue, 25 Feb 2020 09:40:03 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:39:27 -0800
+        bh=QniVckAJWtqLmmFgAWqtQvDUqGmhiEDDkK5Atd0uI+w=;
+        b=kyMNMhztwbU6mou846cQkqQneRsNkC88ndzfRqxJojkN++EUuxnZTVBDQZyk0oiIMI
+         C/iMesNPkgvWejY4QpevrRfX2cT93kJvwwE/IOte3/UVYH9awGPrQd+pXoQ4eqKnh4oR
+         LzUtAT9ByCwtHT7MMwIfVo8DfSpTRgRWe2AsSpti4VwzH/w/sU9KgVvIPQULUgg+jqts
+         fQjEaxGAI0Lg5pbMMN4VpvHdTj3cRB4oCsMJCMaWBRTSHpM4ClSiNTJQBhui1be4TDtP
+         ZlvL9ZTcwvBbwqS+fHha1xcn2cE1c1cGyF1orx7YbzL1g2lBSrm3+AH4AsUiJXL0/lUZ
+         212A==
+X-Gm-Message-State: APjAAAXo6Dbwq029BInsFEbnJB3aYnQXOJ85VNNYWQPd+gzzsJpAMh57
+        EkmLHnzxIcuSFT4ucgMJzCzosfUI3KMnbwvUDpg=
+X-Google-Smtp-Source: APXvYqw22kkM3bH9wLjSIFkgjo4U46Ik1liYbPY7ppLoTBG5p4rEwIGlGJAnCM7FSLJOm8bUadpuV5p12hkwZ3bHzak=
+X-Received: by 2002:a63:d244:: with SMTP id t4mr15492036pgi.241.1582652406574;
+ Tue, 25 Feb 2020 09:40:06 -0800 (PST)
+Date:   Tue, 25 Feb 2020 09:39:28 -0800
 In-Reply-To: <20200225173933.74818-1-samitolvanen@google.com>
-Message-Id: <20200225173933.74818-7-samitolvanen@google.com>
+Message-Id: <20200225173933.74818-8-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200225173933.74818-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v9 06/12] arm64: preserve x18 when CPU is suspended
+Subject: [PATCH v9 07/12] arm64: efi: restore x18 if it was corrupted
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -86,70 +86,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't lose the current task's shadow stack when the CPU is suspended.
+If we detect a corrupted x18, restore the register before jumping back
+to potentially SCS instrumented code. This is safe, because the wrapper
+is called with preemption disabled and a separate shadow stack is used
+for interrupt handling.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Acked-by: Will Deacon <will@kernel.org>
 ---
- arch/arm64/include/asm/suspend.h |  2 +-
- arch/arm64/mm/proc.S             | 14 ++++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/efi-rt-wrapper.S | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
-index 8939c87c4dce..0cde2f473971 100644
---- a/arch/arm64/include/asm/suspend.h
-+++ b/arch/arm64/include/asm/suspend.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_SUSPEND_H
- #define __ASM_SUSPEND_H
- 
--#define NR_CTX_REGS 12
-+#define NR_CTX_REGS 13
- #define NR_CALLEE_SAVED_REGS 12
- 
- /*
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index aafed6902411..7d37e3c70ff5 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -56,6 +56,8 @@
-  * cpu_do_suspend - save CPU registers context
-  *
-  * x0: virtual address of context pointer
-+ *
-+ * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
-  */
- SYM_FUNC_START(cpu_do_suspend)
- 	mrs	x2, tpidr_el0
-@@ -80,6 +82,11 @@ alternative_endif
- 	stp	x8, x9, [x0, #48]
- 	stp	x10, x11, [x0, #64]
- 	stp	x12, x13, [x0, #80]
-+	/*
-+	 * Save x18 as it may be used as a platform register, e.g. by shadow
-+	 * call stack.
-+	 */
-+	str	x18, [x0, #96]
+diff --git a/arch/arm64/kernel/efi-rt-wrapper.S b/arch/arm64/kernel/efi-rt-wrapper.S
+index 3fc71106cb2b..6ca6c0dc11a1 100644
+--- a/arch/arm64/kernel/efi-rt-wrapper.S
++++ b/arch/arm64/kernel/efi-rt-wrapper.S
+@@ -34,5 +34,14 @@ ENTRY(__efi_rt_asm_wrapper)
+ 	ldp	x29, x30, [sp], #32
+ 	b.ne	0f
  	ret
- SYM_FUNC_END(cpu_do_suspend)
- 
-@@ -96,6 +103,13 @@ SYM_FUNC_START(cpu_do_resume)
- 	ldp	x9, x10, [x0, #48]
- 	ldp	x11, x12, [x0, #64]
- 	ldp	x13, x14, [x0, #80]
+-0:	b	efi_handle_corrupted_x18	// tail call
++0:
 +	/*
-+	 * Restore x18, as it may be used as a platform register, and clear
-+	 * the buffer to minimize the risk of exposure when used for shadow
-+	 * call stack.
++	 * With CONFIG_SHADOW_CALL_STACK, the kernel uses x18 to store a
++	 * shadow stack pointer, which we need to restore before returning to
++	 * potentially instrumented code. This is safe because the wrapper is
++	 * called with preemption disabled and a separate shadow stack is used
++	 * for interrupts.
 +	 */
-+	ldr	x18, [x0, #96]
-+	str	xzr, [x0, #96]
- 	msr	tpidr_el0, x2
- 	msr	tpidrro_el0, x3
- 	msr	contextidr_el1, x4
++	mov	x18, x2
++	b	efi_handle_corrupted_x18	// tail call
+ ENDPROC(__efi_rt_asm_wrapper)
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
