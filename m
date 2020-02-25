@@ -2,122 +2,147 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B629C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C5C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0312467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:45:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R6VU0wEY"
+	by mail.kernel.org (Postfix) with ESMTP id 3A86A20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbgBYNpr (ORCPT
+        id S1730148AbgBYNsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:45:47 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32641 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730261AbgBYNpq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:45:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582638346;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/T/kivFGUXg5sHRSIwBgWjiVnsUmWthpcONYfMKDGQU=;
-        b=R6VU0wEYegPORveoMeazRTXnzBhiMutPV6Gui1MyyiaOQQOfYgIz/opxriSbhFs9jY1F1P
-        vr5h6u9dEChdCmfKiKoGeTodJxnFzAAIR9dRS+6S5rWjvGjkG6/43dYX594kRJTxAAeLgM
-        pRwHh+3fk/78ij8ictEJpXLqibCr51k=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-1uRhk7NyOdOR1H7Yo_aluQ-1; Tue, 25 Feb 2020 08:45:39 -0500
-X-MC-Unique: 1uRhk7NyOdOR1H7Yo_aluQ-1
-Received: by mail-wm1-f70.google.com with SMTP id u11so1046925wmb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 05:45:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=/T/kivFGUXg5sHRSIwBgWjiVnsUmWthpcONYfMKDGQU=;
-        b=dXT2HER7G2t6QKc38ecdoSj79JcLn3CYNsylVlJdYP1V+BM6zspf20MmG2bVcSy03S
-         J0sDg7Tx8rl9VSPJQTiqfJKR3lhxfqBarDMzJGwIVDGJ56bT/z7J0N8iH2EtMl4OUmjN
-         JeBqr83Y1uB4d/o6CWUYYBmApuTvMFPGzomORjfuWka4KGG3CISDBWxjR/VK8MirlrUz
-         yDjRQl+UBW/dyU9XW69CrsgR3cwQyI5qUlhbM33eeGcpYdMJA0yl1i06+6petnuJ5DXR
-         xq0ouyh7WWiukhf2xmqSkbChaFf//Kj7n9DZl/l6p3VRr9gYbPuhC6OWgarj924EzzBY
-         7R8A==
-X-Gm-Message-State: APjAAAXxhHHI6jDyGFzr0zE3dfrno/9IXFr8GIQ9Qo//gW5yx+i+uWYc
-        dclQBHhT0JYeQF2bW65Vv5Xq682PsDYS0ky1nkOxZzW1TYiWpaXk8FWlMWE/mJKuwd2BRz0oXVD
-        NYeEvCekRwY2ScupU6OFKA7oW
-X-Received: by 2002:a7b:c5da:: with SMTP id n26mr5249099wmk.138.1582638337568;
-        Tue, 25 Feb 2020 05:45:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwf2ZsKE58ePK4Z2deUeaZOsUEklPqETVClcba53r8rw/fae2dyyFlESYMCG1Qyok6wzsJ9Mg==
-X-Received: by 2002:a7b:c5da:: with SMTP id n26mr5249082wmk.138.1582638337293;
-        Tue, 25 Feb 2020 05:45:37 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id h205sm4401348wmf.25.2020.02.25.05.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 05:45:36 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     rmuncrief@humanavance.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: SVM: allocate AVIC data structures based on kvm_amd moduleparameter
-In-Reply-To: <1582617278-50338-1-git-send-email-pbonzini@redhat.com>
-References: <1582617278-50338-1-git-send-email-pbonzini@redhat.com>
-Date:   Tue, 25 Feb 2020 14:45:36 +0100
-Message-ID: <874kven5kv.fsf@vitty.brq.redhat.com>
+        Tue, 25 Feb 2020 08:48:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46416 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgBYNsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:48:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EDF33AD03;
+        Tue, 25 Feb 2020 13:48:33 +0000 (UTC)
+Subject: Re: [PATCH v7 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
+To:     Brian Geffon <bgeffon@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        Lokesh Gidra <lokeshgidra@google.com>
+References: <20200221174248.244748-1-bgeffon@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3Vq
+Message-ID: <61fc2045-b5fd-86b4-9092-e7638ad63b1e@suse.cz>
+Date:   Tue, 25 Feb 2020 14:48:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200221174248.244748-1-bgeffon@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On 2/21/20 6:42 PM, Brian Geffon wrote:
+> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> set, the source mapping will not be removed. The remap operation
+> will be performed as it would have been normally by moving over the
+> page tables to the new mapping. The old vma will have any locked
+> flags cleared, have no pagetables, and any userfaultfds that were
+> watching that range will continue watching it.
+> 
+> For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
+> the mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+> a VMA you MUST use the MREMAP_MAYMOVE flag, it's not possible to resize
+> a VMA while also moving with MREMAP_DONTUNMAP so old_len must always
+> be equal to the new_len otherwise it will return -EINVAL.
+> 
+> We hope to use this in Chrome OS where with userfaultfd we could write
+> an anonymous mapping to disk without having to STOP the process or worry
+> about VMA permission changes.
+> 
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+> 
+>   v6 -> v7:
+>     - Don't allow resizing VMA as part of MREMAP_DONTUNMAP.
+>       There is no clear use case at the moment and it can be added
+>       later as it simplifies the implementation for now.
+> 
+>   v5 -> v6:
+>     - Code cleanup suggested by Kirill.
+> 
+>   v4 -> v5:
+>     - Correct commit message to more accurately reflect the behavior.
+>     - Clear VM_LOCKED and VM_LOCKEDONFAULT on the old vma.
+>            
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> Reviewed-by: Minchan Kim <minchan@kernel.org>
+> Tested-by: Lokesh Gidra <lokeshgidra@google.com>
 
-> Even if APICv is disabled at startup, the backing page and ir_list need
-> to be initialized in case they are needed later.  The only case in
-> which this can be skipped is for userspace irqchip, and that must be
-> done because avic_init_backing_page dereferences vcpu->arch.apic
-> (which is NULL for userspace irqchip).
->
-> Tested-by: rmuncrief@humanavance.com
-> Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=206579
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/svm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index ad3f5b178a03..bd02526300ab 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2194,8 +2194,9 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  static int avic_init_vcpu(struct vcpu_svm *svm)
->  {
->  	int ret;
-> +	struct kvm_vcpu *vcpu = &svm->vcpu;
->  
-> -	if (!kvm_vcpu_apicv_active(&svm->vcpu))
-> +	if (!avic || !irqchip_in_kernel(vcpu->kvm))
->  		return 0;
->  
->  	ret = avic_init_backing_page(&svm->vcpu);
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Out of pure curiosity,
+Thanks.
 
-when irqchip_in_kernel() is false, can we still get to .update_pi_irte()
-(svm_update_pi_irte()) -> get_pi_vcpu_info() -> "vcpu_info->pi_desc_addr
-= __sme_set(page_to_phys((*svm)->avic_backing_page));" -> crash! or is
-there anything which make this impossible?
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 1fc8a29fbe3f..8b7bf3845e50 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>  static unsigned long move_vma(struct vm_area_struct *vma,
+>  		unsigned long old_addr, unsigned long old_len,
+>  		unsigned long new_len, unsigned long new_addr,
+> -		bool *locked, struct vm_userfaultfd_ctx *uf,
+> -		struct list_head *uf_unmap)
+> +		bool *locked, unsigned long flags,
+> +		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
 
-The patch is an improvement anyway, so
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+The usage of MREMAP_DONTUNMAP directly in the "flags" parameter seems
+weird for generically named vma manipulation functions, but as they are
+all local to mremap.c then it's probably fine.
 
