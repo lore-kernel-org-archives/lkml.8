@@ -2,176 +2,111 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4EAC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF71C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AC621744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GAF43oao"
+	by mail.kernel.org (Postfix) with ESMTP id AA6A021927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbgBYUQI (ORCPT
+        id S1731725AbgBYUQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:16:08 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46494 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730794AbgBYUQH (ORCPT
+        Tue, 25 Feb 2020 15:16:16 -0500
+Received: from smtprelay0010.hostedemail.com ([216.40.44.10]:33420 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730794AbgBYUQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:16:07 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so243326pll.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:16:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RVriVMt9B1z7tUDJAr2xJjSmnlOpNUHydkB5FDLVKeU=;
-        b=GAF43oaoRNtdxzQZenAQT+RFt4hEoY74zIx4Ts94IuklRKPnYoVAdw3Z/nLOHu1lRD
-         Fr/45UkbQl5Dwqp9UUOpoe0gg1TKGykbO5z1chVEgJeFvmHIeaUoKvwc3aIJJLq3Irjm
-         GWYJgFFGMRmY4ERQYDWhAUoQc+PURd9UAARns=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RVriVMt9B1z7tUDJAr2xJjSmnlOpNUHydkB5FDLVKeU=;
-        b=G1vVMdGGDTcBV5AzPd2TWe8knXOD1mq0CXC+qZQ90+63CIA7ogclic+eAqD7zHsZw7
-         CNYxlSPDKPNIxpWmvY1/h74nWmLSmSagcvk976UxZaY7Yqo3pJ9Ji3pEqmu20BXaS86t
-         SQhGjcPiriQM5dM/kdBJUCLI9T2luZGad9Sm4G8QfkX1be3xx2gPhXezrt64tZ3TmoGw
-         VaSegou8gwzYjIY8eTWnb5aaiHw5RMdP//Yfl3bpqaisV5/UMJYOgIaWszcW9bkYbwtb
-         dySffluu78s5EgDFw5vew/eTl6t3vQQFpF5j3Oax28BZrry8Fy42L0A6I4KAgUdMg6Bn
-         EMbw==
-X-Gm-Message-State: APjAAAXvNXhaaTOE9ctb/SGDzhLKt+Hp3ofJqph7NkhLRQBA7YjC0pnS
-        6BFdDAUR6TlsW+tmLXrDHTQMqA==
-X-Google-Smtp-Source: APXvYqyaptWR9wI2Enrg3ZClqaJ6Jmlx/f50KgN2LoG46+BPg2u5z03Q2p2enk9db8pEcN+7i35xhA==
-X-Received: by 2002:a17:90a:2486:: with SMTP id i6mr876306pje.9.1582661766805;
-        Tue, 25 Feb 2020 12:16:06 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w25sm17835454pfi.106.2020.02.25.12.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 12:16:05 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:16:04 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Subject: Re: [RFC PATCH v9 13/27] x86/mm: Shadow Stack page fault error
- checking
-Message-ID: <202002251216.EB9BEDD9D0@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-14-yu-cheng.yu@intel.com>
+        Tue, 25 Feb 2020 15:16:16 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id D9A14182CED2A;
+        Tue, 25 Feb 2020 20:16:14 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lake01_706d7905ad62e
+X-Filterd-Recvd-Size: 3389
+Received: from XPS-9350 (unknown [172.58.92.58])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 25 Feb 2020 20:16:12 +0000 (UTC)
+Message-ID: <8b25478b524f5d9de8e080edf84b2daf1313cb00.camel@perches.com>
+Subject: Re: [RFC][PATCH] checkpatch: Properly warn if Change-Id comes after
+ first Signed-off-by line
+From:   Joe Perches <joe@perches.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Tue, 25 Feb 2020 12:14:39 -0800
+In-Reply-To: <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com>
+References: <20200224235824.126361-1-john.stultz@linaro.org>
+         <a8af6c423501d5d49f1d81997b3a2295c0df7b9e.camel@perches.com>
+         <CALAqxLW7xjPh8SZtZ+ES9fghdMDQZfG_ToSrX+u7DMAOixyQ1Q@mail.gmail.com>
+         <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
+         <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205181935.3712-14-yu-cheng.yu@intel.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:19:21AM -0800, Yu-cheng Yu wrote:
-> If a page fault is triggered by a Shadow Stack (SHSTK) access
-> (e.g. CALL/RET) or SHSTK management instructions (e.g. WRUSSQ), then bit[6]
-> of the page fault error code is set.
-> 
-> In access_error(), verify a SHSTK page fault is within a SHSTK memory area.
-> It is always an error otherwise.
-> 
-> For a valid SHSTK access, set FAULT_FLAG_WRITE to effect copy-on-write.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+On Tue, 2020-02-25 at 09:45 -0800, John Stultz wrote:
+> On Mon, Feb 24, 2020 at 10:50 PM Joe Perches <joe@perches.com> wrote:
+> > > Since I have a few kernel repos that I use for both upstream work and
+> > > work targeting AOSP trees, I usually have the gerrit commit hook
+> > > enabled in my tree (its easier to strip with sed then it is to re-add
+> > > after submitting to gerrit), and at least the commit-msg hook I have
+> > > will usually append a Change-Id: line at the end of the commit
+> > > message, usually after the signed-off-by line.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I think this better still:
 
--Kees
+---
+ scripts/checkpatch.pl | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-> ---
->  arch/x86/include/asm/traps.h |  2 ++
->  arch/x86/mm/fault.c          | 18 ++++++++++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-> index 7ac26bbd0bef..8023d177fcd8 100644
-> --- a/arch/x86/include/asm/traps.h
-> +++ b/arch/x86/include/asm/traps.h
-> @@ -169,6 +169,7 @@ enum {
->   *   bit 3 ==				1: use of reserved bit detected
->   *   bit 4 ==				1: fault was an instruction fetch
->   *   bit 5 ==				1: protection keys block access
-> + *   bit 6 ==				1: shadow stack access fault
->   */
->  enum x86_pf_error_code {
->  	X86_PF_PROT	=		1 << 0,
-> @@ -177,5 +178,6 @@ enum x86_pf_error_code {
->  	X86_PF_RSVD	=		1 << 3,
->  	X86_PF_INSTR	=		1 << 4,
->  	X86_PF_PK	=		1 << 5,
-> +	X86_PF_SHSTK	=		1 << 6,
->  };
->  #endif /* _ASM_X86_TRAPS_H */
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 304d31d8cbbc..9c1243302663 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -1187,6 +1187,17 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
->  				       (error_code & X86_PF_INSTR), foreign))
->  		return 1;
->  
-> +	/*
-> +	 * Verify X86_PF_SHSTK is within a Shadow Stack VMA.
-> +	 * It is always an error if there is a Shadow Stack
-> +	 * fault outside a Shadow Stack VMA.
-> +	 */
-> +	if (error_code & X86_PF_SHSTK) {
-> +		if (!(vma->vm_flags & VM_SHSTK))
-> +			return 1;
-> +		return 0;
-> +	}
-> +
->  	if (error_code & X86_PF_WRITE) {
->  		/* write, present and write, not present: */
->  		if (unlikely(!(vma->vm_flags & VM_WRITE)))
-> @@ -1344,6 +1355,13 @@ void do_user_addr_fault(struct pt_regs *regs,
->  
->  	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
->  
-> +	/*
-> +	 * If the fault is caused by a Shadow Stack access,
-> +	 * i.e. CALL/RET/SAVEPREVSSP/RSTORSSP, then set
-> +	 * FAULT_FLAG_WRITE to effect copy-on-write.
-> +	 */
-> +	if (hw_error_code & X86_PF_SHSTK)
-> +		flags |= FAULT_FLAG_WRITE;
->  	if (hw_error_code & X86_PF_WRITE)
->  		flags |= FAULT_FLAG_WRITE;
->  	if (hw_error_code & X86_PF_INSTR)
-> -- 
-> 2.21.0
-> 
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 3d55d8a2a..d0f850e 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2343,6 +2343,7 @@ sub process {
+ 	my $is_binding_patch = -1;
+ 	my $in_header_lines = $file ? 0 : 1;
+ 	my $in_commit_log = 0;		#Scanning lines before patch
++	my $has_patch_separator = 0;	#Found a --- line
+ 	my $has_commit_log = 0;		#Encountered lines before patch
+ 	my $commit_log_lines = 0;	#Number of commit log lines
+ 	my $commit_log_possible_stack_dump = 0;
+@@ -2668,6 +2669,12 @@ sub process {
+ 			}
+ 		}
+ 
++# Check for patch separator
++		if ($line =~ /^---$/) {
++			$has_patch_separator = 1;
++			$in_commit_log = 0;
++		}
++
+ # Check if MAINTAINERS is being updated.  If so, there's probably no need to
+ # emit the "does MAINTAINERS need updating?" message on file add/move/delete
+ 		if ($line =~ /^\s*MAINTAINERS\s*\|/) {
+@@ -2767,10 +2774,10 @@ sub process {
+ 			     "A patch subject line should describe the change not the tool that found it\n" . $herecurr);
+ 		}
+ 
+-# Check for unwanted Gerrit info
+-		if ($in_commit_log && $line =~ /^\s*change-id:/i) {
++# Check for Gerrit Change-Ids not in any patch context
++		if ($realfile eq '' && !$has_patch_separator && $line =~ /^\s*change-id:/i) {
+ 			ERROR("GERRIT_CHANGE_ID",
+-			      "Remove Gerrit Change-Id's before submitting upstream.\n" . $herecurr);
++			      "Remove Gerrit Change-Id's before submitting upstream\n" . $herecurr);
+ 		}
+ 
+ # Check if the commit log is in a possible stack dump
 
--- 
-Kees Cook
+
