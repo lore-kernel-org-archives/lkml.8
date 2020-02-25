@@ -2,120 +2,116 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89AAC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340DCC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9906E2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084E02082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RcRR219w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbgBYRgh (ORCPT
+        id S1730495AbgBYRhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:36:37 -0500
-Received: from verein.lst.de ([213.95.11.211]:44528 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBYRgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:36:37 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6F2B368BE1; Tue, 25 Feb 2020 18:36:33 +0100 (CET)
-Date:   Tue, 25 Feb 2020 18:36:33 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, ira.weiny@intel.com,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200225173633.GA30843@lst.de>
-References: <20200221004134.30599-1-ira.weiny@intel.com> <20200221004134.30599-8-ira.weiny@intel.com> <20200221174449.GB11378@lst.de> <20200221224419.GW10776@dread.disaster.area> <20200224175603.GE7771@lst.de> <20200225000937.GA10776@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225000937.GA10776@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Tue, 25 Feb 2020 12:37:33 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54686 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbgBYRhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:37:33 -0500
+Received: by mail-pj1-f65.google.com with SMTP id dw13so1563029pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:37:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:subject:cc:from:to:message-id;
+        bh=KNvnzC4oy7KeGoItCm2P3D+dtl4fdF1QEHNvZmvd+Fo=;
+        b=RcRR219wmefc2NDuy99V7MKkcPkTiKEfsKTV5RkD2Ese5TwGN7pSKpdM/iepI+egaR
+         25ig4ZTc6/gdu4GjFG6aY9u10ueyVjBDfw13DCbXSHO+llzTWH03d7m+TB0wCiBQWhKv
+         7FYDowj8+TnXEzMpewLZzSyPKQcchlihzyc6XrJQpbkfp8O8pxvQYVUFvUpnrHIDnsYR
+         13rAh13fXoDnncztPYwXXlNwGVOD1Qk0mw3BJtcfmEFAZY4PNwhUUfoWMrbNvw2LN+Yz
+         nLbjyikj26YPDwFcspHeM4iKgtSBHaGl1I2lqSB9C5JpMFmREE+zd4QXoH++2XBVQKu5
+         W2Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=KNvnzC4oy7KeGoItCm2P3D+dtl4fdF1QEHNvZmvd+Fo=;
+        b=cdslXDojZrgLVS9CTXX6Ivlwv4CVQzWgV/i0YgJIzSuOF8tyftQs+0iBhFhm2zP0KX
+         xbVIAINSfy987Y537mKcymotuMO99aaIDrqRmtQYBoUp7FFUYG53PQE5LKDnfvFy9K7o
+         Fxg9+70TRTsh7cueGu1ffURow2XMLH+200iWSpGALIjfqgdobNeA3eTLw24zs74aSKSw
+         ZtJpqic+lDJ9s0x6P3hTX+5PJPstQKIynQ3dNxRFx8KiMXZ3+FgleJ1gYEfeThFl+iXM
+         E5IEoYsVBcUGZt0JPvjQaZFTdRZxCnYQtpenWU8Y28mByGvNawSQjvPrdT3w1xGgoYCU
+         t2tQ==
+X-Gm-Message-State: APjAAAXTXBHEEJoqW8oU8fR/VqmsyfH1QvKHHNF4dQrhcXrFQ7VEqcYm
+        zKTPo2bdUO3NDkajv1hU23gsFgeuGte6cw==
+X-Google-Smtp-Source: APXvYqx2NqMCDRlWrHkTS9e3SAEWFrbYlWqkJCzFqzk781hycVlBMo6fbq5zxxw4FbS1uXdqczmr0A==
+X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr63638pjn.39.1582652252230;
+        Tue, 25 Feb 2020 09:37:32 -0800 (PST)
+Received: from localhost (c-67-161-15-180.hsd1.ca.comcast.net. [67.161.15.180])
+        by smtp.gmail.com with ESMTPSA id q6sm17721821pfh.127.2020.02.25.09.37.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 09:37:31 -0800 (PST)
+Date:   Tue, 25 Feb 2020 09:37:31 -0800 (PST)
+X-Google-Original-Date: Tue, 25 Feb 2020 09:35:29 PST (-0800)
+Subject: [GIT PULL] RISC-V Fixes for 5.6-rc4
+CC:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-464e74b9-125c-42e3-9384-60c871d22cfd@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:09:37AM +1100, Dave Chinner wrote:
-> > No, the original code was broken because it didn't serialize between
-> > DAX and buffer access.
-> > 
-> > Take a step back and look where the problems are, and they are not
-> > mostly with the aops.  In fact the only aop useful for DAX is
-> > is ->writepages, and how it uses ->writepages is actually a bit of
-> > an abuse of that interface.
-> 
-> The races are all through the fops, too, which is one of the reasons
-> Darrick mentioned we should probably move this up to file ops
-> level...
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
 
-But the file ops are very simple to use.  Pass the flag in the iocb,
-and make sure the flag can only changed with i_rwsem held.  That part
-is pretty trivial, the interesting case is mmap because it is so
-spread out.
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
 
-> > So what we really need it just a way to prevent switching the flag
-> > when a file is mapped,
-> 
-> That's not sufficient.
-> 
-> We also have to prevent the file from being mapped *while we are
-> switching*. Nothing in the mmap() path actually serialises against
-> filesystem operations, and the initial behavioural checks in the
-> page fault path are similarly unserialised against changing the
-> S_DAX flag.
+are available in the Git repository at:
 
-And the important part here is ->mmap.  If ->mmap doesn't get through
-we are not going to see page faults.
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linux-5.6-rc4
 
-> > and in the normal read/write path ensure the
-> > flag can't be switch while I/O is going on, which could either be
-> > done by ensuring it is only switched under i_rwsem or equivalent
-> > protection, or by setting the DAX flag once in the iocb similar to
-> > IOCB_DIRECT.
-> 
-> The iocb path is not the problem - that's entirely serialised
-> against S_DAX changes by the i_rwsem. The problem is that we have no
-> equivalent filesystem level serialisation for the entire mmap/page
-> fault path, and it checks S_DAX all over the place.
+for you to fetch changes up to 8458ca147c204e7db124e8baa8fede219006e80d:
 
-Not right now.  We have various IS_DAX checks outside it.  But it is
-easily fixable indeed.
+  riscv: adjust the indent (2020-02-24 13:12:53 -0800)
 
-> /me wonders if the best thing to do is to add a ->fault callout to
-> tell the filesystem to lock/unlock the inode right up at the top of
-> the page fault path, outside even the mmap_sem.  That means all the
-> methods that the page fault calls are protected against S_DAX
-> changes, and it gives us a low cost method of serialising page
-> faults against DIO (e.g. via inode_dio_wait())....
+----------------------------------------------------------------
+RISC-V Fixes for 5.6-rc4
 
-Maybe.  Especially if it solves real problems and isn't just new
-overhead to add an esoteric feature.
+This tag contains a handful of RISC-V related fixes that I've collected and
+would like to target for 5.6-rc4:
 
-> 
-> > And they easiest way to get all this done is as a first step to
-> > just allowing switching the flag when no blocks are allocated at
-> > all, similar to how the rt flag works.
-> 
-> False equivalence - it is not similar because the RT flag changes
-> and their associated state checks are *already fully serialised* by
-> the XFS_ILOCK_EXCL. S_DAX accesses have no such serialisation, and
-> that's the problem we need to solve...
+* A fix to set up the PMPs on boot, which allows the kernel to access memory on
+  systems that don't set up permissive PMPs before getting to Linux.  This only
+  effects machine-mode kernels, which currently means only NOMMU kernels.
+* A fix to avoid enabling supervisor-mode interrupts when running in
+  machine-mode, also only for NOMMU kernels.
+* A pair of fixes to our KASAN support to avoid corrupting memory.
+* A gitignore fix.
 
-And my point is that if we ensure S_DAX can only be checked if there
-are no blocks on the file, is is fairly easy to provide the same
-guarantee.  And I've not heard any argument that we really need more
-flexibility than that.  In fact I think just being able to change it
-on the parent directory and inheriting the flag might be more than
-plenty, which would lead to a very simple implementation without any
-of the crazy overhead in this series.
+This boots on QEMU's virt board for me.
+
+----------------------------------------------------------------
+Anup Patel (1):
+      RISC-V: Don't enable all interrupts in trap_init()
+
+Damien Le Moal (1):
+      riscv: Fix gitignore
+
+Greentime Hu (1):
+      riscv: set pmp configuration if kernel is running in M-mode
+
+Zong Li (2):
+      riscv: allocate a complete page size for each page table
+      riscv: adjust the indent
+
+ arch/riscv/boot/.gitignore   |  2 ++
+ arch/riscv/include/asm/csr.h | 12 ++++++++++
+ arch/riscv/kernel/head.S     |  6 +++++
+ arch/riscv/kernel/traps.c    |  4 ++--
+ arch/riscv/mm/kasan_init.c   | 53 ++++++++++++++++++++++++++------------------
+ 5 files changed, 53 insertions(+), 24 deletions(-)
