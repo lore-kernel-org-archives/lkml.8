@@ -2,59 +2,108 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD18EC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5565EC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A77220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5EB20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgBYK1w (ORCPT
+        id S1730293AbgBYK2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:27:52 -0500
-Received: from ms.lwn.net ([45.79.88.28]:53168 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730175AbgBYK1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:27:51 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id C9D1C6D9;
-        Tue, 25 Feb 2020 10:27:49 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 03:27:45 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: sysctl/kernel: document acpi_video_flags
-Message-ID: <20200225032745.5f81125e@lwn.net>
-In-Reply-To: <20200221165502.31770-1-steve@sk2.org>
-References: <20200221165502.31770-1-steve@sk2.org>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 25 Feb 2020 05:28:12 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39558 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730175AbgBYK2M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:28:12 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6237F1C0411; Tue, 25 Feb 2020 11:28:10 +0100 (CET)
+Date:   Tue, 25 Feb 2020 11:28:09 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Aditya Pakki <pakki001@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 079/191] orinoco: avoid assertion in case of NULL
+ pointer
+Message-ID: <20200225102809.GA2591@amd>
+References: <20200221072250.732482588@linuxfoundation.org>
+ <20200221072300.728391700@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Disposition: inline
+In-Reply-To: <20200221072300.728391700@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 17:55:02 +0100
-Stephen Kitt <steve@sk2.org> wrote:
 
-> Based on the implementation in arch/x86/kernel/acpi/sleep.c, in
-> particular the acpi_sleep_setup() function.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi!
 
-jon
+> From: Aditya Pakki <pakki001@umn.edu>
+>=20
+> [ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
+>=20
+> In ezusb_init, if upriv is NULL, the code crashes. However, the caller
+> in ezusb_probe can handle the error and print the failure message.
+> The patch replaces the BUG_ON call to error return.
+
+The caller already checked that upriv is not NULL, AFAICT.
+
+    priv =3D alloc_orinocodev(sizeof(*upriv), &udev->dev,
+    	                         ezusb_hard_reset, NULL);
+    if (!priv) {
+        err("Couldn't allocate orinocodev");
+        retval =3D -ENOMEM;
+        goto exit;
+    }
+				=20
+I don't see this as an improvement.
+
+Best regards,
+							Pavel
+						=09
+
+> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+> @@ -1364,7 +1364,8 @@ static int ezusb_init(struct hermes *hw)
+>  	int retval;
+> =20
+>  	BUG_ON(in_interrupt());
+> -	BUG_ON(!upriv);
+> +	if (!upriv)
+> +		return -EINVAL;
+> =20
+>  	upriv->reply_count =3D 0;
+>  	/* Write the MAGIC number on the simulated registers to keep
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl5U9rkACgkQMOfwapXb+vKmjQCgwzqrB0WO/uxLdAnnaigxtoxo
+tcwAn1E7yollUJFJJh4qsgtVH6WaXjZX
+=dz+r
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
