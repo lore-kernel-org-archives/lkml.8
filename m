@@ -2,182 +2,69 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB320C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F24C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50E9206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C4C206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lCbDOjeR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kjY4KEu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgBYSGs (ORCPT
+        id S1731167AbgBYSH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:06:48 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:43206 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgBYSGs (ORCPT
+        Tue, 25 Feb 2020 13:07:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44184 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBYSH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:06:48 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PI31vs179450;
-        Tue, 25 Feb 2020 18:05:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=CGvHcJIJqaZaY5M0QDL05EDvM2dcrysNjTcyUx/HJDw=;
- b=lCbDOjeRmp7BJCShZOjFG6HjxNzX/ECUjimFXRM4BxWcgHLdAMinc/HyA76/cUW51VKQ
- ovP7segEdr/oYKiflQd4AewAXWXL2BEff87j2Oga2pTuEDJ+8Jh4Bxn4kr4WJ54UOB2V
- 2ea890Emo5I3G54lIgmpvrS5YLdAo24+3qKj8X6TiCvR03kLxJawllGYJ9BiKjfEy8Gl
- PoRkjOkQ8NypEv83xfeX4o6i39KsayJwJ+1P0It6NfqCdXbtqfMNo0Y882S1aq6oZpRJ
- MrIIBcLvDgjbTOJ0mgKgfchm2XNGfCK5oAw8WoQTVugIrKh7CCf2HD5KYpO5gXkzkNZw jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yd0m1u64w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 18:05:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PHm1kX031965;
-        Tue, 25 Feb 2020 18:05:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2yd17qg4dh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Feb 2020 18:05:52 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01PI5pKl134669;
-        Tue, 25 Feb 2020 18:05:52 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2yd17qg4cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 18:05:51 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01PI5nw3009467;
-        Tue, 25 Feb 2020 18:05:49 GMT
-Received: from [10.209.227.41] (/10.209.227.41)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Feb 2020 10:05:49 -0800
-Subject: Re: general protection fault in rds_ib_add_one
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+274094e62023782eeb17@syzkaller.appspotmail.com>,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        rds-devel@oss.oracle.com, syzkaller-bugs@googlegroups.com,
-        Andy Grover <andy.grover@oracle.com>
-References: <20200224103913.2776-1-hdanton@sina.com>
- <20200225044734.14680-1-hdanton@sina.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <b35981ca-f565-0169-5f99-35d67828d0b7@oracle.com>
-Date:   Tue, 25 Feb 2020 10:05:48 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Tue, 25 Feb 2020 13:07:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=aCaDXtbBQPVEc9XwUeRXZXycGtd4URd8os8NhYVB/ZI=; b=kjY4KEu9G68waT7PVGTNrC5OTD
+        alIjGbCn1cTJsnpr7OKaq8fT6XfrJox2JDRDqiEwD0GbL+GW8RZHNIrTyijbZv2RTE6IFbZw0GycS
+        px2U5yzIkx4yBHBZNEsQZUIR8AhuJULSbGSX8aD+vTlOllUVyTuBdlnVNybDzC3rjDYLJ+T4/h/NX
+        ughbMwxKWUz3R2frUfteJaPIOkvA/s8M8gUKk0Tf0V2gn//LWFcCOpj0kuikDHj2jwVJnm2DqU/5K
+        qYcrvlBIicxkjoSW0dGlrrSpvqZ6WpURqmoG7qyqr6CeCM5tR4vENw6dl0ArDHKogeKPwm6/xuZrL
+        6G18/UDg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6ec9-0007zW-2t; Tue, 25 Feb 2020 18:07:25 +0000
+Date:   Tue, 25 Feb 2020 10:07:25 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: fix an undefined behaviour in _da3_path_shift
+Message-ID: <20200225180725.GA29862@infradead.org>
+References: <1582641477-4011-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <20200225044734.14680-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 adultscore=0 impostorscore=0 spamscore=0
- phishscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582641477-4011-1-git-send-email-cai@lca.pw>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I think we code do this a tad more cleaner, something like:
 
-
-On 2/24/20 8:47 PM, Hillf Danton wrote:
-> 
-> On Mon, 24 Feb 2020 09:51:01 -0800 Santosh Shilimkar wrote:
->> On 2/24/20 2:39 AM, Hillf Danton wrote:
->>>
->>> Fall back to NUMA_NO_NODE if needed.
-> [...]
->>>
->> This seems good. Can you please post it as properly formatted patch ?
-> 
-Thanks !!
-
-> ---8<---
-> Subject: [PATCH] net/rds: fix gpf in rds_ib_add_one
-> From: Hillf Danton <hdanton@sina.com>
-> 
-> The devoted syzbot posted a gpf report.
-> 
-> general protection fault, probably for non-canonical address 0xdffffc0000000086: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000430-0x0000000000000437]
-> CPU: 0 PID: 8852 Comm: syz-executor043 Not tainted 5.6.0-rc2-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:dev_to_node include/linux/device.h:663 [inline]
-> RIP: 0010:rds_ib_add_one+0x81/0xe50 net/rds/ib.c:140
-> Code: b7 a8 06 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 28 00 74 08 4c 89 f7 e8 0e e4 1d fa bb 30 04 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <42> 8a 04 28 84 c0 0f 85 f0 0a 00 00 8b 1b 48 c7 c0 28 0c 09 89 48
-> RSP: 0018:ffffc90003087298 EFLAGS: 00010202
-> RAX: 0000000000000086 RBX: 0000000000000430 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000001
-> RBP: ffffc900030872f0 R08: ffffffff87964c3c R09: ffffed1014fd109c
-> R10: ffffed1014fd109c R11: 0000000000000000 R12: 0000000000000000
-> R13: dffffc0000000000 R14: ffff8880a7e886a8 R15: ffff8880a7e88000
-> FS:  0000000000c3d880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f0318ed0000 CR3: 00000000a3167000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   add_client_context+0x482/0x660 drivers/infiniband/core/device.c:681
->   enable_device_and_get+0x15b/0x370 drivers/infiniband/core/device.c:1316
->   ib_register_device+0x124d/0x15b0 drivers/infiniband/core/device.c:1382
->   rxe_register_device+0x3f6/0x530 drivers/infiniband/sw/rxe/rxe_verbs.c:1231
->   rxe_add+0x1373/0x14f0 drivers/infiniband/sw/rxe/rxe.c:302
->   rxe_net_add+0x79/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:539
->   rxe_newlink+0x31/0x90 drivers/infiniband/sw/rxe/rxe.c:318
->   nldev_newlink+0x403/0x4a0 drivers/infiniband/core/nldev.c:1538
->   rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
->   rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
->   rdma_nl_rcv+0x701/0xa20 drivers/infiniband/core/netlink.c:259
->   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
->   netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
->   netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
->   sock_sendmsg_nosec net/socket.c:652 [inline]
->   sock_sendmsg net/socket.c:672 [inline]
->   ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
->   ___sys_sendmsg net/socket.c:2397 [inline]
->   __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
->   __do_sys_sendmsg net/socket.c:2439 [inline]
->   __se_sys_sendmsg net/socket.c:2437 [inline]
->   __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
->   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> 
-> It's fixed by falling back to NUMA_NO_NODE if needed while allocating
-> memory slices for send/recv rings at some cost of dip in performance.
-> 
-> Reported-by: syzbot <syzbot+274094e62023782eeb17@syzkaller.appspotmail.com>
-> Fixes: e4c52c98e049 ("RDS/IB: add _to_node() macros for numa and use {k,v}malloc_node()")
-> Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-> Cc: Andy Grover <andy.grover@oracle.com>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> ---
-> 
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-
-> --- a/net/rds/ib.c
-> +++ b/net/rds/ib.c
-> @@ -137,7 +137,8 @@ static void rds_ib_add_one(struct ib_dev
->   		return;
->   
->   	rds_ibdev = kzalloc_node(sizeof(struct rds_ib_device), GFP_KERNEL,
-> -				 ibdev_to_node(device));
-> +				 device->dev.parent ?
-> +				 ibdev_to_node(device) : NUMA_NO_NODE);
->   	if (!rds_ibdev)
->   		return;
->   
-> --
-> 
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 875e04f82541..542a4edfcf54 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -1986,7 +1986,8 @@ xfs_da3_path_shift(
+ 	ASSERT(path != NULL);
+ 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
+ 	level = (path->active-1) - 1;	/* skip bottom layer in path */
+-	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
++	for ( ; level >= 0; level--) {
++		blk = &path->blk[level];
+ 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
+ 					   blk->bp->b_addr);
+ 
