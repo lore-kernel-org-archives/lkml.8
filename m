@@ -2,199 +2,129 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C63C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9476FC4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D25721927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582670953;
-	bh=ZfqdCsYTZr7xoeF7qxhbOAsyLAOQ43Qip2HR86wzpdM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MWzLsjEbrC7+9BfuDp20duA0VmbNhoVnPOQuMq+M+wYg8bj32ejnKATU5/V+p5AC9
-	 ilgZAbqQ2DgpcbXhnA/wUzHJlAOrM61ZKnjYrS9SzHOf9eTf5rRC/Q5ZoJlEbil3vg
-	 NXAdLnBj0ewAwDODSuOzklhjabOcVxZ0Gv0ngVag=
+	by mail.kernel.org (Postfix) with ESMTP id 6865B20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YqQslQS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgBYWtM (ORCPT
+        id S1729249AbgBYWtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:49:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgBYWtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:49:11 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ECEB20732;
-        Tue, 25 Feb 2020 22:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582670950;
-        bh=ZfqdCsYTZr7xoeF7qxhbOAsyLAOQ43Qip2HR86wzpdM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hEkwGucqHchemMDC0fRebVIbxH0hNUIPE+IMikJWCU2No3mbh2Ba52VqquRzIK7pD
-         zbDfzDy0q6ggaxkYnUIfR/+4T4vuqeHFnzTlat9F2PBCpeu+jMdHPM4AUCBb8VVdyg
-         wXqjHNokUroOjfrQvn4D0+rlPeXtrIFd141G/5Ks=
-Date:   Wed, 26 Feb 2020 07:49:06 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     <zhe.he@windriver.com>
-Cc:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <kstewart@linuxfoundation.org>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] perf: probe-file: Check return value of
- strlist__add
-Message-Id: <20200226074906.0acb08b31d01c96c475da0cb@kernel.org>
-In-Reply-To: <1582641703-233485-2-git-send-email-zhe.he@windriver.com>
-References: <1582641703-233485-1-git-send-email-zhe.he@windriver.com>
-        <1582641703-233485-2-git-send-email-zhe.he@windriver.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Feb 2020 17:49:55 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51372 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728806AbgBYWty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:49:54 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PMnniE074691;
+        Tue, 25 Feb 2020 16:49:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582670989;
+        bh=zy1gihk/lmEzN5ETQUN08dIq2i2iSuWxptUBdri6nTQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YqQslQS93oTE5mtL6Jffw+GDDQ9DOKvFeztI9QAisDKoNuemRUUhX7P0DSTd67j9X
+         mwRhPevGkxsB/slE4BSkYOazW5CLfcAx2ZQLjkU+yNx7ru/qAFWnLTsrPatdODSTLN
+         mEWdave3cI7F7c+crVGibb86fpp0A4KE3fUlEt8A=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PMnn7T072939
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 16:49:49 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 16:49:49 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 16:49:49 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01PMnnRI083447;
+        Tue, 25 Feb 2020 16:49:49 -0600
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com> <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e05580eb-670e-9e62-f3c4-84980e2193d2@ti.com>
+Date:   Tue, 25 Feb 2020 16:44:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 22:41:43 +0800
-<zhe.he@windriver.com> wrote:
+Hello
 
-> From: He Zhe <zhe.he@windriver.com>
-> 
-> strlist__add may fail with -ENOMEM or -EEXIST. Check it and give debugging
-> hint when necessary.
-> 
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
-> ---
->  tools/perf/builtin-probe.c   | 30 ++++++++++++++++--------------
->  tools/perf/util/probe-file.c | 26 +++++++++++++++++++++-----
->  2 files changed, 37 insertions(+), 19 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-> index 26bc5923e6b5..8b4511c70fed 100644
-> --- a/tools/perf/builtin-probe.c
-> +++ b/tools/perf/builtin-probe.c
-> @@ -442,24 +442,26 @@ static int perf_del_probe_events(struct strfilter *filter)
->  	}
->  
->  	ret = probe_file__get_events(kfd, filter, klist);
-> -	if (ret == 0) {
-> -		strlist__for_each_entry(ent, klist)
-> -			pr_info("Removed event: %s\n", ent->s);
-> +	if (ret < 0)
-> +		goto out;
+On 2/25/20 4:17 PM, Jacek Anaszewski wrote:
+> On 2/25/20 11:19 AM, Pavel Machek wrote:
+>> Hi!
+>>
+>>>>    leds: lp5521: Add multicolor framework multicolor brightness support
+>>>>    leds: lp55xx: Fix checkpatch file permissions issues
+>>>>    leds: lp5523: Fix checkpatch issues in the code
+>>>>    dt: bindings: Update lp55xx binding to recommended LED naming
+>>> I have no open comments on this patchset except for a DT change requested by
+>>> Shawn Gao but this change should wait till after this patchset is merged.
+>>>
+>>> Is there something holding this up?
+>> Yes... my time; sorry about that.
+>>
+>> The fact that it changes API makes it important to get it right, and
+>> hard/impossible to fix it once it is merged... and I don't think this
+>> is the right interface (sorry).
+>>
+>> In particular, I don't think having directory per channel is a good
+>> idea. It makes atomic updates impossible (minor),
+> It is possible via brightness file, although it will need first writing
+> intensity files, which only will cache colors, and actual write to hw
+> occurs on write to brightness file. This has been discussed dozen of
+> times throughout last year, and you even proposed the formula for
+> calculating per-color-subled brightness basing on global brightness and
+> intensity set for each color.
 
-No, this is ignored by design.
-Since probe_file__get_events() returns -ENOENT when no event is matched,
-this should be just ignored, and goto uprobe event matching.
+I actually just got your reply Pavel.  Unfortunately I don't have the 
+band width to spin any more major framework changes and as you know this 
+has been discussed over and over and over again with multiple iterations 
+and multiple designs.
 
->  
-> -		ret = probe_file__del_strlist(kfd, klist);
-> -		if (ret < 0)
-> -			goto error;
-> -	}
-> +	strlist__for_each_entry(ent, klist)
-> +		pr_info("Removed event: %s\n", ent->s);
-> +
-> +	ret = probe_file__del_strlist(kfd, klist);
-> +	if (ret < 0)
-> +		goto error;
->  
->  	ret2 = probe_file__get_events(ufd, filter, ulist);
-> -	if (ret2 == 0) {
-> -		strlist__for_each_entry(ent, ulist)
-> -			pr_info("Removed event: %s\n", ent->s);
-> +	if (ret2 < 0)
-> +		goto out;
+I still don't agree with some nebulous unbound array being passed into 
+the driver via sysfs. As we have discussed at length in the past this 
+implementation is just as bad if not worse then what I am proposing. I 
+also have provided that particular array implementation and it failed to 
+get any ACKs as it violated sysfs rules and was wrought with corner 
+cases and mismatches of color to intensity values.  And calling the 
+sysfs node channel_intensity and channel_names is not correct this is a 
+LP55xx naming convention and should not be applied.
 
-Ditto.
+But as Jacek indicated lets have the sysfs maintainer provide the 
+consultation on the array implementation again.
 
-Thank you,
+And as I have stated above my time has run out on trying to get this 
+framework completed so I will just re-write the lp50xx driver against 
+the standard LED class implementation and abandon any hope of actually 
+improving the LED subsystem for multi color ICs.  As I don't have 
+another year or two to debate this interface again and try to implement 
+the code just for it to get another NACK in the end and having to 
+rewrite the framework again.
 
->  
-> -		ret2 = probe_file__del_strlist(ufd, ulist);
-> -		if (ret2 < 0)
-> -			goto error;
-> -	}
-> +	strlist__for_each_entry(ent, ulist)
-> +		pr_info("Removed event: %s\n", ent->s);
-> +
-> +	ret2 = probe_file__del_strlist(ufd, ulist);
-> +	if (ret2 < 0)
-> +		goto error;
->  
->  	if (ret == -ENOENT && ret2 == -ENOENT)
->  		pr_warning("\"%s\" does not hit any event.\n", str);
-> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> index cf44c05f89c1..00f086cba88f 100644
-> --- a/tools/perf/util/probe-file.c
-> +++ b/tools/perf/util/probe-file.c
-> @@ -307,10 +307,14 @@ int probe_file__get_events(int fd, struct strfilter *filter,
->  		p = strchr(ent->s, ':');
->  		if ((p && strfilter__compare(filter, p + 1)) ||
->  		    strfilter__compare(filter, ent->s)) {
-> -			strlist__add(plist, ent->s);
-> -			ret = 0;
-> +			ret = strlist__add(plist, ent->s);
-> +			if (ret < 0) {
-> +				pr_debug("strlist__add failed (%d)\n", ret);
-> +				goto out;
-> +			}
->  		}
->  	}
-> +out:
->  	strlist__delete(namelist);
->  
->  	return ret;
-> @@ -517,7 +521,11 @@ static int probe_cache__load(struct probe_cache *pcache)
->  				ret = -EINVAL;
->  				goto out;
->  			}
-> -			strlist__add(entry->tevlist, buf);
-> +			ret = strlist__add(entry->tevlist, buf);
-> +			if (ret < 0) {
-> +				pr_debug("strlist__add failed (%d)\n", ret);
-> +				goto out;
-> +			}
->  		}
->  	}
->  out:
-> @@ -678,7 +686,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
->  		command = synthesize_probe_trace_command(&tevs[i]);
->  		if (!command)
->  			goto out_err;
-> -		strlist__add(entry->tevlist, command);
-> +		ret = strlist__add(entry->tevlist, command);
-> +		if (ret < 0) {
-> +			pr_debug("strlist__add failed (%d)\n", ret);
-> +			goto out_err;
-> +		}
-> +
->  		free(command);
->  	}
->  	list_add_tail(&entry->node, &pcache->entries);
-> @@ -859,7 +872,10 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
->  			break;
->  		}
->  
-> -		strlist__add(entry->tevlist, buf);
-> +		ret = strlist__add(entry->tevlist, buf);
-> +		if (ret < 0)
-> +			pr_debug("strlist__add failed (%d)\n", ret);
-> +
->  		free(buf);
->  		entry = NULL;
->  	}
-> -- 
-> 2.24.1
-> 
+Dan
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
