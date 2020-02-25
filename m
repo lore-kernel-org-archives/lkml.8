@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83891C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C7FC35DF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59ADF24689
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5B624689
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:13:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DcHSUo+5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FNMuINYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgBYFNT (ORCPT
+        id S1728913AbgBYFNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:13:19 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35683 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgBYFNQ (ORCPT
+        Tue, 25 Feb 2020 00:13:20 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43961 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgBYFNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:13:16 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i19so6559783pfa.2
+        Tue, 25 Feb 2020 00:13:17 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u12so6271811pgb.10
         for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:13:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QU6tarMcleK7JZEKv6NGFcAaaMn8J85o/O86pl2boI8=;
-        b=DcHSUo+5uhomdqc7fCqlU3p2aWJnrlaigJaUEKSmf+9FQuRxJNZKzo7AgMVRkj+enj
-         PYAibvmj1Z4N2moDH7SYmegC9w9CQ+j3GWVpJV9v6+s1bSScng2s38DzUzJ80Wqsf+5R
-         8k71AqQfgLS9wzWOi0XFRsHjemnvNdL8m/Jzs=
+        bh=KFgEd5ihB5mpYJHgTJ73YmLe+8HUk6ELkCILmCi0oOk=;
+        b=FNMuINYqjkWcMKmsC54Bq/gTZBk8TfWE/kHSeHazPaZ6Qsgq4UEwtaKxNjx3U/LSOL
+         lSxriB94mOtmP7ZumY1pLpyXNh1eiELD+deo2AfzoltvtXbJresnxC13IfnGI7/zF0u8
+         gfw7+zy+BpP4vi9hf0mYsgj0+sBmXM2UX7Dlk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QU6tarMcleK7JZEKv6NGFcAaaMn8J85o/O86pl2boI8=;
-        b=h5zgrOGJ1gtqjsxoy7eTmtK6R8XZ8UHVgOa6ygUar4XuM7lUn/ODyZufqR24r2gbaI
-         8RPIUJGo7o1hjmN3Pqe/pC1y/jbbbyTfnngod3jaQa2rm3/Fc+NkE1Lhw8GRlOG7Zuy4
-         u3nQr9FfkC0ip5DGkL8v5vOB0hUzhDegHYHt+i0SNFoJYIV0RRKD8+Tip/4cW2E8iMX3
-         S3ScnUWqOA1kC8KVaTpOlHho1KqVYjd4j5ctfcOU+dejiEZ8uwHZ1WxoeuEdwmmusbEQ
-         AmR4uv4VcP6uLg9GX0gOoFqAn3wjoHDZ2F7S5JhumKO4iswVEhEPC3p3EZ+doEJXVSvJ
-         H8Ag==
-X-Gm-Message-State: APjAAAWYoNFWRyQfXRbyahmWoD3dETGHfPvXklu1gHKL2IL4nn8oMw5h
-        0ThZyv42BHGC5Q8COGrzZIaJZA==
-X-Google-Smtp-Source: APXvYqzirNh6rCEGPBMMTd96cFvNHpeUqARTXcwmJmqfs1UtEUIGNuIRJqZRDNbnRdSDNFi3a6YNbQ==
-X-Received: by 2002:aa7:9e0b:: with SMTP id y11mr57940549pfq.182.1582607595420;
-        Mon, 24 Feb 2020 21:13:15 -0800 (PST)
+        bh=KFgEd5ihB5mpYJHgTJ73YmLe+8HUk6ELkCILmCi0oOk=;
+        b=CmF0hHovJCU5yDRxBH0shhA3bbUbrDvNq609gTIRNveoQYla3WyYJYAJeu/wvk9k6j
+         61pXqQ0HMHv8m/Q3V5q1pMa+rGreVDohyc3VRgBSp79Cfutv3BR289BSk2cDcYM1V6ym
+         LmkyANADzwDIox90tWGg9+O/yLxf5oeKoQ74tKZKXQC43FFmH4e1ntd5Nw+pA0CiCi5w
+         ifZytMq3l5s9GyJHE5StIm4lfF67sjPEl9OccDeTgyawYT3znuv6ArTecfL4pRAYLkMp
+         /Ucf/l2VEaeUEJiZmzZzhhpmS6bfehJDmvhwVS+zUYubNzwo0YJbMokK6987Sb4ZnmAl
+         umWw==
+X-Gm-Message-State: APjAAAU+PVovzWzHP6LWONVYOyVw1crguRkIVjekVGC488ITLAcqLHkF
+        2ZroEYqTj/YJUBbt4NXnqO7EZvG3i/U=
+X-Google-Smtp-Source: APXvYqwchftXeveUuXJHknSGejturvoBpu91/DIibP3TqJfUAAo+U3HXFzD6DGyObdeKZ5MP3RURPQ==
+X-Received: by 2002:a63:5b54:: with SMTP id l20mr19043243pgm.324.1582607596247;
+        Mon, 24 Feb 2020 21:13:16 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s14sm14472732pgv.74.2020.02.24.21.13.11
+        by smtp.gmail.com with ESMTPSA id j17sm14695804pfa.16.2020.02.24.21.13.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 21:13:11 -0800 (PST)
+        Mon, 24 Feb 2020 21:13:15 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         Russell King <linux@armlinux.org.uk>,
         Will Deacon <will@kernel.org>, Jann Horn <jannh@google.com>,
         x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/6] arm32/64, elf: Add tables to document READ_IMPLIES_EXEC
-Date:   Mon, 24 Feb 2020 21:13:05 -0800
-Message-Id: <20200225051307.6401-5-keescook@chromium.org>
+Subject: [PATCH v4 6/6] arm64, elf: Disable automatic READ_IMPLIES_EXEC for 64-bit address spaces
+Date:   Mon, 24 Feb 2020 21:13:07 -0800
+Message-Id: <20200225051307.6401-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200225051307.6401-1-keescook@chromium.org>
 References: <20200225051307.6401-1-keescook@chromium.org>
@@ -78,83 +78,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tables to document the current behavior of READ_IMPLIES_EXEC in
-preparation for changing the behavior for both arm64 and arm.
+With arm64 64-bit environments, there should never be a need for automatic
+READ_IMPLIES_EXEC, as the architecture has always been execute-bit aware
+(as in, the default memory protection should be NX unless a region
+explicitly requests to be executable).
 
+Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm/kernel/elf.c        | 24 +++++++++++++++++++++---
- arch/arm64/include/asm/elf.h | 20 ++++++++++++++++++++
- 2 files changed, 41 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/elf.h | 4 ++--
+ fs/compat_binfmt_elf.c       | 5 +++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/elf.c b/arch/arm/kernel/elf.c
-index 182422981386..2f69cf978fe3 100644
---- a/arch/arm/kernel/elf.c
-+++ b/arch/arm/kernel/elf.c
-@@ -78,9 +78,27 @@ void elf_set_personality(const struct elf32_hdr *x)
- EXPORT_SYMBOL(elf_set_personality);
- 
- /*
-- * Set READ_IMPLIES_EXEC if:
-- *  - the binary requires an executable stack
-- *  - we're running on a CPU which doesn't support NX.
-+ * An executable for which elf_read_implies_exec() returns TRUE will
-+ * have the READ_IMPLIES_EXEC personality flag set automatically.
-+ *
-+ * The decision process for determining the results are:
-+ *
-+ *              CPU: | lacks NX*  | has NX     |
-+ * ELF:              |            |            |
-+ * -------------------------------|------------|
-+ * missing GNU_STACK | exec-all   | exec-all   |
-+ * GNU_STACK == RWX  | exec-all   | exec-all   |
-+ * GNU_STACK == RW   | exec-all   | exec-none  |
-+ *
-+ *  exec-all  : all PROT_READ user mappings are executable, except when
-+ *              backed by files on a noexec-filesystem.
-+ *  exec-none : only PROT_EXEC user mappings are executable.
-+ *
-+ *  *this column has no architectural effect: NX markings are ignored by
-+ *   hardware, but may have behavioral effects when "wants X" collides with
-+ *   "cannot be X" constraints in memory permission flags, as in
-+ *   https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
-+ *
-  */
- int arm_elf_read_implies_exec(int executable_stack)
- {
 diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index b618017205a3..7fc779e3f1ec 100644
+index 03ada29984a7..ea9221ed68a1 100644
 --- a/arch/arm64/include/asm/elf.h
 +++ b/arch/arm64/include/asm/elf.h
-@@ -96,6 +96,26 @@
+@@ -105,7 +105,7 @@
+  *             CPU*: | arm32      | arm64      |
+  * ELF:              |            |            |
+  * -------------------------------|------------|
+- * missing GNU_STACK | exec-all   | exec-all   |
++ * missing GNU_STACK | exec-all   | exec-none  |
+  * GNU_STACK == RWX  | exec-stack | exec-stack |
+  * GNU_STACK == RW   | exec-none  | exec-none  |
+  *
+@@ -117,7 +117,7 @@
+  *  *all arm64 CPUs support NX, so there is no "lacks NX" column.
+  *
   */
- #define elf_check_arch(x)		((x)->e_machine == EM_AARCH64)
- 
-+/*
-+ * An executable for which elf_read_implies_exec() returns TRUE will
-+ * have the READ_IMPLIES_EXEC personality flag set automatically.
-+ *
-+ * The decision process for determining the results are:
-+ *
-+ *             CPU*: | arm32      | arm64      |
-+ * ELF:              |            |            |
-+ * -------------------------------|------------|
-+ * missing GNU_STACK | exec-all   | exec-all   |
-+ * GNU_STACK == RWX  | exec-all   | exec-all   |
-+ * GNU_STACK == RW   | exec-none  | exec-none  |
-+ *
-+ *  exec-all  : all PROT_READ user mappings are executable, except when
-+ *              backed by files on a noexec-filesystem.
-+ *  exec-none : only PROT_EXEC user mappings are executable.
-+ *
-+ *  *all arm64 CPUs support NX, so there is no "lacks NX" column.
-+ *
-+ */
- #define elf_read_implies_exec(ex,stk)	(stk != EXSTACK_DISABLE_X)
+-#define elf_read_implies_exec(ex,stk)	(stk == EXSTACK_DEFAULT)
++#define compat_elf_read_implies_exec(ex, stk)	(stk == EXSTACK_DEFAULT)
  
  #define CORE_DUMP_USE_REGSET
+ #define ELF_EXEC_PAGESIZE	PAGE_SIZE
+diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
+index aaad4ca1217e..3068d57436b3 100644
+--- a/fs/compat_binfmt_elf.c
++++ b/fs/compat_binfmt_elf.c
+@@ -113,6 +113,11 @@
+ #define	arch_setup_additional_pages compat_arch_setup_additional_pages
+ #endif
+ 
++#ifdef	compat_elf_read_implies_exec
++#undef	elf_read_implies_exec
++#define	elf_read_implies_exec compat_elf_read_implies_exec
++#endif
++
+ /*
+  * Rename a few of the symbols that binfmt_elf.c will define.
+  * These are all local so the names don't really matter, but it
 -- 
 2.20.1
 
