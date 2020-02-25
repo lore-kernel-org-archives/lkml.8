@@ -2,88 +2,223 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C3EC4BA01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239D9C4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C8320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582667392;
-	bh=HpOrLqgis/0esfG7dq2+OsTjc76h9zTqkjIJyDQmoKA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bvv0twlE1sdfiWlUxciFBMKVchmb2qGo9f32vME9kQEVHMnIVBiecQgvvO1HWvdXU
-	 xrP1PB4SZbGHS0Y89oNcWLdaT64NpBHYoKsyaGq3zMqvy0Kk3pOcTLlevZFX1AGmzx
-	 4MWDxd9tiQRfUcd+IHXbqBqKG9eStvDRxA6n6i6c=
+	by mail.kernel.org (Postfix) with ESMTP id E97EF20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PZ8e3cBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgBYVtv (ORCPT
+        id S1730052AbgBYVt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:49:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgBYVts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:49:48 -0500
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 879F721D7E
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:49:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582667387;
-        bh=HpOrLqgis/0esfG7dq2+OsTjc76h9zTqkjIJyDQmoKA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gLhc7oCBf/dMrtwgyWAQsXlJBnnS8uxHJFBQTNslU/xlcEZ2XsI37rPDayexTl/na
-         fUuMHI7ecFZvcl+kv3tj8ZSXWPVED6uI/6HeAmY/iraqGp56FGYmhadN6drQ3kLQ+1
-         Og4aSYroBhGJzgODXVENKVdfI5ISKrI2XKCmFvP0=
-Received: by mail-wr1-f48.google.com with SMTP id t3so477839wru.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:49:47 -0800 (PST)
-X-Gm-Message-State: APjAAAWF/Zu9rmzg/aQe37e4c16Zu7g4QsGkBMMmAbOfIDvQAmgGutSF
-        fUstQoVFYRyf85rRERTCoqGrHEdTXSZZksQEZaJi/g==
-X-Google-Smtp-Source: APXvYqwwlguw+9143UoHvRORjuDhvyP7pINZdcLc2/GmTaDHWw6AbKjBqD07WA/Fx7HmxjDN7uHVGZJ80tlj+nocYZ4=
-X-Received: by 2002:adf:df0c:: with SMTP id y12mr1116539wrl.257.1582667386041;
- Tue, 25 Feb 2020 13:49:46 -0800 (PST)
+        Tue, 25 Feb 2020 16:49:57 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43592 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729411AbgBYVso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 16:48:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=2x6mr17+IWiABUrH32RRedDjvVTqyCBcBDcULt4oGp0=; b=PZ8e3cBzBVyhOkiqBpWxfXN4l5
+        xX1H3oq8gNl24M5eLkiGq7cvdo2d/+LXFFgro13sGXfH/TxL1lz+SitBPjbM5nJUIBJduLCRfuoZN
+        lRSg3soAax+qgzq+tFKq2E0HwX5+ZJtvf6GARvAtg6KQo5TkEGqUNUehXdbHRXTX7r2bf5VT2g+wM
+        5pRT9wV3BS+lN7qCiNtsR4XhVhj39d8PJfS6AYi99sUACj5L+7nDfMOvgg28i24COXeeWH+zc44ZZ
+        HQsScXR6OxEB5TS4Qd6yNiuyPu8nhF4G5y5x+DBEtU4CfZ/gyo52apJLlS4vHweapHlWzAkyaGWbh
+        yQkniXbQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6i4H-0007pX-2l; Tue, 25 Feb 2020 21:48:41 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v8 05/25] mm: Add new readahead_control API
+Date:   Tue, 25 Feb 2020 13:48:18 -0800
+Message-Id: <20200225214838.30017-6-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200225214838.30017-1-willy@infradead.org>
+References: <20200225214838.30017-1-willy@infradead.org>
 MIME-Version: 1.0
-References: <1582498270-50674-1-git-send-email-schaecsn@gmx.net>
-In-Reply-To: <1582498270-50674-1-git-send-email-schaecsn@gmx.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 25 Feb 2020 13:49:34 -0800
-X-Gmail-Original-Message-ID: <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
-Message-ID: <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
-Subject: Re: [PATCH 0/1] i2c: imc: Add support for Intel iMC SMBus host controller.
-To:     Stefan Schaeckeler <schaecsn@gmx.net>
-Cc:     linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 2:52 PM Stefan Schaeckeler <schaecsn@gmx.net> wrote:
->
-> This patch is based on Andy Lutomirski's iMC SMBus driver patch-set
-> https://lkml.org/lkml/2016/4/28/926. It never made it into the kernel. I hope
-> this rewrite will:
->
->
-> Overview
->
-> Modern Intel memory controllers host an SMBus controller and connection to
-> DIMMs and their thermal sensors. The memory controller firmware has three modes
-> of operation: Closed Loop Thermal Throttling (CLTT), Open Loop Thermal
-> Throttling (OLTT) and none.
->
-> - CLTT: The memory controller firmware is periodically accessing the DIMM
->   temperature sensor over the SMBus.
->
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
+Filesystems which implement the upcoming ->readahead method will get
+their pages by calling readahead_page() or readahead_page_batch().
+These functions support large pages, even though none of the filesystems
+to be converted do yet.
 
-I think this is great!  One question, though: what happens if the
-system is in CLTT mode but you disable CLTT and claim the bus for too
-long?  For example, if there's an infinite loop or other lockup which
-you have the tsod polling interval set to 0?  Does the system catch
-fire or does the system do something intelligent like temporarily
-switching to open loop?
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ include/linux/pagemap.h | 140 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 140 insertions(+)
+
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 24894b9b90c9..232892d37071 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -638,6 +638,146 @@ static inline int add_to_page_cache(struct page *page,
+ 	return error;
+ }
+ 
++/**
++ * struct readahead_control - Describes a readahead request.
++ *
++ * A readahead request is for consecutive pages.  Filesystems which
++ * implement the ->readahead method should call readahead_page() or
++ * readahead_page_batch() in a loop and attempt to start I/O against
++ * each page in the request.
++ *
++ * Most of the fields in this struct are private and should be accessed
++ * by the functions below.
++ *
++ * @file: The file, used primarily by network filesystems for authentication.
++ *	  May be NULL if invoked internally by the filesystem.
++ * @mapping: Readahead this filesystem object.
++ */
++struct readahead_control {
++	struct file *file;
++	struct address_space *mapping;
++/* private: use the readahead_* accessors instead */
++	pgoff_t _index;
++	unsigned int _nr_pages;
++	unsigned int _batch_count;
++};
++
++/**
++ * readahead_page - Get the next page to read.
++ * @rac: The current readahead request.
++ *
++ * Context: The page is locked and has an elevated refcount.  The caller
++ * should decreases the refcount once the page has been submitted for I/O
++ * and unlock the page once all I/O to that page has completed.
++ * Return: A pointer to the next page, or %NULL if we are done.
++ */
++static inline struct page *readahead_page(struct readahead_control *rac)
++{
++	struct page *page;
++
++	BUG_ON(rac->_batch_count > rac->_nr_pages);
++	rac->_nr_pages -= rac->_batch_count;
++	rac->_index += rac->_batch_count;
++
++	if (!rac->_nr_pages) {
++		rac->_batch_count = 0;
++		return NULL;
++	}
++
++	page = xa_load(&rac->mapping->i_pages, rac->_index);
++	VM_BUG_ON_PAGE(!PageLocked(page), page);
++	rac->_batch_count = hpage_nr_pages(page);
++
++	return page;
++}
++
++static inline unsigned int __readahead_batch(struct readahead_control *rac,
++		struct page **array, unsigned int array_sz)
++{
++	unsigned int i = 0;
++	XA_STATE(xas, &rac->mapping->i_pages, 0);
++	struct page *page;
++
++	BUG_ON(rac->_batch_count > rac->_nr_pages);
++	rac->_nr_pages -= rac->_batch_count;
++	rac->_index += rac->_batch_count;
++	rac->_batch_count = 0;
++
++	xas_set(&xas, rac->_index);
++	rcu_read_lock();
++	xas_for_each(&xas, page, rac->_index + rac->_nr_pages - 1) {
++		VM_BUG_ON_PAGE(!PageLocked(page), page);
++		VM_BUG_ON_PAGE(PageTail(page), page);
++		array[i++] = page;
++		rac->_batch_count += hpage_nr_pages(page);
++
++		/*
++		 * The page cache isn't using multi-index entries yet,
++		 * so the xas cursor needs to be manually moved to the
++		 * next index.  This can be removed once the page cache
++		 * is converted.
++		 */
++		if (PageHead(page))
++			xas_set(&xas, rac->_index + rac->_batch_count);
++
++		if (i == array_sz)
++			break;
++	}
++	rcu_read_unlock();
++
++	return i;
++}
++
++/**
++ * readahead_page_batch - Get a batch of pages to read.
++ * @rac: The current readahead request.
++ * @array: An array of pointers to struct page.
++ *
++ * Context: The pages are locked and have an elevated refcount.  The caller
++ * should decreases the refcount once the page has been submitted for I/O
++ * and unlock the page once all I/O to that page has completed.
++ * Return: The number of pages placed in the array.  0 indicates the request
++ * is complete.
++ */
++#define readahead_page_batch(rac, array)				\
++	__readahead_batch(rac, array, ARRAY_SIZE(array))
++
++/**
++ * readahead_pos - The byte offset into the file of this readahead request.
++ * @rac: The readahead request.
++ */
++static inline loff_t readahead_pos(struct readahead_control *rac)
++{
++	return (loff_t)rac->_index * PAGE_SIZE;
++}
++
++/**
++ * readahead_length - The number of bytes in this readahead request.
++ * @rac: The readahead request.
++ */
++static inline loff_t readahead_length(struct readahead_control *rac)
++{
++	return (loff_t)rac->_nr_pages * PAGE_SIZE;
++}
++
++/**
++ * readahead_index - The index of the first page in this readahead request.
++ * @rac: The readahead request.
++ */
++static inline pgoff_t readahead_index(struct readahead_control *rac)
++{
++	return rac->_index;
++}
++
++/**
++ * readahead_count - The number of pages in this readahead request.
++ * @rac: The readahead request.
++ */
++static inline unsigned int readahead_count(struct readahead_control *rac)
++{
++	return rac->_nr_pages;
++}
++
+ static inline unsigned long dir_pages(struct inode *inode)
+ {
+ 	return (unsigned long)(inode->i_size + PAGE_SIZE - 1) >>
+-- 
+2.25.0
+
