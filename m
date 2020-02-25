@@ -2,109 +2,250 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32788C35DF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A9AC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084CC21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtvmPH06"
+	by mail.kernel.org (Postfix) with ESMTP id EE78A21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgBYGX6 (ORCPT
+        id S1729108AbgBYGYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:23:58 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33137 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgBYGX6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:23:58 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m10so1457785wmc.0;
-        Mon, 24 Feb 2020 22:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XpoCQmnnCoX+EypbLxK5wzw5eTUegrwSIJVovT9oIng=;
-        b=LtvmPH06lEPFG8OMZr7AWSiUxP2nhinlf0Z31SrJfHdhmPxKNOalF+o47G7XNsP2iU
-         /8RdGJlXHGUuoin0ZV8LkVbMAsAQTHmD0g/6h4j0TYQKIDEfhRpIFkC+IZtxrf/MKcrO
-         EEG9EMP5ueeVl3sjEgP/zKaW6pYLoa0fclnYExT3ZqLz+fVNY+FZuBzE922FOJo3ElR4
-         2TUIxRNthSYs+5S5cwEINKDatmDWQ0Zze6bYxLOKyzRThPBjC6DEPYKQOgctq6l4Cn/W
-         f0pJsJfnll2bhyzz5d7C9APxrCuM6otCPgO13gs/qnt2EWqBYIFyLdlJBBKl8uedC9WF
-         xSww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XpoCQmnnCoX+EypbLxK5wzw5eTUegrwSIJVovT9oIng=;
-        b=qKJtJtAuZ5VaTc3EejnodqtB0+3gzHi3xg2Aexea7nWWsYd7cLUSQwHtJxYOJF5tLL
-         9J2GAMLB202IdMaWVCwL12uDnzz4STfYdIA0rpt1yc4IQuMo5UcEeSai7/X6VxzxpTR8
-         A3j4hMDL0tz4PZqg9Jop8/Ym3B24EAGWmIAvahW67ynjV2tWnBrU53Mt6GgdfIimxVz+
-         Y7x+HZjYS/ssWuFvLf4njes+liwA25BAkHJr7gjm8IvG+jBPuXpPmHyLnedRK+5R4LcS
-         JSoPXNS0VisLcP3lmPt3D0Gkk5zVpq16rIXu4tSqVnpw6OToFyop/dmGBvsLa9nYe4JG
-         82lQ==
-X-Gm-Message-State: APjAAAXNfUiF9zhFKe1Jx8XJ3769jMftHwlYR1fTc/fyGGwbp4JweSMx
-        kjpjfwFwAJrAJxoDZiXAoEU=
-X-Google-Smtp-Source: APXvYqxFarTonU8f+JPpOAAw/pmNuxJbNOWDYR4F86yTdLQ2YTkbLgsv346IwIWXaxzH05PFdi3kZg==
-X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr3329593wml.54.1582611835918;
-        Mon, 24 Feb 2020 22:23:55 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:d5d8:c920:d17:5c? (p200300EA8F296000D5D8C9200D17005C.dip0.t-ipconnect.de. [2003:ea:8f29:6000:d5d8:c920:d17:5c])
-        by smtp.googlemail.com with ESMTPSA id l6sm23742710wrn.26.2020.02.24.22.23.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 22:23:55 -0800 (PST)
-Subject: Re: [PATCH 0/9] PCI: add and use constant PCI_STATUS_ERROR_BITS and
- helper pci_status_get_and_clear_errors
-To:     David Miller <davem@davemloft.net>
-Cc:     bhelgaas@google.com, nic_swsd@realtek.com, mlindner@marvell.com,
-        stephen@networkplumber.org, clemens@ladisch.de, perex@perex.cz,
-        tiwai@suse.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <5939f711-92aa-e7ed-2a26-4f1e4169f786@gmail.com>
- <20200224.153352.364779446032996784.davem@davemloft.net>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <eb522c30-8d9b-0223-c152-9f2bd972c23b@gmail.com>
-Date:   Tue, 25 Feb 2020 07:23:50 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 01:24:14 -0500
+Received: from mga05.intel.com ([192.55.52.43]:52909 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729074AbgBYGYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:24:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 22:24:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
+   d="scan'208";a="384372054"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 24 Feb 2020 22:24:11 -0800
+Received: from [10.226.38.25] (unknown [10.226.38.25])
+        by linux.intel.com (Postfix) with ESMTP id 78FC158052E;
+        Mon, 24 Feb 2020 22:24:08 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>,
+        simon.k.r.goldschmidt@gmail.com, Dinh Nguyen <dinguyen@kernel.org>,
+        tien.fong.chee@intel.com,
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
+Date:   Tue, 25 Feb 2020 14:24:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200224.153352.364779446032996784.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.02.2020 00:33, David Miller wrote:
-> From: Heiner Kallweit <hkallweit1@gmail.com>
-> Date: Mon, 24 Feb 2020 22:20:08 +0100
-> 
->> Few drivers have own definitions for this constant, so move it to the
->> PCI core. In addition there are several places where the following
->> code sequence is used:
->> 1. Read PCI_STATUS
->> 2. Mask out non-error bits
->> 3. Action based on set error bits
->> 4. Write back set error bits to clear them
+Hi Rob,
+
+      Thank you for the review comments...
+
+On 24/2/2020 11:54 PM, Rob Herring wrote:
+> On Tue, Feb 18, 2020 at 8:29 PM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Cc the DT list if you want this reviewed.
+Sorry,  next patch will add DT list in CC.
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
 >>
->> As this is a repeated pattern, add a helper to the PCI core.
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147 +++++++++++++++++++++
+>>   1 file changed, 147 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
 >>
->> Most affected drivers are network drivers. But as it's about core
->> PCI functionality, I suppose the series should go through the PCI
->> tree.
-> 
-> Heiner, something is up with this submission.
-> 
-> The subject line here says 0/9, but the patches say N/8 and patch #8 never
-> showed up on the list.
-> 
-> Sort out what this should be and resubmit, thank you.
-> 
-Oops, sorry. I'll resubmit.
+>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> new file mode 100644
+>> index 000000000000..1a4d6e8d0d0b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> @@ -0,0 +1,147 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence QSPI Flash Controller support
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +allOf:
+>> +  - $ref: "spi-controller.yaml#"
+>> +
+>> +description: |
+>> +  Binding Documentation for Cadence QSPI controller,This controller is
+>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+>> +  has been tested On Intel's LGM SoC.
+>> +
+>> +  - compatible : should be one of the following:
+>> +        Generic default - "cdns,qspi-nor".
+>> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - items:
+>> +        - enum:
+>> +           - ti,k2g-qspi
+>> +        - const: cdns,qspi-nor
+>> +
+>> +      - items:
+>> +        - enum:
+>> +           - ti,am654-ospi
+>> +        - const: cdns,qspi-nor
+>> +
+>> +      - items:
+>> +        - enum:
+>> +           - intel,lgm-qspi
+>> +        - const: cdns,qspi-nor
+>> +
+>> +      - items:
+>> +        - const: cdns,qspi-nor
+>> +
+>> +  reg:
+>> +    maxItems: 2
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  cdns,fifo-depth:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Size of the data FIFO in words.
+> A 4GB fifo is valid? Add some constraints.
+128 is valid, will update.
+>> +
+>> +  cdns,fifo-width:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Bus width of the data FIFO in bytes.
+> Add some constraints.
+4 is valid , will fix it.
+>> +
+>> +  cdns,trigger-address:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      32-bit indirect AHB trigger address.
+>> +
+>> +  cdns,rclk-en:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Flag to indicate that QSPI return clock is used to latch the read data
+>> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
+>> +      on the board before using this property.
+>> +
+>> +# subnode's properties
+>> +patternProperties:
+>> +  "^.*@[0-9a-fA-F]+$":
+>> +    type: object
+>> +    description:
+>> +      flash device uses the subnodes below defined properties.
+>> +
+>> +  cdns,read-delay:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Delay for read capture logic, in clock cycles.
+> 4 billion clock delay is valid?
+based on the ref_clk , will add it.
+>> +
+>> +  cdns,tshsl-ns:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> You can drop this, anything with a standard unit suffix already has a type.
+sure , will drop it.
+>> +    description: |
+>> +      Delay in nanoseconds for the length that the master mode chip select
+>> +      outputs are de-asserted between transactions.
+> Constraints...?
+
+50ns, will add it.
+
+Regards
+Vadivel
+>> +
+>> +  cdns,tsd2d-ns:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Delay in nanoseconds between one chip select being de-activated
+>> +      and the activation of another.
+>> +
+>> +  cdns,tchsh-ns:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Delay in nanoseconds between last bit of current transaction and
+>> +      deasserting the device chip select (qspi_n_ss_out).
+>> +
+>> +  cdns,tslch-ns:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Delay in nanoseconds between setting qspi_n_ss_out low and
+>> +      first bit transfer.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - cdns,fifo-depth
+>> +  - cdns,fifo-width
+>> +  - cdns,trigger-address
+>> +
+>> +examples:
+>> +  - |
+>> +    qspi: spi@ff705000 {
+>> +          compatible = "cdns,qspi-nor";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +          reg = <0xff705000 0x1000>,
+>> +                <0xffa00000 0x1000>;
+>> +          interrupts = <0 151 4>;
+>> +          clocks = <&qspi_clk>;
+>> +          cdns,fifo-depth = <128>;
+>> +          cdns,fifo-width = <4>;
+>> +          cdns,trigger-address = <0x00000000>;
+>> +
+>> +          flash0: n25q00@0 {
+>> +              compatible = "jedec,spi-nor";
+>> +              reg = <0x0>;
+>> +              cdns,read-delay = <4>;
+>> +              cdns,tshsl-ns = <50>;
+>> +              cdns,tsd2d-ns = <50>;
+>> +              cdns,tchsh-ns = <4>;
+>> +              cdns,tslch-ns = <4>;
+>> +          };
+>> +    };
+>> +
+>> --
+>> 2.11.0
+>>
