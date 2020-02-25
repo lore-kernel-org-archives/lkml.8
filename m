@@ -2,189 +2,131 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523DEC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B80C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4C52084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF3F2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmQJlJHU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oQT+43q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731789AbgBYU1R (ORCPT
+        id S1731797AbgBYU1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:27:17 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38343 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731779AbgBYU1Q (ORCPT
+        Tue, 25 Feb 2020 15:27:40 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34529 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbgBYU1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:27:16 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so780230oth.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:27:16 -0800 (PST)
+        Tue, 25 Feb 2020 15:27:39 -0500
+Received: by mail-pj1-f65.google.com with SMTP id f2so1358698pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:27:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h8zKM3vL3MUBQAymrTc6L3H6hz70LO6qXSQaWI0IU04=;
-        b=WmQJlJHUD9G/rwl2N7kvGdTxCz/wKi5OzBRrKCoh3fWb2iwQEyy5OTrQ3kTGU8gZyJ
-         QoU1CnpgLKviImgkkBCl2TIxhwmNPXOc3RQPaoCxAOZ/1k8ZC8kC/6nM+/P/H78ODdIH
-         QXDJysRZ7/58K1841F4afX1gfkTmlynl9xfZ4kc9BVGwJV3Et7sVsHDedh/buArpiD++
-         UkmuL5eU2z4h1uMVp1unlGbbZTHDbRubOAtgR5D/tOymvzaQqLTNUtKMs1Uuvyc0Vt7n
-         dOZqcoeeV3L/ochfkusVJC7kPWylzVi874qFU6UTI9Pwws/Nqw8b4MIj99KZ/QLZ21fo
-         lj2g==
+         :cc:content-transfer-encoding;
+        bh=tC1nYodbnDy4sNWTsQPnUP+L2m/IgHaO+SrkamcIlsk=;
+        b=oQT+43q3D+8T41Mpemu9+X53sapJF0IHwLEc9L+FuS5/HlEBDG7zUG2peHu7RCbCFX
+         3pJ3BjSWCv7it39emB95HfdmNyR7IGcpn0AC1H1S290CgXqUTInO0RCeGZu36ul0e3VL
+         M7Ly5QgUxI+sOeP3Nf8hzYQsZ7nGoftgc7yU9qf5DratzhkyvLaNTwwlZB57u1a0CDEN
+         Y71BUDUuEqQ9SGBNbtBo78gppwNr0snZJDHVHdUddePa+3m7/AjcuSQ1SdxMjT6zgjNu
+         leZGSn4T1Yq6ZDNT5uYua+rarYsCu+9WtySmu6MLGNaw7pNTSZ2NOPAk/1Kw91beV9pD
+         hOlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h8zKM3vL3MUBQAymrTc6L3H6hz70LO6qXSQaWI0IU04=;
-        b=c/lZl1bUZrBg4Q91ridbQAB01A2gT6GT2hy0OngGplLFnzO4RaZzhOkoqgk9NQj68s
-         4zK/NEyGjYMElpDQFW80TroymyJpXNi2hjGeVyCO1/QyQO3sayy2A28Njh0xjbpC/VVq
-         5MtzfQ8knZi0GbRycusE5cqZxlBBSh230uN6PyWqPyLaf/7eNnMCpCA6Ph+GOpGNPYPg
-         W8pTixl1DEZpn4/otwvK3UHyiLOXjvS8BLczWIB2Bp02QHgKyAbdMDOI8n0j1BmED302
-         5n5+hdMhiQHOX00UJw50Zq/rfrwNrwukiBZkdfDZXXZfUC9Q5PAVvbAit2MBB7JIk5Uk
-         CDIA==
-X-Gm-Message-State: APjAAAWb83KaoQfCEEqp1cxs7xvNLhcMDLiN1TqSAk9bV59cRPWQR4IX
-        F3pxo1WAR7Y5YS18GEQPkljMakga3uPg/ohA6N0pIw==
-X-Google-Smtp-Source: APXvYqwXWHOFSEzZ5QC1kkmr7Xtw4Nl7Oq5Rosar8mcjFmiC5ZLBSPjPBhU74oj/wNW6emI0887RPeUiUzdYSemjOiE=
-X-Received: by 2002:a9d:66d1:: with SMTP id t17mr292149otm.233.1582662435427;
- Tue, 25 Feb 2020 12:27:15 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tC1nYodbnDy4sNWTsQPnUP+L2m/IgHaO+SrkamcIlsk=;
+        b=TBCD0mZldczBzPajV0smEoKnFKur0rgTDDV/KStTJOimXQUjHl5KpA6gRxQN3Q5LpY
+         0Ov4mIBRkc/vqthgy2zod6e46RsTOORymzKet/znEmoKPfY3Nq5m1P87enNWJZbRBjfM
+         fE0T0f5rBZF59ZMjq1mh+GYbJFCvqAmWuvH0dXI/ZU6s2/9mosdMeYBh3xNAixdRlOzD
+         sz+vxgpIHTap35tqpnOmYn8wbnwqWs7QjFJEa/YREJJKHzbfKKpVAa137JSq3z1EMbgB
+         rJUiLt4u9Ok7HB0KFUbGbf4HNm54/S1WyIKp+AIytw0rXPqIVO0kvdLqfJTm51MZoB2v
+         yf/Q==
+X-Gm-Message-State: APjAAAXesdvckcmzV2DEN3wK4lVrsZrS7CP5FZsn69wg9x1ZHzMfn7Or
+        D3CwxyfFO7mHg1pvM2OLVpC1ILmX6EPELXWfhd0hVg==
+X-Google-Smtp-Source: APXvYqwrT1jWL23GcqOoBUpV9rRsfvah/lMSQBrLZVT+2C5s6EqpIgbcdTCSSFlue2SZ4I4hbt/KInrtlkGuBJongyY=
+X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr269035plo.179.1582662457264;
+ Tue, 25 Feb 2020 12:27:37 -0800 (PST)
 MIME-Version: 1.0
-References: <1582661385-30210-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1582661385-30210-1-git-send-email-cai@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 25 Feb 2020 21:27:03 +0100
-Message-ID: <CANpmjNMepxzC1Sy7S9SjLSMOMCVR-5ycEecYcmxUitiiXmPF1Q@mail.gmail.com>
-Subject: Re: [PATCH] xfs: fix data races in inode->i_*time
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
+References: <8bb16ac4b15a7e28a8e819ef9aae20bfc3f75fbc.1582266841.git.stefan@agner.ch>
+ <CAKwvOdmV80xgvBnhB6ZpqYaqkxKi-_p+StnMojwNnf3kdxTT1A@mail.gmail.com> <CAKv+Gu881ZSwvuACmsbBnpfdeJpNYsEQxLSoepJBbZ=O6D6Rcg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu881ZSwvuACmsbBnpfdeJpNYsEQxLSoepJBbZ=O6D6Rcg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 25 Feb 2020 12:27:26 -0800
+Message-ID: <CAKwvOd=9WaeVjvgkkLf5scFaNTpx28d4FAse62vv4X_mEwqRJA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: use assembly mnemonics for VFP register access
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Stefan Agner <stefan@agner.ch>, Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jian Cai <jiancai@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 21:09, Qian Cai <cai@lca.pw> wrote:
+On Tue, Feb 25, 2020 at 11:33 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 >
-> inode->i_*time could be accessed concurrently. The plain reads in
-> xfs_vn_getattr() is lockless which result in data races. To avoid bad
-> compiler optimizations like load tearing, adding pairs of
-> READ|WRITE_ONCE(). While at it, also take care of xfs_setattr_time()
-> which presumably could run concurrently with xfs_vn_getattr() as well.
-> The data races were reported by KCSAN,
+> On Tue, 25 Feb 2020 at 20:10, Nick Desaulniers <ndesaulniers@google.com> =
+wrote:
+> > Ah, this is only when streaming to assembly. Looks like they have the
+> > same encoding, and produce the same disassembly. (Godbolt emits
+> > assembly by default, and has the option to compile, then disassemble).
+> > If I take my case from godbolt above:
+> >
+> > =E2=9E=9C  /tmp arm-linux-gnueabihf-gcc -O2 -c x.c
+> > =E2=9E=9C  /tmp llvm-objdump -dr x.o
+> >
+> > x.o: file format elf32-arm-little
+> >
+> >
+> > Disassembly of section .text:
+> >
+> > 00000000 bar:
+> >        0: f1 ee 10 0a                  vmrs r0, fpscr
+> >        4: 70 47                        bx lr
+> >        6: 00 bf                        nop
+> >
+> > 00000008 baz:
+> >        8: f1 ee 10 0a                  vmrs r0, fpscr
+> >        c: 70 47                        bx lr
+> >        e: 00 bf                        nop
+> >
+> > So indeed a similar encoding exists for the two different assembler
+> > instructions.
 >
->  write to 0xffff9275a1920ad8 of 16 bytes by task 47311 on cpu 46:
->   xfs_vn_update_time+0x1b0/0x400 [xfs]
->   xfs_vn_update_time at fs/xfs/xfs_iops.c:1122
+> Does that hold for ARM (A32) instructions as well?
 
-So this one is doing concurrent writes and reads of the whole struct,
-which is 16 bytes. This will always be split into multiple
-loads/stores. Is it intentional?
+TIL -mthumb is the default for arm-linux-gnueabihf-gcc -O2.
 
-Sadly, this is pretty much guaranteed to tear, even with the
-READ/WRITE_ONCE.  The *ONCE will just make KCSAN not tell us about
-this one, which is probably not what we want right now, unless we know
-for sure the race is intentional.
+=E2=9E=9C  /tmp arm-linux-gnueabihf-gcc -O2 -c x.c -marm
+=E2=9E=9C  /tmp llvm-objdump -dr x.o
 
+x.o: file format elf32-arm-little
+
+
+Disassembly of section .text:
+
+00000000 bar:
+       0: 10 0a f1 ee                  vmrs r0, fpscr
+       4: 1e ff 2f e1                  bx lr
+
+00000008 baz:
+       8: 10 0a f1 ee                  vmrs r0, fpscr
+       c: 1e ff 2f e1                  bx lr
+
+^ Just to show the matching encoding.
+--=20
 Thanks,
--- Marco
-
->   update_time+0x57/0x80
->   file_update_time+0x143/0x1f0
->   __xfs_filemap_fault+0x1be/0x3d0 [xfs]
->   xfs_filemap_page_mkwrite+0x25/0x40 [xfs]
->   do_page_mkwrite+0xf7/0x250
->   do_fault+0x679/0x920
->   __handle_mm_fault+0xc9f/0xd40
->   handle_mm_fault+0xfc/0x2f0
->   do_page_fault+0x263/0x6f9
->   page_fault+0x34/0x40
->
->  4 locks held by doio/47311:
->   #0: ffff9275e7d70808 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x143/0x6f9
->   #1: ffff9274864394d8 (sb_pagefaults){.+.+}, at: __xfs_filemap_fault+0x19b/0x3d0 [xfs]
->   #2: ffff9274864395b8 (sb_internal){.+.+}, at: xfs_trans_alloc+0x2af/0x3c0 [xfs]
->   #3: ffff9275a1920920 (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0x116/0x2c0 [xfs]
->  irq event stamp: 42649
->  hardirqs last  enabled at (42649): [<ffffffffb22dcdb3>] _raw_spin_unlock_irqrestore+0x53/0x60
->  hardirqs last disabled at (42648): [<ffffffffb22dcad1>] _raw_spin_lock_irqsave+0x21/0x60
->  softirqs last  enabled at (42306): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
->  softirqs last disabled at (42299): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
->
->  read to 0xffff9275a1920ad8 of 16 bytes by task 47312 on cpu 40:
->   xfs_vn_getattr+0x20c/0x6a0 [xfs]
->   xfs_vn_getattr at fs/xfs/xfs_iops.c:551
->   vfs_getattr_nosec+0x11a/0x170
->   vfs_statx_fd+0x54/0x90
->   __do_sys_newfstat+0x40/0x90
->   __x64_sys_newfstat+0x3a/0x50
->   do_syscall_64+0x91/0xb05
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
->  no locks held by doio/47312.
->  irq event stamp: 43883
->  hardirqs last  enabled at (43883): [<ffffffffb1805119>] do_syscall_64+0x39/0xb05
->  hardirqs last disabled at (43882): [<ffffffffb1803ede>] trace_hardirqs_off_thunk+0x1a/0x1c
->  softirqs last  enabled at (43844): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
->  softirqs last disabled at (43141): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  fs/xfs/xfs_iops.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 81f2f93caec0..2d5ca13ee9da 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -547,9 +547,9 @@
->         stat->uid = inode->i_uid;
->         stat->gid = inode->i_gid;
->         stat->ino = ip->i_ino;
-> -       stat->atime = inode->i_atime;
-> -       stat->mtime = inode->i_mtime;
-> -       stat->ctime = inode->i_ctime;
-> +       stat->atime = READ_ONCE(inode->i_atime);
-> +       stat->mtime = READ_ONCE(inode->i_mtime);
-> +       stat->ctime = READ_ONCE(inode->i_ctime);
->         stat->blocks =
->                 XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
->
-> @@ -614,11 +614,11 @@
->         ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
->
->         if (iattr->ia_valid & ATTR_ATIME)
-> -               inode->i_atime = iattr->ia_atime;
-> +               WRITE_ONCE(inode->i_atime, iattr->ia_atime);
->         if (iattr->ia_valid & ATTR_CTIME)
-> -               inode->i_ctime = iattr->ia_ctime;
-> +               WRITE_ONCE(inode->i_ctime, iattr->ia_ctime);
->         if (iattr->ia_valid & ATTR_MTIME)
-> -               inode->i_mtime = iattr->ia_mtime;
-> +               WRITE_ONCE(inode->i_mtime, iattr->ia_mtime);
->  }
->
->  static int
-> @@ -1117,11 +1117,11 @@
->
->         xfs_ilock(ip, XFS_ILOCK_EXCL);
->         if (flags & S_CTIME)
-> -               inode->i_ctime = *now;
-> +               WRITE_ONCE(inode->i_ctime, *now);
->         if (flags & S_MTIME)
-> -               inode->i_mtime = *now;
-> +               WRITE_ONCE(inode->i_mtime, *now);
->         if (flags & S_ATIME)
-> -               inode->i_atime = *now;
-> +               WRITE_ONCE(inode->i_atime, *now);
->
->         xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
->         xfs_trans_log_inode(tp, ip, log_flags);
-> --
-> 1.8.3.1
->
+~Nick Desaulniers
