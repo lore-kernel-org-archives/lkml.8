@@ -7,114 +7,206 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB32C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55481C35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1021221556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2393721556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pF+rJ+xD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZJEEX8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgBYHe4 (ORCPT
+        id S1729310AbgBYHfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:34:56 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38401 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgBYHe4 (ORCPT
+        Tue, 25 Feb 2020 02:35:00 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41917 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729268AbgBYHe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:34:56 -0500
-Received: by mail-pj1-f67.google.com with SMTP id j17so896173pjz.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 23:34:55 -0800 (PST)
+        Tue, 25 Feb 2020 02:34:59 -0500
+Received: by mail-qt1-f194.google.com with SMTP id l21so8417500qtr.8;
+        Mon, 24 Feb 2020 23:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=XskRpUztF01a9SskOdCksJRMRljsk5+q6bZK23iH9Gk=;
-        b=pF+rJ+xDnIELjc/cifp+km87lUuO/AyOCF7a5yj7AqFYfm8dFu0OYUebQZndCPsjoP
-         uPoW/Zs8LZG41rspz/uCIwGnT+XmSq5mgism5Vj72arFklztp2GUbh4wXmdhn2M2XQHE
-         X+oIRdqewFcWCoy0OcWLE/t32mWKccE5c9WIIVVrEtuO7wWNMp/Qv6wpBruUVY4haWbz
-         UdN7qw5lhlifVIO1Ux5RHNRQyOW3NqBhGsbEiJoRjBZH3T+dWH5/bFJJDcfMtLgs+ZKD
-         tl2sfLGicmfJpUmg4UkMac8SJfQ6nP11kByu9nU8UFHPm5T6kjmUX8oTNZ82zJt9TSoR
-         tpGg==
+        bh=2BaVUFSv/to+L4aW8kB/7KAen05ZTlbgy3P8SSzYyyg=;
+        b=FZJEEX8lRPAawuOMkBShF4iPQyGKh1OhCpM41mbm1RM+6Im0p5s413VaTMkhsXDuLn
+         FGOyjdv4/Y8XioBGmeRFV+SRiwSfz1+U6SpmjeRYhfyXBeM0MPbgv/Yacbiklvn7iiu3
+         3/NYPR6qkj67TguKnT7EOIF3Va0ySN14Y7kM3h8bpnTz/IQJjd9MiChu3M7ifeWr8wSZ
+         uM0Par3HzzzUxhuqKWdFmz0/x+M4vTJc8CHcJoheIHyBJtvvLDCKeJmxbSlSDRxdL+MU
+         Zg/Cf1fELu/miLUUNE9VNKoMzW8DBe+Y84Uoo/iftwaslyResSljjFCt7qH4A42honES
+         +KeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XskRpUztF01a9SskOdCksJRMRljsk5+q6bZK23iH9Gk=;
-        b=DEk/p2FjnWQNv9uRxuNLirUbb01gbJxryzcGhy4LRcO4u6VwuQYC/qZzx8jMgRTo3X
-         aw1s16Fq9SVvW+XEELKJjksROJdjFdFG4xd6uCQ7ueeAlvYD7oSaERmBAkcYbK+DJQw6
-         Am1y67o0ibGTnxpqWzOq0GDaljibESvgtZJKM2BxjiPyqqsCcp65Cgh5PbmYJeFkusZB
-         epnlNcxhL0pbyKqH0qNUoElWEPU7fNHPvMeFH2D0JIDZSftRwNo6HypKtG8WDCy6LfkO
-         eFc82NiL3MyXsrh5seXH93rRaq4bGS6TBrLWU9b4L90T6IXXRNozwzXuTOwPe3WM2z2K
-         n7eQ==
-X-Gm-Message-State: APjAAAXGd+PkclQhB/qWSeb+IZ+xNN8jMdjnN6s50aKprnctlYf11iP4
-        9qWxboJuc9QeU1cJgALThiQ=
-X-Google-Smtp-Source: APXvYqwwUapmsPngrJ2lEUoW9ZJ8VZLWD8okbx92cxtjWhmmgZjhUigc/gDKKuXELSJRV5dLYaCxJA==
-X-Received: by 2002:a17:902:104:: with SMTP id 4mr53150822plb.24.1582616095537;
-        Mon, 24 Feb 2020 23:34:55 -0800 (PST)
-Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
-        by smtp.gmail.com with ESMTPSA id 26sm1952590pjk.3.2020.02.24.23.34.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 23:34:54 -0800 (PST)
-Date:   Tue, 25 Feb 2020 15:34:46 +0800
-From:   Aaron Lu <aaron.lwe@gmail.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        bh=2BaVUFSv/to+L4aW8kB/7KAen05ZTlbgy3P8SSzYyyg=;
+        b=ni9SOkDCrB7eCmt+UrZ/p2xCZIyhJLksjoTzayKjeZvRZYK3hrRDVsesNsgiLVmyWx
+         zzGLEJ4pxf62Qwsh075rv6mAtLrBTKyzrZtShWcNiTGpeooIEaYA1Wd6an4s4+gYXxn0
+         XRFEhxJaYtkHLY5aIzcg750cbywRuA/emSAZfeOtJemGHA90BxZtbhUoQRDBq0ckd7JT
+         mmYa//RX2beo4kd2OzW673T5MUlHxJvgJGRenaELq+FE4aIrXLSA5kusXTeVfp8swayj
+         41lrdL9nRvBg/zI5nRHqXa08iAEzIKkAsUe8U5lixi3o0tISwFIkMdKiDtj8/KQDWcLJ
+         nfhg==
+X-Gm-Message-State: APjAAAXeyeF3lQD5UjmFDk7Q5XWmLjvBwU5BHptBUAl5KIgUvfKTwEbm
+        hdQDfWc3MkZ5rI6Engdl7mg=
+X-Google-Smtp-Source: APXvYqywTZDhAdh3NYPytHrJJk2ltG5NxK2z+z8bIKzbiNbHj8UZk1/j4E+V0ojLvcqS4T4WgBkNUA==
+X-Received: by 2002:aed:2862:: with SMTP id r89mr3014031qtd.289.1582616097470;
+        Mon, 24 Feb 2020 23:34:57 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id s19sm5768916qkj.88.2020.02.24.23.34.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2020 23:34:56 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 5118122007;
+        Tue, 25 Feb 2020 02:34:55 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 25 Feb 2020 02:34:55 -0500
+X-ME-Sender: <xms:Hc5UXhVwiLZjPi8Zy32BVQ5q_GcJs79WH_xonRpschzx-W6miszgLw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledugdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghenucfkphephedvrdduheehrdduuddurdejudenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
+    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
+    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:Hc5UXl2MS3dmEFw2qDCmK8Rd6wZTuSgOQ8mjdMmLYAi2jXTbRmm9tA>
+    <xmx:Hc5UXoY-rXgllqAh7VdF29FiJ3LSrje7eqcUVF_OyjAuYGuy03XVbg>
+    <xmx:Hc5UXooMd-4XpZf3_zfPoGZOwc6q_SzHpcx6Wd6NKXtpsOBf-7retQ>
+    <xmx:H85UXm8uGqLq75NQwRRsuhNFCzY3jq_Pb5Ilrik4aJBw6R8Zkj1x-CHC6NY>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A2B75328005D;
+        Tue, 25 Feb 2020 02:34:52 -0500 (EST)
+Date:   Tue, 25 Feb 2020 15:34:51 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        Luc Maranget <luc.maranget@inria.fr>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-Message-ID: <20200225073446.GA618392@ziqianlu-desktop.localdomain>
-References: <cover.1572437285.git.vpillai@digitalocean.com>
- <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
- <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
- <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
- <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
- <20200212230705.GA25315@sinkpad>
- <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
- <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
- <20200225034438.GA617271@ziqianlu-desktop.localdomain>
- <CAERHkrs_WX=gS0sQ2Wg_SZuAcf_qhKfT05co0uYgaQk8cFj0ag@mail.gmail.com>
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [RFC 2/3] tools/memory-model: Add a litmus test for atomic_set()
+Message-ID: <20200225073451.GP69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200214040132.91934-1-boqun.feng@gmail.com>
+ <20200214040132.91934-3-boqun.feng@gmail.com>
+ <20200214081213.GA17708@andrea>
+ <20200214104003.GC20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAERHkrs_WX=gS0sQ2Wg_SZuAcf_qhKfT05co0uYgaQk8cFj0ag@mail.gmail.com>
+In-Reply-To: <20200214104003.GC20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 01:32:35PM +0800, Aubrey Li wrote:
-> Aaron - did you test this before? In other words, if you reset repo to your
-> last commit:
+Luc,
 
-I did this test only recently when I started to think if I can use
-coresched to boost main workload's performance in a colocated
-environment.
+Could you have a look at the problem Andrea and I discuss here? It seems
+that you have done a few things in herd for atomic_add_unless() in
+particular, and based on the experiments of Andrea and me, seems
+atomic_add_unless() works correctly. So can you confirm that herd now
+can handle atomic_add_unless() or there is still something missing?
 
+Thanks!
+
+Regards,
+Boqun
+
+On Fri, Feb 14, 2020 at 06:40:03PM +0800, Boqun Feng wrote:
+> On Fri, Feb 14, 2020 at 09:12:13AM +0100, Andrea Parri wrote:
+> > > @@ -0,0 +1,24 @@
+> > > +C Atomic-set-observable-to-RMW
+> > > +
+> > > +(*
+> > > + * Result: Never
+> > > + *
+> > > + * Test of the result of atomic_set() must be observable to atomic RMWs.
+> > > + *)
+> > > +
+> > > +{
+> > > +	atomic_t v = ATOMIC_INIT(1);
+> > > +}
+> > > +
+> > > +P0(atomic_t *v)
+> > > +{
+> > > +	(void)atomic_add_unless(v,1,0);
+> > 
+> > We blacklisted this primitive some time ago, cf. section "LIMITATIONS",
+> > entry (6b) in tools/memory-model/README; the discussion was here:
+> > 
+> >   https://lkml.kernel.org/r/20180829211053.20531-3-paulmck@linux.vnet.ibm.com
+> > 
 > 
-> - 5bd3c80 sched/fair : Wake up forced idle siblings if needed
+> And in an email replying to that email, you just tried and seemed
+> atomic_add_unless() works ;-)
 > 
-> Does the problem remain? Just want to check if this is a regression
->  introduced by the subsequent patchset.
-
-The problem isn't there with commit 5bd3c80 as the head, so yes, it
-looks like indeed a regression introduced by subsequent patchset.
-
-P.S. I will need to take a closer look if each cgA's task is running
-on a different core later but the cpu usage of cgA is back to 800% with
-commit 5bd3c80.
+> > but unfortunately I can't remember other details at the moment: maybe
+> > it is just a matter of or the proper time to update that section.
+> > 
+> 
+> I spend a few time looking into the changes in herd, the dependency
+> problem seems to be as follow:
+> 
+> For atomic_add_unless(ptr, a, u), the return value (true or false)
+> depends on both *ptr and u, this is different than other atomic RMW,
+> whose return value only depends on *ptr. Considering the following
+> litmus test:
+> 
+> 	C atomic_add_unless-dependency
+> 
+> 	{
+> 		int y = 1;
+> 	}
+> 
+> 	P0(int *x, int *y, int *z)
+> 	{
+> 		int r0;
+> 		int r1;
+> 		int r2;
+> 
+> 		r0 = READ_ONCE(*x);
+> 		if (atomic_add_unless(y, 2, r0))
+> 			WRITE_ONCE(*z, 42);
+> 		else
+> 			WRITE_ONCE(*z, 1);
+> 	}
+> 
+> 	P1(int *x, int *y, int *z)
+> 	{
+> 		int r0;
+> 
+> 		r0 = smp_load_acquire(z);
+> 
+> 		WRITE_ONCE(*x, 1);
+> 	}
+> 
+> 	exists
+> 	(1:r0 = 1 /\ 0:r0 = 1)
+> 
+> , the exist-clause will never trigger, however if we replace
+> "atomic_add_unless(y, 2, r0)" with "atomic_add_unless(y, 2, 1)", the
+> write on *z and the read from *x on CPU 0 are not ordered, so we could
+> observe the exist-clause triggered.
+> 
+> I just tried with the latest herd, and herd can work out this
+> dependency. So I think we are good now and can change the limitation
+> section in the document. But I will wait for Luc's input for this. Luc,
+> did I get this correct? Is there any other limitation on
+> atomic_add_unless() now?
+> 
+> Regards,
+> Boqun
+> 
+> > Thanks,
+> >   Andrea
