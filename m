@@ -2,427 +2,306 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B620EC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50434C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C56220CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164A224650
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CG3sVubI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OxnZll4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbgBYUMG (ORCPT
+        id S1731720AbgBYUMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:12:06 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:52905 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbgBYUMF (ORCPT
+        Tue, 25 Feb 2020 15:12:23 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51429 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731330AbgBYUMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:12:05 -0500
-Received: by mail-pj1-f74.google.com with SMTP id u10so350996pjy.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:12:05 -0800 (PST)
+        Tue, 25 Feb 2020 15:12:23 -0500
+Received: by mail-pj1-f65.google.com with SMTP id fa20so208320pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=o7uyCNm3PwcTObFLNHL0wKjFetUXQ9LZudj5gbkagCg=;
-        b=CG3sVubIl1XtHpely2x6iI3gAxlI/J9joPRgYReo4LLymfpQyhJPsuUzS6TAmtbK5m
-         wWoQNbvEf3hTv4pAY/G47YzEE1FURpjhZa4Qp6f/+S0FD8wPbhAOI6/Wvq/KXEFngKcO
-         8xpxCcYebMDiL4IUu97BsivOvXK4zXp2qfpPFFsBPYXVq6JmNxr2JUDKVDaq7Nj4GrL4
-         8wauJomThGX+QnNKqqfpj1jh8NqMyZ2kM74F9tQTM9XmjnZ3gF5wL2/yhTQqtjSyzLTB
-         PtAITMiMKM8n20CyIvKwpRzAzQ/tAeRHxM6FCnTsgzmD5rMvv1hzyh+leyeLSktckdMP
-         vLNA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sH+NLiTWqgzfHa6XdfsJ+yIT5+v5YhITRd9gV+lY4/o=;
+        b=OxnZll4KWu8fDEfWx3E6Z3IPUFOMDdGPcSCPwhvAEtbtj8JF5K5pLJiU3MnEimbv6S
+         M9oK+LxP7mGI14KGWgxXjs2YCNF9H1e4e5R7b7g1L6nFYRg1FJq2Z9lhdZMROIwlpHZi
+         HvhGy2mZDC5myUOCmkwAXWRtdDL/oJU1sUK5U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=o7uyCNm3PwcTObFLNHL0wKjFetUXQ9LZudj5gbkagCg=;
-        b=UAyDsSZm8k8M4NvswNUwud0daPlrWFcCVymGZhzEsW4Aze+EKRasQQxUU8Bv6YXas9
-         ijmEbxVyOhmcZwi5JwqvcUhsUK3gYD/5TpRR1b+NWJSUF3hpPeR1W8RaX2goT6s8v67i
-         6Alj/BAA1sgEuqw27JDwHAS6JOBeRQrrRC5zY8PDZ1C0JY4hFRSyNKDst3KvJO5WYNjO
-         Blf7C1bIqNQCG+vfwlAl+d1oEeuOMPfKMpCW1Sa1SP41Ku8R08+H4x4wWd+qHf7xXN5j
-         UefoKG6WqsrCi4uWAkrAShEDzJDlhb8c9c5jGtqavmOswdgafd0l009CUftLiO7F/IXH
-         +bGg==
-X-Gm-Message-State: APjAAAUuydb/9TjK91GYfRdAreTgwJHazQa2Ez7oVqa0XkjnxfYMtdEy
-        m76+7WEIftIQ5jMfsevoEpDtYK/kVjs9TBwX
-X-Google-Smtp-Source: APXvYqy3QkSKgLaYw5ctE8KDVob2ow1Jd3/T6qCQ2XgvdaOUbMQbU6PUrWwtB3xCN0enaV9K+tgYAQYfzDi3uGyU
-X-Received: by 2002:a63:a4b:: with SMTP id z11mr226540pgk.398.1582661524712;
- Tue, 25 Feb 2020 12:12:04 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:11:30 -0800
-In-Reply-To: <20200225201130.211124-1-heidifahim@google.com>
-Message-Id: <20200225201130.211124-2-heidifahim@google.com>
-Mime-Version: 1.0
-References: <20200225201130.211124-1-heidifahim@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH 2/2] kunit: Run all KUnit tests through allyesconfig
-From:   Heidi Fahim <heidifahim@google.com>
-To:     brendanhiggins@google.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Cc:     Heidi Fahim <heidifahim@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sH+NLiTWqgzfHa6XdfsJ+yIT5+v5YhITRd9gV+lY4/o=;
+        b=EumIjamsNfHrxFgDrgPf9RDtr1Pmn77UhQLN2w9zgNzHTAQURX5nSs991r03zkH9A7
+         /MMg68B+eSehzHePfzVlvJjvm1NFS+vM9vQk1j5jr7UVvbqkdsl3PrhM8iYA1DugI1jP
+         9m51jrqzSE/DnnxqDbyPwp74EBTOK4P/2AnrFXC4BUsbQJ7dBDII6dD0Th/FAalbhPoP
+         /4xBTI8XwGy3LI+JPTA5gAKfdiHPKjLPceWuiA+COOfdZaC/W7XCew5s+JiObYZ/1w3D
+         rh6eTbZwtKnAGEpiKxCTMZlU0cCWgIuzwL55bzYo/H2qreUg5W/k9wvitTLGHbmEIDzQ
+         CfoA==
+X-Gm-Message-State: APjAAAVPgRlZcDJoUEjso23WIWM+sMGcfKSORA3zZ9Dj6TdOG1XHfwNC
+        S89foyft+wiBy3XwO2bHm5vvUw==
+X-Google-Smtp-Source: APXvYqwGU1tp/k5dqMPOjRYB6TzpbdnoXTKgSeVo8Ij8qJpFvzQqyaC5Vn3cvvDaYS/11NVEinm0gg==
+X-Received: by 2002:a17:90a:cf08:: with SMTP id h8mr799455pju.81.1582661541799;
+        Tue, 25 Feb 2020 12:12:21 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t11sm4255164pjo.21.2020.02.25.12.12.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:12:21 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:12:19 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 08/27] x86/mm: Change _PAGE_DIRTY to _PAGE_DIRTY_HW
+Message-ID: <202002251212.6A0968F@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-9-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205181935.3712-9-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implemented the functionality to run all KUnit tests through kunit_tool
-by specifying an --alltests flag, which builds UML with allyesconfig
-enabled, and consequently runs every KUnit test. Two new methods have
-been added to kunit_kernel: make_allyesconfig and run_allconfig.
-Firstly, if --alltests is specified, kunit.py triggers build_um_kernel
-which sets jobs to the max number of cpus on the user's computer. This
-is done to shorten the long running time it takes to build and start a
-kernel with all configs enabled. It then calls the make command,
-disables the broken configs that would otherwise prevent UML from
-building, then starts the kernel with all possible configurations
-enabled. All stdout and stderr is sent to test.log and read from there
-then fed through kunit_parser to parse the tests to the user. Also added
-a signal_handler to clean the config in case kunit is interrupted while
-running.
-Tested: Run under different conditions such as testing with
---raw_output, testing program interrupt then immediately running kunit
-again without --alltests and making sure to clean the configs. Formal
-unit tests will be submitted in a future patchset.
+On Wed, Feb 05, 2020 at 10:19:16AM -0800, Yu-cheng Yu wrote:
+> Before introducing _PAGE_DIRTY_SW for non-hardware memory management
+> purposes in the next patch, rename _PAGE_DIRTY to _PAGE_DIRTY_HW and
+> _PAGE_BIT_DIRTY to _PAGE_BIT_DIRTY_HW to make these PTE dirty bits
+> more clear.  There are no functional changes from this patch.
+> 
+> v9:
+> - At some places _PAGE_DIRTY were not changed to _PAGE_DIRTY_HW, because
+>   they will be changed again in the next patch to _PAGE_DIRTY_BITS.
+>   However, this causes compile issues if the next patch is not yet applied.
+>   Fix it by changing all _PAGE_DIRTY to _PAGE_DRITY_HW.
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-Signed-off-by: Heidi Fahim <heidifahim@google.com>
----
- .../kunit/configs/broken_on_uml.config        | 38 ++++++++++
- tools/testing/kunit/kunit.py                  | 37 ++++++----
- tools/testing/kunit/kunit_kernel.py           | 71 +++++++++++++------
- tools/testing/kunit/kunit_parser.py           |  1 +
- tools/testing/kunit/kunit_tool_test.py        | 17 +++--
- 5 files changed, 122 insertions(+), 42 deletions(-)
- create mode 100644 tools/testing/kunit/configs/broken_on_uml.config
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/tools/testing/kunit/configs/broken_on_uml.config b/tools/testing/kunit/configs/broken_on_uml.config
-new file mode 100644
-index 000000000000..6d746588d46e
---- /dev/null
-+++ b/tools/testing/kunit/configs/broken_on_uml.config
-@@ -0,0 +1,38 @@
-+# CONFIG_STATIC_LINK is not set
-+# CONFIG_UML_NET_VECTOR is not set
-+# CONFIG_UML_NET_VDE is not set
-+# CONFIG_UML_NET_PCAP is not set
-+# CONFIG_NET_PTP_CLASSIFY is not set
-+# CONFIG_IP_VS is not set
-+# CONFIG_BRIDGE_EBT_BROUTE is not set
-+# CONFIG_BRIDGE_EBT_T_FILTER is not set
-+# CONFIG_BRIDGE_EBT_T_NAT is not set
-+# CONFIG_MTD_NAND_CADENCE is not set
-+# CONFIG_MTD_NAND_NANDSIM is not set
-+# CONFIG_BLK_DEV_NULL_BLK is not set
-+# CONFIG_BLK_DEV_RAM is not set
-+# CONFIG_SCSI_DEBUG is not set
-+# CONFIG_NET_VENDOR_XILINX is not set
-+# CONFIG_NULL_TTY is not set
-+# CONFIG_PTP_1588_CLOCK is not set
-+# CONFIG_PINCTRL_EQUILIBRIUM is not set
-+# CONFIG_DMABUF_SELFTESTS is not set
-+# CONFIG_COMEDI is not set
-+# CONFIG_XIL_AXIS_FIFO is not set
-+# CONFIG_EXFAT_FS is not set
-+# CONFIG_STM_DUMMY is not set
-+# CONFIG_FSI_MASTER_ASPEED is not set
-+# CONFIG_JFS_FS is not set
-+# CONFIG_UBIFS_FS is not set
-+# CONFIG_CRAMFS is not set
-+# CONFIG_CRYPTO_DEV_SAFEXCEL is not set
-+# CONFIG_CRYPTO_DEV_AMLOGIC_GXL is not set
-+# CONFIG_KCOV is not set
-+# CONFIG_LKDTM is not set
-+# CONFIG_REED_SOLOMON_TEST is not set
-+# CONFIG_TEST_RHASHTABLE is not set
-+# CONFIG_TEST_MEMINIT is not set
-+# CONFIG_NETWORK_PHY_TIMESTAMPING is not set
-+# CONFIG_DEBUG_INFO_BTF is not set
-+# CONFIG_PTP_1588_CLOCK_INES is not set
-+# CONFIG_QCOM_CPR is not set
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index e59eb9e7f923..37bd20a2a1c5 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -22,7 +22,9 @@ import kunit_parser
- 
- KunitResult = namedtuple('KunitResult', ['status','result'])
- 
--KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
-+KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
-+					   'build_dir', 'defconfig',
-+					   'alltests'])
- 
- class KunitStatus(Enum):
- 	SUCCESS = auto()
-@@ -33,7 +35,7 @@ class KunitStatus(Enum):
- def create_default_kunitconfig():
- 	if not os.path.exists(kunit_kernel.kunitconfig_path):
- 		shutil.copyfile('arch/um/configs/kunit_defconfig',
--				kunit_kernel.kunitconfig_path)
-+				kunit_kernel.KUNITCONFIG_PATH)
- 
- def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	      request: KunitRequest) -> KunitResult:
-@@ -46,24 +48,24 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
- 
- 	build_start = time.time()
--	success = linux.build_um_kernel(request.jobs, request.build_dir)
-+	success = linux.build_um_kernel(request.alltests,
-+					request.jobs,
-+					request.build_dir)
- 	build_end = time.time()
- 	if not success:
- 		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
- 
- 	kunit_parser.print_with_timestamp('Starting KUnit Kernel ...')
- 	test_start = time.time()
--
--	test_result = kunit_parser.TestResult(kunit_parser.TestStatus.SUCCESS,
--					      [],
--					      'Tests not Parsed.')
-+	kunit_output = linux.run_kernel(
-+		timeout=None if request.alltests else request.timeout,
-+		alltests=request.alltests,
-+		build_dir=request.build_dir)
- 	if request.raw_output:
--		kunit_parser.raw_output(
--			linux.run_kernel(timeout=request.timeout,
--					 build_dir=request.build_dir))
-+		raw_output = kunit_parser.raw_output(kunit_output)
-+		isolated = list(kunit_parser.isolate_kunit_output(raw_output))
-+		test_result = kunit_parser.parse_test_result(isolated)
- 	else:
--		kunit_output = linux.run_kernel(timeout=request.timeout,
--						build_dir=request.build_dir)
- 		test_result = kunit_parser.parse_run_tests(kunit_output)
- 	test_end = time.time()
- 
-@@ -111,15 +113,19 @@ def main(argv, linux=None):
- 				help='Uses a default .kunitconfig.',
- 				action='store_true')
- 
-+	run_parser.add_argument('--alltests',
-+				help='Run all KUnit tests through allyesconfig',
-+				action='store_true')
-+
- 	cli_args = parser.parse_args(argv)
- 
- 	if cli_args.subcommand == 'run':
- 		if cli_args.build_dir:
- 			if not os.path.exists(cli_args.build_dir):
- 				os.mkdir(cli_args.build_dir)
--			kunit_kernel.kunitconfig_path = os.path.join(
-+			kunit_kernel.KUNITCONFIG_PATH = os.path.join(
- 				cli_args.build_dir,
--				kunit_kernel.kunitconfig_path)
-+				kunit_kernel.KUNITCONFIG_PATH)
- 
- 		if cli_args.defconfig:
- 			create_default_kunitconfig()
-@@ -131,7 +137,8 @@ def main(argv, linux=None):
- 				       cli_args.timeout,
- 				       cli_args.jobs,
- 				       cli_args.build_dir,
--				       cli_args.defconfig)
-+				       cli_args.defconfig,
-+				       cli_args.alltests)
- 		result = run_tests(linux, request)
- 		if result.status != KunitStatus.SUCCESS:
- 			sys.exit(1)
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index cc5d844ecca1..2b0de7d52110 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -10,11 +10,16 @@
- import logging
- import subprocess
- import os
-+import signal
-+
-+from contextlib import ExitStack
- 
- import kunit_config
-+import kunit_parser
- 
- KCONFIG_PATH = '.config'
--kunitconfig_path = '.kunitconfig'
-+KUNITCONFIG_PATH = '.kunitconfig'
-+BROKEN_ALLCONFIG_PATH = 'tools/testing/kunit/configs/broken_on_uml.config'
- 
- class ConfigError(Exception):
- 	"""Represents an error trying to configure the Linux kernel."""
-@@ -40,12 +45,29 @@ class LinuxSourceTreeOperations(object):
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
--			subprocess.check_output(command)
-+			subprocess.check_output(command, stderr=subprocess.PIPE)
- 		except OSError as e:
- 			raise ConfigError('Could not call make command: ' + e)
- 		except subprocess.CalledProcessError as e:
- 			raise ConfigError(e.output)
- 
-+	def make_allyesconfig(self):
-+		kunit_parser.print_with_timestamp(
-+			'Enabling all CONFIGs for UML...')
-+		process = subprocess.Popen(
-+			['make', 'ARCH=um', 'allyesconfig'],
-+			stdout=subprocess.DEVNULL,
-+			stderr=subprocess.STDOUT)
-+		process.wait()
-+		kunit_parser.print_with_timestamp(
-+			'Disabling broken configs to run KUnit tests...')
-+		with ExitStack() as es:
-+			config = open(KCONFIG_PATH, 'a')
-+			disable = open(BROKEN_ALLCONFIG_PATH, 'r').read()
-+			config.write(disable)
-+		kunit_parser.print_with_timestamp(
-+			'Starting Kernel with all configs takes a few minutes...')
-+
- 	def make(self, jobs, build_dir):
- 		command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
- 		if build_dir:
-@@ -57,19 +79,16 @@ class LinuxSourceTreeOperations(object):
- 		except subprocess.CalledProcessError as e:
- 			raise BuildError(e.output)
- 
--	def linux_bin(self, params, timeout, build_dir):
-+	def linux_bin(self, params, timeout, build_dir, outfile):
- 		"""Runs the Linux UML binary. Must be named 'linux'."""
- 		linux_bin = './linux'
- 		if build_dir:
- 			linux_bin = os.path.join(build_dir, 'linux')
--		process = subprocess.Popen(
--			[linux_bin] + params,
--			stdin=subprocess.PIPE,
--			stdout=subprocess.PIPE,
--			stderr=subprocess.PIPE)
--		process.wait(timeout=timeout)
--		return process
--
-+		with open(outfile, 'w') as output:
-+			process = subprocess.Popen([linux_bin] + params,
-+						   stdout=output,
-+						   stderr=subprocess.STDOUT)
-+			process.wait(timeout)
- 
- def get_kconfig_path(build_dir):
- 	kconfig_path = KCONFIG_PATH
-@@ -82,8 +101,9 @@ class LinuxSourceTree(object):
- 
- 	def __init__(self):
- 		self._kconfig = kunit_config.Kconfig()
--		self._kconfig.read_from_file(kunitconfig_path)
-+		self._kconfig.read_from_file(KUNITCONFIG_PATH)
- 		self._ops = LinuxSourceTreeOperations()
-+		signal.signal(signal.SIGINT, self.signal_handler)
- 
- 	def clean(self):
- 		try:
-@@ -126,7 +146,10 @@ class LinuxSourceTree(object):
- 			print('Generating .config ...')
- 			return self.build_config(build_dir)
- 
--	def build_um_kernel(self, jobs, build_dir):
-+	def build_um_kernel(self, alltests, jobs, build_dir):
-+		if alltests:
-+			jobs = os.cpu_count()
-+			self._ops.make_allyesconfig()
- 		try:
- 			self._ops.make_olddefconfig(build_dir)
- 			self._ops.make(jobs, build_dir)
-@@ -140,10 +163,18 @@ class LinuxSourceTree(object):
- 			return False
- 		return True
- 
--	def run_kernel(self, args=[], timeout=None, build_dir=''):
--		args.extend(['mem=256M'])
--		process = self._ops.linux_bin(args, timeout, build_dir)
--		with open(os.path.join(build_dir, 'test.log'), 'w') as f:
--			for line in process.stdout:
--				f.write(line.rstrip().decode('ascii') + '\n')
--				yield line.rstrip().decode('ascii')
-+	def run_kernel(self, args=[], alltests=False, build_dir='', timeout=None):
-+		args.extend(['mem=1G']) if alltests else args.extend(['mem=256M'])
-+		outfile = 'test.log'
-+		self._ops.linux_bin(args, timeout, build_dir, outfile)
-+		subprocess.call(['stty', 'sane'])
-+		if alltests:
-+			self.clean()
-+		with open(outfile, 'r') as file:
-+			for line in file:
-+				yield line
-+
-+	def signal_handler(self, sig, frame):
-+		logging.error('Build interruption occurred. Cleaning .config.')
-+		subprocess.call(['stty', 'sane'])
-+		self.clean()
-\ No newline at end of file
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 077b21d42258..5b2051848e2f 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -65,6 +65,7 @@ def isolate_kunit_output(kernel_output):
- def raw_output(kernel_output):
- 	for line in kernel_output:
- 		print(line)
-+		yield line
- 
- DIVIDER = '=' * 60
- 
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index 0efae697f396..9ce4c5cdbdaf 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -243,7 +243,8 @@ class KUnitMainTest(unittest.TestCase):
- 		kunit.main(['run'], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
- 		assert self.linux_source_mock.run_kernel.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(
-+			alltests=False, build_dir='', timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- 	def test_run_passes_args_fail(self):
-@@ -258,25 +259,27 @@ class KUnitMainTest(unittest.TestCase):
- 
- 	def test_run_raw_output(self):
- 		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
--		kunit.main(['run', '--raw_output'], self.linux_source_mock)
-+		with self.assertRaises(SystemExit) as e:
-+			kunit.main(['run', '--raw_output'], self.linux_source_mock)
-+		assert type(e.exception) == SystemExit
-+		assert e.exception.code == 1
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
- 		assert self.linux_source_mock.run_kernel.call_count == 1
--		for kall in self.print_mock.call_args_list:
--			assert kall != mock.call(StrContains('Testing complete.'))
--			assert kall != mock.call(StrContains(' 0 tests run'))
- 
- 	def test_run_timeout(self):
- 		timeout = 3453
- 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(
-+			alltests=False, build_dir='', timeout=timeout)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- 	def test_run_builddir(self):
- 		build_dir = '.kunit'
- 		kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
- 		assert self.linux_source_mock.build_reconfig.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(
-+			alltests=False, build_dir=build_dir, timeout=300)
- 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
- 
- if __name__ == '__main__':
+-Kees
+
+> ---
+>  arch/x86/include/asm/pgtable.h       | 18 +++++++++---------
+>  arch/x86/include/asm/pgtable_types.h | 17 +++++++++--------
+>  arch/x86/kernel/relocate_kernel_64.S |  2 +-
+>  arch/x86/kvm/vmx/vmx.c               |  2 +-
+>  4 files changed, 20 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index ad97dc155195..ab50d25f9afc 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -122,7 +122,7 @@ extern pmdval_t early_pmd_flags;
+>   */
+>  static inline int pte_dirty(pte_t pte)
+>  {
+> -	return pte_flags(pte) & _PAGE_DIRTY;
+> +	return pte_flags(pte) & _PAGE_DIRTY_HW;
+>  }
+>  
+>  
+> @@ -161,7 +161,7 @@ static inline int pte_young(pte_t pte)
+>  
+>  static inline int pmd_dirty(pmd_t pmd)
+>  {
+> -	return pmd_flags(pmd) & _PAGE_DIRTY;
+> +	return pmd_flags(pmd) & _PAGE_DIRTY_HW;
+>  }
+>  
+>  static inline int pmd_young(pmd_t pmd)
+> @@ -171,7 +171,7 @@ static inline int pmd_young(pmd_t pmd)
+>  
+>  static inline int pud_dirty(pud_t pud)
+>  {
+> -	return pud_flags(pud) & _PAGE_DIRTY;
+> +	return pud_flags(pud) & _PAGE_DIRTY_HW;
+>  }
+>  
+>  static inline int pud_young(pud_t pud)
+> @@ -312,7 +312,7 @@ static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
+>  
+>  static inline pte_t pte_mkclean(pte_t pte)
+>  {
+> -	return pte_clear_flags(pte, _PAGE_DIRTY);
+> +	return pte_clear_flags(pte, _PAGE_DIRTY_HW);
+>  }
+>  
+>  static inline pte_t pte_mkold(pte_t pte)
+> @@ -332,7 +332,7 @@ static inline pte_t pte_mkexec(pte_t pte)
+>  
+>  static inline pte_t pte_mkdirty(pte_t pte)
+>  {
+> -	return pte_set_flags(pte, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
+> +	return pte_set_flags(pte, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
+>  }
+>  
+>  static inline pte_t pte_mkyoung(pte_t pte)
+> @@ -396,7 +396,7 @@ static inline pmd_t pmd_mkold(pmd_t pmd)
+>  
+>  static inline pmd_t pmd_mkclean(pmd_t pmd)
+>  {
+> -	return pmd_clear_flags(pmd, _PAGE_DIRTY);
+> +	return pmd_clear_flags(pmd, _PAGE_DIRTY_HW);
+>  }
+>  
+>  static inline pmd_t pmd_wrprotect(pmd_t pmd)
+> @@ -406,7 +406,7 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
+>  
+>  static inline pmd_t pmd_mkdirty(pmd_t pmd)
+>  {
+> -	return pmd_set_flags(pmd, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
+> +	return pmd_set_flags(pmd, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
+>  }
+>  
+>  static inline pmd_t pmd_mkdevmap(pmd_t pmd)
+> @@ -450,7 +450,7 @@ static inline pud_t pud_mkold(pud_t pud)
+>  
+>  static inline pud_t pud_mkclean(pud_t pud)
+>  {
+> -	return pud_clear_flags(pud, _PAGE_DIRTY);
+> +	return pud_clear_flags(pud, _PAGE_DIRTY_HW);
+>  }
+>  
+>  static inline pud_t pud_wrprotect(pud_t pud)
+> @@ -460,7 +460,7 @@ static inline pud_t pud_wrprotect(pud_t pud)
+>  
+>  static inline pud_t pud_mkdirty(pud_t pud)
+>  {
+> -	return pud_set_flags(pud, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
+> +	return pud_set_flags(pud, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
+>  }
+>  
+>  static inline pud_t pud_mkdevmap(pud_t pud)
+> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+> index b5e49e6bac63..e647e3c75578 100644
+> --- a/arch/x86/include/asm/pgtable_types.h
+> +++ b/arch/x86/include/asm/pgtable_types.h
+> @@ -15,7 +15,7 @@
+>  #define _PAGE_BIT_PWT		3	/* page write through */
+>  #define _PAGE_BIT_PCD		4	/* page cache disabled */
+>  #define _PAGE_BIT_ACCESSED	5	/* was accessed (raised by CPU) */
+> -#define _PAGE_BIT_DIRTY		6	/* was written to (raised by CPU) */
+> +#define _PAGE_BIT_DIRTY_HW	6	/* was written to (raised by CPU) */
+>  #define _PAGE_BIT_PSE		7	/* 4 MB (or 2MB) page */
+>  #define _PAGE_BIT_PAT		7	/* on 4KB pages */
+>  #define _PAGE_BIT_GLOBAL	8	/* Global TLB entry PPro+ */
+> @@ -45,7 +45,7 @@
+>  #define _PAGE_PWT	(_AT(pteval_t, 1) << _PAGE_BIT_PWT)
+>  #define _PAGE_PCD	(_AT(pteval_t, 1) << _PAGE_BIT_PCD)
+>  #define _PAGE_ACCESSED	(_AT(pteval_t, 1) << _PAGE_BIT_ACCESSED)
+> -#define _PAGE_DIRTY	(_AT(pteval_t, 1) << _PAGE_BIT_DIRTY)
+> +#define _PAGE_DIRTY_HW	(_AT(pteval_t, 1) << _PAGE_BIT_DIRTY_HW)
+>  #define _PAGE_PSE	(_AT(pteval_t, 1) << _PAGE_BIT_PSE)
+>  #define _PAGE_GLOBAL	(_AT(pteval_t, 1) << _PAGE_BIT_GLOBAL)
+>  #define _PAGE_SOFTW1	(_AT(pteval_t, 1) << _PAGE_BIT_SOFTW1)
+> @@ -73,7 +73,7 @@
+>  			 _PAGE_PKEY_BIT3)
+>  
+>  #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
+> -#define _PAGE_KNL_ERRATUM_MASK (_PAGE_DIRTY | _PAGE_ACCESSED)
+> +#define _PAGE_KNL_ERRATUM_MASK (_PAGE_DIRTY_HW | _PAGE_ACCESSED)
+>  #else
+>  #define _PAGE_KNL_ERRATUM_MASK 0
+>  #endif
+> @@ -111,9 +111,9 @@
+>  #define _PAGE_PROTNONE	(_AT(pteval_t, 1) << _PAGE_BIT_PROTNONE)
+>  
+>  #define _PAGE_TABLE_NOENC	(_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |\
+> -				 _PAGE_ACCESSED | _PAGE_DIRTY)
+> +				 _PAGE_ACCESSED | _PAGE_DIRTY_HW)
+>  #define _KERNPG_TABLE_NOENC	(_PAGE_PRESENT | _PAGE_RW |		\
+> -				 _PAGE_ACCESSED | _PAGE_DIRTY)
+> +				 _PAGE_ACCESSED | _PAGE_DIRTY_HW)
+>  
+>  /*
+>   * Set of bits not changed in pte_modify.  The pte's
+> @@ -122,7 +122,7 @@
+>   * pte_modify() does modify it.
+>   */
+>  #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+> -			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+> +			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY_HW |	\
+>  			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+>  #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+>  
+> @@ -167,7 +167,8 @@ enum page_cache_mode {
+>  					 _PAGE_ACCESSED)
+>  
+>  #define __PAGE_KERNEL_EXEC						\
+> -	(_PAGE_PRESENT | _PAGE_RW | _PAGE_DIRTY | _PAGE_ACCESSED | _PAGE_GLOBAL)
+> +	(_PAGE_PRESENT | _PAGE_RW | _PAGE_DIRTY_HW | _PAGE_ACCESSED | \
+> +	 _PAGE_GLOBAL)
+>  #define __PAGE_KERNEL		(__PAGE_KERNEL_EXEC | _PAGE_NX)
+>  
+>  #define __PAGE_KERNEL_RO		(__PAGE_KERNEL & ~_PAGE_RW)
+> @@ -186,7 +187,7 @@ enum page_cache_mode {
+>  #define _PAGE_ENC	(_AT(pteval_t, sme_me_mask))
+>  
+>  #define _KERNPG_TABLE	(_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED |	\
+> -			 _PAGE_DIRTY | _PAGE_ENC)
+> +			 _PAGE_DIRTY_HW | _PAGE_ENC)
+>  #define _PAGE_TABLE	(_KERNPG_TABLE | _PAGE_USER)
+>  
+>  #define __PAGE_KERNEL_ENC	(__PAGE_KERNEL | _PAGE_ENC)
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index ef3ba99068d3..3acd75f97b61 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -15,7 +15,7 @@
+>   */
+>  
+>  #define PTR(x) (x << 3)
+> -#define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
+> +#define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY_HW)
+>  
+>  /*
+>   * control_page + KEXEC_CONTROL_CODE_MAX_SIZE
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index e3394c839dea..fbbbf621b0d9 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -3503,7 +3503,7 @@ static int init_rmode_identity_map(struct kvm *kvm)
+>  	/* Set up identity-mapping pagetable for EPT in real mode */
+>  	for (i = 0; i < PT32_ENT_PER_PAGE; i++) {
+>  		tmp = (i << 22) + (_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |
+> -			_PAGE_ACCESSED | _PAGE_DIRTY | _PAGE_PSE);
+> +			_PAGE_ACCESSED | _PAGE_DIRTY_HW | _PAGE_PSE);
+>  		r = kvm_write_guest_page(kvm, identity_map_pfn,
+>  				&tmp, i * sizeof(tmp), sizeof(tmp));
+>  		if (r < 0)
+> -- 
+> 2.21.0
+> 
+
 -- 
-2.25.0.265.gbab2e86ba0-goog
-
+Kees Cook
