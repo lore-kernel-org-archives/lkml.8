@@ -2,325 +2,188 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A14C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49685C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A9721744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D6021927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jQVflpTe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r6el0YHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgBYSwU (ORCPT
+        id S1731130AbgBYSyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:52:20 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57236 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727624AbgBYSwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:52:19 -0500
-Received: from zn.tnic (p200300EC2F07AB0030A629139D299034.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:ab00:30a6:2913:9d29:9034])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A8E531EC0CD9;
-        Tue, 25 Feb 2020 19:52:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582656736;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=n9C2V9/aZydusth37WA93xbi/LRpYRsdtulxt8mmBXE=;
-        b=jQVflpTeQVE1EW0E5VwWqhbAvMZA+BkF85lmJe2f1oscptj/qaVXlci7mOTyFmGvwwvYcL
-        X/NJGlj6bgj1ZQ1+eiV0fOMb0JQdDSK4DHC2Tvt7anmf9mshTzPmzEM33vffPd6xDhZfk4
-        YaZ9oVnGlbk0a/dxhJOTqgdprrtEoH0=
-Date:   Tue, 25 Feb 2020 19:52:11 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rrichter@marvell.com, robh+dt@kernel.org, frowand.list@gmail.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        devicetree@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, barakw@amazon.com
-Subject: Re: [PATCH v9 1/3] edac: Add support for Amazon's Annapurna Labs L1
- EDAC
-Message-ID: <20200225185211.GB5457@zn.tnic>
-References: <20200129195016.956-1-hhhawa@amazon.com>
- <20200129195016.956-2-hhhawa@amazon.com>
+        Tue, 25 Feb 2020 13:54:12 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46870 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729870AbgBYSyM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:54:12 -0500
+Received: by mail-lf1-f67.google.com with SMTP id u2so7843939lfk.13;
+        Tue, 25 Feb 2020 10:54:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I67NIEQPdsJxMgQqMIJkKCIxMoKM4fFB4eKacrRm7s4=;
+        b=r6el0YHZXimCldwGeCQk+Dd7FALU/v4Te3AWinIu2hFCbOGEKkYcD5JX9MXA+POpue
+         YcvjdilSxnGIBITFuRqv+J4Hifl1NxByKFQTK8dLVkP/LUpqYn6XxctTj5WY88ICG6Dd
+         jnaoAEqJzoujyPr0TkmgU4HMpgBxqk3vLI9H8SDl3QX9534V+AmuTFhc+KqQ+cbY/RXL
+         j5I3axLto9YUbOohHVF1MVwemFflXo3BL6XH07o5Ey4g/Wg6VdDNge4afsnB+e8bFtz4
+         t6TrZo8YCRFbpMqaZ/T6K625JilZ2PNVrFQMRFE4Kl9kem8ViNIgo4EZQPb7ZcqH9M34
+         YJ3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I67NIEQPdsJxMgQqMIJkKCIxMoKM4fFB4eKacrRm7s4=;
+        b=h6pWV3zYQWlgcDs5RBMwrSINXJSS9YCb+8jzjFtJBNLtmTpe1IVCpsBu1bX6I2NFGS
+         /CQ3N0sGDtYfWJkKGATev5Zi4AzD/8fjh4pjTj93hYee+YsWdy92TjNsTJz5bjyf80in
+         VlrX0O/F12mRVuKwszDVjMrdMVPJrvSN8DymMyxYjEDwmeV0qOd1lBZXXdzs0Cl7T8qw
+         r7JLeHyqaxYEz3/yBb0h3VMvtlPXhWXngLgUp15IbhxC0odUxqDdvHk7OnyGX+ByUw8P
+         JnL+HYp5ZUfNFBlnrnXn+4QdpIfpAH1XTQQn3qsrixlIqxrvJKrqcGM0ssB0K15e9TCI
+         DaHQ==
+X-Gm-Message-State: APjAAAXoPhK6j3AViVjr86b0X5Es3tAWy8fkAAxlnRkrOWFRFxpjXgVK
+        SDoXhcxKQc8E5qDGQHCLjcioFxpJpKoVpg==
+X-Google-Smtp-Source: APXvYqze30JVzgeVtjHqBSnnMsTG0tjmfoa2n18VRYONPZJGVJre0pEhjI1W/PLbZFuyV5TPaf+fBA==
+X-Received: by 2002:ac2:46c2:: with SMTP id p2mr118708lfo.139.1582656849336;
+        Tue, 25 Feb 2020 10:54:09 -0800 (PST)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id y14sm8331861ljk.46.2020.02.25.10.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:54:08 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 25 Feb 2020 19:54:00 +0100
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200225185400.GA27919@pc636>
+References: <20200217193314.GA12604@mit.edu>
+ <20200218170857.GA28774@pc636>
+ <20200220045233.GC476845@mit.edu>
+ <20200221003035.GC2935@paulmck-ThinkPad-P72>
+ <20200221131455.GA4904@pc636>
+ <20200221202250.GK2935@paulmck-ThinkPad-P72>
+ <20200222222415.GC191380@google.com>
+ <20200223011018.GB2935@paulmck-ThinkPad-P72>
+ <20200224174030.GA22138@pc636>
+ <20200225020705.GA253171@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200129195016.956-2-hhhawa@amazon.com>
+In-Reply-To: <20200225020705.GA253171@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 09:50:14PM +0200, Hanna Hawa wrote:
+> > > > I was thinking a 2 fold approach (just thinking out loud..):
+> > > > 
+> > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
+> > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
+> > > > queue that.
+> > > > 
+> > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
+> > gets failed in atomic context? Or we can just consider it as out of
+> > memory and another variant is to say that headless object can be called
+> > from preemptible context only.
+> 
+> Yes that makes sense, and we can always put disclaimer in the API's comments
+> saying if this object is expected to be freed a lot, then don't use the
+> headless-API to be extra safe.
+> 
+Agree.
 
-> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
-> report L1 errors.
+> BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
+> the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
+> there seems to be bigger problems in the system any way. I would say let us
+> write a patch to allocate there and see what the -mm guys think.
+> 
+OK. It might be that they can offer something if they do not like our
+approach. I will try to compose something and send the patch to see.
+The tree.c implementation is almost done, whereas tiny one is on hold.
 
-You don't add support for a driver - you either add a driver or you add
-support for HW...
+I think we should support batching as well as bulk interface there.
+Another way is to workaround head-less object, just to attach the head
+dynamically using kmalloc() and then call_rcu() but then it will not be
+a fair headless support :)
 
-> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
-> new file mode 100644
-> index 000000000000..723b35b18f5b
-> --- /dev/null
-> +++ b/drivers/edac/al_l1_edac.c
-> @@ -0,0 +1,207 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + */
-> +
-> +#include <asm/sysreg.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/smp.h>
+What is your view?
 
-asm/ includes go after linux/ includes.
+> > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
+> > > > synchronize_rcu() inline with it.
+> > > > 
+> > > >
+> > What do you mean here, Joel? "grow an rcu_head on the stack"?
+> 
+> By "grow on the stack", use the compiler-allocated rcu_head on the
+> kfree_rcu() caller's stack.
+> 
+> I meant here to say, if we are not in atomic context, then we use regular
+> GFP_KERNEL allocation, and if that fails, then we just use the stack's
+> rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
+> the allocation failure would mean the need for RCU to free some memory is
+> probably great.
+> 
+Ah, i got it. I thought you meant something like recursion and then
+unwinding the stack back somehow :)
 
-> +
-> +#include "edac_device.h"
-> +#include "edac_module.h"
-> +
-> +#define DRV_NAME				"al_l1_edac"
-> +
-> +/* Same bit assignments of CPUMERRSR_EL1 in ARM CA57/CA72 */
-> +#define ARM_CA57_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-> +#define ARM_CA57_CPUMERRSR_RAM_ID		GENMASK(30, 24)
-> +#define  ARM_CA57_L1_I_TAG_RAM			0x00
-> +#define  ARM_CA57_L1_I_DATA_RAM			0x01
-> +#define  ARM_CA57_L1_D_TAG_RAM			0x08
-> +#define  ARM_CA57_L1_D_DATA_RAM			0x09
-> +#define  ARM_CA57_L2_TLB_RAM			0x18
-> +#define ARM_CA57_CPUMERRSR_VALID		BIT(31)
-> +#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK_ULL(39, 32)
-> +#define ARM_CA57_CPUMERRSR_OTHER		GENMASK_ULL(47, 40)
-> +#define ARM_CA57_CPUMERRSR_FATAL		BIT_ULL(63)
-> +
-> +#define AL_L1_EDAC_MSG_MAX			256
-> +
-> +static void al_l1_edac_cpumerrsr_read_status(void *arg)
+> > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
+> > > > between the 2 cases.
+> > > > 
+> > If the current context is preemptable then we can inline synchronize_rcu()
+> > together with freeing to handle such corner case, i mean when we are run
+> > out of memory.
+> 
+> Ah yes, exactly what I mean.
+> 
+OK.
 
-This is a static function so you don't really need a function prefix of
-"al_l1_edac_". Use those chars to make its name more descriptive. Ditto
-for the rest of the static functions in that file.
+> > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
+> > have a look at preempt_count of current process? If we have for example
+> > nested rcu_read_locks:
+> > 
+> > <snip>
+> > rcu_read_lock()
+> >     rcu_read_lock()
+> >         rcu_read_lock()
+> > <snip>
+> > 
+> > the counter would be 3.
+> 
+> No, because preempt_count is not incremented during rcu_read_lock(). RCU
+> reader sections can be preempted, they just cannot goto sleep in a reader
+> section (unless the kernel is RT).
+> 
+So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
+using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
+then we skip it and consider as atomic. Something like:
 
-> +{
-> +	struct edac_device_ctl_info *edac_dev = arg;
-> +	int cpu, space, count;
-> +	u32 ramid, repeat, other, fatal;
-> +	u64 val;
-> +	char msg[AL_L1_EDAC_MSG_MAX];
-> +	char *p;
-> +	spinlock_t *lock;
+<snip>
+static bool is_current_in_atomic()
+{
+#ifdef CONFIG_PREEMPT_RCU
+    if (!rcu_preempt_depth() && !in_atomic())
+        return false;
+#endif
 
-Please sort function local variables declaration in a reverse christmas
-tree order:
+    return true;
+}
+<snip>
 
-	<type A> longest_variable_name;
-	<type B> shorter_var_name;
-	<type C> even_shorter;
-	<type D> i;
+Thanks!
 
-> +
-> +	val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
-> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
-> +		return;
-> +
-> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
-> +
-> +	cpu = smp_processor_id();
-> +	ramid = FIELD_GET(ARM_CA57_CPUMERRSR_RAM_ID, val);
-> +	repeat = FIELD_GET(ARM_CA57_CPUMERRSR_REPEAT, val);
-> +	other = FIELD_GET(ARM_CA57_CPUMERRSR_OTHER, val);
-> +	fatal = FIELD_GET(ARM_CA57_CPUMERRSR_FATAL, val);
-> +
-> +	space = sizeof(msg);
-> +	p = msg;
-> +	count = scnprintf(p, space, "CPU%d L1 %serror detected", cpu,
-> +			  (fatal) ? "Fatal " : "");
-> +	p += count;
-> +	space -= count;
-> +
-> +	switch (ramid) {
-> +	case ARM_CA57_L1_I_TAG_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-I Tag RAM'");
-> +		break;
-> +	case ARM_CA57_L1_I_DATA_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-I Data RAM'");
-> +		break;
-> +	case ARM_CA57_L1_D_TAG_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-D Tag RAM'");
-> +		break;
-> +	case ARM_CA57_L1_D_DATA_RAM:
-> +		count = scnprintf(p, space, " RAMID='L1-D Data RAM'");
-> +		break;
-> +	case ARM_CA57_L2_TLB_RAM:
-> +		count = scnprintf(p, space, " RAMID='L2 TLB RAM'");
-> +		break;
-> +	default:
-> +		count = scnprintf(p, space, " RAMID='unknown'");
-> +		break;
-> +	}
-> +
-> +	p += count;
-> +	space -= count;
-> +	count = scnprintf(p, space,
-> +			  " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
-> +			  repeat, other, val);
-> +
-> +	lock = edac_dev->pvt_info;
-
-That sure looks funky - why not use a proper private struct like the
-rest of the drivers?
-
-> +	spin_lock(lock);
-> +	if (fatal)
-> +		edac_device_handle_ue_count(edac_dev, repeat, 0, 0, msg);
-> +	else
-> +		edac_device_handle_ce_count(edac_dev, repeat, 0, 0, msg);
-> +	spin_unlock(lock);
-> +}
-> +
-> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
-> +{
-> +	on_each_cpu(al_l1_edac_cpumerrsr_read_status, edac_dev, 1);
-> +}
-> +
-> +static int al_l1_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_dev;
-> +	struct device *dev = &pdev->dev;
-> +	spinlock_t *lock;
-> +	int ret;
-> +
-> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*lock), DRV_NAME, 1, "L",
-> +					      1, 1, NULL, 0,
-> +					      edac_device_alloc_index());
-> +	if (!edac_dev)
-> +		return -ENOMEM;
-> +
-> +	edac_dev->edac_check = al_l1_edac_check;
-> +	edac_dev->dev = dev;
-> +	edac_dev->mod_name = DRV_NAME;
-> +	edac_dev->dev_name = dev_name(dev);
-> +	edac_dev->ctl_name = "L1_cache";
-> +	platform_set_drvdata(pdev, edac_dev);
-> +	lock = edac_dev->pvt_info;
-> +
-> +	spin_lock_init(lock);
-> +
-> +	ret = edac_device_add_device(edac_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add L1 edac device (%d)\n", ret);
-> +		edac_device_free_ctl_info(edac_dev);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int al_l1_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-> +
-> +	edac_device_del_device(edac_dev->dev);
-> +	edac_device_free_ctl_info(edac_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id al_l1_edac_of_match[] = {
-> +	/*
-> +	 * "al,alpine-v2", and "amazon,al-alpine-v3" are machine compatible
-> +	 * strings which have Cortex-A57/A72 configured with this support,
-> +	 * and access to CPUMERRSR_EL1 register is enabled in firmware.
-> +	 */
-> +	{ .compatible = "al,alpine-v2" },
-
-Err, checkpatch says:
-
-WARNING: DT compatible string "al,alpine-v2" appears un-documented -- check ./Documentation/devicetree/bindings/
-#236: FILE: drivers/edac/al_l1_edac.c:151:
-+       { .compatible = "al,alpine-v2" },
-
-
-Do you need a devicetree addition? I usually get such with the ARM EDAC
-drivers...
-
-> +	{ .compatible = "amazon,al-alpine-v3" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
-> +
-> +static struct platform_driver al_l1_edac_driver = {
-> +	.probe = al_l1_edac_probe,
-> +	.remove = al_l1_edac_remove,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +	},
-> +};
-> +
-> +static struct platform_device *edac_l1_device;
-
-Please move to the top of the file.
-
-> +
-> +static int __init al_l1_init(void)
-> +{
-> +	struct device_node *root;
-> +	int ret;
-> +
-> +	root = of_find_node_by_path("/");
-> +	if (!root) {
-> +		pr_debug("Can't find root node!\n");
-> +		return 0;
-> +	}
-> +
-> +	if (!of_match_node(al_l1_edac_of_match, root))
-> +		return 0;
-> +
-> +	ret = platform_driver_register(&al_l1_edac_driver);
-> +	if (ret) {
-> +		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
-> +		return ret;
-> +	}
-> +
-> +	edac_l1_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
-> +	if (IS_ERR(edac_l1_device)) {
-> +		pr_err("Failed to register EDAC AL L1 platform device\n");
-
-		platform_driver_unregister() ?
-
-> +		return PTR_ERR(edac_l1_device);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit al_l1_exit(void)
-> +{
-> +	platform_device_unregister(edac_l1_device);
-> +	platform_driver_unregister(&al_l1_edac_driver);
-> +}
-> +
-> +late_initcall(al_l1_init);
-
-Why not module_init() ?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Vlad Rezki
