@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89BBC4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D73EC4BA09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E31124680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A4024680
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbgBYX1Q (ORCPT
+        id S1730679AbgBYX1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:27:16 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56031 "EHLO
+        Tue, 25 Feb 2020 18:27:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56033 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729512AbgBYX1A (ORCPT
+        with ESMTP id S1729445AbgBYX1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:27:00 -0500
+        Tue, 25 Feb 2020 18:27:01 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6jaz-00055g-VU; Wed, 26 Feb 2020 00:26:34 +0100
+        id 1j6jay-00053p-E3; Wed, 26 Feb 2020 00:26:33 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 46CCF10408E;
-        Wed, 26 Feb 2020 00:25:53 +0100 (CET)
-Message-Id: <20200225231609.926703522@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9008B1040C2;
+        Wed, 26 Feb 2020 00:25:52 +0100 (CET)
+Message-Id: <20200225231609.623068964@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:47:29 +0100
+Date:   Tue, 25 Feb 2020 23:47:26 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,7 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 10/15] x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC
+Subject: [patch 07/15] x86/entry: Convert SMP system vectors to IDTENTRY_SYSVEC
 References: <20200225224719.950376311@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,7 +50,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert various hypervisor vectors to IDTENTRY_SYSVEC
+Convert SMP system vectors to IDTENTRY_SYSVEC
   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
   - Remove the ASM idtentries in 64bit
@@ -61,239 +61,190 @@ No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_32.S       |   14 --------------
- arch/x86/entry/entry_64.S       |   17 -----------------
- arch/x86/hyperv/hv_init.c       |    3 ++-
- arch/x86/include/asm/acrn.h     |   11 -----------
- arch/x86/include/asm/idtentry.h |   13 +++++++++++++
- arch/x86/include/asm/mshyperv.h |   14 --------------
- arch/x86/kernel/cpu/acrn.c      |    6 +++---
- arch/x86/kernel/cpu/mshyperv.c  |   18 ++++++++++--------
- 8 files changed, 28 insertions(+), 68 deletions(-)
+ arch/x86/entry/entry_64.S         |   11 -----------
+ arch/x86/include/asm/entry_arch.h |    7 -------
+ arch/x86/include/asm/hw_irq.h     |    6 ------
+ arch/x86/include/asm/idtentry.h   |   10 ++++++++++
+ arch/x86/include/asm/traps.h      |    2 --
+ arch/x86/kernel/apic/vector.c     |    2 +-
+ arch/x86/kernel/idt.c             |   10 +++++-----
+ arch/x86/kernel/smp.c             |   10 +++++-----
+ 8 files changed, 21 insertions(+), 37 deletions(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1380,20 +1380,6 @@ BUILD_INTERRUPT3(xen_hvm_callback_vector
- 		 xen_evtchn_do_upcall)
- #endif
- 
--
--#if IS_ENABLED(CONFIG_HYPERV)
--
--BUILD_INTERRUPT3(hyperv_callback_vector, HYPERVISOR_CALLBACK_VECTOR,
--		 hyperv_vector_handler)
--
--BUILD_INTERRUPT3(hyperv_reenlightenment_vector, HYPERV_REENLIGHTENMENT_VECTOR,
--		 hyperv_reenlightenment_intr)
--
--BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
--		 hv_stimer0_vector_handler)
--
--#endif /* CONFIG_HYPERV */
--
- SYM_CODE_START_LOCAL_NOALIGN(common_exception)
- 	/* the function address is in %gs's slot on the stack */
- 	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1130,23 +1130,6 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTO
- 	xen_hvm_callback_vector xen_evtchn_do_upcall
+@@ -994,11 +994,6 @@ apicinterrupt3 \num \sym \do_sym
+ POP_SECTION_IRQENTRY
+ .endm
+ 
+-#ifdef CONFIG_SMP
+-apicinterrupt3 IRQ_MOVE_CLEANUP_VECTOR		irq_move_cleanup_interrupt	smp_irq_move_cleanup_interrupt
+-apicinterrupt3 REBOOT_VECTOR			reboot_interrupt		smp_reboot_interrupt
+-#endif
+-
+ #ifdef CONFIG_X86_UV
+ apicinterrupt3 UV_BAU_MESSAGE			uv_bau_message_intr1		uv_bau_message_interrupt
+ #endif
+@@ -1021,12 +1016,6 @@ apicinterrupt DEFERRED_ERROR_VECTOR		def
+ apicinterrupt THERMAL_APIC_VECTOR		thermal_interrupt		smp_thermal_interrupt
  #endif
  
--
--#if IS_ENABLED(CONFIG_HYPERV)
--apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
--	hyperv_callback_vector hyperv_vector_handler
--
--apicinterrupt3 HYPERV_REENLIGHTENMENT_VECTOR \
--	hyperv_reenlightenment_vector hyperv_reenlightenment_intr
--
--apicinterrupt3 HYPERV_STIMER0_VECTOR \
--	hv_stimer0_callback_vector hv_stimer0_vector_handler
--#endif /* CONFIG_HYPERV */
--
--#if IS_ENABLED(CONFIG_ACRN_GUEST)
--apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
--	acrn_hv_callback_vector acrn_hv_vector_handler
+-#ifdef CONFIG_SMP
+-apicinterrupt CALL_FUNCTION_SINGLE_VECTOR	call_function_single_interrupt	smp_call_function_single_interrupt
+-apicinterrupt CALL_FUNCTION_VECTOR		call_function_interrupt		smp_call_function_interrupt
+-apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
 -#endif
 -
- /*
-  * Save all registers in pt_regs, and switch gs if needed.
-  * Use slow, but surefire "are we in kernel?" check.
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -15,6 +15,7 @@
- #include <asm/hypervisor.h>
- #include <asm/hyperv-tlfs.h>
- #include <asm/mshyperv.h>
-+#include <asm/idtentry.h>
- #include <linux/version.h>
- #include <linux/vmalloc.h>
- #include <linux/mm.h>
-@@ -151,7 +152,7 @@ static inline bool hv_reenlightenment_av
- 		ms_hyperv.features & HV_X64_ACCESS_REENLIGHTENMENT;
- }
- 
--__visible void __irq_entry hyperv_reenlightenment_intr(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_reenlightenment)
- {
- 	entering_ack_irq();
- 
---- a/arch/x86/include/asm/acrn.h
-+++ /dev/null
-@@ -1,11 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_X86_ACRN_H
--#define _ASM_X86_ACRN_H
--
--extern void acrn_hv_callback_vector(void);
--#ifdef CONFIG_TRACING
--#define trace_acrn_hv_callback_vector acrn_hv_callback_vector
+ #ifdef CONFIG_IRQ_WORK
+ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
+ #endif
+--- a/arch/x86/include/asm/entry_arch.h
++++ b/arch/x86/include/asm/entry_arch.h
+@@ -10,13 +10,6 @@
+  * is no hardware IRQ pin equivalent for them, they are triggered
+  * through the ICC by us (IPIs)
+  */
+-#ifdef CONFIG_SMP
+-BUILD_INTERRUPT(reschedule_interrupt,RESCHEDULE_VECTOR)
+-BUILD_INTERRUPT(call_function_interrupt,CALL_FUNCTION_VECTOR)
+-BUILD_INTERRUPT(call_function_single_interrupt,CALL_FUNCTION_SINGLE_VECTOR)
+-BUILD_INTERRUPT(irq_move_cleanup_interrupt, IRQ_MOVE_CLEANUP_VECTOR)
+-BUILD_INTERRUPT(reboot_interrupt, REBOOT_VECTOR)
 -#endif
+ 
+ #ifdef CONFIG_HAVE_KVM
+ BUILD_INTERRUPT(kvm_posted_intr_ipi, POSTED_INTR_VECTOR)
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -37,16 +37,10 @@ extern asmlinkage void uv_bau_message_in
+ 
+ extern asmlinkage void spurious_apic_interrupt(void);
+ extern asmlinkage void thermal_interrupt(void);
+-extern asmlinkage void reschedule_interrupt(void);
+ 
+-extern asmlinkage void irq_move_cleanup_interrupt(void);
+-extern asmlinkage void reboot_interrupt(void);
+ extern asmlinkage void threshold_interrupt(void);
+ extern asmlinkage void deferred_error_interrupt(void);
+ 
+-extern asmlinkage void call_function_interrupt(void);
+-extern asmlinkage void call_function_single_interrupt(void);
 -
--extern void acrn_hv_vector_handler(struct pt_regs *regs);
--#endif /* _ASM_X86_ACRN_H */
+ #ifdef	CONFIG_X86_LOCAL_APIC
+ struct irq_data;
+ struct pci_dev;
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -523,6 +523,19 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKE
- DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested_ipi);
+@@ -7,6 +7,8 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <asm/kprobes.h>
++
+ #ifdef CONFIG_CONTEXT_TRACKING
+ static __always_inline void enter_from_user_context(void)
+ {
+@@ -487,6 +489,14 @@ DECLARE_IDTENTRY_SYSVEC(LOCAL_TIMER_VECT
+ DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI_VECTOR,	sysvec_x86_platform_ipi);
  #endif
  
-+#if IS_ENABLED(CONFIG_HYPERV)
-+DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_hyperv_callback);
-+DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
-+DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
-+#ifdef CONFIG_TRACING
-+#define trace_hyperv_callback_vector asm_sysvec_hyperv_callback
-+#endif
-+#endif
-+
-+#if IS_ENABLED(CONFIG_ACRN_GUEST)
-+DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_acrn_hv_callback);
++#ifdef CONFIG_SMP
++DECLARE_IDTENTRY_SYSVEC(IRQ_MOVE_CLEANUP_VECTOR,	sysvec_irq_move_cleanup);
++DECLARE_IDTENTRY_SYSVEC(REBOOT_VECTOR,			sysvec_reboot);
++DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single);
++DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_VECTOR,		sysvec_call_function);
++DECLARE_IDTENTRY_SYSVEC(RESCHEDULE_VECTOR,		sysvec_reschedule);
 +#endif
 +
  #ifdef CONFIG_X86_MCE
  /* Machine check */
  DECLARE_IDTENTRY_MCE(X86_TRAP_MC,	exc_machine_check);
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -49,24 +49,11 @@ typedef int (*hyperv_fill_flush_list_fun
- 	((val).archdata.vclock_mode = VCLOCK_HVCLOCK)
- #define hv_get_raw_timer() rdtsc_ordered()
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -38,8 +38,6 @@ asmlinkage void smp_threshold_interrupt(
+ asmlinkage void smp_deferred_error_interrupt(struct pt_regs *regs);
+ #endif
  
--void hyperv_callback_vector(void);
--void hyperv_reenlightenment_vector(void);
--#ifdef CONFIG_TRACING
--#define trace_hyperv_callback_vector hyperv_callback_vector
--#endif
- void hyperv_vector_handler(struct pt_regs *regs);
- 
--/*
-- * Routines for stimer0 Direct Mode handling.
-- * On x86/x64, there are no percpu actions to take.
-- */
--void hv_stimer0_vector_handler(struct pt_regs *regs);
--void hv_stimer0_callback_vector(void);
+-asmlinkage void smp_irq_move_cleanup_interrupt(void);
 -
- static inline void hv_enable_stimer0_percpu_irq(int irq) {}
- static inline void hv_disable_stimer0_percpu_irq(int irq) {}
- 
--
- #if IS_ENABLED(CONFIG_HYPERV)
- extern void *hv_hypercall_pg;
- extern void  __percpu  **hyperv_pcpu_input_arg;
-@@ -221,7 +208,6 @@ void hyperv_setup_mmu_ops(void);
- void *hv_alloc_hyperv_page(void);
- void *hv_alloc_hyperv_zeroed_page(void);
- void hv_free_hyperv_page(unsigned long addr);
--void hyperv_reenlightenment_intr(struct pt_regs *regs);
- void set_hv_tscchange_cb(void (*cb)(void));
- void clear_hv_tscchange_cb(void);
- void hyperv_stop_tsc_emulation(void);
---- a/arch/x86/kernel/cpu/acrn.c
-+++ b/arch/x86/kernel/cpu/acrn.c
-@@ -10,10 +10,10 @@
-  */
- 
- #include <linux/interrupt.h>
--#include <asm/acrn.h>
- #include <asm/apic.h>
- #include <asm/desc.h>
- #include <asm/hypervisor.h>
-+#include <asm/idtentry.h>
- #include <asm/irq_regs.h>
- 
- static uint32_t __init acrn_detect(void)
-@@ -24,7 +24,7 @@ static uint32_t __init acrn_detect(void)
- static void __init acrn_init_platform(void)
- {
- 	/* Setup the IDT for ACRN hypervisor callback */
--	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, acrn_hv_callback_vector);
-+	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, asm_sysvec_acrn_hv_callback);
+ extern void ist_enter(struct pt_regs *regs);
+ extern void ist_exit(struct pt_regs *regs);
+ extern void ist_begin_non_atomic(struct pt_regs *regs);
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -853,7 +853,7 @@ static void free_moved_vector(struct api
+ 	apicd->move_in_progress = 0;
  }
  
- static bool acrn_x2apic_available(void)
-@@ -39,7 +39,7 @@ static bool acrn_x2apic_available(void)
- 
- static void (*acrn_intr_handler)(void);
- 
--__visible void __irq_entry acrn_hv_vector_handler(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_acrn_hv_callback)
+-asmlinkage __visible void __irq_entry smp_irq_move_cleanup_interrupt(void)
++DEFINE_IDTENTRY_SYSVEC(sysvec_irq_move_cleanup)
  {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	struct hlist_head *clhead = this_cpu_ptr(&cleanup_list);
+ 	struct apic_chip_data *apicd;
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -109,11 +109,11 @@ static const __initconst struct idt_data
+  */
+ static const __initconst struct idt_data apic_idts[] = {
+ #ifdef CONFIG_SMP
+-	INTG(RESCHEDULE_VECTOR,		reschedule_interrupt),
+-	INTG(CALL_FUNCTION_VECTOR,	call_function_interrupt),
+-	INTG(CALL_FUNCTION_SINGLE_VECTOR, call_function_single_interrupt),
+-	INTG(IRQ_MOVE_CLEANUP_VECTOR,	irq_move_cleanup_interrupt),
+-	INTG(REBOOT_VECTOR,		reboot_interrupt),
++	INTG(RESCHEDULE_VECTOR,			asm_sysvec_reschedule),
++	INTG(CALL_FUNCTION_VECTOR,		asm_sysvec_call_function),
++	INTG(CALL_FUNCTION_SINGLE_VECTOR,	asm_sysvec_call_function_single),
++	INTG(IRQ_MOVE_CLEANUP_VECTOR,		asm_sysvec_irq_move_cleanup),
++	INTG(REBOOT_VECTOR,			asm_sysvec_reboot),
+ #endif
  
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -23,6 +23,7 @@
- #include <asm/hyperv-tlfs.h>
- #include <asm/mshyperv.h>
- #include <asm/desc.h>
-+#include <asm/idtentry.h>
- #include <asm/irq_regs.h>
- #include <asm/i8259.h>
+ #ifdef CONFIG_X86_THERMAL_VECTOR
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -27,6 +27,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/proto.h>
  #include <asm/apic.h>
-@@ -40,7 +41,7 @@ static void (*hv_stimer0_handler)(void);
- static void (*hv_kexec_handler)(void);
- static void (*hv_crash_handler)(struct pt_regs *regs);
- 
--__visible void __irq_entry hyperv_vector_handler(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
- {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
- 
-@@ -73,8 +74,7 @@ EXPORT_SYMBOL_GPL(hv_remove_vmbus_irq);
-  * Routines to do per-architecture handling of stimer0
-  * interrupts when in Direct Mode
++#include <asm/idtentry.h>
+ #include <asm/nmi.h>
+ #include <asm/mce.h>
+ #include <asm/trace/irq_vectors.h>
+@@ -130,8 +131,7 @@ static int smp_stop_nmi_callback(unsigne
+ /*
+  * this function calls the 'stop' function on all other CPUs in the system.
   */
 -
--__visible void __irq_entry hv_stimer0_vector_handler(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_stimer0)
+-asmlinkage __visible void smp_reboot_interrupt(void)
++DEFINE_IDTENTRY_SYSVEC(sysvec_reboot)
  {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	ipi_entering_ack_irq();
+ 	cpu_emergency_vmxoff();
+@@ -223,7 +223,7 @@ static void native_stop_other_cpus(int w
+  * Reschedule call back. KVM uses this interrupt to force a cpu out of
+  * guest mode
+  */
+-__visible void __irq_entry smp_reschedule_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_reschedule)
+ {
+ 	ack_APIC_irq();
+ 	inc_irq_stat(irq_resched_count);
+@@ -244,7 +244,7 @@ static void native_stop_other_cpus(int w
+ 	scheduler_ipi();
+ }
  
-@@ -321,17 +321,19 @@ static void __init ms_hyperv_init_platfo
- 	x86_platform.apic_post_init = hyperv_init;
- 	hyperv_setup_mmu_ops();
- 	/* Setup the IDT for hypervisor callback */
--	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, hyperv_callback_vector);
-+	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, sysvec_hyperv_callback);
+-__visible void __irq_entry smp_call_function_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_call_function)
+ {
+ 	ipi_entering_ack_irq();
+ 	trace_call_function_entry(CALL_FUNCTION_VECTOR);
+@@ -254,7 +254,7 @@ static void native_stop_other_cpus(int w
+ 	exiting_irq();
+ }
  
- 	/* Setup the IDT for reenlightenment notifications */
--	if (ms_hyperv.features & HV_X64_ACCESS_REENLIGHTENMENT)
-+	if (ms_hyperv.features & HV_X64_ACCESS_REENLIGHTENMENT) {
- 		alloc_intr_gate(HYPERV_REENLIGHTENMENT_VECTOR,
--				hyperv_reenlightenment_vector);
-+				asm_sysvec_hyperv_reenlightenment);
-+	}
- 
- 	/* Setup the IDT for stimer0 */
--	if (ms_hyperv.misc_features & HV_STIMER_DIRECT_MODE_AVAILABLE)
-+	if (ms_hyperv.misc_features & HV_STIMER_DIRECT_MODE_AVAILABLE) {
- 		alloc_intr_gate(HYPERV_STIMER0_VECTOR,
--				hv_stimer0_callback_vector);
-+				asm_sysvec_hyperv_stimer0);
-+	}
- 
- # ifdef CONFIG_SMP
- 	smp_ops.smp_prepare_boot_cpu = hv_smp_prepare_boot_cpu;
+-__visible void __irq_entry smp_call_function_single_interrupt(struct pt_regs *r)
++DEFINE_IDTENTRY_SYSVEC(sysvec_call_function_single)
+ {
+ 	ipi_entering_ack_irq();
+ 	trace_call_function_single_entry(CALL_FUNCTION_SINGLE_VECTOR);
 
