@@ -2,203 +2,258 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3C1C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0115DC35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1D42082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Msx47BI0"
+	by mail.kernel.org (Postfix) with ESMTP id C6AE92176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582655054;
+	bh=yNlfOmQR9+nRAaGFNlH/Ji35iqnG0we1hXWVC5J6quo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xKp45TdDxtzw7mkr5IrHPssUt9fQP8SSG0lImasjpK1INJ7Z7Dv3une+j+0OZDBl/
+	 hfcThJkrp3Vu7pC4jvxFKk2DrCcM8wD4NcJW7hsxC45cUniACV0o8R65GPlND21hx2
+	 spQnj5cwYZq3njezsccXV59zOP1S8HotTN9B3SpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbgBYSXO (ORCPT
+        id S1731547AbgBYSYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:23:14 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38317 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbgBYSXN (ORCPT
+        Tue, 25 Feb 2020 13:24:13 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39784 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBYSYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:23:13 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p7so130240pli.5;
-        Tue, 25 Feb 2020 10:23:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=ktrpYAWrggSTSOV2wvm4YeoVA9u6oYNOnWw43Th7Fmk=;
-        b=Msx47BI0yGUH40FxI+6g16XnDkMgbIKbDgs+lTMTZ80aS7JGz3QQqqpOqSTZ20dNr6
-         PYuyAoeI4Cfa8PCKsVlTmwB7DHVhNtbgYS/dcsBKQSO1LwOM37BCDL6L+5r2oyduy7/2
-         dbKVYraQ3JhcPGNQFAXkthinsLbGD395MS6uf4cRXswx7qqjO5g953IiSLzXDDDgy7vg
-         gIcVNnejlzxXXE9dG6U0uxJvnANU279VaOgE6+AImva9cOZ2kmJDxEHYfaUZzW8YxVZD
-         dC+AZNACfz64yalnIW58YsEBXX9Bg8oU3Ce0J6vG9DLR56uJrOd+kuRFLxtoJRvRdAcj
-         R7qw==
+        Tue, 25 Feb 2020 13:24:13 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 18so262881oij.6;
+        Tue, 25 Feb 2020 10:24:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ktrpYAWrggSTSOV2wvm4YeoVA9u6oYNOnWw43Th7Fmk=;
-        b=N7JS49Ofh0KF9YfexOHe7oI3SBrcGAZqBvGkKECwHMAhZ4PydwUxGCIvWvcVh7S3xx
-         9Bsb5WgmiHWkGA8LQnrgjVS7Sw1UJLA6+OfsqzU6bz4j6axM0xEFrBBSEEmQm0oFr8pq
-         gMWFLDPBxLOdZGasYT+lmdWtUCtNxVvxMwdRTZsBNZSz5c+jNrV0ifEm+//NthVLWZsp
-         YiwphR9dcM3RYilyWREbpBzfm514r28X6TI43RqJQu7HcipY5N72s+6IFAk8LU5rjsoV
-         eNcKQnd48FwBcmLMfKKiNgXbz/JpCFdfVn/fFDqeRu83ciRWBkvjOxqx3ZXivQ9bODMY
-         VZDg==
-X-Gm-Message-State: APjAAAW0LhReFLF0tPymeTuLD4rW3SavmGWemTpFMKz+DfFQLlRaVcLC
-        uos+aKVrbRnROjbUyyzAKXI=
-X-Google-Smtp-Source: APXvYqy8DdX0hZ2iYw8LVycrX4VSdemNCJ52GdNKcGuiqypQt3Pwr4B1Doqk1XYqz/px/WtNtoMQqA==
-X-Received: by 2002:a17:90b:4004:: with SMTP id ie4mr290021pjb.49.1582654992666;
-        Tue, 25 Feb 2020 10:23:12 -0800 (PST)
-Received: from [192.168.0.5] (cpe-72-130-144-74.hawaii.res.rr.com. [72.130.144.74])
-        by smtp.gmail.com with ESMTPSA id w81sm18343794pff.95.2020.02.25.10.23.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 10:23:11 -0800 (PST)
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- inet_release
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     syzbot <syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com>,
-        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, kafai@fb.com,
-        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-References: <00000000000050bd7c059f61fd8c@google.com>
- <3f2984d7-f854-2457-8bbe-7e8b1a377d66@gmail.com>
-Message-ID: <b33cfd8a-4813-4a7e-49ef-ed838e2e2344@gmail.com>
-Date:   Tue, 25 Feb 2020 10:23:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zyUEcnd6mf3xDLs58H/+znKVsIUHaN8BT7T15bn5I/4=;
+        b=eAtzbSrvXHIlj+DIXE5B+cX9N1ysawIUYTjdEbHQca6Zf4J55Mj5rdHaLUbso4WIte
+         OHNqE1DJBJ+jm9Hgr8TELLP+/jzCfpaYlMmAWQ0Bz1p6f+bjZ9qjrwOBVDtShaCCVIjF
+         8pYD4CHtj7PrNRwsLrWMhSEtiBxFedkbngN4UyKt8a2d0DILztME+V2jW9CzuZCotcUO
+         +Wk8Kt49QJhF7clzotAHLZ1CI5YTtiVu/BzCd67AvLIia+S/Y5JR8Xl1A+s9Fhpm8weF
+         RtjeLr5mk5L04qgsTHhpl4qpJNew2axJ+FnbnlcvbqLLVjY1WTmj7IODjDWXOfy59ftF
+         NJBw==
+X-Gm-Message-State: APjAAAUejYKEP4qpg3/o+bd/gxbUJVLfO+vrhiNhBnHxldLWqr8aS0FF
+        ++uNXLCB6JEUQqRw3SWQqg==
+X-Google-Smtp-Source: APXvYqy2YFi/Z/AQYaFr+0YJAOKBBXw2YKbb14sGV3IuzdQIEB+ZE6Mmn4i6K3FgKLi1IMdYd8+R/w==
+X-Received: by 2002:a05:6808:251:: with SMTP id m17mr190704oie.15.1582655052039;
+        Tue, 25 Feb 2020 10:24:12 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n27sm5572706oie.18.2020.02.25.10.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:24:11 -0800 (PST)
+Received: (nullmailer pid 14462 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:24:10 -0000
+Date:   Tue, 25 Feb 2020 12:24:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 88/89] dt-bindings: display: vc4: hdmi: Add BCM2711 HDMI
+ controllers bindings
+Message-ID: <20200225182410.GA7661@bogus>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-In-Reply-To: <3f2984d7-f854-2457-8bbe-7e8b1a377d66@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c21dda4f0b73977de1e54d408d7bf6bf3b6d238.1582533919.git-series.maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 10:07:30AM +0100, Maxime Ripard wrote:
+> The HDMI controllers found in the BCM2711 SoC need some adjustments to the
+> bindings, especially since the registers have been shuffled around in more
+> register ranges.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml | 118 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 109 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> index 52b3cdac0bdf..a9d24e1cf684 100644
+> --- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> +++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+> @@ -11,24 +11,58 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: brcm,bcm2835-hdmi
+> +    enum:
+> +      - brcm,bcm2835-hdmi
+> +      - brcm,bcm2711-hdmi0
+> +      - brcm,bcm2711-hdmi1
+>  
+>    reg:
+> +    oneOf:
+> +      - items:
+> +        - description: HDMI register range
+> +        - description: HD register range
+> +
+> +      - items:
+> +        - description: HDMI controller register range
+> +        - description: DVP register range
+> +        - description: HDMI PHY register range
+> +        - description: Rate Manager register range
+> +        - description: Packet RAM register range
+> +        - description: Metadata RAM register range
+> +        - description: CSC register range
+> +        - description: CEC register range
+> +        - description: HD register range
+> +
+> +  reg-names:
+>      items:
+> -      - description: HDMI register range
+> -      - description: HD register range
+> +      - const: hdmi
+> +      - const: dvp
+> +      - const: phy
+> +      - const: rm
+> +      - const: packet
+> +      - const: metadata
+> +      - const: csc
+> +      - const: cec
+> +      - const: hd
 
+Don't you want 'hd' 2nd or need to define the 2 entry case separately?
 
-On 2/25/20 12:15 AM, Eric Dumazet wrote:
-> 
-> 
-> On 2/25/20 12:08 AM, syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    54dedb5b Merge tag 'for-linus-5.6-rc3-tag' of git://git.ke..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=168f7de9e00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
->> dashboard link: https://syzkaller.appspot.com/bug?extid=1938db17e275e85dc328
->> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1681fe09e00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
->>
->> BUG: kernel NULL pointer dereference, address: 0000000000000000
->> #PF: supervisor instruction fetch in kernel mode
->> #PF: error_code(0x0010) - not-present page
->> PGD a0113067 P4D a0113067 PUD a8771067 PMD 0 
->> Oops: 0010 [#1] PREEMPT SMP KASAN
->> CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> RIP: 0010:0x0
->> Code: Bad RIP value.
->> RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
->> RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
->> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
->> RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
->> R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
->> R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
->> FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
->>  inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
->>  __sock_release net/socket.c:605 [inline]
->>  sock_close+0xe1/0x260 net/socket.c:1283
->>  __fput+0x2e4/0x740 fs/file_table.c:280
->>  ____fput+0x15/0x20 fs/file_table.c:313
->>  task_work_run+0x176/0x1b0 kernel/task_work.c:113
->>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->>  exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
->>  prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
->>  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
->>  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
->>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x45c429
->> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->> RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
->> RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
->> RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
->> RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
->> R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
->> R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
->> Modules linked in:
->> CR2: 0000000000000000
->> ---[ end trace 82567b5207e87bae ]---
->> RIP: 0010:0x0
->> Code: Bad RIP value.
->> RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
->> RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
->> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
->> RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
->> R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
->> R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
->> FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>
->>
->> ---
->> This bug is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this bug report. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> syzbot can test patches for this bug, for details see:
->> https://goo.gl/tpsmEJ#testing-patches
->>
-> 
-> Note to ULP maintainers
-> 
-> Probably the code for IPV6_ADDRFORM  needs some care if a TCP socket got ULP enabled ?
-> 
+Really, I think this should be 2 files. All but interrupts and ddc have 
+a difference.
 
-Maybe simply make sure sk->sk_prot is pristine as in :
-
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 79fc012dd2cae44b69057c168037b018775d1f49..a72c5c30bc3a55ca65974c537cd089fa4260a8d0 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -183,9 +183,14 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
-                                        retv = -EBUSY;
-                                        break;
-                                }
--                       } else if (sk->sk_protocol != IPPROTO_TCP)
-+                       } else if (sk->sk_protocol == IPPROTO_TCP) {
-+                               if (sk->sk_prot != &tcpv6_prot) {
-+                                       retv = -EBUSY;
-+                                       break;
-+                               }
-+                       } else {
-                                break;
--
-+                       }
-                        if (sk->sk_state != TCP_ESTABLISHED) {
-                                retv = -ENOTCONN;
-                                break;
+>  
+>    interrupts:
+>      minItems: 2
+>  
+>    clocks:
+> -    items:
+> -      - description: The pixel clock
+> -      - description: The HDMI state machine clock
+> +    oneOf:
+> +      - items:
+> +        - description: The pixel clock
+> +        - description: The HDMI state machine clock
+> +
+> +      - items:
+> +        - description: The HDMI state machine clock
+>  
+>    clock-names:
+> -    items:
+> -      - const: pixel
+> +    oneOf:
+> +      - items:
+> +        - const: pixel
+> +        - const: hdmi
+> +
+>        - const: hdmi
+>  
+>    ddc:
+> @@ -51,15 +85,54 @@ properties:
+>    dma-names:
+>      const: audio-rx
+>  
+> +  resets:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupts
+>    - clocks
+>    - ddc
+>  
+>  additionalProperties: false
+>  
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - brcm,bcm2711-hdmi0
+> +          - brcm,bcm2711-hdmi1
+> +
+> +then:
+> +  properties:
+> +    reg:
+> +      minItems: 9
+> +
+> +    clocks:
+> +      maxItems: 1
+> +
+> +    clock-names:
+> +      maxItems: 1
+> +
+> +  required:
+> +    - reg-names
+> +    - resets
+> +
+> +else:
+> +  properties:
+> +    reg:
+> +      maxItems: 2
+> +
+> +    clocks:
+> +      minItems: 2
+> +
+> +    clock-names:
+> +      minItems: 2
+> +
+> +  required:
+> +    - interrupts
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/bcm2835.h>
+> @@ -77,4 +150,31 @@ examples:
+>          clock-names = "pixel", "hdmi";
+>      };
+>  
+> +  - |
+> +    hdmi0: hdmi@7ef00700 {
+> +        compatible = "brcm,bcm2711-hdmi0";
+> +        reg = <0x7ef00700 0x300>,
+> +              <0x7ef00300 0x200>,
+> +              <0x7ef00f00 0x80>,
+> +              <0x7ef00f80 0x80>,
+> +              <0x7ef01b00 0x200>,
+> +              <0x7ef01f00 0x400>,
+> +              <0x7ef00200 0x80>,
+> +              <0x7ef04300 0x100>,
+> +              <0x7ef20000 0x100>;
+> +        reg-names = "hdmi",
+> +                    "dvp",
+> +                    "phy",
+> +                    "rm",
+> +                    "packet",
+> +                    "metadata",
+> +                    "csc",
+> +                    "cec",
+> +                    "hd";
+> +        clocks = <&firmware_clocks 13>;
+> +        clock-names = "hdmi";
+> +        resets = <&dvp 0>;
+> +        ddc = <&ddc0>;
+> +    };
+> +
+>  ...
+> -- 
+> git-series 0.9.1
