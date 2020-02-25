@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0114C4BA06
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCE5C4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8459C24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D31B24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbgBYX21 (ORCPT
+        id S1730835AbgBYX23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:28:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55896 "EHLO
+        Tue, 25 Feb 2020 18:28:29 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55888 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730312AbgBYX0h (ORCPT
+        with ESMTP id S1730292AbgBYX0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:26:37 -0500
+        Tue, 25 Feb 2020 18:26:36 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6jal-0004x3-3y; Wed, 26 Feb 2020 00:26:19 +0100
+        id 1j6jaU-0004na-Ue; Wed, 26 Feb 2020 00:26:03 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id A961C1040B5;
-        Wed, 26 Feb 2020 00:25:46 +0100 (CET)
-Message-Id: <20200225224145.233039728@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9471F1040A1;
+        Wed, 26 Feb 2020 00:25:40 +0100 (CET)
+Message-Id: <20200225222650.050626171@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:33:32 +0100
+Date:   Tue, 25 Feb 2020 23:16:25 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,8 +38,8 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 11/16] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
-References: <20200225223321.231477305@linutronix.de>
+Subject: [patch 19/24] x86/entry: Convert General protection exception to IDTENTRY
+References: <20200225221606.511535280@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Linutronix-Spam-Score: -1.0
@@ -50,7 +50,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert # to IDTENTRY:
+Convert #GP to IDTENTRY_ERRORCODE:
   - Implement the C entry point with DEFINE_IDTENTRY
   - Emit the ASM stub with DECLARE_IDTENTRY
   - Remove the ASM idtentry in 64bit
@@ -62,197 +62,162 @@ No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_32.S       |    7 +++++--
- arch/x86/entry/entry_64.S       |   11 ++++-------
- arch/x86/include/asm/idtentry.h |   13 +++++++++++++
- arch/x86/xen/setup.c            |    4 +++-
- arch/x86/xen/smp_pv.c           |    3 ++-
- arch/x86/xen/xen-asm_32.S       |    8 ++++----
+ arch/x86/entry/entry_32.S       |    8 +-------
+ arch/x86/entry/entry_64.S       |    3 +--
+ arch/x86/include/asm/idtentry.h |    1 +
+ arch/x86/include/asm/traps.h    |    3 ---
+ arch/x86/kernel/idt.c           |    2 +-
+ arch/x86/kernel/traps.c         |    7 +++----
+ arch/x86/xen/enlighten_pv.c     |    2 +-
  arch/x86/xen/xen-asm_64.S       |    2 +-
- arch/x86/xen/xen-ops.h          |    1 -
- 8 files changed, 32 insertions(+), 17 deletions(-)
+ 8 files changed, 9 insertions(+), 19 deletions(-)
 
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -1307,7 +1307,10 @@ SYM_CODE_END(native_iret)
+@@ -732,7 +732,7 @@
+ .macro idtentry_push_func vector cfunc
+ 	.if \vector == X86_TRAP_XF
+ 		/* AMD 486 bug: invd from userspace calls exception 19 instead of #GP */
+-		ALTERNATIVE "pushl	$do_general_protection",	\
++		ALTERNATIVE "pushl	$exc_general_protection",	\
+ 			    "pushl	$do_simd_coprocessor_error",	\
+ 			    X86_FEATURE_XMM
+ 	.else
+@@ -1652,12 +1652,6 @@ SYM_CODE_START(nmi)
  #endif
+ SYM_CODE_END(nmi)
  
- #ifdef CONFIG_XEN_PV
--SYM_FUNC_START(xen_hypervisor_callback)
-+/*
-+ * See comment in entry_64.S for further explanation
-+ */
-+SYM_FUNC_START(exc_xen_hypervisor_callback)
- 	/*
- 	 * Check to see if we got the event in the critical
- 	 * region in xen_iret_direct, after we've reenabled
-@@ -1331,7 +1334,7 @@ SYM_FUNC_START(xen_hypervisor_callback)
- 	call	xen_maybe_preempt_hcall
- #endif
- 	jmp	ret_from_intr
--SYM_FUNC_END(xen_hypervisor_callback)
-+SYM_FUNC_END(exc_xen_hypervisor_callback)
- 
- /*
-  * Hypervisor uses this for application faults while it executes.
+-SYM_CODE_START(general_protection)
+-	ASM_CLAC
+-	pushl	$do_general_protection
+-	jmp	common_exception
+-SYM_CODE_END(general_protection)
+-
+ #ifdef CONFIG_KVM_GUEST
+ SYM_CODE_START(async_page_fault)
+ 	ASM_CLAC
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1059,10 +1059,6 @@ idtentry	X86_TRAP_PF		page_fault		do_pag
- idtentry	X86_TRAP_PF		async_page_fault	do_async_page_fault		has_error_code=1
- #endif
- 
--#ifdef CONFIG_XEN_PV
--idtentry	512 /* dummy */		hypervisor_callback	xen_do_hypervisor_callback	has_error_code=0
--#endif
--
- 	/*
- 	 * Reload gs selector with exception handling
- 	 * edi:  new selector
-@@ -1125,9 +1121,10 @@ SYM_FUNC_END(do_softirq_own_stack)
-  * So, on entry to the handler we detect whether we interrupted an
-  * existing activation in its critical region -- if so, we pop the current
-  * activation and restart the handler using the previous one.
-+ *
-+ * C calling convention: exc_xen_hypervisor_callback(struct *pt_regs)
+@@ -1061,7 +1061,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
+  * Exception entry points.
   */
--/* do_hypervisor_callback(struct *pt_regs) */
--SYM_CODE_START_LOCAL(xen_do_hypervisor_callback)
-+SYM_CODE_START_LOCAL(exc_xen_hypervisor_callback)
  
- /*
-  * Since we don't modify %rdi, evtchn_do_upall(struct *pt_regs) will
-@@ -1145,7 +1142,7 @@ SYM_CODE_START_LOCAL(xen_do_hypervisor_c
- 	call	xen_maybe_preempt_hcall
- #endif
- 	jmp	error_exit
--SYM_CODE_END(xen_do_hypervisor_callback)
-+SYM_CODE_END(exc_xen_hypervisor_callback)
- 
- /*
-  * Hypervisor uses this for application faults while it executes.
+-idtentry	X86_TRAP_GP		general_protection	do_general_protection		has_error_code=1
+ idtentry	X86_TRAP_SPURIOUS	spurious_interrupt_bug	do_spurious_interrupt_bug	has_error_code=0
+ idtentry	X86_TRAP_MF		coprocessor_error	do_coprocessor_error		has_error_code=0
+ idtentry	X86_TRAP_AC		alignment_check		do_alignment_check		has_error_code=1
+@@ -1201,7 +1200,7 @@ SYM_CODE_START(xen_failsafe_callback)
+ 	addq	$0x30, %rsp
+ 	pushq	$0				/* RIP */
+ 	UNWIND_HINT_IRET_REGS offset=8
+-	jmp	general_protection
++	jmp	asm_exc_general_protection
+ 1:	/* Segment mismatch => Category 1 (Bad segment). Retry the IRET. */
+ 	movq	(%rsp), %rcx
+ 	movq	8(%rsp), %r11
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -308,6 +308,13 @@ static __always_inline void __##func(str
+@@ -132,5 +132,6 @@ DECLARE_IDTENTRY(X86_TRAP_OLD_MF,	exc_co
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_TS,	exc_invalid_tss);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_NP,	exc_segment_not_present);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_SS,	exc_stack_segment);
++DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_GP,	exc_general_protection);
  
- #endif /* __ASSEMBLY__ */
- 
-+/*
-+ * Dummy trap number so the low level ASM macro vector number checks do not
-+ * match which results in emitting plain IDTENTRY stubs without bells and
-+ * whistels.
-+ */
-+#define X86_TRAP_OTHER		~0uL
-+
- /* Simple exception entries: */
- DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
- DECLARE_IDTENTRY(X86_TRAP_BP,		exc_int3);
-@@ -348,4 +355,10 @@ DECLARE_IDTENTRY_XEN(X86_TRAP_DB,	debug)
- DECLARE_IDTENTRY_DF(X86_TRAP_DF,	exc_double_fault);
  #endif
- 
-+#ifdef CONFIG_XEN_PV
-+DECLARE_IDTENTRY(X6_TRAP_OTHER,		exc_xen_hypervisor_callback);
-+#endif
-+
-+#undef X86_TRAP_OTHER
-+
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -16,7 +16,6 @@ asmlinkage void nmi(void);
+ #ifdef CONFIG_X86_64
+ asmlinkage void double_fault(void);
  #endif
---- a/arch/x86/xen/setup.c
-+++ b/arch/x86/xen/setup.c
-@@ -20,6 +20,7 @@
- #include <asm/setup.h>
- #include <asm/acpi.h>
- #include <asm/numa.h>
-+#include <asm/idtentry.h>
- #include <asm/xen/hypervisor.h>
- #include <asm/xen/hypercall.h>
- 
-@@ -993,7 +994,8 @@ void __init xen_pvmmu_arch_setup(void)
- 	HYPERVISOR_vm_assist(VMASST_CMD_enable,
- 			     VMASST_TYPE_pae_extended_cr3);
- 
--	if (register_callback(CALLBACKTYPE_event, xen_hypervisor_callback) ||
-+	if (register_callback(CALLBACKTYPE_event,
-+			      asm_exc_xen_hypervisor_callback) ||
- 	    register_callback(CALLBACKTYPE_failsafe, xen_failsafe_callback))
- 		BUG();
- 
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -27,6 +27,7 @@
- #include <asm/paravirt.h>
- #include <asm/desc.h>
- #include <asm/pgtable.h>
-+#include <asm/idtentry.h>
- #include <asm/cpu.h>
- 
- #include <xen/interface/xen.h>
-@@ -346,7 +347,7 @@ cpu_initialize_context(unsigned int cpu,
- 	ctxt->gs_base_kernel = per_cpu_offset(cpu);
+-asmlinkage void general_protection(void);
+ asmlinkage void page_fault(void);
+ asmlinkage void async_page_fault(void);
+ asmlinkage void spurious_interrupt_bug(void);
+@@ -31,7 +30,6 @@ asmlinkage void simd_coprocessor_error(v
+ asmlinkage void xen_xennmi(void);
+ asmlinkage void xen_xendebug(void);
+ asmlinkage void xen_double_fault(void);
+-asmlinkage void xen_general_protection(void);
+ asmlinkage void xen_page_fault(void);
+ asmlinkage void xen_spurious_interrupt_bug(void);
+ asmlinkage void xen_coprocessor_error(void);
+@@ -47,7 +45,6 @@ dotraplinkage void do_nmi(struct pt_regs
+ #if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
+ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
  #endif
- 	ctxt->event_callback_eip    =
--		(unsigned long)xen_hypervisor_callback;
-+		(unsigned long)asm_exc_xen_hypervisor_callback;
- 	ctxt->failsafe_callback_eip =
- 		(unsigned long)xen_failsafe_callback;
- 	per_cpu(xen_cr3, cpu) = __pa(swapper_pg_dir);
---- a/arch/x86/xen/xen-asm_32.S
-+++ b/arch/x86/xen/xen-asm_32.S
-@@ -93,7 +93,7 @@ SYM_CODE_START(xen_iret)
- 
- 	/*
- 	 * If there's something pending, mask events again so we can
--	 * jump back into xen_hypervisor_callback. Otherwise do not
-+	 * jump back into exc_xen_hypervisor_callback. Otherwise do not
- 	 * touch XEN_vcpu_info_mask.
+-dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+ dotraplinkage void do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_coprocessor_error(struct pt_regs *regs, long error_code);
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -79,7 +79,7 @@ static const __initconst struct idt_data
+ 	INTG(X86_TRAP_TS,		asm_exc_invalid_tss),
+ 	INTG(X86_TRAP_NP,		asm_exc_segment_not_present),
+ 	INTG(X86_TRAP_SS,		asm_exc_stack_segment),
+-	INTG(X86_TRAP_GP,		general_protection),
++	INTG(X86_TRAP_GP,		asm_exc_general_protection),
+ 	INTG(X86_TRAP_SPURIOUS,		spurious_interrupt_bug),
+ 	INTG(X86_TRAP_MF,		coprocessor_error),
+ 	INTG(X86_TRAP_AC,		alignment_check),
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -214,7 +214,7 @@ do_trap_no_signal(struct task_struct *ts
+ 	 * process no chance to handle the signal and notice the
+ 	 * kernel fault information, so that won't result in polluting
+ 	 * the information about previously queued, but not yet
+-	 * delivered, faults.  See also do_general_protection below.
++	 * delivered, faults.  See also exc_general_protection below.
  	 */
- 	jne 1f
-@@ -113,7 +113,7 @@ SYM_CODE_START(xen_iret)
- 	 * Events are masked, so jumping out of the critical region is
- 	 * OK.
- 	 */
--	je xen_hypervisor_callback
-+	je asm_exc_xen_hypervisor_callback
+ 	tsk->thread.error_code = error_code;
+ 	tsk->thread.trap_nr = trapnr;
+@@ -410,7 +410,7 @@ dotraplinkage void do_double_fault(struc
+ 		 * which is what the stub expects, given that the faulting
+ 		 * RIP will be the IRET instruction.
+ 		 */
+-		regs->ip = (unsigned long)general_protection;
++		regs->ip = (unsigned long)asm_exc_general_protection;
+ 		regs->sp = (unsigned long)&gpregs->orig_ax;
  
- 1:	iret
- xen_iret_end_crit:
-@@ -127,7 +127,7 @@ SYM_CODE_END(xen_iret)
- 	.globl xen_iret_start_crit, xen_iret_end_crit
+ 		return;
+@@ -529,7 +529,7 @@ static enum kernel_gp_hint get_kernel_gp
  
- /*
-- * This is called by xen_hypervisor_callback in entry_32.S when it sees
-+ * This is called by exc_xen_hypervisor_callback in entry_32.S when it sees
-  * that the EIP at the time of interrupt was between
-  * xen_iret_start_crit and xen_iret_end_crit.
-  *
-@@ -144,7 +144,7 @@ SYM_CODE_END(xen_iret)
-  *	 eflags		}
-  *	 cs		}  nested exception info
-  *	 eip		}
-- *	 return address	: (into xen_hypervisor_callback)
-+ *	 return address	: (into asm_exc_xen_hypervisor_callback)
-  *
-  * In order to deliver the nested exception properly, we need to discard the
-  * nested exception frame such that when we handle the exception, we do it
+ #define GPFSTR "general protection fault"
+ 
+-dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
++DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+ {
+ 	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
+ 	enum kernel_gp_hint hint = GP_NO_HINT;
+@@ -603,7 +603,6 @@ dotraplinkage void do_general_protection
+ 	die_addr(desc, regs, error_code, gp_addr);
+ 
+ }
+-NOKPROBE_SYMBOL(do_general_protection);
+ 
+ DEFINE_IDTENTRY(exc_int3)
+ {
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -628,7 +628,7 @@ static struct trap_array_entry trap_arra
+ 	TRAP_ENTRY(exc_invalid_tss,			false ),
+ 	TRAP_ENTRY(exc_segment_not_present,		false ),
+ 	TRAP_ENTRY(exc_stack_segment,			false ),
+-	{ general_protection,          xen_general_protection,          false },
++	TRAP_ENTRY(exc_general_protection,		false ),
+ 	{ spurious_interrupt_bug,      xen_spurious_interrupt_bug,      false },
+ 	{ coprocessor_error,           xen_coprocessor_error,           false },
+ 	{ alignment_check,             xen_alignment_check,             false },
 --- a/arch/x86/xen/xen-asm_64.S
 +++ b/arch/x86/xen/xen-asm_64.S
-@@ -54,7 +54,7 @@ xen_pv_trap asm_exc_simd_coprocessor_err
- #ifdef CONFIG_IA32_EMULATION
- xen_pv_trap entry_INT80_compat
- #endif
--xen_pv_trap hypervisor_callback
-+xen_pv_trap asm_exc_xen_hypervisor_callback
- 
- 	__INIT
- SYM_CODE_START(xen_early_idt_handler_array)
---- a/arch/x86/xen/xen-ops.h
-+++ b/arch/x86/xen/xen-ops.h
-@@ -8,7 +8,6 @@
- #include <xen/xen-ops.h>
- 
- /* These are code, but not functions.  Defined in entry.S */
--extern const char xen_hypervisor_callback[];
- extern const char xen_failsafe_callback[];
- 
- void xen_sysenter_target(void);
+@@ -42,7 +42,7 @@ xen_pv_trap asm_exc_coproc_segment_overr
+ xen_pv_trap asm_exc_invalid_tss
+ xen_pv_trap asm_exc_segment_not_present
+ xen_pv_trap asm_exc_stack_segment
+-xen_pv_trap general_protection
++xen_pv_trap asm_exc_general_protection
+ xen_pv_trap page_fault
+ xen_pv_trap spurious_interrupt_bug
+ xen_pv_trap coprocessor_error
 
