@@ -2,90 +2,108 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF350C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B650C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F1E218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265CF2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582653485;
-	bh=LwXKWjZfFSdGikn7p8jWRZJOGinTNMobus6UKP/+6XE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VvwbJza3leAC+eE0+i/pZdWrrQTa95EGJAypOqpXjkjINLir8fRvHOHgXAJvgfXIP
-	 1yQP7lakzmlVVDN1elVn7Z9hwRdjSRDxxeYhDV3qJ8S6Wp64TlpyIDyTKJUT22SJ5J
-	 jmjE1O82AVOd+tKYYU4S+uaOGv2vxdtcaagHPMjw=
+	s=default; t=1582653513;
+	bh=Sva3j0zxk8ZOvePoBklb1lV/d69k6BLltGcoL8zx+i8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F1aM9HARXoGY3nF7mglfMfIdCUcANN/eVYn+YrkLG5aNER/hT4IOcsRwcTEvfpcBL
+	 hEJ30Z0GbcKnWC0rvPLcwvHj9aHA7JQl3OPqf2eXraPHSWy02aV+wTBo2Czaz6cIog
+	 Ayxey1p8VzOxG+DhuYAshpf2bqIySIEZ4a67ysd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbgBYR6E (ORCPT
+        id S1731170AbgBYR6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:58:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38317 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729536AbgBYR6D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:58:03 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so360582oth.5;
-        Tue, 25 Feb 2020 09:58:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8GwTzddrLu/wUsAnxNvKRBKqXG7o72fYpPpNcXHr19E=;
-        b=ajEf5W+nHQHEO30OrPLyA821vOv2CcsaxFZZBl5NxHZ0Ev/z3kVmuA+D3B/S19N55F
-         hqIOj+kiRpdZ8gB9fSe6NrYEauxmffxc77LT5Au/6MqeXEpHiSfIN66HRYQYeurHhsP+
-         zkKwFjSGwLLwZe9u/aRjU58SiMW+MyHnbwwfTFlrYnRpiJyHCLJ7I/6cI+gNCQ4DHMka
-         TJUNFr8ZnwHJuduI+QqZL40K03u6I+pkM1fq085as7x0IKTO6Qv2umZ5grgW0vUm0nU+
-         gPyqZfM0Sb9sJV3JSKn+Ax0sUNa2ZZ/um0xTmc7ERhyKs+I7Joa5/GSFDQu/t6F4KWNv
-         HdPg==
-X-Gm-Message-State: APjAAAVm/P9sCpbY2wK/RVEUYq64ZnyJQgkhiUg15KZNyL/TWFpnbalM
-        h/tPB79YrBJIx6oyf1uW2g==
-X-Google-Smtp-Source: APXvYqyqIOkEAcKJ5+8hpXXY05G/dthQhXpUBc1sdkuly+kiJaFQmDzPObHMm6N2y/PtDm8/3bQW7Q==
-X-Received: by 2002:a05:6830:1149:: with SMTP id x9mr46722989otq.156.1582653483133;
-        Tue, 25 Feb 2020 09:58:03 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm5900513oti.44.2020.02.25.09.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:58:02 -0800 (PST)
-Received: (nullmailer pid 7499 invoked by uid 1000);
-        Tue, 25 Feb 2020 17:58:01 -0000
-Date:   Tue, 25 Feb 2020 11:58:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, leonard.crestez@nxp.com,
-        daniel.baluta@nxp.com, aisheng.dong@nxp.com, peng.fan@nxp.com,
-        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: Re: [PATCH 3/7] bindings: clock: imx8qxp: add
- "fsl,imx8qxp-lpcg-cm40" compatible string
-Message-ID: <20200225175801.GA7447@bogus>
-References: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
- <1581909561-12058-4-git-send-email-qiangqing.zhang@nxp.com>
+        Tue, 25 Feb 2020 12:58:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730582AbgBYR6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:58:32 -0500
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F048024672
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582653511;
+        bh=Sva3j0zxk8ZOvePoBklb1lV/d69k6BLltGcoL8zx+i8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XvibRSSoNRmYfm+qIPIN7nGGePEDaM41FlNmAuDbFkQjS98jnypCTx3K7+hk1vN2/
+         M/lQCP9nHUXhPsxFFSSFNpzmY/5oXAOoWByYfG7uXgQ6bYNEqrMDvD9uDvFaTSYfzq
+         f+9pjizLNvqqgFV8yly2QYf2270oA547XfqE0UTY=
+Received: by mail-wm1-f53.google.com with SMTP id a6so115068wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:58:30 -0800 (PST)
+X-Gm-Message-State: APjAAAXMjfXq3+Hb/hHHN3tbITbEGeuma56JREscXyz/qnZJd0GsevwB
+        1Al3P1IKmP3/QVC0TYFUlj1xztk50RLhQe4iKDbmWg==
+X-Google-Smtp-Source: APXvYqxhDCWtAL9XVlcgMQcvnJk1Yjnsuht22saRgp4RLN0yPuLVMLnzI7N2hk/Y4yIm7rpnYZjw7y3JX1RRjlmthUI=
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr477751wmk.68.1582653509278;
+ Tue, 25 Feb 2020 09:58:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581909561-12058-4-git-send-email-qiangqing.zhang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
+ <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com> <9e16fed9-4399-5c78-cbfb-6be75c295f31@amd.com>
+In-Reply-To: <9e16fed9-4399-5c78-cbfb-6be75c295f31@amd.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 25 Feb 2020 18:58:18 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_0LUY67DwSLU1tyijuF+0mKPpvq1j3RSMy5HBxYE-3qw@mail.gmail.com>
+Message-ID: <CAKv+Gu_0LUY67DwSLU1tyijuF+0mKPpvq1j3RSMy5HBxYE-3qw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/efi: Add additional efi tables for unencrypted
+ mapping checks
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 11:19:17 +0800, Joakim Zhang wrote:
-> Add "fsl,imx8qxp-lpcg-cm40" compatible string.
-> 
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Tue, 25 Feb 2020 at 18:54, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 2/25/20 11:45 AM, Ard Biesheuvel wrote:
+> > On Tue, 25 Feb 2020 at 18:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> >>
+> >> When booting with SME active, EFI tables must be mapped unencrypted since
+> >> they were built by UEFI in unencrypted memory. Update the list of tables
+> >> to be checked during early_memremap() processing to account for new EFI
+> >> tables.
+> >>
+> >> This fixes a bug where an EFI TPM log table has been created by UEFI, but
+> >> it lives in memory that has been marked as usable rather than reserved.
+> >>
+> >> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> >>
+> >> ---
+> >> Changes since v1:
+> >> - Re-spun against EFI tree
+> >
+> > Which one? Surely not the one in the link I included?
+>
+> I did a git clone of
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
+>
+> and checked out branch next. Not sure what I missed...
+>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Weird. Do you see commit 5d288dbd88606d8f215c7138b10649115d79cadd on
+that branch? It removes rng_seed from struct efi, hence my request to
+rebase your patch.
+
+IMO, best is to simply drop the 'static' from rng_seed, rename it to
+efi_rng_seed, and drop an extern declaration in linux/efi.h so it is
+accessible from your code. I'm reluctant to put it back in struct efi.
