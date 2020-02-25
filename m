@@ -2,98 +2,254 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1D3C35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D13C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645812176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KyXATRz4"
+	by mail.kernel.org (Postfix) with ESMTP id 11A642176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgBYBkI (ORCPT
+        id S1728664AbgBYBnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:40:08 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:60818 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgBYBkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:40:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ruwwviCX3u9iIHw2RDglYwBhcA5r2ShXtHN3byrUOBw=; b=KyXATRz4RpG08H34t3PebJPk63
-        os/hXh+cE23WSw0cL3YEt0OVxWbjNGBEBrrAT9nRAkJNuBEbNFeJHZxE7/kDbvF4DMM8LlrPk+3fB
-        5HLtxbPJhvaHgWmEZ0gR++SBM8kum+UgpYiCmUFYmaInxpKWvB5x19LLayxFVToqCwVA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j6PCW-0003eH-M3; Tue, 25 Feb 2020 02:39:56 +0100
-Date:   Tue, 25 Feb 2020 02:39:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio
- bindings
-Message-ID: <20200225013956.GA13912@lunn.ch>
-References: <20200224211035.16897-1-ansuelsmth@gmail.com>
- <20200224211035.16897-2-ansuelsmth@gmail.com>
+        Mon, 24 Feb 2020 20:43:23 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34746 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726962AbgBYBnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 20:43:23 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2020AE18E1B2C497C114;
+        Tue, 25 Feb 2020 09:43:20 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 25 Feb 2020 09:43:14 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>,
+        Park Ju Hyung <qkrwngud825@gmail.com>
+Subject: [PATCH] f2fs: use kmem_cache pool during inline xattr lookups
+Date:   Tue, 25 Feb 2020 09:42:57 +0800
+Message-ID: <20200225014257.83903-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224211035.16897-2-ansuelsmth@gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:10:31PM +0100, Ansuel Smith wrote:
-> Add documentations for ipq806x mdio driver.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
-> Changes in v7:
-> - Fix dt_binding_check problem
-> 
->  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> new file mode 100644
-> index 000000000000..3178cbfdc661
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x MDIO bus controller
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description: |+
-> +  The ipq806x soc have a MDIO dedicated controller that is
-> +  used to comunicate with the gmac phy conntected.
+It's been observed that kzalloc() on lookup_all_xattrs() are called millions
+of times on Android, quickly becoming the top abuser of slub memory allocator.
 
-used to communicate with the connected gmac phy.
+Use a dedicated kmem cache pool for xattr lookups to mitigate this.
 
-     Andrew
+Signed-off-by: Park Ju Hyung <qkrwngud825@gmail.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+
+Hi, Ju Hyung,
+
+Let me know if you have any objection on this patch. :)
+
+ fs/f2fs/f2fs.h  |  3 +++
+ fs/f2fs/super.c | 10 ++++++++-
+ fs/f2fs/xattr.c | 54 ++++++++++++++++++++++++++++++++++++++++++++-----
+ fs/f2fs/xattr.h |  4 ++++
+ 4 files changed, 65 insertions(+), 6 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 12a197e89a3e..23b93a116c73 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1486,6 +1486,9 @@ struct f2fs_sb_info {
+ 	__u32 s_chksum_seed;
+ 
+ 	struct workqueue_struct *post_read_wq;	/* post read workqueue */
++
++	struct kmem_cache *inline_xattr_slab;	/* inline xattr entry */
++	unsigned int inline_xattr_slab_size;	/* default inline xattr slab size */
+ };
+ 
+ struct f2fs_private_dio {
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index d241e07c0bfa..0b16204d3b7d 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1201,6 +1201,7 @@ static void f2fs_put_super(struct super_block *sb)
+ 	kvfree(sbi->raw_super);
+ 
+ 	destroy_device_list(sbi);
++	f2fs_destroy_xattr_caches(sbi);
+ 	mempool_destroy(sbi->write_io_dummy);
+ #ifdef CONFIG_QUOTA
+ 	for (i = 0; i < MAXQUOTAS; i++)
+@@ -3457,12 +3458,17 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		}
+ 	}
+ 
++	/* init per sbi slab cache */
++	err = f2fs_init_xattr_caches(sbi);
++	if (err)
++		goto free_io_dummy;
++
+ 	/* get an inode for meta space */
+ 	sbi->meta_inode = f2fs_iget(sb, F2FS_META_INO(sbi));
+ 	if (IS_ERR(sbi->meta_inode)) {
+ 		f2fs_err(sbi, "Failed to read F2FS meta data inode");
+ 		err = PTR_ERR(sbi->meta_inode);
+-		goto free_io_dummy;
++		goto free_xattr_cache;
+ 	}
+ 
+ 	err = f2fs_get_valid_checkpoint(sbi);
+@@ -3735,6 +3741,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	make_bad_inode(sbi->meta_inode);
+ 	iput(sbi->meta_inode);
+ 	sbi->meta_inode = NULL;
++free_xattr_cache:
++	f2fs_destroy_xattr_caches(sbi);
+ free_io_dummy:
+ 	mempool_destroy(sbi->write_io_dummy);
+ free_percpu:
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index a3360a97e624..e46a10eb0e42 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -23,6 +23,25 @@
+ #include "xattr.h"
+ #include "segment.h"
+ 
++static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
++{
++	*is_inline = (size == sbi->inline_xattr_slab_size);
++
++	if (*is_inline)
++		return kmem_cache_zalloc(sbi->inline_xattr_slab, GFP_NOFS);
++
++	return f2fs_kzalloc(sbi, size, GFP_NOFS);
++}
++
++static void xattr_free(struct f2fs_sb_info *sbi, void *xattr_addr,
++							bool is_inline)
++{
++	if (is_inline)
++		kmem_cache_free(sbi->inline_xattr_slab, xattr_addr);
++	else
++		kvfree(xattr_addr);
++}
++
+ static int f2fs_xattr_generic_get(const struct xattr_handler *handler,
+ 		struct dentry *unused, struct inode *inode,
+ 		const char *name, void *buffer, size_t size)
+@@ -301,7 +320,8 @@ static int read_xattr_block(struct inode *inode, void *txattr_addr)
+ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 				unsigned int index, unsigned int len,
+ 				const char *name, struct f2fs_xattr_entry **xe,
+-				void **base_addr, int *base_size)
++				void **base_addr, int *base_size,
++				bool *is_inline)
+ {
+ 	void *cur_addr, *txattr_addr, *last_txattr_addr;
+ 	void *last_addr = NULL;
+@@ -313,7 +333,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 		return -ENODATA;
+ 
+ 	*base_size = XATTR_SIZE(inode) + XATTR_PADDING_SIZE;
+-	txattr_addr = f2fs_kzalloc(F2FS_I_SB(inode), *base_size, GFP_NOFS);
++	txattr_addr = xattr_alloc(F2FS_I_SB(inode), *base_size, is_inline);
+ 	if (!txattr_addr)
+ 		return -ENOMEM;
+ 
+@@ -362,7 +382,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 	*base_addr = txattr_addr;
+ 	return 0;
+ out:
+-	kvfree(txattr_addr);
++	xattr_free(F2FS_I_SB(inode), txattr_addr, *is_inline);
+ 	return err;
+ }
+ 
+@@ -499,6 +519,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+ 	unsigned int size, len;
+ 	void *base_addr = NULL;
+ 	int base_size;
++	bool is_inline;
+ 
+ 	if (name == NULL)
+ 		return -EINVAL;
+@@ -509,7 +530,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+ 
+ 	down_read(&F2FS_I(inode)->i_xattr_sem);
+ 	error = lookup_all_xattrs(inode, ipage, index, len, name,
+-				&entry, &base_addr, &base_size);
++				&entry, &base_addr, &base_size, &is_inline);
+ 	up_read(&F2FS_I(inode)->i_xattr_sem);
+ 	if (error)
+ 		return error;
+@@ -532,7 +553,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+ 	}
+ 	error = size;
+ out:
+-	kvfree(base_addr);
++	xattr_free(F2FS_I_SB(inode), base_addr, is_inline);
+ 	return error;
+ }
+ 
+@@ -767,3 +788,26 @@ int f2fs_setxattr(struct inode *inode, int index, const char *name,
+ 	f2fs_update_time(sbi, REQ_TIME);
+ 	return err;
+ }
++
++int f2fs_init_xattr_caches(struct f2fs_sb_info *sbi)
++{
++	dev_t dev = sbi->sb->s_bdev->bd_dev;
++	char slab_name[32];
++
++	sprintf(slab_name, "f2fs_xattr_entry-%u:%u", MAJOR(dev), MINOR(dev));
++
++	sbi->inline_xattr_slab_size = F2FS_OPTION(sbi).inline_xattr_size *
++					sizeof(__le32) + XATTR_PADDING_SIZE;
++
++	sbi->inline_xattr_slab = f2fs_kmem_cache_create(slab_name,
++					sbi->inline_xattr_slab_size);
++	if (!sbi->inline_xattr_slab)
++		return -ENOMEM;
++
++	return 0;
++}
++
++void f2fs_destroy_xattr_caches(struct f2fs_sb_info *sbi)
++{
++	kmem_cache_destroy(sbi->inline_xattr_slab);
++}
+diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
+index 574beea46494..7345dfa7b7a9 100644
+--- a/fs/f2fs/xattr.h
++++ b/fs/f2fs/xattr.h
+@@ -131,6 +131,8 @@ extern int f2fs_setxattr(struct inode *, int, const char *,
+ extern int f2fs_getxattr(struct inode *, int, const char *, void *,
+ 						size_t, struct page *);
+ extern ssize_t f2fs_listxattr(struct dentry *, char *, size_t);
++extern int f2fs_init_xattr_caches(struct f2fs_sb_info *);
++extern void f2fs_destroy_xattr_caches(struct f2fs_sb_info *);
+ #else
+ 
+ #define f2fs_xattr_handlers	NULL
+@@ -151,6 +153,8 @@ static inline ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer,
+ {
+ 	return -EOPNOTSUPP;
+ }
++static int f2fs_init_xattr_caches(struct f2fs_sb_info *sbi) { return 0; }
++static void f2fs_destroy_xattr_caches(struct f2fs_sb_info *sbi) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_F2FS_FS_SECURITY
+-- 
+2.18.0.rc1
+
