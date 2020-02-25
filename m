@@ -2,96 +2,262 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D90C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFD3C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0815C21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0851B21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPtF6e4g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EWIIwc1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgBYIbR (ORCPT
+        id S1729153AbgBYIcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:31:17 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43523 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729142AbgBYIbQ (ORCPT
+        Tue, 25 Feb 2020 03:32:33 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46522 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgBYIcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:31:16 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so11305783oth.10;
-        Tue, 25 Feb 2020 00:31:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T1n3ktw5bPHodKuJWkYqa7LcyNgwBKRduxXfO03KSgk=;
-        b=PPtF6e4g3S/sEpHTe6yWznV3pLLYn4jvkZbGYyT1LHamFseFQCg8aHGs+syAQn4Aob
-         Jp/0iz1n5tZPJA/5IgQuGt3N7bLiUJu3Z2f4/Ris/HNhsLyhhwJj2FrAiYf4I7NPik1H
-         8L8rblY9IPH4PCf2m7g3P+nz8hgRIF4mVCqFLe4y2NKoRItTH/FfKV+MnAGzNzICM2pG
-         o3cyqKEdTSqBbE83IiBv9W4bvAhNOHaWnmYq1gzjBjvecwlPl4PXypHPdpW1A8JWPD3P
-         e8GFfxR5Be8JyXtDUq9rmisQfNyeZvaUvAd97/3q+AoazVyESRbYztISKWjfHprhhJAz
-         b9Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T1n3ktw5bPHodKuJWkYqa7LcyNgwBKRduxXfO03KSgk=;
-        b=V6WcyjC3umXuqSCikxx3T32ZJ6Ce2ruR6+MlsxG7aCi3zi384CxMehZAgY2G5rQtSV
-         mrh591uOQ0q5z4eY6+LX9yA0BsaWbY5xUkJMWJsh7MEZ3DlKEpOba6f7OFc8vvvjX+O1
-         8TFf7HwPeIcVh3NwaoIHYI+0tVWlXBgyf1Ef2EVkjZNB74puIOjLL0uVQCxD0/9sXXh9
-         tlBa78/D+aSDQ2B3nNPmCsjhTcfgfBuCcv6Bf0T8Sd4OAVB1hDzqgpHpYZjCOI6p0Spv
-         8kiw0i/Se18YRhHd0rvlBcO9cnlOt8Z2/4lMmY0yInTHIopHm6aGkBeI/RUhrVJE0s46
-         O/fA==
-X-Gm-Message-State: APjAAAVYn+ClDfUBiWCVWt/GsvYSuioZxrcmzGwr7n/IvYlX1UnW0Ntk
-        dwOx/2Ti9OOhPNtAa9q9yksW7zTyA/TCTZF5onZbsTJh
-X-Google-Smtp-Source: APXvYqwf4tYE7xMxbpSLRtRLqsNTEz9tmoizRdcTISzmz8MO4Eb3Ofc4QxUWwhDN9FZG8XrYsxeYa9tB/Itt2Wv2G4s=
-X-Received: by 2002:a05:6830:1011:: with SMTP id a17mr41220600otp.45.1582619475111;
- Tue, 25 Feb 2020 00:31:15 -0800 (PST)
+        Tue, 25 Feb 2020 03:32:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582619551;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zgKQtRV01Bi8I2OWDhHoJzlNxr2o35DwN7ZNxHQ2pcE=;
+        b=EWIIwc1rwxjLMWLXVRxtPQGUg5qm4mQrvv26p0iJwfgqcUr5oNgpcYpmpbclA0TvKAcvyk
+        qPj5blpuFmU13LvcUqkox9jLKRI+cdpjl3z3+ekm/aFl1ai1HdowsYe1wAsuT9oka4cZgo
+        Kv/MQSboxwACkgDgnWQS2gORv9orVXg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-aLC00U-3MtC6YXxGwaGXZA-1; Tue, 25 Feb 2020 03:32:23 -0500
+X-MC-Unique: aLC00U-3MtC6YXxGwaGXZA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D08BB107ACC7;
+        Tue, 25 Feb 2020 08:32:21 +0000 (UTC)
+Received: from [10.36.116.59] (ovpn-116-59.ams2.redhat.com [10.36.116.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 448B660BF7;
+        Tue, 25 Feb 2020 08:32:16 +0000 (UTC)
+Subject: Re: [PATCH V9 05/10] iommu/vt-d: Support flushing more translation
+ cache types
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1580277713-66934-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1580277713-66934-6-git-send-email-jacob.jun.pan@linux.intel.com>
+ <11add211-dec0-1932-c29c-22cbbf145bd4@redhat.com>
+ <20200214152701.18f76ce1@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <5e7841c4-28df-7a4a-e801-f42b62de1e3d@redhat.com>
+Date:   Tue, 25 Feb 2020 09:32:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <1582022829-27032-1-git-send-email-wanpengli@tencent.com>
- <87zhdg84n6.fsf@vitty.brq.redhat.com> <CANRm+Cyx+J+YK8FzFBV8LRNPeCaXPc93vjFdpA0D_hA+wrpywQ@mail.gmail.com>
- <f433ff7e-72de-e2fd-5b71-a9ac92769c03@redhat.com>
-In-Reply-To: <f433ff7e-72de-e2fd-5b71-a9ac92769c03@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 25 Feb 2020 16:31:03 +0800
-Message-ID: <CANRm+CwfaZHHPyxC1qz_uq6ayw6vg2n0apLPoPH5dKXyy4FLeg@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Recalculate apic map in batch
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200214152701.18f76ce1@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 16:07, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 19/02/20 01:47, Wanpeng Li wrote:
-> >> An alternative idea: instead of making every caller return bool and
-> >> every call site handle the result (once) just add a
-> >> KVM_REQ_APIC_MAP_RECALC flag or a boolean flag to struct kvm. I
-> >> understand it may not be that easy as it sounds as we may be conunting
-> >> on valid mapping somewhere before we actually get to handiling
-> > Yes.
-> >
-> >> KVM_REQ_APIC_MAP_RECALC but we may preserve *some*
-> >> recalculate_apic_map() calls (and make it reset KVM_REQ_APIC_MAP_RECALC).
-> > Paolo, keep the caller return bool or add a booleen flag to struct
-> > kvm, what do you think?
->
-> A third possibility: add an apic_map field to struct kvm_lapic, so that
-> you don't have to add bool return values everywhere.
+Hi Jacob,
 
-This apic_map field is boolean, right?
+On 2/15/20 12:27 AM, Jacob Pan wrote:
+> Hi Eric,
+> 
+> On Wed, 12 Feb 2020 13:55:25 +0100
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Jacob,
+>>
+>> On 1/29/20 7:01 AM, Jacob Pan wrote:
+>>> When Shared Virtual Memory is exposed to a guest via vIOMMU,
+>>> scalable IOTLB invalidation may be passed down from outside IOMMU
+>>> subsystems. This patch adds invalidation functions that can be used
+>>> for additional translation cache types.
+>>>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> ---
+>>>  drivers/iommu/dmar.c        | 33 +++++++++++++++++++++++++++++++++
+>>>  drivers/iommu/intel-pasid.c |  3 ++-
+>>>  include/linux/intel-iommu.h | 20 ++++++++++++++++----
+>>>  3 files changed, 51 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+>>> index 071bb42bbbc5..206733ec8140 100644
+>>> --- a/drivers/iommu/dmar.c
+>>> +++ b/drivers/iommu/dmar.c
+>>> @@ -1411,6 +1411,39 @@ void qi_flush_piotlb(struct intel_iommu
+>>> *iommu, u16 did, u32 pasid, u64 addr, qi_submit_sync(&desc, iommu);
+>>>  }
+>>>  
+>>> +/* PASID-based device IOTLB Invalidate */
+>>> +void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid,
+>>> u16 pfsid,
+>>> +		u32 pasid,  u16 qdep, u64 addr, unsigned
+>>> size_order, u64 granu) +{
+>>> +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
+>>> +
+>>> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
+>>> QI_DEV_EIOTLB_SID(sid) |
+>>> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+>>> +		QI_DEV_IOTLB_PFSID(pfsid);
+>>> +	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
+>>> +
+>>> +	/* If S bit is 0, we only flush a single page. If S bit is
+>>> set,
+>>> +	 * The least significant zero bit indicates the
+>>> invalidation address
+>>> +	 * range. VT-d spec 6.5.2.6.
+>>> +	 * e.g. address bit 12[0] indicates 8KB, 13[0] indicates
+>>> 16KB.
+>>> +	 */
+>>> +	if (!size_order) {
+>>> +		desc.qw0 |= QI_DEV_EIOTLB_ADDR(addr) &
+>>> ~QI_DEV_EIOTLB_SIZE;
+>>> +	} else {
+>>> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT +
+>>> size_order);
+>>> +		desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr & ~mask) |
+>>> QI_DEV_EIOTLB_SIZE;
+>>> +	}
+>>> +	qi_submit_sync(&desc, iommu);  
+>> I made some comments in
+>> https://lkml.org/lkml/2019/8/14/1311
+>> that do not seem to have been taken into account. Or do I miss
+>> something?
+>>
+> I missed adding these changes. At the time Baolu was doing cache flush
+> consolidation so I wasn't sure if I could use his code completely. This
+> patch is on top of his consolidated flush code with what is still
+> needed for vSVA. Then I forgot to address your comments. Sorry about
+> that.
+no problem
+> 
+>> More generally having an individual history log would be useful and
+>> speed up the review.
+>>
+> Will add history to each patch, e.g. like this?
+> ---
+> v8 -> v9
+yes thanks. You're not obliged to list every little thing but to me, it
+helps to see at first sight if you took into account major comments and
+in case you did not - on purpose -, you can also indicate it.
 
-    Wanpeng
+Thanks
+
+Eric
+> ---
+>> Thanks
+>>
+>> Eric
+>>> +}
+>>> +
+>>> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64
+>>> granu, int pasid) +{
+>>> +	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
+>>> +
+>>> +	desc.qw0 = QI_PC_PASID(pasid) | QI_PC_DID(did) |
+>>> QI_PC_GRAN(granu) | QI_PC_TYPE;
+>>> +	qi_submit_sync(&desc, iommu);
+>>> +}
+>>> +
+>>>  /*
+>>>   * Disable Queued Invalidation interface.
+>>>   */
+>>> diff --git a/drivers/iommu/intel-pasid.c
+>>> b/drivers/iommu/intel-pasid.c index bd067af4d20b..b100f51407f9
+>>> 100644 --- a/drivers/iommu/intel-pasid.c
+>>> +++ b/drivers/iommu/intel-pasid.c
+>>> @@ -435,7 +435,8 @@ pasid_cache_invalidation_with_pasid(struct
+>>> intel_iommu *iommu, {
+>>>  	struct qi_desc desc;
+>>>  
+>>> -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL |
+>>> QI_PC_PASID(pasid);
+>>> +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
+>>> +		QI_PC_PASID(pasid) | QI_PC_TYPE;
+>>>  	desc.qw1 = 0;
+>>>  	desc.qw2 = 0;
+>>>  	desc.qw3 = 0;
+>>> diff --git a/include/linux/intel-iommu.h
+>>> b/include/linux/intel-iommu.h index b0ffecbc0dfc..dd9fa61689bc
+>>> 100644 --- a/include/linux/intel-iommu.h
+>>> +++ b/include/linux/intel-iommu.h
+>>> @@ -332,7 +332,7 @@ enum {
+>>>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >>
+>>> (DMA_TLB_FLUSH_GRANU_OFFSET-4)) #define QI_IOTLB_ADDR(addr)
+>>> (((u64)addr) & VTD_PAGE_MASK) #define
+>>> QI_IOTLB_IH(ih)		(((u64)ih) << 6) -#define
+>>> QI_IOTLB_AM(am)		(((u8)am)) +#define
+>>> QI_IOTLB_AM(am)		(((u8)am) & 0x3f) 
+>>>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
+>>>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
+>>> @@ -351,16 +351,21 @@ enum {
+>>>  #define QI_PC_DID(did)		(((u64)did) << 16)
+>>>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
+>>>  
+>>> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
+>>> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
+>>> +/* PASID cache invalidation granu */
+>>> +#define QI_PC_ALL_PASIDS	0
+>>> +#define QI_PC_PASID_SEL		1
+>>>  
+>>>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+>>>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
+>>> -#define QI_EIOTLB_AM(am)	(((u64)am))
+>>> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
+>>>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
+>>>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
+>>>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
+>>>  
+>>> +/* QI Dev-IOTLB inv granu */
+>>> +#define QI_DEV_IOTLB_GRAN_ALL		1
+>>> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
+>>> +
+>>>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+>>>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+>>>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+>>> @@ -660,8 +665,15 @@ extern void qi_flush_iotlb(struct intel_iommu
+>>> *iommu, u16 did, u64 addr, unsigned int size_order, u64 type);
+>>>  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid,
+>>> u16 pfsid, u16 qdep, u64 addr, unsigned mask);
+>>> +
+>>>  void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32
+>>> pasid, u64 addr, unsigned long npages, bool ih);
+>>> +
+>>> +extern void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
+>>> u16 sid, u16 pfsid,
+>>> +			u32 pasid, u16 qdep, u64 addr, unsigned
+>>> size_order, u64 granu); +
+>>> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16
+>>> did, u64 granu, int pasid); +
+>>>  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu
+>>> *iommu); 
+>>>  extern int dmar_ir_support(void);
+>>>   
+>>
+> 
+> [Jacob Pan]
+> 
+
