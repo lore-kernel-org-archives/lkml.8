@@ -2,143 +2,120 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E016CC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89AAC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F192084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582652138;
-	bh=PeNDRn7ouKq00bGzpe3E8vy9GU1wYbIYTrNkavUhBIg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ajku5gLZHim65hmJOU92wT6v6UKSgcEITR7FOe7jzSCm7iTAmktnkJqidrgJ51AAf
-	 /j8nTS0FxL9w2kAZIcUx4VUMgL2t/6i7ATe+n6fyr4HaD/+Vk9pUs1tOUEbOAIGSDs
-	 fDVcjlNqe+LjSx6IUWjg5u2LbArKNduT7g+bxGfA=
+	by mail.kernel.org (Postfix) with ESMTP id 9906E2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgBYRfh (ORCPT
+        id S1730246AbgBYRgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:35:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41518 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 12:36:37 -0500
+Received: from verein.lst.de ([213.95.11.211]:44528 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgBYRff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:35:35 -0500
-Received: from linux-8ccs.suse.de (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ECD921927;
-        Tue, 25 Feb 2020 17:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582652135;
-        bh=PeNDRn7ouKq00bGzpe3E8vy9GU1wYbIYTrNkavUhBIg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUlHglvu2m9gjQH+KC67u8fsVbZ3mAXOLrKVaRJF2WttpJnuXXFG3qGFcHu12RJkM
-         OaKDwLe+hIIOF8cvgMtAiyt0zZdmLh7Oeq3NOAfJVYMhhRDCXkNNV3FzSXo/Pq9LSX
-         afz4KdFrlG2upHV0Oxo7DLsInEhErf1CsjoWn0GE=
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>
-Cc:     linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 2/2] modpost: return error if module is missing ns imports and MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n
-Date:   Tue, 25 Feb 2020 18:35:26 +0100
-Message-Id: <20200225173526.9617-2-jeyu@kernel.org>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200225173526.9617-1-jeyu@kernel.org>
-References: <20200225173526.9617-1-jeyu@kernel.org>
+        id S1728051AbgBYRgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:36:37 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6F2B368BE1; Tue, 25 Feb 2020 18:36:33 +0100 (CET)
+Date:   Tue, 25 Feb 2020 18:36:33 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@lst.de>, ira.weiny@intel.com,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+Message-ID: <20200225173633.GA30843@lst.de>
+References: <20200221004134.30599-1-ira.weiny@intel.com> <20200221004134.30599-8-ira.weiny@intel.com> <20200221174449.GB11378@lst.de> <20200221224419.GW10776@dread.disaster.area> <20200224175603.GE7771@lst.de> <20200225000937.GA10776@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225000937.GA10776@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently when CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, modpost only warns
-when a module is missing namespace imports. Under this configuration, such a module
-cannot be loaded into the kernel anyway, as the module loader would reject it.
-We might as well return a build error when a module is missing namespace imports
-under CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, so that the build
-warning does not go ignored/unnoticed.
+On Tue, Feb 25, 2020 at 11:09:37AM +1100, Dave Chinner wrote:
+> > No, the original code was broken because it didn't serialize between
+> > DAX and buffer access.
+> > 
+> > Take a step back and look where the problems are, and they are not
+> > mostly with the aops.  In fact the only aop useful for DAX is
+> > is ->writepages, and how it uses ->writepages is actually a bit of
+> > an abuse of that interface.
+> 
+> The races are all through the fops, too, which is one of the reasons
+> Darrick mentioned we should probably move this up to file ops
+> level...
 
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
----
- scripts/Makefile.modpost | 15 ++++++++-------
- scripts/mod/modpost.c    | 14 +++++++++++---
- 2 files changed, 19 insertions(+), 10 deletions(-)
+But the file ops are very simple to use.  Pass the flag in the iocb,
+and make sure the flag can only changed with i_rwsem held.  That part
+is pretty trivial, the interesting case is mmap because it is so
+spread out.
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index b4d3f2d122ac..957eed6a17a5 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -46,13 +46,14 @@ include scripts/Kbuild.include
- kernelsymfile := $(objtree)/Module.symvers
- modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
- 
--MODPOST = scripts/mod/modpost						\
--	$(if $(CONFIG_MODVERSIONS),-m)					\
--	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)			\
--	$(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)			\
--	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
--	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
--	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
-+MODPOST = scripts/mod/modpost								\
-+	$(if $(CONFIG_MODVERSIONS),-m)							\
-+	$(if $(CONFIG_MODULE_SRCVERSION_ALL),-a)					\
-+	$(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)					\
-+	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))			\
-+	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))					\
-+	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)					\
-+	$(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-N) 	\
- 	$(if $(KBUILD_MODPOST_WARN),-w)
- 
- ifdef MODPOST_VMLINUX
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index e2805fbeb99f..9ae2b1c9a870 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -39,6 +39,8 @@ static int sec_mismatch_count = 0;
- static int sec_mismatch_fatal = 0;
- /* ignore missing files */
- static int ignore_missing_files;
-+/* If set to 1, only warn (instead of error) about missing ns imports */
-+static int allow_missing_ns_imports = 0;
- 
- enum export {
- 	export_plain,      export_unused,     export_gpl,
-@@ -2211,8 +2213,11 @@ static int check_exports(struct module *mod)
- 
- 		if (exp->namespace &&
- 		    !module_imports_namespace(mod, exp->namespace)) {
--			warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
--			     basename, exp->name, exp->namespace);
-+			warn_unless(!allow_missing_ns_imports,
-+				    "module %s uses symbol %s from namespace %s, but does not import it.\n",
-+				    basename, exp->name, exp->namespace);
-+			if (!allow_missing_ns_imports)
-+				err = 1;
- 			add_namespace(&mod->missing_namespaces, exp->namespace);
- 		}
- 
-@@ -2555,7 +2560,7 @@ int main(int argc, char **argv)
- 	struct ext_sym_list *extsym_iter;
- 	struct ext_sym_list *extsym_start = NULL;
- 
--	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awEd:")) != -1) {
-+	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awENd:")) != -1) {
- 		switch (opt) {
- 		case 'i':
- 			kernel_read = optarg;
-@@ -2593,6 +2598,9 @@ int main(int argc, char **argv)
- 		case 'E':
- 			sec_mismatch_fatal = 1;
- 			break;
-+		case 'N':
-+			allow_missing_ns_imports = 1;
-+			break;
- 		case 'd':
- 			missing_namespace_deps = optarg;
- 			break;
--- 
-2.16.4
+> > So what we really need it just a way to prevent switching the flag
+> > when a file is mapped,
+> 
+> That's not sufficient.
+> 
+> We also have to prevent the file from being mapped *while we are
+> switching*. Nothing in the mmap() path actually serialises against
+> filesystem operations, and the initial behavioural checks in the
+> page fault path are similarly unserialised against changing the
+> S_DAX flag.
 
+And the important part here is ->mmap.  If ->mmap doesn't get through
+we are not going to see page faults.
+
+> > and in the normal read/write path ensure the
+> > flag can't be switch while I/O is going on, which could either be
+> > done by ensuring it is only switched under i_rwsem or equivalent
+> > protection, or by setting the DAX flag once in the iocb similar to
+> > IOCB_DIRECT.
+> 
+> The iocb path is not the problem - that's entirely serialised
+> against S_DAX changes by the i_rwsem. The problem is that we have no
+> equivalent filesystem level serialisation for the entire mmap/page
+> fault path, and it checks S_DAX all over the place.
+
+Not right now.  We have various IS_DAX checks outside it.  But it is
+easily fixable indeed.
+
+> /me wonders if the best thing to do is to add a ->fault callout to
+> tell the filesystem to lock/unlock the inode right up at the top of
+> the page fault path, outside even the mmap_sem.  That means all the
+> methods that the page fault calls are protected against S_DAX
+> changes, and it gives us a low cost method of serialising page
+> faults against DIO (e.g. via inode_dio_wait())....
+
+Maybe.  Especially if it solves real problems and isn't just new
+overhead to add an esoteric feature.
+
+> 
+> > And they easiest way to get all this done is as a first step to
+> > just allowing switching the flag when no blocks are allocated at
+> > all, similar to how the rt flag works.
+> 
+> False equivalence - it is not similar because the RT flag changes
+> and their associated state checks are *already fully serialised* by
+> the XFS_ILOCK_EXCL. S_DAX accesses have no such serialisation, and
+> that's the problem we need to solve...
+
+And my point is that if we ensure S_DAX can only be checked if there
+are no blocks on the file, is is fairly easy to provide the same
+guarantee.  And I've not heard any argument that we really need more
+flexibility than that.  In fact I think just being able to change it
+on the parent directory and inheriting the flag might be more than
+plenty, which would lead to a very simple implementation without any
+of the crazy overhead in this series.
