@@ -2,126 +2,158 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B3FC35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93B4C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2278B2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CI6CtbwD"
+	by mail.kernel.org (Postfix) with ESMTP id AEF662084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgBYMNV (ORCPT
+        id S1729609AbgBYMNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:13:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32301 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbgBYMNV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:13:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582632800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+wrw7WE/m40W3sxI/uRBNf21Q8ICUq5UNJSWodR4eJA=;
-        b=CI6CtbwDFBX/4mmlMm2leM9gTkc01bKsqLStrZJrwsV3hFpXAgZMca58eWG5j3Spvq3ceS
-        FNmgIl/kQ/U9eCdo59k+4w08hhaQY1Pwfy6nGdtMS8fH5y9Mx3Fh2AeBgTuPxdyO4GqgmZ
-        6VmFRABNxS/dx8IPeMshtYqI0/CAVgE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-458-J14YSICYPv2YWiUP_29jHA-1; Tue, 25 Feb 2020 07:13:18 -0500
-X-MC-Unique: J14YSICYPv2YWiUP_29jHA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0FBC8017CC;
-        Tue, 25 Feb 2020 12:13:16 +0000 (UTC)
-Received: from fogou.chygwyn.com (unknown [10.33.36.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CF7027186;
-        Tue, 25 Feb 2020 12:13:13 +0000 (UTC)
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
- <1582316494.3376.45.camel@HansenPartnership.com>
- <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com>
- <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
-From:   Steven Whitehouse <swhiteho@redhat.com>
-Message-ID: <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
-Date:   Tue, 25 Feb 2020 12:13:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 25 Feb 2020 07:13:31 -0500
+Received: from mga18.intel.com ([134.134.136.126]:4824 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgBYMNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:13:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 04:13:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="350138517"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 25 Feb 2020 04:13:25 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 25 Feb 2020 14:13:25 +0200
+Date:   Tue, 25 Feb 2020 14:13:25 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Martin Volf <martin.volf.42@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
+ b84398d6d7f90080
+Message-ID: <20200225121325.GX2667@lahna.fi.intel.com>
+References: <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
+ <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
+ <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
+ <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
+ <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
+ <20200224101800.GJ2667@lahna.fi.intel.com>
+ <20200224103731.GA10400@smile.fi.intel.com>
+ <20200224105121.GK2667@lahna.fi.intel.com>
+ <20200224112740.GL2667@lahna.fi.intel.com>
+ <CAM1AHpQW_=vvcjXHa8UOrdOohABm0sE2UPr4sfK2AtfWHsm4Ag@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM1AHpQW_=vvcjXHa8UOrdOohABm0sE2UPr4sfK2AtfWHsm4Ag@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Feb 24, 2020 at 06:30:21PM +0100, Martin Volf wrote:
+> On Mon, Feb 24, 2020 at 12:27 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Mon, Feb 24, 2020 at 12:51:25PM +0200, Mika Westerberg wrote:
+> > > > I'm wondering if
+> > > >
+> > > >             pci_dev_is_present(...);
+> > > >
+> > > > returns false here.
+> > >
+> > > Well that might also be the case since lspci shows this:
+> > >
+> > > 00:1f.0 ISA bridge: Intel Corporation Z390 Chipset LPC/eSPI Controller (rev 10)
+> > > 00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
+> > > 00:1f.4 SMBus: Intel Corporation Cannon Lake PCH SMBus Controller (rev 10)
+> > >
+> > > PMC is 1f.2 and not present here. However, it may be that the PMC is
+> > > still there it just does not "enumerate" because its devid/vendorid are
+> > > set to 0xffff. Similar hiding was done for the P2SB bridge.
+> >
+> > Actually I think this is the case here.
+> >
+> > I don't know the iTCO_wdt well enough to say if it could live without
+> > the ICH_RES_IO_SMI. It looks like this register is used to disable SMI
+> > generation but not sure how well it works if it is left to BIOS to
+> > configure. I suppose these systems should use WDAT instead.
+> >
+> > Martin, can you try the below patch?
+> >
+> > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> > index ba87305f4332..c16e5ad08641 100644
+> > --- a/drivers/i2c/busses/i2c-i801.c
+> > +++ b/drivers/i2c/busses/i2c-i801.c
+> > @@ -1593,7 +1593,7 @@ i801_add_tco_cnl(struct i801_priv *priv, struct pci_dev *pci_dev,
+> >  static void i801_add_tco(struct i801_priv *priv)
+> >  {
+> >         u32 base_addr, tco_base, tco_ctl, ctrl_val;
+> > -       struct pci_dev *pci_dev = priv->pci_dev;
+> > +       struct pci_dev *pmc_dev, *pci_dev = priv->pci_dev;
+> >         struct resource tco_res[3], *res;
+> >         unsigned int devfn;
+> >
+> > @@ -1620,7 +1620,12 @@ static void i801_add_tco(struct i801_priv *priv)
+> >          * Power Management registers.
+> >          */
+> >         devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
+> > -       pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
+> > +       pmc_dev = pci_get_slot(pci_dev->bus, devfn);
+> > +       if (!pmc_dev) {
+> > +               dev_info(&pci_dev->dev, "PMC device disabled, not enabling iTCO\n");
+> > +               return;
+> > +       }
+> > +       pci_read_config_dword(pmc_dev, ACPIBASE, &base_addr);
+> >
+> >         res = &tco_res[ICH_RES_IO_SMI];
+> >         res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
+> > @@ -1630,15 +1635,17 @@ static void i801_add_tco(struct i801_priv *priv)
+> >         /*
+> >          * Enable the ACPI I/O space.
+> >          */
+> > -       pci_bus_read_config_dword(pci_dev->bus, devfn, ACPICTRL, &ctrl_val);
+> > +       pci_read_config_dword(pmc_dev, ACPICTRL, &ctrl_val);
+> >         ctrl_val |= ACPICTRL_EN;
+> > -       pci_bus_write_config_dword(pci_dev->bus, devfn, ACPICTRL, ctrl_val);
+> > +       pci_write_config_dword(pmc_dev, ACPICTRL, ctrl_val);
+> >
+> >         if (priv->features & FEATURE_TCO_CNL)
+> >                 priv->tco_pdev = i801_add_tco_cnl(priv, pci_dev, tco_res);
+> >         else
+> >                 priv->tco_pdev = i801_add_tco_spt(priv, pci_dev, tco_res);
+> >
+> > +       pci_dev_put(pmc_dev);
+> > +
+> >         if (IS_ERR(priv->tco_pdev))
+> >                 dev_warn(&pci_dev->dev, "failed to create iTCO device\n");
+> >  }
+> 
+> Hello,
+> 
+> with the patch applied, the sensors are working, dmesg says:
+> ...
+> [    2.804423] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+> [    2.804478] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+> [    2.804491] i801_smbus 0000:00:1f.4: PMC device disabled, not enabling iTCO
+> ...
+> [    2.826373] nct6775: Enabling hardware monitor logical device mappings.
+> [    2.826447] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
+> ...
+> 
+> and there is no "002e-0031" line in /proc/ioports.
 
-On 24/02/2020 15:28, Miklos Szeredi wrote:
-> On Mon, Feb 24, 2020 at 3:55 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
->
->> Once it's table driven, certainly a sysfs directory becomes possible.
->> The problem with ST_DEV is filesystems like btrfs and xfs that may have
->> multiple devices.
-> For XFS there's always  a single sb->s_dev though, that's what st_dev
-> will be set to on all files.
->
-> Btrfs subvolume is sort of a lightweight superblock, so basically all
-> such st_dev's are aliases of the same master superblock.  So lookup of
-> all subvolume st_dev's could result in referencing the same underlying
-> struct super_block (just like /proc/$PID will reference the same
-> underlying task group regardless of which of the task group member's
-> PID is used).
->
-> Having this info in sysfs would spare us a number of issues that a set
-> of new syscalls would bring.  The question is, would that be enough,
-> or is there a reason that sysfs can't be used to present the various
-> filesystem related information that fsinfo is supposed to present?
->
-> Thanks,
-> Miklos
->
-We need a unique id for superblocks anyway. I had wondered about using 
-s_dev some time back, but for the reasons mentioned earlier in this 
-thread I think it might just land up being confusing and difficult to 
-manage. While fake s_devs are created for sbs that don't have a device, 
-I can't help thinking that something closer to ifindex, but for 
-superblocks, is needed here. That would avoid the issue of which device 
-number to use.
-
-In fact we need that anyway for the notifications, since without that 
-there is a race that can lead to missing remounts of the same device, in 
-case a umount/mount pair is missed due to an overrun, and then fsinfo 
-returns the same device as before, with potentially the same mount 
-options too. So I think a unique id for a superblock is a generically 
-useful feature, which would also allow for sensible sysfs directory 
-naming, if required,
-
-Steve.
-
-
+Great, thanks for testing. I'll make an updated patch as suggested by
+Guenter that makes the SMI resource optional and send it to you guys.
