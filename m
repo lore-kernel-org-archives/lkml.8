@@ -2,152 +2,180 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E07C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5AFC4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9DC020732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gBECvMi7"
+	by mail.kernel.org (Postfix) with ESMTP id 0905420732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582670869;
+	bh=j/zsh2xhsRGa0zSWKaKjIpm75QoCCLplBUQwSlomtug=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=dSyykDjlXzx+P5Zq7uGoDLulXPYFmRoosqYZDm+soIECUal67kKs1UuHNfXRLGUHO
+	 WOUGV7zk4yO7/mj0PHCXmyO6WlhS1KIQyufKCtt+xP56fVmT5EqQnHgs0D8+rya7kr
+	 u9hh7yWHZqkAFYWjNjixhkQBrKSEV81LEJRH/B/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgBYWqg (ORCPT
+        id S1729203AbgBYWrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:46:36 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45752 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbgBYWqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:46:36 -0500
-Received: by mail-pg1-f194.google.com with SMTP id r77so259329pgr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:46:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MIqEZR3STz4QmJr+fA8HRU8cSaP8JPrg45nVIamGD0w=;
-        b=gBECvMi7LHmxCEXE4SlEiKIpMkovh72MZMxjWYJzsDNBuxk7ho0+Wof+H2bOJqtXS7
-         rUCWlKnKNGbWHQza9F05epdVS1Rdwh0pk03rGO+AJnno5ul+MTbPjK9L+oJb3OhW6hfC
-         84Lupv2kd2qDNzvwLPNxAltuBFabP1Dktlyf8Cgp9b8OnFlgn3uPyYI8815zJIuhdhAz
-         n8MhfVeFTXr9HScaQx/56l2tsfGKRjNlQ/js/vH0krXT3/p1QMpJaV8NLDlyeFfbv8Yf
-         Ey9hZCmxEHjGglNbV/XRFfwQVHA2+v1ZxJquLPR/9y5GIpo63W3mYrPKl1WfLs8DGrum
-         +8YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MIqEZR3STz4QmJr+fA8HRU8cSaP8JPrg45nVIamGD0w=;
-        b=QufA0eGrgpLlruNRZUowOmPtopg4VFk0cdpQF8B2T4T4SJQbP7lvfjYou5RfhNtEqr
-         g63QHHzIFCk6GzN1DJqSt+C7fu8uen4T136UzIeFfadDpobchRB1W41cslqj6ZJurcnD
-         If80gG3k/XH4IC9tnnS9Gmvs+W8cvT5xjNKmjk5GSw246gi3xFNQdH0SPH/TJZEkH0uB
-         uVUI6v87/HnFOe0GbNwvM2saYmc4wQtie15RyC+ik2kqOgYGOA7t/6+ftUwMs2gW1r0+
-         skwftYHB/EBrNdmtAbq05qDXyuHaUt/Wb6qOj/2BymzzjY/hHccQ969QYj91mj28pZaQ
-         JO/A==
-X-Gm-Message-State: APjAAAVtIuyQGU7xSJmvOSfzKezj2zJuOpDkCOe6ES+z4tzy3tPJDoxJ
-        oerfm3aztoKrsSZPSR1KT8l8ldOUKVfWJu25wb12QQ==
-X-Google-Smtp-Source: APXvYqwHTLpFzklEVgvmhFd6xmy3Duncd4nkGPcODLzjvt//m/hCcXy9QQ9L0gxJZfEvCTquEvEHvkK9xDmmkXahrxg=
-X-Received: by 2002:a62:1615:: with SMTP id 21mr1010975pfw.84.1582670794833;
- Tue, 25 Feb 2020 14:46:34 -0800 (PST)
+        Tue, 25 Feb 2020 17:47:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728770AbgBYWrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:47:47 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A3AE20732;
+        Tue, 25 Feb 2020 22:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582670866;
+        bh=j/zsh2xhsRGa0zSWKaKjIpm75QoCCLplBUQwSlomtug=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=tGx0KQTZH7UfFQLGgJZhost0CK2B6Uo5wKuYcryvp33WJjMiK9DYzP8MkzNDdYL2H
+         /YX7O0PF0rTqcHx4A1BFgB8Yps4acsL0hDhbPT4H1VEYxoqzP7VuAt81B3rjONOmP2
+         RGRpFeRw5IFbhsR5sqJGons1B60ROHmZToV9H5Ts=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 292EF3521A51; Tue, 25 Feb 2020 14:47:45 -0800 (PST)
+Date:   Tue, 25 Feb 2020 14:47:45 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200225224745.GX2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200218170857.GA28774@pc636>
+ <20200220045233.GC476845@mit.edu>
+ <20200221003035.GC2935@paulmck-ThinkPad-P72>
+ <20200221131455.GA4904@pc636>
+ <20200221202250.GK2935@paulmck-ThinkPad-P72>
+ <20200222222415.GC191380@google.com>
+ <20200223011018.GB2935@paulmck-ThinkPad-P72>
+ <20200224174030.GA22138@pc636>
+ <20200225020705.GA253171@google.com>
+ <20200225185400.GA27919@pc636>
 MIME-Version: 1.0
-References: <8bb16ac4b15a7e28a8e819ef9aae20bfc3f75fbc.1582266841.git.stefan@agner.ch>
- <CAKwvOdmV80xgvBnhB6ZpqYaqkxKi-_p+StnMojwNnf3kdxTT1A@mail.gmail.com>
- <CAKv+Gu881ZSwvuACmsbBnpfdeJpNYsEQxLSoepJBbZ=O6D6Rcg@mail.gmail.com> <CAKwvOd=9WaeVjvgkkLf5scFaNTpx28d4FAse62vv4X_mEwqRJA@mail.gmail.com>
-In-Reply-To: <CAKwvOd=9WaeVjvgkkLf5scFaNTpx28d4FAse62vv4X_mEwqRJA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Feb 2020 14:46:22 -0800
-Message-ID: <CAKwvOdk-R7gYXr6PScgZcvHbCBF3TX+utMix44kZCo=qe1vZ2Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: use assembly mnemonics for VFP register access
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Stefan Agner <stefan@agner.ch>, Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jian Cai <jiancai@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Peter Smith <Peter.Smith@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225185400.GA27919@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:27 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Feb 25, 2020 at 11:33 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Tue, 25 Feb 2020 at 20:10, Nick Desaulniers <ndesaulniers@google.com=
-> wrote:
-> > > Ah, this is only when streaming to assembly. Looks like they have the
-> > > same encoding, and produce the same disassembly. (Godbolt emits
-> > > assembly by default, and has the option to compile, then disassemble)=
-.
-> > > If I take my case from godbolt above:
-> > >
-> > > =E2=9E=9C  /tmp arm-linux-gnueabihf-gcc -O2 -c x.c
-> > > =E2=9E=9C  /tmp llvm-objdump -dr x.o
-> > >
-> > > x.o: file format elf32-arm-little
-> > >
-> > >
-> > > Disassembly of section .text:
-> > >
-> > > 00000000 bar:
-> > >        0: f1 ee 10 0a                  vmrs r0, fpscr
-> > >        4: 70 47                        bx lr
-> > >        6: 00 bf                        nop
-> > >
-> > > 00000008 baz:
-> > >        8: f1 ee 10 0a                  vmrs r0, fpscr
-> > >        c: 70 47                        bx lr
-> > >        e: 00 bf                        nop
-> > >
-> > > So indeed a similar encoding exists for the two different assembler
-> > > instructions.
-> >
-> > Does that hold for ARM (A32) instructions as well?
->
-> TIL -mthumb is the default for arm-linux-gnueabihf-gcc -O2.
->
-> =E2=9E=9C  /tmp arm-linux-gnueabihf-gcc -O2 -c x.c -marm
-> =E2=9E=9C  /tmp llvm-objdump -dr x.o
->
-> x.o: file format elf32-arm-little
->
->
-> Disassembly of section .text:
->
-> 00000000 bar:
->        0: 10 0a f1 ee                  vmrs r0, fpscr
->        4: 1e ff 2f e1                  bx lr
->
-> 00000008 baz:
->        8: 10 0a f1 ee                  vmrs r0, fpscr
->        c: 1e ff 2f e1                  bx lr
->
-> ^ Just to show the matching encoding.
+On Tue, Feb 25, 2020 at 07:54:00PM +0100, Uladzislau Rezki wrote:
+> > > > > I was thinking a 2 fold approach (just thinking out loud..):
+> > > > > 
+> > > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
+> > > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
+> > > > > queue that.
+> > > > > 
+> > > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
+> > > gets failed in atomic context? Or we can just consider it as out of
+> > > memory and another variant is to say that headless object can be called
+> > > from preemptible context only.
+> > 
+> > Yes that makes sense, and we can always put disclaimer in the API's comments
+> > saying if this object is expected to be freed a lot, then don't use the
+> > headless-API to be extra safe.
+> > 
+> Agree.
+> 
+> > BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
+> > the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
+> > there seems to be bigger problems in the system any way. I would say let us
+> > write a patch to allocate there and see what the -mm guys think.
+> > 
+> OK. It might be that they can offer something if they do not like our
+> approach. I will try to compose something and send the patch to see.
+> The tree.c implementation is almost done, whereas tiny one is on hold.
+> 
+> I think we should support batching as well as bulk interface there.
+> Another way is to workaround head-less object, just to attach the head
+> dynamically using kmalloc() and then call_rcu() but then it will not be
+> a fair headless support :)
+> 
+> What is your view?
+> 
+> > > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
+> > > > > synchronize_rcu() inline with it.
+> > > > > 
+> > > > >
+> > > What do you mean here, Joel? "grow an rcu_head on the stack"?
+> > 
+> > By "grow on the stack", use the compiler-allocated rcu_head on the
+> > kfree_rcu() caller's stack.
+> > 
+> > I meant here to say, if we are not in atomic context, then we use regular
+> > GFP_KERNEL allocation, and if that fails, then we just use the stack's
+> > rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
+> > the allocation failure would mean the need for RCU to free some memory is
+> > probably great.
+> > 
+> Ah, i got it. I thought you meant something like recursion and then
+> unwinding the stack back somehow :)
+> 
+> > > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
+> > > > > between the 2 cases.
+> > > > > 
+> > > If the current context is preemptable then we can inline synchronize_rcu()
+> > > together with freeing to handle such corner case, i mean when we are run
+> > > out of memory.
+> > 
+> > Ah yes, exactly what I mean.
+> > 
+> OK.
+> 
+> > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
+> > > have a look at preempt_count of current process? If we have for example
+> > > nested rcu_read_locks:
+> > > 
+> > > <snip>
+> > > rcu_read_lock()
+> > >     rcu_read_lock()
+> > >         rcu_read_lock()
+> > > <snip>
+> > > 
+> > > the counter would be 3.
+> > 
+> > No, because preempt_count is not incremented during rcu_read_lock(). RCU
+> > reader sections can be preempted, they just cannot goto sleep in a reader
+> > section (unless the kernel is RT).
+> > 
+> So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
+> using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
+> then we skip it and consider as atomic. Something like:
+> 
+> <snip>
+> static bool is_current_in_atomic()
+> {
+> #ifdef CONFIG_PREEMPT_RCU
 
-Further, Peter just sent me this response off thread, which I thought
-I'd share. Thanks Peter.  Bookmarked.
-```
-FWIW the Arm ARM reference manual
-https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf has a
-table that maps the pre-UAL syntax to the UAL syntax.
+If possible: if (IS_ENABLED(CONFIG_PREEMPT_RCU))
 
-K6.1.2 Pre-UAL instruction syntax for the A32 floating-point instructions
-This has an entry mapping pre-UAL (FMRX) to UAL (VMSR)
+Much nicer than #ifdef, and I -think- it should work in this case.
 
-So they are the same instruction with the modern name being VMSR. If
-it is possible to use the new name it will probably confuse fewer
-people, but other than that it won't do any harm.
-```
---=20
-Thanks,
-~Nick Desaulniers
+							Thanx, Paul
+
+>     if (!rcu_preempt_depth() && !in_atomic())
+>         return false;
+> #endif
+> 
+>     return true;
+> }
+> <snip>
+> 
+> Thanks!
+> 
+> --
+> Vlad Rezki
