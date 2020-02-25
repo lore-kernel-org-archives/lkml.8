@@ -2,211 +2,115 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55481C35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B98C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2393721556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625A221744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZJEEX8l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gM6uBKhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgBYHfA (ORCPT
+        id S1729139AbgBYHhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:35:00 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41917 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbgBYHe7 (ORCPT
+        Tue, 25 Feb 2020 02:37:41 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33038 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgBYHhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:34:59 -0500
-Received: by mail-qt1-f194.google.com with SMTP id l21so8417500qtr.8;
-        Mon, 24 Feb 2020 23:34:58 -0800 (PST)
+        Tue, 25 Feb 2020 02:37:40 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so5146736plb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 23:37:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2BaVUFSv/to+L4aW8kB/7KAen05ZTlbgy3P8SSzYyyg=;
-        b=FZJEEX8lRPAawuOMkBShF4iPQyGKh1OhCpM41mbm1RM+6Im0p5s413VaTMkhsXDuLn
-         FGOyjdv4/Y8XioBGmeRFV+SRiwSfz1+U6SpmjeRYhfyXBeM0MPbgv/Yacbiklvn7iiu3
-         3/NYPR6qkj67TguKnT7EOIF3Va0ySN14Y7kM3h8bpnTz/IQJjd9MiChu3M7ifeWr8wSZ
-         uM0Par3HzzzUxhuqKWdFmz0/x+M4vTJc8CHcJoheIHyBJtvvLDCKeJmxbSlSDRxdL+MU
-         Zg/Cf1fELu/miLUUNE9VNKoMzW8DBe+Y84Uoo/iftwaslyResSljjFCt7qH4A42honES
-         +KeQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=lIxGPgoTK3aJQJLA5pnDmNIdVeln7jtxgkVrg2vFgh0=;
+        b=gM6uBKhO2Vo923sJ6TwGOJPnjLGhvZUvAjqh3qVP66woh1w+O6Ncxx/F77fmblUIw7
+         a5b/5lvwlu9456yQBBktiRLpoGTG8bj6zqskfQExhACrDS+8g8Inb3i77BEl0V5GF7sq
+         5KjjmSvO3R+PMpC4LW7X0SLApXxORAUP47mcZE/fGqeeEtCc9Axwjq7C1GqqARZgS4lK
+         M0vMgtwh47Ss6drVJlwzfgoaqRjShywDKE9erLxGilTHOd83zTPv6Iq/6sPf4th/6t0k
+         ILoWvCLZV3U+Ff6snNv6a3gVUcY2oQoRJG6hGJ2B7gbTTuE8blwy7JVa6Jxa/r4Vgson
+         GXGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2BaVUFSv/to+L4aW8kB/7KAen05ZTlbgy3P8SSzYyyg=;
-        b=ni9SOkDCrB7eCmt+UrZ/p2xCZIyhJLksjoTzayKjeZvRZYK3hrRDVsesNsgiLVmyWx
-         zzGLEJ4pxf62Qwsh075rv6mAtLrBTKyzrZtShWcNiTGpeooIEaYA1Wd6an4s4+gYXxn0
-         XRFEhxJaYtkHLY5aIzcg750cbywRuA/emSAZfeOtJemGHA90BxZtbhUoQRDBq0ckd7JT
-         mmYa//RX2beo4kd2OzW673T5MUlHxJvgJGRenaELq+FE4aIrXLSA5kusXTeVfp8swayj
-         41lrdL9nRvBg/zI5nRHqXa08iAEzIKkAsUe8U5lixi3o0tISwFIkMdKiDtj8/KQDWcLJ
-         nfhg==
-X-Gm-Message-State: APjAAAXeyeF3lQD5UjmFDk7Q5XWmLjvBwU5BHptBUAl5KIgUvfKTwEbm
-        hdQDfWc3MkZ5rI6Engdl7mg=
-X-Google-Smtp-Source: APXvYqywTZDhAdh3NYPytHrJJk2ltG5NxK2z+z8bIKzbiNbHj8UZk1/j4E+V0ojLvcqS4T4WgBkNUA==
-X-Received: by 2002:aed:2862:: with SMTP id r89mr3014031qtd.289.1582616097470;
-        Mon, 24 Feb 2020 23:34:57 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id s19sm5768916qkj.88.2020.02.24.23.34.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Feb 2020 23:34:56 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 5118122007;
-        Tue, 25 Feb 2020 02:34:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 25 Feb 2020 02:34:55 -0500
-X-ME-Sender: <xms:Hc5UXhVwiLZjPi8Zy32BVQ5q_GcJs79WH_xonRpschzx-W6miszgLw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledugdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
-    hnpehkvghrnhgvlhdrohhrghenucfkphephedvrdduheehrdduuddurdejudenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
-    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
-    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:Hc5UXl2MS3dmEFw2qDCmK8Rd6wZTuSgOQ8mjdMmLYAi2jXTbRmm9tA>
-    <xmx:Hc5UXoY-rXgllqAh7VdF29FiJ3LSrje7eqcUVF_OyjAuYGuy03XVbg>
-    <xmx:Hc5UXooMd-4XpZf3_zfPoGZOwc6q_SzHpcx6Wd6NKXtpsOBf-7retQ>
-    <xmx:H85UXm8uGqLq75NQwRRsuhNFCzY3jq_Pb5Ilrik4aJBw6R8Zkj1x-CHC6NY>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A2B75328005D;
-        Tue, 25 Feb 2020 02:34:52 -0500 (EST)
-Date:   Tue, 25 Feb 2020 15:34:51 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        Luc Maranget <luc.maranget@inria.fr>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 2/3] tools/memory-model: Add a litmus test for atomic_set()
-Message-ID: <20200225073451.GP69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200214040132.91934-1-boqun.feng@gmail.com>
- <20200214040132.91934-3-boqun.feng@gmail.com>
- <20200214081213.GA17708@andrea>
- <20200214104003.GC20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214104003.GC20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lIxGPgoTK3aJQJLA5pnDmNIdVeln7jtxgkVrg2vFgh0=;
+        b=qKO60M6neQ5cBHsQzynE84/wOqoFUzXhBBj83zHTOQKjyknGu6GyT1pztcFME3vi1B
+         DC9n4ai/FV8exDpZa6O3xcoKZQNffFpZRajMkFZw5xnPsfatswktRrUc32NPqcMoii+5
+         7Z3LKJ0foarvfQV2AbtyybSY4famOiuiwwI7IemV9ky+hcKtsfkn0Vbj1JzKgm6TWHMg
+         j+KQA/XBSzYVu6tU0th1V5tqqY46ORwkS/ch8qdHpSDWKiXUGVnY7j7JDKktz1JxCydy
+         sKo3BtFpeLSSFETDbnox7I8e9OIIjrdNeOFFVP0OQ3NvljDpruonX4bhE48gVDdN5KVj
+         Dxlg==
+X-Gm-Message-State: APjAAAXUzaKrVhOPnGpNtqcJRmd4R2PB/oeo0WQqdTDHp5WsSMKtUnHh
+        WJDWO2jeH5/9B6WPpD2Yc9A=
+X-Google-Smtp-Source: APXvYqy8qXgI+AZB+dK+FooUA6k5KupvgH/ZlMIeqENAlrF6NuJDjGZsjZxrGnTGWGT6YH7MIKt1zQ==
+X-Received: by 2002:a17:902:121:: with SMTP id 30mr51052157plb.4.1582616259822;
+        Mon, 24 Feb 2020 23:37:39 -0800 (PST)
+Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id m128sm15979390pfm.183.2020.02.24.23.37.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 23:37:39 -0800 (PST)
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: [PATCH v2 0/6] arm64: add the time namespace support
+Date:   Mon, 24 Feb 2020 23:37:25 -0800
+Message-Id: <20200225073731.465270-1-avagin@gmail.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luc,
+Allocate the time namespace page among VVAR pages and add the logic
+to handle faults on VVAR properly.
 
-Could you have a look at the problem Andrea and I discuss here? It seems
-that you have done a few things in herd for atomic_add_unless() in
-particular, and based on the experiments of Andrea and me, seems
-atomic_add_unless() works correctly. So can you confirm that herd now
-can handle atomic_add_unless() or there is still something missing?
+If a task belongs to a time namespace then the VVAR page which contains
+the system wide VDSO data is replaced with a namespace specific page
+which has the same layout as the VVAR page. That page has vdso_data->seq
+set to 1 to enforce the slow path and vdso_data->clock_mode set to
+VCLOCK_TIMENS to enforce the time namespace handling path.
 
-Thanks!
+The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+update of the VDSO data is in progress, is not really affecting regular
+tasks which are not part of a time namespace as the task is spin waiting
+for the update to finish and vdso_data->seq to become even again.
 
-Regards,
-Boqun
+If a time namespace task hits that code path, it invokes the corresponding
+time getter function which retrieves the real VVAR page, reads host time
+and then adds the offset for the requested clock which is stored in the
+special VVAR page.
 
-On Fri, Feb 14, 2020 at 06:40:03PM +0800, Boqun Feng wrote:
-> On Fri, Feb 14, 2020 at 09:12:13AM +0100, Andrea Parri wrote:
-> > > @@ -0,0 +1,24 @@
-> > > +C Atomic-set-observable-to-RMW
-> > > +
-> > > +(*
-> > > + * Result: Never
-> > > + *
-> > > + * Test of the result of atomic_set() must be observable to atomic RMWs.
-> > > + *)
-> > > +
-> > > +{
-> > > +	atomic_t v = ATOMIC_INIT(1);
-> > > +}
-> > > +
-> > > +P0(atomic_t *v)
-> > > +{
-> > > +	(void)atomic_add_unless(v,1,0);
-> > 
-> > We blacklisted this primitive some time ago, cf. section "LIMITATIONS",
-> > entry (6b) in tools/memory-model/README; the discussion was here:
-> > 
-> >   https://lkml.kernel.org/r/20180829211053.20531-3-paulmck@linux.vnet.ibm.com
-> > 
-> 
-> And in an email replying to that email, you just tried and seemed
-> atomic_add_unless() works ;-)
-> 
-> > but unfortunately I can't remember other details at the moment: maybe
-> > it is just a matter of or the proper time to update that section.
-> > 
-> 
-> I spend a few time looking into the changes in herd, the dependency
-> problem seems to be as follow:
-> 
-> For atomic_add_unless(ptr, a, u), the return value (true or false)
-> depends on both *ptr and u, this is different than other atomic RMW,
-> whose return value only depends on *ptr. Considering the following
-> litmus test:
-> 
-> 	C atomic_add_unless-dependency
-> 
-> 	{
-> 		int y = 1;
-> 	}
-> 
-> 	P0(int *x, int *y, int *z)
-> 	{
-> 		int r0;
-> 		int r1;
-> 		int r2;
-> 
-> 		r0 = READ_ONCE(*x);
-> 		if (atomic_add_unless(y, 2, r0))
-> 			WRITE_ONCE(*z, 42);
-> 		else
-> 			WRITE_ONCE(*z, 1);
-> 	}
-> 
-> 	P1(int *x, int *y, int *z)
-> 	{
-> 		int r0;
-> 
-> 		r0 = smp_load_acquire(z);
-> 
-> 		WRITE_ONCE(*x, 1);
-> 	}
-> 
-> 	exists
-> 	(1:r0 = 1 /\ 0:r0 = 1)
-> 
-> , the exist-clause will never trigger, however if we replace
-> "atomic_add_unless(y, 2, r0)" with "atomic_add_unless(y, 2, 1)", the
-> write on *z and the read from *x on CPU 0 are not ordered, so we could
-> observe the exist-clause triggered.
-> 
-> I just tried with the latest herd, and herd can work out this
-> dependency. So I think we are good now and can change the limitation
-> section in the document. But I will wait for Luc's input for this. Luc,
-> did I get this correct? Is there any other limitation on
-> atomic_add_unless() now?
-> 
-> Regards,
-> Boqun
-> 
-> > Thanks,
-> >   Andrea
+v2: Code cleanups suggested by Vincenzo.
+
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dmitry Safonov <dima@arista.com>
+
+Andrei Vagin (6):
+  arm64/vdso: use the fault callback to map vvar pages
+  arm64/vdso: Zap vvar pages when switching to a time namespace
+  arm64/vdso: Add time napespace page
+  arm64/vdso: Handle faults on timens page
+  arm64/vdso: Restrict splitting VVAR VMA
+  arm64: enable time namespace support
+
+ arch/arm64/Kconfig                            |   1 +
+ .../include/asm/vdso/compat_gettimeofday.h    |  11 ++
+ arch/arm64/include/asm/vdso/gettimeofday.h    |   8 ++
+ arch/arm64/kernel/vdso.c                      | 134 ++++++++++++++++--
+ arch/arm64/kernel/vdso/vdso.lds.S             |   3 +-
+ arch/arm64/kernel/vdso32/vdso.lds.S           |   3 +-
+ include/vdso/datapage.h                       |   1 +
+ 7 files changed, 147 insertions(+), 14 deletions(-)
+
+-- 
+2.24.1
+
