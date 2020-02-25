@@ -2,27 +2,28 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BA5C35E0D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62818C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C382C21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D262084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730961AbgBYTo4 (ORCPT
+        id S1731226AbgBYTpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:44:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55560 "EHLO mx2.suse.de"
+        Tue, 25 Feb 2020 14:45:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55608 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBYToz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:44:55 -0500
+        id S1728051AbgBYTo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:44:58 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D0466AB7F;
-        Tue, 25 Feb 2020 19:44:52 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 4B623AFCD;
+        Tue, 25 Feb 2020 19:44:56 +0000 (UTC)
 From:   Michal Rostecki <mrostecki@opensuse.org>
 To:     bpf@vger.kernel.org
 Cc:     Alexei Starovoitov <ast@kernel.org>,
@@ -34,10 +35,12 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v3 0/5] bpftool: Make probes which emit dmesg warnings optional
-Date:   Tue, 25 Feb 2020 20:44:38 +0100
-Message-Id: <20200225194446.20651-1-mrostecki@opensuse.org>
+Subject: [PATCH bpf-next v3 2/5] bpftool: Make probes which emit dmesg warnings optional
+Date:   Tue, 25 Feb 2020 20:44:40 +0100
+Message-Id: <20200225194446.20651-3-mrostecki@opensuse.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200225194446.20651-1-mrostecki@opensuse.org>
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,51 +48,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Feature probes in bpftool related to bpf_probe_write_user and
-bpf_trace_printk helpers emit dmesg warnings which might be confusing
-for people running bpftool on production environments. This patch series
-addresses that by filtering them out by default and introducing the new
-positional argument "full" which enables all available probes.
+Probes related to bpf_probe_write_user and bpf_trace_printk helpers emit
+dmesg warnings which might be confusing for people running bpftool on
+production environments. This change filters them out by default and
+introduces the new positional argument "full" which enables all
+available probes.
 
-The main motivation behind those changes is ability the fact that some
-probes (for example those related to "trace" or "write_user" helpers)
-emit dmesg messages which might be confusing for people who are running
-on production environments. For details see the Cilium issue[0].
+Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+---
+ tools/bpf/bpftool/feature.c | 70 ++++++++++++++++++++++++++-----------
+ 1 file changed, 49 insertions(+), 21 deletions(-)
 
-v1 -> v2:
-- Do not expose regex filters to users, keep filtering logic internal,
-expose only the "full" option for including probes which emit dmesg
-warnings.
-
-v2 -> v3:
-- Do not use regex for filtering out probes, use function IDs directly.
-- Fix bash completion - in v2 only "prefix" was proposed after "macros",
-  "dev" and "kernel" were not.
-- Rephrase the man page paragraph, highlight helper function names.
-- Remove tests which parse the plain output of bpftool (except the
-  header/macros test), focus on testing JSON output instead.
-- Add test which compares the output with and without "full" option.
-
-[0] https://github.com/cilium/cilium/issues/10048
-
-Michal Rostecki (5):
-  bpftool: Move out sections to separate functions
-  bpftool: Make probes which emit dmesg warnings optional
-  bpftool: Update documentation of "bpftool feature" command
-  bpftool: Update bash completion for "bpftool feature" command
-  selftests/bpf: Add test for "bpftool feature" command
-
- .../bpftool/Documentation/bpftool-feature.rst |  19 +-
- tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
- tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
- tools/testing/selftests/.gitignore            |   5 +-
- tools/testing/selftests/bpf/Makefile          |   3 +-
- tools/testing/selftests/bpf/test_bpftool.py   | 179 +++++++++++
- tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
- 7 files changed, 374 insertions(+), 123 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
- create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
-
+diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
+index 345e4a2b4f53..ada3e1502b45 100644
+--- a/tools/bpf/bpftool/feature.c
++++ b/tools/bpf/bpftool/feature.c
+@@ -513,14 +513,39 @@ probe_map_type(enum bpf_map_type map_type, const char *define_prefix,
+ 			   define_prefix);
+ }
+ 
++static void
++probe_helper_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
++			  const char *define_prefix, unsigned int id,
++			  const char *ptype_name, __u32 ifindex)
++{
++	bool res;
++
++	if (!supported_type)
++		res = false;
++	else
++		res = bpf_probe_helper(id, prog_type, ifindex);
++
++	if (json_output) {
++		if (res)
++			jsonw_string(json_wtr, helper_name[id]);
++	} else if (define_prefix) {
++		printf("#define %sBPF__PROG_TYPE_%s__HELPER_%s %s\n",
++		       define_prefix, ptype_name, helper_name[id],
++		       res ? "1" : "0");
++	} else {
++		if (res)
++			printf("\n\t- %s", helper_name[id]);
++	}
++}
++
+ static void
+ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
+-			   const char *define_prefix, __u32 ifindex)
++			   const char *define_prefix, bool full_mode,
++			   __u32 ifindex)
+ {
+ 	const char *ptype_name = prog_type_name[prog_type];
+ 	char feat_name[128];
+ 	unsigned int id;
+-	bool res;
+ 
+ 	if (ifindex)
+ 		/* Only test helpers for offload-able program types */
+@@ -542,21 +567,19 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
+ 	}
+ 
+ 	for (id = 1; id < ARRAY_SIZE(helper_name); id++) {
+-		if (!supported_type)
+-			res = false;
+-		else
+-			res = bpf_probe_helper(id, prog_type, ifindex);
+-
+-		if (json_output) {
+-			if (res)
+-				jsonw_string(json_wtr, helper_name[id]);
+-		} else if (define_prefix) {
+-			printf("#define %sBPF__PROG_TYPE_%s__HELPER_%s %s\n",
+-			       define_prefix, ptype_name, helper_name[id],
+-			       res ? "1" : "0");
+-		} else {
+-			if (res)
+-				printf("\n\t- %s", helper_name[id]);
++		/* Skip helper functions which emit dmesg messages when not in
++		 * the full mode.
++		 */
++		switch (id) {
++		case 6: /* trace_printk */
++		case 36: /* probe_write_user */
++			if (!full_mode)
++				continue;
++			/* fallthrough */
++		default:
++			probe_helper_for_progtype(prog_type, supported_type,
++						  define_prefix, id, ptype_name,
++						  ifindex);
+ 		}
+ 	}
+ 
+@@ -655,7 +678,8 @@ static void section_map_types(const char *define_prefix, __u32 ifindex)
+ }
+ 
+ static void
+-section_helpers(bool *supported_types, const char *define_prefix, __u32 ifindex)
++section_helpers(bool *supported_types, const char *define_prefix,
++		bool full_mode, __u32 ifindex)
+ {
+ 	unsigned int i;
+ 
+@@ -681,7 +705,7 @@ section_helpers(bool *supported_types, const char *define_prefix, __u32 ifindex)
+ 		       define_prefix);
+ 	for (i = BPF_PROG_TYPE_UNSPEC + 1; i < ARRAY_SIZE(prog_type_name); i++)
+ 		probe_helpers_for_progtype(i, supported_types[i],
+-					   define_prefix, ifindex);
++					   define_prefix, full_mode, ifindex);
+ 
+ 	print_end_section();
+ }
+@@ -701,6 +725,7 @@ static int do_probe(int argc, char **argv)
+ 	enum probe_component target = COMPONENT_UNSPEC;
+ 	const char *define_prefix = NULL;
+ 	bool supported_types[128] = {};
++	bool full_mode = false;
+ 	__u32 ifindex = 0;
+ 	char *ifname;
+ 
+@@ -740,6 +765,9 @@ static int do_probe(int argc, char **argv)
+ 				      strerror(errno));
+ 				return -1;
+ 			}
++		} else if (is_prefix(*argv, "full")) {
++			full_mode = true;
++			NEXT_ARG();
+ 		} else if (is_prefix(*argv, "macros") && !define_prefix) {
+ 			define_prefix = "";
+ 			NEXT_ARG();
+@@ -775,7 +803,7 @@ static int do_probe(int argc, char **argv)
+ 		goto exit_close_json;
+ 	section_program_types(supported_types, define_prefix, ifindex);
+ 	section_map_types(define_prefix, ifindex);
+-	section_helpers(supported_types, define_prefix, ifindex);
++	section_helpers(supported_types, define_prefix, full_mode, ifindex);
+ 	section_misc(define_prefix, ifindex);
+ 
+ exit_close_json:
+@@ -794,7 +822,7 @@ static int do_help(int argc, char **argv)
+ 	}
+ 
+ 	fprintf(stderr,
+-		"Usage: %s %s probe [COMPONENT] [macros [prefix PREFIX]]\n"
++		"Usage: %s %s probe [COMPONENT] [full] [macros [prefix PREFIX]]\n"
+ 		"       %s %s help\n"
+ 		"\n"
+ 		"       COMPONENT := { kernel | dev NAME }\n"
 -- 
 2.25.1
 
