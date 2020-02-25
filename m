@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391FAC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357A9C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8F020726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136562176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbgBYNWz (ORCPT
+        id S1729878AbgBYNWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:22:55 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33138 "EHLO
+        Tue, 25 Feb 2020 08:22:12 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33135 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729518AbgBYNWN (ORCPT
+        with ESMTP id S1727983AbgBYNWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:22:13 -0500
+        Tue, 25 Feb 2020 08:22:12 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j6aA5-0008Ie-Mk; Tue, 25 Feb 2020 13:22:09 +0000
+        id 1j6aA5-0008Ie-3b; Tue, 25 Feb 2020 13:22:09 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -36,9 +36,9 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Stephen Hemminger <stephen@networkplumber.org>,
         linux-pm@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v6 2/9] sysfs: add sysfs_link_change_owner()
-Date:   Tue, 25 Feb 2020 14:19:31 +0100
-Message-Id: <20200225131938.120447-3-christian.brauner@ubuntu.com>
+Subject: [PATCH v6 1/9] sysfs: add sysfs_file_change_owner()
+Date:   Tue, 25 Feb 2020 14:19:30 +0100
+Message-Id: <20200225131938.120447-2-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200225131938.120447-1-christian.brauner@ubuntu.com>
 References: <20200225131938.120447-1-christian.brauner@ubuntu.com>
@@ -49,7 +49,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to change the owner of a sysfs link.
+Add helpers to change the owner of a sysfs files.
 This function will be used to correctly account for kobject ownership
 changes, e.g. when moving network devices between network namespaces.
 
@@ -57,13 +57,24 @@ Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v2 */
 -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-   - Add comment how ownership of sysfs object is changed.
+   - Better naming for sysfs_file_change_owner() to reflect the fact that it
+     can be used to change the owner of the kobject itself by passing NULL as
+     argument.
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Split sysfs_file_change_owner() into two helpers sysfs_change_owner() and
+    sysfs_change_owner_by_name(). The former changes the owner of the kobject
+    itself, the latter the owner of the kobject looked up via the name
+    argument.
 
 /* v3 */
 -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
    - Add explicit uid/gid parameters.
 
 /* v4 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Remove the second helper which changes the ownership of the kobject itself
+     and do it in-place instead later on in the series. A separate helper is
+     not needed for that.
 - Christian Brauner <christian.brauner@ubuntu.com>:
   - Add more documentation.
 
@@ -71,83 +82,87 @@ Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 unchanged
 
 /* v6 */
-unchanged
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Fix commit message which still referenced the old name of the helper.
 ---
- fs/sysfs/file.c       | 41 +++++++++++++++++++++++++++++++++++++++++
- include/linux/sysfs.h | 10 ++++++++++
- 2 files changed, 51 insertions(+)
+ fs/sysfs/file.c       | 47 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/sysfs.h | 10 +++++++++
+ 2 files changed, 57 insertions(+)
 
 diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 4ca936ca3ba4..332cd69b378c 100644
+index 130fc6fbcc03..4ca936ca3ba4 100644
 --- a/fs/sysfs/file.c
 +++ b/fs/sysfs/file.c
-@@ -570,6 +570,47 @@ static int internal_change_owner(struct kernfs_node *kn, kuid_t kuid,
- 	return kernfs_setattr(kn, &newattrs);
+@@ -558,3 +558,50 @@ void sysfs_remove_bin_file(struct kobject *kobj,
+ 	kernfs_remove_by_name(kobj->sd, attr->attr.name);
  }
- 
+ EXPORT_SYMBOL_GPL(sysfs_remove_bin_file);
++
++static int internal_change_owner(struct kernfs_node *kn, kuid_t kuid,
++				 kgid_t kgid)
++{
++	struct iattr newattrs = {
++		.ia_valid = ATTR_UID | ATTR_GID,
++		.ia_uid = kuid,
++		.ia_gid = kgid,
++	};
++	return kernfs_setattr(kn, &newattrs);
++}
++
 +/**
-+ *	sysfs_link_change_owner - change owner of a sysfs file.
-+ *	@kobj:	object of the kernfs_node the symlink is located in.
-+ *	@targ:	object of the kernfs_node the symlink points to.
-+ *	@name:	name of the link.
++ *	sysfs_file_change_owner - change owner of a sysfs file.
++ *	@kobj:	object.
++ *	@name:	name of the file to change.
 + *	@kuid:	new owner's kuid
 + *	@kgid:	new owner's kgid
 + *
-+ * This function looks up the sysfs symlink entry @name under @kobj and changes
-+ * the ownership to @kuid/@kgid. The symlink is looked up in the namespace of
-+ * @targ.
++ * This function looks up the sysfs entry @name under @kobj and changes the
++ * ownership to @kuid/@kgid.
 + *
 + * Returns 0 on success or error code on failure.
 + */
-+int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
-+			    const char *name, kuid_t kuid, kgid_t kgid)
++int sysfs_file_change_owner(struct kobject *kobj, const char *name, kuid_t kuid,
++			    kgid_t kgid)
 +{
-+	struct kernfs_node *kn = NULL;
++	struct kernfs_node *kn;
 +	int error;
 +
-+	if (!name || !kobj->state_in_sysfs || !targ->state_in_sysfs)
++	if (!name)
 +		return -EINVAL;
 +
-+	error = -ENOENT;
-+	kn = kernfs_find_and_get_ns(kobj->sd, name, targ->sd->ns);
-+	if (!kn)
-+		goto out;
++	if (!kobj->state_in_sysfs)
++		return -EINVAL;
 +
-+	error = -EINVAL;
-+	if (kernfs_type(kn) != KERNFS_LINK)
-+		goto out;
-+	if (kn->symlink.target_kn->priv != targ)
-+		goto out;
++	kn = kernfs_find_and_get(kobj->sd, name);
++	if (!kn)
++		return -ENOENT;
 +
 +	error = internal_change_owner(kn, kuid, kgid);
 +
-+out:
 +	kernfs_put(kn);
++
 +	return error;
 +}
-+
- /**
-  *	sysfs_file_change_owner - change owner of a sysfs file.
-  *	@kobj:	object.
++EXPORT_SYMBOL_GPL(sysfs_file_change_owner);
 diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index a7884024a911..7e15ebfd750e 100644
+index fa7ee503fb76..a7884024a911 100644
 --- a/include/linux/sysfs.h
 +++ b/include/linux/sysfs.h
-@@ -312,6 +312,8 @@ static inline void sysfs_enable_ns(struct kernfs_node *kn)
- 
- int sysfs_file_change_owner(struct kobject *kobj, const char *name, kuid_t kuid,
- 			    kgid_t kgid);
-+int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
-+			    const char *name, kuid_t kuid, kgid_t kgid);
- 
- #else /* CONFIG_SYSFS */
- 
-@@ -532,6 +534,14 @@ static inline int sysfs_file_change_owner(struct kobject *kobj,
- 	return 0;
+@@ -310,6 +310,9 @@ static inline void sysfs_enable_ns(struct kernfs_node *kn)
+ 	return kernfs_enable_ns(kn);
  }
  
-+static inline int sysfs_link_change_owner(struct kobject *kobj,
-+					  struct kobject *targ,
++int sysfs_file_change_owner(struct kobject *kobj, const char *name, kuid_t kuid,
++			    kgid_t kgid);
++
+ #else /* CONFIG_SYSFS */
+ 
+ static inline int sysfs_create_dir_ns(struct kobject *kobj, const void *ns)
+@@ -522,6 +525,13 @@ static inline void sysfs_enable_ns(struct kernfs_node *kn)
+ {
+ }
+ 
++static inline int sysfs_file_change_owner(struct kobject *kobj,
 +					  const char *name, kuid_t kuid,
 +					  kgid_t kgid)
 +{
