@@ -2,192 +2,237 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D07C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CDAC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED382082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11AA2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GH43+Gi2"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Ny9hNRmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbgBYPC7 (ORCPT
+        id S1730978AbgBYPDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:02:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26878 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730810AbgBYPC6 (ORCPT
+        Tue, 25 Feb 2020 10:03:08 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42922 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730810AbgBYPDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:02:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582642977;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QsUuUqLhrHe8PUYsgfmY/tzShcrlmSfcdDzSbxrzr9g=;
-        b=GH43+Gi2soCzu5IBWmG4jViMShCNS+sDicbCvbMuGXGxalhs3DRAF7+no73SOu8xDAnwFM
-        ZQl7UyXkk8hPesbwkK8RtYdOg0UQlC064OFsFF30kO9FC2xTvAH2MjM746qSyIou7V5eQt
-        /UTWz/U6018QSKN2zOOjY0iT3S4i9pI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-320-qY627msGP0CZGKHOCf4IuA-1; Tue, 25 Feb 2020 10:02:56 -0500
-X-MC-Unique: qY627msGP0CZGKHOCf4IuA-1
-Received: by mail-wm1-f69.google.com with SMTP id z7so988288wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:02:55 -0800 (PST)
+        Tue, 25 Feb 2020 10:03:08 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so7304326pfz.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:03:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HXcnWME3zqMcGPYyd8AtzUf91f9WMm8RU0Wrk+XdU2s=;
+        b=Ny9hNRmJQiK2If/FIB2PQP4sL7zzQYgnWFwVLDzOiibHdt19oxudGd0SHvGWPzjVeQ
+         XGY0QhuMkDZgd4oDp5ihkgArtje58gT8a0fsQ0iO8vcsF6XXdRT6/8/AVq7pwtkXdiLE
+         C8zwUi4Sf4y0zeHdNlZzQrVXn0HRJIZ27TWdAICO58+7AcjslqOoiJZXUkiJacQHz33y
+         vaEL1bVZwb/Y1IngUor2Ly5tHSY36Qu6nPgAPS8O9MXsXksR9zsh9Fd4LjSJUx/9XT4e
+         oDyeUbMMTnERTgjdu8KNhd1TODAJykPEqAqCKEA7Qe5SNYrkR3KczxEjIvKJ3aIc8Gm7
+         0wNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=QsUuUqLhrHe8PUYsgfmY/tzShcrlmSfcdDzSbxrzr9g=;
-        b=X7D8gnS7ODzWRFrrCg0uLC9S3TXBwvagvX8CXHshOSKnhqoBA4MlyIQe7aZHND4BvD
-         nJxb4HjSLypykTwOo7+TwmyG3sRthrdI3QOY1mIFy/ZqZF9D/87ja5H/vfFqtPANhQNt
-         CsL9YsrZFmbvX73f5Casy66CFhwjpWin4eyI8pYZfkKZPkpSksbvnsePRU2L30yZ9S/j
-         g22lpA5w6ISvVv5XntzmJ0xbiBe0YdwLmHoy78PdkUYLZQJCMOGeT/SZLCtBaH/5l1Y0
-         31vSFvZMoqCD+WFdcbjsLEvMoU2Bg0bpvkQd4ZFj0L0GMzq+082WNeZ+PwuBk3QEt0Jr
-         LROQ==
-X-Gm-Message-State: APjAAAV6VdEb5ALv0AcLRuI9bIJvLpokXGmQCZ6aiSKttfvlqmhMDp6R
-        +uUmCbYUL8G5v7gVmGARm1ZJSyaRxUoiVoY8L3u5K0A5b/q5qrL95O+1+5C6dTFf0OyL+orYDX5
-        ZGLAGP5DVJAH6I/FtWnUI4ZXO
-X-Received: by 2002:a5d:6191:: with SMTP id j17mr70305554wru.427.1582642974717;
-        Tue, 25 Feb 2020 07:02:54 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzus9h6OKiJ36YQf4+GPEntJYdPgq2qYygP3Yinuve1nFXgN3mUnuND1RVVgpSgd5fqWu9wqQ==
-X-Received: by 2002:a5d:6191:: with SMTP id j17mr70305526wru.427.1582642974464;
-        Tue, 25 Feb 2020 07:02:54 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z8sm24250673wrv.74.2020.02.25.07.02.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HXcnWME3zqMcGPYyd8AtzUf91f9WMm8RU0Wrk+XdU2s=;
+        b=tZaI9VjYtOVpKa7wduqOPzMARDhMwH9/jzbIeJ3Kc+1aK/H5CvMkxIwEP+8e+fCncP
+         SRtlUcjEmezFtgdnWbJtRaJQApLpQdJ7W3gracUMWqYASwQBLwRpeEi5LcB+r6Amybzf
+         DIbNUlfkKaA6IlKiMt8oDQF+BQNbb6r1qkfFKNysX4ESPrvQxcGHmyf90rBFDkwOUXle
+         nR+Qm8eYMLwcj8p8B5jHNaBeRuolUWUbxgIiX6KEYntTqoIqh+o/1LlBGPOMInUBMWZr
+         e/UxxKBp8Gq6nTXGR0dfv/sr+ICOP2wTKGS2x6MX44dQJMBkNQExP/1I8nR8qJb01odH
+         8tUg==
+X-Gm-Message-State: APjAAAUKB6hgkWIJRYzZldOLRuIsDI9jSvqJKWT5zCS9uDBSrZqmbyrQ
+        HTW6MOX7Oz6lKH+FF8AklVzifA==
+X-Google-Smtp-Source: APXvYqyw5rQ/0pgLTRLVs92MO68JBKon9c2eQCycJK08Vr5VZ9oqEF2cN9oyR3lwpssCk1YCa3s7hA==
+X-Received: by 2002:a63:6d01:: with SMTP id i1mr57157955pgc.55.1582642987383;
+        Tue, 25 Feb 2020 07:03:07 -0800 (PST)
+Received: from localhost ([2620:10d:c090:180::be7e])
+        by smtp.gmail.com with ESMTPSA id g24sm17367256pfk.92.2020.02.25.07.03.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 07:02:53 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 61/61] KVM: x86: Move VMX's host_efer to common x86 code
-In-Reply-To: <20200201185218.24473-62-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-62-sean.j.christopherson@intel.com>
-Date:   Tue, 25 Feb 2020 16:02:53 +0100
-Message-ID: <8736aylnfm.fsf@vitty.brq.redhat.com>
+        Tue, 25 Feb 2020 07:03:06 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:03:04 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200225150304.GA10257@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200221171256.GB23476@blackbody.suse.cz>
+ <20200221185839.GB70967@cmpxchg.org>
+ <20200225133720.GA6709@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225133720.GA6709@blackbody.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hello Michal,
 
-> Move host_efer to common x86 code and use it for CPUID's is_efer_nx() to
-> avoid constantly re-reading the MSR.
+On Tue, Feb 25, 2020 at 02:37:20PM +0100, Michal Koutný wrote:
+> On Fri, Feb 21, 2020 at 01:58:39PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > When you set task's and logger's memory.low to "max" or 10G or any
+> > bogus number like this, a limit reclaim in job treats this as origin
+> > protection and tries hard to avoid reclaiming anything in either of
+> > the two cgroups.
+> What do you mean by origin protection? (I'm starting to see some
+> misunderstanding here, c.f. my remark regarding the parent==root
+> condition in the other patch [1]).
+
+By origin protection I mean protection values at the first level of
+children in a reclaim scope. Those are taken as absolute numbers
+during a reclaim cycle and propagated down the tree.
+
+Say you have the following configuration:
+
+                root_mem_cgroup
+               /
+              A (max=12G, low=10G)
+             /
+            B (low=max)
+
+If global reclaim occurs, the protection for subtree A is 10G, and B
+then gets a proportional share of that.
+
+However, if limit reclaim in A occurs due to the 12G max limit, the
+protection for subtree B is max.
+
+> > memory.events::low skyrockets even though no intended
+> > protection was violated, we'll have reclaim latencies (especially when
+> > there are a few dying cgroups accumluated in subtree).
+> Hopefully, I see where are you coming from. There would be no (false)
+> low notifications if the elow was calculated all they way top-down from
+> the real root. Would such calculation be the way to go?
+
+That hinges on whether an opt-out mechanism makes sense, and we
+disagree on that part.
+
+> > that job can't possibly *know* about the top-level host
+> > protection that lies beyond the delegation point and outside its own
+> > namespace,
+> Yes, I agree.
+> 
+> > and that it needs to propagate protection against rpm upgrades into
+> > its own leaf groups for each tasklet and component.
+> If a job wants to use concrete protection than it sets it, if it wants
+> to use protection from above, then it can express it with the infinity
+> (after changing the effective calculation I described above).
+> 
+> Now, you may argue that the infinity would be nonsensical if it's not a
+> subordinate job. Simplest approach would be likely to introduce the
+> special "inherit" value (such a literal name may be misleading as it
+> would be also "dont-care").
+
+Again, a complication of the interface for *everybody* on the premise
+that retaining an opt-out mechanism makes sense. We disagree on that.
+
+> > Again, in practice we have found this to be totally unmanageable and
+> > routinely first forgot and then had trouble hacking the propagation
+> > into random jobs that create their own groups.
+> I've been bitten by this as well. However, the protection defaults to
+> off and I find it this matches the general rule that kernel provides the
+> mechanism and user(space) the policy.
 >
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 2 ++
->  arch/x86/kvm/cpuid.c            | 5 +----
->  arch/x86/kvm/vmx/vmx.c          | 3 ---
->  arch/x86/kvm/vmx/vmx.h          | 1 -
->  arch/x86/kvm/x86.c              | 5 +++++
->  5 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 4165d3ef11e4..a2a091d328c6 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1257,6 +1257,8 @@ struct kvm_arch_async_pf {
->  	bool direct_map;
->  };
->  
-> +extern u64 __read_mostly host_efer;
-> +
+> > And when you add new hardware configurations, you cannot just make a
+> > top-level change in the host config, you have to update all the job
+> > specs of workloads running in the fleet.
+> (I acknowledge the current mechanism lacks an explicit way to express
+> the inherit/dont-care value.)
+> 
+> 
+> > My patch brings memory configuration in line with other cgroup2
+> > controllers.
+> Other controllers mostly provide the limit or weight controls, I'd say
+> protection semantics is specific only to the memory controller so
+> far [2]. I don't think (at least by now) it can be aligned as the weight
+> or limit semantics.
 
-I'm surprised we don't actually cache MSR_EFER in some common x86 code
-already.
+Can you explain why you think protection is different from a weight?
 
->  extern struct kvm_x86_ops *kvm_x86_ops;
->  extern struct kmem_cache *x86_fpu_cache;
->  
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 3d287fc6eb6e..e8beb1e542a8 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -134,10 +134,7 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->  
->  static int is_efer_nx(void)
->  {
-> -	unsigned long long efer = 0;
-> -
-> -	rdmsrl_safe(MSR_EFER, &efer);
-> -	return efer & EFER_NX;
-> +	return host_efer & EFER_NX;
->  }
->  
->  static void cpuid_fix_nx_cap(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e349689ac0cf..0009066e2009 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -433,7 +433,6 @@ static const struct kvm_vmx_segment_field {
->  	VMX_SEGMENT_FIELD(LDTR),
->  };
->  
-> -u64 host_efer;
->  static unsigned long host_idt_base;
->  
->  /*
-> @@ -7577,8 +7576,6 @@ static __init int hardware_setup(void)
->  	struct desc_ptr dt;
->  	int r, i, ept_lpage_level;
->  
-> -	rdmsrl_safe(MSR_EFER, &host_efer);
-> -
->  	store_idt(&dt);
->  	host_idt_base = dt.address;
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 70eafa88876a..0e50fbcb8413 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -12,7 +12,6 @@
->  #include "vmcs.h"
->  
->  extern const u32 vmx_msr_index[];
-> -extern u64 host_efer;
->  
->  extern u32 get_umwait_control_msr(void);
->  
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b40488fd2969..2103101eca78 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -185,6 +185,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
->  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
->  				| XFEATURE_MASK_PKRU)
->  
-> +u64 __read_mostly host_efer;
-> +EXPORT_SYMBOL_GPL(host_efer);
-> +
->  static u64 __read_mostly host_xss;
->  
->  struct kvm_stats_debugfs_item debugfs_entries[] = {
-> @@ -9590,6 +9593,8 @@ int kvm_arch_hardware_setup(void)
->  {
->  	int r;
->  
-> +	rdmsrl_safe(MSR_EFER, &host_efer);
-> +
->  	kvm_set_cpu_caps();
->  
->  	r = kvm_x86_ops->hardware_setup();
+Both specify a minimum amount of a resource that the cgroup can use
+under contention, while allowing the cgroup to use more than that
+share if there is no contention with siblings.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+You configure memory in bytes instead of a relative proportion, but
+that's only because bytes are a natural unit of memory whereas a
+relative proportion of time is a natural unit of CPU and IO.
 
--- 
-Vitaly
+I'm having trouble concluding from this that the inheritance rules
+must be fundamentally different.
 
+For example, if you assign a share of CPU or IO to a subtree, that
+applies to the entire subtree. Nobody has proposed being able to
+opt-out of shares in a subtree, let alone forcing individual cgroups
+to *opt-in* to receive these shares.
+
+I can't fathom why you think assigning pieces of memory to a subtree
+must be fundamentally different.
+
+> > I've made the case why it's not a supported usecase, and why it is a
+> > meaningless configuration in practice due to the way other controllers
+> > already behave.
+> I see how your reasoning works for limits (you set memory limit and you
+> need to control io/cpu too to maintain intended isolation). I'm confused
+> why having a scapegoat (or donor) sibling for protection should not be
+> supported or how it breaks protection for others if not combined with
+> io/cpu controllers. Feel free to point me to the message if I overlooked
+> it.
+
+Because a lack of memory translates to paging, which consumes IO and
+CPU. If you relinquish a cgroup's share of memory (whether with a
+limit or with a lack of protection under pressure), you increases its
+share of IO. To express a priority order between workloads, you cannot
+opt out of memory protection without also opting out of the IO shares.
+
+Say you have the following configuration:
+
+                   A
+                  / \
+                 B   C
+                /\
+               D  E
+
+D houses your main workload, C a secondary workload, E is not
+important. You give B protection and C less protection. You opt E out
+of B's memory share to give it all to D. You established a memory
+order of D > C > E.
+
+Now to the IO side. You assign B a higher weight than C, and D a
+higher weight then E.
+
+Now you apply memory pressure, what happens?. D isn't reclaimed, C is
+somewhat reclaimed, E is reclaimed hard. D will not page, C will page
+a little bit, E will page hard *with the higher IO priority of B*.
+
+Now C is stuck behind E. This is a priority inversion.
+
+Yes, from a pure accounting perspective, you've managed to enforce
+that E will never have more physical pages allocated than C at any
+given time. But what did that accomplish? What was the practical
+benefit of having made E a scapegoat?
+
+Since I'm repeating myself on this topic, I would really like to turn
+your questions around:
+
+1. Can you please make a practical use case for having scape goats or
+   donor groups to justify retaining what I consider to be an
+   unimportant artifact in the memory.low semantics?
+
+2. If you think opting out of hierarchically assigned resources is a
+   fundamentally important usecase, can you please either make an
+   argument why it should also apply to CPU and IO, or alternatively
+   explain in detail why they are meaningfully different?
