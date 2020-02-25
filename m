@@ -2,131 +2,132 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E7C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B457C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C2921744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7028021744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjvb63g0"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WkPlT7Ka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbgBYUbc (ORCPT
+        id S1731372AbgBYUeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:31:32 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40768 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731725AbgBYUbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:31:31 -0500
-Received: by mail-pl1-f195.google.com with SMTP id y1so277757plp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:31:31 -0800 (PST)
+        Tue, 25 Feb 2020 15:34:23 -0500
+Received: from mail-dm6nam12on2054.outbound.protection.outlook.com ([40.107.243.54]:36545
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730566AbgBYUeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:34:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l1I6FqHRDFY/U4fiPuPfHd55nr4mU9lracwVK8v5ZRpv2x0eyXnPUCqX7MYuquzFMNrweptTpteTZK4bLiRw0QI0jVEel2qE2vzN9b23d5XQZeuTMIwa/szCTYcg5xQ4OahemvOkoiV2AfW+Bd6P0R+MMVC5+i8YAsiGJOZc4mjWsFhBqD8YSmq3KOMo/JmUKsPe9He8ndp3wNU9aYLl5L7xBN092i4c5MKROSBgHTTxmNAnIbVvxrDe5I4ZcWCtKTVkRsiJ7s3TCv7FsMWSfHF5RTyV5NYLg867fu8mUvXHCt5+rS6r63eTuSSzh6we4plMQk3IjIB0hV2Fh76T1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BMu1safw3ql9Pth50Jj1XaUPIByC5j4iVT2i/oQTALs=;
+ b=ezBOIuH8vsg+SjEj2dfF5CzNYapaD2JXdhLHEVJEtDC3Rq+5MRkk4+GzmD4VHeiWlqP6aJxZvUywcui6PZxWn/f+sEvDe5cJSpFfPbFLApOVhGc3xREGKMnS3bVWu4KAIAZVoYZYRJRN5ynCcYm/4JW0RzRfldZf8+ztZ7iK8YOIIIHss+E5J1Us9v3HAXmF5Mf+sMdZ2O/3af8thrAoWssK37nNPS6KF5bSv+VXQ6+QrD4daa3sSmTR2dOybNKSWFHnvDCora9iEz1/MtMEI8VIt/LO5Ryq6YIVSBg7SsJ2PSQbZsmCIKSyWDzdcs14Y0P0zZojte5VstQtlY9eig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=f38t1vB1E09D3O7biTt/uQi42QKpJWaCNeM//jWgarM=;
-        b=sjvb63g0ui81MI1fbKV7N4ZZhCK7dzBk+hc23Dx3DUZXkjdV7ixE6DbDIL3m++COvZ
-         exMZqZqLJm4kkM77tkSO9TmOUxFgYUNtzeqItuQQ/uN8LBrAByURzxuTL6l+vSiRxQDV
-         vWQIXWSSLjiZ95LDxy/SlsPwrIa+6E+3JBgvZRMUMUT0Zcd6LqPy3lX2vcrtS99LMSpL
-         C3dmmZ2E/ABD5Ie2tbJGR/CRO1y7VnwD7/+QCfS2kyN+MEbVbX94JnlZUCUpPJ/+vjIo
-         r1buECakC2UYaBHVQW3v/s5+Kibf0uEuGG16hgY53a65cKvyadxR4creiDaMj9x/TiOz
-         fKSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=f38t1vB1E09D3O7biTt/uQi42QKpJWaCNeM//jWgarM=;
-        b=tK/8DdIpS84B1/zG57xc+XujOatDxffkCjZTm13gkbLVTDVtTU8hflUrgvQMTEKnXk
-         ZhFEKupuihhk3KyHmcsfEqm2JOvGEhCjl0FnxMQzt7+sJjGRZz3S+g0R7b31ToI8GTiS
-         SY4u2TGtoDe+SVANvMwX2mjxEXhCv5RJhb4i6Sz6uuMSCeaEMErkvogzf77KFWAgyyz2
-         DDl2g121uTrcAoVp2R5hDZy3OyITlmwCPJRSibmxqU2TVxl9GLWcLW/1w3aGyh9mLSZa
-         0hgbx+nEEGxzaIAfOmTS3egEhiiHlSVFSgHAS6PN7TMricMVMv3ZsrzTbXLEoBB9Q6m/
-         +5Vg==
-X-Gm-Message-State: APjAAAV1GB7N8Jo1VPnWUmkAIQJvEjT3sPscp+q3DcvTQMuTZ3m4mT0R
-        73Hhxys3Fu8eCicck75eb7pIUg==
-X-Google-Smtp-Source: APXvYqyDeg5oZCf2F73phX2nvXcxMbTP9CUH6FGv8O9YLT3d4xw7nlHTf/BPkYJf899KEhhCWK3kng==
-X-Received: by 2002:a17:902:8604:: with SMTP id f4mr327049plo.278.1582662690368;
-        Tue, 25 Feb 2020 12:31:30 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id w81sm18529544pff.95.2020.02.25.12.31.29
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Feb 2020 12:31:29 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:31:07 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     David Hildenbrand <david@redhat.com>
-cc:     Hugh Dickins <hughd@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
- partially
-In-Reply-To: <14abd659-1571-8196-202d-d2fcc227a4b0@redhat.com>
-Message-ID: <alpine.LSU.2.11.2002251216480.7087@eggly.anvils>
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com> <alpine.LSU.2.11.1912041601270.12930@eggly.anvils> <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com> <alpine.LSU.2.11.2002241831060.3084@eggly.anvils>
- <14abd659-1571-8196-202d-d2fcc227a4b0@redhat.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BMu1safw3ql9Pth50Jj1XaUPIByC5j4iVT2i/oQTALs=;
+ b=WkPlT7KahK4vqlmbHnxaOk58o/St+pO1pIRSb//eQnxX6GQMepiNNCPJJQXq87EN0emHGz0SFFb+YpsrdzUEjNCHCkKz6j/wZK679bqejPnheyEYQWgLvojpIvfHbDwlHbPtXBP7i9MqcXqd1VSICctBDzqSrsLnbIpXATvVmzE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+ by DM6PR12MB4434.namprd12.prod.outlook.com (2603:10b6:5:2ad::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
+ 2020 20:34:20 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 20:34:20 +0000
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v3 0/2] SME EFI table updates/fixes
+Date:   Tue, 25 Feb 2020 14:34:00 -0600
+Message-Id: <cover.1582662842.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0701CA0012.namprd07.prod.outlook.com
+ (2603:10b6:803:28::22) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from tlendack-t1.amd.com (165.204.77.1) by SN4PR0701CA0012.namprd07.prod.outlook.com (2603:10b6:803:28::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Tue, 25 Feb 2020 20:34:18 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 41a0f8b4-e5ee-4a80-2dbf-08d7ba3216f2
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4434:|DM6PR12MB4434:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB44344A3E71921208069C2897ECED0@DM6PR12MB4434.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1091;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(366004)(396003)(136003)(189003)(199004)(956004)(6486002)(7416002)(52116002)(7696005)(66556008)(4744005)(316002)(5660300002)(2616005)(6666004)(66946007)(36756003)(86362001)(186003)(81156014)(2906002)(81166006)(4326008)(54906003)(16526019)(66476007)(8936002)(26005)(8676002)(15650500001)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4434;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: F02os+koM1CoOIlgT9oe3bJ+e11kUWOvoIWy2obCw7l5F+99LmvWgNhn4pY16gWx7W95anPR6jaZcF/1W+oDs8oNM9ephPt0iHNaxED0ZCi1CaOzZJPsN+729VjwFVU55igT45z7vqryJBSeXWNOz8s7TnjbeJMwh+1yrhlLthUGhKn6GlL5PTKlSyr+n4LOIMvRURBlqKnsho/YMdmMinABHGm5JC1ZkjNz6Ic/f4AHfFfkiM8GiqeuGrMCl9EqyEMkpUf8195O0EZ4R3nhWaKPTB/nIf+xPQ6WUpymZxPnlVOnQt/99mruElFZ2gDaFz0cm0dzACyAmnWSa17+OtVL0KWdO27e7Dua/l8KNgoK3O+S6NKDLKmhVmaLLgPy/qWKXi7y+ZdAFtyJKJhBilLPyVMe/4GWrDfldwcN0idO/MtFC6WePouA97Y9hVcW
+X-MS-Exchange-AntiSpam-MessageData: 7PP9OGvKfeOHeMmjLYavCF9qkHhNqAzkbddPw5VahA+PjJIdSKjRkdgHhusUzU4YqVqKw/Zn1EyjlhvHlpVuY7Jr0Eh+b2XVPNIESb8gwxZFmTccTlHkXO5hauEP9v78CbSlsVrZoqTM3NIm1h63+w==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41a0f8b4-e5ee-4a80-2dbf-08d7ba3216f2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 20:34:20.3619
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aZGqHI0a/Y7jdjvqU//nqXs3nvGpwDoaaZtmah5lU2wJuF7rqryRz8EEyJZKQOqTI7fcGdg4Fskt3G3H1K9dxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4434
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020, David Hildenbrand wrote:
-> > 
-> > I notice that this thread has veered off into QEMU ballooning
-> > territory: which may indeed be important, but there's nothing at all
-> > that I can contribute on that.  I certainly do not want to slow down
-> > anything important, but remain convinced that the correct filesystem
-> > implementation for punching a hole is to punch a hole.
-> 
-> I am not completely sure I follow all the shmem details (sorry!). But
-> trying to "punch a partial hole punch" into a hugetlbfs page will result
-> in the very same behavior as with shmem as of now, no?
+This patch series adds new EFI tables to the list of tables that are
+to be mapped unencrypted when SME is active
 
-I believe so.
+- EFI TPM log and TPM final log tables
+- EFI RNG seed table
 
-> 
-> FALLOC_FL_PUNCH_HOLE: "Within the specified range, partial filesystem
-> blocks are zeroed, and whole filesystem blocks are removed from the
-> file." ... After a successful call, subsequent reads from this range
-> will return zeros."
-> 
-> So, as long as we are talking about partial blocks the documented
-> behavior seems to be to only zero the memory.
-> 
-> Does this patch fix "FALLOC_FL_PUNCH_HOLE does not free blocks if called
-> in block granularity on shmem" (which would be a valid fix),
+---
 
-Yes. The block size of tmpfs is (talking x86_64 for simplicity) 4KiB;
-but when mounted huge, it transparently takes advantage of 2MiB extents
-when it can.  Rather like a disk-based filesystem always presenting a
-4KiB block interface, but stored on disk in multisector extents.
+Patches based on
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git next
 
-Whereas hugetlbfs is a different filesystem, which is and always has
-been limited to supporting only certain larger block sizes.
+and commit:
+  dc235d62fc60 ("efi: Bump the Linux EFI stub major version number to #1")
 
-> or does it
-> try to implement something that is not documented? (removing partial
-> blocks when called in sub-block granularity)
+Changes since v2:
+- Split the patch into TPM related and RNG related patches
+- Account for the moving of the RNG seed EFI table from struct efi
+  to a static variable
 
-No.
+Tom Lendacky (2):
+  x86/efi: Add TPM related EFI tables to unencrypted mapping checks
+  x86/efi: Add RNG seed EFI table to unencrypted mapping check
 
-> 
-> I assume the latter, in which case I would interpret "punching a hole is
-> to punch a hole" as "punching sub-blocks will not free blocks".
-> 
-> (if somebody could enlighten me which important piece I am missing or
-> messing up, that would be great :) )
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+ arch/x86/platform/efi/efi.c |  3 +++
+ drivers/firmware/efi/efi.c  | 18 ++++++++++--------
+ include/linux/efi.h         |  2 ++
+ 3 files changed, 15 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
+
