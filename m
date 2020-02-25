@@ -2,125 +2,237 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191D8C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBE1C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E388E21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B619222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bxex5n5i"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d3qBxLkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgBYBe6 (ORCPT
+        id S1728725AbgBYBfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:34:58 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44630 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbgBYBe6 (ORCPT
+        Mon, 24 Feb 2020 20:35:01 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42728 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbgBYBe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:34:58 -0500
-Received: by mail-io1-f68.google.com with SMTP id z16so625752iod.11;
-        Mon, 24 Feb 2020 17:34:57 -0800 (PST)
+        Mon, 24 Feb 2020 20:34:59 -0500
+Received: by mail-vs1-f66.google.com with SMTP id b79so6981036vsd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:34:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=sMy0D4t4BEz+I62Pa6Ixc/TtcpxG23tmRPXSx/fbdfA=;
-        b=Bxex5n5ihE8BOt/P+mikL+dJSM3ex/S8YWwgHIsDlsA1WPxMfiLLNQGYgzQogWVLQn
-         Gi7ZSTeKYZZE9dNXK45XteWf1sBSrKMWxweXs53uvh2YfipDvEG6GyFIYNXq+0Se+E6l
-         RjxvD+dSSShWAOWtQL7HoSlP3H0NUzgLafBfHVo//WYWHMqbWo8rwo8JzNda95FOSRYz
-         2e4TCvUlic4ZNMC1qQrenVWc/0FFsLcRHkfqLD950fON+K3S630px2DclwsTxFQR5ARz
-         b2EVTue95HQS4eG3crkYAbuku93JWC1wRnmABjTaihH3XOavNvL1SzCvxxI4y0qVp63d
-         wggw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XvbopwCF9mmo8OGNCSjhGDMkBahDz5BZ+asKUlhTYZA=;
+        b=d3qBxLkkQKBffrrYpQqjOfPul0BCOX5LkqmU+vnztHjTT4FVLQEwOcfsr4+UiX9vVJ
+         BUl9qJLVhATZ5cGirePb6WkDrQVdREkv4EMomOLXaCRGfBTA6kw+HiIIzNhWxlNVrPKU
+         m/gvyTIjy/BWsc6wB4n9sQwmOTGAgEDsskmv8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sMy0D4t4BEz+I62Pa6Ixc/TtcpxG23tmRPXSx/fbdfA=;
-        b=K2MrbAtrXnu/dxPma+ZSoj02JZmYyZvxVkrBx7B5XZyyy8SvNAq70o+mWvx/I1PRsM
-         dfrLzGUU5/x7/u/l21hDrg2VopB7wAFGNiMXzxy/LMdtLISuQJRlG3Y41e2FCxI1OdTb
-         p2vYQGEd7JXjni8k97gQmMu5xFEURbPFpUEezQM7Fyy+hVkvDSGcL4F1S0QPneegUHpd
-         a1rHAFnJR2y/F8lJZUMp5BhL2Dos0NNcLWYAAqAReIOk8gONVtEQwsDcymKdnfdxUtwF
-         osnKflmoMp8T7O8pbEn+nPSoFHGggNDaOCUIkBFXoytyCW21mJPPKLjKMlS3FrSB3ey+
-         BzHg==
-X-Gm-Message-State: APjAAAXhvWSv/A+5e/Gsru4YVTCJrm+GAPbeaGImKd/uhAkk728ns9qR
-        YtyMNC7BkwiGzyZEZaPn5eA=
-X-Google-Smtp-Source: APXvYqx7ANfXYY3vlxOfYrESs9/zK1XANM1oYSy6o5tVQHylmMMevdRVd+EiNYUXGYDFn1Lfvd/Zmg==
-X-Received: by 2002:a6b:1490:: with SMTP id 138mr3357877iou.8.1582594496980;
-        Mon, 24 Feb 2020 17:34:56 -0800 (PST)
-Received: from timdesk.hsd1.ca.comcast.net ([108.165.36.110])
-        by smtp.gmail.com with ESMTPSA id b1sm4888798ilc.33.2020.02.24.17.34.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 24 Feb 2020 17:34:56 -0800 (PST)
-From:   tbird20d@gmail.com
-X-Google-Original-From: tim.bird@sony.com
-To:     mchehab@kernel.org, corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tbird20d@gmail.com, tim.bird@sony.com
-Subject: [PATCH] scripts/sphinx-pre-install: add '-p python3' to virtualenv
-Date:   Mon, 24 Feb 2020 18:34:41 -0700
-Message-Id: <1582594481-23221-1-git-send-email-tim.bird@sony.com>
-X-Mailer: git-send-email 2.1.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XvbopwCF9mmo8OGNCSjhGDMkBahDz5BZ+asKUlhTYZA=;
+        b=bx0fjjTOqrKC+JazPPBCq5VVPyhPR7bTxn2WaUxDXEUuCZSJ9LEKPqUNyJo6WUix57
+         WZ3BkwfBdxe6UUVDa9rH9w+7EpE1vhmzGAo8g3JOWUMiOA2i1Y3N+riYVJkzfWEe4AXD
+         C+JfWZIfonfiAYqOXLtCB9gm3R8A3KO+VcZlqroa9qQeZQtBXOTHj/3C3dyAS/wip908
+         2CmWw4RtjUR2Vw6ka7cKvUSFMO5UU/kv6XLKjd9uE6knQBomNrSS1WK3220r4ZEB9CCe
+         OifTGGLEkGBFvQRvAN+e3OSx0F9D/llVL/JmbxzcK62cs0MZr1tZVT/LQs71tLIUJ08T
+         /sPA==
+X-Gm-Message-State: APjAAAUypbY3WsSmJYgZQ4QKq/CLpjXOhvg7SMAY6L8VFBL5EtLF0FtY
+        bvunhRCYhyale9HM7QHok2G/3NM7LAqgnL+uQxOIEg==
+X-Google-Smtp-Source: APXvYqwj++UMCeh3XQCSqWC6OoNtBiIOWXW/gh6glTMjVsSGcrp1jrbKj/II7rje4gpIBvRg97EAG9UqmCB23TF5yLI=
+X-Received: by 2002:a67:2dd6:: with SMTP id t205mr30321975vst.71.1582594498280;
+ Mon, 24 Feb 2020 17:34:58 -0800 (PST)
+MIME-Version: 1.0
+References: <20200225000036.156250-1-abhishekpandit@chromium.org> <20200224160019.RFC.v3.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
+In-Reply-To: <20200224160019.RFC.v3.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Mon, 24 Feb 2020 17:34:47 -0800
+Message-ID: <CANFp7mUehaCSR2W3mXpq2s80YLJVfO2U8D_N+sRzJ2pMZQw1UA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 1/5] Bluetooth: Add mgmt op set_wake_capable
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Alain Michaud <alainm@chromium.org>
+Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Bird <tim.bird@sony.com>
+I seem to have forgotten to update the series changes here. In series
+3, I added a wakeable property to le_conn_param so that the wakeable
+list is only used for BR/EDR as requested in the previous revision.
 
-With Ubuntu 16.04 (and presumably Debian distros of the same age),
-the instructions for setting up a python virtual environment should
-do so with the python 3 interpreter.  On these older distros, the
-default python (and virtualenv command) might be python2 based.
-
-Some of the packages that sphinx relies on are now only available
-for python3.  If you don't specify the python3 interpreter for
-the virtualenv, you get errors when doing the pip installs for
-various packages
-
-Fix this by adding '-p python3' to the virtualenv recommendation
-line.
-
-Signed-off-by: Tim Bird <tim.bird@sony.com>
----
- scripts/sphinx-pre-install | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index a8f0c00..fa3fb05 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -701,11 +701,26 @@ sub check_needs()
- 		} else {
- 			my $rec_activate = "$virtenv_dir/bin/activate";
- 			my $virtualenv = findprog("virtualenv-3");
-+			my $rec_python3 = "";
- 			$virtualenv = findprog("virtualenv-3.5") if (!$virtualenv);
- 			$virtualenv = findprog("virtualenv") if (!$virtualenv);
- 			$virtualenv = "virtualenv" if (!$virtualenv);
- 
--			printf "\t$virtualenv $virtenv_dir\n";
-+			my $rel = "";
-+			if (index($system_release, "Ubuntu") != -1) {
-+				$rel = $1 if ($system_release =~ /Ubuntu\s+(\d+)[.]/);
-+				if ($rel && $rel >= 16) {
-+					$rec_python3 = " -p python3";
-+				}
-+			}
-+			if (index($system_release, "Debian") != -1) {
-+				$rel = $1 if ($system_release =~ /Debian\s+(\d+)/);
-+				if ($rel && $rel >= 7) {
-+					$rec_python3 = " -p python3";
-+				}
-+			}
-+
-+			printf "\t$virtualenv$rec_python3 $virtenv_dir\n";
- 			printf "\t. $rec_activate\n";
- 			printf "\tpip install -r $requirement_file\n";
- 			deactivate_help();
--- 
-2.1.4
-
+On Mon, Feb 24, 2020 at 4:00 PM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> When the system is suspended, only some connected Bluetooth devices
+> cause user input that should wake the system (mostly HID devices). Add
+> a list to keep track of devices that can wake the system and add
+> a management API to let userspace tell the kernel whether a device is
+> wake capable or not. For LE devices, the wakeable property is added to
+> the connection parameter and can only be modified after calling
+> add_device.
+>
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>  include/net/bluetooth/hci_core.h |  2 ++
+>  include/net/bluetooth/mgmt.h     |  7 +++++
+>  net/bluetooth/hci_core.c         |  1 +
+>  net/bluetooth/mgmt.c             | 51 ++++++++++++++++++++++++++++++++
+>  4 files changed, 61 insertions(+)
+>
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index dcc0dc6e2624..9d9ada5bc9d4 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -394,6 +394,7 @@ struct hci_dev {
+>         struct list_head        mgmt_pending;
+>         struct list_head        blacklist;
+>         struct list_head        whitelist;
+> +       struct list_head        wakeable;
+>         struct list_head        uuids;
+>         struct list_head        link_keys;
+>         struct list_head        long_term_keys;
+> @@ -575,6 +576,7 @@ struct hci_conn_params {
+>
+>         struct hci_conn *conn;
+>         bool explicit_connect;
+> +       bool wakeable;
+>  };
+>
+>  extern struct list_head hci_dev_list;
+> diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
+> index a90666af05bd..283ba5320bdb 100644
+> --- a/include/net/bluetooth/mgmt.h
+> +++ b/include/net/bluetooth/mgmt.h
+> @@ -671,6 +671,13 @@ struct mgmt_cp_set_blocked_keys {
+>  } __packed;
+>  #define MGMT_OP_SET_BLOCKED_KEYS_SIZE 2
+>
+> +#define MGMT_OP_SET_WAKE_CAPABLE       0x0047
+> +#define MGMT_SET_WAKE_CAPABLE_SIZE     8
+> +struct mgmt_cp_set_wake_capable {
+> +       struct mgmt_addr_info addr;
+> +       u8 wake_capable;
+> +} __packed;
+> +
+>  #define MGMT_EV_CMD_COMPLETE           0x0001
+>  struct mgmt_ev_cmd_complete {
+>         __le16  opcode;
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index cbbc34a006d1..2fceaf76644a 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -3299,6 +3299,7 @@ struct hci_dev *hci_alloc_dev(void)
+>         INIT_LIST_HEAD(&hdev->mgmt_pending);
+>         INIT_LIST_HEAD(&hdev->blacklist);
+>         INIT_LIST_HEAD(&hdev->whitelist);
+> +       INIT_LIST_HEAD(&hdev->wakeable);
+>         INIT_LIST_HEAD(&hdev->uuids);
+>         INIT_LIST_HEAD(&hdev->link_keys);
+>         INIT_LIST_HEAD(&hdev->long_term_keys);
+> diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+> index 3074363c68df..9a873097000b 100644
+> --- a/net/bluetooth/mgmt.c
+> +++ b/net/bluetooth/mgmt.c
+> @@ -107,6 +107,7 @@ static const u16 mgmt_commands[] = {
+>         MGMT_OP_READ_EXT_INFO,
+>         MGMT_OP_SET_APPEARANCE,
+>         MGMT_OP_SET_BLOCKED_KEYS,
+> +       MGMT_OP_SET_WAKE_CAPABLE,
+>  };
+>
+>  static const u16 mgmt_events[] = {
+> @@ -4663,6 +4664,48 @@ static int set_fast_connectable(struct sock *sk, struct hci_dev *hdev,
+>         return err;
+>  }
+>
+> +static int set_wake_capable(struct sock *sk, struct hci_dev *hdev, void *data,
+> +                           u16 len)
+> +{
+> +       struct mgmt_cp_set_wake_capable *cp = data;
+> +       struct hci_conn_params *params;
+> +       int err;
+> +       u8 status = MGMT_STATUS_FAILED;
+> +       u8 addr_type = cp->addr.type == BDADDR_BREDR ?
+> +                              cp->addr.type :
+> +                              le_addr_type(cp->addr.type);
+> +
+> +       BT_DBG("Set wake capable %pMR (type 0x%x) = 0x%x\n", &cp->addr.bdaddr,
+> +              addr_type, cp->wake_capable);
+> +
+> +       if (cp->addr.type == BDADDR_BREDR) {
+> +               if (cp->wake_capable)
+> +                       err = hci_bdaddr_list_add(&hdev->wakeable,
+> +                                                 &cp->addr.bdaddr, addr_type);
+> +               else
+> +                       err = hci_bdaddr_list_del(&hdev->wakeable,
+> +                                                 &cp->addr.bdaddr, addr_type);
+> +
+> +               if (!err || err == -EEXIST || err == -ENOENT)
+> +                       status = MGMT_STATUS_SUCCESS;
+> +
+> +               goto done;
+> +       }
+> +
+> +       /* Add wakeable param to le connection parameters */
+> +       params = hci_conn_params_lookup(hdev, &cp->addr.bdaddr, addr_type);
+> +       if (params) {
+> +               params->wakeable = cp->wake_capable;
+> +               status = MGMT_STATUS_SUCCESS;
+> +       }
+> +
+> +done:
+> +       err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_WAKE_CAPABLE, status,
+> +                               cp, sizeof(*cp));
+> +
+> +       return err;
+> +}
+> +
+>  static void set_bredr_complete(struct hci_dev *hdev, u8 status, u16 opcode)
+>  {
+>         struct mgmt_pending_cmd *cmd;
+> @@ -5791,6 +5834,13 @@ static int remove_device(struct sock *sk, struct hci_dev *hdev,
+>                         err = hci_bdaddr_list_del(&hdev->whitelist,
+>                                                   &cp->addr.bdaddr,
+>                                                   cp->addr.type);
+> +
+> +                       /* Don't check result since it either succeeds or device
+> +                        * wasn't there (not wakeable or invalid params as
+> +                        * covered by deleting from whitelist).
+> +                        */
+> +                       hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
+> +                                           cp->addr.type);
+>                         if (err) {
+>                                 err = mgmt_cmd_complete(sk, hdev->id,
+>                                                         MGMT_OP_REMOVE_DEVICE,
+> @@ -6990,6 +7040,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
+>         { set_phy_configuration,   MGMT_SET_PHY_CONFIGURATION_SIZE },
+>         { set_blocked_keys,        MGMT_OP_SET_BLOCKED_KEYS_SIZE,
+>                                                 HCI_MGMT_VAR_LEN },
+> +       { set_wake_capable,        MGMT_SET_WAKE_CAPABLE_SIZE },
+>  };
+>
+>  void mgmt_index_added(struct hci_dev *hdev)
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
