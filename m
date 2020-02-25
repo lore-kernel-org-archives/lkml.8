@@ -2,90 +2,96 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B5C35E08
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305E3C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0062072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015D92064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHutEhIb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNMpfKdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgBYPY1 (ORCPT
+        id S1731078AbgBYPZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:24:27 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:47023 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgBYPY1 (ORCPT
+        Tue, 25 Feb 2020 10:25:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41740 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729501AbgBYPZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:24:27 -0500
-Received: by mail-qk1-f194.google.com with SMTP id u124so12189756qkh.13;
-        Tue, 25 Feb 2020 07:24:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=6Ncg/IKMaDZiOMqupX+S+PJTsB+ocvBSJPg8Zaspt8Y=;
-        b=OHutEhIbBOf73FwZZBukrieOB/TkrRrVUvg3XqQn5i4sNkq7hKQ4NE0a1xdknz6s05
-         fVwFGjvW5npCHe279/i9KXyND6QMWgbZwygrSSIY8Zn/TQeg/1b1bb0EsdnvkYlv6C6B
-         /3YEAyRl9lRWP1IEtFET+T11/13JTOXIKshoN9FXzXpc1Di4NBPDd7uV8js+XJZ6MTuF
-         XUUdkSgoM9J+dCU4cSKvoxaFOWpZ3G/4QfYN9XO87oROeXOQWXtz2DSIwrMgSkVdXiWG
-         na2O4AKiC7QGTbcYTYjRbxGbkQr5JHQL8Edd/DU5ykmi/TPvnKGKt1d/y9QAcQEJcCz5
-         AjYw==
+        Tue, 25 Feb 2020 10:25:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582644338;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XHRKxD00cTyT09o9LKocptIN+yLA1rFAZrxjnmWX1Ls=;
+        b=WNMpfKdukjxhCFt1UUbjJLFvMSTivED30oixJvjCA+2tZV837fc8heq/dLPSC/+7UwKK/f
+        jac6OuCUq/4VdlDlOJPamih3rsHnyWGBtj0bmhcD9FP2msItsBKEnqlqFVoVv1qEtAbsis
+        UKQSWueL1LS/MDzSViuod7TCWLvH/pY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-mSYxfuJ2OnS7Xlgf1SNXPg-1; Tue, 25 Feb 2020 10:25:36 -0500
+X-MC-Unique: mSYxfuJ2OnS7Xlgf1SNXPg-1
+Received: by mail-wr1-f72.google.com with SMTP id t14so899526wrs.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:25:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6Ncg/IKMaDZiOMqupX+S+PJTsB+ocvBSJPg8Zaspt8Y=;
-        b=jSVtVfk0FxR8NNshJIzgiaK3SHrZXojvLFggTNwqjQElhFl+1xGqumE5VCs4C1r1IX
-         wEuWH4AxaPqLUu3gtEWSwrrZOVIGCeS+h/KyjvPLOTUFnlgipPJDHKjJ73HCbkC2uRAR
-         HQVByzT2YdpgoWrD1OmyD4P9y8tKaOOOSI5uyfySPPCL7JPvq8Fiz592WYwS68GDltHt
-         WEhGTk6NaoFNZXWaW3uvEPmaRvlXrqAf9zuMK6zQzbv3fWFRJtKKaMyBDortrH8v0EAR
-         ujZdj/QVJiap3JPv7l3ncE5Nq6k2TuMmd+bPcNMu9nwb7UnLuxsvOipYDKW2notryy2u
-         FpWw==
-X-Gm-Message-State: APjAAAU+lVc9+qyO7tlJ1xnJzaMCvGoDxg8bkNTUcKnWkDuUwl3XVHMB
-        8pqbbizbnGaeGy0NFA75sPk=
-X-Google-Smtp-Source: APXvYqyQIwtfbtN6oSef2kPh4lRCxbB51UlGRbO8Yz46uatDz2X7BxpxW0T6+huFpyQSqlCoXf4+bg==
-X-Received: by 2002:a05:620a:1650:: with SMTP id c16mr58589893qko.346.1582644266026;
-        Tue, 25 Feb 2020 07:24:26 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id d9sm7526626qth.34.2020.02.25.07.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 07:24:25 -0800 (PST)
-Date:   Tue, 25 Feb 2020 10:24:24 -0500
-Message-ID: <20200225102424.GB5199@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] net: dsa: bcm_sf2: Forcibly configure IMP port for
- 1Gb/sec
-In-Reply-To: <20200224235632.5163-1-f.fainelli@gmail.com>
-References: <20200224235632.5163-1-f.fainelli@gmail.com>
+        bh=XHRKxD00cTyT09o9LKocptIN+yLA1rFAZrxjnmWX1Ls=;
+        b=efNG1e9fZSRXv5JmA3/5CupL9/ccJBIy0tkDVXIXQ/Ed/4MwvVaQlW44MUrpRrz5xT
+         /SLFJSNrVLWE+rO9999BF+JnAm5fdAXDoZS3azUc4NXJkbHFoE66mzIqbe756f1HSHXE
+         BcxB4E7+XFL+yJPp+pn+hXwy6TtshPU1aVjXQLHDNzQl8xdpBREz7K8yxMFvKIIy0exc
+         3h0GqPonhs/wydyEYORT388BHEsNbl3WM1Q1C81P4POlsBZORqGHI0rT8v7dPpZiAeBG
+         FwUHOe7Dyc/PcX2TsxD0wPKcC036Ai4CYJJQAgAbhXLp+S8gXqtJJPFYB/Jxa5mx+JQj
+         k/9Q==
+X-Gm-Message-State: APjAAAWqfn/Lwe52ftMSMjlhJnws0PSI5/r1edNT3CCpYVsCwBSwHOs0
+        9kkBvsgWBg1VvNujnIzSgC4PxsD1mh+2+EFTRGdAiVZJY0XCgzfUtq1CBqlQ6N+RxgYFE5jIWKL
+        6mVONXgvXeTanhOCoE6imEgug
+X-Received: by 2002:a1c:491:: with SMTP id 139mr5904258wme.117.1582644334822;
+        Tue, 25 Feb 2020 07:25:34 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxOEO5FTObReQwSnlZOzVoqdfjaEIdHk/sbsxSJs1qE1hoP1ta5zdOmm+8U8vuRcLcMmb2wTA==
+X-Received: by 2002:a1c:491:: with SMTP id 139mr5904230wme.117.1582644334563;
+        Tue, 25 Feb 2020 07:25:34 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:3577:1cfe:d98a:5fb6? ([2001:b07:6468:f312:3577:1cfe:d98a:5fb6])
+        by smtp.gmail.com with ESMTPSA id z21sm4445966wml.5.2020.02.25.07.25.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 07:25:33 -0800 (PST)
+Subject: Re: [PATCH 00/61] KVM: x86: Introduce KVM cpu caps
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <87wo8ak84x.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <a52b3d92-5df6-39bd-f3e7-2cdd4f3be6cb@redhat.com>
+Date:   Tue, 25 Feb 2020 16:25:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <87wo8ak84x.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 15:56:32 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> We are still experiencing some packet loss with the existing advanced
-> congestion buffering (ACB) settings with the IMP port configured for
-> 2Gb/sec, so revert to conservative link speeds that do not produce
-> packet loss until this is resolved.
-> 
-> Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
-> Fixes: de34d7084edd ("net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On 25/02/20 16:18, Vitaly Kuznetsov wrote:
+> Would it be better or worse if we eliminate set_supported_cpuid() hook
+> completely by doing an ugly hack like (completely untested):
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Yes, it makes sense.
+
+Paolo
+
