@@ -2,94 +2,91 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FF1C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64375C35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46A32176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36759222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:54:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UoHTD/6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgBYUyV (ORCPT
+        id S1729553AbgBYUyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:54:21 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:39632 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728714AbgBYUyV (ORCPT
+        Tue, 25 Feb 2020 15:54:45 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45001 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729274AbgBYUyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:54:21 -0500
-Received: (qmail 6720 invoked by uid 2102); 25 Feb 2020 15:54:20 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 25 Feb 2020 15:54:20 -0500
-Date:   Tue, 25 Feb 2020 15:54:20 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-cc:     linux-usb@vger.kernel.org, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        <scan-admin@coverity.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] usb: hub: Fix unhandled return value of usb_autopm_get_interface()
-In-Reply-To: <20200225202223.GA9154@lxhi-065.adit-jv.com>
-Message-ID: <Pine.LNX.4.44L0.2002251553030.1485-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Tue, 25 Feb 2020 15:54:45 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so284975wrx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:54:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=28TDunclJ0ED67dbx8CkZqbh/7wdN9qJRWSOtwdsi1s=;
+        b=UoHTD/6+hk2QYtP059qZLw3RRZ16mc3CjCh2ZZwsu0a7xHxNMua3zoubg3FnJlMpfT
+         h9ft7NT72oICgPc9WavKnXNoQg4dLsDOs92lfQDDJOEaG24d44X339XfYqFwcRKl1+hz
+         FaPA+pFgOHmZtoFQij9N6yoY6Gloe1pEwStUk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=28TDunclJ0ED67dbx8CkZqbh/7wdN9qJRWSOtwdsi1s=;
+        b=PWcTMPrBPfL1LgId4GUtGBMv+R1QztdDUGi+f15fHdBJSgPAMdwTupk4MSFq4Zubk9
+         c7QfmgwOiDwsSH4PhcoIqcQPb6iFdQS65jGTspjPys0FtKxcqB28XOPfB4VsWUapJZ8U
+         jYm4M4G/wYHlZ4MDZ/uXHSOlRmC6g6an3S+DUOTjxUexVigR6xXAbD3nyO6uktKiEwKT
+         8LaFvcEHvCOAnpg9lmws6LltwUw0JrKXAN2p8ETg+HPnuKYhND8wtjJhDqGqZyAlu5hs
+         lHNIxfxj13Ifhx14izk3yQFXr2IJWEJmuo/QjGfqAqNhnWpuDYojvJ/6nkD5MUUgCg7g
+         WSEg==
+X-Gm-Message-State: APjAAAXRB+LDxSaNbCIeJzBN8JZ5Dp0iT6HzddiQ1crDuajuZul64crB
+        Hxqi02reU9/i2zPA/LuZRPiFmw==
+X-Google-Smtp-Source: APXvYqxs5Dht7wCnHgNaDyHKMXo95ql8ZEwhG4lxizSll22ZJBzPc0J3TZ9jyuOGIAHL1lrfaQwGNg==
+X-Received: by 2002:adf:de0b:: with SMTP id b11mr932096wrm.89.1582664082855;
+        Tue, 25 Feb 2020 12:54:42 -0800 (PST)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id t13sm104852wrw.19.2020.02.25.12.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:54:42 -0800 (PST)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH] scripts/bpf: switch to more portable python3 shebang
+Date:   Tue, 25 Feb 2020 12:54:26 -0800
+Message-Id: <20200225205426.6975-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
+Change "/usr/bin/python3" to "/usr/bin/env python3" for
+more portable solution in bpf_helpers_doc.py.
 
-> Hi Alan,
-> 
-> On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
-> > On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
-> > > [1] (v5.6-rc3) git grep -En "[^=]\s+usb_autopm_get_interface\("
-> > >   drivers/input/touchscreen/usbtouchscreen.c:1788:  usb_autopm_get_interface(intf);
-> > >   drivers/media/usb/stkwebcam/stk-webcam.c:628:     usb_autopm_get_interface(dev->interface);
-> > >   drivers/net/usb/hso.c:1308:                       usb_autopm_get_interface(serial->parent->interface);
-> > >   drivers/net/usb/r8152.c:5231:                     usb_autopm_get_interface(tp->intf);
-> > >   sound/usb/usx2y/us122l.c:192:                     usb_autopm_get_interface(iface);
-> > 
-> > Your regular expression isn't right because it doesn't match lines
-> > where the usb_autopm_get_interface() is preceded only by one whitespace
-> > character (i.e., a tab).  It also will match lines where there are two
-> > space characters between the = sign and the function name.  I think
-> > what you want is more like "(^|[^=[:space:]])\s*" at the start of the
-> > RE.
-> 
-> Agreed. My version filters out some true positives.
-> 
-> > 
-> > A revised search finds line 997 in drivers/usb/core/hub.c and lines
-> > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
-> > other directories.)  AFAICT all three of these should check the return
-> > value, although a error message in the kernel log probably isn't
-> > needed.
-> > 
-> > Do you want to fix those instances up also, maybe merging them in with
-> > the existing patch?
-> 
-> I wonder if squashing all these fixes into one patch is the best option.
-> 
-> There are three commits fixed by the proposed changes in usb core:
->  - v5.6-rc3 commit 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
->  - v3.9-rc1 commit 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
->  - v2.6.33-rc1 commit 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
-> 
-> I assume a single fix will create some pain when applying it to the
-> stable branches. Do you have any preference/inputs about that?
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+---
+ scripts/bpf_helpers_doc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you prefer to split this up into multiple patches, that's fine with 
-me.
-
-Alan Stern
+diff --git a/scripts/bpf_helpers_doc.py b/scripts/bpf_helpers_doc.py
+index 90baf7d70911..cebed6fb5bbb 100755
+--- a/scripts/bpf_helpers_doc.py
++++ b/scripts/bpf_helpers_doc.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python3
++#!/usr/bin/env python3
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ # Copyright (C) 2018-2019 Netronome Systems, Inc.
+-- 
+2.17.1
 
