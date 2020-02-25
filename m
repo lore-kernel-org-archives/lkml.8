@@ -2,115 +2,146 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3690C35E0D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627D4C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82222084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D3B21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OIpufyJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgBYTjY (ORCPT
+        id S1730905AbgBYTjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:39:24 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:39258 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728162AbgBYTjY (ORCPT
+        Tue, 25 Feb 2020 14:39:51 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54593 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbgBYTju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:39:24 -0500
-Received: (qmail 5824 invoked by uid 2102); 25 Feb 2020 14:39:23 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 25 Feb 2020 14:39:23 -0500
-Date:   Tue, 25 Feb 2020 14:39:23 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-cc:     linux-usb@vger.kernel.org, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        <scan-admin@coverity.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] usb: hub: Fix unhandled return value of usb_autopm_get_interface()
-In-Reply-To: <20200225191241.GA32410@lxhi-065.adit-jv.com>
-Message-ID: <Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org>
+        Tue, 25 Feb 2020 14:39:50 -0500
+Received: by mail-pj1-f65.google.com with SMTP id dw13so152589pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:39:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0uZBykAXAO6jD5DASmZ5tKSqeRVuomezEv1o1XMOkAw=;
+        b=OIpufyJefzUuIE7EA+vuCdCBPFeaGA+AMgAzJCqQxV/f7sEdIWzaqMl7kL2+83hCgS
+         hQtguyMbdtvRAi0gwq8uh4N+z60MLiNwyVSBuxL+q5v2Fy/6skR+l3LTBvpr0kTuIdvx
+         MW3pAjX8d1AQxA9asqm59YyFka0LDCMVWROEs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0uZBykAXAO6jD5DASmZ5tKSqeRVuomezEv1o1XMOkAw=;
+        b=Ou7Nmr8FlbN5/4QR/Tk/ffnpvzZK4tCX0jzZbc0bhnUmtUHT9g7YPmmSPXEQQiyAC7
+         1zy0IbFwiiAFLS8PgkZXkbGuRZbFriVmbthk6rvpd8eF131ZL6rm+FIK32FaZt0tsWgp
+         uqL/87ZcVBeq5QpOjFBj9oVhaLrWzms/1V3y2M7YEuBIg/hZMLBA81ubpHKATZvJH6WP
+         lhrHkMZAqOcRAkufqf4TLvWOLDkEIdNk6gjp/fy+a7cFuKWpEuFkOApraPTTow10OS/8
+         64FY3NDNmM4uQyM3xV7MVvErSQNF2K/bRVOKBrcKjHuwhgcCr33jWfqLjQOZxn77YhNr
+         pdzg==
+X-Gm-Message-State: APjAAAUIEmD5wklBEgZiFYyRxMA5+8257b1v6xTj24evLAeQzXC3Jh/H
+        yAX9/josmjTZYRVLDe70vGpyEQ==
+X-Google-Smtp-Source: APXvYqwpdQfkaCcBM5JlG7S4uokaXnpoAWqNofj2820k+ou8GtEmHOSAx7+JVN5Zi3OVDMkBJyavVw==
+X-Received: by 2002:a17:90a:98d:: with SMTP id 13mr694690pjo.102.1582659589946;
+        Tue, 25 Feb 2020 11:39:49 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y5sm18562579pfr.169.2020.02.25.11.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 11:39:49 -0800 (PST)
+Date:   Tue, 25 Feb 2020 11:39:48 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Vasily Averin <vvs@virtuozzo.com>, joelaf@google.com
+Cc:     linux-kernel@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v2] pstore: pstore_ftrace_seq_next should increase
+ position index
+Message-ID: <202002251136.3816A79E@keescook>
+References: <4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
+[merged threads]
 
-> Hi Alan,
+On Tue, Feb 25, 2020 at 11:11:20AM +0300, Vasily Averin wrote:
+> In Aug 2018 NeilBrown noticed 
+> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
+> "Some ->next functions do not increment *pos when they return NULL...
+> Note that such ->next functions are buggy and should be fixed. 
+> A simple demonstration is
 > 
-> Many thanks for the prompt review.
+> dd if=/proc/swaps bs=1000 skip=1
 > 
-> On Tue, Feb 25, 2020 at 10:32:32AM -0500, Alan Stern wrote:
-> > On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
-> > > +		int r = usb_autopm_get_interface(intf);
-> > > +
-> > > +		if (!r)
-> > > +			hub->quirk_disable_autosuspend = 1;
-> > > +		else
-> > > +			dev_dbg(&intf->dev, "disable autosuspend err=%d\n", r);
-> > >  	}
-> > >  
-> > >  	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
-> > 
-> > This change is not necessary, because the resume operation cannot fail
-> > at this point (interfaces are always powered-up during probe).
+> Choose any block size larger than the size of /proc/swaps.  This will
+> always show the whole last line of /proc/swaps"
 > 
-> Agreed to avoid unneeded complexity.
+> /proc/swaps output was fixed recently, however there are lot of other
+> affected files, and one of them is related to pstore subsystem.
 > 
-> > A better solution would be to call usb_autpm_get_interface_no_resume()
-> > instead.
+> If .next function does not change position index, following .show function
+> will repeat output related to current position index.
 > 
-> Pushed to https://lore.kernel.org/lkml/20200225183057.31953-1-erosca@de.adit-jv.com
+> There are at least 2 related problems:
+> - read after lseek beyond end of file, described above by NeilBrown
+>   "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
+> - read after lseek on in middle of last line will output expected rest of
+>   last line but then repeat whole last line once again.
 > 
-> > 
-> > On the other hand, the other places that call
-> > usb_autopm_get_interface() without checking should be audited.  Some of
-> > them almost certainly need to be fixed.
+> If .show() function generates multy-line output
+> (like pstore_ftrace_seq_show() does ?)
+> following bash script cycles endlessly
 > 
-> A quick 'git grep' outputs below list of auditable candidates [1].
+>  $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
 > 
-> With no relevant devices at hand, I would avoid touching these drivers,
-> since oftentimes even legitimate patches introduce regressions w/o
-> testing.
+> Unfortunately I'm not familiar enough to pstore subsystem and was unable to
+> find affected pstore-related file on my test node.
 > 
-> If anybody volunteers with testing, I guess it should be quick to
-> either convert usb_autpm_get_interface to *_no_resume variant or
-> handle the return value in place in below instances.
+> If .next function does not change position index,
+> following .show function will repeat output related
+> to current position index.
 > 
-> [1] (v5.6-rc3) git grep -En "[^=]\s+usb_autopm_get_interface\("
->   drivers/input/touchscreen/usbtouchscreen.c:1788:  usb_autopm_get_interface(intf);
->   drivers/media/usb/stkwebcam/stk-webcam.c:628:     usb_autopm_get_interface(dev->interface);
->   drivers/net/usb/hso.c:1308:                       usb_autopm_get_interface(serial->parent->interface);
->   drivers/net/usb/r8152.c:5231:                     usb_autopm_get_interface(tp->intf);
->   sound/usb/usx2y/us122l.c:192:                     usb_autopm_get_interface(iface);
+> Cc: stable@vger.kernel.org
+> Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> ---
+>  fs/pstore/inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+> index 7fbe8f0..ea8799b 100644
+> --- a/fs/pstore/inode.c
+> +++ b/fs/pstore/inode.c
+> @@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(struct seq_file *s, void *v, loff_t *pos)
+>  	struct pstore_private *ps = s->private;
+>  	struct pstore_ftrace_seq_data *data = v;
+>  
+> +	(*pos)++;
+>  	data->off += REC_SIZE;
+>  	if (data->off + REC_SIZE > ps->total_size)
+>  		return NULL;
+>  
+> -	(*pos)++;
+>  	return data;
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
 
-Your regular expression isn't right because it doesn't match lines
-where the usb_autopm_get_interface() is preceded only by one whitespace
-character (i.e., a tab).  It also will match lines where there are two
-space characters between the = sign and the function name.  I think
-what you want is more like "(^|[^=[:space:]])\s*" at the start of the
-RE.
+I think this make sense, but I figured I'd check with Joel first. Does
+this look sane for how ftrace will merge records?
 
-A revised search finds line 997 in drivers/usb/core/hub.c and lines
-216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
-other directories.)  AFAICT all three of these should check the return
-value, although a error message in the kernel log probably isn't
-needed.
-
-Do you want to fix those instances up also, maybe merging them in with
-the existing patch?
-
-Alan Stern
-
+-- 
+Kees Cook
