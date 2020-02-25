@@ -2,270 +2,127 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE02C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2808C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D7921556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63662082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q66BZyz2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cvLez4k2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgBYTyl (ORCPT
+        id S1731218AbgBYTzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:54:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34085 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728443AbgBYTyk (ORCPT
+        Tue, 25 Feb 2020 14:55:24 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40205 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBYTzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:54:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582660478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yU3ceQzKK/6x6sON/Vrv/ktCdA6JsXx9gNkjI3MyGys=;
-        b=Q66BZyz2QmLeq4Fn7tfeRDYvjDHFWEFLCkJl0wp9NWdmA4ilVJgxx3M/f2hbBrGh+o4oXM
-        KztRFOPVren2eLYLD6LiEsCaKhD8tLoafk86Vf5K3lWXnD9Kb1V1hjgOLUE/rQlY5xTk5X
-        BExLPcBIKJxQUApdFAvI2awuD1+nQDs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-TIXlGtCmN_CKnIBSC-BKEw-1; Tue, 25 Feb 2020 14:54:30 -0500
-X-MC-Unique: TIXlGtCmN_CKnIBSC-BKEw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B3611088380;
-        Tue, 25 Feb 2020 19:54:28 +0000 (UTC)
-Received: from krava (ovpn-205-170.brq.redhat.com [10.40.205.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 722F25C21B;
-        Tue, 25 Feb 2020 19:54:21 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 20:54:18 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andreas Gerstmayr <agerstmayr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kabbott@redhat.com,
-        skozina@redhat.com, mpetlan@redhat.com, nathans@redhat.com,
-        mgoodwin@redhat.com, linux-perf-users@vger.kernel.org,
-        bgregg@netflix.com, mspier@netflix.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [RFC] perf script: add flamegraph.py script
-Message-ID: <20200225195418.GA160300@krava>
-References: <20200221175500.83774-1-agerstmayr@redhat.com>
+        Tue, 25 Feb 2020 14:55:24 -0500
+Received: by mail-pj1-f67.google.com with SMTP id 12so170375pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SnsV7ukks/HdHQSNSo2jKDAJZMw+RXgFpVQ1NWbWeJ4=;
+        b=cvLez4k2FMczRwg3HTgCnssgLc9hcjpdA7sScgfJYSyKQS7N0vsqyEphpfVUGVNumO
+         Lz4Zk63sF9n0txyw++6a+NP7F6D9+1wPKN++pGBrFoYrgtu7n+xBdAWoy0yrbsp/1wH8
+         t36jE/s/FvXbCBtx+8eGLY8NLyK5vuww2AMH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SnsV7ukks/HdHQSNSo2jKDAJZMw+RXgFpVQ1NWbWeJ4=;
+        b=mR9q6A6RG/7Z/W7Joj7HOUhxTAp/QCiLP1A1cr4BvcCQcHfdsERjdi2/pvpnFrSRJ1
+         4ZxpR/O34jJT+SOPKJKI3GkJK/G8+ztBKgbGe6lmat1+HE88qKQSfzhTI+Sw53TVSVHC
+         yoZKQjEL9eePh0ulh9tTHBXBh/V43rn2uk+ssl0AX89uV5P2Zs/gMbKL3d3gV5HAC1i6
+         +171MBxurnPKBJkultXFh6GzfFbfywGC9hhncEz5bFmdxrT0ukuMSlkPiZFv9Kjc0ARi
+         vy5lmrJyhgyryD13xonRdM7+ROPqPCTUHcoKMkhlE/3gJgDo/Wba1TNgDRKm2ttrTbTx
+         lI4w==
+X-Gm-Message-State: APjAAAUOf0aJeziu43GTUqfWX8yff+Qwe9HocUj092tceO/zujPqvaSn
+        CoHli4MjwU7NJp3/GYgMkEuz8Q==
+X-Google-Smtp-Source: APXvYqxWh9M0HRW+LvA3wwgav40rYeK2CMkz3dtqrIt1u7Qlo/BpNS1Yl+Z9MlJyn9b3v+TMF2BF3Q==
+X-Received: by 2002:a17:90a:33a1:: with SMTP id n30mr746208pjb.6.1582660522012;
+        Tue, 25 Feb 2020 11:55:22 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id s7sm4355059pjk.22.2020.02.25.11.55.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 11:55:21 -0800 (PST)
+Date:   Tue, 25 Feb 2020 11:55:19 -0800
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org
+Subject: Re: [PATCH 4/8] platform/chrome: cros_ec_chardev: Use
+ cros_ec_cmd_xfer_status helper
+Message-ID: <20200225195519.GC11971@google.com>
+References: <20200220155859.906647-1-enric.balletbo@collabora.com>
+ <20200220155859.906647-5-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221175500.83774-1-agerstmayr@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200220155859.906647-5-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 06:55:01PM +0100, Andreas Gerstmayr wrote:
-> This script works in tandem with d3-flame-graph to generate flame graphs
-> from perf. It supports two output formats: JSON and HTML (the default).
-> The HTML format will look for a standalone d3-flame-graph template file in
-> /usr/share/d3-flame-graph/template.html and fill in the collected stacks.
+Hi Enric,
+
+On Thu, Feb 20, 2020 at 04:58:55PM +0100, Enric Balletbo i Serra wrote:
+> This patch makes use of cros_ec_cmd_xfer_status() instead of
+> cros_ec_cmd_xfer(). In this case the change is trivial and the only
+> reason to do it is because we want to make cros_ec_cmd_xfer() a private
+> function for the EC protocol and let people only use the
+> cros_ec_cmd_xfer_status() to return Linux standard error codes.
 > 
-> Usage:
-> 
->     perf script flamegraph -a -F 99 sleep 60
-> 
-> Alternative usage:
-> 
->     perf record -a -g -F 99 sleep 60
->     perf script report flamegraph
-
-nice, could this output the output file, like:
-
-     # perf script report flamegraph --output krava.html
-     dumping data to krava.html
-
-or something in that sense
-
-other than that it looks good to me
-
-thanks,
-jirka
-
-
-> 
-> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
 > 
-> I'm currently preparing packages for d3-flame-graph. For Fedora, the copr
-> at
-> https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-flame-graph/
-> can be installed, or alternatively the prebuilt standalone d3-flame-graph
-> template can be downloaded from
-> https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/js-d3-flame-graph/template.html
-> and moved into /usr/share/d3-flame-graph/template.html
+>  drivers/platform/chrome/cros_ec_chardev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  .../perf/scripts/python/bin/flamegraph-record |   2 +
->  .../perf/scripts/python/bin/flamegraph-report |   3 +
->  tools/perf/scripts/python/flamegraph.py       | 117 ++++++++++++++++++
->  3 files changed, 122 insertions(+)
->  create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
->  create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
->  create mode 100755 tools/perf/scripts/python/flamegraph.py
-> 
-> diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf/scripts/python/bin/flamegraph-record
-> new file mode 100755
-> index 000000000000..725d66e71570
-> --- /dev/null
-> +++ b/tools/perf/scripts/python/bin/flamegraph-record
-> @@ -0,0 +1,2 @@
-> +#!/usr/bin/sh
-> +perf record -g "$@"
-> diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
-> new file mode 100755
-> index 000000000000..b1a79afd903b
-> --- /dev/null
-> +++ b/tools/perf/scripts/python/bin/flamegraph-report
-> @@ -0,0 +1,3 @@
-> +#!/usr/bin/sh
-> +# description: create flame graphs
-> +perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
-> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-> new file mode 100755
-> index 000000000000..2e9139ef2c4a
-> --- /dev/null
-> +++ b/tools/perf/scripts/python/flamegraph.py
-> @@ -0,0 +1,117 @@
-> +# flamegraph.py - create flame graphs from perf samples
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Usage:
-> +#
-> +#  perf record -a -g -F 99 sleep 60
-> +#  perf script report flamegraph
-> +#
-> +# Combined data collection and flamegraph generation:
-> +#
-> +#  perf script flamegraph -a -F 99 sleep 60
-> +#
-> +# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
-> +# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
-> +# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.com>
-> +
-> +import sys
-> +import os
-> +import argparse
-> +import json
-> +
-> +
-> +class Node:
-> +    def __init__(self, name, libtype=""):
-> +        self.name = name
-> +        self.libtype = libtype
-> +        self.value = 0
-> +        self.children = []
-> +
-> +
-> +class FlameGraphCLI:
-> +    def __init__(self, args):
-> +        self.args = args
-> +        self.stack = Node("root")
-> +
-> +        if self.args.format == "html" and \
-> +                not os.path.isfile(self.args.template):
-> +            print(f"Flame Graph template '{self.args.template}' does not " +
-> +                  f"exist. Please install the d3-flame-graph package, " +
-> +                  f"specify an existing flame graph template " +
-> +                  f"(--template PATH) or another output format " +
-> +                  f"(--format FORMAT).", file=sys.stderr)
-> +            sys.exit(1)
-> +
-> +    def find_or_create_node(self, node, name, dso):
-> +        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
-> +        if name is None:
-> +            name = "[unknown]"
-> +
-> +        for child in node.children:
-> +            if child.name == name and child.libtype == libtype:
-> +                return child
-> +
-> +        child = Node(name, libtype)
-> +        node.children.append(child)
-> +        return child
-> +
-> +    def process_event(self, event):
-> +        node = self.find_or_create_node(self.stack, event["comm"], None)
-> +        if "callchain" in event:
-> +            for entry in reversed(event['callchain']):
-> +                node = self.find_or_create_node(
-> +                    node, entry.get("sym", {}).get("name"), event.get("dso"))
-> +        else:
-> +            node = self.find_or_create_node(
-> +                node, entry.get("symbol"), event.get("dso"))
-> +        node.value += 1
-> +
-> +    def trace_end(self):
-> +        def encoder(x): return x.__dict__
-> +        json_str = json.dumps(self.stack, default=encoder,
-> +                              indent=self.args.indent)
-> +
-> +        if self.args.format == "html":
-> +            try:
-> +                with open(self.args.template) as f:
-> +                    output_str = f.read().replace("/** @flamegraph_params **/",
-> +                                                  json_str)
-> +            except IOError as e:
-> +                print(f"Error reading template file: {e}", file=sys.stderr)
-> +                sys.exit(1)
-> +            output_fn = self.args.output or "flamegraph.html"
-> +        else:
-> +            output_str = json_str
-> +            output_fn = self.args.output or "stacks.json"
-> +
-> +        if output_fn == "-":
-> +            sys.stdout.write(output_str)
-> +        else:
-> +            try:
-> +                with open(output_fn, "w") as out:
-> +                    out.write(output_str)
-> +            except IOError as e:
-> +                print(f"Error writing output file: {e}", file=sys.stderr)
-> +                sys.exit(1)
-> +
-> +
-> +if __name__ == "__main__":
-> +    parser = argparse.ArgumentParser(description="Create flame graphs.")
-> +    parser.add_argument("-F", "--format",
-> +                        default="html", choices=["json", "html"],
-> +                        help="output file format")
-> +    parser.add_argument("-o", "--output",
-> +                        help="output file name")
-> +    parser.add_argument("--indent",
-> +                        type=int, help="JSON indentation")
-> +    parser.add_argument("--template",
-> +                        default="/usr/share/d3-flame-graph/template.html",
-> +                        help="path to flamegraph HTML template")
-> +    parser.add_argument("-i", "--input",
-> +                        help=argparse.SUPPRESS)
-> +
-> +    args = parser.parse_args()
-> +    cli = FlameGraphCLI(args)
-> +
-> +    process_event = cli.process_event
-> +    trace_end = cli.trace_end
-> -- 
-> 2.24.1
-> 
+> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+> index c65e70bc168d..b51ab24055f3 100644
+> --- a/drivers/platform/chrome/cros_ec_chardev.c
+> +++ b/drivers/platform/chrome/cros_ec_chardev.c
+> @@ -301,7 +301,7 @@ static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
+>  	}
+>  
+>  	s_cmd->command += ec->cmd_offset;
+> -	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
+> +	ret = cros_ec_cmd_xfer_status(ec->ec_dev, s_cmd);
 
+One issue I see here is that if we were to later convert
+cros_ec_cmd_xfer_status() to cros_ec_cmd(), we would lose the
+s_cmd->result value, since I was hoping to avoid returning msg->result
+via a pointer parameter. I don't know if userspace actually uses that, but I
+am assuming it does.
+
+So, should cros_ec_cmd() keep the *result pointer like so ?:
+
+int cros_ec_cmd(struct cros_ec_device *ec, u32 version, u32 command,
+               void *outdata, u32 outsize, void *indata, u32 insize, u32 *result);
+
+This way, we can manually re-populate s_cmd->result with |*result|.
+
+Or, should we drop msg->result while returning s_cmd to userspace? I am
+guessing the answer is no, but thought I'd check with you first.
+
+Best regards,
+
+
+>  	/* Only copy data to userland if data was received. */
+>  	if (ret < 0)
+>  		goto exit;
+> -- 
+> 2.25.0
+> 
