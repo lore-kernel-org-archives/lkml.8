@@ -2,124 +2,99 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED94C35DFA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D000FC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BC1218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DCC21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wd1ymYRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgBYIXX convert rfc822-to-8bit (ORCPT
+        id S1729787AbgBYIYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:23:23 -0500
-Received: from skedge03.snt-world.com ([91.208.41.68]:49644 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729648AbgBYIXX (ORCPT
+        Tue, 25 Feb 2020 03:24:07 -0500
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:38138 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729725AbgBYIYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:23:23 -0500
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 8458367A7D5;
-        Tue, 25 Feb 2020 09:23:20 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 25 Feb
- 2020 09:23:20 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 25 Feb 2020 09:23:20 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "Vinod Koul" <vkoul@kernel.org>
-CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] dmaengine: imx-sdma: Fix the event id check to include RX
- event for UART6
-Thread-Topic: [PATCH v2] dmaengine: imx-sdma: Fix the event id check to
- include RX event for UART6
-Thread-Index: AQHV67TW1CT++vzAE0CZMa71bI30KA==
-Date:   Tue, 25 Feb 2020 08:23:20 +0000
-Message-ID: <20200225082139.7646-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Tue, 25 Feb 2020 03:24:07 -0500
+Received: by mail-lj1-f178.google.com with SMTP id w1so13014788ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:24:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+KBmyMZAeqjL/dWehJYWIZj/HK+sTTg1x4dJjtWNJz4=;
+        b=Wd1ymYRw9ghLg/v6CP8+SveZ4OsVVukkCJXUZ+7SUt/vxJsv4eaS/BLi0CELES5LvM
+         u+/5grfOt1wKhyrfkyIMNumcHaIsS/tUhp7iedp58BWEj9mKJf9q6edsZseaFujO/J4v
+         vFK+l9T1tlyC4e1Z+oXvztoTGVSB9/eTRDALR35uR10+F6mqe6PqCelVTTZItYMW/TH2
+         6vbJnSD2DsMY6074zMOVSqSZnGve+cPA4QB9rI6piJ+EHbuQrknS8NdnTxQjF5TGYjfl
+         Oa2EzmUjgPGCTm+2M+zdwtZWMq555nr4lUMRqirC+hurQ8IW6s8rJO6WJlegs6yfrV9a
+         nN8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+KBmyMZAeqjL/dWehJYWIZj/HK+sTTg1x4dJjtWNJz4=;
+        b=Lb1unyNe8Br188ljcmp3Xho/dKEtZxQNGXZM8sdnffRdD8jQZ1q7ZEVac8CiW4qiFB
+         xl7kqWZ6UJ/BgdjTcqulhziw7WqIkt/e5suq2xCHJt000TAnlAEl1tHFHbf8OAS/2kcf
+         piNziAcUhWd2ARyzl22BlyD0j1NpHIhyB6RMmorTUqtO7UKFlqnzGIyJEo7Q3w2liglf
+         ghQGy+gzlfM1Zh0g6WtEb/+IvzXENn/CTlhDWvpttaqQa6BzbpSCEE9mwWgyhT2nRjdm
+         V8qyt3dNy+fwJBtVMUqvyky6+ICzhsMYpOSUe/VQsI0WI46Skf1b2Y1tyMkPIOvR0q2S
+         HPEg==
+X-Gm-Message-State: APjAAAXRis/AtRjM3meakS/TBZBZbibU8BmtzC80RDjrQYTTkmSF8yc+
+        oBNOLddoteDJgkVicpgwd63bq5FpVNbi5EImyY3aKA==
+X-Google-Smtp-Source: APXvYqy8RsIavee13RX2Ng/Iy0dV1rVHxkrrl/x6+fmkPYOKcK8Y0NEg8xCGCBuHo+/9wPVTBt/y2eFuiRQQ6SmYM7o=
+X-Received: by 2002:a2e:9596:: with SMTP id w22mr30879694ljh.21.1582619045157;
+ Tue, 25 Feb 2020 00:24:05 -0800 (PST)
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 8458367A7D5.ADFDA
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linus.ml.walleij@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel.org,
-        vkoul@kernel.org
+References: <20200224095223.13361-9-mgorman@techsingularity.net>
+ <158255763157.28353.3693734020236686000.tip-bot2@tip-bot2> <jhj36b06klb.fsf@arm.com>
+In-Reply-To: <jhj36b06klb.fsf@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 25 Feb 2020 09:23:53 +0100
+Message-ID: <CAKfTPtDSYRaLsxBLi4+=Z8zT4mpXo269MX3TYdxkjD1GSq5d7A@mail.gmail.com>
+Subject: Re: [tip: sched/core] sched/pelt: Add a new runnable average signal
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Mon, 24 Feb 2020 at 17:01, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+>
+> tip-bot2 for Vincent Guittot writes:
+>
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
+> > Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+>
+> With the fork time initialization thing being sorted out, the rest of the
+> runnable series can claim my
+>
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
-On i.MX6UL/ULL and i.MX6SX the DMA event id for the RX channel of
-UART6 is '0'. To fix the broken DMA support for UART6, we change
-the check for event_id0 to include '0' as a valid id.
+Thanks
 
-Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
-Changes in v2:
-  * Be more specific about the affected SoCs in the commit message
-  * Fix the prefix in the subject to 'dmaengine'
-  * Add Fabio's R-b tag
----
- drivers/dma/imx-sdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 066b21a32232..3d4aac97b1fc 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1331,7 +1331,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
- 
- 	sdma_channel_synchronize(chan);
- 
--	if (sdmac->event_id0)
-+	if (sdmac->event_id0 >= 0)
- 		sdma_event_disable(sdmac, sdmac->event_id0);
- 	if (sdmac->event_id1)
- 		sdma_event_disable(sdmac, sdmac->event_id1);
-@@ -1631,7 +1631,7 @@ static int sdma_config(struct dma_chan *chan,
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
- 
- 	/* Set ENBLn earlier to make sure dma request triggered after that */
--	if (sdmac->event_id0) {
-+	if (sdmac->event_id0 >= 0) {
- 		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
- 			return -EINVAL;
- 		sdma_event_enable(sdmac, sdmac->event_id0);
--- 
-2.17.1
+>
+> but I doubt any of that is worth the hassle since it's in tip already. Just
+> figured I'd mention it, being in Cc and all :-)
