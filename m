@@ -2,94 +2,289 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE83C35DEA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E7DC35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1932072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4292072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:27:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RUqKHO73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgBYBZA (ORCPT
+        id S1728646AbgBYB1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:25:00 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:54390 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgBYBY7 (ORCPT
+        Mon, 24 Feb 2020 20:27:04 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39359 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbgBYB1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:24:59 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6Oy1-000c1D-U6; Tue, 25 Feb 2020 01:24:58 +0000
-Date:   Tue, 25 Feb 2020 01:24:57 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v2)
-Message-ID: <20200225012457.GA138294@ZenIV.linux.org.uk>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+        Mon, 24 Feb 2020 20:27:03 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so4791690plp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:27:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tXtCRq6N50TMVHBgGX7wVHtQFncGCBj7Je/zO9FJX0E=;
+        b=RUqKHO73+u5YoiIoWgGGDqR9gEZ1CQOlfWYfH9fub5W4NVGh2fjjoxumHjE6fDkfKk
+         Xu8gk0Dn1v3vw6yoem0PG1HCste03F0tnFahYu1KCNviPSmts6+CakN/4FHRV48cSx3h
+         hk900b2chyn0e5DQ+ngn4sKqTeax8tx/UfGdo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tXtCRq6N50TMVHBgGX7wVHtQFncGCBj7Je/zO9FJX0E=;
+        b=mJWcbyfIiVD2tVu3Gf85ZhB7aGTZuGqn7HKcxfGf4E3+h2pT1lfp0Zd6qo4W6CKkwQ
+         7l87SWRhUI71uMfR2Mxf7EbdAslBZJhVW2O+s50l6H/ZOs7XvYFPUAgHWQ8KZ5Z/hB3E
+         11xi9NsFLNwoXR6ipmpCF5+JJatLm6GfjUNgj9gHBYD7k+dCEtK5+Mf3OFdlJN3yALmf
+         Ibadyt9j6Xiv7sBvGX+4uP4zQ+93o9NQkjU9bh3+SmOwX5nONH9aK41ObkU4Emw5WbTa
+         0te9R79XjHk3273exUxbWrHAIKCwU+KZP951sounD08AOCLY9csDiyWOjj652tAo2eH6
+         b9bA==
+X-Gm-Message-State: APjAAAX7DR/j6gmVP8JJnYpPc2J+eNePwIayJOyoJ+tgfKOlxCrHUKT2
+        x0lm/7ljpAdBQ6VudEFk9X2MiA==
+X-Google-Smtp-Source: APXvYqzTo6wv4ZlB7haxfVEzTLEqXbypHLZ9mkpUtmaqyVn1c9X3k2XK/IQaCoJdpzy4TasArkRjVw==
+X-Received: by 2002:a17:90a:cb0f:: with SMTP id z15mr2174890pjt.67.1582594021382;
+        Mon, 24 Feb 2020 17:27:01 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id 196sm14604143pfy.86.2020.02.24.17.27.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 17:27:00 -0800 (PST)
+Date:   Mon, 24 Feb 2020 17:26:58 -0800
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+Message-ID: <20200225012658.GB11971@google.com>
+References: <20200205190028.183069-1-pmalani@chromium.org>
+ <20200205190028.183069-11-pmalani@chromium.org>
+ <20200206121753.7b809631@archlinux>
+ <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
+ <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
+ <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
+ <2ebc4e17-df7a-d5c2-f657-16d06e402bd4@collabora.com>
+ <CACeCKafG35Di+SU2i=DD09tUyFvq0wyDOLj5J1fUhnds3bTeDg@mail.gmail.com>
+ <20200218183004.GA184561@google.com>
+ <3e6c4ffc-5f7d-7b25-0a5a-d293fa6dd4d4@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223011154.GY23230@ZenIV.linux.org.uk>
+In-Reply-To: <3e6c4ffc-5f7d-7b25-0a5a-d293fa6dd4d4@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 01:12:21AM +0000, Al Viro wrote:
-> 	This is a slightly extended repost of the patchset posted on
-> Jan 19.  Current branch is in vfs.git#work.do_last, the main
-> difference from the last time around being a bit of do_last()
-> untangling added in the end of series.  #work.openat2 is already
-> in mainline, which simplifies the series - now it's a straight
-> branch with no merges.
+On Thu, Feb 20, 2020 at 05:07:00PM +0100, Enric Balletbo i Serra wrote:
+> Hi Prashant,
+> 
+> Could you base your next series on top of [1]. Also, if you can give your
+> feedback and test those, would be much appreciated ;-)
 
-Whee...  While trying to massage ".." handling towards the use of
-regular mount crossing semantics, I've found something interesting.
-Namely, if you start in a directory with overmounted parent,
-LOOKUP_NO_XDEV resolution of ../something will bloody well cross
-into the overmount.
+Sure Enric, I will attempt to rebase on top of [1] this week. I'll
+update you once this is done. Thanks!
 
-Reason: follow_dotdot() (and its RCU counterpart) check for LOOKUP_NO_XDEV
-when crossing into underlying fs, but not when crossing into overmount
-of the parent.
-
-Interpretation of .. is basically
-
-loop:	if we are in root					// uncommon
-		next = current position
-	else if we are in root of a mounted filesystem		// more rare
-		move to underlying mountpoint
-		goto loop
-	else
-		next = parent directory of current position	// most common
-
-	while next is overmounted				// _VERY_ uncommon
-		next = whatever's mounted on next
-
-	move to next
-
-The second loop should've been sharing code with the normal mountpoint
-crossing.  It doesn't, which has already lead to interesting inconsistencies
-(e.g. autofs generally expects ->d_manage() to be called before crossing
-into it; here it's not done).  LOOKUP_NO_XDEV has just added one more...
-
-Incidentally, another inconsistency is LOOKUP_BENEATH treatment in case
-when we have walked out of the subtree by way of e.g. procfs symlink and
-then ran into .. in the absolute root (that's
-                if (!follow_up(&nd->path))
-                        break;
-in follow_dotdot()).  Shouldn't that give the same reaction as ..
-in root (EXDEV on LOOKUP_BENEATH, that is)?  It doesn't...
-
-Another one is about LOOKUP_NO_XDEV again: suppose you have process'
-root directly overmounted and cwd in the root of whatever's overmounting
-it.  Resolution of .. will stay in cwd - we have no parent within the
-chroot jail we are in, so we move to whatever's overmounting that root.
-Which is the original location.  Should we fail on LOOKUP_NO_XDEV here?
-Plain .. in the root of chroot jail (not overmounted by anything) does
-*not*...
+-Prashant
+> 
+> BTW, I think you need to fix your sendmail as the series are not threaded and
+> appear as independent patches in patchwork, which is a bit hard to follow.
+> 
+> Thanks,
+>  Enric
+> 
+> [1] https://lore.kernel.org/patchwork/cover/1197210/
+> 
+> 
+> On 18/2/20 19:30, Prashant Malani wrote:
+> > Hi All,
+> > 
+> > Just thought I'd ping this thread since it's been a week since the last
+> > email.
+> > 
+> > On Mon, Feb 10, 2020 at 12:14:01PM -0800, Prashant Malani wrote:
+> >> Hi All (trimming most code parts of the thread for the sake of brevity),
+> >>
+> >> Thanks for listing the points Enric, Please see my notes inline:
+> >>
+> >> On Mon, Feb 10, 2020 at 3:03 AM Enric Balletbo i Serra
+> >> <enric.balletbo@collabora.com> wrote:
+> >>>
+> >>> Hi Gwendal, Prashant et all
+> >>>
+> >>> On 7/2/20 19:47, Gwendal Grignou wrote:
+> >>>> On Thu, Feb 6, 2020 at 10:50 AM Prashant Malani <pmalani@chromium.org> wrote:
+> >>>>>
+> >>>>> Hi Enric,
+> >>>>>
+> >>>>> Thanks for taking a look at the patch. Please see my response inline:
+> >> ....
+> >>>>>>>> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+> >>>>>>>>
+> >>>>>>>>      memcpy(state->msg->data, &state->param, sizeof(state->param));
+> >>>>>>>>
+> >>>>>>>> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+> >>>>>>>> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
+> >>>>>>>>      if (ret < 0)
+> >>>>>>>>              return ret;
+> >>>>>>>> +    else if (state->msg->result != EC_RES_SUCCESS)
+> >>>>>>>> +            return -EPROTO;
+> >>>>>>>>
+> >>>>>>
+> >>>>>> There is no way to use the new cros_ec_cmd here?
+> >>>> When the EC does not support sensor fifo,
+> >>>> cros_ec_motion_send_host_cmd() is on the data path. For instance, it
+> >>>> is called 2 times every 10ms by chrome to calculate the lid angle. I
+> >>>> would be reluctant to call malloc. Given it is well encapsulated into
+> >>>> the sensor stack. Does it make sense to call cros_ec_cmd_xfer
+> >>>> directly?
+> >>>>
+> >>>
+> >>> Thanks Gwendal for pointing this, it makes totally sense, and I suspect this can
+> >>> happen on other cases.
+> >>>
+> >>> Just to make clear, my concern is not about not using the new 'cros_ec_cmd'
+> >>> here, is about changing 'cros_ec_cmd_xfer_status' for 'cros_ec_cmd_xfer'. Also,
+> >>> my other concern is how useful is the new 'cros_ec_cmd' replacing what we have
+> >>> now if cannot replace all current uses.
+> >>>
+> >>> My points of view are this:
+> >>>
+> >>> * Actually we have cros_ec_cmd_xfer and cros_ec_cmd_xfer_status, use the second
+> >>> one is better, in fact, we tried to move all the cros_ec_cmd_xfer to the _status
+> >>> version in the past because makes the code and error handling cleaner. So I'm
+> >>> reticent to get back to use cros_ec_cmd_xfer instead of cros_ec_cmd_xfer_status.
+> >>>
+> >>> * The users of the cros-ec protocol sometimes they mallocing/freeing at runtime,
+> >>> and sometimes they don't. IMHO *non* mallocing/freeing is usually better, more
+> >>> efficient and faster. Would be nice to standardize this.
+> >>
+> >> I think we should look at latency (I am assuming that is one of the
+> >> concerns Gwendal was referring to).
+> >> We should certainly do more rigorous measurements, but I did a crude
+> >> measurement across a devm_kzalloc() used on one of the EC commands
+> >> inside platform/chrome for struct EC command:
+> >> - Used ktime_get_ns() to record time before and after the devm_kzalloc()
+> >> - Used ktime_sub to subtract the "after" and "before" values:
+> >>
+> >>         struct cros_ec_command *msg;
+> >>         int ret;
+> >> +       ktime_t start, end, diff;
+> >>
+> >> +       start = ktime_get_ns();
+> >>         msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> >> +       end = ktime_get_ns();
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> +       diff = ktime_sub(end, start);
+> >> +       printk("%s(): TEST: kzalloc took: %lld\n", __func__, ktime_to_ns(diff));
+> >>
+> >> On an i5 1.6 GHz system, across 16 call measurements I got the
+> >> following latency values (in ns):
+> >> - Count, N:16
+> >> - Average: 72.375
+> >> - Std. Dev : 28.768
+> >> - Max: 143
+> >> - Min:  51
+> >>
+> >> Are these values significant for the various call-sites? I think the
+> >> driver authors might be able to comment better there (unfortunately I
+> >> don't have enough context for each case).
+> >> Of course there will be other overhead (memcpy) but I think this is a
+> >> good starting point for the discussion.
+> >> (My apologies if this measurement method is incorrect/inaccurate.)
+> > 
+> > Any thoughts / comments here?
+> > 
+> > On an overall note, I think keeping cros_ec_cmd_xfer() and cros_ec_cmd()
+> > might be a good starting point.
+> > 
+> > In this way, we are not introducing any extra function. Also, we can
+> > begin converting the cros_ec_cmd_xfer() use cases (a few call-sites may
+> > need to be investigated from a latency perspective). The
+> > cros_ec_cmd_xfer() conversions are better handled in separate patch
+> > series.
+> > 
+> > Best regards,
+> > 
+> > -Prashant
+> >>
+> >>>
+> >>> * If we want to introduce a new 'cros_ec_cmd', this should make the code cleaner
+> >>> and ideally should be the way we tell the users they should use to communicate
+> >>> with the cros-ec and not open coding constantly. Ideally, should be a
+> >>> replacement of all current 'cros_ec_cmd_xfer*' versions.
+> >>
+> >> As I mentioned previously, I think all calls of cros_ec_cmd_xfer() can
+> >> be converted to use cros_ec_cmd() (especially since the new API has a
+> >> *result pointer),
+> >> but I think it should be staged out a bit more (since cases like iio:
+> >> cros_ec driver require non-trivial refactoring which I think is better
+> >> in a patch/series).
+> >>
+> >>>
+> >>> * If 'cros_ec_cmd' *cannot* replace all the cases, it should be clear to the
+> >>> user in which cases he should use this function and in which cases shouldn't use
+> >>> this function.
+> >>
+> >> This seems like a good compromise, but my expectation is that if there
+> >> is a "fast" and "slow" version of the same functionality, developers
+> >> would be inclined to use the "fast" version always?
+> >>
+> >>
+> >>> * Finally, what pointed Gwendal, what's the best approach to send commands to
+> >>> the EC by default, is better use dynamic memory? or is better use the stack? is
+> >>> it always safe use the stack? is always efficient use allocated memory?
+> >>>
+> >>> As you can see I have a lot of questions still around, but taking in
+> >>> consideration that this will be an important change I think that makes sense
+> >>> spend some time discussing it.
+> >>>
+> >>> What do you think?
+> >>>
+> >>> Enric
+> >>>
+> >>>
+> >>>> Gwendal.
+> >>>>>
+> >>>>> I think it is doable. From looking at the code I felt the factors we
+> >>>>> need to be careful about are:
+> >>>>> - The function cros_ec_motion_send_host_cmd() is called from a few
+> >>>>> other files, each of which set up the struct cros_ec_command
+> >>>>> differently (reference:
+> >>>>> https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
+> >>>>> - It is not clear to me how readability will be affected by making the
+> >>>>> change to cros_ec_cmd().
+> >>>>>
+> >>>>> Due to the above two factors, but primarily because I wanted to avoid
+> >>>>> making such an involved large change in this 17 patch series, I
+> >>>>> reasoned it would be better to make the transition to cros_ec_cmd()
+> >>>>> for these files in a separate patch/series.
+> >>>>> My plan after this patch series is to work on this driver(perhaps we
+> >>>>> can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
+> >>>>> cros_ec_cmd_xfer() usage.
+> >>>>>
+> >>>>> WDYT?
+> >>>>>
+> >>>>> Best regards,
+> >>>>>
+> >>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>>>>      if (ret &&
+> >>>>>>>>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
+> >>>>>>>
