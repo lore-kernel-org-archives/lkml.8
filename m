@@ -2,96 +2,90 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305E3C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB1BC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015D92064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE5821744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNMpfKdu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYGDfqYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgBYPZk (ORCPT
+        id S1731099AbgBYP0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:25:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41740 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729501AbgBYPZj (ORCPT
+        Tue, 25 Feb 2020 10:26:38 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40433 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731045AbgBYP0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:25:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582644338;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XHRKxD00cTyT09o9LKocptIN+yLA1rFAZrxjnmWX1Ls=;
-        b=WNMpfKdukjxhCFt1UUbjJLFvMSTivED30oixJvjCA+2tZV837fc8heq/dLPSC/+7UwKK/f
-        jac6OuCUq/4VdlDlOJPamih3rsHnyWGBtj0bmhcD9FP2msItsBKEnqlqFVoVv1qEtAbsis
-        UKQSWueL1LS/MDzSViuod7TCWLvH/pY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-mSYxfuJ2OnS7Xlgf1SNXPg-1; Tue, 25 Feb 2020 10:25:36 -0500
-X-MC-Unique: mSYxfuJ2OnS7Xlgf1SNXPg-1
-Received: by mail-wr1-f72.google.com with SMTP id t14so899526wrs.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:25:36 -0800 (PST)
+        Tue, 25 Feb 2020 10:26:38 -0500
+Received: by mail-qt1-f196.google.com with SMTP id v25so9283501qto.7;
+        Tue, 25 Feb 2020 07:26:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=H5kUr4WgG5k1LEucWvuIak3cpghudmmXGC7oOGdqPbk=;
+        b=gYGDfqYhI6CblUaeYI8E3MeDfmQgcIT8v8EovacTuGUau4nPzHgHe7GX/1ZkHNVF2J
+         FnNgR+PlKesX4PLdBiBvV73IUmckY34N+ImMaV5wM+wBEquaKuJ8DRH4cxuau/jJDBOA
+         WDrpfGlSPDWpAIeqhyKf73D6WRfYi0wArGnvVl635zK3jfzbug2sB7efJoDESXTEDWgK
+         ze/kHP/cKhkET1nfA2vCSVU1TxmhgnUblZowGHBBYjDXA2d4ryjYJBIRkXed9V+/5TTv
+         oFn769JeU6Zh/idQC1MeKFo2UirguAdXUYeAosJQJzoTMN6lXoPQi5TkZaYf3lprsXA8
+         jNBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
          :content-transfer-encoding;
-        bh=XHRKxD00cTyT09o9LKocptIN+yLA1rFAZrxjnmWX1Ls=;
-        b=efNG1e9fZSRXv5JmA3/5CupL9/ccJBIy0tkDVXIXQ/Ed/4MwvVaQlW44MUrpRrz5xT
-         /SLFJSNrVLWE+rO9999BF+JnAm5fdAXDoZS3azUc4NXJkbHFoE66mzIqbe756f1HSHXE
-         BcxB4E7+XFL+yJPp+pn+hXwy6TtshPU1aVjXQLHDNzQl8xdpBREz7K8yxMFvKIIy0exc
-         3h0GqPonhs/wydyEYORT388BHEsNbl3WM1Q1C81P4POlsBZORqGHI0rT8v7dPpZiAeBG
-         FwUHOe7Dyc/PcX2TsxD0wPKcC036Ai4CYJJQAgAbhXLp+S8gXqtJJPFYB/Jxa5mx+JQj
-         k/9Q==
-X-Gm-Message-State: APjAAAWqfn/Lwe52ftMSMjlhJnws0PSI5/r1edNT3CCpYVsCwBSwHOs0
-        9kkBvsgWBg1VvNujnIzSgC4PxsD1mh+2+EFTRGdAiVZJY0XCgzfUtq1CBqlQ6N+RxgYFE5jIWKL
-        6mVONXgvXeTanhOCoE6imEgug
-X-Received: by 2002:a1c:491:: with SMTP id 139mr5904258wme.117.1582644334822;
-        Tue, 25 Feb 2020 07:25:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxOEO5FTObReQwSnlZOzVoqdfjaEIdHk/sbsxSJs1qE1hoP1ta5zdOmm+8U8vuRcLcMmb2wTA==
-X-Received: by 2002:a1c:491:: with SMTP id 139mr5904230wme.117.1582644334563;
-        Tue, 25 Feb 2020 07:25:34 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:3577:1cfe:d98a:5fb6? ([2001:b07:6468:f312:3577:1cfe:d98a:5fb6])
-        by smtp.gmail.com with ESMTPSA id z21sm4445966wml.5.2020.02.25.07.25.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 07:25:33 -0800 (PST)
-Subject: Re: [PATCH 00/61] KVM: x86: Introduce KVM cpu caps
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <87wo8ak84x.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a52b3d92-5df6-39bd-f3e7-2cdd4f3be6cb@redhat.com>
-Date:   Tue, 25 Feb 2020 16:25:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=H5kUr4WgG5k1LEucWvuIak3cpghudmmXGC7oOGdqPbk=;
+        b=KJ8B59rXSJKyv8Yq7pglQy8QOQeIxfNUzbsq3lxXP27CA7Yg0nNaT98anSABV61olH
+         4m7J9jWOj4C3qldQJUchOdzEw8Z/LH8DNwg+Qc/hIrnUFyOukyIzwqjWtTugOweJoNAK
+         x2x/lx+Yk6mXxzrxdVoPJCaXgkqgxyew5czUVJ1T3h38TIiPLidm1EabQ6ln4xbhBlNH
+         C+75H28re2cM7a7G0fWXwWUWln2P7ZlcIJXjodgOSQeudd9YeLseRnDgqmsuJTBrpcnJ
+         XJn6NKp4hQhX7xdAfYAmGGcImEe7FJf6iODZQDbyVeccQjAVueH3nD9xDkwzqWRZYa7M
+         kVYQ==
+X-Gm-Message-State: APjAAAXDaEBBhYFUsnI4ia6XKvYZoF7c+vKzzkMzDaEPAoTVeruNHsuB
+        NRsPQSRBY+6B2gY1ZXhTi0M=
+X-Google-Smtp-Source: APXvYqzybx+PNry2egFgTpfH6UMHL5FHMxBzLoEBVUQAx82cp2spJWn7wXoG3PrBL+hN+WDxbLAX4Q==
+X-Received: by 2002:aed:2ce4:: with SMTP id g91mr53812077qtd.352.1582644396156;
+        Tue, 25 Feb 2020 07:26:36 -0800 (PST)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id w48sm889934qtc.40.2020.02.25.07.26.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 07:26:35 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:26:34 -0500
+Message-ID: <20200225102634.GB5861@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] Revert "net: dsa: bcm_sf2: Also configure Port 5
+ for 2Gb/sec on 7278"
+In-Reply-To: <20200224234427.12736-1-f.fainelli@gmail.com>
+References: <20200224234427.12736-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87wo8ak84x.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/02/20 16:18, Vitaly Kuznetsov wrote:
-> Would it be better or worse if we eliminate set_supported_cpuid() hook
-> completely by doing an ugly hack like (completely untested):
+On Mon, 24 Feb 2020 15:44:26 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> This reverts commit 7458bd540fa0a90220b9e8c349d910d9dde9caf8 ("net: dsa:
+> bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278") as it causes
+> advanced congestion buffering issues with 7278 switch devices when using
+> their internal Giabit PHY. While this is being debugged, continue with
+> conservative defaults that work and do not cause packet loss.
+> 
+> Fixes: 7458bd540fa0 ("net: dsa: bcm_sf2: Also configure Port 5 for 2Gb/sec on 7278")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Yes, it makes sense.
-
-Paolo
-
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
