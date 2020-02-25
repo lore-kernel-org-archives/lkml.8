@@ -2,94 +2,109 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75897C35E0B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C43C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548572084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEC02084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582647432;
+	bh=l1kpRAXXYq9H4NhUC8N2qXkQy/OJyYRbQ9OH2Dk8bWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sh9qKM4qDV022FwIo05eqP4GqZAGSaCqUWJL5BYRiUlVS89zjHhOXVzPrQUWq5w8A
+	 OV7h/YhOcpOhLrL1RJ29wOQEPnc1jVJpIn+Onpl3+9hYpAmb8N+cbRvRFas5LFhwx2
+	 ptvLyE6Ooukt90IqjdrzBNT5UxD9HI/Jpo+k/W2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgBYQRG (ORCPT
+        id S1730661AbgBYQRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:17:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48448 "EHLO mx2.suse.de"
+        Tue, 25 Feb 2020 11:17:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbgBYQRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:17:05 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B978EABD7;
-        Tue, 25 Feb 2020 16:17:03 +0000 (UTC)
-Message-ID: <a39d4fbf02b21700df8f3a2e9451a917dfee4906.camel@suse.de>
-Subject: Re: [PATCH 12/89] clk: bcm: rpi: Remove pllb_arm_lookup global
- pointer
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Date:   Tue, 25 Feb 2020 17:16:59 +0100
-In-Reply-To: <703e21467f23f63acdac0e078b58040c39b852bf.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-         <703e21467f23f63acdac0e078b58040c39b852bf.1582533919.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-mQsztJO/CyD/HRPi/ysV"
-User-Agent: Evolution 3.34.4 
+        id S1728051AbgBYQRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:17:10 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 050F820CC7;
+        Tue, 25 Feb 2020 16:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582647430;
+        bh=l1kpRAXXYq9H4NhUC8N2qXkQy/OJyYRbQ9OH2Dk8bWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nKiwBpAGLLBuQKBfn37X2vtqT259Mb9XHd5bOP1nZZRGOl6JQzS8GWAsJ7PBuXfwx
+         gZ6TH88rnVq9XSgu26VHUwMb8Qordy829i2btfle/acgmc9QPiO5X8ME6MccexZiKP
+         BCtHM4o8WqXWNHav/CW6STmUhy/9w4kW6sWKCE+4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j6ctQ-007rqy-BK; Tue, 25 Feb 2020 16:17:08 +0000
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 25 Feb 2020 16:17:08 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Heyi Guo <guoheyi@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] irq-gic-v3-its: fix access width for gicr_syncr
+In-Reply-To: <20200225090023.28020-1-guoheyi@huawei.com>
+References: <20200225090023.28020-1-guoheyi@huawei.com>
+Message-ID: <740ba8790b72a42d400cc9fc317c4dba@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: guoheyi@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-02-25 09:00, Heyi Guo wrote:
+> GICR_SYNCR is a 32bit register, so it is better to access it with
+> 32bit access width, though we have not seen any real problem.
+> 
+> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+> 
+> ---
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 65a11257d220..5c6790e3bfbf 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1321,7 +1321,7 @@ static void lpi_write_config(struct irq_data *d,
+> u8 clr, u8 set)
+> 
+>  static void wait_for_syncr(void __iomem *rdbase)
+>  {
+> -	while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
+> +	while (readl_relaxed(rdbase + GICR_SYNCR) & 1)
+>  		cpu_relax();
+>  }
 
---=-mQsztJO/CyD/HRPi/ysV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yup, nice catch. Looks like no implementation really cares about it,
+but still worth fixing.
 
-On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
-> The pllb_arm_lookup pointer in the struct raspberrypi_clk is not used for
-> anything but to store the returned pointer to clkdev_hw_create, and is no=
-t
-> used anywhere else in the driver.
->=20
-> Let's remove that global pointer from the structure.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+I'll take it for 5.7.
 
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Thanks,
 
-Thanks!
-Nicolas
-
-
---=-mQsztJO/CyD/HRPi/ysV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VSHsACgkQlfZmHno8
-x/6IRwf9Fqq8ki5864Qf/tulpjfn0fB7ZlgZ0G6L6r3pcZ8sKECJEgcEnzemvJlD
-gh24JKpJWl83h0w1UCFdDRE1zRoj14kKRyRh86c9etsVknCVQGLhW9n6rO9Zctwy
-xbCmnvEqN+JcJxldJ+ZEbEnCJZVtTJQz0wJX6UrjRcIoBCQXTUIcg3WP2c2xBZc+
-sVAH/gq+rleiF2BeiuTafx6U4Ey5n6AJDrhNVy+O03TX/AQnPzEEWnsp6VUZquDg
-qyqEzBIFkChRFat3B5rgfutAK6FOmOJvhS7/c5fJpn9Ug8CgkXeCBSKZAIG5udug
-k1Wk2dOK1zG+9iwhAaJ7mvp8ih9tEA==
-=NyHR
------END PGP SIGNATURE-----
-
---=-mQsztJO/CyD/HRPi/ysV--
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
