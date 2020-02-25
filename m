@@ -2,108 +2,78 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78255C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36118C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE602084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098BD2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZUftV1WZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731316AbgBYRDo (ORCPT
+        id S1731322AbgBYRE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:03:44 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12394 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728096AbgBYRDn (ORCPT
+        Tue, 25 Feb 2020 12:04:29 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39409 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729832AbgBYRE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:03:43 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PH1sCJ138583
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:03:43 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yd6ktac9g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:03:42 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Tue, 25 Feb 2020 17:03:40 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Feb 2020 17:03:34 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PH3WpP42926282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 17:03:33 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0A1D4204B;
-        Tue, 25 Feb 2020 17:03:32 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A651C42045;
-        Tue, 25 Feb 2020 17:03:31 +0000 (GMT)
-Received: from bali.tlslab.ibm.com (unknown [9.101.4.17])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Feb 2020 17:03:31 +0000 (GMT)
-Subject: Re: [PATCH v3 08/27] ocxl: Emit a log message showing how much LPC
- memory was detected
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-9-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Tue, 25 Feb 2020 18:03:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 12:04:29 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so3928183wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:04:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yL67/kVowXihssgOC1k49Z4q5Ob7fhLHIikyQaonlB0=;
+        b=ZUftV1WZ602cexEiDuSvy3/OpIcp5HARA+6Lt+CjXDqheCE8P1aoq7mFIPGwqdcvK1
+         zZaqZqDmcutwDFb8bV9NHklnZTt4VuTfoFXeBcM/qGGPPbHCHz1oCMohnEVoaRZY3WHg
+         Ft7rS0PSvYIYeT0RNG10FhY4ZIptxQMmCJCj6Zp+YW8j67dugJI9XeOKDp4PxCb5WWAt
+         IL8na28YrWqy/BMxhyiyU5lblWnRsiVsS6xkzWbcH52tHxg4KmAr8TD898M0c9qD9WHT
+         9Wvs3kLZtrDDQuXlHwd3VEfMWEBBmkVBy/SUtPdItByGoVpU3fK0Oyc3l33z3ktN91At
+         yMQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yL67/kVowXihssgOC1k49Z4q5Ob7fhLHIikyQaonlB0=;
+        b=kMGp+uFoyVrrSNWZvuJadjEXTvmeIlRfdSg9cShEnqdpZAHoMZ4bHkSHa4i4145zIr
+         LC4LH2W+s77pZI06shH2RPa3u0jbliy7VRTn6lLBnjXHJSOrz9Xqt4yc0THm+afo3DMC
+         M0fkxxDiKaXTatCFiLx5nMej3h4T2gRzxezvrqg6/pl8uXdqUfoYLh2MmHbkDviuijXz
+         t4t87HIihbwu3yI5rBX5gvtYx3ggPBYTkQ0XaakcT90ByriOVj63bN29rtcbFvNfwWgz
+         FC9FdOpuj5PxLzkcx/zLbUsboFL9YogHBNw1JkohLPnO7W92m0/tuUxpBjJq2LUo64Jh
+         yFIA==
+X-Gm-Message-State: APjAAAVhJExs4FVK5gdS+uEXQ7XX20zy1GZcUDPsS0zzvvzpQRe7IuQM
+        kPBNgq6BL1mKpDVVR3brWMhEyg==
+X-Google-Smtp-Source: APXvYqxb+sPu46jQfnDGzzIaLYa1L8i2d3V8PA9FcCKuBnfzBeGZ+OJjLuvSMO6y5PTjMuwrt97iSw==
+X-Received: by 2002:a05:600c:1009:: with SMTP id c9mr223285wmc.162.1582650267367;
+        Tue, 25 Feb 2020 09:04:27 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id q9sm25764319wrx.18.2020.02.25.09.04.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 09:04:26 -0800 (PST)
+Subject: Re: [PATCH v1 0/3] nvmem: Add support for write-only instances, and
+ clean-up
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <PSXP216MB043899D4B8F693E1E5C3ECCE80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <abdbeaf4-487d-8921-facc-b979421e97e7@linaro.org>
+ <PSXP216MB043872618DA517085324FA0580ED0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <84f85b5e-aae6-8636-448c-37d6e9cb5261@linaro.org>
+Date:   Tue, 25 Feb 2020 17:04:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-9-alastair@au1.ibm.com>
+In-Reply-To: <PSXP216MB043872618DA517085324FA0580ED0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022517-0008-0000-0000-0000035657A1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022517-0009-0000-0000-00004A7773F7
-Message-Id: <f83b0a0f-116e-8e27-00a0-0c3e3ecb7600@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_06:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 mlxlogscore=842 mlxscore=0 priorityscore=1501 bulkscore=0
- malwarescore=0 phishscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250126
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -111,37 +81,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 25/02/2020 15:23, Nicholas Johnson wrote:
+>> Why can not we add a check for reg_read in bin_attr_nvmem_read() before
+>> dereferencing it?
+> That can be easily done in PATCH v2. What error code should be returned?
 > 
-> This patch emits a message showing how much LPC memory & special purpose
-> memory was detected on an OCXL device.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+-EPERM should be good in this case indicating Operation not permitted 
+for implementation reasons!
 
-
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-
-
-
->   drivers/misc/ocxl/config.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index a62e3d7db2bf..701ae6216abf 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -568,6 +568,10 @@ static int read_afu_lpc_memory_info(struct pci_dev *dev,
->   		afu->special_purpose_mem_size =
->   			total_mem_size - lpc_mem_size;
->   	}
-> +
-> +	dev_info(&dev->dev, "Probed LPC memory of %#llx bytes and special purpose memory of %#llx bytes\n",
-> +		afu->lpc_mem_size, afu->special_purpose_mem_size);
-> +
->   	return 0;
->   }
->   
-> 
-
+--srini
