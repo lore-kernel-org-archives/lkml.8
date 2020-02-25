@@ -2,118 +2,94 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D64C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FF1C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3735E2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46A32176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgBYUxb (ORCPT
+        id S1729719AbgBYUyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:53:31 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61574 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729080AbgBYUxS (ORCPT
+        Tue, 25 Feb 2020 15:54:21 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:39632 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728714AbgBYUyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:53:18 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PKoKxC061262;
-        Tue, 25 Feb 2020 15:53:11 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yd6ktgrbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 15:53:11 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01PKqpXj025114;
-        Tue, 25 Feb 2020 20:53:10 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 2yaux6xxhm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 20:53:10 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PKr8Iw47317440
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:53:08 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68484136051;
-        Tue, 25 Feb 2020 20:53:08 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8D43136053;
-        Tue, 25 Feb 2020 20:53:07 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Feb 2020 20:53:07 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
-        gcwilson@linux.ibm.com, jgg@ziepe.ca,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v3 1/4] tpm: of: Handle IBM,vtpm20 case when getting log parameters
-Date:   Tue, 25 Feb 2020 15:53:02 -0500
-Message-Id: <20200225205305.3948001-2-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200225205305.3948001-1-stefanb@linux.vnet.ibm.com>
-References: <20200225205305.3948001-1-stefanb@linux.vnet.ibm.com>
+        Tue, 25 Feb 2020 15:54:21 -0500
+Received: (qmail 6720 invoked by uid 2102); 25 Feb 2020 15:54:20 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 25 Feb 2020 15:54:20 -0500
+Date:   Tue, 25 Feb 2020 15:54:20 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+cc:     linux-usb@vger.kernel.org, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        <scan-admin@coverity.com>, Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] usb: hub: Fix unhandled return value of usb_autopm_get_interface()
+In-Reply-To: <20200225202223.GA9154@lxhi-065.adit-jv.com>
+Message-ID: <Pine.LNX.4.44L0.2002251553030.1485-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_08:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0
- malwarescore=0 phishscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250145
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
 
-A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
-the device tree. Handle it in the same way as 'IBM,vtpm'.
+> Hi Alan,
+> 
+> On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
+> > On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
+> > > [1] (v5.6-rc3) git grep -En "[^=]\s+usb_autopm_get_interface\("
+> > >   drivers/input/touchscreen/usbtouchscreen.c:1788:  usb_autopm_get_interface(intf);
+> > >   drivers/media/usb/stkwebcam/stk-webcam.c:628:     usb_autopm_get_interface(dev->interface);
+> > >   drivers/net/usb/hso.c:1308:                       usb_autopm_get_interface(serial->parent->interface);
+> > >   drivers/net/usb/r8152.c:5231:                     usb_autopm_get_interface(tp->intf);
+> > >   sound/usb/usx2y/us122l.c:192:                     usb_autopm_get_interface(iface);
+> > 
+> > Your regular expression isn't right because it doesn't match lines
+> > where the usb_autopm_get_interface() is preceded only by one whitespace
+> > character (i.e., a tab).  It also will match lines where there are two
+> > space characters between the = sign and the function name.  I think
+> > what you want is more like "(^|[^=[:space:]])\s*" at the start of the
+> > RE.
+> 
+> Agreed. My version filters out some true positives.
+> 
+> > 
+> > A revised search finds line 997 in drivers/usb/core/hub.c and lines
+> > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
+> > other directories.)  AFAICT all three of these should check the return
+> > value, although a error message in the kernel log probably isn't
+> > needed.
+> > 
+> > Do you want to fix those instances up also, maybe merging them in with
+> > the existing patch?
+> 
+> I wonder if squashing all these fixes into one patch is the best option.
+> 
+> There are three commits fixed by the proposed changes in usb core:
+>  - v5.6-rc3 commit 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+>  - v3.9-rc1 commit 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
+>  - v2.6.33-rc1 commit 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
+> 
+> I assume a single fix will create some pain when applying it to the
+> stable branches. Do you have any preference/inputs about that?
 
-The vTPM 2.0's log is written in little endian format so that for this
-aspect we can rely on existing code.
+If you prefer to split this up into multiple patches, that's fine with 
+me.
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- drivers/char/tpm/eventlog/of.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
-index af347c190819..a31a625ad44e 100644
---- a/drivers/char/tpm/eventlog/of.c
-+++ b/drivers/char/tpm/eventlog/of.c
-@@ -17,6 +17,12 @@
- #include "../tpm.h"
- #include "common.h"
- 
-+static const char * const compatibles[] = {
-+	"IBM,vtpm",
-+	"IBM,vtpm20",
-+	NULL
-+};
-+
- int tpm_read_log_of(struct tpm_chip *chip)
- {
- 	struct device_node *np;
-@@ -51,7 +57,7 @@ int tpm_read_log_of(struct tpm_chip *chip)
- 	 * endian format. For this reason, vtpm doesn't need conversion
- 	 * but physical tpm needs the conversion.
- 	 */
--	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
-+	if (!of_device_compatible_match(np, compatibles)) {
- 		size = be32_to_cpup((__force __be32 *)sizep);
- 		base = be64_to_cpup((__force __be64 *)basep);
- 	} else {
--- 
-2.23.0
+Alan Stern
 
