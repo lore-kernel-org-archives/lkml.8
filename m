@@ -2,159 +2,158 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B31C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358D4C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF7B22464
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DC324656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRm7Atxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgBYDlx (ORCPT
+        id S1728849AbgBYDos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:41:53 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36058 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgBYDlw (ORCPT
+        Mon, 24 Feb 2020 22:44:48 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36935 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgBYDos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:41:52 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so4918379plm.3;
-        Mon, 24 Feb 2020 19:41:52 -0800 (PST)
+        Mon, 24 Feb 2020 22:44:48 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so682216pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:44:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iKIwG2W+z0cryGHjYQGewymShZk7YQHTShR2retuQ1I=;
+        b=jRm7AtxwnjKep/goXIg5XTWa2/32AFuCOhpGCTfEd8sLFgrK9hVpGj+KkZNynqvPTN
+         LBgjaVSkCIfTc1F2TET0JWQec65b4QgAgNugn+LD0bTWH2phmUDhL1eF1D8kxGxN+9VO
+         eDhV7g+MRyfs0T2HcTqEhASfHrc1dABKZx8ewx90TPx0C7ukjaEb23THARseb3Yn/cIF
+         x6DpmgM1LduRD3O9DFjVYujA9SKU8rE00w00hH9qg1gA6GbznIxs1LIyHC/T6bm73qWL
+         VEhprIM1vFqnKS+0uU5+8uwYaLKl5zROnnLjfQg5RKK4Pf+miq4xeRr5KvbjoVFlyL9H
+         z+Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NfwJ5K56Btcw4+UaJTYHBCDqKgLQRVQFN/YDLhlR3cE=;
-        b=IyzGPlJoRjnXtrZKqxy8CeKRhhTCgUF5T/HuODbaT4Fnz4/dB1zm+tUyrECKP8GjLj
-         wXcftavqOexWAhqSdB37F8b0qGPcDAKApjrf4zBUgBTUFM48lINxJIajhQxloqZX+IxW
-         38F5jXt/v/GWOYt78t2mBu7pa3D1Gi4P+9jUxcYi5lThf6LfBOKwu6eA3QFtdi7vT3S3
-         VkcDGBjPBMfKa9JqUiAYRyIRBMDrctVjxiE49RkyjL2seI12yVdEyPnidtrncexLeIxG
-         M3FAFPcqnFhd+tQ+yc9sYVmK0pOjYGAX6ETtmSlSylfaU9Wc0JLMNRYPPXo6DX0sNrv3
-         2phA==
-X-Gm-Message-State: APjAAAURh3W1TbuYfAcWMktVqSW/ARx58xwTWQMphFuA+9J5czzle7+G
-        z6/7Mp4p/f6LxWp78l8S1NXRiPyxhP8=
-X-Google-Smtp-Source: APXvYqxjqaP4aSXz3bwzH7aV+g9LNgqYdRjYsNhqFFdaTjsULo7Q6Rj28RTLmhuTYEpfDsdsibeoqQ==
-X-Received: by 2002:a17:90a:3841:: with SMTP id l1mr2784753pjf.108.1582602111270;
-        Mon, 24 Feb 2020 19:41:51 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:e0d5:574d:fc92:e4e? ([2601:647:4000:d7:e0d5:574d:fc92:e4e])
-        by smtp.gmail.com with ESMTPSA id w21sm14427241pgc.87.2020.02.24.19.41.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 19:41:50 -0800 (PST)
-Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98
- (Debian)
-To:     Ondrej Zary <linux@zary.sk>
-Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <202002231929.01662.linux@zary.sk>
- <202002232057.16101.linux@zary.sk>
- <336cb7b1-5e40-5830-3c1c-4389257081ea@acm.org>
- <202002240920.17691.linux@zary.sk>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <1fbad673-1b8c-0813-c60e-a4f56330a972@acm.org>
-Date:   Mon, 24 Feb 2020 19:41:48 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iKIwG2W+z0cryGHjYQGewymShZk7YQHTShR2retuQ1I=;
+        b=OfwfMEpct9KjoAiam38AwCtNFtJkPpOJd5p912zxb8v9YrEf5rEoBfo0xjTMABw6BP
+         ltSHgqVlpvX60HjBOME3WoZ0uLR0ylLcdfT/qZ3URCTRp95tcE46hS00WyMlym5rcSE0
+         Ik5U8PueerTh9dVtHs2sru8Rx54TP6n1Z/rjsQlSLk3YFLMle+wk2ji0dSGzoFQXS4tf
+         aAS0tLZhLSTBR7BZMbO0DThAJrNZ74PMEQzQozM9CFKz5eYqL41b/RQOVxuGFhyMQ5qt
+         r0qUmYyed70+3yn+5kgESO1V9rwkJvbtW6ySrxdn4bI5BXqDJ+DPxWuopafH1CVfGmjL
+         QkXg==
+X-Gm-Message-State: APjAAAVDMY5iH+aS2IpicYKBx07UOSZBAExLVUKdi9MonC0SAEw69J1V
+        MCeqBNOg+3e4faQWaKxzFZg=
+X-Google-Smtp-Source: APXvYqwSxLhXZPyZ1rne8EW0Ux0HAaM30ydcFgWoHXA/Wnildgog998jELIoe+SbR7Pt7dFjV7ipWw==
+X-Received: by 2002:a17:90a:8a98:: with SMTP id x24mr2843092pjn.113.1582602287660;
+        Mon, 24 Feb 2020 19:44:47 -0800 (PST)
+Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id h22sm5081758pgn.57.2020.02.24.19.44.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 19:44:46 -0800 (PST)
+Date:   Tue, 25 Feb 2020 11:44:38 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
+ <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <202002240920.17691.linux@zary.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-24 00:20, Ondrej Zary wrote:
-> Looks like it's in some inlined function.
+On Fri, Feb 14, 2020 at 02:10:53PM +0800, Aubrey Li wrote:
+> On Fri, Feb 14, 2020 at 2:37 AM Tim Chen <tim.c.chen@linux.intel.com> wrote:
+> >
+> > On 2/12/20 3:07 PM, Julien Desfossez wrote:
+> >
+> > >>
+> > >> Have you guys been able to make progress on the issues with I/O intensive workload?
+> > >
+> > > I finally have some results with the following branch:
+> > > https://github.com/digitalocean/linux-coresched/tree/coresched/v4-v5.5.y
+> > >
+> > >
+> > > So the main conclusion is that for all the test cases we have studied,
+> > > core scheduling performs better than nosmt ! This is different than what
+> > > we tested a while back, so it's looking really good !
+> >
+> > Thanks for the data.  They look really encouraging.
+> >
+> > Aubrey is working on updating his patches so it will load balance
+> > to the idle cores a bit better.  We are testing those and will post
+> > the update soon.
 > 
-> /usr/src/linux-source-4.19# gdb /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
-> GNU gdb (Debian 8.2.1-2+b3) 8.2.1
-> ...
-> Reading symbols from /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...Reading symbols 
-> from /usr/lib/debug//lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...done.
-> done.
+> I added a helper to check task and cpu cookie match, including the
+> entire core idle case. The refined patchset updated at here:
+> https://github.com/aubreyli/linux/tree/coresched_v4-v5.5.2
 > 
-> (gdb) list *(qla24xx_async_abort_cmd+0x1b)
-> 0xf88b is in qla24xx_async_abort_cmd (./arch/x86/include/asm/atomic.h:97).
-> 92       *
-> 93       * Atomically increments @v by 1.
-> 94       */
-> 95      static __always_inline void arch_atomic_inc(atomic_t *v)
-> 96      {
-> 97              asm volatile(LOCK_PREFIX "incl %0"
-> 98                           : "+m" (v->counter) :: "memory");
-> 99      }
-> 100     #define arch_atomic_inc arch_atomic_inc
->
-> [ ... ]
-> 
-> (gdb) disassemble qla24xx_async_abort_cmd
-> Dump of assembler code for function qla24xx_async_abort_cmd:
->    0x000000000000f870 <+0>:     callq  0xf875 <qla24xx_async_abort_cmd+5>
->    0x000000000000f875 <+5>:     push   %r15
->    0x000000000000f877 <+7>:     push   %r14
->    0x000000000000f879 <+9>:     push   %r13
->    0x000000000000f87b <+11>:    push   %r12
->    0x000000000000f87d <+13>:    push   %rbp
->    0x000000000000f87e <+14>:    push   %rbx
->    0x000000000000f87f <+15>:    mov    0x28(%rdi),%r13
->    0x000000000000f883 <+19>:    mov    0x20(%rdi),%r15
->    0x000000000000f887 <+23>:    mov    0x48(%rdi),%r14
->    0x000000000000f88b <+27>:    lock incl 0x4(%r14)
->    0x000000000000f890 <+32>:    mfence
+> This branch also includes Tim's patchset. According to our testing
+> result, the performance data looks on par with the previous version.
+> A good news is, v5.4.y stability issue on our 8 numa node machine
+> is gone on this v5.5.2 branch.
 
-Thanks, this is very helpful. I think the above means that the crash is
-triggered by the following code:
+One problem I have when testing this branch: the weight of the croup
+seems to be ignored.
 
-	sp = qla2xxx_get_qpair_sp(cmd_sp->qpair, cmd_sp->fcport,
-		GFP_KERNEL);
+On a 2sockets/16cores/32threads VM, I grouped 8 sysbench(cpu mode)
+threads into one cgroup(cgA) and another 16 sysbench(cpu mode) threads
+into another cgroup(cgB). cgA and cgB's cpusets are set to the same
+socket's 8 cores/16 CPUs and cgA's cpu.shares is set to 10240 while cgB's
+cpu.shares is set to 2(so consider cgB as noise workload and cgA as
+the real workload).
 
-From the start of qla2xxx_get_qpair_sp():
+I had expected cgA to occupy 8 cpus(with each cpu on a different core)
+most of the time since it has way more weight than cgB, while cgB should
+occupy almost no CPUs since:
+ - when cgB's task is in the same CPU queue as cgA's task, then cgB's
+   task is given very little CPU due to its small weight;
+ - when cgB's task is in a CPU queue whose sibling's queue has cgA's
+   task, cgB's task should be forced idle(again, due to its small weight).
+ 
+But testing shows cgA occupies only 2 cpus during the entire run while
+cgB enjoys the remaining 14 cpus. As a comparison, when coresched is off,
+cgA can occupy 8 cpus during its run.
 
-	QLA_QPAIR_MARK_BUSY(qpair, bail);
+I haven't taken a look at the patches, but would like to raise the
+problem first. My gut feeling is that, we didn't make the CPU's load
+balanced.
 
-From qla_def.h:
-
-#define QLA_QPAIR_MARK_BUSY(__qpair, __bail) do {	\
-	atomic_inc(&__qpair->ref_count);		\
-	mb();						\
-	if (__qpair->delete_in_progress) {		\
-		atomic_dec(&__qpair->ref_count);	\
-		__bail = 1;				\
-	} else {					\
-	       __bail = 0;				\
-	}						\
-} while (0)
-
-One of the changes between kernel version v4.9.210 and v4.19.98 is the
-following: "qla2xxx: Add multiple queue pair functionality". I think the
- above information means that the cmd_sp->qpair pointer is NULL. I will
-let QLogic recommend a solution.
-
-Bart.
+P.S. it's not that I care about VM's performance, it's just easier to
+test kernel stuff using a VM than on a bare metal. Its CPU setup might
+seem weird, I just set it up to be the same as my host setup.
