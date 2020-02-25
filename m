@@ -2,151 +2,183 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E201AC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBCC35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857D820CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="P184IGeA"
+	by mail.kernel.org (Postfix) with ESMTP id A3ED92084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582649835;
+	bh=90JBCZvuUwjkSs1Hnc3LpN1N/kPAIDcqYTB1iAObgdY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SktAqCCN5Pj+0EdgbDmLlusIXDeNcwX6Os7S8PA0w7uEp8Co95PXWm99Xsv/Yh7SP
+	 xGbYWVDtdEOIzzy1gxV8LXDJ6IIf+CORiMVznY3d/rmdQhO7ShY/Imy9iuT5j9NVcp
+	 +szUfsDJFhdNDz5GdK5GcVYP124r++O265jv6JuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbgBYQzh (ORCPT
+        id S1731223AbgBYQ5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:55:37 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37473 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgBYQzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:55:36 -0500
-Received: by mail-qt1-f194.google.com with SMTP id j34so130376qtk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 08:55:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=eI480rA4BDfxWyGgJwW8aPuYxCTO0HnuLE75vGul/Xs=;
-        b=P184IGeAqAXRM6R0OEhOJISQRtMWwb9pZ+9c1oAjp2YYR6Dp+uD6ARuWbBtHGOZr2J
-         vK6M4D6AzZC47x9J9h3G0MuW3tXDh+CWptXiLd+VP81+pxlCGywMqrhqyhm9rPX9LImG
-         mNZaRu+T1/sHzEsctNZT4TQZ34JL0gnGDh60xKlsJpFyfyvfVU1n/MqSHFQdDVCOV8lc
-         UNFv8f7ymvtvvvb101XFzxusbA2Oed3oEMx+3QjgkoJJeL5yyx7fpX6DCmCoYicsBAEK
-         IEjLhNX56qFDHYUOi43NZuecSd1k0uDwfEaebDtDS06hVuWSB66CVTtRZhS/44GYjC9u
-         /FcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eI480rA4BDfxWyGgJwW8aPuYxCTO0HnuLE75vGul/Xs=;
-        b=HeHIlK4VTJwWlX9VXW2BOcSyZsy2dSdEGFstcjSWUir/6mqK6JvAHlfHdpZBRgcvzF
-         sBb/e7MVHeuaoDbU5zD6Q5Wh/xbCiSxJoULAlGTOs1nh3JpQwj+MdmJu4rD7PvMZ2nbi
-         FSsZC02iVEHWOEiTw90VkQtLmqT1fwGY5AlanUq+S6zintJGvb+1LzkEK4M3dFWqf+6u
-         zuZrzOWekUIwkqcMcn6etH8qJpOIK3OqWr5phDG58SJy45V1u9lYPUHBWhZq2IRqslQc
-         4ag7Vf0zOaohljLIKFokEE8A3tNQ5//P8ATedqZco6PugfKLpwGvBK5q0Gg9Kc8YePub
-         oTMA==
-X-Gm-Message-State: APjAAAWSxh7EXY43WcFx+rN0moaNpbHxEtFftsaH6aNTq9iEaEZE4nll
-        xn0R+aUwuCJF2rfcsHTlBY1prA==
-X-Google-Smtp-Source: APXvYqy1XlyOCJvt2qv6r7oiMMhi6kuONC5iyE5pEOGafBPuUCN+6TpPX1LQbN0UxPaL4BYZySjpYg==
-X-Received: by 2002:ac8:6046:: with SMTP id k6mr56995736qtm.357.1582649735740;
-        Tue, 25 Feb 2020 08:55:35 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 131sm2743238qkl.86.2020.02.25.08.55.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 08:55:35 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/vmscan: fix data races at kswapd_classzone_idx
-Date:   Tue, 25 Feb 2020 11:55:26 -0500
-Message-Id: <1582649726-15474-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 25 Feb 2020 11:57:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727983AbgBYQ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:57:13 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B664C21927;
+        Tue, 25 Feb 2020 16:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582649832;
+        bh=90JBCZvuUwjkSs1Hnc3LpN1N/kPAIDcqYTB1iAObgdY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2OT1bZXD227lBlfGSt2jsJ3rPt6z/gNKbLuKbylKTau3IUc7jhdLumNvYIIHHYJDq
+         i6YDuBL/cysZRA31xcnYBbQO4vvATKpFxNsLrndeYJtf5zqLIlEwxoNSpU5EeTNjtA
+         TNoO1adeYDCBYlu7+PdEgXhJOI/a6sF/0axR8Tf4=
+Received: by mail-qt1-f172.google.com with SMTP id d9so96461qte.12;
+        Tue, 25 Feb 2020 08:57:12 -0800 (PST)
+X-Gm-Message-State: APjAAAU3RjHl+H/RQcjTIL09oKRc0kQxC+GUlD7glqe7N8TjZpoy6Ecc
+        V5nk/AomzA6E5j5Y+7CN0y+oYRu1/NsbsXVnFw==
+X-Google-Smtp-Source: APXvYqynQGVCaS6vsUSmY1psEfHgy4a65Fy7HlLUFGmtipR1MpihYRNwkGCOJdMOtj5iyqJoT2+ascR04bYI1hr352c=
+X-Received: by 2002:ac8:5513:: with SMTP id j19mr54927970qtq.143.1582649831805;
+ Tue, 25 Feb 2020 08:57:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20200224211035.16897-1-ansuelsmth@gmail.com> <20200224211035.16897-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200224211035.16897-2-ansuelsmth@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 25 Feb 2020 10:57:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
+Message-ID: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pgdat->kswapd_classzone_idx could be accessed concurrently in
-wakeup_kswapd(). Plain writes and reads without any lock protection
-result in data races. Fix them by adding a pair of READ|WRITE_ONCE() as
-well as saving a branch (compilers might well optimize the original code
-in an unintentional way anyway). The data races were reported by KCSAN,
+On Mon, Feb 24, 2020 at 3:10 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
 
- BUG: KCSAN: data-race in wakeup_kswapd / wakeup_kswapd
+typo in the subject. Use 'dt-bindings: net: ...' for the subject prefix.
 
- write to 0xffff9f427ffff2dc of 4 bytes by task 7454 on cpu 13:
-  wakeup_kswapd+0xf1/0x400
-  wakeup_kswapd at mm/vmscan.c:3967
-  wake_all_kswapds+0x59/0xc0
-  wake_all_kswapds at mm/page_alloc.c:4241
-  __alloc_pages_slowpath+0xdcc/0x1290
-  __alloc_pages_slowpath at mm/page_alloc.c:4512
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_vma+0x8a/0x2c0
-  do_anonymous_page+0x16e/0x6f0
-  __handle_mm_fault+0xcd5/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+> Add documentations for ipq806x mdio driver.
+>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> Changes in v7:
+> - Fix dt_binding_check problem
 
- 1 lock held by mtest01/7454:
-  #0: ffff9f425afe8808 (&mm->mmap_sem#2){++++}, at:
- do_page_fault+0x143/0x6f9
- do_user_addr_fault at arch/x86/mm/fault.c:1405
- (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
- irq event stamp: 6944085
- count_memcg_event_mm+0x1a6/0x270
- count_memcg_event_mm+0x119/0x270
- __do_softirq+0x34c/0x57c
- irq_exit+0xa2/0xc0
+Um, no you didn't...
 
- read to 0xffff9f427ffff2dc of 4 bytes by task 7472 on cpu 38:
-  wakeup_kswapd+0xc8/0x400
-  wake_all_kswapds+0x59/0xc0
-  __alloc_pages_slowpath+0xdcc/0x1290
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_vma+0x8a/0x2c0
-  do_anonymous_page+0x16e/0x6f0
-  __handle_mm_fault+0xcd5/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+>
+>  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> new file mode 100644
+> index 000000000000..3178cbfdc661
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
- 1 lock held by mtest01/7472:
-  #0: ffff9f425a9ac148 (&mm->mmap_sem#2){++++}, at:
- do_page_fault+0x143/0x6f9
- irq event stamp: 6793561
- count_memcg_event_mm+0x1a6/0x270
- count_memcg_event_mm+0x119/0x270
- __do_softirq+0x34c/0x57c
- irq_exit+0xa2/0xc0
+Dual license new bindings please:
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/vmscan.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+(GPL-2.0-only OR BSD-2-Clause)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 876370565455..400950734e5a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3961,11 +3961,10 @@ void wakeup_kswapd(struct zone *zone, gfp_t gfp_flags, int order,
- 		return;
- 	pgdat = zone->zone_pgdat;
- 
--	if (pgdat->kswapd_classzone_idx == MAX_NR_ZONES)
--		pgdat->kswapd_classzone_idx = classzone_idx;
--	else
--		pgdat->kswapd_classzone_idx = max(pgdat->kswapd_classzone_idx,
--						  classzone_idx);
-+	if (READ_ONCE(pgdat->kswapd_classzone_idx) == MAX_NR_ZONES ||
-+	    READ_ONCE(pgdat->kswapd_classzone_idx) < classzone_idx)
-+		WRITE_ONCE(pgdat->kswapd_classzone_idx, classzone_idx);
-+
- 	pgdat->kswapd_order = max(pgdat->kswapd_order, order);
- 	if (!waitqueue_active(&pgdat->kswapd_wait))
- 		return;
--- 
-1.8.3.1
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x MDIO bus controller
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description: |+
 
+Don't need '|+' unless you need specific formatting.
+
+> +  The ipq806x soc have a MDIO dedicated controller that is
+> +  used to comunicate with the gmac phy conntected.
+> +  Child nodes of this MDIO bus controller node are standard
+> +  Ethernet PHY device nodes as described in
+> +  Documentation/devicetree/bindings/net/phy.txt
+> +
+> +allOf:
+> +  - $ref: "mdio.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq8064-mdio
+
+blank line between properties please.
+
+> +  reg:
+> +    maxItems: 1
+> +    description: address and length of the register set for the device
+
+That's every 'reg', you can drop this.
+
+> +  clocks:
+> +    maxItems: 1
+> +    description: A reference to the clock supplying the MDIO bus controller
+
+That's every 'clocks', you can drop this.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    mdio0: mdio@37000000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        compatible = "qcom,ipq8064-mdio", "syscon";
+
+'syscon' doesn't match the schema and is wrong.
+
+> +        reg = <0x37000000 0x200000>;
+
+> +        resets = <&gcc GMAC_CORE1_RESET>;
+> +        reset-names = "stmmaceth";
+
+Not documented.
+
+> +        clocks = <&gcc GMAC_CORE1_CLK>;
+
+You need to include the header for these defines.
+
+> +
+> +        switch@10 {
+> +            compatible = "qca,qca8337";
+> +            /* ... */
+> +        };
+> +    };
+> --
+> 2.25.0
+>
