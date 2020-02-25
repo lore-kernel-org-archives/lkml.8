@@ -2,92 +2,92 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BF5C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E5C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81B92176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886E0218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o2NK+KRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbgBYJF7 (ORCPT
+        id S1729870AbgBYJHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:05:59 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43357 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729765AbgBYJF7 (ORCPT
+        Tue, 25 Feb 2020 04:07:16 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47740 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbgBYJHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:05:59 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6WA5-0007xl-H8; Tue, 25 Feb 2020 10:05:53 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6WA3-0003FW-Gm; Tue, 25 Feb 2020 10:05:51 +0100
-Date:   Tue, 25 Feb 2020 10:05:51 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     kernel@pengutronix.de, linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>, Jiri Slaby <jslaby@suse.com>,
-        linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v6 2/4] tty: rename tty_kopen() and add new function
- tty_kopen_shared()
-Message-ID: <20200225090551.jhj7sc75neyphbss@pengutronix.de>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-3-uwe@kleine-koenig.org>
- <20200219132113.GD32540@localhost>
- <20200219163758.5rypsol4n6ucost4@pengutronix.de>
- <20200219171759.GE32540@localhost>
- <20200220110427.e6jgzvdhh3ysql3n@pengutronix.de>
- <20200225085503.GP32540@localhost>
+        Tue, 25 Feb 2020 04:07:15 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P977uH037671;
+        Tue, 25 Feb 2020 03:07:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582621627;
+        bh=S9JO7kVucepr2c7FcYvWKG1W++5dKQhcs5rmNi9JnCQ=;
+        h=From:To:CC:Subject:Date;
+        b=o2NK+KRa1IrpPenLR6X0crRq0B0cOTg0+6Lun6EQBUL42YzZv+7SaO49UTYmMJxhm
+         T1GD278D27d/YxA3UmW+3W9ToN/PjmzLgd7DUsQhFG/bpitbJEvKO3X9ABuJlGoaIM
+         y7I7UBXwZKs82JL/YwKnZS42Zf/q/5u/u3qtKJWg=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P9771J034879
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 03:07:07 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 03:07:07 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 03:07:07 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P973Po052643;
+        Tue, 25 Feb 2020 03:07:04 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Mikhak <alan.mikhak@sifive.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
+Date:   Tue, 25 Feb 2020 14:41:25 +0530
+Message-ID: <20200225091130.29467-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200225085503.GP32540@localhost>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 09:55:03AM +0100, Johan Hovold wrote:
-> On Thu, Feb 20, 2020 at 12:04:27PM +0100, Uwe Kleine-König wrote:
-> > Ah I think I see. tty_driver_lookup_tty() might return NULL which for
-> > the trigger driver indicates that tty_kopen_shared should be retried,
-> > right?
-> 
-> I'm not sure how best to handle this, but yes, your trigger can only be
-> enabled while the port is open currently. And no error is returned to a
-> user trying to enable the trigger before it has been opened.
-> 
-> But regardless of the error reporting, I don't think failing when the
-> port isn't open is the right thing to do as as this makes the interface
-> rather useless since you cannot enable a trigger from for example a udev
-> rule.
-> 
-> If this approach is to be used at all, it seems you may need to allocate
-> the struct tty when the trigger is enabled. And make sure you don't mess
-> up some other assumption in tty core...
+Patch series uses dma engine APIs in pci-epf-test to transfer data using
+DMA. It also adds an option "-d" in pcitest for the user to indicate
+whether DMA has to be used for data transfer. This also prints
+throughput information for data transfer.
 
-My idea is instead to retry opening the device later. At least this
-sounds easier.
+Kishon Vijay Abraham I (5):
+  PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer
+    data
+  PCI: endpoint: functions/pci-epf-test: Print throughput information
+  misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
+  tools: PCI: Add 'd' command line option to support DMA
+  misc: pci_endpoint_test: Add support to get DMA option from userspace
 
-Best regards
-Uwe
+ drivers/misc/pci_endpoint_test.c              | 165 ++++++++++--
+ drivers/pci/endpoint/functions/pci-epf-test.c | 253 +++++++++++++++++-
+ include/uapi/linux/pcitest.h                  |   5 +
+ tools/pci/pcitest.c                           |  20 +-
+ 4 files changed, 412 insertions(+), 31 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
