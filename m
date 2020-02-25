@@ -2,175 +2,140 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB563C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE98C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9177321744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582621792;
-	bh=tpjQ45p7r1ps14Z3kP8eeSKUpmMzgqVzsWCAfUII5WQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0BjT2WmaTX5e7bAXiJGajOh6s51MyqnwIXJ7RhfRdxVLcc070u+aMNuYsvGXHCRrM
-	 g1nMVVlsDCAhjxJP4uW291nQGTL7YRhEBzzt040Na82QMn0g4TqPt454yaeQj3Rzpw
-	 QWXVGB9vBb4Zs1FLhK+KVsmgXhaB2iZUNcEb+Xjo=
+	by mail.kernel.org (Postfix) with ESMTP id 435DD20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALwgoG0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgBYJJv (ORCPT
+        id S1729891AbgBYJK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:09:51 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52233 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729765AbgBYJJu (ORCPT
+        Tue, 25 Feb 2020 04:10:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20729 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726867AbgBYJKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:09:50 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so2150006wmc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 01:09:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QHaclFPIY13mvPspJZLNKlXQdjEW/zdYlrNl6VD7TMc=;
-        b=kIJcmNI9Y+DgKlpOUGxak+9m3PQoBty4URXIwQm6GKXaW+8tDU6aPtbkZQ6WrWad7c
-         vvlBxh11URzDDgPJBspsFLM6qUxsW1MlZJ7pKfzh7v76vsEDp3F3Pkahws9W+kZSIQP1
-         QjeVhuH0HqUU/wmqjAVtOGrxLUMlGUvRRi2ZHQLya0327BujTqCImku/WgLcjdPc/Zfk
-         tdDmFGW62TRcuftccUJRZ0pZ+NTwvpBDhG/47+90ARJfo2hXbDgakcgFYJj8sJZ4MAEI
-         70bMTTOYszO70U4Ya6TPZvOyYkozEXAVRSfj1JFJDx0qgUzpqJ6ocp4oT5lg8O32IYxF
-         7kWA==
-X-Gm-Message-State: APjAAAUJgJEyVPhMNWjLZ7/49qHrYC7S/9H1lqSIBewv4m58iP0aZrym
-        +9o9J3GIMH3d0L7aI+UrTW8=
-X-Google-Smtp-Source: APXvYqxfHkqNKyPCP1YAaoP8oymy4CucVZY5mLAOq8eQoz0zcY7eOMQLWFRWPhb55ILVOpjgYFdLLw==
-X-Received: by 2002:a7b:c407:: with SMTP id k7mr4252567wmi.46.1582621787848;
-        Tue, 25 Feb 2020 01:09:47 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id s139sm3322312wme.35.2020.02.25.01.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 01:09:46 -0800 (PST)
-Date:   Tue, 25 Feb 2020 10:09:45 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200225090945.GJ22443@dhcp22.suse.cz>
-References: <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
- <20200219194006.GA3075@sultan-book.localdomain>
- <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain>
- <20200219214513.GL3420@suse.de>
- <20200219224231.GA5190@sultan-book.localdomain>
- <20200220101945.GN3420@suse.de>
- <20200221042232.GA2197@sultan-book.localdomain>
- <20200221080737.GK20509@dhcp22.suse.cz>
- <20200221210824.GA3605@sultan-book.localdomain>
+        Tue, 25 Feb 2020 04:10:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582621854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=wISzkN9lNxlHaad+ndVdLEhfVnbh/wXEoAaxWEoERhA=;
+        b=ALwgoG0qoDZJW1SnrFMWPiEQOl3/rTSob/UHCzLMazVilPedOMqnpZf1SSXyGU/rx7d2f7
+        2ZxtZpFV0Tkj9Yig3gMpcKawuvu2RyyFb+3UHM4vMl9mCu4KibI4z0fCrpUDCYVnnJPwt7
+        VPztwVOv/bC36qtEUWOivTJ1KzyxmkE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-uXNH8L6dNxyxXPRjl0kCdA-1; Tue, 25 Feb 2020 04:10:50 -0500
+X-MC-Unique: uXNH8L6dNxyxXPRjl0kCdA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE7E9102CE15;
+        Tue, 25 Feb 2020 09:10:48 +0000 (UTC)
+Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F0C95D9CD;
+        Tue, 25 Feb 2020 09:10:46 +0000 (UTC)
+Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
+ case
+To:     Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
+        osalvador@suse.de, dan.j.williams@intel.com, rppt@linux.ibm.com,
+        robin.murphy@arm.com
+References: <20200220043316.19668-1-bhe@redhat.com>
+ <20200220103849.GG20509@dhcp22.suse.cz>
+ <20200221142847.GG4937@MiWiFi-R3L-srv>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <75b4f840-7454-d6d0-5453-f0a045c852fa@redhat.com>
+Date:   Tue, 25 Feb 2020 10:10:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221210824.GA3605@sultan-book.localdomain>
+In-Reply-To: <20200221142847.GG4937@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 21-02-20 13:08:24, Sultan Alsawaf wrote:
-[...]
-> Both of these logs are attached in a tarball.
+>>>  include/linux/mmzone.h |   2 +
+>>>  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
+>>>  2 files changed, 127 insertions(+), 53 deletions(-)
+>>
+>> Why do we need to add so much code to remove a functionality from one
+>> memory model?
+> 
+> Hmm, Dan also asked this before.
+> 
+> The adding mainly happens in patch 2, 3, 4, including the two newly
+> added function defitions, the code comments above them, and those added
+> dummy functions for !VMEMMAP.
 
-Thanks! First of all
-$ grep pswp vmstat.1582318979
-pswpin 0
-pswpout 0
+AFAIKS, it's mostly a bunch of newly added comments on top of functions.
+E.g., the comment for fill_subsection_map() alone spans 12 LOC in total.
+I do wonder if we have to be that verbose. We are barely that verbose on
+MM code (and usually I don't see much benefit unless it's a function
+with many users from many different places).
 
-suggests that you do not have any swap storage, right? I will get back
-to this later. Now, let's have a look at snapshots. We have regular 1s
-snapshots intially but then we have
-vmstat.1582318734
-vmstat.1582318736
-vmstat.1582318758
-vmstat.1582318763
-vmstat.1582318768
-[...]
-vmstat.1582318965
-vmstat.1582318975
-vmstat.1582318976
-
-That is 242s time period when even a simple bash script was struggling
-to write a snapshot of a /proc/vmstat which by itself shouldn't really
-depend on the system activity much. Let's have a look at a random chosen
-two consecutive snapshots from this time period:
-
-		vmstat.1582318736	vmstat.1582318758
-			base		diff
-allocstall_dma  	0       	0
-allocstall_dma32        0       	0
-allocstall_movable      5773    	0
-allocstall_normal       906     	0
-
-to my surprise there was no invocation of the direct reclaim in this
-time period. I would expect this to be the case considering the long
-stall. But the source of the stall might be different than the DR.
-
-compact_stall   	13      	1
-
-Direct compaction has been invoked but this shouldn't cause a major
-stall for all processes.
-
-nr_active_anon  	133932  	236
-nr_inactive_anon        9350    	-1179
-nr_active_file  	318     	190
-nr_inactive_file        673     	56
-nr_unevictable  	51984   	0
-
-The amount of anonymous memory is not really high (~560MB) but file LRU
-is _really_ low (~3MB), unevictable list is at ~200MB. That gets us to
-~760M of memory which is 74% of the memory. Please note that your mem=2G
-setup gives you only 1G of memory in fact (based on the zone_info you
-have posted). That is not something unusual but the amount of the page
-cache is worrying because I would expect a heavy trashing because most
-of the executables are going to require major faults. Anonymous memory
-is not swapped out obviously so there is no other option than to refault
-constantly.
-
-pgscan_kswapd   	64788716        14157035
-pgsteal_kswapd  	29378868        4393216
-pswpin  		0       	0
-pswpout 		0       	0
-workingset_activate     3840226 	169674
-workingset_refault      29396942        4393013
-workingset_restore      2883042 	106358
-
-And here we can see it clearly happening. Note how working set refaults
-matches the amount of memory reclaimed by kswapd.
-
-I would be really curious whether adding swap space would help some.
-
-Now to your patch and why it helps here. It seems quite obvious that the
-only effectively reclaimable memory (page cache) is not going to satisfy
-the high watermark target
-Node 0, zone    DMA32
-  pages free     87925
-        min      11090
-        low      13862
-        high     16634
-
-kswapd has some feedback mechanism to back off when the zone is hopless
-from the reclaim point of view AFAIR but it seems it has failed in this
-particular situation. It should have relied on the direct reclaim and
-eventually trigger the OOM killer. Your patch has worked around this by
-bailing out from the kswapd reclaim too early so a part of the page
-cache required for the code to move on would stay resident and move
-further.
-
-The proper fix should, however, check the amount of reclaimable pages
-and back off if they cannot meet the target IMO. We cannot rely on the
-general reclaimability here because that could really be thrashing.
-
-Thoughts?
 -- 
-Michal Hocko
-SUSE Labs
+Thanks,
+
+David / dhildenb
+
