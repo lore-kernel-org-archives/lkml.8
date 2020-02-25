@@ -2,109 +2,142 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173B8C35E0D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8C5C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D1F20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ER4Hn5y3"
+	by mail.kernel.org (Postfix) with ESMTP id D576320CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582658922;
+	bh=No7bnjFMpZoG5H+BKpwiXz76L973BCgC/d2751ecwag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q4IXFKKhn13WPt/JYW9Q/QKudXTfp5tFGYAPf8irpKFxRKp8TouTFl1xwiZyCj69r
+	 eANiVZ/ke2Jy3loU+YY8zHrrO7CDnTpRU9cx7J10yMJK57i3GoJsjBtjB6QTM2CUhq
+	 Zu/SJOr1j/w5qy2rXjoj70ZUpardZ36fEpktnzI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbgBYT2B (ORCPT
+        id S1731504AbgBYT2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:28:01 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36399 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731425AbgBYT2B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:28:01 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d9so38476pgu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:28:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=4tK5dhNanRBX4RJaY81MXL5uMw9VPzyZ3UaipGWjTeA=;
-        b=ER4Hn5y39DsTdFq4OIFR/dyYBA/md+YMiH6Vlftw5sX/8I8svVtJwDWrl+hIbHDMI+
-         9DIcp5qY/z7utP3Wlsfmi7SD9FiFgaz3JqHR/5d8KjPWEgJS68eSS/70DaFi0VVUDqjx
-         qsRNASKUBSfoa6zYDICVI1jWv5RUSbtgDxLeA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=4tK5dhNanRBX4RJaY81MXL5uMw9VPzyZ3UaipGWjTeA=;
-        b=DxSeCE+D7NtFoU+xpI2KNhbqnH3xAba/5PBbUPAFg+X4jbGcVgWs+XDPIrimVBUSxu
-         d+Vd840oaB7ceEcsdqoElK/7Fn3UhXQoMpS11ztLkormo+k0lCasSFA87t9ADLK14+rT
-         MIIewgO4Ar6+2SUeo9ghdpi4KCx1conD3jenLmZxGib0LWxMllUZANWyDEt6CF85sV+n
-         fw0geXxRlG9kB+OwRpKfFl/3q117hrhMqQHk8cCKH0+TuWHktSGPsYcWB3J1Is66C0QO
-         2AhKFYb3iZ5NVJdru7/9q0C8J0cxMlmNFUvyyulQQ5R5joNIUeBPlZdHKnn5s2ek02Kw
-         l0lw==
-X-Gm-Message-State: APjAAAUCK7TyngmWuTzzRFCANUTC2nIXCLCQJMsuhNWpUqn/zvjg36X6
-        hq8cI3uwdiwgf8Vdefm5FhuB9w==
-X-Google-Smtp-Source: APXvYqx/CuR9tWXGTo9ivBHMqDj/j7Gy5ChN3CDCAyQZMV9kpz8TazoKp8muVVv6CLf1YgtUt+g7UA==
-X-Received: by 2002:aa7:9808:: with SMTP id e8mr299103pfl.32.1582658880299;
-        Tue, 25 Feb 2020 11:28:00 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c26sm18406262pfj.8.2020.02.25.11.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 11:27:59 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 25 Feb 2020 14:28:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731421AbgBYT2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:28:40 -0500
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 497F221556
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582658919;
+        bh=No7bnjFMpZoG5H+BKpwiXz76L973BCgC/d2751ecwag=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AgkksRlijt51Q9tKY9iKGj+8UK0aw/qCD8zKaWMaH1HYuNrKTBq1GMeWJK8Fcylju
+         YZIl8g2rCaS5CGhIdVSMKqYb1U3wwp0C7rwPuV1xiMhrstdqvhmmQAcSWnmIRuZmge
+         ALwW9HV03ej2w12NvYlIi+bF+f/g7snhhaJRr3FI=
+Received: by mail-wr1-f48.google.com with SMTP id w12so44388wrt.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:28:39 -0800 (PST)
+X-Gm-Message-State: APjAAAUyz4AcTcqgorpPp976ASLh49Gw4ccs/lxejYL3Ezs9WN+VL/EH
+        TjmjTgeTYpl04F331iVOKWr21QYO0e7N0ZcJaceboQ==
+X-Google-Smtp-Source: APXvYqxiLow7+4oE/PJEkKz/tPa/dH2bB7gxC7MALajKR8VVqXXA4rfmpFYIQhg2vIXh479srq127AzGLjfx1DBezbc=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr671445wrn.262.1582658917548;
+ Tue, 25 Feb 2020 11:28:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid>
-References: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid>
-Subject: Re: [PATCH 1/4] drm/msm/dpu: Remove unused function arguments
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Drew Davenport <ddavenport@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+References: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
+ <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
+ <9e16fed9-4399-5c78-cbfb-6be75c295f31@amd.com> <CAKv+Gu_0LUY67DwSLU1tyijuF+0mKPpvq1j3RSMy5HBxYE-3qw@mail.gmail.com>
+ <96417897-8bf0-e60c-6285-7286673ecd01@amd.com> <CAKv+Gu-5=5bKBdO_r=Z3bAqCM36vfH=vLcCcaFtKcwYpe=AP7g@mail.gmail.com>
+ <b2374776-6499-0b99-9df0-b17a4d84b0e4@amd.com>
+In-Reply-To: <b2374776-6499-0b99-9df0-b17a4d84b0e4@amd.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 25 Feb 2020 20:28:26 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8M5LMjA+JnJ57+BU4jmpgz0OqLyt1W9LXj_UDH=5DgjQ@mail.gmail.com>
+Message-ID: <CAKv+Gu8M5LMjA+JnJ57+BU4jmpgz0OqLyt1W9LXj_UDH=5DgjQ@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/efi: Add additional efi tables for unencrypted
+ mapping checks
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Drew Davenport <ddavenport@chromium.org>,
-        dri-devel@lists.freedesktop.org
-Date:   Tue, 25 Feb 2020 11:27:58 -0800
-Message-ID: <158265887882.177367.3011043098001339741@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Drew Davenport (2020-02-19 09:42:24)
-> Several functions arguments in the resource manager are unused, so
-> remove them.
->=20
-> Signed-off-by: Drew Davenport <ddavenport@chromium.org>
-> ---
+On Tue, 25 Feb 2020 at 20:21, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 2/25/20 12:12 PM, Ard Biesheuvel wrote:
+> > On Tue, 25 Feb 2020 at 19:10, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> >>
+> >> On 2/25/20 11:58 AM, Ard Biesheuvel wrote:
+> >>> On Tue, 25 Feb 2020 at 18:54, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> >>>>
+> >>>> On 2/25/20 11:45 AM, Ard Biesheuvel wrote:
+> >>>>> On Tue, 25 Feb 2020 at 18:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> >>>>>>
+> >>>>>> When booting with SME active, EFI tables must be mapped unencrypted since
+> >>>>>> they were built by UEFI in unencrypted memory. Update the list of tables
+> >>>>>> to be checked during early_memremap() processing to account for new EFI
+> >>>>>> tables.
+> >>>>>>
+> >>>>>> This fixes a bug where an EFI TPM log table has been created by UEFI, but
+> >>>>>> it lives in memory that has been marked as usable rather than reserved.
+> >>>>>>
+> >>>>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> >>>>>>
+> >>>>>> ---
+> >>>>>> Changes since v1:
+> >>>>>> - Re-spun against EFI tree
+> >>>>>
+> >>>>> Which one? Surely not the one in the link I included?
+> >>>>
+> >>>> I did a git clone of
+> >>>>
+> >>>>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
+> >>>>
+> >>>> and checked out branch next. Not sure what I missed...
+> >>>>
+> >>>
+> >>> Weird. Do you see commit 5d288dbd88606d8f215c7138b10649115d79cadd on
+> >>> that branch? It removes rng_seed from struct efi, hence my request to
+> >>> rebase your patch.
+> >>
+> >> I had just assumed you wanted a cleaner version and didn't realize that
+> >> rng_seed was removed from struct efi. My bad for not building.
+> >>
+> >>>
+> >>> IMO, best is to simply drop the 'static' from rng_seed, rename it to
+> >>> efi_rng_seed, and drop an extern declaration in linux/efi.h so it is
+> >>> accessible from your code. I'm reluctant to put it back in struct efi.
+> >>
+> >> Ok, I'll re-work the patch.
+> >>
+> >
+> > OK
+> >
+> > Btw if you want the TPM part of the fix to go to -stable, better to
+> > split them in two (and I'll put a cc:stable on the tpm one)
+>
+> I had thought about stable, but the fix gets tricky since the two tables
+> were added at different times (4.16 and 5.3) and the efi_tables array was
+> moved from drivers/firmware/efi/efi.c to arch/x86/platform/efi/efi.c in 5.4.
+>
+> I could do the two TPM tables each as their own patch and add an
+> appropriate Cc: stable # v4.16.x-, etc., if you don't think that's
+> overkill. The array move shouldn't be too hard to adjust for in stable.
+> Thoughts?
+>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
->=20
->  drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c | 37 ++++++++++----------------
->  1 file changed, 14 insertions(+), 23 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm=
-/disp/dpu1/dpu_rm.c
-> index 23f5b1433b357..dea1dba441fe7 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> @@ -144,8 +144,7 @@ static int _dpu_rm_hw_blk_create(
->                 const struct dpu_mdss_cfg *cat,
->                 void __iomem *mmio,
->                 enum dpu_hw_blk_type type,
-> -               uint32_t id,
-> -               const void *hw_catalog_info)
-> +               uint32_t id)
-
-It would be good to use u32 instead of uint32_t in this code too. The
-kernel style is to use the shorter name for that type.
+So v5.4/v5.5 seems straight-forward then, no? Once that one is in, we
+can do one specially for v4.19
