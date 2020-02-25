@@ -2,242 +2,117 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22560C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB390C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF4E2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C909024672
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgBYMIz (ORCPT
+        id S1730629AbgBYMJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:08:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:49958 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729458AbgBYMIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:08:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFD47113E;
-        Tue, 25 Feb 2020 04:08:52 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35F0C3F6CF;
-        Tue, 25 Feb 2020 04:08:51 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:08:41 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
- initialization
-Message-ID: <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
-References: <20200217121036.3057-1-vidyas@nvidia.com>
- <20200217121036.3057-6-vidyas@nvidia.com>
+        Tue, 25 Feb 2020 07:09:30 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:6366 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgBYMJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:09:30 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PC71cx010548;
+        Tue, 25 Feb 2020 07:09:28 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yb23agfxd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 07:09:28 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01PC9Qcd058795
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 25 Feb 2020 07:09:27 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Feb 2020 04:09:25 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Feb 2020 04:09:25 -0800
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01PC9N1C003238;
+        Tue, 25 Feb 2020 07:09:24 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>
+Subject: [PATCH v2 0/6] iio: accel: adxl372: add peak mode 
+Date:   Tue, 25 Feb 2020 14:09:03 +0200
+Message-ID: <20200225120909.12629-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217121036.3057-6-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_03:2020-02-21,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 adultscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
-> Add support to defer core initialization and to receive a notifier
-> when core is ready to accommodate platforms where core is not for
-> initialization untile reference clock from host is available.
+This series adds the posibility to configure
+the device, from sysfs, to work in peak mode. This enables
+adxl372 to capture only over threshold accelerations.
 
-I don't understand this commit log, please reword it and fix
-the typos, I would merge it then, thanks.
+1. Create sysfs files for falling_period and rising_period
+in events/ dir.
 
-Lorenzo
+2. Create sysfs files for thresh_falling_value and
+thresh_rising_value for each axis.
 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> V3:
-> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> V2:
-> * Addressed review comments from Kishon
-> 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
->  1 file changed, 77 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index bddff15052cc..be04c6220265 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  			   msecs_to_jiffies(1));
->  }
->  
-> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> -				 void *data)
-> -{
-> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -
-> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> -			   msecs_to_jiffies(1));
-> -
-> -	return NOTIFY_OK;
-> -}
-> -
->  static void pci_epf_test_unbind(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static int pci_epf_test_core_init(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_header *header = epf->header;
-> +	const struct pci_epc_features *epc_features;
-> +	struct pci_epc *epc = epf->epc;
-> +	struct device *dev = &epf->dev;
-> +	bool msix_capable = false;
-> +	bool msi_capable = true;
-> +	int ret;
-> +
-> +	epc_features = pci_epc_get_features(epc, epf->func_no);
-> +	if (epc_features) {
-> +		msix_capable = epc_features->msix_capable;
-> +		msi_capable = epc_features->msi_capable;
-> +	}
-> +
-> +	ret = pci_epc_write_header(epc, epf->func_no, header);
-> +	if (ret) {
-> +		dev_err(dev, "Configuration header write failed\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = pci_epf_test_set_bar(epf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (msi_capable) {
-> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> +		if (ret) {
-> +			dev_err(dev, "MSI configuration failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (msix_capable) {
-> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> +		if (ret) {
-> +			dev_err(dev, "MSI-X configuration failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> +				 void *data)
-> +{
-> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	int ret;
-> +
-> +	switch (val) {
-> +	case CORE_INIT:
-> +		ret = pci_epf_test_core_init(epf);
-> +		if (ret)
-> +			return NOTIFY_BAD;
-> +		break;
-> +
-> +	case LINK_UP:
-> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> +				   msecs_to_jiffies(1));
-> +		break;
-> +
-> +	default:
-> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
->  static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  {
->  	int ret;
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -	struct pci_epf_header *header = epf->header;
->  	const struct pci_epc_features *epc_features;
->  	enum pci_barno test_reg_bar = BAR_0;
->  	struct pci_epc *epc = epf->epc;
-> -	struct device *dev = &epf->dev;
->  	bool linkup_notifier = false;
-> -	bool msix_capable = false;
-> -	bool msi_capable = true;
-> +	bool core_init_notifier = false;
->  
->  	if (WARN_ON_ONCE(!epc))
->  		return -EINVAL;
-> @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epc_features = pci_epc_get_features(epc, epf->func_no);
->  	if (epc_features) {
->  		linkup_notifier = epc_features->linkup_notifier;
-> -		msix_capable = epc_features->msix_capable;
-> -		msi_capable = epc_features->msi_capable;
-> +		core_init_notifier = epc_features->core_init_notifier;
->  		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
->  		pci_epf_configure_bar(epf, epc_features);
->  	}
-> @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epf_test->test_reg_bar = test_reg_bar;
->  	epf_test->epc_features = epc_features;
->  
-> -	ret = pci_epc_write_header(epc, epf->func_no, header);
-> -	if (ret) {
-> -		dev_err(dev, "Configuration header write failed\n");
-> -		return ret;
-> -	}
-> -
->  	ret = pci_epf_test_alloc_space(epf);
->  	if (ret)
->  		return ret;
->  
-> -	ret = pci_epf_test_set_bar(epf);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (msi_capable) {
-> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> -		if (ret) {
-> -			dev_err(dev, "MSI configuration failed\n");
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	if (msix_capable) {
-> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> -		if (ret) {
-> -			dev_err(dev, "MSI-X configuration failed\n");
-> +	if (!core_init_notifier) {
-> +		ret = pci_epf_test_core_init(epf);
-> +		if (ret)
->  			return ret;
-> -		}
->  	}
->  
->  	if (linkup_notifier) {
-> -- 
-> 2.17.1
-> 
+3. Set INT1 reg for acitivity/inactivity and push
+event code in events fifo on irq.
+
+4. Add additional ABIs in order to explain the
+user that setting values in the events/ sysfs files
+also changes device behaviour.
+
+5. Update sysfs docs: renames, added two new
+entries for the activity_detect_event/
+inactivity_detect_event
+
+Alexandru Tachici (5):
+  iio: accel: adxl372: add sysfs for time registers
+  iio: accel: adxl372: Add sysfs for g thresholds
+  iio: accel: adxl372: add iio events
+  iio: accel: adxl372: add additional events ABIs
+  iio: accel: adxl372: Update sysfs docs
+
+Stefan Popa (1):
+  iio: accel: adxl372: Add support for FIFO peak mode
+
+1. Device FIFO can now be set in peak mode and only over the
+threshold accelerations will be stored.
+
+Changelog V1 -> V2:
+- switched from custom sysfs for setting the accel thres/timings
+to standard events interface.
+- renamed fifo_peak_mode_enable to buffer_peak_mode_enable
+- on activity/inactivity, event codes are now pushed in
+the events FIFO
+- added additional custom sysfs for explaining that setting
+values in the events/ sysfs files will change the device's
+behaviour.
+
+ .../ABI/testing/sysfs-bus-iio-accel-adxl372   |  30 ++
+ drivers/iio/accel/adxl372.c                   | 265 +++++++++++++++++-
+ 2 files changed, 293 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
+
+-- 
+2.20.1
+
