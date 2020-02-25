@@ -2,101 +2,182 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60656C35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63923C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4B3218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582611146;
-	bh=fxLOFtVYfe/xZb9HlC6PvDLWrLnNe/I7p4/iU1LvhUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r4KdUDYqUapIH7HLSTBPzGYMyCEg6CEJQDMUzfqvAByuzVGx/6E0UTHS5aJTeMIix
-	 +XPgdUKEOgD5e0RrgxxZlhQqD3KNy2GApIe+BBQSeGKrB9UTtedQxPvTVBiQ53bLg8
-	 QIa3Rj/hbZBYeEGNKjj4RMuWi/7ohzD7pkDuilOk=
+	by mail.kernel.org (Postfix) with ESMTP id 3FE212082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgBYGMZ (ORCPT
+        id S1729004AbgBYGNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:12:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 01:13:19 -0500
+Received: from mga11.intel.com ([192.55.52.93]:8040 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgBYGMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:12:24 -0500
-Received: from localhost (unknown [122.167.120.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 557BE2082F;
-        Tue, 25 Feb 2020 06:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582611144;
-        bh=fxLOFtVYfe/xZb9HlC6PvDLWrLnNe/I7p4/iU1LvhUc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=igezpnXUhAdO5oTgHW459emyzcdKLBnR/P1Gw8dY0ve+VGQoVDDraV4MdWqHfMtUo
-         irHddwFcD3/HwfcnJC3CLI42i2sQhWVZDSfb4Le8MzAg+4Y7KyjJHdT5Y4cbqeHPMg
-         nyKpzGOjwpeRbizs0vyFNvNeGOUDVctNjc9bfEyc=
-Date:   Tue, 25 Feb 2020 11:42:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dma: imx-sdma: Fix the event id check to include RX
- event for UART6
-Message-ID: <20200225061220.GK2618@vkoul-mobl>
-References: <20200224172236.22478-1-frieder.schrempf@kontron.de>
- <CAOMZO5CyYbAZRZrGLJNJXNJiekJXptUTu8tOfVw6y7-n-CXesg@mail.gmail.com>
+        id S1726421AbgBYGNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:13:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 22:13:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
+   d="scan'208";a="284574425"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Feb 2020 22:13:18 -0800
+Date:   Mon, 24 Feb 2020 22:13:17 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
+ specific VM EXIT
+Message-ID: <20200225061317.GV29865@linux.intel.com>
+References: <20200224020751.1469-1-xiaoyao.li@intel.com>
+ <20200224020751.1469-2-xiaoyao.li@intel.com>
+ <87lfosp9xs.fsf@vitty.brq.redhat.com>
+ <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
+ <87imjwp24x.fsf@vitty.brq.redhat.com>
+ <20200224161728.GC29865@linux.intel.com>
+ <50134028-ef7a-46c6-7602-095c47406ed7@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5CyYbAZRZrGLJNJXNJiekJXptUTu8tOfVw6y7-n-CXesg@mail.gmail.com>
+In-Reply-To: <50134028-ef7a-46c6-7602-095c47406ed7@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-02-20, 15:43, Fabio Estevam wrote:
-> Hi Frieder,
-> 
-> On Mon, Feb 24, 2020 at 2:22 PM Schrempf Frieder
-> <frieder.schrempf@kontron.de> wrote:
+On Tue, Feb 25, 2020 at 08:13:15AM +0800, Xiaoyao Li wrote:
+> On 2/25/2020 12:17 AM, Sean Christopherson wrote:
+> >On Mon, Feb 24, 2020 at 02:04:46PM +0100, Vitaly Kuznetsov wrote:
+> >>Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> >>
+> >>>On 2/24/2020 6:16 PM, Vitaly Kuznetsov wrote:
+> >>>>Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> >>>>
+> >>>Here variable basic_exit_reason is added for the cases where only basic
+> >>>exit reason number is needed.
+> >>>
+> >>
+> >>Can we do the other way around, i.e. introduce 'extended_exit_reason'
+> >>and use it where all 32 bits are needed? I'm fine with the change, just
+> >>trying to minimize the (unneeded) code churn.
 > >
-> > From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >100% agree.  Even better than adding a second field to vcpu_vmx would be
+> >to make it a union, though we'd probably want to call it something like
+> >full_exit_reason in that case.  That should give us compile-time checks on
+> >exit_reason, e.g. if we try to query one of the upper bits using a u16, e.g.
+> 
+> I have thought about union, but it seems
+> 
+> union {
+> 	u16 exit_reason;
+> 	u32 full_exit_reason;
+> }
+> 
+> is not a good name. Since there are many codes in vmx.c and nested.c assume
+> that exit_reason stands for 32-bit EXIT REASON vmcs field as well as
+> evmcs->vm_exit_reason and vmcs12->vm_exit_reason. Do we really want to also
+> rename them to full_exit_reason?
+
+It's actually the opposite, almost all of the VMX code assumes exit_reason
+holds only the basic exit reason, i.e. a 16-bit value.  For example, SGX
+adds a modifier flag to denote a VM-Exit was from enclave mode, and that
+bit needs to be stripped from exit_reason, otherwise all the checks like
+"if (exit_reason == blah_blah_blah)" fail.  
+
+Making exit_reason a 16-bit alias of the full/extended exit_reason neatly
+sidesteps that issue.  And it is an issue that has caused actual problems
+in the past, e.g. see commit beb8d93b3e42 ("KVM: VMX: Fix handling of #MC
+that occurs during VM-Entry").  Coincidentally, that commit also removes a
+local "u16 basic_exit_reason" :-).
+
+Except for one mistake, the pseudo-patch below is the entirety of required
+changes.  Most (all?) of the functions that take "u32 exit_reason" can (and
+should) continue to take a u32.
+
+As for the name, I strongly prefer keeping the exit_reason name for the
+basic exit reason.  The vast majority of VM-Exits do not have modifiers
+set, i.e. "basic exit reason" == vmcs.EXIT_REASON for nearly all normal
+usage.  This holds true in every form of communication, e.g. when discussing
+VM-Exit reasons, it's never qualified with "basic", it's simply the exit
+reason.  IMO the code is better off following the colloquial usage of "exit
+reason".  A simple comment above the union would suffice to clear up any
+confusion with respect to the SDM.
+
+> Maybe we name it
+> 
+> union {
+> 	u16 basic_exit_reason;
+> 	u32 exit_reason;
+> }
+> 
+> as what SDM defines?
+> 
+> >--- a/arch/x86/kvm/vmx/vmx.c
+> >+++ b/arch/x86/kvm/vmx/vmx.c
+> >@@ -5818,7 +5818,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+> >         if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
+> >                 return nested_vmx_reflect_vmexit(vcpu, exit_reason);
 > >
-> > On i.MX6 the DMA event for the RX channel of UART6 is '0'. To fix
-> 
-> I would suggest being a bit more specific than saying i.MX6.
-> 
-> I see UART6 is present on i.MX6UL/i.MX6SX, but not on i.MX6Q/i.MX6DL,
-> so it would be better to specify it in the commit log.
-> 
-> imx6ul.dtsi does not have dma nodes under uart6, so I guess you fixed
-> it for imx6sx.
+> >-       if (exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
+> >+       if (vmx->full_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
 
-and use right subsystem tag dmaengine. Git log of the file should tell
-you the right one to use :)
+If we do go the union route, this snippet of code is insufficient, the
+full/extended exit reason needs to be snapshotted early for use in the
+tracepoint and in fail_entry.hardware_entry_failure_reason.
 
-> 
-> > the broken DMA support for UART6, we change the check for event_id0
-> > to include '0' as a valid id.
+> >                 dump_vmcs();
+> >                 vcpu->run->exit_reason = KVM_EXIT_FAIL_ENTRY;
+> >                 vcpu->run->fail_entry.hardware_entry_failure_reason
+> >@@ -6620,11 +6620,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >         vmx->nested.nested_run_pending = 0;
+> >         vmx->idt_vectoring_info = 0;
 > >
-> > Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >-       vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+> >-       if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+> >+       vmx->full_exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
+> >+       if (vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+> >                 kvm_machine_check();
+> >
+> >-       if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+> >+       if (vmx->fail ||
+> >+           (vmx->full_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+> >                 return;
+> >
+> >         vmx->loaded_vmcs->launched = 1;
+> >diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> >index 7f42cf3dcd70..60c09640ea59 100644
+> >--- a/arch/x86/kvm/vmx/vmx.h
+> >+++ b/arch/x86/kvm/vmx/vmx.h
+> >@@ -260,7 +260,10 @@ struct vcpu_vmx {
+> >         int vpid;
+> >         bool emulation_required;
+> >
+> >-       u32 exit_reason;
+> >+       union {
+> >+               u16 exit_reason;
+> >+               u32 full_exit_reason;
+> >+       }
+> >
+> >         /* Posted interrupt descriptor */
+> >         struct pi_desc pi_desc;
+> >
+> >
+> >
+> >
+> >
+> >>-- 
+> >>Vitaly
+> >>
 > 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
--- 
-~Vinod
