@@ -2,125 +2,117 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FCCC4BA09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A25BC4BA09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE37B2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:54:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MbmqYJ3b"
+	by mail.kernel.org (Postfix) with ESMTP id DDD762075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgBYXyb (ORCPT
+        id S1729713AbgBYXyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:54:31 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40566 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbgBYXyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:54:31 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i6so1265129otr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oAqDSepBGZ4n0kSIgLmpw4sGTwUtrjb0cUzefUU3KuM=;
-        b=MbmqYJ3bTxMe7ILHkl8V1BpKi1o65X47MQwpIZFrKvtnxk5Ia7N4Yxh5jXyzl2UHvg
-         LFq79hPlxXf+vrVpK/EaB0+1KrISSykbDer85dM71TmGGfWgEsppOzZcSB5V83fUgmF7
-         aDssLGD4jKvmaA4YHFtgPZ5gPfHlhFTuFPJtyqzseOdWael2CHhcynNMr4O0jrAt3Evz
-         LEAQjMvnMx0lLTC2hu5KJWQmalT4BxaNRZmUwh14P5YNkQW2oUMFpeOtu9xr1IoumhII
-         5nQzlJtlv4Itjcmv5ROdVTh+fM0ynFs6JeOFmnDPyps9PFIgACjP8ZuyJySV304cOToe
-         mK2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oAqDSepBGZ4n0kSIgLmpw4sGTwUtrjb0cUzefUU3KuM=;
-        b=g+gYggqnIrjzHnY67pn3kDm0nagpgr9kkmvPl0cqzApSEgJca+5IVVaLf3bfgpXC4E
-         ulkk9dWTVzosXzob2KOplp4jcrDLdQLnomf6oXCvHY+kNBX1eBS8acjHE6DbbsfPRfZ9
-         P2JAgJ9sZjqKPq+SeROtrBe3vpAgvmyEWpNlGVAP4woCXcdnz8kTrwnJNDbVkKxTXeZ8
-         rCdAtRhFt87KLa9qf+BJ/YjN4bvcqtSVGuatqhTPcoOC0WuYswWlsMg+PKX/BxJYkPVv
-         a8/XYrdIXPfOSYdXSsBMBg0svLrqMYJiRtV0dW1n9sK5VCEkbCrRYUp8NsmyVBBfZEls
-         UUYA==
-X-Gm-Message-State: APjAAAVgvr2F9dijdy2zQwUMmJfESJAUCkcMRX3maHv0X+gbDAcj1K4/
-        FB7Sjc5GgCD8phGRHeRgxIfD7dIJNI0ViOWXOA0OYg==
-X-Google-Smtp-Source: APXvYqxHExvDxP3YDUCsYTbRz8HnGzFZhKBTxskzmLJjMa5mreChK7b0tovjYeFp4V6uvGP5Rvmqe9fzCWzwee3BXhU=
-X-Received: by 2002:a05:6830:1184:: with SMTP id u4mr791163otq.221.1582674870075;
- Tue, 25 Feb 2020 15:54:30 -0800 (PST)
+        Tue, 25 Feb 2020 18:54:37 -0500
+Received: from mga06.intel.com ([134.134.136.31]:56759 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729090AbgBYXyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 18:54:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 15:54:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,486,1574150400"; 
+   d="scan'208";a="230279712"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.78]) ([134.134.177.78])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Feb 2020 15:54:34 -0800
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+ <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+ <20200225221234.GL9245@linux.intel.com>
+ <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
+ <20200225232900.GO9245@linux.intel.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
+Date:   Tue, 25 Feb 2020 15:54:34 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org> <1582223216-23459-5-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1582223216-23459-5-git-send-email-jcrouse@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 25 Feb 2020 15:54:19 -0800
-Message-ID: <CALAqxLWc4QQPyh=R6=0uFnLLicTYJ3NMO6QSc_yF31bJ2Z_rkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] drm/msm/a6xx: Use the DMA API for GMU memory objects
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Boyd <swboyd@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        Todd Kjos <tkjos@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225232900.GO9245@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:27 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> The GMU has very few memory allocations and uses a flat memory space so
-> there is no good reason to go out of our way to bypass the DMA APIs which
-> were basically designed for this exact scenario.
->
-> v2: Pass force_dma false to of_dma_configure to require that the DMA
-> region be set up and return error from of_dma_configure to fail probe.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 112 +++-------------------------------
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   5 +-
->  2 files changed, 11 insertions(+), 106 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 983afea..c36b38b 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-...
-> -       count = bo->size >> PAGE_SHIFT;
-> +       bo->virt = dma_alloc_attrs(gmu->dev, bo->size, &bo->iova, GFP_KERNEL,
-> +               bo->attrs);
->
-...
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> index 2af91ed..31bd1987 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> @@ -13,7 +13,7 @@ struct a6xx_gmu_bo {
->         void *virt;
->         size_t size;
->         u64 iova;
-> -       struct page **pages;
-> +       unsigned long attrs;
->  };
+On 2/25/2020 3:29 PM, Sean Christopherson wrote:
+> On Tue, Feb 25, 2020 at 02:52:32PM -0800, Jacob Keller wrote:
+>> On 2/25/2020 2:12 PM, Sean Christopherson wrote:
+>>> On Tue, Feb 25, 2020 at 01:49:13PM -0800, Jacob Keller wrote:
+>>>> Hi Sean,
+>>>>
+>>>> I suspect something is wrong and the features are enabled even though
+>>>> the BIOS has it disabled, leading to later failure because of this.
+>>>
+>>> Hrm.  On the failing kernel, what are the values of MSR 0x3a for all CPUs,
+>>> i.e. what's the output of 'sudo rdmsr -a 0x3a'?
+>>>
+>>
+>> On the old (fedora 30) kernel, every cpu reports as '1'.
+>>
+>> I can't easily test the failing kernel because it crashes during boot.
+> 
+> No need, your BIOS is likely locking the MSR, I doubt the value is any
+> different when running the new kernel.
+> 
+> Does reverting commit a4d0b2fdbcf7 ("KVM: VMX: Use VMX feature flag to
+> query BIOS enabling") resolve the issue?
+> 
+> Is the failing kernel an (umodified) upstream kernel?  A stable kernel?
+> Or something else?  Assuming it's an unmodified upstream kernel, can you
+> send your .config?  I've tried all the obvious Kconfig combinations but
+> haven't been able to reproduce the problem.  Staring at the code hasn't
+> yielded any revelations either.
+> 
 
-As a head up, Todd reported that this patch is causing build trouble
-w/ arm32, as the iova needs to be a dma_attr_t.
+I reverted the suggested commit and added some prints:
 
-I've got a patch for the android-mainline tree to fix this, but you
-might want to spin a v3 to address this.
-  https://android-review.googlesource.com/c/kernel/common/+/1243928
+[   26.056398] X86_FEATURE_MSR_IA32_FEAT_CTL is enabled
+[   26.062426] X86_FEATURE_VMX is enabled
+[   26.066923] kvm: disabled by bios
 
-thanks
--john
+So the old code flow is finding KVM to be disabled, but both features
+are set...
+
+The code that sets this is run first:
+
+> Feb 25 15:46:05 jbrandeb-saw1 kernel: x86/cpu: FEAT_CTL_LOCKED is set
+> Feb 25 15:46:05 jbrandeb-saw1 kernel: x86/cpu: FEAT_CTL_VMX_ENABLED_INSIDE_SMX is unset
+> Feb 25 15:46:05 jbrandeb-saw1 kernel: x86/cpu: FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX is unset
+> Feb 25 15:46:05 jbrandeb-saw1 kernel: x86/cpu: MSR locked by bios
+> Feb 25 15:46:05 jbrandeb-saw1 kernel: x86/cpu: VMX (outside TXT) disabled by BIOS
+> Feb 25 15:46:05 jbrandeb-saw1 kernel: x86/cpu: disabling X86_FEATURE_VMX
+
+But somehow... it is still set later...
+
+So there's something weird going on. Maybe "boot_cpu_has" in the
+vmx_disabled_by_bios is wrong? Hmm.
