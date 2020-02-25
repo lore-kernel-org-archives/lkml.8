@@ -2,150 +2,191 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC77C35E03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664CDC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECC520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3483320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpSF6Rm5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qoxHjOy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbgBYO0c (ORCPT
+        id S1730741AbgBYO0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:26:32 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44484 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbgBYO0c (ORCPT
+        Tue, 25 Feb 2020 09:26:54 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33261 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730719AbgBYO0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:26:32 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so12676354oia.11;
-        Tue, 25 Feb 2020 06:26:30 -0800 (PST)
+        Tue, 25 Feb 2020 09:26:54 -0500
+Received: by mail-vs1-f68.google.com with SMTP id n27so8117026vsa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:26:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QVZ+sybgO0aKAmVZ2qg1eROixluCRNPHwtU0MppkuKU=;
-        b=OpSF6Rm5Qu0v9jB/gF9QSNPI9lbEWCfSRdINO+sRis1bVFFjCgpvgvBMGjd7yjzLB3
-         F4waFiJD9U2jd9tfKG+hDsApfQKEXXe8K9/KDpY7Hksor9SHoO5+ixv4D4/F+8FLRo3Z
-         AyE8lrrqHwIGCOJuhmhZHKbNpjs7hcNKVLQuewbbZ5Rdh3Wd70vGyDLFlp47+Kukk2C0
-         xx0/TkYnSBGytZOSTtlRTDGW9sK4yX0l8tIXETx0Fpd9Dt+BjYEKD/amkrv5TYywErUO
-         7C07A9jDHhXSRc2i2oZVlLflOCg3P+miRrnHvQtJG0C41I8sicmB7TTQufRQmwj3StE/
-         UQkQ==
+        bh=dc9mXVyInlW6eLNwpAGbHUKzj6s6l4zfLFOdqnVBf5M=;
+        b=qoxHjOy/GqgzD/NTmr9stfdAfFgOFFxqtrHseCckSRfapbD8ztNi/TI6LfdhPfuDqh
+         wRyW0A/z3R22Av6sYOs/oG5S6GTBj3WhCWFSEq4CehCfZOhA4uwNyfLXZOfYrdPz939X
+         8Of1AwtxaR3tKdRswTDJ1RIC42BKYFfFixgxiMS9CUU6Xg7RaCZpeMgjhYqZKDJgbZ8Q
+         8e24iEpuWoTQqPVMBorcg41tA44diEyCBFTJbqKqvcV6P+Ohrc3iIy3iumTshW8WFqBS
+         RuYsfmWm3KyvdT53cFhgTsV9EfHKdfHszyqnlg8HN9PdnP72WGy/ITmKDZzMoragPt9E
+         g1lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QVZ+sybgO0aKAmVZ2qg1eROixluCRNPHwtU0MppkuKU=;
-        b=BJREBdPqCQ/KDV2IOIESeZkFpOQtpDAroBc9ERX5D9K3KrGJJrzPqmxKFHVlK9OB3S
-         WTRPIqCTsd75l/jRT4VWv5RzkMkSS+okaFJA/GxteEB8qoCDntDOXVMTEWz0FTUSBf5l
-         ZckMKRzJwEO+WXNSNsfLatv6PYdYGOpAlnKm41i/sXfG/bZt2La/zImsR+YcXxnYEnCW
-         rVBdFSEBeootjaxHL61rJROphfKr41oAy2ss5gHaVDKis389r6YorydzjHk3Zf+/dwrg
-         AoaqKiVlpUCPht9T4FkeUwfz5iNPKjDWqrFoZSOTdU2ZpKyj7dkSamwuJRb7LDrFL49+
-         FmDg==
-X-Gm-Message-State: APjAAAUYxihWLJa5oyU/WmrH0WuiMUlyrYhv9xvhuFwjXUvVjNY129Ix
-        DByc2eV7esOf8GESRHLwwsMTZ9HE0/2yTcYOBEU=
-X-Google-Smtp-Source: APXvYqwqOF94zwr1nS6udLZXJncXxj33efGYNtHI3II4N+LmaoKu0DilqoeydV7O+QDHO5yTlVFJPFzuQkOU3grDp7Q=
-X-Received: by 2002:aca:1913:: with SMTP id l19mr3562113oii.47.1582640790320;
- Tue, 25 Feb 2020 06:26:30 -0800 (PST)
+        bh=dc9mXVyInlW6eLNwpAGbHUKzj6s6l4zfLFOdqnVBf5M=;
+        b=XO/KMtxS/mCSJAtGvyxo3Y32k+BN7uzbpRSDInpWNtDc7KDp05a+yU6SBpT7YqFvHo
+         1fp99M8+KDUd0WuhLo/HW0kNfetKneGOghxABBxeAy+A0wY9R+DAJKl1NDCI/kHtRYVx
+         hx24wArXgwYHkS+wBaZnRrAan+MEAkdQNCJ14cinrtXEsSRC6FgCGHLCZ+tllxWbrqjG
+         +qyf7ifdwWRPRVOIjdR4Doe9CPx7Ftl6eou9z7Y8J6azAnBthrj5Qbt5pCbg6dvfwaer
+         NJA1MJxwSLoZkb7kB3JG0DlD8KLnT4iuzM9b512Z8m5otyfxP3R3KaTMVbWKNyxBW86L
+         C/0A==
+X-Gm-Message-State: APjAAAUOCjrunkHhHCZI6jgXDLZ/v/1hC4nyMPb0MYP1n2IQLPhUeeOK
+        uk3aq0kJtc+8ia+1w0+KK6QRl78/st98Dq9S1RPmnQ==
+X-Google-Smtp-Source: APXvYqzOGPKZDkx0TUAeyXUaxQ9W2P2xwrMP0XdLMV2o4KLwTAxAdwW6k9ZHpquQwNMPJVcG7wB2vdH3XsBrqb/Q2dk=
+X-Received: by 2002:a05:6102:22d6:: with SMTP id a22mr28791854vsh.191.1582640812562;
+ Tue, 25 Feb 2020 06:26:52 -0800 (PST)
 MIME-Version: 1.0
-References: <1582624061-5814-1-git-send-email-wanpengli@tencent.com> <0af6b96a-16ac-5054-7754-6ab4a239a2d4@redhat.com>
-In-Reply-To: <0af6b96a-16ac-5054-7754-6ab4a239a2d4@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 25 Feb 2020 22:26:19 +0800
-Message-ID: <CANRm+Cz7mKjm7_9H4O4y2XYEv8VnErTtu=dr-8fN0RCCjf0wvA@mail.gmail.com>
-Subject: Re: [PATCH v2] KVM: LAPIC: Recalculate apic map in batch
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+In-Reply-To: <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 25 Feb 2020 15:26:16 +0100
+Message-ID: <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Jon Hunter <jonathanh@nvidia.com>, Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 22:20, Paolo Bonzini <pbonzini@redhat.com> wrote:
++ Faiz Abbas
+
+On Tue, 25 Feb 2020 at 12:41, Jon Hunter <jonathanh@nvidia.com> wrote:
 >
-> On 25/02/20 10:47, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated
-> > several times, each time it will consume 10+ us observed by ftrace in my
-> > non-overcommit environment since the expensive memory allocate/mutex/rcu etc
-> > operations. This patch optimizes it by recaluating apic map in batch, I hope
-> > this can benefit the serverless scenario which can frequently create/destroy
-> > VMs.
-> >
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * add apic_map_dirty to kvm_lapic
-> >  * error condition in kvm_apic_set_state, do recalcuate  unconditionally
-> >
-> >  arch/x86/kvm/lapic.c | 29 +++++++++++++++++++----------
-> >  arch/x86/kvm/lapic.h |  2 ++
-> >  arch/x86/kvm/x86.c   |  2 ++
-> >  3 files changed, 23 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index afcd30d..3476dbc 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -164,7 +164,7 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
-> >       kvfree(map);
-> >  }
-> >
-> > -static void recalculate_apic_map(struct kvm *kvm)
-> > +void kvm_recalculate_apic_map(struct kvm *kvm)
-> >  {
 >
-> It's better to add an "if" here rather than in every caller.  It should
-> be like:
+> On 25/02/2020 10:04, Jon Hunter wrote:
 >
->         if (!apic->apic_map_dirty) {
->                 /*
->                  * Read apic->apic_map_dirty before
->                  * kvm->arch.apic_map.
->                  */
->                 smp_rmb();
->                 return;
->         }
+> ...
 >
->         mutex_lock(&kvm->arch.apic_map_lock);
->         if (!apic->apic_map_dirty) {
->                 /* Someone else has updated the map.  */
->                 mutex_unlock(&kvm->arch.apic_map_lock);
->                 return;
->         }
->         ...
-> out:
->         old = rcu_dereference_protected(kvm->arch.apic_map,
->                         lockdep_is_held(&kvm->arch.apic_map_lock));
->         rcu_assign_pointer(kvm->arch.apic_map, new);
->         /*
->          * Write kvm->arch.apic_map before
->          * clearing apic->apic_map_dirty.
+> >>>   I find that from the commit the changes in mmc_flush_cache below is
+> >>> the cause.
+> >>>
+> >>> ##
+> >>> @@ -961,7 +963,8 @@ int mmc_flush_cache(struct mmc_card *card)
+> >>>                          (card->ext_csd.cache_size > 0) &&
+> >>>                          (card->ext_csd.cache_ctrl & 1)) {
+> >>>                  err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> >>> -                               EXT_CSD_FLUSH_CACHE, 1, 0);
+> >>> +                                EXT_CSD_FLUSH_CACHE, 1,
+> >>> +                                MMC_CACHE_FLUSH_TIMEOUT_MS);
+> >
+> >
+> > I no longer see the issue on reverting the above hunk as Bitan suggested
+> > but now I see the following (which is expected) ...
+> >
+> >  WARNING KERN mmc1: unspecified timeout for CMD6 - use generic
+>
+> For Tegra, the default timeout used when no timeout is specified for CMD6
+> is 100mS. So hard-coding the following also appears to workaround the
+> problem on Tegra ...
+
+Interesting.
+
+>
+> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+> index 868653bc1555..5155e0240fca 100644
+> --- a/drivers/mmc/core/mmc_ops.c
+> +++ b/drivers/mmc/core/mmc_ops.c
+> @@ -992,7 +992,7 @@ int mmc_flush_cache(struct mmc_card *card)
+>                         (card->ext_csd.cache_size > 0) &&
+>                         (card->ext_csd.cache_ctrl & 1)) {
+>                 err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> -                                EXT_CSD_FLUSH_CACHE, 1, 0);
+> +                                EXT_CSD_FLUSH_CACHE, 1, 100);
+>                 if (err)
+>                         pr_err("%s: cache flush error %d\n",
+>                                         mmc_hostname(card->host), err);
+>
+> So the problem appears to be causing by the timeout being too long rather
+> than not long enough.
+>
+> Looking more at the code, I think now that we are hitting the condition
+> ...
+>
+> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+> index 868653bc1555..feae82b1ff35 100644
+> --- a/drivers/mmc/core/mmc_ops.c
+> +++ b/drivers/mmc/core/mmc_ops.c
+> @@ -579,8 +579,10 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+>          * the host to avoid HW busy detection, by converting to a R1 response
+>          * instead of a R1B.
 >          */
->         smp_wmb();
->         apic->apic_map_dirty = false;
->         mutex_unlock(&kvm->arch.apic_map_lock);
->         ...
+> -       if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
+> +       if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
+> +               pr_warn("%s: timeout (%d) > max busy timeout (%d)", mmc_hostname(host), timeout_ms, host->max_busy_timeout);
+>                 use_r1b_resp = false;
+> +       }
 >
-> But actually it seems to me that, given we're going through all this
-> pain, it's better to put the "dirty" flag in kvm->arch, next to the
-> mutex and the map itself.  This should also reduce the number of calls
-> to kvm_recalculate_apic_map that recompute the map.  A lot of them will
-> just wait on the mutex and exit.
+>
+> With the above I see ...
+>
+>  WARNING KERN mmc1: timeout (1600) > max busy timeout (672)
+>
+> So with the longer timeout we are not using/requesting the response.
 
-Good point, will do in next version.
+You are most likely correct.
 
-    Wanpeng
+However, from the core point of view, the response is still requested,
+only that we don't want the driver to wait for the card to stop
+signaling busy. Instead we want to deal with that via "polling" from
+the core.
+
+This is a rather worrying behaviour, as it seems like the host driver
+doesn't really follow this expectations from the core point of view.
+And mmc_flush_cache() is not the only case, as we have erase, bkops,
+sanitize, etc. Are all these working or not really well tested?
+
+Earlier, before my three patches, if the provided timeout_ms parameter
+to __mmc_switch() was zero, which was the case for
+mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
+ignored validating host->max_busy_timeout, which was wrong. In any
+case, this also meant that an R1B response was always used for
+mmc_flush_cache(), as you also indicated above. Perhaps this is the
+critical part where things can go wrong.
+
+BTW, have you tried erase commands for sdhci tegra driver? If those
+are working fine, do you have any special treatments for these?
+
+I have looped in Faiz, as sdhci-omap seems to suffer from very similar
+problems. One thing I noted for sdhci-omap, is that MMC_ERASE commands
+is treated in a special manner in sdhci_omap_set_timeout(). This
+indicates that there is something fishy going on.
+
+Faiz, can you please comment on this?
+
+Kind regards
+Uffe
