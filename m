@@ -2,118 +2,141 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C47C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491B4C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B05820675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=easyb-ch.20150623.gappssmtp.com header.i=@easyb-ch.20150623.gappssmtp.com header.b="oveJUVfN"
+	by mail.kernel.org (Postfix) with ESMTP id 23DCA20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgBYVnE (ORCPT
+        id S1729148AbgBYVnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:43:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40119 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgBYVnD (ORCPT
+        Tue, 25 Feb 2020 16:43:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53419 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbgBYVnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:43:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so821606wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=easyb-ch.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=kEVJ1n2NxQ1glfbZ9e15foebWC3MxMe0p/5A/jyD6H0=;
-        b=oveJUVfN4mGmIby/KrplpWvi32NOCpmb1Fej6u+eU25j1sso9bxSCmnS1HYlP5k+TS
-         MN55kLyOOXTrI5QiCGtP00bRnkJxE6q+aUpqdFsAsXwQh0dvu55FS/TXrAVS/ae6mu1l
-         NAlvopKlSspPGtPCVj0mdTNuFv+ZfhgIinLqRNatsNKvQI8KxR0B1VAiDYp321L4gtUZ
-         g8u+mkFIDr2NdhUV2f4JbQ3BTA7fhSsIoCINRAOSYNlefs7F0PuxzSG5YkiVtBklT+fO
-         oaD/MUhWA0PqDh9MWO9s+RAgppI/P3ICunuQwVb2PDrJVH31q6jq8+vTKG+aECdrMlUL
-         Kc9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=kEVJ1n2NxQ1glfbZ9e15foebWC3MxMe0p/5A/jyD6H0=;
-        b=rEXxctg0eZK6RklFrLOn9Svndp6qRd5Va5MEhQhGXBA5j78QdUc5KDicJjKrHQuWEC
-         44pi1YcKohuvdVxjGSdG9rLD6G156vjogOiV2l2P34sSzyH9yDOeL75i9WuUkQXAcuuZ
-         +y/5JNDk3cW4Pt9EqnOcUH1dBRMWG3EgGPQp8MNdzlWsP0/2n5+YI7p0UKWUxwr9X2N5
-         SFGANbWn/JKKiirzQsx4qbyVvuXJvWrmbkCRakHc+4LiAAooj8DznUIhvkudfwM7zG1v
-         W0ltXspj7SX80scucrtXqusP6YvheyovSAvcCd3DNUSt2f3W7TeC+7N5STJjfy5Wz7xw
-         qx+w==
-X-Gm-Message-State: APjAAAWDJGnmg73G5T2CZlHVELx0lzXaXZR4EDPG9rOVYhRLda5PPvwL
-        fOupFOEm2ghcyzqvH4NLYjwc0g==
-X-Google-Smtp-Source: APXvYqzT6vU3uivqK3LFISSNim+ES8rBV5I3PSPpMQoyPtAT6binkjIz4QcxUjjxxm7ATqtLrWgIdA==
-X-Received: by 2002:a1c:7ec5:: with SMTP id z188mr1188559wmc.52.1582666980570;
-        Tue, 25 Feb 2020 13:43:00 -0800 (PST)
-Received: from ?IPv6:2001:1715:4e22:c580:ed96:156f:9663:e7e4? ([2001:1715:4e22:c580:ed96:156f:9663:e7e4])
-        by smtp.gmail.com with ESMTPSA id f1sm212602wro.85.2020.02.25.13.42.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 13:43:00 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
- TM1628/FD628/AiP1618 LED controllers
-From:   Ezra Buehler <ezra@easyb.ch>
-In-Reply-To: <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-Date:   Tue, 25 Feb 2020 22:42:57 +0100
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        csd@princeton.com.tw, devicetree@vger.kernel.org, sales@fdhisi.com,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, zypeng@titanmec.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>,
-        linux-rockchip@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
- <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
- <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Tue, 25 Feb 2020 16:43:15 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1j6hyx-0004nE-BA; Tue, 25 Feb 2020 22:43:11 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id C8E924C0A43;
+        Tue, 25 Feb 2020 21:43:09 +0000 (UTC)
+Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
+To:     Tim Harvey <tharvey@gateworks.com>, linux-kernel@vger.kernel.org,
+        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>
+Cc:     =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
+Date:   Tue, 25 Feb 2020 22:43:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
-Hi Andreas,
+On 2/25/20 7:35 PM, Tim Harvey wrote:
+> Some SPI host controllers such as the Cavium Thunder do not support
+> full-duplex SPI. Using half-duplex transfers allows the driver to work
+> with those host controllers.
 
-> On 13 Dec 2019, at 15:07, Robin Murphy <robin.murphy@arm.com> wrote:
->=20
-> I also have one of the H96 Max boxes (which I picked up out of =
-curiosity
-> for the mysterious RK3318) with an FD6551, although I've not attacked
-> that one with the logic analyser yet to see how similar it is.
+There are several transfers left in the driver, where both rx_buf and
+tx_buf are set. How does your host controller driver know which one to
+handle?
 
-I have a T9 (RK3328) TV box with the same chip in it. The FD6551 uses an
-I2C-like protocol. Every digit (and the symbols) have an I2C address,
-but, the display does not signal ACK. AFAIK the FD650 and FD655 which
-are used in other boxes (Amlogic) are very similar.
+Marc
 
-So far, I have whipped up a proof-of-cocept driver that uses i2c-gpio.
-The digits seem to be rotated by 180 degrees. So, in order to use
-map_to_7segment.h I had to define the BIT_SEG7_* constants differently.
-My display also has multiple symbols (WIFI, network, pause, play, USB,
-alarm) that are controlled by writing to the same address as for the
-colon.
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> ---
+>  drivers/net/can/spi/mcp251x.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+> index 5009ff2..840c31c 100644
+> --- a/drivers/net/can/spi/mcp251x.c
+> +++ b/drivers/net/can/spi/mcp251x.c
+> @@ -290,23 +290,23 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
+>  	priv->spi_tx_buf[0] = INSTRUCTION_READ;
+>  	priv->spi_tx_buf[1] = reg;
+>  
+> -	mcp251x_spi_trans(spi, 3);
+> -	val = priv->spi_rx_buf[2];
+> +	spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
+>  
+>  	return val;
+>  }
+>  
+>  static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
+>  {
+> +	u8 val[4] = {0};
+>  	struct mcp251x_priv *priv = spi_get_drvdata(spi);
+>  
+>  	priv->spi_tx_buf[0] = INSTRUCTION_READ;
+>  	priv->spi_tx_buf[1] = reg;
+>  
+> -	mcp251x_spi_trans(spi, 4);
+> +	spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
+>  
+> -	*v1 = priv->spi_rx_buf[2];
+> -	*v2 = priv->spi_rx_buf[3];
+> +	*v1 = val[0];
+> +	*v2 = val[1];
+>  }
+>  
+>  static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
+> 
 
-I=E2=80=99d love to work on a driver (similar to Andreas=E2=80=99 SPI =
-based driver) for
-these I2C connected chips.
+Marc
 
-Cheers,
-Ezra.
-
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
