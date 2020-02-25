@@ -2,112 +2,101 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9E5C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA25DC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0206A20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582654504;
-	bh=ksE88csMVPVOWzzcHpIKQckXM92Rf7For2VgVwFf+6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=knAqXgC0Yna1fKS989EV+0ED6LDyu/JAWLG8Ihvx/YVI6qdN86hMrPEMMwe6gXrBQ
-	 pTqaWojDm2rW6bZXCKPEam/jFRhtZS84yTtXKy72CU2QblPvdDcrm0CLVZebFwlJfa
-	 zqENXcj6D/wn+vqC6rxT9SJ/ySC5MTsOfoaQOgMk=
+	by mail.kernel.org (Postfix) with ESMTP id 90DCC20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbgBYSPC (ORCPT
+        id S1731422AbgBYSPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:15:02 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38873 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgBYSPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:15:02 -0500
-Received: by mail-oi1-f194.google.com with SMTP id r137so242528oie.5;
-        Tue, 25 Feb 2020 10:15:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sRPxV5iSvPN80K6tvKNtciXRBCMachxheO+dmsdwNT0=;
-        b=Nr6Hz9U0nsRcJnZ9q4TNOERxSlQMNcuhl6QlpT8EX3rG2/0hs+CRSoFFGitmqo1uIf
-         13RMOsr0IgZk6fcdT/eMQMlEPg+emdbwTLg2HidVP/ps1k9FsoVuzE/FQWLyjQuxRKPY
-         msEL+fZjGRCEb3SKDHXLSapXCVLfBrA0utrx0vFK1uLmBofXknw544Zd/etGNYj3U/P8
-         WjSYW1NWL4Uu9Oyoi7USzwdbVOPRkxzsYvyp7kx7q3C8cxro7a/8TmIa7WW1heTGEL1X
-         z28j1kQEufnulKBoLcXlVqhcke52yFO2hNQor3VbKPN/0CotY5FohaNS/8XnSxtCAFc3
-         AhDA==
-X-Gm-Message-State: APjAAAWRU+kDss3hIEQswV/jQKw8vANBpDzdCb1cHB3Nqq34C8ut69L5
-        NCeL6hxRvrPQWzmFbO1MyQ==
-X-Google-Smtp-Source: APXvYqxWUUIv2aQqOuCp8OaRKWv2QrkvHU2RtzwROvmadfZZRS7+D+CIBSg3H3p92q957/Sr7GWDHg==
-X-Received: by 2002:aca:5f87:: with SMTP id t129mr199368oib.36.1582654501742;
-        Tue, 25 Feb 2020 10:15:01 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i6sm5902042oto.62.2020.02.25.10.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:15:01 -0800 (PST)
-Received: (nullmailer pid 601 invoked by uid 1000);
-        Tue, 25 Feb 2020 18:15:00 -0000
-Date:   Tue, 25 Feb 2020 12:15:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-i2c@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH 02/89] dt-bindings: i2c: brcmstb: Add BCM2711
- BSC/AUTO-I2C  binding
-Message-ID: <20200225181500.GA538@bogus>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
+        Tue, 25 Feb 2020 13:15:52 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31550 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726953AbgBYSPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:15:52 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01PIFfwi001143;
+        Tue, 25 Feb 2020 19:15:41 +0100
+Date:   Tue, 25 Feb 2020 19:15:41 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
+Message-ID: <20200225181541.GA1138@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <20200224212352.8640-2-w@1wt.eu>
+ <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
+ <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
+ <20200225034529.GA8908@1wt.eu>
+ <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
+ <20200225140207.GA31782@1wt.eu>
+ <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
+ <CAHk-=wggnfCR2JcC-U9LxfeBo2UMagd-neEs8PwDHsGVfLfS=Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wggnfCR2JcC-U9LxfeBo2UMagd-neEs8PwDHsGVfLfS=Q@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 10:06:04 +0100, Maxime Ripard wrote:
-> The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
-> EDID. This block is split into two parts, the BSC and the AUTO_I2C,
-> lying in two separate register areas.
+On Tue, Feb 25, 2020 at 10:08:51AM -0800, Linus Torvalds wrote:
+> On Tue, Feb 25, 2020 at 7:22 AM Denis Efremov <efremov@linux.com> wrote:
+> >
+> > I think that for the first attempt changing will be enough:
+> > -static int fdc;                        /* current fdc */
+> > +static int current_fdc;                        /* current fdc */
+> > and
+> > -#define FD_IOPORT fdc_state[fdc].address
+> > +#define FD_IOPORT fdc_state[current_fdc].address
 > 
-> The AUTO_I2C block has a mailbox-like interface and will take away the
-> BSC control from the CPU if enabled. However, the BSC is the actually
-> the same controller than the one supported by the brcmstb driver, and
-> the AUTO_I2C doesn't really bring any immediate benefit.
-> 
-> We can model it in the DT as a single device with two register range,
-> which will allow us to use or or the other in the driver without
-> changing anything in the DT.
-> 
-> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-i2c@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 40 ++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
-> 
+> Please don't do this blindly - ie without verifying that there are no
+> cases of that "local fdc variable shadowing" issue.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+That's exactly what I'm doing. In fact I first renamed the variable
+and am manually checking all places which do not compile anymore.
+Hence the surprizes.
+
+> Of course, such a verification might be as easy as "generates exact
+> same code" rather than looking at every use.
+
+That's exactly what I'm doing.
+
+> And btw, don't worry too much about this being in an UAPI file. I'm
+> pretty sure that's because of specialty programs that use the magical
+> ioctls to do special formatting. They want the special commands
+> (FD_FORMAT etc), but I don't think they really use the port addresses.
+> 
+> So I think it's in a UAPI file entirely by mistake.
+
+OK this will help me, thanks for the hint :-)
+
+> We should at least try moving those bits to the floppy.c file and
+> remove it from the header file.
+
+Makes sense.
+
+> For example, doing a Debian code search on "FDPATCHES" doesn't find
+> any user space hits. Searching for "FD_STATUS" gets a lot of hits, but
+> thos all seem to be because it's a symbol used by user space programs,
+> ("file descriptor status"), not because those hits actually used the
+> fdreg.h header file.
+> 
+> So we can remove at least the FD_IOPORT mess from the header file, I bet.
+> 
+> Worst case - if somebody finds some case that uses them, we can put it back.
+
+I like that. And at least we'll know how they use it (likely without the
+dependency on fdc).
+
+Thanks,
+Willy
