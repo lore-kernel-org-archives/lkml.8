@@ -2,272 +2,169 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EBDC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67206C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E959E24650
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0913724650
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xUld4MdS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgBYDxz (ORCPT
+        id S1728883AbgBYDzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:53:55 -0500
-Received: from mga02.intel.com ([134.134.136.20]:13814 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgBYDxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:53:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 19:53:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
-   d="scan'208";a="316951958"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga001.jf.intel.com with ESMTP; 24 Feb 2020 19:53:51 -0800
-Date:   Mon, 24 Feb 2020 22:44:28 -0500
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>
-Subject: Re: [PATCH v3 2/7] vfio: introduce vfio_dma_rw to read/write a range
- of IOVAs
-Message-ID: <20200225034428.GF30338@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200224084350.31574-1-yan.y.zhao@intel.com>
- <20200224084715.31753-1-yan.y.zhao@intel.com>
- <20200224121442.297a9931@w520.home>
+        Mon, 24 Feb 2020 22:55:40 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:29341 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726962AbgBYDzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 22:55:40 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582602939; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=s35BPNR6Z45kmkW/uZVQApEVNGV6Tou60aGUAhwOQt4=; b=xUld4MdSUBAmhxKRdwbrDLGX3A5pJr0pX755vZhl+G6C0W7vz9gjdp0j6eFFDSQ/zIVZ0Rcw
+ sz2//BeWjD5/msinWx8p9GDvEqjC6MWnuHcTz++JJoSChJUZcywxbif/4Uop0DX3HZgowLmP
+ rDeGU4VaXXTqamu/x8TLAUuHBOM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e549aa3.7f32c5460a08-smtp-out-n03;
+ Tue, 25 Feb 2020 03:55:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59122C447A2; Tue, 25 Feb 2020 03:55:13 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 13E91C43383;
+        Tue, 25 Feb 2020 03:55:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 13E91C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Tue, 25 Feb 2020 09:25:05 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/6] sched/rt: Better manage pushing unfit tasks on
+ wakeup
+Message-ID: <20200225035505.GI28029@codeaurora.org>
+References: <20200223184001.14248-1-qais.yousef@arm.com>
+ <20200223184001.14248-6-qais.yousef@arm.com>
+ <20200224061004.GH28029@codeaurora.org>
+ <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
+ <CAEU1=PncyV=-vqjkDHSJ4hUhhTfYUgVN-HAe4zXMHtFx1oc5XA@mail.gmail.com>
+ <20200224174138.n6pmoeffqg7eqiy2@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224121442.297a9931@w520.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200224174138.n6pmoeffqg7eqiy2@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 03:14:42AM +0800, Alex Williamson wrote:
-> On Mon, 24 Feb 2020 03:47:15 -0500
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
-> 
-> > vfio_dma_rw will read/write a range of user space memory pointed to by
-> > IOVA into/from a kernel buffer without enforcing pinning the user space
-> > memory.
+On Mon, Feb 24, 2020 at 05:41:39PM +0000, Qais Yousef wrote:
+> On 02/24/20 21:34, Pavan Kondeti wrote:
+> > Hi Qais,
 > > 
-> > TODO: mark the IOVAs to user space memory dirty if they are written in
-> > vfio_dma_rw().
+> > On Mon, Feb 24, 2020 at 5:42 PM Qais Yousef <qais.yousef@arm.com> wrote:
+> > [...]
+> > > We could do, temporarily, to get these fixes into 5.6. But I do think
+> > > select_task_rq_rt() doesn't do a good enough job into pushing unfit tasks to
+> > > the right CPUs.
+> > >
+> > > I don't understand the reasons behind your objection. It seems you think that
+> > > select_task_rq_rt() should be enough, but not AFAICS. Can you be a bit more
+> > > detailed please?
+> > >
+> > > FWIW, here's a screenshot of what I see
+> > >
+> > >         https://imgur.com/a/peV27nE
+> > >
+> > > After the first activation, select_task_rq_rt() fails to find the right CPU
+> > > (due to the same move all tasks to the cpumask_fist()) - but when the task
+> > > wakes up on 4, the logic I put causes it to migrate to CPU2, which is the 2nd
+> > > big core. CPU1 and CPU2 are the big cores on Juno.
+> > >
+> > > Now maybe we should fix select_task_rq_rt() to better balance tasks, but not
+> > > sure how easy is that.
+> > >
 > > 
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >  drivers/vfio/vfio.c             | 49 +++++++++++++++++++++
-> >  drivers/vfio/vfio_iommu_type1.c | 77 +++++++++++++++++++++++++++++++++
-> >  include/linux/vfio.h            |  5 +++
-> >  3 files changed, 131 insertions(+)
+> > Thanks for the trace. Now things are clear to me. Two RT tasks woke up
+> > simultaneously and the first task got its previous CPU i.e CPU#1. The next task
+> > goes through find_lowest_rq() and got the same CPU#1. Since this task priority
+> > is not more than the just queued task (already queued on CPU#1), it is sent
+> > to its previous CPU i.e CPU#4 in your case.
 > > 
-> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > index 914bdf4b9d73..902867627cbf 100644
-> > --- a/drivers/vfio/vfio.c
-> > +++ b/drivers/vfio/vfio.c
-> > @@ -1998,6 +1998,55 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
-> >  }
-> >  EXPORT_SYMBOL(vfio_unpin_pages);
-> >  
-> > +
-> > +/*
-> > + * This interface allows the CPUs to perform some sort of virtual DMA on
-> > + * behalf of the device.
-> > + *
-> > + * CPUs read/write a range of IOVAs pointing to user space memory into/from
-> > + * a kernel buffer.
-> > + *
-> > + * As the read/write of user space memory is conducted via the CPUs and is
-> > + * not a real device DMA, it is not necessary to pin the user space memory.
-> > + *
-> > + * The caller needs to call vfio_group_get_external_user() or
-> > + * vfio_group_get_external_user_from_dev() prior to calling this interface,
-> > + * so as to prevent the VFIO group from disposal in the middle of the call.
-> > + * But it can keep the reference to the VFIO group for several calls into
-> > + * this interface.
-> > + * After finishing using of the VFIO group, the caller needs to release the
-> > + * VFIO group by calling vfio_group_put_external_user().
-> > + *
-> > + * @group [in]: vfio group of a device
-> > + * @iova [in] : base IOVA of a user space buffer
-> > + * @data [in] : pointer to kernel buffer
-> > + * @len [in]  : kernel buffer length
-> > + * @write     : indicate read or write
-> > + * Return error code on failure or 0 on success.
-> > + */
-> > +int vfio_dma_rw(struct vfio_group *group, dma_addr_t iova,
-> > +		void *data, size_t len, bool write)
-> > +{
-> > +	struct vfio_container *container;
-> > +	struct vfio_iommu_driver *driver;
-> > +	int ret = 0;
-> > +
-> > +	if (!group || !data || len <= 0)
-> > +		return -EINVAL;
-> > +
-> > +	container = group->container;
-> > +	driver = container->iommu_driver;
-> > +
-> > +	if (likely(driver && driver->ops->dma_rw))
-> > +		ret = driver->ops->dma_rw(container->iommu_data,
-> > +					  iova, data, len, write);
-> > +	else
-> > +		ret = -ENOTTY;
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL(vfio_dma_rw);
-> > +
-> >  static int vfio_register_iommu_notifier(struct vfio_group *group,
-> >  					unsigned long *events,
-> >  					struct notifier_block *nb)
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index 2ada8e6cdb88..74e1c425943c 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -27,6 +27,7 @@
-> >  #include <linux/iommu.h>
-> >  #include <linux/module.h>
-> >  #include <linux/mm.h>
-> > +#include <linux/mmu_context.h>
-> >  #include <linux/rbtree.h>
-> >  #include <linux/sched/signal.h>
-> >  #include <linux/sched/mm.h>
-> > @@ -2326,6 +2327,81 @@ static int vfio_iommu_type1_unregister_notifier(void *iommu_data,
-> >  	return blocking_notifier_chain_unregister(&iommu->notifier, nb);
-> >  }
-> >  
-> > +static size_t vfio_iommu_type1_dma_rw_chunk(struct vfio_iommu *iommu,
-> > +					    dma_addr_t iova, void *data,
-> > +					    size_t count, bool write)
-> > +{
-> > +	struct mm_struct *mm;
-> > +	unsigned long vaddr;
-> > +	struct vfio_dma *dma;
-> > +	bool kthread = current->mm == NULL;
-> > +	size_t done = 0;
-> > +	size_t offset;
-> > +
-> > +	dma = vfio_find_dma(iommu, iova, 1);
-> > +	if (!dma)
-> > +		return 0;
-> > +
-> > +	if ((write && !(dma->prot & IOMMU_WRITE)) ||
-> > +			!(dma->prot & IOMMU_READ))
-> > +		return 0;
-> > +
-> > +	mm = get_task_mm(dma->task);
-> > +
-> > +	if (!mm)
-> > +		return 0;
-> > +
-> > +	if (kthread)
-> > +		use_mm(mm);
-> > +	else if (current->mm != mm)
-> > +		goto out;
-> > +
-> > +	offset = iova - dma->iova;
-> > +
-> > +	if (count > dma->size - offset)
-> > +		count = dma->size - offset;
-> > +
-> > +	vaddr = dma->vaddr + offset;
-> > +
-> > +	if (write)
-> > +		done = __copy_to_user((void __user *)vaddr,
-> > +				       data, count) ? 0 : count;
-> > +	else
-> > +		done = __copy_from_user(data, (void __user *)vaddr,
-> > +					count) ? 0 : count;
-> > +
-> > +	if (kthread)
-> > +		unuse_mm(mm);
-> > +out:
-> > +	mmput(mm);
-> > +	return done;
+> > From task_woken_rt() path, CPU#4 attempts push_rt_tasks(). CPU#4 is
+> > not overloaded,
+> > but we have rt_task_fits_capacity() check which forces the push. Since the CPU
+> > is not overloaded, your has_unfit_tasks() comes to rescue and push the
+> > task. Since
+> > the task has not scheduled in yet, it is eligible for push. You added checks
+> > to skip resched_curr() in push_rt_tasks() otherwise the push won't happen.
 > 
+> Nice summary, that's exactly what it is :)
 > 
-> Return 0 on error?  Why wouldn't this function decide the errno rather
-> than masking them all as -EFAULT by the callee below?  Thanks,
- 
-ok. let me return negative errno on error. Thanks!
-Yan
+> > Finally, I understood your patch. Obviously this is not clear to me
+> > before. I am not
+> > sure if this patch is the right approach to solve this race. I will
+> > think a bit more.
 > 
-> > +}
-> > +
-> > +static int vfio_iommu_type1_dma_rw(void *iommu_data, dma_addr_t iova,
-> > +				   void *data, size_t count, bool write)
-> > +{
-> > +	struct vfio_iommu *iommu = iommu_data;
-> > +	int ret = 0;
-> > +	size_t done = 0;
-> > +
-> > +	mutex_lock(&iommu->lock);
-> > +	while (count > 0) {
-> > +		done = vfio_iommu_type1_dma_rw_chunk(iommu, iova, data,
-> > +						     count, write);
-> > +		if (!done) {
-> > +			ret = -EFAULT;
-> > +			break;
-> > +		}
-> > +
-> > +		count -= done;
-> > +		data += done;
-> > +		iova += done;
-> > +	}
-> > +
-> > +	mutex_unlock(&iommu->lock);
-> > +	return ret;
-> > +}
-> > +
-> >  static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
-> >  	.name			= "vfio-iommu-type1",
-> >  	.owner			= THIS_MODULE,
-> > @@ -2338,6 +2414,7 @@ static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
-> >  	.unpin_pages		= vfio_iommu_type1_unpin_pages,
-> >  	.register_notifier	= vfio_iommu_type1_register_notifier,
-> >  	.unregister_notifier	= vfio_iommu_type1_unregister_notifier,
-> > +	.dma_rw			= vfio_iommu_type1_dma_rw,
-> >  };
-> >  
-> >  static int __init vfio_iommu_type1_init(void)
-> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> > index 2e1fa0c7396f..fea0cb1e61d2 100644
-> > --- a/include/linux/vfio.h
-> > +++ b/include/linux/vfio.h
-> > @@ -82,6 +82,8 @@ struct vfio_iommu_driver_ops {
-> >  					     struct notifier_block *nb);
-> >  	int		(*unregister_notifier)(void *iommu_data,
-> >  					       struct notifier_block *nb);
-> > +	int		(*dma_rw)(void *iommu_data, dma_addr_t iova,
-> > +				  void *data, size_t count, bool write);
-> >  };
-> >  
-> >  extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
-> > @@ -109,6 +111,9 @@ extern int vfio_pin_pages(struct device *dev, unsigned long *user_pfn,
-> >  extern int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn,
-> >  			    int npage);
-> >  
-> > +extern int vfio_dma_rw(struct vfio_group *group, dma_addr_t iova, void *data,
-> > +		       size_t len, bool write);
-> > +
-> >  /* each type has independent events */
-> >  enum vfio_notify_type {
-> >  	VFIO_IOMMU_NOTIFY = 0,
+> I haven't been staring at this code for as long as you, but since we have
+> logic at wakeup to do a push, I think we need something here anyway for unfit
+> tasks.
 > 
+> Fixing select_task_rq_rt() to better balance tasks will help a lot in general,
+> but if that was enough already then why do we need to consider a push at the
+> wakeup at all then?
+> 
+> AFAIU, in SMP the whole push-pull mechanism is racy and we introduce redundancy
+> at taking the decision on various points to ensure we minimize this racy nature
+> of SMP systems. Anything could have happened between the time we called
+> select_task_rq_rt() and the wakeup, so we double check again before we finally
+> go and run. That's how I interpret it.
+> 
+> I am open to hear about other alternatives first anyway. Your help has been
+> much appreciated so far.
+> 
+
+The search inside find_lowest_rq() happens without any locks so I believe it
+is expected to have races like this. In fact there is a comment in the code
+saying "This test is optimistic, if we get it wrong the load-balancer
+will have to sort it out" in select_task_rq_rt(). However, the push logic
+as of today works only for overloaded case. In that sense, your patch fixes
+this race for b.L systems. At the same time, I feel like tracking nonfit tasks
+just to fix this race seems to be too much. I will leave this to Steve and
+others to take a decision.
+
+I thought of suggesting to remove the below check from select_task_rq_rt()
+
+p->prio < cpu_rq(target)->rt.highest_prio.curr
+
+which would then make the target CPU overloaded and the push logic would
+spread the tasks. That works for a b.L system too. However there seems to
+be a very good reason for doing this. see
+https://lore.kernel.org/patchwork/patch/539137/
+
+The fact that a CPU is part of lowest_mask but running a higher prio RT
+task means there is a race. Should we retry one more time to see if we find
+another CPU?
+
+Thanks,
+Pavan
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
