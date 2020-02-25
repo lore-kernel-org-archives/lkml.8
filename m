@@ -2,107 +2,177 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E10FC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270B1C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A182084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F322084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dea58rsr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3bkCqEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbgBYOy3 (ORCPT
+        id S1730914AbgBYOyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:54:29 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53962 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730427AbgBYOy3 (ORCPT
+        Tue, 25 Feb 2020 09:54:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50661 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729510AbgBYOyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:54:29 -0500
+        Tue, 25 Feb 2020 09:54:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582642467;
+        s=mimecast20190719; t=1582642475;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mK3STqvNpT3jDn9vLwtg+cXgS2sGksMMsz4/c3rFMHk=;
-        b=dea58rsrPeKNMLm/+yu2kyQLKbyYLaXJdgMbVNSBpt9KdFXsqPDo7gQ3RA4ByX4/WajWKu
-        ECIn5WwcrjJCWRqd7zwlYBbsXGCWOwY8r/V39tb3CKsqTTuTHSiOxkCL28GdFSKH0Kvsqw
-        5uNJB76rewjOPbDgj7X7Aqu5SBEYZJg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-ykiP9e4xPd-14i41ZdN55A-1; Tue, 25 Feb 2020 09:54:24 -0500
-X-MC-Unique: ykiP9e4xPd-14i41ZdN55A-1
-Received: by mail-wm1-f70.google.com with SMTP id f66so960939wmf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:54:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mK3STqvNpT3jDn9vLwtg+cXgS2sGksMMsz4/c3rFMHk=;
-        b=WOgs+vSgl3qdWnCPgnIhYobJceBPsXReRBZs5awasZPrR3AxLSP3KUafEgVJzu+qHR
-         RldSqiSGzH+MBNbBwTfJBB5mIt2DEUuqtXc5IH+kdAlQsYVJdfTa48uuCCRJww0V9AAI
-         kRBwMISOkhbhEjeKh2xqljP+zpFQIsqhY9Mxxjdxot+pzCbYf36kHVGVrPwv9gLTkaJo
-         4eHqCnP8skVTachukjIUREVCdTpQoJ6DbXzX2gmywfkRNVMF+sjcgtguyXkwhBm4zX2k
-         5JbsABx7tfrpO6qPNXzB9QdtL79Nsnc95BHS9BzmuoTQRB/92DwNhzSLD9+WC7A4F5hs
-         S/GA==
-X-Gm-Message-State: APjAAAUpT6q3/+kswTpvUK7vBdKNR3dDgAWAtspSh1yt3PAubL1vNF+Q
-        X8GuCpiJhGe6jK/GRxNsQUH1Egh9UE98yzpKsokRXqAXajyRahyJG3oOY88Zelb9pO61jw/vf58
-        zBLc8KE0sEhsrNC4za51xIT5s
-X-Received: by 2002:adf:ef8e:: with SMTP id d14mr15574551wro.316.1582642462672;
-        Tue, 25 Feb 2020 06:54:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxNJivnFuLmBEUDYNzro50QPxzSsCchDfqLX6sY7HTC6bfACS5U6cknWPDlWhgge0XEZWwm3A==
-X-Received: by 2002:adf:ef8e:: with SMTP id d14mr15574535wro.316.1582642462449;
-        Tue, 25 Feb 2020 06:54:22 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:3577:1cfe:d98a:5fb6? ([2001:b07:6468:f312:3577:1cfe:d98a:5fb6])
-        by smtp.gmail.com with ESMTPSA id q3sm4200422wmj.38.2020.02.25.06.54.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:54:21 -0800 (PST)
-Subject: Re: [PATCH 19/61] KVM: VMX: Add helpers to query Intel PT mode
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-20-sean.j.christopherson@intel.com>
- <87pne8q8c0.fsf@vitty.brq.redhat.com>
- <20200224221807.GM29865@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <33a4d99d-98da-0bd8-0f9c-fc04bef54350@redhat.com>
-Date:   Tue, 25 Feb 2020 15:54:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QMvNXoW6psDe1PxL4MB925CUo6es0He3gLgCnJQuh1A=;
+        b=c3bkCqEmPrVmJaJ+fZHMWu/HL1vfXxQAqvcqfDCFg6n6mJBsIEqlRdp8PqTQ1mjOguuKAU
+        EW40y584/p/1WHJgiCMGJW5UukUwNT6S3lBj2NJsgaz5i45GP/ooYdBdfXQRcxA9XYTBAy
+        okFg7x1nLgpX5Y9jP7QMNtYENcGuYpM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-266-hv_p7hdhOdCQZbWjrxSTCQ-1; Tue, 25 Feb 2020 09:54:28 -0500
+X-MC-Unique: hv_p7hdhOdCQZbWjrxSTCQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45DEC102CE15;
+        Tue, 25 Feb 2020 14:54:27 +0000 (UTC)
+Received: from lithium.redhat.com (unknown [10.36.118.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 545361BC6D;
+        Tue, 25 Feb 2020 14:54:25 +0000 (UTC)
+From:   Giuseppe Scrivano <gscrivan@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     rcu@vger.kernel.org, ebiederm@xmission.com, paulmck@kernel.org,
+        viro@zeniv.linux.org.uk
+Subject: [PATCH v3] ipc: use a work queue to free_ipc
+Date:   Tue, 25 Feb 2020 15:54:19 +0100
+Message-Id: <20200225145419.527994-1-gscrivan@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224221807.GM29865@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/02/20 23:18, Sean Christopherson wrote:
->>>  {
->>>  	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
->>> -	if (pt_mode == PT_MODE_SYSTEM)
->>> +	if (vmx_pt_mode_is_system())
->> ... and here? I.e. to cover the currently unsupported 'host-only' mode.
-> Hmm, good question.  I don't think so?  On VM-Enter, RTIT_CTL would need to
-> be loaded to disable PT.  Clearing RTIT_CTL on VM-Exit would be redundant
-> at that point[1].  And AIUI, the PIP for VM-Enter/VM-Exit isn't needed
-> because there is no context switch from the decoder's perspective.
+the reason is to avoid a delay caused by the synchronize_rcu() call in
+kern_umount() when the mqueue mount is freed.
 
-How does host-only mode differ from "host-guest but don't expose PT to
-the guest"?  So I would say that host-only mode is a special case of
-host-guest, not of system mode.
+the code:
 
-Paolo
+\#define _GNU_SOURCE
+\#include <sched.h>
+\#include <error.h>
+\#include <errno.h>
+\#include <stdlib.h>
+int main()
+{
+  int i;
+  for (i  =3D 0; i < 1000; i++)
+    if (unshare (CLONE_NEWIPC) < 0)
+      error (EXIT_FAILURE, errno, "unshare");
+}
+
+gets from:
+
+	Command being timed: "./ipc-namespace"
+	User time (seconds): 0.00
+	System time (seconds): 0.06
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
+
+to:
+
+	Command being timed: "./ipc-namespace"
+	User time (seconds): 0.00
+	System time (seconds): 0.02
+	Percent of CPU this job got: 96%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
+
+Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
+---
+v3:
+- added comment for free_ipc_work
+- commit message rephrased
+
+v2: https://lkml.org/lkml/2020/2/17/839
+- comment added in free_ipc_ns()
+
+v1: https://lkml.org/lkml/2020/2/11/692
+
+ include/linux/ipc_namespace.h |  2 ++
+ ipc/namespace.c               | 24 ++++++++++++++++++++++--
+ 2 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.=
+h
+index c309f43bde45..a06a78c67f19 100644
+--- a/include/linux/ipc_namespace.h
++++ b/include/linux/ipc_namespace.h
+@@ -68,6 +68,8 @@ struct ipc_namespace {
+ 	struct user_namespace *user_ns;
+ 	struct ucounts *ucounts;
+=20
++	struct llist_node mnt_llist;
++
+ 	struct ns_common ns;
+ } __randomize_layout;
+=20
+diff --git a/ipc/namespace.c b/ipc/namespace.c
+index b3ca1476ca51..c0470aef41a0 100644
+--- a/ipc/namespace.c
++++ b/ipc/namespace.c
+@@ -117,6 +117,10 @@ void free_ipcs(struct ipc_namespace *ns, struct ipc_=
+ids *ids,
+=20
+ static void free_ipc_ns(struct ipc_namespace *ns)
+ {
++	/* mq_put_mnt() waits for a grace period as kern_unmount()
++	 * uses synchronize_rcu().
++	 */
++	mq_put_mnt(ns);
+ 	sem_exit_ns(ns);
+ 	msg_exit_ns(ns);
+ 	shm_exit_ns(ns);
+@@ -127,6 +131,21 @@ static void free_ipc_ns(struct ipc_namespace *ns)
+ 	kfree(ns);
+ }
+=20
++static LLIST_HEAD(free_ipc_list);
++static void free_ipc(struct work_struct *unused)
++{
++	struct llist_node *node =3D llist_del_all(&free_ipc_list);
++	struct ipc_namespace *n, *t;
++
++	llist_for_each_entry_safe(n, t, node, mnt_llist)
++		free_ipc_ns(n);
++}
++
++/*
++ * The work queue is used to avoid the cost of synchronize_rcu in kern_u=
+nmount.
++ */
++static DECLARE_WORK(free_ipc_work, free_ipc);
++
+ /*
+  * put_ipc_ns - drop a reference to an ipc namespace.
+  * @ns: the namespace to put
+@@ -148,8 +167,9 @@ void put_ipc_ns(struct ipc_namespace *ns)
+ 	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
+ 		mq_clear_sbinfo(ns);
+ 		spin_unlock(&mq_lock);
+-		mq_put_mnt(ns);
+-		free_ipc_ns(ns);
++
++		if (llist_add(&ns->mnt_llist, &free_ipc_list))
++			schedule_work(&free_ipc_work);
+ 	}
+ }
+=20
+--=20
+2.24.1
 
