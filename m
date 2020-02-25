@@ -2,131 +2,188 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A9C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FC7C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284DC2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB4A2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="erp5opGm"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ibg0cOFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgBYIMH (ORCPT
+        id S1729721AbgBYIMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:12:07 -0500
-Received: from mail-bn7nam10on2093.outbound.protection.outlook.com ([40.107.92.93]:14656
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        Tue, 25 Feb 2020 03:12:14 -0500
+Received: from mail-vi1eur05on2073.outbound.protection.outlook.com ([40.107.21.73]:29344
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729253AbgBYIMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:12:06 -0500
+        id S1729458AbgBYIMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:12:13 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fsD5EU5wRtbgctz0dD2GkGcx+fuOesP+SvS20d5VJ80AyFoHU65meDm9jQ1u6hoiCRwjIvEJ07k4+MaSrfXXoyVXSE3caBTLoNJR81KtiYr9ot+mdKI/it0mynjo66hSMCd/GUWcJECaXJs+qm9U06LJdFI/cYP2E77zk0wUfV+As22JAED45hwQDXamPbV34WlfNdJJXHeDVU/GzcqB2zRGD+yuhBgK6acjdUUOLU9zONgpOQg6Gyrkxv+DSUx1qEWCyQ816HguYRXT7oUgv8MZ4Iokqrm93Gsu7mXklEH39Aj1YS68eaJwueRaVBbofNZb6fkG7SHfAi/DUHTzPw==
+ b=ZgKkx9oUWJ/2Szgk7SljbtojxUtuLAsOoX91HekWcMSvAVLJPzsgRW0euBTkWtBtdL2ZbEDinwTqp8iwTa6I0/77xJrCCJ6ZbH9fb5BIc5KHPeDi3dIa4dxNqvsxylRrt/v+X4ZPQnmtMD8aZM5yf0tPyg+65s67NrFyn/hemZe4zwKttX6gacx76Rf9rGvercFo9Qgbqn7NdIjs4/yeQWl86Ko2ZjYROBfcVhehgQm/LG+bv338fMa/AjHI62qYc/SSwqa2i2Nd43BSs7m1SiAfqk3TPAuM3KXfDzejvhLVaigVdG8M980T8fBZXDHu6Xf9OqNnK8H31XfABdz1Gg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uWmD5YkrDPV/XQt4ubPOCeJJPXa81yAu7g7dESfiDrc=;
- b=VSAacKu5z7O7KsUWlCdX4Yc6sXH0tZW+dox4hcHm+TRwjY7ezl+Y2tSz5sZtNslmHbvlENAQ9oA75X75pUSj1go7ndOZJ3Q5EO4/X4b0gILz1eowcHDrMADeASF81nGSm6mjTKGyxCXJ3XxcaZSi72jQPTUZ3LvfHYU/Zc4v1vyWqTxnuUQp3kNjJct3ovowCrKsPouVtMiYkHVDFebrFd6sUOvn93aROwCnb3pzplcb/lVYME1zolbPWq0iKaaxu2WfXO0BpNt+IEaj7d8NScQ57SwZg6yTxhBV0MDza1emy/D6U3f/nJP590+ddg3vzIktHaGV0Vp2oX/Ie98IzA==
+ bh=bKJqPbzyCrYysc8e6vNkQF3RLZxCHQskhMILm6nDuo4=;
+ b=Tw7MRwYphSRHdn44GW5DLawnSoqSm49tSo3TPnikgsljrvfp8Ti2oQpHGIWSRy6TUx63xOYazORTsf/wRPVMWuiCjG9apD1W2ILkTCdO386vXwMhrRzUp6vyW9OdhzTffjDt+A45PC3sGztlMEuO4mhPDKBP1tTOKknQNHPkAzalJghrvNWLu8V9nTn7V3P8z8p8XST08UIdgyaf9jAl515vfG/wA+7WeAIlw9u5pzBEaQvJW/DWrLlOFVPvz08iZPK149ASj2joiBSfODLqAPFC6RSLbnB/PsS5OjkJfn3OMOhl+oGpcDOCMSgC3fL50cOQrKm8HyYMw1/WMKFP4g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uWmD5YkrDPV/XQt4ubPOCeJJPXa81yAu7g7dESfiDrc=;
- b=erp5opGmb+HHuUcfO2eDgloODJP2lODbqLb7F/1xAqaAqSjzbIBVyGZYvQjKVx8fQqW0vhsVmwEro+1Lr5eb6pfT99+nL7womAdBYFH/VjuO2cQ2l61xyCPmsFbX0Uc4seVnNnOvr7FrCRpIF0cdvcyT3muBmF4GQHxisrmOo1g=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (2603:10b6:805:a5::18)
- by SN6PR04MB5151.namprd04.prod.outlook.com (2603:10b6:805:90::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
- 2020 08:12:01 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::9598:7ff:b397:ba56]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::9598:7ff:b397:ba56%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 08:12:01 +0000
-Date:   Tue, 25 Feb 2020 16:11:52 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v7 0/2] Add initial support for slimport anx7625
-Message-ID: <20200225081152.GA12531@xin-VirtualBox>
-References: <cover.1582529411.git.xji@analogixsemi.com>
- <20200225074200.GC3308@kadam>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225074200.GC3308@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK0PR03CA0101.apcprd03.prod.outlook.com
- (2603:1096:203:b0::17) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a5::18)
+ bh=bKJqPbzyCrYysc8e6vNkQF3RLZxCHQskhMILm6nDuo4=;
+ b=ibg0cOFwVs6O/J6+KQDKBBcKf7cejlDYVvD+waPDb6OvaHy1NjKyzu6pcl0hUpjk/WjJszms0hjUhJ8wV1PUXyizyj9RaE5lSBpKSMUfzZeZOld7lyBvcO+fsiH5DKhf0T04sm4Hlal0nwkIlp+3eGf62Nez5x80N8S4JkVPvak=
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
+ VI1PR04MB3309.eurprd04.prod.outlook.com (10.170.225.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Tue, 25 Feb 2020 08:12:10 +0000
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::9547:9dfa:76b8:71b1]) by VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::9547:9dfa:76b8:71b1%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 08:12:10 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+Thread-Topic: [PATCH v2] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+Thread-Index: AQHV6mDVZR8qi0sUNEueYlefbym6aKgrkc4A
+Date:   Tue, 25 Feb 2020 08:12:10 +0000
+Message-ID: <20200225081211.GA6447@b29397-desktop>
+References: <1582472947-22471-1-git-send-email-macpaul.lin@mediatek.com>
+In-Reply-To: <1582472947-22471-1-git-send-email-macpaul.lin@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 31581cb2-dc8d-4a67-8230-08d7b9ca69bf
+x-ms-traffictypediagnostic: VI1PR04MB3309:
+x-microsoft-antispam-prvs: <VI1PR04MB33092E22A0417A5CAEF103F18BED0@VI1PR04MB3309.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0324C2C0E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(346002)(366004)(376002)(396003)(39860400002)(136003)(199004)(189003)(478600001)(6486002)(81166006)(81156014)(71200400001)(44832011)(2906002)(6512007)(6506007)(5660300002)(8676002)(66946007)(316002)(4326008)(7416002)(54906003)(9686003)(8936002)(66446008)(64756008)(66556008)(66476007)(53546011)(33656002)(33716001)(1076003)(6916009)(76116006)(26005)(91956017)(86362001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3309;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /sqDL7DDqp8tILghRoXL53bHSi8NzjmeF03fz2dvqd1CRsjntrACWEj0+aVx8lamkAcqvFclSDT8K+l0W6Hv6Gv0DZ/FbuZnq/RoR9Xs5NOnFPoG7neG/wjeUX762bqH5fB8py7kAhelnNntjS4LyYEo34Siq9qqmBkbjKm1mu38/oZRkNsu59KmiI4uiR3dO5n4IYuXd6Xc1TDfBtzHgdHlR0QB09yCiDMN2YFU2w/ek6WI15m6PxoCPrGuv5LNjnk2PcVFxN+uv6xYpUW76hcm51cKSpK/Kv4S2CfF03XalAzOc09z6F8dSHSabOwUQvIWauB3pkNWb/wzy5h6I6aI+sjH4/pDEOTHNSPzYQSzgFKxEzjs4MShCR/yxYDNTY4YLIEhMWMYT/VmAIFwS4HwKgVhvIVU0L+qi5Va2fvjnuqIIAzduHLIpk6MLq5d
+x-ms-exchange-antispam-messagedata: 9N37SJ0OBEkZX4Ef7/QTKUeBRNKwXIyHzT4T1PZOEfFqGjBxCcstY13PnASRblINzwTAV3YzsaIamQMUtPNnkdiS3aeFNhKHVRP5aDRN/+mvzxRGvY3Rty2TwokMGueh0tzvTLGIXsss2LU3EqmK8g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B737EEDE0836064BB66A40339B2FBCBA@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK0PR03CA0101.apcprd03.prod.outlook.com (2603:1096:203:b0::17) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 08:11:59 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0b4418f5-7903-4f1c-65e8-08d7b9ca63d5
-X-MS-TrafficTypeDiagnostic: SN6PR04MB5151:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR04MB5151A43B41707F0ECB6CFE1BC7ED0@SN6PR04MB5151.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0324C2C0E2
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39850400004)(346002)(396003)(376002)(199004)(189003)(54906003)(9686003)(55016002)(66556008)(956004)(8676002)(5660300002)(107886003)(81166006)(66946007)(33716001)(8936002)(86362001)(81156014)(316002)(66476007)(6496006)(6916009)(186003)(52116002)(7416002)(6666004)(1076003)(16526019)(33656002)(2906002)(478600001)(26005)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5151;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s33h31BvSZP/qc5y4wPM+R/TktdtW7Hw26vlA2IaT3HyoM/cqeYPB/b3usofkslL4yKg/cBIe94W3V9+mSjIE/ejwA5lncgJzQbEGXz7+kCCOap+gvTDUhLNsYVOQyxhQvarYqj15vt3mrqHoaeHtguIMrBe4pV196KNG0PUkq8p6MI13AWOdJQNfaso9AhkXpogkejmoACN+H3UY//dLkvEJOO6kZWHUR8JtsvlistaOXhE6/q2mtagib+3Y+rVqKBg5g+8pqd34coTfwJHfczkYKkhTGgBEqKKVpkEQ0Xu62onsr3Xk8+FyMy1VG9uB0UEodIl8Unin0h96HvRxQSWH8jEV5X50WFsm0/+VtCfWBytYHsmoKPl9QmauIWm5CdprEdBQakTebNbMpAtePF/bxvP+O6XEEnMDqppWUea5ElgTGr3iIPqVYCaSx7y
-X-MS-Exchange-AntiSpam-MessageData: F8uXcJU1WJ20Vgq1xT+eTl9ETnmMvHsxnxgyQCRDNIDB+7f65OicJUUrFkdlUmxGCzGiaCeDX7tVT5sPgYsSzrn86vY/uI4UlgSYv75ex7idkddR5kz0e9u36wOfj7Me6TOkTH+peJ/rBx8j6bxJPQ==
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b4418f5-7903-4f1c-65e8-08d7b9ca63d5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 08:12:01.0223
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31581cb2-dc8d-4a67-8230-08d7b9ca69bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 08:12:10.3745
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BT7IFtwJTyjxK19oyywgICGlMNit9WMdS9QT6dS0f76hSV5G9JqvRICHXWuWehb1pJb18/ACqanmG9N4G3rl4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5151
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gcnqnROLTacTG7acODQnDbhDskMnkKgB1wDz9VrdAJ67fhzJRb76MaCMFWs3RwzB2LJ//LSlSJ6SMpPuuHre7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:42:00AM +0300, Dan Carpenter wrote:
-> On Tue, Feb 25, 2020 at 02:11:39PM +0800, Xin Ji wrote:
-> > Hi all,
-> > 
-> > The following series add initial support for the Slimport ANX7625 transmitter, a
-> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
-> > 
-> > This is the initial version, any mistakes, please let me know, I will fix it in
->               ^^^^^^^^^^^^^^^
-> > the next series.
-> 
-> This is actually the v7 version, but the patch zero cover letter hasn't
-> been updated.  :P  The last time anyone responded to these patches was
-> to point out three simple bugs which you fixed in v4 last November.
-Sorry, I missed it, I'll resend the cover letter.
-> 
-> What changed in this version?  My guess is that nothing changed and you
-> are just prodding us to re-review it...  Feel free to say that also
-> because we can't read your mind.
-I added a new bridge interface "mode_fixup" for processing critical
-timing. And add MIPI RX tolerance by setting register 0x1B to 0x3D.
-> 
-> regards,
-> dan carpenter
+On 20-02-23 23:49:07, Macpaul Lin wrote:
+> This issue was found when adbd trying to open functionfs with AIO mode.
+> Usually, we need to set "setprop sys.usb.ffs.aio_compat 0" to enable
+> adbd with AIO mode on Android.
+>=20
+> When adbd is opening functionfs, it will try to read 24 bytes at the
+> fisrt read I/O control. If this reading has been failed, adbd will
+
+%s/fisrt/first
+
+> try to send FUNCTIONFS_CLEAR_HALT to functionfs. When adbd is in AIO
+> mode, functionfs will be acted with asyncronized I/O path. After the
+> successful read transfer has been completed by gadget hardware, the
+> following series of functions will be called.
+>   ffs_epfile_async_io_complete() -> ffs_user_copy_worker() ->
+>     copy_to_iter() -> _copy_to_iter() -> copyout() ->
+>     iterate_and_advance() -> iterate_iovec()
+>=20
+> Adding debug trace to these functions, it has been found that in
+> copyout(), access_ok() will check if the user space address is valid
+> to write. However if CONFIG_ARM64_TAGGED_ADDR_ABI is enabled, adbd
+> always passes user space address start with "0x3C" to gdaget's AIO
+
+%s/gdaget/gadget
+
+> blocks. This tagged address will cause access_ok() check always fail.
+> Which causes later calculation in iterate_iovec() turn zero.
+> Copyout() won't copy data to userspace since the length to be copied
+> "v.iov_len" will be zero. Finally leads ffs_copy_to_iter() always return
+> -EFAULT, causes adbd cannot open functionfs and send
+> FUNCTIONFS_CLEAR_HALT.
+>=20
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
+> Changes for v2:
+>   - Fix build error for 32-bit load. An #if defined(CONFIG_ARM64) still n=
+eed
+>     for avoiding undeclared defines.
+>=20
+>  drivers/usb/gadget/function/f_fs.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/func=
+tion/f_fs.c
+> index ce1d023..728c260 100644
+> --- a/drivers/usb/gadget/function/f_fs.c
+> +++ b/drivers/usb/gadget/function/f_fs.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/mmu_context.h>
+>  #include <linux/poll.h>
+>  #include <linux/eventfd.h>
+> +#include <linux/thread_info.h>
+> =20
+>  #include "u_fs.h"
+>  #include "u_f.h"
+> @@ -826,6 +827,10 @@ static void ffs_user_copy_worker(struct work_struct =
+*work)
+>  	if (io_data->read && ret > 0) {
+>  		mm_segment_t oldfs =3D get_fs();
+> =20
+> +#if defined(CONFIG_ARM64)
+> +		if (IS_ENABLED(CONFIG_ARM64_TAGGED_ADDR_ABI))
+> +			set_thread_flag(TIF_TAGGED_ADDR);
+> +#endif
+>  		set_fs(USER_DS);
+>  		use_mm(io_data->mm);
+>  		ret =3D ffs_copy_to_iter(io_data->buf, ret, &io_data->data);
+> --=20
+> 1.7.9.5
+
+--=20
+
+Thanks,
+Peter Chen=
