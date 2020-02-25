@@ -2,142 +2,267 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73105C35DFC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB380C35DFE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4322176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79301218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgBYIwe (ORCPT
+        id S1729969AbgBYIwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:52:34 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35587 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729947AbgBYIwd (ORCPT
+        Tue, 25 Feb 2020 03:52:49 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42502 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgBYIws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:52:33 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c7so15337184edu.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:52:32 -0800 (PST)
+        Tue, 25 Feb 2020 03:52:48 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d10so13079892ljl.9;
+        Tue, 25 Feb 2020 00:52:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K+2A/gft6LrFZSl1mPAmF46n0w4UjXc0APhIZ+UJahU=;
-        b=oreHJxzIZydfZL6I+5uKj1kz+zdaoVMTqlNjKcn+0SjV47QKvWnd8sCBdX9PFOi/9N
-         IUJHX2g6HS0waNAoWdC79goixo49PWDZ1ChcOyIAIrkuXOXRIbewmzXezbW37/OaxCXk
-         CTVkcqEAPtZ46io29os8JwJkROJhRkc4Xpysm/ZkkzUM8HP750x2VObyltibPMJotm0+
-         S7nDU9xo1xa/7M1cMkyNT6w/Iu4cTvxj06CzOHA1OFgDK8SMgPv2AvOmicfE2b9shoyf
-         GN8WuSzzs1HG1IuHl09XyVfiIFf3tI6u74ENyMqMGeFC9LO927dq6jO4XE8VEv0ReM9x
-         eFSQ==
-X-Gm-Message-State: APjAAAVbdJyYWa796xqPn5AMjfaR9WNAFxqOKq8Pk/DMId4Qsa2lzo20
-        PkoebYkMpiMUAsTyx4jOHSbsyvjl7Hc=
-X-Google-Smtp-Source: APXvYqzlOAgz7b3/+BZMCjVszAI+KWZKXb/9cJ+seRJFLK+8jP79nDhNvgrY8EtvcO1HhsqQmSeqDQ==
-X-Received: by 2002:a17:906:344d:: with SMTP id d13mr51906876ejb.306.1582620751365;
-        Tue, 25 Feb 2020 00:52:31 -0800 (PST)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id q3sm904259eju.88.2020.02.25.00.52.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 00:52:31 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id z15so5344026wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:52:30 -0800 (PST)
-X-Received: by 2002:a5d:604a:: with SMTP id j10mr5439322wrt.181.1582620750522;
- Tue, 25 Feb 2020 00:52:30 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xsU/6aFnt6cc6o/l2fbAxprJ8+a0i4ExXm0gEynzF+s=;
+        b=ORNZYPIk9iNB1oDtM6WOkGUjPltpAPtbI4kXYv4WKexLQC6nUcnFloStniSykXl6LB
+         h4InLHJ0WEjX5a4Y7b5qR6wZeKQ+oXCIlV3ntTWvmvq1EAYvpjv/mmiYgObRqw+ulNYN
+         khbLy5y7D2HNnY2ZtRT3xhHwklmmsUwnVHp4HeB2WG7OgMjXubYM+bHlI9MUGIT5NUsw
+         6VC/f/LJhsZ9gBIjtXYAIkxLMe8OaH685/zXhGvtgF3vY3pBIsYo3oghf7ein4GJJBDi
+         7qqFVY+eZQ5MYEvBBZAnhngP76qdVhNChyia9BG+d/FE3DyTedgc4pL9HIDXPKIXD0oJ
+         Eahg==
+X-Gm-Message-State: APjAAAVNVi5yB3KX7q4SKusESy5USjuoRXBquFV6kkr6lawJZKPKCeF8
+        COYKvbsZfqIie9Evlh9fIvg=
+X-Google-Smtp-Source: APXvYqy7brF1VxZ4c6iIW+g08pUtLs+ZqdVJVjJwqFPaWWyqEmjEc0ArLCC78upZHUHSzX47viR1kw==
+X-Received: by 2002:a2e:86d6:: with SMTP id n22mr30607540ljj.77.1582620765380;
+        Tue, 25 Feb 2020 00:52:45 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id f4sm7332975ljo.79.2020.02.25.00.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 00:52:44 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:52:32 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: [PATCH v4 2/9] dt_bindings: ROHM BD99954 Charger
+Message-ID: <7aa7f2646077228924d596edbc4d076a787d9312.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20200224173901.174016-1-jernej.skrabec@siol.net>
- <20200224173901.174016-7-jernej.skrabec@siol.net> <20200225083448.6upblnctjjrbarje@gilmour.lan>
-In-Reply-To: <20200225083448.6upblnctjjrbarje@gilmour.lan>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 25 Feb 2020 16:52:18 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64g7Q4e+ic08pA7tbamgToOjyYzuzqP0bpqBZjRuRUrPA@mail.gmail.com>
-Message-ID: <CAGb2v64g7Q4e+ic08pA7tbamgToOjyYzuzqP0bpqBZjRuRUrPA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] drm/sun4i: de2: Don't return de2_fmt_info struct
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 4:35 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Mon, Feb 24, 2020 at 06:39:00PM +0100, Jernej Skrabec wrote:
-> > Now that de2_fmt_info contains only DRM <-> HW format mapping, it
-> > doesn't make sense to return pointer to structure when searching by DRM
-> > format. Rework that to return only HW format instead.
-> >
-> > This doesn't make any functional change.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 15 +++++++++++----
-> >  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  7 +------
-> >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 10 +++++-----
-> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 12 ++++++------
-> >  4 files changed, 23 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > index e078ec96de2d..56cc037fd312 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > @@ -27,6 +27,11 @@
-> >  #include "sun8i_vi_layer.h"
-> >  #include "sunxi_engine.h"
-> >
-> > +struct de2_fmt_info {
-> > +     u32     drm_fmt;
-> > +     u32     de2_fmt;
-> > +};
-> > +
-> >  static const struct de2_fmt_info de2_formats[] = {
-> >       {
-> >               .drm_fmt = DRM_FORMAT_ARGB8888,
-> > @@ -230,15 +235,17 @@ static const struct de2_fmt_info de2_formats[] = {
-> >       },
-> >  };
-> >
-> > -const struct de2_fmt_info *sun8i_mixer_format_info(u32 format)
-> > +int sun8i_mixer_drm_format_to_hw(u32 format, u32 *hw_format)
-> >  {
-> >       unsigned int i;
-> >
-> >       for (i = 0; i < ARRAY_SIZE(de2_formats); ++i)
-> > -             if (de2_formats[i].drm_fmt == format)
-> > -                     return &de2_formats[i];
-> > +             if (de2_formats[i].drm_fmt == format) {
-> > +                     *hw_format = de2_formats[i].de2_fmt;
-> > +                     return 0;
-> > +             }
-> >
-> > -     return NULL;
-> > +     return -EINVAL;
-> >  }
->
-> I'm not too sure about that one. It breaks the consistency with the
-> other functions, and I don't really see a particular benefit to it?
+The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+secondary battery. Intended to be used in space-constraint equipment such
+as Low profile Notebook PC, Tablets and other applications. BD99954
+provides a Dual-source Battery Charger, two port BC1.2 detection and a
+Battery Monitor.
 
-I guess we could just define an "invalid" value, and have the function
-return that if can't find a match? I'm guessing 0x0 is valid, so maybe
-0xffffffff or 0xdeadbeef ?
+Document the DT bindings for BD99954
 
-That would keep consistency with everything else all the while
-removing the level of indirection you wanted to.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-ChenYu
+Changes from rfc-v3:
+  - uncomment multipleOf
+  - add address and size cells properties to example I2C node
+
+ .../bindings/power/supply/rohm,bd9995x.yaml   | 155 ++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+new file mode 100644
+index 000000000000..547403773ec5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/rohm,bd9995x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD99954 Battery charger driver
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++  - Markus Laine <markus.laine@fi.rohmeurope.com>
++  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
++
++description: |
++  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
++  secondary battery intended to be used in space-constraint equipment such
++  as Low profile Notebook PC, Tablets and other applications. BD99954
++  provides a Dual-source Battery Charger, two port BC1.2 detection and a
++  Battery Monitor.
++
++
++properties:
++  compatible:
++    const: rohm,bd9995x-charger
++#
++#    The battery charging profile of BD99954.
++#
++#    Curve (1) represents charging current.
++#    Curve (2) represents battery voltage.
++#
++#    The BD99954 data sheet divides charging to three phases.
++#    a) Trickle-charge with constant current (8).
++#    b) pre-charge with constant current (6)
++#    c) fast-charge with:
++#       First a constant current (5) phase (CC)
++#       Then constant voltage (CV) phase (after the battery voltage has reached
++#       target level - until charging current has dropped to termination
++#       level (7)
++#
++#     V ^                                                        ^ I
++#       .                                                        .
++#       .                                                        .
++# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
++#       .                            /                           .
++#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
++#       .                     +    /  +                          .
++#       .                     +   -   --                         .
++#       .                     +  -     +                         .
++#       .                     +.-      -:                        .
++#       .                    .+         +`                       .
++#       .                  .- +       | `/                       .
++#       .               .."   +          .:                      .
++#       .             -"      +           --                     .
++#       .    (2)  ..."        +       |    :-                    .
++#       .    ...""            +             -:                   .
++# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
++#       .             +                       `:.                .
++#       .             +               |         -:               .
++#       .             +                           -:             .
++#       .             +                             ..           .
++#       .   (1)       +               |               "+++- - - -.- - (7)
++#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
++#       .                                                +       -
++#       -------------------------------------------------+++++++++-->
++#       |             |       |   CC   |      CV         |
++#       | --trickle-- | -pre- | ---------fast----------- |
++#
++#   The charger uses the following battery properties
++# - trickle-charge-current-microamp:
++#     Current used at trickle-charge phase (8 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - precharge-current-microamp:
++#     Current used at pre-charge phase (6 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - constant-charge-current-max-microamp
++#     Current used at fast charge constant current phase (5 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - constant-charge-voltage-max-microvolt
++#     The constant voltage used in fast charging phase (4 in above chart)
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++# - precharge-upper-limit-microvolt
++#     charging mode is changed from trickle charging to pre-charging
++#     when battery voltage exceeds this limit voltage (3 in above chart)
++#     minimum: 2048000
++#     maximum: 19200000
++#     multipleOf: 64000
++# - re-charge-voltage-microvolt
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++#     re-charging is automatically started when battry has been discharging
++#     to the point where the battery voltage drops below this limit
++# - over-voltage-threshold-microvolt
++#     battery is expected to be faulty if battery voltage exceeds this limit.
++#     Charger will then enter to a "battery faulty" -state
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++# - charge-term-current-microamp
++#     minimum: 0
++#     maximum: 1024000
++#     multipleOf: 64000
++#     a charge cycle terminates when the battery voltage is above recharge
++#     threshold, and the current is below this setting (7 in above chart)
++#   See also Documentation/devicetree/bindings/power/supply/battery.txt
++
++  monitored-battery:
++    description:
++      phandle of battery characteristics devicetree node
++
++  rohm,vsys-regulation-microvolt:
++    description: system specific lower limit for system voltage.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 64000
++
++  rohm,vbus-input-current-limit-microamp:
++    description: system specific VBUS input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++  rohm,vcc-input-current-limit-microamp:
++    description: system specific VCC/VACP input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++required:
++  - compatible
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        charger@9 {
++            compatible = "rohm,bd9995x-charger";
++            monitored-battery = <&battery>;
++            reg = <0x9>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 8>;
++            rohm,vsys-regulation-microvolt = <8960000>;
++            rohm,vbus-input-current-limit-microamp = <1472000>;
++            rohm,vcc-input-current-limit-microamp = <1472000>;
++        };
++    };
+-- 
+2.21.0
 
 
-> The rest of the series is
-> Acked-by: Maxime Ripard <mripard@kernel.org>
->
-> Maxime
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
