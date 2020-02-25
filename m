@@ -2,127 +2,123 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0163C35E17
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825BCC35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E5E21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ureUBOEf"
+	by mail.kernel.org (Postfix) with ESMTP id 560EA21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgBYUrr (ORCPT
+        id S1729442AbgBYUtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:47:47 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39056 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgBYUq6 (ORCPT
+        Tue, 25 Feb 2020 15:49:00 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36169 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbgBYUs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:46:58 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkus6045207;
-        Tue, 25 Feb 2020 14:46:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582663616;
-        bh=8gUHCC8lERL7o2usz9p3+V++I32vD0RNtScbEJOJDUI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ureUBOEfyTXFbA7KeofTI9OyP60BBE7jvy4l6mh0mi9F/R+4QUKO7on73Sa/T3kPE
-         8BY+p3vcMDHVYZbpuaXE9ypilEqAL6n7JhNgYWFf6RbY+ERJbmRag9hrH//afWlkU2
-         zegCvWE+fMAPApieozvtqWaONDRhUuzrZ3a7lmKw=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PKkuwu023140
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Feb 2020 14:46:56 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
- Feb 2020 14:46:56 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 25 Feb 2020 14:46:55 -0600
-Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01PKkuDE128891;
-        Tue, 25 Feb 2020 14:46:56 -0600
-Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01PKkuHA025470;
-        Tue, 25 Feb 2020 14:46:56 -0600
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 04/12] ARM: dts: AM4372: Add the PRU-ICSS interconnect target-module node
-Date:   Tue, 25 Feb 2020 14:46:41 -0600
-Message-ID: <20200225204649.28220-5-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200225204649.28220-1-s-anna@ti.com>
-References: <20200225204649.28220-1-s-anna@ti.com>
+        Tue, 25 Feb 2020 15:48:59 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1j6h8O-0007zu-1r; Tue, 25 Feb 2020 21:48:52 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 993DC4C09D6;
+        Tue, 25 Feb 2020 20:48:49 +0000 (UTC)
+Subject: Re: [PATCH linux-master 1/3] can: tcan4x5x: Move clock init to TCAN
+ driver
+To:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        linux-can@vger.kernel.org, wg@grandegger.com,
+        sriram.dash@samsung.com
+Cc:     davem@davemloft.net
+References: <20200131183433.11041-1-dmurphy@ti.com>
+ <20200131183433.11041-2-dmurphy@ti.com>
+ <06af6e1d-aec4-189c-378a-77af4073a1a6@ti.com>
+ <fed1d801-e284-eada-d5b3-ae78089b3ead@pengutronix.de>
+ <e420c667-23d8-9739-1905-4a89570ddb72@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <74993360-b643-51d5-f6f2-aa50ce647a16@pengutronix.de>
+Date:   Tue, 25 Feb 2020 21:48:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <e420c667-23d8-9739-1905-4a89570ddb72@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AM437x family of SoCs contains two dissimilar PRU-ICSS instances,
-but leverage a common reset line and SYSCFG from the larger PRU-ICSS1
-instance. This SYSC register has also very unique bit-fields. Both
-the IPs require the PRCM reset to be deasserted to be able to access
-any registers. Add a common PRUSS interconnect target-module with all
-the required properties.
+On 2/25/20 6:45 PM, Dan Murphy wrote:
+> Marc
+> 
+> On 2/21/20 8:43 AM, Marc Kleine-Budde wrote:
+>> On 2/21/20 3:25 PM, Dan Murphy wrote:
+>>> Hello
+>>>
+>>> On 1/31/20 12:34 PM, Dan Murphy wrote:
+>>>> Move the clock discovery and initialization from the m_can framework to
+>>>> the registrar.  This allows for registrars to have unique clock
+>>>> initialization.  The TCAN device only needs the CAN clock reference.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>> I would like to have these 3 patches reviewed and integrated (post
+>>> review) so I can work on other issues identified.
+>> Applied to linux-can-next/testing.
+> 
+> I am not seeing these patches applied
+> 
+> I am looking here 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git/log/?h=testing
+> 
+> But they could be in a different repo
 
-The PRUSS devices themselves shall be added as child nodes to this
-interconnect node in the future. The PRU-ICSS instances are not
-supported on AM4372 SoC though in the AM437x family, so the target
-module node should be enabled in only those derivative board files
-that use a SoC containing the PRU-ICSS IPs.
+I've just pushed to that branch.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Marc
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index faa14dc0faff..979fa7f67825 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -344,6 +344,29 @@
- 			};
- 		};
- 
-+		pruss_tm: target-module@54400000 {
-+			compatible = "ti,sysc-pruss", "ti,sysc";
-+			reg = <0x54426000 0x4>,
-+			      <0x54426004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_PRUSS_STANDBY_INIT |
-+					 SYSC_PRUSS_SUB_MWAIT)>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&pruss_ocp_clkctrl AM4_PRUSS_OCP_PRUSS_CLKCTRL 0>;
-+			clock-names = "fck";
-+			resets = <&prm_per 1>;
-+			reset-names = "rstctrl";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x54400000 0x80000>;
-+			status = "disabled";
-+		};
-+
- 		gpmc: gpmc@50000000 {
- 			compatible = "ti,am3352-gpmc";
- 			ti,hwmods = "gpmc";
 -- 
-2.23.0
-
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
