@@ -2,64 +2,106 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5FCC35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F798C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1770620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582610986;
-	bh=MgRBEVbXH6Six0fegMThof5UD5xrOEnaDVYeIeAhfiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MYELRMd/wTC2ZTikLxCAYxlzDLuLbOuUkHmbErjFXGeP9KW16/80qgdCYzqOXp3Lu
-	 bIiB0a0/NlhpAxHzu/ixyKwDSARWiqMMbjuczOjM1EEURjRu3hG3/OeMywpYnhhkQa
-	 8th/hAPvpUIa0QOVDF0gfyDEeFWia7RFUBsL1Dxo=
+	by mail.kernel.org (Postfix) with ESMTP id F067320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgBYGJm (ORCPT
+        id S1728996AbgBYGKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:09:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgBYGJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:09:42 -0500
-Received: from localhost (unknown [122.167.120.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B5DE20656;
-        Tue, 25 Feb 2020 06:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582610982;
-        bh=MgRBEVbXH6Six0fegMThof5UD5xrOEnaDVYeIeAhfiA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vO+0B2B4v1T170HBoQEpBd7/e4TD/oAq7OTDhoC2hWax9zPCFAdyH44WsHbHG4X6F
-         I95s17gC5URJG048oj0yBmD6x9QVK0vrp737UoIGF0JduUxOpi0M43V7FaudxSSXZC
-         /thhjkZqukv0r7CgPYRcs0z1WvCruQG9XD2137H8=
-Date:   Tue, 25 Feb 2020 11:39:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com
-Subject: Re: [PATCH v2] dmaengine: ti: edma: Support for interleaved mem to
- mem transfer
-Message-ID: <20200225060937.GJ2618@vkoul-mobl>
-References: <20200210094455.3615-1-peter.ujfalusi@ti.com>
+        Tue, 25 Feb 2020 01:10:15 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49198 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbgBYGKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:10:15 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 647837751992D0EB2F3D;
+        Tue, 25 Feb 2020 14:10:10 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 25 Feb
+ 2020 14:10:06 +0800
+Subject: Re: [PATCH 3/3] f2fs: avoid unneeded barrier in do_checkpoint()
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200218102136.32150-1-yuchao0@huawei.com>
+ <20200218102136.32150-3-yuchao0@huawei.com>
+ <20200219025154.GB96609@google.com>
+ <576f8389-ba27-b461-5466-cc62e84b5c92@huawei.com>
+ <20200224220031.GC77839@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b4c4f60f-ada5-55c9-7d16-45cecad4d433@huawei.com>
+Date:   Tue, 25 Feb 2020 14:10:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210094455.3615-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20200224220031.GC77839@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-02-20, 11:44, Peter Ujfalusi wrote:
-> Add basic interleaved support via EDMA.
+On 2020/2/25 6:00, Jaegeuk Kim wrote:
+> On 02/19, Chao Yu wrote:
+>> On 2020/2/19 10:51, Jaegeuk Kim wrote:
+>>> On 02/18, Chao Yu wrote:
+>>>> We don't need to wait all dirty page submitting IO twice,
+>>>> remove unneeded wait step.
+>>>
+>>> What happens if checkpoint and other meta writs are reordered?
+>>
+>> checkpoint can be done as following:
+>>
+>> 1. All meta except last cp-park of checkpoint area.
+>> 2. last cp-park of checkpoint area
+>>
+>> So we only need to keep barrier in between step 1 and 2, we don't need
+>> to care about the write order of meta in step 1, right?
+> 
+> Ah, let me integrate this patch into Sahitya's patch.>
+> f2fs: fix the panic in do_checkpoint()
 
-Applied, thanks
+No problem.
 
--- 
-~Vinod
+Thanks,
+
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>> ---
+>>>>  fs/f2fs/checkpoint.c | 2 --
+>>>>  1 file changed, 2 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>>> index 751815cb4c2b..9c88fb3d255a 100644
+>>>> --- a/fs/f2fs/checkpoint.c
+>>>> +++ b/fs/f2fs/checkpoint.c
+>>>> @@ -1384,8 +1384,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>>>>  
+>>>>  	/* Flush all the NAT/SIT pages */
+>>>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
+>>>> -	/* Wait for all dirty meta pages to be submitted for IO */
+>>>> -	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
+>>>>  
+>>>>  	/*
+>>>>  	 * modify checkpoint
+>>>> -- 
+>>>> 2.18.0.rc1
+>>> .
+>>>
+> .
+> 
