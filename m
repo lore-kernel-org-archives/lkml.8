@@ -2,111 +2,129 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200A8C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BBEC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADC32084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F982084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sAPoYCpP"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="dvXOPrJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgBYMGy (ORCPT
+        id S1730564AbgBYMH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:06:54 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35693 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgBYMGy (ORCPT
+        Tue, 25 Feb 2020 07:07:57 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:53853 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbgBYMH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:06:54 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z9so1367862lfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 04:06:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qL37Y4QwC2H5BVQcBjGxnhk5Q0ixQAlzjLOKjSRSjzg=;
-        b=sAPoYCpPeqNu1VtPX1gXiQd8dXC9Ud2kT4nsPsqkPjP3zT0K32Y/IeK8JfXh4BF3lr
-         jkwYdlfWZcPTDjrbWeWEh40nPgt+T4+MmNrd5i4YpaaUuJbjXprQyie7WiLLWVLFI612
-         vbcV8uCfmIUI7JIY0nhk7p2ChzdllK/kao+L+oCjBRyTGOTcX9bAcO4OVnYTeHRis5oB
-         ELDgUbJn4tdo9imAGxWaOWsdEsvshYK0XFKDf36phutEiWJda7cdLhBXYMFC1WeE8PbK
-         rCZH4JLpQY/MDgFCrCAY8ibiVOREbl4XByl7pwe4wXdFMsCecj5eoeq/tSHCk4PmtLSK
-         q0eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qL37Y4QwC2H5BVQcBjGxnhk5Q0ixQAlzjLOKjSRSjzg=;
-        b=JwL7Jjfq/7aL1Qh2xYm/cEyQfMPf9Hc+JsUhLN5UYJ8cr/MRX5uiClfGRU/9USoh+8
-         U+i2IGQLiC6vdWk7tTKuvKhd3nETfWD1BQnN0kEDlObJzucYaT8P7571wQwhEGgTKx4v
-         u8F2Tp+m8BBZC3zPraJ/0fEyy5QHBJcrcmUUZpEcK8l/cjIvBaxH2pewArqZ7i+pS6iq
-         saMoF8oplF8wm3p5z8Vms4FPf6ak9cBFALRS1V/idB93skyMMtbDZdtmHQw0maWuBwnm
-         lMPwPyHSIKbG45up7u52skiYwwlaUlvXmawsCbx5bWRV4+dP4gCK3m/8hMjLwiwEeQJm
-         wlcA==
-X-Gm-Message-State: APjAAAU76Y+EiOJ/a3zmklzE7Wk2bF9N8MARjAukVO6y3egil8LjLAkQ
-        wY3Xl/lPb9EKtD/ne9nle9L7GHrAwSe2cbkmBMM7NA==
-X-Google-Smtp-Source: APXvYqx4hD9HaTlSuNdaASWszKdhnnTGw4UdpRdVSDuvLrBOJV88/DSZ6LkAIwOgsPHB/a0L3ZRa+lZx6hi8twr3z8I=
-X-Received: by 2002:ac2:5a05:: with SMTP id q5mr6326196lfn.143.1582632411863;
- Tue, 25 Feb 2020 04:06:51 -0800 (PST)
+        Tue, 25 Feb 2020 07:07:56 -0500
+Received: from [IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2]
+ ([IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 6Z09jyZr8jmHT6Z0DjWpSw; Tue, 25 Feb 2020 13:07:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582632474; bh=Fa07Iai1OLOLmQy78F43ui0l1I5N4AHYY389xHDaTSM=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=dvXOPrJ9Ey0AHGn780q9L6mQ81ik5arScNdE3Se8f5hGPqEtt1lQ0wsgxd4w9tQEW
+         bXsw2s6UprHLv1kFDEM6ZuawzS1e2MP7dd3QnxqVIFnBwZ68APOZhNMB5zZJPkdJcJ
+         F3r4h7ZndI8wdPxSHlj9DphUj7205uJ0fPSv0gp3wTO9E9QTAWqxI4GdIOzr3mdkDJ
+         JUpTPMVtSl/wlRIWRGf4RxnkfdgNsw0hp0gsuzi5G+EPxUW6lK1u0UdNJ9kLiiy7sq
+         e15Am4u42wWHYobw87p9weK7rWnIMsUwp71Sh3Cr5ZQbalG3MNSBO67qMOXcotgVER
+         GN5gKX5CIc4NA==
+Subject: Re: [PATCH v2] media: rcar_drif: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, mchehab@kernel.org,
+        rashanmu@gmail.com, geert@linux-m68k.org
+Cc:     vkoul@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20200120124754.26826-1-peter.ujfalusi@ti.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <d1c3aec0-7b8f-5f78-e055-8dd87bee801b@xs4all.nl>
+Date:   Tue, 25 Feb 2020 13:07:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <cover.1582615616.git.amit.kucheria@linaro.org>
- <0f506cfdd8eb9d50b5eb43c9dca510284ac8ded1.1582615616.git.amit.kucheria@linaro.org>
- <20200225101614.GN2618@vkoul-mobl>
-In-Reply-To: <20200225101614.GN2618@vkoul-mobl>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 25 Feb 2020 17:36:40 +0530
-Message-ID: <CAP245DUh2zZA=pfhoYswuffdR1_p72QR73SdWJCH8w8XySFpvg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: thermal: tsens: Make dtbs_check pass
- for sc7180 tsens
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200120124754.26826-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBKVkvtGsRTpWLDaGXfFoP6yXSIJ9CbES675rm/bNy/DkEwvj1oiTe7rAN6OTM6k2/rAcMnTmypGOHQyo1ewd5L12wwyG8V4F0nouxEf6gvOmRuTuYCJ
+ DDU7dJpXF/VFB9CWTDTsGwtGMg+OJfQA7cyCda/ztDzZOpkRSK8z2mL+vgQjDokMzQzE9axN/lgfOLqv2yorKhvpR/TBhDh4zaMn5GFyTa++/RiUwoEoMoIa
+ UYClDA4wIL5H+djKNajLqp+BPkh9eRQiBj3IfkIfuQr1qEs3lHW9D2U5yCHDhwH4Olaa4DQlFoFUJ8/H9l7gcNZVCXj72yi3GhZ4BiTo4mLX4Nj3u4rY1uBG
+ j880l0pXXm9wIanSMXnMfe6sisCE9kgzC90r/AUCohTwIcMrJ1tkRjT6u4PPK/kmFH+40lySNWGftt3oWbwv1qOSVUuyBIbl5KTz/8vL529kg5Rsyt521H/Q
+ tSBeJRBFCXmvZCF2LsIpmN/hgJ+C3oxImhLj7BZJaWTskSaCoqyUhj/THJA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 3:46 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 25-02-20, 13:01, Amit Kucheria wrote:
-> > Fixes the following warnings:
-> > builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> > thermal-sensor@c263000: compatible: ['qcom,sc7180-tsens',
-> > 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
-> > causes of the failure):
-> > builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> > thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> > ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> > builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> > thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> > ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> > builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> > thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
-> > ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
-> > builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> > thermal-sensor@c263000: compatible:1: 'qcom,tsens-v0_1' was expected
-> > builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
-> > thermal-sensor@c263000: compatible:1: 'qcom,tsens-v1' was expected
->
-> I think the patch title should be "add qcom,sc7180-tsens to  qcom-tsens.yaml"
->
-> and it would be great to see explanation on how adding it fixes these
-> warns.
+Hi Peter,
 
-Agreed. I'll send out a new version with the commit messages fixed.
+On 1/20/20 1:47 PM, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+> 
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Relooking at series I think this applies to rest of the series too :)
->
+Unfortunately the v1 version of this patch got merged, so can you make a
+new patch against the current media_tree master to bring it up to date
+with this v3?
 
-Thanks for the review.
+My apologies for this.
+
+Regards,
+
+	Hans
+
+> ---
+> Hi,
+> 
+> Changes since v2:
+> - Use %pe to print error name using the ch->dmach pointer
+> - Set ch->dmach to NULL in case of error
+> 
+> Changes since v1:
+> - Do not print error in case of EPROBE_DEFER
+> - Added Reviewed-by from Geert
+> 
+> Regards,
+> Peter
+> 
+>  drivers/media/platform/rcar_drif.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
+> index 0f267a237b42..3d2451ac347d 100644
+> --- a/drivers/media/platform/rcar_drif.c
+> +++ b/drivers/media/platform/rcar_drif.c
+> @@ -275,10 +275,14 @@ static int rcar_drif_alloc_dmachannels(struct rcar_drif_sdr *sdr)
+>  	for_each_rcar_drif_channel(i, &sdr->cur_ch_mask) {
+>  		struct rcar_drif *ch = sdr->ch[i];
+>  
+> -		ch->dmach = dma_request_slave_channel(&ch->pdev->dev, "rx");
+> -		if (!ch->dmach) {
+> -			rdrif_err(sdr, "ch%u: dma channel req failed\n", i);
+> -			ret = -ENODEV;
+> +		ch->dmach = dma_request_chan(&ch->pdev->dev, "rx");
+> +		if (IS_ERR(ch->dmach)) {
+> +			ret = PTR_ERR(ch->dmach);
+> +			if (ret != -EPROBE_DEFER)
+> +				rdrif_err(sdr,
+> +					  "ch%u: dma channel req failed: %pe\n",
+> +					  i, ch->dmach);
+> +			ch->dmach = NULL;
+>  			goto dmach_error;
+>  		}
+>  
+> 
+
