@@ -2,88 +2,99 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5715C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D09C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706582084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609C82176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582651750;
-	bh=TSvugZ6AZMmjmOOlSYDQ/kbWU5mPi4HOwCKdo0Hmtg8=;
+	s=default; t=1582651901;
+	bh=lUZKcrUaE1KV5+r+xa13D8X6RoRZ+ugg53IiJh4DQZg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UpQPjCnEq5foa7yK8Vw++AuCtMyX3RK2d3FoxyZ85i5MhAgh0GMdBC17zdjbsn974
-	 swov5X73Av3g1ZZ2DoSQrlrBMi3YRDqKa9c5vYg6eUyzJiseDv0JIGSole2lEDr/ci
-	 jEkQ4uomXic9/T0yfNJQgs+K5cTKx4QhQoU+bcmw=
+	b=iDvR37fV3y/1LUqpVouernze/ycytpFqAPKFLDi0papTAZSenuXWMx5Wf38oarcou
+	 TyUv1MeY9p45ttFOQBcxjNcwy4bYXwOb2nCktYYz1AtmdFr36R9xwLRy9EQBZwMgGr
+	 VsBB8Yc/zrjKFsSJEMflyMOgLun+1bXo/WP+wt0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgBYR3J (ORCPT
+        id S1730335AbgBYRbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:29:09 -0500
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:38809 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730427AbgBYR3J (ORCPT
+        Tue, 25 Feb 2020 12:31:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46036 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728200AbgBYRbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:29:09 -0500
-Received: by mail-oi1-f180.google.com with SMTP id r137so96254oie.5;
-        Tue, 25 Feb 2020 09:29:08 -0800 (PST)
+        Tue, 25 Feb 2020 12:31:40 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so232706otp.12;
+        Tue, 25 Feb 2020 09:31:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i9WEf1lopTCh9mdPytEzlIgO8LHEQJZa98yyLvLlAnU=;
-        b=YGdatUY6i4BnMbFHinnrw6EPSeFhMB5PxvaOQ6+8XAcxwsFYc4PA/z+C6zkMQtktQg
-         scSUQB1jjKlppomho99EwKbWz7zcJ/7IZ4CTfdkP48IF/FCuplIh1oKgbWl7mS25XqK4
-         zaYjqum/HHzh8MQ7IfldC+ubzsRDm0RMrrYvjRHLcDmn+CFWAZB3n1xGHRXikbE6KXoD
-         2WFZRART+BLQJSDL0BPa5b0FDYqBu/4CC53bge7T4wpyRFUh3umCwbHnk5McU+1S2ljf
-         BfLAch5AQf7GBTODau97Lh/PsuClWIbFlzCEQe56J/YzDc3/zEEwlmXRm8RkhTsDfyCT
-         vDuw==
-X-Gm-Message-State: APjAAAWAo8MsInj4SsXcXHH4wB5mQ+gKayl62L5WVm21gv4XmFQEcYVX
-        lXvGNCZfENIzpNeH0XiYbw==
-X-Google-Smtp-Source: APXvYqzgsk4urqoB9f9mZtdmWpTL+TsxcDZcfRf6WQFt93aPBTQJUvh5VIyWcFQZlnJ5HpZnb1J2xQ==
-X-Received: by 2002:aca:c514:: with SMTP id v20mr61682oif.62.1582651748014;
-        Tue, 25 Feb 2020 09:29:08 -0800 (PST)
+        bh=QS0K6caHcm4ENnIoTn05eBvdx/7W9kVs7Tic77EWV3U=;
+        b=nXTVk2CXW9DCWQZJahPfRuzJORSuUNQh5tK+WuM03Ex0gW/O9MLcJW2beosFG3oqOg
+         Rpa60w76YL7vppNDVffMtu4kktDjN36kUcLW3lf31MAZcePrNjFH1uKYQb1Inxi6Apgn
+         B2321KO8isIV4jB9M2DVTqwADyjxC/4bfIFjkOirCoia/pgo8R6SQWJuqloWbCm5hBKX
+         JSyi6MlC9NGqJO7ZuQ6fDquN+pNf8HEvVFPoBIVwS1NvOiDQdCa9Gi8LhClma21ZoNXA
+         IcBqGYpJP9G2iEuWcO1o4QfhAdCCwMPS7nupLXB8grIQ3nTXgcV++2f3YnfesQmTsJ88
+         TFFA==
+X-Gm-Message-State: APjAAAVl1M16Mq41ffapx9X7XtPRUvMdal+Ov80n/bQwPSXJYuZmY5BX
+        KjJU+sUmFwNQ2kSQyphyXQ==
+X-Google-Smtp-Source: APXvYqwB2+0s7QgvbO4hUWGFqaHT7kZzFUz3IlneivicGP+fTVhYNubNwANumJrX5ONqlNtblqsZ9g==
+X-Received: by 2002:a9d:7559:: with SMTP id b25mr44320296otl.189.1582651899014;
+        Tue, 25 Feb 2020 09:31:39 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m18sm5848296otf.6.2020.02.25.09.29.06
+        by smtp.gmail.com with ESMTPSA id l12sm5915266oth.9.2020.02.25.09.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:29:07 -0800 (PST)
-Received: (nullmailer pid 31776 invoked by uid 1000);
-        Tue, 25 Feb 2020 17:29:06 -0000
-Date:   Tue, 25 Feb 2020 11:29:06 -0600
+        Tue, 25 Feb 2020 09:31:38 -0800 (PST)
+Received: (nullmailer pid 2861 invoked by uid 1000);
+        Tue, 25 Feb 2020 17:31:37 -0000
+Date:   Tue, 25 Feb 2020 11:31:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     richard.gong@linux.intel.com
-Cc:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org,
-        linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, richard.gong@linux.intel.com,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1 4/7] dt-bindings, firmware: add compatible value Intel
- Stratix10 service layer binding
-Message-ID: <20200225172906.GA31720@bogus>
-References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
- <1581696052-11540-5-git-send-email-richard.gong@linux.intel.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
+Message-ID: <20200225173137.GA31830@bogus>
+References: <20200215065826.739102-1-gch981213@gmail.com>
+ <20200218125557.GD4232@sirena.org.uk>
+ <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581696052-11540-5-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 10:00:49 -0600, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
+On Thu, Feb 20, 2020 at 07:58:06AM +0800, Chuanhong Guo wrote:
+> Hi!
 > 
-> A a compatible property value to Intel Stratix10 service layer binding
+> On Tue, Feb 18, 2020 at 8:55 PM Mark Brown <broonie@kernel.org> wrote:
+> > This is an ABI break so you shouldn't be doing this, if the existing
+> > binding works it should continue to work.
 > 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
->  Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> The missing spi-max-frequency is the only part preventing old
+> device tree to work with this driver.
+> If the goal is to make existing dt binding work, I could patch dt using
+> of_add_property in v2. I saw similar device tree patching for legacy
+> bindings in pinctrl-single driver.
 
-Acked-by: Rob Herring <robh@kernel.org>
+You should should really only need 'spi-max-frequency' if the max freq 
+is less than the minimum of the host and device max freq.
+
+Rob
