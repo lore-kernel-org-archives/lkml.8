@@ -2,145 +2,111 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E83C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD91C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837CD21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67672222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mTmj8gEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgBYMiR (ORCPT
+        id S1730193AbgBYMiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:38:17 -0500
-Received: from mga11.intel.com ([192.55.52.93]:34255 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgBYMiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:38:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 04:38:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
-   d="scan'208";a="260681181"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Feb 2020 04:38:03 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 3B28B3C0; Tue, 25 Feb 2020 14:38:02 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Martin Volf <martin.volf.42@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] watchdog: iTCO_wdt: Export vendorsupport
-Date:   Tue, 25 Feb 2020 15:38:00 +0300
-Message-Id: <20200225123802.88984-2-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200225123802.88984-1-mika.westerberg@linux.intel.com>
-References: <20200225123802.88984-1-mika.westerberg@linux.intel.com>
+        Tue, 25 Feb 2020 07:38:54 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:57950 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729411AbgBYMiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:38:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7il1HEPle9QWK8/fn+8p2ZW7O17syNxn3S0cD/+iqSQ=; b=mTmj8gEH/PDUSZrnwqB/k2HnS
+        8MBf7jbbYVViLuW2wqdDKg9jHs8mupOQCGoz6I86x8v9A7f/8ChSVtL8Eoh2xHimayo1IuYEmqGBa
+        NPn510WZTRozrgM7Q8GofRL+OZe1MDaK6eoEW/fe/mxPhrXKoFJ7eFHXTk7RrTzxncsT7nledbpG+
+        CD1vAEZVCVajSsZFfPeoXwv8INm+fWQ2o6F5nGnULeqDqlXdrCrVLEUi0VIs+O4y8A1YlC8aOKpHC
+        Y2ok8TmkoetW0RPg7+GbRCJzugXtMQRZ6LDT1eCgDZBxrWN15YKtcLRWUt0Wwf9UDkZHMEbjGgPth
+        ZUbM9B93A==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:52570)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j6ZU4-0000tE-DH; Tue, 25 Feb 2020 12:38:44 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j6ZTz-0007QW-GB; Tue, 25 Feb 2020 12:38:39 +0000
+Date:   Tue, 25 Feb 2020 12:38:39 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Sudheesh Mavila <sudheesh.mavila@amd.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: corrected the return value for
+ genphy_check_and_restart_aneg
+Message-ID: <20200225123839.GT25745@shell.armlinux.org.uk>
+References: <20200225122208.6881-1-sudheesh.mavila@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225122208.6881-1-sudheesh.mavila@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for making ->smi_res optional the iTCO_wdt driver needs
-to know whether vendorsupport is being set to non-zero. For this reason
-export the variable.
+On Tue, Feb 25, 2020 at 05:52:08PM +0530, Sudheesh Mavila wrote:
+> When auto-negotiation is not required, return value should be zero.
+> 
+> Signed-off-by: Sudheesh Mavila <sudheesh.mavila@amd.com>
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/watchdog/iTCO_vendor.h         |  2 ++
- drivers/watchdog/iTCO_vendor_support.c | 16 +++++++++-------
- 2 files changed, 11 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/drivers/watchdog/iTCO_vendor.h b/drivers/watchdog/iTCO_vendor.h
-index 0f7373ba10d5..69e92e692ae0 100644
---- a/drivers/watchdog/iTCO_vendor.h
-+++ b/drivers/watchdog/iTCO_vendor.h
-@@ -1,10 +1,12 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* iTCO Vendor Specific Support hooks */
- #ifdef CONFIG_ITCO_VENDOR_SUPPORT
-+extern int iTCO_vendorsupport;
- extern void iTCO_vendor_pre_start(struct resource *, unsigned int);
- extern void iTCO_vendor_pre_stop(struct resource *);
- extern int iTCO_vendor_check_noreboot_on(void);
- #else
-+#define iTCO_vendorsupport				0
- #define iTCO_vendor_pre_start(acpibase, heartbeat)	{}
- #define iTCO_vendor_pre_stop(acpibase)			{}
- #define iTCO_vendor_check_noreboot_on()			1
-diff --git a/drivers/watchdog/iTCO_vendor_support.c b/drivers/watchdog/iTCO_vendor_support.c
-index 4f1b96f59349..cf0eaa04b064 100644
---- a/drivers/watchdog/iTCO_vendor_support.c
-+++ b/drivers/watchdog/iTCO_vendor_support.c
-@@ -39,8 +39,10 @@
- /* Broken BIOS */
- #define BROKEN_BIOS		911
- 
--static int vendorsupport;
--module_param(vendorsupport, int, 0);
-+int iTCO_vendorsupport;
-+EXPORT_SYMBOL(iTCO_vendorsupport);
-+
-+module_param_named(vendorsupport, iTCO_vendorsupport, int, 0);
- MODULE_PARM_DESC(vendorsupport, "iTCO vendor specific support mode, default="
- 			"0 (none), 1=SuperMicro Pent3, 911=Broken SMI BIOS");
- 
-@@ -152,7 +154,7 @@ static void broken_bios_stop(struct resource *smires)
- void iTCO_vendor_pre_start(struct resource *smires,
- 			   unsigned int heartbeat)
- {
--	switch (vendorsupport) {
-+	switch (iTCO_vendorsupport) {
- 	case SUPERMICRO_OLD_BOARD:
- 		supermicro_old_pre_start(smires);
- 		break;
-@@ -165,7 +167,7 @@ EXPORT_SYMBOL(iTCO_vendor_pre_start);
- 
- void iTCO_vendor_pre_stop(struct resource *smires)
- {
--	switch (vendorsupport) {
-+	switch (iTCO_vendorsupport) {
- 	case SUPERMICRO_OLD_BOARD:
- 		supermicro_old_pre_stop(smires);
- 		break;
-@@ -178,7 +180,7 @@ EXPORT_SYMBOL(iTCO_vendor_pre_stop);
- 
- int iTCO_vendor_check_noreboot_on(void)
- {
--	switch (vendorsupport) {
-+	switch (iTCO_vendorsupport) {
- 	case SUPERMICRO_OLD_BOARD:
- 		return 0;
- 	default:
-@@ -189,13 +191,13 @@ EXPORT_SYMBOL(iTCO_vendor_check_noreboot_on);
- 
- static int __init iTCO_vendor_init_module(void)
- {
--	if (vendorsupport == SUPERMICRO_NEW_BOARD) {
-+	if (iTCO_vendorsupport == SUPERMICRO_NEW_BOARD) {
- 		pr_warn("Option vendorsupport=%d is no longer supported, "
- 			"please use the w83627hf_wdt driver instead\n",
- 			SUPERMICRO_NEW_BOARD);
- 		return -EINVAL;
- 	}
--	pr_info("vendor-support=%d\n", vendorsupport);
-+	pr_info("vendor-support=%d\n", iTCO_vendorsupport);
- 	return 0;
- }
- 
+Thanks for spotting this problem. However, it looks like the same
+problem also exists in genphy_c45_check_and_restart_aneg(). It would
+be a good idea to fix both at the same time.
+
+Thanks.
+
+> ---
+>  drivers/net/phy/phy_device.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 6a5056e0ae77..36cde3dac4c3 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -1806,10 +1806,13 @@ int genphy_check_and_restart_aneg(struct phy_device *phydev, bool restart)
+>  			restart = true;
+>  	}
+>  
+> -	if (restart)
+> -		ret = genphy_restart_aneg(phydev);
+> +	/* Only restart aneg if we are advertising something different
+> +	 * than we were before.
+> +	 */
+> +	if (restart > 0)
+> +		return genphy_restart_aneg(phydev);
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(genphy_check_and_restart_aneg);
+>  
+> -- 
+> 2.17.1
+> 
+> 
+
 -- 
-2.25.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
