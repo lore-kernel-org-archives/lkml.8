@@ -2,35 +2,35 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECDDC4BA06
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D75BC4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD4124680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AB324684
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbgBYXZx (ORCPT
+        id S1730712AbgBYXab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:25:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55517 "EHLO
+        Tue, 25 Feb 2020 18:30:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55543 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729477AbgBYXZu (ORCPT
+        with ESMTP id S1729529AbgBYXZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:25:50 -0500
+        Tue, 25 Feb 2020 18:25:52 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6ja6-0004au-Q9; Wed, 26 Feb 2020 00:25:39 +0100
+        id 1j6jZw-0004W0-9S; Wed, 26 Feb 2020 00:25:28 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id A6DAC104099;
-        Wed, 26 Feb 2020 00:25:33 +0100 (CET)
-Message-Id: <20200225221305.919875257@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9EAD3100375;
+        Wed, 26 Feb 2020 00:25:27 +0100 (CET)
+Message-Id: <20200225213636.689276920@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:08:08 +0100
+Date:   Tue, 25 Feb 2020 22:36:36 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,10 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 7/8] x86/entry: Move irq tracing to prepare_exit_to_user_mode()
-References: <20200225220801.571835584@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [patch 00/10] x86/entry: Consolidation - Part I
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -50,44 +47,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-which again gets it out of the ASM code.
+Hi!
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/common.c   |    1 +
- arch/x86/entry/entry_32.S |    2 +-
- arch/x86/entry/entry_64.S |    1 -
- 3 files changed, 2 insertions(+), 2 deletions(-)
+This is the first batch of a 73 patches series which consolidates the x86
+entry code.
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -244,6 +244,7 @@ static inline void __prepare_exit_to_use
- __visible inline notrace void prepare_exit_to_usermode(struct pt_regs *regs)
- {
- 	__prepare_exit_to_usermode(regs);
-+	trace_hardirqs_on();
- }
- NOKPROBE_SYMBOL(prepare_exit_to_usermode);
- 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -855,7 +855,7 @@ SYM_CODE_START_LOCAL(ret_from_exception)
- 	TRACE_IRQS_OFF
- 	movl	%esp, %eax
- 	call	prepare_exit_to_usermode
--	jmp	restore_all
-+	jmp	restore_all_switch_stack
- SYM_CODE_END(ret_from_exception)
- 
- SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -614,7 +614,6 @@ SYM_CODE_START_LOCAL(common_interrupt)
- .Lretint_user:
- 	mov	%rsp,%rdi
- 	call	prepare_exit_to_usermode
--	TRACE_IRQS_ON
- 
- SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
- #ifdef CONFIG_DEBUG_ENTRY
+This work started off as a trivial 5 patches series moving the heavy
+lifting of POSIX CPU timers out of interrupt context into thread/process
+context. This discovered that KVM is lacking to handle pending work items
+before entering guest mode and added the handling to the x86 KVM
+code. Review requested to make this a generic infrastructure.
 
+The next series grew to 25 patches implementing the generic infrastructure,
+converting x86 (and as a POC ARM64) over, but it turned out that this was
+slightly incomplete and still had some entanglement with the rest of the
+x86 entry code as some of that functionality is shared between syscall and
+interrupt entry/exit. And it also unearthed the nastyness of IOPL which got
+already addressed in mainline.
+
+This series addresses these issues in order to prepare for making the entry
+from userspace and exit to userspace (and it's counterpart enter guest) a
+generic infrastructure in order to restrict the necessary ASM work to the
+bare minimum.
+
+The series is split into 5 parts:
+
+    - General cleanups and bugfixes
+
+    - Consolidation of the syscall entry/exit code
+
+    - Autogenerate simple exception/trap code and reduce the difference
+      between 32 and 64 bit
+
+    - Autogenerate complex exception/trap code and provide different entry
+      points for #DB and #MC exceptions which allows to address the
+      recently discovered RCU vs. world issues in a more structured way
+
+    - Convert the device interrupt entry code to use the same mechanism as
+      exceptions and traps and finally convert the system vectors over as
+      well. The last step after all those cleanups is to move the return
+      from exception/interrupt logic (user mode work, kernel preemption)
+      completely from ASM into C-code, so the ASM code just has to take
+      care about returning from the exception, which is horrible and
+      convoluted enough already.
+
+At the end the x86 entry code is ready to move the syscall parts out into
+generic code and finally tackle the initial problem which started all of
+this.
+
+The complete series is available from git:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/entry
+
+which contains all 73 patches. The individual parts are tagged, so this
+part can be retrieved via:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v1-part1
+
+Thanks,
+
+	tglx
+
+8<---------------
+ entry/entry_32.S          |   19 +++++++------------
+ include/asm/irq.h         |    2 +-
+ include/asm/mce.h         |    3 ---
+ include/asm/traps.h       |   17 +++++++----------
+ kernel/cpu/mce/core.c     |   12 ++++++++++--
+ kernel/cpu/mce/internal.h |    3 +++
+ kernel/irq.c              |    3 +--
+ kernel/traps.c            |   41 ++++++++++++++++++++++++++++++++++-------
+ 8 files changed, 63 insertions(+), 37 deletions(-)
