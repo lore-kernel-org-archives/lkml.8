@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCE5C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B53C4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D31B24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8889024681
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgBYX23 (ORCPT
+        id S1730607AbgBYX2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:28:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55888 "EHLO
+        Tue, 25 Feb 2020 18:28:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55869 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbgBYX0g (ORCPT
+        with ESMTP id S1730266AbgBYX0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:26:36 -0500
+        Tue, 25 Feb 2020 18:26:32 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6jaU-0004na-Ue; Wed, 26 Feb 2020 00:26:03 +0100
+        id 1j6jae-0004sh-7Y; Wed, 26 Feb 2020 00:26:12 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 9471F1040A1;
-        Wed, 26 Feb 2020 00:25:40 +0100 (CET)
-Message-Id: <20200225222650.050626171@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0CF001040A9;
+        Wed, 26 Feb 2020 00:25:45 +0100 (CET)
+Message-Id: <20200225224144.515846398@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:16:25 +0100
+Date:   Tue, 25 Feb 2020 23:33:25 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,8 +38,8 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 19/24] x86/entry: Convert General protection exception to IDTENTRY
-References: <20200225221606.511535280@linutronix.de>
+Subject: [patch 04/16] x86/entry: Convert NMI to IDTENTRY_NMI
+References: <20200225223321.231477305@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Linutronix-Spam-Score: -1.0
@@ -50,11 +50,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert #GP to IDTENTRY_ERRORCODE:
-  - Implement the C entry point with DEFINE_IDTENTRY
-  - Emit the ASM stub with DECLARE_IDTENTRY
-  - Remove the ASM idtentry in 64bit
-  - Remove the open coded ASM entry code in 32bit
+Convert #NMI to IDTENTRY_NMI:
+  - Implement the C entry point with DEFINE_IDTENTRY_NMI
   - Fixup the XEN/PV code
   - Remove the old prototyoes
 
@@ -62,162 +59,229 @@ No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_32.S       |    8 +-------
- arch/x86/entry/entry_64.S       |    3 +--
- arch/x86/include/asm/idtentry.h |    1 +
+ arch/x86/entry/entry_32.S       |    8 ++++----
+ arch/x86/entry/entry_64.S       |   15 +++++++--------
+ arch/x86/include/asm/idtentry.h |    4 ++++
  arch/x86/include/asm/traps.h    |    3 ---
- arch/x86/kernel/idt.c           |    2 +-
- arch/x86/kernel/traps.c         |    7 +++----
- arch/x86/xen/enlighten_pv.c     |    2 +-
+ arch/x86/kernel/idt.c           |    4 ++--
+ arch/x86/kernel/nmi.c           |    4 +---
+ arch/x86/xen/enlighten_pv.c     |    7 ++++++-
  arch/x86/xen/xen-asm_64.S       |    2 +-
- 8 files changed, 9 insertions(+), 19 deletions(-)
+ 8 files changed, 25 insertions(+), 22 deletions(-)
 
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -732,7 +732,7 @@
- .macro idtentry_push_func vector cfunc
- 	.if \vector == X86_TRAP_XF
- 		/* AMD 486 bug: invd from userspace calls exception 19 instead of #GP */
--		ALTERNATIVE "pushl	$do_general_protection",	\
-+		ALTERNATIVE "pushl	$exc_general_protection",	\
- 			    "pushl	$do_simd_coprocessor_error",	\
- 			    X86_FEATURE_XMM
- 	.else
-@@ -1652,12 +1652,6 @@ SYM_CODE_START(nmi)
- #endif
- SYM_CODE_END(nmi)
+@@ -1514,7 +1514,7 @@ SYM_CODE_END(double_fault)
+  * switched stacks.  We handle both conditions by simply checking whether we
+  * interrupted kernel code running on the SYSENTER stack.
+  */
+-SYM_CODE_START(nmi)
++SYM_CODE_START(asm_exc_nmi)
+ 	ASM_CLAC
  
--SYM_CODE_START(general_protection)
--	ASM_CLAC
--	pushl	$do_general_protection
--	jmp	common_exception
--SYM_CODE_END(general_protection)
--
+ #ifdef CONFIG_X86_ESPFIX32
+@@ -1543,7 +1543,7 @@ SYM_CODE_START(nmi)
+ 	jb	.Lnmi_from_sysenter_stack
+ 
+ 	/* Not on SYSENTER stack. */
+-	call	do_nmi
++	call	exc_nmi
+ 	jmp	.Lnmi_return
+ 
+ .Lnmi_from_sysenter_stack:
+@@ -1553,7 +1553,7 @@ SYM_CODE_START(nmi)
+ 	 */
+ 	movl	%esp, %ebx
+ 	movl	PER_CPU_VAR(cpu_current_top_of_stack), %esp
+-	call	do_nmi
++	call	exc_nmi
+ 	movl	%ebx, %esp
+ 
+ .Lnmi_return:
+@@ -1607,7 +1607,7 @@ SYM_CODE_START(nmi)
+ 	lss	(1+5+6)*4(%esp), %esp			# back to espfix stack
+ 	jmp	.Lirq_return
+ #endif
+-SYM_CODE_END(nmi)
++SYM_CODE_END(asm_exc_nmi)
+ 
  #ifdef CONFIG_KVM_GUEST
  SYM_CODE_START(async_page_fault)
- 	ASM_CLAC
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1061,7 +1061,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  * Exception entry points.
-  */
+@@ -1071,7 +1071,6 @@ idtentry_df	X86_TRAP_DF		double_fault		d
  
--idtentry	X86_TRAP_GP		general_protection	do_general_protection		has_error_code=1
- idtentry	X86_TRAP_SPURIOUS	spurious_interrupt_bug	do_spurious_interrupt_bug	has_error_code=0
- idtentry	X86_TRAP_MF		coprocessor_error	do_coprocessor_error		has_error_code=0
- idtentry	X86_TRAP_AC		alignment_check		do_alignment_check		has_error_code=1
-@@ -1201,7 +1200,7 @@ SYM_CODE_START(xen_failsafe_callback)
- 	addq	$0x30, %rsp
- 	pushq	$0				/* RIP */
- 	UNWIND_HINT_IRET_REGS offset=8
--	jmp	general_protection
-+	jmp	asm_exc_general_protection
- 1:	/* Segment mismatch => Category 1 (Bad segment). Retry the IRET. */
- 	movq	(%rsp), %rcx
- 	movq	8(%rsp), %r11
+ #ifdef CONFIG_XEN_PV
+ idtentry	512 /* dummy */		hypervisor_callback	xen_do_hypervisor_callback	has_error_code=0
+-idtentry	X86_TRAP_NMI		xennmi			do_nmi				has_error_code=0
+ idtentry	X86_TRAP_DB		xendebug		do_debug			has_error_code=0
+ #endif
+ 
+@@ -1400,7 +1399,7 @@ SYM_CODE_END(error_exit)
+  *	%r14: Used to save/restore the CR3 of the interrupted context
+  *	      when PAGE_TABLE_ISOLATION is in use.  Do not clobber.
+  */
+-SYM_CODE_START(nmi)
++SYM_CODE_START(asm_exc_nmi)
+ 	UNWIND_HINT_IRET_REGS
+ 
+ 	/*
+@@ -1485,7 +1484,7 @@ SYM_CODE_START(nmi)
+ 
+ 	movq	%rsp, %rdi
+ 	movq	$-1, %rsi
+-	call	do_nmi
++	call	exc_nmi
+ 
+ 	/*
+ 	 * Return back to user mode.  We must *not* do the normal exit
+@@ -1542,7 +1541,7 @@ SYM_CODE_START(nmi)
+ 	 * end_repeat_nmi, then we are a nested NMI.  We must not
+ 	 * modify the "iret" frame because it's being written by
+ 	 * the outer NMI.  That's okay; the outer NMI handler is
+-	 * about to about to call do_nmi anyway, so we can just
++	 * about to about to call exc_nmi() anyway, so we can just
+ 	 * resume the outer NMI.
+ 	 */
+ 
+@@ -1661,7 +1660,7 @@ SYM_CODE_START(nmi)
+ 	 * RSP is pointing to "outermost RIP".  gsbase is unknown, but, if
+ 	 * we're repeating an NMI, gsbase has the same value that it had on
+ 	 * the first iteration.  paranoid_entry will load the kernel
+-	 * gsbase if needed before we call do_nmi.  "NMI executing"
++	 * gsbase if needed before we call exc_nmi().  "NMI executing"
+ 	 * is zero.
+ 	 */
+ 	movq	$1, 10*8(%rsp)		/* Set "NMI executing". */
+@@ -1695,10 +1694,10 @@ SYM_CODE_START(nmi)
+ 	call	paranoid_entry
+ 	UNWIND_HINT_REGS
+ 
+-	/* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
++	/* paranoidentry exc_nmi(), 0; without TRACE_IRQS_OFF */
+ 	movq	%rsp, %rdi
+ 	movq	$-1, %rsi
+-	call	do_nmi
++	call	exc_nmi
+ 
+ 	/* Always restore stashed CR3 value (see paranoid_entry) */
+ 	RESTORE_CR3 scratch_reg=%r15 save_reg=%r14
+@@ -1735,7 +1734,7 @@ SYM_CODE_START(nmi)
+ 	 * about espfix64 on the way back to kernel mode.
+ 	 */
+ 	iretq
+-SYM_CODE_END(nmi)
++SYM_CODE_END(asm_exc_nmi)
+ 
+ #ifndef CONFIG_IA32_EMULATION
+ /*
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -132,5 +132,6 @@ DECLARE_IDTENTRY(X86_TRAP_OLD_MF,	exc_co
- DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_TS,	exc_invalid_tss);
- DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_NP,	exc_segment_not_present);
- DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_SS,	exc_stack_segment);
-+DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_GP,	exc_general_protection);
+@@ -238,4 +238,8 @@ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_AC,
+ DECLARE_IDTENTRY_MCE(X86_TRAP_MC,	exc_machine_check);
+ #endif
  
++/* NMI */
++DECLARE_IDTENTRY_NMI(X86_TRAP_NMI,	exc_nmi);
++DECLARE_IDTENTRY_XEN(X86_TRAP_NMI,	nmi);
++
  #endif
 --- a/arch/x86/include/asm/traps.h
 +++ b/arch/x86/include/asm/traps.h
-@@ -16,7 +16,6 @@ asmlinkage void nmi(void);
+@@ -12,7 +12,6 @@
+ #define dotraplinkage __visible
+ 
+ asmlinkage void debug(void);
+-asmlinkage void nmi(void);
  #ifdef CONFIG_X86_64
  asmlinkage void double_fault(void);
  #endif
--asmlinkage void general_protection(void);
- asmlinkage void page_fault(void);
+@@ -20,14 +19,12 @@ asmlinkage void page_fault(void);
  asmlinkage void async_page_fault(void);
- asmlinkage void spurious_interrupt_bug(void);
-@@ -31,7 +30,6 @@ asmlinkage void simd_coprocessor_error(v
- asmlinkage void xen_xennmi(void);
+ 
+ #if defined(CONFIG_X86_64) && defined(CONFIG_XEN_PV)
+-asmlinkage void xen_xennmi(void);
  asmlinkage void xen_xendebug(void);
  asmlinkage void xen_double_fault(void);
--asmlinkage void xen_general_protection(void);
  asmlinkage void xen_page_fault(void);
- asmlinkage void xen_spurious_interrupt_bug(void);
- asmlinkage void xen_coprocessor_error(void);
-@@ -47,7 +45,6 @@ dotraplinkage void do_nmi(struct pt_regs
+ #endif
+ 
+ dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
+-dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
  #if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
  dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
  #endif
--dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code);
- dotraplinkage void do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
- dotraplinkage void do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
- dotraplinkage void do_coprocessor_error(struct pt_regs *regs, long error_code);
 --- a/arch/x86/kernel/idt.c
 +++ b/arch/x86/kernel/idt.c
-@@ -79,7 +79,7 @@ static const __initconst struct idt_data
- 	INTG(X86_TRAP_TS,		asm_exc_invalid_tss),
- 	INTG(X86_TRAP_NP,		asm_exc_segment_not_present),
- 	INTG(X86_TRAP_SS,		asm_exc_stack_segment),
--	INTG(X86_TRAP_GP,		general_protection),
-+	INTG(X86_TRAP_GP,		asm_exc_general_protection),
- 	INTG(X86_TRAP_SPURIOUS,		spurious_interrupt_bug),
- 	INTG(X86_TRAP_MF,		coprocessor_error),
- 	INTG(X86_TRAP_AC,		alignment_check),
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -214,7 +214,7 @@ do_trap_no_signal(struct task_struct *ts
- 	 * process no chance to handle the signal and notice the
- 	 * kernel fault information, so that won't result in polluting
- 	 * the information about previously queued, but not yet
--	 * delivered, faults.  See also do_general_protection below.
-+	 * delivered, faults.  See also exc_general_protection below.
- 	 */
- 	tsk->thread.error_code = error_code;
- 	tsk->thread.trap_nr = trapnr;
-@@ -410,7 +410,7 @@ dotraplinkage void do_double_fault(struc
- 		 * which is what the stub expects, given that the faulting
- 		 * RIP will be the IRET instruction.
- 		 */
--		regs->ip = (unsigned long)general_protection;
-+		regs->ip = (unsigned long)asm_exc_general_protection;
- 		regs->sp = (unsigned long)&gpregs->orig_ax;
+@@ -71,7 +71,7 @@ static const __initconst struct idt_data
+  */
+ static const __initconst struct idt_data def_idts[] = {
+ 	INTG(X86_TRAP_DE,		asm_exc_divide_error),
+-	INTG(X86_TRAP_NMI,		nmi),
++	INTG(X86_TRAP_NMI,		asm_exc_nmi),
+ 	INTG(X86_TRAP_BR,		asm_exc_bounds),
+ 	INTG(X86_TRAP_UD,		asm_exc_invalid_op),
+ 	INTG(X86_TRAP_NM,		asm_exc_device_not_available),
+@@ -183,7 +183,7 @@ gate_desc debug_idt_table[IDT_ENTRIES] _
+  */
+ static const __initconst struct idt_data ist_idts[] = {
+ 	ISTG(X86_TRAP_DB,	debug,			IST_INDEX_DB),
+-	ISTG(X86_TRAP_NMI,	nmi,			IST_INDEX_NMI),
++	ISTG(X86_TRAP_NMI,	asm_exc_nmi,		IST_INDEX_NMI),
+ 	ISTG(X86_TRAP_DF,	double_fault,		IST_INDEX_DF),
+ #ifdef CONFIG_X86_MCE
+ 	ISTG(X86_TRAP_MC,	asm_exc_machine_check,	IST_INDEX_MCE),
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -507,8 +507,7 @@ static bool notrace is_debug_stack(unsig
+ NOKPROBE_SYMBOL(is_debug_stack);
+ #endif
  
- 		return;
-@@ -529,7 +529,7 @@ static enum kernel_gp_hint get_kernel_gp
- 
- #define GPFSTR "general protection fault"
- 
--dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code)
-+DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+-dotraplinkage notrace void
+-do_nmi(struct pt_regs *regs, long error_code)
++DEFINE_IDTENTRY_NMI(exc_nmi)
  {
- 	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
- 	enum kernel_gp_hint hint = GP_NO_HINT;
-@@ -603,7 +603,6 @@ dotraplinkage void do_general_protection
- 	die_addr(desc, regs, error_code, gp_addr);
- 
+ 	if (IS_ENABLED(CONFIG_SMP) && cpu_is_offline(smp_processor_id()))
+ 		return;
+@@ -558,7 +557,6 @@ do_nmi(struct pt_regs *regs, long error_
+ 	if (user_mode(regs))
+ 		mds_user_clear_cpu_buffers();
  }
--NOKPROBE_SYMBOL(do_general_protection);
+-NOKPROBE_SYMBOL(do_nmi);
  
- DEFINE_IDTENTRY(exc_int3)
+ void stop_nmi(void)
  {
 --- a/arch/x86/xen/enlighten_pv.c
 +++ b/arch/x86/xen/enlighten_pv.c
-@@ -628,7 +628,7 @@ static struct trap_array_entry trap_arra
- 	TRAP_ENTRY(exc_invalid_tss,			false ),
- 	TRAP_ENTRY(exc_segment_not_present,		false ),
- 	TRAP_ENTRY(exc_stack_segment,			false ),
--	{ general_protection,          xen_general_protection,          false },
-+	TRAP_ENTRY(exc_general_protection,		false ),
- 	{ spurious_interrupt_bug,      xen_spurious_interrupt_bug,      false },
- 	{ coprocessor_error,           xen_coprocessor_error,           false },
- 	{ alignment_check,             xen_alignment_check,             false },
+@@ -607,13 +607,18 @@ struct trap_array_entry {
+ 	.xen		= xen_asm_##func,		\
+ 	.ist_okay	= ist_ok }
+ 
++#define TRAP_ENTRY_REDIR(func, xenfunc, ist_ok) {	\
++	.orig		= asm_##func,			\
++	.xen		= xen_asm_##xenfunc,		\
++	.ist_okay	= ist_ok }
++
+ static struct trap_array_entry trap_array[] = {
+ 	{ debug,                       xen_xendebug,                    true },
+ 	{ double_fault,                xen_double_fault,                true },
+ #ifdef CONFIG_X86_MCE
+ 	TRAP_ENTRY(exc_machine_check,			true  ),
+ #endif
+-	{ nmi,                         xen_xennmi,                      true },
++	TRAP_ENTRY_REDIR(exc_nmi, exc_xennmi,		true  ),
+ 	TRAP_ENTRY(exc_int3,				false ),
+ 	TRAP_ENTRY(exc_overflow,			false ),
+ #ifdef CONFIG_IA32_EMULATION
 --- a/arch/x86/xen/xen-asm_64.S
 +++ b/arch/x86/xen/xen-asm_64.S
-@@ -42,7 +42,7 @@ xen_pv_trap asm_exc_coproc_segment_overr
- xen_pv_trap asm_exc_invalid_tss
- xen_pv_trap asm_exc_segment_not_present
- xen_pv_trap asm_exc_stack_segment
--xen_pv_trap general_protection
-+xen_pv_trap asm_exc_general_protection
- xen_pv_trap page_fault
- xen_pv_trap spurious_interrupt_bug
- xen_pv_trap coprocessor_error
+@@ -32,7 +32,7 @@ xen_pv_trap asm_exc_divide_error
+ xen_pv_trap debug
+ xen_pv_trap xendebug
+ xen_pv_trap asm_exc_int3
+-xen_pv_trap xennmi
++xen_pv_trap asm_exc_xennmi
+ xen_pv_trap asm_exc_overflow
+ xen_pv_trap asm_exc_bounds
+ xen_pv_trap asm_exc_invalid_op
 
