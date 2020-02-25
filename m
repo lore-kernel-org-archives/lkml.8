@@ -2,120 +2,228 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28FEC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A8FC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7FD21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582658124;
-	bh=me4bSWBpM9FpbQ7Hs5/OQBsgbx4rxsqreuBOjJJ2QUU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wHmsKAvx/jTrnwGlCHe5DMlUuyngeRnrrt0k/cD/fhhHrVs1K3sai2ZakPxengb0E
-	 5ZmiidwB+otnL2BZqN/9Q7lnhINO+bJ982MO8Z+4gJ9ljEZ1e28cDODE3ASo0gPDS+
-	 /E0+tAYPFdjuUr2aP6/GRHYmMXCJ7Plmi/bjtsT0=
+	by mail.kernel.org (Postfix) with ESMTP id 55DB72082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:16:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hImB0JUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbgBYTPX (ORCPT
+        id S1731275AbgBYTQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:15:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729894AbgBYTPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:15:23 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D5122082F;
-        Tue, 25 Feb 2020 19:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582658121;
-        bh=me4bSWBpM9FpbQ7Hs5/OQBsgbx4rxsqreuBOjJJ2QUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MEMBlK3ME6vljTGBdu9jyyZWwo+dkSGozqRIa4I2vEpJDdDdkSHGZjgnqPeSlNaTE
-         oXmpLbjTq9TSXk6Ls582/gNiUWv7PDnQjPY/Wh8CwRDzTpareneRzkkhvNDGB/2G4M
-         +FTLIRtV9CNfPxUBBxqM2XlnLry4a9tdUpk0FH9w=
-Date:   Tue, 25 Feb 2020 13:15:19 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Michael ." <keltoiboy@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Philip Langdale <philipl@overt.org>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
- working on Panasonic Toughbook CF-29]
-Message-ID: <20200225191519.GA172914@google.com>
+        Tue, 25 Feb 2020 14:16:07 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42529 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730995AbgBYTQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:16:06 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so37967pfz.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:16:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rUZVMlHBXvZV7Ou78rc/XDRW/zexdXeiYa6RgRgftog=;
+        b=hImB0JUoI8D5rK/tvQTSN8CVItuNPQJbJ2XDE4D3EQAf9y/En82yTf0XNRIkj4/FuS
+         CTDFFM0RvgF2LzPcTMLHhOUBt0dw9qe7ZoedDQOT8Y+Q2Af73Jbgz5NDt3bhoObV6lnP
+         MBi596CYyRbYToSNJDfbJXZNkQ9qFGCuqk2jXULldpEqVG26dhFNsHiR1QRPyySsYf3Q
+         2K+6SBsBDKpokrUngVilOcKztuzkSOX0YnPTtx7FyLpJRsqhPtL6gJyBiE87HG8kmFDe
+         o9Ews1BI81nG4va/t3WuZ6AG0lE0DUYCbOzqGETO0qH98D2lO3YaWzz6szRAfhmFXXjQ
+         IK3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rUZVMlHBXvZV7Ou78rc/XDRW/zexdXeiYa6RgRgftog=;
+        b=Nlv8WAreG2gwBIq2qf77A9kOuQ9kSyx9S12JlzgTvYu/zvnsij/6DohVH9R7JvB4I+
+         tjqtUU/GkNpgkUMHc9+i/W+pSSo83l35CkdOee+3rP2xjiuSEmaRDKxbkvR4cB2UMSyh
+         OjyDberUXbXTco8wxXpe0zxKUQhUAzTTXhj85u89lKl58XGgzcP8LUO+nG9DXSH/m1Qe
+         vDFEVax1E3ucG7X3xLE/4e3Eb0q4yxiFh0Mpi5IwHQECCxFQh5XVxD8BmmLpsw31zLDX
+         aRRcod3usaMafKsxtVppVoNXj6wiD0idHmBPfpEKWOwaoTP5D5E6qsPxZM+fpEq2D944
+         +BRw==
+X-Gm-Message-State: APjAAAWyakfQ2aIIw2R7q0Dm0up4eq2CvzRjYzcFhTreOuo+9aDKgPkL
+        rVXqoGz6tl1rjQ6+YH5OH9DIf4fR+NFYcZY1BmulFw==
+X-Google-Smtp-Source: APXvYqy1/IF0tRAavAP1XBZXStk4y3mP+ffbu1nWKKy5fKo84qgyYl5tLGoSfMXrJ/7UEF1VXqAeEBC+4VCGJdlptd4=
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr18126pgb.263.1582658165742;
+ Tue, 25 Feb 2020 11:16:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1581988104-16628-1-git-send-email-wanpengli@tencent.com>
+ <1581988104-16628-2-git-send-email-wanpengli@tencent.com> <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
+In-Reply-To: <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 25 Feb 2020 11:15:54 -0800
+Message-ID: <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 2/2] KVM: Pre-allocate 1 cpumask variable per
+ cpu for both pv tlb and pv ipis
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wanpeng Li <kernellwp@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:03:32PM +0100, Ulf Hansson wrote:
-> On Sat, 22 Feb 2020 at 17:56, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
-> > > [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
-> > > thread, [2] for problem report and the patch Michael tested]
-> > >
-> > > On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
-> > > > Bjorn and Dominik.
-> > > > I am happy to let you know the patch did the trick, it compiled well
-> > > > on 5.4-rc4 and my friends in the CC list have tested the modified
-> > > > kernel and confirmed that both slots are now working as they should.
-> > > > As a group of dedicated Toughbook users and Linux users please accept
-> > > > our thanks your efforts and assistance is greatly appreciated.
-> > > >
-> > > > Now that we know this patch works what kernel do you think it will be
-> > > > released in? Will it make 5.4 or will it be put into 5.5 development
-> > > > for further testing?
-> > >
-> > > That patch was not intended to be a fix; it was just to test my guess
-> > > that the quirk might be related.
-> > >
-> > > Removing the quirk solved the problem *you're* seeing, but the quirk
-> > > was added in the first place to solve some other problem, and if we
-> > > simply remove the quirk, we may reintroduce the original problem.
-> > >
-> > > So we have to look at the history and figure out some way to solve
-> > > both problems.  I cc'd some people who might have insight.  Here are
-> > > some commits that look relevant:
-> > >
-> > >   5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
-> > >   03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
-> > >
-> > >
-> > > [1] https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
-> > > [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
-> >
-> > I guess this problem is still unfixed?  I hate the fact that we broke
-> > something that used to work.
-> >
-> > Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
-> > we skip it for Toughbooks?  Or maybe we limit the quirk to the
-> > machines where it was originally needed?
-> 
-> Both options seems reasonable to me. Do you have time to put
-> together a patch?
+(putting Paolo in To: field, in case email filters are to blame.
+Vitaly, maybe you could ping Paolo internally?)
 
-I don't really have time, and I'm not sure which way is best.  In
-general I like to avoid quirks, so I would lean toward applying the
-quirk only on the machines that we know need it.  But I'm not sure how
-to identify those.
+On Mon, Feb 24, 2020 at 11:55 PM Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> ping,
+> On Tue, 18 Feb 2020 at 09:12, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Nick Desaulniers Reported:
+> >
+> >   When building with:
+> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
+> >   The following warning is observed:
+> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
+> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
+> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
+> >   vector)
+> >               ^
+> >   Debugging with:
+> >   https://github.com/ClangBuiltLinux/frame-larger-than
+> >   via:
+> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
+> >     kvm_send_ipi_mask_allbutself
+> >   points to the stack allocated `struct cpumask newmask` in
+> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
+> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
+> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
+> >   8192, making a single instance of a `struct cpumask` 1024 B.
+> >
+> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
+> > both pv tlb and pv ipis..
+> >
+> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > v1 -> v2:
+> >  * remove '!alloc' check
+> >  * use new pv check helpers
+> >
+> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
+> >  1 file changed, 21 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > index 76ea8c4..377b224 100644
+> > --- a/arch/x86/kernel/kvm.c
+> > +++ b/arch/x86/kernel/kvm.c
+> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
+> >                 kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
+> >  }
+> >
+> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
+> > +
+> >  #ifdef CONFIG_SMP
+> >
+> >  static bool pv_ipi_supported(void)
+> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct cpumask *mask, int vector)
+> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
+> >  {
+> >         unsigned int this_cpu = smp_processor_id();
+> > -       struct cpumask new_mask;
+> > +       struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> >         const struct cpumask *local_mask;
+> >
+> > -       cpumask_copy(&new_mask, mask);
+> > -       cpumask_clear_cpu(this_cpu, &new_mask);
+> > -       local_mask = &new_mask;
+> > +       cpumask_copy(new_mask, mask);
+> > +       cpumask_clear_cpu(this_cpu, new_mask);
+> > +       local_mask = new_mask;
+> >         __send_ipi_mask(local_mask, vector);
+> >  }
+> >
+> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
+> >         update_intr_gate(X86_TRAP_PF, async_page_fault);
+> >  }
+> >
+> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
+> >
+> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+> >                         const struct flush_tlb_info *info)
+> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
+> >         u8 state;
+> >         int cpu;
+> >         struct kvm_steal_time *src;
+> > -       struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
+> > +       struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> >
+> >         cpumask_copy(flushmask, cpumask);
+> >         /*
+> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
+> >         if (pv_tlb_flush_supported()) {
+> >                 pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+> >                 pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+> > +               pr_info("KVM setup pv remote TLB flush\n");
+> >         }
+> >
+> >         if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+> > @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
+> >  }
+> >  arch_initcall(activate_jump_labels);
+> >
+> > -static __init int kvm_setup_pv_tlb_flush(void)
+> > +static __init int kvm_alloc_cpumask(void)
+> >  {
+> >         int cpu;
+> > +       bool alloc = false;
+> >
+> >         if (!kvm_para_available() || nopv)
+> >                 return 0;
+> >
+> > -       if (pv_tlb_flush_supported()) {
+> > +       if (pv_tlb_flush_supported())
+> > +               alloc = true;
+> > +
+> > +#if defined(CONFIG_SMP)
+> > +       if (pv_ipi_supported())
+> > +               alloc = true;
+> > +#endif
+> > +
+> > +       if (alloc)
+> >                 for_each_possible_cpu(cpu) {
+> > -                       zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+> > +                       zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+> >                                 GFP_KERNEL, cpu_to_node(cpu));
+> >                 }
+> > -               pr_info("KVM setup pv remote TLB flush\n");
+> > -       }
+> >
+> >         return 0;
+> >  }
+> > -arch_initcall(kvm_setup_pv_tlb_flush);
+> > +arch_initcall(kvm_alloc_cpumask);
+> >
+> >  #ifdef CONFIG_PARAVIRT_SPINLOCKS
+> >
+> > --
+> > 2.7.4
+> >
 
-Bjorn
+
+
+-- 
+Thanks,
+~Nick Desaulniers
