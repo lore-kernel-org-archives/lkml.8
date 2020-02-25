@@ -2,286 +2,197 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779BFC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98565C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEDA24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638A924684
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CjAlLRcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbgBYFPR (ORCPT
+        id S1726947AbgBYFQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:15:17 -0500
-Received: from mga12.intel.com ([192.55.52.136]:61438 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgBYFPO (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:15:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 21:15:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
-   d="scan'208";a="350074494"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Feb 2020 21:15:11 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4 2/2] perf report: Support interactive annotation of code without symbols
-Date:   Tue, 25 Feb 2020 13:14:38 +0800
-Message-Id: <20200225051438.16253-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200225051438.16253-1-yao.jin@linux.intel.com>
-References: <20200225051438.16253-1-yao.jin@linux.intel.com>
+        Tue, 25 Feb 2020 00:16:20 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38701 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYFQT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 00:16:19 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d6so6298256pgn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:16:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=U6Wt/LenosPR0Sx0SmEySrtroNHk0FTBlW4IV6YiiMg=;
+        b=CjAlLRcClG0VLkuNyIO9/QTuQ1crb4nJN7Ei+88NEFieNYHXTldlqvWRyC3yHQUUo7
+         Wg/5YaAStuyQ1MJGta9daj7RlBnPIPJ3aReGwAgeNQpWUZdkQTfiKw7DNVpjaHnu4XyE
+         JhqVUYtujl/gVANQ91Gq143qIqyFwJLLxHKEI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=U6Wt/LenosPR0Sx0SmEySrtroNHk0FTBlW4IV6YiiMg=;
+        b=aNwyx2TvKf7IY6Uldo74qdBPHXjAAjeJdG0fBE0Fi7KwRprUMYAzpaiuW79V5Y5hR/
+         jrdR79YI1cHf31R7h6VxCFCl1Z+wi5G1FOJGe18DtUgsZWW72BQZYvwz1x4UyvDwiZ5B
+         4gzveNTavHOIVJv+LSolavg3RXLNVTrt305w9maRKYOh2RJCBiA4XnWvYKVAVtsEmY1r
+         v9I4znBTQDYMcmh6vwGQkDoU/B1IuSDJ3Z0P6Mv0D9QSr3YSnuKVtACwY2rZIidoHKH6
+         F9wnpUfNzrOhDhF5OCFQF8nqNNSQxvGnbDGl/pqvOrmUYLrhRM5A0XeAfILY3++E2hLz
+         VsAQ==
+X-Gm-Message-State: APjAAAWM0ihFCfVrpwUqxuUFcG22scbFXKtCI/MeacSWlys2Hv6o64rq
+        oTD+KEYra0glHWPCkPVX1Z8a9A==
+X-Google-Smtp-Source: APXvYqxbtsVYkZjGvUrOjcRDv596Y0cYc435LUeOQfjMG0mCl0eJzQVykAP7z8nr0Sxk5qefm6bfOw==
+X-Received: by 2002:a63:8e44:: with SMTP id k65mr11985018pge.452.1582607778850;
+        Mon, 24 Feb 2020 21:16:18 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r13sm1169792pjp.14.2020.02.24.21.16.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 21:16:18 -0800 (PST)
+Date:   Mon, 24 Feb 2020 21:16:17 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: Remove debug info from kallsyms linking
+Message-ID: <202002242114.CBED7F1@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For perf report on stripped binaries it is currently impossible to do
-annotation. The annotation state is all tied to symbols, but there are
-either no symbols, or symbols are not covering all the code.
+When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
+time collecting and writing the dwarf sections to the temporary output
+files. kallsyms does not need this information, and leaving it off
+halves their linking time. This is especially noticeable without
+CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
+need those details.
 
-We should support the annotation functionality even without symbols.
+Refactor the BTF and kallsyms generation stages slightly for more
+regularized temporary names. Skip debug during kallsyms links.
 
-This patch fakes a dummy symbol and the symbol name is the string of
-address. After that, we just follow current annotation working flow.
+For a full debug info build with BTF, my link time goes from 1m06s to
+0m54s, saving about 12 seconds, or 18%.
 
-For example,
-
-1. perf report
-
-Overhead  Command  Shared Object     Symbol
-  20.67%  div      libc-2.27.so      [.] __random_r
-  17.29%  div      libc-2.27.so      [.] __random
-  10.59%  div      div               [.] 0x0000000000000628
-   9.25%  div      div               [.] 0x0000000000000612
-   6.11%  div      div               [.] 0x0000000000000645
-
-2. Select the line of "10.59%  div      div               [.] 0x0000000000000628" and ENTER.
-
-Annotate 0x0000000000000628
-Zoom into div thread
-Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
-Browse map details
-Run scripts for samples of symbol [0x0000000000000628]
-Run scripts for all samples
-Switch to another data file in PWD
-Exit
-
-3. Select the "Annotate 0x0000000000000628" and ENTER.
-
-Percent│
-       │
-       │
-       │     Disassembly of section .text:
-       │
-       │     0000000000000628 <.text+0x68>:
-       │       divsd %xmm4,%xmm0
-       │       divsd %xmm3,%xmm1
-       │       movsd (%rsp),%xmm2
-       │       addsd %xmm1,%xmm0
-       │       addsd %xmm2,%xmm0
-       │       movsd %xmm0,(%rsp)
-
-Now we can see the dump of object starting from 0x628.
-
-We can also press hotkey 'a' on address in report view.
-For branch mode, we only support the annotation for
-"branch to" address.
-
- v4:
- ---
- 1. Support the hotkey 'a'. When we press 'a' on address,
-    now it supports the annotation.
-
- 2. Change the patch title from
-    "Support interactive annotation of code without symbols" to
-    "perf report: Support interactive annotation of code without symbols"
-
- v3:
- ---
- Keep just the ANNOTATION_DUMMY_LEN, and remove the
- opts->annotate_dummy_len since it's the "maybe in future
- we will provide" feature.
-
- v2:
- ---
- Fix a crash issue when annotating an address in "unknown" object.
-
- The steps to reproduce this issue:
-
- perf record -e cycles:u ls
- perf report
-
-    75.29%  ls       ld-2.27.so        [.] do_lookup_x
-    23.64%  ls       ld-2.27.so        [.] __GI___tunables_init
-     1.04%  ls       [unknown]         [k] 0xffffffff85c01210
-     0.03%  ls       ld-2.27.so        [.] _start
-
- When annotating 0xffffffff85c01210, the crash happens.
-
- v2 adds checking for ms->map in add_annotate_opt(). If the object is
- "unknown", ms->map is NULL.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- tools/perf/ui/browsers/hists.c | 83 ++++++++++++++++++++++++++--------
- tools/perf/util/annotate.h     |  1 +
- 2 files changed, 66 insertions(+), 18 deletions(-)
+ scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f36dee499320..f47d31fca0ed 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2465,13 +2465,41 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 	return 0;
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index dd484e92752e..ac569e197bfa 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -63,12 +63,18 @@ vmlinux_link()
+ 	local lds="${objtree}/${KBUILD_LDS}"
+ 	local output=${1}
+ 	local objects
++	local strip_debug
+ 
+ 	info LD ${output}
+ 
+ 	# skip output file argument
+ 	shift
+ 
++	# The kallsyms linking does not need debug symbols included.
++	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
++		strip_debug=-Wl,--strip-debug
++	fi
++
+ 	if [ "${SRCARCH}" != "um" ]; then
+ 		objects="--whole-archive			\
+ 			${KBUILD_VMLINUX_OBJS}			\
+@@ -79,6 +85,7 @@ vmlinux_link()
+ 			${@}"
+ 
+ 		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
++			${strip_debug#-Wl,}			\
+ 			-o ${output}				\
+ 			-T ${lds} ${objects}
+ 	else
+@@ -91,6 +98,7 @@ vmlinux_link()
+ 			${@}"
+ 
+ 		${CC} ${CFLAGS_vmlinux}				\
++			${strip_debug}				\
+ 			-o ${output}				\
+ 			-Wl,-T,${lds}				\
+ 			${objects}				\
+@@ -106,6 +114,8 @@ gen_btf()
+ {
+ 	local pahole_ver
+ 	local bin_arch
++	local bin_format
++	local bin_file
+ 
+ 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
+ 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
+@@ -118,8 +128,9 @@ gen_btf()
+ 		return 1
+ 	fi
+ 
+-	info "BTF" ${2}
+ 	vmlinux_link ${1}
++
++	info "BTF" ${2}
+ 	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
+ 
+ 	# dump .BTF section into raw binary file to link with final vmlinux
+@@ -127,11 +138,12 @@ gen_btf()
+ 		cut -d, -f1 | cut -d' ' -f2)
+ 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
+ 		awk '{print $4}')
++	bin_file=.btf.vmlinux.bin
+ 	${OBJCOPY} --change-section-address .BTF=0 \
+ 		--set-section-flags .BTF=alloc -O binary \
+-		--only-section=.BTF ${1} .btf.vmlinux.bin
++		--only-section=.BTF ${1} $bin_file
+ 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
+-		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
++		--rename-section .data=.BTF $bin_file ${2}
  }
  
-+static struct symbol *new_annotate_sym(u64 addr, struct map *map)
-+{
-+	struct symbol *sym;
-+	struct annotated_source *src;
-+	char name[64];
-+
-+	if (!map || !map->dso || map->dso->annotate_warned)
-+		return NULL;
-+
-+	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
-+
-+	sym = symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
-+	if (sym) {
-+		src = symbol__hists(sym, 1);
-+		if (!src) {
-+			symbol__delete(sym);
-+			return NULL;
-+		}
-+
-+		dso__insert_symbol(map->dso, sym);
-+	}
-+
-+	return sym;
-+}
-+
- static int
- add_annotate_opt(struct hist_browser *browser __maybe_unused,
- 		 struct popup_action *act, char **optstr,
--		 struct map_symbol *ms)
-+		 struct map_symbol *ms,
-+		 u64 addr)
+ # Create ${2} .o file with all symbols from the ${1} object file
+@@ -166,8 +178,8 @@ kallsyms()
+ kallsyms_step()
  {
--	if (ms->sym == NULL || ms->map->dso->annotate_warned ||
--	    symbol__annotation(ms->sym)->src == NULL)
-+	if (!ms->sym)
-+		ms->sym = new_annotate_sym(addr, ms->map);
-+
-+	if (!ms->sym || symbol__annotation(ms->sym)->src == NULL)
- 		return 0;
+ 	kallsymso_prev=${kallsymso}
+-	kallsymso=.tmp_kallsyms${1}.o
+-	kallsyms_vmlinux=.tmp_vmlinux${1}
++	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
++	kallsymso=${kallsyms_vmlinux}.o
  
- 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
-@@ -3026,6 +3054,14 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			 */
- 			goto out_free_stack;
- 		case 'a':
-+			if (!browser->selection ||
-+			    !browser->he_selection ||
-+			    !browser->selection->map ||
-+			    !browser->selection->map->dso ||
-+			    browser->selection->map->dso->annotate_warned) {
-+				continue;
-+			}
-+
- 			if (!hists__has(hists, sym)) {
- 				ui_browser__warning(&browser->b, delay_secs * 2,
- 			"Annotation is only available for symbolic views, "
-@@ -3033,21 +3069,29 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 				continue;
- 			}
+ 	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
+ 	kallsyms ${kallsyms_vmlinux} ${kallsymso}
+@@ -190,7 +202,6 @@ cleanup()
+ {
+ 	rm -f .btf.*
+ 	rm -f .tmp_System.map
+-	rm -f .tmp_kallsyms*
+ 	rm -f .tmp_vmlinux*
+ 	rm -f System.map
+ 	rm -f vmlinux
+@@ -257,9 +268,8 @@ tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
  
--			if (browser->selection == NULL ||
--			    browser->selection->sym == NULL ||
--			    browser->selection->map->dso->annotate_warned)
--				continue;
-+			if (!browser->selection->sym) {
-+				if (sort__mode == SORT_MODE__BRANCH) {
-+					bi = browser->he_selection->branch_info;
-+					if (!bi)
-+						continue;
- 
--			if (symbol__annotation(browser->selection->sym)->src == NULL) {
--				ui_browser__warning(&browser->b, delay_secs * 2,
--						    "No samples for the \"%s\" symbol.\n\n"
--						    "Probably appeared just in a callchain",
--						    browser->selection->sym->name);
--				continue;
-+					/* Only annotate bi->to */
-+					actions->ms.sym = new_annotate_sym(bi->to.al_addr,
-+									   bi->to.ms.map);
-+					actions->ms.map = bi->to.ms.map;
-+				} else {
-+					actions->ms.sym = new_annotate_sym(browser->he_selection->ip,
-+									   browser->selection->map);
-+					actions->ms.map = browser->selection->map;
-+				}
-+
-+				if (!actions->ms.sym)
-+					continue;
-+			} else {
-+				actions->ms.sym = browser->selection->sym;
-+				actions->ms.map = browser->selection->map;
- 			}
- 
--			actions->ms.map = browser->selection->map;
--			actions->ms.sym = browser->selection->sym;
- 			do_annotate(browser, actions);
- 			continue;
- 		case 'P':
-@@ -3219,17 +3263,20 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			nr_options += add_annotate_opt(browser,
- 						       &actions[nr_options],
- 						       &options[nr_options],
--						       &bi->from.ms);
-+						       &bi->from.ms,
-+						       bi->from.al_addr);
- 			if (bi->to.ms.sym != bi->from.ms.sym)
- 				nr_options += add_annotate_opt(browser,
- 							&actions[nr_options],
- 							&options[nr_options],
--							&bi->to.ms);
-+							&bi->to.ms,
-+							bi->to.al_addr);
- 		} else {
- 			nr_options += add_annotate_opt(browser,
- 						       &actions[nr_options],
- 						       &options[nr_options],
--						       browser->selection);
-+						       browser->selection,
-+						       browser->he_selection->ip);
- 		}
- skip_annotation:
- 		nr_options += add_thread_opt(browser, &actions[nr_options],
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 455403e8fede..c8463c48adf2 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -74,6 +74,7 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
- #define ANNOTATION__CYCLES_WIDTH 6
- #define ANNOTATION__MINMAX_CYCLES_WIDTH 19
- #define ANNOTATION__AVG_IPC_WIDTH 36
-+#define ANNOTATION_DUMMY_LEN	256
- 
- struct annotation_options {
- 	bool hide_src_code,
+ btf_vmlinux_bin_o=""
+ if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
+-	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
+-		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
+-	else
++	btf_vmlinux_bin_o=.btf.vmlinux.bin.o
++	if ! gen_btf .tmp_vmlinux.btf $btf_vmlinux_bin_o ; then
+ 		echo >&2 "Failed to generate BTF for vmlinux"
+ 		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
+ 		exit 1
 -- 
-2.17.1
+2.20.1
 
+
+-- 
+Kees Cook
