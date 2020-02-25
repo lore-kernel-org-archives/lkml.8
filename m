@@ -2,128 +2,110 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1A6C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2385C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9855521927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A356220726
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgBYKav (ORCPT
+        id S1730288AbgBYKdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:30:51 -0500
-Received: from mga01.intel.com ([192.55.52.88]:21797 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbgBYKav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:30:51 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 02:30:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
-   d="scan'208";a="230108009"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Feb 2020 02:30:48 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j6XUI-004dNp-0i; Tue, 25 Feb 2020 12:30:50 +0200
-Date:   Tue, 25 Feb 2020 12:30:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        dan.j.williams@intel.com, peterz@infradead.org
-Subject: Re: [PATCH v5 1/2] x86: fix bitops.h warning with a moved cast
-Message-ID: <20200225103050.GD10400@smile.fi.intel.com>
-References: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
+        Tue, 25 Feb 2020 05:33:31 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:2178 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730186AbgBYKda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:33:30 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PATLEH007210;
+        Tue, 25 Feb 2020 05:33:29 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yb23ag9fx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 05:33:28 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01PAXREI065399
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 25 Feb 2020 05:33:27 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Feb 2020 05:33:26 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Feb 2020 05:33:26 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Feb 2020 05:33:26 -0500
+Received: from saturn.ad.analog.com ([10.48.65.109])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01PAXM2A029020;
+        Tue, 25 Feb 2020 05:33:25 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 3/3] iio: imu: adis: add a note better explaining state_lock
+Date:   Tue, 25 Feb 2020 12:33:19 +0200
+Message-ID: <20200225103319.20751-3-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200225103319.20751-1-alexandru.ardelean@analog.com>
+References: <20200225103319.20751-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_03:2020-02-21,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 impostorscore=0 mlxlogscore=876 adultscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:50:19PM -0800, Jesse Brandeburg wrote:
-> Fix many sparse warnings when building with C=1.
-> 
-> When the kernel is compiled with C=1, there are lots of messages like:
->   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
-> 
-> CONST_MASK() is using a signed integer "1" to create the mask which
-> is later cast to (u8) when used, in order to yield an 8-bit value
-> for the assembly instructions to use. Simplify the expressions used to
-> clearly indicate they are working on 8-bit values only, which still
-> keeps sparse happy without an accidental promotion to a 32 bit integer.
-> 
+The 'state_lock' mutex was renamed from 'txrx_lock' in a previous patch and
+is intended to be used by ADIS drivers to protect the state of devices
+during consecutive R/W ops.
+The initial patch that introduced this change did not do a good [well, any]
+job at explaining this. This patch adds a comment to the 'state_lock'
+better explaining it's use.
 
-> The reason the warning was occurring is because certain bitmasks that
-> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
-> with a mask like 0x7f, which then results in sign extension when doing
-> an invert (but I'm not a compiler expert). It was really only
-> "clear_bit" that was having problems, and it was only on bit checks next
-> to a byte boundary (top bit).
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/linux/iio/imu/adis.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I guess this describes it incorrectly.
-The problem is integer promotion of negation operation for any bit basically.
-
-For example, if we have bit 3 (nr = 3) and got it in the clear bit we will
-get (according to what I see in the warnings) 0xfffffff7. Which is simple
-~(1 << 3) promoted to integer.
-
-I think it is a C standard which dictates this, compiler just follows.
-
-> Verified with a test module (see next patch) and assembly inspection
-> that the patch doesn't introduce any change in generated code.
-> 
-> Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> ---
-> v5: changed code to use simple AND and XOR, updated commit message
-> v4: reverse argument order as suggested by David Laight, added reviewed-by
-> v3: Clean up the header file changes as per peterz.
-> v2: use correct CC: list
-> ---
->  arch/x86/include/asm/bitops.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> index 062cdecb2f24..53f246e9df5a 100644
-> --- a/arch/x86/include/asm/bitops.h
-> +++ b/arch/x86/include/asm/bitops.h
-> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "orb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" ((u8)CONST_MASK(nr))
-> +			: "iq" (CONST_MASK(nr) & 0xff)
->  			: "memory");
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "andb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" ((u8)~CONST_MASK(nr)));
-> +			: "iq" (CONST_MASK(nr) ^ 0xff));
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
->  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> 
-> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> -- 
-> 2.24.1
-> 
-
+diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+index 20339025c75f..dd8219138c2e 100644
+--- a/include/linux/iio/imu/adis.h
++++ b/include/linux/iio/imu/adis.h
+@@ -98,6 +98,17 @@ struct adis {
+ 	const struct adis_data	*data;
+ 	struct adis_burst	*burst;
+ 
++	/**
++	 * The state_lock is meant to be used during operations that require
++	 * a sequence of SPI R/W in order to protect the SPI transfer
++	 * information (fields 'xfer', 'msg' & 'current_page') between
++	 * potential concurrent accesses.
++	 * This lock is used by all "adis_{functions}" that have to read/write
++	 * registers. These functions also have unlocked variants
++	 * (see "__adis_{functions}"), which don't hold this lock.
++	 * This allows users of the ADIS library to group SPI R/W into
++	 * the drivers, but they also must manage this lock themselves.
++	 */
+ 	struct mutex		state_lock;
+ 	struct spi_message	msg;
+ 	struct spi_transfer	*xfer;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
