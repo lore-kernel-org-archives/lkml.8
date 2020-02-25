@@ -2,124 +2,156 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0330C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532A3C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91576222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290D520CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="En+pd2BZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5Ja+WQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgBYFjz (ORCPT
+        id S1726899AbgBYFlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:39:55 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55362 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725837AbgBYFjz (ORCPT
+        Tue, 25 Feb 2020 00:41:31 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40182 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYFlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:39:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582609194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yvyMr31DEcUC3wl6gi1vnkH+1S5pTodyIZXAYjl8UxA=;
-        b=En+pd2BZMstAE8xSKWiy+S6eiUQAoegB05+F4N6iBYik9YQtdEklJWrr9yMpsYqVZsB1Oj
-        yK9tBVUI4jhnxpnlfXRGOaEyZPQDTxHtr/+Lfdsj9g/50XZ8FP4IvF0vVPIGxTzM7pBdIu
-        OYo9ewnDOnN0CCQYa0OjMTyeBU8sOEQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-ZxyOww8YMguspF5qMtIFnQ-1; Tue, 25 Feb 2020 00:39:50 -0500
-X-MC-Unique: ZxyOww8YMguspF5qMtIFnQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D0BD18AB2C2;
-        Tue, 25 Feb 2020 05:39:49 +0000 (UTC)
-Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 001D1393;
-        Tue, 25 Feb 2020 05:39:43 +0000 (UTC)
-Subject: Re: [PATCH] virtio_ring: Fix mem leak with vring_new_virtqueue()
-To:     Suman Anna <s-anna@ti.com>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
-References: <20200224212643.30672-1-s-anna@ti.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b622c831-9adb-b9af-dd4a-21605bc124a8@redhat.com>
-Date:   Tue, 25 Feb 2020 13:39:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 25 Feb 2020 00:41:31 -0500
+Received: by mail-pj1-f65.google.com with SMTP id 12so781647pjb.5;
+        Mon, 24 Feb 2020 21:41:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gLVzYUKvFkdnFdGrFfL5ckRC9d9XLzszDBemhFoCXos=;
+        b=s5Ja+WQrx0bCQ7dZ7FgKMjgQo/QP0DD95K3BOk4egXtL/UeLMvIy2jpS7tx5TsAVVJ
+         aHy/bGrbvj78nC86Nyt+E/I2nmXjh4DHDl/eHROqVjMsC2D2+vG/CH2waM2Fh4cONghZ
+         WdiDspcvDT5PQ0nKNyZnXgoZqB9xy6lYI3HNWKQzA0EOqtOTEoSForwxNvq6DJ/5JqbR
+         E1vsmiWXl54bGwymCrXGFoeX08Y+n0ASpt4lt11VLWRp9R9aH9v61HIqSXmjQQZrgesg
+         Wg5TuHJUcbIh9it/L4yqZVa7sIklAWBBpV8N04jOhzSejJlj2dzAOoC3qGZqNXr9hh6V
+         tv9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gLVzYUKvFkdnFdGrFfL5ckRC9d9XLzszDBemhFoCXos=;
+        b=hSGyrk/ST4/fR6fjhWqB3HV/aSt6nebXASj+e4MsrmLcMYfi4I8WYlwHQ9r4Tjph44
+         Sxws8R9r5dk9KUA2bNJqK8ELOw1ye277huc12PvyoUMsBTrV95EUPNC3Yc1QGzjthnSS
+         qmIJfoEbCsU/ZaYC72b5wmH8Ow3/s8sFHxnwxfvJ69F6J4utZ+UTY6siVztXS8rWmvcc
+         FB3fSCy5uvIwli3dQvX4aX7wQcMOccCIJLToZgNWI/OYJHb+moc/4PBiTYWrkbnI6Vk8
+         0cvU3IQKI4/DHY+7f7B2cetJ77lSWlgybssPgem97I1Vrk1GgJLJZh/GAsSg0yz+PDYD
+         pvEQ==
+X-Gm-Message-State: APjAAAV9FLWpnrfbOXrSccnGNiykQhOjLOeVga6x4V20Auq4XoAIqWnj
+        2W/W0zlrx+eUcU0ameMVY8g=
+X-Google-Smtp-Source: APXvYqyLQD/uoznzJK80E87XPvvlBxI2esMHs4Lc0c2FiNFhE1JCzQiQ97R/mITRAGLVI0hBkdP8jg==
+X-Received: by 2002:a17:902:b417:: with SMTP id x23mr2630326plr.9.1582609290508;
+        Mon, 24 Feb 2020 21:41:30 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:400::5:3b30])
+        by smtp.gmail.com with ESMTPSA id t11sm1382841pjo.21.2020.02.24.21.41.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2020 21:41:29 -0800 (PST)
+Date:   Mon, 24 Feb 2020 21:41:27 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200225054125.dttrc3fvllzu4mx5@ast-mbp>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
+ <202002211946.A23A987@keescook>
+ <20200223220833.wdhonzvven7payaw@ast-mbp>
+ <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
+ <20200224171305.GA21886@chromium.org>
+ <00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com>
+ <202002241136.C4F9F7DFF@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200224212643.30672-1-s-anna@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202002241136.C4F9F7DFF@keescook>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 01:41:19PM -0800, Kees Cook wrote:
+> 
+> But the LSM subsystem doesn't want special cases (Casey has worked very
+> hard to generalize everything there for stacking). It is really hard to
+> accept adding a new special case when there are still special cases yet
+> to be worked out even in the LSM code itself[2].
+> [2] Casey's work to generalize the LSM interfaces continues and it quite
+> complex:
+> https://lore.kernel.org/linux-security-module/20200214234203.7086-1-casey@schaufler-ca.com/
 
-On 2020/2/25 =E4=B8=8A=E5=8D=885:26, Suman Anna wrote:
-> The functions vring_new_virtqueue() and __vring_new_virtqueue() are use=
-d
-> with split rings, and any allocations within these functions are manage=
-d
-> outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring=
-:
-> allocate desc state for split ring separately") allocates the desc stat=
-e
-> within the __vring_new_virtqueue() but frees it only when the .we_own_r=
-ing
-> flag is set. This leads to a memory leak when freeing such allocated
-> virtqueues with the vring_del_virtqueue() function.
->
-> Fix this by moving the desc_state free code outside the flag and only
-> for split rings. Issue was discovered during testing with remoteproc
-> and virtio_rpmsg.
->
-> Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring s=
-eparately")
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->   drivers/virtio/virtio_ring.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.=
-c
-> index 867c7ebd3f10..58b96baa8d48 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueue *_vq)
->   					 vq->split.queue_size_in_bytes,
->   					 vq->split.vring.desc,
->   					 vq->split.queue_dma_addr);
-> -
-> -			kfree(vq->split.desc_state);
->   		}
->   	}
-> +	if (!vq->packed_ring)
-> +		kfree(vq->split.desc_state);
+I think the key mistake we made is that we classified KRSI as LSM.
+LSM stacking, lsmblobs that the above set is trying to do are not necessary for KRSI.
+I don't see anything in LSM infra that KRSI can reuse.
+The only thing BPF needs is a function to attach to.
+It can be a nop function or any other.
+security_*() functions are interesting from that angle only.
+Hence I propose to reconsider what I was suggesting earlier.
+No changes to secruity/ directory.
+Attach to security_*() funcs via bpf trampoline.
+The key observation vs what I was saying earlier is KRSI and LSM are wrong names.
+I think "security" is also loaded word that should be avoided.
+I'm proposing to rename BPF_PROG_TYPE_LSM into BPF_PROG_TYPE_OVERRIDE_RETURN.
 
+> So, unless James is going to take this over Casey's objections, the path
+> forward I see here is:
+> 
+> - land a "slow" KRSI (i.e. one that hooks every hook with a stub).
+> - optimize calling for all LSMs
 
-Nitpick, it looks to me it would be more clear if we just free=20
-desc_state unconditionally here (and remove the kfree for packed above).
+I'm very much surprised how 'slow' KRSI is an option at all.
+'slow' KRSI means that CONFIG_SECURITY_KRSI=y adds indirect calls to nop
+functions for every place in the kernel that calls security_*().
+This is not an acceptable overhead. Even w/o retpoline
+this is not something datacenter servers can use.
 
-Anyway desc_state will be allocated by use even if !we_own_ring.
+Another option is to do this:
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 64b19f050343..7887ce636fb1 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -240,7 +240,7 @@ static inline const char *kernel_load_data_id_str(enum kernel_load_data_id id)
+        return kernel_load_data_str[id];
+ }
 
-Thanks
+-#ifdef CONFIG_SECURITY
++#if defined(CONFIG_SECURITY) || defined(CONFIG_BPF_OVERRIDE_RETURN)
 
+Single line change to security.h and new file kernel/bpf/override_security.c
+that will look like:
+int security_binder_set_context_mgr(struct task_struct *mgr)
+{
+        return 0;
+}
 
->   	list_del(&_vq->list);
->   	kfree(vq);
->   }
-
+int security_binder_transaction(struct task_struct *from,
+                                struct task_struct *to)
+{
+        return 0;
+}
+Essentially it will provide BPF side with a set of nop functions.
+CONFIG_SECURITY is off. It may seem as a downside that it will force a choice
+on kernel users. Either they build the kernel with CONFIG_SECURITY and their
+choice of LSMs or build the kernel with CONFIG_BPF_OVERRIDE_RETURN and use
+BPF_PROG_TYPE_OVERRIDE_RETURN programs to enforce any kind of policy. I think
+it's a pro not a con.
