@@ -2,103 +2,148 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A21C35DFA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2D0C35DFA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9DB2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B7920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDWNGF9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgBYID3 (ORCPT
+        id S1729633AbgBYIEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:03:29 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:55228 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbgBYID3 (ORCPT
+        Tue, 25 Feb 2020 03:04:01 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37662 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729001AbgBYIEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:03:29 -0500
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 715CC67A7DD;
-        Tue, 25 Feb 2020 09:03:26 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 25 Feb
- 2020 09:03:25 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.005; Tue, 25 Feb 2020 09:03:25 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Vinod Koul <vkoul@kernel.org>, Fabio Estevam <festevam@gmail.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Tue, 25 Feb 2020 03:04:00 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so6754932pfn.4;
+        Tue, 25 Feb 2020 00:03:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3UwgyNGegYf+ShQWoRWvT/NL7ARqm4MqRGArNYI3who=;
+        b=kDWNGF9vw5evEFnyTn5rudlI/14OO67KtZuSmNARz8zTE4vVP7Hhc6JwfRZjCo85Z2
+         tvgyuCBpwge1k7uxAL3cVdZdd0QGzOONoXlY+5TvHTzrZZoIbbnkxtUVyXYv0RR+Vity
+         fOXvHDB3esTtnVmpSpmzuRqas5eMJ9vZFO4fAMfsF60iMsVd/vW2Bzs8+2d+xXASD2zh
+         SUjAI5xrrtkyJAoK+q4wao8cymtP54e+xRZfxO+DeDmxIwT0qBTqrTWjbSlS9EpolcvA
+         HhiiBRfm4FTS4F09uPw+SswFfyUOtYA5VfsHVt5vnwZO3TjYll5qx31WeHyUw/SVquMa
+         Xd9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3UwgyNGegYf+ShQWoRWvT/NL7ARqm4MqRGArNYI3who=;
+        b=Kz8XWTDFQIa+CRV65GaM2DGK6zrupl5l+oZ0G+tJGBzvacECZAoK6hlGYYUCbj0ZP6
+         EjzEnDzpJVlZFdCHquwW+Ww9QOCTri9/5VqOOsSLlAK2P0q10lgIAQxYl8eTy2+WKJYj
+         UXvWd7ZSgEJ1BOxDYn9xlbi0YF7IriE8gprQegywDgFNVlR8h9/DQiFbb4BjciMVgyFp
+         uDQ0uuBF08Zcc5rsJ5t8RiKx77FXzngqrDaWq87houu+YnEQKcQ2L8Z6gSQ3yQwjw2+a
+         RzM3IF/fGv1sVHcprzbz8taVvD1NGO7iPuyLLI3zQDkfrMoseiP9IUguDmgr1mEUUG+o
+         o+Vg==
+X-Gm-Message-State: APjAAAWr6TSox7wmFS8aUUERfLOsCY9rEBsJultDc18i/35+Xy+Gueqy
+        clkvLW/rfzeLsWhZcxDcj2Q=
+X-Google-Smtp-Source: APXvYqwMRtQpYwUBTrb0+cvHPd0eiLB/R3rhnLG6W+uGQXS+JAd8tDieKTnw2v05Noa4gwMj4BMhpg==
+X-Received: by 2002:a63:d344:: with SMTP id u4mr35777777pgi.153.1582617838655;
+        Tue, 25 Feb 2020 00:03:58 -0800 (PST)
+Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
+        by smtp.gmail.com with ESMTPSA id b18sm15964609pfd.63.2020.02.25.00.03.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 00:03:58 -0800 (PST)
+Date:   Tue, 25 Feb 2020 00:03:50 -0800
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dma: imx-sdma: Fix the event id check to include RX event
- for UART6
-Thread-Topic: [PATCH] dma: imx-sdma: Fix the event id check to include RX
- event for UART6
-Thread-Index: AQHV6zcHvJnYHLnVJki1UPp7vKjn9agqnVeAgADAigCAAB8JgA==
-Date:   Tue, 25 Feb 2020 08:03:25 +0000
-Message-ID: <3940d827-2886-5507-4a52-d97e572ce0d2@kontron.de>
-References: <20200224172236.22478-1-frieder.schrempf@kontron.de>
- <CAOMZO5CyYbAZRZrGLJNJXNJiekJXptUTu8tOfVw6y7-n-CXesg@mail.gmail.com>
- <20200225061220.GK2618@vkoul-mobl>
-In-Reply-To: <20200225061220.GK2618@vkoul-mobl>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <76DF38E9541B5747898C65CC4CC71FC9@snt-world.com>
-Content-Transfer-Encoding: base64
+Subject: Re: [PATCH v2 3/3] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI and
+ platform drivers
+Message-ID: <20200225080350.GA11332@Asurada>
+References: <VE1PR04MB6479BCA376502F6F1251602BE3EC0@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 715CC67A7DD.A0FDD
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        festevam@gmail.com, kernel@pengutronix.de,
-        linus.ml.walleij@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel.org,
-        vkoul@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6479BCA376502F6F1251602BE3EC0@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjUuMDIuMjAgMDc6MTIsIFZpbm9kIEtvdWwgd3JvdGU6DQo+IE9uIDI0LTAyLTIwLCAxNTo0
-MywgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4+IEhpIEZyaWVkZXIsDQo+Pg0KPj4gT24gTW9uLCBG
-ZWIgMjQsIDIwMjAgYXQgMjoyMiBQTSBTY2hyZW1wZiBGcmllZGVyDQo+PiA8ZnJpZWRlci5zY2hy
-ZW1wZkBrb250cm9uLmRlPiB3cm90ZToNCj4+Pg0KPj4+IEZyb206IEZyaWVkZXIgU2NocmVtcGYg
-PGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+Pg0KPj4+IE9uIGkuTVg2IHRoZSBETUEg
-ZXZlbnQgZm9yIHRoZSBSWCBjaGFubmVsIG9mIFVBUlQ2IGlzICcwJy4gVG8gZml4DQo+Pg0KPj4g
-SSB3b3VsZCBzdWdnZXN0IGJlaW5nIGEgYml0IG1vcmUgc3BlY2lmaWMgdGhhbiBzYXlpbmcgaS5N
-WDYuDQo+Pg0KPj4gSSBzZWUgVUFSVDYgaXMgcHJlc2VudCBvbiBpLk1YNlVML2kuTVg2U1gsIGJ1
-dCBub3Qgb24gaS5NWDZRL2kuTVg2REwsDQo+PiBzbyBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gc3Bl
-Y2lmeSBpdCBpbiB0aGUgY29tbWl0IGxvZy4NCj4+DQo+PiBpbXg2dWwuZHRzaSBkb2VzIG5vdCBo
-YXZlIGRtYSBub2RlcyB1bmRlciB1YXJ0Niwgc28gSSBndWVzcyB5b3UgZml4ZWQNCj4+IGl0IGZv
-ciBpbXg2c3guDQo+IA0KPiBhbmQgdXNlIHJpZ2h0IHN1YnN5c3RlbSB0YWcgZG1hZW5naW5lLiBH
-aXQgbG9nIG9mIHRoZSBmaWxlIHNob3VsZCB0ZWxsDQo+IHlvdSB0aGUgcmlnaHQgb25lIHRvIHVz
-ZSA6KQ0KDQpTb3JyeSwgbXkgYmFkLiBJIHdpbGwgZml4IGl0Lg0KDQo+IA0KPj4NCj4+PiB0aGUg
-YnJva2VuIERNQSBzdXBwb3J0IGZvciBVQVJUNiwgd2UgY2hhbmdlIHRoZSBjaGVjayBmb3IgZXZl
-bnRfaWQwDQo+Pj4gdG8gaW5jbHVkZSAnMCcgYXMgYSB2YWxpZCBpZC4NCj4+Pg0KPj4+IEZpeGVz
-OiAxZWMxZTgyZjI1MTAgKCJkbWFlbmdpbmU6IEFkZCBGcmVlc2NhbGUgaS5NWCBTRE1BIHN1cHBv
-cnQiKQ0KPj4+IENjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+Pj4gU2lnbmVkLW9mZi1ieTog
-RnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KPj4NCj4+IFJl
-dmlld2VkLWJ5OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+DQo+IA==
+On Mon, Feb 24, 2020 at 08:53:25AM +0000, S.j. Wang wrote:
+> Hi
+> 
+> > >
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > ---
+> > >  sound/soc/fsl/Kconfig           |   10 +
+> > >  sound/soc/fsl/Makefile          |    2 +
+> > >  sound/soc/fsl/fsl_asrc_common.h |    1 +
+> > >  sound/soc/fsl/fsl_easrc.c       | 2265 +++++++++++++++++++++++++++++++
+> > >  sound/soc/fsl/fsl_easrc.h       |  668 +++++++++
+> > >  sound/soc/fsl/fsl_easrc_dma.c   |  440 ++++++
+> > 
+> > I see a 90% similarity between fsl_asrc_dma and fsl_easrc_dma files.
+> > Would it be possible reuse the existing code? Could share structures from
+> > my point of view, just like it reuses "enum asrc_pair_index", I know
+> > differentiating "pair" and "context" is a big point here though.
+> > 
+> > A possible quick solution for that, off the top of my head, could be:
+> > 
+> > 1) in fsl_asrc_common.h
+> > 
+> >         struct fsl_asrc {
+> >                 ....
+> >         };
+> > 
+> >         struct fsl_asrc_pair {
+> >                 ....
+> >         };
+> > 
+> > 2) in fsl_easrc.h
+> > 
+> >         /* Renaming shared structures */
+> >         #define fsl_easrc fsl_asrc
+> >         #define fsl_easrc_context fsl_asrc_pair
+> > 
+> > May be a good idea to see if others have some opinion too.
+> > 
+> 
+> We need to modify the fsl_asrc and fsl_asrc_pair, let them
+> To be used by both driver,  also we need to put the specific
+> Definition for each module to same struct, right?
+
+Yea. A merged structure if that doesn't look that bad. I see most
+of the fields in struct fsl_asrc are being reused by in fsl_easrc.
+
+> > 
+> > > +static const struct regmap_config fsl_easrc_regmap_config = {
+> > > +     .readable_reg = fsl_easrc_readable_reg,
+> > > +     .volatile_reg = fsl_easrc_volatile_reg,
+> > > +     .writeable_reg = fsl_easrc_writeable_reg,
+> > 
+> > Can we use regmap_range and regmap_access_table?
+> > 
+> 
+> Can the regmap_range support discontinuous registers?  The
+> reg_stride = 4.
+
+I think it does. Giving an example here:
+https://github.com/torvalds/linux/blob/master/drivers/mfd/da9063-i2c.c
