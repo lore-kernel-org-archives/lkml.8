@@ -2,226 +2,225 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D2AC35DFA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A72FC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905D6218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA84C21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YsdbwzZK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2Ft6uL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbgBYI1q (ORCPT
+        id S1729797AbgBYIbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:27:46 -0500
-Received: from mail-eopbgr50058.outbound.protection.outlook.com ([40.107.5.58]:30021
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729130AbgBYI1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:27:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UKeHbb8GqDJZh4PjaZS0T0YisdElNqjiJdk+lYg/uyshEak7krth8p1esP+dRP44lb+m/zii3r1kiQLX3MeZ4Q5CXiOrJpgC6P9E+iSsE8yYBl8NCsj8BKhFadLLkxmXPDY9GqCsXhlVZWz3yXXXMIMOy6njoI3NikwksqMsPLkPmHsItysfzoxa3OXvpjFvFoAzyjHpSAB+9WyX6yvotp/uA/kIfNUMuwfLVnhSshGc9fAJ8Tt5u1Cf/spDA1o2OtJZ7Grg65Ybqs/Kd06zzeY0keU9yeFRexGnIg2E1s+paNvOWAm2BlT+Yd8xW3Jy31J6/fNR1prnjZCNC7yHwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sx7a72s8/SHpixSvDcyA5LG27FwlKHHq4b9us1Rh6wE=;
- b=VAr5HtBOEE9YTz6BBQhVA7wT1SqgUcSfSt0jeLDcIdKB9RQlvzgnZTe8ZApasp0CGFB/A7ZIg3qCHOKNc7s5G+BhInJxnTHbDlpIrABF/R6o2K5C9j+OpfzkrQ8newab1EjRzQqNnTQeh5+DkIdkpeXYaZGpjqfidEX52cHHRT7RrAAsJHcxno3CPedrLtJqKF55ALUxVR80bpQnNJTn1d9R7hIglgu1WfacxZMz1fZUUIGQDO+gPdhqTEGKF0Ca5cLoepOJWK3xojt2Mb+h9cNEv/PN+54foSaja6e3wN7b2B+8BgI9e6QjGwXcooxlWXtbtj2+aC8Huh6IFjMv5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sx7a72s8/SHpixSvDcyA5LG27FwlKHHq4b9us1Rh6wE=;
- b=YsdbwzZK5KNqWCD0CnPjnJnisd+IafyWtKvEJ2JWN8TzD1eg0tu0saoBZCDq4ObzNl4uMbn/BzrB0GcNAQw0OATETyVjAsFSymylF73YfVI9ZSflppUtGDixN3ZivdheMRtrqb3tcxs/2zWl++ERgirYi8kxljhEAA0Ld9ZOrjs=
-Received: from VI1PR04MB6992.eurprd04.prod.outlook.com (52.133.247.22) by
- VI1PR04MB6879.eurprd04.prod.outlook.com (52.133.245.71) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Tue, 25 Feb 2020 08:27:37 +0000
-Received: from VI1PR04MB6992.eurprd04.prod.outlook.com
- ([fe80::9879:13e1:8f56:cb3b]) by VI1PR04MB6992.eurprd04.prod.outlook.com
- ([fe80::9879:13e1:8f56:cb3b%6]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 08:27:37 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Tue, 25 Feb 2020 03:31:07 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729622AbgBYIbH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:31:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582619465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JmkjEEqq8m5BjNADnDl327dChnkc9rLHPLw9n41A+qY=;
+        b=J2Ft6uL3qb2pUkrxSzHQSuCdB2OCostH1rV/uFJVI2B/TKrJmxoBV0yberxiiXKVlFyM7u
+        JKS/xUMWIFdWvtFbJ2ye3E+rPUp/98hUpbCF0oEdytKtW/QOkTQgoDlQm9w+aPNnVzFO6L
+        svGPKk94UfJIxUteZKeKnY/AtS+VR6A=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-w9QclnFEMXiaU5aR_jpDMA-1; Tue, 25 Feb 2020 03:31:04 -0500
+X-MC-Unique: w9QclnFEMXiaU5aR_jpDMA-1
+Received: by mail-wm1-f71.google.com with SMTP id k21so556790wmi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:31:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JmkjEEqq8m5BjNADnDl327dChnkc9rLHPLw9n41A+qY=;
+        b=kV+2IfvDBKT2F6n0jYfyDgwPGufDM7VeCbjKOFDYbVqxjrkdDsQxDgKvnpMx3oZo6k
+         aRLvkR63z7+lUKTR52EtzIZNbvZRQfJufEOgsEgHLur7kPx1XKzcCbqdrTs9dphbhCqd
+         y3JS7/NNqHnyhDYuDaby8xocIQ4tmfaWz/QoZjT51prvQpc4BXdsblSR4iWuO101UsxE
+         11snHgtzXlHOOHUFnJcJ1t99a6QquzUfSDze3jw2kpLmkt8Cqu68jLjQZQFG7ZLiv15r
+         LbwSut6oIPJ2bDDAMBzO2KO3IsWaPL3A5w3fvA0pxjS84/JhaIEbc1MaCzj3skY5y2JS
+         PBiw==
+X-Gm-Message-State: APjAAAW9RgVGUTUX/IN1XYB8h6ZMJzkZ5JaSuGgTBaKzL+TBawqEr6XM
+        lcnYx1VdlIpKTT9zYqtWOdpdB5RIEuX72+7eQbgCv1JuNYNf4L7QzOj6IFxB9YLdGz2j2+nI5d1
+        BBW67eg9Ui8S3pGCM0aP8V0v4
+X-Received: by 2002:adf:f586:: with SMTP id f6mr15471140wro.256.1582619462028;
+        Tue, 25 Feb 2020 00:31:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxskh69L3ehEc2A4u9xM0Hn8YDZ+SLMXLTAldmiH302cEMuq/teKvvxsxUwEbCUclTnpJrS4Q==
+X-Received: by 2002:adf:f586:: with SMTP id f6mr15471097wro.256.1582619461690;
+        Tue, 25 Feb 2020 00:31:01 -0800 (PST)
+Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id a13sm5456577wrt.55.2020.02.25.00.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 00:31:01 -0800 (PST)
+Date:   Tue, 25 Feb 2020 09:30:58 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        syzbot <syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: RE: [PATCH 2/3] clk: imx: imx8mp: mark sys_pll1/2 as fixed clock
-Thread-Topic: [PATCH 2/3] clk: imx: imx8mp: mark sys_pll1/2 as fixed clock
-Thread-Index: AQHV67EJMasWcpA7OE6netguTosUuagrkvPg
-Date:   Tue, 25 Feb 2020 08:27:37 +0000
-Message-ID: <VI1PR04MB6992355349477F8A7E41161A87ED0@VI1PR04MB6992.eurprd04.prod.outlook.com>
-References: <1582616959-933-1-git-send-email-peng.fan@nxp.com>
- <1582616959-933-2-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1582616959-933-2-git-send-email-peng.fan@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ping.bai@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3897e6a6-8f65-42f1-f658-08d7b9cc923e
-x-ms-traffictypediagnostic: VI1PR04MB6879:|VI1PR04MB6879:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6879DBD7140A405CCB7996CC87ED0@VI1PR04MB6879.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(396003)(346002)(366004)(189003)(199004)(66556008)(55016002)(4326008)(9686003)(110136005)(64756008)(66446008)(2906002)(66946007)(5660300002)(66476007)(86362001)(54906003)(316002)(76116006)(52536014)(186003)(81156014)(33656002)(8676002)(81166006)(478600001)(26005)(71200400001)(53546011)(8936002)(6506007)(7696005)(6636002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6879;H:VI1PR04MB6992.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lNp/o64ZmVAxbIWwFHEpmqGXvdJ2H+kefkfepuNpMvy3iwH6dNUo8u8RfdowGrVMbZApmhZNDdva10vjvAbGr602/x8K6iEnMcR074Pqwoglo61oExWm0s1vuOp47QvGVS/0QQGyzP45CeGg+ozhuK5uJgtP4XZesbR+9qyRkh2Uh8wC/8+FqJVX1S/D3ZZKC7xXS0RIZRgv8cfgKJemLU5MXXhN2fZcLebe9NqBpLSla3bf6g7+DfXzQgV89vatvaUeiOFr6WwxRNdKoP7V2rW4CB7mZUwj8Jb5hRLj2sBb8HXo2ohsfWjny4OBzgDyOoWR0mbHfF9ar+ioF9OhdOT/B18k8qukDhltmfsyjaU168TM8g1n3W2hkeYx2ump2pxqdToASbibX4wOxyeZPuXVCvKi5Wc7LZ4uj6chaJieICnlazoqnYlW81zSZDa9lNl2bo5CZ0sSaFievBFLuCrB134Y/zpcu+/p27hhBy8XVhv8KwIBlayfqI4sSO68
-x-ms-exchange-antispam-messagedata: U7WcX6eiY2zWUBpN8QtCkqmBf3bwLokDQcBpfa1kpRb9HUua22L3ABpCAdQAf9ykGodKZJaXJA6euaXiXQ2HY2dQX6leRXi1YIIIeH/hG2xyeIVtIGWf8hzYqzKLfjYEIus+/rfi/6SwTzfNoqVDSQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: INFO: task hung in lock_sock_nested (2)
+Message-ID: <20200225083058.nfrrvsdgjxj3zcmw@steredhat>
+References: <0000000000004241ff059f2eb8a4@google.com>
+ <20200223075025.9068-1-hdanton@sina.com>
+ <20200224100853.wd67e7rqmtidfg7y@steredhat>
+ <HK0P153MB0148B4C74BA6A60E295A03D8BFED0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3897e6a6-8f65-42f1-f658-08d7b9cc923e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 08:27:37.2429
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DzOAU/xptUfsZ/lOaop7PyvQIMEzBdh37KhjFoqePf0ufoS+OBJoQkmVhUgzMs5mBeADldUwFHJtnBce+aqAzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6879
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0P153MB0148B4C74BA6A60E295A03D8BFED0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5A
-bnhwLmNvbT4NCj4gU2VudDogVHVlc2RheSwgRmVicnVhcnkgMjUsIDIwMjAgMzo0OSBQTQ0KPiBU
-bzogc2JveWRAa2VybmVsLm9yZzsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRy
-b25peC5kZTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAu
-Y29tPg0KPiBDYzoga2VybmVsQHBlbmd1dHJvbml4LmRlOyBkbC1saW51eC1pbXggPGxpbnV4LWlt
-eEBueHAuY29tPjsgQW5zb24gSHVhbmcNCj4gPGFuc29uLmh1YW5nQG54cC5jb20+OyBsaW51eC1j
-bGtAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsNCj4gUGVu
-ZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSCAyLzNdIGNsazogaW14
-OiBpbXg4bXA6IG1hcmsgc3lzX3BsbDEvMiBhcyBmaXhlZCBjbG9jaw0KPiANCj4gRnJvbTogUGVu
-ZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+IA0KPiBTYW1lIHRvIGkuTVg4TU4vaS5NWDhNTSwg
-YWNjb3JkaW5nIEFyY2hpdGVjdHVyZSBkZWZpbml0aW9uIGd1aWRlLA0KPiBTWVNfUExMMSBpcyBm
-aXhlZCBhdCA4MDBNSHosIFNZU19QTEwyIGlzIGZpeGVkIGF0IDEwMDBNSHosIHNvIGxldCdzIHVz
-ZQ0KPiBpbXhfY2xrX2ZpeGVkIHRvIHJlZ2lzdGVyIHRoZSBjbG9ja3MgYW5kIGRyb3AgY29kZSB0
-aGF0IGNvdWxkIGNoYW5nZSB0aGUgcmF0ZS4NCj4gDQoNCkJldHRlciB0byBrZWVwIGl0IGFzIFBM
-TCBmb3Igbm93LCB3ZSBtYXkgaGF2ZSB0aGUgc2l0dWF0aW9uIHRoYXQgbmVlZCB0byBwb3dlciBk
-b3duIHRoZSBQTEwgaW4gc29tZSBjYXNlLg0KDQpCUg0KSmFja3kgQmFpDQo+IFNpZ25lZC1vZmYt
-Ynk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvY2xrL2lt
-eC9jbGstaW14OG1wLmMgfCAxNCArKysrLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQg
-aW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9jbGsvaW14L2Nsay1pbXg4bXAuYyBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1wLmMNCj4g
-aW5kZXggYTg1MDM5Y2ZkYmYxLi43N2I3OWY2MWFhYjUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-Y2xrL2lteC9jbGstaW14OG1wLmMNCj4gKysrIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bXAu
-Yw0KPiBAQCAtMjYsOCArMjYsNiBAQCBzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGRyYW1fcGxs
-X2J5cGFzc19zZWxzW10gPQ0KPiB7ImRyYW1fcGxsIiwgImRyYW1fcGxsX3JlZl9zZSAgc3RhdGlj
-IGNvbnN0IGNoYXIgKiBjb25zdA0KPiBncHVfcGxsX2J5cGFzc19zZWxzW10gPSB7ImdwdV9wbGwi
-LCAiZ3B1X3BsbF9yZWZfc2VsIiwgfTsgIHN0YXRpYyBjb25zdCBjaGFyICoNCj4gY29uc3QgdnB1
-X3BsbF9ieXBhc3Nfc2Vsc1tdID0geyJ2cHVfcGxsIiwgInZwdV9wbGxfcmVmX3NlbCIsIH07ICBz
-dGF0aWMgY29uc3QNCj4gY2hhciAqIGNvbnN0IGFybV9wbGxfYnlwYXNzX3NlbHNbXSA9IHsiYXJt
-X3BsbCIsICJhcm1fcGxsX3JlZl9zZWwiLCB9OyAtc3RhdGljDQo+IGNvbnN0IGNoYXIgKiBjb25z
-dCBzeXNfcGxsMV9ieXBhc3Nfc2Vsc1tdID0geyJzeXNfcGxsMSIsICJzeXNfcGxsMV9yZWZfc2Vs
-IiwgfTsNCj4gLXN0YXRpYyBjb25zdCBjaGFyICogY29uc3Qgc3lzX3BsbDJfYnlwYXNzX3NlbHNb
-XSA9IHsic3lzX3BsbDIiLA0KPiAic3lzX3BsbDJfcmVmX3NlbCIsIH07ICBzdGF0aWMgY29uc3Qg
-Y2hhciAqIGNvbnN0IHN5c19wbGwzX2J5cGFzc19zZWxzW10gPQ0KPiB7InN5c19wbGwzIiwgInN5
-c19wbGwzX3JlZl9zZWwiLCB9Ow0KPiANCj4gIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgaW14
-OG1wX2E1M19zZWxzW10gPSB7Im9zY18yNG0iLCAiYXJtX3BsbF9vdXQiLA0KPiAic3lzX3BsbDJf
-NTAwbSIsIEBAIC00NzEsOCArNDY5LDYgQEAgc3RhdGljIGludA0KPiBpbXg4bXBfY2xvY2tzX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJaHdzW0lNWDhNUF9HUFVfUExM
-X1JFRl9TRUxdID0gaW14X2Nsa19od19tdXgoImdwdV9wbGxfcmVmX3NlbCIsDQo+IGFuYXRvcF9i
-YXNlICsgMHg2NCwgMCwgMiwgcGxsX3JlZl9zZWxzLCBBUlJBWV9TSVpFKHBsbF9yZWZfc2Vscykp
-Ow0KPiAgCWh3c1tJTVg4TVBfVlBVX1BMTF9SRUZfU0VMXSA9IGlteF9jbGtfaHdfbXV4KCJ2cHVf
-cGxsX3JlZl9zZWwiLA0KPiBhbmF0b3BfYmFzZSArIDB4NzQsIDAsIDIsIHBsbF9yZWZfc2Vscywg
-QVJSQVlfU0laRShwbGxfcmVmX3NlbHMpKTsNCj4gIAlod3NbSU1YOE1QX0FSTV9QTExfUkVGX1NF
-TF0gPSBpbXhfY2xrX2h3X211eCgiYXJtX3BsbF9yZWZfc2VsIiwNCj4gYW5hdG9wX2Jhc2UgKyAw
-eDg0LCAwLCAyLCBwbGxfcmVmX3NlbHMsIEFSUkFZX1NJWkUocGxsX3JlZl9zZWxzKSk7DQo+IC0J
-aHdzW0lNWDhNUF9TWVNfUExMMV9SRUZfU0VMXSA9DQo+IGlteF9jbGtfaHdfbXV4KCJzeXNfcGxs
-MV9yZWZfc2VsIiwgYW5hdG9wX2Jhc2UgKyAweDk0LCAwLCAyLCBwbGxfcmVmX3NlbHMsDQo+IEFS
-UkFZX1NJWkUocGxsX3JlZl9zZWxzKSk7DQo+IC0JaHdzW0lNWDhNUF9TWVNfUExMMl9SRUZfU0VM
-XSA9DQo+IGlteF9jbGtfaHdfbXV4KCJzeXNfcGxsMl9yZWZfc2VsIiwgYW5hdG9wX2Jhc2UgKyAw
-eDEwNCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0KPiBBUlJBWV9TSVpFKHBsbF9yZWZfc2VscykpOw0K
-PiAgCWh3c1tJTVg4TVBfU1lTX1BMTDNfUkVGX1NFTF0gPQ0KPiBpbXhfY2xrX2h3X211eCgic3lz
-X3BsbDNfcmVmX3NlbCIsIGFuYXRvcF9iYXNlICsgMHgxMTQsIDAsIDIsIHBsbF9yZWZfc2VscywN
-Cj4gQVJSQVlfU0laRShwbGxfcmVmX3NlbHMpKTsNCj4gDQo+ICAJaHdzW0lNWDhNUF9BVURJT19Q
-TEwxXSA9IGlteF9jbGtfaHdfcGxsMTR4eCgiYXVkaW9fcGxsMSIsDQo+ICJhdWRpb19wbGwxX3Jl
-Zl9zZWwiLCBhbmF0b3BfYmFzZSwgJmlteF8xNDQzeF9wbGwpOyBAQCAtNDgyLDggKzQ3OCw4IEBA
-DQo+IHN0YXRpYyBpbnQgaW14OG1wX2Nsb2Nrc19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiAgCWh3c1tJTVg4TVBfR1BVX1BMTF0gPSBpbXhfY2xrX2h3X3BsbDE0eHgoImdw
-dV9wbGwiLA0KPiAiZ3B1X3BsbF9yZWZfc2VsIiwgYW5hdG9wX2Jhc2UgKyAweDY0LCAmaW14XzE0
-MTZ4X3BsbCk7DQo+ICAJaHdzW0lNWDhNUF9WUFVfUExMXSA9IGlteF9jbGtfaHdfcGxsMTR4eCgi
-dnB1X3BsbCIsDQo+ICJ2cHVfcGxsX3JlZl9zZWwiLCBhbmF0b3BfYmFzZSArIDB4NzQsICZpbXhf
-MTQxNnhfcGxsKTsNCj4gIAlod3NbSU1YOE1QX0FSTV9QTExdID0gaW14X2Nsa19od19wbGwxNHh4
-KCJhcm1fcGxsIiwNCj4gImFybV9wbGxfcmVmX3NlbCIsIGFuYXRvcF9iYXNlICsgMHg4NCwgJmlt
-eF8xNDE2eF9wbGwpOw0KPiAtCWh3c1tJTVg4TVBfU1lTX1BMTDFdID0gaW14X2Nsa19od19wbGwx
-NHh4KCJzeXNfcGxsMSIsDQo+ICJzeXNfcGxsMV9yZWZfc2VsIiwgYW5hdG9wX2Jhc2UgKyAweDk0
-LCAmaW14XzE0MTZ4X3BsbCk7DQo+IC0JaHdzW0lNWDhNUF9TWVNfUExMMl0gPSBpbXhfY2xrX2h3
-X3BsbDE0eHgoInN5c19wbGwyIiwNCj4gInN5c19wbGwyX3JlZl9zZWwiLCBhbmF0b3BfYmFzZSAr
-IDB4MTA0LCAmaW14XzE0MTZ4X3BsbCk7DQo+ICsJaHdzW0lNWDhNUF9TWVNfUExMMV0gPSBpbXhf
-Y2xrX2h3X2ZpeGVkKCJzeXNfcGxsMSIsIDgwMDAwMDAwMCk7DQo+ICsJaHdzW0lNWDhNUF9TWVNf
-UExMMl0gPSBpbXhfY2xrX2h3X2ZpeGVkKCJzeXNfcGxsMiIsIDEwMDAwMDAwMDApOw0KPiAgCWh3
-c1tJTVg4TVBfU1lTX1BMTDNdID0gaW14X2Nsa19od19wbGwxNHh4KCJzeXNfcGxsMyIsDQo+ICJz
-eXNfcGxsM19yZWZfc2VsIiwgYW5hdG9wX2Jhc2UgKyAweDExNCwgJmlteF8xNDE2eF9wbGwpOw0K
-PiANCj4gIAlod3NbSU1YOE1QX0FVRElPX1BMTDFfQllQQVNTXSA9DQo+IGlteF9jbGtfaHdfbXV4
-X2ZsYWdzKCJhdWRpb19wbGwxX2J5cGFzcyIsIGFuYXRvcF9iYXNlLCAxNiwgMSwNCj4gYXVkaW9f
-cGxsMV9ieXBhc3Nfc2VscywgQVJSQVlfU0laRShhdWRpb19wbGwxX2J5cGFzc19zZWxzKSwNCj4g
-Q0xLX1NFVF9SQVRFX1BBUkVOVCk7IEBAIC00OTMsOCArNDg5LDYgQEAgc3RhdGljIGludA0KPiBp
-bXg4bXBfY2xvY2tzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJaHdz
-W0lNWDhNUF9HUFVfUExMX0JZUEFTU10gPQ0KPiBpbXhfY2xrX2h3X211eF9mbGFncygiZ3B1X3Bs
-bF9ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4NjQsIDI4LCAxLA0KPiBncHVfcGxsX2J5cGFzc19z
-ZWxzLCBBUlJBWV9TSVpFKGdwdV9wbGxfYnlwYXNzX3NlbHMpLA0KPiBDTEtfU0VUX1JBVEVfUEFS
-RU5UKTsNCj4gIAlod3NbSU1YOE1QX1ZQVV9QTExfQllQQVNTXSA9DQo+IGlteF9jbGtfaHdfbXV4
-X2ZsYWdzKCJ2cHVfcGxsX2J5cGFzcyIsIGFuYXRvcF9iYXNlICsgMHg3NCwgMjgsIDEsDQo+IHZw
-dV9wbGxfYnlwYXNzX3NlbHMsIEFSUkFZX1NJWkUodnB1X3BsbF9ieXBhc3Nfc2VscyksDQo+IENM
-S19TRVRfUkFURV9QQVJFTlQpOw0KPiAgCWh3c1tJTVg4TVBfQVJNX1BMTF9CWVBBU1NdID0NCj4g
-aW14X2Nsa19od19tdXhfZmxhZ3MoImFybV9wbGxfYnlwYXNzIiwgYW5hdG9wX2Jhc2UgKyAweDg0
-LCAyOCwgMSwNCj4gYXJtX3BsbF9ieXBhc3Nfc2VscywgQVJSQVlfU0laRShhcm1fcGxsX2J5cGFz
-c19zZWxzKSwNCj4gQ0xLX1NFVF9SQVRFX1BBUkVOVCk7DQo+IC0JaHdzW0lNWDhNUF9TWVNfUExM
-MV9CWVBBU1NdID0NCj4gaW14X2Nsa19od19tdXhfZmxhZ3MoInN5c19wbGwxX2J5cGFzcyIsIGFu
-YXRvcF9iYXNlICsgMHg5NCwgMjgsIDEsDQo+IHN5c19wbGwxX2J5cGFzc19zZWxzLCBBUlJBWV9T
-SVpFKHN5c19wbGwxX2J5cGFzc19zZWxzKSwNCj4gQ0xLX1NFVF9SQVRFX1BBUkVOVCk7DQo+IC0J
-aHdzW0lNWDhNUF9TWVNfUExMMl9CWVBBU1NdID0NCj4gaW14X2Nsa19od19tdXhfZmxhZ3MoInN5
-c19wbGwyX2J5cGFzcyIsIGFuYXRvcF9iYXNlICsgMHgxMDQsIDI4LCAxLA0KPiBzeXNfcGxsMl9i
-eXBhc3Nfc2VscywgQVJSQVlfU0laRShzeXNfcGxsMl9ieXBhc3Nfc2VscyksDQo+IENMS19TRVRf
-UkFURV9QQVJFTlQpOw0KPiAgCWh3c1tJTVg4TVBfU1lTX1BMTDNfQllQQVNTXSA9DQo+IGlteF9j
-bGtfaHdfbXV4X2ZsYWdzKCJzeXNfcGxsM19ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4MTE0LCAy
-OCwgMSwNCj4gc3lzX3BsbDNfYnlwYXNzX3NlbHMsIEFSUkFZX1NJWkUoc3lzX3BsbDNfYnlwYXNz
-X3NlbHMpLA0KPiBDTEtfU0VUX1JBVEVfUEFSRU5UKTsNCj4gDQo+ICAJaHdzW0lNWDhNUF9BVURJ
-T19QTEwxX09VVF0gPSBpbXhfY2xrX2h3X2dhdGUoImF1ZGlvX3BsbDFfb3V0IiwNCj4gImF1ZGlv
-X3BsbDFfYnlwYXNzIiwgYW5hdG9wX2Jhc2UsIDEzKTsgQEAgLTUwNCw4ICs0OTgsOCBAQCBzdGF0
-aWMgaW50DQo+IGlteDhtcF9jbG9ja3NfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikNCj4gIAlod3NbSU1YOE1QX0dQVV9QTExfT1VUXSA9IGlteF9jbGtfaHdfZ2F0ZSgiZ3B1X3Bs
-bF9vdXQiLA0KPiAiZ3B1X3BsbF9ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4NjQsIDExKTsNCj4g
-IAlod3NbSU1YOE1QX1ZQVV9QTExfT1VUXSA9IGlteF9jbGtfaHdfZ2F0ZSgidnB1X3BsbF9vdXQi
-LA0KPiAidnB1X3BsbF9ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4NzQsIDExKTsNCj4gIAlod3Nb
-SU1YOE1QX0FSTV9QTExfT1VUXSA9IGlteF9jbGtfaHdfZ2F0ZSgiYXJtX3BsbF9vdXQiLA0KPiAi
-YXJtX3BsbF9ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4ODQsIDExKTsNCj4gLQlod3NbSU1YOE1Q
-X1NZU19QTEwxX09VVF0gPSBpbXhfY2xrX2h3X2dhdGUoInN5c19wbGwxX291dCIsDQo+ICJzeXNf
-cGxsMV9ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4OTQsIDExKTsNCj4gLQlod3NbSU1YOE1QX1NZ
-U19QTEwyX09VVF0gPSBpbXhfY2xrX2h3X2dhdGUoInN5c19wbGwyX291dCIsDQo+ICJzeXNfcGxs
-Ml9ieXBhc3MiLCBhbmF0b3BfYmFzZSArIDB4MTA0LCAxMSk7DQo+ICsJaHdzW0lNWDhNUF9TWVNf
-UExMMV9PVVRdID0gaW14X2Nsa19od19nYXRlKCJzeXNfcGxsMV9vdXQiLA0KPiAic3lzX3BsbDEi
-LCBhbmF0b3BfYmFzZSArIDB4OTQsIDExKTsNCj4gKwlod3NbSU1YOE1QX1NZU19QTEwyX09VVF0g
-PSBpbXhfY2xrX2h3X2dhdGUoInN5c19wbGwyX291dCIsDQo+ICJzeXNfcGxsMiIsDQo+ICthbmF0
-b3BfYmFzZSArIDB4MTA0LCAxMSk7DQo+ICAJaHdzW0lNWDhNUF9TWVNfUExMM19PVVRdID0gaW14
-X2Nsa19od19nYXRlKCJzeXNfcGxsM19vdXQiLA0KPiAic3lzX3BsbDNfYnlwYXNzIiwgYW5hdG9w
-X2Jhc2UgKyAweDExNCwgMTEpOw0KPiANCj4gIAlod3NbSU1YOE1QX1NZU19QTEwxXzQwTV0gPQ0K
-PiBpbXhfY2xrX2h3X2ZpeGVkX2ZhY3Rvcigic3lzX3BsbDFfNDBtIiwgInN5c19wbGwxX291dCIs
-IDEsIDIwKTsNCj4gLS0NCj4gMi4xNi40DQoNCg==
+On Tue, Feb 25, 2020 at 05:44:03AM +0000, Dexuan Cui wrote:
+> > From: Stefano Garzarella <sgarzare@redhat.com>
+> > Sent: Monday, February 24, 2020 2:09 AM
+> > ...
+> > > > syz-executor280 D27912  9768   9766 0x00000000
+> > > > Call Trace:
+> > > >  context_switch kernel/sched/core.c:3386 [inline]
+> > > >  __schedule+0x934/0x1f90 kernel/sched/core.c:4082
+> > > >  schedule+0xdc/0x2b0 kernel/sched/core.c:4156
+> > > >  __lock_sock+0x165/0x290 net/core/sock.c:2413
+> > > >  lock_sock_nested+0xfe/0x120 net/core/sock.c:2938
+> > > >  virtio_transport_release+0xc4/0xd60
+> > net/vmw_vsock/virtio_transport_common.c:832
+> > > >  vsock_assign_transport+0xf3/0x3b0 net/vmw_vsock/af_vsock.c:454
+> > > >  vsock_stream_connect+0x2b3/0xc70 net/vmw_vsock/af_vsock.c:1288
+> > > >  __sys_connect_file+0x161/0x1c0 net/socket.c:1857
+> > > >  __sys_connect+0x174/0x1b0 net/socket.c:1874
+> > > >  __do_sys_connect net/socket.c:1885 [inline]
+> > > >  __se_sys_connect net/socket.c:1882 [inline]
+> > > >  __x64_sys_connect+0x73/0xb0 net/socket.c:1882
+> > > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+> 
+> My understanding about the call trace is: in vsock_stream_connect() 
+> after we call lock_sock(sk), we call vsock_assign_transport(), which may
+> call vsk->transport->release(vsk), i.e. virtio_transport_release(), and in
+> virtio_transport_release() we try to get the same lock and hang.
+
+Yes, that's what I got.
+
+> 
+> > > Seems like vsock needs a word to track lock owner in an attempt to
+> > > avoid trying to lock sock while the current is the lock owner.
+> 
+> I'm unfamilar with the g2h/h2g :-) 
+> Here I'm wondering if it's acceptable to add an 'already_locked'
+> parameter like this:
+>   bool already_locked = true;
+>   vsk->transport->release(vsk, already_locked) ?
+
+Could be acceptable, but I prefer to avoid.
+
+>  
+> > Thanks for this possible solution.
+> > What about using sock_owned_by_user()?
+>  
+> > We should fix also hyperv_transport, because it could suffer from the same
+> > problem.
+> 
+> IIUC hyperv_transport doesn't supprot the h2g/g2h feature, so it should not
+> suffers from the deadlock issue here?
+
+The h2g/g2h is in the vsock core, and the hyperv_transport is one of the g2h
+transports available.
+
+If we have a L1 VM with hyperv_transport (G2H) to communicate with L0 and a
+nested KVM VM (L2) we need to load also vhost_transport (H2G). If the
+user creates a socket and it tries the following:
+    connect(fd, <2,1234>) - socket assigned to hyperv_transport (because
+                            the user wants to reach the host using CID_HOST)
+        fails
+
+    connect(fd, <3,1234>) - socket must be reassigned to vhost_transport
+                            (because the user wants to reach a nested guest)
+
+So, I think in this case we can have the deadlock.
+
+> 
+> > At this point, it might be better to call vsk->transport->release(vsk)
+> > always with the lock taken and remove it in the transports as in the
+> > following patch.
+> > 
+> > What do you think?
+> > 
+> > 
+> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > index 9c5b2a91baad..a073d8efca33 100644
+> > --- a/net/vmw_vsock/af_vsock.c
+> > +++ b/net/vmw_vsock/af_vsock.c
+> > @@ -753,20 +753,18 @@ static void __vsock_release(struct sock *sk, int
+> > level)
+> >  		vsk = vsock_sk(sk);
+> >  		pending = NULL;	/* Compiler warning. */
+> > 
+> > -		/* The release call is supposed to use lock_sock_nested()
+> > -		 * rather than lock_sock(), if a sock lock should be acquired.
+> > -		 */
+> > -		if (vsk->transport)
+> > -			vsk->transport->release(vsk);
+> > -		else if (sk->sk_type == SOCK_STREAM)
+> > -			vsock_remove_sock(vsk);
+> > -
+> >  		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
+> >  		 * version to avoid the warning "possible recursive locking
+> >  		 * detected". When "level" is 0, lock_sock_nested(sk, level)
+> >  		 * is the same as lock_sock(sk).
+> >  		 */
+> >  		lock_sock_nested(sk, level);
+> > +
+> > +		if (vsk->transport)
+> > +			vsk->transport->release(vsk);
+> > +		else if (sk->sk_type == SOCK_STREAM)
+> > +			vsock_remove_sock(vsk);
+> > +
+> >  		sock_orphan(sk);
+> >  		sk->sk_shutdown = SHUTDOWN_MASK;
+> > 
+> > diff --git a/net/vmw_vsock/hyperv_transport.c
+> > b/net/vmw_vsock/hyperv_transport.c
+> > index 3492c021925f..510f25f4a856 100644
+> > --- a/net/vmw_vsock/hyperv_transport.c
+> > +++ b/net/vmw_vsock/hyperv_transport.c
+> > @@ -529,9 +529,7 @@ static void hvs_release(struct vsock_sock *vsk)
+> >  	struct sock *sk = sk_vsock(vsk);
+> >  	bool remove_sock;
+> > 
+> > -	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+> >  	remove_sock = hvs_close_lock_held(vsk);
+> > -	release_sock(sk);
+> >  	if (remove_sock)
+> >  		vsock_remove_sock(vsk);
+> >  }
+> 
+> This looks good to me, but do we know why vsk->transport->release(vsk)
+> is called without holding the lock for 'sk' in the first place?
+
+Maybe because vmci_transport (the first transport implemented) doesn't
+require holding lock during the release.
+
+Okay, so I'll test this patch and then I'll send it out for reviews.
+
+Thanks for the feedback,
+Stefano
+
