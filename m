@@ -2,112 +2,146 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A37FC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EF5C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C212176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBD42176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgBYVLb convert rfc822-to-8bit (ORCPT
+        id S1728849AbgBYVMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:11:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54641 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:11:31 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6hUE-0002y5-DK; Tue, 25 Feb 2020 22:11:26 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0F93C1C2154;
-        Tue, 25 Feb 2020 22:11:26 +0100 (CET)
-Date:   Tue, 25 Feb 2020 21:11:25 -0000
-From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/arm_arch_timer: Fix vDSO
- clockmode when vDSO disabled
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200224151552.57274-1-vincenzo.frascino@arm.com>
-References: <20200224151552.57274-1-vincenzo.frascino@arm.com>
+        Tue, 25 Feb 2020 16:12:31 -0500
+Received: from mga11.intel.com ([192.55.52.93]:11503 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgBYVMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 16:12:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 13:12:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
+   d="scan'208";a="410370648"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 25 Feb 2020 13:12:29 -0800
+Date:   Tue, 25 Feb 2020 13:12:28 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 09/13] fs/xfs: Add write aops lock to xfs layer
+Message-ID: <20200225211228.GB15810@iweiny-DESK2.sc.intel.com>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-10-ira.weiny@intel.com>
+ <20200224003455.GY10776@dread.disaster.area>
+ <20200224195735.GA11565@iweiny-DESK2.sc.intel.com>
+ <20200224223245.GZ10776@dread.disaster.area>
 MIME-Version: 1.0
-Message-ID: <158266508571.28353.6918690655943094425.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224223245.GZ10776@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On Tue, Feb 25, 2020 at 09:32:45AM +1100, Dave Chinner wrote:
+> On Mon, Feb 24, 2020 at 11:57:36AM -0800, Ira Weiny wrote:
+> > On Mon, Feb 24, 2020 at 11:34:55AM +1100, Dave Chinner wrote:
+> > > On Thu, Feb 20, 2020 at 04:41:30PM -0800, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > 
+> > [snip]
+> > 
+> > > > 
+> > > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > > > index 35df324875db..5b014c428f0f 100644
+> > > > --- a/fs/xfs/xfs_inode.c
+> > > > +++ b/fs/xfs/xfs_inode.c
+> > > > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
+> > > >   *
+> > > >   * Basic locking order:
+> > > >   *
+> > > > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+> > > > + * s_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+> > > >   *
+> > > >   * mmap_sem locking order:
+> > > >   *
+> > > >   * i_rwsem -> page lock -> mmap_sem
+> > > > - * mmap_sem -> i_mmap_lock -> page_lock
+> > > > + * s_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
+> > > >   *
+> > > >   * The difference in mmap_sem locking order mean that we cannot hold the
+> > > >   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
+> > > > @@ -182,6 +182,9 @@ xfs_ilock(
+> > > >  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
+> > > >  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
+> > > >  
+> > > > +	if (lock_flags & XFS_DAX_EXCL)
+> > > > +		inode_aops_down_write(VFS_I(ip));
+> > > 
+> > > I largely don't see the point of adding this to xfs_ilock/iunlock.
+> > > 
+> > > It's only got one caller, so I don't see much point in adding it to
+> > > an interface that has over a hundred other call sites that don't
+> > > need or use this lock. just open code it where it is needed in the
+> > > ioctl code.
+> > 
+> > I know it seems overkill but if we don't do this we need to code a flag to be
+> > returned from xfs_ioctl_setattr_dax_invalidate().  This flag is then used in
+> > xfs_ioctl_setattr_get_trans() to create the transaction log item which can then
+> > be properly used to unlock the lock in xfs_inode_item_release()
+> > 
+> > I don't know of a cleaner way to communicate to xfs_inode_item_release() to
+> > unlock i_aops_sem after the transaction is complete.
+> 
+> We manually unlock inodes after transactions in many cases -
+> anywhere we do a rolling transaction, the inode locks do not get
+> released by the transaction. Hence for a one-off case like this it
+> doesn't really make sense to push all this infrastructure into the
+> transaction subsystem. Especially as we can manually lock before and
+> unlock after the transaction context without any real complexity.
 
-Commit-ID:     a67de48b3075cbb6ec030205d7b78981def6596d
-Gitweb:        https://git.kernel.org/tip/a67de48b3075cbb6ec030205d7b78981def6596d
-Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Mon, 24 Feb 2020 15:15:52 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 25 Feb 2020 22:08:39 +01:00
+So does xfs_trans_commit() operate synchronously?
 
-clocksource/drivers/arm_arch_timer: Fix vDSO clockmode when vDSO disabled
+I want to understand this better because I have fought with a lot of ABBA
+issues with these locks.  So...  can I hold the lock until after
+xfs_trans_commit() and safely unlock it there... because the XFS_MMAPLOCK_EXCL,
+XFS_IOLOCK_EXCL, and XFS_ILOCK_EXCL will be released at that point?  Thus
+preserving the following lock order.
 
-The arm_arch_timer requires VDSO_CLOCKMODE_ARCHTIMER to be defined to
-compile correctly. On ARM the vDSO can be disabled and when this is the
-case the compilation ends prematurely with an error:
+...
+ * Basic locking order:
+ *
+ * i_aops_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+ *
+...
 
- $ make ARCH=arm multi_v7_defconfig
- $ ./scripts/config -d VDSO
- $ make
+Thanks for the review!
+Ira
 
-drivers/clocksource/arm_arch_timer.c:73:44: error:
-‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
-  static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
-
-Make the usage of VDSO_CLOCKMODE_ARCHTIMER depend on the VDSO enablement
-and initialize the vdso clockmode variable with VDSO_CLOCKMODE_NONE
-otherwise.
-
-[ tglx: Match changelog and patch content. ]
-
-Fixes: 5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200224151552.57274-1-vincenzo.frascino@arm.com
-
----
- drivers/clocksource/arm_arch_timer.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index ee2420d..d53f4c7 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -69,7 +69,11 @@ static enum arch_timer_ppi_nr arch_timer_uses_ppi = ARCH_TIMER_VIRT_PPI;
- static bool arch_timer_c3stop;
- static bool arch_timer_mem_use_virtual;
- static bool arch_counter_suspend_stop;
-+#ifdef CONFIG_GENERIC_GETTIMEOFDAY
- static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
-+#else
-+static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_NONE;
-+#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
- 
- static cpumask_t evtstrm_available = CPU_MASK_NONE;
- static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
+> 
+> This also means that we can, if necessary, do aops manipulation work
+> /after/ the transaction that changes on-disk state completes and we
+> still hold the aops reference exclusively. While we don't do that
+> now, I think it is worthwhile keeping our options open here....
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
