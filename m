@@ -2,192 +2,222 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E1C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB440C35E0F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E6321744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98C922464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QB9/2Oh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbgBYUOc (ORCPT
+        id S1731733AbgBYUOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:14:32 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11382 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728224AbgBYUOc (ORCPT
+        Tue, 25 Feb 2020 15:14:38 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46853 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731724AbgBYUOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:14:32 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PK92St058083;
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax398vum-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01PK9OCR059563;
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax398vu6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 15:14:21 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01PKDExb023589;
-        Tue, 25 Feb 2020 20:14:19 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02wdc.us.ibm.com with ESMTP id 2yaux6ps3m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 20:14:19 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PKEIoF29032860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:14:18 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2A8D6A058;
-        Tue, 25 Feb 2020 20:14:18 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B0C86A051;
-        Tue, 25 Feb 2020 20:14:18 +0000 (GMT)
-Received: from MSBARTH-P50.rch.stglabs.ibm.com (unknown [9.10.99.26])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Feb 2020 20:14:18 +0000 (GMT)
-From:   Matthew Barth <msbarth@linux.ibm.com>
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Brandon Wyman <bjwyman@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>
-Cc:     Matthew Barth <msbarth@linux.ibm.com>
-Subject: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
-Date:   Tue, 25 Feb 2020 14:14:15 -0600
-Message-Id: <20200225201415.431668-1-msbarth@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 25 Feb 2020 15:14:37 -0500
+Received: by mail-pg1-f193.google.com with SMTP id y30so72987pga.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:14:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BTTLmTlutCOGMTV3ONbR2Fs2QQVUcjN96p4jAbuK95s=;
+        b=QB9/2Oh/cWiLYN8wCN3MJFPiDTfRIJ4E1pxfixTeHiURbdkz67+jdzh8PFJTTfyAyu
+         D3dwetUzQ2S8grF3unLt2EOypBpGybAQh2kB2M2KTKe1PtTjL8Om5GSjQE5+wg8CNBvd
+         kIY+aXUTNgORVkBwei2THalxhJyNF6vj4dofg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BTTLmTlutCOGMTV3ONbR2Fs2QQVUcjN96p4jAbuK95s=;
+        b=rDQA1/MckAauSjWUdKW8hj6GOjAJ4BtmM5hb9seQTaFzfOzqeULx201bADw/dgcx1Z
+         5htMrDIVU9nEzUMT7v/w2ZcLPufRKQB6T72Fqt++aIhKHxomEQZ1e8hcWGwiuMsdLNLi
+         BPUxIcE+MgDJee/C0x5eZtN59D4HYcDfb2D+b9nXK4cOU3tdLa8fxP/qietLLH/vA/bc
+         oYMkIq7cFHmx59Jzon9X3ErvVEVHcGmeYi8m4h3chvGmR5lJz51izJWd0d4/46mOXp5h
+         WstZmk7Exm+sDvwO5+Q4Q6LcJlaEPAN1PyaQjyMjRK43qTvkqEz4diMAVLjoZQFhHGix
+         y1EA==
+X-Gm-Message-State: APjAAAXfAYBRS5SbqAeMnBqedEFtQfw8NliXyKRBczPILA6r9RHmVAqb
+        vdImhcoYGE1jN6f7/SZJu0jDDg==
+X-Google-Smtp-Source: APXvYqzQRJ5UsCLDvhXrdE0i7Rc00jqGyfX6QsU0LmkGz7BPlioCLt8NE2IkhrABklXhz2sOHBeagQ==
+X-Received: by 2002:a62:6d01:: with SMTP id i1mr448865pfc.94.1582661676706;
+        Tue, 25 Feb 2020 12:14:36 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i14sm4258972pgh.14.2020.02.25.12.14.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:14:35 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:14:34 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 12/27] x86/mm: Modify ptep_set_wrprotect and
+ pmdp_set_wrprotect for _PAGE_DIRTY_SW
+Message-ID: <202002251214.8B2063AA87@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-13-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_08:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=987 priorityscore=1501
- lowpriorityscore=0 clxscore=1011 phishscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205181935.3712-13-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
-GPIO.
+On Wed, Feb 05, 2020 at 10:19:20AM -0800, Yu-cheng Yu wrote:
+> When Shadow Stack (SHSTK) is enabled, the [R/O + PAGE_DIRTY_HW] setting is
+> reserved only for SHSTK.  Non-Shadow Stack R/O PTEs are
+> [R/O + PAGE_DIRTY_SW].
+> 
+> When a PTE goes from [R/W + PAGE_DIRTY_HW] to [R/O + PAGE_DIRTY_SW], it
+> could become a transient SHSTK PTE in two cases.
+> 
+> The first case is that some processors can start a write but end up seeing
+> a read-only PTE by the time they get to the Dirty bit, creating a transient
+> SHSTK PTE.  However, this will not occur on processors supporting SHSTK
+> therefore we don't need a TLB flush here.
+> 
+> The second case is that when the software, without atomic, tests & replaces
+> PAGE_DIRTY_HW with PAGE_DIRTY_SW, a transient SHSTK PTE can exist.  This is
+> prevented with cmpxchg.
+> 
+> Dave Hansen, Jann Horn, Andy Lutomirski, and Peter Zijlstra provided many
+> insights to the issue.  Jann Horn provided the cmpxchg solution.
+> 
+> v9:
+> - Change compile-time conditionals to runtime checks.
+> - Fix parameters of try_cmpxchg(): change pte_t/pmd_t to
+>   pte_t.pte/pmd_t.pmd.
+> 
+> v4:
+> - Implement try_cmpxchg().
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
----
-v2: Added leds-pca955x.h include
-    Added upstream to patch
----
----
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index c63cefce636d..d9fa9fd48058 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -4,6 +4,7 @@
- 
- #include "aspeed-g6.dtsi"
- #include <dt-bindings/gpio/aspeed-gpio.h>
-+#include <dt-bindings/leds/leds-pca955x.h>
- 
- / {
- 	model = "Rainier";
-@@ -351,66 +352,82 @@
- 
- 		gpio@0 {
- 			reg = <0>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@1 {
- 			reg = <1>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@2 {
- 			reg = <2>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@3 {
- 			reg = <3>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@4 {
- 			reg = <4>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@5 {
- 			reg = <5>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@6 {
- 			reg = <6>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@7 {
- 			reg = <7>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@8 {
- 			reg = <8>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@9 {
- 			reg = <9>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@10 {
- 			reg = <10>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@11 {
- 			reg = <11>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@12 {
- 			reg = <12>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@13 {
- 			reg = <13>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@14 {
- 			reg = <14>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 
- 		gpio@15 {
- 			reg = <15>;
-+			type = <PCA955X_TYPE_GPIO>;
- 		};
- 	};
- 
+-Kees
+
+> ---
+>  arch/x86/include/asm/pgtable.h | 66 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index 2733e7ec16b3..43cb27379208 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -1253,6 +1253,39 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
+>  static inline void ptep_set_wrprotect(struct mm_struct *mm,
+>  				      unsigned long addr, pte_t *ptep)
+>  {
+> +	/*
+> +	 * Some processors can start a write, but end up seeing a read-only
+> +	 * PTE by the time they get to the Dirty bit.  In this case, they
+> +	 * will set the Dirty bit, leaving a read-only, Dirty PTE which
+> +	 * looks like a Shadow Stack PTE.
+> +	 *
+> +	 * However, this behavior has been improved and will not occur on
+> +	 * processors supporting Shadow Stack.  Without this guarantee, a
+> +	 * transition to a non-present PTE and flush the TLB would be
+> +	 * needed.
+> +	 *
+> +	 * When changing a writable PTE to read-only and if the PTE has
+> +	 * _PAGE_DIRTY_HW set, we move that bit to _PAGE_DIRTY_SW so that
+> +	 * the PTE is not a valid Shadow Stack PTE.
+> +	 */
+> +#ifdef CONFIG_X86_64
+> +	if (static_cpu_has(X86_FEATURE_SHSTK)) {
+> +		pte_t new_pte, pte = READ_ONCE(*ptep);
+> +
+> +		do {
+> +			/*
+> +			 * This is the same as moving _PAGE_DIRTY_HW
+> +			 * to _PAGE_DIRTY_SW.
+> +			 */
+> +			new_pte = pte_wrprotect(pte);
+> +			new_pte.pte |= (new_pte.pte & _PAGE_DIRTY_HW) >>
+> +					_PAGE_BIT_DIRTY_HW << _PAGE_BIT_DIRTY_SW;
+> +			new_pte.pte &= ~_PAGE_DIRTY_HW;
+> +		} while (!try_cmpxchg(&ptep->pte, &pte.pte, new_pte.pte));
+> +
+> +		return;
+> +	}
+> +#endif
+>  	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->pte);
+>  }
+>  
+> @@ -1303,6 +1336,39 @@ static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
+>  static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+>  				      unsigned long addr, pmd_t *pmdp)
+>  {
+> +	/*
+> +	 * Some processors can start a write, but end up seeing a read-only
+> +	 * PMD by the time they get to the Dirty bit.  In this case, they
+> +	 * will set the Dirty bit, leaving a read-only, Dirty PMD which
+> +	 * looks like a Shadow Stack PMD.
+> +	 *
+> +	 * However, this behavior has been improved and will not occur on
+> +	 * processors supporting Shadow Stack.  Without this guarantee, a
+> +	 * transition to a non-present PMD and flush the TLB would be
+> +	 * needed.
+> +	 *
+> +	 * When changing a writable PMD to read-only and if the PMD has
+> +	 * _PAGE_DIRTY_HW set, we move that bit to _PAGE_DIRTY_SW so that
+> +	 * the PMD is not a valid Shadow Stack PMD.
+> +	 */
+> +#ifdef CONFIG_X86_64
+> +	if (static_cpu_has(X86_FEATURE_SHSTK)) {
+> +		pmd_t new_pmd, pmd = READ_ONCE(*pmdp);
+> +
+> +		do {
+> +			/*
+> +			 * This is the same as moving _PAGE_DIRTY_HW
+> +			 * to _PAGE_DIRTY_SW.
+> +			 */
+> +			new_pmd = pmd_wrprotect(pmd);
+> +			new_pmd.pmd |= (new_pmd.pmd & _PAGE_DIRTY_HW) >>
+> +					_PAGE_BIT_DIRTY_HW << _PAGE_BIT_DIRTY_SW;
+> +			new_pmd.pmd &= ~_PAGE_DIRTY_HW;
+> +		} while (!try_cmpxchg(&pmdp->pmd, &pmd.pmd, new_pmd.pmd));
+> +
+> +		return;
+> +	}
+> +#endif
+>  	clear_bit(_PAGE_BIT_RW, (unsigned long *)pmdp);
+>  }
+>  
+> -- 
+> 2.21.0
+> 
+
 -- 
-2.24.1
-
+Kees Cook
