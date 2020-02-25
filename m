@@ -2,589 +2,243 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A85DC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DA7C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBCD20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:11:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K2D1q8zB"
+	by mail.kernel.org (Postfix) with ESMTP id 0D1F92176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbgBYULi (ORCPT
+        id S1731648AbgBYULj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:11:38 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:35515 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731382AbgBYULh (ORCPT
+        Tue, 25 Feb 2020 15:11:39 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54422 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbgBYULi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:11:37 -0500
-Received: by mail-pl1-f201.google.com with SMTP id v24so250186plo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:11:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=olGEKVt7aKYyoJtZp+gI6XiiDQDvBesIaR/gHj/tn7A=;
-        b=K2D1q8zBCgx/n+QcyDqBI731AccIzgRwSe+YEEKwk/FV872ZqCVGx6U4zHFxmG0SkW
-         NaNR9gm5LJ8oER8c4STYYuXWyx5d5JS1wjYRAACo7RIlaIHMVXErIeKOxjAaJOVcoz7G
-         UZKk6UY7EzHq7CbilnXZg8dLevY5A+MTg5yfn16PDuuSNUtje4Z4zI08xpggXeoUauQX
-         3UVhuoeeuLD5Oq3msIRqYj5GmpGHlXUVIwaUk6TSMjWgwJNEpgDQX0vYDiPrwAhYXnHP
-         K3WC+vF2FvRcoqMTXNff6NtNLztOpPaPJeeV2XwPia5DR6brBhkqAVfVRwOF17zHOhve
-         39QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=olGEKVt7aKYyoJtZp+gI6XiiDQDvBesIaR/gHj/tn7A=;
-        b=AMGOi5RpOV5zkcBxm2BgFmDuQ6cTtd6xbZz9WwegNfF6aNulINWAOENkCqSCcBMrj/
-         z3bo+ZL4oxPY0lQDWxPLi6t+weVbJ5dk7GHABpu6g1EWqWQgV895JZhXTHtDtdfG6Eea
-         1BDzwSMnVDydFzOgYR3lplt/tYz8cA+ZXGWGBFHctdvoL6qOLdoucv4hJts/FNoIcSzP
-         +0GyHeL9dvm7INPxHgb/hVf5FW7TPeatkPUbVdEZuXysCr3pTuJ3FASX4gdpXyUNmefU
-         OQCSdU7MDSSgoChy9yC1Bn5mWVuAzus62VBSCUtgr9qwq7y4dBs4t3/cy19xRK9TKLAl
-         sUzw==
-X-Gm-Message-State: APjAAAWXeTd+3w+r07GXs92rjKXnE+cS6LPYCn0K1t61sH1QOxHIudkX
-        yvaZeEHTgAwwfasoH0gW4hz1V6jVVXwkxIta
-X-Google-Smtp-Source: APXvYqxIAKVdXcogeG5IP5XAtbw6nMatG+px/sTtMdYK/slOjhOuTnBjcG3wJc4IYuECo6CZa+5UTgfWnUK89kSC
-X-Received: by 2002:a63:fd17:: with SMTP id d23mr219479pgh.159.1582661496360;
- Tue, 25 Feb 2020 12:11:36 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:11:29 -0800
-Message-Id: <20200225201130.211124-1-heidifahim@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH 1/2] kunit: kunit_parser: making parser more robust
-From:   Heidi Fahim <heidifahim@google.com>
-To:     brendanhiggins@google.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Cc:     Heidi Fahim <heidifahim@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Feb 2020 15:11:38 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1j6gYH-00024R-8I; Tue, 25 Feb 2020 21:11:33 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: misc details: Re: [PATCH 2/2] printk: use the lockless ringbuffer
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+        <20200128161948.8524-3-john.ogness@linutronix.de>
+        <20200217144110.xiqlzhs6ynoqdpun@pathway.suse.cz>
+Date:   Tue, 25 Feb 2020 21:11:31 +0100
+In-Reply-To: <20200217144110.xiqlzhs6ynoqdpun@pathway.suse.cz> (Petr Mladek's
+        message of "Mon, 17 Feb 2020 15:41:10 +0100")
+Message-ID: <87h7zeqvf0.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, kunit_parser did not properly handle kunit TAP output that
-- had any prefixes (generated from different configs)
-- had unrelated kernel output mixed in the middle of it, which has
-shown up when testing with allyesconfig
-To remove prefixes, the parser looks for the first line that includes
-TAP output, "TAP version 14".  It then determines the length of the
-string before this sequence, and strips that number of characters off
-the beginning of the following lines until the last KUnit output line is
-reached.
-These fixes have been tested with additional tests in the
-KUnitParseTest and their associated logs have also been added.
+>> - Record meta-data is now stored in a separate array of descriptors.
+>>   This is an additional 72 * (2 ^ ((CONFIG_LOG_BUF_SHIFT - 6))) bytes
+>>   for the static array and 72 * (2 ^ ((log_buf_len - 6))) bytes for
+>>   the dynamic array.
+>
+> It might help to show some examples. I mean to mention the sizes
+> when CONFIG_LOG_BUF_SHIFT is 12 or so.
 
-Signed-off-by: Heidi Fahim <heidifahim@google.com>
----
- tools/testing/kunit/kunit_parser.py           | 54 +++++++--------
- tools/testing/kunit/kunit_tool_test.py        | 69 +++++++++++++++++++
- .../test_data/test_config_printk_time.log     | 31 +++++++++
- .../test_data/test_interrupted_tap_output.log | 37 ++++++++++
- .../test_data/test_kernel_panic_interrupt.log | 25 +++++++
- .../test_data/test_multiple_prefixes.log      | 31 +++++++++
- ..._output_with_prefix_isolated_correctly.log | 33 +++++++++
- .../kunit/test_data/test_pound_no_prefix.log  | 33 +++++++++
- .../kunit/test_data/test_pound_sign.log       | 33 +++++++++
- 9 files changed, 319 insertions(+), 27 deletions(-)
- create mode 100644 tools/testing/kunit/test_data/test_config_printk_time.log
- create mode 100644 tools/testing/kunit/test_data/test_interrupted_tap_output.log
- create mode 100644 tools/testing/kunit/test_data/test_kernel_panic_interrupt.log
- create mode 100644 tools/testing/kunit/test_data/test_multiple_prefixes.log
- create mode 100644 tools/testing/kunit/test_data/test_output_with_prefix_isolated_correctly.log
- create mode 100644 tools/testing/kunit/test_data/test_pound_no_prefix.log
- create mode 100644 tools/testing/kunit/test_data/test_pound_sign.log
+OK.
 
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 4ffbae0f6732..077b21d42258 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -46,19 +46,21 @@ class TestStatus(Enum):
- 	TEST_CRASHED = auto()
- 	NO_TESTS = auto()
- 
--kunit_start_re = re.compile(r'^TAP version [0-9]+$')
--kunit_end_re = re.compile('List of all partitions:')
-+kunit_start_re = re.compile(r'TAP version [0-9]+$')
-+kunit_end_re = re.compile('(List of all partitions:|'
-+			  'Kernel panic - not syncing: VFS:|reboot: System halted)')
- 
- def isolate_kunit_output(kernel_output):
- 	started = False
- 	for line in kernel_output:
--		if kunit_start_re.match(line):
-+		if kunit_start_re.search(line):
-+			prefix_len = len(line.split('TAP version')[0])
- 			started = True
--			yield line
--		elif kunit_end_re.match(line):
-+			yield line[prefix_len:] if prefix_len > 0 else line
-+		elif kunit_end_re.search(line):
- 			break
- 		elif started:
--			yield line
-+			yield line[prefix_len:] if prefix_len > 0 else line
- 
- def raw_output(kernel_output):
- 	for line in kernel_output:
-@@ -91,35 +93,33 @@ def print_log(log):
- 	for m in log:
- 		print_with_timestamp(m)
- 
--TAP_ENTRIES = re.compile(r'^(TAP|\t?ok|\t?not ok|\t?[0-9]+\.\.[0-9]+|\t?#).*$')
-+TAP_ENTRIES = re.compile(r'(TAP|\t?ok|\t?not ok|\t?[0-9]+\.\.[0-9]+|\t# .*?:.*?).*$')
- 
- def consume_non_diagnositic(lines: List[str]) -> None:
--	while lines and not TAP_ENTRIES.match(lines[0]):
-+	while lines and not TAP_ENTRIES.search(lines[0]):
- 		lines.pop(0)
- 
- def save_non_diagnositic(lines: List[str], test_case: TestCase) -> None:
--	while lines and not TAP_ENTRIES.match(lines[0]):
-+	while lines and not TAP_ENTRIES.search(lines[0]):
- 		test_case.log.append(lines[0])
- 		lines.pop(0)
- 
- OkNotOkResult = namedtuple('OkNotOkResult', ['is_ok','description', 'text'])
- 
--OK_NOT_OK_SUBTEST = re.compile(r'^\t(ok|not ok) [0-9]+ - (.*)$')
-+OK_NOT_OK_SUBTEST = re.compile(r'\t(ok|not ok) [0-9]+ - (.*)$')
- 
--OK_NOT_OK_MODULE = re.compile(r'^(ok|not ok) [0-9]+ - (.*)$')
-+OK_NOT_OK_MODULE = re.compile(r'(ok|not ok) [0-9]+ - (.*)$')
- 
--def parse_ok_not_ok_test_case(lines: List[str],
--			      test_case: TestCase,
--			      expecting_test_case: bool) -> bool:
-+def parse_ok_not_ok_test_case(lines: List[str], test_case: TestCase) -> bool:
- 	save_non_diagnositic(lines, test_case)
- 	if not lines:
--		if expecting_test_case:
--			test_case.status = TestStatus.TEST_CRASHED
--			return True
--		else:
--			return False
-+		test_case.status = TestStatus.TEST_CRASHED
-+		return True
- 	line = lines[0]
- 	match = OK_NOT_OK_SUBTEST.match(line)
-+	while not match and lines:
-+		line = lines.pop(0)
-+		match = OK_NOT_OK_SUBTEST.match(line)
- 	if match:
- 		test_case.log.append(lines.pop(0))
- 		test_case.name = match.group(2)
-@@ -150,12 +150,12 @@ def parse_diagnostic(lines: List[str], test_case: TestCase) -> bool:
- 	else:
- 		return False
- 
--def parse_test_case(lines: List[str], expecting_test_case: bool) -> TestCase:
-+def parse_test_case(lines: List[str]) -> TestCase:
- 	test_case = TestCase()
- 	save_non_diagnositic(lines, test_case)
- 	while parse_diagnostic(lines, test_case):
- 		pass
--	if parse_ok_not_ok_test_case(lines, test_case, expecting_test_case):
-+	if parse_ok_not_ok_test_case(lines, test_case):
- 		return test_case
- 	else:
- 		return None
-@@ -202,7 +202,7 @@ def parse_ok_not_ok_test_suite(lines: List[str], test_suite: TestSuite) -> bool:
- 		test_suite.status = TestStatus.TEST_CRASHED
- 		return False
- 	line = lines[0]
--	match = OK_NOT_OK_MODULE.match(line)
-+	match = OK_NOT_OK_MODULE.search(line)
- 	if match:
- 		lines.pop(0)
- 		if match.group(1) == 'ok':
-@@ -234,11 +234,11 @@ def parse_test_suite(lines: List[str]) -> TestSuite:
- 	expected_test_case_num = parse_subtest_plan(lines)
- 	if not expected_test_case_num:
- 		return None
--	test_case = parse_test_case(lines, expected_test_case_num > 0)
--	expected_test_case_num -= 1
--	while test_case:
-+	while expected_test_case_num > 0:
-+		test_case = parse_test_case(lines)
-+		if not test_case:
-+			break
- 		test_suite.cases.append(test_case)
--		test_case = parse_test_case(lines, expected_test_case_num > 0)
- 		expected_test_case_num -= 1
- 	if parse_ok_not_ok_test_suite(lines, test_suite):
- 		test_suite.status = bubble_up_test_case_errors(test_suite)
-@@ -250,7 +250,7 @@ def parse_test_suite(lines: List[str]) -> TestSuite:
- 		print('failed to parse end of suite' + lines[0])
- 		return None
- 
--TAP_HEADER = re.compile(r'^TAP version 14$')
-+TAP_HEADER = re.compile(r'TAP version 14$')
- 
- def parse_tap_header(lines: List[str]) -> bool:
- 	consume_non_diagnositic(lines)
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index cba97756ac4a..0efae697f396 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -108,6 +108,36 @@ class KUnitParserTest(unittest.TestCase):
- 		self.assertContains('ok 1 - example', result)
- 		file.close()
- 
-+	def test_output_with_prefix_isolated_correctly(self):
-+		log_path = get_absolute_path(
-+			'test_data/test_pound_sign.log')
-+		with open(log_path) as file:
-+			result = kunit_parser.isolate_kunit_output(file.readlines())
-+		self.assertContains('TAP version 14\n', result)
-+		self.assertContains('	# Subtest: kunit-resource-test', result)
-+		self.assertContains('	1..5', result)
-+		self.assertContains('	ok 1 - kunit_resource_test_init_resources', result)
-+		self.assertContains('	ok 2 - kunit_resource_test_alloc_resource', result)
-+		self.assertContains('	ok 3 - kunit_resource_test_destroy_resource', result)
-+		self.assertContains(' foo bar 	#', result)
-+		self.assertContains('	ok 4 - kunit_resource_test_cleanup_resources', result)
-+		self.assertContains('	ok 5 - kunit_resource_test_proper_free_ordering', result)
-+		self.assertContains('ok 1 - kunit-resource-test', result)
-+		self.assertContains(' foo bar 	# non-kunit output', result)
-+		self.assertContains('	# Subtest: kunit-try-catch-test', result)
-+		self.assertContains('	1..2', result)
-+		self.assertContains('	ok 1 - kunit_test_try_catch_successful_try_no_catch',
-+				    result)
-+		self.assertContains('	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch',
-+				    result)
-+		self.assertContains('ok 2 - kunit-try-catch-test', result)
-+		self.assertContains('	# Subtest: string-stream-test', result)
-+		self.assertContains('	1..3', result)
-+		self.assertContains('	ok 1 - string_stream_test_empty_on_creation', result)
-+		self.assertContains('	ok 2 - string_stream_test_not_empty_after_add', result)
-+		self.assertContains('	ok 3 - string_stream_test_get_string', result)
-+		self.assertContains('ok 3 - string-stream-test', result)
-+
- 	def test_parse_successful_test_log(self):
- 		all_passed_log = get_absolute_path(
- 			'test_data/test_is_test_passed-all_passed.log')
-@@ -150,6 +180,45 @@ class KUnitParserTest(unittest.TestCase):
- 			result.status)
- 		file.close()
- 
-+	def test_ignores_prefix_printk_time(self):
-+		prefix_log = get_absolute_path(
-+			'test_data/test_config_printk_time.log')
-+		with open(prefix_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines())
-+		self.assertEqual('kunit-resource-test', result.suites[0].name)
-+
-+	def test_ignores_multiple_prefixes(self):
-+		prefix_log = get_absolute_path(
-+			'test_data/test_multiple_prefixes.log')
-+		with open(prefix_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines())
-+		self.assertEqual('kunit-resource-test', result.suites[0].name)
-+
-+	def test_prefix_mixed_kernel_output(self):
-+		mixed_prefix_log = get_absolute_path(
-+			'test_data/test_interrupted_tap_output.log')
-+		with open(mixed_prefix_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines())
-+		self.assertEqual('kunit-resource-test', result.suites[0].name)
-+
-+	def test_prefix_poundsign(self):
-+		pound_log = get_absolute_path('test_data/test_pound_sign.log')
-+		with open(pound_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines())
-+		self.assertEqual('kunit-resource-test', result.suites[0].name)
-+
-+	def test_kernel_panic_end(self):
-+		panic_log = get_absolute_path('test_data/test_kernel_panic_interrupt.log')
-+		with open(panic_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines())
-+		self.assertEqual('kunit-resource-test', result.suites[0].name)
-+
-+	def test_pound_no_prefix(self):
-+		pound_log = get_absolute_path('test_data/test_pound_no_prefix.log')
-+		with open(pound_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines())
-+		self.assertEqual('kunit-resource-test', result.suites[0].name)
-+
- class StrContains(str):
- 	def __eq__(self, other):
- 		return self in other
-diff --git a/tools/testing/kunit/test_data/test_config_printk_time.log b/tools/testing/kunit/test_data/test_config_printk_time.log
-new file mode 100644
-index 000000000000..c02ca773946d
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_config_printk_time.log
-@@ -0,0 +1,31 @@
-+[    0.060000] printk: console [mc-1] enabled
-+[    0.060000] random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+[    0.060000] TAP version 14
-+[    0.060000] 	# Subtest: kunit-resource-test
-+[    0.060000] 	1..5
-+[    0.060000] 	ok 1 - kunit_resource_test_init_resources
-+[    0.060000] 	ok 2 - kunit_resource_test_alloc_resource
-+[    0.060000] 	ok 3 - kunit_resource_test_destroy_resource
-+[    0.060000] 	ok 4 - kunit_resource_test_cleanup_resources
-+[    0.060000] 	ok 5 - kunit_resource_test_proper_free_ordering
-+[    0.060000] ok 1 - kunit-resource-test
-+[    0.060000] 	# Subtest: kunit-try-catch-test
-+[    0.060000] 	1..2
-+[    0.060000] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+[    0.060000] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+[    0.060000] ok 2 - kunit-try-catch-test
-+[    0.060000] 	# Subtest: string-stream-test
-+[    0.060000] 	1..3
-+[    0.060000] 	ok 1 - string_stream_test_empty_on_creation
-+[    0.060000] 	ok 2 - string_stream_test_not_empty_after_add
-+[    0.060000] 	ok 3 - string_stream_test_get_string
-+[    0.060000] ok 3 - string-stream-test
-+[    0.060000] List of all partitions:
-+[    0.060000] No filesystem could mount root, tried:
-+[    0.060000]
-+[    0.060000] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+[    0.060000] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+[    0.060000] Stack:
-+[    0.060000]  602086f8 601bc260 705c0000 705c0000
-+[    0.060000]  602086f8 6005fcec 705c0000 6002c6ab
-+[    0.060000]  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
-diff --git a/tools/testing/kunit/test_data/test_interrupted_tap_output.log b/tools/testing/kunit/test_data/test_interrupted_tap_output.log
-new file mode 100644
-index 000000000000..5c73fb3a1c6f
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_interrupted_tap_output.log
-@@ -0,0 +1,37 @@
-+[    0.060000] printk: console [mc-1] enabled
-+[    0.060000] random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+[    0.060000] TAP version 14
-+[    0.060000] 	# Subtest: kunit-resource-test
-+[    0.060000] 	1..5
-+[    0.060000] 	ok 1 - kunit_resource_test_init_resources
-+[    0.060000] 	ok 2 - kunit_resource_test_alloc_resource
-+[    0.060000] 	ok 3 - kunit_resource_test_destroy_resource
-+[    0.060000] kAFS: Red Hat AFS client v0.1 registering.
-+[    0.060000] FS-Cache: Netfs 'afs' registered for caching
-+[    0.060000] *** VALIDATE kAFS ***
-+[    0.060000] Btrfs loaded, crc32c=crc32c-generic, debug=on, assert=on, integrity-checker=on, ref-verify=on
-+[    0.060000] BTRFS: selftest: sectorsize: 4096  nodesize: 4096
-+[    0.060000] BTRFS: selftest: running btrfs free space cache tests
-+[    0.060000] 	ok 4 - kunit_resource_test_cleanup_resources
-+[    0.060000] 	ok 5 - kunit_resource_test_proper_free_ordering
-+[    0.060000] ok 1 - kunit-resource-test
-+[    0.060000] 	# Subtest: kunit-try-catch-test
-+[    0.060000] 	1..2
-+[    0.060000] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+[    0.060000] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+[    0.060000] ok 2 - kunit-try-catch-test
-+[    0.060000] 	# Subtest: string-stream-test
-+[    0.060000] 	1..3
-+[    0.060000] 	ok 1 - string_stream_test_empty_on_creation
-+[    0.060000] 	ok 2 - string_stream_test_not_empty_after_add
-+[    0.060000] 	ok 3 - string_stream_test_get_string
-+[    0.060000] ok 3 - string-stream-test
-+[    0.060000] List of all partitions:
-+[    0.060000] No filesystem could mount root, tried:
-+[    0.060000]
-+[    0.060000] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+[    0.060000] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+[    0.060000] Stack:
-+[    0.060000]  602086f8 601bc260 705c0000 705c0000
-+[    0.060000]  602086f8 6005fcec 705c0000 6002c6ab
-+[    0.060000]  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
-diff --git a/tools/testing/kunit/test_data/test_kernel_panic_interrupt.log b/tools/testing/kunit/test_data/test_kernel_panic_interrupt.log
-new file mode 100644
-index 000000000000..c045eee75f27
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_kernel_panic_interrupt.log
-@@ -0,0 +1,25 @@
-+[    0.060000] printk: console [mc-1] enabled
-+[    0.060000] random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+[    0.060000] TAP version 14
-+[    0.060000] 	# Subtest: kunit-resource-test
-+[    0.060000] 	1..5
-+[    0.060000] 	ok 1 - kunit_resource_test_init_resources
-+[    0.060000] 	ok 2 - kunit_resource_test_alloc_resource
-+[    0.060000] 	ok 3 - kunit_resource_test_destroy_resource
-+[    0.060000] 	ok 4 - kunit_resource_test_cleanup_resources
-+[    0.060000] 	ok 5 - kunit_resource_test_proper_free_ordering
-+[    0.060000] ok 1 - kunit-resource-test
-+[    0.060000] 	# Subtest: kunit-try-catch-test
-+[    0.060000] 	1..2
-+[    0.060000] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+[    0.060000] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+[    0.060000] ok 2 - kunit-try-catch-test
-+[    0.060000] 	# Subtest: string-stream-test
-+[    0.060000] 	1..3
-+[    0.060000] 	ok 1 - string_stream_test_empty_on_creation
-+[    0.060000] 	Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+[    0.060000] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+[    0.060000] Stack:
-+[    0.060000]  602086f8 601bc260 705c0000 705c0000
-+[    0.060000]  602086f8 6005fcec 705c0000 6002c6ab
-+[    0.060000]  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
-diff --git a/tools/testing/kunit/test_data/test_multiple_prefixes.log b/tools/testing/kunit/test_data/test_multiple_prefixes.log
-new file mode 100644
-index 000000000000..bc48407dcc36
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_multiple_prefixes.log
-@@ -0,0 +1,31 @@
-+[    0.060000][    T1] printk: console [mc-1] enabled
-+[    0.060000][    T1] random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+[    0.060000][    T1] TAP version 14
-+[    0.060000][    T1] 	# Subtest: kunit-resource-test
-+[    0.060000][    T1] 	1..5
-+[    0.060000][    T1] 	ok 1 - kunit_resource_test_init_resources
-+[    0.060000][    T1] 	ok 2 - kunit_resource_test_alloc_resource
-+[    0.060000][    T1] 	ok 3 - kunit_resource_test_destroy_resource
-+[    0.060000][    T1] 	ok 4 - kunit_resource_test_cleanup_resources
-+[    0.060000][    T1] 	ok 5 - kunit_resource_test_proper_free_ordering
-+[    0.060000][    T1] ok 1 - kunit-resource-test
-+[    0.060000][    T1] 	# Subtest: kunit-try-catch-test
-+[    0.060000][    T1] 	1..2
-+[    0.060000][    T1] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+[    0.060000][    T1] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+[    0.060000][    T1] ok 2 - kunit-try-catch-test
-+[    0.060000][    T1] 	# Subtest: string-stream-test
-+[    0.060000][    T1] 	1..3
-+[    0.060000][    T1] 	ok 1 - string_stream_test_empty_on_creation
-+[    0.060000][    T1] 	ok 2 - string_stream_test_not_empty_after_add
-+[    0.060000][    T1] 	ok 3 - string_stream_test_get_string
-+[    0.060000][    T1] ok 3 - string-stream-test
-+[    0.060000][    T1] List of all partitions:
-+[    0.060000][    T1] No filesystem could mount root, tried:
-+[    0.060000][    T1]
-+[    0.060000][    T1] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+[    0.060000][    T1] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+[    0.060000][    T1] Stack:
-+[    0.060000][    T1]  602086f8 601bc260 705c0000 705c0000
-+[    0.060000][    T1]  602086f8 6005fcec 705c0000 6002c6ab
-+[    0.060000][    T1]  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
-diff --git a/tools/testing/kunit/test_data/test_output_with_prefix_isolated_correctly.log b/tools/testing/kunit/test_data/test_output_with_prefix_isolated_correctly.log
-new file mode 100644
-index 000000000000..0f87cdabebb0
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_output_with_prefix_isolated_correctly.log
-@@ -0,0 +1,33 @@
-+[    0.060000] printk: console [mc-1] enabled
-+[    0.060000] random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+[    0.060000] TAP version 14
-+[    0.060000] 	# Subtest: kunit-resource-test
-+[    0.060000] 	1..5
-+[    0.060000] 	ok 1 - kunit_resource_test_init_resources
-+[    0.060000] 	ok 2 - kunit_resource_test_alloc_resource
-+[    0.060000] 	ok 3 - kunit_resource_test_destroy_resource
-+[    0.060000]  foo bar 	#
-+[    0.060000] 	ok 4 - kunit_resource_test_cleanup_resources
-+[    0.060000] 	ok 5 - kunit_resource_test_proper_free_ordering
-+[    0.060000] ok 1 - kunit-resource-test
-+[    0.060000]  foo bar 	# non-kunit output
-+[    0.060000] 	# Subtest: kunit-try-catch-test
-+[    0.060000] 	1..2
-+[    0.060000] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+[    0.060000] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+[    0.060000] ok 2 - kunit-try-catch-test
-+[    0.060000] 	# Subtest: string-stream-test
-+[    0.060000] 	1..3
-+[    0.060000] 	ok 1 - string_stream_test_empty_on_creation
-+[    0.060000] 	ok 2 - string_stream_test_not_empty_after_add
-+[    0.060000] 	ok 3 - string_stream_test_get_string
-+[    0.060000] ok 3 - string-stream-test
-+[    0.060000] List of all partitions:
-+[    0.060000] No filesystem could mount root, tried:
-+[    0.060000]
-+[    0.060000] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+[    0.060000] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+[    0.060000] Stack:
-+[    0.060000]  602086f8 601bc260 705c0000 705c0000
-+[    0.060000]  602086f8 6005fcec 705c0000 6002c6ab
-+[    0.060000]  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
-diff --git a/tools/testing/kunit/test_data/test_pound_no_prefix.log b/tools/testing/kunit/test_data/test_pound_no_prefix.log
-new file mode 100644
-index 000000000000..2ceb360be7d5
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_pound_no_prefix.log
-@@ -0,0 +1,33 @@
-+ printk: console [mc-1] enabled
-+ random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+ TAP version 14
-+ 	# Subtest: kunit-resource-test
-+ 	1..5
-+ 	ok 1 - kunit_resource_test_init_resources
-+ 	ok 2 - kunit_resource_test_alloc_resource
-+ 	ok 3 - kunit_resource_test_destroy_resource
-+  foo bar 	#
-+ 	ok 4 - kunit_resource_test_cleanup_resources
-+ 	ok 5 - kunit_resource_test_proper_free_ordering
-+ ok 1 - kunit-resource-test
-+  foo bar 	# non-kunit output
-+ 	# Subtest: kunit-try-catch-test
-+ 	1..2
-+ 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+ 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+ ok 2 - kunit-try-catch-test
-+ 	# Subtest: string-stream-test
-+ 	1..3
-+ 	ok 1 - string_stream_test_empty_on_creation
-+ 	ok 2 - string_stream_test_not_empty_after_add
-+ 	ok 3 - string_stream_test_get_string
-+ ok 3 - string-stream-test
-+ List of all partitions:
-+ No filesystem could mount root, tried:
-+
-+ Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+ CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+ Stack:
-+  602086f8 601bc260 705c0000 705c0000
-+  602086f8 6005fcec 705c0000 6002c6ab
-+  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
-diff --git a/tools/testing/kunit/test_data/test_pound_sign.log b/tools/testing/kunit/test_data/test_pound_sign.log
-new file mode 100644
-index 000000000000..0f87cdabebb0
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_pound_sign.log
-@@ -0,0 +1,33 @@
-+[    0.060000] printk: console [mc-1] enabled
-+[    0.060000] random: get_random_bytes called from init_oops_id+0x35/0x40 with crng_init=0
-+[    0.060000] TAP version 14
-+[    0.060000] 	# Subtest: kunit-resource-test
-+[    0.060000] 	1..5
-+[    0.060000] 	ok 1 - kunit_resource_test_init_resources
-+[    0.060000] 	ok 2 - kunit_resource_test_alloc_resource
-+[    0.060000] 	ok 3 - kunit_resource_test_destroy_resource
-+[    0.060000]  foo bar 	#
-+[    0.060000] 	ok 4 - kunit_resource_test_cleanup_resources
-+[    0.060000] 	ok 5 - kunit_resource_test_proper_free_ordering
-+[    0.060000] ok 1 - kunit-resource-test
-+[    0.060000]  foo bar 	# non-kunit output
-+[    0.060000] 	# Subtest: kunit-try-catch-test
-+[    0.060000] 	1..2
-+[    0.060000] 	ok 1 - kunit_test_try_catch_successful_try_no_catch
-+[    0.060000] 	ok 2 - kunit_test_try_catch_unsuccessful_try_does_catch
-+[    0.060000] ok 2 - kunit-try-catch-test
-+[    0.060000] 	# Subtest: string-stream-test
-+[    0.060000] 	1..3
-+[    0.060000] 	ok 1 - string_stream_test_empty_on_creation
-+[    0.060000] 	ok 2 - string_stream_test_not_empty_after_add
-+[    0.060000] 	ok 3 - string_stream_test_get_string
-+[    0.060000] ok 3 - string-stream-test
-+[    0.060000] List of all partitions:
-+[    0.060000] No filesystem could mount root, tried:
-+[    0.060000]
-+[    0.060000] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(98,0)
-+[    0.060000] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-gea2dd7c0875e-dirty #2
-+[    0.060000] Stack:
-+[    0.060000]  602086f8 601bc260 705c0000 705c0000
-+[    0.060000]  602086f8 6005fcec 705c0000 6002c6ab
-+[    0.060000]  6005fcec 601bc260 705c0000 3000000010
-\ No newline at end of file
--- 
-2.25.0.265.gbab2e86ba0-goog
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> - * Every record carries the monotonic timestamp in microseconds, as well as
+>> - * the standard userspace syslog level and syslog facility. The usual
+>> + * Every record meta-data carries the monotonic timestamp in microseconds, as
+>
+> I am afraid that we could not guarantee monotonic timestamp because
+> the writers are not synchronized. I hope that it will not create
+> real problems and we could just remove the word "monotonic" ;-)
 
+I removed "monotonic". I hope userspace doesn't require the ringbuffer
+to be chronologically sorted. That would explain why the safe buffers
+use bogus timestamps. :-/
+
+>> +/*
+>> + * Define the average message size. This only affects the number of
+>> + * descriptors that will be available. Underestimating is better than
+>> + * overestimating (too many available descriptors is better than not enough).
+>> + * The dictionary buffer will be the same size as the text buffer.
+>> + */
+>> +#define PRB_AVGBITS 6
+>
+> Do I get it correctly that '6' means 2^6 = 64 characters?
+
+Correct.
+
+> Some ugly counting on my test systems shows the average 49 chars:
+>
+> $> dmesg | cut -d ']' -f 2- | wc -c
+> 30172
+> $> dmesg | cut -d ']' -f 2- | wc -l
+> 612
+> $> echo $((30172 / 612))
+> 49
+>
+> If I get it correctly then lower number is the more safe side.
+> So, a more safe default should be 5?
+
+For v2 the value will be lowered to 5.
+
+>> -	if (log_make_free_space(size)) {
+>> +	if (!prb_reserve(&e, prb, &r)) {
+>>  		/* truncate the message if it is too long for empty buffer */
+>> -		size = truncate_msg(&text_len, &trunc_msg_len,
+>> -				    &dict_len, &pad_len);
+>> +		truncate_msg(&text_len, &trunc_msg_len, &dict_len);
+>> +		r.text_buf_size = text_len + trunc_msg_len;
+
+Note that the additional space for the trunc_msg_len is being reserved.
+
+>> +		r.dict_buf_size = dict_len;
+>>  		/* survive when the log buffer is too small for trunc_msg */
+>> -		if (log_make_free_space(size))
+>> +		if (!prb_reserve(&e, prb, &r))
+>>  			return 0;
+>>  	}
+>>  
+>> -	if (log_next_idx + size + sizeof(struct printk_log) > log_buf_len) {
+>> -		/*
+>> -		 * This message + an additional empty header does not fit
+>> -		 * at the end of the buffer. Add an empty header with len == 0
+>> -		 * to signify a wrap around.
+>> -		 */
+>> -		memset(log_buf + log_next_idx, 0, sizeof(struct printk_log));
+>> -		log_next_idx = 0;
+>> -	}
+>> -
+>>  	/* fill message */
+>> -	msg = (struct printk_log *)(log_buf + log_next_idx);
+>> -	memcpy(log_text(msg), text, text_len);
+>> -	msg->text_len = text_len;
+>> -	if (trunc_msg_len) {
+>> -		memcpy(log_text(msg) + text_len, trunc_msg, trunc_msg_len);
+>> -		msg->text_len += trunc_msg_len;
+>
+> Note that the old code updates msg->text_len.
+
+msg->text_len is equivalent to r.info->text_len, which was already set
+by the prb_reserve() (and already includes the trunc_msg_len).
+
+>> -	}
+>> -	memcpy(log_dict(msg), dict, dict_len);
+>> -	msg->dict_len = dict_len;
+>> -	msg->facility = facility;
+>> -	msg->level = level & 7;
+>> -	msg->flags = flags & 0x1f;
+>> +	memcpy(&r.text_buf[0], text, text_len);
+>> +	if (trunc_msg_len)
+>> +		memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
+>
+> The new one just appends the string.
+
+That is all it needs to do here.
+
+>> +	if (r.dict_buf)
+>> +		memcpy(&r.dict_buf[0], dict, dict_len);
+>> +	r.info->facility = facility;
+>> +	r.info->level = level & 7;
+>> +	r.info->flags = flags & 0x1f;
+>>  	if (ts_nsec > 0)
+>> -		msg->ts_nsec = ts_nsec;
+>> +		r.info->ts_nsec = ts_nsec;
+>>  	else
+>> -		msg->ts_nsec = local_clock();
+>> -#ifdef CONFIG_PRINTK_CALLER
+>> -	msg->caller_id = caller_id;
+>> -#endif
+>> -	memset(log_dict(msg) + dict_len, 0, pad_len);
+>> -	msg->len = size;
+>> +		r.info->ts_nsec = local_clock();
+>> +	r.info->caller_id = caller_id;
+>>  
+>>  	/* insert message */
+>> -	log_next_idx += msg->len;
+>> -	log_next_seq++;
+>> +	prb_commit(&e);
+>>  
+>> -	return msg->text_len;
+>> +	return text_len;
+>
+> So, this should be text_len + trunc_msg_len.
+
+Good catch! Yes. Fixed for v2. Thank you.
+
+(Note that simply returning r.info->text_len is not allowed because the
+writer must not access that data after calling prb_commit()).
+
+>> @@ -1974,9 +1966,9 @@ asmlinkage int vprintk_emit(int facility, int level,
+>>  
+>>  	/* This stops the holder of console_sem just where we want him */
+>>  	logbuf_lock_irqsave(flags);
+>> -	curr_log_seq = log_next_seq;
+>> +	pending_output = !prb_read_valid(prb, console_seq, NULL);
+>>  	printed_len = vprintk_store(facility, level, dict, dictlen, fmt, args);
+>> -	pending_output = (curr_log_seq != log_next_seq);
+>> +	pending_output &= prb_read_valid(prb, console_seq, NULL);
+>
+> The original code checked whether vprintk_store() stored the text
+> into the main log buffer or only into the cont buffer.
+>
+> The new code checks whether console is behind which is something
+> different.
+
+I would argue that they are the same thing in this context. Keep in mind
+that we are under the logbuf_lock. If there was previously nothing
+pending and now there is, this context is the only one that could have
+added it.
+
+This logic will change significantly when we remove the locks (and it
+will disappear once we go to kthreads). But we aren't that far at this
+stage and I'd like to keep the general logic somewhat close to the
+current mainline implementation for now.
+
+> I prefer to call wake_up_klogd() directly from log_output() or
+> log_store() instead. It might later be used to wake up
+> printk kthreads as well.
+>
+> It was done this way because consoles were historically  preferred
+> over userspace loggers. But the difference will be lower when
+> consoles are handled by kthread.
+
+Agreed, but that is something I would like to save for a later
+series. Right now I only want to replace the ringbuffer without
+rearranging priorities.
+
+>> -skip:
+>> -		if (console_seq == log_next_seq)
+>> -			break;
+>> +		console_seq = console_record.info->seq;
+>
+> This code suggests that it might be possible to get
+> console_seq > console_record.info->seq and we just
+> ignore it. I prefer to make it clear by:
+>
+> 		if (console_seq != console_record.info->seq) {
+
+OK.
+
+Thanks for your help.
+
+John Ogness
