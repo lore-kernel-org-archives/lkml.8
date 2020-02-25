@@ -2,134 +2,123 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B53C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63767C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B43246A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F8320726
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:07:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ipz4bO+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgBYLDv (ORCPT
+        id S1730403AbgBYLHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:03:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:49180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbgBYLDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:03:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E57B131B;
-        Tue, 25 Feb 2020 03:03:49 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BACA3F6CF;
-        Tue, 25 Feb 2020 03:03:48 -0800 (PST)
-Date:   Tue, 25 Feb 2020 11:03:46 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Elliot Berman <eberman@codeaurora.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Trilok Soni <tsoni@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] firmware: psci: Add support for dt-supplied
- SYSTEM_RESET2 type
-Message-ID: <20200225110346.GF32784@bogus>
-References: <1582577858-12410-1-git-send-email-eberman@codeaurora.org>
- <1582577858-12410-3-git-send-email-eberman@codeaurora.org>
+        Tue, 25 Feb 2020 06:07:44 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:33669 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729034AbgBYLHn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:07:43 -0500
+X-UUID: 27556acbd761478096be470492a74c69-20200225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NIVA4F3l7yQpEwqBqiJgTY82QKy3hO5czh6wpcjlijk=;
+        b=Ipz4bO+D3YZ9Y9KXCCPN+lEr4fmGYyzfYDpyIEMemegZZoCB71iSkjODWd04jRlkz6ssb/WsobqN8qZ3hgvHrs5XRU022KA0ciirYZz68kmqxRd2euDvEGEu7KXMgW+/sYnCraC93eFjoGE8RdDJ92ZekTE1Eu+8gPnXy2j6g+g=;
+X-UUID: 27556acbd761478096be470492a74c69-20200225
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1274444266; Tue, 25 Feb 2020 19:07:38 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 25 Feb 2020 19:03:29 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 25 Feb 2020 19:07:22 +0800
+Message-ID: <1582628855.31160.3.camel@mtkswgap22>
+Subject: Re: [PATCH v3] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, <stable@vger.kernel.org>
+Date:   Tue, 25 Feb 2020 19:07:35 +0800
+In-Reply-To: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1582472947-22471-1-git-send-email-macpaul.lin@mediatek.com>
+         <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582577858-12410-3-git-send-email-eberman@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-SNTS-SMTP: 4C2CF332432AB414CFC0F2323587578A8A6BD2A698FE908B77F606313F3EF5E22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:57:37PM -0800, Elliot Berman wrote:
-> Some implementors of PSCI may relax the requirements of the PSCI
-> architectural warm reset. In order to comply with PSCI specification, a
-> different reset_type value must be used. The alternate PSCI
-> SYSTEM_RESET2 may be used in all warm/soft reboot scenarios, replacing
-> the architectural warm reset.
->
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
->  drivers/firmware/psci/psci.c | 22 ++++++++++++++++++----
->  include/uapi/linux/psci.h    |  2 ++
->  2 files changed, 20 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index 2937d44..8f4609c 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -90,6 +90,8 @@ static u32 psci_function_id[PSCI_FN_MAX];
->
->  static u32 psci_cpu_suspend_feature;
->  static bool psci_system_reset2_supported;
-> +static u32 psci_sys_reset2_reset_param =
-> +	PSCI_1_1_SYSTEM_RESET2_SYSTEM_WARM_RESET;
->
->  static inline bool psci_has_ext_power_state(void)
->  {
-> @@ -272,11 +274,10 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
->  	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
->  	    psci_system_reset2_supported) {
->  		/*
-> -		 * reset_type[31] = 0 (architectural)
-> -		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+T24gVHVlLCAyMDIwLTAyLTI1IGF0IDE4OjQxICswODAwLCBNYWNwYXVsIExpbiB3cm90ZToNCj4g
+VGhpcyBpc3N1ZSB3YXMgZm91bmQgd2hlbiBhZGJkIHRyeWluZyB0byBvcGVuIGZ1bmN0aW9uZnMg
+d2l0aCBBSU8gbW9kZS4NCj4gVXN1YWxseSwgd2UgbmVlZCB0byBzZXQgInNldHByb3Agc3lzLnVz
+Yi5mZnMuYWlvX2NvbXBhdCAwIiB0byBlbmFibGUNCj4gYWRiZCB3aXRoIEFJTyBtb2RlIG9uIEFu
+ZHJvaWQuDQo+IA0KPiBXaGVuIGFkYmQgaXMgb3BlbmluZyBmdW5jdGlvbmZzLCBpdCB3aWxsIHRy
+eSB0byByZWFkIDI0IGJ5dGVzIGF0IHRoZQ0KPiBmaXJzdCByZWFkIEkvTyBjb250cm9sLiBJZiB0
+aGlzIHJlYWRpbmcgaGFzIGJlZW4gZmFpbGVkLCBhZGJkIHdpbGwNCj4gdHJ5IHRvIHNlbmQgRlVO
+Q1RJT05GU19DTEVBUl9IQUxUIHRvIGZ1bmN0aW9uZnMuIFdoZW4gYWRiZCBpcyBpbiBBSU8NCj4g
+bW9kZSwgZnVuY3Rpb25mcyB3aWxsIGJlIGFjdGVkIHdpdGggYXN5bmNyb25pemVkIEkvTyBwYXRo
+LiBBZnRlciB0aGUNCj4gc3VjY2Vzc2Z1bCByZWFkIHRyYW5zZmVyIGhhcyBiZWVuIGNvbXBsZXRl
+ZCBieSBnYWRnZXQgaGFyZHdhcmUsIHRoZQ0KPiBmb2xsb3dpbmcgc2VyaWVzIG9mIGZ1bmN0aW9u
+cyB3aWxsIGJlIGNhbGxlZC4NCj4gICBmZnNfZXBmaWxlX2FzeW5jX2lvX2NvbXBsZXRlKCkgLT4g
+ZmZzX3VzZXJfY29weV93b3JrZXIoKSAtPg0KPiAgICAgY29weV90b19pdGVyKCkgLT4gX2NvcHlf
+dG9faXRlcigpIC0+IGNvcHlvdXQoKSAtPg0KPiAgICAgaXRlcmF0ZV9hbmRfYWR2YW5jZSgpIC0+
+IGl0ZXJhdGVfaW92ZWMoKQ0KPiANCj4gQWRkaW5nIGRlYnVnIHRyYWNlIHRvIHRoZXNlIGZ1bmN0
+aW9ucywgaXQgaGFzIGJlZW4gZm91bmQgdGhhdCBpbg0KPiBjb3B5b3V0KCksIGFjY2Vzc19vaygp
+IHdpbGwgY2hlY2sgaWYgdGhlIHVzZXIgc3BhY2UgYWRkcmVzcyBpcyB2YWxpZA0KPiB0byB3cml0
+ZS4gSG93ZXZlciBpZiBDT05GSUdfQVJNNjRfVEFHR0VEX0FERFJfQUJJIGlzIGVuYWJsZWQsIGFk
+YmQNCj4gYWx3YXlzIHBhc3NlcyB1c2VyIHNwYWNlIGFkZHJlc3Mgc3RhcnQgd2l0aCAiMHgzQyIg
+dG8gZ2FkZ2V0J3MgQUlPDQo+IGJsb2Nrcy4gVGhpcyB0YWdnZWQgYWRkcmVzcyB3aWxsIGNhdXNl
+IGFjY2Vzc19vaygpIGNoZWNrIGFsd2F5cyBmYWlsLg0KPiBXaGljaCBjYXVzZXMgbGF0ZXIgY2Fs
+Y3VsYXRpb24gaW4gaXRlcmF0ZV9pb3ZlYygpIHR1cm4gemVyby4NCj4gQ29weW91dCgpIHdvbid0
+IGNvcHkgZGF0YSB0byB1c2Vyc3BhY2Ugc2luY2UgdGhlIGxlbmd0aCB0byBiZSBjb3BpZWQNCj4g
+InYuaW92X2xlbiIgd2lsbCBiZSB6ZXJvLiBGaW5hbGx5IGxlYWRzIGZmc19jb3B5X3RvX2l0ZXIo
+KSBhbHdheXMgcmV0dXJuDQo+IC1FRkFVTFQsIGNhdXNlcyBhZGJkIGNhbm5vdCBvcGVuIGZ1bmN0
+aW9uZnMgYW5kIHNlbmQNCj4gRlVOQ1RJT05GU19DTEVBUl9IQUxULg0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogTWFjcGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+IENo
+YW5nZXMgZm9yIHYzOg0KPiAgIC0gRml4IG1pc3NwZWxsaW5nIGluIGNvbW1pdCBtZXNzYWdlLg0K
+DQpDb3VsZCB5b3Ugc2F5ICJ0aGFuayB5b3UiIHRvIFBldGVyIGZvciBoaXMgY29tbWVudCBhbmQg
+YWRkIA0KIkNjOiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+IiB0byB0aGlzIHBhdGNo
+LCBwbGVhc2U/DQoNCj4gDQo+IENoYW5nZXMgZm9yIHYyOg0KPiAgIC0gRml4IGJ1aWxkIGVycm9y
+IGZvciAzMi1iaXQgbG9hZC4gQW4gI2lmIGRlZmluZWQoQ09ORklHX0FSTTY0KSBzdGlsbCBuZWVk
+DQo+ICAgICBmb3IgYXZvaWRpbmcgdW5kZWNsYXJlZCBkZWZpbmVzLg0KPiANCj4gIGRyaXZlcnMv
+dXNiL2dhZGdldC9mdW5jdGlvbi9mX2ZzLmMgfCAgICA1ICsrKysrDQo+ICAxIGZpbGUgY2hhbmdl
+ZCwgNSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0
+L2Z1bmN0aW9uL2ZfZnMuYyBiL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX2ZzLmMNCj4g
+aW5kZXggY2UxZDAyMy4uNzI4YzI2MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0
+L2Z1bmN0aW9uL2ZfZnMuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9m
+cy5jDQo+IEBAIC0zNSw2ICszNSw3IEBADQo+ICAjaW5jbHVkZSA8bGludXgvbW11X2NvbnRleHQu
+aD4NCj4gICNpbmNsdWRlIDxsaW51eC9wb2xsLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvZXZlbnRm
+ZC5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L3RocmVhZF9pbmZvLmg+DQo+ICANCj4gICNpbmNsdWRl
+ICJ1X2ZzLmgiDQo+ICAjaW5jbHVkZSAidV9mLmgiDQo+IEBAIC04MjYsNiArODI3LDEwIEBAIHN0
+YXRpYyB2b2lkIGZmc191c2VyX2NvcHlfd29ya2VyKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykN
+Cj4gIAlpZiAoaW9fZGF0YS0+cmVhZCAmJiByZXQgPiAwKSB7DQo+ICAJCW1tX3NlZ21lbnRfdCBv
+bGRmcyA9IGdldF9mcygpOw0KPiAgDQo+ICsjaWYgZGVmaW5lZChDT05GSUdfQVJNNjQpDQo+ICsJ
+CWlmIChJU19FTkFCTEVEKENPTkZJR19BUk02NF9UQUdHRURfQUREUl9BQkkpKQ0KPiArCQkJc2V0
+X3RocmVhZF9mbGFnKFRJRl9UQUdHRURfQUREUik7DQo+ICsjZW5kaWYNCj4gIAkJc2V0X2ZzKFVT
+RVJfRFMpOw0KPiAgCQl1c2VfbW0oaW9fZGF0YS0+bW0pOw0KPiAgCQlyZXQgPSBmZnNfY29weV90
+b19pdGVyKGlvX2RhdGEtPmJ1ZiwgcmV0LCAmaW9fZGF0YS0+ZGF0YSk7DQoNCg==
 
-Sorry for missing this earlier, you can move this comment above if others
-agree to not drop that info. I am fine with removing it too.
-
-E
->  		 * cookie = 0 (ignored by the implementation)
->  		 */
-> -		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
-> +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2),
-> +			       psci_sys_reset2_reset_param, 0, 0);
->  	} else {
->  		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
->  	}
-> @@ -493,6 +494,7 @@ typedef int (*psci_initcall_t)(const struct device_node *);
->  static int __init psci_0_2_init(struct device_node *np)
->  {
->  	int err;
-> +	u32 param;
->
->  	err = get_set_conduit_method(np);
->  	if (err)
-> @@ -505,7 +507,19 @@ static int __init psci_0_2_init(struct device_node *np)
->  	 * can be carried out according to the specific version reported
->  	 * by firmware
->  	 */
-> -	return psci_probe();
-> +	err = psci_probe();
-> +	if (err)
-> +		return err;
-> +
-> +	if (psci_system_reset2_supported &&
-> +	    !of_property_read_u32(np, "arm,psci-sys-reset2-param", &param)) {
-> +		if ((s32)param > 0)
-
-What is the point on signed comparison here ? You are assuming all vendor
-reset also as architecture by doing so which is wrong.
-
-> +			pr_warn("%08x is an invalid architectural reset type.\n",
-> +				param);
-
-I thought the point was to have vendor reset here. Based on the 3/3 you
-see to have vendor reset bit set, you ignore that by doing signed comparison
-which is wrong and even the message is wrong. Specification defines only
-one architectural reset(WARM RESET) and all others need to be vendor specific.
-
---
-Regards,
-Sudeep
