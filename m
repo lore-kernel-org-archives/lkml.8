@@ -2,162 +2,181 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFEFC35E03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0EC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692BA20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE3420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jpq8Q2/q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DsMgI5Po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbgBYO1l (ORCPT
+        id S1730770AbgBYO1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:27:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36403 "EHLO
+        Tue, 25 Feb 2020 09:27:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37230 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730734AbgBYO1k (ORCPT
+        with ESMTP id S1730758AbgBYO1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:27:40 -0500
+        Tue, 25 Feb 2020 09:27:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582640858;
+        s=mimecast20190719; t=1582640871;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=8m/8o/+j7USR0Mno0UKhRFwST/1W4yNpinOlsgdzjBM=;
-        b=Jpq8Q2/qyEZ8h1ume1S5FUGBHmOE0CQ/6HItkOPq5SmACRffwh/+jvQLmXPngO6prUKJcr
-        azc+82s7Jtw8Rs3TZcqgAvig5pD9NfcUCZ8cwWI3/ynDh4aMrXXfM6qduLV/wnOgS+AANy
-        oo5A+ynAsCFYAFiGrvX58dDslw0uok8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-452-Vw9YVJa3PiW-tDC_Xb3jTQ-1; Tue, 25 Feb 2020 09:27:36 -0500
-X-MC-Unique: Vw9YVJa3PiW-tDC_Xb3jTQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 873FC477;
-        Tue, 25 Feb 2020 14:27:34 +0000 (UTC)
-Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D2A0927063;
-        Tue, 25 Feb 2020 14:27:28 +0000 (UTC)
-Subject: Re: [PATCH RFC v4 08/13] mm/memory_hotplug: Introduce
- offline_and_remove_memory()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-References: <20191212171137.13872-1-david@redhat.com>
- <20191212171137.13872-9-david@redhat.com>
- <20200225141134.GU22443@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <d1dbb687-7959-f4f1-6a64-33ee039782ef@redhat.com>
-Date:   Tue, 25 Feb 2020 15:27:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+         in-reply-to:in-reply-to:references:references;
+        bh=sxb28+S3GcOqcRUpw4IGeDLDXZNB1HMT0k222wA3ypI=;
+        b=DsMgI5PoK0ZVDTPHEEdVEo+5EO6JA2cDGuypVeYifdt2kb5ezwjb/cd/S6mEAGSTue7cA3
+        BVrpNUoNmJelfQKF0aNeZ898Nvlj3Jc11tZ/gy0Qvw0zf7kINS1jyRHk2RwVhSCkZF2cj5
+        o3YWqtikDHxjZZTr9HWsO5U77TUcDgk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-360-DKSKxEOCPN-ZgwkjBBCP-A-1; Tue, 25 Feb 2020 09:27:50 -0500
+X-MC-Unique: DKSKxEOCPN-ZgwkjBBCP-A-1
+Received: by mail-wr1-f69.google.com with SMTP id s13so7357162wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:27:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=sxb28+S3GcOqcRUpw4IGeDLDXZNB1HMT0k222wA3ypI=;
+        b=tD0dnScclcjaAlNQ7hlC+VmEK5OqEd5kU2egMUIY/k69IZ4gJ4PpBFAWijcufoHfcA
+         4KMtZDt0q+6XXvC+YhhThTBu3VHfe/weH+eSik5dMpZp77FrrpABT34j3sRXBBoSuOCP
+         pMljnj9gmmph9IAYEQer7z/hFZJuUcQsn20q1Hm83ih9qBrUEhKQ3FKqATw2upIw4gRx
+         ABaFDo7fbsRpFwZA2MEztpkCFrhDctMyWKLKKld1QxbWpYfrrg7vppXxCQ/E1Dr6Q9AP
+         ZAwvWHgFI7ZuAImo/T/kvIgfqruZQx52i/kqKrz4w2ZvienGA/punbgYHqz2xdsWg8Pd
+         N80Q==
+X-Gm-Message-State: APjAAAVFSYfwmMD0ccGGOcEgChsFnSfSVXUOvng95oEADVWALlJwgu2G
+        sxK0JWzwbyBAnP9uhj1qRGno8pNJ6fyi1mCJUQ9fh13OUOMU1y4kNNshHVTWu2giwyn5PRHwz5H
+        uI/krdBL3VlUIiVTW6KePXeWg
+X-Received: by 2002:adf:aa0e:: with SMTP id p14mr20709672wrd.399.1582640868661;
+        Tue, 25 Feb 2020 06:27:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx4D3UREkm8u4df6f6dlOnYyMZR00/oXxbAoHat7kDwXxnRJ5PBRjpkdpz9Q2FKz133cKbaVQ==
+X-Received: by 2002:adf:aa0e:: with SMTP id p14mr20709645wrd.399.1582640868423;
+        Tue, 25 Feb 2020 06:27:48 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id s15sm24390458wrp.4.2020.02.25.06.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 06:27:47 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 57/61] KVM: x86/mmu: Merge kvm_{enable,disable}_tdp() into a common function
+In-Reply-To: <20200201185218.24473-58-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-58-sean.j.christopherson@intel.com>
+Date:   Tue, 25 Feb 2020 15:27:47 +0100
+Message-ID: <87eeuilp24.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200225141134.GU22443@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.02.20 15:11, Michal Hocko wrote:
-> On Thu 12-12-19 18:11:32, David Hildenbrand wrote:
->> virtio-mem wants to offline and remove a memory block once it unplugge=
-d
->> all subblocks (e.g., using alloc_contig_range()). Let's provide
->> an interface to do that from a driver. virtio-mem already supports to
->> offline partially unplugged memory blocks. Offlining a fully unplugged
->> memory block will not require to migrate any pages. All unplugged
->> subblocks are PageOffline() and have a reference count of 0 - so
->> offlining code will simply skip them.
->>
->> All we need an interface to trigger the "offlining" and the removing i=
-n a
->> single operation - to make sure the memory block cannot get onlined by
->> user space again before it gets removed.
->=20
-> Why does that matter? Is it really likely that the userspace would
-> interfere? What would be the scenario?
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-I guess it's not that relevant after all (I think this comment dates
-back to the times where we didn't have try_remove_memory() and could
-actually BUG_ON() in remove_memory() if there would have been a race).
-Can drop that part.
+> Combine kvm_enable_tdp() and kvm_disable_tdp() into a single function,
+> kvm_configure_mmu(), in preparation for doing additional configuration
+> during hardware setup.  And because having separate helpers is silly.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  3 +--
+>  arch/x86/kvm/mmu/mmu.c          | 13 +++----------
+>  arch/x86/kvm/svm.c              |  5 +----
+>  arch/x86/kvm/vmx/vmx.c          |  4 +---
+>  4 files changed, 6 insertions(+), 19 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index a8bae9d88bce..1a13a53bbaeb 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1494,8 +1494,7 @@ void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
+>  void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
+>  void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
+>  
+> -void kvm_enable_tdp(void);
+> -void kvm_disable_tdp(void);
+> +void kvm_configure_mmu(bool enable_tdp);
+>  
+>  static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
+>  				  struct x86_exception *exception)
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 84eeb61d06aa..08c80c7c88d4 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -5541,18 +5541,11 @@ void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_mmu_invpcid_gva);
+>  
+> -void kvm_enable_tdp(void)
+> +void kvm_configure_mmu(bool enable_tdp)
+>  {
+> -	tdp_enabled = true;
+> +	tdp_enabled = enable_tdp;
+>  }
+> -EXPORT_SYMBOL_GPL(kvm_enable_tdp);
+> -
+> -void kvm_disable_tdp(void)
+> -{
+> -	tdp_enabled = false;
+> -}
+> -EXPORT_SYMBOL_GPL(kvm_disable_tdp);
+> -
+> +EXPORT_SYMBOL_GPL(kvm_configure_mmu);
+>  
+>  /* The return value indicates if tlb flush on all vcpus is needed. */
+>  typedef bool (*slot_level_handler) (struct kvm *kvm, struct kvm_rmap_head *rmap_head);
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 80962c1eea8f..19dc74ae1efb 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -1443,10 +1443,7 @@ static __init int svm_hardware_setup(void)
+>  	if (npt_enabled && !npt)
+>  		npt_enabled = false;
+>  
+> -	if (npt_enabled)
+> -		kvm_enable_tdp();
+> -	else
+> -		kvm_disable_tdp();
+> +	kvm_configure_mmu(npt_enabled);
+>  	pr_info("kvm: Nested Paging %sabled\n", npt_enabled ? "en" : "dis");
+>  
+>  	if (nrips) {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index e6284b6aac56..59206c22b5e1 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5295,7 +5295,6 @@ static void vmx_enable_tdp(void)
+>  		VMX_EPT_RWX_MASK, 0ull);
+>  
+>  	ept_set_mmio_spte_mask();
+> -	kvm_enable_tdp();
+>  }
+>  
+>  /*
+> @@ -7678,8 +7677,7 @@ static __init int hardware_setup(void)
+>  
+>  	if (enable_ept)
+>  		vmx_enable_tdp();
+> -	else
+> -		kvm_disable_tdp();
+> +	kvm_configure_mmu(enable_ept);
+>  
+>  	/*
+>  	 * Only enable PML when hardware supports PML feature, and both EPT
 
->=20
-> Or is still mostly about not requiring callers to open code this genera=
-l
-> patter?
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-From kernel module context, I cannot get access to the actual memory
-block device (find_memory_block()) and call the device_unregister().
-
-Especially, also the device hotplug lock is not exported. So this is a
-clean helper function to be used from kernel module context. (e.g., also
-hyper-v showed interest for using that)
-
---=20
-Thanks,
-
-David / dhildenb
+-- 
+Vitaly
 
