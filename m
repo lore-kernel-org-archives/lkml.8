@@ -2,143 +2,159 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5ABC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9D9C35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA29020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEAB20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mopFLxsW"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="S/dAxeaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbgBYRyL (ORCPT
+        id S1731248AbgBYRyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:54:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39490 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729765AbgBYRyJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:54:09 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so7240695pgm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:54:09 -0800 (PST)
+        Tue, 25 Feb 2020 12:54:31 -0500
+Received: from mail-eopbgr680059.outbound.protection.outlook.com ([40.107.68.59]:36461
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728762AbgBYRya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:54:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YyeAsmYae6zdVV3+BMrgLwNThiKGrSa1akL0RuVn8uCzqOomk+h6WUHau9pezpTdxEtpXNC/eLSWBqURyw0nO9DOdqQ/D+14O5LL9jlJ2LjPKWyFEz6TipLuy1qE15EVo2yzxzjlEkva4vls8M+sD0CFn1dHs+igl4oAaw6eS7tNdYG++tWaM6ByoDpmC0mTanq3cYSEiNSkXq+SaqoaL6hx4kzqngjs0qb98Ibja96J5C+YSV8bqenPZNN2OYX4yQcwmKImj2pt+KZdsY+0SmUwswhdA3GNtW3qp0g6c1jftKPJxtfuXu15wZZOdpNMydTFb90yJuq2UW/a0JqjVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k+atiIo4WEC1umUiBavDMK/KSQyGCM9fthaYBa9/3J0=;
+ b=JZQ52z9yjdqDKbF90Zz2EGta1SQZKkA6pRUgmEE5mBY2PcdV49t8ITW95XBICMlYboHYDSoCSbTVGoQW2TEe9klcb4A9wIoP2aRTykwgxiKVQWuim7RLbATJ3siotHSzr0NpX97V5Pt5EUpvRg85YzUr/Wj0XDYUWO/EdX7p3XB/6aitzYDME62ZQAz0IJBIt2wTD7D7Dc1F4ndR1YeZNZoEsiBAMZZgEXulWnGuVkSdOyrTwHLgApMu5fEP3AxdBM5Q0u0L6GzgzUIDYanv01+l62IpVmHJL+4sTGok56/wigGjMCypRoWnvjjP378p0zXfV2VK30fgwXj7sG7oGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EGHWPlxApQjuktMa4xDP9Q063H+hJfu1b6AJ+NVENyk=;
-        b=mopFLxsWbeU0/yL28BByX3Qmrqu4/lNA+fcgdrQ0c38OZPHrInJHNTj2WYC/ILCWI3
-         rXsIHYNPOo1xWFMGo7b/0CEJyDfVXjQ/OF3IJs1bd8q8HuaPPs18JlBn3fRBNx7jqN5f
-         fC8vxPOg23B/AWvtJ+Qf4eNAws51cK2BgiyA2EA5uI5P3NgCw0Wv9hQUdeTRc3PUrZ0V
-         hRk0YjbtV5tCBvV82AvEH/9gQey8wstJTVxNI3gzLRzj7PSSlwWMWxLKk9pa39J5/c6r
-         JpjLoP7WYSaFE7JvzH24FqeckT308GZ6KURzKIQEE9oy3BJrKRDDhYmWeLqZFBVK+T/2
-         mbng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EGHWPlxApQjuktMa4xDP9Q063H+hJfu1b6AJ+NVENyk=;
-        b=MjnnkPolL/bqWHtNpe9LD757AtMAdRbKg9zZXZ/v0m8+GQXTchl92INC1tJo9n4WTP
-         +iG+mfesSNGlTeQxBTVTDwJMaQjNRwkicHlFlJ25aKO+R/xJFTe6XOEx4Gq68StCeozs
-         Tfzo3sbz+h02HowQ1ID6r9fB/nScxxGzkOEXWptvMhr1T+XZwbPgvJJmgPPAHzb/4EkL
-         iZVS6m7qmR1/hPOrQJiBK0LwqLsOEVMpwPQ672KwLoq5aOtLMUkp4V0VVNWD8F5qWnCz
-         lRVLhnMk1azBSFdvZMOvtGhITD68Ya7+pDafnIBp0KscdVNerPtGR+0KfOJIpoM2pZgf
-         zBzg==
-X-Gm-Message-State: APjAAAWqqJ1KnUx+tp6gOTPaFi/LGRc/EUMgFxc1sQHcI5borbvtbh/N
-        +5hr6KoeqchEcbgLt7zlXZS8S05AGIg=
-X-Google-Smtp-Source: APXvYqzHMYAmH1VGS/4L4IKuT3hh7pV1x1nh2bDeq23It8zTwLG0Ky2zYk/YSXEkpzQl6uUTVp43bQ==
-X-Received: by 2002:a63:2b0a:: with SMTP id r10mr12434661pgr.213.1582653248359;
-        Tue, 25 Feb 2020 09:54:08 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id v8sm18013291pgt.52.2020.02.25.09.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:54:07 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v8 6/6] usb: dwc3: Rework resets initialization to be more flexible
-Date:   Tue, 25 Feb 2020 17:53:04 +0000
-Message-Id: <20200225175304.36406-7-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200225175304.36406-1-john.stultz@linaro.org>
-References: <20200225175304.36406-1-john.stultz@linaro.org>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k+atiIo4WEC1umUiBavDMK/KSQyGCM9fthaYBa9/3J0=;
+ b=S/dAxeaVTLnVDNH7s5kizhmrDFsIVf5c6EEHT3OTsg9x/9s/nF9vuZFSEQJRSZFcgcmBULDknZQo1ZrhMbsK3W5s5Va7g2ohDKhmfrY+98bHVS/qOYpwq987mOWV7bsSM0+eas4krQ5cG7Vx/kkoEsXZSpOsbbRwYrLsfZkETPE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+ by DM6PR12MB3659.namprd12.prod.outlook.com (2603:10b6:5:14a::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
+ 2020 17:54:25 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 17:54:25 +0000
+Subject: Re: [PATCH v2] x86/efi: Add additional efi tables for unencrypted
+ mapping checks
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
+ <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <9e16fed9-4399-5c78-cbfb-6be75c295f31@amd.com>
+Date:   Tue, 25 Feb 2020 11:54:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0201CA0047.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::33) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.30.74] (165.204.77.1) by SN4PR0201CA0047.namprd02.prod.outlook.com (2603:10b6:803:2e::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Tue, 25 Feb 2020 17:54:24 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8109fc44-8eec-416e-9f3e-08d7ba1bc074
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3659:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3659E9C58F50AA6BEDE5B12AECED0@DM6PR12MB3659.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(189003)(199004)(186003)(7416002)(53546011)(54906003)(31686004)(6486002)(26005)(316002)(16576012)(16526019)(8936002)(5660300002)(4326008)(8676002)(31696002)(6916009)(956004)(2906002)(86362001)(66946007)(478600001)(81166006)(2616005)(52116002)(66556008)(36756003)(66476007)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3659;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sKUs/X6oKTv2Q9ecGZ3GtlCoV58AT5zCgX9Uihh3Kam/NdA/3CgAHYbrGEnjis5nQpm4/7RICyV7u/cKLkAgXN0GKIGkLxHRy+t5qQbEKKm6JcNOpqZHO15qTGptUlCpB8oMjY/KXm55Mcyhg/4D33a1dadNW9kJDun1EKdNHq5RQyt9qr/OpiIe5pDGlcwoyYAGc9p1dZg20KmIAC/Xuc2aeRNoBebz8rmpMJ6MKMTXxPr4w4+9Rcs5drgG62YaaFB9j21BA1PssDtGR694FIXO4OL9Fv0FJIxwvpkhJHha+oYP1Wz8ZLsqPfwMPODcZFK/E4ZM0NqdGXUoutDBaYwgK4bY3jJ7W5EUMEMMho79a3WbPIXnwK5izCJ9/Sh15n9agh+KMV5CVG10duGWWiuRBm16A7+t3falCFeu9geMf7M3EgnXMLiOBXCaFfE+
+X-MS-Exchange-AntiSpam-MessageData: JBm6hUSsZnhhJG1oCK1AU4lFDhBWcGjQSRPo1WqV5jLvU22hj/v+WYu7aDBN/JRI0R0rzG26FT3V4ILZhp6cwd92VAsKAAY0pAOQiZTkf8gkF4mj0gKfSRDJydj5E3PFbGuRc4lE7UAbwx60CIzKZw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8109fc44-8eec-416e-9f3e-08d7ba1bc074
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 17:54:25.3975
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9EqCcdsMUttVEZkoi3PeoIXBt3IKJNkHpoaTqr1DlCHiy3uEhq109rkGeDVkbaj5fOxTQNewpPc/TL/TusmNVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3659
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dwc3 core binding specifies one reset.
+On 2/25/20 11:45 AM, Ard Biesheuvel wrote:
+> On Tue, 25 Feb 2020 at 18:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>>
+>> When booting with SME active, EFI tables must be mapped unencrypted since
+>> they were built by UEFI in unencrypted memory. Update the list of tables
+>> to be checked during early_memremap() processing to account for new EFI
+>> tables.
+>>
+>> This fixes a bug where an EFI TPM log table has been created by UEFI, but
+>> it lives in memory that has been marked as usable rather than reserved.
+>>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>>
+>> ---
+>> Changes since v1:
+>> - Re-spun against EFI tree
+> 
+> Which one? Surely not the one in the link I included?
 
-However some variants of the hardware may have more. Previously
-this was handled by using the dwc3-of-simple glue driver, but
-that resulted in a proliferation of bindings for for every
-variant, when the only difference was the clocks and resets
-lists.
+I did a git clone of
 
-So this patch reworks the reading of the resets to fetch all the
-resets specified in the dts together.
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
 
-This patch was recommended by Rob Herring <robh@kernel.org>
-as an alternative to creating multiple bindings for each variant
-of hardware.
+and checked out branch next. Not sure what I missed...
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v3: Rework dwc3 core rather then adding another dwc-of-simple
-    binding.
-v6: Re-introduce this patch, on Rob's suggestion
----
- drivers/usb/dwc3/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Tom
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index ba21af5c1204..2afcc04da338 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1465,7 +1465,7 @@ static int dwc3_probe(struct platform_device *pdev)
- 
- 	dwc3_get_properties(dwc);
- 
--	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
-+	dwc->reset = devm_reset_control_array_get(dev, true, true);
- 	if (IS_ERR(dwc->reset))
- 		return PTR_ERR(dwc->reset);
- 
--- 
-2.17.1
-
+> 
+>> ---
+>>  arch/x86/platform/efi/efi.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+>> index 43b24e149312..c6ca959e2366 100644
+>> --- a/arch/x86/platform/efi/efi.c
+>> +++ b/arch/x86/platform/efi/efi.c
+>> @@ -88,6 +88,9 @@ static const unsigned long * const efi_tables[] = {
+>>  #ifdef CONFIG_EFI_RCI2_TABLE
+>>         &rci2_table_phys,
+>>  #endif
+>> +       &efi.rng_seed,
+>> +       &efi.tpm_log,
+>> +       &efi.tpm_final_log,
+>>  };
+>>
+>>  u64 efi_setup;         /* efi setup_data physical address */
+>> --
+>> 2.17.1
+>>
