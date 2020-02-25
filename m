@@ -2,112 +2,120 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7F3C35E03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF1BC35E03
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451AD2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B775F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IlOGuQog"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OSiSB30S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgBYOiD (ORCPT
+        id S1730797AbgBYOiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:38:03 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43216 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729436AbgBYOiC (ORCPT
+        Tue, 25 Feb 2020 09:38:15 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33074 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729721AbgBYOiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:38:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582641481;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MMkMT41Ew2lYqvAVHcg6d6gwui9XO+kqAXnNWxZsaWg=;
-        b=IlOGuQog9ugE2VFCWoeE9KLBaYPUD2OLVDbau4+wnivQXPJVqNDYEVvnv6iIXTdnpUK4Bo
-        ftk0iTi6T3gfzbvAv3HljCLcg4ZPjW/hFX1JkP91SNxlTt3jI2HW4iq6NuP52jR/voYAZ5
-        yVetSB3IV7iRdJ56fmtWgbCdRxz+Cpo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-7Bnc-p4yPsegAvsMrcQulA-1; Tue, 25 Feb 2020 09:37:59 -0500
-X-MC-Unique: 7Bnc-p4yPsegAvsMrcQulA-1
-Received: by mail-wm1-f71.google.com with SMTP id u11so1116121wmb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:37:59 -0800 (PST)
+        Tue, 25 Feb 2020 09:38:15 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so9176328qto.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:38:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=K85rzbISZ9phjPe7qHH/4r4BQnNPXo7AftTkrTSEUyg=;
+        b=OSiSB30S+FpwCoVnFe4ufZ+25rEIL9+NPkxPHyt7xfEzRaVVb+JniyRS8Qpfo4WMiS
+         mRgKnYcFu7TY9VuYzSBRCSYw+XN99WbOSRhXLnsuzB9dWFilpMX1uvz1Esbhl3akWBA/
+         Irq7rVhMnX32uVSnN5ll9lp5sy39c2Rl/wvuKsqd7dnCsaKVT4G8t7mDxyQE6C1ScWLA
+         /loulP0o7DpmVk04hkznH+UShJmAWMqy15BEzn6LsxIk9R06XXLq9Cw66RaCQUG/FNeR
+         7u1VdRnULkSoD0rmuIDZBWc1SEp+yo0kBQjyHzV1ItiuNisZRSS4ENJ+RFFJuhLmKTTN
+         iCzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MMkMT41Ew2lYqvAVHcg6d6gwui9XO+kqAXnNWxZsaWg=;
-        b=GWxSq9GMs4BYYUjOtqnIi1ayRIDU3qzlRCpwG8RpjgBzXZpZZhayO326HBSoAkRuPN
-         ZKy1QfCr5e7d1M7ym2VzrqntQqMS1xGCswR15CX8SRmYGHWCq7BLdyGTRLJb9DUgFdUh
-         I+M6anXy03VKwvLhuGglHV7xnAJLrkRwHPMziaFhNUGegY7LYDpZC3olQGGSB3C2pzIm
-         /l1Nsl4suayB74R18Rpyt+2bbLkTfbp99RjS1FkNyIMPAi5eNpux5q5P6cCC9ias4+qh
-         6uLPtZECGOG+O1zY6WfOujNZr3FEcRkXNxHEcWLrCcAhm5B1MaJBavBgkHHh/tUHgAaB
-         n7Dg==
-X-Gm-Message-State: APjAAAWRCvNA+IDUJ3a15+VsNeV4WXyJn32luFPi0J2Q2yBLINExd4g0
-        Z+Dzi2V4lu5qnqostrIcbBjj0AAY0OzrlHydLiWIuBw1vERZ2jp1Umz4IjPjOWaaQTvUGUaDvi4
-        KJt0FPMrXNcjTgThBlJV/ak6N
-X-Received: by 2002:a5d:674d:: with SMTP id l13mr72035867wrw.11.1582641477572;
-        Tue, 25 Feb 2020 06:37:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyb1N/WwmYJ6393LEGUUxwEctjfX/NmXku6SX1zknILjB/nDw9XsgbBJwAP0GuDgbhVG0nT+g==
-X-Received: by 2002:a5d:674d:: with SMTP id l13mr72035852wrw.11.1582641477374;
-        Tue, 25 Feb 2020 06:37:57 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:3577:1cfe:d98a:5fb6? ([2001:b07:6468:f312:3577:1cfe:d98a:5fb6])
-        by smtp.gmail.com with ESMTPSA id p12sm24467412wrx.10.2020.02.25.06.37.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:37:56 -0800 (PST)
-Subject: Re: [PATCH 02/61] KVM: x86: Refactor loop around do_cpuid_func() to
- separate helper
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-3-sean.j.christopherson@intel.com>
- <87sgjng3ru.fsf@vitty.brq.redhat.com> <20200207195301.GM2401@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <04fb4fe9-017a-dcbb-6f18-0f6fd970bc99@redhat.com>
-Date:   Tue, 25 Feb 2020 15:37:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200207195301.GM2401@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=K85rzbISZ9phjPe7qHH/4r4BQnNPXo7AftTkrTSEUyg=;
+        b=ZZCAhkWTpYoxENuZFu7MaJqIDzbbL6j2ijuUiAIEfXukkQBNan/zrIvEafJFBKAmum
+         2xhRh8TibQg6vVCDj3KAMy/YY7GmOF8uyUOYZdgG3ReJWkG2IsulftSHrCKaRiqoG9zf
+         D3Q9DTmdK5Gq4zME5e8dPuEoJu3UCVwtYG9/1PAUM9VAW44Adj7ehlEYYPIzlogMHXfM
+         GubEc6sdqCT5lZ6sQgxq2534bmLxxbd6L8iZHAxFqbYAOey8FftRWl6auMVJ4CKEiSPH
+         9SQEGRfb0ISUBZ+VyPKjg1fF1yIyKIPGxQQUh4jAdPabvak8EN54L5nr4A0GVCZ0QmKG
+         5mjg==
+X-Gm-Message-State: APjAAAXl5udPZCbnJFyn6Kvf2n4p/6GToMKrpH5kmdi2XuhCsPKZkaao
+        20h7kVSGdcC5Ze5dly2t+MuvzA==
+X-Google-Smtp-Source: APXvYqyJ0BZR9+pbLb0Aj+10J/A1VPEvpuu8G0xNNkjWUuaHQbs5tKZg8iXhIaGWIb1WkI6kORpKkg==
+X-Received: by 2002:aed:3324:: with SMTP id u33mr52349364qtd.322.1582641492085;
+        Tue, 25 Feb 2020 06:38:12 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id a13sm7387061qkh.123.2020.02.25.06.38.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 06:38:11 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] xfs: fix an undefined behaviour in _da3_path_shift
+Date:   Tue, 25 Feb 2020 09:37:57 -0500
+Message-Id: <1582641477-4011-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/20 20:53, Sean Christopherson wrote:
-> 
->> 2) Return -EINVAL instead.
-> I agree that it _should_ be -EINVAL, but I just don't think it's worth
-> the possibility of breaking (stupid) userspace that was doing something
-> like:
-> 
-> 	for (i = 0; i < max_cpuid_size; i++) {
-> 		cpuid.nent = i;
-> 
-> 		r = ioctl(fd, KVM_GET_SUPPORTED_CPUID, &cpuid);
-> 		if (!r || r != -E2BIG)
-> 			break;
-> 	}
-> 
+state->path.active could be 1 in xfs_da3_node_lookup_int() and then in
+xfs_da3_path_shift() could see state->path.blk[-1].
 
-Apart from the stupidity of the above case, why would it be EINVAL?
+ UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
+ index -1 is out of range for type 'xfs_da_state_blk_t [5]'
+ Call trace:
+  dump_backtrace+0x0/0x2c8
+  show_stack+0x20/0x2c
+  dump_stack+0xe8/0x150
+  __ubsan_handle_out_of_bounds+0xe4/0xfc
+  xfs_da3_path_shift+0x860/0x86c [xfs]
+  xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
+  xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
+  xfs_dir_createname+0x348/0x38c [xfs]
+  xfs_create+0x6b0/0x8b4 [xfs]
+  xfs_generic_create+0x12c/0x1f8 [xfs]
+  xfs_vn_mknod+0x3c/0x4c [xfs]
+  xfs_vn_create+0x34/0x44 [xfs]
+  do_last+0xd4c/0x10c8
+  path_openat+0xbc/0x2f4
+  do_filp_open+0x74/0xf4
+  do_sys_openat2+0x98/0x180
+  __arm64_sys_openat+0xf8/0x170
+  do_el0_svc+0x170/0x240
+  el0_sync_handler+0x150/0x250
+  el0_sync+0x164/0x180
 
-I can do the change to drop the initializer when applying.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ fs/xfs/libxfs/xfs_da_btree.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Paolo
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 875e04f82541..0906b7748a3f 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -1986,7 +1986,11 @@ static inline int xfs_dabuf_nfsb(struct xfs_mount *mp, int whichfork)
+ 	ASSERT(path != NULL);
+ 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
+ 	level = (path->active-1) - 1;	/* skip bottom layer in path */
+-	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
++
++	if (level >= 0)
++		blk = &path->blk[level];
++
++	for (; level >= 0; blk--, level--) {
+ 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
+ 					   blk->bp->b_addr);
+ 
+-- 
+1.8.3.1
 
