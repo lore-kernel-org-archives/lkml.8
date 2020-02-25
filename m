@@ -2,89 +2,131 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189D0C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDFAC35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E735F21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08D321556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgBYKSV (ORCPT
+        id S1730128AbgBYKSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:18:21 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:56519 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgBYKSV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:18:21 -0500
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1j6XIA-0002Rd-SL
-        for linux-kernel@vger.kernel.org; Tue, 25 Feb 2020 10:18:19 +0000
-Received: by mail-pf1-f199.google.com with SMTP id v14so8848652pfm.21
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 02:18:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+pTBMgNSyaWEJEV8vOsVhnaFO3AzlXBJYTusRgM9dWk=;
-        b=c07Pi8WYfdfX4M+P/RRmXBJwjhSsGHi8633RUl9+FcorhqNjtogdKsK2jaZwqwFvek
-         9VG0j5dS9GiZZRAcUprtWh2lv9yDIZQAZB7T76Rjy6Ym1ecEphVu3c32DvLuiZykknl2
-         xlUCwdHpLr2ljFZiuxfAUvzSKxXfGvSsgbV6fl4+zBmnRhRh3W4DLa9obLC49fwVj0pF
-         IO6PMfJAyD7eHhmyG8AaILv4IgArRcanb61yWit+U82UcmWzD7W9TIGKpooZtLOXWyTb
-         K+QGjjNJu4A7pE3nhMYdNR3KxiMKg2cVYIX668NfzG3hHkqfbzv6s+c+kSw/8Vxsrpis
-         5mow==
-X-Gm-Message-State: APjAAAXTiCd5Tk6y7yd3du6YiWxAeaFHbIc8xmkfYaBaw0YKO93whvfe
-        SQ+Q2f7t1UHHpu0FPS1K0bPxiAUZrBpfFZFl6R8aNj/11h7dEj1JUhtYoIOt2TaBpHZka9UYY03
-        gTYPBmkElS4S903oPK+w6kVZ5xjPWBABMtOwWbbXI
-X-Received: by 2002:a63:354d:: with SMTP id c74mr23102384pga.234.1582625897554;
-        Tue, 25 Feb 2020 02:18:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw32U8UJaAFKSu2igL+Ekf4jExX3nYSTtO0z6U+Ccmd+biRlFPNdgDC/4yTVAeys7G/igMjVg==
-X-Received: by 2002:a63:354d:: with SMTP id c74mr23102359pga.234.1582625897225;
-        Tue, 25 Feb 2020 02:18:17 -0800 (PST)
-Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id v4sm15770025pff.174.2020.02.25.02.18.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 02:18:16 -0800 (PST)
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-To:     linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org,
-        tglx@linutronix.de, john.stultz@linaro.org
-Subject: [PATCH] selftests/timers: Turn off timeout setting
-Date:   Tue, 25 Feb 2020 18:18:09 +0800
-Message-Id: <20200225101809.9986-1-po-hsu.lin@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Feb 2020 05:18:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:48730 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728958AbgBYKSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:18:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3F4330E;
+        Tue, 25 Feb 2020 02:18:30 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 159A93F6CF;
+        Tue, 25 Feb 2020 02:18:29 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:18:25 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] PCI: endpoint: Fix clearing start entry in
+ configfs
+Message-ID: <20200225101825.GA4029@e121166-lin.cambridge.arm.com>
+References: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
+ <20200225190506.7DFA.4A936039@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225190506.7DFA.4A936039@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tests in timers especially nsleep-lat, set-timer-lat,
-inconsistency-check and raw_skew these 4 tests can take longer than
-the default 45 seconds that introduced in commit 852c8cbf
-(selftests/kselftest/runner.sh: Add 45 second timeout per test) to run.
+On Tue, Feb 25, 2020 at 07:05:07PM +0900, Kunihiko Hayashi wrote:
+> Hi Lorenzo,
+> 
+> On Fri, 21 Feb 2020 14:15:53 +0000 <lorenzo.pieralisi@arm.com> wrote:
+> 
+> > On Fri, Dec 20, 2019 at 09:24:37PM +0900, Kunihiko Hayashi wrote:
+> > > The value of 'start' entry is no change whenever writing 0 to configfs.
+> > > So the endpoint that stopped once can't restart.
+> > > 
+> > > The following command lines are an example restarting endpoint and
+> > > reprogramming configurations after receiving bus-reset.
+> > > 
+> > >     echo 0 > controllers/66000000.pcie-ep/start
+> > >     rm controllers/66000000.pcie-ep/func1
+> > >     ln -s functions/pci_epf_test/func1 controllers/66000000.pcie-ep/
+> > >     echo 1 > controllers/66000000.pcie-ep/start
+> > > 
+> > > However, the first 'echo' can't set 0 to 'start', so the last 'echo' can't
+> > > restart endpoint.
+> > 
+> > I think your description is not correct - pci_epc_group->start is
+> > just used to check if an endpoint has been started or not (in
+> > pci_epc_epf_unlink() and that's a WARN_ON) but nonetheless this
+> > looks like a bug and ought to be fixed.
+> 
+> When pci_epc_group->start keeps 1 after starting this controller with
+> 'echo 1 > start', we can never unlink the func1 from the controller
+> because of WARN_ON.
 
-Disable the timeout setting for timers instead of looking for an proper
-value to make it more general.
+To me "I can never unlink" means that it can't be done, which
+is not what's happening. What's happening is that unlinking triggers
+a warning, which is different.
 
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
----
- tools/testing/selftests/timers/settings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 100644 tools/testing/selftests/timers/settings
+> I think that unlink/re-link play initialization role of configfs
+> through 'unbind' and 'bind' functions. However, we can't re-initialize
+> configfs.
+> 
+> If this is the intended behavior, my patch will make no sense.
 
-diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/timers/settings
-@@ -0,0 +1 @@
-+timeout=0
--- 
-2.7.4
+Your patch makes sense, your commit log does not, see above.
 
+> > I need Kishon's ACK to proceed.
+
+Yes - then I am happy to merge this patch with a rewritten
+commit log.
+
+Thanks,
+Lorenzo
+
+> I think so, too.
+> 
+> Thank you,
+> 
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
+> > > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > ---
+> > >  drivers/pci/endpoint/pci-ep-cfs.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> > > index d1288a0..4fead88 100644
+> > > --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> > > +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> > > @@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+> > >  
+> > >  	if (!start) {
+> > >  		pci_epc_stop(epc);
+> > > +		epc_group->start = 0;
+> > >  		return len;
+> > >  	}
+> > >  
+> > > -- 
+> > > 2.7.4
+> > > 
+> 
+> ---
+> Best Regards,
+> Kunihiko Hayashi
+> 
