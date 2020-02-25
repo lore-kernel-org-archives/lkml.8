@@ -2,129 +2,139 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB88C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D364C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFE320732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F8B20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:16:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MASHOfjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgBYRMq (ORCPT
+        id S1730911AbgBYRQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:12:46 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44960 "EHLO
+        Tue, 25 Feb 2020 12:16:03 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41466 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729939AbgBYRMq (ORCPT
+        with ESMTP id S1730460AbgBYRQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:12:46 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a14so6792655pgb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:12:45 -0800 (PST)
+        Tue, 25 Feb 2020 12:16:03 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 70so7179631pgf.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:16:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=nA6XtHfCbnQ+UrxP5iH37BANlB2snp9+FgCCs6LFMHc=;
+        b=MASHOfjqGNYT1tp6DvmruXzocvsetadvExcpfODmmFENiPMhWeeGCkLkwK5CrSPHYu
+         xS0lIIYIC9oJ2y3y7AB5I4+/sYx9Jar/0wKwBcM1V1KB88ETjoj2O0jYgcw6SiX6afr8
+         KdyVnvRqEpAhmxEj6V6AY6f3w0FecY9EkYR68=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V/ZCIccIJ6u9bm3Rjv7+N6WTTpdrTbo3t75yfjBv9GE=;
-        b=Jh9/XqLwAHCSEtv3BrTOm67EsyR+VQXrjTZaFhnU/rNGVoa5sRufSWxu7cYSk0YhFZ
-         XS+fadTA4yyGhpppQUGLiLgmw086yhRKsgi0BWApZFwdP+5KkP6drmbwdUWTT9DjjDF4
-         PXlBKRs1qQl3qYad8xFK0AxAzt72BZYXpGQ3Bcb1llFEyt8m4CoXmb0kMl3SzbZpcauu
-         /jGSDAimQxl2IM+hxiCleW1faWJJ73iH6lEBbC+U0rSmyayTQhwfna522KtKUmTE0+Jp
-         EuBHx2oqf3GmE05xxtUsjEU24ApRC9GT8FQSs1Ix1A/e+JPcfEx5WefkUbTYqQPa1jNj
-         N1lw==
-X-Gm-Message-State: APjAAAXdgdv0QKlDYPBUyzehmT7Flq0GH7ozGBSiuwKARXkP2xLUo7Q7
-        rCooEYQ2g7xqv2stad2jNDc=
-X-Google-Smtp-Source: APXvYqyU7j++q/aWy4d7ycebGNKVGShaQbogy6Y67Mbzi+FdBqnHygHLkz6eScpouw6chPDPbNYPhg==
-X-Received: by 2002:a63:f450:: with SMTP id p16mr36265357pgk.211.1582650765382;
-        Tue, 25 Feb 2020 09:12:45 -0800 (PST)
-Received: from sultan-box.localdomain (c-71-63-179-120.hsd1.wa.comcast.net. [71.63.179.120])
-        by smtp.gmail.com with ESMTPSA id e26sm18284499pfl.59.2020.02.25.09.12.44
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=nA6XtHfCbnQ+UrxP5iH37BANlB2snp9+FgCCs6LFMHc=;
+        b=szA8WQpBVS/GkA1n0kDdXBERfw9wJMQYc0UZMVNl4ocM3irqVjD4P1TSIenYmBDooZ
+         IWa5Lbpa0iLmcRCUgArusCakqLyPgBSmVp/zwj/vDo6DIywUtfe2uk4NN1NCSnaWCD5D
+         FaUh9qxaczIKYFqperKAYpDOt+2Fjsf8sDy8gejToMc3oiS5nijl0+ZItncyZXGagrqE
+         mlLr3PiT1e2S0lZKtUO1Bexa43l8hRw3Jx0Xv7jCZq2Hjcbi4OcjKRYBFbWidCiqK5Jq
+         ThQ6Lhv1k+rBpwnW3awNmWPMbujs+403rbKxz9WQjEcVBudOBHXGptjZx/wEjTTXx6p/
+         EDaA==
+X-Gm-Message-State: APjAAAWTA3z/yTDXrTpXOxVM5Gu/VwysfzPPSpgThRIHPhgFQuy6yC1q
+        K6QHEcgbEEm13quzksDwwJf7v7isn7c=
+X-Google-Smtp-Source: APXvYqz+jv0qTKXQ6FaD+VS8Rw4zthTocRAiqn9uBFJunwpJ3inVjQ7HkA/RT9pN2Kq7aXC8OPj0uA==
+X-Received: by 2002:a63:18d:: with SMTP id 135mr33641250pgb.32.1582650962218;
+        Tue, 25 Feb 2020 09:16:02 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y5sm18329689pfr.169.2020.02.25.09.16.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:12:44 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:12:42 -0800
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mel Gorman <mgorman@suse.de>, Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200225171242.GA496421@sultan-box.localdomain>
-References: <20200219194006.GA3075@sultan-book.localdomain>
- <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain>
- <20200219214513.GL3420@suse.de>
- <20200219224231.GA5190@sultan-book.localdomain>
- <20200220101945.GN3420@suse.de>
- <20200221042232.GA2197@sultan-book.localdomain>
- <20200221080737.GK20509@dhcp22.suse.cz>
- <20200221210824.GA3605@sultan-book.localdomain>
- <20200225090945.GJ22443@dhcp22.suse.cz>
+        Tue, 25 Feb 2020 09:16:01 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225090945.GJ22443@dhcp22.suse.cz>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4c80783d-8ad0-9bd8-c42e-01659fa81afe@codeaurora.org>
+References: <1581944408-7656-1-git-send-email-mkshah@codeaurora.org> <1581944408-7656-2-git-send-email-mkshah@codeaurora.org> <158216527227.184098.17500969657143611632@swboyd.mtv.corp.google.com> <4c80783d-8ad0-9bd8-c42e-01659fa81afe@codeaurora.org>
+Subject: Re: [RFC 1/2] irqchip: qcom: pdc: Introduce irq_set_wake call
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Date:   Tue, 25 Feb 2020 09:16:00 -0800
+Message-ID: <158265096050.177367.409185999509868538@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:09:45AM +0100, Michal Hocko wrote:
-> On Fri 21-02-20 13:08:24, Sultan Alsawaf wrote:
-> [...]
-> > Both of these logs are attached in a tarball.
-> 
-> Thanks! First of all
-> $ grep pswp vmstat.1582318979
-> pswpin 0
-> pswpout 0
-> 
-> suggests that you do not have any swap storage, right?
+Quoting Maulik Shah (2020-02-21 03:20:59)
+>=20
+> On 2/20/2020 7:51 AM, Stephen Boyd wrote:
+>=20
+>     How are wakeups supposed to work when the CPU cluster power is disabl=
+ed
+>     in low power CPU idle modes? Presumably the parent irq controller is
+>     powered off (in this case it's an ARM GIC) and we would need to have =
+the
+>     interrupt be "enabled" or "unmasked" at the PDC for the irq to wakeup
+>     the cluster.
+>=20
+> Correct. Interrupt needs to be "enabled" or "unmasked" at wakeup capable =
+PDC
+> for irqchip to wakeup from "deep" low power modes where parent GIC may no=
+t be
+> monitoring interrupt and only PDC is monitoring.
+> these "deep" low power modes can either be triggered by kernel "suspend" =
+or
+> "cpuidle" path for which drivers may or may not have registered for suspe=
+nd or
+> cpu/cluster pm notifications to make a decision of enabling wakeup capabi=
+lity.
+>=20
+>=20
+>     We shouldn't need to enable irq wake on any irq for the CPU
+>     to get that interrupt in deep CPU idle states.
+>=20
+> + *
+> + *     Note: irq enable/disable state is completely orthogonal
+> + *     to the enable/disable state of irq wake.
+>=20
+> i think that's what above documentation said to have wakeup capability is
+> orthogonal to enable/disable state of irq, no?
+>=20
+> A deep cpuidle entry is also orthogonal to drivers unless they register f=
+or cpu
+> pm notifications.
+>=20
+> so with this change,
+> if the drivers want their interrupt to be wakeup capable during both "sus=
+pend"
+> and "cpuidle" they can call "enable_irq_wake" and leave it there to be wa=
+ke up
+> capable.
 
-Correct. I'm not using any swap (and it should not be necessary to make Linux mm
-work of course). If I were to divide my RAM in half and use one half as swap,
-do you think the results would be different? IMO they shouldn't be.
+Where is there a mention about drivers registering for cpu PM
+notifications? I'm not aware of this being mentioned as a requirement.
+Instead, my understanding is that deep idle states shouldn't affect irqs
+from being raised to the CPU. If such an irq is enabled and can't wake
+the system from deep idle and it's expected to interrupt during this
+idle time then perhaps the PDC driver needs to block deep idle states
+until that irq is disabled.
 
-> The amount of anonymous memory is not really high (~560MB) but file LRU
-> is _really_ low (~3MB), unevictable list is at ~200MB. That gets us to
-> ~760M of memory which is 74% of the memory. Please note that your mem=2G
-> setup gives you only 1G of memory in fact (based on the zone_info you
-> have posted). That is not something unusual but the amount of the page
-> cache is worrying because I would expect a heavy trashing because most
-> of the executables are going to require major faults. Anonymous memory
-> is not swapped out obviously so there is no other option than to refault
-> constantly.
+Does this scenario exist? It sounds like broken system design to have an
+irq that can't wake from deep idle, but I see that PDC has a selective
+set of pins so maybe some irqs just aren't expected to wake the system
+up during idle.
 
-I noticed that only 1G was available as well. Perhaps direct reclaim wasn't
-attempted due to the zone_reclaimable_pages() check, though I don't think direct
-reclaim would've been particularly helpful in this case (see below).
-
-> kswapd has some feedback mechanism to back off when the zone is hopless
-> from the reclaim point of view AFAIR but it seems it has failed in this
-> particular situation. It should have relied on the direct reclaim and
-> eventually trigger the OOM killer. Your patch has worked around this by
-> bailing out from the kswapd reclaim too early so a part of the page
-> cache required for the code to move on would stay resident and move
-> further.
-> 
-> The proper fix should, however, check the amount of reclaimable pages
-> and back off if they cannot meet the target IMO. We cannot rely on the
-> general reclaimability here because that could really be thrashing.
-
-Yes, my guess was that thrashing out pages used by the running programs was the
-cause for my freezes, but I didn't think of making kswapd back off a different
-way.
-
-Right now I don't see any such back-off mechanism in kswapd. Also, if we add
-this into kswapd, we would need to plug it into the direct reclaim path as well,
-no? I don't think direct reclaim would help with the situation I've run into;
-although it wouldn't be as bad as letting kswapd evict pages to the high
-watermark, it would still cause page thrashing that would just be capped to the
-amount of pages a direct reclaimer is looking to steal.
-
-Considering that my patch remedies this issue for me without invoking the OOM
-killer, a proper solution should produce the same or better results. I don't
-think the OOM killer should have been triggered in this case.
-
-Sultan
+>=20
+> This way they don't need to worry about cpu entering to deep low power mo=
+de and
+> enabling wakeup capability "only when" deep low power mode get triggered.
+>
