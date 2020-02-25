@@ -4,36 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9DCC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC482C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195922176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7A62176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgBYJC2 (ORCPT
+        id S1729768AbgBYJEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:02:28 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39138 "EHLO huawei.com"
+        Tue, 25 Feb 2020 04:04:08 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41422 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729153AbgBYJC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:02:28 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1C7BB921633353B4CAA3;
-        Tue, 25 Feb 2020 17:02:21 +0800 (CST)
+        id S1729153AbgBYJEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 04:04:08 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6F6B2544FE40937246FC;
+        Tue, 25 Feb 2020 17:04:04 +0800 (CST)
 Received: from linux-TFkxOR.huawei.com (10.175.104.212) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 25 Feb 2020 17:02:10 +0800
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 25 Feb 2020 17:03:46 +0800
 From:   Heyi Guo <guoheyi@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
+To:     <devel@edk2.groups.io>
 CC:     <wanghaibin.wang@huawei.com>, Heyi Guo <guoheyi@huawei.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH] irq-gic-v3-its: fix access width for gicr_syncr
-Date:   Tue, 25 Feb 2020 17:00:23 +0800
-Message-ID: <20200225090023.28020-1-guoheyi@huawei.com>
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] acpi/iort: check output reference for the real used mapping
+Date:   Tue, 25 Feb 2020 17:01:36 +0800
+Message-ID: <20200225090136.40989-1-guoheyi@huawei.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,32 +49,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GICR_SYNCR is a 32bit register, so it is better to access it with
-32bit access width, though we have not seen any real problem.
+The function iort_node_map_id() does the sanity check against the
+first mapping in the node, but not the one which we really use.
+
+Logically we need check the mapping we use, or check every mapping in
+the node. Choose the first fix for we are not firmware tester.
 
 Signed-off-by: Heyi Guo <guoheyi@huawei.com>
 
 ---
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/arm64/iort.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 65a11257d220..5c6790e3bfbf 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1321,7 +1321,7 @@ static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index ed3d2d1a7ae9..d0fe8d673240 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -470,13 +470,6 @@ static struct acpi_iort_node *iort_node_map_id(struct acpi_iort_node *node,
+ 		map = ACPI_ADD_PTR(struct acpi_iort_id_mapping, node,
+ 				   node->mapping_offset);
  
- static void wait_for_syncr(void __iomem *rdbase)
- {
--	while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
-+	while (readl_relaxed(rdbase + GICR_SYNCR) & 1)
- 		cpu_relax();
- }
+-		/* Firmware bug! */
+-		if (!map->output_reference) {
+-			pr_err(FW_BUG "[node %p type %d] ID map has NULL parent reference\n",
+-			       node, node->type);
+-			goto fail_map;
+-		}
+-
+ 		/*
+ 		 * Get the special ID mapping index (if any) and skip its
+ 		 * associated ID map to prevent erroneous multi-stage
+@@ -497,6 +490,13 @@ static struct acpi_iort_node *iort_node_map_id(struct acpi_iort_node *node,
+ 		if (i == node->mapping_count)
+ 			goto fail_map;
  
++		/* Firmware bug! */
++		if (!map->output_reference) {
++			pr_err(FW_BUG "[node %p type %d] ID map has NULL parent reference\n",
++			       node, node->type);
++			goto fail_map;
++		}
++
+ 		node = ACPI_ADD_PTR(struct acpi_iort_node, iort_table,
+ 				    map->output_reference);
+ 	}
 -- 
 2.19.1
 
