@@ -2,272 +2,118 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C161C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86013C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32F2218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DF4218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fgOxigzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgBYBvo (ORCPT
+        id S1728707AbgBYCAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:51:44 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726962AbgBYBvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:51:44 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CE461DE503E800B389C1;
-        Tue, 25 Feb 2020 09:46:32 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 25 Feb
- 2020 09:46:30 +0800
-Subject: Re: [RFC PATCH 2/2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200221100922.16781-1-yuchao0@huawei.com>
- <20200221100922.16781-2-yuchao0@huawei.com>
- <20200224214605.GA77839@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <db505852-345d-05d0-4555-437093d2af14@huawei.com>
-Date:   Tue, 25 Feb 2020 09:46:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 24 Feb 2020 21:00:49 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:58386 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728489AbgBYCAt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 21:00:49 -0500
+X-UUID: ffdbcc20232d4d8a824edf5a85ee436c-20200225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=HaqLyinc6ZirvAps70soCVJsRIpjo20L+48UAgoY2jA=;
+        b=fgOxigzGsrgpnE0iUci3Grn0QRBfxYEd4U1Z6VoQljpcg5snYwxVj32J/b5XgDIpFFBM8UExHRZmsDRLGEXvxDLeq31HCBdNyBnoF9JZitrqssw3qkpMmn+jLLA6lLW5EJwoK234SIfX4v5AvWnO9owkl8s18HN5+i4JuQd/zXU=;
+X-UUID: ffdbcc20232d4d8a824edf5a85ee436c-20200225
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1546924655; Tue, 25 Feb 2020 10:00:40 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Feb
+ 2020 10:01:14 +0800
+Received: from [10.16.6.141] (10.16.6.141) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 25 Feb 2020 10:01:07 +0800
+Message-ID: <1582596033.12484.1.camel@mszsdaap41>
+Subject: Re: [PATCH v6 1/4] dt-bindings: display: mediatek: update dpi
+ supported chips
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <stonea168@163.com>,
+        <huijuan.xie@mediatek.com>
+Date:   Tue, 25 Feb 2020 10:00:33 +0800
+In-Reply-To: <1582530646.6520.2.camel@mtksdaap41>
+References: <20200221112828.55837-1-jitao.shi@mediatek.com>
+         <20200221112828.55837-2-jitao.shi@mediatek.com>
+         <1582530646.6520.2.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200224214605.GA77839@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: F8BB90EA16B0F142ADAEB685CD52782DC2B7D7467C6F174C8B79AFA650CE00C32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/25 5:46, Jaegeuk Kim wrote:
-> On 02/21, Chao Yu wrote:
->> There are still reserved blocks on compressed inode, this patch
->> introduce a new ioctl to help release reserved blocks back to
->> filesystem, so that userspace can reuse those freed space.
-> 
-> I thought we can add compressed_blocks into free space, after converting
-> the file to immutable one. Otherwise, this patch is able to corrupt the
+T24gTW9uLCAyMDIwLTAyLTI0IGF0IDE1OjUwICswODAwLCBDSyBIdSB3cm90ZToNCj4gSGksIEpp
+dGFvOg0KPiANCj4gT24gRnJpLCAyMDIwLTAyLTIxIGF0IDE5OjI4ICswODAwLCBKaXRhbyBTaGkg
+d3JvdGU6DQo+ID4gQWRkIGRlY3JpcHRpb25zIGFib3V0IHN1cHBvcnRlZCBjaGlwcywgaW5jbHVk
+aW5nIE1UMjcwMSAmIE1UODE3MyAmDQo+ID4gbXQ4MTgzDQo+ID4gDQo+ID4gMS4gQWRkIG1vcmUg
+Y2hpcHMgc3VwcG9ydC4gZXguIE1UMjcwMSAmIE1UODE3MyAmIE1UODE4Mw0KPiA+IDIuIEFkZCBw
+cm9wZXJ0eSAiZHBpX3Bpbl9tb2RlX3N3YXAiIGFuZCAicGluY3RybC1uYW1lcyIgZ3BpbyBtb2Rl
+IGRwaSBtb2RlIGFuZA0KPiA+ICAgIGdwaW8gb3VwcHV0LWxvdyB0byBhdm9pZCBsZWFrYWdlIGN1
+cnJlbnQuDQo+ID4gMy4gQWRkIHByb3BlcnR5ICJkcGlfZHVhbF9lZGdlIiB0byBjb25maWcgdGhl
+IGRwaSBwaW4gb3V0cHV0IG1vZGUgZHVhbCBlZGdlIG9yDQo+ID4gICAgc2luZ2xlIGVkZ2Ugc2Ft
+cGxlIGRhdGEuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlA
+bWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9tZWRpYXRl
+ay9tZWRpYXRlayxkcGkudHh0ICAgICAgICB8IDExICsrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50
+eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkcGkudHh0DQo+ID4gaW5kZXggYjZhN2U3Mzk3YjhiLi5jZDZhMTQ2OWM4YjcgMTAw
+NjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCj4gPiBAQCAt
+Nyw2ICs3LDcgQEAgb3V0cHV0IGJ1cy4NCj4gPiAgDQo+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+ID4gIC0gY29tcGF0aWJsZTogIm1lZGlhdGVrLDxjaGlwPi1kcGkiDQo+ID4gKyAgdGhlIHN1
+cHBvcnRlZCBjaGlwcyBhcmUgbXQyNzAxICwgbXQ4MTczIGFuZCBtdDgxODMuDQo+ID4gIC0gcmVn
+OiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJl
+Z2lzdGVycw0KPiA+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhl
+IGZ1bmN0aW9uIGJsb2NrLg0KPiA+ICAtIGNsb2NrczogZGV2aWNlIGNsb2Nrcw0KPiA+IEBAIC0x
+Niw2ICsxNywxMSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuIFRoaXMgcG9ydCBzaG91bGQgYmUgY29ubmVj
+dGVkDQo+ID4gICAgdG8gdGhlIGlucHV0IHBvcnQgb2YgYW4gYXR0YWNoZWQgSERNSSBvciBMVkRT
+IGVuY29kZXIgY2hpcC4NCj4gPiAgDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0g
+ZHBpX3Bpbl9tb2RlX3N3YXA6IFN3YXAgdGhlIHBpbiBtb2RlIGJldHdlZW4gZHBpIG1vZGUgYW5k
+IGdwaW8gbW9kZS4NCj4gDQo+IFdoZW4geW91IGhhdmUgYm90aCBwaW5jdHJsLW5hbWUgb2YgImdw
+aW9tb2RlIiBhbmQgImRwaW1vZGUiLCBpdCBpbXBseQ0KPiB0aGF0IGRwaV9waW5fbW9kZV9zd2Fw
+ID0gdHJ1ZSwgaXNuJ3QgaXQ/IElmIHNvLCBJIHRoaW5rIHRoaXMgcHJvcGVydHkgaXMNCj4gcmVk
+dW5kYW50Lg0KPiANCj4gUmVnYXJkcywNCj4gQ0sNCg0KWWVzLEknbGwgZml4IGl0IG5leHQgdmVy
+aXNpb24uDQoNCkJlc3QgUmVnYXJkcw0KSml0YW8NCg0KPiANCj4gPiArLSBwaW5jdHJsLW5hbWVz
+OiBDb250YWluICJncGlvbW9kZSIgYW5kICJkcGltb2RlIi4NCj4gPiArLSBkcGlfZHVhbF9lZGdl
+OiBDb250cm9sIHRoZSBSR0IgMjRiaXQgZGF0YSBvbiAxMiBwaW5zIG9yIDI0IHBpbnMuDQo+ID4g
+Kw0KPiA+ICBFeGFtcGxlOg0KPiA+ICANCj4gPiAgZHBpMDogZHBpQDE0MDFkMDAwIHsNCj4gPiBA
+QCAtMjYsNiArMzIsMTEgQEAgZHBpMDogZHBpQDE0MDFkMDAwIHsNCj4gPiAgCQkgPCZtbXN5cyBD
+TEtfTU1fRFBJX0VOR0lORT4sDQo+ID4gIAkJIDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9UVkRQ
+TEw+Ow0KPiA+ICAJY2xvY2stbmFtZXMgPSAicGl4ZWwiLCAiZW5naW5lIiwgInBsbCI7DQo+ID4g
+KwlkcGlfZHVhbF9lZGdlOw0KPiA+ICsJZHBpX3Bpbl9tb2RlX3N3YXA7DQo+ID4gKwlwaW5jdHJs
+LW5hbWVzID0gImdwaW9tb2RlIiwgImRwaW1vZGUiOw0KPiA+ICsJcGluY3RybC0wID0gPCZkcGlf
+cGluX2dwaW8+Ow0KPiA+ICsJcGluY3RybC0xID0gPCZkcGlfcGluX2Z1bmM+Ow0KPiA+ICANCj4g
+PiAgCXBvcnQgew0KPiA+ICAJCWRwaTBfb3V0OiBlbmRwb2ludCB7DQo+IA0KPiANCg0K
 
-Yes, I remember that.
-
-So any suggestion on this patch? we can:
-- check immutable flag before releasing space, or
-- we can add immutable flag on compressed inode in this ioctl interface?
-
-Thanks,
-
-> filesystem very easily.
-> 
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/f2fs.h |   6 +++
->>  fs/f2fs/file.c | 129 ++++++++++++++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 134 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 15199df5d40a..468f807fd917 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
->>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
->>  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
->>  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
->> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
->> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
->>  
->>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
->>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
->> @@ -3957,6 +3959,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
->>  {
->>  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
->>  
->> +	/* don't update i_compr_blocks if saved blocks were released */
->> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
->> +		return;
->> +
->>  	if (add) {
->>  		F2FS_I(inode)->i_compr_blocks += diff;
->>  		stat_add_compr_blocks(inode, diff);
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index 235708c892af..613f87151d90 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -557,6 +557,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->>  	bool compressed_cluster = false;
->>  	int cluster_index = 0, valid_blocks = 0;
->>  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
->> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
->>  
->>  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
->>  		base = get_extra_isize(dn->inode);
->> @@ -595,7 +596,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
->>  
->>  		f2fs_invalidate_blocks(sbi, blkaddr);
->> -		nr_free++;
->> +
->> +		if (released && blkaddr != COMPRESS_ADDR)
->> +			nr_free++;
->>  	}
->>  
->>  	if (compressed_cluster)
->> @@ -3416,6 +3419,127 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
->>  	return put_user(blocks, (u64 __user *)arg);
->>  }
->>  
->> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
->> +{
->> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
->> +	unsigned int released_blocks = 0;
->> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
->> +
->> +	while (count) {
->> +		int compr_blocks = 0;
->> +		block_t blkaddr = f2fs_data_blkaddr(dn);
->> +		int i;
->> +
->> +		if (blkaddr != COMPRESS_ADDR) {
->> +			dn->ofs_in_node += cluster_size;
->> +			goto next;
->> +		}
->> +
->> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
->> +			blkaddr = f2fs_data_blkaddr(dn);
->> +
->> +			if (__is_valid_data_blkaddr(blkaddr)) {
->> +				compr_blocks++;
->> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
->> +							DATA_GENERIC_ENHANCE)))
->> +					return -EFSCORRUPTED;
->> +			}
->> +
->> +			if (blkaddr != NEW_ADDR)
->> +				continue;
->> +
->> +			dn->data_blkaddr = NULL_ADDR;
->> +			f2fs_set_data_blkaddr(dn);
->> +		}
->> +
->> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
->> +		dec_valid_block_count(sbi, dn->inode,
->> +					cluster_size - compr_blocks);
->> +
->> +		released_blocks += cluster_size - compr_blocks;
->> +next:
->> +		count -= cluster_size;
->> +	}
->> +
->> +	return released_blocks;
->> +}
->> +
->> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->> +{
->> +	struct inode *inode = file_inode(filp);
->> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->> +	pgoff_t page_idx = 0, last_idx;
->> +	unsigned int released_blocks = 0;
->> +	int ret;
->> +
->> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
->> +		return -EOPNOTSUPP;
->> +
->> +	if (!f2fs_compressed_file(inode))
->> +		return -EINVAL;
->> +
->> +	if (f2fs_readonly(sbi->sb))
->> +		return -EROFS;
->> +
->> +	ret = mnt_want_write_file(filp);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (!F2FS_I(inode)->i_compr_blocks)
->> +		goto out;
->> +
->> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
->> +
->> +	inode_lock(inode);
->> +
->> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->> +	down_write(&F2FS_I(inode)->i_mmap_sem);
->> +
->> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
->> +
->> +	while (page_idx < last_idx) {
->> +		struct dnode_of_data dn;
->> +		pgoff_t end_offset, count;
->> +
->> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
->> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
->> +		if (ret) {
->> +			if (ret == -ENOENT) {
->> +				page_idx = f2fs_get_next_page_offset(&dn,
->> +								page_idx);
->> +				ret = 0;
->> +				continue;
->> +			}
->> +			break;
->> +		}
->> +
->> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
->> +
->> +		ret = release_compress_blocks(&dn, count);
->> +
->> +		f2fs_put_dnode(&dn);
->> +
->> +		if (ret < 0)
->> +			break;
->> +
->> +		page_idx += count;
->> +		released_blocks += ret;
->> +	}
->> +
->> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->> +	up_write(&F2FS_I(inode)->i_mmap_sem);
->> +
->> +	inode_unlock(inode);
->> +out:
->> +	mnt_drop_write_file(filp);
->> +
->> +	if (!ret)
->> +		ret = put_user(released_blocks, (u64 __user *)arg);
->> +
->> +	return ret;
->> +}
->> +
->>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->>  {
->>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
->> @@ -3496,6 +3620,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->>  		return f2fs_set_volume_name(filp, arg);
->>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
->>  		return f2fs_get_compress_blocks(filp, arg);
->> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
->> +		return f2fs_release_compress_blocks(filp, arg);
->>  	default:
->>  		return -ENOTTY;
->>  	}
->> @@ -3654,6 +3780,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->>  	case F2FS_IOC_GET_VOLUME_NAME:
->>  	case F2FS_IOC_SET_VOLUME_NAME:
->>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
->> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
->>  		break;
->>  	default:
->>  		return -ENOIOCTLCMD;
->> -- 
->> 2.18.0.rc1
-> .
-> 
