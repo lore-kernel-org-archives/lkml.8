@@ -2,193 +2,70 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C65C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AA5C35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE88520838
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E61E20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3rodxzq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SM3k+FIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgBYVfd (ORCPT
+        id S1728162AbgBYVkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:35:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56067 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVfd (ORCPT
+        Tue, 25 Feb 2020 16:40:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39976 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBYVkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:35:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so771157wmj.5;
-        Tue, 25 Feb 2020 13:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1C/K5Wsm9LPHzaz/4XpwnKAwYVbjEpz36KnNrq8NU6A=;
-        b=H3rodxzqGzN4uqzCFXakGUegaCrnGqQBj076s1/t+ZJ7F+rkUIC/oHl3pPwrITc+QK
-         rLYAMLWJ+S9U1Zr8FMmP0WgZwPDiiRx8LIcWnKBBXLL8YHGfOkYUvZJkWWS0h6r6LeWQ
-         riPSMjAmdYalm3BL3wFUrG5dtpN7+Cx23tzs8X16Vpcl9rOLFMlws8ZaoSXnSTineKms
-         L/F6EZD8Ia2bi2uYdIO05251bydHkLy+4+EbB0kIaRsljRdaTpIuuG9GafGWC/AjqxmH
-         S/Nz0R8EE3gTsXsjp2aRtYPXELVnXO0Muy8Q0qYWABY5cIGeSKKgknpnBYp/mtZhuFG3
-         G9xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1C/K5Wsm9LPHzaz/4XpwnKAwYVbjEpz36KnNrq8NU6A=;
-        b=Y9KtnYS2uhJr67aRYhTV6K/hWesKopIzUOhKjbmEtzXgJYIpW4iDI8fvlloZjbOL0a
-         G/Bgczg0UUZ/1hHWy45wljp6BdRrv4BxX53zu+uHdIe5D3rkIx3wlnAab1G44l7AM00w
-         8brz2dXrPBQh9CF1n0uS/2lC0z8VAC3X08HWyleiuFLOv0EuybBi2t9ROsWmBNkArn0y
-         GgOtX933dyA8GnKqrnZc4QJQCUdKIjS7IaZsX76nkq1cmw3Celja/U1EfpQS1vAOtN9Y
-         hJAc6nkimpLDvO3Nu9XmUdcg7xsrY4oaRE9wNv4tf/u5Xv8o+dCl5cqckGzkgSvsitls
-         IzEQ==
-X-Gm-Message-State: APjAAAWumPJjlk91RhcNkokdbExyc9TxNdQxeTdhLwgtZOnxn+LJZY7t
-        etE3mBmrX3Vj9jvuiymFHvg=
-X-Google-Smtp-Source: APXvYqyWYGcFLzI85kNXTDFApx8I2QRip0B35i+/HX9sh1K62R6K8sQleTspdjAn0n60QhMt6lohQA==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr1230756wmb.137.1582666530486;
-        Tue, 25 Feb 2020 13:35:30 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:3571:9abd:5d7f:e3ab? (p200300EA8F29600035719ABD5D7FE3AB.dip0.t-ipconnect.de. [2003:ea:8f29:6000:3571:9abd:5d7f:e3ab])
-        by smtp.googlemail.com with ESMTPSA id k7sm5575667wmi.19.2020.02.25.13.35.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 13:35:30 -0800 (PST)
-Subject: Re: [PATCH v3 1/8] PCI: add constant PCI_STATUS_ERROR_BITS
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-References: <20200225205047.GA194679@google.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <79cca560-1ef5-f9bf-b90d-b2199dd5aedb@gmail.com>
-Date:   Tue, 25 Feb 2020 22:35:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 16:40:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8h8Mk/+i2ci77DBxC+22pQBGtOSOCk88EXwXWgQP6/o=; b=SM3k+FIk88DTWRwntxpfYAN89K
+        8730/L0k8T1+XsnrvgFNMWAfU3J+npnA7AcglPMW6Bo1xxfLLLpVFkPpIYJPJP6Bhu7+++sdf2nEH
+        YB261ciNtDjMI/oof919hR4o1Vy1b/Tpm1qbQB3EJuexLkfZNNuOV19796072HGhlsh0EIzWw5HYM
+        eUtiC/75UHd7z4CtLi7iS7enj2b4YxR2RIq/XwjOL2jsuV22QQdFs+uI19makOCqv8ClbB0oAVsbW
+        Z77s9bVrdikXc2kEfrt+0KjleiaHbcqyykssQ37fBRsVTqPhlgghL5coVoY1AOq2xP0UIa8q2Eciy
+        KEJgOYKw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6hwb-0005MJ-8Z; Tue, 25 Feb 2020 21:40:45 +0000
+Date:   Tue, 25 Feb 2020 13:40:45 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     darrick.wong@oracle.com, hch@infradead.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: fix an undefined behaviour in _da3_path_shift
+Message-ID: <20200225214045.GA14399@infradead.org>
+References: <1582660388-28735-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <20200225205047.GA194679@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582660388-28735-1-git-send-email-cai@lca.pw>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.02.2020 21:50, Bjorn Helgaas wrote:
-> On Tue, Feb 25, 2020 at 03:03:44PM +0100, Heiner Kallweit wrote:
-> 
-> Run "git log --oneline drivers/pci" and make yours match.  In
-> particular, capitalize the first word ("Add").  Same for the other PCI
-> patches.  I don't know the drivers/net convention, but please find and
-> follow that as well.
-> 
->> This constant is used (with different names) in more than one driver,
->> so move it to the PCI core.
-> 
-> The driver constants in *this* patch at least use the same name.
-> 
-Right, I have to fix the description.
+On Tue, Feb 25, 2020 at 02:53:08PM -0500, Qian Cai wrote:
+> xfs_da3_path_shift() could see state->path.blk[-1] because
+> state->path.active == 1 is a valid state when it tries to add an entry
+> to a single dir leaf block and then to shift forward to see if
+> there's a sibling block that would be a better place to put the new
+> entry.
 
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/net/ethernet/marvell/skge.h | 6 ------
->>  drivers/net/ethernet/marvell/sky2.h | 6 ------
->>  include/uapi/linux/pci_regs.h       | 7 +++++++
->>  3 files changed, 7 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
->> index 6fa7b6a34..e149bdfe1 100644
->> --- a/drivers/net/ethernet/marvell/skge.h
->> +++ b/drivers/net/ethernet/marvell/skge.h
->> @@ -15,12 +15,6 @@
->>  #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
->>  #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
->>  
->> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
->> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
->> -			       PCI_STATUS_REC_MASTER_ABORT | \
->> -			       PCI_STATUS_REC_TARGET_ABORT | \
->> -			       PCI_STATUS_PARITY)
->> -
->>  enum csr_regs {
->>  	B0_RAP	= 0x0000,
->>  	B0_CTST	= 0x0004,
->> diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
->> index b02b65230..851d8ed34 100644
->> --- a/drivers/net/ethernet/marvell/sky2.h
->> +++ b/drivers/net/ethernet/marvell/sky2.h
->> @@ -252,12 +252,6 @@ enum {
->>  };
->>  
->>  
->> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
->> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
->> -			       PCI_STATUS_REC_MASTER_ABORT | \
->> -			       PCI_STATUS_REC_TARGET_ABORT | \
->> -			       PCI_STATUS_PARITY)
->> -
->>  enum csr_regs {
->>  	B0_RAP		= 0x0000,
->>  	B0_CTST		= 0x0004,
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index 543769048..9b84a1278 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -68,6 +68,13 @@
->>  #define  PCI_STATUS_SIG_SYSTEM_ERROR	0x4000 /* Set when we drive SERR */
->>  #define  PCI_STATUS_DETECTED_PARITY	0x8000 /* Set on parity error */
->>  
->> +#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
->> +			       PCI_STATUS_SIG_SYSTEM_ERROR | \
->> +			       PCI_STATUS_REC_MASTER_ABORT | \
->> +			       PCI_STATUS_REC_TARGET_ABORT | \
->> +			       PCI_STATUS_SIG_TARGET_ABORT | \
->> +			       PCI_STATUS_PARITY)
-> 
-> This actually *adds* PCI_STATUS_SIG_TARGET_ABORT, which is not in the
-> driver definitions.  At the very least that should be mentioned in the
-> commit log.
-> 
-> Ideally the addition would be in its own patch so it's obvious and
-> bisectable, but I see the problem -- the subsequent patches
-> consolidate things that aren't really quite the same.  One alternative
-> would be to have preliminary patches that change the drivers
-> individually so they all use this new mask, then do the consolidation
-> afterwards.
-> 
-I checked the other patches and we'd need such preliminary patches
-for three of them:
-marvell: misses PCI_STATUS_SIG_TARGET_ABORT
-skfp: misses PCI_STATUS_REC_TARGET_ABORT
-r8169: misses PCI_STATUS_PARITY
+I think this needs a better explanation.  Something like:
 
-> There is pitifully little documentation about the use of include/uapi,
-> but AFAICT that is for the user API, and this isn't part of that.  I
-> think this #define could go in include/linux/pci.h instead.
-> 
-OK, then I'll change the series accordingly.
-
->> +
->>  #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
->>  #define PCI_REVISION_ID		0x08	/* Revision ID */
->>  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
->> -- 
->> 2.25.1
->>
->>
->>
->>
-
+In xfs_da3_path_shift() blk can be assigned to state->path.blk[-1] if
+state->path.active is 1 (which is a valid state) when it tries to add an
+entry > to a single dir leaf block and then to shift forward to see if
+there's a sibling block that would be a better place to put the new
+entry.  This causes a KASAN warning given negative array indices are
+undefined behavior in C.  In practice the warning is entirely harmless
+given that blk is never dereference in this case, but it is still better
+to fix up the warning and slightly improve the code.
