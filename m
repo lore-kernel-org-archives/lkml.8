@@ -2,174 +2,389 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F154C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA79C35DEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340B12072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B0B22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uIacdZO+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dBAl+L53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgBYABM (ORCPT
+        id S1728713AbgBYABV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:01:12 -0500
-Received: from gateway23.websitewelcome.com ([192.185.50.250]:34967 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728634AbgBYABJ (ORCPT
+        Mon, 24 Feb 2020 19:01:21 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40394 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbgBYAAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:01:09 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id C6A3071BC
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:01:07 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6Netji4cBvBMd6NetjeDy0; Mon, 24 Feb 2020 18:01:07 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7YVRuLJggwkZM9arqIBIu//jc9M46qO2P0Pzk4kTM/w=; b=uIacdZO+gRUXg6Nz6B0j5wvSrt
-        xoho3tMu8NiCqxEaKm94kMqvXlp9exLIxhSFpgiuH1q1XlywHUU/l3CkAdCmbRgcupovYgDtTVKYh
-        7kr7+Z4Go+x45891K+W7cm4dgUrdaopS7WMMmiomDDSzmmFdNsy2BOAsuBIroN5oUBo2pFN6jKC0+
-        VOZfvhvq5uBrSa3/2GPakrk4Fur75rT0ENiOfnCA2dWnf/OSqTqsm3VGJ3zSaXn7xJ9mgDIrC33cN
-        Ychjk69lr+0Z/vE7FdxnmD56zRFstNZPWnYI4WCjTcRCDN0xPCfQXyK5jzFmPGLPj3jSiFWdzzfdZ
-        OBAFGkww==;
-Received: from [201.166.191.75] (port=54190 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j6Ner-002K9u-L7; Mon, 24 Feb 2020 18:01:06 -0600
-Date:   Mon, 24 Feb 2020 18:03:55 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Manish Chopra <manishc@marvell.com>,
-        Rahul Verma <rahulv@marvell.com>,
-        "GR-Linux-NIC-Dev@marvell.com David S. Miller" <davem@davemloft.net>,
-        Shahed Shaikh <shshaikh@marvell.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] qlogic: Replace zero-length array with flexible-array
- member
-Message-ID: <20200225000355.GA16193@embeddedor>
+        Mon, 24 Feb 2020 19:00:52 -0500
+Received: by mail-pg1-f195.google.com with SMTP id t24so1568909pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:00:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eCXHKHSG5tUPSj/yQUn0bkQviD7fnjUbdLXbxBcttuo=;
+        b=dBAl+L53PGN6bN4IcYwOx4NFEh5M4UIEVmBXUT9yEG+bVp5/kNlc3e2bhadpz5/IhR
+         K26yQomUUpkY+eQp/bwMnp3ZqekXI48Mxjvt3NkxZqC23y2UKy1fOM9mEAaHvuDxEf11
+         9+kc+GQFC9Lw7sQRxBRWdobYz/5qwJCM3nhB0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eCXHKHSG5tUPSj/yQUn0bkQviD7fnjUbdLXbxBcttuo=;
+        b=OI4vGaFpGw8vmIZ40a7loS3tZzriijlBAgtmT3x29bx6w0GcfFDN//FRtr7PmGM6vu
+         vK5FuD9ISuN+DmxB+e1G8ueMHMGtQCOcMQ9vg6u/dtJOK3VqIY5NNbLfF2y7+Vz7XyAP
+         3R1nA9tLwbr8EzSoe0w703+UsXBthSqFx3X2Cy7zurXYci0PISypC9dp+ssLrDgeItrF
+         cVQmYjxHv70YwLQHUiT2Jo/gDuqrb/GBctkVfngCUqQSUpOqgBump0I4EoMjVCsvLgYh
+         gdtJgePUD6bEC+VIN17EdDcl3P5YVrJsn9obePo0qIaisMGh9YNbXw8+RyViIhOat5vo
+         +R+w==
+X-Gm-Message-State: APjAAAX4ASBJmrEtuZXnDxqwKJJatZoGmftQb/QBt2DAHtWd5S5yVk/o
+        wqhP0e/aTK9BWLRqm1DvvqXbZc+3JI4=
+X-Google-Smtp-Source: APXvYqwOWjtbYtWknl4UkWTjpQEhekZVVkt8T8cNU9N7dgD8W9ctQnQV3fXsHsv11R0fWzIAKQ9FVQ==
+X-Received: by 2002:a63:3048:: with SMTP id w69mr26679991pgw.184.1582588850449;
+        Mon, 24 Feb 2020 16:00:50 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id c188sm14477657pfb.151.2020.02.24.16.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 16:00:49 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [RFC PATCH v3 3/5] Bluetooth: Handle BR/EDR devices during suspend
+Date:   Mon, 24 Feb 2020 16:00:34 -0800
+Message-Id: <20200224160019.RFC.v3.3.Icc7c35e1cabf10f8a383a009694987520f1d1b35@changeid>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200225000036.156250-1-abhishekpandit@chromium.org>
+References: <20200225000036.156250-1-abhishekpandit@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.191.75
-X-Source-L: No
-X-Exim-ID: 1j6Ner-002K9u-L7
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.191.75]:54190
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+To handle BR/EDR devices, we first disable page scan and disconnect all
+connected devices. Once that is complete, we add event filters (for
+devices that can wake the system) and re-enable page scan.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was detected with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 ---
- drivers/net/ethernet/qlogic/netxen/netxen_nic.h | 2 +-
- drivers/net/ethernet/qlogic/qlcnic/qlcnic.h     | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/netxen/netxen_nic.h b/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
-index 3dce769d83a1..86153660d245 100644
---- a/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
-+++ b/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
-@@ -1316,7 +1316,7 @@ struct netxen_minidump_template_hdr {
- 	u32 driver_info_word4;
- 	u32 saved_state_array[NX_DUMP_STATE_ARRAY_LEN];
- 	u32 capture_size_array[NX_DUMP_CAP_SIZE_ARRAY_LEN];
--	u32 rsvd[0];
-+	u32 rsvd[];
- };
+Changes in v3:
+* Refactored to only handle BR/EDR devices
+
+Changes in v2:
+* Refactored filters and whitelist settings to its own patch
+* Refactored update_white_list to have clearer edge cases
+* Add connected devices to whitelist (previously missing corner case)
+
+ include/net/bluetooth/hci.h      |  17 ++++--
+ include/net/bluetooth/hci_core.h |   9 ++-
+ net/bluetooth/hci_core.c         |  21 ++++++-
+ net/bluetooth/hci_event.c        |  24 ++++++++
+ net/bluetooth/hci_request.c      | 101 +++++++++++++++++++++++++++++++
+ 5 files changed, 162 insertions(+), 10 deletions(-)
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 6293bdd7d862..720d8e633f7e 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -932,10 +932,14 @@ struct hci_cp_sniff_subrate {
+ #define HCI_OP_RESET			0x0c03
  
- /* Common Entry Header:  Common to All Entry Types */
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h b/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h
-index 374a4d4371f9..134611aa2c9a 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h
-@@ -418,7 +418,7 @@ struct qlcnic_83xx_dump_template_hdr {
- 	u32	saved_state[16];
- 	u32	cap_sizes[8];
- 	u32	ocm_wnd_reg[16];
--	u32	rsvd[0];
-+	u32	rsvd[];
- };
- 
- struct qlcnic_82xx_dump_template_hdr {
-@@ -436,7 +436,7 @@ struct qlcnic_82xx_dump_template_hdr {
- 	u32	cap_sizes[8];
- 	u32	rsvd[7];
- 	u32	capabilities;
--	u32	rsvd1[0];
-+	u32	rsvd1[];
- };
- 
- #define QLC_PEX_DMA_READ_SIZE	(PAGE_SIZE * 16)
-@@ -740,7 +740,7 @@ struct qlcnic_hostrq_rx_ctx {
- 	   The following is packed:
- 	   - N hostrq_rds_rings
- 	   - N hostrq_sds_rings */
--	char data[0];
-+	char data[];
+ #define HCI_OP_SET_EVENT_FLT		0x0c05
+-struct hci_cp_set_event_flt {
+-	__u8     flt_type;
+-	__u8     cond_type;
+-	__u8     condition[0];
++#define HCI_SET_EVENT_FLT_SIZE		9
++struct hci_cp_set_event_filter {
++	__u8		flt_type;
++	__u8		cond_type;
++	struct {
++		bdaddr_t bdaddr;
++		__u8 auto_accept;
++	} __packed	addr_conn_flt;
  } __packed;
  
- struct qlcnic_cardrsp_rds_ring{
-@@ -769,7 +769,7 @@ struct qlcnic_cardrsp_rx_ctx {
- 	   The following is packed:
- 	   - N cardrsp_rds_rings
- 	   - N cardrs_sds_rings */
--	char data[0];
-+	char data[];
- } __packed;
+ /* Filter types */
+@@ -949,8 +953,9 @@ struct hci_cp_set_event_flt {
+ #define HCI_CONN_SETUP_ALLOW_BDADDR	0x02
  
- #define SIZEOF_HOSTRQ_RX(HOSTRQ_RX, rds_rings, sds_rings)	\
+ /* CONN_SETUP Conditions */
+-#define HCI_CONN_SETUP_AUTO_OFF	0x01
+-#define HCI_CONN_SETUP_AUTO_ON	0x02
++#define HCI_CONN_SETUP_AUTO_OFF		0x01
++#define HCI_CONN_SETUP_AUTO_ON		0x02
++#define HCI_CONN_SETUP_AUTO_ON_WITH_RS	0x03
+ 
+ #define HCI_OP_READ_STORED_LINK_KEY	0x0c0d
+ struct hci_cp_read_stored_link_key {
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index bc9620e5b65b..2723a608183e 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -91,13 +91,18 @@ struct discovery_state {
+ #define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
+ 
+ enum suspend_tasks {
++	SUSPEND_SCAN_DISABLE,
++	SUSPEND_SCAN_ENABLE,
++	SUSPEND_DISCONNECTING,
++
+ 	SUSPEND_PREPARE_NOTIFIER,
+ 	__SUSPEND_NUM_TASKS
+ };
+ 
+ enum suspended_state {
+ 	BT_RUNNING = 0,
+-	BT_SUSPENDED,
++	BT_SUSPEND_DISCONNECT,
++	BT_SUSPEND_COMPLETE,
+ };
+ 
+ struct hci_conn_hash {
+@@ -406,6 +411,8 @@ struct hci_dev {
+ 	struct work_struct	suspend_prepare;
+ 	enum suspended_state	suspend_state_next;
+ 	enum suspended_state	suspend_state;
++	bool			scanning_paused;
++	bool			suspended;
+ 
+ 	wait_queue_head_t	suspend_wait_q;
+ 	DECLARE_BITMAP(suspend_tasks, __SUSPEND_NUM_TASKS);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 6ca0aa8d30dd..66b5dbbe8ea0 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3287,16 +3287,31 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
+ 	int ret = 0;
+ 
+ 	if (action == PM_SUSPEND_PREPARE) {
+-		hdev->suspend_state_next = BT_SUSPENDED;
++		/* Suspend consists of two actions:
++		 *  - First, disconnect everything and make the controller not
++		 *    connectable (disabling scanning)
++		 *  - Second, program event filter/whitelist and enable scan
++		 */
++		hdev->suspend_state_next = BT_SUSPEND_DISCONNECT;
+ 		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
+ 		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
+-
+ 		ret = hci_suspend_wait_event(hdev);
++
++		/* If the disconnect portion failed, don't attempt to complete
++		 * by configuring the whitelist. The suspend notifier will
++		 * follow a cancelled suspend with a PM_POST_SUSPEND
++		 * notification.
++		 */
++		if (!ret) {
++			hdev->suspend_state_next = BT_SUSPEND_COMPLETE;
++			set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
++			queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
++			ret = hci_suspend_wait_event(hdev);
++		}
+ 	} else if (action == PM_POST_SUSPEND) {
+ 		hdev->suspend_state_next = BT_RUNNING;
+ 		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
+ 		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
+-
+ 		ret = hci_suspend_wait_event(hdev);
+ 	}
+ 
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 591e7477e925..e3c36230f705 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2474,6 +2474,7 @@ static void hci_inquiry_result_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	struct hci_ev_conn_complete *ev = (void *) skb->data;
++	struct inquiry_entry *ie;
+ 	struct hci_conn *conn;
+ 
+ 	BT_DBG("%s", hdev->name);
+@@ -2482,6 +2483,21 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ 	conn = hci_conn_hash_lookup_ba(hdev, ev->link_type, &ev->bdaddr);
+ 	if (!conn) {
++		/* Connection may not exist if auto-connected. Check the inquiry
++		 * cache to see if we've already discovered this bdaddr before.
++		 * If found and link is an ACL type, create a connection class
++		 * automatically.
++		 */
++		ie = hci_inquiry_cache_lookup(hdev, &ev->bdaddr);
++		if (ie && ev->link_type == ACL_LINK) {
++			conn = hci_conn_add(hdev, ev->link_type, &ev->bdaddr,
++					    HCI_ROLE_SLAVE);
++			if (!conn) {
++				bt_dev_err(hdev, "no memory for new conn");
++				goto unlock;
++			}
++		}
++
+ 		if (ev->link_type != SCO_LINK)
+ 			goto unlock;
+ 
+@@ -2743,6 +2759,14 @@ static void hci_disconn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ 	hci_disconn_cfm(conn, ev->reason);
+ 	hci_conn_del(conn);
+ 
++	/* The suspend notifier is waiting for all devices to disconnect so
++	 * clear the bit from pending tasks and inform the wait queue.
++	 */
++	if (list_empty(&hdev->conn_hash.list) &&
++	    test_and_clear_bit(SUSPEND_DISCONNECTING, hdev->suspend_tasks)) {
++		wake_up(&hdev->suspend_wait_q);
++	}
++
+ 	/* Re-enable advertising if necessary, since it might
+ 	 * have been disabled by the connection. From the
+ 	 * HCI_LE_Set_Advertise_Enable command description in
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 08908469c043..4d67b1d08608 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -918,12 +918,62 @@ static u8 get_adv_instance_scan_rsp_len(struct hci_dev *hdev, u8 instance)
+ 	return adv_instance->scan_rsp_len;
+ }
+ 
++static void hci_req_clear_event_filter(struct hci_request *req)
++{
++	struct hci_cp_set_event_filter f;
++
++	memset(&f, 0, sizeof(f));
++	f.flt_type = HCI_FLT_CLEAR_ALL;
++	hci_req_add(req, HCI_OP_SET_EVENT_FLT, 1, &f);
++
++	/* Update page scan state (since we may have modified it when setting
++	 * the event filter).
++	 */
++	__hci_req_update_scan(req);
++}
++
++static void hci_req_set_event_filter(struct hci_request *req)
++{
++	struct bdaddr_list *b;
++	struct hci_cp_set_event_filter f;
++	struct hci_dev *hdev = req->hdev;
++	u8 scan;
++
++	/* Always clear event filter when starting */
++	hci_req_clear_event_filter(req);
++
++	list_for_each_entry(b, &hdev->wakeable, list) {
++		memset(&f, 0, sizeof(f));
++		bacpy(&f.addr_conn_flt.bdaddr, &b->bdaddr);
++		f.flt_type = HCI_FLT_CONN_SETUP;
++		f.cond_type = HCI_CONN_SETUP_ALLOW_BDADDR;
++		f.addr_conn_flt.auto_accept = HCI_CONN_SETUP_AUTO_ON;
++
++		BT_DBG("Adding event filters for %pMR", &b->bdaddr);
++		hci_req_add(req, HCI_OP_SET_EVENT_FLT, sizeof(f), &f);
++	}
++
++	scan = !list_empty(&hdev->wakeable) ? SCAN_PAGE : SCAN_DISABLED;
++	hci_req_add(req, HCI_OP_WRITE_SCAN_ENABLE, 1, &scan);
++}
++
++static void suspend_req_complete(struct hci_dev *hdev, u8 status, u16 opcode)
++{
++	BT_DBG("Request complete opcode=0x%x, status=0x%x", opcode, status);
++	if (test_and_clear_bit(SUSPEND_SCAN_ENABLE, hdev->suspend_tasks) ||
++	    test_and_clear_bit(SUSPEND_SCAN_DISABLE, hdev->suspend_tasks)) {
++		wake_up(&hdev->suspend_wait_q);
++	}
++}
++
+ /* Call with hci_dev_lock */
+ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
+ {
+ 	int old_state;
+ 	struct hci_conn *conn;
+ 	struct hci_request req;
++	u8 page_scan;
++	int disconnect_counter;
+ 
+ 	if (next == hdev->suspend_state) {
+ 		BT_DBG("Same state before and after: %d", next);
+@@ -931,6 +981,54 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
+ 	}
+ 
+ 	hdev->suspend_state = next;
++	hci_req_init(&req, hdev);
++
++	if (next == BT_SUSPEND_DISCONNECT) {
++		/* Mark device as suspended */
++		hdev->suspended = true;
++
++		/* Disable page scan */
++		page_scan = SCAN_DISABLED;
++		hci_req_add(&req, HCI_OP_WRITE_SCAN_ENABLE, 1, &page_scan);
++
++		/* Mark task needing completion */
++		set_bit(SUSPEND_SCAN_DISABLE, hdev->suspend_tasks);
++
++		/* Prevent disconnects from causing scanning to be re-enabled */
++		hdev->scanning_paused = true;
++
++		/* Run commands before disconnecting */
++		hci_req_run(&req, suspend_req_complete);
++
++		disconnect_counter = 0;
++		/* Soft disconnect everything (power off) */
++		list_for_each_entry(conn, &hdev->conn_hash.list, list) {
++			hci_disconnect(conn, HCI_ERROR_REMOTE_POWER_OFF);
++			disconnect_counter++;
++		}
++
++		if (disconnect_counter > 0) {
++			BT_DBG("Had %d disconnects. Will wait on them",
++			       disconnect_counter);
++			set_bit(SUSPEND_DISCONNECTING, hdev->suspend_tasks);
++		}
++	} else if (next == BT_SUSPEND_COMPLETE) {
++		/* Unpause to take care of updating scanning params */
++		hdev->scanning_paused = false;
++		/* Enable event filter for paired devices */
++		hci_req_set_event_filter(&req);
++		/* Pause scan changes again. */
++		hdev->scanning_paused = true;
++		hci_req_run(&req, suspend_req_complete);
++	} else {
++		hdev->suspended = false;
++		hdev->scanning_paused = false;
++
++		hci_req_clear_event_filter(&req);
++		hci_req_run(&req, suspend_req_complete);
++	}
++
++	hdev->suspend_state = next;
+ 
+ done:
+ 	clear_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
+@@ -2034,6 +2132,9 @@ void __hci_req_update_scan(struct hci_request *req)
+ 	if (mgmt_powering_down(hdev))
+ 		return;
+ 
++	if (hdev->scanning_paused)
++		return;
++
+ 	if (hci_dev_test_flag(hdev, HCI_CONNECTABLE) ||
+ 	    disconnected_whitelist_entries(hdev))
+ 		scan = SCAN_PAGE;
 -- 
-2.25.0
+2.25.0.265.gbab2e86ba0-goog
 
