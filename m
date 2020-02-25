@@ -2,132 +2,210 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014F8C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3334DC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3B120CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0234D20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3A82NAa"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="i8mWQUOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgBYPFk (ORCPT
+        id S1730855AbgBYPGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:05:40 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39195 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbgBYPFk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:05:40 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so3477215wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:05:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r7RmpUlHRyrdl4Ij2+xzKKWEEb70EyMwIdUyaPKBWHM=;
-        b=R3A82NAa/uw4zA2GaMHN4wQKlKTBMeb9jJ6zMIDMMHoLK/XxFIQbJcc0L2Ki3+yvFj
-         yxpyC6FdWlYlRYnWvGTn6zeomT9vLy0FD++LjOn67mzf9FZYOkrzXXpRyOjizKp2Wxe9
-         quaB7+Zp2qBvkzt7s7yjoFxrEpR9HQJAFq8A4RzEkk8n1v/mHb6qK4kHTSOgtDWYQhlp
-         07VLTA9Rr3bGPXR18KOPCMz34eYkXWRLJHp2bILREpBXIRHcg1RlorcjYvfsuvfCz1za
-         V6evnpd8umP2v3Gyx+XxrfbMuSINL8jEAxJvqV8AVWfC6tqfWyH+TYoXmrPhu0MFkOWc
-         G7AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r7RmpUlHRyrdl4Ij2+xzKKWEEb70EyMwIdUyaPKBWHM=;
-        b=IulNUwRdKFaxkSpa9zjqeAZmz8bxNfMmQMKJp/NFOzQNqj76HOYTIHaJF+AYZ9kGB/
-         02Bty43HBislkWf/JBevi76MOZJwMwj2mKQa7jt820YrY2qBKKUtCBvoFG+bWRdwPU7f
-         NqGLHeWMn9A7jKmbqmSAKsP8f4YVqxvNe0cmLDyRzi390785gfnFn7UrK8cFYFNLYZAs
-         eXnu2144NKpKI/pqCWaC5YODPzr7h8WFwzOpeEeL16MocgH1mny30VzmJtcIc/52f/1J
-         6Csjpe5Icg5i9z5vYQweHH3jXTlFX5x/Fq1MlQCmVtZBrv33ojcMbCeYRkqQvdXn28Kl
-         qPWQ==
-X-Gm-Message-State: APjAAAVDw/XIqBE35Y2L9qnjVPJKjgWlzPn/b2UtheZceHjmj4ey3zEK
-        b4gozjKp1QqxQ1Em0At/XLkWTpLNjYTu7okfgRA=
-X-Google-Smtp-Source: APXvYqxamkV18hd8RMOkHpaLfKNXGsJAnJPKR6dxW+maJw1T8Ozr00KpCqAbTEghrzqJnprPz2AY/+kL7zl5pzkzFzA=
-X-Received: by 2002:a05:600c:218b:: with SMTP id e11mr5878703wme.56.1582643137974;
- Tue, 25 Feb 2020 07:05:37 -0800 (PST)
+        Tue, 25 Feb 2020 10:06:31 -0500
+Received: from mail-eopbgr10055.outbound.protection.outlook.com ([40.107.1.55]:15259
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729268AbgBYPGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 10:06:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ROmbGCyegoAVu+nh5neyEXqFeFIYIWSUB2s2JliRg0LlCjzHLDGM+twsd4vo9pfQbCmZlz4QxEKgu1CFwXQcNSGpbB2lP+6VlxYFd/aGZXwCKeWElGZElRpelE9P2DepQ90V36bL/K3wTIThQ/zE5rIE7LMIujeZfchJP5TyfC+ZbszjXb+dEs5vcQ4IALVwDWVSTZ7NvGavXcpn/jIl19TEnzMCRCi0yf+xBJKxcqWzlcfy7QGfE/4/0SwO+wYG7P8pUlh1KFDpQVOsLjGgFDt9WJUB6OWWMLlWYDVamq/M3qmmBgouqXFDtentDchxNzslhYQoUqbhPO/ZcjQK3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eBqCmOeixAWzJIuE2AMrwhb1irciOUUFnofOCOHo9GI=;
+ b=MdiuJvv5I4f3AHeXZmKmnULjvyl/KYSHOYTxzviH670QdQAEOSuE8h92a8f8uUI5rn9JC/LlwtVZWgrK8l5e7id7N4PlyHQYqH+guToxX+yRHAetoFG2I00Aw+WDTQztrUg+WEYnJs/HGiZZx5MOlxLMuUdrpFdjOWuKcP7l+FBL/qVQYp0LGxR/Kz0o7ppkCN/fZRJP7vrTBYJEI+O2HNXEE1yi/heVVx7m1BDvTWEdqjZK4KnjqXYFCyVh12tzsWDEisnT5Cl3qSCAKEhNrXbEcKj7rA5V2fqkksFpYXOPx2+SwFoBH3eDfx15Y99BolATtdT2yHA6F89ZmOXqMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eBqCmOeixAWzJIuE2AMrwhb1irciOUUFnofOCOHo9GI=;
+ b=i8mWQUOL9Qq5hsINbNyAbrDFn6cK6nf+LlNtuoROG4SCFOGEiJcpkpcC2ii4Lf/MKpPhN0iJb56yqdLLegFEuO/B/k/YxKg7n4ty++aerh0Kklk37V9qNHqNzTZpJR56OiW5IOBT1TIijrp84EwQI+QjMFtTGesZ5c4aBpLzO2E=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=dragos.rosioru@oss.nxp.com; 
+Received: from AM0PR04MB3970.eurprd04.prod.outlook.com (52.134.92.143) by
+ AM0PR04MB4308.eurprd04.prod.outlook.com (52.134.91.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.18; Tue, 25 Feb 2020 15:06:24 +0000
+Received: from AM0PR04MB3970.eurprd04.prod.outlook.com
+ ([fe80::799f:d3bb:67ee:9544]) by AM0PR04MB3970.eurprd04.prod.outlook.com
+ ([fe80::799f:d3bb:67ee:9544%5]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 15:06:24 +0000
+From:   "Dragos Rosioru (OSS)" <dragos.rosioru@oss.nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Marek Vasut <marex@denx.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH] crypto: dcp - fix scatterlist linearization for hash
+Date:   Tue, 25 Feb 2020 17:05:52 +0200
+Message-Id: <1582643152-17278-1-git-send-email-dragos.rosioru@oss.nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: AM5PR0201CA0005.eurprd02.prod.outlook.com
+ (2603:10a6:203:3d::15) To AM0PR04MB3970.eurprd04.prod.outlook.com
+ (2603:10a6:208:5b::15)
 MIME-Version: 1.0
-References: <20200221132433.16532-1-yuehaibing@huawei.com>
-In-Reply-To: <20200221132433.16532-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 25 Feb 2020 10:05:26 -0500
-Message-ID: <CADnq5_O7YQB6_hfsFMCCpoZzrhrcYECocZ56DB6ZuE76sACicg@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/display: remove set but not used variable 'mc_vm_apt_default'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Cheng, Tony" <tony.cheng@amd.com>,
-        "Siqueira, Rodrigo" <Rodrigo.Siqueira@amd.com>,
-        Eric Yang <Eric.Yang2@amd.com>,
-        Yongqiang Sun <yongqiang.sun@amd.com>, joseph.gravenor@amd.com,
-        jaehyun.chung@amd.com,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1664-206.ea.freescale.net (89.37.124.34) by AM5PR0201CA0005.eurprd02.prod.outlook.com (2603:10a6:203:3d::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 15:06:23 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fa1806e6-ddc2-46d1-e419-08d7ba0447ea
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4308:|AM0PR04MB4308:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4308277C950E64FDE2BFDC68DFED0@AM0PR04MB4308.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(366004)(346002)(136003)(189003)(199004)(81166006)(6666004)(110136005)(66556008)(478600001)(2906002)(66946007)(5660300002)(316002)(6506007)(6512007)(54906003)(66476007)(52116002)(2616005)(186003)(26005)(8936002)(8676002)(956004)(16526019)(86362001)(6486002)(7416002)(4326008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4308;H:AM0PR04MB3970.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kKk3qRlsOSgajc++4BTnxKibk+NLoodS97VZ4CLxUcdgZlNpVuQRU2ziGt1wNNtVPNDC2Uw7zJz/mfEIGNrTiKqJYS124fdw1Qq8UvyKRYj1fdX9wtD7T4EgOEUV6SIjakhYCSXikt8jak0ZcVe7J0fR3btkM3qtacRqZP8V6NrtqFXBiEZ6oJqwb20ECnO/qXkO8PPDFzfkUHoSjQnB/cCafwOhzxUnUeHaIbsglY3UlkxI7TLBtYynhf5Q6OVgl3Q6LUFYkEfEPgS8Y5+MGWHhHV3sdbEMzBqgqBe3ACGmrfWtmLhuaqKjHrTB8mO28gGsHjqksJpOi01UZjA9brwi7t3Y8RpIvTVRwvIaLovCxMEcccsRBv9jmLqeSqXc5drUGJV1Ex+B/fLapPcmGFVwFlg6O00wlrTt20R9TFzy+dbrMUUYWHGLCjSgzOVr
+X-MS-Exchange-AntiSpam-MessageData: ZoFN2rve7HI5K+IuEJntnI5Dg94dmnu7Mkp3BIv5bSfk8jdBV64+DuRLTSKdGRM7OKCXzLBq0/+I6DM/fRNISlPlX+3+3U8zHX+5lXzlMqWTSLErj7rIlHflM0i2dB6wiuLH2SDr5J7xs8u/wfaDvA==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa1806e6-ddc2-46d1-e419-08d7ba0447ea
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 15:06:24.7415
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jc9+2itHUxVYdzm0uoqcP8EZdZ49GJaoPyGCWI6KGuek01BfMO8kdYCASKTT22u0PEpmTOv59jeelBORbJi2AQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4308
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:33 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c:
->  In function hubp21_set_vm_system_aperture_settings:
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c:343:23:
->  warning: variable mc_vm_apt_default set but not used [-Wunused-but-set-variable]
->
-> It is never used, so remove it.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+From: Rosioru Dragos <dragos.rosioru@nxp.com>
 
-Applied.  thanks!
+The incorrect traversal of the scatterlist, during the linearization phase
+lead to computing the hash value of the wrong input buffer.
+New implementation uses scatterwalk_map_and_copy()
+to address this issue.
 
-Alex
+Cc: <stable@vger.kernel.org>
+Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")
+Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>
+---
+ drivers/crypto/mxs-dcp.c | 58 +++++++++++++++++++++++-------------------------
+ 1 file changed, 28 insertions(+), 30 deletions(-)
 
+diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
+index 435ac1c..d845302 100644
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -20,6 +20,7 @@
+ #include <crypto/sha.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/skcipher.h>
++#include <crypto/scatterwalk.h>
+ 
+ #define DCP_MAX_CHANS	4
+ #define DCP_BUF_SZ	PAGE_SIZE
+@@ -611,49 +612,46 @@ static int dcp_sha_req_to_buf(struct crypto_async_request *arq)
+ 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
+ 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
+ 	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
+-	const int nents = sg_nents(req->src);
+ 
+ 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
+ 	uint8_t *out_buf = sdcp->coh->sha_out_buf;
+ 
+-	uint8_t *src_buf;
+-
+ 	struct scatterlist *src;
+ 
+-	unsigned int i, len, clen;
++	unsigned int i, len, clen, oft = 0;
+ 	int ret;
+ 
+ 	int fin = rctx->fini;
+ 	if (fin)
+ 		rctx->fini = 0;
+ 
+-	for_each_sg(req->src, src, nents, i) {
+-		src_buf = sg_virt(src);
+-		len = sg_dma_len(src);
+-
+-		do {
+-			if (actx->fill + len > DCP_BUF_SZ)
+-				clen = DCP_BUF_SZ - actx->fill;
+-			else
+-				clen = len;
+-
+-			memcpy(in_buf + actx->fill, src_buf, clen);
+-			len -= clen;
+-			src_buf += clen;
+-			actx->fill += clen;
++	src = req->src;
++	len = req->nbytes;
+ 
+-			/*
+-			 * If we filled the buffer and still have some
+-			 * more data, submit the buffer.
+-			 */
+-			if (len && actx->fill == DCP_BUF_SZ) {
+-				ret = mxs_dcp_run_sha(req);
+-				if (ret)
+-					return ret;
+-				actx->fill = 0;
+-				rctx->init = 0;
+-			}
+-		} while (len);
++	while (len) {
++		if (actx->fill + len > DCP_BUF_SZ)
++			clen = DCP_BUF_SZ - actx->fill;
++		else
++			clen = len;
++
++		scatterwalk_map_and_copy(in_buf + actx->fill, src, oft, clen,
++					 0);
++
++		len -= clen;
++		oft += clen;
++		actx->fill += clen;
++
++		/*
++		 * If we filled the buffer and still have some
++		 * more data, submit the buffer.
++		 */
++		if (len && actx->fill == DCP_BUF_SZ) {
++			ret = mxs_dcp_run_sha(req);
++			if (ret)
++				return ret;
++			actx->fill = 0;
++			rctx->init = 0;
++		}
+ 	}
+ 
+ 	if (fin) {
+-- 
+2.7.4
 
-> ---
->  drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-> index aa7b0e7..d285ba6 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-> @@ -340,13 +340,9 @@ void hubp21_set_vm_system_aperture_settings(struct hubp *hubp,
->  {
->         struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
->
-> -       PHYSICAL_ADDRESS_LOC mc_vm_apt_default;
->         PHYSICAL_ADDRESS_LOC mc_vm_apt_low;
->         PHYSICAL_ADDRESS_LOC mc_vm_apt_high;
->
-> -       // The format of default addr is 48:12 of the 48 bit addr
-> -       mc_vm_apt_default.quad_part = apt->sys_default.quad_part >> 12;
-> -
->         // The format of high/low are 48:18 of the 48 bit addr
->         mc_vm_apt_low.quad_part = apt->sys_low.quad_part >> 18;
->         mc_vm_apt_high.quad_part = apt->sys_high.quad_part >> 18;
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
