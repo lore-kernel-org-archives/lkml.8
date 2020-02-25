@@ -2,174 +2,107 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96266C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26471C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640272176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15C02176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K++mGY+k"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="lQKlfzSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgBYJA2 (ORCPT
+        id S1729795AbgBYJAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:00:28 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:36135 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgBYJA1 (ORCPT
+        Tue, 25 Feb 2020 04:00:35 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33517 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729729AbgBYJAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:00:27 -0500
-Received: by mail-qv1-f65.google.com with SMTP id ff2so5390365qvb.3;
-        Tue, 25 Feb 2020 01:00:27 -0800 (PST)
+        Tue, 25 Feb 2020 04:00:35 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m10so1728014wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 01:00:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=QzFKLT7CioGxjxI7dzMDjcHznX5Nnr+6ELaaegdUFkY=;
-        b=K++mGY+kZvZ348XctWkxGdiLnzN6dwnRoGnNRDHDVHQgLIz/7T0fn00F2Ah+DwQ+OY
-         9/0tU/cbwMXWl8/J54ykzB+RZSNK+DIK8TIYp2BAkxHDBrRzuioNXhsj2PO8gQI9QSZ6
-         dREvlXEX4hWJHRLB/RscgGjuhpdNU5aA9Kks+UbWS7FT5ohZglXBuuYozM1WKrupfb94
-         TMm6KQDRWsq6Wsy+xSjh3KyebYkqd96/ZZ3mNvWlLrOYjgArlPEEbCDI2MH0s4OfMwSA
-         VxtLLv92Z4H3/G+9DcSlb1KPIpA8iAwwBEt4z28ew2UJdg05Dv3dMn9Ht7K8ETkfS9zq
-         k6xQ==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vn4rZGzk+IAH+nxFswZJCGBxbGSA0YI3EXXacsRbD08=;
+        b=lQKlfzSBMr6+Iyq1U8QB2M4CNB9uvrNtci+HBZTL/I4Qo5menq2+zDW4TqHl+cCY0w
+         54CAtPTyp7TR3wF8P++z1IuSs/tnTuKvLgn70iWfxef1owUQQepqcJOx4zNTwe3jWdK0
+         OzZ+M5wZOReDYecL9wivW1Tin+NDEI1Z6IlXimgglU9IInF6Ebq0wRekEPMu04dgy3Vk
+         V/2RTYH2Qs1W4tMcx401cHUxJ2E11fUelpmH69e6+ZKfskNyocFde7WA7WiaqNmW1sdw
+         KtHPUTeRHCg8t4hSVA55LfZdTBayB+aA8QGwpCucpRRBZ0JhRJiU1P0M/uV5h2gBvBK5
+         s5Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=QzFKLT7CioGxjxI7dzMDjcHznX5Nnr+6ELaaegdUFkY=;
-        b=hbcyob6Ln/sKV631BdfXW2hD4fhgb5L43sYlaU4Yya3NtdxK4XAa2xd6VbwqeIApHB
-         9hAx5RgJTa5wAlFWgWFwOivPgZNmCXz3DWspak3sYHu1EZvYzom5+HNEpT2aSZ7YPDCY
-         ab3Dysy92eXxjqxpH6p/aJpiCQBIyC1CMRpB+/lAm37hrDIaB7T7hSkY4xb+QivDXj2w
-         PzDLOuX4JXUvwyfQms/6NYExLnMhBcYZ2eIBNZPvl+ZlgBK5bS7lteDLSdSlFziRYY6W
-         S92SGewQWeoQ2GeXTCq3vmevTe9FNsY7HXQLpG22ej5SVlzBdbP6C7ITLiawb2nKRFFL
-         pryg==
-X-Gm-Message-State: APjAAAWQks8dK/NVuwZY/EIicdHjnZxP1wcVyKS4COHsUqWG2Vmruxk9
-        izEsGdX+usvbTDiU1jC3DBBlkEtVexcRNFZ4fU6cteO3
-X-Google-Smtp-Source: APXvYqwEItTB9zvBYThitayOPuzzlG9VjbwnKhQz3AUqUPE5VAncXdb6x2Ge7Zx+7P1w66TkNonyrxwjHTgdmo44EEQ=
-X-Received: by 2002:ad4:518b:: with SMTP id b11mr50461721qvp.195.1582621226162;
- Tue, 25 Feb 2020 01:00:26 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=vn4rZGzk+IAH+nxFswZJCGBxbGSA0YI3EXXacsRbD08=;
+        b=eTh5QikRbrL1NqgQ+UnN3NDXg0zV34HfTCrMWdfq16bWXz0rpOzo6BvBVwQKttgR7A
+         bLRhGv/eqNX7N1fM3h6wmoa9qNtrTeO195dEaVQpWCXSXl5sKcb9p//PeungBYwmx4Lo
+         PxLsx5wPVWf5NQUKao4vGr/UURVuiGR466TS4nRuIlCvjshDPdEm409lU+O59lu4o8e/
+         zDUAWs8cL8QkCETrkct9mZPHkCLksZVfr0c3cUDulOTpY1khQoZJl6MoecVr8zKhIEJ1
+         3iqm1uCx/hgykadwHibWHY6ZHO/s/pSmnQyg2Uia9pzEf5vkjLpdM/Q3LUS/GnOvC92R
+         H9pQ==
+X-Gm-Message-State: APjAAAXrTdjZTRID4Hrkw0GdvugU/GWxLT5/F3dTgEQQAOiATSBesxYM
+        9qQuwvJfYZ73BoRu5T0tJWOVLA==
+X-Google-Smtp-Source: APXvYqwnbRU6uWCX1oIuC5o2BD9NzbI9iIQCmIV4naL5tZmKiHJH+4Za2QhGieEJuOCl5HIpwSNrhQ==
+X-Received: by 2002:a1c:3906:: with SMTP id g6mr4241872wma.49.1582621232288;
+        Tue, 25 Feb 2020 01:00:32 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id x10sm22346431wrv.60.2020.02.25.01.00.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 01:00:31 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
+Cc:     Durga Challa <vnsl.durga.challa@xilinx.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: zynqmp: Fix GIC compatible property
+Date:   Tue, 25 Feb 2020 10:00:26 +0100
+Message-Id: <a50412fbb520954e4602f274f19a7ffbd1154ead.1582621224.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
-In-Reply-To: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
-From:   Fawad Lateef <fawadlateef@gmail.com>
-Date:   Tue, 25 Feb 2020 10:00:14 +0100
-Message-ID: <CAGgoGu6xQ2aV5kcmxcOm2Q=zPEY3mu3fOaCXKPxaz17vptzcmA@mail.gmail.com>
-Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe just
- goes bad)
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again,
+dtbs_check is showing warning around GIC compatible property as
+interrupt-controller@f9010000: compatible: ['arm,gic-400', 'arm,cortex-a15-gic']
+is not valid under any of the given schemas
 
-Can someone guide me what is going on?
+Similar change has been done also by commit 5400cdc1410b
+("ARM: dts: sunxi: Fix GIC compatible")
 
-Thanks,
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
--- Fawad Lateef
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sat, 22 Feb 2020 at 16:25, Fawad Lateef <fawadlateef@gmail.com> wrote:
->
-> Hello,
->
-> I am trying to figure-out an issue on our i.MX6Q platform based design
-> where PCIe interface goes bad.
->
-> We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
-> board. PCIe root-complex from i.MX6Q is attached to PLX switch
-> (PEX8605).
->
-> Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
-> linux-mainline repo). Kernel do not have PCIe hot-plug and PNP enabled
-> in config.
->
-> PLX switch #PERST is attached to a GPIO pin and stays in disable state
-> until Linux is booted. So at boot time only PCIe root-complex is
-> initialized by kernel.
->
-> After boot if I do "lspci -v"  and see everything good from PCIe
-> root-complex (below):
->
-> ~ # lspci -v
-> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> [Normal decode])
-> Flags: bus master, fast devsel, latency 0, IRQ 295
-> Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> I/O behind bridge: None
-> Memory behind bridge: None
-> Prefetchable memory behind bridge: None
-> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> Capabilities: [40] Power Management version 3
-> Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> Capabilities: [70] Express Root Port (Slot-), MSI 00
-> Capabilities: [100] Advanced Error Reporting
-> Capabilities: [140] Virtual Channel
-> Kernel driver in use: pcieport
->
->
-> Then I enable the #PERST pin of PLX switch, everything is still good
-> (no rescan on Linux is done yet)
->
-> ~ # echo 139 > /sys/class/gpio/export
-> ~ # echo out > /sys/class/gpio/gpio139/direction
-> ~ # echo 1 > /sys/class/gpio/gpio139/value
-> ~ # lspci -v
-> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> [Normal decode])
-> Flags: bus master, fast devsel, latency 0, IRQ 295
-> Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> I/O behind bridge: None
-> Memory behind bridge: None
-> Prefetchable memory behind bridge: None
-> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> Capabilities: [40] Power Management version 3
-> Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> Capabilities: [70] Express Root Port (Slot-), MSI 00
-> Capabilities: [100] Advanced Error Reporting
-> Capabilities: [140] Virtual Channel
-> Kernel driver in use: pcieport
->
->
-> Now just disable/put-in-reset the PLX switch (Linux don't see the
-> switch yet, as no rescan on PCIe was done). Now "lspci -v" and
-> root-complex goes bad.
->
-> ~ # echo 0 > /sys/class/gpio/gpio139/value
-> ~ # lspci -v
-> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> [Normal decode])
-> Flags: fast devsel, IRQ 295
-> Memory at 01000000 (64-bit, prefetchable) [disabled] [size=1M]
-> Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
-> I/O behind bridge: 00000000-00000fff [size=4K]
-> Memory behind bridge: 00000000-000fffff [size=1M]
-> Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
-> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> Capabilities: [40] Power Management version 3
-> Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-> Capabilities: [70] Express Root Port (Slot-), MSI 00
-> Capabilities: [100] Advanced Error Reporting
-> Capabilities: [140] Virtual Channel
-> Kernel driver in use: pcieport
->
-> ~ # uname -a
-> Linux buildroot-2019.08-imx6 4.14.134-phy2 #1 SMP Thu Feb 20 12:13:33
-> UTC 2020 armv7l GNU/Linux
-> ~ #
->
->
-> I am really not sure what is going wrong here. Did I am missing
-> something basic?
->
-> Thanks in advance,
->
-> -- Fawad Lateef
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 1ebb540624de..cde6025b7e24 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -233,7 +233,7 @@ amba_apu: amba-apu@0 {
+ 		ranges = <0 0 0 0 0xffffffff>;
+ 
+ 		gic: interrupt-controller@f9010000 {
+-			compatible = "arm,gic-400", "arm,cortex-a15-gic";
++			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
+ 			reg = <0x0 0xf9010000 0x10000>,
+ 			      <0x0 0xf9020000 0x20000>,
+-- 
+2.25.1
+
