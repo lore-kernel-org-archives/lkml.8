@@ -2,136 +2,193 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB9C35E17
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C65C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA6520838
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE88520838
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bKQHW22g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3rodxzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgBYVdj (ORCPT
+        id S1729016AbgBYVfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:33:39 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44062 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVdi (ORCPT
+        Tue, 25 Feb 2020 16:35:33 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56067 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBYVfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:33:38 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so797568oia.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:33:38 -0800 (PST)
+        Tue, 25 Feb 2020 16:35:33 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so771157wmj.5;
+        Tue, 25 Feb 2020 13:35:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AQCk4Na+YlT3y6qiZ+Z3XHlxdsworui2iUk6aY8nlYE=;
-        b=bKQHW22gH0PuXODit5RIwwuUC63vvGOO2cn9LQAjLkmVR7b6kWjlnlM/EBXa5C47EB
-         NJ5CnHfZYlQAw05rhAixn+ef0rgVez7GtJkcF3EHXx/5KEUeSB5TV1JP/9G/aqj+G0w1
-         zdBFo5j9vQ/abf3atxmIHj+gBhASNr3BM3ItmwhndnqtVxcdDPgo0abR6eJxJMNIns3E
-         C1OSUzrfTMKa840PCfNo6zsr7TrbwWG+ss+RSGY5CkdXSJV+099Uxg60ofUpw5mF1UE/
-         HXDob1NrM/mD4YcWZKw1LY+FJAHBvX8PpK+FcUmxLivlZYv8TPmcfqt8qTT9feLeUzcL
-         jiUw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1C/K5Wsm9LPHzaz/4XpwnKAwYVbjEpz36KnNrq8NU6A=;
+        b=H3rodxzqGzN4uqzCFXakGUegaCrnGqQBj076s1/t+ZJ7F+rkUIC/oHl3pPwrITc+QK
+         rLYAMLWJ+S9U1Zr8FMmP0WgZwPDiiRx8LIcWnKBBXLL8YHGfOkYUvZJkWWS0h6r6LeWQ
+         riPSMjAmdYalm3BL3wFUrG5dtpN7+Cx23tzs8X16Vpcl9rOLFMlws8ZaoSXnSTineKms
+         L/F6EZD8Ia2bi2uYdIO05251bydHkLy+4+EbB0kIaRsljRdaTpIuuG9GafGWC/AjqxmH
+         S/Nz0R8EE3gTsXsjp2aRtYPXELVnXO0Muy8Q0qYWABY5cIGeSKKgknpnBYp/mtZhuFG3
+         G9xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AQCk4Na+YlT3y6qiZ+Z3XHlxdsworui2iUk6aY8nlYE=;
-        b=WOV0ssMiYp2aDXfSWy1EdF1cMKoXCd1tXyYfKbNB4b6qbmvOf0sfruF3dMmFVsXCB+
-         acfsAeJuIgAM+xBm+U2T89624ykv2xPCvSs2nF3kG1pLn/LM56uV455NNFCOuXkeWYaB
-         RvJEHtxIGCrKZYSC1/nU//NZ73pZTp3slPXGrd3PqK9myhZ8Y15X6L1SLS2JiK4BDBhv
-         5BtECe+bR7loAqYfYI681biQevYm2RNNRvfqDCYNB44uUIOs4X1Ogrcya+VpHZIZcASa
-         /+KElfXb/ZXZdx5fsnod3FhbWrcGm7frzDJWVF2jgZtp0ttNO8lEhllBqhGOVZ7G50ha
-         WmCw==
-X-Gm-Message-State: APjAAAVHRCodpRFOxsy0bkpE/oZUY4RMwNQnk02YoJ0EDwsyb3tDHN+m
-        u5S37wZbqeGmUj0mVkcrGTbnfRMGvNY6iegc145YvT9H
-X-Google-Smtp-Source: APXvYqyhhzF0y0crJ6GT0xIVt27C2mJOcnPUMNElY7/GFan7z8i9P+x26qfjcMNj+4iS8QilKQfYsqRm6WCvHCO5a6o=
-X-Received: by 2002:aca:c551:: with SMTP id v78mr691810oif.161.1582666418197;
- Tue, 25 Feb 2020 13:33:38 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1C/K5Wsm9LPHzaz/4XpwnKAwYVbjEpz36KnNrq8NU6A=;
+        b=Y9KtnYS2uhJr67aRYhTV6K/hWesKopIzUOhKjbmEtzXgJYIpW4iDI8fvlloZjbOL0a
+         G/Bgczg0UUZ/1hHWy45wljp6BdRrv4BxX53zu+uHdIe5D3rkIx3wlnAab1G44l7AM00w
+         8brz2dXrPBQh9CF1n0uS/2lC0z8VAC3X08HWyleiuFLOv0EuybBi2t9ROsWmBNkArn0y
+         GgOtX933dyA8GnKqrnZc4QJQCUdKIjS7IaZsX76nkq1cmw3Celja/U1EfpQS1vAOtN9Y
+         hJAc6nkimpLDvO3Nu9XmUdcg7xsrY4oaRE9wNv4tf/u5Xv8o+dCl5cqckGzkgSvsitls
+         IzEQ==
+X-Gm-Message-State: APjAAAWumPJjlk91RhcNkokdbExyc9TxNdQxeTdhLwgtZOnxn+LJZY7t
+        etE3mBmrX3Vj9jvuiymFHvg=
+X-Google-Smtp-Source: APXvYqyWYGcFLzI85kNXTDFApx8I2QRip0B35i+/HX9sh1K62R6K8sQleTspdjAn0n60QhMt6lohQA==
+X-Received: by 2002:a1c:541b:: with SMTP id i27mr1230756wmb.137.1582666530486;
+        Tue, 25 Feb 2020 13:35:30 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:3571:9abd:5d7f:e3ab? (p200300EA8F29600035719ABD5D7FE3AB.dip0.t-ipconnect.de. [2003:ea:8f29:6000:3571:9abd:5d7f:e3ab])
+        by smtp.googlemail.com with ESMTPSA id k7sm5575667wmi.19.2020.02.25.13.35.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 13:35:30 -0800 (PST)
+Subject: Re: [PATCH v3 1/8] PCI: add constant PCI_STATUS_ERROR_BITS
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+References: <20200225205047.GA194679@google.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <79cca560-1ef5-f9bf-b90d-b2199dd5aedb@gmail.com>
+Date:   Tue, 25 Feb 2020 22:35:15 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200224235824.126361-1-john.stultz@linaro.org>
- <a8af6c423501d5d49f1d81997b3a2295c0df7b9e.camel@perches.com>
- <CALAqxLW7xjPh8SZtZ+ES9fghdMDQZfG_ToSrX+u7DMAOixyQ1Q@mail.gmail.com>
- <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
- <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com> <8b25478b524f5d9de8e080edf84b2daf1313cb00.camel@perches.com>
-In-Reply-To: <8b25478b524f5d9de8e080edf84b2daf1313cb00.camel@perches.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 25 Feb 2020 13:33:26 -0800
-Message-ID: <CALAqxLU4xgqiLrPOrMoH57ACVVUE4GD5+Ks6R4onyVyN9Uvvbw@mail.gmail.com>
-Subject: Re: [RFC][PATCH] checkpatch: Properly warn if Change-Id comes after
- first Signed-off-by line
-To:     Joe Perches <joe@perches.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225205047.GA194679@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:16 PM Joe Perches <joe@perches.com> wrote:
-> On Tue, 2020-02-25 at 09:45 -0800, John Stultz wrote:
-> > On Mon, Feb 24, 2020 at 10:50 PM Joe Perches <joe@perches.com> wrote:
-> > > > Since I have a few kernel repos that I use for both upstream work and
-> > > > work targeting AOSP trees, I usually have the gerrit commit hook
-> > > > enabled in my tree (its easier to strip with sed then it is to re-add
-> > > > after submitting to gerrit), and at least the commit-msg hook I have
-> > > > will usually append a Change-Id: line at the end of the commit
-> > > > message, usually after the signed-off-by line.
->
-> I think this better still:
->
-> ---
->  scripts/checkpatch.pl | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 3d55d8a2a..d0f850e 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2343,6 +2343,7 @@ sub process {
->         my $is_binding_patch = -1;
->         my $in_header_lines = $file ? 0 : 1;
->         my $in_commit_log = 0;          #Scanning lines before patch
-> +       my $has_patch_separator = 0;    #Found a --- line
->         my $has_commit_log = 0;         #Encountered lines before patch
->         my $commit_log_lines = 0;       #Number of commit log lines
->         my $commit_log_possible_stack_dump = 0;
-> @@ -2668,6 +2669,12 @@ sub process {
->                         }
->                 }
->
-> +# Check for patch separator
-> +               if ($line =~ /^---$/) {
-> +                       $has_patch_separator = 1;
-> +                       $in_commit_log = 0;
-> +               }
-> +
->  # Check if MAINTAINERS is being updated.  If so, there's probably no need to
->  # emit the "does MAINTAINERS need updating?" message on file add/move/delete
->                 if ($line =~ /^\s*MAINTAINERS\s*\|/) {
-> @@ -2767,10 +2774,10 @@ sub process {
->                              "A patch subject line should describe the change not the tool that found it\n" . $herecurr);
->                 }
->
-> -# Check for unwanted Gerrit info
-> -               if ($in_commit_log && $line =~ /^\s*change-id:/i) {
-> +# Check for Gerrit Change-Ids not in any patch context
-> +               if ($realfile eq '' && !$has_patch_separator && $line =~ /^\s*change-id:/i) {
->                         ERROR("GERRIT_CHANGE_ID",
-> -                             "Remove Gerrit Change-Id's before submitting upstream.\n" . $herecurr);
-> +                             "Remove Gerrit Change-Id's before submitting upstream\n" . $herecurr);
->                 }
->
->  # Check if the commit log is in a possible stack dump
+On 25.02.2020 21:50, Bjorn Helgaas wrote:
+> On Tue, Feb 25, 2020 at 03:03:44PM +0100, Heiner Kallweit wrote:
+> 
+> Run "git log --oneline drivers/pci" and make yours match.  In
+> particular, capitalize the first word ("Add").  Same for the other PCI
+> patches.  I don't know the drivers/net convention, but please find and
+> follow that as well.
+> 
+>> This constant is used (with different names) in more than one driver,
+>> so move it to the PCI core.
+> 
+> The driver constants in *this* patch at least use the same name.
+> 
+Right, I have to fix the description.
 
-This one works well for me too.
-Tested-by: John Stultz <john.stultz@linaro.org>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  drivers/net/ethernet/marvell/skge.h | 6 ------
+>>  drivers/net/ethernet/marvell/sky2.h | 6 ------
+>>  include/uapi/linux/pci_regs.h       | 7 +++++++
+>>  3 files changed, 7 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
+>> index 6fa7b6a34..e149bdfe1 100644
+>> --- a/drivers/net/ethernet/marvell/skge.h
+>> +++ b/drivers/net/ethernet/marvell/skge.h
+>> @@ -15,12 +15,6 @@
+>>  #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
+>>  #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
+>>  
+>> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
+>> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+>> -			       PCI_STATUS_REC_MASTER_ABORT | \
+>> -			       PCI_STATUS_REC_TARGET_ABORT | \
+>> -			       PCI_STATUS_PARITY)
+>> -
+>>  enum csr_regs {
+>>  	B0_RAP	= 0x0000,
+>>  	B0_CTST	= 0x0004,
+>> diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
+>> index b02b65230..851d8ed34 100644
+>> --- a/drivers/net/ethernet/marvell/sky2.h
+>> +++ b/drivers/net/ethernet/marvell/sky2.h
+>> @@ -252,12 +252,6 @@ enum {
+>>  };
+>>  
+>>  
+>> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
+>> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+>> -			       PCI_STATUS_REC_MASTER_ABORT | \
+>> -			       PCI_STATUS_REC_TARGET_ABORT | \
+>> -			       PCI_STATUS_PARITY)
+>> -
+>>  enum csr_regs {
+>>  	B0_RAP		= 0x0000,
+>>  	B0_CTST		= 0x0004,
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index 543769048..9b84a1278 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -68,6 +68,13 @@
+>>  #define  PCI_STATUS_SIG_SYSTEM_ERROR	0x4000 /* Set when we drive SERR */
+>>  #define  PCI_STATUS_DETECTED_PARITY	0x8000 /* Set on parity error */
+>>  
+>> +#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
+>> +			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+>> +			       PCI_STATUS_REC_MASTER_ABORT | \
+>> +			       PCI_STATUS_REC_TARGET_ABORT | \
+>> +			       PCI_STATUS_SIG_TARGET_ABORT | \
+>> +			       PCI_STATUS_PARITY)
+> 
+> This actually *adds* PCI_STATUS_SIG_TARGET_ABORT, which is not in the
+> driver definitions.  At the very least that should be mentioned in the
+> commit log.
+> 
+> Ideally the addition would be in its own patch so it's obvious and
+> bisectable, but I see the problem -- the subsequent patches
+> consolidate things that aren't really quite the same.  One alternative
+> would be to have preliminary patches that change the drivers
+> individually so they all use this new mask, then do the consolidation
+> afterwards.
+> 
+I checked the other patches and we'd need such preliminary patches
+for three of them:
+marvell: misses PCI_STATUS_SIG_TARGET_ABORT
+skfp: misses PCI_STATUS_REC_TARGET_ABORT
+r8169: misses PCI_STATUS_PARITY
 
-Thanks so much!
--john
+> There is pitifully little documentation about the use of include/uapi,
+> but AFAICT that is for the user API, and this isn't part of that.  I
+> think this #define could go in include/linux/pci.h instead.
+> 
+OK, then I'll change the series accordingly.
+
+>> +
+>>  #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
+>>  #define PCI_REVISION_ID		0x08	/* Revision ID */
+>>  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
+>> -- 
+>> 2.25.1
+>>
+>>
+>>
+>>
+
