@@ -2,168 +2,174 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1C1C35E09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB41C35E0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADCD22082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B816721744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rZtO+Qsr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GAmdvgR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgBYPrB (ORCPT
+        id S1730701AbgBYPrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:47:01 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36742 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730566AbgBYPrA (ORCPT
+        Tue, 25 Feb 2020 10:47:52 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38828 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729386AbgBYPrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:47:00 -0500
-Received: by mail-qt1-f194.google.com with SMTP id t13so9352494qto.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:46:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jzzR6L46tUOZAhynuJXzNpU9O0uz0Bf0qECc4tNwkIg=;
-        b=rZtO+QsrE3oj/5lFyd8Y3/K8ZQ8r1IDNHDwGoDkgnrb/nVLhmTI9e2PI2ohrrbqfM0
-         bEAbu6R8+pp0LB650RskEjp8tbYMa6WPYQuDYX85AcR98/GXNnc00u6KaTULY1nh9R02
-         h7joh4MOE0qdRwEDRb8TqJ70ug4V87jrId+YRPAX8ueDWb/Ym9MDZ7D/uLar6DDJnzSe
-         7gxdHkG/x0RlId4D112NQs3qwtM3pseZOtHu76echkC3TSCquc+1k7kGtLaS9/7E71PE
-         N7ZguGElmb+5sB4xm3FmjEV1HJe/460Og7WXc3OiQ7B5Y+gj7L/7F2WlETxYgUl47m+m
-         xvEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jzzR6L46tUOZAhynuJXzNpU9O0uz0Bf0qECc4tNwkIg=;
-        b=iHN+DuSDm7gns4jFETvwbQSJzn5kJXFqhadLsOs/op9/TA8q2gDbZqr1NoIJ5KqXpE
-         eLNB6iB604bnhx5srzt7rupwF+tPfda9MCDl+tTqQsU2KU3gmjFKL/kVkgXtPQdrfX4u
-         AJXgp3vJAVzSi3VUNkL7I97ZaQAzuHOqkJeGoY3QTVxF5vtgyAyiuoy2DP+biHw1ZrXc
-         N6DJqKPv65tvGlTYjoIXNJQqRADe6DsBVfqwS22Z7vJJM2DI1bKbaBjqCrRVH+1voWt0
-         EWzJVzxt/vq07De0LvmJSrPRh/aR6bUSOPt7fQDzBKiqu7AZLV04R7o91cm5LtUrbA0P
-         iepA==
-X-Gm-Message-State: APjAAAUtqIVCy1CaQRzafgLRtwI0z3l3JZaCssRTUyE+PZIGFALfI4aU
-        xgmP5H3KqUExlNmnOm2lu0Mz9w==
-X-Google-Smtp-Source: APXvYqxMu0HdQd0eLwWSBS5Bck4EomA2B40EfTWaFa15jcXKpXWpGw+8+C9hBtEIoLqlQabr5/n3uA==
-X-Received: by 2002:aed:2284:: with SMTP id p4mr53320481qtc.329.1582645619001;
-        Tue, 25 Feb 2020 07:46:59 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id o55sm7921809qtf.46.2020.02.25.07.46.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 07:46:58 -0800 (PST)
-Message-ID: <1582645616.7365.118.camel@lca.pw>
-Subject: Re: [PATCH] xfs: fix an undefined behaviour in _da3_path_shift
-From:   Qian Cai <cai@lca.pw>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 25 Feb 2020 10:46:56 -0500
-In-Reply-To: <20200225152805.GG6740@magnolia>
-References: <1582641477-4011-1-git-send-email-cai@lca.pw>
-         <20200225152805.GG6740@magnolia>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Feb 2020 10:47:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582645670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=trlBFUce873cn9ccfYK+IWU2Bv4WurycszVYAkntBjk=;
+        b=GAmdvgR4XCXrtNG6+sJQfEUdI+kK4lHUsgw/fkslcVmCL1C9w1K7KMNEaFYSdsQHkXmlvT
+        bu83FuG2py59BBIOAY7Wf1kF5yBPj6Si/HS63RoREpgLPA74fDSPYSOrLhik2Nn4VubIsJ
+        e9T8g4mG2YHLXtdjEZ649AQRM/bEQPw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-QWWSaFm4O4GjTIfdmQKHTw-1; Tue, 25 Feb 2020 10:47:46 -0500
+X-MC-Unique: QWWSaFm4O4GjTIfdmQKHTw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82437107BAAB;
+        Tue, 25 Feb 2020 15:47:44 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 583305D9CD;
+        Tue, 25 Feb 2020 15:47:41 +0000 (UTC)
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com>
+ <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com>
+ <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <1064c653-c911-5e82-bdcc-63f7315317ce@redhat.com>
+Date:   Tue, 25 Feb 2020 15:47:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <1582644535.3361.8.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 07:28 -0800, Darrick J. Wong wrote:
-> On Tue, Feb 25, 2020 at 09:37:57AM -0500, Qian Cai wrote:
-> > state->path.active could be 1 in xfs_da3_node_lookup_int() and then in
-> > xfs_da3_path_shift() could see state->path.blk[-1].
-> 
-> Under what circumstancs can it be 1?  Is this a longstanding bug in XFS?
-> A corrupted filesystem?  A deliberately corrupted filesystem?
+Hi,
 
-in xfs_da3_node_lookup_int(),
+On 25/02/2020 15:28, James Bottomley wrote:
+> On Tue, 2020-02-25 at 12:13 +0000, Steven Whitehouse wrote:
+>> Hi,
+>>
+>> On 24/02/2020 15:28, Miklos Szeredi wrote:
+>>> On Mon, Feb 24, 2020 at 3:55 PM James Bottomley
+>>> <James.Bottomley@hansenpartnership.com> wrote:
+>>>
+>>>> Once it's table driven, certainly a sysfs directory becomes
+>>>> possible. The problem with ST_DEV is filesystems like btrfs and
+>>>> xfs that may have multiple devices.
+>>> For XFS there's always  a single sb->s_dev though, that's what
+>>> st_dev will be set to on all files.
+>>>
+>>> Btrfs subvolume is sort of a lightweight superblock, so basically
+>>> all such st_dev's are aliases of the same master superblock.  So
+>>> lookup of all subvolume st_dev's could result in referencing the
+>>> same underlying struct super_block (just like /proc/$PID will
+>>> reference the same underlying task group regardless of which of the
+>>> task group member's PID is used).
+>>>
+>>> Having this info in sysfs would spare us a number of issues that a
+>>> set of new syscalls would bring.  The question is, would that be
+>>> enough, or is there a reason that sysfs can't be used to present
+>>> the various filesystem related information that fsinfo is supposed
+>>> to present?
+>>>
+>>> Thanks,
+>>> Miklos
+>>>
+>> We need a unique id for superblocks anyway. I had wondered about
+>> using s_dev some time back, but for the reasons mentioned earlier in
+>> this thread I think it might just land up being confusing and
+>> difficult to manage. While fake s_devs are created for sbs that don't
+>> have a device, I can't help thinking that something closer to
+>> ifindex, but for superblocks, is needed here. That would avoid the
+>> issue of which device number to use.
+>>
+>> In fact we need that anyway for the notifications, since without
+>> that  there is a race that can lead to missing remounts of the same
+>> device, in  case a umount/mount pair is missed due to an overrun, and
+>> then fsinfo returns the same device as before, with potentially the
+>> same mount options too. So I think a unique id for a superblock is a
+>> generically useful feature, which would also allow for sensible sysfs
+>> directory naming, if required,
+> But would this be informative and useful for the user?  I'm sure we can
+> find a persistent id for a persistent superblock, but what about tmpfs
+> ... that's going to have to change with every reboot.  It's going to be
+> remarkably inconvenient if I want to get fsinfo on /run to have to keep
+> finding what the id is.
 
-	for (blk = &state->path.blk[0], state->path.active = 1;
-			 state->path.active <= XFS_DA_NODE_MAXDEPTH;
-			 blk++, state->path.active++) {
-<snip>
-		if (magic == XFS_ATTR_LEAF_MAGIC ||
-		    magic == XFS_ATTR3_LEAF_MAGIC) {
-			blk->magic = XFS_ATTR_LEAF_MAGIC;
-			blk->hashval = xfs_attr_leaf_lasthash(blk->bp, NULL);
-			break;
-		}
+That is a different question though, or at least it might be... the idea 
+of the superblock id is to uniquely identify a particular superblock. 
+The mount notification should give you the association between that 
+superblock and any devices (assuming those are applicable), or you can 
+use fsinfo if you were not listening to the notifications at the time of 
+the mount to get the same information.
 
-		if (magic == XFS_DIR2_LEAFN_MAGIC ||
-		    magic == XFS_DIR3_LEAFN_MAGIC) {
-			blk->magic = XFS_DIR2_LEAFN_MAGIC;
-			blk->hashval = xfs_dir2_leaf_lasthash(args->dp,
-							      blk->bp, NULL);
-			break;
+If someone unmounts /run and remounts it, then the superblock id would 
+change, but otherwise it would stay the same, so you know that it is the 
+same mount that is being described in future notifications. One of the 
+main aims here being to combine the fsinfo information with the 
+notifications in a race free manner.
 
-Isn't that if the first iteration in the loop calls any of those "break", it
-will have state->path.active = 1 ?
+There are a number of ways one might want to specify a filesystem: by 
+device, by uuid, by volume label and so forth but we can't use any of 
+those very easily as a unique id. Someone might remove a drive and 
+replace it with a different one (so same device, but different content) 
+or they might have two filesystems with the same uuid if they've just 
+done a dd copy to a new device. For the mount notifications we need 
+something that doesn't suffer from these issues, but which can also be 
+very easily associated with what in most cases are more convenient ways 
+to specify a particular filesystem.
 
-I suppose this is a long-standing bug that need UBSAN (no obvious harm could be
-done later because it will bail out immediately in xfs_da3_path_shift()) and a
-set of specific conditions to met to trigger.
 
-> 
-> > 
-> >  UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
-> >  index -1 is out of range for type 'xfs_da_state_blk_t [5]'
-> >  Call trace:
-> >   dump_backtrace+0x0/0x2c8
-> >   show_stack+0x20/0x2c
-> >   dump_stack+0xe8/0x150
-> >   __ubsan_handle_out_of_bounds+0xe4/0xfc
-> >   xfs_da3_path_shift+0x860/0x86c [xfs]
-> >   xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
-> >   xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
-> >   xfs_dir_createname+0x348/0x38c [xfs]
-> >   xfs_create+0x6b0/0x8b4 [xfs]
-> >   xfs_generic_create+0x12c/0x1f8 [xfs]
-> >   xfs_vn_mknod+0x3c/0x4c [xfs]
-> >   xfs_vn_create+0x34/0x44 [xfs]
-> >   do_last+0xd4c/0x10c8
-> >   path_openat+0xbc/0x2f4
-> >   do_filp_open+0x74/0xf4
-> >   do_sys_openat2+0x98/0x180
-> >   __arm64_sys_openat+0xf8/0x170
-> >   do_el0_svc+0x170/0x240
-> >   el0_sync_handler+0x150/0x250
-> >   el0_sync+0x164/0x180
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> >  fs/xfs/libxfs/xfs_da_btree.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-> > index 875e04f82541..0906b7748a3f 100644
-> > --- a/fs/xfs/libxfs/xfs_da_btree.c
-> > +++ b/fs/xfs/libxfs/xfs_da_btree.c
-> > @@ -1986,7 +1986,11 @@ static inline int xfs_dabuf_nfsb(struct xfs_mount *mp, int whichfork)
-> >  	ASSERT(path != NULL);
-> >  	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
-> >  	level = (path->active-1) - 1;	/* skip bottom layer in path */
-> > -	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
-> > +
-> > +	if (level >= 0)
-> > +		blk = &path->blk[level];
-> 
-> ...because if the reason is "corrupt metadata" then perhaps this should
-> return -EFSCORRUPTED?  But I don't know enough about the context to know
-> the answer to that question.
-> 
-> --D
-> 
-> > +
-> > +	for (; level >= 0; blk--, level--) {
-> >  		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
-> >  					   blk->bp->b_addr);
-> >  
-> > -- 
-> > 1.8.3.1
-> > 
+>
+> The other thing a file descriptor does that sysfs doesn't is that it
+> solves the information leak: if I'm in a mount namespace that has no
+> access to certain mounts, I can't fspick them and thus I can't see the
+> information.  By default, with sysfs I can.
+>
+> James
+>
+Yes, thats true, and I wasn't advocating for the sysfs method over 
+fspick here, just pointing out that a unique superblock id would be a 
+generically useful thing to have,
+
+Steve.
+
+
