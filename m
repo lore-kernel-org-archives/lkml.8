@@ -2,171 +2,291 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B918C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E64C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6313D21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582659913;
-	bh=Nj5eGcXxyq9FnFZMfH7juRDhSHO1VgSMIrQjWtUxLn8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=O81XfaL6bpjCFAEZ1dyCufk6PGN+/2U0lh3f7XqtRNB1LSHDRtqL59hOgPwjGZwpp
-	 aTe3KxIDc/IwvFjYjTowtHaOAhxzGw86sMKnEGzmZsdulFsqcfcQLxz9RQaQ3f2Q1x
-	 prIDix5y4wwqH1Pv9RuKenBWBAcd65CyPkSVH4pE=
+	by mail.kernel.org (Postfix) with ESMTP id D28F62084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgBYTpL (ORCPT
+        id S1731536AbgBYTpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:45:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49502 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 14:45:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55680 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730841AbgBYTpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:45:08 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E1F2084E;
-        Tue, 25 Feb 2020 19:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582659908;
-        bh=Nj5eGcXxyq9FnFZMfH7juRDhSHO1VgSMIrQjWtUxLn8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IlAG4Obz3PchfypDD708rExwBwE8cN7Zb9TRW43BV8yBwUbOw1SG3pVS4jKhcUEfs
-         Zq8EsYhwA62Wkl862PGh5g3ox767G98NOPHNJ+jTL4s8KzmRdkSWWsdoTEjlq0IZQN
-         XJ/aF0pQe0zMPC/F0O/4v9baF14IWkzC4VdPyCwo=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j6g8g-007uWl-5Q; Tue, 25 Feb 2020 19:45:06 +0000
+        id S1731330AbgBYTpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:45:05 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E7829AB7F;
+        Tue, 25 Feb 2020 19:45:01 +0000 (UTC)
+From:   Michal Rostecki <mrostecki@opensuse.org>
+To:     bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v3 5/5] selftests/bpf: Add test for "bpftool feature" command
+Date:   Tue, 25 Feb 2020 20:44:43 +0100
+Message-Id: <20200225194446.20651-6-mrostecki@opensuse.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200225194446.20651-1-mrostecki@opensuse.org>
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Feb 2020 19:45:06 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com,
-        Yanlei Jia <jiayanlei@huawei.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Clear Valid before writing any bits
- else in VPENDBASER
-In-Reply-To: <6ce5c751-6d17-b9ee-4054-edad7de075bf@huawei.com>
-References: <20200224025029.92-1-yuzenghui@huawei.com>
- <bb7cdb29eda9cf160bcf85a58a9fc63d@kernel.org>
- <6ce5c751-6d17-b9ee-4054-edad7de075bf@huawei.com>
-Message-ID: <d8d9fbeddfe59574c457b2f803d0af6c@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, jiayanlei@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+Add Python module with tests for "bpftool feature" command, which mainly
+wheck whether the "full" option is working properly.
 
-On 2020-02-25 02:06, Zenghui Yu wrote:
-> Hi Marc,
-> 
-> On 2020/2/25 7:47, Marc Zyngier wrote:
->> Hi Zenghui,
->> 
->> On 2020-02-24 02:50, Zenghui Yu wrote:
->>> The Valid bit must be cleared before changing anything else when 
->>> writing
->>> GICR_VPENDBASER to avoid the UNPREDICTABLE behavior. This is exactly 
->>> what
->>> we've done on 32bit arm, but not on arm64.
->> 
->> I'm not quite sure how you decide that Valid must be cleared before 
->> changing
->> anything else. The reason why we do it on 32bit is that we cannot 
->> update
->> the full 64bit register at once, so we start by clearing Valid so that
->> we can update the rest. arm64 doesn't require that.
-> 
-> The problem came out from discussions with our GIC engineers and what 
-> we
-> talked about at that time was IHI 0069E 9.11.36 - the description of 
-> the
-> Valid field:
-> 
-> "Writing a new value to any bit of GICR_VPENDBASER, other than
-> GICR_VPENDBASER.Valid, when GICR_VPENDBASER.Valid==1 is UNPREDICTABLE."
-> 
-> It looks like we should first clear the Valid and then write something
-> else. We might have some mis-understanding about this statement..
+Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+---
+ tools/testing/selftests/.gitignore          |   5 +-
+ tools/testing/selftests/bpf/Makefile        |   3 +-
+ tools/testing/selftests/bpf/test_bpftool.py | 179 ++++++++++++++++++++
+ tools/testing/selftests/bpf/test_bpftool.sh |   5 +
+ 4 files changed, 190 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
+ create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
 
-So that's the v4.0 version of VPENDBASER. On v4.0, you start by clearing
-Valid, not changing any other bit. Subsequent polling of the leads to
-the PendingLast bit once Dirty clears. The current code follows this
-principle.
-
->> For the rest of discussion, let's ignore GICv4.1 32bit support (I'm
->> pretty sure nobody cares about that).
->> 
->>> This works fine on GICv4 where we only clear Valid for a vPE 
->>> deschedule.
->>> With the introduction of GICv4.1, we might also need to talk 
->>> something else
->>> (e.g., PendingLast, Doorbell) to the redistributor when clearing the 
->>> Valid.
->>> Let's port the 32bit gicr_write_vpendbaser() to arm64 so that 
->>> hardware can
->>> do the right thing after descheduling the vPE.
->> 
->> The spec says that:
->> 
->> "For a write that writes GICR_VPENDBASER.Valid from 1 to 0, if
->> GICR_VPENDBASER.PendingLast is written as 1 then 
->> GICR_VPENDBASER.PendingLast
->> takes an UNKNOWN value and GICR_VPENDBASER.Doorbell is treated as 
->> being 0."
->> 
->> and
->> 
->> "When GICR_VPENDBASER.Valid is written from 1 to 0, if there are 
->> outstanding
->> enabled pending interrupts GICR_VPENDBASER.Doorbell is treated as 0."
->> 
->> which indicate that PendingLast/Doorbell have to be written at the 
->> same time
->> as we clear Valid.
-> 
-> Yes. I obviously missed these two points when writing this patch.
-> 
->> Can you point me to the bit of the v4.1 spec that makes
->> this "clear Valid before doing anything else" requirement explicit?
-> 
-> No, nothing in v4.1 spec supports me :-(  The above has been forwarded
-> to Hisilicon and I will confirm these with them. It would be easy for
-> hardware to handle the PendingLast/DB when clearing Valid, I think.
-
-v4.1 changes the way VPENDBASER works in a number of way. Clearing Valid 
-allows
-a "handshake": At the point of making the vPE non-resident, to specify 
-the
-expected behaviour of the redistributor once the residency has been 
-completed.
-This includes requesting the doorbell or telling the GIC that we don't 
-care to
-know about PendingLast.
-
-This is effectively a relaxation of the v4.0 behaviour. I believe the 
-current
-state of the driver matches both specs (not using common code though).
-
-Thanks,
-
-         M.
-
+diff --git a/tools/testing/selftests/.gitignore b/tools/testing/selftests/.gitignore
+index 61df01cdf0b2..304fdf1a21dc 100644
+--- a/tools/testing/selftests/.gitignore
++++ b/tools/testing/selftests/.gitignore
+@@ -3,4 +3,7 @@ gpiogpio-hammer
+ gpioinclude/
+ gpiolsgpio
+ tpm2/SpaceTest.log
+-tpm2/*.pyc
++
++# Python bytecode and cache
++__pycache__/
++*.py[cod]
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 2a583196fa51..2dffce6cc429 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -62,7 +62,8 @@ TEST_PROGS := test_kmod.sh \
+ 	test_tc_tunnel.sh \
+ 	test_tc_edt.sh \
+ 	test_xdping.sh \
+-	test_bpftool_build.sh
++	test_bpftool_build.sh \
++	test_bpftool.sh
+ 
+ TEST_PROGS_EXTENDED := with_addr.sh \
+ 	with_tunnels.sh \
+diff --git a/tools/testing/selftests/bpf/test_bpftool.py b/tools/testing/selftests/bpf/test_bpftool.py
+new file mode 100644
+index 000000000000..c8e54843a487
+--- /dev/null
++++ b/tools/testing/selftests/bpf/test_bpftool.py
+@@ -0,0 +1,179 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2020 SUSE LLC.
++
++import collections
++import functools
++import json
++import os
++import socket
++import subprocess
++import unittest
++
++
++# Add the source tree of bpftool and /usr/local/sbin to PATH
++cur_dir = os.path.dirname(os.path.realpath(__file__))
++bpftool_dir = os.path.abspath(os.path.join(cur_dir, "..", "..", "..", "..",
++                                           "tools", "bpf", "bpftool"))
++os.environ["PATH"] = bpftool_dir + ":/usr/local/sbin:" + os.environ["PATH"]
++
++
++class IfaceNotFoundError(Exception):
++    pass
++
++
++class UnprivilegedUserError(Exception):
++    pass
++
++
++def _bpftool(args, json=True):
++    _args = ["bpftool"]
++    if json:
++        _args.append("-j")
++    _args.extend(args)
++
++    res = subprocess.run(_args, capture_output=True)
++    return res.stdout
++
++
++def bpftool(args):
++    return _bpftool(args, json=False).decode("utf-8")
++
++
++def bpftool_json(args):
++    res = _bpftool(args)
++    return json.loads(res)
++
++
++def get_default_iface():
++    for iface in socket.if_nameindex():
++        if iface[1] != "lo":
++            return iface[1]
++    raise IfaceNotFoundError("Could not find any network interface to probe")
++
++
++def default_iface(f):
++    @functools.wraps(f)
++    def wrapper(*args, **kwargs):
++        iface = get_default_iface()
++        return f(*args, iface, **kwargs)
++    return wrapper
++
++
++class TestBpftool(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        if os.getuid() != 0:
++            raise UnprivilegedUserError(
++                "This test suite needs root privileges")
++
++    @default_iface
++    def test_feature_dev_json(self, iface):
++        unexpected_helpers = [
++            "bpf_probe_write_user",
++            "bpf_trace_printk",
++        ]
++        expected_keys = [
++            "syscall_config",
++            "program_types",
++            "map_types",
++            "helpers",
++            "misc",
++        ]
++
++        res = bpftool_json(["feature", "probe", "dev", iface])
++        # Check if the result has all expected keys.
++        self.assertCountEqual(res.keys(), expected_keys)
++        # Check if unexpected helpers are not included in helpers probes
++        # result.
++        for helpers in res["helpers"].values():
++            for unexpected_helper in unexpected_helpers:
++                self.assertNotIn(unexpected_helper, helpers)
++
++    def test_feature_kernel(self):
++        test_cases = [
++            bpftool_json(["feature", "probe", "kernel"]),
++            bpftool_json(["feature", "probe"]),
++            bpftool_json(["feature"]),
++        ]
++        unexpected_helpers = [
++            "bpf_probe_write_user",
++            "bpf_trace_printk",
++        ]
++        expected_keys = [
++            "syscall_config",
++            "system_config",
++            "program_types",
++            "map_types",
++            "helpers",
++            "misc",
++        ]
++
++        for tc in test_cases:
++            # Check if the result has all expected keys.
++            self.assertCountEqual(tc.keys(), expected_keys)
++            # Check if unexpected helpers are not included in helpers probes
++            # result.
++            for helpers in tc["helpers"].values():
++                for unexpected_helper in unexpected_helpers:
++                    self.assertNotIn(unexpected_helper, helpers)
++
++    def test_feature_kernel_full(self):
++        test_cases = [
++            bpftool_json(["feature", "probe", "kernel", "full"]),
++            bpftool_json(["feature", "probe", "full"]),
++        ]
++        expected_helpers = [
++            "bpf_probe_write_user",
++            "bpf_trace_printk",
++        ]
++
++        for tc in test_cases:
++            # Check if expected helpers are included at least once in any
++            # helpers list for any program type. Unfortunately we cannot assume
++            # that they will be included in all program types or a specific
++            # subset of programs. It depends on the kernel version and
++            # configuration.
++            found_helpers = False
++
++            for helpers in tc["helpers"].values():
++                if all(expected_helper in helpers
++                       for expected_helper in expected_helpers):
++                    found_helpers = True
++                    break
++
++            self.assertTrue(found_helpers)
++
++    def test_feature_kernel_full_vs_not_full(self):
++        full_res = bpftool_json(["feature", "probe", "full"])
++        not_full_res = bpftool_json(["feature", "probe"])
++        not_full_set = set()
++        full_set = set()
++
++        for helpers in full_res["helpers"].values():
++            for helper in helpers:
++                full_set.add(helper)
++
++        for helpers in not_full_res["helpers"].values():
++            for helper in helpers:
++                not_full_set.add(helper)
++
++        self.assertCountEqual(full_set - not_full_set,
++                                {"bpf_probe_write_user", "bpf_trace_printk"})
++        self.assertCountEqual(not_full_set - full_set, set())
++
++    def test_feature_macros(self):
++        expected_patterns = [
++            r"/\*\*\* System call availability \*\*\*/",
++            r"#define HAVE_BPF_SYSCALL",
++            r"/\*\*\* eBPF program types \*\*\*/",
++            r"#define HAVE.*PROG_TYPE",
++            r"/\*\*\* eBPF map types \*\*\*/",
++            r"#define HAVE.*MAP_TYPE",
++            r"/\*\*\* eBPF helper functions \*\*\*/",
++            r"#define HAVE.*HELPER",
++            r"/\*\*\* eBPF misc features \*\*\*/",
++        ]
++
++        res = bpftool(["feature", "probe", "macros"])
++        for pattern in expected_patterns:
++            self.assertRegex(res, pattern)
+diff --git a/tools/testing/selftests/bpf/test_bpftool.sh b/tools/testing/selftests/bpf/test_bpftool.sh
+new file mode 100755
+index 000000000000..66690778e36d
+--- /dev/null
++++ b/tools/testing/selftests/bpf/test_bpftool.sh
+@@ -0,0 +1,5 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2020 SUSE LLC.
++
++python3 -m unittest -v test_bpftool.TestBpftool
 -- 
-Jazz is not dead. It just smells funny...
+2.25.1
+
