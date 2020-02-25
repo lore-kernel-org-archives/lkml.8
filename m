@@ -2,95 +2,128 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16311C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C25C35E09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16972084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA7D206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gl9kLKaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgBYQOe (ORCPT
+        id S1730109AbgBYQQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:14:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47876 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729992AbgBYQOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:14:33 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9A7D0ABD7;
-        Tue, 25 Feb 2020 16:14:31 +0000 (UTC)
-Message-ID: <609c96533fec609243f12a1f5fdd494e4f1ae34e.camel@suse.de>
-Subject: Re: [PATCH 11/89] clk: bcm: rpi: Make sure pllb_arm is removed
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Date:   Tue, 25 Feb 2020 17:14:30 +0100
-In-Reply-To: <5571315e0aa8c8af02ad61cb396137707d4b6da4.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-         <5571315e0aa8c8af02ad61cb396137707d4b6da4.1582533919.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-zSYz+O1TkTTw+s8JuVwF"
-User-Agent: Evolution 3.34.4 
+        Tue, 25 Feb 2020 11:16:01 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50922 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBYQQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:16:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=KJ1E/IKL8/N0iOQYE5NPhqXs5/0FveqGImaznQIglos=; b=Gl9kLKaEkQylYsxWgr3khdKcrX
+        34YYPKX7ymbat5fWlSXvuB/MSBAcx11UasM94v9O0vI1rNBxCt0wTSGqWy1407vR7witvvIIUgbFr
+        G3AVPbDtpS7+k8GRDBmHoti3VR64XDYIMH2HfSxzVsurLVARvXBIoOAcSBF5xCFZ7Bz5WkkYCv9e3
+        KlLQg7TnRIpaT5APRPi6eMvwmCPLRyNvOoQVuihpZ0DCenzZ63A7G2mkHRPDeyx/BG7xyDR31GUaX
+        Lq74JtPFF+uHyTZiZouQ6OM8cNwykLEFbXO+TnVWF0IIzI2YjUSaIuNKiVeu0eDFWmssUnES3bX0y
+        6tI4e0AA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6csK-0000YT-0G; Tue, 25 Feb 2020 16:16:00 +0000
+Subject: Re: [PATCH v3 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+To:     Mateusz Holenko <mholenko@antmicro.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+References: <20200225094437.4170502-0-mholenko@antmicro.com>
+ <20200225094437.4170502-3-mholenko@antmicro.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <291b0a18-2b50-515e-d6f8-31f766dbe567@infradead.org>
+Date:   Tue, 25 Feb 2020 08:15:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200225094437.4170502-3-mholenko@antmicro.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/25/20 12:46 AM, Mateusz Holenko wrote:
+> diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
+> new file mode 100644
+> index 000000000000..22c78cda0b83
+> --- /dev/null
+> +++ b/drivers/soc/litex/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License_Identifier: GPL-2.0
+> +
+> +menu "Enable LiteX SoC Builder specific drivers"
+> +
+> +config LITEX_SOC_CONTROLLER
+> +	tristate "Enable LiteX SoC Controller driver"
+> +	help
+> +	This option enables the SoC Controller Driver which verifies
+> +	LiteX CSR access and provides common litex_get_reg/litex_set_reg
+> +	accessors.
+> +	All drivers that use functions from litex.h must depend on
+> +	LITEX_SOC_CONTROLLER
 
---=-zSYz+O1TkTTw+s8JuVwF
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
+Please indent the help text with 2 additional spaces, as explained in the
+coding-style.rst file:
 
-On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
-> The pllb_arm clock was created at probe time, but was never removed if
-> something went wrong later in probe, or if the driver was ever removed fr=
-om
-> the system.
->=20
-> Now that we are using clk_hw_register, we can just use its managed varian=
-t
-> to take care of that for us.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+10) Kconfig configuration files
+-------------------------------
 
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+For all of the Kconfig* configuration files throughout the source tree,
+the indentation is somewhat different.  Lines under a ``config`` definition
+are indented with one tab, while help text is indented an additional two
+spaces.  Example::
 
-Thanks!
-Nicolas
+  config AUDIT
+	bool "Auditing support"
+	depends on NET
+	help
+	  Enable auditing infrastructure that can be used with another
+	  kernel subsystem, such as SELinux (which requires this for
+	  logging of avc messages output).  Does not do system-call
+	  auditing without CONFIG_AUDITSYSCALL.
 
+> +
+> +endmenu
 
---=-zSYz+O1TkTTw+s8JuVwF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+and then end the last line of the help text with a period ('.').
 
------BEGIN PGP SIGNATURE-----
+thanks.
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VR+YACgkQlfZmHno8
-x/5tbgf+KEUYT0jpT3C1Unk34E5t2GRWaiQ46ZtRMRoYx60hHiygSxcrkoZOtYiF
-WgsNmLUlhgSu30qeRzOgsfYHoS7ttnuZjDXWXB2Lx27bnGBXrgZPnLfEefBAQt02
-uCd/O+Nc45NFZLfxk3AGansY5ja4i5zG115Zy5njBoDBmxdchTmh4IX6dj99heKa
-p1VeDbgDt0CTpFUpUE2vVI59mLsI9MnVyTh2CngxfW0Kev9MpEPqWcWiO1xbxae4
-AND1pPwO5aAEc0qWB2NqlDOZ+c/eJMWwQ5p7UaorMdUaURQY5zr12Qfzqnhm+6QX
-gWJJCfh07YRMgduhXRK0dagH1ddjtQ==
-=LhDi
------END PGP SIGNATURE-----
-
---=-zSYz+O1TkTTw+s8JuVwF--
+-- 
+~Randy
 
