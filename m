@@ -2,57 +2,58 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E5C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D6C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574F921556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD32D21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="JkRNezg1"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="l2AwvKtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgBYIq0 (ORCPT
+        id S1729871AbgBYIqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:46:26 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37835 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729393AbgBYIq0 (ORCPT
+        Tue, 25 Feb 2020 03:46:36 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37354 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbgBYIqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:46:26 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b15so9125815lfc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:46:24 -0800 (PST)
+        Tue, 25 Feb 2020 03:46:35 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q23so13114543ljm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:46:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=antmicro.com; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=z1Qahvm7KnmiXYASqq9Hf+eApJtHkcbwnGtdfFCR58I=;
-        b=JkRNezg1xTJbkzROqNPOSM7N/KDneMzf5fQc37XnkxK6A7mvmUCD8yCzb0FcbcAYdn
-         h1gK7sDUGueciXFuXPXj+pm+S+9wWeN7p7Uy2Lrml34l54S8shvQe8jh1v73UljsECco
-         AYGiNRWphBxpBmtLFW0lzTz2OXczZJ8G5JMzc=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mU4JnOUOVxqxZ36QdYJ5U3KLqP1IM5LUm7cfygDKacI=;
+        b=l2AwvKtt7YhgpVdY6QmP0Rf1NjNk7T4OVJIkhMNiJyRLund6iPDmdMy9keVPMcYtAS
+         NAvVn16fpHqaTIhjXwzvUoeyX1j6wDwuI9bunUCXUJvmnQr7gs6mrz0Tc5ajJAp7JW1k
+         tGf874bnYurX9Kc8ITGWK31xjYmv6JTytrQtE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=z1Qahvm7KnmiXYASqq9Hf+eApJtHkcbwnGtdfFCR58I=;
-        b=ObB++mjKrx7hzfdLLwRn/ewEMYnJC5harK59rW28ODbiA6RaZDkP5VLpwGrYh9xpit
-         S4cC6w8GpfDx390eQyV0QRCJyf8N+vx/ELVTQ7dQ+lpkS+zzWI2WrLqLuXeje35Q+/7G
-         m6591OlyiHZQj4iMztYPlo2mH7+sjR7ziPwYVHVgt3RKyq8Qr97yjTDQ3/7pu63i7nBU
-         zX30dHa8h72QwGyG3Oj1HzD6WqbFvipMGOalNI8AmLT7zFyZAuxSnqn0YcJWIKhBeQvS
-         w2kBjOEqDQpWJke5OJOkQV6MLDYJ+pKXWQUidu3UGwmDVYVKzNGZOVCNnRwjW7HqEzwR
-         xVvw==
-X-Gm-Message-State: APjAAAXA7bS5D316FL8xshKfjHVZAJASCNguv0L6SrxEZrOHDNR9I5xs
-        wfWpC+13Whn4CMUJqj20B0jbGw==
-X-Google-Smtp-Source: APXvYqzyNxgyrjZV6JMCkLoX1qWII/B9Gu5Yg1+FK+C9qDt9KG3oE7u+XjroFjv1fnlh1zl/mb5EQQ==
-X-Received: by 2002:a19:6e0f:: with SMTP id j15mr3693486lfc.76.1582620383320;
-        Tue, 25 Feb 2020 00:46:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mU4JnOUOVxqxZ36QdYJ5U3KLqP1IM5LUm7cfygDKacI=;
+        b=ulzZxj8SD2ypOA38HRFyAv3Jossiv1CvFBKHTEi+rGaH09buRDWDEkD1mbVV4t5c5E
+         6vcq4G3mdbDKz6TgAWQ6k/quAB5DE7jjVHyHg646yhHKMrIlqIEwTbll0ebr+DSa1F1w
+         0aroAjdCajjCz2K4YqqgxyhXCDd0Z7fpavh+9ubTrYj91QkOnvTh7xOVMkmrmrv3JAGM
+         qbRp7wx+Y28atjjHTeB5gOmSfYYomzxUG0k9mnOmgla5TYCa/PoPLUqZnaLIQq4AKq9x
+         PGgpLV3MYEc3jS7LrG/htWpZnPcZRFwyprV7DvMcrnp95mbUB16xKzHuT4SU4yGJBxPS
+         /AAw==
+X-Gm-Message-State: APjAAAWGNcKO0wUC+zNASoSzrNfUSLrmjgZA0S4sk/9fuawn6iJNpato
+        3oBq3p2l6GJXoRvp4SQN0k70cA==
+X-Google-Smtp-Source: APXvYqwmGHxprXso3OM+eG1dgajWRSODUWYeOuWKpRznqafT7X3t8pIBTwo1iSirn0AvR5QNiy34WA==
+X-Received: by 2002:a2e:9b95:: with SMTP id z21mr32851409lji.291.1582620393600;
+        Tue, 25 Feb 2020 00:46:33 -0800 (PST)
 Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id n15sm8343233lfe.54.2020.02.25.00.46.21
+        by smtp.gmail.com with ESMTPSA id g78sm3410189lfd.21.2020.02.25.00.46.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 00:46:22 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:46:18 +0100
+        Tue, 25 Feb 2020 00:46:32 -0800 (PST)
+Date:   Tue, 25 Feb 2020 09:46:28 +0100
 From:   Mateusz Holenko <mholenko@antmicro.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -76,72 +77,49 @@ Cc:     Stafford Horne <shorne@gmail.com>,
         Icenowy Zheng <icenowy@aosc.io>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] LiteX SoC controller and LiteUART serial driver
-Message-ID: <20200225094437.4170502-0-mholenko@antmicro.com>
+Subject: [PATCH v3 1/5] dt-bindings: vendor: add vendor prefix for LiteX
+Message-ID: <20200225094437.4170502-1-mholenko@antmicro.com>
+References: <20200225094437.4170502-0-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200225094437.4170502-0-mholenko@antmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset introduces support for LiteX SoC Controller
-and LiteUART - serial device from LiteX SoC builder
-(https://github.com/enjoy-digital/litex).
+From: Filip Kokosinski <fkokosinski@antmicro.com>
 
-In the following patchset I will add
-a new mor1kx-based (OpenRISC) platform that
-uses this device.
+Add vendor prefix for LiteX SoC builder.
 
-Later I plan to extend this platform by
-adding support for more devices from LiteX suite.
+Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
+Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Changes in v3:
-- added Acked-by and Reviewed-by tags
-- introduced LiteX SoC Controller driver
-- removed endianness detection (handled now by LiteX SoC Controller driver)
-- modified litex.h header
-- DTS aliases for LiteUART made optional
-- renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
-- changed PORT_LITEUART from 122 to 123
+Notes:
+    Changes in v3:
+    - added Acked-by tag
+    
+    No changes in v2.
 
-Changes in v2:
-- binding description rewritten to a yaml schema file
-- added litex.h header with common register access functions
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Filip Kokosinski (3):
-  dt-bindings: vendor: add vendor prefix for LiteX
-  dt-bindings: serial: document LiteUART bindings
-  drivers/tty/serial: add LiteUART driver
-
-Pawel Czarnecki (2):
-  dt-bindings: soc: document LiteX SoC Controller bindings
-  drivers/soc/litex: add LiteX SoC Controller driver
-
- .../bindings/serial/litex,liteuart.yaml       |  38 ++
- .../soc/litex/litex,soc_controller.yaml       |  46 ++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   9 +
- drivers/soc/Kconfig                           |   1 +
- drivers/soc/Makefile                          |   1 +
- drivers/soc/litex/Kconfig                     |  14 +
- drivers/soc/litex/Makefile                    |   3 +
- drivers/soc/litex/litex_soc_ctrl.c            | 233 ++++++++++
- drivers/tty/serial/Kconfig                    |  32 +-
- drivers/tty/serial/Makefile                   |   1 +
- drivers/tty/serial/liteuart.c                 | 411 ++++++++++++++++++
- include/linux/litex.h                         |  45 ++
- include/uapi/linux/serial_core.h              |   3 +
- 14 files changed, 838 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
- create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
- create mode 100644 drivers/soc/litex/Kconfig
- create mode 100644 drivers/soc/litex/Makefile
- create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
- create mode 100644 drivers/tty/serial/liteuart.c
- create mode 100644 include/linux/litex.h
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9e67944bec9c..d9107f0fed2e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -549,6 +549,8 @@ patternProperties:
+     description: Linux-specific binding
+   "^linx,.*":
+     description: Linx Technologies
++  "^litex,.*":
++    description: LiteX SoC builder
+   "^lltc,.*":
+     description: Linear Technology Corporation
+   "^logicpd,.*":
 -- 
 2.25.0
 
