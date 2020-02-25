@@ -2,112 +2,88 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D396AC4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C3EC4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1A221D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iHzf862V"
+	by mail.kernel.org (Postfix) with ESMTP id 94C8320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582667392;
+	bh=HpOrLqgis/0esfG7dq2+OsTjc76h9zTqkjIJyDQmoKA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bvv0twlE1sdfiWlUxciFBMKVchmb2qGo9f32vME9kQEVHMnIVBiecQgvvO1HWvdXU
+	 xrP1PB4SZbGHS0Y89oNcWLdaT64NpBHYoKsyaGq3zMqvy0Kk3pOcTLlevZFX1AGmzx
+	 4MWDxd9tiQRfUcd+IHXbqBqKG9eStvDRxA6n6i6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgBYVtj (ORCPT
+        id S1730014AbgBYVtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:49:39 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43600 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729421AbgBYVso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:48:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ilETxbAF/LnQ+7vQ62oXBRdetg0lVhl7+QmSqIaqn70=; b=iHzf862VL2VnrxSBkf4KbYamDC
-        CkAw3ckh0Ylis+8A2gD1tE/+sqpsOYn1GJwj3zGciT52rDRE4m0vdfZ7aI9JOPqa2rMNsHj0xnCpC
-        I3GODW75NyWOqmJnjKkMp6Pecsnp8iQcEVaFuetDZak3WRdImHTxdDyRxOkEdN4WqEC2Kc2Ll+gnG
-        +DdrY2XLIMobmag3BKii8SF/TJoLLW5ueWTDMxUETv3fSF1uu91n/AHyfoeNMN2CTYgTED+7Wnkc9
-        8sZ01LxeSQBoAXKhI3uSwc5QiOhgh52GC+Tyxxv5YR6SFRl7pKghdca4VxL+bi9kpFJI7sqMJIoiB
-        H+sDEH1g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6i4H-0007pP-0Y; Tue, 25 Feb 2020 21:48:41 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <dchinner@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v8 03/25] mm: Ignore return value of ->readpages
-Date:   Tue, 25 Feb 2020 13:48:16 -0800
-Message-Id: <20200225214838.30017-4-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200225214838.30017-1-willy@infradead.org>
-References: <20200225214838.30017-1-willy@infradead.org>
+        Tue, 25 Feb 2020 16:49:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728162AbgBYVts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 16:49:48 -0500
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 879F721D7E
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582667387;
+        bh=HpOrLqgis/0esfG7dq2+OsTjc76h9zTqkjIJyDQmoKA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gLhc7oCBf/dMrtwgyWAQsXlJBnnS8uxHJFBQTNslU/xlcEZ2XsI37rPDayexTl/na
+         fUuMHI7ecFZvcl+kv3tj8ZSXWPVED6uI/6HeAmY/iraqGp56FGYmhadN6drQ3kLQ+1
+         Og4aSYroBhGJzgODXVENKVdfI5ISKrI2XKCmFvP0=
+Received: by mail-wr1-f48.google.com with SMTP id t3so477839wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:49:47 -0800 (PST)
+X-Gm-Message-State: APjAAAWF/Zu9rmzg/aQe37e4c16Zu7g4QsGkBMMmAbOfIDvQAmgGutSF
+        fUstQoVFYRyf85rRERTCoqGrHEdTXSZZksQEZaJi/g==
+X-Google-Smtp-Source: APXvYqwwlguw+9143UoHvRORjuDhvyP7pINZdcLc2/GmTaDHWw6AbKjBqD07WA/Fx7HmxjDN7uHVGZJ80tlj+nocYZ4=
+X-Received: by 2002:adf:df0c:: with SMTP id y12mr1116539wrl.257.1582667386041;
+ Tue, 25 Feb 2020 13:49:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1582498270-50674-1-git-send-email-schaecsn@gmx.net>
+In-Reply-To: <1582498270-50674-1-git-send-email-schaecsn@gmx.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 25 Feb 2020 13:49:34 -0800
+X-Gmail-Original-Message-ID: <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
+Message-ID: <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
+Subject: Re: [PATCH 0/1] i2c: imc: Add support for Intel iMC SMBus host controller.
+To:     Stefan Schaeckeler <schaecsn@gmx.net>
+Cc:     linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Sun, Feb 23, 2020 at 2:52 PM Stefan Schaeckeler <schaecsn@gmx.net> wrote:
+>
+> This patch is based on Andy Lutomirski's iMC SMBus driver patch-set
+> https://lkml.org/lkml/2016/4/28/926. It never made it into the kernel. I hope
+> this rewrite will:
+>
+>
+> Overview
+>
+> Modern Intel memory controllers host an SMBus controller and connection to
+> DIMMs and their thermal sensors. The memory controller firmware has three modes
+> of operation: Closed Loop Thermal Throttling (CLTT), Open Loop Thermal
+> Throttling (OLTT) and none.
+>
+> - CLTT: The memory controller firmware is periodically accessing the DIMM
+>   temperature sensor over the SMBus.
+>
 
-We used to assign the return value to a variable, which we then ignored.
-Remove the pretence of caring.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
----
- mm/readahead.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 41a592886da7..61b15b6b9e72 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -113,17 +113,16 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
- 
- EXPORT_SYMBOL(read_cache_pages);
- 
--static int read_pages(struct address_space *mapping, struct file *filp,
-+static void read_pages(struct address_space *mapping, struct file *filp,
- 		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
- {
- 	struct blk_plug plug;
- 	unsigned page_idx;
--	int ret;
- 
- 	blk_start_plug(&plug);
- 
- 	if (mapping->a_ops->readpages) {
--		ret = mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
-+		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
- 		/* Clean up the remaining pages */
- 		put_pages_list(pages);
- 		goto out;
-@@ -136,12 +135,9 @@ static int read_pages(struct address_space *mapping, struct file *filp,
- 			mapping->a_ops->readpage(filp, page);
- 		put_page(page);
- 	}
--	ret = 0;
- 
- out:
- 	blk_finish_plug(&plug);
--
--	return ret;
- }
- 
- /*
--- 
-2.25.0
-
+I think this is great!  One question, though: what happens if the
+system is in CLTT mode but you disable CLTT and claim the bus for too
+long?  For example, if there's an infinite loop or other lockup which
+you have the tsod polling interval set to 0?  Does the system catch
+fire or does the system do something intelligent like temporarily
+switching to open loop?
