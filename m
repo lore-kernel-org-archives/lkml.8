@@ -2,135 +2,93 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044BCC35E09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA379C35E09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3A4206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC50320CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbgBYQKc (ORCPT
+        id S1730860AbgBYQLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:10:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:52634 "EHLO foss.arm.com"
+        Tue, 25 Feb 2020 11:11:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46660 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728499AbgBYQKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:10:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82F52101E;
-        Tue, 25 Feb 2020 07:48:48 -0800 (PST)
-Received: from e110176-lin.kfn.arm.com (unknown [10.50.4.157])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1DAE3F703;
-        Tue, 25 Feb 2020 07:48:46 -0800 (PST)
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Ofir Drang <ofir.drang@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] crypto: testmgr - sync both RFC4106 IV copies
-Date:   Tue, 25 Feb 2020 17:48:34 +0200
-Message-Id: <20200225154834.25108-3-gilad@benyossef.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200225154834.25108-1-gilad@benyossef.com>
-References: <20200225154834.25108-1-gilad@benyossef.com>
+        id S1729206AbgBYQLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:11:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CA24AACB8;
+        Tue, 25 Feb 2020 16:11:35 +0000 (UTC)
+Message-ID: <f7d43591965dd9c5aed7af194709e15f68f63d3d.camel@suse.de>
+Subject: Re: [PATCH 09/89] clk: bcm: rpi: Use clk_hw_register for pllb_arm
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Tue, 25 Feb 2020 17:11:34 +0100
+In-Reply-To: <1c47c839fda93460994d37b4c851d805a3282d5f.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <1c47c839fda93460994d37b4c851d805a3282d5f.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-WxIH33aUvejlhlKylEgn"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RFC4106 AEAD ciphers the AAD is the concatenation of associated
-authentication data || IV || plaintext or ciphertext but the
-random AEAD message generation in testmgr extended tests did
-not obey this requirements producing messages with undefined
-behaviours. Fix it by syncing the copies if needed.
 
-Since this only relevant for developer only extended tests any
-additional cycles/run time costs are negligible.
+--=-WxIH33aUvejlhlKylEgn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This fixes extended AEAD test failures with the ccree driver
-caused by illegal input.
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> The pllb_arm clock is defined as a fixed factor clock with the pllb clock
+> as a parent. However, all its configuration is entirely static, and thus =
+we
+> don't really need to call clk_hw_register_fixed_factor but can simply cal=
+l
+> clk_hw_register with a static clk_fixed_factor structure.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Eric Biggers <ebiggers@kernel.org>
----
- crypto/testmgr.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index cf565b063cdf..288f349a0cae 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -95,6 +95,11 @@ struct aead_test_suite {
- 	 * AAD buffer during decryption.
- 	 */
- 	unsigned int esp_aad : 1;
-+
-+	/*
-+	 * Set if the algorithm requires the IV to trail the AAD buffer.
-+	 */
-+	unsigned int iv_aad : 1;
- };
- 
- struct cipher_test_suite {
-@@ -2207,6 +2212,10 @@ static void generate_aead_message(struct aead_request *req,
- 
- 	/* Generate the AAD. */
- 	generate_random_bytes((u8 *)vec->assoc, vec->alen);
-+	/* For RFC4106 algs, a copy of the IV is part of the AAD */
-+	if (suite->iv_aad)
-+		memcpy(((u8 *)vec->assoc + vec->alen - ivsize), vec->iv,
-+		       ivsize);
- 
- 	if (inauthentic && prandom_u32() % 2 == 0) {
- 		/* Generate a random ciphertext. */
-@@ -2247,6 +2256,14 @@ static void generate_aead_message(struct aead_request *req,
- 	vec->novrfy = 1;
- 	if (suite->einval_allowed)
- 		vec->crypt_error = -EINVAL;
-+
-+	/*
-+	 * For RFC4106 algs, the IV is embedded as part of the AAD
-+	 * and we might have mutated the AAD so sync the copies
-+	 */
-+	if (suite->iv_aad)
-+		memcpy((u8 *)vec->iv, (vec->assoc + vec->alen - ivsize),
-+		       ivsize);
- }
- 
- /*
-@@ -5243,6 +5260,7 @@ static const struct alg_test_desc alg_test_descs[] = {
- 				____VECS(aes_gcm_rfc4106_tv_template),
- 				.einval_allowed = 1,
- 				.esp_aad = 1,
-+				.iv_aad = 1,
- 			}
- 		}
- 	}, {
-@@ -5255,6 +5273,7 @@ static const struct alg_test_desc alg_test_descs[] = {
- 				____VECS(aes_ccm_rfc4309_tv_template),
- 				.einval_allowed = 1,
- 				.esp_aad = 1,
-+				.iv_aad = 1,
- 			}
- 		}
- 	}, {
-@@ -5265,6 +5284,7 @@ static const struct alg_test_desc alg_test_descs[] = {
- 			.aead = {
- 				____VECS(aes_gcm_rfc4543_tv_template),
- 				.einval_allowed = 1,
-+				.iv_aad = 1,
- 			}
- 		}
- 	}, {
--- 
-2.25.0
+Thanks!
+Nicolas
+
+
+--=-WxIH33aUvejlhlKylEgn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VRzYACgkQlfZmHno8
+x/47yggAt8HYPSSAwxIpPsTANQ5MOmHcSrWHPtoeQ9a34zlBUUytK4V4bHUW0oXO
+W1GOccGSIUHjMHxIZxvOQtiTPgQH56S9SwygQc46T1w+wk/PbuWbBIp7PD71ff1t
+JM80+4P+PUb/DU45sjzNlJ7pjVf1u5TrSjcSyZsTKgvDBH871y/+bQhv2vyvCD50
+tpnI/h4TdEg4J3xJjXGqqlKHJGUL9QzWUid4iUDzrWJUedsERifPTNTWGtHGuJrJ
+sULf1ByFTAgzjY9rY9ss+uP1lQVcspatnr8aqU9H1Zs+fBzN4f7eLnbdC3vM9SBq
+96EoI2KTjpdggc67GD/da+kMBmYCHg==
+=UyQW
+-----END PGP SIGNATURE-----
+
+--=-WxIH33aUvejlhlKylEgn--
 
