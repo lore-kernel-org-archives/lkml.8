@@ -2,109 +2,112 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E3C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9E5C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958102176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0206A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582654504;
+	bh=ksE88csMVPVOWzzcHpIKQckXM92Rf7For2VgVwFf+6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=knAqXgC0Yna1fKS989EV+0ED6LDyu/JAWLG8Ihvx/YVI6qdN86hMrPEMMwe6gXrBQ
+	 pTqaWojDm2rW6bZXCKPEam/jFRhtZS84yTtXKy72CU2QblPvdDcrm0CLVZebFwlJfa
+	 zqENXcj6D/wn+vqC6rxT9SJ/ySC5MTsOfoaQOgMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbgBYSOn (ORCPT
+        id S1731413AbgBYSPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:14:43 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62532 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728367AbgBYSOm (ORCPT
+        Tue, 25 Feb 2020 13:15:02 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38873 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBYSPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:14:42 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PI9rA1038422;
-        Tue, 25 Feb 2020 13:14:34 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yd4h31jhu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 13:14:34 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01PIAn3H028112;
-        Tue, 25 Feb 2020 18:14:33 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 2yaux6whse-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 18:14:33 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PIEWUa37290490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 18:14:32 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6ABA1124058;
-        Tue, 25 Feb 2020 18:14:32 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6073B12405B;
-        Tue, 25 Feb 2020 18:14:32 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Feb 2020 18:14:32 +0000 (GMT)
-Subject: Re: [PATCH v2 2/4] tpm: ibmvtpm: Wait for buffer to be set before
- proceeding
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
-References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
- <20200213202329.898607-3-stefanb@linux.vnet.ibm.com>
- <20200225165744.GD15662@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <8b61d1b4-8503-88e7-271f-da2ea0fc437f@linux.ibm.com>
-Date:   Tue, 25 Feb 2020 13:14:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 25 Feb 2020 13:15:02 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r137so242528oie.5;
+        Tue, 25 Feb 2020 10:15:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sRPxV5iSvPN80K6tvKNtciXRBCMachxheO+dmsdwNT0=;
+        b=Nr6Hz9U0nsRcJnZ9q4TNOERxSlQMNcuhl6QlpT8EX3rG2/0hs+CRSoFFGitmqo1uIf
+         13RMOsr0IgZk6fcdT/eMQMlEPg+emdbwTLg2HidVP/ps1k9FsoVuzE/FQWLyjQuxRKPY
+         msEL+fZjGRCEb3SKDHXLSapXCVLfBrA0utrx0vFK1uLmBofXknw544Zd/etGNYj3U/P8
+         WjSYW1NWL4Uu9Oyoi7USzwdbVOPRkxzsYvyp7kx7q3C8cxro7a/8TmIa7WW1heTGEL1X
+         z28j1kQEufnulKBoLcXlVqhcke52yFO2hNQor3VbKPN/0CotY5FohaNS/8XnSxtCAFc3
+         AhDA==
+X-Gm-Message-State: APjAAAWRU+kDss3hIEQswV/jQKw8vANBpDzdCb1cHB3Nqq34C8ut69L5
+        NCeL6hxRvrPQWzmFbO1MyQ==
+X-Google-Smtp-Source: APXvYqxWUUIv2aQqOuCp8OaRKWv2QrkvHU2RtzwROvmadfZZRS7+D+CIBSg3H3p92q957/Sr7GWDHg==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr199368oib.36.1582654501742;
+        Tue, 25 Feb 2020 10:15:01 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i6sm5902042oto.62.2020.02.25.10.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:15:01 -0800 (PST)
+Received: (nullmailer pid 601 invoked by uid 1000);
+        Tue, 25 Feb 2020 18:15:00 -0000
+Date:   Tue, 25 Feb 2020 12:15:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 02/89] dt-bindings: i2c: brcmstb: Add BCM2711
+ BSC/AUTO-I2C  binding
+Message-ID: <20200225181500.GA538@bogus>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+ <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-In-Reply-To: <20200225165744.GD15662@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_06:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- bulkscore=0 suspectscore=0 phishscore=0 priorityscore=1501 clxscore=1011
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250130
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 11:57 AM, Jarkko Sakkinen wrote:
-> On Thu, Feb 13, 2020 at 03:23:27PM -0500, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> Synchronize with the results from the CRQs before continuing with
->> the initialization. This avoids trying to send TPM commands while
->> the rtce buffer has not been allocated, yet.
-> What is CRQ anyway an acronym of?
+On Mon, 24 Feb 2020 10:06:04 +0100, Maxime Ripard wrote:
+> The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
+> EDID. This block is split into two parts, the BSC and the AUTO_I2C,
+> lying in two separate register areas.
+> 
+> The AUTO_I2C block has a mailbox-like interface and will take away the
+> BSC control from the CPU if enabled. However, the BSC is the actually
+> the same controller than the one supported by the brcmstb driver, and
+> the AUTO_I2C doesn't really bring any immediate benefit.
+> 
+> We can model it in the DT as a single device with two register range,
+> which will allow us to use or or the other in the driver without
+> changing anything in the DT.
+> 
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 40 ++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
 
-Command request queue.
-
-
->
->> This patch fixes an existing race condition that may occurr if the
->> hypervisor does not quickly respond to the VTPM_GET_RTCE_BUFFER_SIZE
->> request sent during initialization and therefore the ibmvtpm->rtce_buf
->> has not been allocated at the time the first TPM command is sent.
-> If it fixes a race condition, why doesn't it have a fixes tag?
-
-Which commit should I mention?
-
-   Stefan
-
-
->
-> /Jarkko
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
