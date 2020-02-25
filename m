@@ -2,121 +2,95 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3A1C35DFB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9406AC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A79D21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A00B222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgBYKFL (ORCPT
+        id S1729977AbgBYKFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:05:11 -0500
-Received: from mx.socionext.com ([202.248.49.38]:34642 "EHLO mx.socionext.com"
+        Tue, 25 Feb 2020 05:05:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44780 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgBYKFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:05:10 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 25 Feb 2020 19:05:08 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 51B8618008B;
-        Tue, 25 Feb 2020 19:05:08 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 25 Feb 2020 19:05:08 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id C82F81A0006;
-        Tue, 25 Feb 2020 19:05:07 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id AFFD212013D;
-        Tue, 25 Feb 2020 19:05:07 +0900 (JST)
-Date:   Tue, 25 Feb 2020 19:05:07 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND] PCI: endpoint: Fix clearing start entry in configfs
-Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
-References: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com> <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
-Message-Id: <20200225190506.7DFA.4A936039@socionext.com>
+        id S1727016AbgBYKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:05:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EA0CEAD81;
+        Tue, 25 Feb 2020 10:05:40 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 11:05:39 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Will Deacon <will@kernel.org>
+cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        akpm@linux-foundation.org,
+        "K . Prasad" <prasad@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Quentin Perret <qperret@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
+ kallsyms_on_each_symbol()
+In-Reply-To: <20200221114404.14641-1-will@kernel.org>
+Message-ID: <alpine.LSU.2.21.2002251104130.11531@pobox.suse.cz>
+References: <20200221114404.14641-1-will@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+CC live-patching ML, because this could affect many of its users...
 
-On Fri, 21 Feb 2020 14:15:53 +0000 <lorenzo.pieralisi@arm.com> wrote:
+On Fri, 21 Feb 2020, Will Deacon wrote:
 
-> On Fri, Dec 20, 2019 at 09:24:37PM +0900, Kunihiko Hayashi wrote:
-> > The value of 'start' entry is no change whenever writing 0 to configfs.
-> > So the endpoint that stopped once can't restart.
-> > 
-> > The following command lines are an example restarting endpoint and
-> > reprogramming configurations after receiving bus-reset.
-> > 
-> >     echo 0 > controllers/66000000.pcie-ep/start
-> >     rm controllers/66000000.pcie-ep/func1
-> >     ln -s functions/pci_epf_test/func1 controllers/66000000.pcie-ep/
-> >     echo 1 > controllers/66000000.pcie-ep/start
-> > 
-> > However, the first 'echo' can't set 0 to 'start', so the last 'echo' can't
-> > restart endpoint.
+> Hi folks,
 > 
-> I think your description is not correct - pci_epc_group->start is
-> just used to check if an endpoint has been started or not (in
-> pci_epc_epf_unlink() and that's a WARN_ON) but nonetheless this
-> looks like a bug and ought to be fixed.
-
-When pci_epc_group->start keeps 1 after starting this controller with
-'echo 1 > start', we can never unlink the func1 from the controller
-because of WARN_ON.
-
-I think that unlink/re-link play initialization role of configfs
-through 'unbind' and 'bind' functions. However, we can't re-initialize
-configfs.
-
-If this is the intended behavior, my patch will make no sense.
-
-> I need Kishon's ACK to proceed.
-
-I think so, too.
-
-Thank you,
-
+> Despite having just a single modular in-tree user that I could spot,
+> kallsyms_lookup_name() is exported to modules and provides a mechanism
+> for out-of-tree modules to access and invoke arbitrary, non-exported
+> kernel symbols when kallsyms is enabled.
 > 
-> Thanks,
-> Lorenzo
+> This patch series fixes up that one user and unexports the symbol along
+> with kallsyms_on_each_symbol(), since that could also be abused in a
+> similar manner.
 > 
-> > Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
-> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  drivers/pci/endpoint/pci-ep-cfs.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-> > index d1288a0..4fead88 100644
-> > --- a/drivers/pci/endpoint/pci-ep-cfs.c
-> > +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> > @@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
-> >  
-> >  	if (!start) {
-> >  		pci_epc_stop(epc);
-> > +		epc_group->start = 0;
-> >  		return len;
-> >  	}
-> >  
-> > -- 
-> > 2.7.4
-> > 
-
----
-Best Regards,
-Kunihiko Hayashi
+> Cheers,
+> 
+> Will
+> 
+> Cc: K.Prasad <prasad@linux.vnet.ibm.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Quentin Perret <qperret@google.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> --->8
+> 
+> Will Deacon (3):
+>   samples/hw_breakpoint: Drop HW_BREAKPOINT_R when reporting writes
+>   samples/hw_breakpoint: Drop use of kallsyms_lookup_name()
+>   kallsyms: Unexport kallsyms_lookup_name() and
+>     kallsyms_on_each_symbol()
+> 
+>  kernel/kallsyms.c                       |  2 --
+>  samples/hw_breakpoint/data_breakpoint.c | 11 ++++++++---
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
 
