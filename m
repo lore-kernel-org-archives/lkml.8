@@ -2,87 +2,84 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD56C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEF1C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F3520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5142072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbgBYPTT (ORCPT
+        id S1730984AbgBYPVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:19:19 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36339 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729817AbgBYPTT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:19:19 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-181-PygZP9mHNwW0TQKcmdPTxQ-1; Tue, 25 Feb 2020 15:19:14 +0000
-X-MC-Unique: PygZP9mHNwW0TQKcmdPTxQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Feb 2020 15:19:14 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Feb 2020 15:19:14 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Paolo Bonzini' <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 43/61] KVM: x86: Use KVM cpu caps to mark CR4.LA57 as
- not-reserved
-Thread-Topic: [PATCH 43/61] KVM: x86: Use KVM cpu caps to mark CR4.LA57 as
- not-reserved
-Thread-Index: AQHV6+4E9BqMh7ePK0SVXxTqp0vBfqgsBIsQ
-Date:   Tue, 25 Feb 2020 15:19:14 +0000
-Message-ID: <5c0282a66ae54d36af674a568b58071b@AcuMS.aculab.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-44-sean.j.christopherson@intel.com>
- <8736azocyp.fsf@vitty.brq.redhat.com>
- <66467dd7-09f0-7975-5c4e-c0404d779d8d@redhat.com>
-In-Reply-To: <66467dd7-09f0-7975-5c4e-c0404d779d8d@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 25 Feb 2020 10:21:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:52118 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729867AbgBYPVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 10:21:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E0FA1FB;
+        Tue, 25 Feb 2020 07:21:23 -0800 (PST)
+Received: from [10.0.8.126] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C96483F703;
+        Tue, 25 Feb 2020 07:21:21 -0800 (PST)
+Subject: Re: [PATCH v2 2/6] sched/rt: Re-instate old behavior in
+ select_task_rq_rt
+To:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+References: <20200223184001.14248-1-qais.yousef@arm.com>
+ <20200223184001.14248-3-qais.yousef@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <01313581-0c60-8b4c-ceb3-e23554a600ed@arm.com>
+Date:   Tue, 25 Feb 2020 15:21:16 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200223184001.14248-3-qais.yousef@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGFvbG8gQm9uemluaQ0KPiBTZW50OiAyNSBGZWJydWFyeSAyMDIwIDE1OjEyDQo+IE9u
-IDI0LzAyLzIwIDIzOjA4LCBWaXRhbHkgS3V6bmV0c292IHdyb3RlOg0KPiA+PiArDQo+ID4+ICtz
-dGF0aWMgX19hbHdheXNfaW5saW5lIGJvb2wga3ZtX2NwdV9jYXBfaGFzKHVuc2lnbmVkIHg4Nl9m
-ZWF0dXJlKQ0KPiA+PiArew0KPiA+PiArCXJldHVybiBrdm1fY3B1X2NhcF9nZXQoeDg2X2ZlYXR1
-cmUpOw0KPiA+PiArfQ0KPiA+IEkga25vdyB0aGlzIHdvcmtzIChhbmQgSSBldmVuIGNoZWNrZWQg
-Qzk5IHRvIG1ha2Ugc3VyZSB0aGF0IGl0IHdvcmtzIG5vdA0KPiA+IGJ5IGFjY2lkZW50KSBidXQg
-SSBoYXZlIHRvIGFkbWl0IHRoYXQgZXhwbGljaXQgJyEhJyBjb252ZXJzaW9uIHRvIGJvb2wNCj4g
-PiBhbHdheXMgbWFrZXMgbWUgZmVlbCBzYWZlciA6LSkNCj4gDQo+IFNhbWUgaGVyZSwgSSBkb24n
-dCByZWFsbHkgbGlrZSB0aGUgYXV0b21hZ2ljIGJvb2wgYmVoYXZpb3IuLi4NCg0KSSBqdXN0IGRp
-c2xpa2UgJ2Jvb2wnLg0KDQpDb252ZXJzaW9uIG9mIDAvbm9uLXplcm8gdG8gMC8xIGlzbid0IGNv
-bXBsZXRlbHkgZnJlZS4NCkFuZCBzb21ldGhpbmcgaGFzIHRvICdnaXZlJyB3aGVuIHRoZSByZWZl
-cmVuY2VkIG1lbW9yeSBsb2NhdGlvbg0KZG9lc24ndCBjb250YWluIDAgb3IgMS4NCg0KT25lIHZl
-cnkgb2xkIHZlcnNpb24gb2YgZ2NjIG1hZGUgYSBjb21wbGV0ZSBoYXNoIG9mOg0KCWJvb2xfdmFy
-IHw9IGZ1bmN0aW9uX3JldHVybmluZ19ib29sKCk7DQoNCkknbSBub3Qgc3VyZSB3aGF0IHRoZSBz
-dGFuZGFyZCByZXF1aXJlcyBub3Igd2hhdCBjdXJyZW50IGdjYw0KZ2VuZXJhdGVzIC0gYnV0IHlv
-dSB3YW50IGEgJ2xvZ2ljYWwgb3InIGluc3RydWN0aW9uLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0
-ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBL
-ZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On 23.02.20 18:39, Qais Yousef wrote:
 
+[...]
+
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 4043abe45459..2c3fae637cef 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1474,6 +1474,13 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+>  	if (test || !rt_task_fits_capacity(p, cpu)) {
+>  		int target = find_lowest_rq(p);
+>  
+> +		/*
+> +		 * Bail out if we were forcing a migration to find a better
+> +		 * fitting CPU but our search failed.
+> +		 */
+> +		if (!test && !rt_task_fits_capacity(p, target))
+> +			goto out_unlock;
+
+Didn't you loose the 'target != -1' condition from
+https://lore.kernel.org/r/20200218041620.GD28029@codeaurora.org ?
+
+A call to rt_task_fits_capacity(p, -1) would cause issues on a
+heterogeneous system.
+
+I tried to provoke this but wasn't able to do so. find_lowest_rq()
+returns -1 in 4 places. (1) lowest_mask should be there (2) if
+'task->nr_cpus_allowed == 1' select_task_rq_rt() wouldn't have been
+called but maybe (3) or (4) can still return -1.
+
+[...]
