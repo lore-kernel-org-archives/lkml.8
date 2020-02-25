@@ -2,227 +2,448 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FB6C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B607C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F9920CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F033620CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EC1+98kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgBYM0C (ORCPT
+        id S1729856AbgBYM00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:26:02 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39026 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgBYM0B (ORCPT
+        Tue, 25 Feb 2020 07:26:26 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:51171 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729206AbgBYM00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:26:01 -0500
-Received: from [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281] (unknown [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: gtucker)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 535F7294D77;
-        Tue, 25 Feb 2020 12:25:59 +0000 (GMT)
-Subject: Re: next/master bisection: baseline.login on
- sun8i-h2-plus-orangepi-zero
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     broonie@kernel.org, tomeu.vizoso@collabora.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        enric.balletbo@collabora.com, khilman@baylibre.com,
-        mgalka@collabora.com, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <5e4b4889.1c69fb81.bc072.65a9@mx.google.com>
- <50f9ce8b-c303-3b25-313b-cfb62d7e8735@collabora.com>
- <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <9bfacff8-33f2-8145-4210-dd382e6e4f27@collabora.com>
-Date:   Tue, 25 Feb 2020 12:25:56 +0000
+        Tue, 25 Feb 2020 07:26:26 -0500
+Received: from [IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2]
+ ([IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 6ZI3jyhoYjmHT6ZI6jWw5v; Tue, 25 Feb 2020 13:26:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582633583; bh=jtQMXNw/cfyh+gnYhCWrvjIQGpiDbUxxuddj1fuUNmg=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=EC1+98kg7kFI68JPL2LrYUFj0x7Rpbc7+nMlkvwkmXpvYcmuqbnZoBOEVaZSHcEtz
+         Y8jwBhb3H7dpUGdJ24zhf/GxUW1+dPPG4UluNBFwPqHX01FEMVxHsNm01mGOA6pzWV
+         ZxtWmER02n68ka7ivec5aNO3mDAqDqa8zhPMhporQI8G0MBezU8MxexwgAhystNoXU
+         QHOJvhJ7lEWmQWODHHXP5E21bwCMrgXv86AUwPkFIpJlfqownyen53PVqKXOSLtccE
+         pfk3ZPP/+6ogrLvfztPhouNgf7BPEvdq7ZuyHjoill4gW2iR5Dd48fIcVFwWrBekGd
+         3aP8qR4pzeJbw==
+Subject: Re: [PATCH v3] media: vimc: get pixformat info from v4l2_format_info
+To:     "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+References: <20200122175727.62664-1-carlosecb@tutanota.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c175b8fd-481c-5429-1f8c-4d8a8127584f@xs4all.nl>
+Date:   Tue, 25 Feb 2020 13:26:19 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200122175727.62664-1-carlosecb@tutanota.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPcH9kTfNi8S5LUz9sGwr8ZGlUfUfLrp3dNgy9kqmje0jxipjQOsKc+uly5L74Mo/PXR7UvQl4ZUxr7nca+HjmYrJ1xCKW+5cPPX1TRjE7u8MzKFL3hf
+ nn79Bw73nL0kAkpxrTSWDtEs/LegvL1giZOeSYYHAJ4WSaOtS/kcJQHc8rM4aXpkXC84wBQt39/qFOKu6AUcdEUnVUN4vprpLvEcl+dGi7EE/x0xc3O2ZKbR
+ 2K8zFUiF4v68kCcMSinpXQNm5xedYmndkTR5UCBUGPsszumGMrtZsYWPzlitjHDHgauEH2Ke8fpNrlaOo8mHFqJekqCmcIHfcWzaoxXWJ7owrDpNmXTH2a9l
+ vT+EeFBK3F5K/hEE2Gok6bwKIKph6yxsF8YM8SpytG7sOxO79zF0QniNL96PEFQfdMBLVJjzxVlc64M1Bn4tuGDj9XsqS2eS7UCmjjUOiTl73g2zRMDOxfQ6
+ T85DXlbqLKD6CsL3Zw+Wx2/dZtbGxBwbJsyUqHnxWpUC3Z0j4wspWVPFKb8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 23:49, Stephen Boyd wrote:
-> Adding some Allwinner folks. Presumably there is some sort of clk that
-> is failing to calculate a phase when it gets registered. Maybe that's
-> because the parent isn't registered yet?
-
-FYI this is still happening on several Allwinner boards:
-
-On 25/02/2020 11:57, kernelci.org bot wrote:
-> next/master bisection: baseline.login on sun7i-a20-cubieboard2
+On 1/22/20 6:57 PM, Carlos E. C. Barbosa wrote:
+> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
 > 
-> Summary:
->   Start:      c99b17ac03994 Add linux-next specific files for 20200225
->   Plain log:  https://storage.kernelci.org//next/master/next-20200225/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cubieboard2.txt
->   HTML log:   https://storage.kernelci.org//next/master/next-20200225/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun7i-a20-cubieboard2.html
->   Result:     2760878662a29 clk: Bail out when calculating phase fails during clk registration
+> There is overlapping code over two distinct lists. This repurposes vimc_pix_map
+> for mapping formats and remaps the calls to the matching v4l2_format_info.
 > 
-> Checks:
->   revert:     PASS
->   verify:     PASS
+> ---
+> Changes in v2:
+> As advised by Helen Koike and Hans Verkuil, the const qualifiers are not
+> removed, the bayer flag is kept and the unnecessary changes are not
+> made.
 > 
-> Parameters:
->   Tree:       next
->   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->   Branch:     master
->   Target:     sun7i-a20-cubieboard2
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig
->   Test case:  baseline.login
+> Changes in v3:
+> Change declaration order of variables and some minor style changes.
+> 
+> v4l2-compliance message:
+> https://pastebin.com/UkmfjuLa
+> 
+> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
 
-Guillaume
+This Sob needs to be above the --- line!
 
-> Quoting Guillaume Tucker (2020-02-17 23:45:41)
->> Hi Stephen,
->>
->> Please see the bisection report below about a boot failure.
->>
->> Reports aren't automatically sent to the public while we're
->> trialing new bisection features on kernelci.org but this one
->> looks valid.
->>
->> There's nothing in the serial console log, probably because it's
->> crashing too early during boot.  I'm not sure if other platforms
->> on kernelci.org were hit by this in the same way, it's tricky to
->> tell partly because there is no output.  It should possible to
->> run it again with earlyprintk enabled in BayLibre's test lab
->> though.
->>
->> Thanks,
->> Guillaume
->>
->>
->> On 18/02/2020 02:14, kernelci.org bot wrote:
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>> * This automated bisection report was sent to you on the basis  *
->>> * that you may be involved with the breaking commit it has      *
->>> * found.  No manual investigation has been done to verify it,   *
->>> * and the root cause of the problem may be somewhere else.      *
->>> *                                                               *
->>> * If you do send a fix, please include this trailer:            *
->>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->>> *                                                               *
->>> * Hope this helps!                                              *
->>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>>
->>> next/master bisection: baseline.login on sun8i-h2-plus-orangepi-zero
->>>
->>> Summary:
->>>   Start:      c25a951c50dc Add linux-next specific files for 20200217
->>>   Plain log:  https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.txt
->>>   HTML log:   https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.html
->>>   Result:     2760878662a2 clk: Bail out when calculating phase fails during clk registration
->>>
->>> Checks:
->>>   revert:     PASS
->>>   verify:     PASS
->>>
->>> Parameters:
->>>   Tree:       next
->>>   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->>>   Branch:     master
->>>   Target:     sun8i-h2-plus-orangepi-zero
->>>   CPU arch:   arm
->>>   Lab:        lab-baylibre
->>>   Compiler:   gcc-8
->>>   Config:     multi_v7_defconfig
->>>   Test case:  baseline.login
->>>
->>> Breaking commit found:
->>>
->>> -------------------------------------------------------------------------------
->>> commit 2760878662a290ac57cff8a5a8d8bda8f4dddc37
->>> Author: Stephen Boyd <sboyd@kernel.org>
->>> Date:   Wed Feb 5 15:28:02 2020 -0800
->>>
->>>     clk: Bail out when calculating phase fails during clk registration
->>>     
->>>     Bail out of clk registration if we fail to get the phase for a clk that
->>>     has a clk_ops::get_phase() callback. Print a warning too so that driver
->>>     authors can easily figure out that some clk is unable to read back phase
->>>     information at boot.
->>>     
->>>     Cc: Douglas Anderson <dianders@chromium.org>
->>>     Cc: Heiko Stuebner <heiko@sntech.de>
->>>     Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
->>>     Signed-off-by: Stephen Boyd <sboyd@kernel.org>
->>>     Link: https://lkml.kernel.org/r/20200205232802.29184-5-sboyd@kernel.org
->>>     Acked-by: Jerome Brunet <jbrunet@baylibre.com>
->>>
->>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->>> index dc8bdfbd6a0c..ed1797857bae 100644
->>> --- a/drivers/clk/clk.c
->>> +++ b/drivers/clk/clk.c
->>> @@ -3457,7 +3457,12 @@ static int __clk_core_init(struct clk_core *core)
->>>        * Since a phase is by definition relative to its parent, just
->>>        * query the current clock phase, or just assume it's in phase.
->>>        */
->>> -     clk_core_get_phase(core);
->>> +     ret = clk_core_get_phase(core);
->>> +     if (ret < 0) {
->>> +             pr_warn("%s: Failed to get phase for clk '%s'\n", __func__,
->>> +                     core->name);
->>> +             goto out;
->>> +     }
->>>  
->>>       /*
->>>        * Set clk's duty cycle.
->>> -------------------------------------------------------------------------------
->>>
->>>
->>> Git bisection log:
->>>
->>> -------------------------------------------------------------------------------
->>> git bisect start
->>> # good: [11a48a5a18c63fd7621bb050228cebf13566e4d8] Linux 5.6-rc2
->>> git bisect good 11a48a5a18c63fd7621bb050228cebf13566e4d8
->>> # bad: [c25a951c50dca1da4a449a985a9debd82dc18573] Add linux-next specific files for 20200217
->>> git bisect bad c25a951c50dca1da4a449a985a9debd82dc18573
->>> # bad: [5859c179b7ed01050641bd565959a2c4571923da] Merge remote-tracking branch 'swiotlb/linux-next'
->>> git bisect bad 5859c179b7ed01050641bd565959a2c4571923da
->>> # bad: [ecf5a6e1ec22ecbe1c9086f40130188f31e37a38] Merge remote-tracking branch 'xtensa/xtensa-for-next'
->>> git bisect bad ecf5a6e1ec22ecbe1c9086f40130188f31e37a38
->>> # good: [e475ff54b7d62c550768ce36617e8c8fec72cfc0] Merge remote-tracking branch 'reset/reset/next'
->>> git bisect good e475ff54b7d62c550768ce36617e8c8fec72cfc0
->>> # bad: [9e86f8cc2d2f464e27c172127e02641fe77eccea] Merge remote-tracking branch 'sh/sh-next'
->>> git bisect bad 9e86f8cc2d2f464e27c172127e02641fe77eccea
->>> # good: [1752d66d86600e9cb508612ded6984774b72321d] Merge remote-tracking branch 'tegra/for-next'
->>> git bisect good 1752d66d86600e9cb508612ded6984774b72321d
->>> # bad: [0ecb83df935b058a2c3727716a7fab539dbaba88] Merge remote-tracking branch 'csky/linux-next'
->>> git bisect bad 0ecb83df935b058a2c3727716a7fab539dbaba88
->>> # bad: [898fe3af935a45236cbfd053e79ae01506ae7aa2] Merge branch 'clk-formatting' into clk-next
->>> git bisect bad 898fe3af935a45236cbfd053e79ae01506ae7aa2
->>> # bad: [0d426990beac93127a4ee37cc056fce928466f7d] Merge branch 'clk-phase-errors' into clk-next
->>> git bisect bad 0d426990beac93127a4ee37cc056fce928466f7d
->>> # good: [6e37add6b938941f755928159ede3c9855307066] Merge branch 'clk-qcom' into clk-next
->>> git bisect good 6e37add6b938941f755928159ede3c9855307066
->>> # good: [5d98429bbebc5dc683ea6919d9b9e6e83e8c8867] Merge branch 'clk-fixes' into clk-next
->>> git bisect good 5d98429bbebc5dc683ea6919d9b9e6e83e8c8867
->>> # good: [768a5d4f63c29d3bed5abb3c187312fcf623fa05] clk: Use 'parent' to shorten lines in __clk_core_init()
->>> git bisect good 768a5d4f63c29d3bed5abb3c187312fcf623fa05
->>> # bad: [2760878662a290ac57cff8a5a8d8bda8f4dddc37] clk: Bail out when calculating phase fails during clk registration
->>> git bisect bad 2760878662a290ac57cff8a5a8d8bda8f4dddc37
->>> # good: [0daa376d832f4ce585f153efee4233b52fa3fe58] clk: Move rate and accuracy recalc to mostly consumer APIs
->>> git bisect good 0daa376d832f4ce585f153efee4233b52fa3fe58
->>> # first bad commit: [2760878662a290ac57cff8a5a8d8bda8f4dddc37] clk: Bail out when calculating phase fails during clk registration
->>> -------------------------------------------------------------------------------
->>>
->>
+I get sparse warnings:
+
+drivers/media/platform/vimc/vimc-scaler.c:128:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
+drivers/media/platform/vimc/vimc-scaler.c:181:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
+
+It does seem that it is indeed unused.
+
+Regards,
+
+	Hans
+
+> ---
+>  drivers/media/platform/vimc/vimc-capture.c | 14 ++++++++-----
+>  drivers/media/platform/vimc/vimc-common.c  | 23 ----------------------
+>  drivers/media/platform/vimc/vimc-common.h  |  2 --
+>  drivers/media/platform/vimc/vimc-debayer.c |  7 +++++--
+>  drivers/media/platform/vimc/vimc-scaler.c  | 12 +++++++++--
+>  drivers/media/platform/vimc/vimc-sensor.c  |  9 +++++++--
+>  6 files changed, 31 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+> index 76c015898cfd..686456aad29c 100644
+> --- a/drivers/media/platform/vimc/vimc-capture.c
+> +++ b/drivers/media/platform/vimc/vimc-capture.c
+> @@ -85,6 +85,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+>  				    struct v4l2_format *f)
+>  {
+>  	struct v4l2_pix_format *format = &f->fmt.pix;
+> +	const struct v4l2_format_info *vinfo;
+>  	const struct vimc_pix_map *vpix;
+>  
+>  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
+> @@ -94,12 +95,13 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	/* Don't accept a pixelformat that is not on the table */
+>  	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+> -	if (!vpix) {
+> +	if (!vpix)
+>  		format->pixelformat = fmt_default.pixelformat;
+> -		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+> -	}
+> +
+> +	vinfo = v4l2_format_info(format->pixelformat);
+> +
+>  	/* TODO: Add support for custom bytesperline values */
+> -	format->bytesperline = format->width * vpix->bpp;
+> +	format->bytesperline = format->width * vinfo->bpp[0];
+>  	format->sizeimage = format->bytesperline * format->height;
+>  
+>  	if (format->field == V4L2_FIELD_ANY)
+> @@ -386,6 +388,7 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+>  				     const char *vcfg_name)
+>  {
+>  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+> +	const struct v4l2_format_info *vinfo;
+>  	const struct vimc_pix_map *vpix;
+>  	struct vimc_cap_device *vcap;
+>  	struct video_device *vdev;
+> @@ -435,7 +438,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+>  	/* Set default frame format */
+>  	vcap->format = fmt_default;
+>  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
+> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
+> +	vinfo = v4l2_format_info(vpix->pixelformat);
+> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
+>  	vcap->format.sizeimage = vcap->format.bytesperline *
+>  				 vcap->format.height;
+>  
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index 16ce9f3b7c75..8327ada1b461 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -21,19 +21,16 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  	{
+>  		.code = MEDIA_BUS_FMT_BGR888_1X24,
+>  		.pixelformat = V4L2_PIX_FMT_BGR24,
+> -		.bpp = 3,
+>  		.bayer = false,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_RGB888_1X24,
+>  		.pixelformat = V4L2_PIX_FMT_RGB24,
+> -		.bpp = 3,
+>  		.bayer = false,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
+>  		.pixelformat = V4L2_PIX_FMT_ARGB32,
+> -		.bpp = 4,
+>  		.bayer = false,
+>  	},
+>  
+> @@ -41,49 +38,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  	{
+>  		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  
+> @@ -91,25 +80,21 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  	{
+>  		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  
+> @@ -117,49 +102,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  	{
+>  		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
+> -		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+>  		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
+> -		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  };
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index 87eb8259c2a8..dd1c45334705 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -62,7 +62,6 @@ do {									\
+>   * struct vimc_pix_map - maps media bus code with v4l2 pixel format
+>   *
+>   * @code:		media bus format code defined by MEDIA_BUS_FMT_* macros
+> - * @bbp:		number of bytes each pixel occupies
+>   * @pixelformat:	pixel format devined by V4L2_PIX_FMT_* macros
+>   *
+>   * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
+> @@ -70,7 +69,6 @@ do {									\
+>   */
+>  struct vimc_pix_map {
+>  	unsigned int code;
+> -	unsigned int bpp;
+>  	u32 pixelformat;
+>  	bool bayer;
+>  };
+> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+> index 5d1b67d684bb..10d53ca129fd 100644
+> --- a/drivers/media/platform/vimc/vimc-debayer.c
+> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+> @@ -303,6 +303,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>  	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>  
+>  	if (enable) {
+> +		const struct v4l2_format_info *vinfo;
+>  		const struct vimc_pix_map *vpix;
+>  		unsigned int frame_size;
+>  
+> @@ -311,12 +312,14 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>  
+>  		/* Calculate the frame size of the source pad */
+>  		vpix = vimc_pix_map_by_code(vdeb->src_code);
+> +		vinfo = v4l2_format_info(vpix->pixelformat);
+>  		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
+> -				vpix->bpp;
+> +				vinfo->bpp[0];
+>  
+>  		/* Save the bytes per pixel of the sink */
+>  		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
+> -		vdeb->sink_bpp = vpix->bpp;
+> +		vinfo = v4l2_format_info(vpix->pixelformat);
+> +		vdeb->sink_bpp = vinfo->bpp[0];
+>  
+>  		/* Get the corresponding pixel map from the table */
+>  		vdeb->sink_pix_map =
+> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+> index e2e551bc3ded..55be69ddf918 100644
+> --- a/drivers/media/platform/vimc/vimc-scaler.c
+> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+> @@ -125,6 +125,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+>  				    struct v4l2_subdev_pad_config *cfg,
+>  				    struct v4l2_subdev_frame_size_enum *fse)
+>  {
+> +	const struct v4l2_format_info *vinfo;
+>  	const struct vimc_pix_map *vpix;
+>  
+>  	if (fse->index)
+> @@ -135,6 +136,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+>  	if (!vpix || vpix->bayer)
+>  		return -EINVAL;
+>  
+> +	vinfo = v4l2_format_info(vpix->pixelformat);
+>  	fse->min_width = VIMC_FRAME_MIN_WIDTH;
+>  	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
+>  
+> @@ -176,12 +178,16 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
+>  
+>  static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
+>  {
+> +	const struct v4l2_format_info *vinfo;
+>  	const struct vimc_pix_map *vpix;
+>  
+>  	/* Only accept code in the pix map table in non bayer format */
+>  	vpix = vimc_pix_map_by_code(fmt->code);
+> -	if (!vpix || vpix->bayer)
+> +	if (!vpix || vpix->bayer) {
+>  		fmt->code = sink_fmt_default.code;
+> +		vpix = vimc_pix_map_by_code(fmt->code);
+> +	}
+> +	vinfo = v4l2_format_info(vpix->pixelformat);
+>  
+>  	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+>  			     VIMC_FRAME_MAX_WIDTH) & ~1;
+> @@ -331,6 +337,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+>  
+>  	if (enable) {
+> +		const struct v4l2_format_info *vinfo;
+>  		const struct vimc_pix_map *vpix;
+>  		unsigned int frame_size;
+>  
+> @@ -339,7 +346,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>  
+>  		/* Save the bytes per pixel of the sink */
+>  		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
+> -		vsca->bpp = vpix->bpp;
+> +		vinfo = v4l2_format_info(vpix->pixelformat);
+> +		vsca->bpp = vinfo->bpp[0];
+>  
+>  		/* Calculate the width in bytes of the src frame */
+>  		vsca->src_line_size = vsca->crop_rect.width *
+> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+> index 32380f504591..941529ddf639 100644
+> --- a/drivers/media/platform/vimc/vimc-sensor.c
+> +++ b/drivers/media/platform/vimc/vimc-sensor.c
+> @@ -102,10 +102,13 @@ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
+>  {
+>  	const struct vimc_pix_map *vpix =
+>  				vimc_pix_map_by_code(vsen->mbus_format.code);
+> +	const struct v4l2_format_info *vinfo =
+> +				v4l2_format_info(vpix->pixelformat);
+>  
+>  	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
+>  			 vsen->mbus_format.height, vsen->mbus_format.field);
+> -	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
+> +	tpg_s_bytesperline(&vsen->tpg, 0,
+> +			   vsen->mbus_format.width * vinfo->bpp[0]);
+>  	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
+>  	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
+>  	/* TODO: add support for V4L2_FIELD_ALTERNATE */
+> @@ -198,12 +201,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>  				container_of(sd, struct vimc_sen_device, sd);
+>  
+>  	if (enable) {
+> +		const struct v4l2_format_info *vinfo;
+>  		const struct vimc_pix_map *vpix;
+>  		unsigned int frame_size;
+>  
+>  		/* Calculate the frame size */
+>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+> -		frame_size = vsen->mbus_format.width * vpix->bpp *
+> +		vinfo = v4l2_format_info(vpix->pixelformat);
+> +		frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
+>  			     vsen->mbus_format.height;
+>  
+>  		/*
+> 
 
