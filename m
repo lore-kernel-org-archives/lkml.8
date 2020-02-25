@@ -2,127 +2,131 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CA8C35DFA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A364C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B5D218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DCYfGreF"
+	by mail.kernel.org (Postfix) with ESMTP id 2CC2120CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbgBYIhU (ORCPT
+        id S1729829AbgBYIiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:37:20 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43989 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgBYIhU (ORCPT
+        Tue, 25 Feb 2020 03:38:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60959 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgBYIiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:37:20 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s1so6785259pfh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:37:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=lesurzoUvSvfZ2EeEsmnXSXZFaFQRXcHJcV4OzRZYOs=;
-        b=DCYfGreFPdhhVUKXFmeqvJ7SEwhie4HjOFGZRNvYH5SHGiV2hNKnZM5LLgrSEwuNK7
-         ETetaQ1oMfVmaw3i9vzZIH/dJHU/aNeO2l1wNQw3Jk0AI7ENyeR5T7UPFpZ78lCsi/mv
-         kgwfnufCzk/jHU/WRhl1aJXX8MoSfanEuNzEWfq6le+2X32btUn47Uln8Dc0XD0ZbgEJ
-         RBVbcCdYViUIjt0SAfo8x3VSPfsgeOQzZ3YlESmTJ0yAIE2HbOtkc5SEViXCsGYjH40X
-         Zniy5FQ2dnfIFvKYiV9vPy5iyjHXhmpX6OMC/q3DWm0AjGtMNhDEpxP9Nu4SWi6NCbn2
-         1IWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=lesurzoUvSvfZ2EeEsmnXSXZFaFQRXcHJcV4OzRZYOs=;
-        b=lwJ1QFSBx69UOv/ccGPVvoiKkPBR56m4/Oa6OkxMIRh8GiW34b1mnJnvxauQhbcBkw
-         vfAN6Sv5nXKHbPf+k7ySAeCtsgwIPo3nyNxSiFrkgmJh+h8WB7MtIDhwZSAw1Zxx+ALo
-         XamYQDIfgHcLaWCpUh6qkmqHUFsflYEds9l8PPnlKvccu91QkR/pudRs79t8bT/md5T+
-         McPkcJriqX8jRQ3hdFSw6b6UKnxytvIdT81jqCOoSshYqxYatOPXG5PcgoHZYc7R8QfY
-         vW6Q9dbyBrxc9zjOeAC++iSZBkz3KZ0lIKF6I1htBFepRfnNAEh3sVkfKC3yzZQLnLn/
-         ZgNQ==
-X-Gm-Message-State: APjAAAXXWBW0C/QEWIiXwptApTtgWqsGbILcdl1c9BUGYfOBuHVi5SQP
-        J2kwJE/irASe1+1qxgzm9gx2Yw==
-X-Google-Smtp-Source: APXvYqxEIXMkJNt5ttW3aixCV0507Pt6cLR5KGoDAfoWs6jkQMH5M+MdAxhMB11LIwT8PXIuxrhNDA==
-X-Received: by 2002:a63:f70e:: with SMTP id x14mr55230760pgh.71.1582619839849;
-        Tue, 25 Feb 2020 00:37:19 -0800 (PST)
-Received: from ?IPv6:240e:362:421:7f00:524:e1bd:8061:a346? ([240e:362:421:7f00:524:e1bd:8061:a346])
-        by smtp.gmail.com with ESMTPSA id c26sm16217660pfj.8.2020.02.25.00.36.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 00:37:19 -0800 (PST)
-Subject: Re: [PATCH v12 2/4] uacce: add uacce driver
-To:     "Raj, Ashok" <ashok.raj@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>, Ashok Raj <ashok.raj@intel.com>
-References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
- <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
- <20200224182201.GA22668@araj-mobl1.jf.intel.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <81c5a532-468c-3316-83d2-b4fa027dbe0e@linaro.org>
-Date:   Tue, 25 Feb 2020 16:36:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 25 Feb 2020 03:38:50 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6Vjs-0003He-0o; Tue, 25 Feb 2020 09:38:48 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6Vjq-00021D-FT; Tue, 25 Feb 2020 09:38:46 +0100
+Date:   Tue, 25 Feb 2020 09:38:46 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, kernel@pengutronix.de
+Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200225083846.4l4tnbjcpm6uggtl@pengutronix.de>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-4-lokeshvutla@ti.com>
+ <20200224085531.zab5ewr2nfi2shem@pengutronix.de>
+ <4aedb6d4-1823-ab46-b7e6-cc0b30f7747d@ti.com>
+ <20200225064833.kmvaplfqqf53s3iy@pengutronix.de>
+ <8e22912c-a65f-9efe-27e7-555cd144776f@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224182201.GA22668@araj-mobl1.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <8e22912c-a65f-9efe-27e7-555cd144776f@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Raj
+Hello Lokesh,
 
-On 2020/2/25 ä¸Šåˆ2:22, Raj, Ashok wrote:
-> Hi Kenneth,
->
-> sorry for waking up late on this patchset.
->
-> +
-> +static int uacce_fops_open(struct inode *inode, struct file *filep)
-> +{
-> +	struct uacce_mm *uacce_mm = NULL;
-> +	struct uacce_device *uacce;
-> +	struct uacce_queue *q;
-> +	int ret = 0;
-> +
-> +	uacce = xa_load(&uacce_xa, iminor(inode));
-> +	if (!uacce)
-> +		return -ENODEV;
-> +
-> +	q = kzalloc(sizeof(struct uacce_queue), GFP_KERNEL);
-> +	if (!q)
-> +		return -ENOMEM;
-> +
-> +	mutex_lock(&uacce->mm_lock);
-> +	uacce_mm = uacce_mm_get(uacce, q, current->mm);
-> I think having this at open time is a bit unnatural. Since when a process
-> does fork, we do not inherit the PASID. Although it inherits the fd
-> but cannot use the mmaped address in the child.
->
-> If you move this to the mmap time, its more natural. The child could
-> do a mmap() get a new PASID + mmio space to work with the hardware.
->
-Thanks for the suggestion.
-We will consider fork in the next step, may need some time.
+On Tue, Feb 25, 2020 at 01:29:57PM +0530, Lokesh Vutla wrote:
+> On 25/02/20 12:18 PM, Uwe Kleine-König wrote:
+> > On Tue, Feb 25, 2020 at 10:32:42AM +0530, Lokesh Vutla wrote:
+> >> On 24/02/20 2:25 PM, Uwe Kleine-König wrote:
+> >>> On Mon, Feb 24, 2020 at 10:51:34AM +0530, Lokesh Vutla wrote:
+> >>>>  	omap->pdata->set_load(omap->dm_timer, true, load_value);
+> >>>>  	omap->pdata->set_match(omap->dm_timer, true, match_value);
+> >>>
+> >>> (Without having looked into the depths of the driver I assume
+> >>> .set_load() sets the period of the PWM and .set_match() the duty cycle.)
+> >>
+> >> Right.
+> >>
+> >>>
+> >>> What happens on a running PWM if you change the period? Consider you
+> >>> change from duty_cycle = 1000, period = 5000 to duty_cycle = 4000,
+> >>> period = 10000. As you set the period first, can it happen the hardware
+> >>> produces a cycle with duty_cycle = 1000, period = 10000?
+> >>
+> >> No. So, the current cycle is un affected with duty_cycle = 1000 and period =
+> >> 5000. Starting from next cycle new settings gets reflected with duty_cycle =
+> >> 4000 and period = 10000.
+> > 
+> > Is the reference manual for this hardware publically available?
+> 
+> AM335x TRM [0] Section 20.1.3.5 Pulse-Width Modulation (Page 4445).
+> 
+> [0] http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
 
-Thanks
+Great. This is BTW an opportunity to increase your patch count: Create a
+patch that adds a reference to this document at the top of the driver.
+
+> > So the .set_load callback just writes a shadow register and .set_match
+> > latches it into hardware atomically with its own register changes? A
+> > comment in the source code about this would be good. Also if .set_load
+> > doesn't work without .set_match I wonder if it is sane to put their
+> > logic in two different functions.
+> 
+> Just to give a little bit of background:
+
+Thanks, very appreciated.
+
+> - The omap timer is an upward counter that can be started and stopped at any time.
+> - Once the timer counter overflows, it gets loaded with a predefined load
+> value.(Or can be configured to not re load at all).
+> - Timer has a configurable output pin which can be toggled in the following two
+> cases:
+> 	- When the counter overflows
+> 	- When the counter matches with a predefined register(match register).
+> 
+> Using this o/p pin the driver tries to generate a PWM with period = (OVERFLOW -
+> LOAD_VALUE) and duty_cycle = (MATCH_VALUE - LOAD_VALUE).
+> 
+> .set_load will configure the load value .set_match will configure the match
+> value. The configured values gets effected only in the next cycle of PWM.
+
+Ah, so back to my original question: If you change from
+duty_cycle/period = 1000/5000 to duty_cycle/period = 4000/10000 and
+after you set the period but before you set the duty_cycle a period
+happens to end, you get indeed a cycle with mixed settings, right?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
