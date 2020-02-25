@@ -2,251 +2,95 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F107C35E02
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B388C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473F82176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205242176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbgBYL57 (ORCPT
+        id S1730329AbgBYL7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:57:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:49816 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730196AbgBYL56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:57:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18A8F1396;
-        Tue, 25 Feb 2020 03:57:58 -0800 (PST)
-Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.36.33])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 08FD93F6CF;
-        Tue, 25 Feb 2020 03:57:55 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     adrian.hunter@intel.com, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Tan Xiaojun <tanxiaojun@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v5 4/4] perf tools: Support "branch-misses:pp" on arm64
-Date:   Tue, 25 Feb 2020 11:57:39 +0000
-Message-Id: <20200225115739.18740-5-james.clark@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200225115739.18740-1-james.clark@arm.com>
-References: <768a33f2-8694-270e-d3e8-3da4c65e96b3@intel.com>
- <20200225115739.18740-1-james.clark@arm.com>
+        Tue, 25 Feb 2020 06:59:05 -0500
+Received: from outbound-smtp07.blacknight.com ([46.22.139.12]:45237 "EHLO
+        outbound-smtp07.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbgBYL7E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:59:04 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp07.blacknight.com (Postfix) with ESMTPS id D06861C346A
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:59:02 +0000 (GMT)
+Received: (qmail 17056 invoked from network); 25 Feb 2020 11:59:02 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Feb 2020 11:59:02 -0000
+Date:   Tue, 25 Feb 2020 11:59:01 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200225115901.GB3466@techsingularity.net>
+References: <20200224095223.13361-1-mgorman@techsingularity.net>
+ <20200224151641.GA24316@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200224151641.GA24316@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+On Mon, Feb 24, 2020 at 04:16:41PM +0100, Ingo Molnar wrote:
+> 
+> * Mel Gorman <mgorman@techsingularity.net> wrote:
+> 
+> > The only differences in V6 are due to Vincent's latest patch series.
+> > 
+> > This is V5 which includes the latest versions of Vincent's patch
+> > addressing review feedback. Patches 4-9 are Vincent's work plus one
+> > important performance fix. Vincent's patches were retested and while
+> > not presented in detail, it was mostly an improvement.
+> > 
+> > Changelog since V5:
+> > o Import Vincent's latest patch set
+> 
+> >  include/linux/sched.h        |  31 ++-
+> >  include/trace/events/sched.h |  49 ++--
+> >  kernel/sched/core.c          |  13 -
+> >  kernel/sched/debug.c         |  17 +-
+> >  kernel/sched/fair.c          | 626 ++++++++++++++++++++++++++++---------------
+> >  kernel/sched/pelt.c          |  59 ++--
+> >  kernel/sched/sched.h         |  42 ++-
+> >  7 files changed, 535 insertions(+), 302 deletions(-)
+> 
+> Applied to tip:sched/core for v5.7 inclusion, thanks Mel and Vincent!
+> 
 
-At the suggestion of James Clark, use spe to support the precise
-ip of some events. Currently its support event is:
-branch-misses.
+Thanks!
 
-Example usage:
+> Please base future iterations on top of a0f03b617c3b (current 
+> sched/core).
+> 
 
-$ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
-(:p/pp/ppp is same for this case.)
+Will do.
 
-$ ./perf report --stdio
-("--stdio is not necessary")
+However I noticed that "sched/fair: Fix find_idlest_group() to handle
+CPU affinity" did not make it to tip/sched/core. Peter seemed to think it
+was fine. Was it rejected or is it just sitting in Peter's queue somewhere?
 
---------------------------------------------------------------------
-...
- # Samples: 14  of event 'branch-misses:pp'
- # Event count (approx.): 14
- #
- # Children      Self  Command  Shared Object      Symbol
- # ........  ........  .......  .................  ..........................
- #
-    14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
-    14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
-     7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
-     7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
-     7.14%     7.14%  dd       ld-2.28.so         [.] check_match
-     7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
-     7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
-     7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
-...
---------------------------------------------------------------------
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Suggested-by: James Clark <James.Clark@arm.com>
-Tested-by: Qi Liu <liuqi115@hisilicon.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: Al Grant <al.grant@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/arch/arm/util/auxtrace.c | 39 +++++++++++++++++++++++++++++
- tools/perf/builtin-record.c         |  5 ++++
- tools/perf/util/arm-spe.c           |  9 +++++++
- tools/perf/util/arm-spe.h           |  3 +++
- tools/perf/util/auxtrace.h          |  6 +++++
- 5 files changed, 62 insertions(+)
-
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 0a6e75b8777a..7f412b7894ab 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -10,11 +10,25 @@
- 
- #include "../../util/auxtrace.h"
- #include "../../util/debug.h"
-+#include "../../util/env.h"
- #include "../../util/evlist.h"
- #include "../../util/pmu.h"
- #include "cs-etm.h"
- #include "arm-spe.h"
- 
-+#define SPE_ATTR_TS_ENABLE		BIT(0)
-+#define SPE_ATTR_PA_ENABLE		BIT(1)
-+#define SPE_ATTR_PCT_ENABLE		BIT(2)
-+#define SPE_ATTR_JITTER			BIT(16)
-+#define SPE_ATTR_BRANCH_FILTER		BIT(32)
-+#define SPE_ATTR_LOAD_FILTER		BIT(33)
-+#define SPE_ATTR_STORE_FILTER		BIT(34)
-+
-+#define SPE_ATTR_EV_RETIRED		BIT(1)
-+#define SPE_ATTR_EV_CACHE		BIT(3)
-+#define SPE_ATTR_EV_TLB			BIT(5)
-+#define SPE_ATTR_EV_BRANCH		BIT(7)
-+
- static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
- {
- 	struct perf_pmu **arm_spe_pmus = NULL;
-@@ -108,3 +122,28 @@ struct auxtrace_record
- 	*err = 0;
- 	return NULL;
- }
-+
-+void auxtrace__preprocess_evlist(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+	struct perf_pmu *pmu;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		/* Currently only supports precise_ip for branch-misses on arm64 */
-+		if (!strcmp(perf_env__arch(evlist->env), "arm64")
-+			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
-+			&& evsel->core.attr.type == PERF_TYPE_HARDWARE
-+			&& evsel->core.attr.precise_ip)
-+		{
-+			pmu = perf_pmu__find("arm_spe_0");
-+			if (pmu) {
-+				evsel->pmu_name = pmu->name;
-+				evsel->core.attr.type = pmu->type;
-+				evsel->core.attr.config = SPE_ATTR_TS_ENABLE
-+							| SPE_ATTR_BRANCH_FILTER;
-+				evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
-+				evsel->core.attr.precise_ip = 0;
-+			}
-+		}
-+	}
-+}
-\ No newline at end of file
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 4c301466101b..3bc61f03d572 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2451,6 +2451,11 @@ int cmd_record(int argc, const char **argv)
- 
- 	argc = parse_options(argc, argv, record_options, record_usage,
- 			    PARSE_OPT_STOP_AT_NON_OPTION);
-+
-+	if (auxtrace__preprocess_evlist) {
-+		auxtrace__preprocess_evlist(rec->evlist);
-+	}
-+
- 	if (quiet)
- 		perf_quiet_option();
- 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 4ef22a0775a9..b21806c97dd8 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -778,6 +778,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
-+	/* If it is in the precise ip mode, there is no need to
-+	 * synthesize new events. */
-+	if (!strncmp(evsel->name, "branch-misses", 13)) {
-+		spe->sample_branch_miss = true;
-+		spe->branch_miss_id = evsel->core.id[0];
-+
-+		return 0;
-+	}
-+
- 	/* create new id val to be a fixed offset from evsel id */
- 	id = evsel->core.id[0] + 1000000000;
- 
-diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-index 98d3235781c3..8b1fb191d03a 100644
---- a/tools/perf/util/arm-spe.h
-+++ b/tools/perf/util/arm-spe.h
-@@ -20,6 +20,8 @@ enum {
- union perf_event;
- struct perf_session;
- struct perf_pmu;
-+struct evlist;
-+struct evsel;
- 
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu);
-@@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
- 
- struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
- #endif
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 52e148eea7f8..4be56bca54dc 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -584,6 +584,7 @@ void auxtrace__dump_auxtrace_sample(struct perf_session *session,
- int auxtrace__flush_events(struct perf_session *session, struct perf_tool *tool);
- void auxtrace__free_events(struct perf_session *session);
- void auxtrace__free(struct perf_session *session);
-+void auxtrace__preprocess_evlist(struct evlist *evlist) __attribute__((weak));
- 
- #define ITRACE_HELP \
- "				i:	    		synthesize instructions events\n"		\
-@@ -731,6 +732,11 @@ void auxtrace__free(struct perf_session *session __maybe_unused)
- {
- }
- 
-+static inline
-+void auxtrace__preprocess_evlist(struct evlist *evlist __maybe_unused)
-+{
-+}
-+
- static inline
- int auxtrace_index__write(int fd __maybe_unused,
- 			  struct list_head *head __maybe_unused)
 -- 
-2.17.1
-
+Mel Gorman
+SUSE Labs
