@@ -2,122 +2,126 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB371C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB61FC35E02
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9663218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B3A21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Em9lWr5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgBYNFa (ORCPT
+        id S1730120AbgBYNFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:05:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:50534 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729193AbgBYNFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:05:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B085E11B3;
-        Tue, 25 Feb 2020 03:57:55 -0800 (PST)
-Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.36.33])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AFE943F6CF;
-        Tue, 25 Feb 2020 03:57:52 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     adrian.hunter@intel.com, jolsa@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Tan Xiaojun <tanxiaojun@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v5 3/4] perf report: Add SPE options to --itrace argument
-Date:   Tue, 25 Feb 2020 11:57:38 +0000
-Message-Id: <20200225115739.18740-4-james.clark@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200225115739.18740-1-james.clark@arm.com>
-References: <768a33f2-8694-270e-d3e8-3da4c65e96b3@intel.com>
- <20200225115739.18740-1-james.clark@arm.com>
+        Tue, 25 Feb 2020 08:05:49 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49288 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729193AbgBYNFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:05:49 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PD0LHw123433;
+        Tue, 25 Feb 2020 07:00:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582635621;
+        bh=n4t+iSnVQ8VDVIb2I48j7hH+y8NZ1XyrKycrJ1RQK90=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Em9lWr5gFGAJGIVefw5xY+a+Dwwp3Pn1zqurQTmTa86QzSJfB61woe0HHUX/g8ehS
+         XLAlCnUyKrUCjo5oq/k/ku4iF5vXr4pkDEUhadl/PRi+CaazR50RDc2zCa/81FX0cB
+         wuXtBSeggje7gf1NyIoD0IKvmhnN45jt4LHXNtzo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PD0LKB096983
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 07:00:21 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 07:00:20 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 07:00:20 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PD0KFe036379;
+        Tue, 25 Feb 2020 07:00:20 -0600
+Subject: Re: [PATCH 1/4] dt-bindings: leds: Add a binding for AXP813 charger
+ led
+To:     Ondrej Jirman <megous@megous.com>, <linux-sunxi@googlegroups.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200223131435.681620-1-megous@megous.com>
+ <20200223131435.681620-2-megous@megous.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <8c4b9ef7-0c18-d5c1-9672-b7fc683c3ce9@ti.com>
+Date:   Tue, 25 Feb 2020 06:55:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200223131435.681620-2-megous@megous.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+Ondrej
 
-The previous patch added support in "perf report" for some arm-spe
-events(llc-miss, tlb-miss, branch-miss, remote_access). This patch
-adds their help instructions.
+On 2/23/20 7:14 AM, Ondrej Jirman wrote:
+> The AXP813 PMIC can control one LED. Add binding to represent the LED.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>   .../devicetree/bindings/leds/leds-axp20x.yaml | 24 +++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.yaml b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+> new file mode 100644
+> index 0000000000000..79282d55764bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+> @@ -0,0 +1,24 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-axp20x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LED driver for AXP813 PMIC from X-Powers.
+> +
+> +maintainers:
+> +  - Ondrej Jirman <megous@megous.com>
+> +
+> +description: |
+> +  This module is part of the AXP20x MFD device. For more details
+> +  see Documentation/devicetree/bindings/mfd/axp20x.txt.
+> +
+> +  The LED controller is represented as a sub-node of the PMIC node on
+> +  the device tree.
+> +
+> +properties:
+> +  compatible:
+> +    const: x-powers,axp813-charger-led
+> +
+> +required:
+> +  - compatible
 
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Tested-by: Qi Liu <liuqi115@hisilicon.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: Al Grant <al.grant@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/itrace.txt | 5 ++++-
- tools/perf/util/auxtrace.h          | 5 ++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+You need to add the color and function properties for proper LED device 
+name presentation per the bindings/leds/common.yaml binding.
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 82ff7dad40c2..da3e5ccc039e 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -1,5 +1,5 @@
- 		i	synthesize instructions events
--		b	synthesize branches events
-+		b	synthesize branches events (branch misses on Arm)
- 		c	synthesize branches events (calls only)
- 		r	synthesize branches events (returns only)
- 		x	synthesize transactions events
-@@ -9,6 +9,9 @@
- 			of aux-output (refer to perf record)
- 		e	synthesize error events
- 		d	create a debug log
-+		m	synthesize LLC miss events
-+		t	synthesize TLB miss events
-+		a	synthesize remote access events
- 		g	synthesize a call chain (use with i or x)
- 		l	synthesize last branch entries (use with i or x)
- 		s       skip initial number of events
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 80617b0d044d..52e148eea7f8 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -587,7 +587,7 @@ void auxtrace__free(struct perf_session *session);
- 
- #define ITRACE_HELP \
- "				i:	    		synthesize instructions events\n"		\
--"				b:	    		synthesize branches events\n"		\
-+"				b:	    		synthesize branches events (branch misses on Arm)\n" \
- "				c:	    		synthesize branches events (calls only)\n"	\
- "				r:	    		synthesize branches events (returns only)\n" \
- "				x:	    		synthesize transactions events\n"		\
-@@ -595,6 +595,9 @@ void auxtrace__free(struct perf_session *session);
- "				p:	    		synthesize power events\n"			\
- "				e:	    		synthesize error events\n"			\
- "				d:	    		create a debug log\n"			\
-+"				m:	    		synthesize LLC miss events\n" \
-+"				t:	    		synthesize TLB miss events\n" \
-+"				a:	    		synthesize remote access events\n" \
- "				g[len]:     		synthesize a call chain (use with i or x)\n" \
- "				l[len]:     		synthesize last branch entries (use with i or x)\n" \
- "				sNUMBER:    		skip initial number of events\n"		\
--- 
-2.17.1
+Dan
+
 
