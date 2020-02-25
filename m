@@ -2,197 +2,113 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C309C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC59C35E03
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F089C2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6982C218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ByaN7yln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgBYNBG (ORCPT
+        id S1729966AbgBYNCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:01:06 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:11270
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729179AbgBYNBG (ORCPT
+        Tue, 25 Feb 2020 08:02:14 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42012 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729179AbgBYNCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:01:06 -0500
-From:   Luc Maranget <luc.maranget@inria.fr>
-X-IronPort-AV: E=Sophos;i="5.70,484,1574118000"; 
-   d="scan'208";a="340371138"
-Received: from yquem.paris.inria.fr (HELO yquem.inria.fr) ([128.93.101.33])
-  by mail3-relais-sop.national.inria.fr with ESMTP; 25 Feb 2020 14:01:02 +0100
-Received: by yquem.inria.fr (Postfix, from userid 18041)
-        id 65A98E1AAB; Tue, 25 Feb 2020 14:01:02 +0100 (CET)
-Date:   Tue, 25 Feb 2020 14:01:02 +0100
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 2/3] tools/memory-model: Add a litmus test for atomic_set()
-Message-ID: <20200225130102.wsz3bpyhjmcru7os@yquem.inria.fr>
-References: <20200214040132.91934-1-boqun.feng@gmail.com>
- <20200214040132.91934-3-boqun.feng@gmail.com>
- <20200214081213.GA17708@andrea>
- <20200214104003.GC20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200225073451.GP69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Tue, 25 Feb 2020 08:02:14 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PD1pN4052659;
+        Tue, 25 Feb 2020 07:01:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582635711;
+        bh=oXx7cuB8ADrmQ3vOUgyN9ou7IhxwTR3y4ztgLQsmi6c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ByaN7ylnnHP1DrKCw/8xkcyNg8CLYK2IQXegD0Klr8ETbKC/0oU1LFFJX/9mGFS3J
+         Q5rQVBPXdvAcP5/RWgJTkIm/J4D0StamwNuvv6JfSWV/5G0qrZSeXfUuO3pHk30T/8
+         ZsbbhuU1ABVMArXDiDH//ZijNO9MIHEgTEpkFhZg=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PD1pB2107735
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 07:01:51 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 07:01:50 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 07:01:50 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01PD1o78075900;
+        Tue, 25 Feb 2020 07:01:50 -0600
+Subject: Re: [PATCH 3/4] ARM: dts: axp813: Add charger LED
+To:     Ondrej Jirman <megous@megous.com>, <linux-sunxi@googlegroups.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200223131435.681620-1-megous@megous.com>
+ <20200223131435.681620-4-megous@megous.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3d7c078b-362d-6eab-0915-8079768a729e@ti.com>
+Date:   Tue, 25 Feb 2020 06:56:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200225073451.GP69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200223131435.681620-4-megous@megous.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Ondrej
 
-As far as I can remember I have implemented atomic_add_unless in herd7.
+On 2/23/20 7:14 AM, Ondrej Jirman wrote:
+> PMIC supports charging status indication via a LED. Add support
+> for it.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>   arch/arm/boot/dts/axp81x.dtsi | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+> index 1dfeeceabf4c3..00b092f94433d 100644
+> --- a/arch/arm/boot/dts/axp81x.dtsi
+> +++ b/arch/arm/boot/dts/axp81x.dtsi
+> @@ -175,4 +175,9 @@ reg_drivevbus: drivevbus {
+>   	usb_power_supply: usb-power-supply {
+>   		compatible = "x-powers,axp813-usb-power-supply";
+>   	};
+> +
+> +	charger_led: charger-led {
+> +		compatible = "x-powers,axp813-charger-led";
+> +		status = "disabled";
 
-As to your test, I have first run a slightly modified version of your test
-as a kernel module (using klitmus7).
+As I commented before you need to add function and color to this node 
+and read it from the driver.  Or you can add them to the over ride for 
+the specific use case.
 
-C atomic_add_unless-dependency
-{
-        atomic_t y = ATOMIC_INIT(1);
-}
-  P0(int *x, atomic_t *y, int *z)
-{
-        int r0;
-        r0 = READ_ONCE(*x);
-        if (atomic_add_unless((atomic_t *)y, 2, r0))
-                WRITE_ONCE(*z, 42);
-        else
-                WRITE_ONCE(*z, 1);
-}
-  P1(int *x, int *z)
-{
-        int r0;
-        r0 = smp_load_acquire(z);
-        WRITE_ONCE(*x, 1);
-}
-locations [y]
-exists
-(1:r0 = 1 /\ 0:r0 = 1)
+Another question is is this LED only used for charging or can it be 
+multi purpose?
+
+Dan
 
 
-The test is also accepted by herd7, here producing teh same final values
-as actual run on a raspberry PI4B.
-
---Luc
-
-> Luc,
-> 
-> Could you have a look at the problem Andrea and I discuss here? It seems
-> that you have done a few things in herd for atomic_add_unless() in
-> particular, and based on the experiments of Andrea and me, seems
-> atomic_add_unless() works correctly. So can you confirm that herd now
-> can handle atomic_add_unless() or there is still something missing?
-> 
-> Thanks!
-> 
-> Regards,
-> Boqun
-> 
-> On Fri, Feb 14, 2020 at 06:40:03PM +0800, Boqun Feng wrote:
-> > On Fri, Feb 14, 2020 at 09:12:13AM +0100, Andrea Parri wrote:
-> > > > @@ -0,0 +1,24 @@
-> > > > +C Atomic-set-observable-to-RMW
-> > > > +
-> > > > +(*
-> > > > + * Result: Never
-> > > > + *
-> > > > + * Test of the result of atomic_set() must be observable to atomic RMWs.
-> > > > + *)
-> > > > +
-> > > > +{
-> > > > +	atomic_t v = ATOMIC_INIT(1);
-> > > > +}
-> > > > +
-> > > > +P0(atomic_t *v)
-> > > > +{
-> > > > +	(void)atomic_add_unless(v,1,0);
-> > > 
-> > > We blacklisted this primitive some time ago, cf. section "LIMITATIONS",
-> > > entry (6b) in tools/memory-model/README; the discussion was here:
-> > > 
-> > >   https://lkml.kernel.org/r/20180829211053.20531-3-paulmck@linux.vnet.ibm.com
-> > > 
-> > 
-> > And in an email replying to that email, you just tried and seemed
-> > atomic_add_unless() works ;-)
-> > 
-> > > but unfortunately I can't remember other details at the moment: maybe
-> > > it is just a matter of or the proper time to update that section.
-> > > 
-> > 
-> > I spend a few time looking into the changes in herd, the dependency
-> > problem seems to be as follow:
-> > 
-> > For atomic_add_unless(ptr, a, u), the return value (true or false)
-> > depends on both *ptr and u, this is different than other atomic RMW,
-> > whose return value only depends on *ptr. Considering the following
-> > litmus test:
-> > 
-> > 	C atomic_add_unless-dependency
-> > 
-> > 	{
-> > 		int y = 1;
-> > 	}
-> > 
-> > 	P0(int *x, int *y, int *z)
-> > 	{
-> > 		int r0;
-> > 		int r1;
-> > 		int r2;
-> > 
-> > 		r0 = READ_ONCE(*x);
-> > 		if (atomic_add_unless(y, 2, r0))
-> > 			WRITE_ONCE(*z, 42);
-> > 		else
-> > 			WRITE_ONCE(*z, 1);
-> > 	}
-> > 
-> > 	P1(int *x, int *y, int *z)
-> > 	{
-> > 		int r0;
-> > 
-> > 		r0 = smp_load_acquire(z);
-> > 
-> > 		WRITE_ONCE(*x, 1);
-> > 	}
-> > 
-> > 	exists
-> > 	(1:r0 = 1 /\ 0:r0 = 1)
-> > 
-> > , the exist-clause will never trigger, however if we replace
-> > "atomic_add_unless(y, 2, r0)" with "atomic_add_unless(y, 2, 1)", the
-> > write on *z and the read from *x on CPU 0 are not ordered, so we could
-> > observe the exist-clause triggered.
-> > 
-> > I just tried with the latest herd, and herd can work out this
-> > dependency. So I think we are good now and can change the limitation
-> > section in the document. But I will wait for Luc's input for this. Luc,
-> > did I get this correct? Is there any other limitation on
-> > atomic_add_unless() now?
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > > Thanks,
-> > >   Andrea
+> +	};
+>   };
