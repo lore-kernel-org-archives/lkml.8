@@ -2,153 +2,142 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561CCC35DFB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73105C35DFC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CBF2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4322176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgBYIwU (ORCPT
+        id S1729956AbgBYIwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:52:20 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33456 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgBYIwT (ORCPT
+        Tue, 25 Feb 2020 03:52:34 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35587 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729947AbgBYIwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:52:19 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y6so13148266lji.0;
-        Tue, 25 Feb 2020 00:52:17 -0800 (PST)
+        Tue, 25 Feb 2020 03:52:33 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c7so15337184edu.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:52:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gii62aW++pR74nYBt74sL6Yi7EVbnZGVzniidCX/aH4=;
-        b=Aq47jDe0mEDf09kl7pgSrZmoiNaHWKcWgCTNyREtCohkWHv39kHRXKEPd03g/YYhk1
-         hOYTQuPDQmYu1BjxnQdA70JqAgDKLKxU137iLLcGJm2F6dEmixgoH8Ivhh3aMZbCoL8R
-         QJjRoPRyCiEQmGDCrGYWNwcz9VlIGhSQtK8NUMJ8SKppOM5X/yjZOpxpbs5okCPPbjbo
-         8afytIX34Ufmv+6VIB1RzZasp4Ii2kp/4vXacAoPflhSZqGOA5qF6at38f/v295ojMp+
-         yBBhegcHj291dA79waHTG7BGWd8hOEcSntYqA0KFtb8bp4jIJC+DOQr92G99kelc1j55
-         RrjQ==
-X-Gm-Message-State: APjAAAUBNu/gtFAHwUA04f0Z8FVlpvyoUEc7p7tJF4wgFOTt3JZ4XRzb
-        b1GjLWKLqq0FHJ2u++5FBuLbISaB
-X-Google-Smtp-Source: APXvYqxUfGhgbjUVDG3LikTmVkXivuxd1GCNq0KHsfnbXlYUvD3NSfcdPUlha8oxaqoYitrUEYXf6g==
-X-Received: by 2002:a2e:b5ce:: with SMTP id g14mr30509217ljn.264.1582620737024;
-        Tue, 25 Feb 2020 00:52:17 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id w19sm6966470lfl.55.2020.02.25.00.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 00:52:16 -0800 (PST)
-Date:   Tue, 25 Feb 2020 10:52:04 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: [PATCH v4 1/9] dt-bindings: battery: add new battery parameters
-Message-ID: <a834eda9015145e978da16d89857b78669a2b9c8.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K+2A/gft6LrFZSl1mPAmF46n0w4UjXc0APhIZ+UJahU=;
+        b=oreHJxzIZydfZL6I+5uKj1kz+zdaoVMTqlNjKcn+0SjV47QKvWnd8sCBdX9PFOi/9N
+         IUJHX2g6HS0waNAoWdC79goixo49PWDZ1ChcOyIAIrkuXOXRIbewmzXezbW37/OaxCXk
+         CTVkcqEAPtZ46io29os8JwJkROJhRkc4Xpysm/ZkkzUM8HP750x2VObyltibPMJotm0+
+         S7nDU9xo1xa/7M1cMkyNT6w/Iu4cTvxj06CzOHA1OFgDK8SMgPv2AvOmicfE2b9shoyf
+         GN8WuSzzs1HG1IuHl09XyVfiIFf3tI6u74ENyMqMGeFC9LO927dq6jO4XE8VEv0ReM9x
+         eFSQ==
+X-Gm-Message-State: APjAAAVbdJyYWa796xqPn5AMjfaR9WNAFxqOKq8Pk/DMId4Qsa2lzo20
+        PkoebYkMpiMUAsTyx4jOHSbsyvjl7Hc=
+X-Google-Smtp-Source: APXvYqzlOAgz7b3/+BZMCjVszAI+KWZKXb/9cJ+seRJFLK+8jP79nDhNvgrY8EtvcO1HhsqQmSeqDQ==
+X-Received: by 2002:a17:906:344d:: with SMTP id d13mr51906876ejb.306.1582620751365;
+        Tue, 25 Feb 2020 00:52:31 -0800 (PST)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id q3sm904259eju.88.2020.02.25.00.52.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 00:52:31 -0800 (PST)
+Received: by mail-wr1-f51.google.com with SMTP id z15so5344026wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:52:30 -0800 (PST)
+X-Received: by 2002:a5d:604a:: with SMTP id j10mr5439322wrt.181.1582620750522;
+ Tue, 25 Feb 2020 00:52:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20200224173901.174016-1-jernej.skrabec@siol.net>
+ <20200224173901.174016-7-jernej.skrabec@siol.net> <20200225083448.6upblnctjjrbarje@gilmour.lan>
+In-Reply-To: <20200225083448.6upblnctjjrbarje@gilmour.lan>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 25 Feb 2020 16:52:18 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64g7Q4e+ic08pA7tbamgToOjyYzuzqP0bpqBZjRuRUrPA@mail.gmail.com>
+Message-ID: <CAGb2v64g7Q4e+ic08pA7tbamgToOjyYzuzqP0bpqBZjRuRUrPA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] drm/sun4i: de2: Don't return de2_fmt_info struct
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add:
+On Tue, Feb 25, 2020 at 4:35 PM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Mon, Feb 24, 2020 at 06:39:00PM +0100, Jernej Skrabec wrote:
+> > Now that de2_fmt_info contains only DRM <-> HW format mapping, it
+> > doesn't make sense to return pointer to structure when searching by DRM
+> > format. Rework that to return only HW format instead.
+> >
+> > This doesn't make any functional change.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 15 +++++++++++----
+> >  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  7 +------
+> >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 10 +++++-----
+> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 12 ++++++------
+> >  4 files changed, 23 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> > index e078ec96de2d..56cc037fd312 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> > @@ -27,6 +27,11 @@
+> >  #include "sun8i_vi_layer.h"
+> >  #include "sunxi_engine.h"
+> >
+> > +struct de2_fmt_info {
+> > +     u32     drm_fmt;
+> > +     u32     de2_fmt;
+> > +};
+> > +
+> >  static const struct de2_fmt_info de2_formats[] = {
+> >       {
+> >               .drm_fmt = DRM_FORMAT_ARGB8888,
+> > @@ -230,15 +235,17 @@ static const struct de2_fmt_info de2_formats[] = {
+> >       },
+> >  };
+> >
+> > -const struct de2_fmt_info *sun8i_mixer_format_info(u32 format)
+> > +int sun8i_mixer_drm_format_to_hw(u32 format, u32 *hw_format)
+> >  {
+> >       unsigned int i;
+> >
+> >       for (i = 0; i < ARRAY_SIZE(de2_formats); ++i)
+> > -             if (de2_formats[i].drm_fmt == format)
+> > -                     return &de2_formats[i];
+> > +             if (de2_formats[i].drm_fmt == format) {
+> > +                     *hw_format = de2_formats[i].de2_fmt;
+> > +                     return 0;
+> > +             }
+> >
+> > -     return NULL;
+> > +     return -EINVAL;
+> >  }
+>
+> I'm not too sure about that one. It breaks the consistency with the
+> other functions, and I don't really see a particular benefit to it?
 
- - trickle-charge-current-microamp:
+I guess we could just define an "invalid" value, and have the function
+return that if can't find a match? I'm guessing 0x0 is valid, so maybe
+0xffffffff or 0xdeadbeef ?
 
-Some chargers have 3 charging stages. First one when battery is almost
-empty is often called as trickle-charge. Last state when battery has been
-"woken up" is usually called as fast-charge. In addition to this some
-chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-pre-charge. Some batteries can benefit from this 3-phase charging
-[citation needed].
+That would keep consistency with everything else all the while
+removing the level of indirection you wanted to.
 
-Introduce trickle-charge-current-microamp so that batteries can give
-charging current limit for all three states.
-
- - precharge-upper-limit-microvolt:
-
-When battery voltage has reached certain limit we change from
-trickle-charge to next charging state (pre-charge for BD99954). Allow
-battery to specify this limit.
-
- - re-charge-voltage-microvolt:
-
-Allow giving a battery specific voltage limit for chargers which can
-automatically re-start charging when battery has discharghed down to
-this limit.
-
-- over-voltage-threshold-microvolt
-
-Allow specifying voltage threshold after which the battery is assumed to
-be faulty.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
-
-Changes from rfc-v3:
-  Fixed typo in commit message battry => battery
-
- Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-index 3049cf88bdcf..5e29595edd74 100644
---- a/Documentation/devicetree/bindings/power/supply/battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
- behavior should a replacement that changes the battery type occur
- without a corresponding update to the dtb.
- 
-+Please note that not all charger drivers respect all of the properties.
-+
- Required Properties:
-  - compatible: Must be "simple-battery"
- 
- Optional Properties:
-+ - over-voltage-threshold-microvolt: battery over-voltage limit
-+ - re-charge-voltage-microvolt: limit to automatically start charging again
-  - voltage-min-design-microvolt: drained battery voltage
-  - voltage-max-design-microvolt: fully charged battery voltage
-  - energy-full-design-microwatt-hours: battery design energy
-  - charge-full-design-microamp-hours: battery design capacity
-+ - trickle-charge-current-microamp: current for trickle-charge phase
-  - precharge-current-microamp: current for pre-charge phase
-+ - precharge-upper-limit-microvolt: limit when to change to constant charging
-  - charge-term-current-microamp: current for charge termination phase
-  - constant-charge-current-max-microamp: maximum constant input current
-  - constant-charge-voltage-max-microvolt: maximum constant input voltage
--- 
-2.21.0
+ChenYu
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> The rest of the series is
+> Acked-by: Maxime Ripard <mripard@kernel.org>
+>
+> Maxime
