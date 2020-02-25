@@ -2,96 +2,90 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1E0C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E1AC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB8620714
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC45218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582626461;
+	bh=c11I1+aXz7I861UYGuPVDLiwVXB6TbdIH+RT/RHaxf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RMsoUsQu9c0uTA9FeFEQlv+C55Tv4mHoiW2oq5VTvSYXLj7HX6vLLf1AAEi1D+Qx7
+	 /Dr03Hdy97oJeyTa/wtAJ6EENp6sJCl43vrRM3fblOuscHYumPNHw6nlIbHjUV4UiP
+	 glEws461GjDuxKg8/Uxms0uQStjqN5tQhLogtcbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbgBYK06 (ORCPT
+        id S1730222AbgBYK1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:26:58 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34454 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730154AbgBYK05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:26:57 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8C569BA817E84CD5D94D;
-        Tue, 25 Feb 2020 18:26:55 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 25 Feb 2020 18:26:48 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to check i_compr_blocks correctly
-Date:   Tue, 25 Feb 2020 18:26:46 +0800
-Message-ID: <20200225102646.43367-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 25 Feb 2020 05:27:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730126AbgBYK1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:27:39 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2A1220714;
+        Tue, 25 Feb 2020 10:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582626458;
+        bh=c11I1+aXz7I861UYGuPVDLiwVXB6TbdIH+RT/RHaxf8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UszBqyn5y1O3RMhXxzYd9ILQv5H/sSSXmlq0iAC6KbeivREBvpzR4imZ4qfAjx9/I
+         Z++3G+BqHAeKqaBSQ/FSXW2eHESMmfYQbOL4I20TyEVWi+7Q/o42N1ugel1BeMxFXm
+         AThdATN3CaDXnYWB72W8o8sFgQFDalyzLX+lPbk0=
+Date:   Tue, 25 Feb 2020 15:57:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Subject: Re: [PATCH 00/10] soundwire: bus: fix race conditions, add
+ suspend-resume
+Message-ID: <20200225102734.GO2618@vkoul-mobl>
+References: <20200115000844.14695-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115000844.14695-1-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-inode.i_blocks counts based on 512byte sector, we need to convert
-to 4kb sized block count before comparing to i_compr_blocks.
+On 14-01-20, 18:08, Pierre-Louis Bossart wrote:
+> The existing mainline code for SoundWire does not handle critical race
+> conditions, and does not have any support for pm_runtime suspend or
+> clock-stop modes needed for e.g. jack detection or external VAD.
+> 
+> As suggested by Vinod, these patches for the bus are shared first -
+> with the risk that they are separated from their actual use in Intel
+> drivers, so reviewers might wonder why they are needed in the first
+> place.
+> 
+> For reference, the complete set of 90+ patches required for SoundWire
+> on Intel platforms is available here:
+> 
+> https://github.com/thesofproject/linux/pull/1692
+> 
+> These patches are not Intel-specific and are likely required for
+> e.g. Qualcomm-based implementations.
+> 
+> All the patches in this series were generated during the joint
+> Intel-Realtek validation effort on Intel reference designs and
+> form-factor devices. The support for the initialization_complete
+> signaling is already available in the Realtek codecs drivers merged in
+> the ASoC tree (rt700, rt711, rt1308, rt715)
 
-In addition, add to print message when sanity check on inode
-compression configs failed.
+Applied all, thanks
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/inode.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
-
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 156cc5ef3044..299611562f7e 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -291,13 +291,30 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
- 			fi->i_flags & F2FS_COMPR_FL &&
- 			F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
- 						i_log_cluster_size)) {
--		if (ri->i_compress_algorithm >= COMPRESS_MAX)
-+		if (ri->i_compress_algorithm >= COMPRESS_MAX) {
-+			f2fs_warn(sbi, "%s: inode (ino=%lx) has unsupported "
-+				"compress algorithm: %u, run fsck to fix",
-+				  __func__, inode->i_ino,
-+				  ri->i_compress_algorithm);
- 			return false;
--		if (le64_to_cpu(ri->i_compr_blocks) > inode->i_blocks)
-+		}
-+		if (le64_to_cpu(ri->i_compr_blocks) >
-+				SECTOR_TO_BLOCK(inode->i_blocks)) {
-+			f2fs_warn(sbi, "%s: inode (ino=%lx) hash inconsistent "
-+				"i_compr_blocks:%llu, i_blocks:%llu, run fsck to fix",
-+				  __func__, inode->i_ino,
-+				  le64_to_cpu(ri->i_compr_blocks),
-+				  SECTOR_TO_BLOCK(inode->i_blocks));
- 			return false;
-+		}
- 		if (ri->i_log_cluster_size < MIN_COMPRESS_LOG_SIZE ||
--			ri->i_log_cluster_size > MAX_COMPRESS_LOG_SIZE)
-+			ri->i_log_cluster_size > MAX_COMPRESS_LOG_SIZE) {
-+			f2fs_warn(sbi, "%s: inode (ino=%lx) has unsupported "
-+				"log cluster size: %u, run fsck to fix",
-+				  __func__, inode->i_ino,
-+				  ri->i_log_cluster_size);
- 			return false;
-+		}
- 	}
- 
- 	return true;
 -- 
-2.18.0.rc1
-
+~Vinod
