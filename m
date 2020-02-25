@@ -2,104 +2,80 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21503C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F9C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69332082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JN2e49PA"
+	by mail.kernel.org (Postfix) with ESMTP id 22C0920CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582612327;
+	bh=CSADtHLh4uy2pwTG/rYHxSNpQhgO2kNjyWKWP0iqptM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XJfepnYz5SeBwqv9mqAKTa2A+cR1v5bUOvU2HdFbCvXfDg6Q8VDMMBJht78guB5Dk
+	 3PQzs5Gl+1o1J421WBqKKkrxbnJJ/nAXSzHvbIKSydJWpamxtdJsOfGE6D6eoe6sTH
+	 FDdk0wgivJCaKMYIvR/ojZphmd35EH/TDyxfNJtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgBYGbc (ORCPT
+        id S1729113AbgBYGcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:31:32 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46776 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgBYGbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:31:32 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a22so11496255oid.13;
-        Mon, 24 Feb 2020 22:31:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yTXnQnJXMwonwysk9ULJEMBbzepXTZX104rAvocoFpg=;
-        b=JN2e49PA/MntSGElEaJR40KNMKu61EVbPCCfRPirey3u/q36XyBiIML4HcwELMFDDg
-         VM4SoY9ii/Qk/A6yZFSfBfXBw585JQJs8GYg7vnso2Nc31+lSYGesDcTxJYx6mGkxbVp
-         DxTaPaPfWs+cnkwY8RYLL7cdhIOUNKR63MJUAowwZcsaygWB0KlXI3U6hv7uhfxNNqsp
-         xauMQ/EelcYxriDuFMWuyokrnNkpPjK0sI+IaxY/pDFhOyAabQ6lwylmElqhoe9LOpb5
-         vcnK8p3E25F2G36cqLfOlP97b5iBf7mNQYujk/1Ubb0yLX26LOiB8OoVw4Eai4Cx+SvA
-         Uxdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yTXnQnJXMwonwysk9ULJEMBbzepXTZX104rAvocoFpg=;
-        b=QazhJztm4AhIQYJ0q0WVH5PzIpKuXyFHH0eKutMRFSKD2TSfur1LICO23R3KwausRg
-         bJCp9h0zyASFgPaLHx6SD8GljFn0YNMPDZmXqnBYJXmklXC39QjZmTYh6riayPppt9Nw
-         etEaRp9xtI8uh5RD2GnJ0ozcYsg1f1fh29VVBtlb6FTvKV0ikbzhCqzi0YiE26CD69CK
-         9ne/b0bo5f2W/wZfnI73645HGx+X8wzU+Z1WiU9RMZwBmrSaB4de4R99N93SbuCZQG9F
-         PsfvrpAaRauICUB2cvk7HgT9TmtgAQSvgFs5WXRaFBXN+mD4hB9vCl7VFcS1Nc6DRsmM
-         zB9w==
-X-Gm-Message-State: APjAAAW8sCf35QyR6w5EBHqf6kV+9vBi68XC633HxDD2sS1yqIuToiak
-        wnzXocXQWpOoLuC2+Wh5zeVyPqMRiQdZ+SQZv/M=
-X-Google-Smtp-Source: APXvYqz+kVcf0zlMxv5KCUeIPaPVARziQywm6nniqo0yWNTzlrLVJ2zHPdCMRgoeRgoHStm4bjbMXnEQqckua2gLPys=
-X-Received: by 2002:aca:44d7:: with SMTP id r206mr2282068oia.33.1582612291759;
- Mon, 24 Feb 2020 22:31:31 -0800 (PST)
+        Tue, 25 Feb 2020 01:32:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgBYGcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:32:05 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2CE32082F;
+        Tue, 25 Feb 2020 06:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582612324;
+        bh=CSADtHLh4uy2pwTG/rYHxSNpQhgO2kNjyWKWP0iqptM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b/Bvtczk39lN5rbBvtV+gfxV123RLd+I7XzRpS7I8Jv3gGnoKaqXls8j4sGJh6kXh
+         0TvJOrrKMgKUx460vWEr15bMoFcttkz9v77juDIvu6UUln1Y93A376YdM+Z70YwTMH
+         7K+nbqto33kDlJfSQCzWNmacDKKDLgQSNtxFAK8k=
+Date:   Tue, 25 Feb 2020 12:02:00 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/19] NVIDIA Tegra APB DMA driver fixes and
+ improvements
+Message-ID: <20200225063200.GL2618@vkoul-mobl>
+References: <20200209163356.6439-1-digetx@gmail.com>
 MIME-Version: 1.0
-References: <07348bb2-c8a5-41d0-afca-26c1056570a5.bangcai.hrg@alibaba-inc.com>
-In-Reply-To: <07348bb2-c8a5-41d0-afca-26c1056570a5.bangcai.hrg@alibaba-inc.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 25 Feb 2020 14:31:20 +0800
-Message-ID: <CANRm+CwZq=FbCwRcyO=C7YinLevmMuVVu9auwPqyho3o-4Y-wQ@mail.gmail.com>
-Subject: Re: [RFC] Question about async TLB flush and KVM pv tlb improvements
-To:     =?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?= <bangcai.hrg@alibaba-inc.com>
-Cc:     namit <namit@vmware.com>, peterz <peterz@infradead.org>,
-        pbonzini <pbonzini@redhat.com>,
-        "dave.hansen" <dave.hansen@intel.com>, mingo <mingo@redhat.com>,
-        tglx <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "dave.hansen" <dave.hansen@linux.intel.com>, bp <bp@alien8.de>,
-        luto <luto@kernel.org>, kvm <kvm@vger.kernel.org>,
-        "yongting.lyt" <yongting.lyt@alibaba-inc.com>,
-        =?UTF-8?B?5ZC05ZCv57++KOWQr+e/vik=?= <qixuan.wqx@alibaba-inc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209163356.6439-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 12:12, =E4=BD=95=E5=AE=B9=E5=85=89(=E9=82=A6=E9=87=
-=87) <bangcai.hrg@alibaba-inc.com> wrote:
->
-> Hi there,
->
-> I saw this async TLB flush patch at https://lore.kernel.org/patchwork/pat=
-ch/1082481/ , and I am wondering after one year, do you think if this patch=
- is practical or there are functional flaws?
-> From my POV, Nadav's patch seems has no obvious flaw. But I am not famili=
-ar about the relationship between CPU's speculation exec and stale TLB, sin=
-ce it's usually transparent from programing. In which condition would machi=
-ne check occurs? Is there some reference I can learn?
-> BTW, I am trying to improve kvm pv tlb flush that if a vCPU is preempted,=
- as initiating CPU is not sending IPI to and waiting for the preempted vCPU=
-, when the preempted vCPU is resuming, I want the VMM to inject an interrup=
-t, perhaps NMI, to the vCPU and letting vCPU flush TLB instead of flush TLB=
- for the vCPU, in case the vCPU is not in kernel mode or disabled interrupt=
-, otherwise stick to VMM flush. Since VMM flush using INVVPID would flush a=
-ll TLB of all PCID thus has some negative performance impacting on the pree=
-mpted vCPU. So is there same problem as the async TLB flush patch?
+On 09-02-20, 19:33, Dmitry Osipenko wrote:
+> Hello,
+> 
+> This series fixes some problems that I spotted recently, secondly the
+> driver's code gets a cleanup. Please review and apply, thanks in advance!
 
-PV TLB Shootdown is disabled in dedicated scenario, I believe there
-are already heavy tlb misses in overcommit scenarios before this
-feature, so flush all TLB associated with one specific VPID will not
-worse that much.
+Applied, thanks
 
-    Wanpeng
+One note I would like to add thanking you and Jon for the series :)
+
+This version was pleasure to read. A patch should do *one* thing and
+this series really illustrates this principal and as a result I enjoyed
+reading the series and was able to do a quick review of the series,
+notwithstanding the fact that it had 19 patches. So thanks to you and
+Jon (i know he pushed for split etc) for the wonderful read.
+
+-- 
+~Vinod
