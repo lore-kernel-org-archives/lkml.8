@@ -2,135 +2,101 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE8CC35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60656C35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EAA2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="lJFVgcKd"
+	by mail.kernel.org (Postfix) with ESMTP id 2F4B3218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582611146;
+	bh=fxLOFtVYfe/xZb9HlC6PvDLWrLnNe/I7p4/iU1LvhUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r4KdUDYqUapIH7HLSTBPzGYMyCEg6CEJQDMUzfqvAByuzVGx/6E0UTHS5aJTeMIix
+	 +XPgdUKEOgD5e0RrgxxZlhQqD3KNy2GApIe+BBQSeGKrB9UTtedQxPvTVBiQ53bLg8
+	 QIa3Rj/hbZBYeEGNKjj4RMuWi/7ohzD7pkDuilOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgBYGLy (ORCPT
+        id S1729005AbgBYGMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:11:54 -0500
-Received: from mail-mw2nam12on2111.outbound.protection.outlook.com ([40.107.244.111]:46916
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726465AbgBYGLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:11:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lnjfY/9PFhKOXMqzH0npClgg5CpA3VOWVgeCnZCigbgC/aRfHY+sbuI6Ein3Ie4F2ODKQEW1MCFhzeeQMwhAIXXpWtmiW/CLSZdu4cJ/zOxfBu1/Lo7C/4dh38Po/h/imCMp4IUWgvCpJ0cXZfn3UZIE6jls2iTKtz319pcQ96IlIOyW0gjjotv2rPfgJ2MFG+3LBL9iSpDeg2rGLDjHQmrOzQV2RVapPpIKwnRxvyY9m91oqTQ0Mhqto24fVLOko0qcW2T1UsBdcgJwyhcxXVox0LFLu2khnTSKWBYYrcw6P9BbV/LgbJmig+s7GdTTxVAw9tPcd9Lc53O6tr1HpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P5Ci8GWyK3SOB6xpXF/O/X6MBqh9rKxAjlXfoNb8Yp8=;
- b=CnGxx3zrX9O8r1pZa4IaBP5dgF8HSKlZv7u7n1Cb0XWBwXuMBwgFsUOxjiDg+2axXy9g/Fcy6Suo6RkrHuSbKi9yJ4tCfePRW4irpGb9AEeDWysA2JYSMcdJQJhwtAkoX4E24G5g0lcnhfTWvJmvO2hWSYkM6lQ36bXfSD5SlKThw+yVXp3MXUz/liZxGAaADQ6jU0c7kcDp3ib7tyIdWqOMtpQOiYd9NHp8SfDZRQCkRpKp6sbVgmO/B4MvlnOPFqNNbV6KyuYaO6gLsTLyZi0Xb/Qjaddy8aX+8w31Z8Lac38nmqkeTe37EN5evljLu5Zct9zQP0/nMZtMJxqj2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P5Ci8GWyK3SOB6xpXF/O/X6MBqh9rKxAjlXfoNb8Yp8=;
- b=lJFVgcKdtrqArdenYuMSCxLqyoKrqxLlJShypo5F4t44DaL8w38NxNBkH34qpJ7/l30nCUImIMnc+BrdGgbjYNAXe366CamkkgYbfUyXUMcJO2vxOawpmKYn1Ljb0vc1ihETD9hSDO2D0KTWuKkU9W75HT+lsMgsVJK3pwdl1zQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=xji@analogixsemi.com; 
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com (2603:10b6:805:a5::18)
- by SN6PR04MB5231.namprd04.prod.outlook.com (2603:10b6:805:fe::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Tue, 25 Feb
- 2020 06:11:49 +0000
-Received: from SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::9598:7ff:b397:ba56]) by SN6PR04MB4543.namprd04.prod.outlook.com
- ([fe80::9598:7ff:b397:ba56%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 06:11:49 +0000
-Date:   Tue, 25 Feb 2020 14:11:39 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: [PATCH v7 0/2] Add initial support for slimport anx7625
-Message-ID: <cover.1582529411.git.xji@analogixsemi.com>
+        Tue, 25 Feb 2020 01:12:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbgBYGMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:12:24 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557BE2082F;
+        Tue, 25 Feb 2020 06:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582611144;
+        bh=fxLOFtVYfe/xZb9HlC6PvDLWrLnNe/I7p4/iU1LvhUc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=igezpnXUhAdO5oTgHW459emyzcdKLBnR/P1Gw8dY0ve+VGQoVDDraV4MdWqHfMtUo
+         irHddwFcD3/HwfcnJC3CLI42i2sQhWVZDSfb4Le8MzAg+4Y7KyjJHdT5Y4cbqeHPMg
+         nyKpzGOjwpeRbizs0vyFNvNeGOUDVctNjc9bfEyc=
+Date:   Tue, 25 Feb 2020 11:42:20 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linus Walleij <linus.ml.walleij@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dma: imx-sdma: Fix the event id check to include RX
+ event for UART6
+Message-ID: <20200225061220.GK2618@vkoul-mobl>
+References: <20200224172236.22478-1-frieder.schrempf@kontron.de>
+ <CAOMZO5CyYbAZRZrGLJNJXNJiekJXptUTu8tOfVw6y7-n-CXesg@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK0PR03CA0117.apcprd03.prod.outlook.com
- (2603:1096:203:b0::33) To SN6PR04MB4543.namprd04.prod.outlook.com
- (2603:10b6:805:a5::18)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK0PR03CA0117.apcprd03.prod.outlook.com (2603:1096:203:b0::33) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 06:11:48 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e946bed7-6089-420d-72a2-08d7b9b999a8
-X-MS-TrafficTypeDiagnostic: SN6PR04MB5231:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR04MB5231F43C4E4EE82649E0AE6CC7ED0@SN6PR04MB5231.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0324C2C0E2
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(189003)(199004)(86362001)(6496006)(52116002)(2906002)(498600001)(110136005)(5660300002)(54906003)(4744005)(81166006)(2616005)(956004)(66476007)(81156014)(4326008)(66556008)(36756003)(8936002)(107886003)(6486002)(6666004)(16526019)(7416002)(8676002)(66946007)(186003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5231;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: analogixsemi.com does not
- designate permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dsAj6hCelPNna0Kj+l8n6zzzIqY51lqP7wkHTuP34ZINmxv7vDTrofe92JhUvzDEbsIlLrTt7dblTeeEWY4sHdUtdTZaxqAgMEgcNCiC7wERiKik+tcWFkjun+deqA3P6d+DqnJ1heKAU3xSMLfOrZbq/gfH6a1eUP7U+6aEobvZRCtAJ+6haFgk1PSD+zwLbTHjAdNmS1wxb66kYfYORKitLujDzrHue93q3A5QsOzCFp+v4d/Tw+M/7qZtJLN61fNZY7AawdQbLc4cGv90GvpMmyt8XsOJ86kVeg/rznhwC2pg0wQ1CJmp3bXEJb8wtByTYeMOGbGr8Z+T1bclafIJ6Mvo8PSt12XOVYiIsOim3BlogTmoIH++kzzkAaSTYi7ETUn9ydSIoLBNEUXApFmqU1YRiC3w3sGlHMg5RC8XDbAwPQua1NBLGFBrW0K4
-X-MS-Exchange-AntiSpam-MessageData: K2eF92iMU9tNhNVPeHjV/vO7gZeRbMDymSNqGzdfkPoRHDtKW5VO3Gx2amvf0tqHv/ZcWQYbaN5xaDTHbNzuEbi5+YcoIjGMRTXwXw4RHkYIQ5KnJLO0a6sNSphLX/b7srYkuyBnJpYEMWFz15mWFQ==
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e946bed7-6089-420d-72a2-08d7b9b999a8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 06:11:49.6235
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uTbgyHNoogKZTgBB/4VwmDnCOOz37sjlgNSsRhUvBRlfHNTNDn+I47p8aPBVLGfqfjmS6VnwywE2a4sbwmIWXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5231
+In-Reply-To: <CAOMZO5CyYbAZRZrGLJNJXNJiekJXptUTu8tOfVw6y7-n-CXesg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On 24-02-20, 15:43, Fabio Estevam wrote:
+> Hi Frieder,
+> 
+> On Mon, Feb 24, 2020 at 2:22 PM Schrempf Frieder
+> <frieder.schrempf@kontron.de> wrote:
+> >
+> > From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >
+> > On i.MX6 the DMA event for the RX channel of UART6 is '0'. To fix
+> 
+> I would suggest being a bit more specific than saying i.MX6.
+> 
+> I see UART6 is present on i.MX6UL/i.MX6SX, but not on i.MX6Q/i.MX6DL,
+> so it would be better to specify it in the commit log.
+> 
+> imx6ul.dtsi does not have dma nodes under uart6, so I guess you fixed
+> it for imx6sx.
 
-The following series add initial support for the Slimport ANX7625 transmitter, a
-ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
+and use right subsystem tag dmaengine. Git log of the file should tell
+you the right one to use :)
 
-This is the initial version, any mistakes, please let me know, I will fix it in
-the next series.
-
-Thanks,
-Xin
-
-
-Xin Ji (2):
-  dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter binding
-  drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP bridge driver
-
- .../bindings/display/bridge/anx7625.yaml           |   91 +
- drivers/gpu/drm/bridge/Makefile                    |    2 +-
- drivers/gpu/drm/bridge/analogix/Kconfig            |    6 +
- drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
- drivers/gpu/drm/bridge/analogix/anx7625.c          | 2172 ++++++++++++++++++++
- drivers/gpu/drm/bridge/analogix/anx7625.h          |  410 ++++
- 6 files changed, 2681 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.yaml
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
- create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+> 
+> > the broken DMA support for UART6, we change the check for event_id0
+> > to include '0' as a valid id.
+> >
+> > Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
 -- 
-2.7.4
-
+~Vinod
