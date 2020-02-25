@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07A6C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F76DC4BA06
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A020624680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1053D24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgBYXaK (ORCPT
+        id S1730570AbgBYXaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:30:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55598 "EHLO
+        Tue, 25 Feb 2020 18:30:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55566 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729707AbgBYXZ7 (ORCPT
+        with ESMTP id S1729602AbgBYXZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:25:59 -0500
+        Tue, 25 Feb 2020 18:25:54 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6jaA-0004aQ-MI; Wed, 26 Feb 2020 00:25:42 +0100
+        id 1j6ja3-0004Yi-RD; Wed, 26 Feb 2020 00:25:36 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 70CD4104098;
-        Wed, 26 Feb 2020 00:25:33 +0100 (CET)
-Message-Id: <20200225221305.813084267@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5B104101226;
+        Wed, 26 Feb 2020 00:25:32 +0100 (CET)
+Message-Id: <20200225221305.295289073@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:08:07 +0100
+Date:   Tue, 25 Feb 2020 23:08:02 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,7 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 6/8] x86/entry: Move irq tracing to syscall_slow_exit_work
+Subject: [patch 1/8] x86/entry/64: Trace irqflags unconditionally on when returing to user space
 References: <20200225220801.571835584@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,62 +50,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-which removes the ASM IRQ tracepoints.
+User space cannot longer disable interrupts so trace return to user space
+unconditionally as IRQS_ON.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/common.c   |    2 ++
- arch/x86/entry/entry_32.S |    3 ++-
- arch/x86/entry/entry_64.S |    3 ---
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/entry/entry_64.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -299,6 +299,8 @@ static void syscall_slow_exit_work(struc
- 
- 	local_irq_disable();
- 	__prepare_exit_to_usermode(regs);
-+	/* Return to user space enables interrupts */
-+	trace_hardirqs_on();
- }
- NOKPROBE_SYMBOL(syscall_return_slowpath);
- 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -812,7 +812,7 @@ SYM_CODE_START(ret_from_fork)
- 	movl    %esp, %eax
- 	call    syscall_return_slowpath
- 	STACKLEAK_ERASE
--	jmp     restore_all
-+	jmp     restore_all_switch_stack
- 
- 	/* kernel thread */
- 1:	movl	%edi, %eax
-@@ -1077,6 +1077,7 @@ SYM_FUNC_START(entry_INT80_32)
- 
- restore_all:
- 	TRACE_IRQS_IRET
-+restore_all_switch_stack:
- 	SWITCH_TO_ENTRY_STACK
- 	CHECK_AND_APPLY_ESPFIX
- .Lrestore_nocheck:
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -172,8 +172,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
+@@ -174,7 +174,7 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
  	movq	%rsp, %rsi
  	call	do_syscall_64		/* returns with IRQs disabled */
  
--	TRACE_IRQS_ON			/* return enables interrupts */
--
+-	TRACE_IRQS_IRETQ		/* we're about to change IF */
++	TRACE_IRQS_ON			/* return enables interrupts */
+ 
  	/*
  	 * Try to use SYSRET instead of IRET if we're returning to
- 	 * a completely clean 64-bit userspace context.  If we're not,
-@@ -340,7 +338,6 @@ SYM_CODE_START(ret_from_fork)
- 	UNWIND_HINT_REGS
- 	movq	%rsp, %rdi
- 	call	syscall_return_slowpath	/* returns with IRQs disabled */
--	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
- 	jmp	swapgs_restore_regs_and_return_to_usermode
+@@ -619,7 +619,7 @@ SYM_CODE_START_LOCAL(common_interrupt)
+ .Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+-	TRACE_IRQS_IRETQ
++	TRACE_IRQS_ON
  
- 1:
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
 
