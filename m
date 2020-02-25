@@ -2,127 +2,189 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E032C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1C9C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EB02084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D5A2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:26:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lY4cwsjE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fC7mjojU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731766AbgBYU0S (ORCPT
+        id S1731777AbgBYU0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:26:18 -0500
-Received: from mail-vi1eur05on2081.outbound.protection.outlook.com ([40.107.21.81]:6063
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731685AbgBYU0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:26:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uw1Ix3PbMj9o7FOrpvkavgaONivTimLNO9PFXsVWQWfaKztWawWk5kMo9lsBe/USugBHLWpFGuV1Z6mqZ2tG3CWIC4zdjArAw1wAVLg7friLRhRhGJiAaVjmVth/CG3iUkZkW5HKQlk2CxCzCG4fXAlD49iwpqgGGTOufIL9/AjQrL/bRamE3+9g9UiAG5lgQDAWlPDFjjL+muS8vqR4rrbHWAEjPUZ16/ASCNkU1hpaFIXa9llSTRwVymZYv+QeqC7bw4sd+hx4d9sOZdfWHaU0dXEt805cYR2YqrAJydBTbIkl3p2LJRbkT/7snt2UpPHgAFzgWtV12MQFewL6kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cayu79wOyGEn227qtv7X5t4JIzglzRpTlHAZ6QHTDos=;
- b=OedsqO0ibBYpnYAjtKg6MVrjpaJ90dmWtt+qdYv9UmZf3LpZEEdTLmppIOnD7l4ieNCSeUsWEclDjuCz0HKRV+IZEE+ouF0ueMOdxeDYmpCAWe/gH/vM9rFRTTy2e1N8SKa8zKPTApI7j4ywSFutX2Lh6ovAcIOc9sKwCevcrlAzIuZuFtqf+q4PPCAEKp8Z2Gk7LdLfV1RHYHqukxkj6tVuQCA14K4H3GyZi8j00llVN5g6EvPCkFFhOoTF3vnlv5+WhVqQk1WxnKCW+xFPr8d+kj+OUQ7yQmPLuG2ZJZzDNVatzz1Ecv+8eJQuqSHmfunUBfAqnDlwHP7lyG72Xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cayu79wOyGEn227qtv7X5t4JIzglzRpTlHAZ6QHTDos=;
- b=lY4cwsjE6doHG5CdpHVHUaoHvAekoV1VTvGxAGs+FAFxZN51AbJitp2ZCHtkbmBEtWOrA1Alm7BA0HXPjeicaspIgm7iCD9Xnwi9rrl2GnO7mR/7fKprD68PGaYlf5+krFdZBOCiSje+hGrge+bAFptuYkzRO0AYAoTK9wTD5/M=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3695.eurprd04.prod.outlook.com (52.134.14.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Tue, 25 Feb 2020 20:26:14 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 20:26:14 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v7 7/9] crypto: caam - invalidate entropy register during
- RNG initialization
-Thread-Topic: [PATCH v7 7/9] crypto: caam - invalidate entropy register during
- RNG initialization
-Thread-Index: AQHV1TLWgWFMXoW0dUik/8LP0jRlww==
-Date:   Tue, 25 Feb 2020 20:26:13 +0000
-Message-ID: <VI1PR0402MB3485FBC57F580FEA36F7336498ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
- <20200127165646.19806-8-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a24ba5ae-ee12-48d5-8cce-08d7ba30f5c5
-x-ms-traffictypediagnostic: VI1PR0402MB3695:|VI1PR0402MB3695:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3695F8786E7C0DA8A467DA7198ED0@VI1PR0402MB3695.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:220;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(199004)(189003)(52536014)(110136005)(2906002)(5660300002)(44832011)(8676002)(4326008)(26005)(33656002)(316002)(71200400001)(81166006)(54906003)(186003)(81156014)(4744005)(6506007)(55016002)(7696005)(478600001)(9686003)(8936002)(53546011)(86362001)(64756008)(66556008)(66946007)(91956017)(66476007)(76116006)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3695;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: umKsa/QXmJSTSdRGylv1WJVLo8Aw9tjGN8YokEYWwbpqKy11KRkFXWZKTRSIW1ywnhcrZ8Jj1dIIXj4x8lQ22dmnExwI8bF0z+zXjl0vnnkbaylyNpETGVAXQjimQYEKoRTWSLSCoEVf3saeNxaVOfw5dQRRcUgfXL5C7P44CDSKOlrv4TJodJ6PzI1TL7RgXDHuPFlABkWPQ5RiLv50AcBUjuyyRHvbqJ3YE3Wux9gVEfm5ooaywcMJnhlUwYOw5QMfVWqeHngOVCopX+ibU72fQY5iZPht4WE3N5g6V9xqB5gUg88Ai/U6TNJ3zF2y13ZQwi0TuN3BKm1w2BE1ypmeQZuBRTb1qNXa0BHARbVTBlg3+D+VN5ZZRnZHwzjJBcnNS2edAN92PggN44Ua2Zfkpkcl/3kXpZpzzle3OM+OZ5ykFzRm2RKWTjrvpHYA
-x-ms-exchange-antispam-messagedata: etryfZHFMNm13U/WzbtWxEveE+kSQzuTWbEebdSumQ/B8bqbViHfztGFrU6cI7zgLQ1+anBUyxI9tZLxRmBOf0YobcDekSgFTQvAsILqDrh9eleTNQ82K8hns2va/QKZ3Du5DwpW2pGi5aoII+dTEQ==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Feb 2020 15:26:46 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:54002 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731685AbgBYU0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:26:46 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PKMpRZ127687;
+        Tue, 25 Feb 2020 20:26:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=UL9wyjJBjP3/IyS1CKoZAtXUZ06/abJ/4utKURUvHkg=;
+ b=fC7mjojUgAGaP1M7x+OptllYga6DD1iy+NU7mP1G7GRM2qNZ3glLljPBVEiT26j0wtvM
+ EdD5UDROukyjT+qJVRcr7kSpXmUUR15FHjBouCjThYsijxhxhn1kLIq4yPkAOb4kP3zf
+ IeK+c77VMXLahNMy4Zf47OmDN14aylarOpIq/XeI0IsMYn1cut0tRupLcDpxeCiCidJk
+ KgEJBxIhSwi1Z3+2hata6nodlUcJ3b0bEzrAhCrMobsQ6sncEyRT2voDGAtkt6ut6Lff
+ 7Q8529aTbtwaEhX08NsLlXY5Fv+l5qfIlEYtme74jc69T+XNhBdFjFIY+w+euWQst73s xQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yd0m1uwnk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 20:26:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PKM4XH020310;
+        Tue, 25 Feb 2020 20:26:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yd17qs1yt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 20:26:39 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01PKQYCE022263;
+        Tue, 25 Feb 2020 20:26:34 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Feb 2020 12:26:33 -0800
+Date:   Tue, 25 Feb 2020 12:26:32 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: Regression: hibernation is broken since
+ e6bc9de714972cac34daa1dc1567ee48a47a9342
+Message-ID: <20200225202632.GE6748@magnolia>
+References: <20200213172351.GA6747@dumbo>
+ <20200213175753.GS6874@magnolia>
+ <20200213183515.GA8798@dumbo>
+ <20200213193410.GB6868@magnolia>
+ <20200213194135.GF6870@magnolia>
+ <20200214211523.GA32637@dumbo>
+ <20200222002319.GK9504@magnolia>
+ <20200223190311.GA26811@dumbo>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a24ba5ae-ee12-48d5-8cce-08d7ba30f5c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 20:26:13.9336
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LAsIk9mrCTRyRDc/Ace0VxwCPOI/Ub1O/jEL1rylym5if7DkbJoOlYP3dFccgiYGfjqcycWi0hCyuIHPYIuwpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3695
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223190311.GA26811@dumbo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 phishscore=0 suspectscore=2 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002250142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
+ suspectscore=2 bulkscore=0 adultscore=0 impostorscore=0 spamscore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/27/2020 6:57 PM, Andrey Smirnov wrote:=0A=
-> In order to make sure that we always use non-stale entropy data, change=
-=0A=
-> the code to invalidate entropy register during RNG initialization.=0A=
-> =0A=
-> Signed-off-by: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
-> Signed-off-by: Vipul Kumar <vipul_kumar@mentor.com>=0A=
-> [andrew.smirnov@gmail.com ported to upstream kernel, rewrote commit msg]=
-=0A=
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
-> Cc: Chris Healy <cphealy@gmail.com>=0A=
-> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
-> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: linux-kernel@vger.kernel.org=0A=
-> Cc: linux-imx@nxp.com=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
-=0A=
+On Sun, Feb 23, 2020 at 08:03:11PM +0100, Domenico Andreoli wrote:
+> On Fri, Feb 21, 2020 at 04:23:19PM -0800, Darrick J. Wong wrote:
+> > 
+> > Ok, third try.  Does the following work?  This is a little more
+> > selective in that it only disables the write protection on the swap
+> > device/file that uswusp is going to write to.
+> 
+> Yes it works but also verified that once the S_SWAPFILE bit is cleared
+> it's never restored, therefore the protecton is gone after the first
+> hibernation.
+
+Ok, good.  Now can you try the third part, which ought to re-apply
+S_SWAPFILE after a successful resume, please?  Assuming this works, I
+think we're ready with a fixpatch.
+
+--D
+
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 1e99f7ac1d7e..add93e205850 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -458,6 +458,7 @@ extern void swap_free(swp_entry_t);
+ extern void swapcache_free_entries(swp_entry_t *entries, int n);
+ extern int free_swap_and_cache(swp_entry_t);
+ extern int swap_type_of(dev_t, sector_t, struct block_device **);
++extern void swap_relockall(void);
+ extern unsigned int count_swap_pages(int, int);
+ extern sector_t map_swap_page(struct page *, struct block_device **);
+ extern sector_t swapdev_block(int, pgoff_t);
+diff --git a/kernel/power/user.c b/kernel/power/user.c
+index 77438954cc2b..b11f7037ce5e 100644
+--- a/kernel/power/user.c
++++ b/kernel/power/user.c
+@@ -271,6 +271,8 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
+ 			break;
+ 		}
+ 		error = hibernation_restore(data->platform_support);
++		if (!error)
++			swap_relockall();
+ 		break;
+ 
+ 	case SNAPSHOT_FREE:
+@@ -372,10 +374,17 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
+ 			 */
+ 			swdev = new_decode_dev(swap_area.dev);
+ 			if (swdev) {
++				struct block_device *bd;
++
+ 				offset = swap_area.offset;
+-				data->swap = swap_type_of(swdev, offset, NULL);
++				data->swap = swap_type_of(swdev, offset, &bd);
+ 				if (data->swap < 0)
+ 					error = -ENODEV;
++
++				inode_lock(bd->bd_inode);
++				bd->bd_inode->i_flags &= ~S_SWAPFILE;
++				inode_unlock(bd->bd_inode);
++				bdput(bd);
+ 			} else {
+ 				data->swap = -1;
+ 				error = -EINVAL;
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index b2a2e45c9a36..a64dcba10db6 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1799,6 +1799,32 @@ int swap_type_of(dev_t device, sector_t offset, struct block_device **bdev_p)
+ 	return -ENODEV;
+ }
+ 
++/* Re-lock swap devices after resuming from userspace suspend. */
++void swap_relockall(void)
++{
++	int type;
++
++	spin_lock(&swap_lock);
++	for (type = 0; type < nr_swapfiles; type++) {
++		struct swap_info_struct *sis = swap_info[type];
++		struct block_device *bdev = bdgrab(sis->bdev);
++
++		/*
++		 * uswsusp only knows how to suspend to block devices, so we
++		 * can skip swap files.
++		 */
++		if (!(sis->flags & SWP_WRITEOK) ||
++		    !(sis->flags & SWP_BLKDEV))
++			continue;
++
++		inode_lock(bd->bd_inode);
++		bd->bd_inode->i_flags |= S_SWAPFILE;
++		inode_unlock(bd->bd_inode);
++		bdput(bd);
++	}
++	spin_unlock(&swap_lock);
++}
++
+ /*
+  * Get the (PAGE_SIZE) block corresponding to given offset on the swapdev
+  * corresponding to given index in swap_info (swap type).
