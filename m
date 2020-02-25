@@ -2,105 +2,140 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E90DC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89BAC35DFA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DE72176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtAbwH3N"
+	by mail.kernel.org (Postfix) with ESMTP id 934B72176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgBYIHk (ORCPT
+        id S1729686AbgBYIIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:07:40 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38551 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729646AbgBYIHk (ORCPT
+        Tue, 25 Feb 2020 03:08:17 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:38281 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729111AbgBYIIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:07:40 -0500
-Received: by mail-ed1-f67.google.com with SMTP id p23so15202015edr.5;
-        Tue, 25 Feb 2020 00:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hpxymrnMFLY6A9AjiKv5IjjdyYwWAfmtWtkwbGf9b7c=;
-        b=LtAbwH3NCYO0hWAIqgRNZKiofeQ4oKb/QJbzNpSuP2noOsBHx/TBWPmdeiNrmL4I3O
-         D57p+otGx35oQdxExJ4wHGkLurcdMy8rq0M4oxSCSlF+DYYJXWfeFzK0+QoIN+geQi6g
-         L27sIFmSQjWxZiAezZxWpOJ+b3o06ajFUIrEieVsw9IBTV3fHUdQQDIQE+VVXULpo+EL
-         DemhoGAjEuLXv1kMk20msEPMVL+YDL6ObdkNepzCgvIOcV+E/aFwDcZpMMjLa0XPI/ft
-         op+3kVP0ALKp38eMJVFkotxxAR2SbGbcue+nll17Cu36osstHt0DFjVH8lbh6Zckv4T2
-         +GMQ==
+        Tue, 25 Feb 2020 03:08:16 -0500
+Received: by mail-io1-f69.google.com with SMTP id x2so19715779iog.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:08:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hpxymrnMFLY6A9AjiKv5IjjdyYwWAfmtWtkwbGf9b7c=;
-        b=eI1wORLNT3zaLO8+XJfAP8jSP7BclYW1AUsZSaHaEJOCz/eS7OEqEt6nT0lf5DSwr3
-         7LPquq5RrvxoVUt79IegX4PzSIcYkxiBAu9I7d3fkqbgh96h1wjY/SVHjy0WCULDfXHM
-         N9Uh/epMmFvFBXggEpjtdIIgO53/d/44G+UkmXLxZVRxwzuOm+DDHHJ7GPfmefkVfajD
-         1v2Z9G/BVnlorA7f0rToqJCMy//zRCasC1ppOx7o6B5SoWtkwbaSnhAl8pYWUGGY2drD
-         Z0nnV+iDbwruaC+cfUy49Ag8N79XO+LZPXSuaa5IQrqr3MGHm69qi6KFiR/jfNjUYMlh
-         Ihxw==
-X-Gm-Message-State: APjAAAXRWgsytHgsfI5pKVf8iyuf/W2dFOJahL7xS2u/0CstFnKWE2OT
-        Jev4zFPvBveJ6d1TILMdGvUScXgvuRg=
-X-Google-Smtp-Source: APXvYqyz1rM9kGZ2yKQKtBdZegqxArEcIfrkYZ1vi8wcL7rT+x4CQ95yAutuOXs0cIHPPNLUbA1SEw==
-X-Received: by 2002:aa7:df09:: with SMTP id c9mr50386890edy.133.1582618058417;
-        Tue, 25 Feb 2020 00:07:38 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d75:fc00:5586:e036:dd7a:89bd])
-        by smtp.gmail.com with ESMTPSA id u9sm1188510edt.91.2020.02.25.00.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 00:07:37 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify MMP SUPPORT after moving cputype.h
-Date:   Tue, 25 Feb 2020 09:07:27 +0100
-Message-Id: <20200225080727.5687-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=oBN7oAkwhJVbDOrp7SHliafS7zMYsi6zrfd5xebUUMY=;
+        b=i7oLRI1h1RwG8vJwbr/UzwvLabguVl9InfSkQAC5RmU3yfSIE1Rrxppd1lyo1tgDIv
+         p8RJT24nhZ2bgXx4d/EGdUOI0ZLThVnIwNezQcAXXeqvYFPe3NO+jbjp47R2McRsM8tu
+         DXtDRE1ywyAK1q8rBwinhQIkZZWMfty53hYwEpWyrXO5wQSeYS05NT/EAaTIlk92zs/t
+         /zxvBWqPs0yRMBQp/v3FoAH+mFGorRn9AL5EdBSVfOkSkNCk4ZQkj1PiSPhU0gH7jn4O
+         pYijGmjF/QP+yVvhTibAF/DlWrpdpxwkrRLoTbEuf3vwnloSLj+Cco0AJO0MB77HQCEM
+         XRSQ==
+X-Gm-Message-State: APjAAAU4+1d7ml4pdF4BFpzaEyOVJ0AO7XhOmBzwxWKqMX/iGVWysvx9
+        ljhBpnq6eD1dliVFWrheBKLHUeaXgIC6cu1iS3p5/rNF9099
+X-Google-Smtp-Source: APXvYqwVT2913CZ9DmaHsTWnMfMyzl+yPM99L45ZuUJFLfuF0xfQmiUugmqk4q+DNzUnn8LFfOxEA/PPyut8NcjwQmAU2MZZLYbD
+MIME-Version: 1.0
+X-Received: by 2002:a5e:8e4d:: with SMTP id r13mr50829768ioo.60.1582618094122;
+ Tue, 25 Feb 2020 00:08:14 -0800 (PST)
+Date:   Tue, 25 Feb 2020 00:08:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000050bd7c059f61fd8c@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in inet_release
+From:   syzbot <syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, kafai@fb.com,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-added a file entry that does not point to the intended file location.
+Hello,
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+syzbot found the following crash on:
 
-  warning: no file matches F: linux/soc/mmp/
+HEAD commit:    54dedb5b Merge tag 'for-linus-5.6-rc3-tag' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=168f7de9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
+dashboard link: https://syzkaller.appspot.com/bug?extid=1938db17e275e85dc328
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1681fe09e00000
 
-Rectify the MAINTAINERS entry now.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
 
-Fixes: 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD a0113067 P4D a0113067 PUD a8771067 PMD 0 
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
+ __sock_release net/socket.c:605 [inline]
+ sock_close+0xe1/0x260 net/socket.c:1283
+ __fput+0x2e4/0x740 fs/file_table.c:280
+ ____fput+0x15/0x20 fs/file_table.c:313
+ task_work_run+0x176/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+ prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
+ syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
+ do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c429
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
+RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
+RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
+R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 82567b5207e87bae ]---
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
-Lubomir, please pick this patch.
-applies cleanly on current master and next-20200225
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fcd79fc38928..ed62b3eba75c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11197,7 +11197,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp.git
- S:	Odd Fixes
- F:	arch/arm/boot/dts/mmp*
- F:	arch/arm/mach-mmp/
--F:	linux/soc/mmp/
-+F:	include/linux/soc/mmp/
- 
- MMP USB PHY DRIVERS
- R:	Lubomir Rintel <lkundrak@v3.sk>
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
