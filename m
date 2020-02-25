@@ -2,75 +2,150 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31D6C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC77C35E03
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B050A20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECC520658
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpSF6Rm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730691AbgBYOYf (ORCPT
+        id S1730713AbgBYO0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:24:35 -0500
-Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:38356 "EHLO
-        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729721AbgBYOYf (ORCPT
+        Tue, 25 Feb 2020 09:26:32 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44484 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730525AbgBYO0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:24:35 -0500
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 15E90CCA65
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:24:33 +0000 (GMT)
-Received: (qmail 7086 invoked from network); 25 Feb 2020 14:24:32 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 25 Feb 2020 14:24:32 -0000
-Date:   Tue, 25 Feb 2020 14:24:30 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200225142430.GC3466@techsingularity.net>
-References: <20200224095223.13361-1-mgorman@techsingularity.net>
- <20200224151641.GA24316@gmail.com>
- <20200225115901.GB3466@techsingularity.net>
- <CAKfTPtDN-XP7LAyy-zQ-J=nxv5M1x_f2AZ2qJ8CK6B82f5WwYg@mail.gmail.com>
+        Tue, 25 Feb 2020 09:26:32 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so12676354oia.11;
+        Tue, 25 Feb 2020 06:26:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QVZ+sybgO0aKAmVZ2qg1eROixluCRNPHwtU0MppkuKU=;
+        b=OpSF6Rm5Qu0v9jB/gF9QSNPI9lbEWCfSRdINO+sRis1bVFFjCgpvgvBMGjd7yjzLB3
+         F4waFiJD9U2jd9tfKG+hDsApfQKEXXe8K9/KDpY7Hksor9SHoO5+ixv4D4/F+8FLRo3Z
+         AyE8lrrqHwIGCOJuhmhZHKbNpjs7hcNKVLQuewbbZ5Rdh3Wd70vGyDLFlp47+Kukk2C0
+         xx0/TkYnSBGytZOSTtlRTDGW9sK4yX0l8tIXETx0Fpd9Dt+BjYEKD/amkrv5TYywErUO
+         7C07A9jDHhXSRc2i2oZVlLflOCg3P+miRrnHvQtJG0C41I8sicmB7TTQufRQmwj3StE/
+         UQkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QVZ+sybgO0aKAmVZ2qg1eROixluCRNPHwtU0MppkuKU=;
+        b=BJREBdPqCQ/KDV2IOIESeZkFpOQtpDAroBc9ERX5D9K3KrGJJrzPqmxKFHVlK9OB3S
+         WTRPIqCTsd75l/jRT4VWv5RzkMkSS+okaFJA/GxteEB8qoCDntDOXVMTEWz0FTUSBf5l
+         ZckMKRzJwEO+WXNSNsfLatv6PYdYGOpAlnKm41i/sXfG/bZt2La/zImsR+YcXxnYEnCW
+         rVBdFSEBeootjaxHL61rJROphfKr41oAy2ss5gHaVDKis389r6YorydzjHk3Zf+/dwrg
+         AoaqKiVlpUCPht9T4FkeUwfz5iNPKjDWqrFoZSOTdU2ZpKyj7dkSamwuJRb7LDrFL49+
+         FmDg==
+X-Gm-Message-State: APjAAAUYxihWLJa5oyU/WmrH0WuiMUlyrYhv9xvhuFwjXUvVjNY129Ix
+        DByc2eV7esOf8GESRHLwwsMTZ9HE0/2yTcYOBEU=
+X-Google-Smtp-Source: APXvYqwqOF94zwr1nS6udLZXJncXxj33efGYNtHI3II4N+LmaoKu0DilqoeydV7O+QDHO5yTlVFJPFzuQkOU3grDp7Q=
+X-Received: by 2002:aca:1913:: with SMTP id l19mr3562113oii.47.1582640790320;
+ Tue, 25 Feb 2020 06:26:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDN-XP7LAyy-zQ-J=nxv5M1x_f2AZ2qJ8CK6B82f5WwYg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1582624061-5814-1-git-send-email-wanpengli@tencent.com> <0af6b96a-16ac-5054-7754-6ab4a239a2d4@redhat.com>
+In-Reply-To: <0af6b96a-16ac-5054-7754-6ab4a239a2d4@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 25 Feb 2020 22:26:19 +0800
+Message-ID: <CANRm+Cz7mKjm7_9H4O4y2XYEv8VnErTtu=dr-8fN0RCCjf0wvA@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: LAPIC: Recalculate apic map in batch
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:28:16PM +0100, Vincent Guittot wrote:
+On Tue, 25 Feb 2020 at 22:20, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 25/02/20 10:47, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
 > >
-> > Will do.
+> > In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated
+> > several times, each time it will consume 10+ us observed by ftrace in my
+> > non-overcommit environment since the expensive memory allocate/mutex/rcu etc
+> > operations. This patch optimizes it by recaluating apic map in batch, I hope
+> > this can benefit the serverless scenario which can frequently create/destroy
+> > VMs.
 > >
-> > However I noticed that "sched/fair: Fix find_idlest_group() to handle
-> > CPU affinity" did not make it to tip/sched/core. Peter seemed to think it
-> > was fine. Was it rejected or is it just sitting in Peter's queue somewhere?
-> 
-> The patch has already reached mainline through tip/sched-urgent-for-linus
-> 
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > v1 -> v2:
+> >  * add apic_map_dirty to kvm_lapic
+> >  * error condition in kvm_apic_set_state, do recalcuate  unconditionally
+> >
+> >  arch/x86/kvm/lapic.c | 29 +++++++++++++++++++----------
+> >  arch/x86/kvm/lapic.h |  2 ++
+> >  arch/x86/kvm/x86.c   |  2 ++
+> >  3 files changed, 23 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index afcd30d..3476dbc 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -164,7 +164,7 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
+> >       kvfree(map);
+> >  }
+> >
+> > -static void recalculate_apic_map(struct kvm *kvm)
+> > +void kvm_recalculate_apic_map(struct kvm *kvm)
+> >  {
+>
+> It's better to add an "if" here rather than in every caller.  It should
+> be like:
+>
+>         if (!apic->apic_map_dirty) {
+>                 /*
+>                  * Read apic->apic_map_dirty before
+>                  * kvm->arch.apic_map.
+>                  */
+>                 smp_rmb();
+>                 return;
+>         }
+>
+>         mutex_lock(&kvm->arch.apic_map_lock);
+>         if (!apic->apic_map_dirty) {
+>                 /* Someone else has updated the map.  */
+>                 mutex_unlock(&kvm->arch.apic_map_lock);
+>                 return;
+>         }
+>         ...
+> out:
+>         old = rcu_dereference_protected(kvm->arch.apic_map,
+>                         lockdep_is_held(&kvm->arch.apic_map_lock));
+>         rcu_assign_pointer(kvm->arch.apic_map, new);
+>         /*
+>          * Write kvm->arch.apic_map before
+>          * clearing apic->apic_map_dirty.
+>          */
+>         smp_wmb();
+>         apic->apic_map_dirty = false;
+>         mutex_unlock(&kvm->arch.apic_map_lock);
+>         ...
+>
+> But actually it seems to me that, given we're going through all this
+> pain, it's better to put the "dirty" flag in kvm->arch, next to the
+> mutex and the map itself.  This should also reduce the number of calls
+> to kvm_recalculate_apic_map that recompute the map.  A lot of them will
+> just wait on the mutex and exit.
 
-Bah, I pasted the wrong subject. I am thinking of your
-patch "sched/fair: fix statistics for find_idlest_group" --
-https://lore.kernel.org/lkml/20200218144534.4564-1-vincent.guittot@linaro.org/
-It still appears to be relevant or did I miss something else?
+Good point, will do in next version.
 
--- 
-Mel Gorman
-SUSE Labs
+    Wanpeng
