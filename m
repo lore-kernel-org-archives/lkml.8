@@ -2,133 +2,122 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDBAC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB27C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E37A20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63F620CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zFak7vW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbgBYS3R (ORCPT
+        id S1731565AbgBYS3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:29:17 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:54214 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgBYS3Q (ORCPT
+        Tue, 25 Feb 2020 13:29:35 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:52924 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgBYS3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:29:16 -0500
-Received: by mail-io1-f71.google.com with SMTP id q24so139338iot.20
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 10:29:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=I6UFJnlb79zEXPRMLPthQdcBm8xLbG9d9X38VNdzh5I=;
-        b=YGpLmuRtbeV4GEuaSYrITfH9QBxlNkaDpkmoG7rGafRv+2aTw/vDrtWGXAh6ijUxIR
-         vwq/TAzT7+8c3DXqBwijcRYXodZ5zaW/sigKVfYI9FEsAQWYUHXgWDzhgcvOHrkcYlwP
-         0lYNikS1hiEquoyMdyAum+ro+1pqdIwU/8qF3pCcO2d26VOq25OBcOtS/qgd20JRJA9+
-         0grxffOlKBkZx6CePyxxkEo6EdGXK2btp3+HJdaXeyx9lx/dH+VGhHNxXs4lMluburfQ
-         Bx+c4drQSlvbCrm5Q292XiJc0E17fLFvZdgP16NJmGoHzc72OACPfy53nCMqMOZbOKxq
-         cF4Q==
-X-Gm-Message-State: APjAAAWTpoHAMnp6vfXE0I/aOmK2K98UtUfGpKJ0XjfVF7Qs3auuOZDT
-        9NYHQLuxM3FHKhY7omYvvFC0gKtlg4i7Kh5P35c4QaIYeVcJ
-X-Google-Smtp-Source: APXvYqy4V13LXEbDGJeEiMLFmiTWFhqlbNUfSf0I1y+me/7hD1uy9H2ngIyOh13oh0LwjM470mxkKEVEdicXMmzjkTAL8qT8R6eQ
+        Tue, 25 Feb 2020 13:29:35 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PINhOG135617;
+        Tue, 25 Feb 2020 18:28:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=s65FAwe6rKkFUzFN7JM3BEeK126LVw7a/JcTrGwEU+8=;
+ b=zFak7vW096Kbg9nvSPPrC1FraCgE/MxLkheu8lIBmf0UYkGbiKB8N2l6n4GQnzLgVW8q
+ YmdnWesUf2zt+cM/iJT0KQCIOTg7omXMu6bxoT78WJkgYc2TircwN3CCo3JHh7SGNDcG
+ tXvO8h22KtDA5fxtudbWzwdGr39Hwc3nTV0ZFwgz17GGVTtv6cA1jwJErSSghUd5197/
+ OZ+JqpkqH7zw7ezWPQoNQLa45oVfyczkpOU4zUL273O8WLupqda6XXAf6wbrUXKloN1O
+ dzQNgXoG1AXm37KzgcjVsxYYinzW0ekdLzQagRJTBGyXyHfGoVOXegRZ9E1DGUQ2az7J fQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2yd093keew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 18:28:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PIEJk7187859;
+        Tue, 25 Feb 2020 18:28:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yd0vv53r2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 18:28:27 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01PISQu6015812;
+        Tue, 25 Feb 2020 18:28:26 GMT
+Received: from localhost.localdomain (/10.159.148.245)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Feb 2020 10:28:26 -0800
+Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
+ specific VM EXIT
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200224020751.1469-1-xiaoyao.li@intel.com>
+ <20200224020751.1469-2-xiaoyao.li@intel.com>
+ <87lfosp9xs.fsf@vitty.brq.redhat.com>
+ <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
+ <716806df-c0e4-43d5-b082-627d2c312f53@oracle.com>
+ <877e0an763.fsf@vitty.brq.redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <f109f89d-ec69-4651-140b-24cc0be233d2@oracle.com>
+Date:   Tue, 25 Feb 2020 10:28:25 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:76c:: with SMTP id y12mr53721381jad.95.1582655354188;
- Tue, 25 Feb 2020 10:29:14 -0800 (PST)
-Date:   Tue, 25 Feb 2020 10:29:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000030395e059f6aaa09@google.com>
-Subject: general protection fault in j1939_netdev_start
-From:   syzbot <syzbot+f03d384f3455d28833eb@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de, kuba@kernel.org,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <877e0an763.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=990
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002250130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 mlxlogscore=999 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+On 2/25/20 5:11 AM, Vitaly Kuznetsov wrote:
+> Krish Sadhukhan <krish.sadhukhan@oracle.com> writes:
+>
+>> We have a macro for bit 31,
+>>
+>>       VMX_EXIT_REASONS_FAILED_VMENTRY                0x80000000
+>>
+>>
+>> Does it make sense to define a macro like that instead ? Say,
+>>
+>>       VMX_BASIC_EXIT_REASON        0x0000ffff
+>>
+> 0xffffU ?
+>
+>> and then we do,
+>>
+>>       u32 exit_reason = vmx->exit_reason;
+>>       u16 basic_exit_reason = exit_reason & VMX_BASIC_EXIT_REASON;
+>>
+> Just a naming suggestion: if we decide to go down this road, let's name
+> it e.g. VMX_BASIC_EXIT_REASON_MASK to make it clear this is *not* an
+> exit reason.
+>
 
-HEAD commit:    6132c1d9 net: core: devlink.c: Hold devlink->lock from the..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=10678909e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
-dashboard link: https://syzkaller.appspot.com/bug?extid=f03d384f3455d28833eb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e36909e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=100679dde00000
+VMX_BASIC_EXIT_REASON_MASK  works.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f03d384f3455d28833eb@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000c05: 0000 [#1] PREEMPT SMP KASAN
-KASAN: probably user-memory-access in range [0x0000000000006028-0x000000000000602f]
-CPU: 1 PID: 10119 Comm: syz-executor671 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:j1939_priv_set net/can/j1939/main.c:145 [inline]
-RIP: 0010:j1939_netdev_start+0x361/0x650 net/can/j1939/main.c:280
-Code: 03 80 3c 02 00 0f 85 bc 02 00 00 4c 8b ab 90 05 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d bd 28 60 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 89 02 00 00 4d 89 a5 28 60 00 00 48 c7 c7 60 89
-RSP: 0018:ffffc900070b7d00 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff888094ed4000 RCX: ffffffff8715dd84
-RDX: 0000000000000c05 RSI: ffffffff8715ed3c RDI: 0000000000006028
-RBP: ffffc900070b7d40 R08: ffff888095b121c0 R09: fffff52000e16f8e
-R10: fffff52000e16f8d R11: 0000000000000003 R12: ffff888095538000
-R13: 0000000000000000 R14: ffff888095539050 R15: ffff888094ed4558
-FS:  00007f9a340ef700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9a340eee78 CR3: 00000000947c2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- j1939_sk_bind+0x68d/0x980 net/can/j1939/socket.c:469
- __sys_bind+0x239/0x290 net/socket.c:1662
- __do_sys_bind net/socket.c:1673 [inline]
- __se_sys_bind net/socket.c:1671 [inline]
- __x64_sys_bind+0x73/0xb0 net/socket.c:1671
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446d39
-Code: e8 8c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9a340eed98 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00000000006dbc78 RCX: 0000000000446d39
-RDX: 0000000000000018 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 00000000006dbc70 R08: 00007f9a340ef700 R09: 0000000000000000
-R10: 00007f9a340ef700 R11: 0000000000000246 R12: 00000000006dbc7c
-R13: 000000006f340000 R14: 0000000000000000 R15: 068500100000003c
-Modules linked in:
----[ end trace e9a9971e66fb9d42 ]---
-RIP: 0010:j1939_priv_set net/can/j1939/main.c:145 [inline]
-RIP: 0010:j1939_netdev_start+0x361/0x650 net/can/j1939/main.c:280
-Code: 03 80 3c 02 00 0f 85 bc 02 00 00 4c 8b ab 90 05 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d bd 28 60 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 89 02 00 00 4d 89 a5 28 60 00 00 48 c7 c7 60 89
-RSP: 0018:ffffc900070b7d00 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff888094ed4000 RCX: ffffffff8715dd84
-RDX: 0000000000000c05 RSI: ffffffff8715ed3c RDI: 0000000000006028
-RBP: ffffc900070b7d40 R08: ffff888095b121c0 R09: fffff52000e16f8e
-R10: fffff52000e16f8d R11: 0000000000000003 R12: ffff888095538000
-R13: 0000000000000000 R14: ffff888095539050 R15: ffff888094ed4558
-FS:  00007f9a340ef700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9a340eee78 CR3: 00000000947c2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
