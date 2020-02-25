@@ -2,160 +2,113 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215C5C35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5531C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D222176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B262176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u9eyt5e7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ivpk23W4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgBYBsy (ORCPT
+        id S1728732AbgBYBt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:48:54 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41018 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgBYBsy (ORCPT
+        Mon, 24 Feb 2020 20:49:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60343 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgBYBt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:48:54 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l21so7994747qtr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lQ7GCo7cVwQFlLI9a2rMkRqHCZRbg3JBq4Afyow0Kjw=;
-        b=u9eyt5e7DOImqpnhRcwRosrVhrBa0EeN4ldTCttmJAwxh8och5yVQBD/Z1NimveKBy
-         JCehb1Mlczdo3yY7lezHYj6Vb/0YBlLVrwd0pP8BndXyMnDn+fLGxtXBlh0GiuGmLR5L
-         EI+Dakp7T+mYiWK/qrV58aATfyGciKuEl8DEg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lQ7GCo7cVwQFlLI9a2rMkRqHCZRbg3JBq4Afyow0Kjw=;
-        b=EQz+gEjaGJChBXb+8AyHFscx+bl7pAy+PdmRLmHbd/Ouhu0ropmKEMdEwYygjk8kl/
-         yBQq80QDDe9zlAFg3wFPciZILgCi1ZXEaT9iGPo+JGcovB4wt2sWu53ggkjUHrMc4/kn
-         QIlMOlVuNSiQ1xwKcHTiax/B+65rFLrHRJUhCzHuAhsyuMfxZ7TYLGbzwJje8ZKwGUMT
-         pitZdq1DdxKaQpErWnUkGPn4Tu3OkoxneWUpes7morIkj2YGrH5a4OakrtbXg6yfOlyv
-         hxiMTK3p77CV6R5y+ZSsmY5GI/XWobhILb+bWv4F6UzsUUuuKyLsjLzapNbknrYLm0ip
-         40RQ==
-X-Gm-Message-State: APjAAAWhiZFU8GzzzkZqWrUan/URDf4ydGB5LUHUfybzhus0GpTpBfQW
-        TOUE4lLl6sMez/q5Fdgl1KYnsg==
-X-Google-Smtp-Source: APXvYqyp8ViMH6odn4BmLMO9B5r+MxrJYojbCDAawTdrvd0x0I/XETGNP1jpPH6KxNDMYhjH7G1UkQ==
-X-Received: by 2002:ac8:4542:: with SMTP id z2mr49739414qtn.324.1582595333320;
-        Mon, 24 Feb 2020 17:48:53 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id f128sm4286143qke.54.2020.02.24.17.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 17:48:52 -0800 (PST)
-Date:   Mon, 24 Feb 2020 20:48:51 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200225014851.GA237890@google.com>
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200221120618.GA194360@google.com>
- <20200221132817.GB194360@google.com>
- <20200221192152.GA6306@pc636>
- <20200222221253.GB191380@google.com>
- <20200224170219.GA21229@pc636>
+        Mon, 24 Feb 2020 20:49:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582595368;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wc7tZyJ6iU/QokJr3t6fWMYT5Rf36+F0rsTqeX+IMo4=;
+        b=ivpk23W4aoUduM2wKLW5NNIou+nHR/Uriv6s650DSNxJWwDRax34toPwoUH2pTE/K5b9Vz
+        jhBeGGsK1POpoR/Pv1goaHHAs7xPBwtCWx5+HTX4LwLuTOnJhWJJiDm0FhaZVyqSSf3oqN
+        sFxW5HGzoz3UUVS/LRgUvHE8QyhnPHs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-LDxbto9CN5SO2iVJGfLBGw-1; Mon, 24 Feb 2020 20:49:20 -0500
+X-MC-Unique: LDxbto9CN5SO2iVJGfLBGw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF134800D50;
+        Tue, 25 Feb 2020 01:49:19 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-179.pek2.redhat.com [10.72.12.179])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 998C060BF7;
+        Tue, 25 Feb 2020 01:49:17 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 09:49:12 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: x86/kdump] x86/kexec: Do not reserve EFI setup_data in the
+ kexec e820 table
+Message-ID: <20200225014912.GA13800@dhcp-128-65.nay.redhat.com>
+References: <20200212110424.GA2938@dhcp-128-65.nay.redhat.com>
+ <158254146897.28353.4247096498069522547.tip-bot2@tip-bot2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224170219.GA21229@pc636>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158254146897.28353.4247096498069522547.tip-bot2@tip-bot2>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[..]
-> > > > debug_objects bits wouldn't work obviously for the !emergency kvfree case,
-> > > > not sure what we can do there.
-> > > >
-> > > Agree.
-> > > 
-> > > Thank you, Joel, for your comments!
-> > 
-> > No problem, I think we have a couple of ideas here.
-> > 
-> > What I also wanted to do was (may be after all this), see if we can create an
-> > API for head-less kfree based on the same ideas. Not just for arrays for for
-> > any object. Calling it, say, kfree_rcu_headless() and then use the bulk array
-> > as we have been doing. That would save any users from having an rcu_head --
-> > of course with all needed warnings about memory allocation failure. Vlad,
-> > What do you think? Paul, any thoughts on this?
-> > 
-> I like it. It would be more clean interface. Also there are places where
-> people do not embed the rcu_head into their stuctures for some reason
-> and do like:
+On 02/24/20 at 10:51am, tip-bot2 for Dave Young wrote:
+> The following commit has been merged into the x86/kdump branch of tip:
 > 
+> Commit-ID:     8efbc518b884e1db2dd6a6fce62d0112ab871dcf
+> Gitweb:        https://git.kernel.org/tip/8efbc518b884e1db2dd6a6fce62d0112ab871dcf
+> Author:        Dave Young <dyoung@redhat.com>
+> AuthorDate:    Wed, 12 Feb 2020 19:04:24 +08:00
+> Committer:     Borislav Petkov <bp@suse.de>
+> CommitterDate: Mon, 24 Feb 2020 11:41:57 +01:00
 > 
-> <snip>
->     synchronize_rcu();
->     kfree(p);
-> <snip>
+> x86/kexec: Do not reserve EFI setup_data in the kexec e820 table
 > 
-> <snip>
-> urezki@pc636:~/data/ssd/coding/linux-rcu$ find ./ -name "*.c" | xargs grep -C 1 -rn "synchronize_rcu" | grep kfree
-> ./arch/x86/mm/mmio-mod.c-314-           kfree(found_trace);
-> ./kernel/module.c-3910- kfree(mod->args);
-> ./kernel/trace/ftrace.c-5078-                   kfree(direct);
-> ./kernel/trace/ftrace.c-5155-                   kfree(direct);
-> ./kernel/trace/trace_probe.c-1087-      kfree(link);
-> ./fs/nfs/sysfs.c-113-           kfree(old);
-> ./fs/ext4/super.c-1701- kfree(old_qname);
-> ./net/ipv4/gre.mod.c-36-        { 0xfc3fcca2, "kfree_skb" },
-> ./net/core/sysctl_net_core.c-143-                               kfree(cur);
-> ./drivers/crypto/nx/nx-842-pseries.c-1010-      kfree(old_devdata);
-> ./drivers/misc/vmw_vmci/vmci_context.c-692-             kfree(notifier);
-> ./drivers/misc/vmw_vmci/vmci_event.c-213-       kfree(s);
-> ./drivers/infiniband/core/device.c:2162:                         * synchronize_rcu before the netdev is kfreed, so we
-> ./drivers/infiniband/hw/hfi1/sdma.c-1337-       kfree(dd->per_sdma);
-> ./drivers/net/ethernet/myricom/myri10ge/myri10ge.c-3582-        kfree(mgp->ss);
-> ./drivers/net/ethernet/myricom/myri10ge/myri10ge.mod.c-156-     { 0x37a0cba, "kfree" },
-> ./drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c:286:       synchronize_rcu(); /* before kfree(flow) */
-> ./drivers/net/ethernet/mellanox/mlxsw/core.c-1504-      kfree(rxl_item);
-> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6648- kfree(adapter->mbox_log);
-> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6650- kfree(adapter);
-> ./drivers/block/drbd/drbd_receiver.c-3804-      kfree(old_net_conf);
-> ./drivers/block/drbd/drbd_receiver.c-4176-                      kfree(old_disk_conf);
-> ./drivers/block/drbd/drbd_state.c-2074-         kfree(old_conf);
-> ./drivers/block/drbd/drbd_nl.c-1689-    kfree(old_disk_conf);
-> ./drivers/block/drbd/drbd_nl.c-2522-    kfree(old_net_conf);
-> ./drivers/block/drbd/drbd_nl.c-2935-            kfree(old_disk_conf);
-> ./drivers/mfd/dln2.c-178-               kfree(i);
-> ./drivers/staging/fwserial/fwserial.c-2122-     kfree(peer);
-> <snip>
+> The e820 table for the kexec kernel unconditionally marks setup_data as
+> reserved because the second kernel can reuse setup_data passed by the
+> 1st kernel's boot loader, for example SETUP_PCI marked regions like PCI
+> BIOS, etc.
+> 
+> SETUP_EFI types, however, are used by kexec itself to enable EFI in the
+> 2nd kernel. Thus, it is pointless to add this type of setup_data to the
+> kexec e820 table as reserved.
+> 
+> IOW, what happens is this:
+> 
+>   -  1st physical boot: no SETUP_EFI.
+> 
+>   - kexec loads a new kernel and prepares a SETUP_EFI setup_data blob, then
+>   reboots the machine.
+> 
+>   - 2nd kernel sees SETUP_EFI, reserves it both in the e820 and in the
+>   kexec e820 table.
+> 
+>   - If another kexec load is executed, it prepares a new SETUP_EFI blob and
+>   then reboots the machine into the new kernel.
+> 
+>   5. The 3rd kexec-ed kernel has two SETUP_EFI ranges reserved. And so on...
+> 
+> Thus skip SETUP_EFI while reserving setup_data in the e820_table_kexec
+> table because it is not needed.
+> 
+>  [ bp: Heavily massage commit message, shorten line and improve comment. ]
 
-Wow that's pretty amazing, looks like could be very useful.
+Boris, thanks for the amending and log massage.
+I was hesitating to break the long line or not and then I choosed
+leaving it as is.  Both are not very good and either of them is fine to me.
 
-Do you want to continue your patch and then post it, and we can discuss it?
-Or happy to take it as well.
-
-We could split work into 3 parts:
-1. Make changes for 2 separate per-CPU arrays. One for vfree and one for kfree.
-2. Add headless support for both as alternative API.
-3. Handle the low memory case somehow (I'll reply to the other thread).
-
-May be we can start with 1. where you can clean up your patch and post, and
-then I/we can work based on that?
-
-thanks,
-
- - Joel
+Thanks
+Dave
 
