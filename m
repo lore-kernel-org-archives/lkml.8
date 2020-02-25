@@ -2,134 +2,127 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6624C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9D2C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953EF20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jpmh+RNF"
+	by mail.kernel.org (Postfix) with ESMTP id 6459B20732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgBYS3z (ORCPT
+        id S1731578AbgBYSbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:29:55 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:34630 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgBYS3z (ORCPT
+        Tue, 25 Feb 2020 13:31:36 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53558 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731421AbgBYSbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:29:55 -0500
-Received: by mail-qt1-f180.google.com with SMTP id l16so367230qtq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 10:29:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dcyqLzOqexgUYT665cSkM8WWwCRhPRScopxtXSuIwhE=;
-        b=Jpmh+RNFwunTVE54TkNAMpIsJMC14pvYiihY2wibmIpVX0RbbLKqd+eRY+qLo+5dMX
-         SX/9q41bGSyzvt8Pwk0COP3eLMg2ZuR8i3keXR/Ugag06NeXPkgJ++b/DqwsqlDv6h7+
-         dJaE04Hrv00OVzAXInk6W742RND5wYHL7IHyjiVU9HtD+l9sgmi/BIP9DZuGBiHDIzVV
-         Rl4hgFqlbrS9uGoF/YYTKpoMUsz8acQVTVOIgh91x4yI55/FFGIeh7pE/6+FAYAlirwH
-         yPRpZ3lT1j/DlxMhxVX5gxm7z6uk+L9PQ0ggSo1OmHOQfC4eMGwm53EBmu/xPLat2a7M
-         jmeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dcyqLzOqexgUYT665cSkM8WWwCRhPRScopxtXSuIwhE=;
-        b=soZxjU0yVck9VZZhsQ8G5lJERbJmWeCy3onvl6YZCHlp80UzjiNtT9IJwZ1L6alGJn
-         kI9srOfLAATUomEbrKmUHzqVoRea3Pp0wfkB2q7Xuqb5B3A8tRLrXmS6zjDBk7CZuFPF
-         U5PB+bHB//MYHG7X1HOxWjkPfgE/ZKEcmNeXYFs/al+Jk4W2CZYmrSxGFpqZB1G7y9qS
-         vfskjiTnIBbrsxpPK9XWGdJaHnB7V8FwKWzpVi4Ko8TTo1eDQzwGv+OqXLgA8N1drQfm
-         LmGTaBf5GXtFTXHLqciK98bOFNyFFiWDspIUHXB4br8UOflB3baM7ThohZi1+dR7M1dx
-         iLiA==
-X-Gm-Message-State: APjAAAVvuT5wuTQ5+cAgtLM71TzBwHRL7kvFMeCnxAl/4IXVJ8FsrFlT
-        vIwttxu7yo06mVa3RArctIg=
-X-Google-Smtp-Source: APXvYqyBzz8PIiE4DMeQoSS0UbMGeYfXX70NFgGSlsN335mu/Ia42Q1kv7+TZ9UcbD3LmRz8jwx0yQ==
-X-Received: by 2002:ac8:1e90:: with SMTP id c16mr54660410qtm.265.1582655393994;
-        Tue, 25 Feb 2020 10:29:53 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o25sm7843946qkk.7.2020.02.25.10.29.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:29:53 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 25 Feb 2020 13:29:51 -0500
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fangrui Song <maskray@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>
-Subject: Re: --orphan-handling=warn
-Message-ID: <20200225182951.GA1179890@rani.riverdale.lan>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200109150218.16544-2-nivedita@alum.mit.edu>
- <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
- <20200222065521.GA11284@zn.tnic>
- <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan>
- <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <202002242122.AA4D1B8@keescook>
+        Tue, 25 Feb 2020 13:31:35 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E09013C009D;
+        Tue, 25 Feb 2020 19:31:31 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XMi49W9SirJX; Tue, 25 Feb 2020 19:31:22 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9D4043C005E;
+        Tue, 25 Feb 2020 19:31:22 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 25 Feb
+ 2020 19:31:22 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        <linux-usb@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        <scan-admin@coverity.com>
+Subject: [PATCH v2] usb: hub: Fix unhandled return value of usb_autopm_get_interface()
+Date:   Tue, 25 Feb 2020 19:30:57 +0100
+Message-ID: <20200225183057.31953-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202002242122.AA4D1B8@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:35:04PM -0800, Kees Cook wrote:
-> 
-> Actually, it's rather opposed to the FGKASLR series, as for that, I need
-> some kind of linker script directive like this:
-> 
-> 	/PASSTHRU/ : {
-> 		*(.text.*)
-> 	}
-> 
-> Where "PASSTHRU" would create a 1-to-1 input-section to output-section
-> with the same name, flags, etc.
-> 
-> ld.bfd's handling of orphan sections named .text.* is to put them each
-> as a separate output section, after the existing .text output section.
-> 
-> ld.lld's handling of orphan sections named .text.* is to put them into
-> the .text output section.
+Address below Coverity complaint (Feb 25, 2020, 8:06 AM CET):
 
-This doesn't match ld's documentation [1] of how orphan sections are to
-be handled, it's supposed to append it into an existing output section
-only if the names match exactly, creating a new one if that isn't so. If
-ld.lld is to be a drop-in replacement for ld.bfd, this probably needs to
-change?
+*** CID 1458999:  Error handling issues  (CHECKED_RETURN)
+/drivers/usb/core/hub.c: 1869 in hub_probe()
+1863
+1864            if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
+1865                    hub->quirk_check_port_auto_suspend = 1;
+1866
+1867            if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
+1868                    hub->quirk_disable_autosuspend = 1;
+ >>>     CID 1458999:  Error handling issues  (CHECKED_RETURN)
+ >>>     Calling "usb_autopm_get_interface" without checking return value (as is done elsewhere 97 out of 111 times).
+1869                    usb_autopm_get_interface(intf);
+1870            }
+1871
+1872            if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
+1873                    return 0;
+1874
 
-Also ld.lld doesn't seem to support the --unique option, I think you'll
-also want that for FGKASLR to avoid merging static functions with the
-same name from unrelated source files.
+Rather than checking the return value of 'usb_autopm_get_interface()',
+switch to the usb_autpm_get_interface_no_resume() API, as per:
 
-[1] https://sourceware.org/binutils/docs/ld/Orphan-Sections.html
+On Tue, Feb 25, 2020 at 10:32:32AM -0500, Alan Stern wrote:
+ ------ 8< ------
+ > This change (i.e. 'ret = usb_autopm_get_interface') is not necessary,
+ > because the resume operation cannot fail at this point (interfaces
+ > are always powered-up during probe). A better solution would be to
+ > call usb_autpm_get_interface_no_resume() instead.
+ ------ 8< ------
 
-> 
-> For FGKASLR (as it is currently implemented[2]), the sections need to be
-> individually named output sections (as bfd does it). *However*, with the
-> "warn on orphans" patch, FGKASLR's intentional orphaning will backfire
-> (I guess the warning could be turned off, but I'd like lld to handle
-> FGKASLR at some point.)
-> 
-> Note that cheating and doing the 1-to-1 mapping by handy with a 40,000
-> entry linker script ... made ld.lld take about 15 minutes to do the
-> final link. :(
+Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: scan-admin@coverity.com
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
 
-Out of curiosity, how long does ld.bfd take on that linker script :)
+v2:
+ - [Alan Stern] Use usb_autpm_get_interface_no_resume() instead of
+   usb_autopm_get_interface()
+ - Augment commit description to provide background
+
+v1:
+ - Link: https://lore.kernel.org/lkml/20200225130846.20236-1-erosca@de.adit-jv.com
+---
+ drivers/usb/core/hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 1d212f82c69b..1105983b5c1c 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1866,7 +1866,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 
+ 	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
+ 		hub->quirk_disable_autosuspend = 1;
+-		usb_autopm_get_interface(intf);
++		usb_autopm_get_interface_no_resume(intf);
+ 	}
+ 
+ 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
+-- 
+2.25.1
+
