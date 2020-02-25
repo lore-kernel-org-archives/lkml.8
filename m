@@ -2,308 +2,166 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D6EC35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3BCC35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36EC2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="J3kDjF/8"
+	by mail.kernel.org (Postfix) with ESMTP id EDA4F218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgBYBEX (ORCPT
+        id S1728649AbgBYBKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:04:23 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:20545 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgBYBEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:04:23 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 01P13V5u029378;
-        Tue, 25 Feb 2020 10:03:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 01P13V5u029378
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582592612;
-        bh=sbdW+j1dev5cR9lqtU/QyEWRKr6L0JmtzRCOHfnmTZ8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=J3kDjF/84X2/geC8FZQq5+BPzrjHT4tGAK6Q7w3gFY5XKmE74KPF/MrjVAtkZTP0q
-         Ovf+rXxc5EAqT1ClAR2MJ+qYOvt4V6yxak1KbNvFn83DmEzmrx23bXWYeWK13TmL3I
-         B3/kVHrdt1BwSUFThNMtVhqLDrCOcfL+SteAca58jaF88So0BbhpCzcueiUr/WLaCe
-         nGwIdbE0J8vakVeKGya1qO/NFIeAvxvMdvk0UD0FSMd4ZwuANV/1CbzmH7sMADFODW
-         hOvhiwcsSgB/NihpN0MMpFU13TtIezvqT3HKL3GJNUo8lpM/D+8Ijp2/h41938BxAm
-         b5iBgQQ46eypw==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: [PATCH] dt-bindings: clock: Convert UniPhier clock to json-schema
-Date:   Tue, 25 Feb 2020 10:03:28 +0900
-Message-Id: <20200225010328.5638-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Feb 2020 20:10:34 -0500
+Received: from mga12.intel.com ([192.55.52.136]:46772 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728011AbgBYBKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 20:10:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 17:10:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
+   d="scan'208";a="350041774"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Feb 2020 17:10:31 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j6Ok2-000972-Sy; Tue, 25 Feb 2020 09:10:30 +0800
+Date:   Tue, 25 Feb 2020 09:09:37 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/boot] BUILD SUCCESS
+ 0eea39a234dc52063d14541fabcb2c64516a2328
+Message-ID: <5e5473d1.Ei9kjtFGm6hxE9FZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier clock controller binding to DT schema format.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/boot
+branch HEAD: 0eea39a234dc52063d14541fabcb2c64516a2328  x86/boot/compressed: Remove .eh_frame section from bzImage
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+elapsed time: 482m
+
+configs tested: 103
+configs skipped: 117
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+arc                                 defconfig
+parisc                generic-64bit_defconfig
+riscv                          rv32_defconfig
+nds32                               defconfig
+c6x                        evmc6678_defconfig
+riscv                    nommu_virt_defconfig
+sh                            titan_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+x86_64               randconfig-a001-20200224
+x86_64               randconfig-a002-20200224
+x86_64               randconfig-a003-20200224
+i386                 randconfig-a001-20200224
+i386                 randconfig-a002-20200224
+i386                 randconfig-a003-20200224
+alpha                randconfig-a001-20200225
+m68k                 randconfig-a001-20200225
+mips                 randconfig-a001-20200225
+nds32                randconfig-a001-20200225
+parisc               randconfig-a001-20200225
+riscv                randconfig-a001-20200225
+c6x                  randconfig-a001-20200225
+h8300                randconfig-a001-20200225
+microblaze           randconfig-a001-20200225
+nios2                randconfig-a001-20200225
+sparc64              randconfig-a001-20200225
+csky                 randconfig-a001-20200225
+openrisc             randconfig-a001-20200225
+s390                 randconfig-a001-20200225
+sh                   randconfig-a001-20200225
+xtensa               randconfig-a001-20200225
+x86_64               randconfig-f001-20200224
+x86_64               randconfig-f002-20200224
+x86_64               randconfig-f003-20200224
+i386                 randconfig-f001-20200224
+i386                 randconfig-f002-20200224
+i386                 randconfig-f003-20200224
+x86_64               randconfig-h001-20200225
+x86_64               randconfig-h002-20200225
+x86_64               randconfig-h003-20200225
+i386                 randconfig-h001-20200225
+i386                 randconfig-h002-20200225
+i386                 randconfig-h003-20200225
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
-
- .../clock/socionext,uniphier-clock.yaml       |  94 +++++++++++++
- .../bindings/clock/uniphier-clock.txt         | 132 ------------------
- 2 files changed, 94 insertions(+), 132 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/uniphier-clock.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml b/Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml
-new file mode 100644
-index 000000000000..c3930edc410f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/socionext,uniphier-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier clock controller
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: System clock
-+        enum:
-+          - socionext,uniphier-ld4-clock
-+          - socionext,uniphier-pro4-clock
-+          - socionext,uniphier-sld8-clock
-+          - socionext,uniphier-pro5-clock
-+          - socionext,uniphier-pxs2-clock
-+          - socionext,uniphier-ld6b-clock
-+          - socionext,uniphier-ld11-clock
-+          - socionext,uniphier-ld20-clock
-+          - socionext,uniphier-pxs3-clock
-+      - description: Media I/O (MIO) clock, SD clock
-+        enum:
-+          - socionext,uniphier-ld4-mio-clock
-+          - socionext,uniphier-pro4-mio-clock
-+          - socionext,uniphier-sld8-mio-clock
-+          - socionext,uniphier-pro5-sd-clock
-+          - socionext,uniphier-pxs2-sd-clock
-+          - socionext,uniphier-ld11-mio-clock
-+          - socionext,uniphier-ld20-sd-clock
-+          - socionext,uniphier-pxs3-sd-clock
-+      - description: Peripheral clock
-+        enum:
-+          - socionext,uniphier-ld4-peri-clock
-+          - socionext,uniphier-pro4-peri-clock
-+          - socionext,uniphier-sld8-peri-clock
-+          - socionext,uniphier-pro5-peri-clock
-+          - socionext,uniphier-pxs2-peri-clock
-+          - socionext,uniphier-ld11-peri-clock
-+          - socionext,uniphier-ld20-peri-clock
-+          - socionext,uniphier-pxs3-peri-clock
-+
-+  "#clock-cells":
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - "#clock-cells"
-+
-+examples:
-+  - |
-+    sysctrl@61840000 {
-+        compatible = "socionext,uniphier-sysctrl", "simple-mfd", "syscon";
-+        reg = <0x61840000 0x4000>;
-+
-+        clock {
-+            compatible = "socionext,uniphier-ld11-clock";
-+            #clock-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-+
-+  - |
-+    mioctrl@59810000 {
-+        compatible = "socionext,uniphier-mioctrl", "simple-mfd", "syscon";
-+        reg = <0x59810000 0x800>;
-+
-+        clock {
-+            compatible = "socionext,uniphier-ld11-mio-clock";
-+            #clock-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-+
-+  - |
-+    perictrl@59820000 {
-+        compatible = "socionext,uniphier-perictrl", "simple-mfd", "syscon";
-+        reg = <0x59820000 0x200>;
-+
-+        clock {
-+            compatible = "socionext,uniphier-ld11-peri-clock";
-+            #clock-cells = <1>;
-+        };
-+
-+        // other nodes ...
-+    };
-diff --git a/Documentation/devicetree/bindings/clock/uniphier-clock.txt b/Documentation/devicetree/bindings/clock/uniphier-clock.txt
-deleted file mode 100644
-index 7b5f602765fe..000000000000
---- a/Documentation/devicetree/bindings/clock/uniphier-clock.txt
-+++ /dev/null
-@@ -1,132 +0,0 @@
--UniPhier clock controller
--
--
--System clock
--------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld4-clock"  - for LD4 SoC.
--    "socionext,uniphier-pro4-clock" - for Pro4 SoC.
--    "socionext,uniphier-sld8-clock" - for sLD8 SoC.
--    "socionext,uniphier-pro5-clock" - for Pro5 SoC.
--    "socionext,uniphier-pxs2-clock" - for PXs2/LD6b SoC.
--    "socionext,uniphier-ld11-clock" - for LD11 SoC.
--    "socionext,uniphier-ld20-clock" - for LD20 SoC.
--    "socionext,uniphier-pxs3-clock" - for PXs3 SoC
--- #clock-cells: should be 1.
--
--Example:
--
--	sysctrl@61840000 {
--		compatible = "socionext,uniphier-sysctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x61840000 0x4000>;
--
--		clock {
--			compatible = "socionext,uniphier-ld11-clock";
--			#clock-cells = <1>;
--		};
--
--		other nodes ...
--	};
--
--Provided clocks:
--
-- 8: ST DMAC
--12: GIO (Giga bit stream I/O)
--14: USB3 ch0 host
--15: USB3 ch1 host
--16: USB3 ch0 PHY0
--17: USB3 ch0 PHY1
--20: USB3 ch1 PHY0
--21: USB3 ch1 PHY1
--
--
--Media I/O (MIO) clock, SD clock
---------------------------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld4-mio-clock"  - for LD4 SoC.
--    "socionext,uniphier-pro4-mio-clock" - for Pro4 SoC.
--    "socionext,uniphier-sld8-mio-clock" - for sLD8 SoC.
--    "socionext,uniphier-pro5-sd-clock"  - for Pro5 SoC.
--    "socionext,uniphier-pxs2-sd-clock"  - for PXs2/LD6b SoC.
--    "socionext,uniphier-ld11-mio-clock" - for LD11 SoC.
--    "socionext,uniphier-ld20-sd-clock"  - for LD20 SoC.
--    "socionext,uniphier-pxs3-sd-clock"  - for PXs3 SoC
--- #clock-cells: should be 1.
--
--Example:
--
--	mioctrl@59810000 {
--		compatible = "socionext,uniphier-mioctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x59810000 0x800>;
--
--		clock {
--			compatible = "socionext,uniphier-ld11-mio-clock";
--			#clock-cells = <1>;
--		};
--
--		other nodes ...
--	};
--
--Provided clocks:
--
-- 0: SD ch0 host
-- 1: eMMC host
-- 2: SD ch1 host
-- 7: MIO DMAC
-- 8: USB2 ch0 host
-- 9: USB2 ch1 host
--10: USB2 ch2 host
--12: USB2 ch0 PHY
--13: USB2 ch1 PHY
--14: USB2 ch2 PHY
--
--
--Peripheral clock
------------------
--
--Required properties:
--- compatible: should be one of the following:
--    "socionext,uniphier-ld4-peri-clock"  - for LD4 SoC.
--    "socionext,uniphier-pro4-peri-clock" - for Pro4 SoC.
--    "socionext,uniphier-sld8-peri-clock" - for sLD8 SoC.
--    "socionext,uniphier-pro5-peri-clock" - for Pro5 SoC.
--    "socionext,uniphier-pxs2-peri-clock" - for PXs2/LD6b SoC.
--    "socionext,uniphier-ld11-peri-clock" - for LD11 SoC.
--    "socionext,uniphier-ld20-peri-clock" - for LD20 SoC.
--    "socionext,uniphier-pxs3-peri-clock" - for PXs3 SoC
--- #clock-cells: should be 1.
--
--Example:
--
--	perictrl@59820000 {
--		compatible = "socionext,uniphier-perictrl",
--			     "simple-mfd", "syscon";
--		reg = <0x59820000 0x200>;
--
--		clock {
--			compatible = "socionext,uniphier-ld11-peri-clock";
--			#clock-cells = <1>;
--		};
--
--		other nodes ...
--	};
--
--Provided clocks:
--
-- 0: UART ch0
-- 1: UART ch1
-- 2: UART ch2
-- 3: UART ch3
-- 4: I2C ch0
-- 5: I2C ch1
-- 6: I2C ch2
-- 7: I2C ch3
-- 8: I2C ch4
-- 9: I2C ch5
--10: I2C ch6
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
