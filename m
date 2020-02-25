@@ -2,107 +2,148 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91CAC35E15
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E71C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C40D2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:52:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJBKheyS"
+	by mail.kernel.org (Postfix) with ESMTP id 320192176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgBYUw2 (ORCPT
+        id S1729310AbgBYUxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:52:28 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34526 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgBYUw2 (ORCPT
+        Tue, 25 Feb 2020 15:53:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16220 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728367AbgBYUxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:52:28 -0500
-Received: by mail-pj1-f67.google.com with SMTP id f2so1380938pjq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:52:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GAoYW3jtAWCjdGaJXCm1P0l2hukH5ekAbYDVhrn3FCI=;
-        b=kJBKheySLFt0Q1njT7UpJ8+EDt27CVBBJHrvJ0UtSvuHFxIIjGi22GqBUgpH2nAHdI
-         JY5jrCDf3PIG9COk+pwYByEiwkOKxIApV/ovtrc9wrCaKya9UoDMEVp3Rz9kOWYFJgZ6
-         LFrubn4k0J3ci67mSNf1jdg3j0c2vRI3NMo0hVWrLh5JRtR2Ea45SlATQTxbUKChv5wX
-         4xOYXRcY5SQJ59KF+n2sYezpKSTZ/7kWy6dPhVgzAu1h6Pl5XBxt8qUPbxgM379BZ/Oa
-         /iM37C2zdp+gP8bAXtXgNbQc3SdKilus0OLnBjt0xT5I3zkOQcbj5sMbfKPzqlA7Sd0v
-         mZhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GAoYW3jtAWCjdGaJXCm1P0l2hukH5ekAbYDVhrn3FCI=;
-        b=FvdzY2B+Nd9iRLuzCQ/8w4omL7Gffq4ZgaNgVJM+yTtg1Dal7omLjWXsuFjyjwfvpY
-         anTktUe+KnX0PeDe7870j7zVqAyvq4LiDmaxVMYXRV2K7Her+vPd9fZoSGWqNSGmMHWA
-         v0c2L7uoDp8gGbMgfo4vqkvZfqjKf9fWJAvI5qYBRVzrGzKckH3n5WO4s9Mn81+HCX1G
-         hbXrRd1C9X1sAZE3uHcOdTGtXeoUbooPYlEcBiPEpfgvV0QBPvc7+B7jNo6DYRc2FB/4
-         GyQvY7AYf08jnmn/yL+WSHKdRjb9TBJRdx3J/4h1FovwVBEOOdb/h4MrT2JzY+eZL3pO
-         0Gkg==
-X-Gm-Message-State: APjAAAVE7hfkabuz0f3DB8d+tmuGm1vI+xHGqsfcUwIysDnFuoCHubXX
-        6Iu0DV0mLoQYX3stAwwq8wrbzaz0b07hl6aZQ3i/BA==
-X-Google-Smtp-Source: APXvYqwmB04vyduuyJu/HEN0PY3Yi4sOxYmfQoRVMJPmSpkr6VIiN9TCWrQH4VKDHGWrnSeq/vTIXr42Ie5xms8bARw=
-X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr353457plo.179.1582663947479;
- Tue, 25 Feb 2020 12:52:27 -0800 (PST)
+        Tue, 25 Feb 2020 15:53:18 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PKp1je139582;
+        Tue, 25 Feb 2020 15:53:12 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yaygqchea-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 15:53:12 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01PKghdX024778;
+        Tue, 25 Feb 2020 20:53:11 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02wdc.us.ibm.com with ESMTP id 2yaux6q32d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 20:53:11 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PKrA6E52101510
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 20:53:10 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01207136053;
+        Tue, 25 Feb 2020 20:53:10 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5BAA413604F;
+        Tue, 25 Feb 2020 20:53:09 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Feb 2020 20:53:09 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v3 3/4] tpm: Implement tpm2_init_commands to use in non-auto startup case
+Date:   Tue, 25 Feb 2020 15:53:04 -0500
+Message-Id: <20200225205305.3948001-4-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200225205305.3948001-1-stefanb@linux.vnet.ibm.com>
+References: <20200225205305.3948001-1-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200224174129.2664-1-ndesaulniers@google.com> <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com>
-In-Reply-To: <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Feb 2020 12:52:16 -0800
-Message-ID: <CAKwvOd=mPg79CrYnDm8=z0iJpKL0FHm9J5qZF0_A6BFXBv8Dow@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_08:2020-02-25,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 priorityscore=1501 spamscore=0
+ phishscore=0 clxscore=1015 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 4:34 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Tue, Feb 25, 2020 at 2:41 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > Added to kbuild documentation. Provides more official info on building
-> > kernels with Clang and LLVM than our wiki.
-> >
-> > Suggested-by: Kees Cook <keescook@chromium.org>
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
->
->
-> Perhaps, is it better to explicitly add it to MAINTAINERS?
->
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4118,6 +4118,7 @@ W:        https://clangbuiltlinux.github.io/
->  B:     https://github.com/ClangBuiltLinux/linux/issues
->  C:     irc://chat.freenode.net/clangbuiltlinux
->  S:     Supported
-> +F:     Documentation/kbuild/llvm.rst
->  K:     \b(?i:clang|llvm)\b
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-I'm happy to leave it to the maintainers of Documentation/.  Otherwise
-we have a file for which there is no MAINTAINER, which seems
-ambiguous.
+The IBM vTPM device driver will not use TPM_OPS_AUTO_STARTUP since we
+assume the firmware has initialized the TPM 2 and TPM2_Startup() need
+not be sent. Therefore, tpm2_auto_startup() will not be called. To cover
+the tpm_chip's initialization of timeouts, command durations, and
+command attributes we implement tpm2_init_commands() function that will
+be called instead of tpm2_auto_startup().
 
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+---
+ drivers/char/tpm/tpm-interface.c |  5 ++++-
+ drivers/char/tpm/tpm.h           |  1 +
+ drivers/char/tpm/tpm2-cmd.c      | 14 ++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index a438b1206fcb..30d80b94db33 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -371,8 +371,11 @@ int tpm_auto_startup(struct tpm_chip *chip)
+ {
+ 	int rc;
+ 
+-	if (!(chip->ops->flags & TPM_OPS_AUTO_STARTUP))
++	if (!(chip->ops->flags & TPM_OPS_AUTO_STARTUP)) {
++		if (chip->flags & TPM_CHIP_FLAG_TPM2)
++			return tpm2_init_commands(chip);
+ 		return 0;
++	}
+ 
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+ 		rc = tpm2_auto_startup(chip);
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index 5620747da0cf..30da942d714a 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -222,6 +222,7 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
+ 			u32 *value, const char *desc);
+ 
+ ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip);
++int tpm2_init_commands(struct tpm_chip *chip);
+ int tpm2_auto_startup(struct tpm_chip *chip);
+ void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
+ unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index 13696deceae8..2d0c5a3b65c0 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -709,6 +709,20 @@ static int tpm2_startup(struct tpm_chip *chip)
+ 	return rc;
+ }
+ 
++/**
++ * tpm2_init_commands - Get timeouts, durations and command code attributes
++ *                      in case tpm2_auto_startup is not used.
++ * @chip: TPM chip to use
++ *
++ * Return 0 on success, < 0 in case of fatal error.
++ */
++int tpm2_init_commands(struct tpm_chip *chip)
++{
++	tpm2_get_timeouts(chip);
++
++	return tpm2_get_cc_attrs_tbl(chip);
++}
++
+ /**
+  * tpm2_auto_startup - Perform the standard automatic TPM initialization
+  *                     sequence
 -- 
-Thanks,
-~Nick Desaulniers
+2.23.0
+
