@@ -2,96 +2,200 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F835C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46200C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E6020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC7C2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582647868;
+	bh=yWwM6NwH9zQfOWRSF6NwiqphPCJ8H+CIPFFFdKMrl9A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=POHcvF7Dp3iqYWlgzvfcogIFyhfvUpjBrlHObeH7/4wuMaGY6D0Ljfe6QmIit4sx3
+	 z7CGZiHzqo3JkCdo5yX6s+zAvh/l1fy++mU1u45HLw9LKyihA+Guhdk9TqN4ahy/2S
+	 ZzPJHx2UHN/GpAzf/5VCwhiCHLB/pj7a8WAri7oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgBYQYJ (ORCPT
+        id S1730847AbgBYQY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:24:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54360 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729817AbgBYQYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:24:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CB7D8AD48;
-        Tue, 25 Feb 2020 16:24:06 +0000 (UTC)
-Message-ID: <b411e2a675dd1b2e688815fa3eb0bd3c7c86946d.camel@suse.de>
-Subject: Re: [PATCH 15/89] clk: bcm: rpi: Create a data structure for the
- clocks
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Date:   Tue, 25 Feb 2020 17:24:02 +0100
-In-Reply-To: <adc5810f9ed6400940f36be6e0a3a7255c557687.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-         <adc5810f9ed6400940f36be6e0a3a7255c557687.1582533919.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-NxrkRqtfUvDY/OjkZYGj"
-User-Agent: Evolution 3.34.4 
+        Tue, 25 Feb 2020 11:24:26 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33201 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729817AbgBYQY0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:24:26 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w6so97133otk.0;
+        Tue, 25 Feb 2020 08:24:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ElkWtD05bpJz0nVAaK9Zxby7+iR2LvCo6qCQ1kcJkb8=;
+        b=BFwOjgb3qvMkPpj6BbgzqCHGtSsgrYnpMbTPViSmlIYBr1/I90E1m5KqxOwxy/QIJU
+         QhlYsuroRBS8D7BCw3fMIqVTFW/JMaL0tZeUVjvTnzhVLfE024hCRGbmj4OBepcdtx3A
+         pLSnay+IMX96O5OqCqrG7izEBmrofrsdecl202qr0QxQ/Av5dZQ7obT8B4+R0kBOiwlC
+         QU25R+e0QBtKvzn6xzpOxZEXE2lRcy6l4UAHM8I8lObaW+h+CTu9GEUtndMlIifH6kV9
+         IIvhf8iVWomOuvT8P0t6v8UQSsocDj+bRUZxHoZemUjcljiHiAknrbO17TzNl/zZiHWE
+         n8+Q==
+X-Gm-Message-State: APjAAAVtEjp21OxHPIAGrcwJmTYAtl/LNDgbqQZRhZm6vCDcCSpCru7O
+        izCuwzjdwQLMqbni4NqN80x046MTKHsI0+IqFF8=
+X-Google-Smtp-Source: APXvYqwKdQMsgAI31D0CTHFGEH5+24plVvLyCRNnBzVO50zYXso/wv+RUoxfNGl/HfCpSc/O7agAGNn8m2aboYQmg88=
+X-Received: by 2002:a9d:7653:: with SMTP id o19mr43593382otl.118.1582647864921;
+ Tue, 25 Feb 2020 08:24:24 -0800 (PST)
 MIME-Version: 1.0
+References: <20200225050828.56458-1-john.stultz@linaro.org> <20200225050828.56458-2-john.stultz@linaro.org>
+In-Reply-To: <20200225050828.56458-2-john.stultz@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 25 Feb 2020 17:24:13 +0100
+Message-ID: <CAJZ5v0husR3hgnSKOhQuGTaDVsQxS477JGLC2pdW=k2qJuA5mw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] driver core: Fix driver_deferred_probe_check_state()
+ logic
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 6:08 AM John Stultz <john.stultz@linaro.org> wrote:
+>
+> driver_deferred_probe_check_state() has some uninituitive behavior.
+>
+> * From boot to late_initcall, it returns -EPROBE_DEFER
+>
+> * From late_initcall to the deferred_probe_timeout (if set)
+>   it returns -ENODEV
+>
+> * If the deferred_probe_timeout it set, after it fires, it
+>   returns -ETIMEDOUT
+>
+> This is a bit confusing, as its useful to have the function
+> return -EPROBE_DEFER while the timeout is still running. This
+> behavior has resulted in the somwhat duplicative
+> driver_deferred_probe_check_state_continue() function being
+> added.
+>
+> Thus this patch tries to improve the logic, so that it behaves
+> as such:
+>
+> * If late_initcall has passed, and modules are not enabled
+>   it returns -ENODEV
+>
+> * If modules are enabled and deferred_probe_timeout is set,
+>   it returns -EPROBE_DEFER until the timeout, afterwhich it
+>   returns -ETIMEDOUT.
+>
+> * In all other cases, it returns -EPROBE_DEFER
+>
+> This will make the deferred_probe_timeout value much more
+> functional, and will allow us to consolidate the
+> driver_deferred_probe_check_state() and
+> driver_deferred_probe_check_state_continue() logic in a later
+> patch.
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
---=-NxrkRqtfUvDY/OjkZYGj
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
-> So far the driver has really only been providing a single clock, and stor=
-ed
-> both the data associated to that clock in particular with the data
-> associated to the "controller".
->=20
-> Since we will change that in the future, let's decouple the clock data fr=
-om
-> the provider data.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Thanks!
-Nicolas
-
-
---=-NxrkRqtfUvDY/OjkZYGj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VSiIACgkQlfZmHno8
-x/67cQf9ElW7VnzLZaFV3c8EcEp/LDyKUov3/WaAU+cOAeaQeXhBsw6PuOhDYoe4
-WBbwNikei9qvSn48Vq/kH00pkXvoHQsVY2BY4O7ImbuHTEyYkeIguWeAtVHLFv0m
-sP35lY0G/MeI1MZkPO8NCCNXoQPvLqyVU65gnjAAsnEvpfKe2PCzbjmGp+E85Yov
-oRxeevriB34mlrTDEIDQ2cxPvku3YO2yHyPqbq+1CLHjqJV4nK1JJq/b7vcTKbue
-OkhCsNJb+ddOD4J7MMJGTdiZJrfO2tPe7PyFAEuaAK7ytHLy/G0S1kvBWW/e2+XV
-jOLl9CnX6QQBZoLloLB+OplaQFqj5A==
-=73tJ
------END PGP SIGNATURE-----
-
---=-NxrkRqtfUvDY/OjkZYGj--
-
+> ---
+> v4:
+> * Simplified logic suggested by Andy Shevchenko
+> * Clarified commit message to focus on logic change
+> v5:
+> * Cleanup comment wording as suggested by Rafael
+> * Tweaked the logic to use Saravana's suggested conditionals
+> ---
+>  drivers/base/dd.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index b25bcab2a26b..d75b34de6964 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -237,24 +237,26 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>
+>  static int __driver_deferred_probe_check_state(struct device *dev)
+>  {
+> -       if (!initcalls_done)
+> -               return -EPROBE_DEFER;
+> +       if (!IS_ENABLED(CONFIG_MODULES) && initcalls_done)
+> +               return -ENODEV;
+>
+>         if (!deferred_probe_timeout) {
+>                 dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+>                 return -ETIMEDOUT;
+>         }
+>
+> -       return 0;
+> +       return -EPROBE_DEFER;
+>  }
+>
+>  /**
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+>   *
+> - * Returns -ENODEV if init is done and all built-in drivers have had a chance
+> - * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
+> - * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
+> + * Return:
+> + * -ENODEV if initcalls have completed and modules are disabled.
+> + * -ETIMEDOUT if the deferred probe timeout was set and has expired
+> + *  and modules are enabled.
+> + * -EPROBE_DEFER in other cases.
+>   *
+>   * Drivers or subsystems can opt-in to calling this function instead of directly
+>   * returning -EPROBE_DEFER.
+> @@ -264,7 +266,7 @@ int driver_deferred_probe_check_state(struct device *dev)
+>         int ret;
+>
+>         ret = __driver_deferred_probe_check_state(dev);
+> -       if (ret < 0)
+> +       if (ret != -ENODEV)
+>                 return ret;
+>
+>         dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> @@ -292,7 +294,7 @@ int driver_deferred_probe_check_state_continue(struct device *dev)
+>         int ret;
+>
+>         ret = __driver_deferred_probe_check_state(dev);
+> -       if (ret < 0)
+> +       if (ret != -ENODEV)
+>                 return ret;
+>
+>         return -EPROBE_DEFER;
+> --
+> 2.17.1
+>
