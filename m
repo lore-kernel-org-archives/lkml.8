@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2477DC35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AD6C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED5924653
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E168B2465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HxeCbEeA"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Pe0HY8p1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgBYDXi (ORCPT
+        id S1728898AbgBYDXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:23:38 -0500
+        Mon, 24 Feb 2020 22:23:40 -0500
 Received: from mail-eopbgr60072.outbound.protection.outlook.com ([40.107.6.72]:49061
         "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728011AbgBYDXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:23:38 -0500
+        id S1726962AbgBYDXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 22:23:40 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jy30nSkpBXm6PhPwzs9jIkEyb6Tmt/J3qU6v8nkNhYjdwvPukWBa2MJyEkbMgSEJ2L32hsRvhjP4+jWTEWGI6vE09tzDWIfAzUHtcH5Go74Jm4fRgcAmgz/LgfCK3numGqgexiE/7UlTOCVdzBeiorp33FZYs5Ed2jcOdoLOGzPPn2WUxH5WEQ88iPJrUVHdZq3q9ndMjhv6AyThCzaJICR51HIciqq6lyHotoWLSq+UX6DiTSO5iyC44GPO2+g5m9LLpvhNOwyHuL0glh9bP9qaRIdrGAKV3UbHWeZm86wbRt6J1g1JWuQJdrvZX65M6luIf3rBcHDY3xjqUeS37g==
+ b=aKJkqglk+Kvfk2/X6OwP5d+dqQvFha6DPeUIi0JBZD3yrdXPVp8wWLxSIj2RiaE6OuMxG+fuj9pScWA/1mT+o8u+AP4TQseVAqpYyUP8DG8PYoB24LHsdTqcq5v5rxTqiWz3NgHS453hPmSOSH29uExIks/8GPtwabK7/LabhriTBNOBIKelS4D7p7y5b1Xs/Hx2sOnLD8mHiTI3nwApzc181+fE4b77R+hjrwx4KZQb2JZMO6kOwjD+1SFnn2F7S8YIn5Ph/Mb9JEWiS5Y3hH7/TV4D6uUf5d9ybvxMQEST3cY+7ifJrK+rgQQd+PHeC6z76FuSO6BA6v4MJLU1lA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fJyU8zrMqOjpeQFbAy7mevrx8zFjHvNVX5MfodSa2Y=;
- b=TtOhHe5NXRb6897P8jojUFoPbAcAcV/FCqVAAcALFsp5GdHKmuhNMlzXfJzmwzJqd36g4aUBTZvnWEg/Np6FKN9OG2/lXELkpbuTb6V0pXIedyS8o+iJOPynOf84sIUqbd9TcyU9KTy729nH4qkW9wNfG4uvTgolhN6fFNCBRfQ5tOWAM+S4iQrg2/lD5SKY7yVOIuec+UrDXOqhYNcgyy19wYgNrJykhFQJg5vNv84omfZ4BtkF52uorSeX9IUl0L+lA3zExVvjQRhC2a59za4C1d1IzOVnktMi0iz2PFXUjTmhdFWzgkaBSHwUfG/12E8wzUvQxLRZjCfAX3gB1w==
+ bh=XpSDWjkQvRdr+pe2M0T1r1Ml2wXcjK/cOuA6L+RZEPU=;
+ b=gQ11INHnCDl2kshMfjTMB8RQYJ3PY7VE9L/wUFUYah3/LgWdXXvDxwzN/gGKvNvH7fD47yrKLT2E32MqthEQAbu9m9x6cKd2eibOuO/gQvNY+IiMlkRgEGLFSr+9RJZhAef1nhjgtmcgT6ZLqseAKyPouM6euHSEUGUIiNRHqBRCpD/li5clO9MNcCw1cKZodfZYy3afwXRLUzmZhN1YGQrmZ1Ppu9xeDVNz89NV4ayaWJwL5Fkue30NbYpRgg1g3Y52C7vncU1phX25Hl5l1+TLS3TuwJjbfNxccNrcOMsSjULPXtje8OlW6xRAQnJONgBQ099WYtl9uTqleMs5rg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fJyU8zrMqOjpeQFbAy7mevrx8zFjHvNVX5MfodSa2Y=;
- b=HxeCbEeAfiBXUMCTE9B9/K+gqIGWV1gtp927h/HivhHESWEKQ0ISswC5D7pr1NRhG0MvZuaJH6cXjmUjnLARRLRGzM8UBR8yt8YjpHmyW+Sts4em/DyWkYpzSKKEqXGhA0XLp3V7Br1/rwjkTBoyk347Yz1Uqcq6bp6CgDE1/pI=
+ bh=XpSDWjkQvRdr+pe2M0T1r1Ml2wXcjK/cOuA6L+RZEPU=;
+ b=Pe0HY8p1N6FqgYKA7AFqP+huEVx+ZzBYMb1cagTXyzsy9foHKfywKN2SjxkXuSn47C1fQG78/7Ib1uMWUliUEqaSJ9ewLGbkj3Pc87s1QN1TnnhOIMUH7yVOnh7Urf4OCZDptT8HXkDr1wgLT5hlQAEGtg+COHlBXjoM1SAQMh8=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
  AM0PR04MB5938.eurprd04.prod.outlook.com (20.178.112.12) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Tue, 25 Feb 2020 03:23:31 +0000
+ 15.20.2750.22; Tue, 25 Feb 2020 03:23:35 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 03:23:30 +0000
+ 03:23:35 +0000
 From:   peng.fan@nxp.com
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
         jassisinghbrar@gmail.com, o.rempel@pengutronix.de
@@ -54,45 +54,44 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         Anson.Huang@nxp.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 1/2] mailbox: imx: support SCU channel type
-Date:   Tue, 25 Feb 2020 11:17:06 +0800
-Message-Id: <1582600627-28415-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH V2 2/2] firmware: imx-scu: Support one TX and one RX
+Date:   Tue, 25 Feb 2020 11:17:07 +0800
+Message-Id: <1582600627-28415-3-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582600627-28415-1-git-send-email-peng.fan@nxp.com>
 References: <1582600627-28415-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: HK2PR04CA0089.apcprd04.prod.outlook.com
  (2603:1096:202:15::33) To AM0PR04MB4481.eurprd04.prod.outlook.com
  (2603:10a6:208:70::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0089.apcprd04.prod.outlook.com (2603:1096:202:15::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 03:23:27 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR04CA0089.apcprd04.prod.outlook.com (2603:1096:202:15::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 03:23:31 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5bbf50ae-d00e-458a-389b-08d7b9a21658
+X-MS-Office365-Filtering-Correlation-Id: 9efa3a74-f3e4-49fc-8633-08d7b9a218ce
 X-MS-TrafficTypeDiagnostic: AM0PR04MB5938:|AM0PR04MB5938:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB5938A654659B20DF1A819E6988ED0@AM0PR04MB5938.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Microsoft-Antispam-PRVS: <AM0PR04MB5938220413C62E6F8C7E958C88ED0@AM0PR04MB5938.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
 X-Forefront-PRVS: 0324C2C0E2
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(199004)(189003)(6486002)(8676002)(81156014)(81166006)(316002)(15650500001)(66476007)(66556008)(52116002)(66946007)(5660300002)(8936002)(186003)(478600001)(9686003)(6512007)(36756003)(86362001)(6506007)(2616005)(6666004)(2906002)(956004)(4326008)(26005)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5938;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(199004)(189003)(6486002)(8676002)(81156014)(81166006)(316002)(66476007)(66556008)(52116002)(66946007)(5660300002)(8936002)(186003)(478600001)(69590400006)(9686003)(6512007)(36756003)(86362001)(6506007)(2616005)(6666004)(2906002)(956004)(4326008)(26005)(16526019)(83323001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5938;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kAVqp6hIVt5F0OgAcvvWui3qFgzrTtWKwIQYOpP14/YTGfYY1GWWwpljjZNGpwghHk2qDxbE+SmyYCb54i4dWaD85C+Wx+fzdtYyizf65Fj7VypQ6hG8MmTvs7b0IIrWroCqUnpLEp43ABw6wEaLS3KwvPfZkG7a9TxD0sbrWTmyOt0fEAQq8FZi3k54d7PEMUTKs40pUD2V4MEXAd9PHonavoMUwq8CrzTcu8eRT5UaPPK14QYznsxxWMdPLsN7fW2F10nM2MElpweWjjB9txLPKzCQLoonwNkeugcGp1ljPeaZlSv7OY0CqH9QThXHp1PCxm0uJtTWwXzBnX4yUETANUvnb7IFIueEbFuEOIVxGUb9tPvVhAWpBnLLwFl2cTTy0m6UevGGf1IsYIkkBP0Bx6/QfX0vL08jmTj8q0x8HStH8Elim3vpt27cBHzX
-X-MS-Exchange-AntiSpam-MessageData: iT5NzbdOgzmd/q0UzGekSMlkemNb7UNPu+FAAso8Ktiy+fr1I4xaFopHMHjQo1ksArVQI0R9ZPExdpQitMYCnmI+ymQCWmRav4YRKK21c03booVwXueeysUcI78jgwl9jBoFMe6Cbnmz6ZuA68j2GQ==
+X-Microsoft-Antispam-Message-Info: 3HlGJTLsmykGNSrLzZSY2nVRvAaPT1cYPqLhEoxhFFsjdbZxhIPoF++QBxuZQ5Qpu+bpvLL1cjo0TC8cmCqJWVmr+wBtECRmyxGxKvqgMuHx7ihfjoECo6iRBE5zJsp3wsB1vir3pzvAhwusFk8C7M8IjdcK6mQtLtU9eJfImT5dLUMj1WlRPsys8+id1vPeQMfYcVd/pcGAE9nGmZu+9Rtq/lrOTmSTS65hlVH6B39M0dKhRrzNkslVqlqZvz1f9WDNQabOphzomK100LIuJ9ztr4clhgGdHoPzmE76rFP83PLPGEpI2yOnQNWicoblbn9i/6F0vYo3f0cAkNgGnrqREMUlpLn0rTWnTHOIRHuJPmHrAsqQLMLwwE6FlchVrBXSIVGL1ejr64+Hv9/lNu6/i9hB2LNyWpJ06lj4fbQweYJud9BKM9r/R004DRrBsrigmZA3zNCbYbpC04geBkQP0iREfUiq4fv3cyNRGnGJSR1/dMIl34GkR+YD0HpWeWc9j43zqyKXdhuvafWYSz63ERVlLRnR+gxYaeEy2v0ZpYDvxhVjPGFO/yWPbKO7
+X-MS-Exchange-AntiSpam-MessageData: lOUjU6bsDRJiiMlFju6FdqBlnZRGDU9WrLTJ0ovfSrEx51jaDDMNNA9uo9sJurB3OCtaYLCnXxyjorqVAPAsnkRd09k/5/IQeknIn9czzKF9S5EQgNgJqfhnVWjJ6BUPm4eEpRc/G0p6IdI2+ToqYQ==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bbf50ae-d00e-458a-389b-08d7b9a21658
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 03:23:30.8954
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9efa3a74-f3e4-49fc-8633-08d7b9a218ce
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 03:23:35.0171
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EYWj8a0Po92+wAI1JKyJ5WmGqZssnHHwg5IvbGWdbVkZ1TyxAbChVa8WPSDzQHVvxjctXKs0+qAomrQQV0e1eA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: haAXJPEa6f7b7ib6S1h3uS/0eeMmr7GquvgCeGkwj9Qqzyr/FvxeDSuGGylB/F9pF4CtlYl9pwRCiLkdIm1t3g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5938
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -101,144 +100,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-Per i.MX8QXP Reference mannual, Chapter "12.9.2.3.2 Messaging Examples",
- Passing short messages: Transmit register(s) can be used to pass
- short messages from one to four words in length. For example, when
- a four-word message is desired, only one of the registers needs to
- have its corresponding interrupt enable bit set at the receiver side;
- the message’s first three words are written to the registers whose
- interrupt is masked, and the fourth word is written to the other
- register (which triggers an interrupt at the receiver side).
+Current imx-scu requires four TX and four RX to communicate with
+SCU. This is low efficient and causes lots of mailbox interrupts.
 
-i.MX8/8X SCU firmware IPC is an implementation of passing short
-messages. But current imx-mailbox driver only support one word
-message, i.MX8/8X linux side firmware has to request four TX
-and four RX to support IPC to SCU firmware. This is low efficent
-and more interrupts triggered compared with one TX and
-one RX.
-
-To make SCU channel type work,
-  - parse the size of msg.
-  - Only enable TR0/RR0 interrupt for transmit/receive message.
+With imx-mailbox driver could support one TX to use all four transmit
+registers and one RX to use all four receive registers, imx-scu
+could use one TX and one RX.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/mailbox/imx-mailbox.c | 46 +++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 42 insertions(+), 4 deletions(-)
+ drivers/firmware/imx/imx-scu.c | 48 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 2cdcdc5f1119..0b4a33254114 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -4,6 +4,7 @@
-  */
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index f71eaa5bf52d..c839dbaaf3da 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -38,6 +38,7 @@ struct imx_sc_ipc {
+ 	struct device *dev;
+ 	struct mutex lock;
+ 	struct completion done;
++	bool fast_ipc;
  
- #include <linux/clk.h>
-+#include <linux/firmware/imx/ipc.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-@@ -65,8 +66,14 @@ struct imx_mu_priv {
- 	int			irq;
+ 	/* temporarily store the SCU msg */
+ 	u32 *msg;
+@@ -115,6 +116,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+ 	struct imx_sc_ipc *sc_ipc = sc_chan->sc_ipc;
+ 	struct imx_sc_rpc_msg *hdr;
+ 	u32 *data = msg;
++	int i;
  
- 	bool			side_b;
-+	bool			scu;
- };
+ 	if (!sc_ipc->msg) {
+ 		dev_warn(sc_ipc->dev, "unexpected rx idx %d 0x%08x, ignore!\n",
+@@ -122,6 +124,19 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+ 		return;
+ 	}
  
-+struct imx_sc_rpc_msg_max {
-+	struct imx_sc_rpc_msg hdr;
-+	u32 data[7];
-+} __packed __aligned(4);;
++	if (sc_ipc->fast_ipc) {
++		hdr = msg;
++		sc_ipc->rx_size = hdr->size;
++		sc_ipc->msg[0] = *data++;
 +
- static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
- 	.xTR	= {0x0, 0x4, 0x8, 0xc},
- 	.xRR	= {0x10, 0x14, 0x18, 0x1c},
-@@ -123,7 +130,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 	struct mbox_chan *chan = p;
- 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
- 	struct imx_mu_con_priv *cp = chan->con_priv;
-+	struct imx_sc_rpc_msg_max msg;
-+	u32 *p_msg = (u32 *)&msg;
- 	u32 val, ctrl, dat;
-+	int i;
- 
- 	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
- 	val = imx_mu_read(priv, priv->dcfg->xSR);
-@@ -152,8 +162,19 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
- 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
- 		mbox_chan_txdone(chan, 0);
- 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
--		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
--		mbox_chan_received_data(chan, (void *)&dat);
-+		if (!priv->scu) {
-+			dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
-+			mbox_chan_received_data(chan, (void *)&dat);
-+		} else {
-+			imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
-+			*p_msg++ = imx_mu_read(priv, priv->dcfg->xRR[0]);
-+			for (i = 1; i < msg.hdr.size; i++) {
-+				*p_msg++ = imx_mu_read(priv,
-+						       priv->dcfg->xRR[i % 4]);
-+			}
-+			imx_mu_xcr_rmw(priv, IMX_MU_xCR_RIEn(0), 0);
-+			mbox_chan_received_data(chan, (void *)&msg);
-+		}
- 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
- 		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
- 		mbox_chan_received_data(chan, NULL);
-@@ -169,11 +190,20 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
- {
- 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
- 	struct imx_mu_con_priv *cp = chan->con_priv;
-+	struct imx_sc_rpc_msg_max *msg = data;
- 	u32 *arg = data;
-+	int i;
- 
- 	switch (cp->type) {
- 	case IMX_MU_TYPE_TX:
--		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
-+		if (priv->scu) {
-+			for (i = 0; i < msg->hdr.size; i++) {
-+				imx_mu_write(priv, *arg++,
-+					     priv->dcfg->xTR[i % 4]);
-+			}
-+		} else {
-+			imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
-+		}
- 		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
- 		break;
- 	case IMX_MU_TYPE_TXDB:
-@@ -259,6 +289,7 @@ static const struct mbox_chan_ops imx_mu_ops = {
- static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
- 				       const struct of_phandle_args *sp)
- {
-+	struct imx_mu_priv *priv = to_imx_mu_priv(mbox);
- 	u32 type, idx, chan;
- 
- 	if (sp->args_count != 2) {
-@@ -270,7 +301,9 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
- 	idx = sp->args[1]; /* index */
- 	chan = type * 4 + idx;
- 
--	if (chan >= mbox->num_chans) {
-+	/* For TX/RX SCU, only one channel supported */
-+	if ((chan >= mbox->num_chans) ||
-+	    (priv->scu && type < 1 && idx >= 1)) {
- 		dev_err(mbox->dev, "Not supported channel number: %d. (type: %d, idx: %d)\n", chan, type, idx);
- 		return ERR_PTR(-EINVAL);
- 	}
-@@ -341,6 +374,11 @@ static int imx_mu_probe(struct platform_device *pdev)
- 	}
- 
- 	priv->side_b = of_property_read_bool(np, "fsl,mu-side-b");
-+	np = of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
-+	if (np) {
-+		priv->scu = true;
-+		of_node_put(np);
++		for (i = 1; i < sc_ipc->rx_size; i++)
++			sc_ipc->msg[i] = *data++;
++
++		complete(&sc_ipc->done);
++
++		return;
 +	}
++
+ 	if (sc_chan->idx == 0) {
+ 		hdr = msg;
+ 		sc_ipc->rx_size = hdr->size;
+@@ -147,6 +162,7 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 	struct imx_sc_chan *sc_chan;
+ 	u32 *data = msg;
+ 	int ret;
++	int size;
+ 	int i;
  
- 	spin_lock_init(&priv->xcr_lock);
+ 	/* Check size */
+@@ -156,7 +172,8 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
+ 		hdr->func, hdr->size);
  
+-	for (i = 0; i < hdr->size; i++) {
++	size = sc_ipc->fast_ipc ? 1 : hdr->size;
++	for (i = 0; i < size; i++) {
+ 		sc_chan = &sc_ipc->chans[i % 4];
+ 
+ 		/*
+@@ -168,8 +185,10 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 		 * Wait for tx_done before every send to ensure that no
+ 		 * queueing happens at the mailbox channel level.
+ 		 */
+-		wait_for_completion(&sc_chan->tx_done);
+-		reinit_completion(&sc_chan->tx_done);
++		if (!sc_ipc->fast_ipc) {
++			wait_for_completion(&sc_chan->tx_done);
++			reinit_completion(&sc_chan->tx_done);
++		}
+ 
+ 		ret = mbox_send_message(sc_chan->ch, &data[i]);
+ 		if (ret < 0)
+@@ -246,6 +265,7 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 	struct imx_sc_chan *sc_chan;
+ 	struct mbox_client *cl;
+ 	char *chan_name;
++	int num_channel;
+ 	int ret;
+ 	int i;
+ 
+@@ -253,11 +273,15 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 	if (!sc_ipc)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < SCU_MU_CHAN_NUM; i++) {
+-		if (i < 4)
++	sc_ipc->fast_ipc = true;
++
++	num_channel = sc_ipc->fast_ipc ? 2 : SCU_MU_CHAN_NUM;
++	for (i = 0; i < num_channel; i++) {
++		if (i < num_channel / 2)
+ 			chan_name = kasprintf(GFP_KERNEL, "tx%d", i);
+ 		else
+-			chan_name = kasprintf(GFP_KERNEL, "rx%d", i - 4);
++			chan_name = kasprintf(GFP_KERNEL, "rx%d",
++					      i - num_channel / 2);
+ 
+ 		if (!chan_name)
+ 			return -ENOMEM;
+@@ -269,13 +293,15 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 		cl->knows_txdone = true;
+ 		cl->rx_callback = imx_scu_rx_callback;
+ 
+-		/* Initial tx_done completion as "done" */
+-		cl->tx_done = imx_scu_tx_done;
+-		init_completion(&sc_chan->tx_done);
+-		complete(&sc_chan->tx_done);
++		if (!sc_ipc->fast_ipc) {
++			/* Initial tx_done completion as "done" */
++			cl->tx_done = imx_scu_tx_done;
++			init_completion(&sc_chan->tx_done);
++			complete(&sc_chan->tx_done);
++		}
+ 
+ 		sc_chan->sc_ipc = sc_ipc;
+-		sc_chan->idx = i % 4;
++		sc_chan->idx = i % (num_channel / 2);
+ 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
+ 		if (IS_ERR(sc_chan->ch)) {
+ 			ret = PTR_ERR(sc_chan->ch);
 -- 
 2.16.4
 
