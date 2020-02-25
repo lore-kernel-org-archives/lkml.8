@@ -2,110 +2,120 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79852C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D79C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432D62082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF932082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uKkLyZCU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g3lDsjzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgBYRp3 (ORCPT
+        id S1730908AbgBYRsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:45:29 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34060 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730222AbgBYRp2 (ORCPT
+        Tue, 25 Feb 2020 12:48:46 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43188 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbgBYRsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:45:28 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so352832otl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:45:28 -0800 (PST)
+        Tue, 25 Feb 2020 12:48:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so342229edb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4W5yVK824wX/ACwE2yGPoPcMjZTyMfgcOXv/yEgNjeQ=;
-        b=uKkLyZCUtPdgiKg3PGXf08p4v/Wr8tyhxNp18NjbvMyPzgm58MceHf4ZIpxrg6Wg5q
-         SdfNub575PSu8R78Ys9EITNYTsGPg5Z20m7jlo42FdDf4GccxHi31AMkvf1ulDOHfHR8
-         YxXf2ctZ4NO7l6SxSVxpYF4BVR4bHWg9IFG+Rq+jes56uxE5bQt8q7iYHGhqWh9rGNOV
-         uMsUxfBQjewaDBhioiqEB4x3F/HXWepJbfvGw3TeHV5DKwjiZdSJln4ermrwjvJx3mPR
-         rNgmxdKnsDBCXhFtjJXUN91jh6lsVeuZigljIzAOO2M7sUIPUVFWE/e4DJpXYKFsAfRT
-         nf9g==
+        bh=kvtigPXGzRvNJs/q8hvKnfgrObs8p/1xNnA1u/u1AWw=;
+        b=g3lDsjzUlLRHtr6kX3I1c8/QQ+96C/dhxsGBD3pD/oyEQPfnHcnTEQHK2ZAiDLGvxQ
+         XfbzXPYIrD9ycrQssohA0EunqZQZ4DqVbIhbaZi+1UuHwukrLKRapTrEcZiDydSXZ0Tu
+         aGMIRtz4I+rDHgBeWDB7rwq7CU6wK90mKr8BtK0LGKwuMirHsS2Z2T7/EGFO5HqASpXx
+         375KiUBJO04jNROG7s80x7LlJBsgEdE635+eSfZMhe3pUKgTglfxibQX7WWeBEDC4kV6
+         CHeV+IRdcksSJG2FIKfJOEyofZhfJqOONpn/GX7RMiXdjHjgvLgKjcVUXQjss3sVNl1p
+         lfdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4W5yVK824wX/ACwE2yGPoPcMjZTyMfgcOXv/yEgNjeQ=;
-        b=P3B9IQ1NnRY21XEKlo1m9YrN/9Bgfzmz8XGSUz0NHpNgjEpvstxkGLGJbUEEZhAhgy
-         oe3cEcnjeSxiLd4oFJKKNR9oIzC8BoWcJL0GQeaEFju2qXgKZ4VjLm3jTFfdIz3pcrgb
-         3Tqtr8sf/5exnKa9LbIk/RpZghPGnjAedNauGxMHy+TSaVnBHc4rzPKVW36uov6J/nD/
-         +1RQDv67OelZ6R2wVobChAK9yFsZyD1Pok9tfhgTwUr54zzQWWU7QqvSxaeofhV7EnoL
-         xmiWK23k2qayzFufzIx/lABj35tIoU/zGLe6VyCHN35kIDvRny3Nb7GXLN5q4TTVgG6z
-         akQA==
-X-Gm-Message-State: APjAAAWvwLQWmIRWUmuWxF9YjXFcrUBBP6HFzqHO/J2Ol/LOBon8SFzo
-        VIgwtJLap0AFJL3HBQtDUlHNVsGeYa/Vvo4lr1lLjA==
-X-Google-Smtp-Source: APXvYqytDZ822JdwgytUa3aflcsu3+aF5ibkKtr0TDDApdeO3lI9rr+7EmJu1Dz44Vm4BBkwPeLM15R88Rclo7Se15I=
-X-Received: by 2002:a05:6830:147:: with SMTP id j7mr2217318otp.12.1582652727731;
- Tue, 25 Feb 2020 09:45:27 -0800 (PST)
+        bh=kvtigPXGzRvNJs/q8hvKnfgrObs8p/1xNnA1u/u1AWw=;
+        b=P1mNyiIN7sktaiBuN2ZOiN0fjv11eZUlrHiTvWpNfm/cSbH7hTv5au4jDLGuNEp9Os
+         J8Uu6250N7wR6Nyq4tecxmengxB9jX2gqBwPSc3oUead5F+iVBpQOEpbn7FsQGwZqrAb
+         yBc33OlXvoIF2YODHyPG7Cy33W6zXOHVaooseHa2bAthhG6AAxNyxavH3lPUPWZJSWZF
+         E9olgrIbzLObJtgCzar6r6Ycdcw3PfVQAvr61AEwHVp5GCWieGrQxosmU/nFgbJZ+V3i
+         DT1fiJ+4ri6q2wSUrwgVliE/THh0gc0cwtOCYO9Aof/JS82Z0BGQCnYwuu+8UA3JkPGE
+         B+kw==
+X-Gm-Message-State: APjAAAV1ZMvAGHU/6NNMfJHwVCxrjIM766O/o4GYoq8GDoYrTxijj+z3
+        JuqXg3nX5zh7NsMptUxWzRPXlejT37PJW4g5wP0xUw==
+X-Google-Smtp-Source: APXvYqwL/CiO8f6NAwcGkhm1MCHZePRc5Gf3TcwghTHAVbuGSMFi6jwXEIdH0hP7sL1Z1R4q4Q50D7bpRSDfgunmgdo=
+X-Received: by 2002:a17:906:339a:: with SMTP id v26mr366874eja.2.1582652923183;
+ Tue, 25 Feb 2020 09:48:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20200224235824.126361-1-john.stultz@linaro.org>
- <a8af6c423501d5d49f1d81997b3a2295c0df7b9e.camel@perches.com>
- <CALAqxLW7xjPh8SZtZ+ES9fghdMDQZfG_ToSrX+u7DMAOixyQ1Q@mail.gmail.com> <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
-In-Reply-To: <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 25 Feb 2020 09:45:17 -0800
-Message-ID: <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] checkpatch: Properly warn if Change-Id comes after
- first Signed-off-by line
-To:     Joe Perches <joe@perches.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Whitcroft <apw@canonical.com>
+References: <20200221174248.244748-1-bgeffon@google.com> <20200221174248.244748-3-bgeffon@google.com>
+ <f0340108-a1ce-85cd-23dd-790848603b37@suse.cz>
+In-Reply-To: <f0340108-a1ce-85cd-23dd-790848603b37@suse.cz>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Tue, 25 Feb 2020 09:48:17 -0800
+Message-ID: <CADyq12wfEH4Aou=zGhdktVprw0h3YpkJLyjpb3Az8bRR3yJB5Q@mail.gmail.com>
+Subject: Re: [PATCH v7] mremap.2: Add information for MREMAP_DONTUNMAP.
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        mtk.manpages@gmail.com, linux-man@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:50 PM Joe Perches <joe@perches.com> wrote:
-> > Since I have a few kernel repos that I use for both upstream work and
-> > work targeting AOSP trees, I usually have the gerrit commit hook
-> > enabled in my tree (its easier to strip with sed then it is to re-add
-> > after submitting to gerrit), and at least the commit-msg hook I have
-> > will usually append a Change-Id: line at the end of the commit
-> > message, usually after the signed-off-by line.
->
-> Perhaps this is better:
-> ---
->  scripts/checkpatch.pl | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index a63380..698c7c8 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2721,9 +2721,9 @@ sub process {
->                 }
->
->  # Check for unwanted Gerrit info
-> -               if ($in_commit_log && $line =~ /^\s*change-id:/i) {
-> +               if ($realfile eq '' && $line =~ /^\s*change-id:/i) {
->                         ERROR("GERRIT_CHANGE_ID",
-> -                             "Remove Gerrit Change-Id's before submitting upstream.\n" . $herecurr);
-> +                             "Remove Gerrit Change-Id's before submitting upstream\n" . $herecurr);
->                 }
->
->  # Check if the commit log is in a possible stack dump
->
+Yes, you're correct that is poorly worded. I'll send an updated
+manpage closer to the release of this in case anything else changes.
+Thanks for taking a look.
 
-Yep. This works well for me, catching Change-Id lines that are missed
-by the current code.
+Brian
 
-Tested-by: John Stultz <john.stultz@linaro.org>
-
-Thanks so much!
--john
+On Tue, Feb 25, 2020 at 5:51 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>
+> On 2/21/20 6:42 PM, Brian Geffon wrote:
+> > @@ -209,10 +227,20 @@ flag was not specified.
+> >  .RE
+> >  .TP
+> >  .B ENOMEM
+> > +Not enough memory was available to complete the operation.
+> > +Possible causes are:
+> > +.RS
+> > +.IP * 3
+> >  The memory area cannot be expanded at the current virtual address, and the
+> >  .B MREMAP_MAYMOVE
+> >  flag is not set in \fIflags\fP.
+> >  Or, there is not enough (virtual) memory available.
+> > +.IP *
+> > +.B MREMAP_DONTUNMAP
+> > +was used without
+> > +.B MREMAP_FIXED
+> > +causing a new mapping to be created that would exceed the virtual memory available or it would exceed the maximum number of allowed mappings.
+>
+> So this can also result with MREMAP_FIXED, no?
+>
+> > +.RE
+> >  .SH CONFORMING TO
+> >  This call is Linux-specific, and should not be used in programs
+> >  intended to be portable.
+> >
+>
