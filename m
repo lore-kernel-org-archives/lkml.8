@@ -2,86 +2,193 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC57EC35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989F8C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC07520838
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B32218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cef/4pH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgBYAUK (ORCPT
+        id S1728495AbgBYAZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:20:10 -0500
-Received: from avon.wwwdotorg.org ([104.237.132.123]:53770 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBYAUK (ORCPT
+        Mon, 24 Feb 2020 19:25:02 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.179]:16540 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727976AbgBYAZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:20:10 -0500
-Received: from [10.20.204.51] (unknown [216.228.112.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by avon.wwwdotorg.org (Postfix) with ESMTPSA id DD3721C03C9;
-        Mon, 24 Feb 2020 17:20:07 -0700 (MST)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
-Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
-        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200224231841.26550-1-digetx@gmail.com>
- <20200224231841.26550-4-digetx@gmail.com>
-From:   Stephen Warren <swarren@wwwdotorg.org>
-Message-ID: <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
-Date:   Mon, 24 Feb 2020 17:20:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 24 Feb 2020 19:25:01 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 63AF05EBA
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:25:00 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6O20jnNSHAGTX6O20jx2Oc; Mon, 24 Feb 2020 18:25:00 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=StD8K7B/IbLHb+7gq2AVQ24d9PrxX4zRAlmjceGLxBI=; b=cef/4pH9Y7gkNa2Rujz7TwrUuz
+        ao2dsiqnIm0nORidRrr4/fvQ8RILopsIHSo7ARSdrOk05VwGXag8B6MtXnfeaaYqLBgD6djtps/0c
+        A/LJQv9eO0E6TXTo9JCPFPyzXu4ZHczCKsIh7pgRpnmHMn53qfYJ7iSXtaJc6mW/ZZpbR0d2El6sF
+        VstH3V3fOY61qg7nprMZvqzVNVkf54FB4jQZYVNSEBvw342NRGtX9uLSCu1HA2sG4g8FXvnwh4W0D
+        c4yBXY3CfKPmfJs0m5q+yJFguVmCdxz2EBJ8WcXBlHT3q57lZlQjW8quMCujZpGm5iRTuUpVJJU08
+        llHgKSIw==;
+Received: from [201.166.191.153] (port=54744 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6O1x-002VtX-VX; Mon, 24 Feb 2020 18:24:58 -0600
+Date:   Mon, 24 Feb 2020 18:27:46 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] wireless: realtek: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200225002746.GA26789@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200224231841.26550-4-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.191.153
+X-Source-L: No
+X-Exim-ID: 1j6O1x-002VtX-VX
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.191.153]:54744
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 40
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
-> All NVIDIA Tegra devices use a special partition table format for the
-> internal storage partitioning. Most of Tegra devices have GPT partition
-> in addition to TegraPT, but some older Android consumer-grade devices do
-> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
-> in order to support these devices properly in the upstream kernel. This
-> patch adds support for NVIDIA Tegra Partition Table format that is used
-> at least by all NVIDIA Tegra20 and Tegra30 devices.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> +static void __init tegra_boot_config_table_init(void)
-> +{
-> +	void __iomem *bct_base;
-> +	u16 pt_addr, pt_size;
-> +
-> +	bct_base = IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSET;
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot 
-Information Table) to a fixed location in IRAM, and there's some value 
-in the BIT that points to where the BCT is in IRAM. In practice, it 
-might work out that the BCT is always at the same place in IRAM, but 
-this certainly isn't guaranteed. I think there's code in U-Boot which 
-extracts the BCT location from the BIT? Yes, see 
-arch/arm/mach-tegra/ap.c:get_odmdata().
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h | 2 +-
+ drivers/net/wireless/realtek/rtlwifi/wifi.h      | 6 +++---
+ drivers/net/wireless/realtek/rtw88/fw.h          | 2 +-
+ drivers/net/wireless/realtek/rtw88/main.h        | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index 6598c8d786ea..440d164443bc 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -627,7 +627,7 @@ struct rtl8xxxu_firmware_header {
+ 	u32	reserved4;
+ 	u32	reserved5;
+ 
+-	u8	data[0];
++	u8	data[];
+ };
+ 
+ /*
+diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+index 1cff9f07c9e9..13421cf2d201 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
++++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+@@ -1051,13 +1051,13 @@ struct rtl_hdr_3addr {
+ 	u8 addr2[ETH_ALEN];
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct rtl_info_element {
+ 	u8 id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct rtl_probe_rsp {
+@@ -1068,7 +1068,7 @@ struct rtl_probe_rsp {
+ 	/*SSID, supported rates, FH params, DS params,
+ 	 * CF params, IBSS params, TIM (if beacon), RSN
+ 	 */
+-	struct rtl_info_element info_element[0];
++	struct rtl_info_element info_element[];
+ } __packed;
+ 
+ /*LED related.*/
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.h b/drivers/net/wireless/realtek/rtw88/fw.h
+index ccd27bd45775..414827800a5f 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.h
++++ b/drivers/net/wireless/realtek/rtw88/fw.h
+@@ -36,7 +36,7 @@ enum rtw_c2h_cmd_id_ext {
+ struct rtw_c2h_cmd {
+ 	u8 id;
+ 	u8 seq;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ enum rtw_rsvd_packet_type {
+diff --git a/drivers/net/wireless/realtek/rtw88/main.h b/drivers/net/wireless/realtek/rtw88/main.h
+index c074cef22120..46c0ebceb177 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.h
++++ b/drivers/net/wireless/realtek/rtw88/main.h
+@@ -1641,7 +1641,7 @@ struct rtw_dev {
+ 	struct rtw_wow_param wow;
+ 
+ 	/* hci related data, must be last */
+-	u8 priv[0] __aligned(sizeof(void *));
++	u8 priv[] __aligned(sizeof(void *));
+ };
+ 
+ #include "hci.h"
+-- 
+2.25.0
+
