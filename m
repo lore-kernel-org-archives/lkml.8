@@ -2,193 +2,83 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989F8C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51078C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B32218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208DE21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:27:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cef/4pH9"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="BQCQ10WE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgBYAZC (ORCPT
+        id S1728574AbgBYA11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:25:02 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.179]:16540 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727976AbgBYAZB (ORCPT
+        Mon, 24 Feb 2020 19:27:27 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:44694 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbgBYA11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:25:01 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 63AF05EBA
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:25:00 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6O20jnNSHAGTX6O20jx2Oc; Mon, 24 Feb 2020 18:25:00 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=StD8K7B/IbLHb+7gq2AVQ24d9PrxX4zRAlmjceGLxBI=; b=cef/4pH9Y7gkNa2Rujz7TwrUuz
-        ao2dsiqnIm0nORidRrr4/fvQ8RILopsIHSo7ARSdrOk05VwGXag8B6MtXnfeaaYqLBgD6djtps/0c
-        A/LJQv9eO0E6TXTo9JCPFPyzXu4ZHczCKsIh7pgRpnmHMn53qfYJ7iSXtaJc6mW/ZZpbR0d2El6sF
-        VstH3V3fOY61qg7nprMZvqzVNVkf54FB4jQZYVNSEBvw342NRGtX9uLSCu1HA2sG4g8FXvnwh4W0D
-        c4yBXY3CfKPmfJs0m5q+yJFguVmCdxz2EBJ8WcXBlHT3q57lZlQjW8quMCujZpGm5iRTuUpVJJU08
-        llHgKSIw==;
-Received: from [201.166.191.153] (port=54744 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j6O1x-002VtX-VX; Mon, 24 Feb 2020 18:24:58 -0600
-Date:   Mon, 24 Feb 2020 18:27:46 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] wireless: realtek: Replace zero-length array with
- flexible-array member
-Message-ID: <20200225002746.GA26789@embeddedor>
+        Mon, 24 Feb 2020 19:27:27 -0500
+Received: by mail-il1-f195.google.com with SMTP id s85so9305675ill.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SQsmpamnEC+1G39fOnv3AHWet4T1m/yewhekPzkg6oM=;
+        b=BQCQ10WEVUabUm+celhXtz0JdV/fkLvArkq4WsPhiiiAA43MY858di0FZp521E3XTa
+         5gqYAYDSdEkYN7SnEs4kyHgKuDAokjOrwg8sDzoyGx+kRiRQoeYPAVL27o3UY1SptQ6P
+         pawfnNYmAT74vVjX3bw3QxdpPYAKa7PertS4SDxi5/4YRqLx4WUWY4Ylh1MJTe0qeGqM
+         r7Zso+I/9Be7mulc84it+ioN3JpDc0n0Kd2afVxxvFbzx11l8++ZB3RGjGPJCEOH5hAH
+         GLMKZmfBiPVmTF/1Gi+sS0w11tan1GNl6HxPE8SWZpwc/YwfxcOn9Pqvsn0bWAq+BB1q
+         KTHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SQsmpamnEC+1G39fOnv3AHWet4T1m/yewhekPzkg6oM=;
+        b=jiu4XJqyxdOia2uQdn7IhHFjHlCeB0FxQu/gCBZg2vmiUemD+sqBsMKKcDltFCFqHs
+         2qDGVt38TswMh+HHv0EeF02lis7c3Z3OIAnlSKUYFF4Q+iVgahexff1BR/zLLA2zBEYv
+         v1cPkiITg8/BrAnVx0I9CwMBp8+1hd4ukbvonr2XT2ODZiO9FnWxdocyyHdzKCvJC8FU
+         xtD8om8KaKbvKh59PE56rovGqgka243aQkKY7u6JCvOh8XDTG3yg5lOaez8jbj/jz9Gj
+         tk2zrWwfesCEqG5vCYpYEV2p7LYeS/jLvmy+S7pOzDf/AJThXXVWyjebzO37OPLrqyyN
+         RzdA==
+X-Gm-Message-State: APjAAAWHwvbAoSG2aWd+3nnOU62TP2ugFq3em7mlnc29/kPV+VeeX6ld
+        T4STkcUyd0DcGhqu/lL01umqtlgEYT82jDpg0qLTGDLJ
+X-Google-Smtp-Source: APXvYqywoJznArA+B42fE3qotZLbAO/lZwwwFgSnCIFaKH0Kz32B3tEXhjaA2SpvadNI/Y+gQm5xbMlQ4ziEB+Eb1ho=
+X-Received: by 2002:a92:db49:: with SMTP id w9mr59714964ilq.277.1582590446536;
+ Mon, 24 Feb 2020 16:27:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.191.153
-X-Source-L: No
-X-Exim-ID: 1j6O1x-002VtX-VX
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.191.153]:54744
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 40
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200224233146.23734-1-mpe@ellerman.id.au> <20200224233146.23734-3-mpe@ellerman.id.au>
+In-Reply-To: <20200224233146.23734-3-mpe@ellerman.id.au>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 24 Feb 2020 16:27:15 -0800
+Message-ID: <CAOesGMhHSYHvAXAH-kBxxGhd05Q0bbxDa9dyuw7oKTH96PTi0w@mail.gmail.com>
+Subject: Re: [PATCH 3/8] powerpc: Remove PA SEMI MAINTAINERS entries
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Mon, Feb 24, 2020 at 3:31 PM Michael Ellerman <mpe@ellerman.id.au> wrote=
+:
+>
+> The PA SEMI entries have been orphaned for 3 =C2=BD years, so fold them
+> into the main POWERPC entry. The result of get_maintainer.pl is more
+> or less unchanged.
+>
+> Cc: Olof Johansson <olof@lixom.net>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Acked-by: Olof Johansson <olof@lixom.net>
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h | 2 +-
- drivers/net/wireless/realtek/rtlwifi/wifi.h      | 6 +++---
- drivers/net/wireless/realtek/rtw88/fw.h          | 2 +-
- drivers/net/wireless/realtek/rtw88/main.h        | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index 6598c8d786ea..440d164443bc 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -627,7 +627,7 @@ struct rtl8xxxu_firmware_header {
- 	u32	reserved4;
- 	u32	reserved5;
- 
--	u8	data[0];
-+	u8	data[];
- };
- 
- /*
-diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-index 1cff9f07c9e9..13421cf2d201 100644
---- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
-+++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-@@ -1051,13 +1051,13 @@ struct rtl_hdr_3addr {
- 	u8 addr2[ETH_ALEN];
- 	u8 addr3[ETH_ALEN];
- 	__le16 seq_ctl;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- struct rtl_info_element {
- 	u8 id;
- 	u8 len;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- struct rtl_probe_rsp {
-@@ -1068,7 +1068,7 @@ struct rtl_probe_rsp {
- 	/*SSID, supported rates, FH params, DS params,
- 	 * CF params, IBSS params, TIM (if beacon), RSN
- 	 */
--	struct rtl_info_element info_element[0];
-+	struct rtl_info_element info_element[];
- } __packed;
- 
- /*LED related.*/
-diff --git a/drivers/net/wireless/realtek/rtw88/fw.h b/drivers/net/wireless/realtek/rtw88/fw.h
-index ccd27bd45775..414827800a5f 100644
---- a/drivers/net/wireless/realtek/rtw88/fw.h
-+++ b/drivers/net/wireless/realtek/rtw88/fw.h
-@@ -36,7 +36,7 @@ enum rtw_c2h_cmd_id_ext {
- struct rtw_c2h_cmd {
- 	u8 id;
- 	u8 seq;
--	u8 payload[0];
-+	u8 payload[];
- } __packed;
- 
- enum rtw_rsvd_packet_type {
-diff --git a/drivers/net/wireless/realtek/rtw88/main.h b/drivers/net/wireless/realtek/rtw88/main.h
-index c074cef22120..46c0ebceb177 100644
---- a/drivers/net/wireless/realtek/rtw88/main.h
-+++ b/drivers/net/wireless/realtek/rtw88/main.h
-@@ -1641,7 +1641,7 @@ struct rtw_dev {
- 	struct rtw_wow_param wow;
- 
- 	/* hci related data, must be last */
--	u8 priv[0] __aligned(sizeof(void *));
-+	u8 priv[] __aligned(sizeof(void *));
- };
- 
- #include "hci.h"
--- 
-2.25.0
-
+-Olof
