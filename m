@@ -2,86 +2,93 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E67C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7DEC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7437E21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F41621556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgBYLwV (ORCPT
+        id S1730222AbgBYLwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:52:21 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11152 "EHLO mga05.intel.com"
+        Tue, 25 Feb 2020 06:52:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:49668 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729976AbgBYLwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:52:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 03:52:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
-   d="scan'208";a="271280971"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Feb 2020 03:52:18 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j6Yl9-004eDR-MA; Tue, 25 Feb 2020 13:52:19 +0200
-Date:   Tue, 25 Feb 2020 13:52:19 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        dan.j.williams@intel.com, peterz@infradead.org
-Subject: Re: [PATCH v5 1/2] x86: fix bitops.h warning with a moved cast
-Message-ID: <20200225115219.GI10400@smile.fi.intel.com>
-References: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
- <20200225103050.GD10400@smile.fi.intel.com>
+        id S1729976AbgBYLwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:52:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AF2A1063;
+        Tue, 25 Feb 2020 03:52:46 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E589E3F6CF;
+        Tue, 25 Feb 2020 03:52:43 -0800 (PST)
+Date:   Tue, 25 Feb 2020 11:52:41 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
+        andreyknvl@google.com
+Subject: Re: [PATCH v3] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+Message-ID: <20200225115241.GB2410978@arrakis.emea.arm.com>
+References: <1582472947-22471-1-git-send-email-macpaul.lin@mediatek.com>
+ <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225103050.GD10400@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:30:50PM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 24, 2020 at 02:50:19PM -0800, Jesse Brandeburg wrote:
-> > Fix many sparse warnings when building with C=1.
-> > 
-> > When the kernel is compiled with C=1, there are lots of messages like:
-> >   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
-> > 
-> > CONST_MASK() is using a signed integer "1" to create the mask which
-> > is later cast to (u8) when used, in order to yield an 8-bit value
-> > for the assembly instructions to use. Simplify the expressions used to
-> > clearly indicate they are working on 8-bit values only, which still
-> > keeps sparse happy without an accidental promotion to a 32 bit integer.
-> > 
-> 
-> > The reason the warning was occurring is because certain bitmasks that
-> > end with a mask next to a natural boundary like 7, 15, 23, 31, end up
-> > with a mask like 0x7f, which then results in sign extension when doing
-> > an invert (but I'm not a compiler expert). It was really only
-> > "clear_bit" that was having problems, and it was only on bit checks next
-> > to a byte boundary (top bit).
-> 
-> I guess this describes it incorrectly.
+On Tue, Feb 25, 2020 at 06:41:55PM +0800, Macpaul Lin wrote:
+> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+> index ce1d023..728c260 100644
+> --- a/drivers/usb/gadget/function/f_fs.c
+> +++ b/drivers/usb/gadget/function/f_fs.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/mmu_context.h>
+>  #include <linux/poll.h>
+>  #include <linux/eventfd.h>
+> +#include <linux/thread_info.h>
+>  
+>  #include "u_fs.h"
+>  #include "u_f.h"
+> @@ -826,6 +827,10 @@ static void ffs_user_copy_worker(struct work_struct *work)
+>  	if (io_data->read && ret > 0) {
+>  		mm_segment_t oldfs = get_fs();
+>  
+> +#if defined(CONFIG_ARM64)
+> +		if (IS_ENABLED(CONFIG_ARM64_TAGGED_ADDR_ABI))
+> +			set_thread_flag(TIF_TAGGED_ADDR);
+> +#endif
+>  		set_fs(USER_DS);
+>  		use_mm(io_data->mm);
+>  		ret = ffs_copy_to_iter(io_data->buf, ret, &io_data->data);
 
-Forget about it, I looked at the warning again and there is the 0x7f byte at
-the end. Sorry for noise.
-
-> I think it is a C standard which dictates this, compiler just follows.
+I really don't think that's the correct fix. The TIF_TAGGED_ADDR is a
+per-thread property and not really compatible with use_mm(). We've had
+tagged pointers in arm64 user-space since day 0 and access_ok() would
+have prevented them, so this config is not something new. For some
+reason, adb now passes them to the kernel (presumably because user-space
+makes more use of them). If you have strong reasons not to fix it in
+adb, the next best thing may be to untag the addresses in the usb gadget
+driver.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Catalin
