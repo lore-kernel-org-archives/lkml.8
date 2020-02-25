@@ -2,120 +2,155 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7698FC35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B2FC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440982084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8368E21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQAxfxhQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipTJOk/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgBYOHF (ORCPT
+        id S1730602AbgBYOIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:07:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57636 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbgBYOHF (ORCPT
+        Tue, 25 Feb 2020 09:08:32 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46641 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730240AbgBYOIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:07:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582639623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nsLsuFeIQPYcnkAa/VDzmAJLH88gjRW8GgyCncxisZ4=;
-        b=IQAxfxhQedse0fMW8pb2e+3TJrYdaciwLEpYhEHz70scRi/B/Mr4FlnLEyst/PAHCQS0lI
-        jBmonpQC2tqvdG8WkejA83zfhg+OT865aP2FBKVCZkSeNHsB5fbHFetrxPGLsQREjV9EbC
-        lVdIHRnJ0FKct1xxAhnx8WpvtrBSprw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-F1leL3HyPj6Lhu-XYCTfbQ-1; Tue, 25 Feb 2020 09:06:59 -0500
-X-MC-Unique: F1leL3HyPj6Lhu-XYCTfbQ-1
-Received: by mail-wm1-f71.google.com with SMTP id p2so910444wma.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:06:59 -0800 (PST)
+        Tue, 25 Feb 2020 09:08:31 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j7so2363757wrp.13;
+        Tue, 25 Feb 2020 06:08:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E9/8+yaqRvrAtgc15Q6xGgpo7ZqTiVPb7l/6H6m7t5Q=;
+        b=ipTJOk/01c3Cv19kwq5xngz+7Q8JLD9W9SwP30kqoDvGgs9mzmSuyVdOp/0x2Z3JBX
+         SouECnpnvqbZiyAORAku+W/U/oRbWRkpCMkrmsn8Xl89YrZge3A/xv42OGXaXRe85vr9
+         vTJsbKq4CygkV1enEslMKQQAzYJvqW3zZywCr495lv9nYZjlIyDLhhmMutccJIDL3E+D
+         UjcWbnalYMJWIJc1ouJOTNUt8xrvH7VkdxIyKwl0kRhepl8251mAItVW4EnwGN5lCEOU
+         trh3JytS55gxaECU44jYgdM7QwaTh8CoQ0V0QkYq/wyOz2RQYHpyMrLr1mpaw7/QNu2g
+         A+Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=nsLsuFeIQPYcnkAa/VDzmAJLH88gjRW8GgyCncxisZ4=;
-        b=PqTwR44ySRAkOJN1EC/prFS+pU+J1RZzjD1uKTXRXiJs723xp3MV0vZVw7aFxmVE4c
-         IHJEnOSs04Cvih5AuzHHoignTJXCxLPcexVML7+c3HPJyP6NRbfbZGr0t1l+y3F9lgwz
-         UT49oxsrMCk5R/qDNonXqO9W+49MhOh0Y2VlG8ZQkdXYNSFQwpQgus8BW3QDdykQNVAw
-         yZKQ52/JUibMMl6MJQPD8bH1KjY+Wfq4y4a2ieiT6xONXJCgV8D6Se4IQKVHIw/yXfqP
-         o159jVc8k5MYIbQ8EAAtZeRjZ0VIkRii3jVlvPr7bAMSNe1sW7Oz3A0aK/SvteOdfjkF
-         gy9w==
-X-Gm-Message-State: APjAAAUPg/2MtNqwVH17nKoKmxDj27VubfBRjC2FkAjtzlzDp7klRr/F
-        c8+5UqQ5w8+lz2jweL+cyI0QrJqg5Akp3S4jTjfOAigSWJ0ufvQPrNjfyxhcVuF5nXLyD4zc52v
-        5nMX5Vv/6EWN21eHgDQU/WkKQ
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr5388830wmb.81.1582639618476;
-        Tue, 25 Feb 2020 06:06:58 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwaifqeoSZjnYk4Mg1qtEqaTG7voewFuaRxLLbNZc17nvAEuudygfkwayhsT4aeCSe1PaUqaw==
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr5388814wmb.81.1582639618233;
-        Tue, 25 Feb 2020 06:06:58 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id j66sm4400946wmb.21.2020.02.25.06.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 06:06:57 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 51/61] KVM: x86: Use kvm_cpu_caps to detect Intel PT support
-In-Reply-To: <20200201185218.24473-52-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-52-sean.j.christopherson@intel.com>
-Date:   Tue, 25 Feb 2020 15:06:56 +0100
-Message-ID: <87v9nulq0v.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E9/8+yaqRvrAtgc15Q6xGgpo7ZqTiVPb7l/6H6m7t5Q=;
+        b=CI1/BbZxkbVcrdTVwl7COxp1msnv0nYYIXR6m23lgnsoEvDN6jlsr9b4AG6xH7WO3Y
+         H++ZjMfW8t+3nwaWZidaIIJE61XhTrkKuL/U/NOzfM8iuDcvQitP2OA9KoiFE64mPXIP
+         iW8uKVLqFA28RlmwXwl1xw7qNjRp8x5XmtTXab3hRv4Pn9xBITac6D1NVQsBO2aoOOJg
+         1paeZyyJEAw5M2BhetphKgh84Bz9Vo5VRTndjM/M8HPgfLumOKsYpUjn4RynoLn2Sv72
+         Da3+QLB6t8nJ1zhL2t7kRvnecYzfu7ZRMYqp+TJBHN/wrWsmdo91s8u6ZwT1r+NGXUKc
+         sURg==
+X-Gm-Message-State: APjAAAXaLNLa1qtKc4w1GpcQim+cnx1R7qrCPefyR3lj/zEeIrFOO7cO
+        ScaomgeDRiFQSuW82rks+MU=
+X-Google-Smtp-Source: APXvYqx+DZruNmT8sN2rhRo+8HDVho5gJrgSt8caSfXEUGu9sq6Ub/o8MAgrKTltKV/iaWI8Kpn9HA==
+X-Received: by 2002:a5d:5183:: with SMTP id k3mr72340713wrv.414.1582639709386;
+        Tue, 25 Feb 2020 06:08:29 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:30a8:e117:ed7d:d145? (p200300EA8F29600030A8E117ED7DD145.dip0.t-ipconnect.de. [2003:ea:8f29:6000:30a8:e117:ed7d:d145])
+        by smtp.googlemail.com with ESMTPSA id z19sm4286325wmi.35.2020.02.25.06.08.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 06:08:28 -0800 (PST)
+Subject: [PATCH v3 1/8] PCI: add constant PCI_STATUS_ERROR_BITS
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+References: <20ca7c1f-7530-2d89-40a6-d97a65aa25ef@gmail.com>
+Message-ID: <73dd692e-bbce-35f5-88e9-417fb0f7229e@gmail.com>
+Date:   Tue, 25 Feb 2020 15:03:44 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20ca7c1f-7530-2d89-40a6-d97a65aa25ef@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+This constant is used (with different names) in more than one driver,
+so move it to the PCI core.
 
-> Check for Intel PT using kvm_cpu_cap_has() to pave the way toward
-> eliminating ->pt_supported().
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index a37cb6fda979..3d287fc6eb6e 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -507,7 +507,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  {
->  	struct kvm_cpuid_entry2 *entry;
->  	int r, i, max_idx;
-> -	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
->  
->  	/* all calls to cpuid_count() should be made on the same cpu */
->  	get_cpu();
-> @@ -687,7 +686,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		break;
->  	/* Intel PT */
->  	case 0x14:
-> -		if (!f_intel_pt) {
-> +		if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT)) {
->  			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
->  			break;
->  		}
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/net/ethernet/marvell/skge.h | 6 ------
+ drivers/net/ethernet/marvell/sky2.h | 6 ------
+ include/uapi/linux/pci_regs.h       | 7 +++++++
+ 3 files changed, 7 insertions(+), 12 deletions(-)
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
+diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
+index 6fa7b6a34..e149bdfe1 100644
+--- a/drivers/net/ethernet/marvell/skge.h
++++ b/drivers/net/ethernet/marvell/skge.h
+@@ -15,12 +15,6 @@
+ #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
+ #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
+ 
+-#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
+-			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+-			       PCI_STATUS_REC_MASTER_ABORT | \
+-			       PCI_STATUS_REC_TARGET_ABORT | \
+-			       PCI_STATUS_PARITY)
+-
+ enum csr_regs {
+ 	B0_RAP	= 0x0000,
+ 	B0_CTST	= 0x0004,
+diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
+index b02b65230..851d8ed34 100644
+--- a/drivers/net/ethernet/marvell/sky2.h
++++ b/drivers/net/ethernet/marvell/sky2.h
+@@ -252,12 +252,6 @@ enum {
+ };
+ 
+ 
+-#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
+-			       PCI_STATUS_SIG_SYSTEM_ERROR | \
+-			       PCI_STATUS_REC_MASTER_ABORT | \
+-			       PCI_STATUS_REC_TARGET_ABORT | \
+-			       PCI_STATUS_PARITY)
+-
+ enum csr_regs {
+ 	B0_RAP		= 0x0000,
+ 	B0_CTST		= 0x0004,
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 543769048..9b84a1278 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -68,6 +68,13 @@
+ #define  PCI_STATUS_SIG_SYSTEM_ERROR	0x4000 /* Set when we drive SERR */
+ #define  PCI_STATUS_DETECTED_PARITY	0x8000 /* Set on parity error */
+ 
++#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
++			       PCI_STATUS_SIG_SYSTEM_ERROR | \
++			       PCI_STATUS_REC_MASTER_ABORT | \
++			       PCI_STATUS_REC_TARGET_ABORT | \
++			       PCI_STATUS_SIG_TARGET_ABORT | \
++			       PCI_STATUS_PARITY)
++
+ #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
+ #define PCI_REVISION_ID		0x08	/* Revision ID */
+ #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
 -- 
-Vitaly
+2.25.1
+
+
+
 
