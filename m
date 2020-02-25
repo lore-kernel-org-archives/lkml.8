@@ -2,225 +2,232 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62DC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31294C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6E42176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD632082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MblnRK6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgBYGaG (ORCPT
+        id S1729081AbgBYGbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:30:06 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47879 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgBYGaG (ORCPT
+        Tue, 25 Feb 2020 01:31:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45116 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgBYGbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:30:06 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1j6TjE-0005Y9-4z; Tue, 25 Feb 2020 07:30:00 +0100
-Subject: Re: [PATCH V2 1/2] mailbox: imx: support SCU channel type
-To:     peng.fan@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com
-Cc:     aisheng.dong@nxp.com, Anson.Huang@nxp.com,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-References: <1582600627-28415-1-git-send-email-peng.fan@nxp.com>
- <1582600627-28415-2-git-send-email-peng.fan@nxp.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <fcd868b0-2a8b-c13e-e773-3626a1cfda32@pengutronix.de>
-Date:   Tue, 25 Feb 2020 07:29:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 01:31:04 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g3so13203676wrs.12;
+        Mon, 24 Feb 2020 22:31:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ZjrDQL3LER0qAgx1gMeLpsXVl1KwKwuKmN0OHczFSk4=;
+        b=MblnRK6LdgNKiZ0kMjzz1DJp+UX58M1YT+G+HTkk3Oq7VIbxtgSsyoGgRzmQdHeKwX
+         uGQCRfVCtOpwr9ypQBxp6QNjooJboY/0va+v7sK51PnxrwOD0wAraumNRh9xKLGdAOb0
+         ZiaFXoAGJOGdtVM+t0uNTdVhuxFMPGwJNKNviKo7t4qoG0UwgtF0WzEtORwWOLwvypEG
+         7nhODu6G1D31m3A+oYgXolptvawJJYTJoJIJy2+agzUWsJvv7kuxJHGK5ZQnR42j/DX8
+         OS2ztgHu+xugT9PoLff3V2iH+D2xjfn4siP/s8dMHWQtnxi5J989WJ2QkFTVoeAnV7Fv
+         JRTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ZjrDQL3LER0qAgx1gMeLpsXVl1KwKwuKmN0OHczFSk4=;
+        b=dgKt+Dxf8pEedobrjsYYKlW/l0lavf0NasDhx1TBPnmN0q2hpziNaGpVGKPKAWpsvU
+         AOXk91l5OhK1YXGW9eNrE/tKsCdEBrHrxAH6nSPWTfSN0uN9BcdXRU3+AshjgOyo3AQu
+         kOZfrFhhjh39gl9y/b+xdEU74ZCEEMDqkwD1K87fx7C7bndWKmL+6pm2GY4aITSQWHSK
+         m198FXmB6KBvbIa0lycjGSSpNNI/YkzUp/jyikwM1Q9kmzEMKd/7iQE5oTQecsmUPVYo
+         ceOrAwYDIG/gd4jqXc66ZQCQh47p6dzg3Rvm0SyRbHJF7SgOelH40RiiXRrWwrDercwi
+         vOUA==
+X-Gm-Message-State: APjAAAUyr1dSrn6rEeUDnd1g9+GWu3OQJm1wCE1J2XZrUvPddSPWsDFd
+        dZJc+puWMJQS0VpIe0bznGgaRwFtaSvZWJWmJTE=
+X-Google-Smtp-Source: APXvYqz0m+/GUt9kS8abLMTXEYt6gf+ptK2KMsPZVIeNT03+EOs6epg/ikq1RZRLIbmZb2r3HvAFXBg3bpJq1B3jr3E=
+X-Received: by 2002:a05:6000:114f:: with SMTP id d15mr44810682wrx.130.1582612261176;
+ Mon, 24 Feb 2020 22:31:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582600627-28415-2-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200224174129.2664-1-ndesaulniers@google.com> <202002242003.870E5F80@keescook>
+In-Reply-To: <202002242003.870E5F80@keescook>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 25 Feb 2020 07:33:27 +0100
+Message-ID: <CA+icZUWVybtEW3bxw5p8UFvoRr5OU=sgcpL=EbQTW7sTWYsRqg@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, corbet@lwn.net,
+        masahiroy@kernel.org, Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 5:08 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Feb 24, 2020 at 09:41:28AM -0800, Nick Desaulniers wrote:
+> > Added to kbuild documentation. Provides more official info on building
+> > kernels with Clang and LLVM than our wiki.
+> >
+> > Suggested-by: Kees Cook <keescook@chromium.org>
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  Documentation/kbuild/index.rst |  1 +
+> >  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
+> >  2 files changed, 81 insertions(+)
+> >  create mode 100644 Documentation/kbuild/llvm.rst
+> >
+> > diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
+> > index 0f144fad99a6..3882bd5f7728 100644
+> > --- a/Documentation/kbuild/index.rst
+> > +++ b/Documentation/kbuild/index.rst
+> > @@ -19,6 +19,7 @@ Kernel Build System
+> >
+> >      issues
+> >      reproducible-builds
+> > +    llvm
+> >
+> >  .. only::  subproject and html
+> >
+> > diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> > new file mode 100644
+> > index 000000000000..68ae022aebc0
+> > --- /dev/null
+> > +++ b/Documentation/kbuild/llvm.rst
+> > @@ -0,0 +1,80 @@
+> > +==============================
+> > +Building Linux with Clang/LLVM
+> > +==============================
+> > +
+> > +This document covers how to build the Linux kernel with Clang and LLVM
+> > +utilities.
+> > +
+> > +About
+> > +-----
+> > +
+> > +The Linux kernel has always traditionally been compiled with GNU toolchains
+> > +such as GCC and binutils. On going work has allowed for `Clang
+> > +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
+> > +used as viable substitutes. Distributions such as `Android
+> > +<https://www.android.com/>`_, `ChromeOS
+> > +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
+> > +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
+> > +collection of toolchain components implemented in terms of C++ objects
+> > +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
+> > +supports C and the GNU C extensions required by the kernel, and is pronounced
+> > +"klang," not "see-lang."
+> > +
+> > +Clang
+> > +-----
+> > +
+> > +The compiler used can be swapped out via `CC=` command line argument to `make`.
+> > +`CC=` should be set when selecting a config and during a build.
+> > +
+> > +     make CC=clang defconfig
+> > +
+> > +     make CC=clang
+> > +
+> > +Cross Compiling
+> > +---------------
+> > +
+> > +A single Clang compiler binary will typically contain all supported backends,
+> > +which can help simplify cross compiling.
+> > +
+> > +     ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
+> > +
+> > +`CROSS_COMPILE` is not used to suffix the Clang compiler binary, instead
+>
+> s/suffix/prefix/
+>
+> > +`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
+> > +example:
+> > +
+> > +     clang --target aarch64-linux-gnu foo.c
+> > +
+> > +LLVM Utilities
+> > +--------------
+> > +
+> > +LLVM has substitutes for GNU binutils utilities. These can be invoked as
+> > +additional parameters to `make`.
+> > +
+> > +     make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+> > +       OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
+> > +       READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+> > +       HOSTLD=ld.lld
+> > +
+> > +Getting Help
+> > +------------
+> > +
+> > +- `Website <https://clangbuiltlinux.github.io/>`_
+> > +- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
+> > +- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
+> > +- IRC: #clangbuiltlinux on chat.freenode.net
+> > +- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
+> > +- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
+> > +- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
+> > +
+> > +Getting LLVM
+> > +-------------
+> > +
+> > +- http://releases.llvm.org/download.html
+> > +- https://github.com/llvm/llvm-project
+> > +- https://llvm.org/docs/GettingStarted.html
+> > +- https://llvm.org/docs/CMake.html
+> > +- https://apt.llvm.org/
+> > +- https://www.archlinux.org/packages/extra/x86_64/llvm/
+> > +- https://github.com/ClangBuiltLinux/tc-build
+> > +- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
+> > +- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
+>
+> Should this also include an update to Documentation/process/changes.rst
+> with the minimum version required? (I would expect this to be "9" for Clang,
+> and "11" for ld.lld.)
+>
+> Otherwise, yes, with Randy and Masahiro's suggestions, please consider it:
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+
 Hi,
 
-On 25.02.20 04:17, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Per i.MX8QXP Reference mannual, Chapter "12.9.2.3.2 Messaging Examples",
->   Passing short messages: Transmit register(s) can be used to pass
->   short messages from one to four words in length. For example, when
->   a four-word message is desired, only one of the registers needs to
->   have its corresponding interrupt enable bit set at the receiver side;
->   the message’s first three words are written to the registers whose
->   interrupt is masked, and the fourth word is written to the other
->   register (which triggers an interrupt at the receiver side).
-> 
-> i.MX8/8X SCU firmware IPC is an implementation of passing short
-> messages. But current imx-mailbox driver only support one word
-> message, i.MX8/8X linux side firmware has to request four TX
-> and four RX to support IPC to SCU firmware. This is low efficent
-> and more interrupts triggered compared with one TX and
-> one RX.
-> 
-> To make SCU channel type work,
->    - parse the size of msg.
->    - Only enable TR0/RR0 interrupt for transmit/receive message.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->   drivers/mailbox/imx-mailbox.c | 46 +++++++++++++++++++++++++++++++++++++++----
->   1 file changed, 42 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index 2cdcdc5f1119..0b4a33254114 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -4,6 +4,7 @@
->    */
->   
->   #include <linux/clk.h>
-> +#include <linux/firmware/imx/ipc.h>
->   #include <linux/interrupt.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> @@ -65,8 +66,14 @@ struct imx_mu_priv {
->   	int			irq;
->   
->   	bool			side_b;
-> +	bool			scu;
->   };
->   
-> +struct imx_sc_rpc_msg_max {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u32 data[7];
-> +} __packed __aligned(4);;
-> +
->   static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
->   	.xTR	= {0x0, 0x4, 0x8, 0xc},
->   	.xRR	= {0x10, 0x14, 0x18, 0x1c},
-> @@ -123,7 +130,10 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
->   	struct mbox_chan *chan = p;
->   	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
->   	struct imx_mu_con_priv *cp = chan->con_priv;
-> +	struct imx_sc_rpc_msg_max msg;
-> +	u32 *p_msg = (u32 *)&msg;
->   	u32 val, ctrl, dat;
-> +	int i;
->   
->   	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
->   	val = imx_mu_read(priv, priv->dcfg->xSR);
-> @@ -152,8 +162,19 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
->   		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
->   		mbox_chan_txdone(chan, 0);
->   	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
-> -		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
-> -		mbox_chan_received_data(chan, (void *)&dat);
-> +		if (!priv->scu) {
-> +			dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
-> +			mbox_chan_received_data(chan, (void *)&dat);
-> +		} else {
-> +			imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
-> +			*p_msg++ = imx_mu_read(priv, priv->dcfg->xRR[0]);
-> +			for (i = 1; i < msg.hdr.size; i++) {
-> +				*p_msg++ = imx_mu_read(priv,
-> +						       priv->dcfg->xRR[i % 4]);
-> +			}
-> +			imx_mu_xcr_rmw(priv, IMX_MU_xCR_RIEn(0), 0);
-> +			mbox_chan_received_data(chan, (void *)&msg);
-> +		}
->   	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
->   		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
->   		mbox_chan_received_data(chan, NULL);
-> @@ -169,11 +190,20 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
->   {
->   	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
->   	struct imx_mu_con_priv *cp = chan->con_priv;
-> +	struct imx_sc_rpc_msg_max *msg = data;
->   	u32 *arg = data;
-> +	int i;
->   
->   	switch (cp->type) {
->   	case IMX_MU_TYPE_TX:
-> -		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
-> +		if (priv->scu) {
-> +			for (i = 0; i < msg->hdr.size; i++) {
-> +				imx_mu_write(priv, *arg++,
-> +					     priv->dcfg->xTR[i % 4]);
-> +			}
-> +		} else {
-> +			imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
-> +		}
->   		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
->   		break;
->   	case IMX_MU_TYPE_TXDB:
-> @@ -259,6 +289,7 @@ static const struct mbox_chan_ops imx_mu_ops = {
->   static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
->   				       const struct of_phandle_args *sp)
->   {
-> +	struct imx_mu_priv *priv = to_imx_mu_priv(mbox);
->   	u32 type, idx, chan;
->   
->   	if (sp->args_count != 2) {
-> @@ -270,7 +301,9 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
->   	idx = sp->args[1]; /* index */
->   	chan = type * 4 + idx;
->   
-> -	if (chan >= mbox->num_chans) {
-> +	/* For TX/RX SCU, only one channel supported */
-> +	if ((chan >= mbox->num_chans) ||
-> +	    (priv->scu && type < 1 && idx >= 1)) {
->   		dev_err(mbox->dev, "Not supported channel number: %d. (type: %d, idx: %d)\n", chan, type, idx);
->   		return ERR_PTR(-EINVAL);
->   	}
-> @@ -341,6 +374,11 @@ static int imx_mu_probe(struct platform_device *pdev)
->   	}
->   
->   	priv->side_b = of_property_read_bool(np, "fsl,mu-side-b");
-> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
+that update for documentation purposes was overdue.
 
-This will configure every MU on the SoC as SCU, even it is not communicating with it.
+My last experiments were with Linux v5.3 and llvm-toolchain 9.0 means
+Clang compiler v9.0 and LLD linker v9.0 on x86-64.
+With Debian's kernel-config I was able to build OOTB (out-of-the-box)
+with no extra patches.
+I cannot speak for higher Linux and/or llvm-toolchain versions/combinations.
 
-> +	if (np) {
-> +		priv->scu = true;
-> +		of_node_put(np);
-> +	}
->   
+I would prefer such an information also for the *supported* Linux
+versions, so people have a good orientation.
 
-Please take a look at drivers/remoteproc/imx_rproc.c
-especially the use of struct imx_rproc_dcfg.
-Introduce simialr struct in the imx-mailbox.c
+So for the above scenario, you can add:
 
-It will be some thing like:
-struct imx_mu_dcfg {
-	unsigned int chans; /* number of supported channels */
-	int (*tx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp);
-	int (*rx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp);
-}
+Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>.(Clang and LLD v9.0,
+Linux v5.3, x86-64)
 
-Define functions for generic tx/rx. And for SCU specific tx/rx. Please, add sanity check 
-in to SCU specific functions. In current implementation an error on SCU side will couse 
-stack corruption on Linux side.
+Regards,
+- Sedat -
 
-Use compatible string (some thing like fsl,imx8-mu-scu) to detect proper metrics of new 
-device.
 
-Kind regards,
-Oleksij Rempel
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202002242003.870E5F80%40keescook.
