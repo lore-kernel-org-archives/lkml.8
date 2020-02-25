@@ -2,71 +2,218 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1ADC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186BFC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F62620726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tCh9n7eE"
+	by mail.kernel.org (Postfix) with ESMTP id EA88A218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgBYMur (ORCPT
+        id S1730420AbgBYMux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:50:47 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:42098 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730001AbgBYMup (ORCPT
+        Tue, 25 Feb 2020 07:50:53 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:60259 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729781AbgBYMuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:50:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=g+KiJZzksPAm2BNWFU7kxrgNyJwR+BQ4nqNwddviLwE=; b=tCh9n7eE375VlDUXXbMfRxeU5t
-        BODlcDvyopq6h4o8ADOabjBwl7+bM+eJDXxDiW9VvedM9hC+hhDR8qYMl1keKDi8aOxnDPSuF27NY
-        GznS6JGLmDAD4U6yc24GcNOVuHXJNnD6QVRG3qjsXUvqJRiP3rwffnHdw1Pzmw+UOL85eLw2Hq2pe
-        jUPVZNiuXo6YJF4MYXEW3LPe69DbOgp9BaXmtG4iNTEeuyj5bH06fMKY9d0McLrhyQmm6L5Kx9JLE
-        236w/SOd0/8NpFPIdNFW0/QT3n1qTaGPpIS1yhp3cfb2rJDtzjegTQdk9w1J7WO7WIuvrcpsiXzDM
-        xsLsJHvw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6ZfW-0003gq-6w; Tue, 25 Feb 2020 12:50:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 67198306060;
-        Tue, 25 Feb 2020 13:48:35 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2FDD82B4DAAF6; Tue, 25 Feb 2020 13:50:30 +0100 (CET)
-Date:   Tue, 25 Feb 2020 13:50:30 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        dan.j.williams@intel.com
-Subject: Re: [PATCH v5 1/2] x86: fix bitops.h warning with a moved cast
-Message-ID: <20200225125030.GL18400@hirez.programming.kicks-ass.net>
-References: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
- <20200225103050.GD10400@smile.fi.intel.com>
+        Tue, 25 Feb 2020 07:50:06 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j6Zf2-0005kT-2S; Tue, 25 Feb 2020 12:50:04 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v5 5/9] device: add device_change_owner()
+Date:   Tue, 25 Feb 2020 13:49:44 +0100
+Message-Id: <20200225124948.80682-6-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200225124948.80682-1-christian.brauner@ubuntu.com>
+References: <20200225124948.80682-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225103050.GD10400@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:30:50PM +0200, Andy Shevchenko wrote:
+Add a helper to change the owner of a device's sysfs entries. This
+needs to happen when the ownership of a device is changed, e.g. when
+moving network devices between network namespaces.
+This function will be used to correctly account for ownership changes,
+e.g. when moving network devices between network namespaces.
 
-> I think it is a C standard which dictates this, compiler just follows.
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+unchanged
 
-Correct, a semi readable explanation of this:
+/* v3 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add explicit uid/gid parameters.
 
-  https://stackoverflow.com/questions/46073295/implicit-type-promotion-rules
+/* v4 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add more documentation.
+
+/* v5 */
+unchanged
+---
+ drivers/base/core.c    | 116 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/device.h |   1 +
+ 2 files changed, 117 insertions(+)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 42a672456432..988f34ce2eb0 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3458,6 +3458,122 @@ int device_move(struct device *dev, struct device *new_parent,
+ }
+ EXPORT_SYMBOL_GPL(device_move);
+ 
++static int device_attrs_change_owner(struct device *dev, kuid_t kuid,
++				     kgid_t kgid)
++{
++	struct kobject *kobj = &dev->kobj;
++	struct class *class = dev->class;
++	const struct device_type *type = dev->type;
++	int error;
++
++	if (class) {
++		/*
++		 * Change the device groups of the device class for @dev to
++		 * @kuid/@kgid.
++		 */
++		error = sysfs_groups_change_owner(kobj, class->dev_groups, kuid,
++						  kgid);
++		if (error)
++			return error;
++	}
++
++	if (type) {
++		/*
++		 * Change the device groups of the device type for @dev to
++		 * @kuid/@kgid.
++		 */
++		error = sysfs_groups_change_owner(kobj, type->groups, kuid,
++						  kgid);
++		if (error)
++			return error;
++	}
++
++	/* Change the device groups of @dev to @kuid/@kgid. */
++	error = sysfs_groups_change_owner(kobj, dev->groups, kuid, kgid);
++	if (error)
++		return error;
++
++	if (device_supports_offline(dev) && !dev->offline_disabled) {
++		/* Change online device attributes of @dev to @kuid/@kgid. */
++		error = sysfs_file_change_owner(kobj, dev_attr_online.attr.name,
++						kuid, kgid);
++		if (error)
++			return error;
++	}
++
++	return 0;
++}
++
++/**
++ * device_change_owner - change the owner of an existing device.
++ * @dev: device.
++ * @kuid: new owner's kuid
++ * @kgid: new owner's kgid
++ *
++ * This changes the owner of @dev and its corresponding sysfs entries to
++ * @kuid/@kgid. This function closely mirrors how @dev was added via driver
++ * core.
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
++{
++	int error;
++	struct kobject *kobj = &dev->kobj;
++
++	dev = get_device(dev);
++	if (!dev)
++		return -EINVAL;
++
++	/*
++	 * Change the kobject and the default attributes and groups of the
++	 * ktype associated with it to @kuid/@kgid.
++	 */
++	error = sysfs_change_owner(kobj, kuid, kgid);
++	if (error)
++		goto out;
++
++	/*
++	 * Change the uevent file for @dev to the new owner. The uevent file
++	 * was created in a separate step when @dev got added and we mirror
++	 * that step here.
++	 */
++	error = sysfs_file_change_owner(kobj, dev_attr_uevent.attr.name, kuid,
++					kgid);
++	if (error)
++		goto out;
++
++	/*
++	 * Change the device groups, the device groups associated with the
++	 * device class, and the groups associated with the device type of @dev
++	 * to @kuid/@kgid.
++	 */
++	error = device_attrs_change_owner(dev, kuid, kgid);
++	if (error)
++		goto out;
++
++#ifdef CONFIG_BLOCK
++	if (sysfs_deprecated && dev->class == &block_class)
++		goto out;
++#endif
++
++	/*
++	 * Change the owner of the symlink located in the class directory of
++	 * the device class associated with @dev which points to the actual
++	 * directory entry for @dev to @kuid/@kgid. This ensures that the
++	 * symlink shows the same permissions as its target.
++	 */
++	error = sysfs_link_change_owner(&dev->class->p->subsys.kobj, &dev->kobj,
++					dev_name(dev), kuid, kgid);
++	if (error)
++		goto out;
++
++out:
++	put_device(dev);
++	return error;
++}
++EXPORT_SYMBOL_GPL(device_change_owner);
++
+ /**
+  * device_shutdown - call ->shutdown() on each device to shutdown.
+  */
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 0cd7c647c16c..3e40533d2037 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -817,6 +817,7 @@ extern struct device *device_find_child_by_name(struct device *parent,
+ extern int device_rename(struct device *dev, const char *new_name);
+ extern int device_move(struct device *dev, struct device *new_parent,
+ 		       enum dpm_order dpm_order);
++extern int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
+ extern const char *device_get_devnode(struct device *dev,
+ 				      umode_t *mode, kuid_t *uid, kgid_t *gid,
+ 				      const char **tmp);
+-- 
+2.25.1
+
