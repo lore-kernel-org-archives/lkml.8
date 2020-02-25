@@ -2,109 +2,114 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C42DC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D963CC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB6221744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56D121744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgBYPcd (ORCPT
+        id S1731090AbgBYPdE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:32:33 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:38778 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730984AbgBYPcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:32:33 -0500
-Received: (qmail 3414 invoked by uid 2102); 25 Feb 2020 10:32:32 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 25 Feb 2020 10:32:32 -0500
-Date:   Tue, 25 Feb 2020 10:32:32 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-cc:     linux-usb@vger.kernel.org, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        <scan-admin@coverity.com>
-Subject: Re: [PATCH] usb: hub: Fix unhandled return value of usb_autopm_get_interface()
-In-Reply-To: <20200225130846.20236-1-erosca@de.adit-jv.com>
-Message-ID: <Pine.LNX.4.44L0.2002251028030.1485-100000@iolanthe.rowland.org>
+        Tue, 25 Feb 2020 10:33:04 -0500
+Received: from mail-oln040092253074.outbound.protection.outlook.com ([40.92.253.74]:35168
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731053AbgBYPdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 10:33:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oKGdOBKIwDX6S0Kip9uWaFFk5wVqvIUj3pi0fyrOknMWqp1lMw3Y831jctfqHA6p8U88oXzLp5cMhCG0y2qrwa+PnmASb+qBc97Q6jiPmuLGqaTf8WkA7pAtAxnfRPiSNMmUOFi4shgxQ4OHVo5VHy/Z7nXMpugC7HeNfaDfbeLImEZU39h9miDbNF4APNDglEK7jQWC6VValw/VRGeCqdKTam1RK5Ba5+cPZAWJESREFkqFseBe+MvydNQkrM+KSQO4DUy9U/sjGzjH2dJHnuDRu0i/+J2djsYoWxHiQoiS3z8UHjwRogKtwk0QnaNZoLvxmqI/UVYMNcL/ovUZCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vd4FfUlUR061VGal7bxTqHbkYVODgNSjjcCH9spLMGo=;
+ b=U70JVS3YP4kaiHA42aN8sHhSI2/8/Ck35c1Z2ZB1M4rmkyHPxQqUJG08VYCgoz6MnUbtDvtkMWkueXAslNxO8wotA0d8NMwDVXPHskDWgcH8OUesjvjUJbzIA74JQaIVBbKj9tuZJq3jg14r3So6dOqTDINKN2CDGqzigJkX+AQM1uB8ZZyMLZ8sc0cZDC43S1z4M0z9w9838IVmKFENOU3fBeCP1Fam7l1YVh4BRFZtz+6oxhwArMbihDHKEXCX0vvrz9XZGpeHIjDEFLL3IeMDrAETDfRdLthtzIzs5E/38PXmhc8TecuIduaI/eVMmAwQf+IK+zfhevDFJaRi4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HK2APC01FT047.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebc::33) by
+ HK2APC01HT032.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::286)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18; Tue, 25 Feb
+ 2020 15:33:00 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.60) by
+ HK2APC01FT047.mail.protection.outlook.com (10.152.249.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 15:33:00 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.012; Tue, 25 Feb 2020
+ 15:33:00 +0000
+Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by ME2PR01CA0009.ausprd01.prod.outlook.com (2603:10c6:201:15::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 15:32:58 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v1 2/3] Revert "thunderbolt: Prevent crash if non-active
+ NVMem file is read"
+Thread-Topic: [PATCH v1 2/3] Revert "thunderbolt: Prevent crash if non-active
+ NVMem file is read"
+Thread-Index: AQHV6zneI6K1RjwByk+TFt04XZDxaagr34qAgAArsoA=
+Date:   Tue, 25 Feb 2020 15:33:00 +0000
+Message-ID: <PSXP216MB04387341897FDF77424BE82D80ED0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB043899D4B8F693E1E5C3ECCE80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <PSXP216MB04383751C15C4D66B59335DA80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20200225125629.GB2667@lahna.fi.intel.com>
+In-Reply-To: <20200225125629.GB2667@lahna.fi.intel.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0009.ausprd01.prod.outlook.com
+ (2603:10c6:201:15::21) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:FFD64A55E7E74D7E24C92DC349F6EAC0CD53155278C1DEC0B6D95A5599AED940;UpperCasedChecksum:1F42FD9B5A06A6D846DD2586013383CFFEF8DCF94879563F52F8604EB6A9F799;SizeAsReceived:7986;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [CX/MIC/nSBxU82IOwMtvAfa+byOyhHxOHWourM0WcilCrNOVI+SmJqs0eLgKtoVx]
+x-microsoft-original-message-id: <20200225153253.GC1740@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 75895552-6aa7-4ffe-7c61-08d7ba07feba
+x-ms-traffictypediagnostic: HK2APC01HT032:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7CyW+crcjpnRR5jHgHUGmqoXcr4hWG6kjlbVLYPF+cmNIIWaXegw+6BM5Zt90/gEjXBKP2fYM1upoRmEz2zmrrX+ZHQIBPttMAu1JVncgKTCf047Gv2PDyQT/Le+gpizcwhKKGDGZ3fdzSG0CMsP3A8agD9z8R2T3EMIDA12pcd+oHl4myE58oXlZ/fuGdYH
+x-ms-exchange-antispam-messagedata: YT8l0dgaWC9q6E2bnHS8CJ0rwSPOLRVdqZklRV7KmQJCsDo1PN5uH/qvaEA46hp28BP3xeKimYEJCjqa4MVZVWgyftP/+ukfyjK8FoGXvszZZFR/HeWsxx6wNVct8sd9Nd65m1Dl4qHY/iL2Ff0/9VhhYXMa8Fn9ZdCMXPBBsVQyaGC95lpHMF6vzo7lez1uafU9XzmOCXJxze7IXdS/4Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <613B6465DA9E164AB5C884B14D654E22@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75895552-6aa7-4ffe-7c61-08d7ba07feba
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 15:33:00.0634
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
-
-> Address below Coverity complaint (Feb 25, 2020, 8:06 AM CET):
+On Tue, Feb 25, 2020 at 02:56:29PM +0200, Mika Westerberg wrote:
+> On Mon, Feb 24, 2020 at 05:43:05PM +0000, Nicholas Johnson wrote:
+> > This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
+> > 
+> > Since commit cd76ed9e5913 ("nvmem: add support for write-only
+> > instances"), this work around is no longer required, so drop it.
 > 
-> *** CID 1458999:  Error handling issues  (CHECKED_RETURN)
-> /drivers/usb/core/hub.c: 1869 in hub_probe()
-> 1863
-> 1864            if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
-> 1865                    hub->quirk_check_port_auto_suspend = 1;
-> 1866
-> 1867            if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
-> 1868                    hub->quirk_disable_autosuspend = 1;
->  >>>     CID 1458999:  Error handling issues  (CHECKED_RETURN)
->  >>>     Calling "usb_autopm_get_interface" without checking return value (as is done elsewhere 97 out of 111 times).
-> 1869                    usb_autopm_get_interface(intf);
-> 1870            }
-> 1871
-> 1872            if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
-> 1873                    return 0;
-> 1874
+> I don't think you can refer commits that only exists in your local tree.
+> I would just say that "since NVMem subsystem gained support for
+> write-only instances this workaround is not needed anymore" or somesuch.
+Are the commit hashes changed when applied to the kernel? If so, oops!
+
+I will remove it in PATCH v2.
 > 
-> Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
-> Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reported-by: scan-admin@coverity.com
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> ---
->  drivers/usb/core/hub.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index 1d212f82c69b..ff04ca28970d 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -1865,8 +1865,12 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
->  		hub->quirk_check_port_auto_suspend = 1;
->  
->  	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
-> -		hub->quirk_disable_autosuspend = 1;
-> -		usb_autopm_get_interface(intf);
-> +		int r = usb_autopm_get_interface(intf);
-> +
-> +		if (!r)
-> +			hub->quirk_disable_autosuspend = 1;
-> +		else
-> +			dev_dbg(&intf->dev, "disable autosuspend err=%d\n", r);
->  	}
->  
->  	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
-
-This change is not necessary, because the resume operation cannot fail
-at this point (interfaces are always powered-up during probe).  A
-better solution would be to call usb_autpm_get_interface_no_resume()
-instead.
-
-On the other hand, the other places that call
-usb_autopm_get_interface() without checking should be audited.  Some of
-them almost certainly need to be fixed.
-
-Alan Stern
-
+> Otherwise this looks good to me, no objections and thanks for doing this :)
+Glad I can be of help. :)
