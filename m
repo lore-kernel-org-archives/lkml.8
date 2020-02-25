@@ -2,102 +2,207 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB46C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5C9C35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4F421556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9A021556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:45:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUfwnzKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgBYGoK (ORCPT
+        id S1729120AbgBYGpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:44:10 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:29696 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729025AbgBYGoK (ORCPT
+        Tue, 25 Feb 2020 01:45:13 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41771 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbgBYGpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:44:10 -0500
-X-IronPort-AV: E=Sophos;i="5.70,483,1574092800"; 
-   d="scan'208";a="83891623"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 25 Feb 2020 14:44:06 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 081C950A9976;
-        Tue, 25 Feb 2020 14:34:20 +0800 (CST)
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.85) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Tue, 25 Feb 2020 14:44:02 +0800
-Received: from Fedora-30.g08.fujitsu.local (10.167.220.106) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- id 14.3.439.0; Tue, 25 Feb 2020 14:44:05 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>
-Subject: [PATCH] tools/perf/util/*.c: Use "%zd" output format for size_t type
-Date:   Tue, 25 Feb 2020 14:39:01 +0800
-Message-ID: <20200225063901.20165-1-yangx.jy@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 25 Feb 2020 01:45:13 -0500
+Received: by mail-qk1-f196.google.com with SMTP id b5so3901274qkh.8;
+        Mon, 24 Feb 2020 22:45:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k4mGpa6lFJ+xLU/GYHvEyHr6PhkA8euhkcKvRvI1CFE=;
+        b=SUfwnzKGRBWN9dBz04mZbE1kA9I2smWFfhGGhtCGI7bx9U1TJrh4wIDfy94gtU2PqW
+         I5T8VGD730Yjx6tnmPKO59Y4C2sF0a7ICWdfawRVFz+nASRJka3tieW6DgjB/BnKh+9L
+         yGQ24u0rCtpwDr5gKclYT7D900LmQ9PYCbx77hK2GLfBm/Cqeol6RoxMIHB0uZSbIaHK
+         57o1Abk4jNY2jY4J47SOX9uP4jobmzNRZ8QuXaxV5oPpiKUiAYU0uljxrKS6B8Tmyc/g
+         J3ycM5SkFpxRxG/FH+0anfyMqb42RCY4DOFhjuJtfLUqv7RbpMylTyXPokTu/8KA7r2w
+         yTdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k4mGpa6lFJ+xLU/GYHvEyHr6PhkA8euhkcKvRvI1CFE=;
+        b=kFkZpr2o+zpWHO+RjHlg+U77ncB/K5viiUQ7if3gYX95yccE2z/SOjdjPMIdLKKaoX
+         6Up4Kf8ZeJf1Ny55i4KWnBY9/PDmdtQwP1f5lP/yAaEPDiieiHCW/Np5wf4olQPgTmRJ
+         snT/16zog2w3hUSjyoOFx6F7QUFFqCrrirhTg6IZopcaXlL3v/abunHExkY11CyaIeEn
+         z22ysVBO0CZW90Z1i49//OM+MHr0O+m+LZSx4Uu538pyVMLAVd3Kr6SR683PsFq9T7AZ
+         jEWR4Yh4jpx3VdZM3Tw3igXAG+TnHEfWXH7F0LlDRv4JjauLbObSW1CpCiNjiPuuVZdJ
+         5EPg==
+X-Gm-Message-State: APjAAAV9ui82M6cVBopdj5LLcZq5VtryYBku/ewzVfWK5InvlN4w5ssu
+        ZXYwpNHLPO807BiVogxRxjfmN2iPamwWWq1Lfgw=
+X-Google-Smtp-Source: APXvYqy+xFYP0hh/mm9EffLEWXZeT4lA4WEk9ac5Jjq/spDLvGwzsSosqDqOkDeylj0SW9Ox2x3/jc7TGmwky8RmBm8=
+X-Received: by 2002:a37:9104:: with SMTP id t4mr58093431qkd.449.1582613111335;
+ Mon, 24 Feb 2020 22:45:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 081C950A9976.AA05D
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+References: <20200220175250.10795-1-kpsingh@chromium.org> <20200220175250.10795-7-kpsingh@chromium.org>
+In-Reply-To: <20200220175250.10795-7-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 24 Feb 2020 22:45:00 -0800
+Message-ID: <CAEf4BzbSBBPx9Z728aV6pu8R0mtwumq-zbX=u7hxjQuvtQqPww@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 6/8] tools/libbpf: Add support for BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid the following errors when building perf:
------------------------------------------------
-util/session.c: In function 'perf_session__process_compressed_event':
-util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
-  pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-...
-til/zstd.c: In function 'zstd_decompress_stream':
-util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
-    pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-...
------------------------------------------------
+On Thu, Feb 20, 2020 at 9:53 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> Since BPF_PROG_TYPE_LSM uses the same attaching mechanism as
+> BPF_PROG_TYPE_TRACING, the common logic is refactored into a static
+> function bpf_program__attach_btf.
+>
+> A new API call bpf_program__attach_lsm is still added to avoid userspace
+> conflicts if this ever changes in the future.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  tools/lib/bpf/bpf.c      |  3 ++-
+>  tools/lib/bpf/libbpf.c   | 46 ++++++++++++++++++++++++++++++++--------
+>  tools/lib/bpf/libbpf.h   |  4 ++++
+>  tools/lib/bpf/libbpf.map |  3 +++
+>  4 files changed, 46 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> index c6dafe563176..73220176728d 100644
+> --- a/tools/lib/bpf/bpf.c
+> +++ b/tools/lib/bpf/bpf.c
+> @@ -235,7 +235,8 @@ int bpf_load_program_xattr(const struct bpf_load_program_attr *load_attr,
+>         memset(&attr, 0, sizeof(attr));
+>         attr.prog_type = load_attr->prog_type;
+>         attr.expected_attach_type = load_attr->expected_attach_type;
+> -       if (attr.prog_type == BPF_PROG_TYPE_STRUCT_OPS) {
+> +       if (attr.prog_type == BPF_PROG_TYPE_STRUCT_OPS ||
+> +           attr.prog_type == BPF_PROG_TYPE_LSM) {
+>                 attr.attach_btf_id = load_attr->attach_btf_id;
+>         } else if (attr.prog_type == BPF_PROG_TYPE_TRACING ||
+>                    attr.prog_type == BPF_PROG_TYPE_EXT) {
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 514b1a524abb..d11139d5e76b 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -2351,16 +2351,14 @@ static int bpf_object__finalize_btf(struct bpf_object *obj)
+>
+>  static inline bool libbpf_prog_needs_vmlinux_btf(struct bpf_program *prog)
+>  {
+> -       if (prog->type == BPF_PROG_TYPE_STRUCT_OPS)
+> +       if (prog->type == BPF_PROG_TYPE_STRUCT_OPS ||
+> +           prog->type == BPF_PROG_TYPE_LSM)
+>                 return true;
+>
+>         /* BPF_PROG_TYPE_TRACING programs which do not attach to other programs
+>          * also need vmlinux BTF
+>          */
+> -       if (prog->type == BPF_PROG_TYPE_TRACING && !prog->attach_prog_fd)
+> -               return true;
+> -
+> -       return false;
+> +       return prog->type == BPF_PROG_TYPE_TRACING && !prog->attach_prog_fd;
 
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
----
- tools/perf/util/session.c | 2 +-
- tools/perf/util/zstd.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d0d7d25b23e3..5b74d606b4b7 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 		session->decomp_last = decomp;
- 	}
- 
--	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-+	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index d2202392ffdb..48dd2b018c47 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
- 			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
- 		}
--- 
-2.21.0
+please keep this as is, it allows to add more logic easily, if necessary
 
+>  }
+>
+>  static int bpf_object__load_vmlinux_btf(struct bpf_object *obj)
+> @@ -4855,7 +4853,8 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
+>         load_attr.insns = insns;
+>         load_attr.insns_cnt = insns_cnt;
+>         load_attr.license = license;
 
+[...]
 
+> -struct bpf_link *bpf_program__attach_trace(struct bpf_program *prog)
+> +/* Common logic for all BPF program types that attach to a btf_id */
+> +static struct bpf_link *bpf_program__attach_btf(struct bpf_program *prog)
+>  {
+>         char errmsg[STRERR_BUFSIZE];
+>         struct bpf_link_fd *link;
+> @@ -7376,7 +7388,7 @@ struct bpf_link *bpf_program__attach_trace(struct bpf_program *prog)
+>         if (pfd < 0) {
+>                 pfd = -errno;
+>                 free(link);
+> -               pr_warn("program '%s': failed to attach to trace: %s\n",
+> +               pr_warn("program '%s': failed to attach to: %s\n",
+
+to attach to ... what?.. %s at the end is just an error message
+
+>                         bpf_program__title(prog, false),
+>                         libbpf_strerror_r(pfd, errmsg, sizeof(errmsg)));
+>                 return ERR_PTR(pfd);
+> @@ -7385,10 +7397,26 @@ struct bpf_link *bpf_program__attach_trace(struct bpf_program *prog)
+>         return (struct bpf_link *)link;
+>  }
+>
+
+[...]
+
+> --- a/tools/lib/bpf/libbpf.map
+> +++ b/tools/lib/bpf/libbpf.map
+> @@ -227,10 +227,13 @@ LIBBPF_0.0.7 {
+>                 bpf_probe_large_insn_limit;
+>                 bpf_prog_attach_xattr;
+>                 bpf_program__attach;
+> +               bpf_program__attach_lsm;
+>                 bpf_program__name;
+>                 bpf_program__is_extension;
+> +               bpf_program__is_lsm;
+>                 bpf_program__is_struct_ops;
+>                 bpf_program__set_extension;
+> +               bpf_program__set_lsm;
+
+please make sure to add to 0.0.8 version for new revision
+
+>                 bpf_program__set_struct_ops;
+>                 btf__align_of;
+>                 libbpf_find_kernel_btf;
+> --
+> 2.20.1
+>
