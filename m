@@ -2,136 +2,123 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A432C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBFDC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0ABB2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:24:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ltTXZwDq"
+	by mail.kernel.org (Postfix) with ESMTP id 60F352084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582651647;
+	bh=d9yXpSfnLppkIApp2OipAy9FX26fZHOcVSR0irr/Y1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sSzDFWgIduFv0TfVQsXrIlurs2Gc2GL9WQ9GWmebyqdSvUgTroyTuAksSOjF5L6Cr
+	 aGU5BteNU2RY0JASNosGv9uiIgAVsQJ9T3IN8in2SaBBypeGE3lm3FjeFnoenJ1lVm
+	 9EI1SakEH+tDPYiKt7IKHm1wZnAjCzdODUCeDTPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbgBYRYo (ORCPT
+        id S1730668AbgBYR10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:24:44 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34043 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbgBYRYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:24:44 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so7547699pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:24:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lfotpKjLU7BxU2unCoAL0OLP6JpkqZvfhxJOwfxAYmg=;
-        b=ltTXZwDqi3bj0f4va6iSNa+noIAQ6niJVSGeslx5czOaMstk4QGvtQQBXCIA5DdolR
-         n4MHGW+hII0IRLuu5vH5+ECcXvVBUIxDWvuiepyhTBqQbzFDKU5Eg6L51TGu0NJl6T2d
-         4Aj3Fnggf+FTY9ad5BqpOrZyLPt3CvCy1aEd8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lfotpKjLU7BxU2unCoAL0OLP6JpkqZvfhxJOwfxAYmg=;
-        b=MpnRqUlPwKk6kDAdz+uhEO7DV2S4h5ILOXtdDY4l2rbyWmXsytbQhtHJAqIkBiQNi6
-         L8w1fgr01F3+5RTTfG8+oMKpi7oZ0RKn07MN1P6zjkp/noJ+4Ea8nIDuyGbThLLRror2
-         kSuA4HbhrSD71g3dL1vxQrGsPfZenbQvkIAHvd9V06IfVA5fyjk1mM5x7Awh5z1pb87n
-         X5DhJlutiqw7T7XTN6Z/xfOmMKzefgA4EwIquLyyTP3ZiFo+6Xw/FA/2dKNtSzr/cPO4
-         0qm90tKW6Hhc+9JyYwO82UYE/ovt7a3lPz8NkZy6deC52bsDECi5BIh0We1EHxGHmwqb
-         P8SA==
-X-Gm-Message-State: APjAAAVESor8WYd04J8+wjPr2twGCfMnAoSsryK4dmXPylHKsWy+x68j
-        DB/No4AQN/yo8IBQB8hNXS+9kg==
-X-Google-Smtp-Source: APXvYqwArngtth7ItH3EpE8LH8S4j/eVAVVg6AqEvqOu3xoUF1RjeEXBYLVRxkXdit5VDdriBk3z6w==
-X-Received: by 2002:a63:cf06:: with SMTP id j6mr39603191pgg.379.1582651483432;
-        Tue, 25 Feb 2020 09:24:43 -0800 (PST)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id a17sm11099378pgv.11.2020.02.25.09.24.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:24:42 -0800 (PST)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] media: mtk-vpu: avoid unaligned access to DTCM buffer.
-Date:   Wed, 26 Feb 2020 01:24:37 +0800
-Message-Id: <20200225172437.106679-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+        Tue, 25 Feb 2020 12:27:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:53552 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbgBYR1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:27:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21F221FB;
+        Tue, 25 Feb 2020 09:27:25 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A6403F6CF;
+        Tue, 25 Feb 2020 09:27:24 -0800 (PST)
+Date:   Tue, 25 Feb 2020 17:27:23 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Amit Kachhap <amit.kachhap@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu" <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v6 05/11] arm64: elf: Enable BTI at exec based on ELF
+ program properties
+Message-ID: <20200225172723.GG4633@sirena.org.uk>
+References: <20200212192906.53366-1-broonie@kernel.org>
+ <20200212192906.53366-6-broonie@kernel.org>
+ <275b9cdb-7835-0dfe-9bea-acb0d8301e36@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TmwHKJoIRFM7Mu/A"
+Content-Disposition: inline
+In-Reply-To: <275b9cdb-7835-0dfe-9bea-acb0d8301e36@arm.com>
+X-Cookie: Booths for two or more.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
-Tightly Coupled Memory) buffer shared with AP.  It's not able to do
-unaligned access. Otherwise kernel would crash due to unable to handle
-kernel paging request.
 
-struct vpu_run {
-	u32 signaled;
-	char fw_ver[VPU_FW_VER_LEN];
-	unsigned int	dec_capability;
-	unsigned int	enc_capability;
-	wait_queue_head_t wq;
-};
+--TmwHKJoIRFM7Mu/A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-fw_ver starts at 4 byte boundary. If system enables
-CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
-read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
+On Tue, Feb 25, 2020 at 06:58:50PM +0530, Amit Kachhap wrote:
+> On 2/13/20 12:59 AM, Mark Brown wrote:
 
-Copy the string by memcpy_fromio() for this buffer to avoid unaligned
-access.
+> > +static inline int arch_parse_elf_property(u32 type, const void *data,
+> > +					  size_t datasz, bool compat,
+> > +					  struct arch_elf_state *arch)
+> > +{
 
-Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
-Change in v3:
-- fix sparse warnings.
-Change in v2:
-- fix sparse warnings.
----
- drivers/media/platform/mtk-vpu/mtk_vpu.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+> Does this check here make sense to skip running extra code?
+>     if (!system_supports_bti())
+>              return 0;
 
-diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-index a768707abb94..e3fd2d1814f3 100644
---- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
-+++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-@@ -603,12 +603,14 @@ EXPORT_SYMBOL_GPL(vpu_load_firmware);
- static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
- {
- 	struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
--	struct vpu_run *run = (struct vpu_run *)data;
--
--	vpu->run.signaled = run->signaled;
--	strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
--	vpu->run.dec_capability = run->dec_capability;
--	vpu->run.enc_capability = run->enc_capability;
-+	struct vpu_run __iomem *run = (struct vpu_run __iomem __force *)data;
-+
-+	vpu->run.signaled = readl(&run->signaled);
-+	memcpy_fromio(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-+	/* Make sure the string is NUL-terminated */
-+	vpu->run.fw_ver[sizeof(vpu->run.fw_ver) - 1] = '\0';
-+	vpu->run.dec_capability = readl(&run->dec_capability);
-+	vpu->run.enc_capability = readl(&run->enc_capability);
- 	wake_up_interruptible(&vpu->run.wq);
- }
- 
--- 
-2.25.0.265.gbab2e86ba0-goog
+This specifically is the wrong place for such a test since we didn't
+even figure out if we're looking at the BTI property yet so it'd need to
+be moved if any further properties are added.
 
+> Although this check is there in arch_validate_prot.
+
+And more importantly in arch_calc_vm_prot_bits() so we never actually
+create guarded pages on a system that doesn't support BTI.  That said I
+do agree that it seems reasonable to add an explicit check in the
+parsing of the actual BTI property for robustness and clarity, I'll do a
+patch for that and roll it into any future versions or send it
+incrementally if this one is applied but it doesn't seem sensible to
+spin the whole series with the very broad CC list it has.
+
+--TmwHKJoIRFM7Mu/A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5VWPoACgkQJNaLcl1U
+h9Bq6Af/XISIHfTbIdVWLIy9cav1xBGoNheQB8U8jrd370PqkAtHsvZwnq9aDdt3
+IxSWEuRVgj4bCprzm7gRSiLT5DSxNEqraVfT9GtbAy2Yi/ErLTSHRTCafCelguRv
+guxddwpmSo/yyNcyW0xen19YAhFjJ+VAKjlPdO0ApbplIBWPzwX7cvO7db6qnH9m
+k0GBhysZIXjhJW9KtjmFjdeiJxWGkjTXMDiC5O+Lq0/PL5MIWzrALmT45mFq4Ojf
+1rHAkV6H/8HqU7hSGxnKegK5uwx/gPT2JjhKVYoXXnTIogDeFmnBuz4ZlWMaVD0P
+3T4W1JDe639jb8v2EqZNxjdsU2XPFA==
+=os2p
+-----END PGP SIGNATURE-----
+
+--TmwHKJoIRFM7Mu/A--
