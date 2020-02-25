@@ -2,138 +2,259 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F55AC35E1C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA06C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2568320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEa2RI30"
+	by mail.kernel.org (Postfix) with ESMTP id A35D920675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgBYVqS (ORCPT
+        id S1729077AbgBYVqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:46:18 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34630 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:46:18 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so899454oig.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:46:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
-        b=qEa2RI30+eu6y+QG1RZcKaHE63SwriP8FaoGgwhahp/jQ21rAuyfZyhnI39ZaQZPTK
-         x+hjX7xFI4kZoMYbClW5pfDwOlru9laun8LG52dDvbs36nVfcRIuXJFMcetpsWABJkwy
-         joYb3JrrYXZ548+Zal0Q8PMlSZGWpJ8BEpfeWWDdjA3JtgPwNzcOW3qFf8maZZdozYQU
-         ux2WYmwTQB3ZIWRqlN5rqV5Jog6VUM0bEhy9mjUk2yD89nAIT8/dEbYlqT+pKaj4U2Dn
-         0bRx+Fv2YVyzelsP/9ttTUm4knli3ewZHxsXIwT+oFehxZ9gsP9iP/b8vez+UUdwDQE0
-         +OFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
-        b=E8qmpljjsiZwoVTVAYVrXx9njoPeQXBHpFawkclTcXhF1wKfl+uz2KfS2rjdSyQWBV
-         U9TjsQyjMug3RipW+a2tLAGTH5MnqzYshfIiffMQpP5UDhkxQNLEyZit4GHdF4ZsPnuM
-         2vbOYYfuqz4HzLQNAXAMt0lz7Y7hPJUlo2R3E5cMeODxArLW01qdyPeAcDcELjLWlWd5
-         kBCfnu61/q/Er9rTADk4LgeIVvlTrJ5ILSYONiggvRidFk+LpWoxQGDHoJdvrWJDqBWI
-         mgqd6RNnc1EpXTLg3gyhwYOxBudb4C2k/E3P2mCplPEqdXK2gslcbnyTUEFNxD0iJKvp
-         NCbA==
-X-Gm-Message-State: APjAAAV6tjJuv9to2yCKdnaFg4ImLrynGYaQkBJZthLbLzEAU14Ev9zM
-        qF7UgL/B2zL/2DMuHX7vbAT6/P4300dfgSrfyu/XBA==
-X-Google-Smtp-Source: APXvYqzYfJMSifN7KgTz+K+MGlTU91tf+QULFSdmvn4DI2zL4yI7bwfwIGxnV/JfXP88xbSYOEqcTpG9Tgu9zHpTakg=
-X-Received: by 2002:aca:ea43:: with SMTP id i64mr786584oih.30.1582667177181;
- Tue, 25 Feb 2020 13:46:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20200220055250.196456-1-saravanak@google.com> <CANcMJZBQe5F=gbj6V2ybF-dK=kRsGZT2BX9CBJiBFoK=5Hg-kA@mail.gmail.com>
- <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
-In-Reply-To: <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 25 Feb 2020 13:45:41 -0800
-Message-ID: <CAGETcx_n=fZYaY5q6yZRJR9daTXm2Ryz5frfZr3n1BKf-pXCEQ@mail.gmail.com>
-Subject: Re: [PATCH v1] of: property: Add device link support for
- power-domains and hwlocks
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
+        Tue, 25 Feb 2020 16:46:21 -0500
+Received: from mga11.intel.com ([192.55.52.93]:14112 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgBYVqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 16:46:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 13:46:19 -0800
+X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
+   d="scan'208";a="231166812"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 13:46:19 -0800
+Message-ID: <3d719897039273a2bb8d0fe7d12563498ebd2897.camel@linux.intel.com>
+Subject: Re: [PATCH RFC v4 06/13] mm: Allow to offline unmovable
+ PageOffline() pages via MEM_GOING_OFFLINE
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Qian Cai <cai@lca.pw>, Pingfan Liu <kernelfans@gmail.com>
+Date:   Tue, 25 Feb 2020 13:46:18 -0800
+In-Reply-To: <267ea186-aba8-1a93-bd55-ac641f78d07e@redhat.com>
+References: <20191212171137.13872-1-david@redhat.com>
+         <20191212171137.13872-7-david@redhat.com>
+         <6ec496580ddcb629d22589a1cba8cd61cbd53206.camel@linux.intel.com>
+         <267ea186-aba8-1a93-bd55-ac641f78d07e@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 3:30 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Feb 20, 2020 at 3:26 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Wed, Feb 19, 2020 at 9:53 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Add support for creating device links out of more DT properties.
-> > >
-> > > To: lkml <linux-kernel@vger.kernel.org>
-> > > To: John Stultz <john.stultz@linaro.org>
-> > > To: Rob Herring <robh@kernel.org>
-> >
-> > Just as a heads up, git-send-email doesn't seem to pick up these To:
-> > lines, so I had to dig this out of an archive.
->
-> Weird! Left out the main person who'd care about this patch.
->
-> >
-> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > Cc: Kevin Hilman <khilman@kernel.org>
-> > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Len Brown <len.brown@intel.com>
-> > > Cc: Todd Kjos <tkjos@google.com>
-> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Cc: Liam Girdwood <lgirdwood@gmail.com>
-> > > Cc: Mark Brown <broonie@kernel.org>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: linux-pm@vger.kernel.org
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/of/property.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> >
-> > This does seem to work for me, allowing various clk drivers to be used
-> > as modules! This removes the functional need for my recent driver core
-> > patch series around the deferred_probe_timeout (though the cleanup
-> > bits in there may still be worth while).
-> >
-> > Tested-by: John Stultz <john.stultz@linaro.org>
-> >
-> > Thanks for sending it out!
->
-> Thanks for the Tested-by!
->
-> Rob,
->
-> Can you pick this up for the next rc?
+On Tue, 2020-02-25 at 19:49 +0100, David Hildenbrand wrote:
+> > >  /*
+> > >   * Scan pfn range [start,end) to find movable/migratable pages (LRU pages,
+> > > - * non-lru movable pages and hugepages). We scan pfn because it's much
+> > > - * easier than scanning over linked list. This function returns the pfn
+> > > - * of the first found movable page if it's found, otherwise 0.
+> > > + * non-lru movable pages and hugepages).
+> > > + *
+> > > + * Returns:
+> > > + *	0 in case a movable page is found and movable_pfn was updated.
+> > > + *	-ENOENT in case no movable page was found.
+> > > + *	-EBUSY in case a definetly unmovable page was found.
+> > >   */
+> > > -static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
+> > > +static int scan_movable_pages(unsigned long start, unsigned long end,
+> > > +			      unsigned long *movable_pfn)
+> > >  {
+> > >  	unsigned long pfn;
+> > >  
+> > > @@ -1247,18 +1251,29 @@ static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
+> > >  			continue;
+> > >  		page = pfn_to_page(pfn);
+> > >  		if (PageLRU(page))
+> > > -			return pfn;
+> > > +			goto found;
+> > >  		if (__PageMovable(page))
+> > > -			return pfn;
+> > > +			goto found;
+> > > +
+> > > +		/*
+> > > +		 * Unmovable PageOffline() pages where somebody still holds
+> > > +		 * a reference count (after MEM_GOING_OFFLINE) can definetly
+> > > +		 * not be offlined.
+> > > +		 */
+> > > +		if (PageOffline(page) && page_count(page))
+> > > +			return -EBUSY;
+> > 
+> > So the comment confused me a bit because technically this function isn't
+> > about offlining memory, it is about finding movable pages. I had to do a
+> > bit of digging to find the only consumer is __offline_pages, but if we are
+> > going to talk about "offlining" instead of "moving" in this function it
+> > might make sense to rename it.
+> 
+> Well, it's contained in memory_hotplug.c, and the only user of moving
+> pages around in there is offlining code :) And it's job is to locate
+> movable pages, skip over some (temporary? unmovable ones) and (now)
+> indicate definitely unmovable ones.
+> 
+> Any idea for a better name?
+> scan_movable_pages_and_stop_on_definitely_unmovable() is not so nice :)
 
-Friendly reminder.
+I dunno. What I was getting at is that the wording here would make it
+clearer if you simply stated that these pages "can definately not be
+moved". Saying you cannot offline a page that is PageOffline seems kind of
+redundant, then again calling it an Unmovable and then saying it cannot be
+moves is also redundant I suppose. In the end you don't move them, but
+they can be switched to offline if the page count hits 0. When that
+happens you simply end up skipping over them in the code for
+__test_page_isolated_in_pageblock and __offline_isolated_pages.
 
--Saravana
+> > >  
+> > >  		if (!PageHuge(page))
+> > >  			continue;
+> > >  		head = compound_head(page);
+> > >  		if (page_huge_active(head))
+> > > -			return pfn;
+> > > +			goto found;
+> > >  		skip = compound_nr(head) - (page - head);
+> > >  		pfn += skip - 1;
+> > >  	}
+> > > +	return -ENOENT;
+> > > +found:
+> > > +	*movable_pfn = pfn;
+> > >  	return 0;
+> > >  }
+> > 
+> > So I am looking at this function and it seems like your change completely
+> > changes the behavior. The code before would walk the entire range and if
+> > at least 1 page was available to move you would return the PFN of that
+> > page. Now what seems to happen is that you will return -EBUSY as soon as
+> > you encounter an offline page with a page count. I would think that would
+> > slow down the offlining process since you have made the Unmovable
+> > PageOffline() page a head of line blocker that you have to wait to get
+> > around.
+> 
+> So, the comment says "Unmovable PageOffline() pages where somebody still
+> holds a reference count (after MEM_GOING_OFFLINE) can definitely not be
+> offlined". And the doc "-EBUSY in case a definitely unmovable page was
+> found."
+> 
+> So why would this make offlining slow? Offlining will be aborted,
+> because offlining is not possible.
+
+Okay, my reading of the code was a bit off. In my mind I was thinking you
+were effectively treating it almost like an EAGAIN and continuing the
+loop. I didn't catch the part where you had rewritten the for loop as a
+do-while in __offline_pages.
+
+> Please note that this is the exact old behavior, where isolating the
+> page range would have failed directly and offlining would have been
+> aborted early. The old offlining failure in the case in the offlining
+> path would have been "failure to isolate range".
+> 
+> Also, note that the users of PageOffline() with unmovable pages are very
+> rare (only balloon drivers for now).
+> 
+> > Would it perhaps make more sense to add a return value initialized to
+> > ENOENT, and if you encounter one of these offline pages you change the
+> > return value to EBUSY, and then if you walk through the entire list
+> > without finding a movable page you just return the value?
+> 
+> Did you have a look in  which context this function is used, especially
+> [1] and [2]?
+> 
+> > Otherwise you might want to add a comment explaining why the function
+> > should stall instead of skipping over the unmovable section that will
+> > hopefully become movable later.
+> 
+> So we have "-EBUSY in case a definitely unmovable page was found.". Do
+> you have a better suggestion?
+> 
+> > > @@ -1528,7 +1543,8 @@ static int __ref __offline_pages(unsigned long start_pfn,
+> > >  	}
+> > >  
+> > >  	do {
+> > > -		for (pfn = start_pfn; pfn;) {
+> > > +		pfn = start_pfn;
+> > > +		do {
+> > >  			if (signal_pending(current)) {
+> > >  				ret = -EINTR;
+> > >  				reason = "signal backoff";
+> > > @@ -1538,14 +1554,19 @@ static int __ref __offline_pages(unsigned long start_pfn,
+> > >  			cond_resched();
+> > >  			lru_add_drain_all();
+> > >  
+> > > -			pfn = scan_movable_pages(pfn, end_pfn);
+> > > -			if (pfn) {
+> > > +			ret = scan_movable_pages(pfn, end_pfn, &pfn);
+> > > +			if (!ret) {
+> > >  				/*
+> > >  				 * TODO: fatal migration failures should bail
+> > >  				 * out
+> > >  				 */
+> > >  				do_migrate_range(pfn, end_pfn);
+> > >  			}
+> 
+> [1] we detect a definite offlining blocker and
+> 
+> > > +		} while (!ret);
+> > > +
+> > > +		if (ret != -ENOENT) {
+> > > +			reason = "unmovable page";
+> 
+> [2] we abort offlining
+> 
+> > > +			goto failed_removal_isolated;
+> > >  		}
+> > >  
+> > >  		/*
+
+Yeah, this is the piece I misread.  I knew the loop this was in previously
+was looping when returning -ENOENT so for some reason I had it in my head
+that you were still looping on -EBUSY.
+
+So the one question I would have is if at this point are we guaranteed
+that the balloon drivers have already taken care of the page count for all
+the pages they set to PageOffline? Based on the patch description I was
+thinking that this was going to be looping for a while waiting for the
+driver to clear the pages and then walking through them at the end of the
+loop via check_pages_isolated_cb.
+
+> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > > index 5334decc9e06..840c0bbe2d9f 100644
+> > > --- a/mm/page_alloc.c
+> > > +++ b/mm/page_alloc.c
+> > > @@ -8256,6 +8256,19 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+> > >  		if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
+> > >  			continue;
+> > >  
+> > > +		/*
+> > > +		 * We treat all PageOffline() pages as movable when offlining
+> > > +		 * to give drivers a chance to decrement their reference count
+> > > +		 * in MEM_GOING_OFFLINE in order to signalize that these pages
+> > 
+> > You can probably just use "signal" or "indicate" instead of "signalize".
+> 
+> Makes sense, "indicate" it is!
+> 
+> Thanks!
+> 
+
+No problem.
+
