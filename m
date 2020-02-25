@@ -7,99 +7,125 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C851AC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D6C35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF66218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20DB2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8vnnMgD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk50Ylop"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgBYHFS (ORCPT
+        id S1729268AbgBYHHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:05:18 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33174 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBYHFR (ORCPT
+        Tue, 25 Feb 2020 02:07:30 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35201 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729131AbgBYHH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:05:17 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so12856304lji.0;
-        Mon, 24 Feb 2020 23:05:15 -0800 (PST)
+        Tue, 25 Feb 2020 02:07:29 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w12so13347971wrt.2;
+        Mon, 24 Feb 2020 23:07:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D6g4FFN+2/oVw+clsWyRcWM8iKy7VGLHSR27Eox3yHM=;
-        b=g8vnnMgDO/kKH9FnhFtWoxZa4r+k8oIrtEVXMSPL/rAA3SNVTo3zhywXPgyZaHdvkz
-         yyuIlnbgLXQ3cXGldW9tr3T9bj4NhUTDaWCwn4nF8NCL4C7cOJTymqJbmg1wX9yOAOHT
-         Y2FThsgRQAxmkQeIwh4oEUIMAQHS9v9YGO9X9XGCtC7jkkNsEaI0PTFEvLJCQbny1yRs
-         KoFXK1vjuJvD6wPBlAlsTjMrAwRO/7UDy8ld/koZ0PQbU5RL8swznH7Cq70MTJ5JpbCN
-         PWM8aIN0yupzeriDf46m86JxZvearD7ef6QkSrThcu80Bmaf1wEql/YlABav0mCMWYs7
-         wvRg==
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=SrZGU1G41mv2qo7iIZNTk8CjAnB4XhhlNzKIGNifM0Q=;
+        b=jk50YlopcwFVRMPmcDUM4T5pppnv57UfoUrrPKa/JFtcjo0yOqHtm2QZrZGRPH5sp8
+         MxL2mrGSG78JYZwEWVFPPvBTDRKnGlydyla7Gyi+Z4RIbTByvXOpkO2SLaxut4YAj8oq
+         B6nh7qgqH+FLCINiDppYKzLugPogIu81SvQGqqCSNZ+Bo9ILa4Q9GhMTiEYv2XAQ53IT
+         jRYulYvfmsLkFL1NZmsDXu5rW53n5f6Vmnjb8kgoF5QUiSuVp36Dxejpb1Bbp5RNLww5
+         TEwo/v+SooIj5PNHEA6v3PLD6+AwujIF2UaO3405spRFSL4kOJD0N21LZ9pdCeo+zEHF
+         HYEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D6g4FFN+2/oVw+clsWyRcWM8iKy7VGLHSR27Eox3yHM=;
-        b=NrTKYV06D2m6LFxp7atVpb9p/jbFJGJlJYyDPo131M9iMwO1Zz+b1tKFLP7z9KCtw8
-         UwwYMz0233E6JRNIWHptZGZe8rZyz4Xzbrtjgyn7qLm0fWr0TrTv3d/mPSYDtrq8W2Du
-         G1ThdvcbhL9QTiwL3nrNmC6PZWK+KyPGoSclxOtoraxfTjex7DAIE9gNuS2naUTeuaoe
-         dgS22UkxSZgjStrY4wIke4LjH+cB6SrmzIMipDXdKp5I167AUUAx6sTzenO/HG32xucU
-         yQwV2WzWnuLl49L4FbA9PQtIGj2Bpb1WGx29VFlWRZ0CC8ahjg+JvsKtnUuMitFvDGj2
-         Ho0Q==
-X-Gm-Message-State: APjAAAWC/6rFLPJb6Mi3PpkDWnhOJvOb58WStAa5/DLZlsP795ZpQ31n
-        9Mk0zv34cxaGkTvDOnh3FSWPXPRQ
-X-Google-Smtp-Source: APXvYqxqb3bIiRuvkdOQq4qHLS9yorrChDkfPCKN/aAxnhXVtgL2Fb/IO7BcwvR4aRVVc8zExU7BaQ==
-X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr33756662ljn.277.1582614314466;
-        Mon, 24 Feb 2020 23:05:14 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id b30sm6788895lfc.39.2020.02.24.23.05.13
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=SrZGU1G41mv2qo7iIZNTk8CjAnB4XhhlNzKIGNifM0Q=;
+        b=ZiixYLksIdfznPNS5eeEMgVBPvqE9DhMaeBUySc5XlcKYFnj8kGLLYrtmSo0675rxK
+         9V/f1OZmdlLGzuQrTVJ+jeXro98jbxst/uYv8w58QO1DsnBS4rCHrrRz+JCfU8dInuEK
+         W4XLRIB5Ef85cHMLfIg1u2tvU6D2EfBdU+R+ZsKrDJ5qnRnXd5TJjv6wu0hSUq0py/AO
+         I9xE5wEhkaPkquGUbrpJzNIgTLY/XzQ8XFTD/GqScC9Mz5AjraJNE/dHkybzwiASfIOW
+         a6tlL0fm4kICYEiW9nMknL6Efuyi7wvogAkpiss+u/gEo5bhkMj47KPn2bxQ+v6BrZt6
+         rbsA==
+X-Gm-Message-State: APjAAAXTqQKmWjkyYEGTeNkqvd3XpHRQ/KBukWiVZzFwkSxv/VDYYw1+
+        Ho3Joy3NC2M2JLjpz1U6NDI=
+X-Google-Smtp-Source: APXvYqysD1p70Ezv+KN17DCQ5At5jsTA6LK4mGbct2w3ALF7Jx1cPZVxtyDnNXicOuATMH89iy1bCA==
+X-Received: by 2002:a5d:4b03:: with SMTP id v3mr74472281wrq.178.1582614447704;
+        Mon, 24 Feb 2020 23:07:27 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:6c81:a415:de47:1314? (p200300EA8F2960006C81A415DE471314.dip0.t-ipconnect.de. [2003:ea:8f29:6000:6c81:a415:de47:1314])
+        by smtp.googlemail.com with ESMTPSA id f11sm2878410wml.3.2020.02.24.23.07.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 23:05:13 -0800 (PST)
-Subject: Re: [PATCH v8 00/19] NVIDIA Tegra APB DMA driver fixes and
- improvements
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200209163356.6439-1-digetx@gmail.com>
- <20200225063200.GL2618@vkoul-mobl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <84308985-5417-eead-7edc-4984193009b0@gmail.com>
-Date:   Tue, 25 Feb 2020 10:05:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 24 Feb 2020 23:07:27 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 0/8] PCI: add and use constant PCI_STATUS_ERROR_BITS and
+ helper pci_status_get_and_clear_errors
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+Message-ID: <c1a84adc-a864-4f46-c8de-7ea533a7fdc3@gmail.com>
+Date:   Tue, 25 Feb 2020 08:07:21 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200225063200.GL2618@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.02.2020 09:32, Vinod Koul пишет:
-> On 09-02-20, 19:33, Dmitry Osipenko wrote:
->> Hello,
->>
->> This series fixes some problems that I spotted recently, secondly the
->> driver's code gets a cleanup. Please review and apply, thanks in advance!
-> 
-> Applied, thanks
-> 
-> One note I would like to add thanking you and Jon for the series :)
-> 
-> This version was pleasure to read. A patch should do *one* thing and
-> this series really illustrates this principal and as a result I enjoyed
-> reading the series and was able to do a quick review of the series,
-> notwithstanding the fact that it had 19 patches. So thanks to you and
-> Jon (i know he pushed for split etc) for the wonderful read.
-> 
+Few drivers have own definitions for this constant, so move it to the
+PCI core. In addition there are several places where the following
+code sequence is used:
+1. Read PCI_STATUS
+2. Mask out non-error bits
+3. Action based on set error bits
+4. Write back set error bits to clear them
 
-Thank you very much!
+As this is a repeated pattern, add a helper to the PCI core.
+
+Most affected drivers are network drivers. But as it's about core
+PCI functionality, I suppose the series should go through the PCI
+tree.
+
+v2:
+- fix formal issue with cover letter
+
+Heiner Kallweit (8):
+  PCI: add constant PCI_STATUS_ERROR_BITS
+  PCI: add pci_status_get_and_clear_errors
+  r8169: use pci_status_get_and_clear_errors
+  net: cassini: use pci_status_get_and_clear_errors
+  net: sungem: use pci_status_get_and_clear_errors
+  net: skfp: use PCI_STATUS_ERROR_BITS
+  PCI: pci-bridge-emul: use PCI_STATUS_ERROR_BITS
+  sound: bt87x: use pci_status_get_and_clear_errors
+
+ drivers/net/ethernet/marvell/skge.h       |  6 -----
+ drivers/net/ethernet/marvell/sky2.h       |  6 -----
+ drivers/net/ethernet/realtek/r8169_main.c | 15 +++++-------
+ drivers/net/ethernet/sun/cassini.c        | 28 ++++++++-------------
+ drivers/net/ethernet/sun/sungem.c         | 30 +++++++----------------
+ drivers/net/fddi/skfp/drvfbi.c            |  2 +-
+ drivers/net/fddi/skfp/h/skfbi.h           |  5 ----
+ drivers/pci/pci-bridge-emul.c             | 14 ++---------
+ drivers/pci/pci.c                         | 23 +++++++++++++++++
+ include/linux/pci.h                       |  1 +
+ include/uapi/linux/pci_regs.h             |  7 ++++++
+ sound/pci/bt87x.c                         |  7 +-----
+ 12 files changed, 60 insertions(+), 84 deletions(-)
+
+-- 
+2.25.1
+
+
+
