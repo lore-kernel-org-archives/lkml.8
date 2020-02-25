@@ -2,95 +2,132 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1C8C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAD1C35E0D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319162084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CAB2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kCihkCk3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BE3s7hwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgBYSjV (ORCPT
+        id S1731604AbgBYSjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:39:21 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33696 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731439AbgBYSjU (ORCPT
+        Tue, 25 Feb 2020 13:39:25 -0500
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:34804 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731439AbgBYSjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:39:20 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PHprpF117879;
-        Tue, 25 Feb 2020 11:51:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582653113;
-        bh=/d5Vd5oiaQH19vYJUAtx0fN3kkFJcOQ0EtyuBQuYOwY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kCihkCk38atKc2IxuB5xoD9DirvUYwJcUd1ugSK0if2KKycinf/7Bm1jPAKnj1+9u
-         UE9pvz+empMdjcCuQuojTptgqCD8G4tT/qQbWxs2MArXWVSmxrHnvO+dmTOjjnTWgh
-         A6zZFtxD6fYyHo/PENXqmEicRNBEraLhBTf+hQ9g=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PHprKL018788
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Feb 2020 11:51:53 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
- Feb 2020 11:51:53 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 25 Feb 2020 11:51:53 -0600
-Received: from [158.218.117.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PHpppQ060872;
-        Tue, 25 Feb 2020 11:51:51 -0600
-Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
- preemption of traffic classes
-To:     Po Liu <po.liu@nxp.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-References: <20191127094517.6255-1-Po.Liu@nxp.com>
- <87a75br4ze.fsf@linux.intel.com>
- <VE1PR04MB64968E2DE71D1BCE48C6E17192EE0@VE1PR04MB6496.eurprd04.prod.outlook.com>
-From:   Murali Karicheri <m-karicheri2@ti.com>
-Message-ID: <7d68d83c-c81d-5221-b843-07adb40e4b93@ti.com>
-Date:   Tue, 25 Feb 2020 12:59:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Tue, 25 Feb 2020 13:39:23 -0500
+Received: by mail-pl1-f171.google.com with SMTP id j7so158172plt.1;
+        Tue, 25 Feb 2020 10:39:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P8swh48wfTLZuYv02RwLOZrF/pIWOZiF/oICtKiXMJc=;
+        b=BE3s7hwKT6oHvUI0W48DjcFi/+3Hm2fY5rHl1CjxQYcS3UXiBjlQrNiwrts0qBdgSB
+         j1gHofmQS/zw6Ow8MGCGQbrJ6pYOzQn90TkBw5kVQMF29L74lTeFJz4BjauMjqwRLf2X
+         Dxil8Dcz1j3AbCnF0KEKSQ6gXAx5uODlCKBGh6XHZhgGlhBajcLIXZ+01G4onRqFQC5S
+         9EC6Tnp7y1l+A7yekcWnRJDUZ4RQGGYs7CWGdtFB4p2fMkE4fatO4YIEowrnXuUhArzp
+         Lq98HT7Ge/L87abL8+It18Av1Iudc9SKBC8ibN4Fwt7X9Y88Ipe1fEahDJYWuuAU9uOu
+         WKxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P8swh48wfTLZuYv02RwLOZrF/pIWOZiF/oICtKiXMJc=;
+        b=fCHgPHfkU/1t40RjXXovjIymU9tPktYWSiayfP3hC5+OvQVPiJQdbs6Y1HViyKdNs9
+         uh1vmk5A6RR+tz7f1OIB7qAnh+TuM0dToexpC+JGAWtJdwmfeBVxiE8NJkuJ3kyJWJs8
+         47LXscySUMwn2CDCUzyk04KHPEOBeH27EJZG9fsAB0ntAEBqY3cC5dC1cHYEF0yyIN3x
+         75bOIFwcDRL3buQHnZMlnanMQqNK+V0+VG9/CCdK+e9pxHeUGTQNm0UA97euzOGjdEIl
+         w9afgcJSJly5yHQJ7NTAQNuTEobuecj9p7zatnAKM9FTQQNhHCGmksCOwksijRpwNS3Q
+         He3g==
+X-Gm-Message-State: APjAAAWk38VSdppr/EX64hwV4rBhxLIaMMDtXFCSHs1c/zmCmUarIcLX
+        hTEk3Joq6hep30FpAL87Y1s=
+X-Google-Smtp-Source: APXvYqyApWD8VybffrlZ5mdReiC24DM6E2uK/QjrEZU40b4xruIxjMwwS+Yey6Aplb1bHaeECPA3bw==
+X-Received: by 2002:a17:90a:cc04:: with SMTP id b4mr369278pju.136.1582655962841;
+        Tue, 25 Feb 2020 10:39:22 -0800 (PST)
+Received: from localhost.localdomain ([103.46.201.207])
+        by smtp.gmail.com with ESMTPSA id 13sm17803325pfi.78.2020.02.25.10.39.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:39:22 -0800 (PST)
+From:   amanharitsh123 <amanharitsh123@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] doc: Convert to checklist.txt to checklist.rst
+Date:   Wed, 26 Feb 2020 00:09:16 +0530
+Message-Id: <20200225183916.4555-1-amanharitsh123@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <VE1PR04MB64968E2DE71D1BCE48C6E17192EE0@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-<<< No Message Collected >>>
+This patch converts checklist.txt to checklist.rst and
+adds it to index.rst
+
+Signed-off-by: amanharitsh123 <amanharitsh123@gmail.com>
+---
+ Documentation/RCU/{checklist.txt => checklist.rst} | 8 +++++---
+ Documentation/RCU/index.rst                        | 1 +
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+ rename Documentation/RCU/{checklist.txt => checklist.rst} (99%)
+
+diff --git a/Documentation/RCU/checklist.txt b/Documentation/RCU/checklist.rst
+similarity index 99%
+rename from Documentation/RCU/checklist.txt
+rename to Documentation/RCU/checklist.rst
+index e98ff261a438..49bf7862c950 100644
+--- a/Documentation/RCU/checklist.txt
++++ b/Documentation/RCU/checklist.rst
+@@ -1,5 +1,7 @@
+-Review Checklist for RCU Patches
++.. checklist doc:
+ 
++Review Checklist for RCU Patches
++================================
+ 
+ This document contains a checklist for producing and reviewing patches
+ that make use of RCU.  Violating any of the rules listed below will
+@@ -442,8 +444,8 @@ over a rather long period of time, but improvements are always welcome!
+ 
+ 	You instead need to use one of the barrier functions:
+ 
+-	o	call_rcu() -> rcu_barrier()
+-	o	call_srcu() -> srcu_barrier()
++	-	call_rcu() -> rcu_barrier()
++	-	call_srcu() -> srcu_barrier()
+ 
+ 	However, these barrier functions are absolutely -not- guaranteed
+ 	to wait for a grace period.  In fact, if there are no call_rcu()
+diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+index 81a0a1e5f767..d60eb4ba2cd0 100644
+--- a/Documentation/RCU/index.rst
++++ b/Documentation/RCU/index.rst
+@@ -10,6 +10,7 @@ RCU concepts
+    arrayRCU
+    rcubarrier
+    rcu_dereference
++   checklist
+    whatisRCU
+    rcu
+    listRCU
+-- 
+2.20.1
+
