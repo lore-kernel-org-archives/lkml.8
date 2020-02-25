@@ -2,152 +2,64 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB04C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5FCC35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D97A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4Kf+dOo"
+	by mail.kernel.org (Postfix) with ESMTP id 1770620656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582610986;
+	bh=MgRBEVbXH6Six0fegMThof5UD5xrOEnaDVYeIeAhfiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MYELRMd/wTC2ZTikLxCAYxlzDLuLbOuUkHmbErjFXGeP9KW16/80qgdCYzqOXp3Lu
+	 bIiB0a0/NlhpAxHzu/ixyKwDSARWiqMMbjuczOjM1EEURjRu3hG3/OeMywpYnhhkQa
+	 8th/hAPvpUIa0QOVDF0gfyDEeFWia7RFUBsL1Dxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgBYGJZ (ORCPT
+        id S1728978AbgBYGJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:09:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20487 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726019AbgBYGJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:09:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582610964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0IoUDI0r2nKt/KLH2gl0wTcdvg0oCDvDokn7okiLyHg=;
-        b=R4Kf+dOoIrZfig0mugI2di0BsODBOtZtaylwB/xm/qf3avyTjlsveNw53EQoQv4W2cg9of
-        QdTKyFpouMVjtJlUu+iQvv3Wv4pcHznNe7TQPkYnxYDYSIxOLE5B8sn4iAD3hxytv9ipfk
-        I1AxJymjBV4hsiENLb+V79YWeU4BhMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-KEF-yYO0OPWKOZhO7cB7og-1; Tue, 25 Feb 2020 01:09:20 -0500
-X-MC-Unique: KEF-yYO0OPWKOZhO7cB7og-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 25 Feb 2020 01:09:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbgBYGJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:09:42 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FB92107ACC5;
-        Tue, 25 Feb 2020 06:09:19 +0000 (UTC)
-Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA7141001902;
-        Tue, 25 Feb 2020 06:09:09 +0000 (UTC)
-Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
-Date:   Tue, 25 Feb 2020 14:09:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5DE20656;
+        Tue, 25 Feb 2020 06:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582610982;
+        bh=MgRBEVbXH6Six0fegMThof5UD5xrOEnaDVYeIeAhfiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vO+0B2B4v1T170HBoQEpBd7/e4TD/oAq7OTDhoC2hWax9zPCFAdyH44WsHbHG4X6F
+         I95s17gC5URJG048oj0yBmD6x9QVK0vrp737UoIGF0JduUxOpi0M43V7FaudxSSXZC
+         /thhjkZqukv0r7CgPYRcs0z1WvCruQG9XD2137H8=
+Date:   Tue, 25 Feb 2020 11:39:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com
+Subject: Re: [PATCH v2] dmaengine: ti: edma: Support for interleaved mem to
+ mem transfer
+Message-ID: <20200225060937.GJ2618@vkoul-mobl>
+References: <20200210094455.3615-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210094455.3615-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10-02-20, 11:44, Peter Ujfalusi wrote:
+> Add basic interleaved support via EDMA.
 
-On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote:
->> From: Alex Williamson
->> Sent: Thursday, February 20, 2020 2:54 AM
->>
->> Changes since v1 are primarily to patch 3/7 where the commit log is
->> rewritten, along with option parsing and failure logging based on
->> upstream discussions.  The primary user visible difference is that
->> option parsing is now much more strict.  If a vf_token option is
->> provided that cannot be used, we generate an error.  As a result of
->> this, opening a PF with a vf_token option will serve as a mechanism of
->> setting the vf_token.  This seems like a more user friendly API than
->> the alternative of sometimes requiring the option (VFs in use) and
->> sometimes rejecting it, and upholds our desire that the option is
->> always either used or rejected.
->>
->> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
->> means of setting the VF token, which might call into question whether
->> we absolutely need this new ioctl.  Currently I'm keeping it because I
->> can imagine use cases, for example if a hypervisor were to support
->> SR-IOV, the PF device might be opened without consideration for a VF
->> token and we'd require the hypservisor to close and re-open the PF in
->> order to set a known VF token, which is impractical.
->>
->> Series overview (same as provided with v1):
-> Thanks for doing this!
->
->> The synopsis of this series is that we have an ongoing desire to drive
->> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
->> for this with DPDK drivers and potentially interesting future use
-> Can you provide a link to the DPDK discussion?
->
->> cases in virtualization.  We've been reluctant to add this support
->> previously due to the dependency and trust relationship between the
->> VF device and PF driver.  Minimally the PF driver can induce a denial
->> of service to the VF, but depending on the specific implementation,
->> the PF driver might also be responsible for moving data between VFs
->> or have direct access to the state of the VF, including data or state
->> otherwise private to the VF or VF driver.
-> Just a loud thinking. While the motivation of VF token sounds reasonabl=
-e
-> to me, I'm curious why the same concern is not raised in other usages.
-> For example, there is no such design in virtio framework, where the
-> virtio device could also be restarted, putting in separate process (vho=
-st-user),
-> and even in separate VM (virtio-vhost-user), etc.
+Applied, thanks
 
-
-AFAIK, the restart could only be triggered by either VM or qemu. But=20
-yes, the datapath could be offloaded.
-
-But I'm not sure introducing another dedicated mechanism is better than=20
-using the exist generic POSIX mechanism to make sure the connection=20
-(AF_UINX) is secure.
-
-
->   Of course the para-
-> virtualized attribute of virtio implies some degree of trust, but as yo=
-u
-> mentioned many SR-IOV implementations support VF->PF communication
-> which also implies some level of trust. It's perfectly fine if VFIO jus=
-t tries
-> to do better than other sub-systems, but knowing how other people
-> tackle the similar problem may make the whole picture clearer. =F0=9F=98=
-=8A
->
-> +Jason.
-
-
-I'm not quite sure e.g allowing userspace PF driver with kernel VF=20
-driver would not break the assumption of kernel security model. At least=20
-we should forbid a unprivileged PF driver running in userspace.
-
-Thanks
-
+-- 
+~Vinod
