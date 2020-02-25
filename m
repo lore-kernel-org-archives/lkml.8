@@ -2,153 +2,121 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBA9C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817EFC35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6067421D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="SDfjbEqU"
+	by mail.kernel.org (Postfix) with ESMTP id 5C54421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgBYCGZ (ORCPT
+        id S1728780AbgBYCGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 21:06:25 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.23]:39040 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728011AbgBYCGY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 21:06:24 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 7DEDD15796E
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 20:06:21 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6PbnjoxeHAGTX6PbxjycOH; Mon, 24 Feb 2020 20:06:19 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3WYY4D95dFsGR6aMI/L2pR572DKPC2ZtgZvA51FyZmc=; b=SDfjbEqUWa5eyJtudos2VU69K3
-        slC/oG4O9+M6lqicfB/Ypvnl9pHtHkvcPAIjDbTrwGhc8GHF4Au8ftHWr+66MZVLJVQ7dZ0OsGH1Z
-        9Sucy77xWuZhLOkv/4ujdkydQ1ibfudhitglXMVtz1bJoWHMjxniLqb9N2jd5UPyR8eJRymHlK8tX
-        4RZghqUUz+K6pn6HbGp6HZAQQf85GBWGNLEbaF6n0Ny1YItVZmR0769hFHowRnXBb3oLJFXbxGYVN
-        o/70KaI/Ig0ILP2MtfxHPPJml1+3We6thtdY1fFwKJch3vb1g90h7wwsGjfOgCVaisGZQnWeL3pvS
-        ZtP5SOxQ==;
-Received: from [201.166.191.97] (port=60674 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j6PbT-003Hcz-Ke; Mon, 24 Feb 2020 20:05:44 -0600
-Date:   Mon, 24 Feb 2020 20:08:04 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] brcmfmac: Replace zero-length array with
- flexible-array member
-Message-ID: <20200225020804.GA9428@embeddedor>
+        Mon, 24 Feb 2020 21:06:50 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58960 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728011AbgBYCGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 21:06:50 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8828C5E565293787A2F6;
+        Tue, 25 Feb 2020 10:06:48 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Feb 2020
+ 10:06:27 +0800
+Subject: Re: [PATCH] irqchip/gic-v3-its: Clear Valid before writing any bits
+ else in VPENDBASER
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        Yanlei Jia <jiayanlei@huawei.com>
+References: <20200224025029.92-1-yuzenghui@huawei.com>
+ <bb7cdb29eda9cf160bcf85a58a9fc63d@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <6ce5c751-6d17-b9ee-4054-edad7de075bf@huawei.com>
+Date:   Tue, 25 Feb 2020 10:06:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.191.97
-X-Source-L: No
-X-Exim-ID: 1j6PbT-003Hcz-Ke
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.191.97]:60674
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <bb7cdb29eda9cf160bcf85a58a9fc63d@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi Marc,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On 2020/2/25 7:47, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On 2020-02-24 02:50, Zenghui Yu wrote:
+>> The Valid bit must be cleared before changing anything else when writing
+>> GICR_VPENDBASER to avoid the UNPREDICTABLE behavior. This is exactly what
+>> we've done on 32bit arm, but not on arm64.
+> 
+> I'm not quite sure how you decide that Valid must be cleared before 
+> changing
+> anything else. The reason why we do it on 32bit is that we cannot update
+> the full 64bit register at once, so we start by clearing Valid so that
+> we can update the rest. arm64 doesn't require that.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+The problem came out from discussions with our GIC engineers and what we
+talked about at that time was IHI 0069E 9.11.36 - the description of the
+Valid field:
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+"Writing a new value to any bit of GICR_VPENDBASER, other than
+GICR_VPENDBASER.Valid, when GICR_VPENDBASER.Valid==1 is UNPREDICTABLE."
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+It looks like we should first clear the Valid and then write something
+else. We might have some mis-understanding about this statement..
 
-This issue was found with the help of Coccinelle.
+> 
+> For the rest of discussion, let's ignore GICv4.1 32bit support (I'm
+> pretty sure nobody cares about that).
+> 
+>> This works fine on GICv4 where we only clear Valid for a vPE deschedule.
+>> With the introduction of GICv4.1, we might also need to talk something 
+>> else
+>> (e.g., PendingLast, Doorbell) to the redistributor when clearing the 
+>> Valid.
+>> Let's port the 32bit gicr_write_vpendbaser() to arm64 so that hardware 
+>> can
+>> do the right thing after descheduling the vPE.
+> 
+> The spec says that:
+> 
+> "For a write that writes GICR_VPENDBASER.Valid from 1 to 0, if
+> GICR_VPENDBASER.PendingLast is written as 1 then 
+> GICR_VPENDBASER.PendingLast
+> takes an UNKNOWN value and GICR_VPENDBASER.Doorbell is treated as being 0."
+> 
+> and
+> 
+> "When GICR_VPENDBASER.Valid is written from 1 to 0, if there are 
+> outstanding
+> enabled pending interrupts GICR_VPENDBASER.Doorbell is treated as 0."
+> 
+> which indicate that PendingLast/Doorbell have to be written at the same 
+> time
+> as we clear Valid.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+Yes. I obviously missed these two points when writing this patch.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h | 2 +-
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> Can you point me to the bit of the v4.1 spec that makes
+> this "clear Valid before doing anything else" requirement explicit?
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h
-index 3347439543bb..46c66415b4a6 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h
-@@ -60,7 +60,7 @@ struct brcmf_fw_request {
- 	u16 bus_nr;
- 	u32 n_items;
- 	const char *board_type;
--	struct brcmf_fw_item items[0];
-+	struct brcmf_fw_item items[];
- };
- 
- struct brcmf_fw_name {
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
-index 79c8a858b6d6..a5cced2c89ac 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
-@@ -32,7 +32,7 @@ struct brcmf_fweh_queue_item {
- 	u8 ifaddr[ETH_ALEN];
- 	struct brcmf_event_msg_be emsg;
- 	u32 datalen;
--	u8 data[0];
-+	u8 data[];
- };
- 
- /**
--- 
-2.25.0
+No, nothing in v4.1 spec supports me :-(  The above has been forwarded
+to Hisilicon and I will confirm these with them. It would be easy for
+hardware to handle the PendingLast/DB when clearing Valid, I think.
+
+
+Thank you,
+Zenghui
 
