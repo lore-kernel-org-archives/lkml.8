@@ -2,159 +2,107 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E98C35E15
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91CAC35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7CA20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582663851;
-	bh=Q3oe1jxf23yBLBrYYE0k+LTqlIPd2rBAHhHvbGkjQlo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=T+C/R+lNjY6J90VTcJf0N/5EGJP8iytTP7fe80UwYiOaylNvrSBCMJOXN9cYBhT3L
-	 Yhj5wrL3eUEzLWj3j6kzzFuO0JWIINjAXbSaMqOrvXHOFDtl4e22KCTkevlR6by9Iu
-	 B4aVHVHKJ/eNrWAiPTetusjCD2ufDJtuswgIRD9E=
+	by mail.kernel.org (Postfix) with ESMTP id 7C40D2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:52:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJBKheyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgBYUuu (ORCPT
+        id S1729018AbgBYUw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbgBYUuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:50:50 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A6520675;
-        Tue, 25 Feb 2020 20:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582663849;
-        bh=Q3oe1jxf23yBLBrYYE0k+LTqlIPd2rBAHhHvbGkjQlo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tmyBTjgnONnSCV+zBj0HV0B4XxFIdMnoFPCfUcc6+p3zeJfkCYynmcFx5XzEJJeWx
-         2d1rVmeeWj9K9LOxXYsW1QaAv+IAA0OJi9Ty4i1N04Tj1urzCMLDNqSSSDW79mAhXy
-         Bb/oqu2up4Ig0LQ6MNqF38n633K3DyjjSlyYGaRk=
-Date:   Tue, 25 Feb 2020 14:50:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 1/8] PCI: add constant PCI_STATUS_ERROR_BITS
-Message-ID: <20200225205047.GA194679@google.com>
+        Tue, 25 Feb 2020 15:52:28 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34526 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbgBYUw2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:52:28 -0500
+Received: by mail-pj1-f67.google.com with SMTP id f2so1380938pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:52:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GAoYW3jtAWCjdGaJXCm1P0l2hukH5ekAbYDVhrn3FCI=;
+        b=kJBKheySLFt0Q1njT7UpJ8+EDt27CVBBJHrvJ0UtSvuHFxIIjGi22GqBUgpH2nAHdI
+         JY5jrCDf3PIG9COk+pwYByEiwkOKxIApV/ovtrc9wrCaKya9UoDMEVp3Rz9kOWYFJgZ6
+         LFrubn4k0J3ci67mSNf1jdg3j0c2vRI3NMo0hVWrLh5JRtR2Ea45SlATQTxbUKChv5wX
+         4xOYXRcY5SQJ59KF+n2sYezpKSTZ/7kWy6dPhVgzAu1h6Pl5XBxt8qUPbxgM379BZ/Oa
+         /iM37C2zdp+gP8bAXtXgNbQc3SdKilus0OLnBjt0xT5I3zkOQcbj5sMbfKPzqlA7Sd0v
+         mZhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GAoYW3jtAWCjdGaJXCm1P0l2hukH5ekAbYDVhrn3FCI=;
+        b=FvdzY2B+Nd9iRLuzCQ/8w4omL7Gffq4ZgaNgVJM+yTtg1Dal7omLjWXsuFjyjwfvpY
+         anTktUe+KnX0PeDe7870j7zVqAyvq4LiDmaxVMYXRV2K7Her+vPd9fZoSGWqNSGmMHWA
+         v0c2L7uoDp8gGbMgfo4vqkvZfqjKf9fWJAvI5qYBRVzrGzKckH3n5WO4s9Mn81+HCX1G
+         hbXrRd1C9X1sAZE3uHcOdTGtXeoUbooPYlEcBiPEpfgvV0QBPvc7+B7jNo6DYRc2FB/4
+         GyQvY7AYf08jnmn/yL+WSHKdRjb9TBJRdx3J/4h1FovwVBEOOdb/h4MrT2JzY+eZL3pO
+         0Gkg==
+X-Gm-Message-State: APjAAAVE7hfkabuz0f3DB8d+tmuGm1vI+xHGqsfcUwIysDnFuoCHubXX
+        6Iu0DV0mLoQYX3stAwwq8wrbzaz0b07hl6aZQ3i/BA==
+X-Google-Smtp-Source: APXvYqwmB04vyduuyJu/HEN0PY3Yi4sOxYmfQoRVMJPmSpkr6VIiN9TCWrQH4VKDHGWrnSeq/vTIXr42Ie5xms8bARw=
+X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr353457plo.179.1582663947479;
+ Tue, 25 Feb 2020 12:52:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73dd692e-bbce-35f5-88e9-417fb0f7229e@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200224174129.2664-1-ndesaulniers@google.com> <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com>
+In-Reply-To: <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 25 Feb 2020 12:52:16 -0800
+Message-ID: <CAKwvOd=mPg79CrYnDm8=z0iJpKL0FHm9J5qZF0_A6BFXBv8Dow@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 03:03:44PM +0100, Heiner Kallweit wrote:
+On Mon, Feb 24, 2020 at 4:34 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Tue, Feb 25, 2020 at 2:41 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > Added to kbuild documentation. Provides more official info on building
+> > kernels with Clang and LLVM than our wiki.
+> >
+> > Suggested-by: Kees Cook <keescook@chromium.org>
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+>
+>
+> Perhaps, is it better to explicitly add it to MAINTAINERS?
+>
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4118,6 +4118,7 @@ W:        https://clangbuiltlinux.github.io/
+>  B:     https://github.com/ClangBuiltLinux/linux/issues
+>  C:     irc://chat.freenode.net/clangbuiltlinux
+>  S:     Supported
+> +F:     Documentation/kbuild/llvm.rst
+>  K:     \b(?i:clang|llvm)\b
 
-Run "git log --oneline drivers/pci" and make yours match.  In
-particular, capitalize the first word ("Add").  Same for the other PCI
-patches.  I don't know the drivers/net convention, but please find and
-follow that as well.
+I'm happy to leave it to the maintainers of Documentation/.  Otherwise
+we have a file for which there is no MAINTAINER, which seems
+ambiguous.
 
-> This constant is used (with different names) in more than one driver,
-> so move it to the PCI core.
-
-The driver constants in *this* patch at least use the same name.
-
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/net/ethernet/marvell/skge.h | 6 ------
->  drivers/net/ethernet/marvell/sky2.h | 6 ------
->  include/uapi/linux/pci_regs.h       | 7 +++++++
->  3 files changed, 7 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
-> index 6fa7b6a34..e149bdfe1 100644
-> --- a/drivers/net/ethernet/marvell/skge.h
-> +++ b/drivers/net/ethernet/marvell/skge.h
-> @@ -15,12 +15,6 @@
->  #define  PCI_VPD_ROM_SZ	7L<<14	/* VPD ROM size 0=256, 1=512, ... */
->  #define  PCI_REV_DESC	1<<2	/* Reverse Descriptor bytes */
->  
-> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
-> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
-> -			       PCI_STATUS_REC_MASTER_ABORT | \
-> -			       PCI_STATUS_REC_TARGET_ABORT | \
-> -			       PCI_STATUS_PARITY)
-> -
->  enum csr_regs {
->  	B0_RAP	= 0x0000,
->  	B0_CTST	= 0x0004,
-> diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
-> index b02b65230..851d8ed34 100644
-> --- a/drivers/net/ethernet/marvell/sky2.h
-> +++ b/drivers/net/ethernet/marvell/sky2.h
-> @@ -252,12 +252,6 @@ enum {
->  };
->  
->  
-> -#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
-> -			       PCI_STATUS_SIG_SYSTEM_ERROR | \
-> -			       PCI_STATUS_REC_MASTER_ABORT | \
-> -			       PCI_STATUS_REC_TARGET_ABORT | \
-> -			       PCI_STATUS_PARITY)
-> -
->  enum csr_regs {
->  	B0_RAP		= 0x0000,
->  	B0_CTST		= 0x0004,
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 543769048..9b84a1278 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -68,6 +68,13 @@
->  #define  PCI_STATUS_SIG_SYSTEM_ERROR	0x4000 /* Set when we drive SERR */
->  #define  PCI_STATUS_DETECTED_PARITY	0x8000 /* Set on parity error */
->  
-> +#define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
-> +			       PCI_STATUS_SIG_SYSTEM_ERROR | \
-> +			       PCI_STATUS_REC_MASTER_ABORT | \
-> +			       PCI_STATUS_REC_TARGET_ABORT | \
-> +			       PCI_STATUS_SIG_TARGET_ABORT | \
-> +			       PCI_STATUS_PARITY)
-
-This actually *adds* PCI_STATUS_SIG_TARGET_ABORT, which is not in the
-driver definitions.  At the very least that should be mentioned in the
-commit log.
-
-Ideally the addition would be in its own patch so it's obvious and
-bisectable, but I see the problem -- the subsequent patches
-consolidate things that aren't really quite the same.  One alternative
-would be to have preliminary patches that change the drivers
-individually so they all use this new mask, then do the consolidation
-afterwards.
-
-There is pitifully little documentation about the use of include/uapi,
-but AFAICT that is for the user API, and this isn't part of that.  I
-think this #define could go in include/linux/pci.h instead.
-
-> +
->  #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
->  #define PCI_REVISION_ID		0x08	/* Revision ID */
->  #define PCI_CLASS_PROG		0x09	/* Reg. Level Programming Interface */
-> -- 
-> 2.25.1
-> 
-> 
-> 
-> 
+-- 
+Thanks,
+~Nick Desaulniers
