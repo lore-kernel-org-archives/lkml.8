@@ -2,181 +2,156 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0EC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351A5C35E03
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE3420CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076DD20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DsMgI5Po"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LPWCNZ3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbgBYO1x (ORCPT
+        id S1730785AbgBYO2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:27:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37230 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730758AbgBYO1x (ORCPT
+        Tue, 25 Feb 2020 09:28:05 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45031 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730757AbgBYO2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:27:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582640871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sxb28+S3GcOqcRUpw4IGeDLDXZNB1HMT0k222wA3ypI=;
-        b=DsMgI5PoK0ZVDTPHEEdVEo+5EO6JA2cDGuypVeYifdt2kb5ezwjb/cd/S6mEAGSTue7cA3
-        BVrpNUoNmJelfQKF0aNeZ898Nvlj3Jc11tZ/gy0Qvw0zf7kINS1jyRHk2RwVhSCkZF2cj5
-        o3YWqtikDHxjZZTr9HWsO5U77TUcDgk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-DKSKxEOCPN-ZgwkjBBCP-A-1; Tue, 25 Feb 2020 09:27:50 -0500
-X-MC-Unique: DKSKxEOCPN-ZgwkjBBCP-A-1
-Received: by mail-wr1-f69.google.com with SMTP id s13so7357162wru.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:27:49 -0800 (PST)
+        Tue, 25 Feb 2020 09:28:04 -0500
+Received: by mail-qt1-f195.google.com with SMTP id j23so9124290qtr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:28:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WvYGv8xN+w/SUBCWE+CoNscUIV7+ScpQFYEooaj8Z1c=;
+        b=LPWCNZ3YxMHTL7Q7dPalvXEujGlkQ8tRXyBT/5BjWctRPf0/PYnf5M/hZdsrz9/lWU
+         3gMKqV3GYdS8Z0CYfte8BOCVSBngbSW1BdXnB0WILNLv3kVsoJvaTWxPXvNdhsBn3qQ9
+         F+Ifwv67cH/ryZeK1cf4lxS2ZN5JSju4kx3hi/Lhm1jmf0BMvSxpt2GS2HYsMzzr7Lum
+         mla+JC8oqknzqPLa+J4SuC39w8lVzVkpxD3R6gLgbmpuhH2zlDhv8efipV23iVfEmW6B
+         ruY/etXZqSHeTJ3Xh+pZNwmiWa6ymzlA8PAtA6PPRbJk7BWYvQ9c814wTCE/Fxk0b9eQ
+         vxfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=sxb28+S3GcOqcRUpw4IGeDLDXZNB1HMT0k222wA3ypI=;
-        b=tD0dnScclcjaAlNQ7hlC+VmEK5OqEd5kU2egMUIY/k69IZ4gJ4PpBFAWijcufoHfcA
-         4KMtZDt0q+6XXvC+YhhThTBu3VHfe/weH+eSik5dMpZp77FrrpABT34j3sRXBBoSuOCP
-         pMljnj9gmmph9IAYEQer7z/hFZJuUcQsn20q1Hm83ih9qBrUEhKQ3FKqATw2upIw4gRx
-         ABaFDo7fbsRpFwZA2MEztpkCFrhDctMyWKLKKld1QxbWpYfrrg7vppXxCQ/E1Dr6Q9AP
-         ZAwvWHgFI7ZuAImo/T/kvIgfqruZQx52i/kqKrz4w2ZvienGA/punbgYHqz2xdsWg8Pd
-         N80Q==
-X-Gm-Message-State: APjAAAVFSYfwmMD0ccGGOcEgChsFnSfSVXUOvng95oEADVWALlJwgu2G
-        sxK0JWzwbyBAnP9uhj1qRGno8pNJ6fyi1mCJUQ9fh13OUOMU1y4kNNshHVTWu2giwyn5PRHwz5H
-        uI/krdBL3VlUIiVTW6KePXeWg
-X-Received: by 2002:adf:aa0e:: with SMTP id p14mr20709672wrd.399.1582640868661;
-        Tue, 25 Feb 2020 06:27:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx4D3UREkm8u4df6f6dlOnYyMZR00/oXxbAoHat7kDwXxnRJ5PBRjpkdpz9Q2FKz133cKbaVQ==
-X-Received: by 2002:adf:aa0e:: with SMTP id p14mr20709645wrd.399.1582640868423;
-        Tue, 25 Feb 2020 06:27:48 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id s15sm24390458wrp.4.2020.02.25.06.27.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 06:27:47 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 57/61] KVM: x86/mmu: Merge kvm_{enable,disable}_tdp() into a common function
-In-Reply-To: <20200201185218.24473-58-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-58-sean.j.christopherson@intel.com>
-Date:   Tue, 25 Feb 2020 15:27:47 +0100
-Message-ID: <87eeuilp24.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WvYGv8xN+w/SUBCWE+CoNscUIV7+ScpQFYEooaj8Z1c=;
+        b=X++GLWi0JHpzLrX4ILri3uSwPVAtrRSJMyH4R/ytDAKJsOHb8ds7n0Z1hRTk0xXvpj
+         tvt+cJ14v2sIzp3EZ+5tNZmaK0FVjh7SwqrARFXgxJRem2fbtNO4pPX3eVDiRiQSah38
+         ZY5ASMXYFENNCXyqj9TVoSq+w24YxG8StAtLnh4I4eTc8EHBHXhvdzHfCFDIkURohix4
+         tmjZULmQ/d/LYiFoQ1fu/yITo7RhFXTb6ZF4wHQkNEFnl1H9rmVMTurifL8Becxwamly
+         Q3brcqlxAzEwuMbl+c2FRX4Bzy09rGUHncsYdNQpnqmTaoRDUkI3RdZS3VKPoYv7QTU2
+         5LhA==
+X-Gm-Message-State: APjAAAU5T/7Y9Wedubf1cfxtFyOAyYgp+cJQgWyB+++JLNYQrn7hghkx
+        YBQNHDIR1RdiZ2hYvgpCQU1tReQjsWPL6Cig8lC0Rw==
+X-Google-Smtp-Source: APXvYqzIjJaqUWOjpQ3AxKjIQBwmXnEB1sd2r3K+WGIfjR3G/kcsLiNMp5GR7V1Y4KM1fAVZzy2R8Awn6oeBYmQ17Zc=
+X-Received: by 2002:ac8:7159:: with SMTP id h25mr53587846qtp.380.1582640882721;
+ Tue, 25 Feb 2020 06:28:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <000000000000a719a9059f62246e@google.com> <CAHC9VhTh6s1m7YBZp-3XO3q2EcjtMKUTcXwRzDTj_LSJd+cHTA@mail.gmail.com>
+In-Reply-To: <CAHC9VhTh6s1m7YBZp-3XO3q2EcjtMKUTcXwRzDTj_LSJd+cHTA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 25 Feb 2020 15:27:51 +0100
+Message-ID: <CACT4Y+Y3QN9=c5JvJkecCtdQGTxHYRXMhS4f1itwU5JEZmcYtA@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in cipso_v4_sock_setattr
+To:     Paul Moore <paul@paul-moore.com>, Paolo Abeni <pabeni@redhat.com>
+Cc:     syzbot <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com>,
+        cpaasch@apple.com, David Miller <davem@davemloft.net>,
+        Davide Caratti <dcaratti@redhat.com>,
+        Florian Westphal <fw@strlen.de>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        matthieu.baerts@tessares.net, netdev <netdev@vger.kernel.org>,
+        peter.krystad@linux.intel.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> Combine kvm_enable_tdp() and kvm_disable_tdp() into a single function,
-> kvm_configure_mmu(), in preparation for doing additional configuration
-> during hardware setup.  And because having separate helpers is silly.
+On Tue, Feb 25, 2020 at 3:20 PM Paul Moore <paul@paul-moore.com> wrote:
 >
-> No functional change intended.
+> On Tue, Feb 25, 2020 at 3:19 AM syzbot
+> <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    ca7e1fd1 Merge tag 'linux-kselftest-5.6-rc3' of git://git...
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=179f0931e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=a61f2164c515c07f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=f4dfece964792d80b139
+> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fdfdede00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17667de9e00000
+> >
+> > The bug was bisected to:
+> >
+> > commit 2303f994b3e187091fd08148066688b08f837efc
+> > Author: Peter Krystad <peter.krystad@linux.intel.com>
+> > Date:   Wed Jan 22 00:56:17 2020 +0000
+> >
+> >     mptcp: Associate MPTCP context with TCP socket
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fbec81e00000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=16fbec81e00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12fbec81e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com
+> > Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+> >
+> > BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > #PF: supervisor instruction fetch in kernel mode
+> > #PF: error_code(0x0010) - not-present page
+> > PGD 8e171067 P4D 8e171067 PUD 93fa2067 PMD 0
+> > Oops: 0010 [#1] PREEMPT SMP KASAN
+> > CPU: 0 PID: 8984 Comm: syz-executor066 Not tainted 5.6.0-rc2-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > RIP: 0010:0x0
+> > Code: Bad RIP value.
+> > RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
+> > RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
+> > RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
+> > RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
+> > R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
+> > R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
+> > FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  cipso_v4_sock_setattr+0x34b/0x470 net/ipv4/cipso_ipv4.c:1888
+> >  netlbl_sock_setattr+0x2a7/0x310 net/netlabel/netlabel_kapi.c:989
+> >  smack_netlabel security/smack/smack_lsm.c:2425 [inline]
+> >  smack_inode_setsecurity+0x3da/0x4a0 security/smack/smack_lsm.c:2716
+> >  security_inode_setsecurity+0xb2/0x140 security/security.c:1364
+> >  __vfs_setxattr_noperm+0x16f/0x3e0 fs/xattr.c:197
+> >  vfs_setxattr fs/xattr.c:224 [inline]
+> >  setxattr+0x335/0x430 fs/xattr.c:451
+> >  __do_sys_fsetxattr fs/xattr.c:506 [inline]
+> >  __se_sys_fsetxattr+0x130/0x1b0 fs/xattr.c:495
+> >  __x64_sys_fsetxattr+0xbf/0xd0 fs/xattr.c:495
+> >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 >
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  3 +--
->  arch/x86/kvm/mmu/mmu.c          | 13 +++----------
->  arch/x86/kvm/svm.c              |  5 +----
->  arch/x86/kvm/vmx/vmx.c          |  4 +---
->  4 files changed, 6 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index a8bae9d88bce..1a13a53bbaeb 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1494,8 +1494,7 @@ void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
->  void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
->  void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
->  
-> -void kvm_enable_tdp(void);
-> -void kvm_disable_tdp(void);
-> +void kvm_configure_mmu(bool enable_tdp);
->  
->  static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
->  				  struct x86_exception *exception)
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 84eeb61d06aa..08c80c7c88d4 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5541,18 +5541,11 @@ void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid)
->  }
->  EXPORT_SYMBOL_GPL(kvm_mmu_invpcid_gva);
->  
-> -void kvm_enable_tdp(void)
-> +void kvm_configure_mmu(bool enable_tdp)
->  {
-> -	tdp_enabled = true;
-> +	tdp_enabled = enable_tdp;
->  }
-> -EXPORT_SYMBOL_GPL(kvm_enable_tdp);
-> -
-> -void kvm_disable_tdp(void)
-> -{
-> -	tdp_enabled = false;
-> -}
-> -EXPORT_SYMBOL_GPL(kvm_disable_tdp);
-> -
-> +EXPORT_SYMBOL_GPL(kvm_configure_mmu);
->  
->  /* The return value indicates if tlb flush on all vcpus is needed. */
->  typedef bool (*slot_level_handler) (struct kvm *kvm, struct kvm_rmap_head *rmap_head);
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 80962c1eea8f..19dc74ae1efb 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1443,10 +1443,7 @@ static __init int svm_hardware_setup(void)
->  	if (npt_enabled && !npt)
->  		npt_enabled = false;
->  
-> -	if (npt_enabled)
-> -		kvm_enable_tdp();
-> -	else
-> -		kvm_disable_tdp();
-> +	kvm_configure_mmu(npt_enabled);
->  	pr_info("kvm: Nested Paging %sabled\n", npt_enabled ? "en" : "dis");
->  
->  	if (nrips) {
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e6284b6aac56..59206c22b5e1 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5295,7 +5295,6 @@ static void vmx_enable_tdp(void)
->  		VMX_EPT_RWX_MASK, 0ull);
->  
->  	ept_set_mmio_spte_mask();
-> -	kvm_enable_tdp();
->  }
->  
->  /*
-> @@ -7678,8 +7677,7 @@ static __init int hardware_setup(void)
->  
->  	if (enable_ept)
->  		vmx_enable_tdp();
-> -	else
-> -		kvm_disable_tdp();
-> +	kvm_configure_mmu(enable_ept);
->  
->  	/*
->  	 * Only enable PML when hardware supports PML feature, and both EPT
+> Netdev folks, I'm not very familiar with the multipath TCP code so I
+> was wondering if you might help me out a bit with this report.  Based
+> on the stack trace above it looks like for a given AF_INET sock "sk",
+> inet_sk(sk)->is_icsk is true but inet_csk(sk) is NULL; should this be
+> possible under normal conditions or is there an issue somewhere?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+Paolo has submitted some patch for testing for this bug, not sure if
+you have seen it, just in case:
+https://groups.google.com/forum/#!msg/syzkaller-bugs/dqwnTBh-MQw/LhgSZYGsBgAJ
