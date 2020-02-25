@@ -2,113 +2,200 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EE3C35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5507C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F46B24650
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743C322527
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=waifu.club header.i=@waifu.club header.b="Kv7jHqmJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MXlDVQn4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgBYD4t (ORCPT
+        id S1728911AbgBYEIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:56:49 -0500
-Received: from mx1.cock.li ([185.10.68.5]:44443 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726962AbgBYD4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:56:49 -0500
+        Mon, 24 Feb 2020 23:08:31 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42927 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgBYEIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 23:08:30 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so6464402pfz.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 20:08:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hsmwTWPSD0szPQ7rhutWKLwR4ldbSWtt8mN+lR7f3aU=;
+        b=MXlDVQn4uxGfZrKHYHdu9vVDcDBZL3lMcLcfkDncLFD0zglrIbydVAGMBV8Agofb0n
+         zkD60KvQ1pCfz2obp+2lXF8jOXuSGqU5dzcfEw46uZTOuXz4r7clGnU0mWjfozvjJ1O6
+         IpVneKjih9wEx7/pBxWAh0Ykd2vjNwYiRAEEo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hsmwTWPSD0szPQ7rhutWKLwR4ldbSWtt8mN+lR7f3aU=;
+        b=tuM1q8aapajvsEkothWsWqNTwC3ymiyPCS9j2Ds4pdt04/i7NYrCH43ykpNIeRc6jE
+         8MSgmZjAZRgyu5UzJSq74VCnHWEwi37E2jbUU1J5NK40xKK2MyCTKks3AXuVzDDchpdz
+         fIvnH0vZhQwbhnlfXiojY4Hy4+xjarMXWWxjyG5LTPXgt8t046fciCa8tNu+XnkfUZ39
+         3TqW5ta57qkTLJ4F29XUCtcQBVKv3Rn5xPBvrYAuf2WXHOf6saOzsQ6cbvRG40KVbhRb
+         2TwcFGNtuDc9qMkEKWYcaVeG1URryar0C5k7pwhj87lqOPcgbBvOACj5Rsn1Hu7RMZpt
+         Tgdw==
+X-Gm-Message-State: APjAAAW6euZGi8cPZJIQub87BjUQlMb0mymXvpvyv1VRKYz7L+mBsz/j
+        DseBKozicwkV7e43uL7FZIbtQg==
+X-Google-Smtp-Source: APXvYqzLSh4qBx7e3y9T7+6B1WtB3BYgqC7e04hpV+b/CjGdlLicTi1+yUxV41DvXvzlMP3W7wKwaA==
+X-Received: by 2002:a63:b515:: with SMTP id y21mr9533512pge.148.1582603708389;
+        Mon, 24 Feb 2020 20:08:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z27sm14758726pfj.107.2020.02.24.20.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 20:08:27 -0800 (PST)
+Date:   Mon, 24 Feb 2020 20:08:26 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     corbet@lwn.net, masahiroy@kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
+ Clang/LLVM
+Message-ID: <202002242003.870E5F80@keescook>
+References: <20200224174129.2664-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=waifu.club; s=mail;
-        t=1582603005; bh=btnYEUoxM2lY7tAOZNUCienv1ZMrRKlySzePRr4n7oQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Kv7jHqmJYvHDHIRb1elIE+/xmowJ8x2vdz41WWMiRJWThK/CfVf7qyOJOMuS4348T
-         cBEMOiou23qlWp9pEmyJjnUEEeS0HEzpSgHJVzipQrTrdoOWcUnN4w2vQqIl5SR5J4
-         qBHG9GW4RbtvH0gzR44Wm8nukaymhfNDBktmHGV1AdCL8KjXwIFhb7i38TcJysirsT
-         7/HIyoEhaa3W9GuObrPVNVfNDPIDUWy3KSkYzAUnEOQODfS+2B7kmepB53CJ4Nmlwf
-         ge/ds1rQZVM39rclhkZdO87N1dJYrG7C5vNJBXORRmTH30yGP3IOyngo4x1M4VXd48
-         BHVOBb9pDjXRA==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Feb 2020 03:56:44 +0000
-From:   whywontyousue@waifu.club
-To:     Stephan von Krawczynski <skraw.ml@ithnet.com>
-Cc:     linux-kernel@vger.kernel.org, bruce@perens.com, rms@gnu.org,
-        moglen@columbia.edu, blukashev@sempervictus.com,
-        tcallawa@redhat.com, editor@lwn.net, skraw.ml@ithnet.com,
-        torvalds@osdl.org
-Subject: Re: General Discussion about GPLness
-In-Reply-To: <20200224150124.7c88cb8a@ithnet.com>
-References: <8b0e828da35ab77c1ad4603768c6eab6@waifu.club>
- <20200223133301.03eab91d@ithnet.com>
- <2241a3e0c8dcba5b69b4f670e181d7cd@waifu.club>
- <20200223153909.1ba91bae@ithnet.com>
- <dadb648cd23ee79dacf5992ff5ca6094@waifu.club>
- <20200223214757.5adf49e4@ithnet.com>
- <9c062aed49c1484d435e1a394e979c83@waifu.club>
- <20200224150124.7c88cb8a@ithnet.com>
-Message-ID: <e02b9131897a194aaec834c9393aab68@waifu.club>
-X-Sender: whywontyousue@waifu.club
-User-Agent: Roundcube Webmail/1.3.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224174129.2664-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I see that you're just going to ignore
-Universal City Studios Inc v Reimerdes
-
-Instead you address your emotional issues. This is the making of a 
-beast: which is what you are. Driven by your instincts.
-
-You want to violate the linux copyright. You announced your intent 
-(which increases the damages you are liable for under US jurisprudence.)
-
-The facts are simple: You may not execute the scheme you are suggesting. 
-If you do execute the scheme you or suggesting, or if you assist others 
-in doing so then you are liable for copyright infringement (direct or 
-contributory). If you make over 1000 dollars off of this infringement 
-you are liable for criminal penalties as-well.
-
-The courts see unlicensed modification of another copyright-holders 
-work, in memory, while running, as the creation of an unlicensed 
-derivative work.
-
-It does not matter how you try to sugar coat it or change your 
-description, nor do your complaints of me CC'ing relevant parties (a 
-diversion technique by you) who could explain this all to you in ways 
-you could understand, change anything. The courts in the USA see this 
-type of action you suggest as the creation of a derivative work.
-
-Thus you must follow the permissions and must not overstep them. That is 
-all. Having non-gpl modules work as you describe violates the linux 
-kernel copyright just as the plugin in the Reimerdes case violated the 
-RealPlayer copyright: in both cases the situation involves "modules" 
-extending the running program in real-time, in both cases the "modules" 
-are not permitted by the copyright owners to do as they wish: and the 
-Court agreed.
-
-On 2020-02-24 14:01, Stephan von Krawczynski wrote:
-> On Mon, 24 Feb 2020 07:46:33 +0000
-> whywontyousue@waifu.club wrote:
+On Mon, Feb 24, 2020 at 09:41:28AM -0800, Nick Desaulniers wrote:
+> Added to kbuild documentation. Provides more official info on building
+> kernels with Clang and LLVM than our wiki.
 > 
->> > Hm, really it is quite hard to stay calm reading your constant insults
->> > on
->> 
->> If such is so, it is shown to all that you are a stupid white man, 
->> what
->> can I say. You can't separate facts from fiction (opinion)
->> [...]
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  Documentation/kbuild/index.rst |  1 +
+>  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 81 insertions(+)
+>  create mode 100644 Documentation/kbuild/llvm.rst
 > 
-> Please stop spamming people completely unrelated to this thread.
-> And please stop spamming this thread with insults and blatant 
-> ignorance.
-> Thank you.
-> No more answers from me to you.
-> --
-> Regards,
-> Stephan
+> diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
+> index 0f144fad99a6..3882bd5f7728 100644
+> --- a/Documentation/kbuild/index.rst
+> +++ b/Documentation/kbuild/index.rst
+> @@ -19,6 +19,7 @@ Kernel Build System
+>  
+>      issues
+>      reproducible-builds
+> +    llvm
+>  
+>  .. only::  subproject and html
+>  
+> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> new file mode 100644
+> index 000000000000..68ae022aebc0
+> --- /dev/null
+> +++ b/Documentation/kbuild/llvm.rst
+> @@ -0,0 +1,80 @@
+> +==============================
+> +Building Linux with Clang/LLVM
+> +==============================
+> +
+> +This document covers how to build the Linux kernel with Clang and LLVM
+> +utilities.
+> +
+> +About
+> +-----
+> +
+> +The Linux kernel has always traditionally been compiled with GNU toolchains
+> +such as GCC and binutils. On going work has allowed for `Clang
+> +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
+> +used as viable substitutes. Distributions such as `Android
+> +<https://www.android.com/>`_, `ChromeOS
+> +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
+> +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
+> +collection of toolchain components implemented in terms of C++ objects
+> +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
+> +supports C and the GNU C extensions required by the kernel, and is pronounced
+> +"klang," not "see-lang."
+> +
+> +Clang
+> +-----
+> +
+> +The compiler used can be swapped out via `CC=` command line argument to `make`.
+> +`CC=` should be set when selecting a config and during a build.
+> +
+> +	make CC=clang defconfig
+> +
+> +	make CC=clang
+> +
+> +Cross Compiling
+> +---------------
+> +
+> +A single Clang compiler binary will typically contain all supported backends,
+> +which can help simplify cross compiling.
+> +
+> +	ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
+> +
+> +`CROSS_COMPILE` is not used to suffix the Clang compiler binary, instead
+
+s/suffix/prefix/
+
+> +`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
+> +example:
+> +
+> +	clang --target aarch64-linux-gnu foo.c
+> +
+> +LLVM Utilities
+> +--------------
+> +
+> +LLVM has substitutes for GNU binutils utilities. These can be invoked as
+> +additional parameters to `make`.
+> +
+> +	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+> +	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
+> +	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+> +	  HOSTLD=ld.lld
+> +
+> +Getting Help
+> +------------
+> +
+> +- `Website <https://clangbuiltlinux.github.io/>`_
+> +- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
+> +- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
+> +- IRC: #clangbuiltlinux on chat.freenode.net
+> +- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
+> +- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
+> +- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
+> +
+> +Getting LLVM
+> +-------------
+> +
+> +- http://releases.llvm.org/download.html
+> +- https://github.com/llvm/llvm-project
+> +- https://llvm.org/docs/GettingStarted.html
+> +- https://llvm.org/docs/CMake.html
+> +- https://apt.llvm.org/
+> +- https://www.archlinux.org/packages/extra/x86_64/llvm/
+> +- https://github.com/ClangBuiltLinux/tc-build
+> +- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
+> +- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
+
+Should this also include an update to Documentation/process/changes.rst
+with the minimum version required? (I would expect this to be "9" for Clang,
+and "11" for ld.lld.)
+
+Otherwise, yes, with Randy and Masahiro's suggestions, please consider it:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
