@@ -2,448 +2,206 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B607C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50851C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F033620CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F5C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EC1+98kg"
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="QxGkSpFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgBYM00 (ORCPT
+        id S1729882AbgBYM1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:26:26 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:51171 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729206AbgBYM00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:26:26 -0500
-Received: from [IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2]
- ([IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 6ZI3jyhoYjmHT6ZI6jWw5v; Tue, 25 Feb 2020 13:26:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582633583; bh=jtQMXNw/cfyh+gnYhCWrvjIQGpiDbUxxuddj1fuUNmg=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=EC1+98kg7kFI68JPL2LrYUFj0x7Rpbc7+nMlkvwkmXpvYcmuqbnZoBOEVaZSHcEtz
-         Y8jwBhb3H7dpUGdJ24zhf/GxUW1+dPPG4UluNBFwPqHX01FEMVxHsNm01mGOA6pzWV
-         ZxtWmER02n68ka7ivec5aNO3mDAqDqa8zhPMhporQI8G0MBezU8MxexwgAhystNoXU
-         QHOJvhJ7lEWmQWODHHXP5E21bwCMrgXv86AUwPkFIpJlfqownyen53PVqKXOSLtccE
-         pfk3ZPP/+6ogrLvfztPhouNgf7BPEvdq7ZuyHjoill4gW2iR5Dd48fIcVFwWrBekGd
-         3aP8qR4pzeJbw==
-Subject: Re: [PATCH v3] media: vimc: get pixformat info from v4l2_format_info
-To:     "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-References: <20200122175727.62664-1-carlosecb@tutanota.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c175b8fd-481c-5429-1f8c-4d8a8127584f@xs4all.nl>
-Date:   Tue, 25 Feb 2020 13:26:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 07:27:10 -0500
+Received: from vps.xff.cz ([195.181.215.36]:45144 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729865AbgBYM1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:27:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+        t=1582633626; bh=jODQ6T7oQ2+AV1GKAMVcUlItvawkW9XBOLOlOP3MO/M=;
+        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
+        b=QxGkSpFM3dUSZ7AEots+oCFkWmEEmkDFGu8AeLdmReCGnlHFbXv+uGqG4lWe0fghx
+         0CIodYVENX5LYZaw36m9Y9Cs521uVfHyxQXdwPrGHgqF9yI82/PmpkH0jGXaPwlZ4g
+         WRMh8OIcGzOjtzgRpvoeaAQLDnMSg5SQ4El7xSAc=
+Date:   Tue, 25 Feb 2020 13:27:06 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
+ support was added
+Message-ID: <20200225122706.d6pngz62iwyowhym@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20191209222345.1078-1-jaegeuk@kernel.org>
+ <20200222044617.pfrhnz2iavkrtdn6@core.my.home>
+ <20200222181721.tzrrohep5l3yklpf@core.my.home>
+ <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
+ <b1eb9b22-b570-41ab-5177-2c89105428a2@huawei.com>
+ <20200224135837.k54ke4ppca26ibec@core.my.home>
+ <20200224140349.74yagjdwewmclx4v@core.my.home>
+ <20200224143149.au6hvmmfw4ajsq2g@core.my.home>
+ <39712bf4-210b-d7b6-cbb1-eb57585d991a@huawei.com>
+ <20200225120814.gjm4dby24cs22lux@core.my.home>
 MIME-Version: 1.0
-In-Reply-To: <20200122175727.62664-1-carlosecb@tutanota.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPcH9kTfNi8S5LUz9sGwr8ZGlUfUfLrp3dNgy9kqmje0jxipjQOsKc+uly5L74Mo/PXR7UvQl4ZUxr7nca+HjmYrJ1xCKW+5cPPX1TRjE7u8MzKFL3hf
- nn79Bw73nL0kAkpxrTSWDtEs/LegvL1giZOeSYYHAJ4WSaOtS/kcJQHc8rM4aXpkXC84wBQt39/qFOKu6AUcdEUnVUN4vprpLvEcl+dGi7EE/x0xc3O2ZKbR
- 2K8zFUiF4v68kCcMSinpXQNm5xedYmndkTR5UCBUGPsszumGMrtZsYWPzlitjHDHgauEH2Ke8fpNrlaOo8mHFqJekqCmcIHfcWzaoxXWJ7owrDpNmXTH2a9l
- vT+EeFBK3F5K/hEE2Gok6bwKIKph6yxsF8YM8SpytG7sOxO79zF0QniNL96PEFQfdMBLVJjzxVlc64M1Bn4tuGDj9XsqS2eS7UCmjjUOiTl73g2zRMDOxfQ6
- T85DXlbqLKD6CsL3Zw+Wx2/dZtbGxBwbJsyUqHnxWpUC3Z0j4wspWVPFKb8=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225120814.gjm4dby24cs22lux@core.my.home>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 6:57 PM, Carlos E. C. Barbosa wrote:
-> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
+On Tue, Feb 25, 2020 at 01:08:14PM +0100, megi xff wrote:
+> Hello,
 > 
-> There is overlapping code over two distinct lists. This repurposes vimc_pix_map
-> for mapping formats and remaps the calls to the matching v4l2_format_info.
+> On Tue, Feb 25, 2020 at 07:24:12PM +0800, Chao Yu wrote:
+> > On 2020/2/24 22:31, Ondřej Jirman wrote:
+> > >> Just by a looks of it:
+> > >>
+> > >> root@tbs2[/proc/sys/kernel] # dmesg | grep up_write | wc -l
+> > >> 324
+> > >> root@tbs2[/proc/sys/kernel] # dmesg | grep down_write | wc -l
+> > >> 347
+> > >>
+> > >> there seems to be a mismatch of lock/unlock counts.
+> > >  
+> > > Sorry, a wrong grep expression.
+> > > 
+> > > root@tbs2[~] # dmesg | grep inode_down_write | wc -l
+> > > 357
+> > > root@tbs2[~] # dmesg | grep inode_up_write | wc -l
+> > > 357
+> > > root@tbs2[~] # dmesg | grep inode_up_read | wc -l
+> > > 16
+> > > root@tbs2[~] # dmesg | grep inode_down_read | wc -l
+> > > 16
+> > 
+> > I don't know why we have consistent down/up pair, but through disassembled
+> > code, I doubt it's the f2fs_inode->i_sem.
 > 
-> ---
-> Changes in v2:
-> As advised by Helen Koike and Hans Verkuil, the const qualifiers are not
-> removed, the bayer flag is kept and the unnecessary changes are not
-> made.
+> Because we were counting attempts, and not a successful lock. ;)
 > 
-> Changes in v3:
-> Change declaration order of variables and some minor style changes.
+> > c0435d7c:       ebf54af8        bl      c0188964 <printk>
+> > c0435d80:       e1a00006        mov     r0, r6
+> > c0435d84:       eb138135        bl      c0916260 <down_write>
+> > 
+> > inode_down_write()
+> > 
+> > c0435d88:       e284ce1d        add     ip, r4, #464    ; 0x1d0
+> > 
+> > We are stuck here.
+> > 
+> > [  430.675754] [<c0916260>] (down_write) from [<c0435d88>] (f2fs_write_single_data_page+0x600/0x7d8)
+> >                                                 ^^^^^^^^^
+> > [  430.675764] [<c0435788>] (f2fs_write_single_data_page) from [<c0436214>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+> > 
+> > 
+> > c0435d8c:       e14b0ad4        ldrd    r0, [fp, #-164] ; 0xffffff5c
+> > c0435d90:       e1cc20d0        ldrd    r2, [ip]
+> > c0435d94:       e1520000        cmp     r2, r0
+> > c0435d98:       e0d33001        sbcs    r3, r3, r1
+> > c0435d9c:       b1cc00f0        strdlt  r0, [ip]
+> > c0435da0:       e1a00006        mov     r0, r6
+> > c0435da4:       ebf52227        bl      c017e648 <up_write>
+> > c0435da8:       e51b2098        ldr     r2, [fp, #-152] ; 0xffffff68
+> > c0435dac:       e30c0730        movw    r0, #50992      ; 0xc730
+> > c0435db0:       e59f11a4        ldr     r1, [pc, #420]  ; c0435f5c <f2fs_write_single_data_page+0x7d4>
+> > c0435db4:       e34c00b6        movt    r0, #49334      ; 0xc0b6
+> > c0435db8:       ebf54ae9        bl      c0188964 <printk>
+> > 
+> > inode_up_write()
 > 
-> v4l2-compliance message:
-> https://pastebin.com/UkmfjuLa
+> The patch you sent helped so far. I'll keep the tablet running for a while,
+> but so far the issue did not reappear within a few minutes after boot as
+> usual.
+
+So this time it just took several times longer to appear (8-20mins to the hang):
+
+https://megous.com/dl/tmp/dmesg1
+https://megous.com/dl/tmp/dmesg2
+
+thank you and regards,
+	o.
+
+> thank you and regards,
+> 	o.
 > 
-> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
-
-This Sob needs to be above the --- line!
-
-I get sparse warnings:
-
-drivers/media/platform/vimc/vimc-scaler.c:128:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
-drivers/media/platform/vimc/vimc-scaler.c:181:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
-
-It does seem that it is indeed unused.
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/platform/vimc/vimc-capture.c | 14 ++++++++-----
->  drivers/media/platform/vimc/vimc-common.c  | 23 ----------------------
->  drivers/media/platform/vimc/vimc-common.h  |  2 --
->  drivers/media/platform/vimc/vimc-debayer.c |  7 +++++--
->  drivers/media/platform/vimc/vimc-scaler.c  | 12 +++++++++--
->  drivers/media/platform/vimc/vimc-sensor.c  |  9 +++++++--
->  6 files changed, 31 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 76c015898cfd..686456aad29c 100644
-> --- a/drivers/media/platform/vimc/vimc-capture.c
-> +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -85,6 +85,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->  				    struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format *format = &f->fmt.pix;
-> +	const struct v4l2_format_info *vinfo;
->  	const struct vimc_pix_map *vpix;
->  
->  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
-> @@ -94,12 +95,13 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->  
->  	/* Don't accept a pixelformat that is not on the table */
->  	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
-> -	if (!vpix) {
-> +	if (!vpix)
->  		format->pixelformat = fmt_default.pixelformat;
-> -		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
-> -	}
-> +
-> +	vinfo = v4l2_format_info(format->pixelformat);
-> +
->  	/* TODO: Add support for custom bytesperline values */
-> -	format->bytesperline = format->width * vpix->bpp;
-> +	format->bytesperline = format->width * vinfo->bpp[0];
->  	format->sizeimage = format->bytesperline * format->height;
->  
->  	if (format->field == V4L2_FIELD_ANY)
-> @@ -386,6 +388,7 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->  				     const char *vcfg_name)
->  {
->  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-> +	const struct v4l2_format_info *vinfo;
->  	const struct vimc_pix_map *vpix;
->  	struct vimc_cap_device *vcap;
->  	struct video_device *vdev;
-> @@ -435,7 +438,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->  	/* Set default frame format */
->  	vcap->format = fmt_default;
->  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
-> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
-> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
->  	vcap->format.sizeimage = vcap->format.bytesperline *
->  				 vcap->format.height;
->  
-> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-> index 16ce9f3b7c75..8327ada1b461 100644
-> --- a/drivers/media/platform/vimc/vimc-common.c
-> +++ b/drivers/media/platform/vimc/vimc-common.c
-> @@ -21,19 +21,16 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_BGR888_1X24,
->  		.pixelformat = V4L2_PIX_FMT_BGR24,
-> -		.bpp = 3,
->  		.bayer = false,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_RGB888_1X24,
->  		.pixelformat = V4L2_PIX_FMT_RGB24,
-> -		.bpp = 3,
->  		.bayer = false,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
->  		.pixelformat = V4L2_PIX_FMT_ARGB32,
-> -		.bpp = 4,
->  		.bayer = false,
->  	},
->  
-> @@ -41,49 +38,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  
-> @@ -91,25 +80,21 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  
-> @@ -117,49 +102,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  };
-> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-> index 87eb8259c2a8..dd1c45334705 100644
-> --- a/drivers/media/platform/vimc/vimc-common.h
-> +++ b/drivers/media/platform/vimc/vimc-common.h
-> @@ -62,7 +62,6 @@ do {									\
->   * struct vimc_pix_map - maps media bus code with v4l2 pixel format
->   *
->   * @code:		media bus format code defined by MEDIA_BUS_FMT_* macros
-> - * @bbp:		number of bytes each pixel occupies
->   * @pixelformat:	pixel format devined by V4L2_PIX_FMT_* macros
->   *
->   * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
-> @@ -70,7 +69,6 @@ do {									\
->   */
->  struct vimc_pix_map {
->  	unsigned int code;
-> -	unsigned int bpp;
->  	u32 pixelformat;
->  	bool bayer;
->  };
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index 5d1b67d684bb..10d53ca129fd 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -303,6 +303,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->  	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
->  
->  	if (enable) {
-> +		const struct v4l2_format_info *vinfo;
->  		const struct vimc_pix_map *vpix;
->  		unsigned int frame_size;
->  
-> @@ -311,12 +312,14 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  		/* Calculate the frame size of the source pad */
->  		vpix = vimc_pix_map_by_code(vdeb->src_code);
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
->  		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
-> -				vpix->bpp;
-> +				vinfo->bpp[0];
->  
->  		/* Save the bytes per pixel of the sink */
->  		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
-> -		vdeb->sink_bpp = vpix->bpp;
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
-> +		vdeb->sink_bpp = vinfo->bpp[0];
->  
->  		/* Get the corresponding pixel map from the table */
->  		vdeb->sink_pix_map =
-> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-> index e2e551bc3ded..55be69ddf918 100644
-> --- a/drivers/media/platform/vimc/vimc-scaler.c
-> +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> @@ -125,6 +125,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->  				    struct v4l2_subdev_pad_config *cfg,
->  				    struct v4l2_subdev_frame_size_enum *fse)
->  {
-> +	const struct v4l2_format_info *vinfo;
->  	const struct vimc_pix_map *vpix;
->  
->  	if (fse->index)
-> @@ -135,6 +136,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->  	if (!vpix || vpix->bayer)
->  		return -EINVAL;
->  
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
->  	fse->min_width = VIMC_FRAME_MIN_WIDTH;
->  	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
->  
-> @@ -176,12 +178,16 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
->  
->  static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
->  {
-> +	const struct v4l2_format_info *vinfo;
->  	const struct vimc_pix_map *vpix;
->  
->  	/* Only accept code in the pix map table in non bayer format */
->  	vpix = vimc_pix_map_by_code(fmt->code);
-> -	if (!vpix || vpix->bayer)
-> +	if (!vpix || vpix->bayer) {
->  		fmt->code = sink_fmt_default.code;
-> +		vpix = vimc_pix_map_by_code(fmt->code);
-> +	}
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
->  
->  	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
->  			     VIMC_FRAME_MAX_WIDTH) & ~1;
-> @@ -331,6 +337,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
->  
->  	if (enable) {
-> +		const struct v4l2_format_info *vinfo;
->  		const struct vimc_pix_map *vpix;
->  		unsigned int frame_size;
->  
-> @@ -339,7 +346,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  		/* Save the bytes per pixel of the sink */
->  		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
-> -		vsca->bpp = vpix->bpp;
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
-> +		vsca->bpp = vinfo->bpp[0];
->  
->  		/* Calculate the width in bytes of the src frame */
->  		vsca->src_line_size = vsca->crop_rect.width *
-> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
-> index 32380f504591..941529ddf639 100644
-> --- a/drivers/media/platform/vimc/vimc-sensor.c
-> +++ b/drivers/media/platform/vimc/vimc-sensor.c
-> @@ -102,10 +102,13 @@ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
->  {
->  	const struct vimc_pix_map *vpix =
->  				vimc_pix_map_by_code(vsen->mbus_format.code);
-> +	const struct v4l2_format_info *vinfo =
-> +				v4l2_format_info(vpix->pixelformat);
->  
->  	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
->  			 vsen->mbus_format.height, vsen->mbus_format.field);
-> -	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
-> +	tpg_s_bytesperline(&vsen->tpg, 0,
-> +			   vsen->mbus_format.width * vinfo->bpp[0]);
->  	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
->  	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
->  	/* TODO: add support for V4L2_FIELD_ALTERNATE */
-> @@ -198,12 +201,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
->  				container_of(sd, struct vimc_sen_device, sd);
->  
->  	if (enable) {
-> +		const struct v4l2_format_info *vinfo;
->  		const struct vimc_pix_map *vpix;
->  		unsigned int frame_size;
->  
->  		/* Calculate the frame size */
->  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
-> -		frame_size = vsen->mbus_format.width * vpix->bpp *
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
-> +		frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
->  			     vsen->mbus_format.height;
->  
->  		/*
-> 
-
+> > Thanks,
+> > 
+> > > 
+> > > So it's probably not inode locking.
+> > > 
+> > >> root@tbs2[/proc/sys/kernel] # dmesg | grep down_read | wc -l
+> > >> 16
+> > >> root@tbs2[/proc/sys/kernel] # dmesg | grep up_read | wc -l
+> > >> 16
+> > >>
+> > >> regards,
+> > >> 	o.
+> > >>
+> > >>> thank you,
+> > >>> 	o.
+> > >>>
+> > >>>>> Thanks,
+> > >>>>>
+> > >>>>>> [  246.758190]  r5:eff213b0 r4:da283c60
+> > >>>>>> [  246.758198] [<c0435578>] (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+> > >>>>>> [  246.758204]  r10:da645c28 r9:da283d60 r8:da283c60 r7:0000000f r6:da645d80 r5:00000001
+> > >>>>>> [  246.758206]  r4:eff213b0
+> > >>>>>> [  246.758214] [<c0435d24>] (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
+> > >>>>>> [  246.758220]  r10:00000000 r9:d9ed002c r8:d9ed0000 r7:00000004 r6:da283d60 r5:da283c60
+> > >>>>>> [  246.758223]  r4:da645d80
+> > >>>>>> [  246.758238] [<c04364e8>] (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
+> > >>>>>> [  246.758244]  r10:0000000a r9:c0e03d00 r8:00000c00 r7:c0264ddc r6:da645d80 r5:da283d60
+> > >>>>>> [  246.758246]  r4:da283c60
+> > >>>>>> [  246.758254] [<c0267eac>] (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
+> > >>>>>> [  246.758259]  r7:da283d60 r6:da645eac r5:da645d80 r4:da283c60
+> > >>>>>> [  246.758266] [<c0310c78>] (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
+> > >>>>>> [  246.758272]  r10:0000000a r9:c0e03d00 r8:da283cc8 r7:da283c60 r6:da645eac r5:da283d08
+> > >>>>>> [  246.758274]  r4:d9dc9848
+> > >>>>>> [  246.758281] [<c03110cc>] (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
+> > >>>>>> [  246.758287]  r10:da3797a8 r9:c0e03d00 r8:d9dc985c r7:da645eac r6:00000000 r5:d9dc9848
+> > >>>>>> [  246.758289]  r4:da5a8800
+> > >>>>>> [  246.758296] [<c031157c>] (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
+> > >>>>>> [  246.758302]  r10:fffbf200 r9:da644000 r8:c0e04e64 r7:d9dc9848 r6:d9dc9874 r5:da645eac
+> > >>>>>> [  246.758305]  r4:d9dc9848
+> > >>>>>> [  246.758312] [<c0311660>] (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
+> > >>>>>> [  246.758318]  r10:da5f2005 r9:d9dc984c r8:d9dc9948 r7:d9dc9848 r6:00000000 r5:d9dc9954
+> > >>>>>> [  246.758321]  r4:000031e6
+> > >>>>>> [  246.758334] [<c0312a50>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+> > >>>>>> [  246.758340]  r10:da5f2005 r9:00000200 r8:00000000 r7:da5f2000 r6:ef044400 r5:da5eb000
+> > >>>>>> [  246.758343]  r4:d9dc9954
+> > >>>>>> [  246.758350] [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+> > >>>>>> [  246.758357]  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:da5eb014
+> > >>>>>> [  246.758359]  r4:da5eb000
+> > >>>>>> [  246.758368] [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+> > >>>>>> [  246.758374]  r10:ec9e5e90 r9:dabf325c r8:da5eb000 r7:da644000 r6:00000000 r5:da5fe000
+> > >>>>>> [  246.758377]  r4:dabf3240
+> > >>>>>> [  246.758386] [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > >>>>>> [  246.758391] Exception stack(0xda645fb0 to 0xda645ff8)
+> > >>>>>> [  246.758397] 5fa0:                                     00000000 00000000 00000000 00000000
+> > >>>>>> [  246.758402] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > >>>>>> [  246.758407] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > >>>>>> [  246.758413]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
+> > >>>>>> [  246.758416]  r4:da5fe000
+> > >>>>>> .
+> > >>>>>>
+> > >>>>>
+> > >>>>>
+> > >>>>> _______________________________________________
+> > >>>>> Linux-f2fs-devel mailing list
+> > >>>>> Linux-f2fs-devel@lists.sourceforge.net
+> > >>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> > >>>>>
+> > > .
+> > > 
