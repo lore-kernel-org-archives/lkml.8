@@ -2,118 +2,113 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B325C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A913C35DF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA95520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B4920CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdNQZQrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgBYFnP (ORCPT
+        id S1727028AbgBYFns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:43:15 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:57073 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgBYFnP (ORCPT
+        Tue, 25 Feb 2020 00:43:48 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33912 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgBYFnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:43:15 -0500
-Received: by mail-il1-f200.google.com with SMTP id p67so22988007ili.23
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:43:13 -0800 (PST)
+        Tue, 25 Feb 2020 00:43:47 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l18so8748808lfc.1;
+        Mon, 24 Feb 2020 21:43:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p5/5vEBubNjmt22m/UMeJDFdXk5YFn70ecwWdjPyPE8=;
+        b=GdNQZQrARMDie/sTWPxRiOwmun0GRWKpBmT1CnCPcTs7WcNLJae8K6mPa6eFJo/n7U
+         nyFXy5GBFeey2tSZjlCb3bkAwuRVqfJsBiwH2pKxufIMo4crV00Fxkg24dIm/7y+kQCz
+         2oDJEPKBDsWe+ITLLhuZOOTOXZAZbEJ0jzx+r7oARptjNvD4owwRhpEydDUqtQQ9gXZ9
+         lthmfGtiv2GxmHanh0COZMw9FGVC3hUQnzo6YoKC/DAToVqme/MtaVtiQS/YnyiarSk2
+         2TvuzXpdq5D4yGUFPDK5Z+vHhKiluOLZAP2NJnxFRDWSLKCkloIcT2AxekjPrl/8zCPU
+         wCig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hMFIzaD34cEyiy4pe9ZVgsYgncv2dmIkFd8NRXrfNIw=;
-        b=rABz+15uHziux7sXzenahZAowycA0u8wqc9FzpZ1e1Zj4LoZ76K6J+ZZGEhsAPL7x+
-         uKIQH0Hd+JMOpZVaImxXGU98A86IUyjy5lb8lMTjYX3Dlbm+MJFR7Y+DgDbPeV3odGAr
-         wgqWz+qD7Xze2r3WBUM38oi3841wdaek9JQL0Y2RZFxCpKqLLPt29zj5MUnyUkTAdHRL
-         7WBDnM9Zt5iVrCBqHYBDFifmFeHaq5MpdXOb0ZD4mLHESg2EY1xzwqbEuFERU788g4Ah
-         FpjirnDrWYQ9kG4//DGfyE48fPYPO6UQJu6qTEifV/FgAByf5TebvLi5NinPycogfqLI
-         VSYA==
-X-Gm-Message-State: APjAAAXmCu8Gg+BGXsn9QZMNY1r2fKf8cRpKKx1mrd0GM3R87+nYoqg5
-        suMOpgH7s6Y6oVb8lv931B6HWq4rI/TWumyPef6TzPYMQXOS
-X-Google-Smtp-Source: APXvYqyX+8bh4pqGwUyfTDN7ausdfx6o3oaqgOKmF9c/aUSjuAI8sb9sMQDpMWqe/nIzsmjZWo8ldZYW7CfFCUz71Ymm9LWtZcy3
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p5/5vEBubNjmt22m/UMeJDFdXk5YFn70ecwWdjPyPE8=;
+        b=hRohDoOX0WPqKkXDN1iB7SYHriKcEYsGnpGS8Vii1IBBtQIMCSZU03k+emigQkTjnb
+         j/9tDaZD8WK1F8x3HE29tuTeg+FhQRltNLmys31fe9dB8y2CPPyE5+BQLlTAVKZri4x6
+         65sHxk8P2e3tkHnAKknO1kfNdfxKIy08x4OzfH1ygRPCecp9qMfcO78jKKF1vGEjRUsS
+         AZZrVPKgB1bQSH/lrnXJajlSIdkqjF5M2ogzrcxh6oam8LfPukVYQNjbcnltYTJsg70z
+         WxS/vJp/nRePHZvZfrcF+xse5H5U61sEPUIo9DAxLF6O9kP22ae1OSt20viTd+hgAjpo
+         H1Iw==
+X-Gm-Message-State: APjAAAWSj42LWa2uz9FGDakboHeNOucIqjbZrBPIsZ81v7AVgWujaOoA
+        56Rg3SOqt7XH1fONLxT4nve7jS14CkovBGiiYq4=
+X-Google-Smtp-Source: APXvYqx+WlziPWsLP6bLP2Ka9u56rRfhqByB/DBn0OjicY5J8svu/TUsBz7aMQWPnU+NZwrE2hzSp+HaK5Vx7ZHzFzQ=
+X-Received: by 2002:a05:6512:304d:: with SMTP id b13mr3576611lfb.134.1582609425105;
+ Mon, 24 Feb 2020 21:43:45 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a02:b38f:: with SMTP id p15mr56855445jan.56.1582609393220;
- Mon, 24 Feb 2020 21:43:13 -0800 (PST)
-Date:   Mon, 24 Feb 2020 21:43:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b380de059f5ff6aa@google.com>
-Subject: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-From:   syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+References: <20200221165801.32687-1-steve@sk2.org> <CAADnVQ+QNxFk97fnsY1NL1PQWykdok_ha_KajCc68bRT1BLp2A@mail.gmail.com>
+ <20200224205028.0f283991@heffalump.sk2.org>
+In-Reply-To: <20200224205028.0f283991@heffalump.sk2.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 24 Feb 2020 21:43:33 -0800
+Message-ID: <CAADnVQKb-3fzx1xKLwms8pcPiJNLsmFsHyj_gnsE8DKVp1jhYQ@mail.gmail.com>
+Subject: Re: [PATCH] docs: sysctl/kernel: document BPF entries
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Feb 24, 2020 at 11:50 AM Stephen Kitt <steve@sk2.org> wrote:
+>
+> On Sun, 23 Feb 2020 14:44:31 -0800, Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> > On Fri, Feb 21, 2020 at 10:18 AM Stephen Kitt <steve@sk2.org> wrote:
+> > > @@ -1152,6 +1166,16 @@ NMI switch that most IA32 servers have fires
+> > > unknown NMI up, for example.  If a system hangs up, try pressing the =
+NMI
+> > > switch.
+> > >
+> > >
+> > > +unprivileged_bpf_disabled
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > +
+> > > +Writing 1 to this entry will disabled unprivileged calls to ``bpf()`=
+`;
+> >
+> > 'will disable' ?
+>
+> Indeed, thanks.
+>
+> > It doesn't apply to bpf-next with:
+> > error: sha1 information is lacking or useless
+> > (Documentation/admin-guide/sysctl/kernel.rst).
+> > error: could not build fake ancestor
+> > Patch failed at 0001 docs: sysctl/kernel: Document BPF entries
+>
+> Sorry, I forgot to include the base commit information; this is against
+> 8f21f54b8a95 in docs-next.
+>
+> I=E2=80=99ll wait for that to make it to Linus=E2=80=99 tree and re-submi=
+t the patch (with
+> the fix above).
 
-syzbot found the following crash on:
-
-HEAD commit:    d2eee258 Merge tag 'for-5.6-rc2-tag' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17fd8931e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
-dashboard link: https://syzkaller.appspot.com/bug?extid=46f513c3033d592409d2
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: work_struct hint: tcindex_destroy_rexts_work+0x0/0xd0 net/sched/cls_tcindex.c:57
-WARNING: CPU: 1 PID: 21 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
-WARNING: CPU: 1 PID: 21 at lib/debugobjects.c:488 __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-WARNING: CPU: 1 PID: 21 at lib/debugobjects.c:488 debug_check_no_obj_freed+0x468/0x620 lib/debugobjects.c:998
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21 Comm: kworker/u4:1 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: tc_filter_workqueue tcindex_destroy_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
-RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-RIP: 0010:debug_check_no_obj_freed+0x468/0x620 lib/debugobjects.c:998
-Code: 08 48 89 df e8 f9 27 0f fe 4c 8b 03 48 c7 c7 75 eb f0 88 48 c7 c6 8f dc ee 88 4c 89 e2 44 89 f9 4d 89 e9 31 c0 e8 28 c4 a3 fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df 4c 8b 6d b0 ff 05 b6 df c4 05
-RSP: 0018:ffffc90000dd7be0 EFLAGS: 00010046
-RAX: a8ee08c59d207d00 RBX: ffffffff892d11c0 RCX: ffff8880a9bf6580
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: ffffc90000dd7c78 R08: ffffffff81600324 R09: ffffed1015d64592
-R10: ffffed1015d64592 R11: 0000000000000000 R12: ffffffff88f4c8da
-R13: ffffffff869b5000 R14: ffff88802cc7c000 R15: 0000000000000000
- kfree+0xff/0x220 mm/slab.c:3756
- tcindex_destroy_work+0x3e/0x70 net/sched/cls_tcindex.c:231
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Please use bpf-next tree as a base for your patch.
