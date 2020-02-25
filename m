@@ -2,79 +2,146 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7798EC35DEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91D8C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3731B20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E03721927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pdVgPiWK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JD/Y/mIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgBYAIR (ORCPT
+        id S1728579AbgBYAJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:08:17 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42154 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbgBYAIQ (ORCPT
+        Mon, 24 Feb 2020 19:09:29 -0500
+Received: from gateway20.websitewelcome.com ([192.185.52.45]:14169 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728396AbgBYAJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:08:16 -0500
-Received: by mail-io1-f65.google.com with SMTP id z1so1161042iom.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:08:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yYLHirngUHxt10qFoU9xmupylPxKXSewlxECiHVcCbc=;
-        b=pdVgPiWKRIZ6FGDifzN+jO7VW4qmMUPDK9hEVvS/Uzl7iTkfQxBqNCYbyruzNjkH3R
-         FUsq75ZEMBVuEZmMvqJlBUHbo+HQ9+bhK97Nb6Qn8c+k8WLWDt6OcSir14JkDnVim3VL
-         dAhGAYEIq3EX7SLhpFZDPFNtOPhCNiVDp+YX66sO+jg2+77959SfeDUcywD9q76Qcb+n
-         SXXL7OVxUHg7VJvpXpLbuUq1cGDk5BnhUbJeWXdWWsyTnXEW2RxfLnY6YvR6kf7QgwMi
-         G9Ug6sDiaWMxQY/sQIweYBoEk6YUqtOHp1K0Y5poF5WyQOhiz1YMlOp3J8K8ilB1XVBP
-         oXZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yYLHirngUHxt10qFoU9xmupylPxKXSewlxECiHVcCbc=;
-        b=s4/6H7fm8d2lpDxl0v892+jn6aBpMiedGKNHEe8Kf+kPbelNrq/gFSmBe3j0y3Wmib
-         uTme+bWl0wQXfzXoR5/xxAWyplRBvqadXkKAR74b3G178pl/A58LVljBg6C27t/RfZMv
-         h8JPloxGVUfQoEDU1kOKS8DB7ox8thbRtRD7lLiVHdbqTE+EyKJydl7j1Ii0ec3EbpiE
-         xLQ69E2w8yawCpQGQXfBsaZsG4KcNLZJjEmVy0+Whfn4t727K6f9c0tpMkQNhzrMTFnx
-         LABDgU5iLX9sXXCEYBcv3GxMCPW0looXAnC8UpT+o0UNAQ12P9ZI/t+KCUIcliTI335y
-         erGw==
-X-Gm-Message-State: APjAAAU2urfibcY9ppLhPjxfdCtWXhTl/MLwyuFhdYatLRrNljGElKuv
-        Hsz+FfO6tIHeQ8sEFUPC0cXHjqNr0xSWutlA/Y9hGg==
-X-Google-Smtp-Source: APXvYqxTkakpljUYeVp2JLg4XJzRu6x6qf4LnVcCbcWcEYJgPZZWbcAnu6mgIc2I1Tomu0LoUoG8bchFDT2g5USxwpM=
-X-Received: by 2002:a6b:ee01:: with SMTP id i1mr54662261ioh.109.1582589295859;
- Mon, 24 Feb 2020 16:08:15 -0800 (PST)
+        Mon, 24 Feb 2020 19:09:28 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 2EFB4400CE19A
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:55:12 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6NmwjDxfYEfyq6NmwjKGSm; Mon, 24 Feb 2020 18:09:26 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZwmvXNF0jxPluhfTdIp+OkMhFDGnO6D8vfAw9YlIa3k=; b=JD/Y/mISz9+s6xEcFV8VrUebnA
+        GXp81qYIO0zcoyu28r1UkT83FgP+aju1ycUxK/cvS6CYIVP90cCrNqaK1cFMulvC47GW5P0yscOq/
+        HU7qUwAULL+2b1mn3E0k6XakzlGx6bfvP6J6w5e4nmLbwrrY17Dq3IDFoR1Y+8AQ9z5VTrYU0p2MS
+        7YFfFzYQYNKkfmweNOL+uywgNzcLBMr0pBdadbrRYgozPOvTXTklF75Q05Cumo/mCmOfirpAkpSQ2
+        8Seg1Va6u0aZPU0w5lpNRL3DkoZ3ZrrUNFNViG9JhPXdYVESgL8wDtUg4TxIhcgWEpRxNvl/Yhgg2
+        IrkC12Zw==;
+Received: from [201.166.190.60] (port=54458 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6Nmu-002OsC-IZ; Mon, 24 Feb 2020 18:09:25 -0600
+Date:   Mon, 24 Feb 2020 18:12:13 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] net: marvell: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200225001213.GA20527@embeddedor>
 MIME-Version: 1.0
-References: <20200222023413.78202-1-ehankland@google.com> <9adcb973-7b60-71dd-636d-1e451e664c55@redhat.com>
- <0c66eae3-8983-0632-6d39-fd335620b76a@linux.intel.com>
-In-Reply-To: <0c66eae3-8983-0632-6d39-fd335620b76a@linux.intel.com>
-From:   Eric Hankland <ehankland@google.com>
-Date:   Mon, 24 Feb 2020 16:08:04 -0800
-Message-ID: <CAOyeoRX8kXD4nHGCLk=pV2EHS4t9wykV5tYDfgKkTLBcN5=GGw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Adjust counter sample period after a wrmsr
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.190.60
+X-Source-L: No
+X-Exim-ID: 1j6Nmu-002OsC-IZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.190.60]:54458
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 26
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Like -
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Thanks for the feedback - is your recommendation to do the read and
-period change at the same time and only take the lock once or is there
-another way around this while still handling writes correctly?
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Eric
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/marvell/skge.h | 2 +-
+ drivers/net/ethernet/marvell/sky2.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
+index 6fa7b6a34c08..a1313d57e283 100644
+--- a/drivers/net/ethernet/marvell/skge.h
++++ b/drivers/net/ethernet/marvell/skge.h
+@@ -2426,7 +2426,7 @@ struct skge_hw {
+ 	spinlock_t	     phy_lock;
+ 	struct tasklet_struct phy_task;
+ 
+-	char		     irq_name[0]; /* skge@pci:000:04:00.0 */
++	char		     irq_name[]; /* skge@pci:000:04:00.0 */
+ };
+ 
+ enum pause_control {
+diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
+index b02b6523083c..ada1ca60f088 100644
+--- a/drivers/net/ethernet/marvell/sky2.h
++++ b/drivers/net/ethernet/marvell/sky2.h
+@@ -2309,7 +2309,7 @@ struct sky2_hw {
+ 	struct work_struct   restart_work;
+ 	wait_queue_head_t    msi_wait;
+ 
+-	char		     irq_name[0];
++	char		     irq_name[];
+ };
+ 
+ static inline int sky2_is_copper(const struct sky2_hw *hw)
+-- 
+2.25.0
+
