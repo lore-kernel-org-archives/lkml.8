@@ -2,315 +2,185 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2141AC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC78C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C7920CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0422020CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:34:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cDqMkNUQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jr2iMjqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbgBYTd5 (ORCPT
+        id S1731601AbgBYTeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:33:57 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42560 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731212AbgBYTdw (ORCPT
+        Tue, 25 Feb 2020 14:34:03 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37175 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730539AbgBYTdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:33:52 -0500
-Received: by mail-pl1-f194.google.com with SMTP id u3so199844plr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:33:51 -0800 (PST)
+        Tue, 25 Feb 2020 14:33:47 -0500
+Received: by mail-wr1-f65.google.com with SMTP id l5so47159wrx.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:33:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=qjq1rYwYZyqa6T9kkCXqj08Gw/H8i3ujajvWEUPawsQ=;
-        b=cDqMkNUQ3xXixDRuNzXC11g87RUP7M21eCuL3NDnulLtrqaf0UvLy72WC6qx6PIPKI
-         c0Ttar9R/Duu8SU6Q4PEw9ThOWPyP9C35hO0TGX+m1ypebrg9t8d/tktBjrhsD+cz7U7
-         0JcYj4pYk1d3S+NsCgSgbxXkwBpkZ8Zoa0bn4=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Pm9mKzisBXffRenDjzc076HpmcDb6sC4Riuk402uBGE=;
+        b=jr2iMjqiejBKhDq5xjvmyFjljYq3lwqKBrpHOAjCtsrFl6i9NZ+7uR8rwXJajAaVWM
+         SvzFIMNZxAYa5mOzSq8Y8Lx53XifXhNWDaQsmhlFr4a2vQwk7cOx2hb5Gzi2TFVQ2j3l
+         JLv/R02zcCkjC0GqcR8a9PF+OtQuK2ir792RrAPY8GnZz3aMzTF4A4h8Qo+j+HepT4Xs
+         /3DoZ07Boevr9AClCLzy29EwKRoo2a4KyvLILHKWZCOpTYLC5XdzOgdRxQZP0PtwB+nw
+         Nwzc+WPHsYIk2FVsN1qleTc1HIwVEaJzRg12FugLELMVDKrxvHDJr5jy0TKXM1WtbUQE
+         68lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=qjq1rYwYZyqa6T9kkCXqj08Gw/H8i3ujajvWEUPawsQ=;
-        b=YfNPzLLoIbkgc+Irw4T7stxFqiyqVAWHprd/sVd8GYN32s85M7Vv0NWxKrxYYgBclw
-         h+IJiaLu/1BcIXXIFghlw4gJfNpdrVqaIG6bGTq+au8ne6YdQ7yS4k7moneR+Sqs8frI
-         HIsJjnGW9mD/JVaxrTFkF0G/aR2gaBEXSgzet7WqdQMVd27lsBN+XSn84lYj7iaGgG8q
-         Qp5rOQhFQsXQmGykIwfhlJCzGTfHXGAUdPtubKWdXdYSSSfWLWNBrOv9IhZkmTxxewCf
-         Y5Hnpigu8LG18WZcucuWSKFqL5913lEolky6AcigjySik4FsoNN3ml20RVwGEwaBZ/pz
-         GiNQ==
-X-Gm-Message-State: APjAAAVW+cNQ7yyFiyU7X61uZQurSlQIH5UnG8x5ZEYOb11ZSt2C0mc/
-        gxcvYJDL7ByO+uujpZtIkhkO+Q==
-X-Google-Smtp-Source: APXvYqxDKHrP7qTiMvkalQZ2YXorUCJY2C2zjXz3x09A/XTU8PzAM54XPoxry11GFtz5Eb8PKERJtw==
-X-Received: by 2002:a17:902:b110:: with SMTP id q16mr46290plr.289.1582659231027;
-        Tue, 25 Feb 2020 11:33:51 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id z4sm17320690pfn.42.2020.02.25.11.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 11:33:50 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pm9mKzisBXffRenDjzc076HpmcDb6sC4Riuk402uBGE=;
+        b=TWzJ08xDEyccGfcMwsxEI4KcGFXS8IYHSZmC02SVXX6RdMy6FOFrDj8bFVPM0t+8vR
+         jWa6XYuIBmHu25w3Wah9x/Hb1uX0gkHhXgW0OVbhnZm4AUE6p9N7+D2sTA4F3GL+QNG8
+         EoirXjRSGn+M3MqmWQrTp1wogmIabnBRNoC/j6T1RvMy4gqN8DZWVC3VloEpTc0rveh4
+         kR0n3e4lrWw9C57aukvOip5w9aqTYwf2AXGwzVkxQJxCiAI9XXaJ7YZYViCQOUpJevai
+         zZLyvVMzmgVtoyTucEn9A0AawrqJ1B9y2xL7FKXHX28+6wJByhqea3tPMgAFvzWHduaO
+         13gw==
+X-Gm-Message-State: APjAAAX4nKgn0W4R5SFjdouanpojSe+lY9cBqC23LUtwJESNX9PS4uc0
+        45gcD9rcsnJk0jdaGt13pa1bfxKaG7RH079Sg0J80w==
+X-Google-Smtp-Source: APXvYqxrxYeyZvodeEJ9iVUbqY7GqA354m0m1zT131nsQCFY1tmU8J/9AtNy0njbTfrfES0Z6kSPd1IFhJnhghT2o2E=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr691012wrn.262.1582659225078;
+ Tue, 25 Feb 2020 11:33:45 -0800 (PST)
 MIME-Version: 1.0
+References: <8bb16ac4b15a7e28a8e819ef9aae20bfc3f75fbc.1582266841.git.stefan@agner.ch>
+ <CAKwvOdmV80xgvBnhB6ZpqYaqkxKi-_p+StnMojwNnf3kdxTT1A@mail.gmail.com>
+In-Reply-To: <CAKwvOdmV80xgvBnhB6ZpqYaqkxKi-_p+StnMojwNnf3kdxTT1A@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 25 Feb 2020 20:33:34 +0100
+Message-ID: <CAKv+Gu881ZSwvuACmsbBnpfdeJpNYsEQxLSoepJBbZ=O6D6Rcg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: use assembly mnemonics for VFP register access
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Stefan Agner <stefan@agner.ch>, Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jian Cai <jiancai@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200219104148.2.I2c848e8f8ab1bcd4042d8ebcf35de737cceec5fe@changeid>
-References: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid> <20200219104148.2.I2c848e8f8ab1bcd4042d8ebcf35de737cceec5fe@changeid>
-Subject: Re: [PATCH 2/4] drm/msm/dpu: Refactor rm iterator
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Drew Davenport <ddavenport@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Fritz Koenig <frkoenig@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Shubhashree Dhar <dhar@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhengbin <zhengbin13@huawei.com>
-To:     Drew Davenport <ddavenport@chromium.org>,
-        dri-devel@lists.freedesktop.org
-Date:   Tue, 25 Feb 2020 11:33:49 -0800
-Message-ID: <158265922943.177367.14293328114795800228@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Drew Davenport (2020-02-19 09:42:25)
-> Make iterator implementation private, and add function to
-> query resources assigned to an encoder.
->=20
-> Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+On Tue, 25 Feb 2020 at 20:10, Nick Desaulniers <ndesaulniers@google.com> wr=
+ote:
+>
+> On Mon, Feb 24, 2020 at 9:22 PM Stefan Agner <stefan@agner.ch> wrote:
+> >
+> > Clang's integrated assembler does not allow to to use the mcr
+> > instruction to access floating point co-processor registers:
+> > arch/arm/vfp/vfpmodule.c:342:2: error: invalid operand for instruction
+> >         fmxr(FPEXC, fpexc & ~(FPEXC_EX|FPEXC_DEX|FPEXC_FP2V|FPEXC_VV|FP=
+EXC_TRAP_MASK));
+> >         ^
+> > arch/arm/vfp/vfpinstr.h:79:6: note: expanded from macro 'fmxr'
+> >         asm("mcr p10, 7, %0, " vfpreg(_vfp_) ", cr0, 0 @ fmxr   " #_vfp=
+_ ", %0" \
+> >             ^
+> > <inline asm>:1:6: note: instantiated into assembly here
+> >         mcr p10, 7, r0, cr8, cr0, 0 @ fmxr      FPEXC, r0
+> >             ^
+> >
+> > The GNU assembler supports the .fpu directive at least since 2.17 (when
+> > documentation has been added). Since Linux requires binutils 2.21 it is
+> > safe to use .fpu directive. Use the .fpu directive and mnemonics for VF=
+P
+> > register access.
+> >
+> > This allows to build vfpmodule.c with Clang and its integrated assemble=
+r.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/905
+> > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > ---
+> >  arch/arm/vfp/vfpinstr.h | 12 ++++--------
+> >  1 file changed, 4 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm/vfp/vfpinstr.h b/arch/arm/vfp/vfpinstr.h
+> > index 38dc154e39ff..799ccf065406 100644
+> > --- a/arch/arm/vfp/vfpinstr.h
+> > +++ b/arch/arm/vfp/vfpinstr.h
+> > @@ -62,21 +62,17 @@
+> >  #define FPSCR_C (1 << 29)
+> >  #define FPSCR_V        (1 << 28)
+> >
+> > -/*
+> > - * Since we aren't building with -mfpu=3Dvfp, we need to code
+> > - * these instructions using their MRC/MCR equivalents.
+> > - */
+> > -#define vfpreg(_vfp_) #_vfp_
+> > -
+> >  #define fmrx(_vfp_) ({                 \
+> >         u32 __v;                        \
+> > -       asm("mrc p10, 7, %0, " vfpreg(_vfp_) ", cr0, 0 @ fmrx   %0, " #=
+_vfp_    \
+> > +       asm(".fpu       vfpv2\n"        \
+> > +           "vmrs       %0, " #_vfp_    \
+> >             : "=3Dr" (__v) : : "cc");     \
+> >         __v;                            \
+> >   })
+> >
+> >  #define fmxr(_vfp_,_var_)              \
+> > -       asm("mcr p10, 7, %0, " vfpreg(_vfp_) ", cr0, 0 @ fmxr   " #_vfp=
+_ ", %0" \
+> > +       asm(".fpu       vfpv2\n"        \
+> > +           "vmsr       " #_vfp_ ", %0" \
+> >            : : "r" (_var_) : "cc")
+> >
+> >  u32 vfp_single_cpdo(u32 inst, u32 fpscr);
+> > --
+>
+> Hi Stefan,
+> Thanks for the patch.  Reading through:
+> - FMRX, FMXR, and FMSTAT:
+> http://infocenter.arm.com/help/index.jsp?topic=3D/com.arm.doc.dui0068b/Bc=
+fbdihi.html
+> - VMRS and VMSR:
+> http://infocenter.arm.com/help/index.jsp?topic=3D/com.arm.doc.dui0204h/Bc=
+fbdihi.html
+>
+> Should a macro called `fmrx` that had a comment about `fmrx` be using
+> `vmrs` in place of `fmrx`?
+>
+> It looks like Clang treats them the same, but GCC keeps them separate:
+> https://godbolt.org/z/YKmSAs
+> Ah, this is only when streaming to assembly. Looks like they have the
+> same encoding, and produce the same disassembly. (Godbolt emits
+> assembly by default, and has the option to compile, then disassemble).
+> If I take my case from godbolt above:
+>
+> =E2=9E=9C  /tmp arm-linux-gnueabihf-gcc -O2 -c x.c
+> =E2=9E=9C  /tmp llvm-objdump -dr x.o
+>
+> x.o: file format elf32-arm-little
+>
+>
+> Disassembly of section .text:
+>
+> 00000000 bar:
+>        0: f1 ee 10 0a                  vmrs r0, fpscr
+>        4: 70 47                        bx lr
+>        6: 00 bf                        nop
+>
+> 00000008 baz:
+>        8: f1 ee 10 0a                  vmrs r0, fpscr
+>        c: 70 47                        bx lr
+>        e: 00 bf                        nop
+>
+> So indeed a similar encoding exists for the two different assembler
+> instructions.
 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/dr=
-m/msm/disp/dpu1/dpu_encoder.c
-> index f8ac3bf60fd60..6cadeff456f09 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -957,11 +957,11 @@ static void dpu_encoder_virt_mode_set(struct drm_en=
-coder *drm_enc,
->         struct drm_connector *conn =3D NULL, *conn_iter;
->         struct drm_crtc *drm_crtc;
->         struct dpu_crtc_state *cstate;
-> -       struct dpu_rm_hw_iter hw_iter;
->         struct msm_display_topology topology;
-> -       struct dpu_hw_ctl *hw_ctl[MAX_CHANNELS_PER_ENC] =3D { NULL };
-> -       struct dpu_hw_mixer *hw_lm[MAX_CHANNELS_PER_ENC] =3D { NULL };
-> -       int num_lm =3D 0, num_ctl =3D 0;
-> +       struct dpu_hw_blk *hw_pp[MAX_CHANNELS_PER_ENC];
-> +       struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
-> +       struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
-> +       int num_lm, num_ctl, num_pp;
-
-All these should be unsigned too?
-
->         int i, j, ret;
-> =20
->         if (!drm_enc) {
-> @@ -1005,42 +1005,31 @@ static void dpu_encoder_virt_mode_set(struct drm_=
-encoder *drm_enc,
->                 return;
->         }
-> =20
-> -       dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id, DPU_HW_BLK_PINGPO=
-NG);
-> -       for (i =3D 0; i < MAX_CHANNELS_PER_ENC; i++) {
-> -               dpu_enc->hw_pp[i] =3D NULL;
-> -               if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
-> -                       break;
-> -               dpu_enc->hw_pp[i] =3D (struct dpu_hw_pingpong *) hw_iter.=
-hw;
-> -       }
-> -
-> -       dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id, DPU_HW_BLK_CTL);
-> -       for (i =3D 0; i < MAX_CHANNELS_PER_ENC; i++) {
-> -               if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
-> -                       break;
-> -               hw_ctl[i] =3D (struct dpu_hw_ctl *)hw_iter.hw;
-
-Why cast? Isn't it void pointer?
-
-> -               num_ctl++;
-> -       }
-> +       num_pp =3D dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->b=
-ase.id,
-> +               DPU_HW_BLK_PINGPONG, hw_pp, ARRAY_SIZE(hw_pp));
-> +       num_ctl =3D dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->=
-base.id,
-> +               DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
-> +       num_lm =3D dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->b=
-ase.id,
-> +               DPU_HW_BLK_LM, hw_lm, ARRAY_SIZE(hw_lm));
-> =20
-> -       dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id, DPU_HW_BLK_LM);
-> -       for (i =3D 0; i < MAX_CHANNELS_PER_ENC; i++) {
-> -               if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
-> -                       break;
-> -               hw_lm[i] =3D (struct dpu_hw_mixer *)hw_iter.hw;
-
-Why cast?
-
-> -               num_lm++;
-> -       }
-> +       for (i =3D 0; i < MAX_CHANNELS_PER_ENC; i++)
-> +               dpu_enc->hw_pp[i] =3D i < num_pp ? to_dpu_hw_pingpong(hw_=
-pp[i])
-> +                                               : NULL;
-
-This line is pretty hard to read. Maybe use an if/else?
-
-> =20
->         cstate =3D to_dpu_crtc_state(drm_crtc->state);
-> =20
->         for (i =3D 0; i < num_lm; i++) {
->                 int ctl_idx =3D (i < num_ctl) ? i : (num_ctl-1);
-> =20
-> -               cstate->mixers[i].hw_lm =3D hw_lm[i];
-> -               cstate->mixers[i].lm_ctl =3D hw_ctl[ctl_idx];
-> +               cstate->mixers[i].hw_lm =3D to_dpu_hw_mixer(hw_lm[i]);
-> +               cstate->mixers[i].lm_ctl =3D to_dpu_hw_ctl(hw_ctl[ctl_idx=
-]);
->         }
-> =20
->         cstate->num_mixers =3D num_lm;
-> =20
->         for (i =3D 0; i < dpu_enc->num_phys_encs; i++) {
-> +               int num_blk;
-
-unsigned int?
-
-> +               struct dpu_hw_blk *hw_blk[MAX_CHANNELS_PER_ENC];
->                 struct dpu_encoder_phys *phys =3D dpu_enc->phys_encs[i];
-> =20
->                 if (!dpu_enc->hw_pp[i]) {
-> @@ -1056,17 +1045,15 @@ static void dpu_encoder_virt_mode_set(struct drm_=
-encoder *drm_enc,
->                 }
-> =20
->                 phys->hw_pp =3D dpu_enc->hw_pp[i];
-> -               phys->hw_ctl =3D hw_ctl[i];
-> +               phys->hw_ctl =3D to_dpu_hw_ctl(hw_ctl[i]);
-> =20
-> -               dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id,
-> -                                   DPU_HW_BLK_INTF);
-> -               for (j =3D 0; j < MAX_CHANNELS_PER_ENC; j++) {
-> +               num_blk =3D dpu_rm_get_assigned_resources(&dpu_kms->rm,
-> +                       drm_enc->base.id, DPU_HW_BLK_INTF, hw_blk,
-> +                       ARRAY_SIZE(hw_blk));
-> +               for (j =3D 0; j < num_blk; j++) {
->                         struct dpu_hw_intf *hw_intf;
-> =20
-> -                       if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
-> -                               break;
-> -
-> -                       hw_intf =3D (struct dpu_hw_intf *)hw_iter.hw;
-> +                       hw_intf =3D to_dpu_hw_intf(hw_blk[i]);
->                         if (hw_intf->idx =3D=3D phys->intf_idx)
->                                 phys->hw_intf =3D hw_intf;
->                 }
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm=
-/disp/dpu1/dpu_rm.c
-> index dea1dba441fe7..779df26dc81ae 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> @@ -83,7 +97,7 @@ static bool _dpu_rm_get_hw_locked(struct dpu_rm *rm, st=
-ruct dpu_rm_hw_iter *i)
->         return false;
->  }
-> =20
-> -bool dpu_rm_get_hw(struct dpu_rm *rm, struct dpu_rm_hw_iter *i)
-> +static bool dpu_rm_get_hw(struct dpu_rm *rm, struct dpu_rm_hw_iter *i)
->  {
->         bool ret;
-> =20
-> @@ -635,3 +649,16 @@ int dpu_rm_reserve(
-> =20
->         return ret;
->  }
-> +
-> +int dpu_rm_get_assigned_resources(struct dpu_rm *rm, uint32_t enc_id,
-
-Return unsigned int?
-
-> +       enum dpu_hw_blk_type type, struct dpu_hw_blk **blks, int blks_siz=
-e)
-
-unsigned int blks_size?
-
-> +{
-> +       struct dpu_rm_hw_iter hw_iter;
-> +       int num_blks =3D 0;
-
-unsigned int?
-
-> +
-> +       dpu_rm_init_hw_iter(&hw_iter, enc_id, type);
-> +       while (num_blks < blks_size && dpu_rm_get_hw(rm, &hw_iter))
-> +               blks[num_blks++] =3D hw_iter.blk->hw;
-> +
-> +       return num_blks;
-
-It's not possible for it to be negative number right?
-
-> +}
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h b/drivers/gpu/drm/msm=
-/disp/dpu1/dpu_rm.h
-> index 9c580a0170946..982b91e272275 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-> @@ -24,26 +24,6 @@ struct dpu_rm {
->         struct mutex rm_lock;
->  };
-> =20
-> -/**
-> - *  struct dpu_rm_hw_blk - resource manager internal structure
-> - *     forward declaration for single iterator definition without void p=
-ointer
-> - */
-> -struct dpu_rm_hw_blk;
-> -
-> -/**
-> - * struct dpu_rm_hw_iter - iterator for use with dpu_rm
-> - * @hw: dpu_hw object requested, or NULL on failure
-> - * @blk: dpu_rm internal block representation. Clients ignore. Used as i=
-terator.
-> - * @enc_id: DRM ID of Encoder client wishes to search for, or 0 for Any =
-Encoder
-
-Why is Encoder and Any capitalized?
-
-> - * @type: Hardware Block Type client wishes to search for.
-> - */
-> -struct dpu_rm_hw_iter {
-> -       void *hw;
-> -       struct dpu_rm_hw_blk *blk;
-> -       uint32_t enc_id;
-> -       enum dpu_hw_blk_type type;
-> -};
-> -
->  /**
->   * dpu_rm_init - Read hardware catalog and create reservation tracking o=
-bjects
->   *     for all HW blocks.
-> @@ -93,28 +73,9 @@ int dpu_rm_reserve(struct dpu_rm *rm,
->  void dpu_rm_release(struct dpu_rm *rm, struct drm_encoder *enc);
-> =20
->  /**
-> - * dpu_rm_init_hw_iter - setup given iterator for new iteration over hw =
-list
-> - *     using dpu_rm_get_hw
-> - * @iter: iter object to initialize
-> - * @enc_id: DRM ID of Encoder client wishes to search for, or 0 for Any =
-Encoder
-> - * @type: Hardware Block Type client wishes to search for.
-
-Ah I guess it's copied from here.
+Does that hold for ARM (A32) instructions as well?
