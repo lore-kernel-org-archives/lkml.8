@@ -2,237 +2,92 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F40EC35E09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B05C35E09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1BA02084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582647205;
-	bh=NSkebQCWE7xdULDE77JJ/S8AyzPx1Omet//km+sAlIc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KXBM78lU68H2DBsrR02rKcR7Nt4QonGFe35u3gJdr3JRMfOnllW3t2WDcuRdSrZPC
-	 OCojXOBKTvpC5nTSHJvLi7k8LWkqO1136QTdViWay5cIl6rt/029FRWozukvcD0WTL
-	 quUOLe28ZxEsa85HeOSm+bhY8qL17uiZbYsbFVrk=
+	by mail.kernel.org (Postfix) with ESMTP id 912F720CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbgBYQNY (ORCPT
+        id S1730945AbgBYQNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:13:24 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35462 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgBYQNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:13:24 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so50324otd.2;
-        Tue, 25 Feb 2020 08:13:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VL+DlyeyetOp4hj4Wd5H2StakcvzqSai3gD2cxZNaVU=;
-        b=TCJFthGcpQjUV/t0A1xP4NxNmzxtaPk8RQ9L0c7x7ukdLOADNc4qsmFQrs3s1cmoF8
-         12OJSRL5wKhACXCm27oGkuuYuW7pO9CAg5YbTrV7Vei+8vsE0t4TuP1G0LmpPC9VTaip
-         w5j0I5h/f15lY1x+pA/NDnOrH26xHCVTAZJ/kx21em7dlwQt2iS8k/IbfYGGvwTfCXse
-         R3zQYnBAD8W47X7+04bYE3DzPXpddDYSdUsmwuQvcZwTvtEdmtM3ew2rNtqsgVY/mx1M
-         Kcbdu3XfjKovb6hlbilsLbL8M5YdCd+KOxDlAnRvhHsPAPSjgm5/0yhnrHk4qvaqLlyb
-         oWWQ==
-X-Gm-Message-State: APjAAAW7ljdwiaM5XkKnXBJ86E0jKvTp2+SvMU9QbCSl1TJJgRiC9XFu
-        sIYuvWsTI40kP9k57U7gE1bIQDY8Ci/PWouK5HA=
-X-Google-Smtp-Source: APXvYqy63J+4B+eRAxGKURNWKgaKqO36eFLFSszHvTNIVZUAJvPu1RoqON1pZkTd0zEjWOHRd5HvC3NhPplF8VrLqMI=
-X-Received: by 2002:a9d:7653:: with SMTP id o19mr43546746otl.118.1582647202902;
- Tue, 25 Feb 2020 08:13:22 -0800 (PST)
+        Tue, 25 Feb 2020 11:13:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47326 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728065AbgBYQNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:13:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AB537ACB8;
+        Tue, 25 Feb 2020 16:13:34 +0000 (UTC)
+Message-ID: <52aebb76952df530f93e9de539124ddf1b825876.camel@suse.de>
+Subject: Re: [PATCH 10/89] clk: bcm: rpi: Remove global pllb_arm clock
+ pointer
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 25 Feb 2020 17:13:33 +0100
+In-Reply-To: <3876f732b3fec2059270678d464d27b7d3a0414b.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <3876f732b3fec2059270678d464d27b7d3a0414b.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+DV8XHxS6Q5E2RTbz1B1"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-References: <20200225131938.120447-1-christian.brauner@ubuntu.com> <20200225131938.120447-7-christian.brauner@ubuntu.com>
-In-Reply-To: <20200225131938.120447-7-christian.brauner@ubuntu.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Feb 2020 17:13:11 +0100
-Message-ID: <CAJZ5v0ip8Z78_tOrDB+dR_t+V6YfKi6qY14nr6j6fW=zPu99wQ@mail.gmail.com>
-Subject: Re: [PATCH v6 6/9] drivers/base/power: add dpm_sysfs_change_owner()
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 2:22 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> Add a helper to change the owner of a device's power entries. This
-> needs to happen when the ownership of a device is changed, e.g. when
-> moving network devices between network namespaces.
-> This function will be used to correctly account for ownership changes,
-> e.g. when moving network devices between network namespaces.
->
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+--=-+DV8XHxS6Q5E2RTbz1B1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> ---
-> /* v2 */
-> - "Rafael J. Wysocki" <rafael@kernel.org>:
->   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
->      if (device_can_wakeup(dev)) check since the former can never be true if
->      the latter is false.
->
-> - Christian Brauner <christian.brauner@ubuntu.com>:
->   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
->     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
->     when this config option is set.
->
-> /* v3 */
-> -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
->    - Add explicit uid/gid parameters.
->
-> /* v4 */
-> - "Rafael J. Wysocki" <rafael@kernel.org>:
->    - Remove in-function #ifdef in favor of separate helper that is a nop
->      whenver !CONFIG_PM_SLEEP.
->
-> /* v5 */
-> - "Rafael J. Wysocki" <rafael@kernel.org>:
->    - Return directly if condition is true in dpm_sysfs_wakeup_change_owner()
->      instead of using additional variable.
->
-> /* v6 */
-> - Christian Brauner <christian.brauner@ubuntu.com>:
->   - Make dpm_sysfs_wakeup_change_owner() static inline.
-> ---
->  drivers/base/core.c        |  4 +++
->  drivers/base/power/power.h |  3 +++
->  drivers/base/power/sysfs.c | 55 +++++++++++++++++++++++++++++++++++++-
->  3 files changed, 61 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 988f34ce2eb0..fb8b7990f6fd 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3552,6 +3552,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
->         if (error)
->                 goto out;
->
-> +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
-> +       if (error)
-> +               goto out;
-> +
->  #ifdef CONFIG_BLOCK
->         if (sysfs_deprecated && dev->class == &block_class)
->                 goto out;
-> diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
-> index 444f5c169a0b..54292cdd7808 100644
-> --- a/drivers/base/power/power.h
-> +++ b/drivers/base/power/power.h
-> @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
->  extern void pm_qos_sysfs_remove_flags(struct device *dev);
->  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
->  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
-> +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
->
->  #else /* CONFIG_PM */
->
-> @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
->
->  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
->  static inline void dpm_sysfs_remove(struct device *dev) {}
-> +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
-> +                                        kgid_t kgid) { return 0; }
->
->  #endif
->
-> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> index d7d82db2e4bc..2b99fe1eb207 100644
-> --- a/drivers/base/power/sysfs.c
-> +++ b/drivers/base/power/sysfs.c
-> @@ -480,6 +480,14 @@ static ssize_t wakeup_last_time_ms_show(struct device *dev,
->         return enabled ? sprintf(buf, "%lld\n", msec) : sprintf(buf, "\n");
->  }
->
-> +static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
-> +                                               kgid_t kgid)
-> +{
-> +       if (dev->power.wakeup && dev->power.wakeup->dev)
-> +               return device_change_owner(dev->power.wakeup->dev, kuid, kgid);
-> +       return 0;
-> +}
-> +
->  static DEVICE_ATTR_RO(wakeup_last_time_ms);
->
->  #ifdef CONFIG_PM_AUTOSLEEP
-> @@ -501,7 +509,13 @@ static ssize_t wakeup_prevent_sleep_time_ms_show(struct device *dev,
->
->  static DEVICE_ATTR_RO(wakeup_prevent_sleep_time_ms);
->  #endif /* CONFIG_PM_AUTOSLEEP */
-> -#endif /* CONFIG_PM_SLEEP */
-> +#else /* CONFIG_PM_SLEEP */
-> +static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
-> +                                               kgid_t kgid)
-> +{
-> +       return 0;
-> +}
-> +#endif
->
->  #ifdef CONFIG_PM_ADVANCED_DEBUG
->  static ssize_t runtime_usage_show(struct device *dev,
-> @@ -684,6 +698,45 @@ int dpm_sysfs_add(struct device *dev)
->         return rc;
->  }
->
-> +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> +{
-> +       int rc;
-> +
-> +       if (device_pm_not_required(dev))
-> +               return 0;
-> +
-> +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
-> +       if (rc)
-> +               return rc;
-> +
-> +       if (pm_runtime_callbacks_present(dev)) {
-> +               rc = sysfs_group_change_owner(
-> +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +
-> +       if (device_can_wakeup(dev)) {
-> +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
-> +                                             kuid, kgid);
-> +               if (rc)
-> +                       return rc;
-> +
-> +               rc = dpm_sysfs_wakeup_change_owner(dev, kuid, kgid);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +
-> +       if (dev->power.set_latency_tolerance) {
-> +               rc = sysfs_group_change_owner(
-> +                       &dev->kobj, &pm_qos_latency_tolerance_attr_group, kuid,
-> +                       kgid);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +       return 0;
-> +}
-> +
->  int wakeup_sysfs_add(struct device *dev)
->  {
->         return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
-> --
-> 2.25.1
->
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> The pllb_arm clk_hw pointer in the raspberry_clk structure isn't used
+> anywhere but in the raspberrypi_register_pllb_arm.
+>=20
+> Let's remove it, this will make our lives easier in future patches.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Thanks!
+Nicolas
+
+
+--=-+DV8XHxS6Q5E2RTbz1B1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VR60ACgkQlfZmHno8
+x/6e7wf/XVgbwEEX5ppOPnSG2E91lbuIzKYvYGPjiktH7Nah1qc0u+QdwzPf6KDT
+yc3+x2Qc8SJMYKsA67LRGpfmpt4x/BTMobJ9cz5v5wSi3bdRy/BI1ocszZ39NJPW
+5gSbcUp9qRpTHFav65qYTmKeB/lq0D9legwP/2BzurnevyEnmCvmRpO2/rHytbqI
+xb0zgMky5eME5T45VseWgkO0MsvjYNavumgrMC7fXP6aqsFyugX0mGmgM7Qy0I8z
+/b7sC6q/c/52SuxzZv0089XNRCz67N27Kqnxm0qY2JX14QggoxHDpFnHuBUUceK4
+qzePwlSt7NB700qR2B7M4kkoiBlWbg==
+=wHRd
+-----END PGP SIGNATURE-----
+
+--=-+DV8XHxS6Q5E2RTbz1B1--
+
