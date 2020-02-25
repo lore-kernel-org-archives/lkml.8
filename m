@@ -2,228 +2,188 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD75C35DF1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFF7C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84FF22525
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D80122525
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:08:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="W5pZkJuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgBYDII (ORCPT
+        id S1728899AbgBYDI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:08:08 -0500
-Received: from mga09.intel.com ([134.134.136.24]:2212 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728011AbgBYDII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:08:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 19:08:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
-   d="scan'208";a="237534007"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga003.jf.intel.com with ESMTP; 24 Feb 2020 19:08:04 -0800
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 24 Feb 2020 19:08:04 -0800
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 24 Feb 2020 19:08:04 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.97]) with mapi id 14.03.0439.000;
- Tue, 25 Feb 2020 11:08:01 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: RE: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
-Thread-Topic: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
-Thread-Index: AQHV51YaoTnickP570etlLGInd5eAKgrQJIw
-Date:   Tue, 25 Feb 2020 03:08:00 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
- <158213846731.17090.37693075723046377.stgit@gimli.home>
-In-Reply-To: <158213846731.17090.37693075723046377.stgit@gimli.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGRlNGZlNmEtNWQyNi00ZmI0LWE1MzgtZGE5OWVhOWFhODU5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidk8wamFLNjNkZnpBSzd5b3VHRmpsTTFBOWRwM3ZYc2hLeFBabTVuSVoxXC9uQ0RrZUpUdzhsZURYT1RSb1BZak8ifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Feb 2020 22:08:28 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38580 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728886AbgBYDI1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 22:08:27 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z19so10711614qkj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:08:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Czy4TADuB5bsGvxmnxW7ivChVVUNSrZgPzlTYMcyuIQ=;
+        b=W5pZkJuHrdFd4lHHumAcstAq5SCYfgAYaY7X3Hji4zTWZK60JZ0iG8cdWleXklD5I3
+         WPY3WIsRojFXAH2Fay2W/LCJ0mTMyKn62K8SZtvhKvGiziiBhWsVVQgCVVQmDXmAx1bh
+         /WpcCHUm+qrHUG1jzWG3BDE3b5y+TDxw+CyqC3692YY0ReYC3JrA0WOkO+IdNWHZJDue
+         t/Y8qlxcMTL+Qyx+aSYZSufmGe+q+OQ+ooCabgOeM2V70I1W01+Bg0bIbgD47y+uosP+
+         ewmp/S2Q8zM0JLtTMT88tg97KN8KCe2woW0vD4yiIFgnjS/jXVOdh5Ky1w+Y+QP0qKI/
+         5d2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Czy4TADuB5bsGvxmnxW7ivChVVUNSrZgPzlTYMcyuIQ=;
+        b=L90Qb+iI5uRld5Av/njcvetedQDTgMm2IgRAPemF14VIdpBcp+1Oi3AmEs0DXZ2jps
+         aFcNJrKkE0ZarQo6E7oYYpqU/kU3+/xGDRYY9ujWD5SvJfiAb2fol6N8X7eW/BnCrNs0
+         TqoikPX73A0dm5mXETvA6AoepYUdCGqdNL0nzewZtHMkfHhXtKMgvJkyLQ+pIVd8tW4B
+         7jz7AHOqy4L4cZgXS9U/5JCQM6z/2L9+BqudlA/43YA0ljvM9ktfRzzngsiCQbu5T9MA
+         ZhP2Y3EYzuc5wMwE4omI/5eVaKQRznm+QueNxz/64fOZCviOT2oPwzg7htBegHVjfFVH
+         lRNw==
+X-Gm-Message-State: APjAAAVuhy0qXiLYVMVVvzT1Z+8DzifenqetqMZ8txfuodw7Sr1JMHbu
+        gl62ZGx0QC+S/AWHHNrhc/5Zig==
+X-Google-Smtp-Source: APXvYqwZgzbXZyY17bBjqWnjmGcc7nmUcbkNt8juBskAZl+S6ZFY+tJusS6IHPIB9iWQCEK4kE4rcg==
+X-Received: by 2002:a37:4f93:: with SMTP id d141mr53357449qkb.125.1582600106383;
+        Mon, 24 Feb 2020 19:08:26 -0800 (PST)
+Received: from ovpn-121-71.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y190sm1670457qkb.130.2020.02.24.19.08.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2020 19:08:25 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de, fweisbec@gmail.com, mingo@kernel.org
+Cc:     elver@google.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] tick/sched: fix data races at tick_do_timer_cpu
+Date:   Mon, 24 Feb 2020 22:08:08 -0500
+Message-Id: <20200225030808.1207-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbGV4IFdpbGxpYW1zb24NCj4gU2VudDogVGh1cnNkYXksIEZlYnJ1YXJ5IDIwLCAy
-MDIwIDI6NTQgQU0NCj4gDQo+IFdpdGggdGhlIFZGIFRva2VuIGludGVyZmFjZSB3ZSBjYW4gbm93
-IGV4cGVjdCB0aGF0IGEgdmZpbyB1c2Vyc3BhY2UNCj4gZHJpdmVyIG11c3QgYmUgaW4gY29sbGFi
-b3JhdGlvbiB3aXRoIHRoZSBQRiBkcml2ZXIsIGFuIHVud2l0dGluZw0KPiB1c2Vyc3BhY2UgZHJp
-dmVyIHdpbGwgbm90IGJlIGFibGUgdG8gZ2V0IHBhc3QgdGhlIEdFVF9ERVZJQ0VfRkQgc3RlcA0K
-PiBpbiBhY2Nlc3NpbmcgdGhlIGRldmljZS4gIFdlIGNhbiBub3cgbW92ZSBvbiB0byBhY3R1YWxs
-eSBhbGxvd2luZw0KPiBTUi1JT1YgdG8gYmUgZW5hYmxlZCBieSB2ZmlvLXBjaSBvbiB0aGUgUEYu
-ICBTdXBwb3J0IGZvciB0aGlzIGlzIG5vdA0KPiBlbmFibGVkIGJ5IGRlZmF1bHQgaW4gdGhpcyBj
-b21taXQsIGJ1dCBpdCBkb2VzIHByb3ZpZGUgYSBtb2R1bGUgb3B0aW9uDQo+IGZvciB0aGlzIHRv
-IGJlIGVuYWJsZWQgKGVuYWJsZV9zcmlvdj0xKS4gIEVuYWJsaW5nIFZGcyBpcyByYXRoZXINCj4g
-c3RyYWlnaHRmb3J3YXJkLCBleGNlcHQgd2UgZG9uJ3Qgd2FudCB0byByaXNrIHRoYXQgYSBWRiBt
-aWdodCBnZXQNCj4gYXV0b3Byb2JlZCBhbmQgYm91bmQgdG8gb3RoZXIgZHJpdmVycywgc28gYSBi
-dXMgbm90aWZpZXIgaXMgdXNlZCB0bw0KPiAiY2FwdHVyZSIgVkZzIHRvIHZmaW8tcGNpIHVzaW5n
-IHRoZSBkcml2ZXJfb3ZlcnJpZGUgc3VwcG9ydC4gIFdlDQo+IGFzc3VtZSBhbnkgbGF0ZXIgYWN0
-aW9uIHRvIGJpbmQgdGhlIGRldmljZSB0byBvdGhlciBkcml2ZXJzIGlzDQo+IGNvbmRvbmVkIGJ5
-IHRoZSBzeXN0ZW0gYWRtaW4gYW5kIGFsbG93IGl0IHdpdGggYSBsb2cgd2FybmluZy4NCj4gDQo+
-IHZmaW8tcGNpIHdpbGwgZGlzYWJsZSBTUi1JT1Ygb24gYSBQRiBiZWZvcmUgcmVsZWFzaW5nIHRo
-ZSBkZXZpY2UsDQo+IGFsbG93aW5nIGEgVkYgZHJpdmVyIHRvIGJlIGFzc3VyZWQgb3RoZXIgZHJp
-dmVycyBjYW5ub3QgdGFrZSBvdmVyIHRoZQ0KPiBQRiBhbmQgdGhhdCBhbnkgb3RoZXIgdXNlcnNw
-YWNlIGRyaXZlciBtdXN0IGtub3cgdGhlIHNoYXJlZCBWRiB0b2tlbi4NCj4gVGhpcyBzdXBwb3J0
-IGFsc28gZG9lcyBub3QgcHJvdmlkZSBhIG1lY2hhbmlzbSBmb3IgdGhlIFBGIHVzZXJzcGFjZQ0K
-PiBkcml2ZXIgaXRzZWxmIHRvIG1hbmlwdWxhdGUgU1ItSU9WIHRocm91Z2ggdGhlIHZmaW8gQVBJ
-LiAgV2l0aCB0aGlzDQo+IHBhdGNoIFNSLUlPViBjYW4gb25seSBiZSBlbmFibGVkIHZpYSB0aGUg
-aG9zdCBzeXNmcyBpbnRlcmZhY2UgYW5kIHRoZQ0KPiBQRiBkcml2ZXIgdXNlciBjYW5ub3QgY3Jl
-YXRlIG9yIHJlbW92ZSBWRnMuDQoNCkknbSBub3Qgc3VyZSBob3cgbWFueSBkZXZpY2VzIGNhbiBi
-ZSBwcm9wZXJseSBjb25maWd1cmVkIHNpbXBseSANCndpdGggcGNpX2VuYWJsZV9zcmlvdi4gSXQg
-aXMgbm90IHVudXN1YWwgdG8gcmVxdWlyZSBQRiBkcml2ZXIgcHJlcGFyZQ0Kc29tZXRoaW5nIGJl
-Zm9yZSB0dXJuaW5nIFBDSSBTUi1JT1YgY2FwYWJpbGl0eS4gSWYgeW91IGxvb2sga2VybmVsDQpQ
-RiBkcml2ZXJzLCB0aGVyZSBhcmUgb25seSB0d28gdXNpbmcgZ2VuZXJpYyBwY2lfc3Jpb3ZfY29u
-ZmlndXJlXw0Kc2ltcGxlIChzaW1wbGUgd3JhcHBlciBsaWtlIHBjaV9lbmFibGVfc3Jpb3YpLCB3
-aGlsZSBtb3N0IG90aGVycw0KaW1wbGVtZW50aW5nIHRoZWlyIG93biBjYWxsYmFjay4gSG93ZXZl
-ciB2ZmlvIGl0c2VsZiBoYXMgbm8gaWRlYQ0KdGh1cyBJJ20gbm90IHN1cmUgaG93IGFuIHVzZXIg
-a25vd3Mgd2hldGhlciB1c2luZyB0aGlzIG9wdGlvbiBjYW4NCmFjdHVhbGx5IG1lZXQgaGlzIHB1
-cnBvc2UuIEkgbWF5IG1pc3Mgc29tZXRoaW5nIGhlcmUsIHBvc3NpYmx5IA0KdXNpbmcgRFBESyBh
-cyBhbiBleGFtcGxlIHdpbGwgbWFrZSBpdCBjbGVhcmVyLg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiBBbGV4IFdpbGxpYW1zb24gPGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tPg0KPiAtLS0NCj4g
-IGRyaXZlcnMvdmZpby9wY2kvdmZpb19wY2kuYyAgICAgICAgIHwgIDEwNiArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0NCj4gLS0NCj4gIGRyaXZlcnMvdmZpby9wY2kvdmZpb19wY2lf
-cHJpdmF0ZS5oIHwgICAgMiArDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDk3IGluc2VydGlvbnMoKyks
-IDExIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmZpby9wY2kvdmZp
-b19wY2kuYyBiL2RyaXZlcnMvdmZpby9wY2kvdmZpb19wY2kuYw0KPiBpbmRleCBlNGQ1ZDI2ZTVl
-NzEuLmI0MGFkZTQ4YTg0NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy92ZmlvL3BjaS92ZmlvX3Bj
-aS5jDQo+ICsrKyBiL2RyaXZlcnMvdmZpby9wY2kvdmZpb19wY2kuYw0KPiBAQCAtNTQsNiArNTQs
-MTIgQEAgbW9kdWxlX3BhcmFtKGRpc2FibGVfaWRsZV9kMywgYm9vbCwgU19JUlVHTyB8DQo+IFNf
-SVdVU1IpOw0KPiAgTU9EVUxFX1BBUk1fREVTQyhkaXNhYmxlX2lkbGVfZDMsDQo+ICAJCSAiRGlz
-YWJsZSB1c2luZyB0aGUgUENJIEQzIGxvdyBwb3dlciBzdGF0ZSBmb3IgaWRsZSwgdW51c2VkDQo+
-IGRldmljZXMiKTsNCj4gDQo+ICtzdGF0aWMgYm9vbCBlbmFibGVfc3Jpb3Y7DQo+ICsjaWZkZWYg
-Q09ORklHX1BDSV9JT1YNCj4gK21vZHVsZV9wYXJhbShlbmFibGVfc3Jpb3YsIGJvb2wsIDA2NDQp
-Ow0KPiArTU9EVUxFX1BBUk1fREVTQyhlbmFibGVfc3Jpb3YsICJFbmFibGUgc3VwcG9ydCBmb3Ig
-U1ItSU9WDQo+IGNvbmZpZ3VyYXRpb24iKTsNCj4gKyNlbmRpZg0KPiArDQo+ICBzdGF0aWMgaW5s
-aW5lIGJvb2wgdmZpb192Z2FfZGlzYWJsZWQodm9pZCkNCj4gIHsNCj4gICNpZmRlZiBDT05GSUdf
-VkZJT19QQ0lfVkdBDQo+IEBAIC0xNTI4LDYgKzE1MzQsMzUgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCB2ZmlvX2RldmljZV9vcHMgdmZpb19wY2lfb3BzID0NCj4gew0KPiANCj4gIHN0YXRpYyBpbnQg
-dmZpb19wY2lfcmVmbGNrX2F0dGFjaChzdHJ1Y3QgdmZpb19wY2lfZGV2aWNlICp2ZGV2KTsNCj4g
-IHN0YXRpYyB2b2lkIHZmaW9fcGNpX3JlZmxja19wdXQoc3RydWN0IHZmaW9fcGNpX3JlZmxjayAq
-cmVmbGNrKTsNCj4gK3N0YXRpYyBzdHJ1Y3QgcGNpX2RyaXZlciB2ZmlvX3BjaV9kcml2ZXI7DQo+
-ICsNCj4gK3N0YXRpYyBpbnQgdmZpb19wY2lfYnVzX25vdGlmaWVyKHN0cnVjdCBub3RpZmllcl9i
-bG9jayAqbmIsDQo+ICsJCQkJIHVuc2lnbmVkIGxvbmcgYWN0aW9uLCB2b2lkICpkYXRhKQ0KPiAr
-ew0KPiArCXN0cnVjdCB2ZmlvX3BjaV9kZXZpY2UgKnZkZXYgPSBjb250YWluZXJfb2YobmIsDQo+
-ICsJCQkJCQkgICAgc3RydWN0IHZmaW9fcGNpX2RldmljZSwgbmIpOw0KPiArCXN0cnVjdCBkZXZp
-Y2UgKmRldiA9IGRhdGE7DQo+ICsJc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRl
-dik7DQo+ICsJc3RydWN0IHBjaV9kZXYgKnBoeXNmbiA9IHBjaV9waHlzZm4ocGRldik7DQo+ICsN
-Cj4gKwlpZiAoYWN0aW9uID09IEJVU19OT1RJRllfQUREX0RFVklDRSAmJg0KPiArCSAgICBwZGV2
-LT5pc192aXJ0Zm4gJiYgcGh5c2ZuID09IHZkZXYtPnBkZXYpIHsNCj4gKwkJcGNpX2luZm8odmRl
-di0+cGRldiwgIkNhcHR1cmVkIFNSLUlPViBWRiAlcw0KPiBkcml2ZXJfb3ZlcnJpZGVcbiIsDQo+
-ICsJCQkgcGNpX25hbWUocGRldikpOw0KPiArCQlwZGV2LT5kcml2ZXJfb3ZlcnJpZGUgPSBrYXNw
-cmludGYoR0ZQX0tFUk5FTCwgIiVzIiwNCj4gKwkJCQkJCSAgdmZpb19wY2lfb3BzLm5hbWUpOw0K
-PiArCX0gZWxzZSBpZiAoYWN0aW9uID09IEJVU19OT1RJRllfQk9VTkRfRFJJVkVSICYmDQo+ICsJ
-CSAgIHBkZXYtPmlzX3ZpcnRmbiAmJiBwaHlzZm4gPT0gdmRldi0+cGRldikgew0KPiArCQlzdHJ1
-Y3QgcGNpX2RyaXZlciAqZHJ2ID0gcGNpX2Rldl9kcml2ZXIocGRldik7DQo+ICsNCj4gKwkJaWYg
-KGRydiAmJiBkcnYgIT0gJnZmaW9fcGNpX2RyaXZlcikNCj4gKwkJCXBjaV93YXJuKHZkZXYtPnBk
-ZXYsDQo+ICsJCQkJICJWRiAlcyBib3VuZCB0byBkcml2ZXIgJXMgd2hpbGUgUEYgYm91bmQgdG8N
-Cj4gdmZpby1wY2lcbiIsDQo+ICsJCQkJIHBjaV9uYW1lKHBkZXYpLCBkcnYtPm5hbWUpOw0KPiAr
-CX0NCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiANCj4gIHN0YXRpYyBpbnQgdmZpb19wY2lf
-cHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNlX2lkICpp
-ZCkNCj4gIHsNCj4gQEAgLTE1MzksMTIgKzE1NzQsMTIgQEAgc3RhdGljIGludCB2ZmlvX3BjaV9w
-cm9iZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwNCj4gY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQg
-KmlkKQ0KPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gDQo+ICAJLyoNCj4gLQkgKiBQcmV2ZW50IGJp
-bmRpbmcgdG8gUEZzIHdpdGggVkZzIGVuYWJsZWQsIHRoaXMgdG9vIGVhc2lseSBhbGxvd3MNCj4g
-LQkgKiB1c2Vyc3BhY2UgaW5zdGFuY2Ugd2l0aCBWRnMgYW5kIFBGcyBmcm9tIHRoZSBzYW1lIGRl
-dmljZSwgd2hpY2gNCj4gLQkgKiBjYW5ub3Qgd29yay4gIERpc2FibGluZyBTUi1JT1YgaGVyZSB3
-b3VsZCBpbml0aWF0ZSByZW1vdmluZyB0aGUNCj4gLQkgKiBWRnMsIHdoaWNoIHdvdWxkIHVuYmlu
-ZCB0aGUgZHJpdmVyLCB3aGljaCBpcyBwcm9uZSB0byBibG9ja2luZw0KPiAtCSAqIGlmIHRoYXQg
-VkYgaXMgYWxzbyBpbiB1c2UgYnkgdmZpby1wY2kuICBKdXN0IHJlamVjdCB0aGVzZSBQRnMNCj4g
-LQkgKiBhbmQgbGV0IHRoZSB1c2VyIHNvcnQgaXQgb3V0Lg0KPiArCSAqIFByZXZlbnQgYmluZGlu
-ZyB0byBQRnMgd2l0aCBWRnMgZW5hYmxlZCwgdGhlIFZGcyBtaWdodCBiZSBpbiB1c2UNCj4gKwkg
-KiBieSB0aGUgaG9zdCBvciBvdGhlciB1c2Vycy4gIFdlIGNhbm5vdCBjYXB0dXJlIHRoZSBWRnMg
-aWYgdGhleQ0KPiArCSAqIGFscmVhZHkgZXhpc3QsIG5vciBjYW4gd2UgdHJhY2sgVkYgdXNlcnMu
-ICBEaXNhYmxpbmcgU1ItSU9WIGhlcmUNCj4gKwkgKiB3b3VsZCBpbml0aWF0ZSByZW1vdmluZyB0
-aGUgVkZzLCB3aGljaCB3b3VsZCB1bmJpbmQgdGhlIGRyaXZlciwNCj4gKwkgKiB3aGljaCBpcyBw
-cm9uZSB0byBibG9ja2luZyBpZiB0aGF0IFZGIGlzIGFsc28gaW4gdXNlIGJ5IHZmaW8tcGNpLg0K
-PiArCSAqIEp1c3QgcmVqZWN0IHRoZXNlIFBGcyBhbmQgbGV0IHRoZSB1c2VyIHNvcnQgaXQgb3V0
-Lg0KPiAgCSAqLw0KPiAgCWlmIChwY2lfbnVtX3ZmKHBkZXYpKSB7DQo+ICAJCXBjaV93YXJuKHBk
-ZXYsICJDYW5ub3QgYmluZCB0byBQRiB3aXRoIFNSLUlPViBlbmFibGVkXG4iKTsNCj4gQEAgLTE1
-OTIsNiArMTYyNywxOCBAQCBzdGF0aWMgaW50IHZmaW9fcGNpX3Byb2JlKHN0cnVjdCBwY2lfZGV2
-ICpwZGV2LA0KPiBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpDQo+ICAJCQlrZnJlZSh2
-ZGV2KTsNCj4gIAkJCXJldHVybiAtRU5PTUVNOw0KPiAgCQl9DQo+ICsNCj4gKwkJdmRldi0+bmIu
-bm90aWZpZXJfY2FsbCA9IHZmaW9fcGNpX2J1c19ub3RpZmllcjsNCj4gKwkJcmV0ID0gYnVzX3Jl
-Z2lzdGVyX25vdGlmaWVyKCZwY2lfYnVzX3R5cGUsICZ2ZGV2LT5uYik7DQo+ICsJCWlmIChyZXQp
-IHsNCj4gKwkJCWtmcmVlKHZkZXYtPnZmX3Rva2VuKTsNCj4gKwkJCXZmaW9fcGNpX3JlZmxja19w
-dXQodmRldi0+cmVmbGNrKTsNCj4gKwkJCXZmaW9fZGVsX2dyb3VwX2RldigmcGRldi0+ZGV2KTsN
-Cj4gKwkJCXZmaW9faW9tbXVfZ3JvdXBfcHV0KGdyb3VwLCAmcGRldi0+ZGV2KTsNCj4gKwkJCWtm
-cmVlKHZkZXYpOw0KPiArCQkJcmV0dXJuIHJldDsNCj4gKwkJfQ0KPiArDQo+ICAJCW11dGV4X2lu
-aXQoJnZkZXYtPnZmX3Rva2VuLT5sb2NrKTsNCj4gIAkJdXVpZF9nZW4oJnZkZXYtPnZmX3Rva2Vu
-LT51dWlkKTsNCj4gIAl9DQo+IEBAIC0xNjI1LDYgKzE2NzIsOCBAQCBzdGF0aWMgdm9pZCB2Zmlv
-X3BjaV9yZW1vdmUoc3RydWN0IHBjaV9kZXYgKnBkZXYpDQo+ICB7DQo+ICAJc3RydWN0IHZmaW9f
-cGNpX2RldmljZSAqdmRldjsNCj4gDQo+ICsJcGNpX2Rpc2FibGVfc3Jpb3YocGRldik7DQo+ICsN
-Cj4gIAl2ZGV2ID0gdmZpb19kZWxfZ3JvdXBfZGV2KCZwZGV2LT5kZXYpOw0KPiAgCWlmICghdmRl
-dikNCj4gIAkJcmV0dXJuOw0KPiBAQCAtMTYzNSw2ICsxNjg0LDkgQEAgc3RhdGljIHZvaWQgdmZp
-b19wY2lfcmVtb3ZlKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQ0KPiAgCQlrZnJlZSh2ZGV2LT52Zl90
-b2tlbik7DQo+ICAJfQ0KPiANCj4gKwlpZiAodmRldi0+bmIubm90aWZpZXJfY2FsbCkNCj4gKwkJ
-YnVzX3VucmVnaXN0ZXJfbm90aWZpZXIoJnBjaV9idXNfdHlwZSwgJnZkZXYtPm5iKTsNCj4gKw0K
-PiAgCXZmaW9fcGNpX3JlZmxja19wdXQodmRldi0+cmVmbGNrKTsNCj4gDQo+ICAJdmZpb19pb21t
-dV9ncm91cF9wdXQocGRldi0+ZGV2LmlvbW11X2dyb3VwLCAmcGRldi0+ZGV2KTsNCj4gQEAgLTE2
-ODMsMTYgKzE3MzUsNDggQEAgc3RhdGljIHBjaV9lcnNfcmVzdWx0X3QNCj4gdmZpb19wY2lfYWVy
-X2Vycl9kZXRlY3RlZChzdHJ1Y3QgcGNpX2RldiAqcGRldiwNCj4gIAlyZXR1cm4gUENJX0VSU19S
-RVNVTFRfQ0FOX1JFQ09WRVI7DQo+ICB9DQo+IA0KPiArc3RhdGljIGludCB2ZmlvX3BjaV9zcmlv
-dl9jb25maWd1cmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGludCBucl92aXJ0Zm4pDQo+ICt7DQo+
-ICsJc3RydWN0IHZmaW9fcGNpX2RldmljZSAqdmRldjsNCj4gKwlzdHJ1Y3QgdmZpb19kZXZpY2Ug
-KmRldmljZTsNCj4gKwlpbnQgcmV0ID0gMDsNCj4gKw0KPiArCW1pZ2h0X3NsZWVwKCk7DQo+ICsN
-Cj4gKwlpZiAoIWVuYWJsZV9zcmlvdikNCj4gKwkJcmV0dXJuIC1FTk9FTlQ7DQo+ICsNCj4gKwlk
-ZXZpY2UgPSB2ZmlvX2RldmljZV9nZXRfZnJvbV9kZXYoJnBkZXYtPmRldik7DQo+ICsJaWYgKCFk
-ZXZpY2UpDQo+ICsJCXJldHVybiAtRU5PREVWOw0KPiArDQo+ICsJdmRldiA9IHZmaW9fZGV2aWNl
-X2RhdGEoZGV2aWNlKTsNCj4gKwlpZiAoIXZkZXYpIHsNCj4gKwkJdmZpb19kZXZpY2VfcHV0KGRl
-dmljZSk7DQo+ICsJCXJldHVybiAtRU5PREVWOw0KPiArCX0NCj4gKw0KPiArCWlmIChucl92aXJ0
-Zm4gPT0gMCkNCj4gKwkJcGNpX2Rpc2FibGVfc3Jpb3YocGRldik7DQo+ICsJZWxzZQ0KPiArCQly
-ZXQgPSBwY2lfZW5hYmxlX3NyaW92KHBkZXYsIG5yX3ZpcnRmbik7DQo+ICsNCj4gKwl2ZmlvX2Rl
-dmljZV9wdXQoZGV2aWNlKTsNCj4gKw0KPiArCXJldHVybiByZXQgPCAwID8gcmV0IDogbnJfdmly
-dGZuOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcnJvcl9oYW5kbGVy
-cyB2ZmlvX2Vycl9oYW5kbGVycyA9IHsNCj4gIAkuZXJyb3JfZGV0ZWN0ZWQgPSB2ZmlvX3BjaV9h
-ZXJfZXJyX2RldGVjdGVkLA0KPiAgfTsNCj4gDQo+ICBzdGF0aWMgc3RydWN0IHBjaV9kcml2ZXIg
-dmZpb19wY2lfZHJpdmVyID0gew0KPiAtCS5uYW1lCQk9ICJ2ZmlvLXBjaSIsDQo+IC0JLmlkX3Rh
-YmxlCT0gTlVMTCwgLyogb25seSBkeW5hbWljIGlkcyAqLw0KPiAtCS5wcm9iZQkJPSB2ZmlvX3Bj
-aV9wcm9iZSwNCj4gLQkucmVtb3ZlCQk9IHZmaW9fcGNpX3JlbW92ZSwNCj4gLQkuZXJyX2hhbmRs
-ZXIJPSAmdmZpb19lcnJfaGFuZGxlcnMsDQo+ICsJLm5hbWUJCQk9ICJ2ZmlvLXBjaSIsDQo+ICsJ
-LmlkX3RhYmxlCQk9IE5VTEwsIC8qIG9ubHkgZHluYW1pYyBpZHMgKi8NCj4gKwkucHJvYmUJCQk9
-IHZmaW9fcGNpX3Byb2JlLA0KPiArCS5yZW1vdmUJCQk9IHZmaW9fcGNpX3JlbW92ZSwNCj4gKwku
-c3Jpb3ZfY29uZmlndXJlCT0gdmZpb19wY2lfc3Jpb3ZfY29uZmlndXJlLA0KPiArCS5lcnJfaGFu
-ZGxlcgkJPSAmdmZpb19lcnJfaGFuZGxlcnMsDQo+ICB9Ow0KPiANCj4gIHN0YXRpYyBERUZJTkVf
-TVVURVgocmVmbGNrX2xvY2spOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92ZmlvL3BjaS92Zmlv
-X3BjaV9wcml2YXRlLmgNCj4gYi9kcml2ZXJzL3ZmaW8vcGNpL3ZmaW9fcGNpX3ByaXZhdGUuaA0K
-PiBpbmRleCA3NmMxMWM5MTU5NDkuLjM2ZWM2OTA4MWVjZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy92ZmlvL3BjaS92ZmlvX3BjaV9wcml2YXRlLmgNCj4gKysrIGIvZHJpdmVycy92ZmlvL3BjaS92
-ZmlvX3BjaV9wcml2YXRlLmgNCj4gQEAgLTEzLDYgKzEzLDcgQEANCj4gICNpbmNsdWRlIDxsaW51
-eC9pcnFieXBhc3MuaD4NCj4gICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPg0KPiAgI2luY2x1ZGUg
-PGxpbnV4L3V1aWQuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9ub3RpZmllci5oPg0KPiANCj4gICNp
-Zm5kZWYgVkZJT19QQ0lfUFJJVkFURV9IDQo+ICAjZGVmaW5lIFZGSU9fUENJX1BSSVZBVEVfSA0K
-PiBAQCAtMTMwLDYgKzEzMSw3IEBAIHN0cnVjdCB2ZmlvX3BjaV9kZXZpY2Ugew0KPiAgCXN0cnVj
-dCBtdXRleAkJaW9ldmVudGZkc19sb2NrOw0KPiAgCXN0cnVjdCBsaXN0X2hlYWQJaW9ldmVudGZk
-c19saXN0Ow0KPiAgCXN0cnVjdCB2ZmlvX3BjaV92Zl90b2tlbgkqdmZfdG9rZW47DQo+ICsJc3Ry
-dWN0IG5vdGlmaWVyX2Jsb2NrCW5iOw0KPiAgfTsNCj4gDQo+ICAjZGVmaW5lIGlzX2ludHgodmRl
-dikgKHZkZXYtPmlycV90eXBlID09IFZGSU9fUENJX0lOVFhfSVJRX0lOREVYKQ0KDQo=
+tick_do_timer_cpu could be accessed concurrently where both plain writes
+and plain reads are not protected by a lock. Thus, it could result in
+data races. Fix them by adding pairs of READ|WRITE_ONCE(). The data
+races were reported by KCSAN,
+
+ write to 0xffffffffb2dc94ac of 4 bytes by interrupt on cpu 98:
+  tick_sched_do_timer+0x77/0x90
+  tick_sched_do_timer at kernel/time/tick-sched.c:136
+  tick_sched_timer+0x35/0xc0
+  __hrtimer_run_queues+0x217/0x7c0
+  hrtimer_interrupt+0x1d4/0x3e0
+  smp_apic_timer_interrupt+0x107/0x460
+  apic_timer_interrupt+0xf/0x20
+  cpuidle_enter_state+0x15e/0x980
+  cpuidle_enter+0x69/0xc0
+  call_cpuidle+0x23/0x40
+  do_idle+0x248/0x280
+  cpu_startup_entry+0x1d/0x1f
+  start_secondary+0x1b2/0x230
+  secondary_startup_64+0xb6/0xc0
+
+ read to 0xffffffffb2dc94ac of 4 bytes by interrupt on cpu 67:
+  tick_sched_do_timer+0x31/0x90
+  tick_sched_do_timer at kernel/time/tick-sched.c:132
+  tick_sched_timer+0x35/0xc0
+  __hrtimer_run_queues+0x217/0x7c0
+  hrtimer_interrupt+0x1d4/0x3e0
+  smp_apic_timer_interrupt+0x107/0x460
+  apic_timer_interrupt+0xf/0x20
+  cpuidle_enter_state+0x15e/0x980
+  cpuidle_enter+0x69/0xc0
+  call_cpuidle+0x23/0x40
+  do_idle+0x248/0x280
+  cpu_startup_entry+0x1d/0x1f
+  start_secondary+0x1b2/0x230
+  secondary_startup_64+0xb6/0xc0
+
+ read to 0xffffffffb2dc94ac of 4 bytes by task 0 on cpu 107:
+  tick_nohz_idle_stop_tick+0x149/0x5f0
+  tick_nohz_stop_tick at kernel/time/tick-sched.c:774
+  (inlined by) __tick_nohz_idle_stop_tick at kernel/time/tick-sched.c:967
+  (inlined by) tick_nohz_idle_stop_tick at kernel/time/tick-sched.c:988
+  do_idle+0x235/0x280
+  cpu_startup_entry+0x1d/0x1f
+  start_secondary+0x1b2/0x230
+  secondary_startup_64+0xb6/0xc0
+
+ read to 0xffffffffb2dc94ac of 4 bytes by task 0 on cpu 21:
+  tick_nohz_next_event+0x19b/0x2c0
+  tick_nohz_next_event at kernel/time/tick-sched.c:740
+  tick_nohz_get_sleep_length+0xae/0xe0
+  menu_select+0x8b/0xc29
+  cpuidle_select+0x50/0x70
+  do_idle+0x214/0x280
+  cpu_startup_entry+0x1d/0x1f
+  start_secondary+0x1b2/0x230
+  secondary_startup_64+0xb6/0xc0
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/time/tick-sched.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index a792d21cac64..54bcf4eff238 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -129,16 +129,16 @@ static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
+ 	 * If nohz_full is enabled, this should not happen because the
+ 	 * tick_do_timer_cpu never relinquishes.
+ 	 */
+-	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
++	if (unlikely(READ_ONCE(tick_do_timer_cpu) == TICK_DO_TIMER_NONE)) {
+ #ifdef CONFIG_NO_HZ_FULL
+ 		WARN_ON(tick_nohz_full_running);
+ #endif
+-		tick_do_timer_cpu = cpu;
++		WRITE_ONCE(tick_do_timer_cpu, cpu);
+ 	}
+ #endif
+ 
+ 	/* Check, if the jiffies need an update */
+-	if (tick_do_timer_cpu == cpu)
++	if (READ_ONCE(tick_do_timer_cpu) == cpu)
+ 		tick_do_update_jiffies64(now);
+ 
+ 	if (ts->inidle)
+@@ -737,8 +737,9 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
+ 	 * Otherwise we can sleep as long as we want.
+ 	 */
+ 	delta = timekeeping_max_deferment();
+-	if (cpu != tick_do_timer_cpu &&
+-	    (tick_do_timer_cpu != TICK_DO_TIMER_NONE || !ts->do_timer_last))
++	if (cpu != READ_ONCE(tick_do_timer_cpu) &&
++	    (READ_ONCE(tick_do_timer_cpu) != TICK_DO_TIMER_NONE ||
++	     !ts->do_timer_last))
+ 		delta = KTIME_MAX;
+ 
+ 	/* Calculate the next expiry time */
+@@ -771,10 +772,10 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int cpu)
+ 	 * do_timer() never invoked. Keep track of the fact that it
+ 	 * was the one which had the do_timer() duty last.
+ 	 */
+-	if (cpu == tick_do_timer_cpu) {
+-		tick_do_timer_cpu = TICK_DO_TIMER_NONE;
++	if (cpu == READ_ONCE(tick_do_timer_cpu)) {
++		WRITE_ONCE(tick_do_timer_cpu, TICK_DO_TIMER_NONE);
+ 		ts->do_timer_last = 1;
+-	} else if (tick_do_timer_cpu != TICK_DO_TIMER_NONE) {
++	} else if (READ_ONCE(tick_do_timer_cpu) != TICK_DO_TIMER_NONE) {
+ 		ts->do_timer_last = 0;
+ 	}
+ 
+-- 
+2.21.0 (Apple Git-122.2)
+
