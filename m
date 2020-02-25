@@ -2,170 +2,69 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E68C4BA00
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA96AC4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C1A21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582668637;
-	bh=hvJ5tuJ5yIFjoBRVcTFHKeBYd5/95XV9l9w4dyQkviA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VX/O/+EfkX8aggg30ASszWA9X80yeFKV36FIXkfAdydg6DqmP/kVCj0MXRvd0Yyde
-	 7TgieBkhbreQ3s30Ew3vaXbAxbNIZBDkwJd7I2KeEr/lPtLJMcQ9Z7UlzBwvfiu2WM
-	 Fb8PKaZJp2Lx+TY3p4qnm5/fcx3qFwVwj6v/LmBM=
+	by mail.kernel.org (Postfix) with ESMTP id 8824720838
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="I+cLWs1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgBYWKh (ORCPT
+        id S1729102AbgBYWMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:10:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57652 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 17:12:18 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34154 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgBYWKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:10:36 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A884320838;
-        Tue, 25 Feb 2020 22:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582668635;
-        bh=hvJ5tuJ5yIFjoBRVcTFHKeBYd5/95XV9l9w4dyQkviA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sblGjPogMQ6cBXQ3ElszjOe+8AvPLU3AWSKwrgqbnaUh1t9BN6MwFTKrMlMutmBBi
-         SLiBkhhKA75ZCshNKj/q4Xr8mpHfkTbJ5k7SPkHE809haQLGby9Xn3XSyVBQq+Z/Oa
-         pn0TKB5ZS9pJIN6NwUjLZ5kxGSYB7V6X6ykoeoBs=
-Date:   Tue, 25 Feb 2020 23:10:32 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200225221031.GB9599@lenoir>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
- <20200224161318.GG14897@hirez.programming.kicks-ass.net>
- <20200225030905.GB28329@lenoir>
- <20200225154111.GM18400@hirez.programming.kicks-ass.net>
+        id S1726130AbgBYWMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:12:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=qlW98hTIwGDZZ8hfou8pBRvumuSRk/WMKT22BYcU3TA=; b=I+cLWs1cqCJzfss1fUdZ6oabMy
+        Shzb95kJ2UHK7aiRQ+lLCPz7/0THxiSo6Jvw8ju7QgY4ck8l95rnjO+Wka9kwDMrlFtC+ojR7R8jo
+        0DZo9O4NBje4xcaePtQDqVQ+/dS31jIc7/QvRZ3le0cARIk2bQvpx6CzQJZ8cyJVMAn8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j6iR5-0001fD-HM; Tue, 25 Feb 2020 23:12:15 +0100
+Date:   Tue, 25 Feb 2020 23:12:15 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+Subject: Re: [RFC net-next 0/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX326x (AC3x)
+Message-ID: <20200225221215.GI7663@lunn.ch>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225154111.GM18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200225163025.9430-1-vadym.kochan@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:41:11PM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 25, 2020 at 04:09:06AM +0100, Frederic Weisbecker wrote:
-> > On Mon, Feb 24, 2020 at 05:13:18PM +0100, Peter Zijlstra wrote:
-> 
-> > > +#define arch_nmi_enter()						\
-> > > +do {									\
-> > > +	struct nmi_ctx *___ctx;						\
-> > > +	unsigned int ___cnt;						\
-> > > +									\
-> > > +	if (!is_kernel_in_hyp_mode() || in_nmi())			\
-> > > +		break;							\
-> > > +									\
-> > > +	___ctx = this_cpu_ptr(&nmi_contexts);				\
-> > > +	___cnt = ___ctx->cnt;						\
-> > > +	if (!(___cnt & 1) && __cnt) {					\
-> > > +		___ctx->cnt += 2;					\
-> > > +		break;							\
-> > > +	}								\
-> > > +									\
-> > > +	___ctx->cnt |= 1;						\
-> > > +	barrier();							\
-> > > +	nmi_ctx->hcr = read_sysreg(hcr_el2);				\
-> > > +	if (!(nmi_ctx->hcr & HCR_TGE)) {				\
-> > > +		write_sysreg(nmi_ctx->hcr | HCR_TGE, hcr_el2);		\
-> > > +		isb();							\
-> > > +	}								\
-> > > +	barrier();							\
-> > 
-> > Suppose the first NMI is interrupted here. nmi_ctx->hcr has HCR_TGE unset.
-> > The new NMI is going to overwrite nmi_ctx->hcr with HCR_TGE set. Then the
-> > first NMI will not restore the correct value upon arch_nmi_exit().
-> > 
-> > So perhaps the below, but I bet I overlooked something obvious.
-> 
-> Well, none of this is obvious :/
-> 
-> The basic idea was that the LSB signifies 'pending/in-progress' and when
-> that is set, nobody else touches no nothing. Enter will unconditionally
-> (re) write_sysreg(), exit will nothing.
+> CPU RX/TX support will be provided in the next contribution.
 
-So here is my previous proposal, based on a simple counter, this time
-with comments and a few fixes:
+Hi Vadym
 
-#define arch_nmi_enter()						\
-do {									\
-	struct nmi_ctx *___ctx;						\
-	u64 ___hcr;							\
-									\
-	if (!is_kernel_in_hyp_mode())					\
-		break;							\
-									\
-	___ctx = this_cpu_ptr(&nmi_contexts);				\
-	if (___ctx->cnt) {						\
-		___ctx->cnt++;						\
-		break;							\
-	}								\
-									\
-	___hcr = read_sysreg(hcr_el2);					\
-	if (!(___hcr & HCR_TGE)) {					\
-		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
-		isb();							\
-	}								\
-	/*								\
-	 * Make sure the sysreg write is performed before ___ctx->cnt	\
-	 * is set to 1. NMIs that see cnt == 1 will rely on us.		\
-	 */								\
-	barrier();							\
-	___ctx->cnt = 1;                                                \
-	/*								\
-	 * Make sure ___ctx->cnt is set before we save ___hcr. We	\
-	 * don't want ___ctx->hcr to be overwritten.			\
-	 */								\
-	barrier();							\
-	___ctx->hcr = ___hcr;						\
-} while (0)
+This is a core feature which needs to be in the first version merged
+into the kernel. Basically, the driver first needs to offer 24
+individual interfaces which can send and receive packets. The Linux
+stack does everything else. You then add offloads, like bridges,
+vlans, etc, allowing the hardware to accelerate what Linux is doing.
 
-#define arch_nmi_exit()							\
-do {									\
-	struct nmi_ctx *___ctx;						\
-	u64 ___hcr;							\
-									\
-	if (!is_kernel_in_hyp_mode())					\
-		break;							\
-									\
-	___ctx = this_cpu_ptr(&nmi_contexts);				\
-	___hcr = ___ctx->hcr;						\
-	/*								\
-	 * Make sure we read ___ctx->hcr before we release		\
-	 * ___ctx->cnt as it makes ___ctx->hcr updatable again.		\
-	 */								\
-	barrier();							\
-	___ctx->cnt--;							\
-	/*								\
-	 * Make sure ___ctx->cnt release is visible before we		\
-	 * restore the sysreg. Otherwise a new NMI occuring		\
-	 * right after write_sysreg() can be fooled and think		\
-	 * we secured things for it.					\
-	 */								\
-	barrier();							\
-	if (!___ctx->cnt && !(___hcr & HCR_TGE))			\
-            write_sysreg(___hcr, hcr_el2);				\
-} while (0)
+	Andrew
