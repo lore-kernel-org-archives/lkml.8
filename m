@@ -2,120 +2,96 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3092EC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57C4C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0818F2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iBq/v5SU"
+	by mail.kernel.org (Postfix) with ESMTP id B4A452082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgBYGco (ORCPT
+        id S1729137AbgBYGdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:32:44 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39239 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725783AbgBYGco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:32:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582612363; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=ieAzKJEGqXO7uuP4tofi0kDsDedqiH3Cfd0F5f+Tzuc=; b=iBq/v5SUC5/pyrOkphXuEaRIVZ0UCis0rY47Izsi2+mkb73zEKs8kVPqXFGOCui3b1xkA2Y6
- o26Q+ma3KqL+FQvQjNZGQYE6QQvRCPCVLIHPHt3zPZLGgkauTfrpIOoNSneiGYod/GyggXFM
- ADDYymlR58ADG1SQRZWXmcLeGsQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e54bf84.7f6e36a62880-smtp-out-n01;
- Tue, 25 Feb 2020 06:32:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F2F10C447A4; Tue, 25 Feb 2020 06:32:34 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F53CC43383;
-        Tue, 25 Feb 2020 06:32:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F53CC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Tue, 25 Feb 2020 12:02:26 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        chris.hyser@oracle.com, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, David.Laight@ACULAB.COM,
-        pjt@google.com, pavel@ucw.cz, tj@kernel.org,
-        dhaval.giani@oracle.com, qperret@google.com,
-        tim.c.chen@linux.intel.com
-Subject: Re: [PATCH v4 2/4] sched/core: Propagate parent task's latency
- requirements to the child task
-Message-ID: <20200225063226.GJ28029@codeaurora.org>
-References: <20200224085918.16955-1-parth@linux.ibm.com>
- <20200224085918.16955-3-parth@linux.ibm.com>
+        Tue, 25 Feb 2020 01:33:53 -0500
+Received: from mga01.intel.com ([192.55.52.88]:4552 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729058AbgBYGdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:33:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 22:33:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
+   d="scan'208";a="226244465"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 22:33:52 -0800
+Received: from [10.226.38.25] (unknown [10.226.38.25])
+        by linux.intel.com (Postfix) with ESMTP id E5E0858052E;
+        Mon, 24 Feb 2020 22:33:49 -0800 (PST)
+Subject: Re: [PATCH v10 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org
+Cc:     robh+dt@kernel.org, simon.k.r.goldschmidt@gmail.com,
+        dinguyen@kernel.org, tien.fong.chee@intel.com, marex@denx.de,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <99f7e23f-268d-f32b-086f-4a46fc232ce9@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <e5571c19-de2a-5c93-8bde-22b03d6a21a4@linux.intel.com>
+Date:   Tue, 25 Feb 2020 14:33:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224085918.16955-3-parth@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <99f7e23f-268d-f32b-086f-4a46fc232ce9@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:29:16PM +0530, Parth Shah wrote:
-> Clone parent task's latency_nice attribute to the forked child task.
-> 
-> Reset the latency_nice value to default value when the child task is
-> set to sched_reset_on_fork.
-> 
-> Signed-off-by: Parth Shah <parth@linux.ibm.com>
-> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-> ---
->  kernel/sched/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 377ec26e9159..65b6c00d6dac 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2860,6 +2860,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
->  	 */
->  	p->prio = current->normal_prio;
->  
-> +	/* Propagate the parent's latency requirements to the child as well */
-> +	p->latency_nice = current->latency_nice;
-> +
->  	uclamp_fork(p);
->  
->  	/*
-> @@ -2876,6 +2879,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
->  		p->prio = p->normal_prio = __normal_prio(p);
->  		set_load_weight(p, false);
->  
-> +		p->latency_nice = DEFAULT_LATENCY_NICE;
->  		/*
->  		 * We don't need the reset flag anymore after the fork. It has
->  		 * fulfilled its duty:
-> -- 
-> 2.17.2
-> 
+Hi,
 
-LGTM.
+On 25/2/2020 12:23 PM, Vignesh Raghavendra wrote:
+> Hi,
+>
+> On 19/02/20 7:58 am, Ramuthevar,Vadivel MuruganX wrote:
+> [...]
+>>      CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+>>
+>> Ramuthevar Vadivel Murugan (2):
+>>    dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+>>    spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+>>
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147 +++++
+>>   drivers/mtd/spi-nor/Kconfig                        |  11 -
+>>   drivers/mtd/spi-nor/Makefile                       |   1 -
+>>   drivers/spi/Kconfig                                |   8 +
+>>   drivers/spi/Makefile                               |   1 +
+>>   .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
+>>   6 files changed, 459 insertions(+), 350 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> You will have to remove old bindings as well. Also please CC linux-mtd
+> list as these patches touch drivers/mtd/*
 
-latency_nice value initialization is missing for the init_task.
+Sure, will remove old bindings.
 
-Thanks,
-Pavan
+Agree!, cc of linux-mtd list.
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+>
+> Just run scripts/get_maintainer.pl on your patches to get list of
+> mailing list and people to CC
+
+Thanks for the commands.
+
+Regards
+Vadivel
+>>   rename drivers/{mtd/spi-nor/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (73%)
+>>
