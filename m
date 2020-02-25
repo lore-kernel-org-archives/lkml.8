@@ -2,196 +2,131 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B510C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E7C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6772084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C2921744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:31:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dfCk58MJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjvb63g0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731802AbgBYU2g (ORCPT
+        id S1731772AbgBYUbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:28:36 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48392 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731753AbgBYU2g (ORCPT
+        Tue, 25 Feb 2020 15:31:32 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40768 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731725AbgBYUbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:28:36 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PKRdNu067852;
-        Tue, 25 Feb 2020 20:28:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=yjNUY6JNmqI/pXqRDfsd3xZwpU1/jOskG2o2uGjgE5I=;
- b=dfCk58MJh9vaAPQP5W43zpbeNQKctpTJC6YD1tOGeXAAivXMFYr8JAjF54sH5yLpsM2Y
- hDLB6gp2/fhMCUv9JCQwCOz0rUTJk9IoNqRc3FFrU7sNzv0JRAA06fXyr7BQcsj5lLyL
- kJ0U8nRhm7rd8LYetkU+CyX9ZQGzeQ+mPXHFQTIc7my3LmAR9J2MOPPImMnI3sMB9qn2
- dNQ9WhL2OGTB5e5h9WFau/+7vofebpgT89oCvmDWsdS6hcjBwOrAciPKx3UQOk8ptUmX
- RDNtcpmf1PI84LnT7Kgse59nwBLqzV62W9RBjuvzdFyQNAppK54ACQX4DMh2Gvkoyg+0 JQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2yd093m2cg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:28:32 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PKS0xR062956;
-        Tue, 25 Feb 2020 20:28:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2yd17qs40w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:28:31 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01PKSU3B027037;
-        Tue, 25 Feb 2020 20:28:30 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Feb 2020 12:28:30 -0800
-Date:   Tue, 25 Feb 2020 12:28:29 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     elver@google.com, linux-xfs@vger.kernel.org,
+        Tue, 25 Feb 2020 15:31:31 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y1so277757plp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:31:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=f38t1vB1E09D3O7biTt/uQi42QKpJWaCNeM//jWgarM=;
+        b=sjvb63g0ui81MI1fbKV7N4ZZhCK7dzBk+hc23Dx3DUZXkjdV7ixE6DbDIL3m++COvZ
+         exMZqZqLJm4kkM77tkSO9TmOUxFgYUNtzeqItuQQ/uN8LBrAByURzxuTL6l+vSiRxQDV
+         vWQIXWSSLjiZ95LDxy/SlsPwrIa+6E+3JBgvZRMUMUT0Zcd6LqPy3lX2vcrtS99LMSpL
+         C3dmmZ2E/ABD5Ie2tbJGR/CRO1y7VnwD7/+QCfS2kyN+MEbVbX94JnlZUCUpPJ/+vjIo
+         r1buECakC2UYaBHVQW3v/s5+Kibf0uEuGG16hgY53a65cKvyadxR4creiDaMj9x/TiOz
+         fKSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=f38t1vB1E09D3O7biTt/uQi42QKpJWaCNeM//jWgarM=;
+        b=tK/8DdIpS84B1/zG57xc+XujOatDxffkCjZTm13gkbLVTDVtTU8hflUrgvQMTEKnXk
+         ZhFEKupuihhk3KyHmcsfEqm2JOvGEhCjl0FnxMQzt7+sJjGRZz3S+g0R7b31ToI8GTiS
+         SY4u2TGtoDe+SVANvMwX2mjxEXhCv5RJhb4i6Sz6uuMSCeaEMErkvogzf77KFWAgyyz2
+         DDl2g121uTrcAoVp2R5hDZy3OyITlmwCPJRSibmxqU2TVxl9GLWcLW/1w3aGyh9mLSZa
+         0hgbx+nEEGxzaIAfOmTS3egEhiiHlSVFSgHAS6PN7TMricMVMv3ZsrzTbXLEoBB9Q6m/
+         +5Vg==
+X-Gm-Message-State: APjAAAV1GB7N8Jo1VPnWUmkAIQJvEjT3sPscp+q3DcvTQMuTZ3m4mT0R
+        73Hhxys3Fu8eCicck75eb7pIUg==
+X-Google-Smtp-Source: APXvYqyDeg5oZCf2F73phX2nvXcxMbTP9CUH6FGv8O9YLT3d4xw7nlHTf/BPkYJf899KEhhCWK3kng==
+X-Received: by 2002:a17:902:8604:: with SMTP id f4mr327049plo.278.1582662690368;
+        Tue, 25 Feb 2020 12:31:30 -0800 (PST)
+Received: from [100.112.92.218] ([104.133.9.106])
+        by smtp.gmail.com with ESMTPSA id w81sm18529544pff.95.2020.02.25.12.31.29
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 25 Feb 2020 12:31:29 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:31:07 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     David Hildenbrand <david@redhat.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix data races in inode->i_*time
-Message-ID: <20200225202829.GV6740@magnolia>
-References: <1582661385-30210-1-git-send-email-cai@lca.pw>
+Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+In-Reply-To: <14abd659-1571-8196-202d-d2fcc227a4b0@redhat.com>
+Message-ID: <alpine.LSU.2.11.2002251216480.7087@eggly.anvils>
+References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com> <alpine.LSU.2.11.1912041601270.12930@eggly.anvils> <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com> <alpine.LSU.2.11.2002241831060.3084@eggly.anvils>
+ <14abd659-1571-8196-202d-d2fcc227a4b0@redhat.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582661385-30210-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 phishscore=0 suspectscore=27 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 suspectscore=27 priorityscore=1501
- phishscore=0 clxscore=1011 mlxlogscore=999 spamscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250143
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 03:09:45PM -0500, Qian Cai wrote:
-> inode->i_*time could be accessed concurrently. The plain reads in
-> xfs_vn_getattr() is lockless which result in data races. To avoid bad
-> compiler optimizations like load tearing, adding pairs of
-> READ|WRITE_ONCE(). While at it, also take care of xfs_setattr_time()
-> which presumably could run concurrently with xfs_vn_getattr() as well.
-> The data races were reported by KCSAN,
+On Tue, 25 Feb 2020, David Hildenbrand wrote:
+> > 
+> > I notice that this thread has veered off into QEMU ballooning
+> > territory: which may indeed be important, but there's nothing at all
+> > that I can contribute on that.  I certainly do not want to slow down
+> > anything important, but remain convinced that the correct filesystem
+> > implementation for punching a hole is to punch a hole.
 > 
->  write to 0xffff9275a1920ad8 of 16 bytes by task 47311 on cpu 46:
->   xfs_vn_update_time+0x1b0/0x400 [xfs]
->   xfs_vn_update_time at fs/xfs/xfs_iops.c:1122
->   update_time+0x57/0x80
->   file_update_time+0x143/0x1f0
->   __xfs_filemap_fault+0x1be/0x3d0 [xfs]
->   xfs_filemap_page_mkwrite+0x25/0x40 [xfs]
->   do_page_mkwrite+0xf7/0x250
->   do_fault+0x679/0x920
->   __handle_mm_fault+0xc9f/0xd40
->   handle_mm_fault+0xfc/0x2f0
->   do_page_fault+0x263/0x6f9
->   page_fault+0x34/0x40
-> 
->  4 locks held by doio/47311:
->   #0: ffff9275e7d70808 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x143/0x6f9
->   #1: ffff9274864394d8 (sb_pagefaults){.+.+}, at: __xfs_filemap_fault+0x19b/0x3d0 [xfs]
->   #2: ffff9274864395b8 (sb_internal){.+.+}, at: xfs_trans_alloc+0x2af/0x3c0 [xfs]
->   #3: ffff9275a1920920 (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0x116/0x2c0 [xfs]
->  irq event stamp: 42649
->  hardirqs last  enabled at (42649): [<ffffffffb22dcdb3>] _raw_spin_unlock_irqrestore+0x53/0x60
->  hardirqs last disabled at (42648): [<ffffffffb22dcad1>] _raw_spin_lock_irqsave+0x21/0x60
->  softirqs last  enabled at (42306): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
->  softirqs last disabled at (42299): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
-> 
->  read to 0xffff9275a1920ad8 of 16 bytes by task 47312 on cpu 40:
->   xfs_vn_getattr+0x20c/0x6a0 [xfs]
->   xfs_vn_getattr at fs/xfs/xfs_iops.c:551
->   vfs_getattr_nosec+0x11a/0x170
->   vfs_statx_fd+0x54/0x90
->   __do_sys_newfstat+0x40/0x90
->   __x64_sys_newfstat+0x3a/0x50
->   do_syscall_64+0x91/0xb05
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
->  no locks held by doio/47312.
->  irq event stamp: 43883
->  hardirqs last  enabled at (43883): [<ffffffffb1805119>] do_syscall_64+0x39/0xb05
->  hardirqs last disabled at (43882): [<ffffffffb1803ede>] trace_hardirqs_off_thunk+0x1a/0x1c
->  softirqs last  enabled at (43844): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
->  softirqs last disabled at (43141): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  fs/xfs/xfs_iops.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 81f2f93caec0..2d5ca13ee9da 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -547,9 +547,9 @@
->  	stat->uid = inode->i_uid;
->  	stat->gid = inode->i_gid;
->  	stat->ino = ip->i_ino;
-> -	stat->atime = inode->i_atime;
-> -	stat->mtime = inode->i_mtime;
-> -	stat->ctime = inode->i_ctime;
-> +	stat->atime = READ_ONCE(inode->i_atime);
-> +	stat->mtime = READ_ONCE(inode->i_mtime);
-> +	stat->ctime = READ_ONCE(inode->i_ctime);
+> I am not completely sure I follow all the shmem details (sorry!). But
+> trying to "punch a partial hole punch" into a hugetlbfs page will result
+> in the very same behavior as with shmem as of now, no?
 
-Seeing as one is supposed to take ILOCK_SHARED before reading inode core
-information, why don't we do that here?  Is there some huge performance
-benefit to be realized from READ_ONCE vs. waiting for the lock that
-protects all the writes from each other?
+I believe so.
 
---D
+> 
+> FALLOC_FL_PUNCH_HOLE: "Within the specified range, partial filesystem
+> blocks are zeroed, and whole filesystem blocks are removed from the
+> file." ... After a successful call, subsequent reads from this range
+> will return zeros."
+> 
+> So, as long as we are talking about partial blocks the documented
+> behavior seems to be to only zero the memory.
+> 
+> Does this patch fix "FALLOC_FL_PUNCH_HOLE does not free blocks if called
+> in block granularity on shmem" (which would be a valid fix),
 
->  	stat->blocks =
->  		XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
->  
-> @@ -614,11 +614,11 @@
->  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
->  
->  	if (iattr->ia_valid & ATTR_ATIME)
-> -		inode->i_atime = iattr->ia_atime;
-> +		WRITE_ONCE(inode->i_atime, iattr->ia_atime);
->  	if (iattr->ia_valid & ATTR_CTIME)
-> -		inode->i_ctime = iattr->ia_ctime;
-> +		WRITE_ONCE(inode->i_ctime, iattr->ia_ctime);
->  	if (iattr->ia_valid & ATTR_MTIME)
-> -		inode->i_mtime = iattr->ia_mtime;
-> +		WRITE_ONCE(inode->i_mtime, iattr->ia_mtime);
->  }
->  
->  static int
-> @@ -1117,11 +1117,11 @@
->  
->  	xfs_ilock(ip, XFS_ILOCK_EXCL);
->  	if (flags & S_CTIME)
-> -		inode->i_ctime = *now;
-> +		WRITE_ONCE(inode->i_ctime, *now);
->  	if (flags & S_MTIME)
-> -		inode->i_mtime = *now;
-> +		WRITE_ONCE(inode->i_mtime, *now);
->  	if (flags & S_ATIME)
-> -		inode->i_atime = *now;
-> +		WRITE_ONCE(inode->i_atime, *now);
->  
->  	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
->  	xfs_trans_log_inode(tp, ip, log_flags);
+Yes. The block size of tmpfs is (talking x86_64 for simplicity) 4KiB;
+but when mounted huge, it transparently takes advantage of 2MiB extents
+when it can.  Rather like a disk-based filesystem always presenting a
+4KiB block interface, but stored on disk in multisector extents.
+
+Whereas hugetlbfs is a different filesystem, which is and always has
+been limited to supporting only certain larger block sizes.
+
+> or does it
+> try to implement something that is not documented? (removing partial
+> blocks when called in sub-block granularity)
+
+No.
+
+> 
+> I assume the latter, in which case I would interpret "punching a hole is
+> to punch a hole" as "punching sub-blocks will not free blocks".
+> 
+> (if somebody could enlighten me which important piece I am missing or
+> messing up, that would be great :) )
+> 
 > -- 
-> 1.8.3.1
+> Thanks,
 > 
+> David / dhildenb
