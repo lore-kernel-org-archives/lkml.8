@@ -2,161 +2,158 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D63FC35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C63BC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5116C20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QcngjVQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 6D114218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgBYMnk (ORCPT
+        id S1729947AbgBYMuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:43:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37088 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729686AbgBYMnk (ORCPT
+        Tue, 25 Feb 2020 07:50:05 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:60247 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729671AbgBYMuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:43:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582634618;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iaNn1ynq48vLpTxDrAlYN1oM6Y/pu6+O3QE2MamshO4=;
-        b=QcngjVQ2hHoyBHV0/FoOCpRuS6eZn/Cd4qkkAtd5NhH40pDutNAjS4HPYNDpHzEfoL3ID2
-        usqgI03JpnohH+JPSBSA/zd/nYPNfVSguOt3BNPfuNPTzmHfMQB+jWtBHm5PTX2m+5i0Vi
-        En/EnPa7RDiviExxgqOfD+67ZJdEn5g=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-52-aIJhlotYPqi5sAUBRm5wlw-1; Tue, 25 Feb 2020 07:43:37 -0500
-X-MC-Unique: aIJhlotYPqi5sAUBRm5wlw-1
-Received: by mail-wm1-f69.google.com with SMTP id k21so810800wmi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 04:43:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=iaNn1ynq48vLpTxDrAlYN1oM6Y/pu6+O3QE2MamshO4=;
-        b=naGSTNLMx8eQXNG3qRTMrUUL9t25mSRrT4CFsRi4kndjfJ0K8FCva+UKanhZgF8Qig
-         3Nft0DMM8m3ubDSbo3oo/tTZg0SeLdCn1dHp4++wmzWxYB3XFI0BPjEF5go/7biCoUvH
-         oDUw/o9Pj48NDcB9I67SON+6afWiVsEvoD1P5a2aDxRzy7dPaGLSSmB7ovnp0so9ycOP
-         S7hRGYBKJ4EjRh53+yPcBpfdUCzTDwyxshTzsYVlxvTC3O/09BTonZNyLVhyORGJIALx
-         HBCpK+baZJoBzycXbhgqcSGl43D68o4fhdRUXwZYc6aSbaFS4t+639IkXSvBM67d0Exz
-         io4g==
-X-Gm-Message-State: APjAAAUlvwX4GHeTsCTN7Mo0ETddtLs6mdO7J8P8nAe3b+EAhW5LLZ9V
-        FhP9xLHukTePBXhEXGD8i7aqt7+v8ast6ENGtyvZ1is4HPrU5A/4ZgnK7T6GpmzqKIi2L+Gea5J
-        XioYYEFJFzo+lm/yiHyvEfaA8
-X-Received: by 2002:a1c:2089:: with SMTP id g131mr4891480wmg.63.1582634615979;
-        Tue, 25 Feb 2020 04:43:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwXpLSxXihQUnUiQh0jNgbtVlRTh4HV6fmkshzIW/LXmyh0n1o+t0mLFMw203AeYdGahwTdKg==
-X-Received: by 2002:a1c:2089:: with SMTP id g131mr4891454wmg.63.1582634615709;
-        Tue, 25 Feb 2020 04:43:35 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o27sm6334675wro.27.2020.02.25.04.43.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 04:43:35 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH] KVM: X86: avoid meaningless kvm_apicv_activated() check
-In-Reply-To: <1582597279-32297-1-git-send-email-linmiaohe@huawei.com>
-References: <1582597279-32297-1-git-send-email-linmiaohe@huawei.com>
-Date:   Tue, 25 Feb 2020 13:43:34 +0100
-Message-ID: <87d0a2n8g9.fsf@vitty.brq.redhat.com>
+        Tue, 25 Feb 2020 07:50:05 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j6Zf0-0005kT-5g; Tue, 25 Feb 2020 12:50:02 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v5 2/9] sysfs: add sysfs_link_change_owner()
+Date:   Tue, 25 Feb 2020 13:49:41 +0100
+Message-Id: <20200225124948.80682-3-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200225124948.80682-1-christian.brauner@ubuntu.com>
+References: <20200225124948.80682-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linmiaohe <linmiaohe@huawei.com> writes:
+Add a helper to change the owner of a sysfs link.
+This function will be used to correctly account for kobject ownership
+changes, e.g. when moving network devices between network namespaces.
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> After test_and_set_bit() for kvm->arch.apicv_inhibit_reasons, we will
-> always get false when calling kvm_apicv_activated() because it's sure
-> apicv_inhibit_reasons do not equal to 0.
->
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/x86.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ddcc51b89e2c..fa62dcb0ed0c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8018,8 +8018,7 @@ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
->  		    !kvm_apicv_activated(kvm))
->  			return;
->  	} else {
-> -		if (test_and_set_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
-> -		    kvm_apicv_activated(kvm))
-> +		if (test_and_set_bit(bit, &kvm->arch.apicv_inhibit_reasons))
->  			return;
->  	}
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add comment how ownership of sysfs object is changed.
 
-This seems to be correct in a sense that we are not really protected
-against concurrent modifications of 'apicv_inhibit_reasons' (like what
-if 'apicv_inhibit_reasons' gets modified right after we've checked
-'kvm_apicv_activated(kvm)').
+/* v3 */
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add explicit uid/gid parameters.
 
-The function, however, still gives a flase impression it is somewhat
-protected against concurent modifications. Like what are these
-test_and_{set,clear}_bit() for?
+/* v4 */
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Add more documentation.
 
-If I'm not mistaken, the logic this function was supposed to implement
-is: change the requested bit to the requested state and, if
-kvm_apicv_activated() changed (we set the first bit or cleared the
-last), proceed with KVM_REQ_APICV_UPDATE. What if we re-write it like
+/* v5 */
+unchanged
+---
+ fs/sysfs/file.c       | 41 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/sysfs.h | 10 ++++++++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 2103101eca78..b97b8ff4a789 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8027,19 +8027,19 @@ EXPORT_SYMBOL_GPL(kvm_vcpu_update_apicv);
-  */
- void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
- {
-+       bool apicv_was_activated = kvm_apicv_activated(kvm);
-+
-        if (!kvm_x86_ops->check_apicv_inhibit_reasons ||
-            !kvm_x86_ops->check_apicv_inhibit_reasons(bit))
-                return;
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 4ca936ca3ba4..332cd69b378c 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -570,6 +570,47 @@ static int internal_change_owner(struct kernfs_node *kn, kuid_t kuid,
+ 	return kernfs_setattr(kn, &newattrs);
+ }
  
--       if (activate) {
--               if (!test_and_clear_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
--                   !kvm_apicv_activated(kvm))
--                       return;
--       } else {
--               if (test_and_set_bit(bit, &kvm->arch.apicv_inhibit_reasons) ||
--                   kvm_apicv_activated(kvm))
--                       return;
--       }
-+       if (activate)
-+               clear_bit(bit, &kvm->arch.apicv_inhibit_reasons);
-+       else
-+               set_bit(bit, &kvm->arch.apicv_inhibit_reasons);
++/**
++ *	sysfs_link_change_owner - change owner of a sysfs file.
++ *	@kobj:	object of the kernfs_node the symlink is located in.
++ *	@targ:	object of the kernfs_node the symlink points to.
++ *	@name:	name of the link.
++ *	@kuid:	new owner's kuid
++ *	@kgid:	new owner's kgid
++ *
++ * This function looks up the sysfs symlink entry @name under @kobj and changes
++ * the ownership to @kuid/@kgid. The symlink is looked up in the namespace of
++ * @targ.
++ *
++ * Returns 0 on success or error code on failure.
++ */
++int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
++			    const char *name, kuid_t kuid, kgid_t kgid)
++{
++	struct kernfs_node *kn = NULL;
++	int error;
 +
-+       if (kvm_apicv_activated(kvm) == apicv_was_activated)
-+               return;
++	if (!name || !kobj->state_in_sysfs || !targ->state_in_sysfs)
++		return -EINVAL;
++
++	error = -ENOENT;
++	kn = kernfs_find_and_get_ns(kobj->sd, name, targ->sd->ns);
++	if (!kn)
++		goto out;
++
++	error = -EINVAL;
++	if (kernfs_type(kn) != KERNFS_LINK)
++		goto out;
++	if (kn->symlink.target_kn->priv != targ)
++		goto out;
++
++	error = internal_change_owner(kn, kuid, kgid);
++
++out:
++	kernfs_put(kn);
++	return error;
++}
++
+ /**
+  *	sysfs_file_change_owner - change owner of a sysfs file.
+  *	@kobj:	object.
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index a7884024a911..7e15ebfd750e 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -312,6 +312,8 @@ static inline void sysfs_enable_ns(struct kernfs_node *kn)
  
-        trace_kvm_apicv_update_request(activate, bit);
-        if (kvm_x86_ops->pre_update_apicv_exec_ctrl)
-
-Is this equal?
-
+ int sysfs_file_change_owner(struct kobject *kobj, const char *name, kuid_t kuid,
+ 			    kgid_t kgid);
++int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
++			    const char *name, kuid_t kuid, kgid_t kgid);
+ 
+ #else /* CONFIG_SYSFS */
+ 
+@@ -532,6 +534,14 @@ static inline int sysfs_file_change_owner(struct kobject *kobj,
+ 	return 0;
+ }
+ 
++static inline int sysfs_link_change_owner(struct kobject *kobj,
++					  struct kobject *targ,
++					  const char *name, kuid_t kuid,
++					  kgid_t kgid)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_SYSFS */
+ 
+ static inline int __must_check sysfs_create_file(struct kobject *kobj,
 -- 
-Vitaly
+2.25.1
 
