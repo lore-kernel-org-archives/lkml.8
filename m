@@ -2,279 +2,114 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0926DC35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ACEC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67A421927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4357921927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:39:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mL+UYeip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgBYHiy (ORCPT
+        id S1729577AbgBYHi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:38:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55676 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgBYHiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:38:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29611AD7B;
-        Tue, 25 Feb 2020 07:38:51 +0000 (UTC)
-Subject: Re: [PATCH RFC v3 2/6] drm/sprd: add Unisoc's drm kms master
-To:     tang pengchuan <kevin3.tang@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     mark.rutland@arm.com, Baolin Wang <baolin.wang@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        robh+dt@kernel.org, Orson Zhai <orsonzhai@gmail.com>
-References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com>
- <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
- <20200221213652.GD3456@ravnborg.org>
- <CAFPSGXacMKTPrxk_FOrwrvH_XfmO3dYCCa_GoPCe_HUfQFPHtw@mail.gmail.com>
- <20200222212713.GA30872@ravnborg.org>
- <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <3acf15ff-6a41-ca13-e219-301fcef983fa@suse.de>
-Date:   Tue, 25 Feb 2020 08:38:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 02:38:59 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:19962 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729563AbgBYHi6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:38:58 -0500
+X-UUID: e1152e0e1cce48338a42ddf2b2eff2f9-20200225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=JOPFLx0c64QohXvIceHZUjk7yf6iTiPFaEfvoGNhpc0=;
+        b=mL+UYeipL+Rww3LkSnW+is6ZUJ+DpDAvT/XnKeKkpfMAvvpNcIl/Iqi8YdrymYDVZFfoyspOCII1now4TmMv0wFtK4yc28g6sVNB5wV91zsHOANgdNkLRMvMq+fqgzrDstagiX7T2CQCoAeHV3Z7vQUqbnUpc7qZ+EPoihHFiPc=;
+X-UUID: e1152e0e1cce48338a42ddf2b2eff2f9-20200225
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 712588057; Tue, 25 Feb 2020 15:38:53 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 25 Feb 2020 15:37:00 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 25 Feb 2020 15:39:04 +0800
+From:   <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v3 0/2] pinctrl: make MediaTek pinctrl v2 driver and MT6765 pinctrl driver ready for building loadable module
+Date:   Tue, 25 Feb 2020 15:38:49 +0800
+Message-ID: <1582616331-7702-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2
-Content-Type: multipart/mixed; boundary="FMsG9sLQC920eSt6ZJLnytyVsciYT0LhQ";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: tang pengchuan <kevin3.tang@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc: mark.rutland@arm.com, Baolin Wang <baolin.wang@linaro.org>,
- David Airlie <airlied@linux.ie>, Chunyan Zhang <zhang.lyra@gmail.com>,
- "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>, robh+dt@kernel.org,
- Orson Zhai <orsonzhai@gmail.com>
-Message-ID: <3acf15ff-6a41-ca13-e219-301fcef983fa@suse.de>
-Subject: Re: [PATCH RFC v3 2/6] drm/sprd: add Unisoc's drm kms master
-References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com>
- <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
- <20200221213652.GD3456@ravnborg.org>
- <CAFPSGXacMKTPrxk_FOrwrvH_XfmO3dYCCa_GoPCe_HUfQFPHtw@mail.gmail.com>
- <20200222212713.GA30872@ravnborg.org>
- <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
-In-Reply-To: <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KSW4gdGhlIGZ1
+dHVyZSB3ZSB3YW50IHRvIGJlIGFibGUgdG8gYnVpbGQgdGhlIE1lZGlhVGVrIHBpbmN0cmwgZHJp
+dmVyLA0KYmFzZWQgb24gcGFyaXMsIGFzIGtlcm5lbCBtb2R1bGUuIFRoaXMgcGF0Y2ggYWxsb3dz
+IHBpbmN0cmwtcGFyaXMuYywgdGhlDQpleHRlcm5hbCBpbnRlcnJ1cHQgY29udHJvbGxlciBtdGst
+ZWludC5jLCBhbmQgcGluY3RybC1tdGstY29tbW9uLXYyLmMgdG8NCmJlIGxvYWRhYmxlIGFzIG1v
+ZHVsZS4NCg0KVGhlIGZvbGxvd2luZyBpcyB0aGUgcmF0aW9uYWxlIGZvciBkZXRlcm1pbmluZyB3
+aGV0aGVyIG10ay1laW50LmMsDQpwaW5jdHJsLW10ay1jb21tb24tdjIuYywgYW5kIHBpbmN0cmwt
+cGFyaXMuYyBhcmUgYnVpbHQgYXMgbG9hZGFibGUgbW9kdWxlOg0KDQoxLiBkcml2ZXJzL3BpbmN0
+cmwvbWVkaWF0ZWsvS2NvbmZpZzoNCjEuMSBQSU5DVFJMX01UWFhYWDogY2hhbmdlIGZyb20gYm9v
+bCB0byB0cmlzdGF0ZS4gSXQgaXMgc3BlY2lmaWVkIGluDQogICAgICAgIGRlZmNvbmZpZyBmaWxl
+LiBNVFhYWFggY2FuIG9ubHkgYmUgdGhlIHVzZXIgb2YgcGluY3RybC1wYXJpcywNCiAgICAgICAg
+d2hpY2ggY2FuIE1UNjc2NSBvciBNVDgxODMuIFRoZSBwYXRjaCBmb3IgY2hhbmdpbmcNCiAgICAg
+ICAgUElOQ1RSTF9NVDY3NjUgZnJvbSBib29sIHRvIHRyaXN0YXRlIHdpbGwgYmUgZ2l2ZW4gYXMg
+dGhlIG5leHQNCiAgICAgICAgcGF0Y2ggb2YgdGhlIHBhdGNoIHNlcmllcy4NCjEuMiBQSU5DVFJM
+X01US19QQVJJUzogY2hhbmdlIGZyb20gYm9vbCB0byB0cmlzdGF0ZSBhbmQgc2VsZWN0DQogICAg
+ICAgIFBJTkNUUkxfTVRLX1YyLiBObyBuZWVkIHRvIHNwZWNpZnkgaW4gZGVmY29uZmlnIGZpbGUu
+DQogICAgICAqIFBJTkNUUkxfTVRLX1BBUklTIHdpbGwgYmUgeSBpZiBhbnkgUElOQ1RSTF9NVFhY
+WFggc2VsZWN0aW5nDQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGlzIHkuDQogICAgICAqIFBJ
+TkNUUkxfTVRLX1BBUklTIHdpbGwgYmUgbiBpZiBhbGwgUElOQ1RSTF9NVFhYWFggc2VsZWN0aW5n
+DQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGlzIG4uDQogICAgICAqIFBJTkNUUkxfTVRLX1BB
+UklTIHdpbGwgYmUgbSBpZiBzb21lIFBJTkNUUkxfTVRYWFhYIHNlbGVjdGluZw0KICAgICAgICBQ
+SU5DVFJMX01US19QQVJJUyBhcmUgbSBhbmQgb3RoZXIgUElOQ1RSTF9NVFhYWFggc2VsZWN0aW5n
+DQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGFyZSBuLg0KMS4zIFBJTkNUUkxfTVRLX01PT1JF
+OiBzZWxlY3QgRUlOVF9NVEsgYW5kIFBJTkNUUkxfTVRLX1YyLiBJdCBpcyBtYWtlDQogICAgICAg
+IHRvIGJlIHJlYWR5IGZvciBidWlsZGluZyBhcyBsb2FkYWJsZSBrZXJuZWwgbW9kdWxlIGJlY2F1
+c2UgaXQNCiAgICAgICAgaXMgbm90IHVzZWQgb24gQW5kcm9pZCBrZXJuZWwuICAgICAgICANCjEu
+NCBQSU5DVFJMX01US19WMjogYWRkIHRoaXMgdHJpc3RhdGUgY29uZmlnIHdoaWNoIGRlcGVuZHMg
+b24NCiAgICAgICAgUElOQ1RSTF9NVEtfUEFSSVMgYW5kIFBJTkNUUkxfTVRLX01PT1JFLiBObyBu
+ZWVkIHRvIHNwZWNpZnkgaW4gDQogICAgICAgIGRlZmNvbmZpZyBmaWxlLg0KICAgICAgKiBQSU5D
+VFJMX01US19WMiB3aWxsIGJlIHkgaWYgZWl0aGVyIFBJTkNUUkxfTVRLX1BBUklTIG9yDQogICAg
+ICAgIFBJTkNUUkxfTVRLX01PT1JFIGlzIHkuDQogICAgICAqIFBJTkNUUkxfTVRLX1YyIHdpbGwg
+YmUgbiBpZiBib3RoIFBJTkNUUkxfTVRLX1BBUklTIGFuZA0KICAgICAgICBQSU5DVFJMX01US19N
+T09SRSBhcmUgbi4NCiAgICAgICogUElOQ1RSTF9NVEtfVjIgd2lsbCBiZSBtIGlmIFBJTkNUUkxf
+TVRLX1BBUklTIGlzIG0gYW5kDQogICAgICAgIFBJTkNUUkxfTVRLX01PT1JFIGlzIG4uDQoxLjUg
+RUlOVF9NVEs6IGNoYW5nZSBmcm9tIGJvb2wgdG8gdHJpc3RhdGUgYW5kIGFkZCBydWxlIGZvciBk
+ZWZhdWx0Lg0KICAgICAgICBObyBuZWVkIHRvIHNwZWNpZnkgaW4gZGVmY29uZmlnIGZpbGUuDQog
+ICAgICAqIEZpcnN0IHJ1bGU6IGRldGVybWluZSBpZiBFSU5UX01USyBpcyB5IG9yIG4gYWNjb3Jk
+aW5nIHRvIA0KICAgICAgICBzZWxlY3Rpb24gb2YgUElOQ1RSTF9NVEsgb3IgUElOQ1RSTF9NVEtf
+TU9SRS4NCiAgICAgICogU2Vjb25kIHJ1bGU6IGRldGVybWluZSBpZiBFSU5UX01USyBpcyB5LCBt
+LCBvciBuIGFjY29yZGluZyB0bw0KICAgICAgICBzZWxlY3Rpb24gb2YgUElOQ1RSTF9NVEtfUEFS
+SVMuDQoNCjIuIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZTogVXNlIFBJTkNUUkxf
+TVRLX1YyIHRvIGRldGVybWluZQ0KICAgICAgICBpZiBwaW5jdHJsLW10ay1jb21tb24tdjIuYyBp
+cyBidWlsdCBhcyBsb2FkYWJsZSBtb2R1bGUgb3INCiAgICAgICAgYnVpbHQtaW4uDQoNCkxpZ2h0
+IEhzaWVoICgyKToNCiAgcGluY3RybDogbWFrZSBNZWRpYVRlayBwaW5jdHJsIHYyIGRyaXZlciBy
+ZWFkeSBmb3IgYnVpZGxpbmcgbG9hZGFibGUNCiAgICBtb2R1bGUNCiAgcGluY3RybDogbWFrZSBN
+ZWRpYVRlayBNVDY3NjUgcGluY3RybCByZWFkeSBmb3IgYnVpZGxpbmcgbG9hZGFibGUNCiAgICBt
+b2R1bGUNCg0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnICAgICAgICAgICAgICAg
+ICB8IDE1ICsrKysrKysrKysrKy0tLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmls
+ZSAgICAgICAgICAgICAgICB8ICA1ICsrKy0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL210
+ay1laW50LmMgICAgICAgICAgICAgIHwgIDkgKysrKysrKysrDQogZHJpdmVycy9waW5jdHJsL21l
+ZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMgICAgICAgIHwgIDQgKysrKw0KIGRyaXZlcnMvcGluY3Ry
+bC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYyB8IDI0ICsrKysrKysrKysrKysrKysr
+KysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgICAgICAg
+ICB8ICA1ICsrKysrDQogZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5jICAgICAgICAg
+ICAgICAgIHwgIDEgKw0KIDcgZmlsZXMgY2hhbmdlZCwgNTggaW5zZXJ0aW9ucygrKSwgNSBkZWxl
+dGlvbnMoLSkNCg0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
 
---FMsG9sLQC920eSt6ZJLnytyVsciYT0LhQ
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 23.02.20 um 05:26 schrieb tang pengchuan:
->=20
->=20
-> On Sun, Feb 23, 2020 at 5:27 AM Sam Ravnborg <sam@ravnborg.org
-> <mailto:sam@ravnborg.org>> wrote:
->=20
->     Hi Kevin/tang.
->=20
->     Thanks for the quick and detailed feedback.
->     Your questions are addressed below.
->=20
->     =C2=A0 =C2=A0 =C2=A0 =C2=A0 Sam
->=20
->=20
->     > > > +static int sprd_drm_bind(struct device *dev)
->     > > > +{
->     > > > +=C2=A0 =C2=A0 =C2=A0struct drm_device *drm;
->     > > > +=C2=A0 =C2=A0 =C2=A0struct sprd_drm *sprd;
->     > > > +=C2=A0 =C2=A0 =C2=A0int err;
->     > > > +
->     > > > +=C2=A0 =C2=A0 =C2=A0drm =3D drm_dev_alloc(&sprd_drm_drv, dev=
-);
->     > > > +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(drm))
->     > > > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_E=
-RR(drm);
->     > > You should embed drm_device in struct sprd_drm.
->     > > See example code in drm/drm_drv.c
->     > >
->     > > This is what modern drm drivers do.
->     > >
->     > > I *think* you can drop the component framework if you do this.
->     > >
->     > I have read it(drm/drm_drv.c) carefully, if drop the component
->     framework,
->     > the whole our drm driver maybe need to redesign, so i still want
->     to keep
->     > current design.
->     OK, fine.
->=20
->     > > > +=C2=A0 =C2=A0 =C2=A0sprd_drm_mode_config_init(drm);
->     > > > +
->     > > > +=C2=A0 =C2=A0 =C2=A0/* bind and init sub drivers */
->     > > > +=C2=A0 =C2=A0 =C2=A0err =3D component_bind_all(drm->dev, drm=
-);
->     > > > +=C2=A0 =C2=A0 =C2=A0if (err) {
->     > > > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0DRM_ERROR("f=
-ailed to bind all component.\n");
->     > > > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err_dc_=
-cleanup;
->     > > > +=C2=A0 =C2=A0 =C2=A0}
->     > > When you have a drm_device - which you do here.
->     > > Then please use drm_err() and friends for error messages.
->     > > Please verify all uses of DRM_XXX
->     > >
->     >=C2=A0 =C2=A0modern drm drivers need drm_xxx to replace DRM_XXX?
->     Yes, use of DRM_XXX is deprecated - when you have a drm_device.
->=20
->     > >
->     > > > +=C2=A0 =C2=A0 =C2=A0/* with irq_enabled =3D true, we can use=
- the vblank
->     feature. */
->     > > > +=C2=A0 =C2=A0 =C2=A0drm->irq_enabled =3D true;
->     > > I cannot see any irq being installed. This looks wrong.
->     > >
->     > Our display controller isr is been register on crtc
->     driver(sprd_dpu.c), not
->     > here.
->=20
->     I think you just need to move this to next patch and then it is fin=
-e.
->=20
-> Here is the advice given by Thomas Zimmermann, similar to the advice yo=
-u
-> gave.
-> I have given thomas feedback about my questions, maybe thomas didn't se=
-e
-> my email, so there is no reply.
-
-I have been busy last week. Sorry for not getting back to you.
-
->=20
-> But I've always been confused, because irq is initialized in drm driver=
-
-> for other guys, why not for me?
-
-Do you have an example?
-
-Best regards
-Thomas
-
-> Can you help to tell the reason in detail, looking forward to your answ=
-ers.
->=20
-> Thomas's suggestion=EF=BC=9A
-> -----------------------------------------------------------------------=
---------------------
->=20
-> This line indicates the problem's design. The irq is initialized in the=
-
-> sub-device code, but the device state is set here. Instead both should
-> be set in the same place.
->=20
->> +
->> +=C2=A0 =C2=A0 =C2=A0/* reset all the states of crtc/plane/encoder/con=
-nector */
->> +=C2=A0 =C2=A0 =C2=A0drm_mode_config_reset(drm);
->> +
->> +=C2=A0 =C2=A0 =C2=A0/* init kms poll for handling hpd */
->> +=C2=A0 =C2=A0 =C2=A0drm_kms_helper_poll_init(drm);
->=20
-> Most of this function's code should be moved into the sub-device bind
-> function.
->=20
-> Here, maybe do:
->=20
-> =C2=A0* allocate device structures
-> =C2=A0* call component_bind_all()
-> =C2=A0* on success, register device
->=20
-> The sub-device function should then do
->=20
-> =C2=A0* init modesetting, crtc, planes, etc.
-> =C2=A0* do drm_mode_config_reset()
-> =C2=A0* init vblanking
-> =C2=A0* init the irq
-> =C2=A0* do drm_kms_helper_poll_init()
->=20
-> roughtly in that order. It makes sense to call drm_vblank_init() after
-> drm_mode_config_reset(), as vblanking uses some of the mode-config fiel=
-ds.=C2=A0
-> -----------------------------------------------------------------------=
--------------------------------
->=20
->=20
->     =C2=A0 =C2=A0 =C2=A0 =C2=A0 Sam
->=20
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---FMsG9sLQC920eSt6ZJLnytyVsciYT0LhQ--
-
---QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5UzwcACgkQaA3BHVML
-eiMf5wf8DivhAr6LFIIlZXxbo6hEtUbn4XxT+xFzFM4rPbYbJjCj9VC+CST8sq4P
-HLLVDYxngnpIclwUF9UlprIBpXNCuZobb+koJXkKIBEP17+imX3n7oc8Tqq+yOyY
-Wb45hWUwOtM4uAS4ULrIppnGPOye8GLCVJpc+XbrLSVlglI/OCkBrxGuwQ0VM/Ck
-fe0/i7H0Eoq+/Jrll+abcxUF3fYrbeVG62PPIzfVh5d3hu0cElMPJwLngtYq7/0x
-IRW5S5PcAP6XUTC2kpfZyCjc9++B3vIkYcy0Hpq4j7HaOkXTuEn24ipBNkR32s2U
-g4HMCrbA4NKmiSrYloLnID3DGZYlhw==
-=fwAf
------END PGP SIGNATURE-----
-
---QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2--
