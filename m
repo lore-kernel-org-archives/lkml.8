@@ -2,143 +2,160 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF1EC35DEA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215C5C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728562176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D222176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u9eyt5e7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgBYBsS (ORCPT
+        id S1728757AbgBYBsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:48:18 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:46883 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728583AbgBYBsP (ORCPT
+        Mon, 24 Feb 2020 20:48:54 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41018 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728489AbgBYBsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:48:15 -0500
-Received: by mail-il1-f200.google.com with SMTP id a2so22116575ill.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:48:13 -0800 (PST)
+        Mon, 24 Feb 2020 20:48:54 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l21so7994747qtr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:48:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lQ7GCo7cVwQFlLI9a2rMkRqHCZRbg3JBq4Afyow0Kjw=;
+        b=u9eyt5e7DOImqpnhRcwRosrVhrBa0EeN4ldTCttmJAwxh8och5yVQBD/Z1NimveKBy
+         JCehb1Mlczdo3yY7lezHYj6Vb/0YBlLVrwd0pP8BndXyMnDn+fLGxtXBlh0GiuGmLR5L
+         EI+Dakp7T+mYiWK/qrV58aATfyGciKuEl8DEg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=THUlbZ/6NMU2sVym3Qlfci4ygzS5ZBnoxaxT1jFcOt8=;
-        b=GQLoijd1obN0xw1SfHEt/USQFbkdsZjmmtMT2ryAzbTePUR6kBvUbNaT6/RZkHg7i/
-         4+OHRjB+e7+oJeDlvACiVKIelMJ6Ty4ugtfh8Yq4b7BhIxOWwvC+bb16ZF7+lz4nHPB4
-         qM7jpvs1NOKDWnPTOcS1vF0ocFVP+4fm+HRWRRuatUWkq8aifJvT5qVO2/6RYj4j1dCc
-         hDOdeJoezCDKSJDpaWlz86yQI0C05EQiQFWWrTV7WF/FKeu9XuO4JlKHsg+wKnjTNNlC
-         2Jssidi1NzYEnc/mIxmULFA1/JOZbZ4xHrkYwODtR+2Ell3rM+IaKID9ZJ8VZTA8m6ze
-         7dFA==
-X-Gm-Message-State: APjAAAUZWyCKuAUm8qrLmQbpuKvs3h12hAtoSSMvh2Cbf25wcO6X6l4A
-        pHFOaILa/6Zhp4z1eN0Hci3foKJGVuI8Wu4PT5O2R+fZDkTl
-X-Google-Smtp-Source: APXvYqzntUKeAtSxXmfIUrtt3OhLfaq7b1vqkJ/qquLmzXPg8jF/9WS/6RvoU3bd3Sm3RhE87tSf+y+MdenYf0corw66y5ScFTFY
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lQ7GCo7cVwQFlLI9a2rMkRqHCZRbg3JBq4Afyow0Kjw=;
+        b=EQz+gEjaGJChBXb+8AyHFscx+bl7pAy+PdmRLmHbd/Ouhu0ropmKEMdEwYygjk8kl/
+         yBQq80QDDe9zlAFg3wFPciZILgCi1ZXEaT9iGPo+JGcovB4wt2sWu53ggkjUHrMc4/kn
+         QIlMOlVuNSiQ1xwKcHTiax/B+65rFLrHRJUhCzHuAhsyuMfxZ7TYLGbzwJje8ZKwGUMT
+         pitZdq1DdxKaQpErWnUkGPn4Tu3OkoxneWUpes7morIkj2YGrH5a4OakrtbXg6yfOlyv
+         hxiMTK3p77CV6R5y+ZSsmY5GI/XWobhILb+bWv4F6UzsUUuuKyLsjLzapNbknrYLm0ip
+         40RQ==
+X-Gm-Message-State: APjAAAWhiZFU8GzzzkZqWrUan/URDf4ydGB5LUHUfybzhus0GpTpBfQW
+        TOUE4lLl6sMez/q5Fdgl1KYnsg==
+X-Google-Smtp-Source: APXvYqyp8ViMH6odn4BmLMO9B5r+MxrJYojbCDAawTdrvd0x0I/XETGNP1jpPH6KxNDMYhjH7G1UkQ==
+X-Received: by 2002:ac8:4542:: with SMTP id z2mr49739414qtn.324.1582595333320;
+        Mon, 24 Feb 2020 17:48:53 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id f128sm4286143qke.54.2020.02.24.17.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 17:48:52 -0800 (PST)
+Date:   Mon, 24 Feb 2020 20:48:51 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200225014851.GA237890@google.com>
+References: <20200215233817.GA670792@mit.edu>
+ <20200216121246.GG2935@paulmck-ThinkPad-P72>
+ <20200217160827.GA5685@pc636>
+ <20200217193314.GA12604@mit.edu>
+ <20200218170857.GA28774@pc636>
+ <20200221120618.GA194360@google.com>
+ <20200221132817.GB194360@google.com>
+ <20200221192152.GA6306@pc636>
+ <20200222221253.GB191380@google.com>
+ <20200224170219.GA21229@pc636>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2352:: with SMTP id r18mr52270205iot.220.1582595293486;
- Mon, 24 Feb 2020 17:48:13 -0800 (PST)
-Date:   Mon, 24 Feb 2020 17:48:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004aa34d059f5caedc@google.com>
-Subject: general protection fault in nldev_stat_set_doit
-From:   syzbot <syzbot+bd4af81bc51ee0283445@syzkaller.appspotmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        markz@mellanox.com, netdev@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224170219.GA21229@pc636>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+[..]
+> > > > debug_objects bits wouldn't work obviously for the !emergency kvfree case,
+> > > > not sure what we can do there.
+> > > >
+> > > Agree.
+> > > 
+> > > Thank you, Joel, for your comments!
+> > 
+> > No problem, I think we have a couple of ideas here.
+> > 
+> > What I also wanted to do was (may be after all this), see if we can create an
+> > API for head-less kfree based on the same ideas. Not just for arrays for for
+> > any object. Calling it, say, kfree_rcu_headless() and then use the bulk array
+> > as we have been doing. That would save any users from having an rcu_head --
+> > of course with all needed warnings about memory allocation failure. Vlad,
+> > What do you think? Paul, any thoughts on this?
+> > 
+> I like it. It would be more clean interface. Also there are places where
+> people do not embed the rcu_head into their stuctures for some reason
+> and do like:
+> 
+> 
+> <snip>
+>     synchronize_rcu();
+>     kfree(p);
+> <snip>
+> 
+> <snip>
+> urezki@pc636:~/data/ssd/coding/linux-rcu$ find ./ -name "*.c" | xargs grep -C 1 -rn "synchronize_rcu" | grep kfree
+> ./arch/x86/mm/mmio-mod.c-314-           kfree(found_trace);
+> ./kernel/module.c-3910- kfree(mod->args);
+> ./kernel/trace/ftrace.c-5078-                   kfree(direct);
+> ./kernel/trace/ftrace.c-5155-                   kfree(direct);
+> ./kernel/trace/trace_probe.c-1087-      kfree(link);
+> ./fs/nfs/sysfs.c-113-           kfree(old);
+> ./fs/ext4/super.c-1701- kfree(old_qname);
+> ./net/ipv4/gre.mod.c-36-        { 0xfc3fcca2, "kfree_skb" },
+> ./net/core/sysctl_net_core.c-143-                               kfree(cur);
+> ./drivers/crypto/nx/nx-842-pseries.c-1010-      kfree(old_devdata);
+> ./drivers/misc/vmw_vmci/vmci_context.c-692-             kfree(notifier);
+> ./drivers/misc/vmw_vmci/vmci_event.c-213-       kfree(s);
+> ./drivers/infiniband/core/device.c:2162:                         * synchronize_rcu before the netdev is kfreed, so we
+> ./drivers/infiniband/hw/hfi1/sdma.c-1337-       kfree(dd->per_sdma);
+> ./drivers/net/ethernet/myricom/myri10ge/myri10ge.c-3582-        kfree(mgp->ss);
+> ./drivers/net/ethernet/myricom/myri10ge/myri10ge.mod.c-156-     { 0x37a0cba, "kfree" },
+> ./drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c:286:       synchronize_rcu(); /* before kfree(flow) */
+> ./drivers/net/ethernet/mellanox/mlxsw/core.c-1504-      kfree(rxl_item);
+> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6648- kfree(adapter->mbox_log);
+> ./drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c-6650- kfree(adapter);
+> ./drivers/block/drbd/drbd_receiver.c-3804-      kfree(old_net_conf);
+> ./drivers/block/drbd/drbd_receiver.c-4176-                      kfree(old_disk_conf);
+> ./drivers/block/drbd/drbd_state.c-2074-         kfree(old_conf);
+> ./drivers/block/drbd/drbd_nl.c-1689-    kfree(old_disk_conf);
+> ./drivers/block/drbd/drbd_nl.c-2522-    kfree(old_net_conf);
+> ./drivers/block/drbd/drbd_nl.c-2935-            kfree(old_disk_conf);
+> ./drivers/mfd/dln2.c-178-               kfree(i);
+> ./drivers/staging/fwserial/fwserial.c-2122-     kfree(peer);
+> <snip>
 
-syzbot found the following crash on:
+Wow that's pretty amazing, looks like could be very useful.
 
-HEAD commit:    39f3b41a net: genetlink: return the error code when attrib..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=161be265e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
-dashboard link: https://syzkaller.appspot.com/bug?extid=bd4af81bc51ee0283445
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167103ede00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1710c265e00000
+Do you want to continue your patch and then post it, and we can discuss it?
+Or happy to take it as well.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+bd4af81bc51ee0283445@syzkaller.appspotmail.com
+We could split work into 3 parts:
+1. Make changes for 2 separate per-CPU arrays. One for vfree and one for kfree.
+2. Add headless support for both as alternative API.
+3. Handle the low memory case somehow (I'll reply to the other thread).
 
-iwpm_register_pid: Unable to send a nlmsg (client = 2)
-infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 PID: 9754 Comm: syz-executor069 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nla_get_u32 include/net/netlink.h:1474 [inline]
-RIP: 0010:nldev_stat_set_doit+0x63c/0xb70 drivers/infiniband/core/nldev.c:1760
-Code: fc 01 0f 84 58 03 00 00 e8 41 83 bf fb 4c 8b a3 58 fd ff ff 48 b8 00 00 00 00 00 fc ff df 49 8d 7c 24 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 6d
-RSP: 0018:ffffc900068bf350 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: ffffc900068bf728 RCX: ffffffff85b60470
-RDX: 0000000000000000 RSI: ffffffff85b6047f RDI: 0000000000000004
-RBP: ffffc900068bf750 R08: ffff88808c3ee140 R09: ffff8880a25e6010
-R10: ffffed10144bcddc R11: ffff8880a25e6ee3 R12: 0000000000000000
-R13: ffff88809acb0000 R14: ffff888092a42c80 R15: 000000009ef2e29a
-FS:  0000000001ff0880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4733e34000 CR3: 00000000a9b27000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
- rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4403d9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc0efbc5c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004403d9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000008 R09: 00000000004002c8
-R10: 000000000000004a R11: 0000000000000246 R12: 0000000000401c60
-R13: 0000000000401cf0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 548745c787596b79 ]---
-RIP: 0010:nla_get_u32 include/net/netlink.h:1474 [inline]
-RIP: 0010:nldev_stat_set_doit+0x63c/0xb70 drivers/infiniband/core/nldev.c:1760
-Code: fc 01 0f 84 58 03 00 00 e8 41 83 bf fb 4c 8b a3 58 fd ff ff 48 b8 00 00 00 00 00 fc ff df 49 8d 7c 24 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 6d
-RSP: 0018:ffffc900068bf350 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: ffffc900068bf728 RCX: ffffffff85b60470
-RDX: 0000000000000000 RSI: ffffffff85b6047f RDI: 0000000000000004
-RBP: ffffc900068bf750 R08: ffff88808c3ee140 R09: ffff8880a25e6010
-R10: ffffed10144bcddc R11: ffff8880a25e6ee3 R12: 0000000000000000
-R13: ffff88809acb0000 R14: ffff888092a42c80 R15: 000000009ef2e29a
-FS:  0000000001ff0880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4733e34000 CR3: 00000000a9b27000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+May be we can start with 1. where you can clean up your patch and post, and
+then I/we can work based on that?
 
+thanks,
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ - Joel
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
