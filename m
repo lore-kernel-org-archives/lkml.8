@@ -2,146 +2,182 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91D8C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947F3C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E03721927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:09:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JD/Y/mIS"
+	by mail.kernel.org (Postfix) with ESMTP id 668CA222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgBYAJ3 (ORCPT
+        id S1728615AbgBYAJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:09:29 -0500
-Received: from gateway20.websitewelcome.com ([192.185.52.45]:14169 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728396AbgBYAJ2 (ORCPT
+        Mon, 24 Feb 2020 19:09:46 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54329 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728011AbgBYAJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:09:28 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 2EFB4400CE19A
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:55:12 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6NmwjDxfYEfyq6NmwjKGSm; Mon, 24 Feb 2020 18:09:26 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZwmvXNF0jxPluhfTdIp+OkMhFDGnO6D8vfAw9YlIa3k=; b=JD/Y/mISz9+s6xEcFV8VrUebnA
-        GXp81qYIO0zcoyu28r1UkT83FgP+aju1ycUxK/cvS6CYIVP90cCrNqaK1cFMulvC47GW5P0yscOq/
-        HU7qUwAULL+2b1mn3E0k6XakzlGx6bfvP6J6w5e4nmLbwrrY17Dq3IDFoR1Y+8AQ9z5VTrYU0p2MS
-        7YFfFzYQYNKkfmweNOL+uywgNzcLBMr0pBdadbrRYgozPOvTXTklF75Q05Cumo/mCmOfirpAkpSQ2
-        8Seg1Va6u0aZPU0w5lpNRL3DkoZ3ZrrUNFNViG9JhPXdYVESgL8wDtUg4TxIhcgWEpRxNvl/Yhgg2
-        IrkC12Zw==;
-Received: from [201.166.190.60] (port=54458 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j6Nmu-002OsC-IZ; Mon, 24 Feb 2020 18:09:25 -0600
-Date:   Mon, 24 Feb 2020 18:12:13 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] net: marvell: Replace zero-length array with
- flexible-array member
-Message-ID: <20200225001213.GA20527@embeddedor>
+        Mon, 24 Feb 2020 19:09:45 -0500
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 899633A1961;
+        Tue, 25 Feb 2020 11:09:39 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j6Nn7-0004kt-Lc; Tue, 25 Feb 2020 11:09:37 +1100
+Date:   Tue, 25 Feb 2020 11:09:37 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+Message-ID: <20200225000937.GA10776@dread.disaster.area>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-8-ira.weiny@intel.com>
+ <20200221174449.GB11378@lst.de>
+ <20200221224419.GW10776@dread.disaster.area>
+ <20200224175603.GE7771@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.190.60
-X-Source-L: No
-X-Exim-ID: 1j6Nmu-002OsC-IZ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.190.60]:54458
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 26
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200224175603.GE7771@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=7-415B0cAAAA:8 a=Nhs22OFJWa-oc4Q03hQA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Mon, Feb 24, 2020 at 06:56:03PM +0100, Christoph Hellwig wrote:
+> On Sat, Feb 22, 2020 at 09:44:19AM +1100, Dave Chinner wrote:
+> > > I am very much against this.  There is a reason why we don't support
+> > > changes of ops vectors at runtime anywhere else, because it is
+> > > horribly complicated and impossible to get right.  IFF we ever want
+> > > to change the DAX vs non-DAX mode (which I'm still not sold on) the
+> > > right way is to just add a few simple conditionals and merge the
+> > > aops, which is much easier to reason about, and less costly in overall
+> > > overhead.
+> > 
+> > *cough*
+> > 
+> > That's exactly what the original code did. And it was broken
+> > because page faults call multiple aops that are dependent on the
+> > result of the previous aop calls setting up the state correctly for
+> > the latter calls. And when S_DAX changes between those calls, shit
+> > breaks.
+> 
+> No, the original code was broken because it didn't serialize between
+> DAX and buffer access.
+> 
+> Take a step back and look where the problems are, and they are not
+> mostly with the aops.  In fact the only aop useful for DAX is
+> is ->writepages, and how it uses ->writepages is actually a bit of
+> an abuse of that interface.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+The races are all through the fops, too, which is one of the reasons
+Darrick mentioned we should probably move this up to file ops
+level...
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+> So what we really need it just a way to prevent switching the flag
+> when a file is mapped,
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+That's not sufficient.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+We also have to prevent the file from being mapped *while we are
+switching*. Nothing in the mmap() path actually serialises against
+filesystem operations, and the initial behavioural checks in the
+page fault path are similarly unserialised against changing the
+S_DAX flag.
 
-This issue was found with the help of Coccinelle.
+e.g. there's a race against ->mmap() with switching the the S_DAX
+flag. In xfs_file_mmap():
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+        file_accessed(file);
+        vma->vm_ops = &xfs_file_vm_ops;
+        if (IS_DAX(inode))
+                vma->vm_flags |= VM_HUGEPAGE;
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/ethernet/marvell/skge.h | 2 +-
- drivers/net/ethernet/marvell/sky2.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+So if this runs while a switch from true to false is occurring,
+we've got a non-dax VMA with huge pages enabled, and the non-dax
+page fault path doesn't support this.
 
-diff --git a/drivers/net/ethernet/marvell/skge.h b/drivers/net/ethernet/marvell/skge.h
-index 6fa7b6a34c08..a1313d57e283 100644
---- a/drivers/net/ethernet/marvell/skge.h
-+++ b/drivers/net/ethernet/marvell/skge.h
-@@ -2426,7 +2426,7 @@ struct skge_hw {
- 	spinlock_t	     phy_lock;
- 	struct tasklet_struct phy_task;
- 
--	char		     irq_name[0]; /* skge@pci:000:04:00.0 */
-+	char		     irq_name[]; /* skge@pci:000:04:00.0 */
- };
- 
- enum pause_control {
-diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
-index b02b6523083c..ada1ca60f088 100644
---- a/drivers/net/ethernet/marvell/sky2.h
-+++ b/drivers/net/ethernet/marvell/sky2.h
-@@ -2309,7 +2309,7 @@ struct sky2_hw {
- 	struct work_struct   restart_work;
- 	wait_queue_head_t    msi_wait;
- 
--	char		     irq_name[0];
-+	char		     irq_name[];
- };
- 
- static inline int sky2_is_copper(const struct sky2_hw *hw)
+If we are really lucky, we'll have IS_DAX() set just long
+enough to get through this check in xfs_filemap_huge_fault():
+
+        if (!IS_DAX(file_inode(vmf->vma->vm_file)))
+                return VM_FAULT_FALLBACK;
+
+and then we'll get into __xfs_filemap_fault() and block on the
+MMAPLOCK. When we actually get that lock, S_DAX will now be false
+and we have a huge page fault running through a path (page cache IO)
+that doesn't support huge pages...
+
+This is the sort of landmine switching S_DAX without serialisation
+causes. The methods themselves look sane, but it's cross-method
+dependencies for a stable S_DAX flag that is the real problem.
+
+Yes, we can probably fix this by adding XFS_MMAPLOCK_SHARED here,
+but means every filesystem has to solve the same race conditions
+itself. That's hard to get right and easy to get wrong. If the
+VFS/mm subsystem provides the infrastructure needed to use this
+functionality safely, then that is hard for filesystem developers to
+get wrong.....
+
+> and in the normal read/write path ensure the
+> flag can't be switch while I/O is going on, which could either be
+> done by ensuring it is only switched under i_rwsem or equivalent
+> protection, or by setting the DAX flag once in the iocb similar to
+> IOCB_DIRECT.
+
+The iocb path is not the problem - that's entirely serialised
+against S_DAX changes by the i_rwsem. The problem is that we have no
+equivalent filesystem level serialisation for the entire mmap/page
+fault path, and it checks S_DAX all over the place.
+
+It's basically the same limitation that we have with mmap vs direct
+IO - we can't lock out mmap when we do direct IO, so we cannot
+guarantee coherency between the two. Similar here - we cannot
+lockout mmap in any sane way, so we cannot guarantee coherency
+between mmap and changing the S_DAX flag.
+
+That's the underlying problem we need to solve here.
+
+/me wonders if the best thing to do is to add a ->fault callout to
+tell the filesystem to lock/unlock the inode right up at the top of
+the page fault path, outside even the mmap_sem.  That means all the
+methods that the page fault calls are protected against S_DAX
+changes, and it gives us a low cost method of serialising page
+faults against DIO (e.g. via inode_dio_wait())....
+
+> And they easiest way to get all this done is as a first step to
+> just allowing switching the flag when no blocks are allocated at
+> all, similar to how the rt flag works.
+
+False equivalence - it is not similar because the RT flag changes
+and their associated state checks are *already fully serialised* by
+the XFS_ILOCK_EXCL. S_DAX accesses have no such serialisation, and
+that's the problem we need to solve...
+
+In reality, I don't really care how we solve this problem, but we've
+been down the path you are suggesting at least twice before and each
+time we've ended up in a "that doesn't work" corner and had to
+persue other solutions. I don't like going around in circles.
+
+Cheers,
+
+Dave.
 -- 
-2.25.0
-
+Dave Chinner
+david@fromorbit.com
