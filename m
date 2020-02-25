@@ -2,91 +2,102 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC559C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB46C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD28921556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4F421556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgBYGnu (ORCPT
+        id S1729173AbgBYGoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:43:50 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58881 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgBYGnu (ORCPT
+        Tue, 25 Feb 2020 01:44:10 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:29696 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729025AbgBYGoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:43:50 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6Twa-0006m6-5S; Tue, 25 Feb 2020 07:43:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6TwY-0006WO-W1; Tue, 25 Feb 2020 07:43:46 +0100
-Date:   Tue, 25 Feb 2020 07:43:46 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 1/4] pwm: omap-dmtimer: Drop unused header file
-Message-ID: <20200225064346.xj5gejuvu76riou2@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-2-lokeshvutla@ti.com>
- <20200224075302.jd3vcrdl6fuqrkpb@pengutronix.de>
- <ca33326e-22c8-e57b-c5fe-900f4749e640@ti.com>
+        Tue, 25 Feb 2020 01:44:10 -0500
+X-IronPort-AV: E=Sophos;i="5.70,483,1574092800"; 
+   d="scan'208";a="83891623"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 25 Feb 2020 14:44:06 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 081C950A9976;
+        Tue, 25 Feb 2020 14:34:20 +0800 (CST)
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.85) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Tue, 25 Feb 2020 14:44:02 +0800
+Received: from Fedora-30.g08.fujitsu.local (10.167.220.106) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ id 14.3.439.0; Tue, 25 Feb 2020 14:44:05 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>
+Subject: [PATCH] tools/perf/util/*.c: Use "%zd" output format for size_t type
+Date:   Tue, 25 Feb 2020 14:39:01 +0800
+Message-ID: <20200225063901.20165-1-yangx.jy@cn.fujitsu.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ca33326e-22c8-e57b-c5fe-900f4749e640@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 081C950A9976.AA05D
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:32:04AM +0530, Lokesh Vutla wrote:
-> Hi Uwe,
-> 
-> On 24/02/20 1:23 PM, Uwe Kleine-König wrote:
-> > Hello,
-> > 
-> > On Mon, Feb 24, 2020 at 10:51:32AM +0530, Lokesh Vutla wrote:
-> >> @@ -190,9 +190,8 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
-> >>  		load_value, load_value,	match_value, match_value);
-> >>  
-> >>  	omap->pdata->set_pwm(omap->dm_timer,
-> >> -			      pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> >> -			      true,
-> >> -			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> >> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> >> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> > 
-> > This is unrelated.
-> 
-> PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE is deleted along with header file
-> and used OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE. I should have mentioned this
-> in my commit description. Will fix it in v2.
+Avoid the following errors when building perf:
+-----------------------------------------------
+util/session.c: In function 'perf_session__process_compressed_event':
+util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
+  pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
+...
+til/zstd.c: In function 'zstd_decompress_stream':
+util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
+    pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
+...
+-----------------------------------------------
 
-Ah, indeed I missed that the register name was changed in that hunk and
-considered that an indention only change.
+Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+---
+ tools/perf/util/session.c | 2 +-
+ tools/perf/util/zstd.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Best regards
-Uwe
-
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d0d7d25b23e3..5b74d606b4b7 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 		session->decomp_last = decomp;
+ 	}
+ 
+-	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
++	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index d2202392ffdb..48dd2b018c47 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+ 	while (input.pos < input.size) {
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+-			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
++			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
+ 			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+ 			break;
+ 		}
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.21.0
+
+
+
