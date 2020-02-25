@@ -2,150 +2,138 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF56C35E05
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D864C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776FD2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7474F2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ZHgAtt+Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBg91KtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgBYOU6 (ORCPT
+        id S1730654AbgBYOVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:20:58 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34239 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730654AbgBYOU5 (ORCPT
+        Tue, 25 Feb 2020 09:21:22 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43370 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730569AbgBYOVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:20:57 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r18so16442447edl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:20:56 -0800 (PST)
+        Tue, 25 Feb 2020 09:21:21 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p11so5545262plq.10;
+        Tue, 25 Feb 2020 06:21:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x0DDJv++iHMwFovcTSUdqNPnf7WFz++klT2C8MF2YAk=;
-        b=ZHgAtt+ZWNZuRLCOtkQ+cnzsMFKlWKGsHwIWalC0ewkaUXugyhDoTqYEH9X4i0GGZv
-         orFXRyBhjJf0ltZGcarH36Nnhr4EWIvzKdVUKjBvlY5hUGC9NWUG4mIXYJGxCmZj4hax
-         jx489NWyobGvzkLEmJDQXdvShmP0IgX1nzbjjaKHmIhjgw3l2N8Iszwq7QMxK6iA/Ulf
-         muQzUDLQTE2obbByzg766pxkaheuuqcG4bb9N49Nb2xKEvSaa8QpFgSFuh6+H36LI965
-         UXD1VCiKR39dD1YCe1MiDdMu/YOAtPmIQbkCHWGssJkQZEPQQnP8duIrt5gAhOZKpNes
-         WB0A==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QvBus++WyjhvYBCp9i75NW/uEyt5Dfmx631jJ94IeXM=;
+        b=rBg91KtJEhzKGIJ0zR0yiJnzcswH1v0DnfWXA9yR9b9FenNLKprGBPpMMQPudBbM9t
+         YGwDoSCsm8vkl4HUGdhWapbCT9pskfpNH7lnnxhQiq/VqOrAdZKcmDhIg5ds+R5r9ylJ
+         T0l7vHtT0m+rHAOOpYVanToDoMA8K5zi5bWSpmHy1DWMIRcbpun6SxkNWFghYCMHpvxd
+         s+HQ20n+/xUkxbT0+6np1Ea6skjax9TMx5jeO3oeAAA74Mnb2pMDP963TKZRUyLhdfec
+         /lPnCqlwfXUSAeAgJuo93HNJvLpTDWNw0Kem+n1ngtCpa8KTcAYnzAJ12lCll2nt5Ura
+         Wx0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x0DDJv++iHMwFovcTSUdqNPnf7WFz++klT2C8MF2YAk=;
-        b=socS2u3u9MjKw0ohRj4ZjVySaZP6AN+t26WnPSVeS+JbiGSiH8yTc8bBEsoSsv8viZ
-         bgIA2W3plxuSsAqP8rhyD+0AI0wMW9+eGvd+jld5KiwbmOzfu6fV5EJjudun393JWqic
-         efmCz1OljGIlclsgyNQK6vgSjCpS2bjTtSoUwuk7L5Mn98jCZDbIrUck2iVkeZD8e3nd
-         pbeDdu7g0+pvr87WDNmYlOIUtQ70FqHb0w72QuKHAAhPH2zobGWT++UFw5r76UJMVEZC
-         FBpTlltWr7uajjG0DdyNR5dvBLjdcfhIkStwIqN8wThyxGvszxLlgeTT3Xr6kzEUsfpJ
-         nY8Q==
-X-Gm-Message-State: APjAAAXUaj6poOL1JniE2Lo9IitdvrlMvLCUiDIOZ37H3LTSc/L5DJoZ
-        uFX6zg3gnPvEOwfAUiVWzoErAS0qdKJrw6rufIS1
-X-Google-Smtp-Source: APXvYqwWKX3jUx2E5vy+abrEsYm2bW9GwEripUqXhbnIh2aKLOWYSU7BVwy2dpskrNrYbYThDA/eBzwYY572UgTANug=
-X-Received: by 2002:a50:e108:: with SMTP id h8mr49416136edl.196.1582640455132;
- Tue, 25 Feb 2020 06:20:55 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QvBus++WyjhvYBCp9i75NW/uEyt5Dfmx631jJ94IeXM=;
+        b=pY1vY5kcIOAwzXh3lkpCBGEThUI+k+VdzPsZKy36QQqqO4B4mYn2sEMiQ4QgfZZ9yl
+         6HKoizYlbd46f2pF7ZsKa0YgmiyKZLeUoVAIeD9Jco4HkgFpKSYx9qKGubmrr8A+8iVd
+         4mdobH+HabV88SGi6ddZWMMQ/PzOgBQZPsXCtG78ymCnkzSCokQqwfWyYPz4dCgNZdRn
+         1lilof2Gb/y9OiOLOhzKnKZuhwl8fUvFc9vl5aCao88oBAjOpWBw0Arg6gKIsbAm2qlQ
+         rbQvSUla1TSZssQNhI/ov//4LeTIwp817OB4gG4+KhyD5otPMlHIbu3tVqeCLRxufmN6
+         hHeg==
+X-Gm-Message-State: APjAAAWGwdoAgW/fVkZtE7cRzow1GJvKFVfyRP2MJN7Z8aQLmEwidzD3
+        zCa1MwH+lwuVPm403rOdOedSYoBT
+X-Google-Smtp-Source: APXvYqwk+c9O++P8bbW000HdLInaZ9rMbX3+CxFjHo7AJo3BZQfjXEck+nF9sMxnT+MlMfw1ZoxCsw==
+X-Received: by 2002:a17:90a:17c5:: with SMTP id q63mr5297103pja.138.1582640479142;
+        Tue, 25 Feb 2020 06:21:19 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i2sm3270121pjs.21.2020.02.25.06.21.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 06:21:18 -0800 (PST)
+Subject: Re: [PATCH 3/3] i2c: i801: Do not add ICH_RES_IO_SMI if PMC device is
+ not present
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Martin Volf <martin.volf.42@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200225123802.88984-1-mika.westerberg@linux.intel.com>
+ <20200225123802.88984-4-mika.westerberg@linux.intel.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <2dec872e-26fb-eefc-5606-cfb1bf55d02e@roeck-us.net>
+Date:   Tue, 25 Feb 2020 06:21:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <000000000000a719a9059f62246e@google.com>
-In-Reply-To: <000000000000a719a9059f62246e@google.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 25 Feb 2020 09:20:44 -0500
-Message-ID: <CAHC9VhTh6s1m7YBZp-3XO3q2EcjtMKUTcXwRzDTj_LSJd+cHTA@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in cipso_v4_sock_setattr
-To:     syzbot <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com>
-Cc:     cpaasch@apple.com, davem@davemloft.net, dcaratti@redhat.com,
-        fw@strlen.de, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        matthieu.baerts@tessares.net, netdev@vger.kernel.org,
-        pabeni@redhat.com, peter.krystad@linux.intel.com,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225123802.88984-4-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 3:19 AM syzbot
-<syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    ca7e1fd1 Merge tag 'linux-kselftest-5.6-rc3' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=179f0931e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a61f2164c515c07f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f4dfece964792d80b139
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fdfdede00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17667de9e00000
->
-> The bug was bisected to:
->
-> commit 2303f994b3e187091fd08148066688b08f837efc
-> Author: Peter Krystad <peter.krystad@linux.intel.com>
-> Date:   Wed Jan 22 00:56:17 2020 +0000
->
->     mptcp: Associate MPTCP context with TCP socket
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fbec81e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=16fbec81e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12fbec81e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com
-> Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
->
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> #PF: supervisor instruction fetch in kernel mode
-> #PF: error_code(0x0010) - not-present page
-> PGD 8e171067 P4D 8e171067 PUD 93fa2067 PMD 0
-> Oops: 0010 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 8984 Comm: syz-executor066 Not tainted 5.6.0-rc2-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:0x0
-> Code: Bad RIP value.
-> RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
-> RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
-> RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
-> RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
-> R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
-> R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
-> FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  cipso_v4_sock_setattr+0x34b/0x470 net/ipv4/cipso_ipv4.c:1888
->  netlbl_sock_setattr+0x2a7/0x310 net/netlabel/netlabel_kapi.c:989
->  smack_netlabel security/smack/smack_lsm.c:2425 [inline]
->  smack_inode_setsecurity+0x3da/0x4a0 security/smack/smack_lsm.c:2716
->  security_inode_setsecurity+0xb2/0x140 security/security.c:1364
->  __vfs_setxattr_noperm+0x16f/0x3e0 fs/xattr.c:197
->  vfs_setxattr fs/xattr.c:224 [inline]
->  setxattr+0x335/0x430 fs/xattr.c:451
->  __do_sys_fsetxattr fs/xattr.c:506 [inline]
->  __se_sys_fsetxattr+0x130/0x1b0 fs/xattr.c:495
->  __x64_sys_fsetxattr+0xbf/0xd0 fs/xattr.c:495
->  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On 2/25/20 4:38 AM, Mika Westerberg wrote:
+> Martin noticed that nct6775 driver does not load properly on his system
+> in v5.4+ kernels. The issue was bisected to commit b84398d6d7f9 ("i2c:
+> i801: Use iTCO version 6 in Cannon Lake PCH and beyond") but it is
+> likely not the culprit because the faulty code has been in the driver
+> already since commit 9424693035a5 ("i2c: i801: Create iTCO device on
+> newer Intel PCHs"). So more likely some commit that added PCI IDs of
+> recent chipsets made the driver to create the iTCO_wdt device on Martins
+> system.
+> 
+> The issue was debugged to be PCI configuration access to the PMC device
+> that is not present. This returns all 1's when read and this caused the
+> iTCO_wdt driver to accidentally request resourses used by nct6775.
+> 
+> Fix this by checking that the PMC device is there and only then populate
+> the iTCO_wdt ICH_RES_IO_SMI resource. Since the resource is now optional
+> the iTCO_wdt driver should continue to work on recent systems without it.
+> 
+> Link: https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com/
+> Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
+> Reported-by: Martin Volf <martin.volf.42@gmail.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>   drivers/i2c/busses/i2c-i801.c | 45 +++++++++++++++++++++--------------
+>   1 file changed, 27 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index ca4f096fef74..7fa58375bd4b 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -1519,7 +1519,7 @@ static DEFINE_SPINLOCK(p2sb_spinlock);
+>   
+>   static struct platform_device *
+>   i801_add_tco_spt(struct i801_priv *priv, struct pci_dev *pci_dev,
+> -		 struct resource *tco_res)
+> +		 struct resource *tco_res, size_t nres)
+>   {
+>   	struct resource *res;
+>   	unsigned int devfn;
+> @@ -1563,7 +1563,7 @@ i801_add_tco_spt(struct i801_priv *priv, struct pci_dev *pci_dev,
+>   	res->flags = IORESOURCE_MEM;
+>   
+>   	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
+> -					tco_res, 3, &spt_tco_platform_data,
+> +					tco_res, nres + 1, &spt_tco_platform_data,
 
-Netdev folks, I'm not very familiar with the multipath TCP code so I
-was wondering if you might help me out a bit with this report.  Based
-on the stack trace above it looks like for a given AF_INET sock "sk",
-inet_sk(sk)->is_icsk is true but inet_csk(sk) is NULL; should this be
-possible under normal conditions or is there an issue somewhere?
+Does this work as intended ? It still adds ICH_RES_MEM_OFF at index 2,
+but if there is no SMI resource it will only pass two sets of resources
+to the wdt driver, one of which (the SMI resource) would be empty,
+ie have start == NULL and size == 0.
 
--- 
-paul moore
-www.paul-moore.com
+Guenter
