@@ -2,99 +2,138 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48201C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F19AC35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CB620732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817992051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbgBYQpa (ORCPT
+        id S1731212AbgBYQpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:45:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39358 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729536AbgBYQpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:45:30 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9897AAAC2;
-        Tue, 25 Feb 2020 16:45:28 +0000 (UTC)
-Message-ID: <47f6f9f63a25820b9c9fb10d281f4824862a234b.camel@suse.de>
-Subject: Re: [PATCH 18/89] clk: bcm: rpi: Rename is_prepared function
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Date:   Tue, 25 Feb 2020 17:45:26 +0100
-In-Reply-To: <cdeaa4152ac84aecc362e09153d1427777e3d933.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-         <cdeaa4152ac84aecc362e09153d1427777e3d933.1582533919.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-RIXUZuAJcUivUhgI0C4B"
-User-Agent: Evolution 3.34.4 
+        Tue, 25 Feb 2020 11:45:55 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:41069 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731203AbgBYQpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:45:54 -0500
+Received: from [109.168.11.45] (port=37076 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1j6dLD-00DPYO-Q0; Tue, 25 Feb 2020 17:45:51 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2] of: overlay: log the error cause on resolver failure
+Date:   Tue, 25 Feb 2020 17:45:40 +0100
+Message-Id: <20200225164540.4520-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For some of its error paths, of_resolve_phandles() only logs a very generic
+error which does not help much in finding the origin of the problem:
 
---=-RIXUZuAJcUivUhgI0C4B
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+  OF: resolver: overlay phandle fixup failed: -22
 
-On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
-> The raspberrypi_fw_pll_is_on function doesn't only apply to PLL
-> registered in the driver, but any clock exposed by the firmware.
->=20
-> Since we also implement the is_prepared hook, make the function
-> consistent with the other function names, and drop the fw from the
-> function name.
+Add error messages for all the error paths that don't have one. Now a
+specific message is always emitted, thus also remove the generic catch-all
+message emitted before returning.
 
-It seems you didn't :)
+For example, in case a DT overlay has a fixup node that is not present in
+the base DT __symbols__, this error is now logged:
 
-As it does use the fw interface I'd say keep it in the name, with that:
+  OF: resolver: node gpio9 not found in base DT, fixup failed
 
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+---
 
-Thanks!
-Nicolas
+I don't know in detail the meaning of the adjust_local_phandle_references()
+and update_usages_of_a_phandle_reference() error paths, thus I have put
+pretty generic messages. Any suggestion on better wording would be welcome.
 
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
+Changed in v2:
 
+ - add a message for each error path that does not have one yet
+---
+ drivers/of/resolver.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---=-RIXUZuAJcUivUhgI0C4B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VTyYACgkQlfZmHno8
-x/5rAgf7BxTTPBRye7XRqwBPhoICcffv/Ii4T91MNAtumCd4F0s+hsYk44Ttsbrb
-tr9ZiFNFnOkV/rVNLG3cg/QhMaKotcAg59qVcw/g/ZDPc6xodEilj19jaf2WDIi1
-echfeq0yvG8cPb8ljFCPiKisneTp/ascqFR//M9Ap8zpfpQUCswisjsqzhSY1Y1k
-f5Dtc3fY+2szMYu08XhKojT0UUBt4gtxh5pAXk7RSG1moPrP/NGJpS/8XQ0w5EyT
-fs8hWtU4De7Ja4NH8Xb2haFk0kZgoJyqxGjhMOyeYtBUS8mpKbE0iWMg0fx2vW+/
-KtTtxwpzcWfrZ+Ox/njAdAXkd+CUOA==
-=pqBd
------END PGP SIGNATURE-----
-
---=-RIXUZuAJcUivUhgI0C4B--
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 83c766233181..a80d673621bc 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -291,8 +291,10 @@ int of_resolve_phandles(struct device_node *overlay)
+ 			break;
+ 
+ 	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
+-	if (err)
++	if (err) {
++		pr_err("cannot adjust local phandle references\n");
+ 		goto out;
++	}
+ 
+ 	overlay_fixups = NULL;
+ 
+@@ -321,11 +323,15 @@ int of_resolve_phandles(struct device_node *overlay)
+ 
+ 		err = of_property_read_string(tree_symbols,
+ 				prop->name, &refpath);
+-		if (err)
++		if (err) {
++			pr_err("node %s not found in base DT, fixup failed\n",
++			       prop->name);
+ 			goto out;
++		}
+ 
+ 		refnode = of_find_node_by_path(refpath);
+ 		if (!refnode) {
++			pr_err("cannot find node for %s\n", refpath);
+ 			err = -ENOENT;
+ 			goto out;
+ 		}
+@@ -334,13 +340,14 @@ int of_resolve_phandles(struct device_node *overlay)
+ 		of_node_put(refnode);
+ 
+ 		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+-		if (err)
++		if (err) {
++			pr_err("cannot update usages of a phandle reference (%s)\n",
++				prop->name);
+ 			break;
++		}
+ 	}
+ 
+ out:
+-	if (err)
+-		pr_err("overlay phandle fixup failed: %d\n", err);
+ 	of_node_put(tree_symbols);
+ 
+ 	return err;
+-- 
+2.25.0
 
