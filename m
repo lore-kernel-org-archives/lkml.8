@@ -2,180 +2,84 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE89C35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D597AC35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07ED824656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA5A24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgBYDpH (ORCPT
+        id S1728916AbgBYDpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:45:07 -0500
-Received: from mga07.intel.com ([134.134.136.100]:30180 "EHLO mga07.intel.com"
+        Mon, 24 Feb 2020 22:45:38 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31503 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgBYDpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:45:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 19:45:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
-   d="scan'208";a="384340464"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga004.jf.intel.com with ESMTP; 24 Feb 2020 19:45:04 -0800
-Date:   Mon, 24 Feb 2020 22:35:42 -0500
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>
-Subject: Re: [PATCH v3 1/7] vfio: allow external user to get vfio group from
- device
-Message-ID: <20200225033542.GE30338@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200224084350.31574-1-yan.y.zhao@intel.com>
- <20200224084641.31696-1-yan.y.zhao@intel.com>
- <20200224121504.367cdfb4@w520.home>
+        id S1728903AbgBYDpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 22:45:38 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01P3jTMA008979;
+        Tue, 25 Feb 2020 04:45:29 +0100
+Date:   Tue, 25 Feb 2020 04:45:29 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
+Message-ID: <20200225034529.GA8908@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <20200224212352.8640-2-w@1wt.eu>
+ <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
+ <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224121504.367cdfb4@w520.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 03:15:04AM +0800, Alex Williamson wrote:
-> On Mon, 24 Feb 2020 03:46:41 -0500
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
-> 
-> > external user is able to
-> > 1. add a device into an vfio group
-> 
-> How so?  The device is added via existing mechanisms, the only thing
-> added here is an interface to get a group reference from a struct
-> device.
-> 
-> > 2. call vfio_group_get_external_user_from_dev() with the device pointer
-> > to get vfio_group associated with this device and increments the container
-> > user counter to prevent the VFIO group from disposal before KVM exits.
-> > 3. When the external KVM finishes, it calls vfio_group_put_external_user()
-> > to release the VFIO group.
+On Tue, Feb 25, 2020 at 02:13:42AM +0300, Denis Efremov wrote:
+> On 2/25/20 12:53 AM, Linus Torvalds wrote:
+> > So I'd like to see that second step that does the
 > > 
-> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >  drivers/vfio/vfio.c  | 37 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/vfio.h |  2 ++
-> >  2 files changed, 39 insertions(+)
+> >     -static int fdc;                 /* current fdc */
+> >     +static int current_fdc;
 > > 
-> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > index c8482624ca34..914bdf4b9d73 100644
-> > --- a/drivers/vfio/vfio.c
-> > +++ b/drivers/vfio/vfio.c
-> > @@ -1720,6 +1720,43 @@ struct vfio_group *vfio_group_get_external_user(struct file *filep)
-> >  }
-> >  EXPORT_SYMBOL_GPL(vfio_group_get_external_user);
-> >  
-> > +/**
-> > + * External user API, exported by symbols to be linked dynamically.
-> > + *
-> > + * The protocol includes:
-> > + * 1. External user add a device into a vfio group
-> > + *
-> > + * 2. The external user calls vfio_group_get_external_user_from_dev()
-> > + * with the device pointer
-> > + * to verify that:
-> > + *	- there's a vfio group associated with it and is initialized;
-> > + *	- IOMMU is set for the vfio group.
-> > + * If both checks passed, vfio_group_get_external_user_from_dev()
-> > + * increments the container user counter to prevent
-> > + * the VFIO group from disposal before KVM exits.
-> > + *
-> > + * 3. When the external KVM finishes, it calls
-> > + * vfio_group_put_external_user() to release the VFIO group.
-> > + * This call decrements the container user counter.
-> > + */
-> 
-> I don't think we need to duplicate this whole comment block for a
-> _from_dev() version of the existing vfio_group_get_external_user().
-> Please merge the comments.
-ok. but I have a question: for an external user, as it already has group
-fd, it can use vfio_group_get_external_user() directly, is there a
-necessity for it to call vfio_group_get_external_user_from_dev() ?
+> > change.
+> > 
+> > We already call the global 'drive' variable 'current_drive', so it
+> > really is 'fdc' that is misnamed and ambiguous because it then has two
+> > different cases: the global 'fdc' and then the various shadowing local
+> > 'fdc' variables (or function arguments).
+> > 
+> > Mind adding that too? Slightly less automatic, I agree, because then
+> > you really do have to disambiguate between the "is this the shadowed
+> > use of a local 'fdc'" case or the "this is the global 'fdc' use" case.
 
-If an external user wants to call this interface, it needs to first get
-device fd, passes the device fd to kernel and kernel retrieves the pointer
-to struct device, right?
+I definitely agree. I first wanted to be sure the patches were acceptable
+as a principle, but disambiguating the variables is easy to do now.
 
+> > Can coccinelle do that?
 
-> > +
-> > +struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev)
-> > +{
-> > +	struct vfio_group *group;
-> > +	int ret;
-> > +
-> > +	group = vfio_group_get_from_dev(dev);
-> > +	if (!group)
-> > +		return ERR_PTR(-ENODEV);
-> > +
-> > +	ret = vfio_group_add_container_user(group);
-> > +	if (ret)
-> > +		return ERR_PTR(ret);
-> 
-> Error path leaks group reference.
->
-oops, sorry for that.
+I could do it by hand, I did quite a bit of manual changes and checks
+already and the driver is not that long.
 
-> > +
-> > +	return group;
-> > +}
-> > +EXPORT_SYMBOL_GPL(vfio_group_get_external_user_from_dev);
-> > +
-> >  void vfio_group_put_external_user(struct vfio_group *group)
-> >  {
-> >  	vfio_group_try_dissolve_container(group);
-> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> > index e42a711a2800..2e1fa0c7396f 100644
-> > --- a/include/linux/vfio.h
-> > +++ b/include/linux/vfio.h
-> > @@ -94,6 +94,8 @@ extern void vfio_unregister_iommu_driver(
-> >   */
-> >  extern struct vfio_group *vfio_group_get_external_user(struct file *filep);
-> >  extern void vfio_group_put_external_user(struct vfio_group *group);
-> > +extern
-> > +struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev);
-> 
-> Slight cringe at this line wrap, personally would prefer to wrap the
-> args as done repeatedly elsewhere in this file.  Thanks,
->
-yeah, I tried to do in that way, but the name of this interface is too long,
-as well as its return type, it passes 80 characters limit even with just one
-arg...
+> Willy, if you don't want to spend your time with this code anymore I can
+> prepare pat?hes for the second step. I know coccinelle and could try
+> to automate this transformation. At first sight your patches look
+> good to me. I will answer to the top email after more accurate review.
 
-is it better to wrap in below way?
-extern struct vfio_group *vfio_group_get_external_user_from_dev(struct device
-								*dev);
+OK, it's as you like. If you think you can do the change quickly, feel
+free to do so, otherwise it should not take me more than one hour. In
+any case as previously mentioned I still have the hardware in a usable
+state if you want me to recheck anything.
 
-or just a shorter interface name?
-extern struct vfio_group *vfio_group_get_user_from_dev(struct device *dev);
-
-Thanks
-Yan
-> 
-> >  extern bool vfio_external_group_match_file(struct vfio_group *group,
-> >  					   struct file *filep);
-> >  extern int vfio_external_user_iommu_id(struct vfio_group *group);
-> 
+Cheers,
+Willy
