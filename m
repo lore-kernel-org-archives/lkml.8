@@ -2,310 +2,181 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14870C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E615C35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C28C920726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B97420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="kh93uXgT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSnxeGcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgBYLfR (ORCPT
+        id S1730121AbgBYLgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:35:17 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36061 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgBYLfQ (ORCPT
+        Tue, 25 Feb 2020 06:36:35 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:40353 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729952AbgBYLgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:35:16 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so14320133wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 03:35:13 -0800 (PST)
+        Tue, 25 Feb 2020 06:36:35 -0500
+Received: by mail-vs1-f67.google.com with SMTP id c18so7766347vsq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 03:36:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=LY6biZcm8R/QrClAZ/HsTb1RNT08TvHG0vUt4da2h60=;
-        b=kh93uXgTimo3chBQN5mtRomSyg65ssTDVJ1sQ8/Lkcw1psBzp9A1ia9oUVj/ZcIbL0
-         01HoGIK3tt/WCz2XZK/vKieqGLblqAXbj8P96i0d4oXKQyAD9lj1GaPuomqGKPUUXc+s
-         4kLY3kpP04gTZq8zgkdsj27rFR1NfPSWs8nklbRSbTvhsYWx+gYpgIHxwFzoiOngg5zd
-         PHoFbtRWGSOz+4O4EoDbbZ5bezMFqBR49BZ5h4YlHqlUu98VSnhys+ixmMB+u55gMsFx
-         cuge2g3UjN8t993G5c6AF+aTz+K+4AdIQlYY9AJs8r+Cjvx8JBECfVg2x5LBNOXfbBH8
-         2dHA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=waQSb6stmPcnoB4eM+4hwJOeHqxIryXzXf95arFm1ZM=;
+        b=kSnxeGcdCUm8c8qcQs+UjwEt2mVUY3QUveccoJK8UEHME1JecEh89chAY8hpuER069
+         XUnq3TKRnjzWCvlZCYnl682fmAevkMx+E/+HV6+kWqmsTAKL+8INs2IJ8MMqJtBrgFmM
+         H/dmfvsYTBUUHl3VVE0EKm0paYx3DdM1qQegFgAbBvPT7bvdjaOnnmRYxrRvtysL6vXk
+         +Vmw31YY1EGlSV0OG1q9WfPR1K9EP5QVV2JfjLPNPeigRKW/V7Dbbi4tLQ6A890gJvwk
+         PYBul1p+r2hp6q+Dn0qE5PlyYuM+xKEoDxWCpDRyEz4rhiEZwCm0bND8IQi8NQsqzmVE
+         rvnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=LY6biZcm8R/QrClAZ/HsTb1RNT08TvHG0vUt4da2h60=;
-        b=XpRM0bL3yxcTynSVFOzCoraPU+nFmml0aOADDJWVsGuephjzgaRk/fmPpp5jBF1mYA
-         ECYHPTRKcwm3MYrVUUuOeT8U16HaDma8h86RUuJf2omEuuMVD7h4po48bA5UJT+naabI
-         eYhWGThIdliVrSCOu4QD+1fWFxd5tD8+ZDHLhR3QAyzw129kyIT23M2VchgeOikutBMc
-         NAFtyUQP70g+E0s+7MX1ytWuBpknE29WO8v6Cl/5Hd5PTvyZjZq8yKBbAsdeFjOky1wU
-         RJHW6d1HjzRXeKwPEf2p/1dTgI87kQ7MXaPnWad0Tg9lOHgPxTC4unv2y1exvtJ1Wxg9
-         YrSQ==
-X-Gm-Message-State: APjAAAWhoQOneM3GygTTdlm+JhNTo3KIKvRXk0QY9JxZ0iJcN5L3tLuW
-        W4O4alOLEa8qUUCsn0CP2YEc9g==
-X-Google-Smtp-Source: APXvYqwrEqKO6Tw3Nnk5DX0NtnB3x9gBegcco4xab3I71PkNSN9xePRcLcP2cFfPKsA5zuVHOOmVXA==
-X-Received: by 2002:adf:e543:: with SMTP id z3mr70859994wrm.369.1582630512651;
-        Tue, 25 Feb 2020 03:35:12 -0800 (PST)
-Received: from [74.125.206.108] ([149.199.62.130])
-        by smtp.gmail.com with ESMTPSA id v14sm19271415wrm.30.2020.02.25.03.35.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 03:35:11 -0800 (PST)
-Subject: Re: [PATCH 00/10] Hi,
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, git@xilinx.com, arnd@arndb.de
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mubin Sayyed <mubinusm@xilinx.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-References: <cover.1581497860.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <bb01ba1d-49a4-6827-b2ef-18475cea18f7@monstr.eu>
-Date:   Tue, 25 Feb 2020 12:34:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=waQSb6stmPcnoB4eM+4hwJOeHqxIryXzXf95arFm1ZM=;
+        b=k4JumXnlRjfclMcip/i+9vhx0Wlo3lKmmR6hTtGiPCp0oca/L1fFFcir4QSsek9rCT
+         hv1J78yrcVZLTlXLAn/IB0ziL0bfiw5q7CikT3dtkm+fuoOpcw0P/+Wa3P5AjfsdhzP1
+         55aClZkIN/v63Dt/gMlOKzPuLgP4wcJ82qJJX8tkDG2uWni76sm3wLXwn2N5GWPq8CbW
+         gJjMzuTGgNE7fX5a4x4HCDRP96Gpi41sSxe7PQuzQJ3bWXNfbgGGq8uYbRjoEd9Lljv5
+         kSUIui8p+4JY3m0AbdthZ5nioCQkZsR0Eb6odk+PKCuFjSTCDD7I3sYkdBGCwO3aQHmX
+         UBsg==
+X-Gm-Message-State: APjAAAXNel2gRQEKCw9ghx3ibZWd2zceJN1DEmek8AhYeDdluMbRZCx4
+        3xsIquivOnSqhoUhMZCVgxxzj2iz92bD11RwcMLHGQ==
+X-Google-Smtp-Source: APXvYqwnatp2kL7HBmo7cFXXOQwYTjKiSf3qt2bibPEDajZ3hf1PQp54sT0gs45xqpbdXFDSiC9ZbAlQ+ZycYfy1pJk=
+X-Received: by 2002:a05:6102:757:: with SMTP id v23mr29794027vsg.35.1582630592569;
+ Tue, 25 Feb 2020 03:36:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <cover.1581497860.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="LZHPN2jpshxJTPpehPN2oomZ5ViUkpu3G"
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
+In-Reply-To: <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 25 Feb 2020 12:35:56 +0100
+Message-ID: <CAPDyKFr5tN4Y2MqnbnuPu6YFJJ4EK2_VceUfNsDrgbgoxnJVBA@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---LZHPN2jpshxJTPpehPN2oomZ5ViUkpu3G
-Content-Type: multipart/mixed; boundary="c2rUlmsk1qexDFpBjgpaV7Nn62sVlDOPV";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org,
- git@xilinx.com, arnd@arndb.de
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
- Arvind Sankar <nivedita@alum.mit.edu>, Borislav Petkov <bp@suse.de>,
- Cornelia Huck <cohuck@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Greg Ungerer <gerg@linux-m68k.org>,
- Heiko Carstens <heiko.carstens@de.ibm.com>, Kees Cook
- <keescook@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>,
- Mike Rapoport <rppt@linux.ibm.com>, Mubin Sayyed <mubinusm@xilinx.com>,
- Nicholas Piggin <npiggin@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>,
- Rob Herring <robh@kernel.org>,
- Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
- Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>,
- Stefan Asserhall <stefan.asserhall@xilinx.com>,
- Vladimir Murzin <vladimir.murzin@arm.com>, Will Deacon <will@kernel.org>,
- linux-arch@vger.kernel.org, linux-mm@kvack.org
-Message-ID: <bb01ba1d-49a4-6827-b2ef-18475cea18f7@monstr.eu>
-Subject: Re: [PATCH 00/10] Hi,
-References: <cover.1581497860.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1581497860.git.michal.simek@xilinx.com>
+On Tue, 25 Feb 2020 at 11:04, Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+>
+> On 24/02/2020 11:16, Ulf Hansson wrote:
+> > + Adrian
+> >
+> > On Fri, 21 Feb 2020 at 20:44, Bitan Biswas <bbiswas@nvidia.com> wrote:
+> >>
+> >> On 2/21/20 1:48 AM, Ulf Hansson wrote:
+> >>> External email: Use caution opening links or attachments
+> >>>
+> >>>
+> >>> On Thu, 20 Feb 2020 at 18:54, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>>>
+> >>>> On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >>>>>
+> >>>>> On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>>>>>
+> >>>>>
+> >>>>> Try to restore the value for the cache flush timeout, by updating the
+> >>>>> define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
+> >>>>
+> >>>> I have increased the timeout to 10 minutes but it did not help.
+> >>>> Same error found.
+> >>>> [  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
+> >>>> [  608.684964] mmc1: cache flush error -110
+> >>>> [  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
+> >>>> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
+> >>>>
+> >>>> OTOH, What best i could do for my own experiment to revert all three patches and
+> >>>> now the reported error gone and device mount successfully [1].
+> >>>>
+> >>>> List of patches reverted,
+> >>>>    mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
+> >>>>    mmc: block: Use generic_cmd6_time when modifying
+> >>>>      INAND_CMD38_ARG_EXT_CSD
+> >>>>    mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+>
+>
+> Reverting all the above also fixes the problem for me.
+>
+> >>   I find that from the commit the changes in mmc_flush_cache below is
+> >> the cause.
+> >>
+> >> ##
+> >> @@ -961,7 +963,8 @@ int mmc_flush_cache(struct mmc_card *card)
+> >>                          (card->ext_csd.cache_size > 0) &&
+> >>                          (card->ext_csd.cache_ctrl & 1)) {
+> >>                  err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> >> -                               EXT_CSD_FLUSH_CACHE, 1, 0);
+> >> +                                EXT_CSD_FLUSH_CACHE, 1,
+> >> +                                MMC_CACHE_FLUSH_TIMEOUT_MS);
+>
+>
+> I no longer see the issue on reverting the above hunk as Bitan suggested
+> but now I see the following (which is expected) ...
+>
+>  WARNING KERN mmc1: unspecified timeout for CMD6 - use generic
+>
+> > Just as a quick sanity test, please try the below patch, which
+> > restores the old cache flush timeout to 10min.
+> >
+> > However, as I indicated above, this seems to be a problem that needs
+> > to be fixed at in the host driver side. For the sdhci driver, there is
+> > a bit of a tricky logic around how to deal with timeouts in
+> > sdhci_send_command(). My best guess is that's where we should look
+> > more closely (and I am doing that).
+> >
+> > From: Ulf Hansson <ulf.hansson@linaro.org>
+> > Date: Mon, 24 Feb 2020 11:43:33 +0100
+> > Subject: [PATCH] mmc: core: Restore busy timeout for eMMC cache flushing
+> >
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  drivers/mmc/core/mmc_ops.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+> > index da425ee2d9bf..713e7dd6d028 100644
+> > --- a/drivers/mmc/core/mmc_ops.c
+> > +++ b/drivers/mmc/core/mmc_ops.c
+> > @@ -21,7 +21,7 @@
+> >
+> >  #define MMC_OPS_TIMEOUT_MS             (10 * 60 * 1000) /* 10min*/
+> >  #define MMC_BKOPS_TIMEOUT_MS           (120 * 1000) /* 120s */
+> > -#define MMC_CACHE_FLUSH_TIMEOUT_MS     (30 * 1000) /* 30s */
+> > +#define MMC_CACHE_FLUSH_TIMEOUT_MS     (10 * 60 * 1000) /* 10min */
+>
+> This does not fix the problem for me.
 
---c2rUlmsk1qexDFpBjgpaV7Nn62sVlDOPV
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Thanks for testing and the report - the results are not surprising.
 
-On 12. 02. 20 9:57, Michal Simek wrote:
->=20
-> I am sending this series as before SMP support.
-> Most of these patches are clean ups and should be easy to review them. =
-I
-> expect there will be more discussions about SMP support.
->=20
-> There could be some optimization added based on
-> https://lkml.org/lkml/2020/2/10/1528
->=20
-> Thanks,
-> Michal
->=20
->=20
-> Michal Simek (6):
->   microblaze: Convert headers to SPDX license
->   microblaze: Remove architecture tlb.h and use generic one
->   microblaze: Remove early printk setup
->   microblaze: Remove empty headers
->   microblaze: Remove unused boot_cpuid variable
->   microblaze: Use asm generic cmpxchg.h for !SMP case
->=20
-> Stefan Asserhall (4):
->   microblaze: Define microblaze barrier
->   microblaze: Add sync to tlb operations
->   microblaze: Add missing irqflags.h header
->   microblaze: Define percpu sestion in linker file
->=20
->  arch/microblaze/include/asm/Kbuild            |  4 +-
->  arch/microblaze/include/asm/barrier.h         | 13 ++++++
->  arch/microblaze/include/asm/cache.h           |  5 +--
->  arch/microblaze/include/asm/cacheflush.h      |  6 +--
->  arch/microblaze/include/asm/checksum.h        |  5 +--
->  arch/microblaze/include/asm/cmpxchg.h         | 40 ++-----------------=
+I am getting back with an update asap, just want to complete my tests
+over here before I say more.
 
->  arch/microblaze/include/asm/cpuinfo.h         |  5 +--
->  arch/microblaze/include/asm/cputable.h        |  1 -
->  arch/microblaze/include/asm/current.h         |  5 +--
->  arch/microblaze/include/asm/delay.h           |  7 +---
->  arch/microblaze/include/asm/dma.h             |  5 +--
->  arch/microblaze/include/asm/elf.h             |  5 +--
->  arch/microblaze/include/asm/entry.h           |  5 +--
->  arch/microblaze/include/asm/exceptions.h      |  5 +--
->  arch/microblaze/include/asm/fixmap.h          |  5 +--
->  arch/microblaze/include/asm/flat.h            |  5 +--
->  arch/microblaze/include/asm/hw_irq.h          |  1 -
->  arch/microblaze/include/asm/io.h              |  5 +--
->  arch/microblaze/include/asm/irq.h             |  5 +--
->  arch/microblaze/include/asm/irqflags.h        |  5 +--
->  arch/microblaze/include/asm/mmu.h             |  5 +--
->  arch/microblaze/include/asm/mmu_context_mm.h  |  5 +--
->  arch/microblaze/include/asm/module.h          |  5 +--
->  arch/microblaze/include/asm/page.h            |  5 +--
->  arch/microblaze/include/asm/pgalloc.h         |  5 +--
->  arch/microblaze/include/asm/pgtable.h         |  5 +--
->  arch/microblaze/include/asm/processor.h       |  5 +--
->  arch/microblaze/include/asm/ptrace.h          |  5 +--
->  arch/microblaze/include/asm/pvr.h             |  5 +--
->  arch/microblaze/include/asm/registers.h       |  5 +--
->  arch/microblaze/include/asm/sections.h        |  5 +--
->  arch/microblaze/include/asm/setup.h           |  7 +---
->  arch/microblaze/include/asm/string.h          |  5 +--
->  arch/microblaze/include/asm/switch_to.h       |  5 +--
->  arch/microblaze/include/asm/thread_info.h     |  5 +--
->  arch/microblaze/include/asm/timex.h           |  5 +--
->  arch/microblaze/include/asm/tlb.h             | 17 --------
->  arch/microblaze/include/asm/tlbflush.h        |  5 +--
->  arch/microblaze/include/asm/uaccess.h         |  5 +--
->  arch/microblaze/include/asm/unaligned.h       |  5 +--
->  arch/microblaze/include/asm/unistd.h          |  5 +--
->  arch/microblaze/include/asm/unwind.h          |  5 +--
->  arch/microblaze/include/asm/user.h            |  1 -
->  arch/microblaze/kernel/cpu/cpuinfo-pvr-full.c |  7 +---
->  arch/microblaze/kernel/cpu/pvr.c              |  1 +
->  arch/microblaze/kernel/misc.S                 |  3 +-
->  arch/microblaze/kernel/setup.c                |  1 -
->  arch/microblaze/kernel/vmlinux.lds.S          |  3 ++
->  48 files changed, 62 insertions(+), 215 deletions(-)
->  create mode 100644 arch/microblaze/include/asm/barrier.h
->  delete mode 100644 arch/microblaze/include/asm/cputable.h
->  delete mode 100644 arch/microblaze/include/asm/hw_irq.h
->  delete mode 100644 arch/microblaze/include/asm/tlb.h
->  delete mode 100644 arch/microblaze/include/asm/user.h
->=20
-
-applied all.
-M
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
-
-
---c2rUlmsk1qexDFpBjgpaV7Nn62sVlDOPV--
-
---LZHPN2jpshxJTPpehPN2oomZ5ViUkpu3G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXlUGXwAKCRDKSWXLKUoM
-IWakAKCB1Nf50wQlkY3QmenLnoFwU1bVRQCfXM644R24pTsD+kEK+7AWWzPDUeE=
-=6NRI
------END PGP SIGNATURE-----
-
---LZHPN2jpshxJTPpehPN2oomZ5ViUkpu3G--
+Kind regards
+Uffe
