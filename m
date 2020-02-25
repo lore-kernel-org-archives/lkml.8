@@ -2,119 +2,185 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031D1C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690D3C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F5B2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3657124656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvpUiAYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbgBYMJk (ORCPT
+        id S1729829AbgBYMJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:09:40 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12310 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730651AbgBYMJf (ORCPT
+        Tue, 25 Feb 2020 07:09:41 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36260 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729458AbgBYMJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:09:35 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PC4tfl012993;
-        Tue, 25 Feb 2020 07:09:34 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yay1brsvn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Feb 2020 07:09:34 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01PC9WtK058810
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 25 Feb 2020 07:09:32 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Feb 2020 04:09:31 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Feb 2020 04:09:31 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 25 Feb 2020 04:09:30 -0800
-Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01PC9N1I003238;
-        Tue, 25 Feb 2020 07:09:29 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>
-Subject: [PATCH v2 6/6] iio: accel: adxl372: Update sysfs docs
-Date:   Tue, 25 Feb 2020 14:09:09 +0200
-Message-ID: <20200225120909.12629-7-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200225120909.12629-1-alexandru.tachici@analog.com>
-References: <20200225120909.12629-1-alexandru.tachici@analog.com>
+        Tue, 25 Feb 2020 07:09:38 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d9so6805809pgu.3;
+        Tue, 25 Feb 2020 04:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Mqwfc2KPcVYiVKPkQxYVO7vDegBEMXoJ1E0hLY/tEvs=;
+        b=QvpUiAYt/81/K3o5p9SEGp2S+oMZT+pF5G/IgKwJ3lkCNIGGhE/nqbrDprw6OJGudw
+         DUsN/CNkCmL2wqEET9mky2iuKALEg4gRZPHXjbe4mDJGEFhJ8ZlmL+35JSi4sbKu7+ym
+         bXdvae1ucylvR/2yo/6NFm7kVpAx2Ft2uX2ENpIxVC/i2YISkNdFAgUAGz/5Ypm36D9D
+         LBpyOYtWig9hLKlZ09ncVhBxPnKYi2nK6R4tGVHmUkvyzlngfHidSMEFW5Hzx4tGTi/h
+         OWGfE8fn6cQTUGLapsaPo39dImC5ITRM7AsE00N4g2ZNcVba4ZwRXvZQy+IondWafLuJ
+         uLcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mqwfc2KPcVYiVKPkQxYVO7vDegBEMXoJ1E0hLY/tEvs=;
+        b=SEADDwq04uNK5AGDop93xJlxHlS3XW3J+/Uym/0H7J12Htbb1tyZd+ldL0CRDat21X
+         6vwsCvMKoR4vE3koxi5ZivAOuyC/ZWkzOX5XbSmlvEVNpiYaY2uck/TFHz9iyV4RuZVy
+         uJh6KCQvzK8mxNxkH/1FbU8ezWnlH9aZcSQdyPCzL6pHYLfHvPGlGMRjs2HVEiTjXmeo
+         bmy+ZdLA2kmlYBiCTlM5EP17oGsckoNpfVBN2EBrmN13xa95w043QCXUvKf9/p7oJsrw
+         mZOphkhNEdwiMZ6hU6hLpl+FlGVsub+6JbQI2OaN/ZiW8vg8PUpWYubH/7PvcDvWnzHF
+         u6ng==
+X-Gm-Message-State: APjAAAUOshflN2igIfDHbeV+SgG31NL9BPQS+ogEOApCS8arTujS6lvn
+        Yt/XNaO4Z1PbTd7ST4hz/A==
+X-Google-Smtp-Source: APXvYqw2IDOcub20k/JBZx9cp2o1QdYEKf3jJ3rBWjrY04ClE4F+LPbgluh8uCOp28IxecK5bd73nA==
+X-Received: by 2002:aa7:8587:: with SMTP id w7mr57040697pfn.39.1582632577377;
+        Tue, 25 Feb 2020 04:09:37 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee1:f355:e8e5:803b:cde8:bccc])
+        by smtp.gmail.com with ESMTPSA id e6sm16685944pfh.32.2020.02.25.04.09.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 04:09:36 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Tue, 25 Feb 2020 17:39:08 +0530
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     madhuparnabhowmik10@gmail.com, jiri@mellanox.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        frextrite@gmail.com, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
+Message-ID: <20200225120908.GA29836@madhuparna-HP-Notebook>
+References: <20200224093013.25700-1-madhuparnabhowmik10@gmail.com>
+ <20200224105209.GB16270@nanopsycho>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_03:2020-02-21,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224105209.GB16270@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds entries in the syfs docs of ADXL372.
+On Mon, Feb 24, 2020 at 11:52:09AM +0100, Jiri Pirko wrote:
+> Mon, Feb 24, 2020 at 10:30:13AM CET, madhuparnabhowmik10@gmail.com wrote:
+> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >
+> >list_for_each_entry_rcu() has built-in RCU and lock checking.
+> >
+> >Pass cond argument to list_for_each_entry_rcu() to silence
+> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled.
+> >
+> >The devlink->lock is held when devlink_dpipe_table_find()
+> >is called in non RCU read side section. Therefore, pass struct devlink
+> >to devlink_dpipe_table_find() for lockdep checking.
+> >
+> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >---
+> > net/core/devlink.c | 18 +++++++++---------
+> > 1 file changed, 9 insertions(+), 9 deletions(-)
+> >
+> >diff --git a/net/core/devlink.c b/net/core/devlink.c
+> >index e82750bdc496..dadf5fa79bb1 100644
+> >--- a/net/core/devlink.c
+> >+++ b/net/core/devlink.c
+> >@@ -2103,11 +2103,11 @@ static int devlink_dpipe_entry_put(struct sk_buff *skb,
+> > 
+> > static struct devlink_dpipe_table *
+> > devlink_dpipe_table_find(struct list_head *dpipe_tables,
+> >-			 const char *table_name)
+> >+			 const char *table_name, struct devlink *devlink)
+> > {
+> > 	struct devlink_dpipe_table *table;
+> >-
+> >-	list_for_each_entry_rcu(table, dpipe_tables, list) {
+> >+	list_for_each_entry_rcu(table, dpipe_tables, list,
+> >+				lockdep_is_held(&devlink->lock)) {
+> > 		if (!strcmp(table->name, table_name))
+> > 			return table;
+> > 	}
+> >@@ -2226,7 +2226,7 @@ static int devlink_nl_cmd_dpipe_entries_get(struct sk_buff *skb,
+> > 
+> > 	table_name = nla_data(info->attrs[DEVLINK_ATTR_DPIPE_TABLE_NAME]);
+> > 	table = devlink_dpipe_table_find(&devlink->dpipe_table_list,
+> >-					 table_name);
+> >+					 table_name, devlink);
+> > 	if (!table)
+> > 		return -EINVAL;
+> > 
+> >@@ -2382,7 +2382,7 @@ static int devlink_dpipe_table_counters_set(struct devlink *devlink,
+> > 	struct devlink_dpipe_table *table;
+> > 
+> > 	table = devlink_dpipe_table_find(&devlink->dpipe_table_list,
+> >-					 table_name);
+> >+					 table_name, devlink);
+> > 	if (!table)
+> > 		return -EINVAL;
+> > 
+> >@@ -6814,7 +6814,7 @@ bool devlink_dpipe_table_counter_enabled(struct devlink *devlink,
+> > 
+> > 	rcu_read_lock();
+> > 	table = devlink_dpipe_table_find(&devlink->dpipe_table_list,
+> >-					 table_name);
+> >+					 table_name, devlink);
+> > 	enabled = false;
+> > 	if (table)
+> > 		enabled = table->counters_enabled;
+> >@@ -6845,7 +6845,7 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+> > 
+> > 	mutex_lock(&devlink->lock);
+> > 
+> >-	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name)) {
+> >+	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name, devlink)) {
+> 
+> Run scripts/checkpatch.pl on your patch. You are breaking 80-cols limit
+> here.
+>
+Sure, I will take care of this and send the updated patch soon.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- .../ABI/testing/sysfs-bus-iio-accel-adxl372   | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372 b/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
-new file mode 100644
-index 000000000000..709376b54bec
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
-@@ -0,0 +1,30 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/buffer_peak_mode_enable
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		This attribute allows to configure the FIFO to store sample
-+		sets of impact event peak (x, y, z). As a precondition, all
-+		three channels (x, y, z) need to be enabled.
-+		Writing 1, peak fifo mode will be enabled, if cleared and
-+		all three channels are enabled, sample sets of concurrent
-+		3-axis data will be stored in the FIFO.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/activity_detect_event
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		adxl372 works in loop mode. It will loop  between activity
-+		and inactivity detection mode. The thresh_rising sysfs files
-+		found in events/ need to be configured in order to define when
-+		the device will mark a sensed acceleration over a period of
-+		time as activity.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/inactivity_detect_event
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		adxl372 works in loop mode. It will loop  between activity
-+		and inactivity detection mode. The thresh_falling sysfs files
-+		found in events/ need to be configured in order to define when
-+		the device will mark a sensed acceleration over a period of
-+		time as inactivity.
--- 
-2.20.1
-
+Thank you,
+Madhuparna
+> Otherwise, the patch looks fine.
+> 
+> > 		err = -EEXIST;
+> > 		goto unlock;
+> > 	}
+> >@@ -6881,7 +6881,7 @@ void devlink_dpipe_table_unregister(struct devlink *devlink,
+> > 
+> > 	mutex_lock(&devlink->lock);
+> > 	table = devlink_dpipe_table_find(&devlink->dpipe_table_list,
+> >-					 table_name);
+> >+					 table_name, devlink);
+> > 	if (!table)
+> > 		goto unlock;
+> > 	list_del_rcu(&table->list);
+> >@@ -7038,7 +7038,7 @@ int devlink_dpipe_table_resource_set(struct devlink *devlink,
+> > 
+> > 	mutex_lock(&devlink->lock);
+> > 	table = devlink_dpipe_table_find(&devlink->dpipe_table_list,
+> >-					 table_name);
+> >+					 table_name, devlink);
+> > 	if (!table) {
+> > 		err = -EINVAL;
+> > 		goto out;
+> >-- 
+> >2.17.1
+> >
