@@ -2,189 +2,189 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1C9C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523DEC35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D5A2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4C52084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fC7mjojU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmQJlJHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgBYU0q (ORCPT
+        id S1731789AbgBYU1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:26:46 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:54002 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731685AbgBYU0q (ORCPT
+        Tue, 25 Feb 2020 15:27:17 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38343 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731779AbgBYU1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:26:46 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PKMpRZ127687;
-        Tue, 25 Feb 2020 20:26:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=UL9wyjJBjP3/IyS1CKoZAtXUZ06/abJ/4utKURUvHkg=;
- b=fC7mjojUgAGaP1M7x+OptllYga6DD1iy+NU7mP1G7GRM2qNZ3glLljPBVEiT26j0wtvM
- EdD5UDROukyjT+qJVRcr7kSpXmUUR15FHjBouCjThYsijxhxhn1kLIq4yPkAOb4kP3zf
- IeK+c77VMXLahNMy4Zf47OmDN14aylarOpIq/XeI0IsMYn1cut0tRupLcDpxeCiCidJk
- KgEJBxIhSwi1Z3+2hata6nodlUcJ3b0bEzrAhCrMobsQ6sncEyRT2voDGAtkt6ut6Lff
- 7Q8529aTbtwaEhX08NsLlXY5Fv+l5qfIlEYtme74jc69T+XNhBdFjFIY+w+euWQst73s xQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yd0m1uwnk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:26:40 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PKM4XH020310;
-        Tue, 25 Feb 2020 20:26:40 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2yd17qs1yt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 20:26:39 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01PKQYCE022263;
-        Tue, 25 Feb 2020 20:26:34 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Feb 2020 12:26:33 -0800
-Date:   Tue, 25 Feb 2020 12:26:32 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: Regression: hibernation is broken since
- e6bc9de714972cac34daa1dc1567ee48a47a9342
-Message-ID: <20200225202632.GE6748@magnolia>
-References: <20200213172351.GA6747@dumbo>
- <20200213175753.GS6874@magnolia>
- <20200213183515.GA8798@dumbo>
- <20200213193410.GB6868@magnolia>
- <20200213194135.GF6870@magnolia>
- <20200214211523.GA32637@dumbo>
- <20200222002319.GK9504@magnolia>
- <20200223190311.GA26811@dumbo>
+        Tue, 25 Feb 2020 15:27:16 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z9so780230oth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:27:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h8zKM3vL3MUBQAymrTc6L3H6hz70LO6qXSQaWI0IU04=;
+        b=WmQJlJHUD9G/rwl2N7kvGdTxCz/wKi5OzBRrKCoh3fWb2iwQEyy5OTrQ3kTGU8gZyJ
+         QoU1CnpgLKviImgkkBCl2TIxhwmNPXOc3RQPaoCxAOZ/1k8ZC8kC/6nM+/P/H78ODdIH
+         QXDJysRZ7/58K1841F4afX1gfkTmlynl9xfZ4kc9BVGwJV3Et7sVsHDedh/buArpiD++
+         UkmuL5eU2z4h1uMVp1unlGbbZTHDbRubOAtgR5D/tOymvzaQqLTNUtKMs1Uuvyc0Vt7n
+         dOZqcoeeV3L/ochfkusVJC7kPWylzVi874qFU6UTI9Pwws/Nqw8b4MIj99KZ/QLZ21fo
+         lj2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h8zKM3vL3MUBQAymrTc6L3H6hz70LO6qXSQaWI0IU04=;
+        b=c/lZl1bUZrBg4Q91ridbQAB01A2gT6GT2hy0OngGplLFnzO4RaZzhOkoqgk9NQj68s
+         4zK/NEyGjYMElpDQFW80TroymyJpXNi2hjGeVyCO1/QyQO3sayy2A28Njh0xjbpC/VVq
+         5MtzfQ8knZi0GbRycusE5cqZxlBBSh230uN6PyWqPyLaf/7eNnMCpCA6Ph+GOpGNPYPg
+         W8pTixl1DEZpn4/otwvK3UHyiLOXjvS8BLczWIB2Bp02QHgKyAbdMDOI8n0j1BmED302
+         5n5+hdMhiQHOX00UJw50Zq/rfrwNrwukiBZkdfDZXXZfUC9Q5PAVvbAit2MBB7JIk5Uk
+         CDIA==
+X-Gm-Message-State: APjAAAWb83KaoQfCEEqp1cxs7xvNLhcMDLiN1TqSAk9bV59cRPWQR4IX
+        F3pxo1WAR7Y5YS18GEQPkljMakga3uPg/ohA6N0pIw==
+X-Google-Smtp-Source: APXvYqwXWHOFSEzZ5QC1kkmr7Xtw4Nl7Oq5Rosar8mcjFmiC5ZLBSPjPBhU74oj/wNW6emI0887RPeUiUzdYSemjOiE=
+X-Received: by 2002:a9d:66d1:: with SMTP id t17mr292149otm.233.1582662435427;
+ Tue, 25 Feb 2020 12:27:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223190311.GA26811@dumbo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 phishscore=0 suspectscore=2 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250142
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=2 bulkscore=0 adultscore=0 impostorscore=0 spamscore=0
- phishscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250142
+References: <1582661385-30210-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1582661385-30210-1-git-send-email-cai@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 25 Feb 2020 21:27:03 +0100
+Message-ID: <CANpmjNMepxzC1Sy7S9SjLSMOMCVR-5ycEecYcmxUitiiXmPF1Q@mail.gmail.com>
+Subject: Re: [PATCH] xfs: fix data races in inode->i_*time
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 08:03:11PM +0100, Domenico Andreoli wrote:
-> On Fri, Feb 21, 2020 at 04:23:19PM -0800, Darrick J. Wong wrote:
-> > 
-> > Ok, third try.  Does the following work?  This is a little more
-> > selective in that it only disables the write protection on the swap
-> > device/file that uswusp is going to write to.
-> 
-> Yes it works but also verified that once the S_SWAPFILE bit is cleared
-> it's never restored, therefore the protecton is gone after the first
-> hibernation.
+On Tue, 25 Feb 2020 at 21:09, Qian Cai <cai@lca.pw> wrote:
+>
+> inode->i_*time could be accessed concurrently. The plain reads in
+> xfs_vn_getattr() is lockless which result in data races. To avoid bad
+> compiler optimizations like load tearing, adding pairs of
+> READ|WRITE_ONCE(). While at it, also take care of xfs_setattr_time()
+> which presumably could run concurrently with xfs_vn_getattr() as well.
+> The data races were reported by KCSAN,
+>
+>  write to 0xffff9275a1920ad8 of 16 bytes by task 47311 on cpu 46:
+>   xfs_vn_update_time+0x1b0/0x400 [xfs]
+>   xfs_vn_update_time at fs/xfs/xfs_iops.c:1122
 
-Ok, good.  Now can you try the third part, which ought to re-apply
-S_SWAPFILE after a successful resume, please?  Assuming this works, I
-think we're ready with a fixpatch.
+So this one is doing concurrent writes and reads of the whole struct,
+which is 16 bytes. This will always be split into multiple
+loads/stores. Is it intentional?
 
---D
+Sadly, this is pretty much guaranteed to tear, even with the
+READ/WRITE_ONCE.  The *ONCE will just make KCSAN not tell us about
+this one, which is probably not what we want right now, unless we know
+for sure the race is intentional.
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 1e99f7ac1d7e..add93e205850 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -458,6 +458,7 @@ extern void swap_free(swp_entry_t);
- extern void swapcache_free_entries(swp_entry_t *entries, int n);
- extern int free_swap_and_cache(swp_entry_t);
- extern int swap_type_of(dev_t, sector_t, struct block_device **);
-+extern void swap_relockall(void);
- extern unsigned int count_swap_pages(int, int);
- extern sector_t map_swap_page(struct page *, struct block_device **);
- extern sector_t swapdev_block(int, pgoff_t);
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 77438954cc2b..b11f7037ce5e 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -271,6 +271,8 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
- 			break;
- 		}
- 		error = hibernation_restore(data->platform_support);
-+		if (!error)
-+			swap_relockall();
- 		break;
- 
- 	case SNAPSHOT_FREE:
-@@ -372,10 +374,17 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
- 			 */
- 			swdev = new_decode_dev(swap_area.dev);
- 			if (swdev) {
-+				struct block_device *bd;
-+
- 				offset = swap_area.offset;
--				data->swap = swap_type_of(swdev, offset, NULL);
-+				data->swap = swap_type_of(swdev, offset, &bd);
- 				if (data->swap < 0)
- 					error = -ENODEV;
-+
-+				inode_lock(bd->bd_inode);
-+				bd->bd_inode->i_flags &= ~S_SWAPFILE;
-+				inode_unlock(bd->bd_inode);
-+				bdput(bd);
- 			} else {
- 				data->swap = -1;
- 				error = -EINVAL;
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index b2a2e45c9a36..a64dcba10db6 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1799,6 +1799,32 @@ int swap_type_of(dev_t device, sector_t offset, struct block_device **bdev_p)
- 	return -ENODEV;
- }
- 
-+/* Re-lock swap devices after resuming from userspace suspend. */
-+void swap_relockall(void)
-+{
-+	int type;
-+
-+	spin_lock(&swap_lock);
-+	for (type = 0; type < nr_swapfiles; type++) {
-+		struct swap_info_struct *sis = swap_info[type];
-+		struct block_device *bdev = bdgrab(sis->bdev);
-+
-+		/*
-+		 * uswsusp only knows how to suspend to block devices, so we
-+		 * can skip swap files.
-+		 */
-+		if (!(sis->flags & SWP_WRITEOK) ||
-+		    !(sis->flags & SWP_BLKDEV))
-+			continue;
-+
-+		inode_lock(bd->bd_inode);
-+		bd->bd_inode->i_flags |= S_SWAPFILE;
-+		inode_unlock(bd->bd_inode);
-+		bdput(bd);
-+	}
-+	spin_unlock(&swap_lock);
-+}
-+
- /*
-  * Get the (PAGE_SIZE) block corresponding to given offset on the swapdev
-  * corresponding to given index in swap_info (swap type).
+Thanks,
+-- Marco
+
+>   update_time+0x57/0x80
+>   file_update_time+0x143/0x1f0
+>   __xfs_filemap_fault+0x1be/0x3d0 [xfs]
+>   xfs_filemap_page_mkwrite+0x25/0x40 [xfs]
+>   do_page_mkwrite+0xf7/0x250
+>   do_fault+0x679/0x920
+>   __handle_mm_fault+0xc9f/0xd40
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+>
+>  4 locks held by doio/47311:
+>   #0: ffff9275e7d70808 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x143/0x6f9
+>   #1: ffff9274864394d8 (sb_pagefaults){.+.+}, at: __xfs_filemap_fault+0x19b/0x3d0 [xfs]
+>   #2: ffff9274864395b8 (sb_internal){.+.+}, at: xfs_trans_alloc+0x2af/0x3c0 [xfs]
+>   #3: ffff9275a1920920 (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0x116/0x2c0 [xfs]
+>  irq event stamp: 42649
+>  hardirqs last  enabled at (42649): [<ffffffffb22dcdb3>] _raw_spin_unlock_irqrestore+0x53/0x60
+>  hardirqs last disabled at (42648): [<ffffffffb22dcad1>] _raw_spin_lock_irqsave+0x21/0x60
+>  softirqs last  enabled at (42306): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
+>  softirqs last disabled at (42299): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
+>
+>  read to 0xffff9275a1920ad8 of 16 bytes by task 47312 on cpu 40:
+>   xfs_vn_getattr+0x20c/0x6a0 [xfs]
+>   xfs_vn_getattr at fs/xfs/xfs_iops.c:551
+>   vfs_getattr_nosec+0x11a/0x170
+>   vfs_statx_fd+0x54/0x90
+>   __do_sys_newfstat+0x40/0x90
+>   __x64_sys_newfstat+0x3a/0x50
+>   do_syscall_64+0x91/0xb05
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+>  no locks held by doio/47312.
+>  irq event stamp: 43883
+>  hardirqs last  enabled at (43883): [<ffffffffb1805119>] do_syscall_64+0x39/0xb05
+>  hardirqs last disabled at (43882): [<ffffffffb1803ede>] trace_hardirqs_off_thunk+0x1a/0x1c
+>  softirqs last  enabled at (43844): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
+>  softirqs last disabled at (43141): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  fs/xfs/xfs_iops.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..2d5ca13ee9da 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -547,9 +547,9 @@
+>         stat->uid = inode->i_uid;
+>         stat->gid = inode->i_gid;
+>         stat->ino = ip->i_ino;
+> -       stat->atime = inode->i_atime;
+> -       stat->mtime = inode->i_mtime;
+> -       stat->ctime = inode->i_ctime;
+> +       stat->atime = READ_ONCE(inode->i_atime);
+> +       stat->mtime = READ_ONCE(inode->i_mtime);
+> +       stat->ctime = READ_ONCE(inode->i_ctime);
+>         stat->blocks =
+>                 XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
+>
+> @@ -614,11 +614,11 @@
+>         ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+>
+>         if (iattr->ia_valid & ATTR_ATIME)
+> -               inode->i_atime = iattr->ia_atime;
+> +               WRITE_ONCE(inode->i_atime, iattr->ia_atime);
+>         if (iattr->ia_valid & ATTR_CTIME)
+> -               inode->i_ctime = iattr->ia_ctime;
+> +               WRITE_ONCE(inode->i_ctime, iattr->ia_ctime);
+>         if (iattr->ia_valid & ATTR_MTIME)
+> -               inode->i_mtime = iattr->ia_mtime;
+> +               WRITE_ONCE(inode->i_mtime, iattr->ia_mtime);
+>  }
+>
+>  static int
+> @@ -1117,11 +1117,11 @@
+>
+>         xfs_ilock(ip, XFS_ILOCK_EXCL);
+>         if (flags & S_CTIME)
+> -               inode->i_ctime = *now;
+> +               WRITE_ONCE(inode->i_ctime, *now);
+>         if (flags & S_MTIME)
+> -               inode->i_mtime = *now;
+> +               WRITE_ONCE(inode->i_mtime, *now);
+>         if (flags & S_ATIME)
+> -               inode->i_atime = *now;
+> +               WRITE_ONCE(inode->i_atime, *now);
+>
+>         xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+>         xfs_trans_log_inode(tp, ip, log_flags);
+> --
+> 1.8.3.1
+>
