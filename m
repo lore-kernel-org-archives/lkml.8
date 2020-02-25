@@ -2,169 +2,150 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840AFC35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC11C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519E624686
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2B924682
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PjVbUxYl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LFrOdVRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgBYFJA (ORCPT
+        id S1726400AbgBYFNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:09:00 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37817 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728976AbgBYFI6 (ORCPT
+        Tue, 25 Feb 2020 00:13:14 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43886 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYFNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:08:58 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m13so757972pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:08:58 -0800 (PST)
+        Tue, 25 Feb 2020 00:13:14 -0500
+Received: by mail-pl1-f195.google.com with SMTP id p11so4987220plq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:13:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vs2A4Za3pdSHZq6f79ZL4a42P4ysEMl/Adkkn+cV4Fo=;
-        b=PjVbUxYl+hzlQEyEE/+DB53B78mYOsBa4d+R7HXKHucgElknJuPi8+O2ymUo5woKmw
-         X9b28lQAtJNLxeLLU6jP+C7LUH7J+tLG0wxDm9jCrqAOIEb/WimLugq09G7kZKBkSKgT
-         KeC9j6XeAuTz5pHC3pjH03DJSsL7O9oyIQSvGO/Xh1Olwev/DvbPvYPr6DjUVUdNaTKs
-         epV8gLOG0i1gSqruvRfwloVvoB+I9RTCFgPgAGZS0dPZOKM1WkYeGDTgs4hPER8EfSxj
-         gH8DHV/RPxDFNZ5dfOdbO5BDNiLNpcKzdGA/F5KxXlGxAWV2HLE5XwR4avjuJUOkBCf1
-         H7dw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CQB4rWAgQlshK2jar7JtwK95ipRQeMQdrfjF9c60b3Q=;
+        b=LFrOdVRmnVadjqGd8oJrAQjMoolYjWN9vYwc3EwXw87IXTST26Jz+ZUqqf3Cwz9CoS
+         8nvpcKutc2DDmK9larltPBH0crdkmid8hDBB1a3PpJF4ipvEpIkrP1nwnZd6QtbZKUqw
+         THv95WvZqUUgZ2hYd5vk1iRfZrXdVhQeyUBzQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vs2A4Za3pdSHZq6f79ZL4a42P4ysEMl/Adkkn+cV4Fo=;
-        b=qVLpH6ns3tnN2maIaA5GJBEx44Ddt9s4cvHIhwUeR3dVBMpCJboq8MQ3Frq19AX8CO
-         PJldPmgz3kG+KOoCoW5cLJOGjKA5R4lEdndyb5f4Qxfofi+Z38GPnZ0phLJv3GkVOt49
-         ZO1l9tA4SACqs86UfWsUPyNsFvfod2YBhuv2Wh8PN1Wk168psjUOtd7Vs232XnYhjOhN
-         6pW7/cqHSyoTCYepEAtbvXPX0GqaUq9K3qfiVwDI50GAfRDScV3fHJZjQQDDDUYFOyGR
-         kmlPJiGWISkVTHSc6GnQzYSxyJudma9XkO/fvZ/0ugVjzCUEfU5ArhY483t91fJCSTQW
-         CFYQ==
-X-Gm-Message-State: APjAAAX+p1t1hL4Ozgl27K5XDVcsHOITjRpTdHR4Xp/E8rY3F1BcH6Uo
-        0RLD9djZU3S8fthjXJjG2d/CwsvJbFI=
-X-Google-Smtp-Source: APXvYqxWpmh6vnDqtiwV0kaQCSFa+mczFvYM+vPDL+J9/4sdKTBHrQa7W6/PV/8V+Vj2QOhZD+RVeg==
-X-Received: by 2002:a17:90a:1f8c:: with SMTP id x12mr3170349pja.27.1582607337454;
-        Mon, 24 Feb 2020 21:08:57 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id r66sm15156450pfc.74.2020.02.24.21.08.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CQB4rWAgQlshK2jar7JtwK95ipRQeMQdrfjF9c60b3Q=;
+        b=jecIb7LFddsCed11T4Tp3HXW5sQT9C/QtswUBnkOwJHb65cWnIg8t5K2MlrjFBqx5f
+         6K/Hkt4H1d6f7lFkAvaIDQdykJW2CqSUVT6V0XFraA0bHjJKU6h0ozmDQPI4bTunqqcg
+         XrnHa7aPPCHOHqZTLd4k2qt/ZqLi+CcJnkOOAN8wdMm9hM7fxi+bUw5ujBKmelSIZypR
+         XLZRou8oKa40vlSpxyTjOmBlDVUbpEAm/tzJCVVeLmwobAhmlIls1TOkYdGAVkuhqMin
+         2rnAnTn8cTeX+kk3cnFnE3l7qOAAM+CLBmce65dlahIkAJ01ABfTWfSgVhNiqnEP2jF0
+         dcpg==
+X-Gm-Message-State: APjAAAXgHwkYTR60b4EsXFA/H9DilNDRWy5ubTBqBxECRd5fx4cyIo6O
+        jULEO2hqZup9JmLivZSRHZ1iag==
+X-Google-Smtp-Source: APXvYqyEp2DduArcsAfDzCxBtvCjTHJyL0Kka4MDfFR/IyZ8Q21kRRLDuvjt0qN6ORbpfkkeenKrsA==
+X-Received: by 2002:a17:90a:da03:: with SMTP id e3mr3139897pjv.57.1582607592644;
+        Mon, 24 Feb 2020 21:13:12 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h13sm1274471pjc.9.2020.02.24.21.13.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 21:08:56 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v5 6/6] regulator: Use driver_deferred_probe_timeout for regulator_init_complete_work
-Date:   Tue, 25 Feb 2020 05:08:28 +0000
-Message-Id: <20200225050828.56458-7-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200225050828.56458-1-john.stultz@linaro.org>
-References: <20200225050828.56458-1-john.stultz@linaro.org>
+        Mon, 24 Feb 2020 21:13:11 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, Jann Horn <jannh@google.com>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern CPUs
+Date:   Mon, 24 Feb 2020 21:13:01 -0800
+Message-Id: <20200225051307.6401-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regulator_init_complete_work logic defers the cleanup for an
-arbitrary 30 seconds of time to allow modules loaded by userland
-to start.
+Hi,
 
-This arbitrary timeout is similar to the
-driver_deferred_probe_timeout value, and its been suggested we
-align these so users have a method to extend the timeouts as
-needed.
+This is a refresh of my earlier attempt to fix READ_IMPLIES_EXEC. I
+think it incorporates the feedback from v2 (there are no code changes
+between v3 and v4; I've just added Reviews/Acks and directed at Boris,
+as it seems Ingo is busy). The selftest from v3 has been remove from v4,
+as I will land it separately via Shuah's selftest tree.
 
-So this patch changes the logic to use the
-driver_deferred_probe_timeout value for the delay value if it
-is set (using a delay of 0 if it is not).
+This series is for x86, arm, and arm64; I'd like it to go via -tip,
+though, just to keep this change together with the selftest. To
+that end, I'd like to collect Acks from the respective architecture
+maintainers. (Note that most other architectures don't suffer from this
+problem. e.g. powerpc's behavior appears to already be correct. MIPS may
+need adjusting but the history of CPU features and toolchain behavior
+is very unclear to me.)
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Kevin Hilman <khilman@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
+Repeating the commit log from later in the series:
+
+
+The READ_IMPLIES_EXEC work-around was designed for old toolchains that
+lacked the ELF PT_GNU_STACK marking under the assumption that toolchains
+that couldn't specify executable permission flags for the stack may not
+know how to do it correctly for any memory region.
+
+This logic is sensible for having ancient binaries coexist in a system
+with possibly NX memory, but was implemented in a way that equated having
+a PT_GNU_STACK marked executable as being as "broken" as lacking the
+PT_GNU_STACK marking entirely. Things like unmarked assembly and stack
+trampolines may cause PT_GNU_STACK to need an executable bit, but they
+do not imply all mappings must be executable.
+
+This confusion has led to situations where modern programs with explicitly
+marked executable stack are forced into the READ_IMPLIES_EXEC state when
+no such thing is needed. (And leads to unexpected failures when mmap()ing
+regions of device driver memory that wish to disallow VM_EXEC[1].)
+
+In looking for other reasons for the READ_IMPLIES_EXEC behavior, Jann
+Horn noted that glibc thread stacks have always been marked RWX (until
+2003 when they started tracking the PT_GNU_STACK flag instead[2]). And
+musl doesn't support executable stacks at all[3]. As such, no breakage
+for multithreaded applications is expected from this change.
+
+[1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
+[2] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=54ee14b3882
+[3] https://lkml.kernel.org/r/20190423192534.GN23599@brightrain.aerifal.cx
+
+
+-Kees
+
+
 v4:
-* Split out into its own patch, as suggested by Mark
-v5:
-* Try to simplify the logic a touch as suggested by Bjorn
----
- drivers/regulator/core.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ - split selftest into separate series to go via Shuah's tree
+ - add Reviews/Acks
+v3: https://lore.kernel.org/lkml/20200210193049.64362-1-keescook@chromium.org
+v2: https://lore.kernel.org/lkml/20190424203408.GA11386@beast/
+v1: https://lore.kernel.org/lkml/20190423181210.GA2443@beast/
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index d015d99cb59d..51b6a2dea717 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5757,6 +5757,10 @@ static DECLARE_DELAYED_WORK(regulator_init_complete_work,
- 
- static int __init regulator_init_complete(void)
- {
-+	int delay = driver_deferred_probe_timeout;
-+
-+	if (delay < 0)
-+		delay = 0;
- 	/*
- 	 * Since DT doesn't provide an idiomatic mechanism for
- 	 * enabling full constraints and since it's much more natural
-@@ -5767,18 +5771,17 @@ static int __init regulator_init_complete(void)
- 		has_full_constraints = true;
- 
- 	/*
--	 * We punt completion for an arbitrary amount of time since
--	 * systems like distros will load many drivers from userspace
--	 * so consumers might not always be ready yet, this is
--	 * particularly an issue with laptops where this might bounce
--	 * the display off then on.  Ideally we'd get a notification
--	 * from userspace when this happens but we don't so just wait
--	 * a bit and hope we waited long enough.  It'd be better if
--	 * we'd only do this on systems that need it, and a kernel
--	 * command line option might be useful.
-+	 * If driver_deferred_probe_timeout is set, we punt
-+	 * completion for that many seconds since systems like
-+	 * distros will load many drivers from userspace so consumers
-+	 * might not always be ready yet, this is particularly an
-+	 * issue with laptops where this might bounce the display off
-+	 * then on.  Ideally we'd get a notification from userspace
-+	 * when this happens but we don't so just wait a bit and hope
-+	 * we waited long enough.  It'd be better if we'd only do
-+	 * this on systems that need it.
- 	 */
--	schedule_delayed_work(&regulator_init_complete_work,
--			      msecs_to_jiffies(30000));
-+	schedule_delayed_work(&regulator_init_complete_work, delay * HZ);
- 
- 	return 0;
- }
+Kees Cook (6):
+  x86/elf: Add table to document READ_IMPLIES_EXEC
+  x86/elf: Split READ_IMPLIES_EXEC from executable GNU_STACK
+  x86/elf: Disable automatic READ_IMPLIES_EXEC for 64-bit address spaces
+  arm32/64, elf: Add tables to document READ_IMPLIES_EXEC
+  arm32/64, elf: Split READ_IMPLIES_EXEC from executable GNU_STACK
+  arm64, elf: Disable automatic READ_IMPLIES_EXEC for 64-bit address
+    spaces
+
+ arch/arm/kernel/elf.c        | 27 +++++++++++++++++++++++----
+ arch/arm64/include/asm/elf.h | 23 ++++++++++++++++++++++-
+ arch/x86/include/asm/elf.h   | 22 +++++++++++++++++++++-
+ fs/compat_binfmt_elf.c       |  5 +++++
+ 4 files changed, 71 insertions(+), 6 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
