@@ -2,91 +2,158 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26400C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80659C4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED70820838
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d+XeytSF"
+	by mail.kernel.org (Postfix) with ESMTP id 573D920838
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgBYW7I (ORCPT
+        id S1729307AbgBYW7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:59:08 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47867 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbgBYW7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:59:08 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48RvWF1ZKmz9sPR;
-        Wed, 26 Feb 2020 09:59:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582671545;
-        bh=FsIT/LG/Iu82AMwY16eCZxR4qz3TVYWCGa+ExdBjvP8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d+XeytSFTxpnXzisYdpBXxqxMZx9llv5OxlHJBT+SVfbgyWHFhQ8oZ794fGHAujay
-         7oxbQBtmlRB9Ut373J5KdOHHecOWM6dYcKNSm5ik6ryWIsJd+BBsZkjfLpSTcAXsoW
-         AlrAgsQzKkT6dCXh9/Jj4aMEKpFP+KlO7emZLEbd7Bl/RX0HwJSMiQ6gyRZDIssjHx
-         GS3vqJ3IHsSmzYZVOSb7E4k/Pi1vfArJ5mSo5BxAYXRkGo3G6gWiKt4EKR09G7gUX/
-         bbAWiC1mnGaScr1vLEtfmXnpg5hHXv7ZmTe8UXXkmzAtnoaNjyUgVyWQA2cF+wVNbh
-         5o1oXC+ZUmXKg==
-Date:   Wed, 26 Feb 2020 09:58:55 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, martin.varghese@nokia.com,
-        willemb@google.com
-Subject: Re: linux-next: build warning after merge of the net-next tree
-Message-ID: <20200226095855.64388b4a@canb.auug.org.au>
-In-Reply-To: <20200224.144243.1485587034182183004.davem@davemloft.net>
-References: <20200225092736.137df206@canb.auug.org.au>
-        <20200224.144243.1485587034182183004.davem@davemloft.net>
+        Tue, 25 Feb 2020 17:59:48 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45885 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728806AbgBYW7r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:59:47 -0500
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A7E1D3A2C51;
+        Wed, 26 Feb 2020 09:59:42 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j6jAz-0004a5-3t; Wed, 26 Feb 2020 09:59:41 +1100
+Date:   Wed, 26 Feb 2020 09:59:41 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 09/13] fs/xfs: Add write aops lock to xfs layer
+Message-ID: <20200225225941.GO10776@dread.disaster.area>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-10-ira.weiny@intel.com>
+ <20200224003455.GY10776@dread.disaster.area>
+ <20200224195735.GA11565@iweiny-DESK2.sc.intel.com>
+ <20200224223245.GZ10776@dread.disaster.area>
+ <20200225211228.GB15810@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/e8ENf_75BTzs1duxn25sxue";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225211228.GB15810@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=WlU5GPDpDACU7zcM-uYA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/e8ENf_75BTzs1duxn25sxue
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 25, 2020 at 01:12:28PM -0800, Ira Weiny wrote:
+> On Tue, Feb 25, 2020 at 09:32:45AM +1100, Dave Chinner wrote:
+> > On Mon, Feb 24, 2020 at 11:57:36AM -0800, Ira Weiny wrote:
+> > > On Mon, Feb 24, 2020 at 11:34:55AM +1100, Dave Chinner wrote:
+> > > > On Thu, Feb 20, 2020 at 04:41:30PM -0800, ira.weiny@intel.com wrote:
+> > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > > 
+> > > 
+> > > [snip]
+> > > 
+> > > > > 
+> > > > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > > > > index 35df324875db..5b014c428f0f 100644
+> > > > > --- a/fs/xfs/xfs_inode.c
+> > > > > +++ b/fs/xfs/xfs_inode.c
+> > > > > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
+> > > > >   *
+> > > > >   * Basic locking order:
+> > > > >   *
+> > > > > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+> > > > > + * s_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+> > > > >   *
+> > > > >   * mmap_sem locking order:
+> > > > >   *
+> > > > >   * i_rwsem -> page lock -> mmap_sem
+> > > > > - * mmap_sem -> i_mmap_lock -> page_lock
+> > > > > + * s_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
+> > > > >   *
+> > > > >   * The difference in mmap_sem locking order mean that we cannot hold the
+> > > > >   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
+> > > > > @@ -182,6 +182,9 @@ xfs_ilock(
+> > > > >  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
+> > > > >  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
+> > > > >  
+> > > > > +	if (lock_flags & XFS_DAX_EXCL)
+> > > > > +		inode_aops_down_write(VFS_I(ip));
+> > > > 
+> > > > I largely don't see the point of adding this to xfs_ilock/iunlock.
+> > > > 
+> > > > It's only got one caller, so I don't see much point in adding it to
+> > > > an interface that has over a hundred other call sites that don't
+> > > > need or use this lock. just open code it where it is needed in the
+> > > > ioctl code.
+> > > 
+> > > I know it seems overkill but if we don't do this we need to code a flag to be
+> > > returned from xfs_ioctl_setattr_dax_invalidate().  This flag is then used in
+> > > xfs_ioctl_setattr_get_trans() to create the transaction log item which can then
+> > > be properly used to unlock the lock in xfs_inode_item_release()
+> > > 
+> > > I don't know of a cleaner way to communicate to xfs_inode_item_release() to
+> > > unlock i_aops_sem after the transaction is complete.
+> > 
+> > We manually unlock inodes after transactions in many cases -
+> > anywhere we do a rolling transaction, the inode locks do not get
+> > released by the transaction. Hence for a one-off case like this it
+> > doesn't really make sense to push all this infrastructure into the
+> > transaction subsystem. Especially as we can manually lock before and
+> > unlock after the transaction context without any real complexity.
+> 
+> So does xfs_trans_commit() operate synchronously?
 
-Hi Dave,
+What do you mean by "synchronously", and what are you expecting to
+occur (a)synchronously with respect to filesystem objects and/or
+on-disk state?
 
-On Mon, 24 Feb 2020 14:42:43 -0800 (PST) David Miller <davem@davemloft.net>=
- wrote:
->
-> I've committed the following into net-next, hopefully it does the trick:
+Keep in mid that the xfs transaction subsystem is a complex
+asynchronous IO engine full of feedback loops and resource
+management, so asking if something is "synchronous" without any
+other context is a difficult question to answer :)
 
-That fixed the warnings for me, thanks.
+> I want to understand this better because I have fought with a lot of ABBA
+> issues with these locks.  So...  can I hold the lock until after
+> xfs_trans_commit() and safely unlock it there... because the XFS_MMAPLOCK_EXCL,
+> XFS_IOLOCK_EXCL, and XFS_ILOCK_EXCL will be released at that point?  Thus
+> preserving the following lock order.
 
---=20
+See how operations like xfs_create, xfs_unlink, etc work. The don't
+specify flags to xfs_ijoin(), and so the transaction commits don't
+automatically unlock the inode. This is necessary so that rolling
+transactions are executed atomically w.r.t. inode access - no-one
+can lock and access the inode while a multi-commit rolling
+transaction on the inode is on-going.
+
+In this case it's just a single commit and we don't need to keep
+it locked after the change is made, so we can unlock the inode
+on commit. So for the XFS internal locks the code is fine and
+doesn't need to change. We just need to wrap the VFS aops lock (if
+we keep it) around the outside of all the XFS locking until the
+transaction commits and unlocks the XFS locks...
+
 Cheers,
-Stephen Rothwell
 
---Sig_/e8ENf_75BTzs1duxn25sxue
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Vpq8ACgkQAVBC80lX
-0Gxvegf6As+r+gXCaWneBNlZOG6h5CJ39JHetyb3xvCBJ6nXYIYMwDJSJAnrZBoN
-Au6lYyLdghlUpz6wVqPZ+il2Y2QGoHJyaYeUGorcrZXSeTBn2VqGlMzWIJ2KyDse
-eziWEWhVM2pNJ4r0ZTnOmsYmddkuaOWhr9GRI8XxAtV3FZeNr7VKcjn0M9evwbFy
-GRfgB8eiAR8J8nJYU5A4hNBBnNyzhD93ObMST+tOSGy1RHq8zUJzfiRxOql4KZYX
-p+NKQGkv4aw1zx/XYUqZnUX+SuwgMVo4iRZoGPLY3y5VIexFl6THt1JweOSsxl8F
-0JJB7q0eCsklHM8Ldz7Ziv6mLa8p7w==
-=03CM
------END PGP SIGNATURE-----
-
---Sig_/e8ENf_75BTzs1duxn25sxue--
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
