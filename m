@@ -2,114 +2,95 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D963CC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF0FC35E0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56D121744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB6C21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582644793;
+	bh=CD8/SSUn/fUOuvnQtg9vFEVoTSFY+NVJ9uBpbKvZs+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iRmyFsgGrcqvC+XqJDN15ozniG34vfRqUeX0/Eu1HaHTFhapDyvsz8/RLpZMHlC1l
+	 CQENiD8yPloRskXmZ5cmLqeW9RUxIzGM3+pFI9CTiNaamSfXi/IilVLK1/fvmHsSrB
+	 384jqpGMEAY5afIoT9EFnNlMCRh3+YEJKh3YIHCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbgBYPdE convert rfc822-to-8bit (ORCPT
+        id S1731136AbgBYPdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:33:04 -0500
-Received: from mail-oln040092253074.outbound.protection.outlook.com ([40.92.253.74]:35168
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731053AbgBYPdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:33:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oKGdOBKIwDX6S0Kip9uWaFFk5wVqvIUj3pi0fyrOknMWqp1lMw3Y831jctfqHA6p8U88oXzLp5cMhCG0y2qrwa+PnmASb+qBc97Q6jiPmuLGqaTf8WkA7pAtAxnfRPiSNMmUOFi4shgxQ4OHVo5VHy/Z7nXMpugC7HeNfaDfbeLImEZU39h9miDbNF4APNDglEK7jQWC6VValw/VRGeCqdKTam1RK5Ba5+cPZAWJESREFkqFseBe+MvydNQkrM+KSQO4DUy9U/sjGzjH2dJHnuDRu0i/+J2djsYoWxHiQoiS3z8UHjwRogKtwk0QnaNZoLvxmqI/UVYMNcL/ovUZCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vd4FfUlUR061VGal7bxTqHbkYVODgNSjjcCH9spLMGo=;
- b=U70JVS3YP4kaiHA42aN8sHhSI2/8/Ck35c1Z2ZB1M4rmkyHPxQqUJG08VYCgoz6MnUbtDvtkMWkueXAslNxO8wotA0d8NMwDVXPHskDWgcH8OUesjvjUJbzIA74JQaIVBbKj9tuZJq3jg14r3So6dOqTDINKN2CDGqzigJkX+AQM1uB8ZZyMLZ8sc0cZDC43S1z4M0z9w9838IVmKFENOU3fBeCP1Fam7l1YVh4BRFZtz+6oxhwArMbihDHKEXCX0vvrz9XZGpeHIjDEFLL3IeMDrAETDfRdLthtzIzs5E/38PXmhc8TecuIduaI/eVMmAwQf+IK+zfhevDFJaRi4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT047.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebc::33) by
- HK2APC01HT032.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::286)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18; Tue, 25 Feb
- 2020 15:33:00 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.60) by
- HK2APC01FT047.mail.protection.outlook.com (10.152.249.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 15:33:00 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.012; Tue, 25 Feb 2020
- 15:33:00 +0000
-Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by ME2PR01CA0009.ausprd01.prod.outlook.com (2603:10c6:201:15::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 15:32:58 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v1 2/3] Revert "thunderbolt: Prevent crash if non-active
- NVMem file is read"
-Thread-Topic: [PATCH v1 2/3] Revert "thunderbolt: Prevent crash if non-active
- NVMem file is read"
-Thread-Index: AQHV6zneI6K1RjwByk+TFt04XZDxaagr34qAgAArsoA=
-Date:   Tue, 25 Feb 2020 15:33:00 +0000
-Message-ID: <PSXP216MB04387341897FDF77424BE82D80ED0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB043899D4B8F693E1E5C3ECCE80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <PSXP216MB04383751C15C4D66B59335DA80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20200225125629.GB2667@lahna.fi.intel.com>
-In-Reply-To: <20200225125629.GB2667@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0009.ausprd01.prod.outlook.com
- (2603:10c6:201:15::21) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:FFD64A55E7E74D7E24C92DC349F6EAC0CD53155278C1DEC0B6D95A5599AED940;UpperCasedChecksum:1F42FD9B5A06A6D846DD2586013383CFFEF8DCF94879563F52F8604EB6A9F799;SizeAsReceived:7986;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [CX/MIC/nSBxU82IOwMtvAfa+byOyhHxOHWourM0WcilCrNOVI+SmJqs0eLgKtoVx]
-x-microsoft-original-message-id: <20200225153253.GC1740@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 75895552-6aa7-4ffe-7c61-08d7ba07feba
-x-ms-traffictypediagnostic: HK2APC01HT032:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7CyW+crcjpnRR5jHgHUGmqoXcr4hWG6kjlbVLYPF+cmNIIWaXegw+6BM5Zt90/gEjXBKP2fYM1upoRmEz2zmrrX+ZHQIBPttMAu1JVncgKTCf047Gv2PDyQT/Le+gpizcwhKKGDGZ3fdzSG0CMsP3A8agD9z8R2T3EMIDA12pcd+oHl4myE58oXlZ/fuGdYH
-x-ms-exchange-antispam-messagedata: YT8l0dgaWC9q6E2bnHS8CJ0rwSPOLRVdqZklRV7KmQJCsDo1PN5uH/qvaEA46hp28BP3xeKimYEJCjqa4MVZVWgyftP/+ukfyjK8FoGXvszZZFR/HeWsxx6wNVct8sd9Nd65m1Dl4qHY/iL2Ff0/9VhhYXMa8Fn9ZdCMXPBBsVQyaGC95lpHMF6vzo7lez1uafU9XzmOCXJxze7IXdS/4Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <613B6465DA9E164AB5C884B14D654E22@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Tue, 25 Feb 2020 10:33:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:52226 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731106AbgBYPdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 10:33:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9253F1FB;
+        Tue, 25 Feb 2020 07:33:11 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1317C3F703;
+        Tue, 25 Feb 2020 07:33:10 -0800 (PST)
+Date:   Tue, 25 Feb 2020 15:33:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "rafael@kernel.org" <rafael@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
+Message-ID: <20200225153309.GE4633@sirena.org.uk>
+References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+ <ba2eb2d7363b386136a546a769a6e2d077558094.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200224115751.GE6215@sirena.org.uk>
+ <d5e63ea6935991d855e2ae12915b3b4614e8f3aa.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75895552-6aa7-4ffe-7c61-08d7ba07feba
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 15:33:00.0634
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT032
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PGNNI9BzQDUtgA2J"
+Content-Disposition: inline
+In-Reply-To: <d5e63ea6935991d855e2ae12915b3b4614e8f3aa.camel@fi.rohmeurope.com>
+X-Cookie: Booths for two or more.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:56:29PM +0200, Mika Westerberg wrote:
-> On Mon, Feb 24, 2020 at 05:43:05PM +0000, Nicholas Johnson wrote:
-> > This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
-> > 
-> > Since commit cd76ed9e5913 ("nvmem: add support for write-only
-> > instances"), this work around is no longer required, so drop it.
-> 
-> I don't think you can refer commits that only exists in your local tree.
-> I would just say that "since NVMem subsystem gained support for
-> write-only instances this workaround is not needed anymore" or somesuch.
-Are the commit hashes changed when applied to the kernel? If so, oops!
 
-I will remove it in PATCH v2.
-> 
-> Otherwise this looks good to me, no objections and thanks for doing this :)
-Glad I can be of help. :)
+--PGNNI9BzQDUtgA2J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Feb 25, 2020 at 06:23:31AM +0000, Vaittinen, Matti wrote:
+
+> Only change required on individual regulator drivers should be renaming
+> the struct regulator_linear_range to linear_range. Rest of the changes
+> should be internal to regulator framework, right?
+
+Right, it's that type replacement that should be done atomically.
+
+--PGNNI9BzQDUtgA2J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5VPjQACgkQJNaLcl1U
+h9DV+Af/YLPOCGPhEgq/4DLBacyUVBBMzshszyl+1OhweGApumy620sSGDV2XqMt
+et1IK21GhwqVae3/qawujyX3lsyQX8lX/w17bHzr5MLEemCDvUp4luJaIlRKZS2p
+5h0Qbt0ioaL7RDQ3+a/YtXgZqIR6EKGWUtIdW4wUk4K2VF1+9xUqvQNVeDFjxoUr
+S9IBP/rMQJS3pgn0R1EtSZmFqqb7BBi+Cl1k/Qkbw5Ym/PukYHzFbnJXxTyxlrBX
+OSbUPWd5YlhaGXcm+95hkzePuUbEiJBGUrAwwqSRCeTpzcIseDa0YtzMWUu+aP7/
+vYpzdbT1DjswwI6XKO/JfgD0kKhmhw==
+=fCzU
+-----END PGP SIGNATURE-----
+
+--PGNNI9BzQDUtgA2J--
