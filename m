@@ -2,120 +2,138 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36C8C35E07
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB1DC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D672084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEA721744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="jGWepyEI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJqTYZwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbgBYOyr (ORCPT
+        id S1730930AbgBYOzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:54:47 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41760 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbgBYOyr (ORCPT
+        Tue, 25 Feb 2020 09:55:20 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45554 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730659AbgBYOzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:54:47 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v4so2216109wrs.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:54:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y++kI/5dCtw5fZaeSgXh8lWKMSaGQmRYxWkHHDDsYEE=;
-        b=jGWepyEIkZ1p0tED+rauWwmW4k3RG+6zN0X4+Bky/2ByebPFpB9k5sL2WKPs6Odb+c
-         E5MFAI285mX4zdtjqORrRKQDBBJwXm1myO7nslK+AtFUxk5GUzxOs1R8v73pHgKaV2X0
-         7R/bLi/0hyOhShc0bz1uYhtozSNWxm0TGVRbDAkkvl0P/UQ1ljuyPwdVM1Nj0jSzRkLz
-         hmkndN0H37fZzshO4I7DzEGHOxlvrPfvsAt9p7Naj81CWN4vKqrl+nuY6mZlh+N4Rj07
-         7gnDQ/sDjdKgaWRUy/RfRO+i8ZglHkuBPTxsb18n4eB0SPCdfQsiuh1wa857P0BP4fUo
-         TgIg==
+        Tue, 25 Feb 2020 09:55:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582642519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gji83vHKV1k5g/ChPkhalite2KXqbop0gZZfM2DEBYg=;
+        b=FJqTYZwHS4zMn92K9Y20eurDNQz4YEczt2exBxf5g3ryiKz1UyI5VlfmCCVF8AQCF0l7bY
+        V9rmSH/p2V1lFsOmlToX6XaeeWzWYZuBBvMbFj+MJNivo/tMjzvm+WNSgoold4Z5hGKuWU
+        OsUfF0XsGGCwmP/k05coM23r/7oVx74=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-agpjJVPJNlu0YTR4JoXKiA-1; Tue, 25 Feb 2020 09:55:14 -0500
+X-MC-Unique: agpjJVPJNlu0YTR4JoXKiA-1
+Received: by mail-wr1-f70.google.com with SMTP id m15so7376357wrs.22
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:55:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y++kI/5dCtw5fZaeSgXh8lWKMSaGQmRYxWkHHDDsYEE=;
-        b=PM/1qSvnddFadW8v/rEcl3ywjh/iGtwFdDr6+n/LOlkjQm4mjn0OeVX+wNMObpJhlf
-         Xw5UNsQ5doJ/BmywZa77YVuk3Rw5ob5dsmwhcf8nP1jdeVS6F9NR6RMAstuVR9Y6LB1f
-         E1g25aExc2fGdoA6Bwol0/CC8VlVAJBDIV4aGduf+bev8efYqncU0wd51k3Fc2XfKaxS
-         BrffRBUxdK4oMndNBwt8VtSKYQzpsylZITUgxb4hERIehLZ1zNJTZD+YSp7Je4hdYUE3
-         WxQpDH/1NNYqTlUgpFk/mdzMg1HU9Iwsa64tQqxhQ3u/AJMZOoMcjn3/T4aF495DmFyS
-         FPOQ==
-X-Gm-Message-State: APjAAAVr8RgSrQLhJR9OsH++U7c70ygtpVFyb32NNkBk8vHmoaaYemjV
-        Ny0tMLSXvWJfgLgOyBAFhtYwxw==
-X-Google-Smtp-Source: APXvYqwfSaJ8pCA6BhtoWHv0t8xFZnZrK/CzrI1X29nZWXWlh6LSoOIjxsxgH2SsHYgerYZIkRUP+w==
-X-Received: by 2002:adf:f244:: with SMTP id b4mr20457380wrp.413.1582642485266;
-        Tue, 25 Feb 2020 06:54:45 -0800 (PST)
-Received: from [192.168.1.10] ([194.35.116.65])
-        by smtp.gmail.com with ESMTPSA id v131sm4674454wme.23.2020.02.25.06.54.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:54:44 -0800 (PST)
-Subject: Re: [PATCH bpf-next v2 5/5] selftests/bpf: Add test for "bpftool
- feature" command
-To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-References: <20200221031702.25292-1-mrostecki@opensuse.org>
- <20200221031702.25292-6-mrostecki@opensuse.org>
- <d178dc6c-7696-8e58-9df9-887152104a1c@isovalent.com>
- <c24d2b7a-889b-9294-cd30-6938f00b645a@opensuse.org>
-From:   Quentin Monnet <quentin@isovalent.com>
-Message-ID: <424b3804-a6ec-750c-bc90-753bbdf512ce@isovalent.com>
-Date:   Tue, 25 Feb 2020 14:54:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Gji83vHKV1k5g/ChPkhalite2KXqbop0gZZfM2DEBYg=;
+        b=ZCK3x40O3CbpP413aE82IiaFrUOhzsB9S/MqY9eBQlaTb807UadkngPreqRO7mHdE4
+         s2WFnje0UDthqdgxj6WUHSkNR+JI29PVOptFuFEzQgkN9EEjDUKPgY/U4usqGwGBv2pE
+         nxyAYGZFKwmgfRNzSxIexJzm44DCLfOyOJzB/4jnRkEonQnjerxIGOAnrvnZN59bDIjB
+         dzfTxENOMBv47IqEyxvXFlMbq+yRYVedRunJq9tXnlr1tHvSBQsWmBzcjO/fIloqTM0F
+         ybLygNS5PrHo7xRnyEyDN279Uz/gw9Bhzg57o7VMUaT+QWzU9/iXp2JrQWW/PTHmiSBo
+         FE/g==
+X-Gm-Message-State: APjAAAV0QTY4ajyzsLu9N/yreiKmWzW5RbQMS+sN4PPlHAvypVCPa3Ov
+        ki+FeuxUJCoE32D8ryk7JgbZzImRur0GKwi/1jGBItVvWCKrwbU1hV4H2Oq9RNxCWTJOEXyRb5T
+        rMU8yESN0EfWjq4gFct1OE0/K
+X-Received: by 2002:adf:fc12:: with SMTP id i18mr14772567wrr.354.1582642513260;
+        Tue, 25 Feb 2020 06:55:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwXr3wjuxnRC1UK23RsKWqBFdQZDHdHj223uHMid455IAOjAv00FvziRQO2xBJQYBw4ADY7dw==
+X-Received: by 2002:adf:fc12:: with SMTP id i18mr14772547wrr.354.1582642513041;
+        Tue, 25 Feb 2020 06:55:13 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t10sm3180316wru.59.2020.02.25.06.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 06:55:12 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 59/61] KVM: x86: Don't propagate MMU lpage support to memslot.disallow_lpage
+In-Reply-To: <20200201185218.24473-60-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-60-sean.j.christopherson@intel.com>
+Date:   Tue, 25 Feb 2020 15:55:11 +0100
+Message-ID: <878skqlnsg.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <c24d2b7a-889b-9294-cd30-6938f00b645a@opensuse.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-02-25 14:55 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
-> On 2/21/20 12:28 PM, Quentin Monnet wrote:
->>> +    @default_iface
->>> +    def test_feature_dev(self, iface):
->>> +        expected_patterns = [
->>> +            SECTION_SYSCALL_CONFIG_PATTERN,
->>> +            SECTION_PROGRAM_TYPES_PATTERN,
->>> +            SECTION_MAP_TYPES_PATTERN,
->>> +            SECTION_HELPERS_PATTERN,
->>> +            SECTION_MISC_PATTERN,
->>> +        ]
->>
->> Mixed feeling on the tests with plain output, as we keep telling people
->> that plain output should not be parsed (not reliable, may change). But
->> if you want to run one or two tests with it, why not, I guess.
-> 
-> I thought about that and yes, testing the plain output is probably
-> redundant and makes those tests less readable. However, the only plain
-> output test which I would like to keep there is test_feature_macros -
-> because I guess that we are not planning to change names or patterns of
-> generated macros (or if so, we should test that change).
-> 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-I did not mentally include the header/macros output in “plain output”, 
-but yeah I guess I was not explicit on this one. So: Agreed, with 
-“macros” it should not change and it is welcome in the tests, feel free 
-to keep it :)
+> Stop propagating MMU large page support into a memslot's disallow_lpage
+> now that the MMU's max_page_level handles the scenario where VMX's EPT is
+> enabled and EPT doesn't support 2M pages.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 3 ---
+>  arch/x86/kvm/x86.c     | 6 ++----
+>  2 files changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 3ad24ca692a6..e349689ac0cf 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7633,9 +7633,6 @@ static __init int hardware_setup(void)
+>  	if (!cpu_has_vmx_tpr_shadow())
+>  		kvm_x86_ops->update_cr8_intercept = NULL;
+>  
+> -	if (enable_ept && !cpu_has_vmx_ept_2m_page())
+> -		kvm_disable_largepages();
+> -
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  	if (ms_hyperv.nested_features & HV_X64_NESTED_GUEST_MAPPING_FLUSH
+>  	    && enable_ept) {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 144143a57d0b..b40488fd2969 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9884,11 +9884,9 @@ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
+>  		ugfn = slot->userspace_addr >> PAGE_SHIFT;
+>  		/*
+>  		 * If the gfn and userspace address are not aligned wrt each
+> -		 * other, or if explicitly asked to, disable large page
+> -		 * support for this slot
+> +		 * other, disable large page support for this slot.
+>  		 */
+> -		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1) ||
+> -		    !kvm_largepages_enabled()) {
+> +		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
+>  			unsigned long j;
+>  
+>  			for (j = 0; j < lpages; ++j)
 
-Quentin
+MMU code always explodes my brain, this left me wondering why wasn't the
+original vmx_get_lpage_level() adjusted before...
+
+FWIW,
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
