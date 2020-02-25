@@ -2,141 +2,138 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491B4C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F55AC35E1C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DCA20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2568320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEa2RI30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgBYVnQ (ORCPT
+        id S1728978AbgBYVqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:43:16 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53419 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbgBYVnP (ORCPT
+        Tue, 25 Feb 2020 16:46:18 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34630 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBYVqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:43:15 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1j6hyx-0004nE-BA; Tue, 25 Feb 2020 22:43:11 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id C8E924C0A43;
-        Tue, 25 Feb 2020 21:43:09 +0000 (UTC)
-Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
-To:     Tim Harvey <tharvey@gateworks.com>, linux-kernel@vger.kernel.org,
-        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>
-Cc:     =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
-Date:   Tue, 25 Feb 2020 22:43:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 25 Feb 2020 16:46:18 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l136so899454oig.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:46:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
+        b=qEa2RI30+eu6y+QG1RZcKaHE63SwriP8FaoGgwhahp/jQ21rAuyfZyhnI39ZaQZPTK
+         x+hjX7xFI4kZoMYbClW5pfDwOlru9laun8LG52dDvbs36nVfcRIuXJFMcetpsWABJkwy
+         joYb3JrrYXZ548+Zal0Q8PMlSZGWpJ8BEpfeWWDdjA3JtgPwNzcOW3qFf8maZZdozYQU
+         ux2WYmwTQB3ZIWRqlN5rqV5Jog6VUM0bEhy9mjUk2yD89nAIT8/dEbYlqT+pKaj4U2Dn
+         0bRx+Fv2YVyzelsP/9ttTUm4knli3ewZHxsXIwT+oFehxZ9gsP9iP/b8vez+UUdwDQE0
+         +OFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OaHhaeQJNk3b1iGwrho9OQW7vTtILFRlnGdHwBGHiXA=;
+        b=E8qmpljjsiZwoVTVAYVrXx9njoPeQXBHpFawkclTcXhF1wKfl+uz2KfS2rjdSyQWBV
+         U9TjsQyjMug3RipW+a2tLAGTH5MnqzYshfIiffMQpP5UDhkxQNLEyZit4GHdF4ZsPnuM
+         2vbOYYfuqz4HzLQNAXAMt0lz7Y7hPJUlo2R3E5cMeODxArLW01qdyPeAcDcELjLWlWd5
+         kBCfnu61/q/Er9rTADk4LgeIVvlTrJ5ILSYONiggvRidFk+LpWoxQGDHoJdvrWJDqBWI
+         mgqd6RNnc1EpXTLg3gyhwYOxBudb4C2k/E3P2mCplPEqdXK2gslcbnyTUEFNxD0iJKvp
+         NCbA==
+X-Gm-Message-State: APjAAAV6tjJuv9to2yCKdnaFg4ImLrynGYaQkBJZthLbLzEAU14Ev9zM
+        qF7UgL/B2zL/2DMuHX7vbAT6/P4300dfgSrfyu/XBA==
+X-Google-Smtp-Source: APXvYqzYfJMSifN7KgTz+K+MGlTU91tf+QULFSdmvn4DI2zL4yI7bwfwIGxnV/JfXP88xbSYOEqcTpG9Tgu9zHpTakg=
+X-Received: by 2002:aca:ea43:: with SMTP id i64mr786584oih.30.1582667177181;
+ Tue, 25 Feb 2020 13:46:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200220055250.196456-1-saravanak@google.com> <CANcMJZBQe5F=gbj6V2ybF-dK=kRsGZT2BX9CBJiBFoK=5Hg-kA@mail.gmail.com>
+ <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
+In-Reply-To: <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 25 Feb 2020 13:45:41 -0800
+Message-ID: <CAGETcx_n=fZYaY5q6yZRJR9daTXm2Ryz5frfZr3n1BKf-pXCEQ@mail.gmail.com>
+Subject: Re: [PATCH v1] of: property: Add device link support for
+ power-domains and hwlocks
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 7:35 PM, Tim Harvey wrote:
-> Some SPI host controllers such as the Cavium Thunder do not support
-> full-duplex SPI. Using half-duplex transfers allows the driver to work
-> with those host controllers.
+On Thu, Feb 20, 2020 at 3:30 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Thu, Feb 20, 2020 at 3:26 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Wed, Feb 19, 2020 at 9:53 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > Add support for creating device links out of more DT properties.
+> > >
+> > > To: lkml <linux-kernel@vger.kernel.org>
+> > > To: John Stultz <john.stultz@linaro.org>
+> > > To: Rob Herring <robh@kernel.org>
+> >
+> > Just as a heads up, git-send-email doesn't seem to pick up these To:
+> > lines, so I had to dig this out of an archive.
+>
+> Weird! Left out the main person who'd care about this patch.
+>
+> >
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Kevin Hilman <khilman@kernel.org>
+> > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Len Brown <len.brown@intel.com>
+> > > Cc: Todd Kjos <tkjos@google.com>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Cc: Liam Girdwood <lgirdwood@gmail.com>
+> > > Cc: Mark Brown <broonie@kernel.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: linux-pm@vger.kernel.org
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/of/property.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> >
+> > This does seem to work for me, allowing various clk drivers to be used
+> > as modules! This removes the functional need for my recent driver core
+> > patch series around the deferred_probe_timeout (though the cleanup
+> > bits in there may still be worth while).
+> >
+> > Tested-by: John Stultz <john.stultz@linaro.org>
+> >
+> > Thanks for sending it out!
+>
+> Thanks for the Tested-by!
+>
+> Rob,
+>
+> Can you pick this up for the next rc?
 
-There are several transfers left in the driver, where both rx_buf and
-tx_buf are set. How does your host controller driver know which one to
-handle?
+Friendly reminder.
 
-Marc
-
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
->  drivers/net/can/spi/mcp251x.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-> index 5009ff2..840c31c 100644
-> --- a/drivers/net/can/spi/mcp251x.c
-> +++ b/drivers/net/can/spi/mcp251x.c
-> @@ -290,23 +290,23 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
->  	priv->spi_tx_buf[0] = INSTRUCTION_READ;
->  	priv->spi_tx_buf[1] = reg;
->  
-> -	mcp251x_spi_trans(spi, 3);
-> -	val = priv->spi_rx_buf[2];
-> +	spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
->  
->  	return val;
->  }
->  
->  static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
->  {
-> +	u8 val[4] = {0};
->  	struct mcp251x_priv *priv = spi_get_drvdata(spi);
->  
->  	priv->spi_tx_buf[0] = INSTRUCTION_READ;
->  	priv->spi_tx_buf[1] = reg;
->  
-> -	mcp251x_spi_trans(spi, 4);
-> +	spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
->  
-> -	*v1 = priv->spi_rx_buf[2];
-> -	*v2 = priv->spi_rx_buf[3];
-> +	*v1 = val[0];
-> +	*v2 = val[1];
->  }
->  
->  static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
-> 
-
-Marc
-
--- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+-Saravana
