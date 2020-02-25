@@ -2,106 +2,134 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B08C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B53C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2FC21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mJps6WqQ"
+	by mail.kernel.org (Postfix) with ESMTP id 80B43246A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgBYLAN (ORCPT
+        id S1730003AbgBYLDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:00:13 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38062 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgBYLAM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:00:12 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PAxki2096227;
-        Tue, 25 Feb 2020 04:59:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582628386;
-        bh=4SXC0So5Cf5UBNuGctQdmvRSYNGGE7hSlqUpZblF06M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mJps6WqQVeD5qiy57T3qc/hTqJRxnP2d4kJ6JIPQC/BmTDl3bIch8c4OiqY0++6oc
-         hiIk9nyjxnaB0i4+ST4E6v/UkVYbOhD0XlP6rD3Fk+/pvDsoXGq6NeJvcyUvUsAvvm
-         pqQNlImsDzmsXN0abhGSPhnPktDVRJAkGd6JkI58=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PAxkTd077900
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Feb 2020 04:59:46 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
- Feb 2020 04:59:46 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 25 Feb 2020 04:59:46 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PAxg21055523;
-        Tue, 25 Feb 2020 04:59:43 -0600
-Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        <simon.k.r.goldschmidt@gmail.com>,
-        Dinh Nguyen <dinguyen@kernel.org>, <tien.fong.chee@intel.com>,
-        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
-References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
- <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
- <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
- <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <8c329860-84fd-463b-782f-83a788998878@ti.com>
-Date:   Tue, 25 Feb 2020 16:30:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 25 Feb 2020 06:03:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:49180 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729287AbgBYLDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:03:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E57B131B;
+        Tue, 25 Feb 2020 03:03:49 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BACA3F6CF;
+        Tue, 25 Feb 2020 03:03:48 -0800 (PST)
+Date:   Tue, 25 Feb 2020 11:03:46 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Trilok Soni <tsoni@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] firmware: psci: Add support for dt-supplied
+ SYSTEM_RESET2 type
+Message-ID: <20200225110346.GF32784@bogus>
+References: <1582577858-12410-1-git-send-email-eberman@codeaurora.org>
+ <1582577858-12410-3-git-send-email-eberman@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582577858-12410-3-git-send-email-eberman@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 12:57:37PM -0800, Elliot Berman wrote:
+> Some implementors of PSCI may relax the requirements of the PSCI
+> architectural warm reset. In order to comply with PSCI specification, a
+> different reset_type value must be used. The alternate PSCI
+> SYSTEM_RESET2 may be used in all warm/soft reboot scenarios, replacing
+> the architectural warm reset.
+>
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+> ---
+>  drivers/firmware/psci/psci.c | 22 ++++++++++++++++++----
+>  include/uapi/linux/psci.h    |  2 ++
+>  2 files changed, 20 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index 2937d44..8f4609c 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -90,6 +90,8 @@ static u32 psci_function_id[PSCI_FN_MAX];
+>
+>  static u32 psci_cpu_suspend_feature;
+>  static bool psci_system_reset2_supported;
+> +static u32 psci_sys_reset2_reset_param =
+> +	PSCI_1_1_SYSTEM_RESET2_SYSTEM_WARM_RESET;
+>
+>  static inline bool psci_has_ext_power_state(void)
+>  {
+> @@ -272,11 +274,10 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+>  	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+>  	    psci_system_reset2_supported) {
+>  		/*
+> -		 * reset_type[31] = 0 (architectural)
+> -		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
 
+Sorry for missing this earlier, you can move this comment above if others
+agree to not drop that info. I am fine with removing it too.
 
-On 25/02/20 1:08 pm, Ramuthevar, Vadivel MuruganX wrote:
->>>>> +
->>>>> +  cdns,fifo-depth:
->>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    description:
->>>>> +      Size of the data FIFO in words.
->>>> A 4GB fifo is valid? Add some constraints.
->>> 128 is valid, will update.
->> Nope, the width of this field is 8bits -> 256 bytes 
-> 
-> correct me if I am wrong, the width of this field is 4bits -> 128 bytes
-> (based on QUAD mode) .
+E
+>  		 * cookie = 0 (ignored by the implementation)
+>  		 */
+> -		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
+> +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2),
+> +			       psci_sys_reset2_reset_param, 0, 0);
+>  	} else {
+>  		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+>  	}
+> @@ -493,6 +494,7 @@ typedef int (*psci_initcall_t)(const struct device_node *);
+>  static int __init psci_0_2_init(struct device_node *np)
+>  {
+>  	int err;
+> +	u32 param;
+>
+>  	err = get_set_conduit_method(np);
+>  	if (err)
+> @@ -505,7 +507,19 @@ static int __init psci_0_2_init(struct device_node *np)
+>  	 * can be carried out according to the specific version reported
+>  	 * by firmware
+>  	 */
+> -	return psci_probe();
+> +	err = psci_probe();
+> +	if (err)
+> +		return err;
+> +
+> +	if (psci_system_reset2_supported &&
+> +	    !of_property_read_u32(np, "arm,psci-sys-reset2-param", &param)) {
+> +		if ((s32)param > 0)
 
-This has nothing to do with quad-mode. Its about how much SRAM amount of
-SRAM is present to buffer INDAC mode data. For TI platforms this is 256
-bytes.
-See CQSPI_REG_SRAMPARTITION definition in your datasheet.
+What is the point on signed comparison here ? You are assuming all vendor
+reset also as architecture by doing so which is wrong.
 
--- 
-Regards
-Vignesh
+> +			pr_warn("%08x is an invalid architectural reset type.\n",
+> +				param);
+
+I thought the point was to have vendor reset here. Based on the 3/3 you
+see to have vendor reset bit set, you ignore that by doing signed comparison
+which is wrong and even the message is wrong. Specification defines only
+one architectural reset(WARM RESET) and all others need to be vendor specific.
+
+--
+Regards,
+Sudeep
