@@ -2,98 +2,98 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF9FC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1C2C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F99521556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AD421556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="tuTxGHwr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFlPaymx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgBYKJD (ORCPT
+        id S1730019AbgBYKJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:09:03 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:58811 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbgBYKJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:09:03 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id d66c8548;
-        Tue, 25 Feb 2020 10:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=bMG3a8sETAFevA+RrkHwTbqJF4k=; b=tuTxGH
-        wrdaV6dHFYM1sfCD2lgenrCr2sIS4fI8ONgYGlT8HU/Pjh2/XeqoG6FUR7UYzWgr
-        CU8NaYNpLND2rmT2wHojH0PTFjmUD7hT7Ry2dvF3TZ/xLha/KqpfFCSf+S+L5CLU
-        xVtVBQXuCgU9vThFW6Y+D/tPqYThlXnpUVEn2kCGZz5k+U8sncwOSa4bjhYnJYWk
-        ibPUjc+4P5NT7rLRri7fIhbQ7RtSs2fZ92qKSnOUGQN01ZskpZl7JiivgiDOhzPZ
-        jqKCm097vS2cYmlvis5k8sh0KfgLpPjeUsMmYFjO82TJcCerTVbL+KFjkmXcxnU3
-        h/0iZnHS9GLePBKQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d1f191ff (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 25 Feb 2020 10:05:30 +0000 (UTC)
-Received: by mail-ot1-f44.google.com with SMTP id r27so11541373otc.8;
-        Tue, 25 Feb 2020 02:09:01 -0800 (PST)
-X-Gm-Message-State: APjAAAXPUkT6CYNljQlMZYl1A3tiHhS8R0D4W7P8CtLxsbRGq4VwjYsJ
-        LfWdO+X7WOkFR56jnqmBEjTZQd3OoLZJU64Nfto=
-X-Google-Smtp-Source: APXvYqyH6FyTD1BglsITNbf1R40BsS3/QdM1a7nYQiUam5fFt2VuAFypr29/4UNOs4hsUsYffLXzwJybJ3XWivHpwE4=
-X-Received: by 2002:a9d:6a53:: with SMTP id h19mr45381243otn.120.1582625340064;
- Tue, 25 Feb 2020 02:09:00 -0800 (PST)
+        Tue, 25 Feb 2020 05:09:48 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38167 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729981AbgBYKJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:09:47 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x185so6928301pfc.5;
+        Tue, 25 Feb 2020 02:09:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wh/aV6f8G9P8NFi86qh7LhwbQJ/WhimCuc3W3RTKcZE=;
+        b=KFlPaymx0DYUd8m3GIFgxt2xLl5otTfghyORLQBRAKY/JXiEDUAVl14Fq0LOhXd3OP
+         BYs0TTqBSzUJQeeX7D3QoHk0dHWQ31xJXe+Yhrn6loPk/pLsuoBW+58LUUXeOXRh5c4w
+         kffKXxC0pxA6WaWERdiPRpxhwX4LvfZiHeRe4FHKqZqX9dnUHAkMt105JgVtuxkqstNQ
+         vsXEPlFVreZI4LBgeEL7pSmHeS89OnPs9SVG1whCPo0FQwDWSHtqcR46u2munqOjGTcX
+         ihNvpq9o2/M6Upu2oD0eRNWLuFAl9lX6S9T4Zfx/vjya35tC5JBP2LWBRFdbbFNtXaRP
+         EOKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wh/aV6f8G9P8NFi86qh7LhwbQJ/WhimCuc3W3RTKcZE=;
+        b=Zz5GYATvtMAusECLILgCSVQDl2qaM7nXX0oIDFDOjQAzCbIwW1N+E4FHNANa7JWppn
+         xtLRLmqJrBHMVHWyxvOFVCOflBq3PQv8EUPdx8dAyJeBPMgfAbhdptQyMB4OxID7AQNk
+         jglSFmZRyNF4d92diAqxTcdyBEAslPU90eqcqxi912/gfuSeLG3v71J++i98/LX5sM5N
+         bfhVz5COow5Q7+m8y6XfMLL4yTN4q3G7h8u0uvB6IGf5Ilm0KFRtlU2QCT7QFfj9gooa
+         S5qtttun6UaqHJe6eQ2TjfGu6yA/++r9F0TJ2ojgzuPpqn/5X45xVrTzBc5T3WAPrDpI
+         TW7w==
+X-Gm-Message-State: APjAAAULta+FY4tFefb481HMAqtj1wuoncdFtPpDccDXTzsozG2tJS+x
+        TTTQWx2kn74EvRPPEKDCXOM=
+X-Google-Smtp-Source: APXvYqx8Yfc4lFhAWYyQXx8bh8cKTSKSygqvlznUOWE2jNOZJYYzwPYWixn6hqZq7vx8iXGletOiug==
+X-Received: by 2002:a63:3c4b:: with SMTP id i11mr58936564pgn.123.1582625385752;
+        Tue, 25 Feb 2020 02:09:45 -0800 (PST)
+Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
+        by smtp.gmail.com with ESMTPSA id b27sm16151184pgl.77.2020.02.25.02.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 02:09:44 -0800 (PST)
+Date:   Tue, 25 Feb 2020 19:09:42 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] openrisc: use the generic in-place uncached DMA
+ allocator
+Message-ID: <20200225100942.GB7926@lianli.shorne-pla.net>
+References: <20200224194446.690816-1-hch@lst.de>
+ <20200224194446.690816-6-hch@lst.de>
 MIME-Version: 1.0
-References: <20200225063930.106436-1-chenzhou10@huawei.com> <CAHmME9rWq+jJk5s+OoQ+MFMg74=b-a+LtJFjNWqLg6fcreLKbA@mail.gmail.com>
-In-Reply-To: <CAHmME9rWq+jJk5s+OoQ+MFMg74=b-a+LtJFjNWqLg6fcreLKbA@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 25 Feb 2020 18:08:48 +0800
-X-Gmail-Original-Message-ID: <CAHmME9pr0CEiztk11GMJS3MFhQkAmeUPkM-uHR06_ataw+SpBg@mail.gmail.com>
-Message-ID: <CAHmME9pr0CEiztk11GMJS3MFhQkAmeUPkM-uHR06_ataw+SpBg@mail.gmail.com>
-Subject: Re: [PATCH -next] drivers: net: WIREGUARD depends on IPV6
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     David Miller <davem@davemloft.net>, jiri@mellanox.com,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224194446.690816-6-hch@lst.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 2:52 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On 2/25/20, Chen Zhou <chenzhou10@huawei.com> wrote:
-> > If CONFIG_IPV6 is n, build fails:
-> >
-> > drivers/net/wireguard/device.o: In function `wg_xmit':
-> > device.c:(.text+0xb2d): undefined reference to `icmpv6_ndo_send'
-> > make: *** [vmlinux] Error 1
-> >
-> > Set WIREGUARD depending on IPV6 to fix this.
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> > ---
-> >  drivers/net/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-> > index 25a8f93..824292e 100644
-> > --- a/drivers/net/Kconfig
-> > +++ b/drivers/net/Kconfig
-> > @@ -74,7 +74,7 @@ config DUMMY
-> >  config WIREGUARD
-> >       tristate "WireGuard secure network tunnel"
-> >       depends on NET && INET
-> > -     depends on IPV6 || !IPV6
-> > +     depends on IPV6
->
-> Thanks for reporting the breakage. However, this is not the correct
-> fix, as wireguard should work without IPv6. Rather, the recent icmp
-> fixes changed something. I'll investigate why when I'm off the road in
-> several hours.
+On Mon, Feb 24, 2020 at 11:44:45AM -0800, Christoph Hellwig wrote:
+> Switch openrisc to use the dma-direct allocator and just provide the
+> hooks for setting memory uncached or cached.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Off the road. Fix posted to mailing list:
-https://lore.kernel.org/netdev/20200225100535.45146-1-Jason@zx2c4.com/
+Reviewed-by: Stafford Horne <shorne@gmail.com>
+
+I also test booted this series with linux 5.5 on my OpenRISC target.  There are
+no issues.  Note, I had an issue with patch 3/5 not cleanly applying with 'git am'
+but it worked fine using just patch, I didn't get any other details.
+
+-Stafford
