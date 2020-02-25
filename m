@@ -2,228 +2,116 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A8FC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0493C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DB72082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hImB0JUo"
+	by mail.kernel.org (Postfix) with ESMTP id C3EB42082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbgBYTQH (ORCPT
+        id S1731374AbgBYTQj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:16:07 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42529 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730995AbgBYTQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:16:06 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so37967pfz.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rUZVMlHBXvZV7Ou78rc/XDRW/zexdXeiYa6RgRgftog=;
-        b=hImB0JUoI8D5rK/tvQTSN8CVItuNPQJbJ2XDE4D3EQAf9y/En82yTf0XNRIkj4/FuS
-         CTDFFM0RvgF2LzPcTMLHhOUBt0dw9qe7ZoedDQOT8Y+Q2Af73Jbgz5NDt3bhoObV6lnP
-         MBi596CYyRbYToSNJDfbJXZNkQ9qFGCuqk2jXULldpEqVG26dhFNsHiR1QRPyySsYf3Q
-         2K+6SBsBDKpokrUngVilOcKztuzkSOX0YnPTtx7FyLpJRsqhPtL6gJyBiE87HG8kmFDe
-         o9Ews1BI81nG4va/t3WuZ6AG0lE0DUYCbOzqGETO0qH98D2lO3YaWzz6szRAfhmFXXjQ
-         IK3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rUZVMlHBXvZV7Ou78rc/XDRW/zexdXeiYa6RgRgftog=;
-        b=Nlv8WAreG2gwBIq2qf77A9kOuQ9kSyx9S12JlzgTvYu/zvnsij/6DohVH9R7JvB4I+
-         tjqtUU/GkNpgkUMHc9+i/W+pSSo83l35CkdOee+3rP2xjiuSEmaRDKxbkvR4cB2UMSyh
-         OjyDberUXbXTco8wxXpe0zxKUQhUAzTTXhj85u89lKl58XGgzcP8LUO+nG9DXSH/m1Qe
-         vDFEVax1E3ucG7X3xLE/4e3Eb0q4yxiFh0Mpi5IwHQECCxFQh5XVxD8BmmLpsw31zLDX
-         aRRcod3usaMafKsxtVppVoNXj6wiD0idHmBPfpEKWOwaoTP5D5E6qsPxZM+fpEq2D944
-         +BRw==
-X-Gm-Message-State: APjAAAWyakfQ2aIIw2R7q0Dm0up4eq2CvzRjYzcFhTreOuo+9aDKgPkL
-        rVXqoGz6tl1rjQ6+YH5OH9DIf4fR+NFYcZY1BmulFw==
-X-Google-Smtp-Source: APXvYqy1/IF0tRAavAP1XBZXStk4y3mP+ffbu1nWKKy5fKo84qgyYl5tLGoSfMXrJ/7UEF1VXqAeEBC+4VCGJdlptd4=
-X-Received: by 2002:a63:4e22:: with SMTP id c34mr18126pgb.263.1582658165742;
- Tue, 25 Feb 2020 11:16:05 -0800 (PST)
+        Tue, 25 Feb 2020 14:16:39 -0500
+Received: from mga18.intel.com ([134.134.136.126]:36580 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728756AbgBYTQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:16:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 11:16:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
+   d="scan'208";a="260805520"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Feb 2020 11:16:37 -0800
+Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 25 Feb 2020 11:16:37 -0800
+Received: from orsmsx113.amr.corp.intel.com ([169.254.9.183]) by
+ ORSMSX125.amr.corp.intel.com ([169.254.3.208]) with mapi id 14.03.0439.000;
+ Tue, 25 Feb 2020 11:16:37 -0800
+From:   "Allan, Bruce W" <bruce.w.allan@intel.com>
+To:     Colin King <colin.king@canonical.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH][next] ice: remove redundant
+ assignment to pointer vsi
+Thread-Topic: [Intel-wired-lan] [PATCH][next] ice: remove redundant
+ assignment to pointer vsi
+Thread-Index: AQHV6aMWiEGBawp1sE64DZXz6vfzxKgsR9Og
+Date:   Tue, 25 Feb 2020 19:16:36 +0000
+Message-ID: <804857E1F29AAC47BF68C404FC60A184010B0500CE@ORSMSX113.amr.corp.intel.com>
+References: <20200222171054.171505-1-colin.king@canonical.com>
+In-Reply-To: <20200222171054.171505-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYmZhOTY1YmUtOWQ5ZC00MDcyLTg5ZTMtYzQ2YzJhNDQwNDJmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNENUaUxac2FRUkYyVTBoNytRMFlaRmM0NjAweDUwb1RQc2sySGNLQzBrM1VlVjUxU1Z3QW94bk12VFRWcFN1MyJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1581988104-16628-1-git-send-email-wanpengli@tencent.com>
- <1581988104-16628-2-git-send-email-wanpengli@tencent.com> <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
-In-Reply-To: <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Feb 2020 11:15:54 -0800
-Message-ID: <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 2/2] KVM: Pre-allocate 1 cpumask variable per
- cpu for both pv tlb and pv ipis
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wanpeng Li <kernellwp@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(putting Paolo in To: field, in case email filters are to blame.
-Vitaly, maybe you could ping Paolo internally?)
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Colin King
+> Sent: Saturday, February 22, 2020 9:11 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
+> <davem@davemloft.net>; intel-wired-lan@lists.osuosl.org;
+> netdev@vger.kernel.org
+> Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [Intel-wired-lan] [PATCH][next] ice: remove redundant assignment to
+> pointer vsi
+> 
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Pointer vsi is being re-assigned a value that is never read,
+> the assignment is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
 
-On Mon, Feb 24, 2020 at 11:55 PM Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> ping,
-> On Tue, 18 Feb 2020 at 09:12, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Nick Desaulniers Reported:
-> >
-> >   When building with:
-> >   $ make CC=clang arch/x86/ CFLAGS=-Wframe-larger-than=1000
-> >   The following warning is observed:
-> >   arch/x86/kernel/kvm.c:494:13: warning: stack frame size of 1064 bytes in
-> >   function 'kvm_send_ipi_mask_allbutself' [-Wframe-larger-than=]
-> >   static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int
-> >   vector)
-> >               ^
-> >   Debugging with:
-> >   https://github.com/ClangBuiltLinux/frame-larger-than
-> >   via:
-> >   $ python3 frame_larger_than.py arch/x86/kernel/kvm.o \
-> >     kvm_send_ipi_mask_allbutself
-> >   points to the stack allocated `struct cpumask newmask` in
-> >   `kvm_send_ipi_mask_allbutself`. The size of a `struct cpumask` is
-> >   potentially large, as it's CONFIG_NR_CPUS divided by BITS_PER_LONG for
-> >   the target architecture. CONFIG_NR_CPUS for X86_64 can be as high as
-> >   8192, making a single instance of a `struct cpumask` 1024 B.
-> >
-> > This patch fixes it by pre-allocate 1 cpumask variable per cpu and use it for
-> > both pv tlb and pv ipis..
-> >
-> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * remove '!alloc' check
-> >  * use new pv check helpers
-> >
-> >  arch/x86/kernel/kvm.c | 33 +++++++++++++++++++++------------
-> >  1 file changed, 21 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index 76ea8c4..377b224 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -432,6 +432,8 @@ static bool pv_tlb_flush_supported(void)
-> >                 kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
-> >  }
-> >
-> > +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
-> > +
-> >  #ifdef CONFIG_SMP
-> >
-> >  static bool pv_ipi_supported(void)
-> > @@ -510,12 +512,12 @@ static void kvm_send_ipi_mask(const struct cpumask *mask, int vector)
-> >  static void kvm_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
-> >  {
-> >         unsigned int this_cpu = smp_processor_id();
-> > -       struct cpumask new_mask;
-> > +       struct cpumask *new_mask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> >         const struct cpumask *local_mask;
-> >
-> > -       cpumask_copy(&new_mask, mask);
-> > -       cpumask_clear_cpu(this_cpu, &new_mask);
-> > -       local_mask = &new_mask;
-> > +       cpumask_copy(new_mask, mask);
-> > +       cpumask_clear_cpu(this_cpu, new_mask);
-> > +       local_mask = new_mask;
-> >         __send_ipi_mask(local_mask, vector);
-> >  }
-> >
-> > @@ -595,7 +597,6 @@ static void __init kvm_apf_trap_init(void)
-> >         update_intr_gate(X86_TRAP_PF, async_page_fault);
-> >  }
-> >
-> > -static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
-> >
-> >  static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-> >                         const struct flush_tlb_info *info)
-> > @@ -603,7 +604,7 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-> >         u8 state;
-> >         int cpu;
-> >         struct kvm_steal_time *src;
-> > -       struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_tlb_mask);
-> > +       struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> >
-> >         cpumask_copy(flushmask, cpumask);
-> >         /*
-> > @@ -642,6 +643,7 @@ static void __init kvm_guest_init(void)
-> >         if (pv_tlb_flush_supported()) {
-> >                 pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-> >                 pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> > +               pr_info("KVM setup pv remote TLB flush\n");
-> >         }
-> >
-> >         if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> > @@ -748,24 +750,31 @@ static __init int activate_jump_labels(void)
-> >  }
-> >  arch_initcall(activate_jump_labels);
-> >
-> > -static __init int kvm_setup_pv_tlb_flush(void)
-> > +static __init int kvm_alloc_cpumask(void)
-> >  {
-> >         int cpu;
-> > +       bool alloc = false;
-> >
-> >         if (!kvm_para_available() || nopv)
-> >                 return 0;
-> >
-> > -       if (pv_tlb_flush_supported()) {
-> > +       if (pv_tlb_flush_supported())
-> > +               alloc = true;
-> > +
-> > +#if defined(CONFIG_SMP)
-> > +       if (pv_ipi_supported())
-> > +               alloc = true;
-> > +#endif
-> > +
-> > +       if (alloc)
-> >                 for_each_possible_cpu(cpu) {
-> > -                       zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
-> > +                       zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
-> >                                 GFP_KERNEL, cpu_to_node(cpu));
-> >                 }
-> > -               pr_info("KVM setup pv remote TLB flush\n");
-> > -       }
-> >
-> >         return 0;
-> >  }
-> > -arch_initcall(kvm_setup_pv_tlb_flush);
-> > +arch_initcall(kvm_alloc_cpumask);
-> >
-> >  #ifdef CONFIG_PARAVIRT_SPINLOCKS
-> >
-> > --
-> > 2.7.4
-> >
+What version of coverity and what options were used?
 
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+> b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+> index 169b72a94b9d..2c8e334c47a0 100644
+> --- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+> +++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+> @@ -2191,7 +2191,6 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8
+> *msg)
+>  		set_bit(vf_q_id, vf->rxq_ena);
+>  	}
+> 
+> -	vsi = pf->vsi[vf->lan_vsi_idx];
+>  	q_map = vqs->tx_queues;
+>  	for_each_set_bit(vf_q_id, &q_map, ICE_MAX_BASE_QS_PER_VF) {
+>  		if (!ice_vc_isvalid_q_id(vf, vqs->vsi_id, vf_q_id)) {
+> --
+> 2.25.0
+> 
+> _______________________________________________
+> Intel-wired-lan mailing list
+> Intel-wired-lan@osuosl.org
+> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
