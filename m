@@ -2,175 +2,887 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C61EC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BAFC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FA520726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="T8u6NHzY"
+	by mail.kernel.org (Postfix) with ESMTP id 4C2AD20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730407AbgBYLLj (ORCPT
+        id S1730422AbgBYLNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:11:39 -0500
-Received: from mout.web.de ([217.72.192.78]:59527 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728963AbgBYLLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:11:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1582629025;
-        bh=D2XHRvOFPR9WzZoqGxrex+WWhHl9ZTf9IK53kE+n8Y8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=T8u6NHzYxSvNCz2m+WAQnq7p/qDqMcEO3J8/n8+VtF4DdG0F8MgCLuBjERDQXGcg5
-         25XM/oJfZM+L4jSRL6aL2L8//eW6TtEGD6AMUSEWKCbIjARpPY/ppHrj0wCLeHsRkx
-         zMr1t1Z8ota3E10J8faqj9ztxsk8y94J2nLlPqyM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.118.181]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M8Qpi-1jKWWZ1JVC-00vuYF; Tue, 25
- Feb 2020 12:10:25 +0100
-Subject: Re: [for-next][12/26] Documentation: bootconfig: Add a doc for
- extended boot config
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+        Tue, 25 Feb 2020 06:13:13 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38320 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgBYLNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:13:13 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aragua)
+        with ESMTPSA id E862029475A
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     swboyd@chromium.org, kernel@collabora.com,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Bird <Tim.Bird@sony.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-References: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
- <20200220221340.2b66fd2051a5da74775c474b@kernel.org>
- <5ed96b7b-7485-1ea0-16e2-d39c14ae266d@web.de>
- <20200221191637.e9eed4268ff607a98200628c@kernel.org>
- <5ade73b0-a3e8-e71a-3685-6485f37ac8b7@web.de>
- <20200222131833.56a5be2d36033dc5a77a9f0b@kernel.org>
- <370e675a-598e-71db-8213-f5494b852a71@web.de>
- <20200223005615.79f308e2ca0717132bb2887b@kernel.org>
- <8cc7e621-c5e3-28fa-c789-0bb7c55d77d6@web.de>
- <20200224121302.5b730b519d550eb34da720a5@kernel.org>
- <25dd284f-6122-c01b-ef22-901c3e0bdf37@web.de>
- <20200225154903.f636acde809a304bfccf4995@kernel.org>
- <8c99a63b-b1b9-a1ba-fa2a-38d1573f18b1@web.de>
- <20200225192951.b7753d3cf31fda2dcaa12fdb@kernel.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d13c63f5-35f6-129b-a3b8-61cb9ae5369d@web.de>
-Date:   Tue, 25 Feb 2020 12:10:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: [PATCH 1/1] tpm: Add driver for cr50 on I2C
+Date:   Tue, 25 Feb 2020 12:12:51 +0100
+Message-Id: <20200225111253.1322538-1-fabien.lahoudere@collabora.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200225192951.b7753d3cf31fda2dcaa12fdb@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/5Tt/uCj3wyA7n5TFQ3cI0ASAyi3YXld41xrivpNXRAt0WK/h85
- BuEOEvagGLAncVD2m+vwnz3BNDnmNuXbRkNP8aveEaIPmPNScZG9H+xK818yF6N6EqzcPq7
- dGkjggsris44/eLBdGbwyCv4xzj6QEnN77dOwtEu5nzWkFyo9flMcwPC26QI6KThweQj63b
- iWRkSZem5np5P8UEciOww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ajs7gP3mvH8=:S2TfbiCeTwAVXvhy+Eacgh
- dGMOFxIrig23kDF/Q0TZ2U/8UPNHbTIaUIpLpflJXcrt9oC/P5jVwqwX+/OtX01GSMJNonLTK
- 3C4LiS5z8M9wu+Dhx+ig4K0Uin5HtwXe7fo7ssAMuYtutwmP2Uex/HgnI5SC9OOfH3R2mI75G
- 5Ve+W5ODTEgUizrq0l6pHtbfotu+M5DgUBa07hySXy99IYH8O0NwYvllGsqjwCrJOqfwfRq1A
- hBmI032RWRh3nKDDoJDt4yfg5HPOSSy43COIn0I6sDhy4B0SDxqFyELRB5qLB13IX1vJaU7pO
- wJuLwXkdFX2+RR62Lyohsntf/RY1Kz0Z+bsvNLqsHi2XrEwHCfWqyTFAG21ONQC5ydmpRmwCa
- OR4Uyp9nOT8NMCYUVksl09kyNLxYTW0wGjRjJoIa7H3SfmUwQiVaf4tKn1RfWQq+Ztu6f8YqZ
- zmBPPMGqsyxRMh0E8jW6vTqgfMaHP1I+F4S5ZbOQvqz1qGs3yf2afshvv76Z2RgHyrBh6sEX3
- FO/979rAczXb6CnPz2kB7X1DFSRRQn3+LQNobuscxtPsPGmRIDUF/w8C5qg+St8Ytgv2P2j0U
- baJlf37KpdBNr4K0S6xp9lAkndvXhMOhdGdVGL8N2+N1oiqP+/N1+Cz2Xvv5Y2e9AkuPltQB5
- TtIevgTowd5X9Jngj9qog6GcrrcinN8BPIIhc/TadmVIiS0dXfJ+ySZ0H0xzlryD80HDlHjEB
- Pd7kDmvRKWSEBf8B1omkL/XP6JmWguIoSu3vqMlXHrsh0Paf/QEvQfT4mdxlwrMykqV65SsPY
- 6WRJubmkWBp5HYCKoFnyw2IXYB8jpKhGZJEhbuxmpFk5InRLH7vjQdADf8mm7AAa3N8riOwtR
- Y27BTHysaat7Rqs5x7hSAFNyqRBsmrl+p36qp85GXcrrEZAS5xldJSeNpTAOAsLZL0BaPcybh
- OwqA0pZd9mnIO6lvJFk+k2F7BAKt6fL0A46RivlCebLijRQAn97wbIRtjj/AwnxBlAV/PGy9W
- nz5REDfkh7jRRVGsI77SAWWhYhYTznTg+LAwQkvtdumPeKyrMxtmkw596GI/60bYxgiJK0fnJ
- aZ0d3XKRuGaVcFgXaJLCzrR6vkQQYTMXzt/Ni71K2wOEkbALbRh6EoGr9iB+5l32ZetvUcrJk
- gQWd6hE83BhheleN/jVPThguYTxpZqclpMQoXiejOI8nXji1kq4UfhoidmddEVun0u5rauRXT
- OSIG0eCJ6GHGeUVF/
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> The file format will trigger specific parsing efforts.
->
-> Maybe. If someone is interested in expanding their command, (e.g. vim)
-> they can use EBNF to understand syntax,
+From: Duncan Laurie <dlaurie@chromium.org>
+      Stephen Boyd <swboyd@chromium.org>
 
-I hope so.
+Add TPM 2.0 compatible I2C interface for chips with cr50 firmware.
 
+The firmware running on the currently supported H1 MCU requires a
+special driver to handle its specific protocol, and this makes it
+unsuitable to use tpm_tis_core_* and instead it must implement the
+underlying TPM protocol similar to the other I2C TPM drivers.
 
-> or directly reuse lib/bootconfig.c which provides a compact parser. :)
+- All 4 byes of status register must be read/written at once.
+- FIFO and burst count is limited to 63 and must be drained by AP.
+- Provides an interrupt to indicate when read response data is ready
+and when the TPM is finished processing write data.
 
-I see some development challenges according to this design direction.
-This software component is using programming interfaces from
-the Linux kernel, isn't it?
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/l=
-ib/bootconfig.c?id=3Dc99b17ac03994525092fd66bed14b4a0c82f0b4d#n9
+This driver is based on the existing infineon I2C TPM driver, which
+most closely matches the cr50 i2c protocol behavior.  The driver is
+intentionally kept very similar in structure and style to the
+corresponding drivers in coreboot and depthcharge.
 
-I guess that other approaches should be considered for the desired
-software reuse in this system configuration area.
+Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+[swboyd@chromium.org: Depend on i2c even if it's a module, replace
+boilier plate with SPDX tag, drop asm/byteorder.h include, simplify
+return from probe]
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+---
+ drivers/char/tpm/Kconfig            |  10 +
+ drivers/char/tpm/Makefile           |   2 +
+ drivers/char/tpm/tpm_tis_i2c_cr50.c | 765 ++++++++++++++++++++++++++++
+ 3 files changed, 777 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_tis_i2c_cr50.c
 
-Is there a need to map key and value combinations directly to files
-(and directories) for a more convenient data processing by user-space proc=
-esses?
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index aacdeed93320..4b8e60118891 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -74,6 +74,16 @@ config TCG_TIS_SPI_CR50
+ 	  If you have a H1 secure module running Cr50 firmware on SPI bus,
+ 	  say Yes and it will be accessible from within Linux.
+ 
++config TCG_TIS_I2C_CR50
++	tristate "TPM Interface Specification 2.0 Interface (I2C - CR50)"
++	depends on I2C
++	select TCG_CR50
++	help
++	  This is a driver for the Google cr50 I2C TPM interface which is a
++	  custom microcontroller and requires a custom i2c protocol interface
++	  to handle the limitations of the hardware.  To compile this driver
++	  as a module, choose M here; the module will be called tcg_tis_i2c_cr50.
++
+ config TCG_TIS_I2C_ATMEL
+ 	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+ 	depends on I2C
+diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+index 9567e5197f74..68d96410c1fb 100644
+--- a/drivers/char/tpm/Makefile
++++ b/drivers/char/tpm/Makefile
+@@ -26,6 +26,8 @@ obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+ tpm_tis_spi-y := tpm_tis_spi_main.o
+ tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
+ 
++obj-$(CONFIG_TCG_TIS_I2C_CR50) += tpm_tis_i2c_cr50.o
++
+ obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
+ obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
+ obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
+diff --git a/drivers/char/tpm/tpm_tis_i2c_cr50.c b/drivers/char/tpm/tpm_tis_i2c_cr50.c
+new file mode 100644
+index 000000000000..ed9bcb7b8bc1
+--- /dev/null
++++ b/drivers/char/tpm/tpm_tis_i2c_cr50.c
+@@ -0,0 +1,765 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2016 Google Inc.
++ *
++ * Based on Linux Kernel TPM driver by
++ * Peter Huewe <peter.huewe@infineon.com>
++ * Copyright (C) 2011 Infineon Technologies
++ */
++
++/*
++ * cr50 is a firmware for H1 secure modules that requires special
++ * handling for the I2C interface.
++ *
++ * - Use an interrupt for transaction status instead of hardcoded delays
++ * - Must use write+wait+read read protocol
++ * - All 4 bytes of status register must be read/written at once
++ * - Burst count max is 63 bytes, and burst count behaves
++ *   slightly differently than other I2C TPMs
++ * - When reading from FIFO the full burstcnt must be read
++ *   instead of just reading header and determining the remainder
++ */
++
++#include <linux/acpi.h>
++#include <linux/completion.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/pm.h>
++#include <linux/slab.h>
++#include <linux/interrupt.h>
++#include <linux/wait.h>
++#include "tpm_tis_core.h"
++
++#define CR50_MAX_BUFSIZE	63
++#define CR50_TIMEOUT_SHORT_MS	2	/* Short timeout during transactions */
++#define CR50_TIMEOUT_NOIRQ_MS	20	/* Timeout for TPM ready without IRQ */
++#define CR50_I2C_DID_VID	0x00281ae0L
++#define CR50_I2C_MAX_RETRIES	3	/* Max retries due to I2C errors */
++#define CR50_I2C_RETRY_DELAY_LO	55	/* Min usecs between retries on I2C */
++#define CR50_I2C_RETRY_DELAY_HI	65	/* Max usecs between retries on I2C */
++
++#define TPM_I2C_ACCESS(l)	(0x0000 | ((l) << 4))
++#define TPM_I2C_STS(l)		(0x0001 | ((l) << 4))
++#define TPM_I2C_DATA_FIFO(l)	(0x0005 | ((l) << 4))
++#define TPM_I2C_DID_VID(l)	(0x0006 | ((l) << 4))
++
++struct priv_data {
++	int irq;
++	int locality;
++	struct completion tpm_ready;
++	u8 buf[CR50_MAX_BUFSIZE + sizeof(u8)];
++};
++
++/*
++ * The cr50 interrupt handler just signals waiting threads that the
++ * interrupt was asserted.  It does not do any processing triggered
++ * by interrupts but is instead used to avoid fixed delays.
++ *
++ * @dummy: unuesed parameter
++ * @dev_id: TPM chip information
++ */
++static irqreturn_t cr50_i2c_int_handler(int dummy, void *dev_id)
++{
++	struct tpm_chip *chip = dev_id;
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++
++	complete(&priv->tpm_ready);
++
++	return IRQ_HANDLED;
++}
++
++/*
++ * Wait for completion interrupt if available, otherwise use a fixed
++ * delay for the TPM to be ready.
++ *
++ * @chip: TPM chip information
++ *
++ * Returns negative number for error, positive number for success.
++ */
++static int cr50_i2c_wait_tpm_ready(struct tpm_chip *chip)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	long rc;
++
++	/* Use a safe fixed delay if interrupt is not supported */
++	if (priv->irq <= 0) {
++		msleep(CR50_TIMEOUT_NOIRQ_MS);
++		return 1;
++	}
++
++	/* Wait for interrupt to indicate TPM is ready to respond */
++	rc = wait_for_completion_timeout(&priv->tpm_ready,
++					 msecs_to_jiffies(chip->timeout_a));
++
++	if (rc == 0)
++		dev_warn(&chip->dev, "Timeout waiting for TPM ready\n");
++
++	return rc;
++}
++
++/*
++ * cr50_i2c_enable_tpm_irq - enable TPM irq
++ *
++ * @chip: TPM chip information
++ */
++static void cr50_i2c_enable_tpm_irq(struct tpm_chip *chip)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++
++	if (priv->irq > 0) {
++		reinit_completion(&priv->tpm_ready);
++		enable_irq(priv->irq);
++	}
++}
++
++/*
++ * cr50_i2c_disable_tpm_irq - disable TPM irq
++ *
++ * @chip: TPM chip information
++ */
++static void cr50_i2c_disable_tpm_irq(struct tpm_chip *chip)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++
++	if (priv->irq > 0)
++		disable_irq(priv->irq);
++}
++
++/*
++ * cr50_i2c_transfer - transfer messages over i2c
++ *
++ * @dev: device information
++ * @adapter: i2c adapter
++ * @msgs: array of messages to transfer
++ * @num: number of messages in the array
++ *
++ * Call unlocked i2c transfer routine with the provided parameters and retry
++ * in case of bus errors. Returns the number of transferred messages.
++ */
++static int cr50_i2c_transfer(struct device *dev, struct i2c_adapter *adapter,
++			     struct i2c_msg *msgs, int num)
++{
++	int rc, try;
++
++	for (try = 0; try < CR50_I2C_MAX_RETRIES; try++) {
++		rc = __i2c_transfer(adapter, msgs, num);
++		if (rc > 0)
++			break;
++		if (try)
++			dev_warn(dev, "i2c transfer failed (attempt %d/%d): %d\n",
++				 try + 1, CR50_I2C_MAX_RETRIES, rc);
++		usleep_range(CR50_I2C_RETRY_DELAY_LO, CR50_I2C_RETRY_DELAY_HI);
++	}
++
++	return rc;
++}
++
++/*
++ * cr50_i2c_read() - read from TPM register
++ *
++ * @chip: TPM chip information
++ * @addr: register address to read from
++ * @buffer: provided by caller
++ * @len: number of bytes to read
++ *
++ * 1) send register address byte 'addr' to the TPM
++ * 2) wait for TPM to indicate it is ready
++ * 3) read 'len' bytes of TPM response into the provided 'buffer'
++ *
++ * Returns negative number for error, 0 for success.
++ */
++static int cr50_i2c_read(struct tpm_chip *chip, u8 addr, u8 *buffer, size_t len)
++{
++	struct i2c_client *client = to_i2c_client(chip->dev.parent);
++	struct i2c_msg msg1 = {
++		.addr = client->addr,
++		.len = 1,
++		.buf = &addr
++	};
++	struct i2c_msg msg2 = {
++		.addr = client->addr,
++		.flags = I2C_M_RD,
++		.len = len,
++		.buf = buffer
++	};
++	int rc;
++
++	i2c_lock_bus(client->adapter, I2C_LOCK_SEGMENT);
++
++	/* Prepare for completion interrupt */
++	cr50_i2c_enable_tpm_irq(chip);
++
++	/* Send the register address byte to the TPM */
++	rc = cr50_i2c_transfer(&chip->dev, client->adapter, &msg1, 1);
++	if (rc <= 0)
++		goto out;
++
++	/* Wait for TPM to be ready with response data */
++	rc = cr50_i2c_wait_tpm_ready(chip);
++	if (rc < 0)
++		goto out;
++
++	/* Read response data from the TPM */
++	rc = cr50_i2c_transfer(&chip->dev, client->adapter, &msg2, 1);
++
++out:
++	cr50_i2c_disable_tpm_irq(chip);
++	i2c_unlock_bus(client->adapter, I2C_LOCK_SEGMENT);
++
++	if (rc < 0)
++		return rc;
++	if (rc == 0)
++		return -EIO; /* No i2c segments transferred */
++
++	return 0;
++}
++
++/*
++ * cr50_i2c_write() - write to TPM register
++ *
++ * @chip: TPM chip information
++ * @addr: register address to write to
++ * @buffer: data to write
++ * @len: number of bytes to write
++ *
++ * 1) prepend the provided address to the provided data
++ * 2) send the address+data to the TPM
++ * 3) wait for TPM to indicate it is done writing
++ *
++ * Returns negative number for error, 0 for success.
++ */
++static int cr50_i2c_write(struct tpm_chip *chip, u8 addr, u8 *buffer,
++			  size_t len)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	struct i2c_client *client = to_i2c_client(chip->dev.parent);
++	struct i2c_msg msg1 = {
++		.addr = client->addr,
++		.len = len + 1,
++		.buf = priv->buf
++	};
++	int rc;
++
++	if (len > CR50_MAX_BUFSIZE)
++		return -EINVAL;
++
++	i2c_lock_bus(client->adapter, I2C_LOCK_SEGMENT);
++
++	/* Prepend the 'register address' to the buffer */
++	priv->buf[0] = addr;
++	memcpy(priv->buf + 1, buffer, len);
++
++	/* Prepare for completion interrupt */
++	cr50_i2c_enable_tpm_irq(chip);
++
++	/* Send write request buffer with address */
++	rc = cr50_i2c_transfer(&chip->dev, client->adapter, &msg1, 1);
++	if (rc <= 0)
++		goto out;
++
++	/* Wait for TPM to be ready, ignore timeout */
++	cr50_i2c_wait_tpm_ready(chip);
++
++out:
++	cr50_i2c_disable_tpm_irq(chip);
++	i2c_unlock_bus(client->adapter, I2C_LOCK_SEGMENT);
++
++	if (rc < 0)
++		return rc;
++	if (rc == 0)
++		return -EIO; /* No i2c segments transferred */
++
++	return 0;
++}
++
++/*
++ * check_locality - verify TPM locality
++ *
++ * @chip: TPM chip information
++ *
++ * Returns negative number for error, 0 for success.
++ */
++static int check_locality(struct tpm_chip *chip)
++{
++	u8 mask = TPM_ACCESS_VALID | TPM_ACCESS_ACTIVE_LOCALITY;
++	u8 buf;
++	int rc;
++
++	rc = cr50_i2c_read(chip, TPM_I2C_ACCESS(0), &buf, 1);
++	if (rc < 0)
++		return rc;
++
++	if ((buf & mask) == mask)
++		return 0;
++
++	return -EIO;
++}
++
++/*
++ * release_locality - release TPM locality
++ *
++ * @chip: TPM chip information
++ * @force: flag to force release if set
++ */
++static void release_locality(struct tpm_chip *chip, int force)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	u8 mask = TPM_ACCESS_VALID | TPM_ACCESS_REQUEST_PENDING;
++	u8 addr = TPM_I2C_ACCESS(priv->locality);
++	u8 buf;
++
++	if (cr50_i2c_read(chip, addr, &buf, 1) < 0)
++		return;
++
++	if (force || (buf & mask) == mask) {
++		buf = TPM_ACCESS_ACTIVE_LOCALITY;
++		cr50_i2c_write(chip, addr, &buf, 1);
++	}
++
++	priv->locality = 0;
++}
++
++/*
++ * request_locality - request TPM locality
++ *
++ * @chip: TPM chip information
++ */
++static int request_locality(struct tpm_chip *chip)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	u8 buf = TPM_ACCESS_REQUEST_USE;
++	unsigned long stop;
++	int rc;
++
++	if (check_locality(chip) == 0)
++		return 0;
++
++	rc = cr50_i2c_write(chip, TPM_I2C_ACCESS(0), &buf, 1);
++	if (rc < 0)
++		return rc;
++
++	stop = jiffies + chip->timeout_a;
++	do {
++		if (check_locality(chip) == 0) {
++			priv->locality = 0;
++			return 0;
++		}
++		msleep(CR50_TIMEOUT_SHORT_MS);
++	} while (time_before(jiffies, stop));
++
++	return -ETIMEDOUT;
++}
++
++/*
++ * cr50 requires all 4 bytes of status register to be read
++ *
++ * @chip: TPM chip information
++ *
++ * Returns TPM status
++ */
++static u8 cr50_i2c_tis_status(struct tpm_chip *chip)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	u8 buf[4];
++
++	if (cr50_i2c_read(chip, TPM_I2C_STS(priv->locality),
++			  buf, sizeof(buf)) < 0)
++		return 0;
++	return buf[0];
++}
++
++/*
++ * cr50 requires all 4 bytes of status register to be written
++ *
++ * @chip: TPM chip information
++ */
++static void cr50_i2c_tis_ready(struct tpm_chip *chip)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	u8 buf[4] = { TPM_STS_COMMAND_READY };
++
++	cr50_i2c_write(chip, TPM_I2C_STS(priv->locality), buf, sizeof(buf));
++	msleep(CR50_TIMEOUT_SHORT_MS);
++}
++
++/*
++ * cr50 uses bytes 3:2 of status register for burst count and
++ * all 4 bytes must be read
++ *
++ * @chip: TPM chip information
++ * @mask: status mask
++ * @burst: return value for burst
++ * @status: return value for statis
++ *
++ * Returns negative number for error, 0 for success.
++ */
++static int cr50_i2c_wait_burststs(struct tpm_chip *chip, u8 mask,
++				  size_t *burst, int *status)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	unsigned long stop;
++	u8 buf[4];
++
++	/* wait for burstcount */
++	stop = jiffies + chip->timeout_b;
++	do {
++		if (cr50_i2c_read(chip, TPM_I2C_STS(priv->locality),
++				  (u8 *)&buf, sizeof(buf)) < 0) {
++			msleep(CR50_TIMEOUT_SHORT_MS);
++			continue;
++		}
++
++		*status = *buf;
++		*burst = le16_to_cpup((__le16 *)(buf + 1));
++
++		if ((*status & mask) == mask &&
++		    *burst > 0 && *burst <= CR50_MAX_BUFSIZE)
++			return 0;
++
++		msleep(CR50_TIMEOUT_SHORT_MS);
++	} while (time_before(jiffies, stop));
++
++	dev_err(&chip->dev, "Timeout reading burst and status\n");
++	return -ETIMEDOUT;
++}
++
++/*
++ * cr50_i2c_tis_recv - TPM reception callback
++ *
++ * @chip: TPM chip information
++ * @buf: reception buffer
++ * @buf_len: buffer length to read
++ *
++ * Returns negative number for error, number of bytes read for success.
++ */
++static int cr50_i2c_tis_recv(struct tpm_chip *chip, u8 *buf, size_t buf_len)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	int status, rc;
++	size_t burstcnt, cur, len, expected;
++	u8 addr = TPM_I2C_DATA_FIFO(priv->locality);
++	u8 mask = TPM_STS_VALID | TPM_STS_DATA_AVAIL;
++
++	if (buf_len < TPM_HEADER_SIZE)
++		return -EINVAL;
++
++	rc = cr50_i2c_wait_burststs(chip, mask, &burstcnt, &status);
++	if (rc < 0)
++		goto out_err;
++
++	if (burstcnt > buf_len || burstcnt < TPM_HEADER_SIZE) {
++		dev_err(&chip->dev,
++			"Unexpected burstcnt: %zu (max=%zu, min=%d)\n",
++			burstcnt, buf_len, TPM_HEADER_SIZE);
++		rc = -EIO;
++		goto out_err;
++	}
++
++	/* Read first chunk of burstcnt bytes */
++	rc = cr50_i2c_read(chip, addr, buf, burstcnt);
++	if (rc < 0) {
++		dev_err(&chip->dev, "Read of first chunk failed\n");
++		goto out_err;
++	}
++
++	/* Determine expected data in the return buffer */
++	expected = be32_to_cpup((__be32 *)(buf + 2));
++	if (expected > buf_len) {
++		dev_err(&chip->dev, "Too much data in FIFO\n");
++		goto out_err;
++	}
++
++	/* Now read the rest of the data */
++	cur = burstcnt;
++	while (cur < expected) {
++		/* Read updated burst count and check status */
++		rc = cr50_i2c_wait_burststs(chip, mask, &burstcnt, &status);
++		if (rc < 0)
++			goto out_err;
++
++		len = min_t(size_t, burstcnt, expected - cur);
++		rc = cr50_i2c_read(chip, addr, buf + cur, len);
++		if (rc < 0) {
++			dev_err(&chip->dev, "Read failed\n");
++			goto out_err;
++		}
++
++		cur += len;
++	}
++
++	/* Ensure TPM is done reading data */
++	rc = cr50_i2c_wait_burststs(chip, TPM_STS_VALID, &burstcnt, &status);
++	if (rc < 0)
++		goto out_err;
++	if (status & TPM_STS_DATA_AVAIL) {
++		dev_err(&chip->dev, "Data still available\n");
++		rc = -EIO;
++		goto out_err;
++	}
++
++	release_locality(chip, 0);
++	return cur;
++
++out_err:
++	/* Abort current transaction if still pending */
++	if (cr50_i2c_tis_status(chip) & TPM_STS_COMMAND_READY)
++		cr50_i2c_tis_ready(chip);
++
++	release_locality(chip, 0);
++	return rc;
++}
++
++/*
++ * cr50_i2c_tis_send - TPM emission callback
++ *
++ * @chip: TPM chip information
++ * @buf: buffer to send
++ * @len: buffer length
++ *
++ * Returns negative number for error, 0 for success.
++ */
++static int cr50_i2c_tis_send(struct tpm_chip *chip, u8 *buf, size_t len)
++{
++	struct priv_data *priv = dev_get_drvdata(&chip->dev);
++	int rc, status;
++	size_t burstcnt, limit, sent = 0;
++	u8 tpm_go[4] = { TPM_STS_GO };
++	unsigned long stop;
++
++	rc = request_locality(chip);
++	if (rc < 0)
++		return rc;
++
++	/* Wait until TPM is ready for a command */
++	stop = jiffies + chip->timeout_b;
++	while (!(cr50_i2c_tis_status(chip) & TPM_STS_COMMAND_READY)) {
++		if (time_after(jiffies, stop)) {
++			rc = -ETIMEDOUT;
++			goto out_err;
++		}
++
++		cr50_i2c_tis_ready(chip);
++	}
++
++	while (len > 0) {
++		u8 mask = TPM_STS_VALID;
++
++		/* Wait for data if this is not the first chunk */
++		if (sent > 0)
++			mask |= TPM_STS_DATA_EXPECT;
++
++		/* Read burst count and check status */
++		rc = cr50_i2c_wait_burststs(chip, mask, &burstcnt, &status);
++		if (rc < 0)
++			goto out_err;
++
++		/*
++		 * Use burstcnt - 1 to account for the address byte
++		 * that is inserted by cr50_i2c_write()
++		 */
++		limit = min_t(size_t, burstcnt - 1, len);
++		rc = cr50_i2c_write(chip, TPM_I2C_DATA_FIFO(priv->locality),
++				    &buf[sent], limit);
++		if (rc < 0) {
++			dev_err(&chip->dev, "Write failed\n");
++			goto out_err;
++		}
++
++		sent += limit;
++		len -= limit;
++	}
++
++	/* Ensure TPM is not expecting more data */
++	rc = cr50_i2c_wait_burststs(chip, TPM_STS_VALID, &burstcnt, &status);
++	if (rc < 0)
++		goto out_err;
++	if (status & TPM_STS_DATA_EXPECT) {
++		dev_err(&chip->dev, "Data still expected\n");
++		rc = -EIO;
++		goto out_err;
++	}
++
++	/* Start the TPM command */
++	rc = cr50_i2c_write(chip, TPM_I2C_STS(priv->locality), tpm_go,
++			    sizeof(tpm_go));
++	if (rc < 0) {
++		dev_err(&chip->dev, "Start command failed\n");
++		goto out_err;
++	}
++	return 0;
++
++out_err:
++	/* Abort current transaction if still pending */
++	if (cr50_i2c_tis_status(chip) & TPM_STS_COMMAND_READY)
++		cr50_i2c_tis_ready(chip);
++
++	release_locality(chip, 0);
++	return rc;
++}
++
++/*
++ * cr50_i2c_req_canceled - callback to notify a request cancel
++ *
++ * @chip: TPM chip information
++ * @status: status given by the cancel callback
++ *
++ * Return if command is ready or not
++ */
++static bool cr50_i2c_req_canceled(struct tpm_chip *chip, u8 status)
++{
++	return (status == TPM_STS_COMMAND_READY);
++}
++
++static const struct tpm_class_ops cr50_i2c = {
++	.flags = TPM_OPS_AUTO_STARTUP,
++	.status = &cr50_i2c_tis_status,
++	.recv = &cr50_i2c_tis_recv,
++	.send = &cr50_i2c_tis_send,
++	.cancel = &cr50_i2c_tis_ready,
++	.req_complete_mask = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
++	.req_complete_val = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
++	.req_canceled = &cr50_i2c_req_canceled,
++};
++
++static const struct i2c_device_id cr50_i2c_table[] = {
++	{"cr50_i2c", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, cr50_i2c_table);
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id cr50_i2c_acpi_id[] = {
++	{ "GOOG0005", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, cr50_i2c_acpi_id);
++#endif
++
++#ifdef CONFIG_OF
++static const struct of_device_id of_cr50_i2c_match[] = {
++	{ .compatible = "google,cr50", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, of_cr50_i2c_match);
++#endif
++
++/*
++ * cr50_i2c_probe - driver prbe function
++ *
++ * @client: i2x client information
++ * @id: i2c device id
++ *
++ * Returns negative number for error, 0 for success.
++ */
++static int cr50_i2c_probe(struct i2c_client *client,
++			  const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct tpm_chip *chip;
++	struct priv_data *priv;
++	u8 buf[4];
++	u32 vendor;
++	int rc;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
++		return -ENODEV;
++
++	chip = tpmm_chip_alloc(dev, &cr50_i2c);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	/* cr50 is a TPM 2.0 chip */
++	chip->flags |= TPM_CHIP_FLAG_TPM2;
++	chip->flags |= TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED;
++
++	/* Default timeouts */
++	chip->timeout_a = msecs_to_jiffies(TIS_SHORT_TIMEOUT);
++	chip->timeout_b = msecs_to_jiffies(TIS_LONG_TIMEOUT);
++	chip->timeout_c = msecs_to_jiffies(TIS_SHORT_TIMEOUT);
++	chip->timeout_d = msecs_to_jiffies(TIS_SHORT_TIMEOUT);
++
++	dev_set_drvdata(&chip->dev, priv);
++	init_completion(&priv->tpm_ready);
++
++	if (client->irq > 0) {
++		rc = devm_request_irq(dev, client->irq, cr50_i2c_int_handler,
++				      IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++				      dev->driver->name, chip);
++		if (rc < 0) {
++			dev_err(dev, "Failed to probe IRQ %d\n", client->irq);
++			return rc;
++		}
++
++		disable_irq(client->irq);
++		priv->irq = client->irq;
++	} else {
++		dev_warn(dev, "No IRQ, will use %ums delay for TPM ready\n",
++			 CR50_TIMEOUT_NOIRQ_MS);
++	}
++
++	rc = request_locality(chip);
++	if (rc < 0) {
++		dev_err(dev, "Could not request locality\n");
++		return rc;
++	}
++
++	/* Read four bytes from DID_VID register */
++	rc = cr50_i2c_read(chip, TPM_I2C_DID_VID(0), buf, sizeof(buf));
++	if (rc < 0) {
++		dev_err(dev, "Could not read vendor id\n");
++		release_locality(chip, 1);
++		return rc;
++	}
++
++	vendor = le32_to_cpup((__le32 *)buf);
++	if (vendor != CR50_I2C_DID_VID) {
++		dev_err(dev, "Vendor ID did not match! ID was %08x\n", vendor);
++		release_locality(chip, 1);
++		return -ENODEV;
++	}
++
++	dev_info(dev, "cr50 TPM 2.0 (i2c 0x%02x irq %d id 0x%x)\n",
++		 client->addr, client->irq, vendor >> 16);
++
++	return tpm_chip_register(chip);
++}
++
++/*
++ * cr50_i2c_probe - driver prbe function
++ *
++ * @client: i2x client information
++ *
++ * Returns 0
++ */
++static int cr50_i2c_remove(struct i2c_client *client)
++{
++	struct tpm_chip *chip = i2c_get_clientdata(client);
++
++	tpm_chip_unregister(chip);
++	release_locality(chip, 1);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(cr50_i2c_pm, tpm_pm_suspend, tpm_pm_resume);
++
++static struct i2c_driver cr50_i2c_driver = {
++	.id_table = cr50_i2c_table,
++	.probe = cr50_i2c_probe,
++	.remove = cr50_i2c_remove,
++	.driver = {
++		.name = "cr50_i2c",
++		.pm = &cr50_i2c_pm,
++		.acpi_match_table = ACPI_PTR(cr50_i2c_acpi_id),
++		.of_match_table = of_match_ptr(of_cr50_i2c_match),
++	},
++};
++
++module_i2c_driver(cr50_i2c_driver);
++
++MODULE_DESCRIPTION("cr50 TPM I2C Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.24.1
 
-Regards,
-Markus
