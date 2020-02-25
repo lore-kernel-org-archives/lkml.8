@@ -2,371 +2,145 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B405AC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D01EC35DFA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF442082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B01B2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m70wOcNT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gT/0N5dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgBYHze (ORCPT
+        id S1729683AbgBYH4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:55:34 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40221 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgBYHze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:55:34 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a142so11684126oii.7;
-        Mon, 24 Feb 2020 23:55:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vDTNmuWjuAHtvuVbjdMd3VLuF/qKiWw9E7XEtWsc/5E=;
-        b=m70wOcNTGxbblYPvO5tT6VYYHlU5Fy/HWUhb7ItZhaCTCBjaZApb/9e6oIOdnuxwzF
-         kt/tStmjYohgve5ADUmeQ+T/bVHOSPUFUia1CxHuNRTKUZRL69Bv0f/qCfACVOSKuvVS
-         IjjGAtQ80wn8d9O9jbpMcHJX5LW+dEflPmzyEZ02lIuot72DtKES5jAjZZ+EXpZzybzD
-         yN9WGAvMd2EekPscMzOx4OULdlrtZg/x6VOpWs+eBDN2o8toLcVtv+z812bwtBIP4I0U
-         0kShLU1lIabMdISrzvPtdJjVbeiVmxm4ZyuvKFUMA8Ok5IArhmRez9FsdjrjbZQgy4cr
-         qJXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vDTNmuWjuAHtvuVbjdMd3VLuF/qKiWw9E7XEtWsc/5E=;
-        b=rszsOt8LGlr80dtSDe3CVDSwSM7osIs8KiH1Zm1u2K62FIr25CH531jlBiIxstlwZM
-         ALVAMNhyds5cPS3hYcfhoTfAVQoJKj/xwvJ8xigx6ePFohBbH8oA2FmHTNsId2CZIJUN
-         tRRaycD6OiKKkmTzqKlE0aQlsP3bV2btyKB9H7vwoZ8+vEzB39ORhLtVj0amkPc13DPV
-         8fsf11HfRkSgd+NuzvGnsMF1hPHJC57ag3OoN13v7dA00A3fbGwjMeTDCtNQjL4JvnBj
-         /co910C6vxS3nWJEyRnlhNpkyJYmpglpL6PuhnHa0CKRQ+CMNqKwBMNKIhhm8orySyhu
-         CCKQ==
-X-Gm-Message-State: APjAAAVOv3is8/+0HHzzU5bDQcXWgitRpSN7gKoquqwyClut3n2nU3hd
-        XeCLdaKMQQoTSx53Qp1uX+K3O27ldY4mK6If4E+uc3ZP
-X-Google-Smtp-Source: APXvYqzj21h0ZL8pb+IscgvCYutp8SLIikMEv5yDF7wzQtTtYz0/RXLNbHjhBPxX0S+5sbh5rp1RAQpDs7mS5zG80fw=
-X-Received: by 2002:aca:44d7:: with SMTP id r206mr2474277oia.33.1582617331043;
- Mon, 24 Feb 2020 23:55:31 -0800 (PST)
+        Tue, 25 Feb 2020 02:56:07 -0500
+Received: from mail-eopbgr130078.outbound.protection.outlook.com ([40.107.13.78]:55872
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729124AbgBYH4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:56:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cm93Q91+icCyw0wCoFeuM5VDeAuXfZFBIk4Go6VakfRvpB6UFDKF0l2B2L8LUVK1WZjjtEd2TO4O1Fusmltr+GEtq9FaGA4zTyh+4JS3qKvRMVAc36jInKEj5n/uYjMLTK7kYqALTQzHZ/ktZda1EaPS53fNZhNM0W/8fe6fqTPbt3rnkW2sBXYlWqk/OBFT6be3Cf7/crsZbQ4HjJQ/aDgtjtyu1j1QuuPQZo09joXAGN2wB/oamxMhdJBEWKaxrZpbmj5HB+Xsb1EjTR0DFZ0iso8KtM2OXuSgWu6T0HjVlZ6sUP0nJZMoydB/I++rVBCNlbNZqGHr8kVznlAUOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/E+jOEBhHp/WCddiDK0qDv0wzWFVbbaY7ZkBzk74XCM=;
+ b=dm6SHIr994pIm79rWkbp/WcPvVP7oJziX0nV+tAIQbowK+Fcq6gn/VZeaR0R+Bh5BWsvgCb3CwYWFq6T8dGK6RIDtRXjf5hYRwk79KkfaKbqEM3kimZi+jrTTGBJ/a0SyE5N+33YWLUTRkS7M/o1uuYTVzZqtEUY2yYAyreuU2rv+iwlf2SwJ/+ci4YYntRx50pWP65tFpuUBo8WXFQdVJMGRTu8zh6ekZ+L4yXwJWWpw7WONgIt+5hcCkJ8LBO988xzntyVolzbIWbSbp3/eienyGoVGNX2UiSp7SzwvkLu6487rBCsijFrFjzWyDW2w3H4P/PsXP9U0yiFZrwWcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/E+jOEBhHp/WCddiDK0qDv0wzWFVbbaY7ZkBzk74XCM=;
+ b=gT/0N5dyoDLL3M8OsJ6EDIUNzYuCoctRkdVfLbsZ3wT7/5stRefVWWlmRiUSDR3DqdeoeLGtKxdnIxJgSI9QqWLyxTraOQ3sYZew+RX6QfgDuBCAZqadVCENxUDXZy4UELEIFo/RlVGS2xYkDhW4OIgswe9HieQqoaKyQf1ld0s=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4562.eurprd04.prod.outlook.com (52.135.148.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Tue, 25 Feb 2020 07:56:02 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 07:56:02 +0000
+From:   peng.fan@nxp.com
+To:     sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, abel.vesa@nxp.com
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com, Anson.Huang@nxp.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        leonard.crestez@nxp.com, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/3] clk: imx: imx8mp: fix pll mux bit
+Date:   Tue, 25 Feb 2020 15:49:17 +0800
+Message-Id: <1582616959-933-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR01CA0056.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-References: <1582022829-27032-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1582022829-27032-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 25 Feb 2020 15:55:20 +0800
-Message-ID: <CANRm+CxyWGExs=OxD13vJcZS2NUBEXt2ppUrcLX=h0O-RpJRgg@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Recalculate apic map in batch
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by HK0PR01CA0056.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 07:55:58 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2cb40bde-9043-4b61-a0e0-08d7b9c82874
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4562:|AM0PR04MB4562:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4562F375A820B0896C4E464C88ED0@AM0PR04MB4562.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(199004)(189003)(52116002)(2906002)(6666004)(86362001)(36756003)(478600001)(81156014)(5660300002)(8676002)(4326008)(8936002)(69590400006)(81166006)(9686003)(66556008)(316002)(66476007)(6486002)(186003)(2616005)(956004)(6506007)(16526019)(66946007)(6512007)(26005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4562;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BS+jdY5PG4qKoQwIyf8eoKVbMzteeVjs1Jdr/zXbZag4XgTgUN7d7Pmx3zcTUR2Bt1mWjOdf0zU7rHJYXZfuQRVlO2mUlCYFhQaaSFz5lSGhfa+OA2BoZDZS2zCw3scLcE2XisUB9QDD0tQHQONn4oL4xpK9PRKJpN9wyhTV90tHrmxPODyc68IKlPmoUfuHlREPlS0m6EC4ldpP81KGK2j4IFm+iM9sGa8fXknWZkR+PWhDnVYLdKGCtcQkHu4t/nae4TiZPyfXFuHQQvxIbQmjdECyE5pfXcnbkZVFCNXmmF92h8hUGlpr2VW+8dCttt7Ghv6cCuB7dCtDlHuUre2+BrORZe4XfLqdOxgei1xpoVsvSQGdnV3SYfrVs+gJMv3rnG4aOUgbVwMZXfVSPRE8EWR3daEQmcpbcB+wUuqmrr9A0vQeebucEYvJ6EHSp/uOCe2enJ49reN4SQeKcumRWrleta08BHNIB21Ug4MzOyXX8ac9W/NyI7ys8ekrhQCEATQy9D5aUnDJpYylKCkMuRLRlP1g8DGZ0MLj90v5D2Xh3mu5THx91ROPVktF
+X-MS-Exchange-AntiSpam-MessageData: uoQEcAFgZoicAMOt0E0fJ8YpOkM8/HI3byH2zNYO8RygGaccHrw+fIu53bvNuA4nXiiCXrMJ0heRYAI0FeLkxliRapB3M8nIBwn6F576BJPR4Pg32iPTKH91rIIEgrpfWVrwjwCkvSLoQRydmrxt/A==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cb40bde-9043-4b61-a0e0-08d7b9c82874
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 07:56:02.0883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J7TdrpcNaQKswMT7UE1WJaE9ppsv7AC/JqGVFMX0SfP5EJ3hWZSLpkyTYgE3pDc3z/hvQ2NB1CAtAhVV4YoVTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4562
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping,
-On Tue, 18 Feb 2020 at 18:49, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated
-> several times, each time it will consume 10+ us observed by ftrace in my
-> non-overcommit environment since the expensive memory allocate/mutex/rcu etc
-> operations. This patch optimizes it by recaluating apic map in batch, I hope
-> this can benefit the serverless scenario which can frequently create/destroy
-> VMs.
->
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c | 74 ++++++++++++++++++++++++++++++++++------------------
->  arch/x86/kvm/lapic.h |  3 ++-
->  arch/x86/kvm/x86.c   |  3 ++-
->  3 files changed, 53 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index afcd30d..71f843a 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -164,7 +164,7 @@ static void kvm_apic_map_free(struct rcu_head *rcu)
->         kvfree(map);
->  }
->
-> -static void recalculate_apic_map(struct kvm *kvm)
-> +void kvm_recalculate_apic_map(struct kvm *kvm)
->  {
->         struct kvm_apic_map *new, *old = NULL;
->         struct kvm_vcpu *vcpu;
-> @@ -244,9 +244,10 @@ static void recalculate_apic_map(struct kvm *kvm)
->         kvm_make_scan_ioapic_request(kvm);
->  }
->
-> -static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
-> +static inline bool apic_set_spiv(struct kvm_lapic *apic, u32 val)
->  {
->         bool enabled = val & APIC_SPIV_APIC_ENABLED;
-> +       bool need_recal = false;
->
->         kvm_lapic_set_reg(apic, APIC_SPIV, val);
->
-> @@ -257,20 +258,20 @@ static inline void apic_set_spiv(struct kvm_lapic *apic, u32 val)
->                 else
->                         static_key_slow_inc(&apic_sw_disabled.key);
->
-> -               recalculate_apic_map(apic->vcpu->kvm);
-> +               need_recal = true;
->         }
-> +
-> +       return need_recal;
->  }
->
->  static inline void kvm_apic_set_xapic_id(struct kvm_lapic *apic, u8 id)
->  {
->         kvm_lapic_set_reg(apic, APIC_ID, id << 24);
-> -       recalculate_apic_map(apic->vcpu->kvm);
->  }
->
->  static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
->  {
->         kvm_lapic_set_reg(apic, APIC_LDR, id);
-> -       recalculate_apic_map(apic->vcpu->kvm);
->  }
->
->  static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
-> @@ -286,7 +287,6 @@ static inline void kvm_apic_set_x2apic_id(struct kvm_lapic *apic, u32 id)
->
->         kvm_lapic_set_reg(apic, APIC_ID, id);
->         kvm_lapic_set_reg(apic, APIC_LDR, ldr);
-> -       recalculate_apic_map(apic->vcpu->kvm);
->  }
->
->  static inline int apic_lvt_enabled(struct kvm_lapic *apic, int lvt_type)
-> @@ -1882,14 +1882,16 @@ static void apic_manage_nmi_watchdog(struct kvm_lapic *apic, u32 lvt0_val)
->  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  {
->         int ret = 0;
-> +       bool need_recal = false;
->
->         trace_kvm_apic_write(reg, val);
->
->         switch (reg) {
->         case APIC_ID:           /* Local APIC ID */
-> -               if (!apic_x2apic_mode(apic))
-> +               if (!apic_x2apic_mode(apic)) {
->                         kvm_apic_set_xapic_id(apic, val >> 24);
-> -               else
-> +                       need_recal = true;
-> +               } else
->                         ret = 1;
->                 break;
->
-> @@ -1903,16 +1905,17 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->                 break;
->
->         case APIC_LDR:
-> -               if (!apic_x2apic_mode(apic))
-> +               if (!apic_x2apic_mode(apic)) {
->                         kvm_apic_set_ldr(apic, val & APIC_LDR_MASK);
-> -               else
-> +                       need_recal = true;
-> +               } else
->                         ret = 1;
->                 break;
->
->         case APIC_DFR:
->                 if (!apic_x2apic_mode(apic)) {
->                         kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
-> -                       recalculate_apic_map(apic->vcpu->kvm);
-> +                       need_recal = true;
->                 } else
->                         ret = 1;
->                 break;
-> @@ -1921,7 +1924,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->                 u32 mask = 0x3ff;
->                 if (kvm_lapic_get_reg(apic, APIC_LVR) & APIC_LVR_DIRECTED_EOI)
->                         mask |= APIC_SPIV_DIRECTED_EOI;
-> -               apic_set_spiv(apic, val & mask);
-> +               if (apic_set_spiv(apic, val & mask))
-> +                       need_recal = true;
->                 if (!(val & APIC_SPIV_APIC_ENABLED)) {
->                         int i;
->                         u32 lvt_val;
-> @@ -2018,6 +2022,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->                 break;
->         }
->
-> +       if (need_recal)
-> +               kvm_recalculate_apic_map(apic->vcpu->kvm);
-> +
->         return ret;
->  }
->  EXPORT_SYMBOL_GPL(kvm_lapic_reg_write);
-> @@ -2143,10 +2150,11 @@ u64 kvm_lapic_get_cr8(struct kvm_vcpu *vcpu)
->         return (tpr & 0xf0) >> 4;
->  }
->
-> -void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
-> +bool kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
->  {
->         u64 old_value = vcpu->arch.apic_base;
->         struct kvm_lapic *apic = vcpu->arch.apic;
-> +       bool need_recal = false;
->
->         if (!apic)
->                 value |= MSR_IA32_APICBASE_BSP;
-> @@ -2157,7 +2165,7 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
->                 kvm_update_cpuid(vcpu);
->
->         if (!apic)
-> -               return;
-> +               return need_recal;
->
->         /* update jump label if enable bit changes */
->         if ((old_value ^ value) & MSR_IA32_APICBASE_ENABLE) {
-> @@ -2166,12 +2174,14 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
->                         static_key_slow_dec_deferred(&apic_hw_disabled);
->                 } else {
->                         static_key_slow_inc(&apic_hw_disabled.key);
-> -                       recalculate_apic_map(vcpu->kvm);
->                 }
-> +               need_recal = true;
->         }
->
-> -       if (((old_value ^ value) & X2APIC_ENABLE) && (value & X2APIC_ENABLE))
-> +       if (((old_value ^ value) & X2APIC_ENABLE) && (value & X2APIC_ENABLE)) {
->                 kvm_apic_set_x2apic_id(apic, vcpu->vcpu_id);
-> +               need_recal = true;
-> +       }
->
->         if ((old_value ^ value) & (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE))
->                 kvm_x86_ops->set_virtual_apic_mode(vcpu);
-> @@ -2182,6 +2192,8 @@ void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value)
->         if ((value & MSR_IA32_APICBASE_ENABLE) &&
->              apic->base_address != APIC_DEFAULT_PHYS_BASE)
->                 pr_warn_once("APIC base relocation is unsupported by KVM");
-> +
-> +       return need_recal;
->  }
->
->  void kvm_apic_update_apicv(struct kvm_vcpu *vcpu)
-> @@ -2203,6 +2215,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->  {
->         struct kvm_lapic *apic = vcpu->arch.apic;
->         int i;
-> +       bool need_recal = false;
->
->         if (!apic)
->                 return;
-> @@ -2214,6 +2227,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->                 kvm_lapic_set_base(vcpu, APIC_DEFAULT_PHYS_BASE |
->                                          MSR_IA32_APICBASE_ENABLE);
->                 kvm_apic_set_xapic_id(apic, vcpu->vcpu_id);
-> +               need_recal = true;
->         }
->         kvm_apic_set_version(apic->vcpu);
->
-> @@ -2227,10 +2241,13 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->         apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
->
->         kvm_lapic_set_reg(apic, APIC_DFR, 0xffffffffU);
-> -       apic_set_spiv(apic, 0xff);
-> +       if (apic_set_spiv(apic, 0xff))
-> +               need_recal = true;
->         kvm_lapic_set_reg(apic, APIC_TASKPRI, 0);
-> -       if (!apic_x2apic_mode(apic))
-> +       if (!apic_x2apic_mode(apic)) {
->                 kvm_apic_set_ldr(apic, 0);
-> +               need_recal = true;
-> +       }
->         kvm_lapic_set_reg(apic, APIC_ESR, 0);
->         kvm_lapic_set_reg(apic, APIC_ICR, 0);
->         kvm_lapic_set_reg(apic, APIC_ICR2, 0);
-> @@ -2246,8 +2263,8 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->         update_divide_count(apic);
->         atomic_set(&apic->lapic_timer.pending, 0);
->         if (kvm_vcpu_is_bsp(vcpu))
-> -               kvm_lapic_set_base(vcpu,
-> -                               vcpu->arch.apic_base | MSR_IA32_APICBASE_BSP);
-> +               need_recal = kvm_lapic_set_base(vcpu,
-> +                                       vcpu->arch.apic_base | MSR_IA32_APICBASE_BSP);
->         vcpu->arch.pv_eoi.msr_val = 0;
->         apic_update_ppr(apic);
->         if (vcpu->arch.apicv_active) {
-> @@ -2258,6 +2275,9 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->
->         vcpu->arch.apic_arb_prio = 0;
->         vcpu->arch.apic_attention = 0;
-> +
-> +       if (need_recal)
-> +               kvm_recalculate_apic_map(vcpu->kvm);
->  }
->
->  /*
-> @@ -2478,18 +2498,22 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
->  {
->         struct kvm_lapic *apic = vcpu->arch.apic;
->         int r;
-> +       bool need_recal = false;
->
-> -
-> -       kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
-> +       need_recal = kvm_lapic_set_base(vcpu, vcpu->arch.apic_base);
->         /* set SPIV separately to get count of SW disabled APICs right */
-> -       apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV)));
-> +       if (apic_set_spiv(apic, *((u32 *)(s->regs + APIC_SPIV))))
-> +               need_recal = true;
->
->         r = kvm_apic_state_fixup(vcpu, s, true);
-> -       if (r)
-> +       if (r) {
-> +               if (need_recal)
-> +                       kvm_recalculate_apic_map(vcpu->kvm);
->                 return r;
-> +       }
->         memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
->
-> -       recalculate_apic_map(vcpu->kvm);
-> +       kvm_recalculate_apic_map(vcpu->kvm);
->         kvm_apic_set_version(vcpu);
->
->         apic_update_ppr(apic);
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index ec6fbfe..58c07ad 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -76,8 +76,9 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event);
->  u64 kvm_lapic_get_cr8(struct kvm_vcpu *vcpu);
->  void kvm_lapic_set_tpr(struct kvm_vcpu *vcpu, unsigned long cr8);
->  void kvm_lapic_set_eoi(struct kvm_vcpu *vcpu);
-> -void kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
-> +bool kvm_lapic_set_base(struct kvm_vcpu *vcpu, u64 value);
->  u64 kvm_lapic_get_base(struct kvm_vcpu *vcpu);
-> +void kvm_recalculate_apic_map(struct kvm *kvm);
->  void kvm_apic_set_version(struct kvm_vcpu *vcpu);
->  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val);
->  int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 79bc995..e961e65 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -349,7 +349,8 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->                         return 1;
->         }
->
-> -       kvm_lapic_set_base(vcpu, msr_info->data);
-> +       if (kvm_lapic_set_base(vcpu, msr_info->data))
-> +               kvm_recalculate_apic_map(vcpu->kvm);
->         return 0;
->  }
->  EXPORT_SYMBOL_GPL(kvm_set_apic_base);
-> --
-> 2.7.4
->
+From: Peng Fan <peng.fan@nxp.com>
+
+Same to i.MX8MN/i.MX8MM, pll BYPASS bit should be kept inside pll
+driver for glitchless freq setting following spec. If exposing the
+bit, that means pll driver and clk driver has two paths to touch
+this bit, which is wrong.
+
+So use EXT_BYPASS bit here.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mp.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
+index 7d558d6334eb..a85039cfdbf1 100644
+--- a/drivers/clk/imx/clk-imx8mp.c
++++ b/drivers/clk/imx/clk-imx8mp.c
+@@ -486,16 +486,16 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
+ 	hws[IMX8MP_SYS_PLL2] = imx_clk_hw_pll14xx("sys_pll2", "sys_pll2_ref_sel", anatop_base + 0x104, &imx_1416x_pll);
+ 	hws[IMX8MP_SYS_PLL3] = imx_clk_hw_pll14xx("sys_pll3", "sys_pll3_ref_sel", anatop_base + 0x114, &imx_1416x_pll);
+ 
+-	hws[IMX8MP_AUDIO_PLL1_BYPASS] = imx_clk_hw_mux_flags("audio_pll1_bypass", anatop_base, 4, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_AUDIO_PLL2_BYPASS] = imx_clk_hw_mux_flags("audio_pll2_bypass", anatop_base + 0x14, 4, 1, audio_pll2_bypass_sels, ARRAY_SIZE(audio_pll2_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_VIDEO_PLL1_BYPASS] = imx_clk_hw_mux_flags("video_pll1_bypass", anatop_base + 0x28, 4, 1, video_pll1_bypass_sels, ARRAY_SIZE(video_pll1_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_DRAM_PLL_BYPASS] = imx_clk_hw_mux_flags("dram_pll_bypass", anatop_base + 0x50, 4, 1, dram_pll_bypass_sels, ARRAY_SIZE(dram_pll_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_GPU_PLL_BYPASS] = imx_clk_hw_mux_flags("gpu_pll_bypass", anatop_base + 0x64, 4, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_VPU_PLL_BYPASS] = imx_clk_hw_mux_flags("vpu_pll_bypass", anatop_base + 0x74, 4, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_ARM_PLL_BYPASS] = imx_clk_hw_mux_flags("arm_pll_bypass", anatop_base + 0x84, 4, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_SYS_PLL1_BYPASS] = imx_clk_hw_mux_flags("sys_pll1_bypass", anatop_base + 0x94, 4, 1, sys_pll1_bypass_sels, ARRAY_SIZE(sys_pll1_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_SYS_PLL2_BYPASS] = imx_clk_hw_mux_flags("sys_pll2_bypass", anatop_base + 0x104, 4, 1, sys_pll2_bypass_sels, ARRAY_SIZE(sys_pll2_bypass_sels), CLK_SET_RATE_PARENT);
+-	hws[IMX8MP_SYS_PLL3_BYPASS] = imx_clk_hw_mux_flags("sys_pll3_bypass", anatop_base + 0x114, 4, 1, sys_pll3_bypass_sels, ARRAY_SIZE(sys_pll3_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_AUDIO_PLL1_BYPASS] = imx_clk_hw_mux_flags("audio_pll1_bypass", anatop_base, 16, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_AUDIO_PLL2_BYPASS] = imx_clk_hw_mux_flags("audio_pll2_bypass", anatop_base + 0x14, 16, 1, audio_pll2_bypass_sels, ARRAY_SIZE(audio_pll2_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_VIDEO_PLL1_BYPASS] = imx_clk_hw_mux_flags("video_pll1_bypass", anatop_base + 0x28, 16, 1, video_pll1_bypass_sels, ARRAY_SIZE(video_pll1_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_DRAM_PLL_BYPASS] = imx_clk_hw_mux_flags("dram_pll_bypass", anatop_base + 0x50, 16, 1, dram_pll_bypass_sels, ARRAY_SIZE(dram_pll_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_GPU_PLL_BYPASS] = imx_clk_hw_mux_flags("gpu_pll_bypass", anatop_base + 0x64, 28, 1, gpu_pll_bypass_sels, ARRAY_SIZE(gpu_pll_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_VPU_PLL_BYPASS] = imx_clk_hw_mux_flags("vpu_pll_bypass", anatop_base + 0x74, 28, 1, vpu_pll_bypass_sels, ARRAY_SIZE(vpu_pll_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_ARM_PLL_BYPASS] = imx_clk_hw_mux_flags("arm_pll_bypass", anatop_base + 0x84, 28, 1, arm_pll_bypass_sels, ARRAY_SIZE(arm_pll_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_SYS_PLL1_BYPASS] = imx_clk_hw_mux_flags("sys_pll1_bypass", anatop_base + 0x94, 28, 1, sys_pll1_bypass_sels, ARRAY_SIZE(sys_pll1_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_SYS_PLL2_BYPASS] = imx_clk_hw_mux_flags("sys_pll2_bypass", anatop_base + 0x104, 28, 1, sys_pll2_bypass_sels, ARRAY_SIZE(sys_pll2_bypass_sels), CLK_SET_RATE_PARENT);
++	hws[IMX8MP_SYS_PLL3_BYPASS] = imx_clk_hw_mux_flags("sys_pll3_bypass", anatop_base + 0x114, 28, 1, sys_pll3_bypass_sels, ARRAY_SIZE(sys_pll3_bypass_sels), CLK_SET_RATE_PARENT);
+ 
+ 	hws[IMX8MP_AUDIO_PLL1_OUT] = imx_clk_hw_gate("audio_pll1_out", "audio_pll1_bypass", anatop_base, 13);
+ 	hws[IMX8MP_AUDIO_PLL2_OUT] = imx_clk_hw_gate("audio_pll2_out", "audio_pll2_bypass", anatop_base + 0x14, 13);
+-- 
+2.16.4
+
