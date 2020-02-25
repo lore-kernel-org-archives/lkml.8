@@ -2,125 +2,182 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16D6C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF59C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99962467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E322467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:56:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lRKk+qOV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgBYEx4 (ORCPT
+        id S1728943AbgBYE4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 23:53:56 -0500
-Received: from mga02.intel.com ([134.134.136.20]:17213 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbgBYEx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 23:53:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 20:53:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,482,1574150400"; 
-   d="scan'208";a="255826497"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
-  by orsmga002.jf.intel.com with ESMTP; 24 Feb 2020 20:53:50 -0800
-Date:   Tue, 25 Feb 2020 12:53:49 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-Message-ID: <20200225045349.GD63065@shbuild999.sh.intel.com>
-References: <20200223141147.GA53531@shbuild999.sh.intel.com>
- <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
- <20200224003301.GA5061@shbuild999.sh.intel.com>
- <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
- <20200224021915.GC5061@shbuild999.sh.intel.com>
- <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
- <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
- <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
- <20200225025748.GB63065@shbuild999.sh.intel.com>
- <CAHk-=wisa2xZHaCV=kh3seU-1kFDTjyWW9Ak3w5HH8nDvv7Snw@mail.gmail.com>
+        Mon, 24 Feb 2020 23:56:12 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55192 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbgBYE4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 23:56:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P4u4rJ005344;
+        Mon, 24 Feb 2020 22:56:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582606564;
+        bh=Hi3alq/PW0I95g8l0i49IRWre9otN2P6q1NyxVUBRIM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lRKk+qOVCrAFp2ZUgV9fdGqiLAneXtVAgGjDSU8tVxnLiNJsv2AiCuO39r+xqwvW/
+         B0gqdYxfL+sN0NQywS0W8wwx/ryYigAvqzUufIHOYBvwpSLY0S6Ny8EQKa3xkh7ODA
+         hYLtFFlCXV/7/R/+EPy4pOcuncOrWCvhNtFKLubs=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P4u4X1051429
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Feb 2020 22:56:04 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 22:56:03 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 22:56:03 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P4u01w018889;
+        Mon, 24 Feb 2020 22:56:01 -0600
+Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
+ Cadence platform to DT schema
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200217111519.29163-1-kishon@ti.com>
+ <20200217111519.29163-3-kishon@ti.com> <20200219203205.GA14068@bogus>
+ <2b927c66-d640-fb11-878a-c69a459a28f8@ti.com>
+ <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9be3291f-b0a8-a30f-57ad-f38bc7a8197c@ti.com>
+Date:   Tue, 25 Feb 2020 10:29:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wisa2xZHaCV=kh3seU-1kFDTjyWW9Ak3w5HH8nDvv7Snw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Rob,
 
-On Mon, Feb 24, 2020 at 07:15:15PM -0800, Linus Torvalds wrote:
-> On Mon, Feb 24, 2020 at 6:57 PM Feng Tang <feng.tang@intel.com> wrote:
-> >
-> > Thanks for the optimization patch for signal!
-> >
-> > It makes a big difference, that the performance score is tripled!
-> > bump from original 17000 to 54000. Also the gap between 5.0-rc6 and
-> > 5.0-rc6+Jiri's patch is reduced to around 2%.
+On 24/02/20 8:56 pm, Rob Herring wrote:
+> On Mon, Feb 24, 2020 at 4:14 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 20/02/20 2:02 am, Rob Herring wrote:
+>>> On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Include Cadence core DT schema and define the Cadence platform DT schema
+>>>> for both Host and Endpoint mode. Note: The Cadence core DT schema could
+>>>> be included for other platforms using Cadence PCIe core.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
+>>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
+>>>>  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
+>>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
+>>>>  MAINTAINERS                                   |  2 +-
+>>>>  5 files changed, 125 insertions(+), 94 deletions(-)
+>>>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>>>  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..2f605297f862
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>> @@ -0,0 +1,76 @@
+>>>> +# SPDX-License-Identifier: GPL-2.0-only
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Cadence PCIe host controller
+>>>> +
+>>>> +maintainers:
+>>>> +  - Tom Joseph <tjoseph@cadence.com>
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: /schemas/pci/pci-bus.yaml#
+>>>> +  - $ref: "cdns-pcie-host.yaml#"
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: cdns,cdns-pcie-host
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 3
+>>>> +
+>>>> +  reg-names:
+>>>> +    items:
+>>>> +      - const: reg
+>>>> +      - const: cfg
+>>>> +      - const: mem
+>>>> +
+>>>> +  msi-parent: true
+>>>> +
+>>>> +required:
+>>>> +  - reg
+>>>> +  - reg-names
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    bus {
+>>>> +        #address-cells = <2>;
+>>>> +        #size-cells = <2>;
+>>>> +
+>>>> +        pcie@fb000000 {
+>>>> +            compatible = "cdns,cdns-pcie-host";
+>>>> +            device_type = "pci";
+>>>> +            #address-cells = <3>;
+>>>> +            #size-cells = <2>;
+>>>> +            bus-range = <0x0 0xff>;
+>>>> +            linux,pci-domain = <0>;
+>>>> +            cdns,max-outbound-regions = <16>;
+>>>> +            cdns,no-bar-match-nbits = <32>;
+>>>
+>>>> +            vendor-id = /bits/ 16 <0x17cd>;
+>>>> +            device-id = /bits/ 16 <0x0200>;
+>>>
+>>> Please make these 32-bit as that is what the spec says.
+>>
+>> Can you clarify this is mentioned in which spec? PCI spec has both of
+>> these 16 bits and I checked the PCI binding doc but couldn't spot the
+>> size of these fields.
+>>
+>> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
 > 
-> Ok, so what I think is happening is that the exact same issue still
-> exists, but now with less contention it's not quite as noticeable.
-
-I thought that too. 
-
-Since we have the reproducable platform, we will keep an eye on it,
-and report back if anything found.
-
-You've mentioned the patch's effect on small system in another mail,
-I ran the benchmark on a 4 core Skylake desktop, and it only brought
-2% performance gain, as expected.
-
+> Section 4.1.2.1. The key point is the type is 'encode-int' which means
+> 32-bit. Keep in mind, that 16-bits was not a defined type when this
+> spec was written. We added that for FDT.
 > 
-> Can you find some Intel CPU hardware person who could spend a moment
-> on that odd 32-byte sub-block issue?
-> 
-> Considering that this effect apparently doesn't happen on any other
-> platform you've tested, and this Cascade Lake platform is the newly
-> released current Intel server platform, I think it's worth looking at.
- 
-I'll try to reach some silicon people, and get back if found anything.
+> Also, look at other instances of reading 'vendor-id' in the kernel.
 
+Thanks for clarifying.
 
-> That microbenchmark is not important on its own, but the odd timing
-> behaviour it has would be good to have explained.
-> 
-> And while the signal sending microbenchmark is not likely to be very
-> relevant to much anything else, I guess I'll apply the patch. Even if
-> it's just a microbenchmark, it's not like we haven't used those before
-> to pinpoint some very specific behavior. We used lmbench (and whatever
-> that odd page cache benchmark was) to do some fairly fundamental
-> optimizations back in the days.
-
-Thanks again for the patch.
-
-- Feng
-> 
-> If you fix the details on all the microbenchmarks you find, eventually
-> you probably do well on real loads too..
-> 
->            Linus
+Regards
+Kishon
