@@ -3,112 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644F0C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83FCC35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E9320CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9985B20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbgBYLmh (ORCPT
+        id S1730273AbgBYLrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:42:37 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47102 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729178AbgBYLmg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:42:36 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9E1941C208D; Tue, 25 Feb 2020 12:42:35 +0100 (CET)
-Date:   Tue, 25 Feb 2020 12:42:34 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     pavel@denx.de
-Cc:     linux-kernel@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 184/191] drm/amdgpu/smu10: fix
- smu10_get_clock_by_type_with_latency
-Message-ID: <20200225114234.GB2591@amd>
-References: <20200221072250.732482588@linuxfoundation.org>
- <20200221072312.821201678@linuxfoundation.org>
+        Tue, 25 Feb 2020 06:47:37 -0500
+Received: from mga03.intel.com ([134.134.136.65]:30644 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729510AbgBYLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:47:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 03:47:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="384447662"
+Received: from ayakove1-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.12.5])
+  by orsmga004.jf.intel.com with ESMTP; 25 Feb 2020 03:47:31 -0800
+Date:   Tue, 25 Feb 2020 13:47:28 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     swboyd@chromium.org, kernel@collabora.com,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 1/1] Add TPM 2.0 compatible I2C interface for chips with
+ cr50 firmware.
+Message-ID: <20200225114728.GA15662@linux.intel.com>
+References: <20200225110810.1321686-1-fabien.lahoudere@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221072312.821201678@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200225110810.1321686-1-fabien.lahoudere@collabora.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 12:08:07PM +0100, Fabien Lahoudere wrote:
+> The firmware running on the currently supported H1 MCU requires a
+> special driver to handle its specific protocol, and this makes it
+> unsuitable to use tpm_tis_core_* and instead it must implement the
+> underlying TPM protocol similar to the other I2C TPM drivers.
+> 
+> - All 4 byes of status register must be read/written at once.
+> - FIFO and burst count is limited to 63 and must be drained by AP.
+> - Provides an interrupt to indicate when read response data is ready
+> and when the TPM is finished processing write data.
+> 
+> This driver is based on the existing infineon I2C TPM driver, which
+> most closely matches the cr50 i2c protocol behavior.  The driver is
+> intentionally kept very similar in structure and style to the
+> corresponding drivers in coreboot and depthcharge.
+> 
+> Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+> [swboyd@chromium.org: Depend on i2c even if it's a module, replace
+> boilier plate with SPDX tag, drop asm/byteorder.h include, simplify
+> return from probe]
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
 
---+pHx0qQiF2pBVqBT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The code quality looks overally decent, checkpatch.pl does not complain
+and neither does sparse.
 
-Hi!
+My only concern is the lack of tested-by's.
 
-> From: Alex Deucher <alexander.deucher@amd.com>
->=20
-> [ Upstream commit 4d0a72b66065dd7e274bad6aa450196d42fd8f84 ]
->=20
-> Only send non-0 clocks to DC for validation.  This mirrors
-> what the windows driver does.
-
-> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/=
-gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> index 1546bc49004f8..3fa6e8123b8eb 100644
-> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> @@ -994,12 +994,15 @@ static int smu10_get_clock_by_type_with_latency(str=
-uct pp_hwmgr *hwmgr,
-> =20
->  	clocks->num_levels =3D 0;
->  	for (i =3D 0; i < pclk_vol_table->count; i++) {
-> -		clocks->data[i].clocks_in_khz =3D pclk_vol_table->entries[i].clk * 10;
-> -		clocks->data[i].latency_in_us =3D latency_required ?
-> -						smu10_get_mem_latency(hwmgr,
-> -						pclk_vol_table->entries[i].clk) :
-> -						0;
-> -		clocks->num_levels++;
-> +		if (pclk_vol_table->entries[i].clk) {
-> +			clocks->data[clocks->num_levels].clocks_in_khz =3D
-> +				pclk_vol_table->entries[i].clk * 10;
-> +			clocks->data[clocks->num_levels].latency_in_us =3D latency_required ?
-> +				smu10_get_mem_latency(hwmgr,
-> +						      pclk_vol_table->entries[i].clk) :
-> +				0;
-> +			clocks->num_levels++;
-> +		}
->  	}
-
-This results in very ugly wrapping. Better way would be to do
-"if !(pclk_vol_table->entries[i].clk) continue;"...
-
-"drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage" could be
-improved in similar way.
-
-Best regards,
-							Pavel
-
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---+pHx0qQiF2pBVqBT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5VCCoACgkQMOfwapXb+vLXQgCffdt12/YTK2DTCSDvMalPYVdb
-lCMAmwQ257909XAf0gGoMrf1TiEyAaJT
-=zSlR
------END PGP SIGNATURE-----
-
---+pHx0qQiF2pBVqBT--
+/Jarkko
