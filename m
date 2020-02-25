@@ -2,112 +2,83 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92484C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5191FC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD842082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279762082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AG/N+nAH"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vLp0hdjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbgBYRk1 (ORCPT
+        id S1731305AbgBYRkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:40:27 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:59865 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731254AbgBYRkU (ORCPT
+        Tue, 25 Feb 2020 12:40:31 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44866 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730934AbgBYRk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:40:20 -0500
-Received: by mail-pj1-f74.google.com with SMTP id z5so24917pjq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:40:20 -0800 (PST)
+        Tue, 25 Feb 2020 12:40:28 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so266475otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:40:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S6rjWX4zh65J8qRPSZGN8zFIqvl385Xc8XQW3COWMIA=;
-        b=AG/N+nAHceAaZJA2t3Ejlewnc800yTOYWW+XxDFlkHuEYsEQXM8laR8JPO6q9sZexT
-         Qx9MR9PKuF1TFGK9rO4WrVGkhDFRUGBo3nTHm42lh1aY7DKUsRdqOVC006GRSybPTBpy
-         CwdI4+LxD7e+4hZQ2qE/GwtlmXo1ZC8r/ZErTUuiCdp5rmFmAgH5PeFSBDiA+eNFZEE1
-         7vUfoZhf7+iQVtJY9b36r4K3TymVF9QDFXBobvvCwA1YLJK0qNYbbXNNu3MS1aQw9yMX
-         I0P+8rGbiMpOXi6P0ZHT3Ij2kkgGsyVJDrLVC8dfHFUYAz5mItfFosYAxy/OwBsM9sCx
-         TRAw==
+        bh=iYtNZ1xT6uFxT8TBLjArkPtxeHvwasJTNpB6uOAhuuM=;
+        b=vLp0hdjATiQFiYDWcV8uCuBKu/MDvQb4xSQ1J2o3Vxgi7RVy4e9ZsEWQQ575qDQTRW
+         9Ew2R9vixKS3jn2cv6NlgWjfNAW6YIUurfP3C1fbwdwSoXA1YM/2EqIpb0ey5EVAye/2
+         g7YFbsboxePJx3dlbwa2HI/49qSkNpDa3LJOffu0GP+ve/NRc8lQB3owKvwOeviY2mj4
+         8eEE3QNGJ5yB88CHoSMU34so4iDVao/D5iWnq7tGoTPXsH1XupjeGJmpGiRQZtCG9hVm
+         NR3A1af0MhepiT/G397PMavZQD/g6sbtFzQouSzq8W+0QnYrE5g1H1jpC0v0pok7NBHK
+         rRuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=S6rjWX4zh65J8qRPSZGN8zFIqvl385Xc8XQW3COWMIA=;
-        b=ttX8FfMUY1+Po29ta0WS7hSp0YpHxQpzZ4sEhhg7kGXpqwh96ExqMj4ohNa1ZzRvw+
-         3H+zQtM/JsT69Gu9qj0XG58il0uPbI8n8P+LlaP6tBckSmyht9S8//qYcSx4/T4h16x4
-         n0x/01PxIk0H3mooetQW9t3dX77BZUOlGCAPbxtNLmtj3NuMH39H1gOjzz/jmI/PT4zv
-         F00mXPUm6+HQ63NU1IEYTpzMWxRwO/P+dfxjQrf18Eu2Y5dAcfW7+IyyLxAZWIaqr9P5
-         IPeN12B5dhCaHq+Ltb6o78Wu++Ie+cK3b7F+u6bQ6QjTzmixSzzoNMXlsofA52yG0EfQ
-         ccSg==
-X-Gm-Message-State: APjAAAVN8MBZknQq1mmyMsqYB1stW4dMb7vyMPuTHTkEBW31DgXAgBEa
-        OhT0Pv8howDqKA2NVPafYTvTmQdCzAC6spg/E1w=
-X-Google-Smtp-Source: APXvYqxga1IezAaj/7lzDoz6ajYcBY13ZBQ7EtWObgAVtXX9jDsYBp8jjd+EWNf7mvFW/jyX4NCc+z3bne5DtOlbYaQ=
-X-Received: by 2002:a63:e044:: with SMTP id n4mr57741015pgj.338.1582652419605;
- Tue, 25 Feb 2020 09:40:19 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:39:33 -0800
-In-Reply-To: <20200225173933.74818-1-samitolvanen@google.com>
-Message-Id: <20200225173933.74818-13-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20200225173933.74818-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v9 12/12] efi/libstub: disable SCS
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iYtNZ1xT6uFxT8TBLjArkPtxeHvwasJTNpB6uOAhuuM=;
+        b=LTf2pPWrjGGgINwQ4+BnZvWgAwxMBp77VdKEDDAhNKW78jWIa7cTwZL0hGOMfVsRzQ
+         V0mJoAucnRzxYKc7tlY9oHqHjM9SYs2hbeWqfawiiWV/ObjwCH19ZVHphmYozK/EAynz
+         G3rDZy2cFzqVUHrcPaZpiDTfVGgFNPQ2YQwP7HFj2Lqx0aZ1+C5HnmDniufVZjS+xdh/
+         Q+YVA0l7Vc0+SzQBvNqR/IqUf9DTqaGccoWSmDOkO9Nk8EbG+pEXv4bNeaoEOlmg40f9
+         LRwQx8deOXLVTMrmS6OEHhikrw1fBUQUu+uNvD2eb4aRYKhb3S2m+gfifUjjRy/7lg3N
+         8vrw==
+X-Gm-Message-State: APjAAAU93+wAY7+ihZZvJcjEAT0btPfgSqlkGGqvKGbSvmHs9eMySk71
+        SmNZY/CaByM1tYcC28dU2+0N2a//EPKKfPMBirUeHw==
+X-Google-Smtp-Source: APXvYqwGTSmHP8luhoLnsu9zg2hn84azyAtuqIl0pEBs9Aisv3xWMqq2Kqhgt07QP/Tmo0fTgzoRihjhPo9DWyzmYmA=
+X-Received: by 2002:a9d:64d8:: with SMTP id n24mr42748771otl.71.1582652428399;
+ Tue, 25 Feb 2020 09:40:28 -0800 (PST)
+MIME-Version: 1.0
+References: <20200225161927.hvftuq7kjn547fyj@kili.mountain> <20200225162055.amtosfy7m35aivxg@kili.mountain>
+In-Reply-To: <20200225162055.amtosfy7m35aivxg@kili.mountain>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 25 Feb 2020 09:40:17 -0800
+Message-ID: <CAPcyv4h99vYcxgJ_9NKtYbhAGsifTG0JCRYq-j2t_CQinHZVcw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] libnvdimm: Out of bounds read in __nd_ioctl()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shadow stacks are not available in the EFI stub, filter out SCS flags.
+On Tue, Feb 25, 2020 at 8:21 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> The "cmd" comes from the user and it can be up to 255.  It it's more
+> than the number of bits in long, it results out of bounds read when we
+> check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+> ND_CMD_CALL (10) so I added a compare against that.
+>
+> Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Suggested-by: James Morse <james.morse@arm.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- drivers/firmware/efi/libstub/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 98a81576213d..ee5c37c401c9 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -30,6 +30,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 				   $(call cc-option,-fno-stack-protector) \
- 				   -D__DISABLE_EXPORTS
- 
-+#  remove SCS flags from all objects in this directory
-+KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
-+
- GCOV_PROFILE			:= n
- KASAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Looks good, applied.
