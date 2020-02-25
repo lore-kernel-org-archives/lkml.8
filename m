@@ -2,139 +2,91 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0EEC35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A8BC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC04A2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397892082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEITAgIl"
+	dkim=pass (1024-bit key) header.d=alibaba-inc.com header.i=@alibaba-inc.com header.b="vcnxWliA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgBYHwB (ORCPT
+        id S1729637AbgBYHxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:52:01 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55022 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgBYHwA (ORCPT
+        Tue, 25 Feb 2020 02:53:23 -0500
+Received: from out0-138.mail.aliyun.com ([140.205.0.138]:40245 "EHLO
+        out0-138.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729111AbgBYHxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:52:00 -0500
-Received: by mail-pj1-f65.google.com with SMTP id dw13so891078pjb.4;
-        Mon, 24 Feb 2020 23:51:59 -0800 (PST)
+        Tue, 25 Feb 2020 02:53:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T1LnGLoBaV2TTPUF6toPUaaqUjCR3lePLHm0eYLmXyU=;
-        b=iEITAgIl00kyXUWSBKvpCYdnRJXBwyc+KUDYeJYmABzTDgw3gcRNZBbg8LlnJz/oNX
-         v8YYzG1FvT8RwvFlEPaC+A1kXJd/owZ7a+ucuUQ6OtLBcpN3As8Clp6EahNILoAjLLYL
-         QJdwLi7cthjDRR+Sc+AmJ76XAMdAwNQJHg6Q12G20zFoNhffXATJn4PtI6qlYuIisw20
-         fHDE340iO7iweLR3SccBAnIXnD4bG5lWttzj9AE4RlRsqH+6EeznJ6uDGhmOas6WMXIK
-         0T99p1wIA1w8NTUrngcs5PxIklGlUbgiXe328C+qNmbbhTW7hZtkkXPAOpnXlA/iajxO
-         H0RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T1LnGLoBaV2TTPUF6toPUaaqUjCR3lePLHm0eYLmXyU=;
-        b=H4b+KqLhGJ9ASW5rLFfQe6wx1OGriGTWvrmQHUy+yNuMRngbZSY5EX6i02BXJA+1x9
-         PQzVKL0zD1abckSHuoR8fSsVE0e0p7HZJLNnqLVOsnYUUXM34RChr2bt+r9ukxixQq24
-         w+opFE2fKXucJ+aCmUEU4/e4gjPS9X4XqA60OcdX7U6pZJqX/srYuzWkoMDUh7pAph1+
-         rvG5fzc4Cv3WkSizDv19tFIyJVx8SPzhS5qsoFqJ9PTLVkiLhPb6E9gPKuoa4pe9pXmj
-         nuoU+A9eYwn2aqkcXEksrLqduxKeyU0CbIY8RnCzKC7p0YaI8eyg3J6yGZQf3QnXfAcp
-         2MgA==
-X-Gm-Message-State: APjAAAU2CbJ0L5fXdQUMQEvXACcNuxFHhDVUfLiHuRhOQuG8zkzKKiap
-        qeOrdzxS1ZM38wQEzoKUUQM=
-X-Google-Smtp-Source: APXvYqx+5pXqKxI4ULLR6ATgJX5fTRooYMW74dM+2ZDktjJeVYsoT2ZTDKe76IT+s1v84AUfEpO83g==
-X-Received: by 2002:a17:902:7c07:: with SMTP id x7mr3617020pll.232.1582617118595;
-        Mon, 24 Feb 2020 23:51:58 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id w189sm15983184pfw.157.2020.02.24.23.51.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Feb 2020 23:51:58 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:21:55 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Barry Song <baohua@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Subject: Re: [PATCH v2 16/18] clocksource: Replace setup_irq() by
- request_irq()
-Message-ID: <20200225075155.GA6735@afzalpc>
-References: <4e565e7afa2f2a0ed89774d0a1597649173b1746.1582471508.git.afzal.mohd.ma@gmail.com>
- <202002251058.U8V8FHji%lkp@intel.com>
+        d=alibaba-inc.com; s=default;
+        t=1582617199; h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type;
+        bh=/puhnCRsreW0Ri4vztcPQdwutZNhsyKqRStaan379Pc=;
+        b=vcnxWliAjKnw0QmJv+mfVhYVY5ahTkbQqi3ARAi4BWNDotPq8gVuQfjIy50MzIocMHyaGqu8bwHoV7Og8z/Ili56Q5i1X1wcLTg/t1uvFsaZWUOABpgU4cTCrYrRydDtBwZWqu7ANo3K9ipIs4gD3Tm2FJrjqRMFOp2r85QnSok=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e02c03293;MF=bangcai.hrg@alibaba-inc.com;NM=1;PH=DW;RN=16;SR=0;TI=W4_5790132_DEFAULT_0AB10216_1582615630451_o7001c563;
+Received: from WS-web (bangcai.hrg@alibaba-inc.com[W4_5790132_DEFAULT_0AB10216_1582615630451_o7001c563]) by e01e04486.eu6 at Tue, 25 Feb 2020 15:53:17 +0800
+Date:   Tue, 25 Feb 2020 15:53:17 +0800
+From:   "=?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?=" <bangcai.hrg@alibaba-inc.com>
+To:     "Wanpeng Li" <kernellwp@gmail.com>
+Cc:     "namit" <namit@vmware.com>, "peterz" <peterz@infradead.org>,
+        "pbonzini" <pbonzini@redhat.com>,
+        "dave.hansen" <dave.hansen@intel.com>, "mingo" <mingo@redhat.com>,
+        "tglx" <tglx@linutronix.de>, "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "dave.hansen" <dave.hansen@linux.intel.com>, "bp" <bp@alien8.de>,
+        "luto" <luto@kernel.org>, "kvm" <kvm@vger.kernel.org>,
+        "=?UTF-8?B?5p6X5rC45ZCsKOa1t+aeqyk=?=" <yongting.lyt@alibaba-inc.com>,
+        "=?UTF-8?B?5ZC05ZCv57++KOWQr+e/vik=?=" <qixuan.wqx@alibaba-inc.com>,
+        "herongguang" <herongguang@linux.alibaba.com>
+Reply-To: "=?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?=" 
+          <bangcai.hrg@alibaba-inc.com>
+Message-ID: <660daad7-afb0-496d-9f40-a1162d5451e2.bangcai.hrg@alibaba-inc.com>
+Subject: =?UTF-8?B?5Zue5aSN77yaW1JGQ10gUXVlc3Rpb24gYWJvdXQgYXN5bmMgVExCIGZsdXNoIGFuZCBLVk0g?=
+  =?UTF-8?B?cHYgdGxiIGltcHJvdmVtZW50cw==?=
+X-Mailer: [Alimail-Mailagent revision 59873560][W4_5790132][DEFAULT][Chrome]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202002251058.U8V8FHji%lkp@intel.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+References: <07348bb2-c8a5-41d0-afca-26c1056570a5.bangcai.hrg@alibaba-inc.com>,<CANRm+CwZq=FbCwRcyO=C7YinLevmMuVVu9auwPqyho3o-4Y-wQ@mail.gmail.com>
+x-aliyun-mail-creator: W4_5790132_DEFAULT_M2ITW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzgwLjAuMzk4Ny4xMTYgU2FmYXJpLzUzNy4zNg==3L
+In-Reply-To: <CANRm+CwZq=FbCwRcyO=C7YinLevmMuVVu9auwPqyho3o-4Y-wQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Feb 25, 2020 at 10:52:55AM +0800, kbuild test robot wrote:
-
-> Thank you for the patch! Yet something to improve:
-
-And thanks for the report, i will try to improve :)
-
-> [auto build test ERROR on tip/timers/core]
-> [also build test ERROR on arm-soc/for-next powerpc/next linus/master v5.6-rc3 next-20200221]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-i did use --base option w/ git format-patch, though the output of it
-was rigged to indicate a human understandable start point that can be
-parsed by the script as well.
-
-In cover letter, there was "base-commit: v5.6-rc1", test robot cannot
-make use of that information ?, since my thought was that your script
-would create a branch with any valid start point following
-"base-commit:"
-
->    drivers/clocksource/timer-prima2.c: In function 'sirfsoc_prima2_timer_init':
-> >> drivers/clocksource/timer-prima2.c:213:2: error: 'sirfsoc_timer_irq' undeclared (first use in this function); did you mean 'sirfsoc_timer_read'?
->      sirfsoc_timer_irq.irq = irq_of_parse_and_map(np, 0);
->      ^~~~~~~~~~~~~~~~~
->      sirfsoc_timer_read
->    drivers/clocksource/timer-prima2.c:213:2: note: each undeclared identifier is reported only once for each function it appears in
-
-Does the robot keep the log of patches that are successfully built ?,
-w/ v1, i did not receive similar report, and tried to find if test
-robot has successfully built v1, but couldn't find out.
-
-Regards
-afzal
+PiBPbiBUdWUsIDI1IEZlYiAyMDIwIGF0IDEyOjEyLCDkvZXlrrnlhYko6YKm6YeHKSA8YmFuZ2Nh
+aS5ocmdAYWxpYmFiYS1pbmMuY29tPiB3cm90ZToKPj4KPj4gSGkgdGhlcmUsCj4+Cj4+IEkgc2F3
+IHRoaXMgYXN5bmMgVExCIGZsdXNoIHBhdGNoIGF0IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3Bh
+dGNod29yay9wYXRjaC8xMDgyNDgxLyAsIGFuZCBJIGFtIHdvbmRlcmluZyBhZnRlciBvbmUgeWVh
+ciwgZG8geW91IHRoaW5rIGlmIHRoaXMgcGF0Y2ggaXMgcHJhY3RpY2FsIG9yIHRoZXJlIGFyZSBm
+dW5jdGlvbmFsIGZsYXdzPwo+PiBGcm9tIG15IFBPViwgTmFkYXYncyBwYXRjaCBzZWVtcyBoYXMg
+bm8gb2J2aW91cyBmbGF3LiBCdXQgSSBhbSBub3QgZmFtaWxpYXIgYWJvdXQgdGhlIHJlbGF0aW9u
+c2hpcCBiZXR3ZWVuIENQVSdzIHNwZWN1bGF0aW9uIGV4ZWMgYW5kIHN0YWxlIFRMQiwgc2luY2Ug
+aXQncyB1c3VhbGx5IHRyYW5zcGFyZW50IGZyb20gcHJvZ3JhbWluZy4gSW4gd2hpY2ggY29uZGl0
+aW9uIHdvdWxkIG1hY2hpbmUgY2hlY2sgb2NjdXJzPyBJcyB0aGVyZSBzb21lIHJlZmVyZW5jZSBJ
+IGNhbiBsZWFybj8KPj4gQlRXLCBJIGFtIHRyeWluZyB0byBpbXByb3ZlIGt2bSBwdiB0bGIgZmx1
+c2ggdGhhdCBpZiBhIHZDUFUgaXMgcHJlZW1wdGVkLCBhcyBpbml0aWF0aW5nIENQVSBpcyBub3Qg
+c2VuZGluZyBJUEkgdG8gYW5kIHdhaXRpbmcgZm9yIHRoZSBwcmVlbXB0ZWQgdkNQVSwgd2hlbiB0
+aGUgcHJlZW1wdGVkIHZDUFUgaXMgcmVzdW1pbmcsIEkgd2FudCB0aGUgVk1NIHRvIGluamVjdCBh
+biBpbnRlcnJ1cHQsIHBlcmhhcHMgTk1JLCB0byB0aGUgdkNQVSBhbmQgbGV0dGluZyB2Q1BVIGZs
+dXNoIFRMQiBpbnN0ZWFkIG9mIGZsdXNoIFRMQiBmb3IgdGhlIHZDUFUsIGluIGNhc2UgdGhlIHZD
+UFUgaXMgbm90IGluIGtlcm5lbCBtb2RlIG9yIGRpc2FibGVkIGludGVycnVwdCwgb3RoZXJ3aXNl
+IHN0aWNrIHRvIFZNTSBmbHVzaC4gU2luY2UgVk1NIGZsdXNoIHVzaW5nIElOVlZQSUQgd291bGQg
+Zmx1c2ggYWxsIFRMQiBvZiBhbGwgUENJRCB0aHVzIGhhcyBzb21lIG5lZ2F0aXZlIHBlcmZvcm1h
+bmNlIGltcGFjdGluZyBvbiB0aGUgcHJlZW1wdGVkIHZDUFUuIFNvIGlzIHRoZXJlIHNhbWUgcHJv
+YmxlbSBhcyB0aGUgYXN5bmMgVExCIGZsdXNoIHBhdGNoPwoKPiBQViBUTEIgU2hvb3Rkb3duIGlz
+IGRpc2FibGVkIGluIGRlZGljYXRlZCBzY2VuYXJpbywgSSBiZWxpZXZlIHRoZXJlCj4gYXJlIGFs
+cmVhZHkgaGVhdnkgdGxiIG1pc3NlcyBpbiBvdmVyY29tbWl0IHNjZW5hcmlvcyBiZWZvcmUgdGhp
+cwo+IGZlYXR1cmUsIHNvIGZsdXNoIGFsbCBUTEIgYXNzb2NpYXRlZCB3aXRoIG9uZSBzcGVjaWZp
+YyBWUElEIHdpbGwgbm90Cj4gd29yc2UgdGhhdCBtdWNoLgoKSWYgdmNwdXMgcnVubmluZyBvbiBv
+bmUgcGNwdSBpcyBsaW1pdGVkIHRvIGEgZmV3LCBmcm9tIG15IHRlc3QsIHRoZXJlIApjYW4gc3Rp
+bGwgYmUgc29tZSBiZW5lZmljaWFsLiBFc3BlY2lhbGx5IGlmIHdlIGNhbiBtb3ZlIGFsbCB0aGUg
+bG9naWMgdG8KVk1NIGVsaW1pbmF0aW5nIHdhaXRpbmcgb2YgSVBJLCBob3dldmVyIGNvcnJlY3Ru
+ZXNzIG9mIGZ1bmN0aW9uYWxseSAKaXMgYSBjb25jZXJuLiBUaGlzIGlzIGFsc28gd2h5IEkgZm91
+bmQgTmFkYXYncyBwYXRjaCwgZG8geW91IGhhdmUgCmFueSBhZHZpY2Ugb24gdGhpcz8=
