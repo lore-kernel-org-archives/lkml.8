@@ -2,453 +2,100 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C7DC35E17
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E497C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292D621D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:07:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BZO6oZ6A"
+	by mail.kernel.org (Postfix) with ESMTP id EC1C32176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582664914;
+	bh=3es8V6fUrYVM+iZIUY/IWNaP1qhHHLlybmCtZyRpMik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tLcTlspp0c71T/QVmGOxC0e8A4WnhL6gP1h0WQ7Ac3gQLPFNRDVn+DEfC1XsWTx2z
+	 lDndgMdDM00vxeM9DyvrCnt2Avy5NCPgv7nY5Y+CnJhxUJwy4LN+m9ngVahp1TfiUt
+	 FrLw8CRBNofJJTmnDMTQUvnHLb67vGDnLlYaLQ2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgBYVHt (ORCPT
+        id S1728849AbgBYVId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:07:49 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35111 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728688AbgBYVHt (ORCPT
+        Tue, 25 Feb 2020 16:08:33 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38254 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgBYVIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:07:49 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 7so167202pgr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:07:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TKd4I5/WwOk7TgiwtjETXh7Zo7Mjc0q4nGb96fr6GK0=;
-        b=BZO6oZ6A8cZmZqloX0DKy1GOEbceLI9chiAHebEX2VgYIjjy2O+rybKtsk8PsauMss
-         wKVQhwbcAHqdbU/nCqot9JTYXaSI30aTzB8stl7tMJxbsnYzRLifKayBEYI+9/gsHzRQ
-         gvG3xJqT55s5r9hvHnvwCO/GWxtsVG+L620Gk=
+        Tue, 25 Feb 2020 16:08:32 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so894279oth.5;
+        Tue, 25 Feb 2020 13:08:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TKd4I5/WwOk7TgiwtjETXh7Zo7Mjc0q4nGb96fr6GK0=;
-        b=a6AL8I2+cwjtS0C/d5vnoVDEPBkCupt9Z25PeRoJYBQPAcv6b0rtTHcQtG3YBHldHt
-         BNwQi5c7YGg32hrPTK0A6+oHfwtmE2nILzZXxqmgqHAUF3SQDsvfYsbb70Z7HdMwFS2w
-         Qr0640+xSXQp650vvZKTShIQKevPnCNnQ6V+JBKh+D0kYnzi6h4V94O64n5miQKTJfwR
-         iuDTmpF4/xa3aMXxyIQWMcf3K0yFRQs4XDxPrcNYLddiKM/MeHPo7HELP1fygfZIL/Py
-         nfxYYe7BXM9fXeMR5MKjF0UwqbKdw91mB+sa2jMqi2TfKjZ+M6UT0kaiHnrO+tLOg8H8
-         4lUg==
-X-Gm-Message-State: APjAAAVvkv7xz2siBcANct3WNAvblBOOnT0AM55F2YXSrS5nrBKc6vtM
-        MaGVak0qHrHhcZI6cc2SvQOfyw==
-X-Google-Smtp-Source: APXvYqyXkndaV7rJA0zMXDICnSqxAjerRHL3b37R/Kb6u2Hc1kQ2oyP1AQMzZ2Y3ORigrLDdZyOhiw==
-X-Received: by 2002:aa7:83c7:: with SMTP id j7mr638913pfn.228.1582664867330;
-        Tue, 25 Feb 2020 13:07:47 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i3sm18067049pfg.94.2020.02.25.13.07.45
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YcXK2d/HNObTwr0I3OOYmF2ixmUF+zbcJyMaSLcYMLI=;
+        b=K/eLoDPIfmh/Ql/YsDqioYbvcmUyXbe0gXafPjbcgXbyRTVWE+XvjWfW6ZB6FN3IWx
+         NWCQSzqwKcev6H4XM1fOB6hVkDyPJ73H8tsz5gzkYZg/t5nXD8hEaWRa7hBayrv/qR+1
+         WTZVADyEetn1Y7I8G1tZ2HcgiAo6HKGYHjrdmSEzpTYedmVD4QYygibh06cp+1URJ1+S
+         dRidn6mBpFV11Y0WB7lAg23h9MHZdlHhTQELiOick45sZHk7eXnh9g1w+L/jq2LrOOzC
+         K0yh06l5OrJbbQclp/gHpxOpzP+GkcttRxSELO3OffIdeHd4JmXRIugzRp4ACYddQuqU
+         HoEw==
+X-Gm-Message-State: APjAAAVZQ7kPFfUMYd7NKlmi+oXK8ESMGnSW5Hux2iCKc/nrR2ANu/xt
+        7oNn1m9of1ZX6zLQ//oZmlLX0pw=
+X-Google-Smtp-Source: APXvYqwKnMmf0Icu7p/ThX9TbfyLhc/rH2s+Hnl3NlaO+1ryh7LNYdLP1osM+tNj+tl8U5W0+UOwQQ==
+X-Received: by 2002:a9d:7c81:: with SMTP id q1mr408456otn.112.1582664911711;
+        Tue, 25 Feb 2020 13:08:31 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h15sm6095843otq.67.2020.02.25.13.08.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 13:07:46 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:07:44 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Subject: Re: [RFC PATCH v9 17/27] x86/cet/shstk: User-mode Shadow Stack
- support
-Message-ID: <202002251306.2011C9374@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-18-yu-cheng.yu@intel.com>
+        Tue, 25 Feb 2020 13:08:31 -0800 (PST)
+Received: (nullmailer pid 31660 invoked by uid 1000);
+        Tue, 25 Feb 2020 21:08:30 -0000
+Date:   Tue, 25 Feb 2020 15:08:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Cc:     robh+dt@kernel.org, frowand.list@gmail.com,
+        Patrick Daly <pdaly@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lmark@codeaurora.org, pratikp@codeaurora.org,
+        kernel-team@android.com,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Subject: Re: [PATCH] of: of_reserved_mem: Increase limit on number of
+ reserved regions
+Message-ID: <20200225210830.GA31602@bogus>
+References: <1582567352-4664-1-git-send-email-isaacm@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205181935.3712-18-yu-cheng.yu@intel.com>
+In-Reply-To: <1582567352-4664-1-git-send-email-isaacm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:19:25AM -0800, Yu-cheng Yu wrote:
-> This patch adds basic Shadow Stack (SHSTK) enabling/disabling routines.
-> A task's SHSTK is allocated from memory with VM_SHSTK flag and read-only
-> protection.  It has a fixed size of RLIMIT_STACK.
+On Mon, 24 Feb 2020 10:02:32 -0800, "Isaac J. Manjarres" wrote:
+> From: Patrick Daly <pdaly@codeaurora.org>
 > 
-> v9:
-> - Change cpu_feature_enabled() to static_cpu_has().
-> - Merge cet_disable_shstk to cet_disable_free_shstk.
-> - Remove the empty slot at the top of the SHSTK, as it is not needed.
-> - Move do_mmap_locked() to alloc_shstk(), which is a static function.
+> Certain SoCs need to support a large amount of reserved memory
+> regions. For example, Qualcomm's SM8150 SoC requires that 20
+> regions of memory be reserved for a variety of reasons (e.g.
+> loading a peripheral subsystem's firmware image into a
+> particular space).
 > 
-> v6:
-> - Create a function do_mmap_locked() for SHSTK allocation.
+> When adding more reserved memory regions to cater to different
+> usecases, the remaining number of reserved memory regions--12
+> to be exact--becomes too small. Thus, double the existing
+> limit of reserved memory regions.
 > 
-> v2:
-> - Change noshstk to no_cet_shstk.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
 > ---
->  arch/x86/include/asm/cet.h                    |  31 +++++
->  arch/x86/include/asm/disabled-features.h      |   8 +-
->  arch/x86/include/asm/processor.h              |   5 +
->  arch/x86/kernel/Makefile                      |   2 +
->  arch/x86/kernel/cet.c                         | 121 ++++++++++++++++++
->  arch/x86/kernel/cpu/common.c                  |  25 ++++
->  arch/x86/kernel/process.c                     |   1 +
->  .../arch/x86/include/asm/disabled-features.h  |   8 +-
->  8 files changed, 199 insertions(+), 2 deletions(-)
->  create mode 100644 arch/x86/include/asm/cet.h
->  create mode 100644 arch/x86/kernel/cet.c
-> 
-> diff --git a/arch/x86/include/asm/cet.h b/arch/x86/include/asm/cet.h
-> new file mode 100644
-> index 000000000000..c44c991ca91f
-> --- /dev/null
-> +++ b/arch/x86/include/asm/cet.h
-> @@ -0,0 +1,31 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_CET_H
-> +#define _ASM_X86_CET_H
-> +
-> +#ifndef __ASSEMBLY__
-> +#include <linux/types.h>
-> +
-> +struct task_struct;
-> +/*
-> + * Per-thread CET status
-> + */
-> +struct cet_status {
-> +	unsigned long	shstk_base;
-> +	unsigned long	shstk_size;
-> +	unsigned int	shstk_enabled:1;
-> +};
-> +
-> +#ifdef CONFIG_X86_INTEL_CET
-> +int cet_setup_shstk(void);
-> +void cet_disable_free_shstk(struct task_struct *p);
-> +#else
-> +static inline void cet_disable_free_shstk(struct task_struct *p) {}
-> +#endif
-> +
-> +#define cpu_x86_cet_enabled() \
-> +	(static_cpu_has(X86_FEATURE_SHSTK) || \
-> +	 static_cpu_has(X86_FEATURE_IBT))
-> +
-> +#endif /* __ASSEMBLY__ */
-> +
-> +#endif /* _ASM_X86_CET_H */
-> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-> index 8e1d0bb46361..e1454509ad83 100644
-> --- a/arch/x86/include/asm/disabled-features.h
-> +++ b/arch/x86/include/asm/disabled-features.h
-> @@ -62,6 +62,12 @@
->  # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
->  #endif
->  
-> +#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-> +#define DISABLE_SHSTK	0
-> +#else
-> +#define DISABLE_SHSTK	(1<<(X86_FEATURE_SHSTK & 31))
-> +#endif
-> +
->  /*
->   * Make sure to add features to the correct mask
->   */
-> @@ -81,7 +87,7 @@
->  #define DISABLED_MASK13	0
->  #define DISABLED_MASK14	0
->  #define DISABLED_MASK15	0
-> -#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP)
-> +#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP|DISABLE_SHSTK)
->  #define DISABLED_MASK17	0
->  #define DISABLED_MASK18	0
->  #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index 0340aad3f2fc..793d210e64da 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -25,6 +25,7 @@ struct vm86;
->  #include <asm/special_insns.h>
->  #include <asm/fpu/types.h>
->  #include <asm/unwind_hints.h>
-> +#include <asm/cet.h>
->  
->  #include <linux/personality.h>
->  #include <linux/cache.h>
-> @@ -539,6 +540,10 @@ struct thread_struct {
->  	unsigned int		sig_on_uaccess_err:1;
->  	unsigned int		uaccess_err:1;	/* uaccess failed */
->  
-> +#ifdef CONFIG_X86_INTEL_CET
-> +	struct cet_status	cet;
-> +#endif
-> +
->  	/* Floating point and extended processor state */
->  	struct fpu		fpu;
->  	/*
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index 6175e370ee4a..b8c1ea4ab7eb 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -142,6 +142,8 @@ obj-$(CONFIG_UNWINDER_ORC)		+= unwind_orc.o
->  obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
->  obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
->  
-> +obj-$(CONFIG_X86_INTEL_CET)		+= cet.o
-> +
->  ###
->  # 64 bit specific files
->  ifeq ($(CONFIG_X86_64),y)
-> diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
-> new file mode 100644
-> index 000000000000..b4c7d88e9a8f
-> --- /dev/null
-> +++ b/arch/x86/kernel/cet.c
-> @@ -0,0 +1,121 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * cet.c - Control-flow Enforcement (CET)
-> + *
-> + * Copyright (c) 2019, Intel Corporation.
-> + * Yu-cheng Yu <yu-cheng.yu@intel.com>
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/mm.h>
-> +#include <linux/mman.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/sched/signal.h>
-> +#include <linux/compat.h>
-> +#include <asm/msr.h>
-> +#include <asm/user.h>
-> +#include <asm/fpu/internal.h>
-> +#include <asm/fpu/xstate.h>
-> +#include <asm/fpu/types.h>
-> +#include <asm/cet.h>
-> +
-> +static void start_update_msrs(void)
-> +{
-> +	fpregs_lock();
-> +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-> +		__fpregs_load_activate();
-> +}
-> +
-> +static void end_update_msrs(void)
-> +{
-> +	fpregs_unlock();
-> +}
-> +
-> +static unsigned long cet_get_shstk_addr(void)
-> +{
-> +	struct fpu *fpu = &current->thread.fpu;
-> +	unsigned long ssp = 0;
-> +
-> +	fpregs_lock();
-> +
-> +	if (fpregs_state_valid(fpu, smp_processor_id())) {
-> +		rdmsrl(MSR_IA32_PL3_SSP, ssp);
-> +	} else {
-> +		struct cet_user_state *p;
-> +
-> +		p = get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER);
-> +		if (p)
-> +			ssp = p->user_ssp;
-> +	}
-> +
-> +	fpregs_unlock();
-> +	return ssp;
-> +}
-> +
-> +static unsigned long alloc_shstk(unsigned long size)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +	unsigned long addr, populate;
-> +
-> +	down_write(&mm->mmap_sem);
-> +	addr = do_mmap(NULL, 0, size, PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE,
-> +		       VM_SHSTK, 0, &populate, NULL);
-> +	up_write(&mm->mmap_sem);
-> +
-> +	if (populate)
-> +		mm_populate(addr, populate);
-> +
-> +	return addr;
-> +}
-> +
-> +int cet_setup_shstk(void)
-> +{
-> +	unsigned long addr, size;
-> +	struct cet_status *cet = &current->thread.cet;
-> +
-> +	if (!static_cpu_has(X86_FEATURE_SHSTK))
-> +		return -EOPNOTSUPP;
-> +
-> +	size = rlimit(RLIMIT_STACK);
-> +	addr = alloc_shstk(size);
-> +
-> +	if (IS_ERR((void *)addr))
-> +		return PTR_ERR((void *)addr);
-> +
-> +	cet->shstk_base = addr;
-> +	cet->shstk_size = size;
-> +	cet->shstk_enabled = 1;
-> +
-> +	start_update_msrs();
-> +	wrmsrl(MSR_IA32_PL3_SSP, addr + size);
-> +	wrmsrl(MSR_IA32_U_CET, MSR_IA32_CET_SHSTK_EN);
-> +	end_update_msrs();
-> +	return 0;
-> +}
-> +
-> +void cet_disable_free_shstk(struct task_struct *tsk)
-> +{
-> +	struct cet_status *cet = &tsk->thread.cet;
-> +
-> +	if (!static_cpu_has(X86_FEATURE_SHSTK) ||
-> +	    !cet->shstk_enabled || !cet->shstk_base)
-> +		return;
-> +
-> +	if (!tsk->mm || (tsk->mm != current->mm))
-> +		return;
-> +
-> +	if (tsk == current) {
-> +		u64 msr_val;
-> +
-> +		start_update_msrs();
-> +		rdmsrl(MSR_IA32_U_CET, msr_val);
-> +		wrmsrl(MSR_IA32_U_CET, msr_val & ~MSR_IA32_CET_SHSTK_EN);
-> +		end_update_msrs();
-> +	}
-> +
-> +	vm_munmap(cet->shstk_base, cet->shstk_size);
-> +	cet->shstk_base = 0;
-> +	cet->shstk_size = 0;
-> +	cet->shstk_enabled = 0;
-> +}
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 2e4d90294fe6..40498ec72fda 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -54,6 +54,7 @@
->  #include <asm/microcode_intel.h>
->  #include <asm/intel-family.h>
->  #include <asm/cpu_device_id.h>
-> +#include <asm/cet.h>
->  #include <asm/uv/uv.h>
->  
->  #include "cpu.h"
-> @@ -486,6 +487,29 @@ static __init int setup_disable_pku(char *arg)
->  __setup("nopku", setup_disable_pku);
->  #endif /* CONFIG_X86_64 */
->  
-> +static __always_inline void setup_cet(struct cpuinfo_x86 *c)
-> +{
-> +	if (cpu_x86_cet_enabled())
-> +		cr4_set_bits(X86_CR4_CET);
-> +}
-> +
-> +#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-> +static __init int setup_disable_shstk(char *s)
-> +{
-> +	/* require an exact match without trailing characters */
-> +	if (s[0] != '\0')
-> +		return 0;
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_SHSTK))
-> +		return 1;
-> +
-> +	setup_clear_cpu_cap(X86_FEATURE_SHSTK);
-> +	pr_info("x86: 'no_cet_shstk' specified, disabling Shadow Stack\n");
-> +	return 1;
-> +}
-> +__setup("no_cet_shstk", setup_disable_shstk);
-> +#endif
-
-I wonder if this should be "cet_shstk=..." instead? Will it always be a
-giant knob like this? Will we want to disable it for userspace but keep
-it for kernel space, etc?
-
-> +
->  /*
->   * Some CPU features depend on higher CPUID levels, which may not always
->   * be available due to CPUID level capping or broken virtualization
-> @@ -1510,6 +1534,7 @@ static void identify_cpu(struct cpuinfo_x86 *c)
->  	x86_init_rdrand(c);
->  	x86_init_cache_qos(c);
->  	setup_pku(c);
-> +	setup_cet(c);
->  
->  	/*
->  	 * Clear/Set all flags overridden by options, need do it
-> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> index 8d0b9442202e..e102e63de641 100644
-> --- a/arch/x86/kernel/process.c
-> +++ b/arch/x86/kernel/process.c
-> @@ -43,6 +43,7 @@
->  #include <asm/spec-ctrl.h>
->  #include <asm/io_bitmap.h>
->  #include <asm/proto.h>
-> +#include <asm/cet.h>
->  
->  #include "process.h"
->  
-> diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-> index 8e1d0bb46361..e1454509ad83 100644
-> --- a/tools/arch/x86/include/asm/disabled-features.h
-> +++ b/tools/arch/x86/include/asm/disabled-features.h
-> @@ -62,6 +62,12 @@
->  # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
->  #endif
->  
-> +#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-> +#define DISABLE_SHSTK	0
-> +#else
-> +#define DISABLE_SHSTK	(1<<(X86_FEATURE_SHSTK & 31))
-> +#endif
-> +
->  /*
->   * Make sure to add features to the correct mask
->   */
-> @@ -81,7 +87,7 @@
->  #define DISABLED_MASK13	0
->  #define DISABLED_MASK14	0
->  #define DISABLED_MASK15	0
-> -#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP)
-> +#define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP|DISABLE_SHSTK)
->  #define DISABLED_MASK17	0
->  #define DISABLED_MASK18	0
->  #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
-> -- 
-> 2.21.0
-> 
+>  drivers/of/of_reserved_mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Otherwise, looks good to me. :)
+Applied, thanks.
 
--- 
-Kees Cook
+Rob
