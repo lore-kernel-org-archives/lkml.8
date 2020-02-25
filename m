@@ -2,70 +2,66 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AA5C35E15
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAF3C35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E61E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SM3k+FIk"
+	by mail.kernel.org (Postfix) with ESMTP id EDCF120675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgBYVkr (ORCPT
+        id S1729042AbgBYVmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:40:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVkq (ORCPT
+        Tue, 25 Feb 2020 16:42:04 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:39684 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726421AbgBYVmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:40:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8h8Mk/+i2ci77DBxC+22pQBGtOSOCk88EXwXWgQP6/o=; b=SM3k+FIk88DTWRwntxpfYAN89K
-        8730/L0k8T1+XsnrvgFNMWAfU3J+npnA7AcglPMW6Bo1xxfLLLpVFkPpIYJPJP6Bhu7+++sdf2nEH
-        YB261ciNtDjMI/oof919hR4o1Vy1b/Tpm1qbQB3EJuexLkfZNNuOV19796072HGhlsh0EIzWw5HYM
-        eUtiC/75UHd7z4CtLi7iS7enj2b4YxR2RIq/XwjOL2jsuV22QQdFs+uI19makOCqv8ClbB0oAVsbW
-        Z77s9bVrdikXc2kEfrt+0KjleiaHbcqyykssQ37fBRsVTqPhlgghL5coVoY1AOq2xP0UIa8q2Eciy
-        KEJgOYKw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6hwb-0005MJ-8Z; Tue, 25 Feb 2020 21:40:45 +0000
-Date:   Tue, 25 Feb 2020 13:40:45 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     darrick.wong@oracle.com, hch@infradead.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: fix an undefined behaviour in _da3_path_shift
-Message-ID: <20200225214045.GA14399@infradead.org>
-References: <1582660388-28735-1-git-send-email-cai@lca.pw>
+        Tue, 25 Feb 2020 16:42:04 -0500
+Received: (qmail 6807 invoked by uid 2102); 25 Feb 2020 16:42:03 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 25 Feb 2020 16:42:03 -0500
+Date:   Tue, 25 Feb 2020 16:42:03 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Luc Maranget <luc.maranget@inria.fr>
+cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: More on reader-writer locks
+In-Reply-To: <20200225130102.wsz3bpyhjmcru7os@yquem.inria.fr>
+Message-ID: <Pine.LNX.4.44L0.2002251608290.1485-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582660388-28735-1-git-send-email-cai@lca.pw>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:53:08PM -0500, Qian Cai wrote:
-> xfs_da3_path_shift() could see state->path.blk[-1] because
-> state->path.active == 1 is a valid state when it tries to add an entry
-> to a single dir leaf block and then to shift forward to see if
-> there's a sibling block that would be a better place to put the new
-> entry.
+On Tue, 25 Feb 2020, Luc Maranget wrote:
 
-I think this needs a better explanation.  Something like:
+> Hi,
+> 
+> As far as I can remember I have implemented atomic_add_unless in herd7.
 
-In xfs_da3_path_shift() blk can be assigned to state->path.blk[-1] if
-state->path.active is 1 (which is a valid state) when it tries to add an
-entry > to a single dir leaf block and then to shift forward to see if
-there's a sibling block that would be a better place to put the new
-entry.  This causes a KASAN warning given negative array indices are
-undefined behavior in C.  In practice the warning is entirely harmless
-given that blk is never dereference in this case, but it is still better
-to fix up the warning and slightly improve the code.
+Luc, have you considered whether we can use atomic_add_unless and
+cmpxchg to implement reader-writer locks in the LKMM?  I don't think we
+can handle them the same way we handle ordinary locks now.
+
+Let's say that a lock variable holds 0 if it is unlocked, -1 if it is 
+write-locked, and a positive value if it is read-locked (the value is 
+the number of read locks currently in effect).  Then operations like 
+write_lock, write_trylock, and so on could all be modeled using 
+variants of atomic_add_unless, atomic_dec, and cmpxchg.
+
+But will that work if the reads-from relation is computed by the cat 
+code in lock.cat?  I suspect it won't.
+
+How would you approach this problem?
+
+Alan
+
