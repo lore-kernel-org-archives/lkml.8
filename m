@@ -3,172 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37358C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE10AC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A342176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F77F22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BVKzaof3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LdoVsVqE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIALNDBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgBYLV6 (ORCPT
+        id S1730474AbgBYLWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:21:58 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:38590 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgBYLV6 (ORCPT
+        Tue, 25 Feb 2020 06:22:05 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44047 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgBYLWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:21:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582629718; x=1614165718;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=6rsYUU8oQKRKh87HLt7l9Y6VknSWE8Ep42q7AwgVnsE=;
-  b=BVKzaof3qnLtZsbrkYphEHCvbapRaOx16xcKFdJxdgOxvjxJxxOt1oCv
-   OzfjglBksaHzOhx8DsT7kZD/1kJV3GDknwKH8Vq85ANPbFpDvIXlWgTqF
-   dwUkvAxIxLs4jyJQsRrtFRiulFHDvOESrCKnLNEevWMPJs8SDKVQedaX1
-   YUsDX7+f3+uFrgUHQRjfHEf1/3GfNnPit+i+Dla49NaLqkiLAAlicBHAf
-   Lql1SqFuOs9rUcYHzKr498S8caQXPv1LOTtHmLv19dgz50zTcrFNMMJpk
-   Hs/oVt8SMxv0oxONSM584rMzC66Nbm+xg8HX+WkxNFlvG8KWvJdT4pjcl
-   Q==;
-IronPort-SDR: MbUbqbnzFM59JRmXGKVWgbVZFWUpeCcoch/kmBil6dw3BkVBp+cQm5Atc1I/1vexUel8nU0Kdr
- MJI7tK+MiXi76YBwlgwFQUJXvbQiqy+hZZtZIG052roKtENmKX/dmW3F6K4xDHhEhsYJVDVbZB
- dzSLX+J3MJ18+HCvsRcqLz7NNcExwsmanlOjTHLqyV/gAEQh1zx6cP+twJUn/rrIc/7TQf/HV9
- TFasUuY9H+zJAgm7hKHU09JbDTzMIGf24WhPRBw5pfcwui7vkwT7NJPl41L8cl+Fr0wVpfUt1h
- MR0=
-X-IronPort-AV: E=Sophos;i="5.70,483,1574092800"; 
-   d="scan'208";a="131200336"
-Received: from mail-co1nam11lp2175.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.175])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Feb 2020 19:21:56 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S99z+Edlb7e7rxX0IZmVhdbnJ5M1f/dWDdNr8RoNP7Y6jShP6bU3ujoMNFAS44PAHWOhtGim3GleSilM5WhuyRTQDsl3M/d8pzEH5Bo7hgtQE+dR/ljiGxEW6mvx2Yv2Rpe+5NWwZGIT58rVy7ezJUR0FGxknZ1cj7psfGzKN6mFzTtML3pVzt42xR1QO94K3xCvVkk6nf5L/wjQnLrT5124tPUneyYmoVk3721DuNGTUF4giqMT+9TUN+LaPgcM2L/cC8hYqxMpo7LFBTZuBM1DvylEubgo7GgHv9IXA4AHiSizWPyJ24EIyki33E6XV6jBlN5MVctgY/kx7ypbcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6rsYUU8oQKRKh87HLt7l9Y6VknSWE8Ep42q7AwgVnsE=;
- b=BIHH6rI3jQDcMdwnLm8EYx44l5+iXs4xtOLSuvdG3bDqA9yF/ZmVtv+WoRbkUktPYdG77jhREpN+6X2q6TKGQsVS7/fN1N5quW56uYDQBmv7Or2omsahAKPZ2iCsBJuIBXj20vI7Ois4TiS96osWa9VSQjSR6yHGx/okg8R0OX+FTJb0SK0hILNUHo8pBIQ9IeB/t3xqzt9yntIXhwxJiIpwdrbbt4+k1qnD1j6GXM4bGZMddiqD7cMxlXeGnzL5+ccgPEMOss1DgdCz1JhQtGjIH8I+akJvAOCHqyugoF3NV+8BmcWp9Ya2syBdNTPAL1L0RawGaUtE6xf6OMsO8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 25 Feb 2020 06:22:04 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y5so7012276pfb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 03:22:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6rsYUU8oQKRKh87HLt7l9Y6VknSWE8Ep42q7AwgVnsE=;
- b=LdoVsVqEb/lQNsiHhi5KR657TWyZWdmiBGNkZ0ocBK7GV+nbE+BairwrQ+DrsS8liRaa9iWQiFxpXbaUY/HZkH6ASPkL1jYcm3L3MAiUNtqGVY56NzKPw/4E0imslzoy7w2+3lpqNkXnWvXyRVtPRthCLlkCxh+7KqYBeWwssMs=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (2603:10b6:208:1e1::17)
- by MN2PR04MB6463.namprd04.prod.outlook.com (2603:10b6:208:1a3::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
- 2020 11:21:53 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 11:21:53 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Asutosh Das <asutoshd@codeaurora.org>,
-        "subhashj@codeaurora.org" <subhashj@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "vinholikatti@gmail.com" <vinholikatti@gmail.com>,
-        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [<RFC PATCH v1> 1/2] scsi: ufs: add write booster feature support
-Thread-Topic: [<RFC PATCH v1> 1/2] scsi: ufs: add write booster feature
- support
-Thread-Index: AQHV6Rh2ZTwBYaR27UCCKm4Ugks9U6grwt/ggAAGNqA=
-Date:   Tue, 25 Feb 2020 11:21:53 +0000
-Message-ID: <MN2PR04MB6991F821F0613DE77AA18A15FCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <cover.1582330473.git.asutoshd@codeaurora.org>
- <0eb182e6731bc4ce0c1d6a97f102155d7186520f.1582330473.git.asutoshd@codeaurora.org>
- <MN2PR04MB69918182A787BA86A275A59CFCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
-In-Reply-To: <MN2PR04MB69918182A787BA86A275A59CFCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c574dcc6-4455-48d1-9726-08d7b9e4ea94
-x-ms-traffictypediagnostic: MN2PR04MB6463:
-x-microsoft-antispam-prvs: <MN2PR04MB6463283B4FCF0CB8576F0185FCED0@MN2PR04MB6463.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(346002)(366004)(396003)(136003)(189003)(199004)(71200400001)(316002)(7416002)(55016002)(66446008)(64756008)(76116006)(9686003)(7696005)(66556008)(5660300002)(52536014)(33656002)(66476007)(6506007)(186003)(2906002)(2940100002)(4326008)(86362001)(81156014)(26005)(66946007)(54906003)(110136005)(8676002)(478600001)(8936002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6463;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dsoBlg5gQWFvTQ4d6ZXQM+MaVUBHvhHR6Y1mqFqFbkU1OIreFmsKU/3LBFnoit9xO/9WA/LhCT/bWfpQ67OppQjfU1gVYlGj0jv0IIq1EDuHEZb98IyqsmQ5r4EOtnONwQL/7hwdSWbhg7dVHKRkMDUfTtCqojCXSZz/vMf9ldIAEgIp5W9f0wQrFum/qWqFnZNNgK+QKV60OXyGiSSIhpC8OIHb48pIeaL/q0CHolxlp8WdsvQZDiU2EKHHeT6k3CZmIXaVikGmdTjXr7dzv60GhwwSAaB8XlyTwBPT1PCkZ84Gb4sQyrlC2izHoU0eaeUkFombJx4SYBR3rlA3ShnRpGHoywXm03PnQEXKieF5qwQnQAFBxb87TS0YW490t29VeQSlMy7zITLu29yUi05An4Bf0I0D0zhWRduZU5D1iz/87BGB5Q3fOL/Vi83y
-x-ms-exchange-antispam-messagedata: tGS1y3F0zA7yUbU7m2DEiE/vxNt39aa3/vluTylu3xVLEw99nLK14aDWN3CNsDEZ/6RyNGobJDWtvLgPDN/kM23neaygK/aUTl5as5uNF0cMWlHY0C2txFXZ1wtv0ldS3mP7kwg7thrhzhIp/wzSBA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EUm9z7WkAiCk1ivsS8Uff7qEBq+u4XWDIwD3YfqnT88=;
+        b=ZIALNDBsJ79rIl/zg545heZl09NGHH3PzyR5iRsqOD8S3Cg53zpEx/H3rE59vH2P/c
+         rUjuxXkDXQ6vKrjWldp4Jug6HvW0nXKXCkLH9+JE7SH9tLb+9ltHjVm+FeHwvM6xVx+z
+         hqQgeTdHJ8GXAfTck5v+pd4aC/IDWkvRhZoHQubmL9dcKbhB4TSJeP7iYUT6JavMY+Fh
+         lx613k/duwL9PieW9Ar8DqUUPABr6LvWxIkSq4F7IYtxVpVuwBvKrQ0CjZiJSkRqArT6
+         J5uBQAEX5Q0asJFAvqrwXGpvNJxDcJktuSD7Ym9q29gBUx7/AMY5jXoP4hzMNDBeOZjo
+         3WuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EUm9z7WkAiCk1ivsS8Uff7qEBq+u4XWDIwD3YfqnT88=;
+        b=Vx4ObsqgKfZy0o5ljc1jkhQaHYn4ezro7azeYiEqYjuwqva5NocbFNYiKbb24Lo5RD
+         lnHuzhzZcnIA/V/RRt4bz+imOKM+5yVhIzL8A2cj3NT2L0hkWdfhxcZBI8TLOFDv/Sul
+         c5CBz5C7kf2rF481p/eqDJd1JseQd6ZIzQlc9fMvukZhhlAc9ZIGAiV6BRh4TwOz1ZiD
+         Opy7gIJ2jbQeAX6fkJqdXhjA5anoPf3peNe2fADzDferwyRVi/i1Afm3BP+tUWHPns1f
+         JOSyMh+sB9tGU4u93TPgumLn1F2oiMNho4bAoMer6FQdoXKHL+C/KCIme0Y7s3TTalyx
+         3ueA==
+X-Gm-Message-State: APjAAAUW1knhMoKc8WxJprXLwzJqc6whrKCs21b+scO37ZDFqwo3X2mT
+        YOJpry+1NQU3ozgDnACAxh0=
+X-Google-Smtp-Source: APXvYqxEWDB8BEiZ4a3fNfbf3wzXr3d2SPXsKomACVc3xo+rVC4Hj+BRzuNEqn6W72NuTU+Edj1CIA==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr57013823pfc.113.1582629723147;
+        Tue, 25 Feb 2020 03:22:03 -0800 (PST)
+Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id r145sm17039849pfr.5.2020.02.25.03.21.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 03:22:02 -0800 (PST)
+Date:   Tue, 25 Feb 2020 19:21:53 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <20200225112153.GA618752@ziqianlu-desktop.localdomain>
+References: <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+ <CAERHkrs_WX=gS0sQ2Wg_SZuAcf_qhKfT05co0uYgaQk8cFj0ag@mail.gmail.com>
+ <20200225073446.GA618392@ziqianlu-desktop.localdomain>
+ <CAERHkrtraNqWj+RZnUFBaR8Cxk_cprQnzyKEgZ=6K+1mb1Jifw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c574dcc6-4455-48d1-9726-08d7b9e4ea94
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 11:21:53.4393
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pYpkrwpVhl2Sk8YrcNyeiEW75oWv564lzDLxSTLSdsZo+llMUDt2qLhm+Xty7pQrkn5C0Lu/pSmDZmSRP1GTUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6463
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAERHkrtraNqWj+RZnUFBaR8Cxk_cprQnzyKEgZ=6K+1mb1Jifw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ICsgICAgICAgLyogRW5hYmxlIFdCIG9ubHkgZm9yIFVGUy0zLjEgT1IgaWYgZGVzYyBsZW4g
-Pj0gMHg1OSAqLw0KPiBZb3UgZG9uJ3QgcmVhbGx5IGNoZWNrIHRoYXQgdGhlIGRlc2NyaXB0b3Ig
-c2l6ZSBpcyBsYXJnZSBlbm91Z2gNCj4gDQo+ID4gKyAgICAgICBpZiAoZGV2X2luZm8tPndzcGVj
-dmVyc2lvbiA+PSAweDMxMCkgew0KPiA+ICsgICAgICAgICAgICAgICBoYmEtPmRldl9pbmZvLmRf
-ZXh0X3Vmc19mZWF0dXJlX3N1cCA9DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGVzY19i
-dWZbREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VGU19GRUFUVVJFX1NVUF0NCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwg
-MjQgfA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRlc2NfYnVmW0RFVklDRV9ERVNDX1BB
-UkFNX0VYVF9VRlNfRkVBVFVSRV9TVVAgKw0KPiAxXQ0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCAxNiB8DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgZGVzY19idWZbREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VG
-U19GRUFUVVJFX1NVUCArDQo+IDJdDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw8IDggfA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGRlc2NfYnVmW0RFVklDRV9ERVNDX1BBUkFNX0VYVF9VRlNfRkVBVFVSRV9T
-VVAgKw0KPiAzXTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGhiYS0+ZGV2X2luZm8uYl93
-Yl9idWZmZXJfdHlwZSA9DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGVzY19idWZbREVW
-SUNFX0RFU0NfUEFSQU1fV0JfVFlQRV07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpZiAo
-aGJhLT5kZXZfaW5mby5iX3diX2J1ZmZlcl90eXBlKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGdvdG8gc2tpcF91bml0X2Rlc2M7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBoYmEt
-PmRldl9pbmZvLndiX2NvbmZpZ19sdW4gPSBmYWxzZTsNCj4gPiArICAgICAgICAgICAgICAgZm9y
-IChsdW4gPSAwOyBsdW4gPCBVRlNfVVBJVV9NQVhfR0VORVJBTF9MVU47IGx1bisrKSB7DQpBbHNv
-IGx1biBub3QgZGVmaW5lZA0KDQo+IFlvdSBmb3Jnb3QgdG8gc2V0DQo+IHU4IHdiX2J1Zls0XSA9
-IHt9Ow0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBtZW1zZXQod2JfYnVmLCAwLCBz
-aXplb2Yod2JfYnVmKSk7DQo+IE5vdCBuZWVkZWQNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgZXJyID0gdWZzaGNkX2dldF93Yl9hbGxvY191bml0cyhoYmEsIGx1biwgd2JfYnVmKTsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpZiAoZXJyKQ0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIHJlcyA9IHdiX2J1ZlswXSA8PCAyNCB8IHdiX2J1ZlsxXSA8PCAxNiB8DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB3Yl9idWZbMl0gPDwgOCB8IHdiX2J1ZlszXTsNCkFu
-ZCByZXMgbm90IGRlZmluZWQgYXMgd2VsbC4NCg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGlmIChyZXMpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhiYS0+ZGV2
-X2luZm8ud2JfY29uZmlnX2x1biA9IHRydWU7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBicmVhazsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAg
-ICAgICAgICAgIH0NCj4gPiArICAgICAgIH0NCj4gPiArDQo+IA0KPiBUaGFua3MsDQo+IEF2cmkN
-Cg==
+On Tue, Feb 25, 2020 at 06:40:02PM +0800, Aubrey Li wrote:
+> On Tue, Feb 25, 2020 at 3:34 PM Aaron Lu <aaron.lwe@gmail.com> wrote:
+> >
+> > On Tue, Feb 25, 2020 at 01:32:35PM +0800, Aubrey Li wrote:
+> > > Aaron - did you test this before? In other words, if you reset repo to your
+> > > last commit:
+> >
+> > I did this test only recently when I started to think if I can use
+> > coresched to boost main workload's performance in a colocated
+> > environment.
+> >
+> > >
+> > > - 5bd3c80 sched/fair : Wake up forced idle siblings if needed
+> > >
+> > > Does the problem remain? Just want to check if this is a regression
+> > >  introduced by the subsequent patchset.
+> >
+> > The problem isn't there with commit 5bd3c80 as the head, so yes, it
+> > looks like indeed a regression introduced by subsequent patchset.
+> >
+> > P.S. I will need to take a closer look if each cgA's task is running
+> > on a different core later but the cpu usage of cgA is back to 800% with
+> > commit 5bd3c80.
+> 
+> Hmm..., I went through the subsequent patches, and I think this one
+> 
+> - 4041eeb8f3 sched/fair: don't migrate task if cookie not match
+> 
+> is probably the major cause, can you please revert this one to see
+> if the problem is gone?
+
+Yes, reverting this one fixed the problem.
