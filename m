@@ -2,112 +2,65 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11CAC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68214C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FE520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Le1Nz8N5"
+	by mail.kernel.org (Postfix) with ESMTP id 48C1020838
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbgBYRt6 (ORCPT
+        id S1731278AbgBYRwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:49:58 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43518 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731017AbgBYRt5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:49:57 -0500
-Received: by mail-qt1-f196.google.com with SMTP id g21so228909qtq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:49:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xRRmwcNUsR+GhcUjy9+SyPV6XEYtfd5D5Ja+YQokWiA=;
-        b=Le1Nz8N5wJimx6Cq77znmKci4x87K/gkTCkMfK1j7bJ8Fv9ymgm/XdiSiOnPcw59Uw
-         rLt/1/ZWyfPowrtLXK1HsrBUNyO7hODU7ZiV/uvlIkSSg+i8Fr+zjxZ4w+DPEe74w7fn
-         Zf6eXtWvTOQnAMfHADwvdXdfpmgR1iX4ijn446/439PzTmMu+JjT6M99asMiUWlI4ioc
-         FyiGlNwsZOT9MUA/7uMaUcqfyjRPMSBEaBRs92XACg/xV5HOCOPGbjeFQUrwfIR8F0R7
-         m8/NWnpniNXJAuTgdF+aFLOsWCOZCNNSALWVB641OGBBw7N8SkAD154cauwtYpJJ9W7Q
-         K1Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xRRmwcNUsR+GhcUjy9+SyPV6XEYtfd5D5Ja+YQokWiA=;
-        b=KbpelOtPrVIX7QCt2+TPhRM3Kd7GeAqu/ulcYAAngsAF8Nd6jyddbxyQeQE5Cymrcw
-         OGqGisFONKXy8S8pFM93CuenNkx9APpkCpnpQM3p6arZe6GvP7fPxJb92lAmsoTyL/CC
-         Uc3U1Mct5V+GajLZhLqjE/+N32I5EWEMNHFkoGkGkGyDrmECN/RM1O4eRscj4nK7SdOG
-         3I6TLgwOCRpOZ+/XhoredS5cxbsOfC7R445IzzsaGixmlZXchfoqBN10wthrelQYFWIT
-         73cuiNYQrz51qe6Tcf5ikRJaumal44SINTKGYpM+7vAt56xMKfdO1lZspGD/fy3nBjye
-         8UCQ==
-X-Gm-Message-State: APjAAAWQyMs21N6Y+aSPzmwxAP5XQurJJvB3PPzjqW8Bo9Rrf94X7sT9
-        53+Rs7OG72qArM07Lst2mvc=
-X-Google-Smtp-Source: APXvYqzZa4ogNVvT5VxJnr40/hfAfIF63UJfQH6ZI2z+wrgJCDPOis9RIBPDS3YG3vDgxX31ODwTXQ==
-X-Received: by 2002:ac8:1308:: with SMTP id e8mr56613876qtj.242.1582652995139;
-        Tue, 25 Feb 2020 09:49:55 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o17sm7919334qtj.80.2020.02.25.09.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:49:55 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 25 Feb 2020 12:49:53 -0500
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, keescook@chromium.org,
-        rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 08/11] x86: Add support for finer grained KASLR
-Message-ID: <20200225174951.GA1373392@rani.riverdale.lan>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-9-kristen@linux.intel.com>
+        Tue, 25 Feb 2020 12:52:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:53970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731059AbgBYRwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:52:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F155931B;
+        Tue, 25 Feb 2020 09:52:44 -0800 (PST)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CC52D3F6CF;
+        Tue, 25 Feb 2020 09:52:43 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, patrick.bellasi@matbug.net,
+        qais.yousef@arm.com
+Subject: [PATCH 0/3] sched/debug: Add uclamp values to procfs
+Date:   Tue, 25 Feb 2020 17:52:24 +0000
+Message-Id: <20200225175227.22090-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200205223950.1212394-9-kristen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 02:39:47PM -0800, Kristen Carlson Accardi wrote:
-> At boot time, find all the function sections that have separate .text
-> sections, shuffle them, and then copy them to new locations. Adjust
-> any relocations accordingly.
-> 
-> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> ---
->  arch/x86/boot/compressed/Makefile        |   1 +
->  arch/x86/boot/compressed/fgkaslr.c       | 751 +++++++++++++++++++++++
->  arch/x86/boot/compressed/misc.c          | 106 +++-
->  arch/x86/boot/compressed/misc.h          |  26 +
->  arch/x86/boot/compressed/vmlinux.symbols |  15 +
->  arch/x86/include/asm/boot.h              |  15 +-
->  arch/x86/include/asm/kaslr.h             |   1 +
->  arch/x86/lib/kaslr.c                     |  15 +
->  scripts/kallsyms.c                       |  14 +-
->  scripts/link-vmlinux.sh                  |   4 +
->  10 files changed, 939 insertions(+), 9 deletions(-)
->  create mode 100644 arch/x86/boot/compressed/fgkaslr.c
->  create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
-> 
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index b7e5ea757ef4..60d4c4e59c05 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -122,6 +122,7 @@ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
->  
->  ifdef CONFIG_FG_KASLR
->  	RELOCS_ARGS += --fg-kaslr
-> +	OBJCOPYFLAGS += --keep-symbols=$(obj)/vmlinux.symbols
+Hi,
 
-I think this should be $(srctree)/$(src) rather than $(obj)? Using a
-separate build directory fails currently.
+This is a small debug series I've been sitting on. It's been helpful in
+testing and reviewing some uclamp stuff, for instance the issue Qais fixed
+at [1] was really easy to observe with those debug prints.
+
+[1]: https://lore.kernel.org/lkml/20191224115405.30622-1-qais.yousef@arm.com/
+
+Cheers,
+Valentin
+
+
+Valentin Schneider (3):
+  sched/debug: Remove redundant macro define
+  sched/debug: Bunch up printing formats in common macros
+  sched/debug: Add task uclamp values to SCHED_DEBUG procfs
+
+ kernel/sched/debug.c | 44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+--
+2.24.0
+
