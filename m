@@ -2,190 +2,157 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01C6C4BA01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31BDC4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA37E20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B37822464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DyLkCv60"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="rKvOBaZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgBYWhl (ORCPT
+        id S1729147AbgBYWpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:37:41 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45618 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgBYWhl (ORCPT
+        Tue, 25 Feb 2020 17:45:16 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36220 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbgBYWpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:37:41 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so408308pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:37:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ujUSpbSlCH5ZCbsE0Im09CK5jyllUEPbsT32AKCmZZ8=;
-        b=DyLkCv60xAdLCmRKcDclI0CdjpCht6vI0Kff3FlLtJ7IJj+r1jKD0DZHiRDVNX9oU2
-         4ILDtH0EHnHCBkWm9pY11x/hcehrKdRPZLnZ0B+wuKFb3zlDp6C5dn106hviyEbF5k2w
-         /2q2TLjsB4pOYE7UmuaRr59Z8/Ete9pGvTXVU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ujUSpbSlCH5ZCbsE0Im09CK5jyllUEPbsT32AKCmZZ8=;
-        b=c2qGJQB/J9+xiAheHijCVXl9WV19DBliJp/hZ2CsGNtKNEH0OJ9PSIvdkNO14ecqd8
-         Sf4lj4rWTUatPz++HWnc3oRQT0W7y8/1ZneZnbZmYPVlL//G0oGHgrqiBQHenudBAOhm
-         7tIDbOWNnQvXVejmCj7jKTjIYNhHvp+Zvr0urnbFlSoQ9LYspKNvJaVJL0k4KtcT62Pf
-         5IhMkiJVS7CicUiv/C9YDyCV6Jf5Hys1/JjBK68tAzGODmuxQTKXdjUnwRRFAEXBifyU
-         xIZDA02HjSl+OXej6nppy3awmOsV+UAtQ/DguCu52Zd4Vud64OHrSxdqwdIqTY9bDG5A
-         kcGQ==
-X-Gm-Message-State: APjAAAXsZkGwb+ryHaMBiN47GxSzkjZorCaoZAHcMbQ6iUrm7v1C53vE
-        eRs7Fv1q1BC5o2yYq/98re29Xg==
-X-Google-Smtp-Source: APXvYqyClLjlKFFh151KqjRXFbjTgwsEjNcVLzqq++3PiVnTCzW7kl9YidPkNzPtFOSSHwlCCAAalw==
-X-Received: by 2002:a17:902:bf41:: with SMTP id u1mr738034pls.207.1582670259870;
-        Tue, 25 Feb 2020 14:37:39 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x12sm111778pfr.47.2020.02.25.14.37.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 14:37:39 -0800 (PST)
-Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Andy Gross <agross@kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-7-scott.branden@broadcom.com>
- <20200220074711.GA3261162@kroah.com>
- <ee53fe6f-53de-87c0-db16-989cc15abbce@broadcom.com>
- <CAK8P3a0y8RfjEng4AsMr4MAPGMTXduiFOyfUzazgw9c+KVWmYA@mail.gmail.com>
- <CAOesGMj423YXNhk_vFE0ueNjzbYoD0wQ68jJApewZS8qtVX3=g@mail.gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <d35204c1-054e-ec5b-069b-42a053a3863f@broadcom.com>
-Date:   Tue, 25 Feb 2020 14:37:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAOesGMj423YXNhk_vFE0ueNjzbYoD0wQ68jJApewZS8qtVX3=g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Feb 2020 17:45:15 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 12D8C891AA;
+        Wed, 26 Feb 2020 11:45:11 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1582670711;
+        bh=E2Bfu4fc4j6p7NFg4tTrbd/vXn2tcNQq3rTK3nWshUA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=rKvOBaZx42TAr+6AdLmWawHwTp4RvQhmWTJq/vIWLZsK74PcOBj0RvbxJ/nWYByOb
+         tfORMMls9ld6keASQTeH+ZKeX5UoOfSs44Rq/L1v4ZW/7weBHVjmthvMZqCJZNsO7C
+         0XY3a4Yh1macwhc1+KhrQHI9uUg3T17PTvCsGDUsBmMemyI6IC+A+Y49sChCxskgBM
+         qYpS9IhAT95MVWqfHBVZL5jUxi9baePVy+BEsYUM7J+5aXV0owqwGmEtnZd7djN6vn
+         /Y9nbTDruObHG3Odtg8xsMPysSqpHvgjVKvLy4BfArw3gzWPJn82kqegiCN/HrLgzw
+         eimT5AJ3JUSrw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e55a3750001>; Wed, 26 Feb 2020 11:45:09 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 26 Feb 2020 11:45:10 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 26 Feb 2020 11:45:10 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vadym.kochan@plvision.eu" <vadym.kochan@plvision.eu>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "volodymyr.mytnyk@plvision.eu" <volodymyr.mytnyk@plvision.eu>,
+        "oleksandr.mazur@plvision.eu" <oleksandr.mazur@plvision.eu>,
+        "andrii.savka@plvision.eu" <andrii.savka@plvision.eu>,
+        "taras.chornyi@plvision.eu" <taras.chornyi@plvision.eu>,
+        "serhiy.boiko@plvision.eu" <serhiy.boiko@plvision.eu>
+Subject: Re: [RFC net-next 0/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX326x (AC3x)
+Thread-Topic: [RFC net-next 0/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX326x (AC3x)
+Thread-Index: AQHV6/jy7mjUjxYwxkS7hliqOPvXRagrqJaA
+Date:   Tue, 25 Feb 2020 22:45:09 +0000
+Message-ID: <1810583047af2d41d2521960f7a39f768748f2cb.camel@alliedtelesis.co.nz>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+In-Reply-To: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:7442:d04a:557:a011]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5D0BFC321CBCCA4F806DE73A60F64962@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof/All,
-
-I'm trying to digest all the feedback of what needs to be done.
-I will be fixing up all the valuable comments about general issues but 
-would like to know
-what needs to be done about the tty interface.
-
-The VK devices are configured to write serial data to circular buffers 
-in memory or out a UART.
-When we configure a system using the UART we connect a cable to the host 
-and open a tty device.
-When we don't connect a UART cable to the host we open the tty device in 
-our driver instead.
-In this case the memory is exposed to the host via PCI BAR memory space.
-The bcm-vk host driver then accesses PCI space and presents a tty 
-interface to the host.
-We implemented a tty device to present the tty interface.
-Host doesn't change anything other than opening a different devnode in 
-UART vs. PCI case.
-
-Based on all the comments: what interface should we be providing in 
-driver instead?
-
-On 2020-02-23 3:55 p.m., Olof Johansson wrote:
-> On Sat, Feb 22, 2020 at 12:03 AM Arnd Bergmann <arnd@arndb.de> wrote:
->> On Fri, Feb 21, 2020 at 7:19 PM Scott Branden
->> <scott.branden@broadcom.com> wrote:
->>> On 2020-02-19 11:47 p.m., Greg Kroah-Hartman wrote:
->>>> Have you worked with the V4L developers to tie this into the proper
->>>> in-kernel apis for this type of functionality?
->>> We looked at the V4L model doesn't have any support for anything we are
->>> doing in this driver.
->>> We also want a driver that doesn't care about video.  It could be
->>> offloading crypto or other operations.
->>> We talked with Olof about all of this previously and he said leave it as
->>> a misc driver for now.
->>> He was going to discuss at linux plumbers conference that we need some
->>> sort of offload engine model that such devices could fit into.
->> I see. Have you looked at the "uacce" driver submission? It seems
->> theirs is similar enough that there might be some way to share interfaces.
-> Uacce isn't a driver (or wasn't last time I looked at it, when it had
-> a different name). It's more of a framework for standardized direct HW
-> access from userspace, and relies on I/O virtualization to keep DMA
-> secure/partitioned, etc. VK is more of a classic PCIe device, it'll
-> handle DMA to/from the host, etc.
->
->>>> Using a tty driver seems like the totally incorrect way to do this, what
->>>> am I missing?
->>> tty driver is used to provide console access to the processors running
->>> on vk.
->>> Data is sent using the bcm_vk_msg interface by read/write operations
->>> from user space.
->>> VK then gets the messages and DMA's the data to/from host memory when
->>> needed to process.
->> In turn here, it sounds like you'd want to look at what drivers/misc/mic/
->> and the mellanox bluefield drivers are doing. As I understand, they have the
->> same requirements for console, but have a nicer approach of providing
->> abstract 'virtio' channels between the PCIe endpoint and the host, and
->> then run regular virtio based drivers (console, tty, block, filesystem,
->> network, ...) along with application specific ones to provide the custom
->> high-level protocols.
-> This has more value on the device than on the host, as far as I've
-> seen it used (if you want to boot Linux on it and have things
-> exposed).
->
-> virtio isn't necessarily a match if all you really want is a character
-> stream for a console and don't need (or have performance requirements
-> beyond what virtio offers) other types of communication.
->
->> This is also similar to what the drivers/pci/endpoint
->> (from the other end) as the drivers/ntb (pci host on both ends) frameworks
->> and of course the rpmsg/remoteproc framework do.
-> remoteproc is more about booting a tightly integrated device on an
-> embedded system. Also not a match here IMHO.
->
->> In the long run, I would want much more consolidation between the
->> low-level parts of all these frameworks, but moving your high-level
->> protocols to the same virtio method would sound like a step in the
->> direction towards a generialized framework and easier sharing of
->> the abstractions.
-> For a simple naive console/character stream, doing something on top of
-> hvc might be easier -- it already does polling for you, etc.
->
-> Of course, the intent is not to ever use it as a console for the host
-> here, so that aspect of hvc isn't useful. But it gives you a bunch of
-> other stuff for free with just getchar/putchar interfaces to
-> implement.
->
->
-> -Olof
-
+SGkgVmFkeW0sDQoNCk9uIFR1ZSwgMjAyMC0wMi0yNSBhdCAxNjozMCArMDAwMCwgVmFkeW0gS29j
+aGFuIHdyb3RlOg0KPiBNYXJ2ZWxsIFByZXN0ZXJhIDk4RFgzMjZ4IGludGVncmF0ZXMgdXAgdG8g
+MjQgcG9ydHMgb2YgMUdiRSB3aXRoIDgNCj4gcG9ydHMgb2YgMTBHYkUgdXBsaW5rcyBvciAyIHBv
+cnRzIG9mIDQwR2JwcyBzdGFja2luZyBmb3IgYSBsYXJnZWx5DQo+IHdpcmVsZXNzIFNNQiBkZXBs
+b3ltZW50Lg0KPiANCj4gUHJlc3RlcmEgU3dpdGNoZGV2IGlzIGEgZmlybXdhcmUgYmFzZWQgZHJp
+dmVyIHdoaWNoIG9wZXJhdGVzIHZpYSBQQ0kNCj4gYnVzLiBUaGUgZHJpdmVyIGlzIHNwbGl0IGlu
+dG8gMiBtb2R1bGVzOg0KPiANCj4gICAgIC0gcHJlc3RlcmFfc3cua28gLSBtYWluIGdlbmVyaWMg
+U3dpdGNoZGV2IFByZXN0ZXJhIEFTSUMgcmVsYXRlZCBsb2dpYy4NCj4gDQo+ICAgICAtIHByZXN0
+ZXJhX3BjaS5rbyAtIGJ1cyBzcGVjaWZpYyBjb2RlIHdoaWNoIGFsc28gaW1wbGVtZW50cyBmaXJt
+d2FyZQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICBsb2FkaW5nIGFuZCBsb3ctbGV2ZWwgbWVz
+c2FnaW5nIHByb3RvY29sIGJldHdlZW4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgZmlybXdh
+cmUgYW5kIHRoZSBzd2l0Y2hkZXYgZHJpdmVyLg0KPiANCj4gVGhpcyBkcml2ZXIgaW1wbGVtZW50
+YXRpb24gaW5jbHVkZXMgb25seSBMMSAmIGJhc2ljIEwyIHN1cHBvcnQuDQo+IA0KPiBUaGUgY29y
+ZSBQcmVzdGVyYSBzd2l0Y2hpbmcgbG9naWMgaXMgaW1wbGVtZW50ZWQgaW4gcHJlc3RlcmEuYywg
+dGhlcmUgaXMNCj4gYW4gaW50ZXJtZWRpYXRlIGh3IGxheWVyIGJldHdlZW4gY29yZSBsb2dpYyBh
+bmQgZmlybXdhcmUuIEl0IGlzDQo+IGltcGxlbWVudGVkIGluIHByZXN0ZXJhX2h3LmMsIHRoZSBw
+dXJwb3NlIG9mIGl0IGlzIHRvIGVuY2Fwc3VsYXRlIGh3DQo+IHJlbGF0ZWQgbG9naWMsIGluIGZ1
+dHVyZSB0aGVyZSBpcyBhIHBsYW4gdG8gc3VwcG9ydCBtb3JlIGRldmljZXMgd2l0aA0KPiBkaWZm
+ZXJlbnQgSFcgcmVsYXRlZCBjb25maWd1cmF0aW9ucy4NCg0KVmVyeSBleGNpdGVkIGJ5IHRoaXMg
+cGF0Y2ggc2VyaWVzLiBXZSBoYXZlIHNvbWUgY3VzdG9tIGRlc2lnbnMgdXNpbmcNCnRoZSBBQzN4
+LiBJJ20gaW4gdGhlIHByb2Nlc3Mgb2YgZ2V0dGluZyB0aGUgYm9hcmQgZHRzZXMgcmVhZHkgZm9y
+DQpzdWJtaXR0aW5nIHVwc3RyZWFtLiANCg0KUGxlYXNlIGZlZWwgZnJlZSB0byBhZGQgbWUgdG8g
+dGhlIENjIGxpc3QgZm9yIGZ1dHVyZSB2ZXJzaW9ucyBvZiB0aGlzDQpwYXRjaCBzZXQgKGFuZCBy
+ZWxlYXRlZCBvbmVzKS4NCg0KSSdsbCBhbHNvIGxvb2sgdG8gc2VlIHdoYXQgd2UgY2FuIGRvIHRv
+IHRlc3Qgb24gb3VyIGhhcmR3YXJlIHBsYXRmb3Jtcy4NCg0KPiANCj4gVGhlIGZpcm13YXJlIGhh
+cyB0byBiZSBsb2FkZWQgZWFjaCB0aW1lIGRldmljZSBpcyByZXNldC4gVGhlIGRyaXZlciBpcw0K
+PiBsb2FkaW5nIGl0IGZyb206DQo+IA0KPiAgICAgL2xpYi9maXJtd2FyZS9tYXJ2ZWxsL3ByZXN0
+ZXJhX2Z3X2ltZy5iaW4NCj4gDQo+IFRoZSBmaXJtd2FyZSBpbWFnZSB2ZXJzaW9uIGlzIGxvY2F0
+ZWQgd2l0aGluIGludGVybmFsIGhlYWRlciBhbmQgY29uc2lzdHMNCj4gb2YgMyBudW1iZXJzIC0g
+TUFKT1IuTUlOT1IuUEFUQ0guIEFkZGl0aW9uYWxseSwgZHJpdmVyIGhhcyBoYXJkLWNvZGVkDQo+
+IG1pbmltdW0gc3VwcG9ydGVkIGZpcm13YXJlIHZlcnNpb24gd2hpY2ggaXQgY2FuIHdvcmsgd2l0
+aDoNCj4gDQo+ICAgICBNQUpPUiAtIHJlZmxlY3RzIHRoZSBzdXBwb3J0IG9uIEFCSSBsZXZlbCBi
+ZXR3ZWVuIGRyaXZlciBhbmQgbG9hZGVkDQo+ICAgICAgICAgICAgIGZpcm13YXJlLCB0aGlzIG51
+bWJlciBzaG91bGQgYmUgdGhlIHNhbWUgZm9yIGRyaXZlciBhbmQNCj4gICAgICAgICAgICAgbG9h
+ZGVkIGZpcm13YXJlLg0KPiANCj4gICAgIE1JTk9SIC0gdGhpcyBpcyB0aGUgbWluaW1hbCBzdXBw
+b3J0ZWQgdmVyc2lvbiBiZXR3ZWVuIGRyaXZlciBhbmQgdGhlDQo+ICAgICAgICAgICAgIGZpcm13
+YXJlLg0KPiANCj4gICAgIFBBVENIIC0gaW5kaWNhdGVzIG9ubHkgZml4ZXMsIGZpcm13YXJlIEFC
+SSBpcyBub3QgY2hhbmdlZC4NCj4gDQo+IFRoZSBmaXJtd2FyZSBpbWFnZSB3aWxsIGJlIHN1Ym1p
+dHRlZCB0byB0aGUgbGludXgtZmlybXdhcmUgYWZ0ZXIgdGhlDQo+IGRyaXZlciBpcyBhY2NlcHRl
+ZC4NCj4gDQo+IFRoZSBmb2xsb3dpbmcgU3dpdGNoZGV2IGZlYXR1cmVzIGFyZSBzdXBwb3J0ZWQ6
+DQo+IA0KPiAgICAgLSBWTEFOLWF3YXJlIGJyaWRnZSBvZmZsb2FkaW5nDQo+ICAgICAtIFZMQU4t
+dW5hd2FyZSBicmlkZ2Ugb2ZmbG9hZGluZw0KPiAgICAgLSBGREIgb2ZmbG9hZGluZyAobGVhcm5p
+bmcsIGFnZWluZykNCj4gICAgIC0gU3dpdGNocG9ydCBjb25maWd1cmF0aW9uDQo+IA0KPiBDUFUg
+UlgvVFggc3VwcG9ydCB3aWxsIGJlIHByb3ZpZGVkIGluIHRoZSBuZXh0IGNvbnRyaWJ1dGlvbi4N
+Cj4gDQo+IFZhZHltIEtvY2hhbiAoMyk6DQo+ICAgbmV0OiBtYXJ2ZWxsOiBwcmVzdGVyYTogQWRk
+IFN3aXRjaGRldiBkcml2ZXIgZm9yIFByZXN0ZXJhIGZhbWlseSBBU0lDDQo+ICAgICBkZXZpY2Ug
+OThEWDMyNXggKEFDM3gpDQo+ICAgbmV0OiBtYXJ2ZWxsOiBwcmVzdGVyYTogQWRkIFBDSSBpbnRl
+cmZhY2Ugc3VwcG9ydA0KPiAgIGR0LWJpbmRpbmdzOiBtYXJ2ZWxsLHByZXN0ZXJhOiBBZGQgYWRk
+cmVzcyBtYXBwaW5nIGZvciBQcmVzdGVyYQ0KPiAgICAgU3dpdGNoZGV2IFBDSWUgZHJpdmVyDQo+
+IA0KPiAgLi4uL2JpbmRpbmdzL25ldC9tYXJ2ZWxsLHByZXN0ZXJhLnR4dCAgICAgICAgIHwgICAx
+MyArDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL0tjb25maWcgICAgICAgICAgfCAg
+ICAxICsNCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L21hcnZlbGwvTWFrZWZpbGUgICAgICAgICB8
+ICAgIDEgKw0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9LY29uZmln
+IHwgICAyNCArDQo+ICAuLi4vbmV0L2V0aGVybmV0L21hcnZlbGwvcHJlc3RlcmEvTWFrZWZpbGUg
+ICAgfCAgICA1ICsNCj4gIC4uLi9uZXQvZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9wcmVzdGVy
+YS5jICB8IDE1MDIgKysrKysrKysrKysrKysrKysNCj4gIC4uLi9uZXQvZXRoZXJuZXQvbWFydmVs
+bC9wcmVzdGVyYS9wcmVzdGVyYS5oICB8ICAyNDQgKysrDQo+ICAuLi4vbWFydmVsbC9wcmVzdGVy
+YS9wcmVzdGVyYV9kcnZfdmVyLmggICAgICAgfCAgIDIzICsNCj4gIC4uLi9ldGhlcm5ldC9tYXJ2
+ZWxsL3ByZXN0ZXJhL3ByZXN0ZXJhX2h3LmMgICB8IDEwOTQgKysrKysrKysrKysrDQo+ICAuLi4v
+ZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9wcmVzdGVyYV9ody5oICAgfCAgMTU5ICsrDQo+ICAu
+Li4vZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9wcmVzdGVyYV9wY2kuYyAgfCAgODQwICsrKysr
+KysrKw0KPiAgLi4uL21hcnZlbGwvcHJlc3RlcmEvcHJlc3RlcmFfc3dpdGNoZGV2LmMgICAgIHwg
+MTIxNyArKysrKysrKysrKysrDQo+ICAxMiBmaWxlcyBjaGFuZ2VkLCA1MTIzIGluc2VydGlvbnMo
+KykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL3By
+ZXN0ZXJhL0tjb25maWcNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25ldC9ldGhlcm5l
+dC9tYXJ2ZWxsL3ByZXN0ZXJhL01ha2VmaWxlDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9wcmVzdGVyYS5jDQo+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9wcmVzdGVyYS5o
+DQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVsbC9wcmVz
+dGVyYS9wcmVzdGVyYV9kcnZfdmVyLmgNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25l
+dC9ldGhlcm5ldC9tYXJ2ZWxsL3ByZXN0ZXJhL3ByZXN0ZXJhX2h3LmMNCj4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL3ByZXN0ZXJhL3ByZXN0ZXJhX2h3
+LmgNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL3By
+ZXN0ZXJhL3ByZXN0ZXJhX3BjaS5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9uZXQv
+ZXRoZXJuZXQvbWFydmVsbC9wcmVzdGVyYS9wcmVzdGVyYV9zd2l0Y2hkZXYuYw0KPiANCg==
