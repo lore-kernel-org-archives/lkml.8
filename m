@@ -2,72 +2,121 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C534CC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3A1C35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A603921D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A79D21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgBYKFI (ORCPT
+        id S1729952AbgBYKFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:05:08 -0500
-Received: from ms.lwn.net ([45.79.88.28]:53034 "EHLO ms.lwn.net"
+        Tue, 25 Feb 2020 05:05:11 -0500
+Received: from mx.socionext.com ([202.248.49.38]:34642 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgBYKFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:05:07 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id A611B738;
-        Tue, 25 Feb 2020 10:05:06 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 03:05:01 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] Some cross-reference fixes due to fixes renames
-Message-ID: <20200225030501.48770bc2@lwn.net>
-In-Reply-To: <cover.1582361737.git.mchehab+huawei@kernel.org>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1727016AbgBYKFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:05:10 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 25 Feb 2020 19:05:08 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 51B8618008B;
+        Tue, 25 Feb 2020 19:05:08 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 25 Feb 2020 19:05:08 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id C82F81A0006;
+        Tue, 25 Feb 2020 19:05:07 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id AFFD212013D;
+        Tue, 25 Feb 2020 19:05:07 +0900 (JST)
+Date:   Tue, 25 Feb 2020 19:05:07 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RESEND] PCI: endpoint: Fix clearing start entry in configfs
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
+References: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com> <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
+Message-Id: <20200225190506.7DFA.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Feb 2020 10:00:00 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+Hi Lorenzo,
 
-> There are some references that got broken due to renames
-> (mostly .txt to .yaml and .rst, but also some files got moved
-> to other directories).
+On Fri, 21 Feb 2020 14:15:53 +0000 <lorenzo.pieralisi@arm.com> wrote:
+
+> On Fri, Dec 20, 2019 at 09:24:37PM +0900, Kunihiko Hayashi wrote:
+> > The value of 'start' entry is no change whenever writing 0 to configfs.
+> > So the endpoint that stopped once can't restart.
+> > 
+> > The following command lines are an example restarting endpoint and
+> > reprogramming configurations after receiving bus-reset.
+> > 
+> >     echo 0 > controllers/66000000.pcie-ep/start
+> >     rm controllers/66000000.pcie-ep/func1
+> >     ln -s functions/pci_epf_test/func1 controllers/66000000.pcie-ep/
+> >     echo 1 > controllers/66000000.pcie-ep/start
+> > 
+> > However, the first 'echo' can't set 0 to 'start', so the last 'echo' can't
+> > restart endpoint.
 > 
-> The first patch actually contains a fix for
-> documentation-file-ref-check, with currently reports several
-> false positives.
+> I think your description is not correct - pci_epc_group->start is
+> just used to check if an endpoint has been started or not (in
+> pci_epc_epf_unlink() and that's a WARN_ON) but nonetheless this
+> looks like a bug and ought to be fixed.
+
+When pci_epc_group->start keeps 1 after starting this controller with
+'echo 1 > start', we can never unlink the func1 from the controller
+because of WARN_ON.
+
+I think that unlink/re-link play initialization role of configfs
+through 'unbind' and 'bind' functions. However, we can't re-initialize
+configfs.
+
+If this is the intended behavior, my patch will make no sense.
+
+> I need Kishon's ACK to proceed.
+
+I think so, too.
+
+Thank you,
+
 > 
-> Mauro Carvalho Chehab (7):
->   scripts: documentation-file-ref-check: improve :doc: handling
->   docs: dt: fix several broken references due to renames
->   docs: fix broken references to text files
->   docs: adm1177: fix a broken reference
->   docs: fix broken references for ReST files that moved around
->   docs: remove nompx kernel parameter and intel_mpx from index.rst
->   docs: gpu: i915.rst: fix warnings due to file renames
+> Thanks,
+> Lorenzo
+> 
+> > Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  drivers/pci/endpoint/pci-ep-cfs.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> > index d1288a0..4fead88 100644
+> > --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> > +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> > @@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+> >  
+> >  	if (!start) {
+> >  		pci_epc_stop(epc);
+> > +		epc_group->start = 0;
+> >  		return len;
+> >  	}
+> >  
+> > -- 
+> > 2.7.4
+> > 
 
-OK, I've applied the first and the last of those.  Patches 2 and 4 have
-already been applied elsewhere.  Parts 3 and 5 have horrific conflicts
-against docs-next, so I've passed them by.  That leaves nompx, which had
-a comment from Dave Hansen.
+---
+Best Regards,
+Kunihiko Hayashi
 
-Thanks,
-
-jon
