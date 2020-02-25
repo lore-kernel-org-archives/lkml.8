@@ -2,183 +2,70 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBCC35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1704C35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3ED92084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582649835;
-	bh=90JBCZvuUwjkSs1Hnc3LpN1N/kPAIDcqYTB1iAObgdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SktAqCCN5Pj+0EdgbDmLlusIXDeNcwX6Os7S8PA0w7uEp8Co95PXWm99Xsv/Yh7SP
-	 xGbYWVDtdEOIzzy1gxV8LXDJ6IIf+CORiMVznY3d/rmdQhO7ShY/Imy9iuT5j9NVcp
-	 +szUfsDJFhdNDz5GdK5GcVYP124r++O265jv6JuA=
+	by mail.kernel.org (Postfix) with ESMTP id 9ADB82082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbgBYQ5O (ORCPT
+        id S1731230AbgBYQ5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 11:57:49 -0500
+Received: from mga09.intel.com ([134.134.136.24]:17264 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgBYQ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:57:13 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B664C21927;
-        Tue, 25 Feb 2020 16:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582649832;
-        bh=90JBCZvuUwjkSs1Hnc3LpN1N/kPAIDcqYTB1iAObgdY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2OT1bZXD227lBlfGSt2jsJ3rPt6z/gNKbLuKbylKTau3IUc7jhdLumNvYIIHHYJDq
-         i6YDuBL/cysZRA31xcnYBbQO4vvATKpFxNsLrndeYJtf5zqLIlEwxoNSpU5EeTNjtA
-         TNoO1adeYDCBYlu7+PdEgXhJOI/a6sF/0axR8Tf4=
-Received: by mail-qt1-f172.google.com with SMTP id d9so96461qte.12;
-        Tue, 25 Feb 2020 08:57:12 -0800 (PST)
-X-Gm-Message-State: APjAAAU3RjHl+H/RQcjTIL09oKRc0kQxC+GUlD7glqe7N8TjZpoy6Ecc
-        V5nk/AomzA6E5j5Y+7CN0y+oYRu1/NsbsXVnFw==
-X-Google-Smtp-Source: APXvYqynQGVCaS6vsUSmY1psEfHgy4a65Fy7HlLUFGmtipR1MpihYRNwkGCOJdMOtj5iyqJoT2+ascR04bYI1hr352c=
-X-Received: by 2002:ac8:5513:: with SMTP id j19mr54927970qtq.143.1582649831805;
- Tue, 25 Feb 2020 08:57:11 -0800 (PST)
+        id S1727983AbgBYQ5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:57:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 08:57:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="438125640"
+Received: from gbwalsh-mobl6.ger.corp.intel.com (HELO localhost) ([10.252.26.72])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Feb 2020 08:57:45 -0800
+Date:   Tue, 25 Feb 2020 18:57:44 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v2 2/4] tpm: ibmvtpm: Wait for buffer to be set before
+ proceeding
+Message-ID: <20200225165744.GD15662@linux.intel.com>
+References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
+ <20200213202329.898607-3-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200224211035.16897-1-ansuelsmth@gmail.com> <20200224211035.16897-2-ansuelsmth@gmail.com>
-In-Reply-To: <20200224211035.16897-2-ansuelsmth@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 25 Feb 2020 10:57:00 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
-Message-ID: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213202329.898607-3-stefanb@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 3:10 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->
+On Thu, Feb 13, 2020 at 03:23:27PM -0500, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
+> 
+> Synchronize with the results from the CRQs before continuing with
+> the initialization. This avoids trying to send TPM commands while
+> the rtce buffer has not been allocated, yet.
 
-typo in the subject. Use 'dt-bindings: net: ...' for the subject prefix.
+What is CRQ anyway an acronym of?
 
-> Add documentations for ipq806x mdio driver.
->
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
-> Changes in v7:
-> - Fix dt_binding_check problem
+> This patch fixes an existing race condition that may occurr if the
+> hypervisor does not quickly respond to the VTPM_GET_RTCE_BUFFER_SIZE
+> request sent during initialization and therefore the ibmvtpm->rtce_buf
+> has not been allocated at the time the first TPM command is sent.
 
-Um, no you didn't...
+If it fixes a race condition, why doesn't it have a fixes tag?
 
->
->  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> new file mode 100644
-> index 000000000000..3178cbfdc661
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x MDIO bus controller
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description: |+
-
-Don't need '|+' unless you need specific formatting.
-
-> +  The ipq806x soc have a MDIO dedicated controller that is
-> +  used to comunicate with the gmac phy conntected.
-> +  Child nodes of this MDIO bus controller node are standard
-> +  Ethernet PHY device nodes as described in
-> +  Documentation/devicetree/bindings/net/phy.txt
-> +
-> +allOf:
-> +  - $ref: "mdio.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq8064-mdio
-
-blank line between properties please.
-
-> +  reg:
-> +    maxItems: 1
-> +    description: address and length of the register set for the device
-
-That's every 'reg', you can drop this.
-
-> +  clocks:
-> +    maxItems: 1
-> +    description: A reference to the clock supplying the MDIO bus controller
-
-That's every 'clocks', you can drop this.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    mdio0: mdio@37000000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        compatible = "qcom,ipq8064-mdio", "syscon";
-
-'syscon' doesn't match the schema and is wrong.
-
-> +        reg = <0x37000000 0x200000>;
-
-> +        resets = <&gcc GMAC_CORE1_RESET>;
-> +        reset-names = "stmmaceth";
-
-Not documented.
-
-> +        clocks = <&gcc GMAC_CORE1_CLK>;
-
-You need to include the header for these defines.
-
-> +
-> +        switch@10 {
-> +            compatible = "qca,qca8337";
-> +            /* ... */
-> +        };
-> +    };
-> --
-> 2.25.0
->
+/Jarkko
