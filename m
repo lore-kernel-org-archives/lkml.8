@@ -2,94 +2,91 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15C5C35DF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC559C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D4721556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:42:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWo/lJ0o"
+	by mail.kernel.org (Postfix) with ESMTP id AD28921556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgBYGmF (ORCPT
+        id S1729093AbgBYGnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:42:05 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33268 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgBYGmF (ORCPT
+        Tue, 25 Feb 2020 01:43:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58881 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgBYGnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:42:05 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d5so8372931qto.0;
-        Mon, 24 Feb 2020 22:42:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CjACLIW/ztf9uXbrc9lIWhWHMhhHprWeuEL61GFpnss=;
-        b=pWo/lJ0ohpndxU57k182UbHL/4Q+95c1oCthXKhX5P5SC3ugrhMElve0Xdic/dEY6J
-         kN/HJW3c7OpdxFS/D86Kle+HorN5J/n2AIp/9N6w47snqw8Nd/J8Cm3tWmsmiSYgzB/O
-         CgPR+KAzDhanZOnjUJ8BqT9xNDqaNxmZ8ATbztpnWvPGMLvJXESAfTZME3hQ0sYAMvqL
-         eVS0DhPOdT7oj1zy+/J6K/hHwVRxG6qzKHzEx75MDGmgw6N9VkzmJHDUhxUZx3tJXxtZ
-         2/paeYlw8pXuV0mb8qfh6xtCdmt9KiYv2um7Smi3nz125AJWrBAXlxbgoPXSyP/oNGuA
-         SPIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CjACLIW/ztf9uXbrc9lIWhWHMhhHprWeuEL61GFpnss=;
-        b=gTpQQ2PIz/CluZA0NJ3ndBSXPfvD/BZnRE6rKXZjq5B/my4bbndiNJUPLOKmiVmTNX
-         dPKCkb6fKjnrBBmmSC5Zesdaal/T3+JJnSukqcwJKan2ZVawQqRDOZAJtId9UrfdnH/Y
-         i5qEiKFd6Un9Fu8pgr5zuoHtcg4N/T4g4krtvUSTsMYVQAp1x6yvF/DJdOQ+G/ajTbli
-         878ZFFS7eKU73aEQALax9N9TqHMA0Q/764LDIq3oWQVWYnXxiok2PTz2zSSjQKs2BfHD
-         qPp7ah9OLGRRWe8m0n4vrD0xxMNZ3cXVDo//lfz2cSV3oKQUCikzD+z274VvxPYUSsFE
-         SPSQ==
-X-Gm-Message-State: APjAAAUd+j1oSPCxZbpGzP0P2JokKwTz4ezUU1gylRQ3xIpeCwtrtLVv
-        k3yga3DIlxogH7QIwXR+aZ3+ylLBl+fr5el6rB8=
-X-Google-Smtp-Source: APXvYqzuUu3LTqLatCxP+WEwHX/BTN2Ky4+aNnyZqZkcKIwMIrRJ2BJWdFX7dCsHLrz8l6iFMJJmAwuJb/4d420P/eI=
-X-Received: by 2002:ac8:9e:: with SMTP id c30mr53592557qtg.359.1582612924150;
- Mon, 24 Feb 2020 22:42:04 -0800 (PST)
+        Tue, 25 Feb 2020 01:43:50 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6Twa-0006m6-5S; Tue, 25 Feb 2020 07:43:48 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6TwY-0006WO-W1; Tue, 25 Feb 2020 07:43:46 +0100
+Date:   Tue, 25 Feb 2020 07:43:46 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 1/4] pwm: omap-dmtimer: Drop unused header file
+Message-ID: <20200225064346.xj5gejuvu76riou2@pengutronix.de>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-2-lokeshvutla@ti.com>
+ <20200224075302.jd3vcrdl6fuqrkpb@pengutronix.de>
+ <ca33326e-22c8-e57b-c5fe-900f4749e640@ti.com>
 MIME-Version: 1.0
-References: <20200220041608.30289-1-lukenels@cs.washington.edu> <CAADnVQJTtNu5a2oM=8poe6FHXeQttG44S+7XvuqQtv1Cgui8tg@mail.gmail.com>
-In-Reply-To: <CAADnVQJTtNu5a2oM=8poe6FHXeQttG44S+7XvuqQtv1Cgui8tg@mail.gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Tue, 25 Feb 2020 07:41:52 +0100
-Message-ID: <CAJ+HfNgBNHQ=sOgjZy1NZ+VnG2hYNCqJvueS9Xjgm0DswLPp9g@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next] RV32G eBPF JIT
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        bpf <bpf@vger.kernel.org>, Jiong Wang <jiong.wang@netronome.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca33326e-22c8-e57b-c5fe-900f4749e640@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 01:42, Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-[...]
-> > Co-developed-by: Xi Wang <xi.wang@gmail.com>
-> > Signed-off-by: Xi Wang <xi.wang@gmail.com>
-> > Signed-off-by: Luke Nelson <lukenels@cs.washington.edu>
->
-> Bjorn,
->
-> please review.
+On Tue, Feb 25, 2020 at 10:32:04AM +0530, Lokesh Vutla wrote:
+> Hi Uwe,
+> 
+> On 24/02/20 1:23 PM, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Mon, Feb 24, 2020 at 10:51:32AM +0530, Lokesh Vutla wrote:
+> >> @@ -190,9 +190,8 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+> >>  		load_value, load_value,	match_value, match_value);
+> >>  
+> >>  	omap->pdata->set_pwm(omap->dm_timer,
+> >> -			      pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+> >> -			      true,
+> >> -			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
+> >> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+> >> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
+> > 
+> > This is unrelated.
+> 
+> PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE is deleted along with header file
+> and used OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE. I should have mentioned this
+> in my commit description. Will fix it in v2.
 
-Alexei/Luke/Xi -- Sorry for the late reply. I'll do a review ASAP.
+Ah, indeed I missed that the register name was changed in that hunk and
+considered that an indention only change.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
