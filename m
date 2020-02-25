@@ -2,200 +2,150 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F98C35E17
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81D1C35E17
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820C12176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="az9/lEQ6"
+	by mail.kernel.org (Postfix) with ESMTP id 8A29320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgBYVDB (ORCPT
+        id S1729472AbgBYVDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:03:01 -0500
-Received: from mail-qv1-f73.google.com ([209.85.219.73]:45534 "EHLO
-        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbgBYVDA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:03:00 -0500
-Received: by mail-qv1-f73.google.com with SMTP id d7so769726qvq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:02:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=vWB3la6MZAcuUeVOqIcp281F5LSfjcobFajXxwkFi6A=;
-        b=az9/lEQ6wwXYJyI3Gy29nxJIfWaxkNA++/xMMPhGH9Bp55F58tIoAVd2evBeCT3IlI
-         KKgT00uOWJLWB6jM4tMv/BPZk2IBrtNGq1UX9hERFKv4CE6BDLW/6YKDNoqRugx0oOT1
-         JFEPhPT7z9F67zo+gQk9nVxt8J2a//vG9eP1UplMOqDnWzcoXl0qqUpUbhow29LFFsDn
-         reHM0SO7vQWbTfc/yOUJLSXO7dgd9DEpCrAc4RVQU0ltXVvkKgrYgYLltwqnerD/XmQS
-         /3lvr+TKKjaUhwe/wV9rXCo1vDnYLQPRPVlKZHfsvP2A00O5Bpk2Anzs0X1WZLoKap6w
-         wzAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=vWB3la6MZAcuUeVOqIcp281F5LSfjcobFajXxwkFi6A=;
-        b=KZCSow6Ml7oa+XTz5AT6O+Q2F8Nj0wgSUySQQLHRhJnsSxED5bkO50f3KlOwRhPljh
-         Eg1Y6NaB72XODFoeAdHm0FC64VpyWjqtdyucMZqnNe4qSyEgiVe+M7iyV0SUWc8k/JPy
-         6htMQbqPOuMg2yVjy3SWaRDIMwmBx3RCOf/sw9SHKNroumB63//AtF4F438O0edU+N2r
-         +uysMiXaSFrSqtl9x51tSVTSMo68t+YqEeIFmsodRYXCXQ/utEdpDpT9195QqpXPi0CV
-         vqoNKzDwB/mEvzB5rUDIWlZn/y71k/UqfUk5sFEyUEyBAgqXbHs2YqjJZJ0ZdaThjE2W
-         KXMA==
-X-Gm-Message-State: APjAAAUHVS3fhX7EnAMvhi7pkozNbpuHwNIKRteHJ9xzUp6kt1PwH+8A
-        cD3u+RtX5Vye0QLPuWA/BlbLywCzEVn6kJeTuy8=
-X-Google-Smtp-Source: APXvYqw9j4SjKcqy0U3A0k0fMjgQj/y1SE9wLfZHXsZM0aTr3GyALCU9cgEB1u7akUo3JkjTfFIOLdEo4I2R8DIwtHE=
-X-Received: by 2002:ad4:48c6:: with SMTP id v6mr930719qvx.207.1582664577840;
- Tue, 25 Feb 2020 13:02:57 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:02:49 -0800
-In-Reply-To: <20200224174129.2664-1-ndesaulniers@google.com>
-Message-Id: <20200225210250.64366-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200224174129.2664-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     corbet@lwn.net, masahiroy@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Feb 2020 16:03:08 -0500
+Received: from mga14.intel.com ([192.55.52.115]:16033 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728618AbgBYVDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 16:03:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 13:03:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
+   d="scan'208";a="436393557"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Feb 2020 13:03:06 -0800
+Date:   Tue, 25 Feb 2020 13:03:06 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+Message-ID: <20200225210306.GA15810@iweiny-DESK2.sc.intel.com>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-8-ira.weiny@intel.com>
+ <20200221174449.GB11378@lst.de>
+ <20200221224419.GW10776@dread.disaster.area>
+ <20200224175603.GE7771@lst.de>
+ <20200225000937.GA10776@dread.disaster.area>
+ <20200225173633.GA30843@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225173633.GA30843@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added to kbuild documentation. Provides more official info on building
-kernels with Clang and LLVM than our wiki.
+On Tue, Feb 25, 2020 at 06:36:33PM +0100, Christoph Hellwig wrote:
+> On Tue, Feb 25, 2020 at 11:09:37AM +1100, Dave Chinner wrote:
+> > > No, the original code was broken because it didn't serialize between
+> > > DAX and buffer access.
+> > > 
+> > > Take a step back and look where the problems are, and they are not
+> > > mostly with the aops.  In fact the only aop useful for DAX is
+> > > is ->writepages, and how it uses ->writepages is actually a bit of
+> > > an abuse of that interface.
+> > 
+> > The races are all through the fops, too, which is one of the reasons
+> > Darrick mentioned we should probably move this up to file ops
+> > level...
+> 
+> But the file ops are very simple to use.  Pass the flag in the iocb,
+> and make sure the flag can only changed with i_rwsem held.  That part
+> is pretty trivial, the interesting case is mmap because it is so
+> spread out.
+> 
+> > > So what we really need it just a way to prevent switching the flag
+> > > when a file is mapped,
+> > 
+> > That's not sufficient.
+> > 
+> > We also have to prevent the file from being mapped *while we are
+> > switching*. Nothing in the mmap() path actually serialises against
+> > filesystem operations, and the initial behavioural checks in the
+> > page fault path are similarly unserialised against changing the
+> > S_DAX flag.
+> 
+> And the important part here is ->mmap.  If ->mmap doesn't get through
+> we are not going to see page faults.
 
-Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1 -> V2:
-* s/On going/ongoing/
-* add Randy's Suggested-by
-* add Nathan and Sedat's Reviewed-by
-* Upgrade Kees' Sugguested-by to Reviewed-by
-* s/suffix/prefix/
+The series already blocks mmap'ed files from a switch.  That was not crazy
+hard.  I don't see a use case to support changing the mode while the file is
+mapped.
 
+> 
+> > > and in the normal read/write path ensure the
+> > > flag can't be switch while I/O is going on, which could either be
+> > > done by ensuring it is only switched under i_rwsem or equivalent
+> > > protection, or by setting the DAX flag once in the iocb similar to
+> > > IOCB_DIRECT.
+> > 
+> > The iocb path is not the problem - that's entirely serialised
+> > against S_DAX changes by the i_rwsem. The problem is that we have no
+> > equivalent filesystem level serialisation for the entire mmap/page
+> > fault path, and it checks S_DAX all over the place.
+> 
+> Not right now.  We have various IS_DAX checks outside it.  But it is
+> easily fixable indeed.
+> 
+> > /me wonders if the best thing to do is to add a ->fault callout to
+> > tell the filesystem to lock/unlock the inode right up at the top of
+> > the page fault path, outside even the mmap_sem.  That means all the
+> > methods that the page fault calls are protected against S_DAX
+> > changes, and it gives us a low cost method of serialising page
+> > faults against DIO (e.g. via inode_dio_wait())....
+> 
+> Maybe.  Especially if it solves real problems and isn't just new
+> overhead to add an esoteric feature.
 
- Documentation/kbuild/index.rst |  1 +
- Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/kbuild/llvm.rst
+I thought about doing something like this but it seemed easier to block the
+change while the file was mapped.
 
-diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-index 0f144fad99a6..3882bd5f7728 100644
---- a/Documentation/kbuild/index.rst
-+++ b/Documentation/kbuild/index.rst
-@@ -19,6 +19,7 @@ Kernel Build System
- 
-     issues
-     reproducible-builds
-+    llvm
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-new file mode 100644
-index 000000000000..d6c79eb4e23e
---- /dev/null
-+++ b/Documentation/kbuild/llvm.rst
-@@ -0,0 +1,80 @@
-+==============================
-+Building Linux with Clang/LLVM
-+==============================
-+
-+This document covers how to build the Linux kernel with Clang and LLVM
-+utilities.
-+
-+About
-+-----
-+
-+The Linux kernel has always traditionally been compiled with GNU toolchains
-+such as GCC and binutils. Ongoing work has allowed for `Clang
-+<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
-+used as viable substitutes. Distributions such as `Android
-+<https://www.android.com/>`_, `ChromeOS
-+<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
-+<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
-+collection of toolchain components implemented in terms of C++ objects
-+<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
-+supports C and the GNU C extensions required by the kernel, and is pronounced
-+"klang," not "see-lang."
-+
-+Clang
-+-----
-+
-+The compiler used can be swapped out via `CC=` command line argument to `make`.
-+`CC=` should be set when selecting a config and during a build.
-+
-+	make CC=clang defconfig
-+
-+	make CC=clang
-+
-+Cross Compiling
-+---------------
-+
-+A single Clang compiler binary will typically contain all supported backends,
-+which can help simplify cross compiling.
-+
-+	ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
-+
-+`CROSS_COMPILE` is not used to prefix the Clang compiler binary, instead
-+`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
-+example:
-+
-+	clang --target aarch64-linux-gnu foo.c
-+
-+LLVM Utilities
-+--------------
-+
-+LLVM has substitutes for GNU binutils utilities. These can be invoked as
-+additional parameters to `make`.
-+
-+	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
-+	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
-+	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-+	  HOSTLD=ld.lld
-+
-+Getting Help
-+------------
-+
-+- `Website <https://clangbuiltlinux.github.io/>`_
-+- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
-+- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
-+- IRC: #clangbuiltlinux on chat.freenode.net
-+- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
-+- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
-+- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
-+
-+Getting LLVM
-+-------------
-+
-+- http://releases.llvm.org/download.html
-+- https://github.com/llvm/llvm-project
-+- https://llvm.org/docs/GettingStarted.html
-+- https://llvm.org/docs/CMake.html
-+- https://apt.llvm.org/
-+- https://www.archlinux.org/packages/extra/x86_64/llvm/
-+- https://github.com/ClangBuiltLinux/tc-build
-+- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
-+- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
--- 
-2.25.0.265.gbab2e86ba0-goog
+> 
+> > 
+> > > And they easiest way to get all this done is as a first step to
+> > > just allowing switching the flag when no blocks are allocated at
+> > > all, similar to how the rt flag works.
+> > 
+> > False equivalence - it is not similar because the RT flag changes
+> > and their associated state checks are *already fully serialised* by
+> > the XFS_ILOCK_EXCL. S_DAX accesses have no such serialisation, and
+> > that's the problem we need to solve...
+> 
+> And my point is that if we ensure S_DAX can only be checked if there
+> are no blocks on the file, is is fairly easy to provide the same
+> guarantee.  And I've not heard any argument that we really need more
+> flexibility than that.  In fact I think just being able to change it
+> on the parent directory and inheriting the flag might be more than
+> plenty, which would lead to a very simple implementation without any
+> of the crazy overhead in this series.
+
+Inherit on file creation or also if a file was moved under the directory?
+
+Do we need to consider hard or soft links?
+
+Ira
 
