@@ -2,125 +2,286 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A541EC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBF5C35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7898F24650
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582654358;
-	bh=mXWUiZJkPmr1lE8uFH0V3qybqZfjUw3HgXua5XVN2cU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=d4qkm5G3n8sg7/GDd/uXSOE92WClm3YKGt8Sdnk87qSrKeow5osmu6wgk22N8ftQE
-	 aycTnserqmlM9C04lsVIy5BprbO4D5txBss1DB1BGAgRw0wthTUk20KUTSI73Wdgko
-	 qzqeKuNmojnG2pRRmJI1REXvZzf8sTks2Ecf974M=
+	by mail.kernel.org (Postfix) with ESMTP id EB41320CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JXZDpSk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbgBYSMg (ORCPT
+        id S1731355AbgBYSNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:12:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbgBYSMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:12:36 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C7322464
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 18:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582654355;
-        bh=mXWUiZJkPmr1lE8uFH0V3qybqZfjUw3HgXua5XVN2cU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fMui7mI7qIyRMi4ekKiacJt4rF4HFT4WpEGnJTtw/GxytaWxH2e3qhX//Bj86Cp9X
-         UNk4hH5PPZhW0gD9n4rbF+CK6lcM2vdrzkiYo4A+Hhv+Cso7V2PX925fbRajyv6FWn
-         aVrwy653xgbTgqvTKzFjfBe3eMZJDac6HNoPKVFM=
-Received: by mail-wr1-f41.google.com with SMTP id z15so7570568wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 10:12:35 -0800 (PST)
-X-Gm-Message-State: APjAAAUgKOfOpE5PaNW2ns8gqbulg/ztoOp6xdxdqlHX0ovncK/nUqR3
-        O389tbeHutKwA2ypqQYCbW01Ka8wxjbCud/Vg2Cy+Q==
-X-Google-Smtp-Source: APXvYqyqT+4lqHqb1wfGC3LfI8nS+unwk420CYZlyoxCttkGv3eFgPfmPK5xORObhzEOKAXEiAmF1nZu/8bOUQXtGc0=
-X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr417950wrw.252.1582654353845;
- Tue, 25 Feb 2020 10:12:33 -0800 (PST)
+        Tue, 25 Feb 2020 13:13:17 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4863 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730017AbgBYSNR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:13:17 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5563970000>; Tue, 25 Feb 2020 10:12:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 25 Feb 2020 10:13:15 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 25 Feb 2020 10:13:15 -0800
+Received: from [10.25.74.250] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Feb
+ 2020 18:13:10 +0000
+Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
+        <thierry.reding@gmail.com>, <Jisheng.Zhang@synaptics.com>,
+        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+ <20200217121036.3057-6-vidyas@nvidia.com>
+ <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
+Date:   Tue, 25 Feb 2020 23:43:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
- <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
- <9e16fed9-4399-5c78-cbfb-6be75c295f31@amd.com> <CAKv+Gu_0LUY67DwSLU1tyijuF+0mKPpvq1j3RSMy5HBxYE-3qw@mail.gmail.com>
- <96417897-8bf0-e60c-6285-7286673ecd01@amd.com>
-In-Reply-To: <96417897-8bf0-e60c-6285-7286673ecd01@amd.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 25 Feb 2020 19:12:22 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu-5=5bKBdO_r=Z3bAqCM36vfH=vLcCcaFtKcwYpe=AP7g@mail.gmail.com>
-Message-ID: <CAKv+Gu-5=5bKBdO_r=Z3bAqCM36vfH=vLcCcaFtKcwYpe=AP7g@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/efi: Add additional efi tables for unencrypted
- mapping checks
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582654359; bh=ZvETQ+ouytMuwblQdY1QXIne6U0B0F6861iyW2Xtjpk=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JXZDpSk9xsRyXzWcV+pE5k0m9WQB/RBlLM/7toUqg9ji5ApPVGzox9EToYPtMM1Gz
+         eRxvIhKVLc0n+3Dh3Jl38+XKlJB6LdqlgRrPPTyfzWNsO4OzLxNo6sn+UNjQgO7j+8
+         svl1y/kRfokdxA0ERwoxbKCRCazRBUy9dSBYXrkrpgLm2Pq4wEAsJxy36fEymC89rI
+         0CNDx75T2vha1tunTc9zrDEDgxCneiYb6AwTFKCSHotuWB5eEhnr2mW5aSvfuLNFnW
+         rKWp+fCkGq2+4lYuqdo+0eo5Ud+J9OBgYKcO3PXapOlU6mj4asAt0JniINqXbjCXvM
+         82AO2sohHMIUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 19:10, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
-> On 2/25/20 11:58 AM, Ard Biesheuvel wrote:
-> > On Tue, 25 Feb 2020 at 18:54, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> >>
-> >> On 2/25/20 11:45 AM, Ard Biesheuvel wrote:
-> >>> On Tue, 25 Feb 2020 at 18:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> >>>>
-> >>>> When booting with SME active, EFI tables must be mapped unencrypted since
-> >>>> they were built by UEFI in unencrypted memory. Update the list of tables
-> >>>> to be checked during early_memremap() processing to account for new EFI
-> >>>> tables.
-> >>>>
-> >>>> This fixes a bug where an EFI TPM log table has been created by UEFI, but
-> >>>> it lives in memory that has been marked as usable rather than reserved.
-> >>>>
-> >>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> >>>>
-> >>>> ---
-> >>>> Changes since v1:
-> >>>> - Re-spun against EFI tree
-> >>>
-> >>> Which one? Surely not the one in the link I included?
-> >>
-> >> I did a git clone of
-> >>
-> >>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
-> >>
-> >> and checked out branch next. Not sure what I missed...
-> >>
-> >
-> > Weird. Do you see commit 5d288dbd88606d8f215c7138b10649115d79cadd on
-> > that branch? It removes rng_seed from struct efi, hence my request to
-> > rebase your patch.
->
-> I had just assumed you wanted a cleaner version and didn't realize that
-> rng_seed was removed from struct efi. My bad for not building.
->
-> >
-> > IMO, best is to simply drop the 'static' from rng_seed, rename it to
-> > efi_rng_seed, and drop an extern declaration in linux/efi.h so it is
-> > accessible from your code. I'm reluctant to put it back in struct efi.
->
-> Ok, I'll re-work the patch.
->
 
-OK
 
-Btw if you want the TPM part of the fix to go to -stable, better to
-split them in two (and I'll put a cc:stable on the tpm one)
+On 2/25/2020 5:38 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
+>> Add support to defer core initialization and to receive a notifier
+>> when core is ready to accommodate platforms where core is not for
+>> initialization untile reference clock from host is available.
+> 
+> I don't understand this commit log, please reword it and fix
+> the typos, I would merge it then, thanks.
+Would the following be ok?
+
+Add support to defer DWC core initialization for the endpoint mode of 
+operation. Initialization would resume based on the notifier mechanism. 
+This would enable support for implementations like Tegra194 for endpoint 
+mode operation, where the core initialization needs to be deferred until 
+the PCIe reference clock is available from the host system.
+
+If it is ok, I'll send new patch series with this commit log.
+
+Thanks,
+Vidya Sagar
+> 
+> Lorenzo
+> 
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> V3:
+>> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> V2:
+>> * Addressed review comments from Kishon
+>>
+>>   drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+>>   1 file changed, 77 insertions(+), 41 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> index bddff15052cc..be04c6220265 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>>                           msecs_to_jiffies(1));
+>>   }
+>>
+>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>> -                              void *data)
+>> -{
+>> -     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>> -     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> -
+>> -     queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>> -                        msecs_to_jiffies(1));
+>> -
+>> -     return NOTIFY_OK;
+>> -}
+>> -
+>>   static void pci_epf_test_unbind(struct pci_epf *epf)
+>>   {
+>>        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>        return 0;
+>>   }
+>>
+>> +static int pci_epf_test_core_init(struct pci_epf *epf)
+>> +{
+>> +     struct pci_epf_header *header = epf->header;
+>> +     const struct pci_epc_features *epc_features;
+>> +     struct pci_epc *epc = epf->epc;
+>> +     struct device *dev = &epf->dev;
+>> +     bool msix_capable = false;
+>> +     bool msi_capable = true;
+>> +     int ret;
+>> +
+>> +     epc_features = pci_epc_get_features(epc, epf->func_no);
+>> +     if (epc_features) {
+>> +             msix_capable = epc_features->msix_capable;
+>> +             msi_capable = epc_features->msi_capable;
+>> +     }
+>> +
+>> +     ret = pci_epc_write_header(epc, epf->func_no, header);
+>> +     if (ret) {
+>> +             dev_err(dev, "Configuration header write failed\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     ret = pci_epf_test_set_bar(epf);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     if (msi_capable) {
+>> +             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>> +             if (ret) {
+>> +                     dev_err(dev, "MSI configuration failed\n");
+>> +                     return ret;
+>> +             }
+>> +     }
+>> +
+>> +     if (msix_capable) {
+>> +             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>> +             if (ret) {
+>> +                     dev_err(dev, "MSI-X configuration failed\n");
+>> +                     return ret;
+>> +             }
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>> +                              void *data)
+>> +{
+>> +     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>> +     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> +     int ret;
+>> +
+>> +     switch (val) {
+>> +     case CORE_INIT:
+>> +             ret = pci_epf_test_core_init(epf);
+>> +             if (ret)
+>> +                     return NOTIFY_BAD;
+>> +             break;
+>> +
+>> +     case LINK_UP:
+>> +             queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>> +                                msecs_to_jiffies(1));
+>> +             break;
+>> +
+>> +     default:
+>> +             dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+>> +             return NOTIFY_BAD;
+>> +     }
+>> +
+>> +     return NOTIFY_OK;
+>> +}
+>> +
+>>   static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>   {
+>>        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>   {
+>>        int ret;
+>>        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>> -     struct pci_epf_header *header = epf->header;
+>>        const struct pci_epc_features *epc_features;
+>>        enum pci_barno test_reg_bar = BAR_0;
+>>        struct pci_epc *epc = epf->epc;
+>> -     struct device *dev = &epf->dev;
+>>        bool linkup_notifier = false;
+>> -     bool msix_capable = false;
+>> -     bool msi_capable = true;
+>> +     bool core_init_notifier = false;
+>>
+>>        if (WARN_ON_ONCE(!epc))
+>>                return -EINVAL;
+>> @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>        epc_features = pci_epc_get_features(epc, epf->func_no);
+>>        if (epc_features) {
+>>                linkup_notifier = epc_features->linkup_notifier;
+>> -             msix_capable = epc_features->msix_capable;
+>> -             msi_capable = epc_features->msi_capable;
+>> +             core_init_notifier = epc_features->core_init_notifier;
+>>                test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>>                pci_epf_configure_bar(epf, epc_features);
+>>        }
+>> @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>        epf_test->test_reg_bar = test_reg_bar;
+>>        epf_test->epc_features = epc_features;
+>>
+>> -     ret = pci_epc_write_header(epc, epf->func_no, header);
+>> -     if (ret) {
+>> -             dev_err(dev, "Configuration header write failed\n");
+>> -             return ret;
+>> -     }
+>> -
+>>        ret = pci_epf_test_alloc_space(epf);
+>>        if (ret)
+>>                return ret;
+>>
+>> -     ret = pci_epf_test_set_bar(epf);
+>> -     if (ret)
+>> -             return ret;
+>> -
+>> -     if (msi_capable) {
+>> -             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>> -             if (ret) {
+>> -                     dev_err(dev, "MSI configuration failed\n");
+>> -                     return ret;
+>> -             }
+>> -     }
+>> -
+>> -     if (msix_capable) {
+>> -             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>> -             if (ret) {
+>> -                     dev_err(dev, "MSI-X configuration failed\n");
+>> +     if (!core_init_notifier) {
+>> +             ret = pci_epf_test_core_init(epf);
+>> +             if (ret)
+>>                        return ret;
+>> -             }
+>>        }
+>>
+>>        if (linkup_notifier) {
+>> --
+>> 2.17.1
+>>
