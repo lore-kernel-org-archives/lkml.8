@@ -2,200 +2,171 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5507C35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B4DC35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743C322527
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B96E22527
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 04:10:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MXlDVQn4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LVqXzB6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgBYEIb (ORCPT
+        id S1728921AbgBYEKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 23:08:31 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42927 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgBYEIa (ORCPT
+        Mon, 24 Feb 2020 23:10:16 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46006 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbgBYEKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 23:08:30 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so6464402pfz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 20:08:28 -0800 (PST)
+        Mon, 24 Feb 2020 23:10:16 -0500
+Received: by mail-pg1-f194.google.com with SMTP id r77so2828846pgr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 20:10:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=hsmwTWPSD0szPQ7rhutWKLwR4ldbSWtt8mN+lR7f3aU=;
-        b=MXlDVQn4uxGfZrKHYHdu9vVDcDBZL3lMcLcfkDncLFD0zglrIbydVAGMBV8Agofb0n
-         zkD60KvQ1pCfz2obp+2lXF8jOXuSGqU5dzcfEw46uZTOuXz4r7clGnU0mWjfozvjJ1O6
-         IpVneKjih9wEx7/pBxWAh0Ykd2vjNwYiRAEEo=
+        bh=Vusshdc55krHefiBaqz9JgK7J4GXTO3PHrFYufBJIy8=;
+        b=LVqXzB6A+JGJPJqEKhZBJWn4eYCob5Nq9+y4QHTqsa3h7PUNHjF/T47O5j1eadLhss
+         OAWHrHsfUIRgdGSum6yPmaAHSuaoLnREsztkvFNZovYtniDt/ENe/GoUSeRSJ8ZippC+
+         H2a+Hr+tQgMuKTHTIay62rAK0p5X3/cCjQqZs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hsmwTWPSD0szPQ7rhutWKLwR4ldbSWtt8mN+lR7f3aU=;
-        b=tuM1q8aapajvsEkothWsWqNTwC3ymiyPCS9j2Ds4pdt04/i7NYrCH43ykpNIeRc6jE
-         8MSgmZjAZRgyu5UzJSq74VCnHWEwi37E2jbUU1J5NK40xKK2MyCTKks3AXuVzDDchpdz
-         fIvnH0vZhQwbhnlfXiojY4Hy4+xjarMXWWxjyG5LTPXgt8t046fciCa8tNu+XnkfUZ39
-         3TqW5ta57qkTLJ4F29XUCtcQBVKv3Rn5xPBvrYAuf2WXHOf6saOzsQ6cbvRG40KVbhRb
-         2TwcFGNtuDc9qMkEKWYcaVeG1URryar0C5k7pwhj87lqOPcgbBvOACj5Rsn1Hu7RMZpt
-         Tgdw==
-X-Gm-Message-State: APjAAAW6euZGi8cPZJIQub87BjUQlMb0mymXvpvyv1VRKYz7L+mBsz/j
-        DseBKozicwkV7e43uL7FZIbtQg==
-X-Google-Smtp-Source: APXvYqzLSh4qBx7e3y9T7+6B1WtB3BYgqC7e04hpV+b/CjGdlLicTi1+yUxV41DvXvzlMP3W7wKwaA==
-X-Received: by 2002:a63:b515:: with SMTP id y21mr9533512pge.148.1582603708389;
-        Mon, 24 Feb 2020 20:08:28 -0800 (PST)
+        bh=Vusshdc55krHefiBaqz9JgK7J4GXTO3PHrFYufBJIy8=;
+        b=k9gOwzhvRzBTP3CHCVVllEX2Lvo1ak63gy0jwzMyLH5aqvpWrxpzh/Rz4Svk92+ZFu
+         LtQkOHXYrkTpLRS3zxmamKewH9uxPoywhp8J/wRqdjaRP/yiJ/ZOp2F5J6IfXTGPCwog
+         Nta7utte9vEwQO3X2Ar2VEBjjzynmfikQRfai/R+eJ134gVXTTxmhgDzRZI+0ENxvhkt
+         UKxvGHwiJJlO70hpgiUs3YO1I3n3vThgJc9fT2Ku4RDVRyWrHjVU45LCBniUcmoi/XAO
+         2r3cpHxQ2oDXb8MM9VKPjHyWE03w8FVvYkHVZ4cCBE1OokvAYWHNlZX8RuKsX9tzrwIa
+         2sxQ==
+X-Gm-Message-State: APjAAAWQ+1/PIGylPe2Vg5EiKluH2W1tOby3tJLx3+t3it6wGc8o8y7C
+        ncBV3KlYQabj/Vxzb4VYxdwhyQ==
+X-Google-Smtp-Source: APXvYqxNGrbGo9L64Qk6lCwyRxDkHThodXQ842cNxQGHqao4AFc0UXuG1doiFDs4qn9IIeFbCD1ZDQ==
+X-Received: by 2002:aa7:8804:: with SMTP id c4mr56003796pfo.214.1582603814922;
+        Mon, 24 Feb 2020 20:10:14 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z27sm14758726pfj.107.2020.02.24.20.08.27
+        by smtp.gmail.com with ESMTPSA id z30sm14679470pff.131.2020.02.24.20.10.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 20:08:27 -0800 (PST)
-Date:   Mon, 24 Feb 2020 20:08:26 -0800
+        Mon, 24 Feb 2020 20:10:14 -0800 (PST)
+Date:   Mon, 24 Feb 2020 20:10:12 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     corbet@lwn.net, masahiroy@kernel.org,
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
- Clang/LLVM
-Message-ID: <202002242003.870E5F80@keescook>
-References: <20200224174129.2664-1-ndesaulniers@google.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2 1/2] arch/x86: Use -fno-asynchronous-unwind-tables to
+ suppress .eh_frame sections
+Message-ID: <202002242009.43E8DFD58@keescook>
+References: <CAKwvOdn6cxm9EpB7A9kLasttPwLY2csnhqgNAdkJ6_s2DP1-HA@mail.gmail.com>
+ <20200224232129.597160-2-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224174129.2664-1-ndesaulniers@google.com>
+In-Reply-To: <20200224232129.597160-2-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:41:28AM -0800, Nick Desaulniers wrote:
-> Added to kbuild documentation. Provides more official info on building
-> kernels with Clang and LLVM than our wiki.
+On Mon, Feb 24, 2020 at 06:21:28PM -0500, Arvind Sankar wrote:
+> While discussing a patch to discard .eh_frame from the compressed
+> vmlinux using the linker script, Fangrui Song pointed out [1] that these
+> sections shouldn't exist in the first place because arch/x86/Makefile
+> uses -fno-asynchronous-unwind-tables.
 > 
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  Documentation/kbuild/index.rst |  1 +
->  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/kbuild/llvm.rst
+> It turns out this is because the Makefiles used to build the compressed
+> kernel redefine KBUILD_CFLAGS, dropping this flag.
 > 
-> diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-> index 0f144fad99a6..3882bd5f7728 100644
-> --- a/Documentation/kbuild/index.rst
-> +++ b/Documentation/kbuild/index.rst
-> @@ -19,6 +19,7 @@ Kernel Build System
->  
->      issues
->      reproducible-builds
-> +    llvm
->  
->  .. only::  subproject and html
->  
-> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> new file mode 100644
-> index 000000000000..68ae022aebc0
-> --- /dev/null
-> +++ b/Documentation/kbuild/llvm.rst
-> @@ -0,0 +1,80 @@
-> +==============================
-> +Building Linux with Clang/LLVM
-> +==============================
-> +
-> +This document covers how to build the Linux kernel with Clang and LLVM
-> +utilities.
-> +
-> +About
-> +-----
-> +
-> +The Linux kernel has always traditionally been compiled with GNU toolchains
-> +such as GCC and binutils. On going work has allowed for `Clang
-> +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
-> +used as viable substitutes. Distributions such as `Android
-> +<https://www.android.com/>`_, `ChromeOS
-> +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
-> +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
-> +collection of toolchain components implemented in terms of C++ objects
-> +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
-> +supports C and the GNU C extensions required by the kernel, and is pronounced
-> +"klang," not "see-lang."
-> +
-> +Clang
-> +-----
-> +
-> +The compiler used can be swapped out via `CC=` command line argument to `make`.
-> +`CC=` should be set when selecting a config and during a build.
-> +
-> +	make CC=clang defconfig
-> +
-> +	make CC=clang
-> +
-> +Cross Compiling
-> +---------------
-> +
-> +A single Clang compiler binary will typically contain all supported backends,
-> +which can help simplify cross compiling.
-> +
-> +	ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
-> +
-> +`CROSS_COMPILE` is not used to suffix the Clang compiler binary, instead
+> Add the flag to the Makefile for the compressed kernel, as well as the
+> EFI stub Makefile to fix this.
+> 
+> Also add the flag to boot/Makefile and realmode/rm/Makefile so that the
+> kernel's boot code (boot/setup.elf) and realmode trampoline
+> (realmode/rm/realmode.elf) won't be compiled with .eh_frame sections,
+> since their linker scripts also just discard it.
+> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-s/suffix/prefix/
-
-> +`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
-> +example:
-> +
-> +	clang --target aarch64-linux-gnu foo.c
-> +
-> +LLVM Utilities
-> +--------------
-> +
-> +LLVM has substitutes for GNU binutils utilities. These can be invoked as
-> +additional parameters to `make`.
-> +
-> +	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
-> +	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
-> +	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-> +	  HOSTLD=ld.lld
-> +
-> +Getting Help
-> +------------
-> +
-> +- `Website <https://clangbuiltlinux.github.io/>`_
-> +- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
-> +- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
-> +- IRC: #clangbuiltlinux on chat.freenode.net
-> +- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
-> +- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
-> +- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
-> +
-> +Getting LLVM
-> +-------------
-> +
-> +- http://releases.llvm.org/download.html
-> +- https://github.com/llvm/llvm-project
-> +- https://llvm.org/docs/GettingStarted.html
-> +- https://llvm.org/docs/CMake.html
-> +- https://apt.llvm.org/
-> +- https://www.archlinux.org/packages/extra/x86_64/llvm/
-> +- https://github.com/ClangBuiltLinux/tc-build
-> +- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
-> +- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
-
-Should this also include an update to Documentation/process/changes.rst
-with the minimum version required? (I would expect this to be "9" for Clang,
-and "11" for ld.lld.)
-
-Otherwise, yes, with Randy and Masahiro's suggestions, please consider it:
+Thanks for sorting this out. I think it's much cleaner than adding it to
+DISCARD. :)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> Suggested-By: Fangrui Song <maskray@google.com>
+> [1] https://lore.kernel.org/lkml/20200222185806.ywnqhfqmy67akfsa@google.com/
+> ---
+>  arch/x86/boot/Makefile                | 1 +
+>  arch/x86/boot/compressed/Makefile     | 1 +
+>  arch/x86/realmode/rm/Makefile         | 1 +
+>  drivers/firmware/efi/libstub/Makefile | 3 ++-
+>  4 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+> index 012b82fc8617..24f011e0adf1 100644
+> --- a/arch/x86/boot/Makefile
+> +++ b/arch/x86/boot/Makefile
+> @@ -68,6 +68,7 @@ clean-files += cpustr.h
+>  KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
+>  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+>  KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> +KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+>  GCOV_PROFILE := n
+>  UBSAN_SANITIZE := n
+>  
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 26050ae0b27e..c33111341325 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -39,6 +39,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+>  KBUILD_CFLAGS += -Wno-pointer-sign
+>  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> +KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+>  
+>  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+>  GCOV_PROFILE := n
+> diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
+> index 99b6332ba540..b11ec5d8f8ac 100644
+> --- a/arch/x86/realmode/rm/Makefile
+> +++ b/arch/x86/realmode/rm/Makefile
+> @@ -71,5 +71,6 @@ $(obj)/realmode.relocs: $(obj)/realmode.elf FORCE
+>  KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -D_WAKEUP \
+>  		   -I$(srctree)/arch/x86/boot
+>  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+> +KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+>  GCOV_PROFILE := n
+>  UBSAN_SANITIZE := n
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 98a81576213d..a1140c4ee478 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -12,7 +12,8 @@ cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ -O2 \
+>  				   -mno-mmx -mno-sse -fshort-wchar \
+>  				   -Wno-pointer-sign \
+>  				   $(call cc-disable-warning, address-of-packed-member) \
+> -				   $(call cc-disable-warning, gnu)
+> +				   $(call cc-disable-warning, gnu) \
+> +				   -fno-asynchronous-unwind-tables
+>  
+>  # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
+>  # disable the stackleak plugin
+> -- 
+> 2.24.1
+> 
 
 -- 
 Kees Cook
