@@ -2,161 +2,77 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7ECC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BCCC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A9C218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="DWYpM6Sc"
+	by mail.kernel.org (Postfix) with ESMTP id C748221556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgBYMey (ORCPT
+        id S1729988AbgBYMg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:34:54 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:51139 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729193AbgBYMey (ORCPT
+        Tue, 25 Feb 2020 07:36:57 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52876 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgBYMg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:34:54 -0500
-Received: from [IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2]
- ([IPv6:2001:420:44c1:2577:a473:ad6c:dd91:35d2])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 6ZQAjylQGjmHT6ZQDjWz1M; Tue, 25 Feb 2020 13:34:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582634092; bh=CU5LnbxximNUnjWck66zq1CCdc9Wngm+ubQMrVPDvmg=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=DWYpM6Scbd3BF7ijSg1uDfgcyhvJIZR3tZBwdPu0xIbVfjfUH/qT2YMAzBwofd3Z9
-         Cs2cNy8fewHyYZHbuULL/vF7Rn/RnmSpe6XKJuboNCNN/LcWCDZF9TdWcmgjtE/0US
-         B8XIum/n4ONfcBkUE8pdcdzMvHPEnlNwWVFjJ8pun3C/R2Ms3cg6gtUiPVLRkOcYxZ
-         QYFCrZgIxA6UG8mymcMGIMwkcUb9oPXWs/z31KRaVCY0HE5tKWOJSF0hXeJoMz7DKx
-         MCBvpsu3RQ6HUNXwaM30VfFBLEUGG6N7pFkcaBlZ6Y00wgee6bigwbqEX0wrzHqyxx
-         EzqUBBCFweawA==
-Subject: Re: [PATCH v2] media: mtk-vpu: avoid unaligned access to DTCM buffer.
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200214120142.50529-1-hsinyi@chromium.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <2d5e3b57-cfac-de3a-e331-6ac9245e6640@xs4all.nl>
-Date:   Tue, 25 Feb 2020 13:34:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 07:36:56 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j6ZRg-0002g5-4R; Tue, 25 Feb 2020 13:36:16 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 135EB101226; Tue, 25 Feb 2020 13:36:15 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [patch V3 06/22] bpf/trace: Remove redundant preempt_disable from trace_call_bpf()
+In-Reply-To: <20200225003351.vvsrgyta47ciqhvo@ast-mbp>
+References: <20200224140131.461979697@linutronix.de> <20200224145643.059995527@linutronix.de> <20200224194017.rtwjcgjxnmltisfe@ast-mbp> <875zfvk983.fsf@nanos.tec.linutronix.de> <20200225003351.vvsrgyta47ciqhvo@ast-mbp>
+Date:   Tue, 25 Feb 2020 13:36:15 +0100
+Message-ID: <8736aykfnk.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200214120142.50529-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCalW01R6rcPoKeE87B47crmHsfGvlZLqjnZu4sF2ZrGoDjqiAQm1z1qm/rcxWfkRMR7lQH/YcIHkrUNtHGuwzk092zH6bx7P4fY6qFbQIKyfFQr0NMU
- 2C/Xmluza+HGflOXXJMYr5iAuldL4pW4fh4pmyQ51eGMuBE2B583nE67YaDb74odAXRr9tSW7zznZOYEgEsAQT3D+ei9zur7YPxj/QRhPBWnaubbMi46Kxu1
- dBrKkAolS+X2jMMdzaFtNyyzuVhfOHV8YKVjA9mCaAfgHqFZ+bI81jyBdO8mtiWiHmsxjpQiyEjcC0BwTsmtd0hGXAYtRCZHFp9GDGGcEBzv8mwrtJcAeQYS
- Qh1cmy7OkIRVde9+94QGNICkpjPh1PTJH6iKzjbv8Bg1UvxsDJBSHLDROF8wxjeQ7OAmA8BN5urIORqGc4+MJke0LvvxhLijzJJZXxEDReVx3oJm2EZPOmN5
- ivUSqchqQUiApMfLZDLF8Yp10p5i7PtG9rxGEPEk9DzgAK91efwuA9Lp3UrLq4WGU8jCEN3gauXTUmM+r634DUD/4nH3HHeuNO/tVUraP7muUnp9XLlMX1AC
- nvHOp50YlQ4m9g6M9VkwwqG1KCp/bv/XFs+Tkqd/ujo18QXVNWDcG6iPecO1g1+k/nbIPeT2ct7sfq99+PsGYkkQPl01XIKw0mvxaUAB8glGK1394VvfCqkp
- V80w4y0ZtMN+W2Tsyx7shWMgVB2gUBhn
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/14/20 1:01 PM, Hsin-Yi Wang wrote:
-> struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
-> Tightly Coupled Memory) buffer shared with AP.  It's not able to do
-> unaligned access. Otherwise kernel would crash due to unable to handle
-> kernel paging request.
-> 
-> struct vpu_run {
-> 	u32 signaled;
-> 	char fw_ver[VPU_FW_VER_LEN];
-> 	unsigned int	dec_capability;
-> 	unsigned int	enc_capability;
-> 	wait_queue_head_t wq;
-> };
-> 
-> fw_ver starts at 4 byte boundary. If system enables
-> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
-> read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
-> 
-> Copy the string by memcpy_fromio() for this buffer to avoid unaligned
-> access.
-> 
-> Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> Change in v2:
-> - fix sparse warnings.
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> On Mon, Feb 24, 2020 at 09:42:52PM +0100, Thomas Gleixner wrote:
+>> > But looking at your patch cant_sleep() seems unnecessary strong.
+>> > Should it be cant_migrate() instead?
+>> 
+>> Yes, if we go with the migrate_disable(). OTOH, having a
+>> preempt_disable() in that uprobe callsite should work as well, then we
+>> can keep the cant_sleep() check which covers all other callsites
+>> properly. No strong opinion though.
+>
+> ok. I went with preempt_disable() for uprobes. It's simpler.
+> And pushed the whole set to bpf-next.
+> In few days we'll send it to Dave for net-next and on the way
+> to Linus's next release. imo it's a big milestone.
+> Thank you for the hard work to make it happen.
 
-I still get sparse warnings:
+Thank you for guidance and review!
 
-drivers/media/platform/mtk-vpu/mtk_vpu.c:710:47:  warning: incorrect type in argument 1 (different address spaces)
-drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c:66:32:  warning: incorrect type in argument 3 (incompatible argument 1 (different address spaces))
-drivers/media/platform/mtk-vcodec/vdec_vpu_if.c:111:22:  warning: incorrect type in assignment (incompatible argument 1 (different address spaces))
-drivers/media/platform/mtk-vcodec/venc_vpu_if.c:96:54:  warning: incorrect type in argument 3 (incompatible argument 1 (different address spaces))
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/platform/mtk-vpu/mtk_vpu.c | 17 ++++++++++-------
->  drivers/media/platform/mtk-vpu/mtk_vpu.h |  2 +-
->  2 files changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> index a768707abb94..c59373e84a33 100644
-> --- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> +++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> @@ -600,15 +600,18 @@ int vpu_load_firmware(struct platform_device *pdev)
->  }
->  EXPORT_SYMBOL_GPL(vpu_load_firmware);
->  
-> -static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
-> +static void vpu_init_ipi_handler(void __iomem *data, unsigned int len,
-> +				 void *priv)
->  {
->  	struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
-> -	struct vpu_run *run = (struct vpu_run *)data;
-> -
-> -	vpu->run.signaled = run->signaled;
-> -	strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-> -	vpu->run.dec_capability = run->dec_capability;
-> -	vpu->run.enc_capability = run->enc_capability;
-> +	struct vpu_run __iomem *run = data;
-> +
-> +	vpu->run.signaled = readl(&run->signaled);
-> +	memcpy_fromio(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-> +	/* Make sure the string is NUL-terminated */
-> +	vpu->run.fw_ver[sizeof(vpu->run.fw_ver) - 1] = '\0';
-> +	vpu->run.dec_capability = readl(&run->dec_capability);
-> +	vpu->run.enc_capability = readl(&run->enc_capability);
->  	wake_up_interruptible(&vpu->run.wq);
->  }
->  
-> diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.h b/drivers/media/platform/mtk-vpu/mtk_vpu.h
-> index d4453b4bcee9..a7ac351b19c1 100644
-> --- a/drivers/media/platform/mtk-vpu/mtk_vpu.h
-> +++ b/drivers/media/platform/mtk-vpu/mtk_vpu.h
-> @@ -15,7 +15,7 @@
->   * VPU interfaces with other blocks by share memory and interrupt.
->   **/
->  
-> -typedef void (*ipi_handler_t) (void *data,
-> +typedef void (*ipi_handler_t) (void __iomem *data,
->  			       unsigned int len,
->  			       void *priv);
->  
-> 
-
+      tglx
