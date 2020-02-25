@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6DAC4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECDDC4BA06
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FB924680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD4124680
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgBYXaZ (ORCPT
+        id S1729607AbgBYXZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:30:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55545 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729553AbgBYXZx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Feb 2020 18:25:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55517 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729477AbgBYXZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 18:25:50 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6ja8-0004bl-Aq; Wed, 26 Feb 2020 00:25:40 +0100
+        id 1j6ja6-0004au-Q9; Wed, 26 Feb 2020 00:25:39 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id DD5DF104089;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id A6DAC104099;
         Wed, 26 Feb 2020 00:25:33 +0100 (CET)
-Message-Id: <20200225221306.026841950@linutronix.de>
+Message-Id: <20200225221305.919875257@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:08:09 +0100
+Date:   Tue, 25 Feb 2020 23:08:08 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,7 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 8/8] x86/entry: Move irqflags tracing to do_int80_syscall_32()
+Subject: [patch 7/8] x86/entry: Move irq tracing to prepare_exit_to_user_mode()
 References: <20200225220801.571835584@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,122 +50,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-which cleans up the ASM maze.
+which again gets it out of the ASM code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/common.c          |    8 +++++++-
- arch/x86/entry/entry_32.S        |    9 ++-------
- arch/x86/entry/entry_64_compat.S |   14 +++++---------
- 3 files changed, 14 insertions(+), 17 deletions(-)
+ arch/x86/entry/common.c   |    1 +
+ arch/x86/entry/entry_32.S |    2 +-
+ arch/x86/entry/entry_64.S |    1 -
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
 --- a/arch/x86/entry/common.c
 +++ b/arch/x86/entry/common.c
-@@ -333,6 +333,7 @@ void do_syscall_64_irqs_on(unsigned long
+@@ -244,6 +244,7 @@ static inline void __prepare_exit_to_use
+ __visible inline notrace void prepare_exit_to_usermode(struct pt_regs *regs)
  {
- 	syscall_entry_fixups();
- 	do_syscall_64_irqs_on(nr, regs);
+ 	__prepare_exit_to_usermode(regs);
 +	trace_hardirqs_on();
  }
- NOKPROBE_SYMBOL(do_syscall_64);
- #endif
-@@ -389,6 +390,7 @@ static __always_inline void do_syscall_3
- {
- 	syscall_entry_fixups();
- 	do_syscall_32_irqs_on(regs);
-+	trace_hardirqs_on();
- }
- NOKPROBE_SYMBOL(do_int80_syscall_32);
- 
-@@ -468,8 +470,12 @@ static __always_inline long do_fast_sysc
- /* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL. */
- __visible notrace long do_fast_syscall_32(struct pt_regs *regs)
- {
-+	long ret;
-+
- 	syscall_entry_fixups();
--	return do_fast_syscall_32_irqs_on(regs);
-+	ret = do_fast_syscall_32_irqs_on(regs);
-+	trace_hardirqs_on();
-+	return ret;
- }
- NOKPROBE_SYMBOL(do_fast_syscall_32);
+ NOKPROBE_SYMBOL(prepare_exit_to_usermode);
  
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -811,8 +811,7 @@ SYM_CODE_START(ret_from_fork)
- 	/* When we fork, we trace the syscall return in the child, too. */
- 	movl    %esp, %eax
- 	call    syscall_return_slowpath
--	STACKLEAK_ERASE
--	jmp     restore_all_switch_stack
-+	jmp     .Lsyscall_32_done
- 
- 	/* kernel thread */
- 1:	movl	%edi, %eax
-@@ -968,8 +967,7 @@ SYM_FUNC_START(entry_SYSENTER_32)
- 
- 	STACKLEAK_ERASE
- 
--/* Opportunistic SYSEXIT */
--	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
-+	/* Opportunistic SYSEXIT */
- 
- 	/*
- 	 * Setup entry stack - we keep the pointer in %eax and do the
-@@ -1072,11 +1070,8 @@ SYM_FUNC_START(entry_INT80_32)
+@@ -855,7 +855,7 @@ SYM_CODE_START_LOCAL(ret_from_exception)
+ 	TRACE_IRQS_OFF
  	movl	%esp, %eax
- 	call	do_int80_syscall_32
- .Lsyscall_32_done:
--
- 	STACKLEAK_ERASE
+ 	call	prepare_exit_to_usermode
+-	jmp	restore_all
++	jmp	restore_all_switch_stack
+ SYM_CODE_END(ret_from_exception)
  
--restore_all:
--	TRACE_IRQS_IRET
- restore_all_switch_stack:
- 	SWITCH_TO_ENTRY_STACK
- 	CHECK_AND_APPLY_ESPFIX
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -132,8 +132,8 @@ SYM_FUNC_START(entry_SYSENTER_compat)
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
--	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
--		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
-+	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
-+		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
- 	jmp	sysret32_from_system_call
- 
- .Lsysenter_fix_flags:
-@@ -244,8 +244,8 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
--	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
--		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
-+	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
-+		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
- 
- 	/* Opportunistic SYSRET */
- sysret32_from_system_call:
-@@ -254,7 +254,7 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
- 	 * stack. So let's erase the thread stack right now.
- 	 */
- 	STACKLEAK_ERASE
--	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
-+
- 	movq	RBX(%rsp), %rbx		/* pt_regs->rbx */
- 	movq	RBP(%rsp), %rbp		/* pt_regs->rbp */
- 	movq	EFLAGS(%rsp), %r11	/* pt_regs->flags (in r11) */
-@@ -393,9 +393,5 @@ SYM_CODE_START(entry_INT80_compat)
- 
- 	movq	%rsp, %rdi
- 	call	do_int80_syscall_32
--.Lsyscall_32_done:
--
--	/* Go back to user mode. */
+ SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -614,7 +614,6 @@ SYM_CODE_START_LOCAL(common_interrupt)
+ .Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
 -	TRACE_IRQS_ON
- 	jmp	swapgs_restore_regs_and_return_to_usermode
- SYM_CODE_END(entry_INT80_compat)
+ 
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
 
