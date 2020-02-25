@@ -2,214 +2,150 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E1EC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C138C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963A12084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54B22084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyHv0N8X"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ERjzs/tX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbgBYSkE (ORCPT
+        id S1731633AbgBYSkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:40:04 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35123 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731502AbgBYSkE (ORCPT
+        Tue, 25 Feb 2020 13:40:19 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39661 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731439AbgBYSkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:40:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m3so264080wmi.0;
-        Tue, 25 Feb 2020 10:40:01 -0800 (PST)
+        Tue, 25 Feb 2020 13:40:19 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y8so132840qvk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 10:40:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=feAL21K5KyQooD4Dct/J2LgVGWzU4vdAa6CeFCmcjfo=;
-        b=eyHv0N8X4mYVdB/JLOAbKaWUiTwdA1GhsnRxkfBZnYkw7AtaMhL7rqrajCubVKn7ny
-         3BDX09hTwlqazgI7AUtjqmj09Pn9IoohJaA+GYE3iYx3FwCt66bsHOPxM+ag9/fAEOwi
-         BDe3exw4DenI7EmRulnRSmeCWHZT4zdgMD4Hui18X1nlLRsBZVXaTNSr3U22p4Nrsl6/
-         WjeF56LmWzh62DKceeMyGjZDUcfHQaVSt8LQscuJeVXOxywOX8yPaLZpNywrocUyeiKP
-         AhCoLqHrndHV8RK6ajFPOnRnWBkfO/ynztO6nCEayUxA1vJDtN0OPm/uyUmgkypbyLjI
-         UB8A==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=i2CV/HrBlB038Ie8Qimmh82koD0NdKzml2lxz77LIw8=;
+        b=ERjzs/tXZewLwer9YDYr/IYsZ/pnkPxN3//YU6bP7CHHDRMWHkIbtg/nZJaTXwNmK7
+         4Qs4eXYUyB3Ezg+amypKAA20yzqDlEMeDIBpWdXMJnLR0PY7mXMKbXfnv97c2RPJisPX
+         mm5VxvL+kqkeqFK9E7EdHKna0JtlAdztQzV/q7yA8TjapZ/6iFqjVEf2XjpalFBXfJY5
+         qX3jcf2q9XJ5LFRVJQgHZWN8TzNR4va/XA3U7FJ79+PGCItxdnPc4CUAhu+up/bX+Tfn
+         Vfdfg2Pcea2m37AoNJ0Xto0D2JDL0rkW2eLIM8KMNVqsT+PYB2rqxqoqatC4WbAuFM49
+         3yDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=feAL21K5KyQooD4Dct/J2LgVGWzU4vdAa6CeFCmcjfo=;
-        b=hQ9bduo8w1T82ToMHjKcVDqEgm0LEt5DakFaLHsBBrOord7tNNOWO//dhSDNnGRadp
-         IyGsFuGGEzuaZMHzsD/jobCG5+g+6soT9sIoirwCdGntA5acNTC+fu+50hmM/xmU+pcQ
-         Ap1dA4sW8gAmN/0ZLetDV5zho6/SQB1hzkSnbmec5x4MXVvjvUF4Aq3Wyb3dP0JBH6b5
-         ZdrqnCtBEYcghZdaetj5cbiSO5NMVjtX993dNHTj+MZwWGwtXWgYmLxfQ6+z6j8NIAPx
-         aaXdbMRAAEv8rzQmZPoTDyJ6xSOr5k+9bMAb3kXFpqhNv2lWLVXj6/2CLwWyyU72L/z8
-         6thw==
-X-Gm-Message-State: APjAAAWuzDP0eMOKYKcvkZRO1hcj2f9+O5wPhAzF5ADT3Cvu7DsZlmVN
-        G2pWiX5FT9MxDCrv0iafc8E=
-X-Google-Smtp-Source: APXvYqxkUbC3nFV7VQ8Rme8IvHtqfkWKRCuZgFFg5eoAcloLZmRp5cJ0Askhj8hpJax4US6yo8+V/Q==
-X-Received: by 2002:a1c:3803:: with SMTP id f3mr587833wma.134.1582656000717;
-        Tue, 25 Feb 2020 10:40:00 -0800 (PST)
-Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.gmail.com with ESMTPSA id x7sm24416640wrq.41.2020.02.25.10.39.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 10:39:59 -0800 (PST)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh+dt@kernel.org>
-Cc:     "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Andrew Lunn'" <andrew@lunn.ch>,
-        "'Florian Fainelli'" <f.fainelli@gmail.com>,
-        "'Heiner Kallweit'" <hkallweit1@gmail.com>,
-        "'Russell King'" <linux@armlinux.org.uk>,
-        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
-        "'netdev'" <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200224211035.16897-1-ansuelsmth@gmail.com> <20200224211035.16897-2-ansuelsmth@gmail.com> <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
-In-Reply-To: <CAL_JsqL7hAX81hDg8L24n-xpJGzZLEu+kAvJfw=g2pzEo_LPOw@mail.gmail.com>
-Subject: R: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
-Date:   Tue, 25 Feb 2020 19:39:59 +0100
-Message-ID: <007601d5ec0a$fc80df70$f5829e50$@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=i2CV/HrBlB038Ie8Qimmh82koD0NdKzml2lxz77LIw8=;
+        b=StCLVzL3BPl1OjY+HQgUS45mR/xJMs4keAbNAElZLO57kSbUAfGf/2TZzVGwY1T9xI
+         mD8A8TQEpiIwXSCLcgFx0Sdhjamm2LmS6kh8q1LsaQEsbHAFZRg6X+u8eRPzybvMsn4Q
+         WCIL1EuqacHS8jX4AozWWL1CwXK3trF5ge3W8MH3RYPSKPmNKaE5O8tMOTBpRuWHBtPk
+         YodixToIrqZb2GygdiLxA+TY+B0fIHuGPHA4tB2ECm9P7oLRaRKFB6JjbHcfbQnic8Zn
+         xBi8aXdNqfgzmL9x+nTlPn6aFnc60ORMYJoXH+i6MlSTsC0NmkaQkhxisSR48GF9SBEP
+         23dg==
+X-Gm-Message-State: APjAAAUPAwGVXfUbW97IwdZRUkou8NqGuJuE5WWAEzvKgVXKStEH0jkz
+        +RMY9Tg7MyMe1m9gMWcJNBLUyw==
+X-Google-Smtp-Source: APXvYqykB1tvyK9fp2RnMOVCx8rSnGK9lnKsMu0SxzRDZPYVode1NoBodz4tt48PVsQOPvJqzVRHrQ==
+X-Received: by 2002:a0c:da08:: with SMTP id x8mr313476qvj.166.1582656018181;
+        Tue, 25 Feb 2020 10:40:18 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:4d9c])
+        by smtp.gmail.com with ESMTPSA id u26sm6102857qkk.18.2020.02.25.10.40.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:40:17 -0800 (PST)
+Date:   Tue, 25 Feb 2020 13:40:14 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 2/3] mm: memcontrol: clean up and document effective
+ low/min calculations
+Message-ID: <20200225184014.GC10257@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-3-hannes@cmpxchg.org>
+ <20200221171024.GA23476@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQMEm6ZQ0XHBfC/w6iKFBoKEX66FxAGLDSBGAdvCRiqls6b/QA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221171024.GA23476@blackbody.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mon, Feb 24, 2020 at 3:10 PM Ansuel Smith <ansuelsmth@gmail.com>
-> wrote:
-> >
-> 
-> typo in the subject. Use 'dt-bindings: net: ...' for the subject prefix.
-> 
-> > Add documentations for ipq806x mdio driver.
-> >
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> > Changes in v7:
-> > - Fix dt_binding_check problem
-> 
-> Um, no you didn't...
-> 
+Hello Michal,
 
-Does make dt_check_binding still gives errors? 
-If yes can you give me some advice on how to test only this since it gives me
-errors on checking other upstream Documentation ? 
-I will fix the other problem in v8. Sorry for the mess and thanks.
+On Fri, Feb 21, 2020 at 06:10:24PM +0100, Michal Koutný wrote:
+> On Thu, Dec 19, 2019 at 03:07:17PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > + *    Consider the following example tree:
+> >   *
+> > + *        A      A/memory.low = 2G, A/memory.current = 6G
+> > + *       //\\
+> > + *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
+> > + *               C/memory.low = 1G  C/memory.current = 2G
+> > + *               D/memory.low = 0   D/memory.current = 2G
+> > + *               E/memory.low = 10G E/memory.current = 0
+> >   *
+> > + *    and memory pressure is applied, the following memory
+> > + *    distribution is expected (approximately*):
+> >   *
+> > + *      A/memory.current = 2G
+> > + *      B/memory.current = 1.3G
+> > + *      C/memory.current = 0.6G
+> > + *      D/memory.current = 0
+> > + *      E/memory.current = 0
+> >   *
+> > + *    *assuming equal allocation rate and reclaimability
+> I think the assumptions for this example don't hold (anymore).
+> Because reclaim rate depends on the usage above protection, the siblings
+> won't be reclaimed equally and so the low_usage proportionality will
+> change over time and the equilibrium distribution is IMO different (I'm
+> attaching an Octave script to calculate it).
 
-> >
-> >  .../bindings/net/qcom,ipq8064-mdio.yaml       | 55
-> +++++++++++++++++++
-> >  1 file changed, 55 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-
-> mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-
-> mdio.yaml
-> > new file mode 100644
-> > index 000000000000..3178cbfdc661
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-
-> mdio.yaml
-> > @@ -0,0 +1,55 @@
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> 
-> Dual license new bindings please:
-> 
-> (GPL-2.0-only OR BSD-2-Clause)
-> 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm ipq806x MDIO bus controller
-> > +
-> > +maintainers:
-> > +  - Ansuel Smith <ansuelsmth@gmail.com>
-> > +
-> > +description: |+
-> 
-> Don't need '|+' unless you need specific formatting.
-> 
-> > +  The ipq806x soc have a MDIO dedicated controller that is
-> > +  used to comunicate with the gmac phy conntected.
-> > +  Child nodes of this MDIO bus controller node are standard
-> > +  Ethernet PHY device nodes as described in
-> > +  Documentation/devicetree/bindings/net/phy.txt
-> > +
-> > +allOf:
-> > +  - $ref: "mdio.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,ipq8064-mdio
-> 
-> blank line between properties please.
-> 
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: address and length of the register set for the device
-> 
-> That's every 'reg', you can drop this.
-> 
-> > +  clocks:
-> > +    maxItems: 1
-> > +    description: A reference to the clock supplying the MDIO bus
-> controller
-> 
-> That's every 'clocks', you can drop this.
-> 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +
-> > +examples:
-> > +  - |
-> > +    mdio0: mdio@37000000 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        compatible = "qcom,ipq8064-mdio", "syscon";
-> 
-> 'syscon' doesn't match the schema and is wrong.
-> 
-> > +        reg = <0x37000000 0x200000>;
-> 
-> > +        resets = <&gcc GMAC_CORE1_RESET>;
-> > +        reset-names = "stmmaceth";
-> 
-> Not documented.
-> 
-> > +        clocks = <&gcc GMAC_CORE1_CLK>;
-> 
-> You need to include the header for these defines.
-> 
-> > +
-> > +        switch@10 {
-> > +            compatible = "qca,qca8337";
-> > +            /* ... */
-> > +        };
-> > +    };
-> > --
-> > 2.25.0
-> >
+Hm, this example doesn't change with my patch because there is no
+"floating" protection that gets distributed among the siblings.
 
+In my testing with the above parameters, the equilibrium still comes
+out to roughly this distribution.
+
+> As it depends on the initial usage, I don't think there can be given
+> such a general example (for overcommit).
+
+It's just to illustrate the pressure weight, not to reflect each
+factor that can influence the equilibrium.
+
+I think it still has value to gain understanding of how it works, no?
+
+> > @@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
+> >   * for next usage. This part is intentionally racy, but it's ok,
+> >   * as memory.low is a best-effort mechanism.
+> Although it's a different issue but since this updates the docs I'm
+> mentioning it -- we treat memory.min the same, i.e. it's subject to the
+> same race, however, it's not meant to be best effort. I didn't look into
+> outcomes of potential misaccounting but the comment seems to miss impact
+> on memory.min protection.
+
+Yeah I think we can delete that bit.
+
+> > @@ -6292,52 +6333,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+> > [...]
+> > +	if (parent == root) {
+> > +		memcg->memory.emin = memcg->memory.min;
+> > +		memcg->memory.elow = memcg->memory.low;
+> > +		goto out;
+> >  	}
+> Shouldn't this condition be 'if (parent == root_mem_cgroup)'? (I.e. 1st
+> level takes direct input, but 2nd and further levels redistribute only
+> what they really got from parent.)
+
+I believe we cleared this up in the parallel thread, but just in case:
+reclaim can happen due to a memory.max set lower in the
+tree. memory.low propagation is always relative from the reclaim
+scope, not the system-wide root cgroup.
