@@ -2,106 +2,84 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F798C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E932FC35DF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F067320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4442467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V4NxU7bE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgBYGKP (ORCPT
+        id S1729009AbgBYGKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:10:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49198 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbgBYGKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:10:15 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 647837751992D0EB2F3D;
-        Tue, 25 Feb 2020 14:10:10 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 25 Feb
- 2020 14:10:06 +0800
-Subject: Re: [PATCH 3/3] f2fs: avoid unneeded barrier in do_checkpoint()
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200218102136.32150-1-yuchao0@huawei.com>
- <20200218102136.32150-3-yuchao0@huawei.com>
- <20200219025154.GB96609@google.com>
- <576f8389-ba27-b461-5466-cc62e84b5c92@huawei.com>
- <20200224220031.GC77839@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <b4c4f60f-ada5-55c9-7d16-45cecad4d433@huawei.com>
-Date:   Tue, 25 Feb 2020 14:10:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 25 Feb 2020 01:10:18 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33123 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725837AbgBYGKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:10:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582611016;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cQNaTh1HwhNOEGJ51j3glAMwSw4Nt/oACsQTPYH5feA=;
+        b=V4NxU7bEihn1CviVKyvZPRqxyc7u+Utanhgb1G1S9n9+17f6GBd8PNiCwbxWsECEnuXE7q
+        2W1aKXdkzUEuC9B97nxJx82zdcREde1fbkvkng882Rr0oUyxU7EW4i2Y4KH6lBd4vdS4mB
+        afTQj2LGOIFrzcrVnUol3Zo6kxris6g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-105-DYyKaKDLN3CegtXVUSCMDQ-1; Tue, 25 Feb 2020 01:10:14 -0500
+X-MC-Unique: DYyKaKDLN3CegtXVUSCMDQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DBCF107ACC4;
+        Tue, 25 Feb 2020 06:10:12 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-87.ams2.redhat.com [10.36.116.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 10680385;
+        Tue, 25 Feb 2020 06:10:09 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 2C95F1747F; Tue, 25 Feb 2020 07:10:08 +0100 (CET)
+Date:   Tue, 25 Feb 2020 07:10:08 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH 1/2] virtio: add dma-buf support for exported objects
+Message-ID: <20200225061008.wqxqppfglzmwvtid@sirius.home.kraxel.org>
+References: <20200219080637.61312-1-stevensd@chromium.org>
+ <20200219080637.61312-2-stevensd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200224220031.GC77839@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219080637.61312-2-stevensd@chromium.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/25 6:00, Jaegeuk Kim wrote:
-> On 02/19, Chao Yu wrote:
->> On 2020/2/19 10:51, Jaegeuk Kim wrote:
->>> On 02/18, Chao Yu wrote:
->>>> We don't need to wait all dirty page submitting IO twice,
->>>> remove unneeded wait step.
->>>
->>> What happens if checkpoint and other meta writs are reordered?
->>
->> checkpoint can be done as following:
->>
->> 1. All meta except last cp-park of checkpoint area.
->> 2. last cp-park of checkpoint area
->>
->> So we only need to keep barrier in between step 1 and 2, we don't need
->> to care about the write order of meta in step 1, right?
-> 
-> Ah, let me integrate this patch into Sahitya's patch.>
-> f2fs: fix the panic in do_checkpoint()
+On Wed, Feb 19, 2020 at 05:06:36PM +0900, David Stevens wrote:
+> This change adds a new flavor of dma-bufs that can be used by virtio
+> drivers to share exported objects. A virtio dma-buf can be queried by
+> virtio drivers to obtain the UUID which identifies the underlying
+> exported object.
 
-No problem.
+That duplicates a bunch of code from dma-buf.c in virtio_dma_buf.c.
 
-Thanks,
+How about dma_buf_{get,set}_uuid, simliar to dma_buf_set_name?
 
-> 
->>
->> Thanks,
->>
->>>
->>>>
->>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>> ---
->>>>  fs/f2fs/checkpoint.c | 2 --
->>>>  1 file changed, 2 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>>> index 751815cb4c2b..9c88fb3d255a 100644
->>>> --- a/fs/f2fs/checkpoint.c
->>>> +++ b/fs/f2fs/checkpoint.c
->>>> @@ -1384,8 +1384,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>>  
->>>>  	/* Flush all the NAT/SIT pages */
->>>>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
->>>> -	/* Wait for all dirty meta pages to be submitted for IO */
->>>> -	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
->>>>  
->>>>  	/*
->>>>  	 * modify checkpoint
->>>> -- 
->>>> 2.18.0.rc1
->>> .
->>>
-> .
-> 
+cheers,
+  Gerd
+
