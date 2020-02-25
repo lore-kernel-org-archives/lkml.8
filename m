@@ -2,296 +2,174 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAC2C35DEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F154C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48882072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340B12072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kRrwaphC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uIacdZO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgBYAAx (ORCPT
+        id S1728172AbgBYABM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:00:53 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40266 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbgBYAAv (ORCPT
+        Mon, 24 Feb 2020 19:01:12 -0500
+Received: from gateway23.websitewelcome.com ([192.185.50.250]:34967 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728634AbgBYABJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:00:51 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so469663pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:00:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Um7WHOq7oL5BVx9ef4KzYXbuCI2F7lnanA46u13kxmc=;
-        b=kRrwaphC58E38cqB5LNH0sgRf1ij9PWALl3QAH2ukpR5WJs/3M5veVc9Nr6ri0lFsA
-         0BS0dswuppwNLRyw6hEBqx1tSuQMJWCY/3HGwMJ/RHGjC7e8w0SA4NdALO1eSzcTZJW5
-         VgK+aCryTDc3WEJU7Rw0l3PwPExF+qIGm2NBM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Um7WHOq7oL5BVx9ef4KzYXbuCI2F7lnanA46u13kxmc=;
-        b=QSQKab97scpY1NbNNX9snCtEtNVG4qwnTfEVuCofVdvTsyzXQUBDynlTtASr0bpIjq
-         m9uBlNdk+Sqn1433+Z+RPIm9Iel4qNcFgkykDlnRAAeE2+lBALKq5H4t11cnYFRRDtJ8
-         EZN4rnWTA+cnozUOq3dqWlTPzeh36xbjTdKqzDzItB4LTT7wNamiUzZq7+MpnNnEm0yz
-         7R99tanI02QrcIiTez2JMyfN4xCtgnMR3PIWj79+ezND8CuK37d2GTqu7DYVeiq6XELC
-         S0zGYMxUR9vOv3L2kOeS1MS4UF0eqNb6HkkW40JCBuYnlzZN+oWB1uUh06Dml+QgDiBB
-         GcMQ==
-X-Gm-Message-State: APjAAAXkzPkaGluqqZ1I+wa4MK8epLgD/mOURRIeMnOlW52UW4nmWKis
-        EK5S9JYw0j40xk464fgDD67J1g==
-X-Google-Smtp-Source: APXvYqwtq0+XJEvBPN5FsKCYE1xi/p/7DfSAUUaxn0Z/X4xOZVCnAT1fSbzjFBPZgoeMsQFTtxRHEA==
-X-Received: by 2002:a17:90a:a409:: with SMTP id y9mr1803111pjp.119.1582588849314;
-        Mon, 24 Feb 2020 16:00:49 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id c188sm14477657pfb.151.2020.02.24.16.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 16:00:48 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [RFC PATCH v3 2/5] Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
-Date:   Mon, 24 Feb 2020 16:00:33 -0800
-Message-Id: <20200224160019.RFC.v3.2.I62f17edc39370044c75ad43a55a7382b4b8a5ceb@changeid>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200225000036.156250-1-abhishekpandit@chromium.org>
-References: <20200225000036.156250-1-abhishekpandit@chromium.org>
+        Mon, 24 Feb 2020 19:01:09 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id C6A3071BC
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:01:07 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6Netji4cBvBMd6NetjeDy0; Mon, 24 Feb 2020 18:01:07 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7YVRuLJggwkZM9arqIBIu//jc9M46qO2P0Pzk4kTM/w=; b=uIacdZO+gRUXg6Nz6B0j5wvSrt
+        xoho3tMu8NiCqxEaKm94kMqvXlp9exLIxhSFpgiuH1q1XlywHUU/l3CkAdCmbRgcupovYgDtTVKYh
+        7kr7+Z4Go+x45891K+W7cm4dgUrdaopS7WMMmiomDDSzmmFdNsy2BOAsuBIroN5oUBo2pFN6jKC0+
+        VOZfvhvq5uBrSa3/2GPakrk4Fur75rT0ENiOfnCA2dWnf/OSqTqsm3VGJ3zSaXn7xJ9mgDIrC33cN
+        Ychjk69lr+0Z/vE7FdxnmD56zRFstNZPWnYI4WCjTcRCDN0xPCfQXyK5jzFmPGLPj3jSiFWdzzfdZ
+        OBAFGkww==;
+Received: from [201.166.191.75] (port=54190 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6Ner-002K9u-L7; Mon, 24 Feb 2020 18:01:06 -0600
+Date:   Mon, 24 Feb 2020 18:03:55 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Manish Chopra <manishc@marvell.com>,
+        Rahul Verma <rahulv@marvell.com>,
+        "GR-Linux-NIC-Dev@marvell.com David S. Miller" <davem@davemloft.net>,
+        Shahed Shaikh <shshaikh@marvell.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] qlogic: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200225000355.GA16193@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.191.75
+X-Source-L: No
+X-Exim-ID: 1j6Ner-002K9u-L7
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.191.75]:54190
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register for PM_SUSPEND_PREPARE and PM_POST_SUSPEND to make sure the
-Bluetooth controller is prepared correctly for suspend/resume. Implement
-the registration, scheduling and task handling portions only in this
-patch.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was detected with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
+ drivers/net/ethernet/qlogic/netxen/netxen_nic.h | 2 +-
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic.h     | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Changes in v3: None
-Changes in v2:
-* Moved pm notifier registration into its own patch and moved params out
-  of separate suspend_state
-
- include/net/bluetooth/hci_core.h | 21 ++++++++++
- net/bluetooth/hci_core.c         | 70 ++++++++++++++++++++++++++++++++
- net/bluetooth/hci_request.c      | 19 +++++++++
- net/bluetooth/hci_request.h      |  2 +
- 4 files changed, 112 insertions(+)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 9d9ada5bc9d4..bc9620e5b65b 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -88,6 +88,18 @@ struct discovery_state {
- 	unsigned long		scan_duration;
+diff --git a/drivers/net/ethernet/qlogic/netxen/netxen_nic.h b/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
+index 3dce769d83a1..86153660d245 100644
+--- a/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
++++ b/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
+@@ -1316,7 +1316,7 @@ struct netxen_minidump_template_hdr {
+ 	u32 driver_info_word4;
+ 	u32 saved_state_array[NX_DUMP_STATE_ARRAY_LEN];
+ 	u32 capture_size_array[NX_DUMP_CAP_SIZE_ARRAY_LEN];
+-	u32 rsvd[0];
++	u32 rsvd[];
  };
  
-+#define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
-+
-+enum suspend_tasks {
-+	SUSPEND_PREPARE_NOTIFIER,
-+	__SUSPEND_NUM_TASKS
-+};
-+
-+enum suspended_state {
-+	BT_RUNNING = 0,
-+	BT_SUSPENDED,
-+};
-+
- struct hci_conn_hash {
- 	struct list_head list;
- 	unsigned int     acl_num;
-@@ -389,6 +401,15 @@ struct hci_dev {
- 	void			*smp_bredr_data;
+ /* Common Entry Header:  Common to All Entry Types */
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h b/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h
+index 374a4d4371f9..134611aa2c9a 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic.h
+@@ -418,7 +418,7 @@ struct qlcnic_83xx_dump_template_hdr {
+ 	u32	saved_state[16];
+ 	u32	cap_sizes[8];
+ 	u32	ocm_wnd_reg[16];
+-	u32	rsvd[0];
++	u32	rsvd[];
+ };
  
- 	struct discovery_state	discovery;
-+
-+	struct notifier_block	suspend_notifier;
-+	struct work_struct	suspend_prepare;
-+	enum suspended_state	suspend_state_next;
-+	enum suspended_state	suspend_state;
-+
-+	wait_queue_head_t	suspend_wait_q;
-+	DECLARE_BITMAP(suspend_tasks, __SUSPEND_NUM_TASKS);
-+
- 	struct hci_conn_hash	conn_hash;
+ struct qlcnic_82xx_dump_template_hdr {
+@@ -436,7 +436,7 @@ struct qlcnic_82xx_dump_template_hdr {
+ 	u32	cap_sizes[8];
+ 	u32	rsvd[7];
+ 	u32	capabilities;
+-	u32	rsvd1[0];
++	u32	rsvd1[];
+ };
  
- 	struct list_head	mgmt_pending;
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 2fceaf76644a..6ca0aa8d30dd 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -31,6 +31,8 @@
- #include <linux/debugfs.h>
- #include <linux/crypto.h>
- #include <linux/property.h>
-+#include <linux/suspend.h>
-+#include <linux/wait.h>
- #include <asm/unaligned.h>
+ #define QLC_PEX_DMA_READ_SIZE	(PAGE_SIZE * 16)
+@@ -740,7 +740,7 @@ struct qlcnic_hostrq_rx_ctx {
+ 	   The following is packed:
+ 	   - N hostrq_rds_rings
+ 	   - N hostrq_sds_rings */
+-	char data[0];
++	char data[];
+ } __packed;
  
- #include <net/bluetooth/bluetooth.h>
-@@ -3241,6 +3243,65 @@ void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
- 	}
- }
+ struct qlcnic_cardrsp_rds_ring{
+@@ -769,7 +769,7 @@ struct qlcnic_cardrsp_rx_ctx {
+ 	   The following is packed:
+ 	   - N cardrsp_rds_rings
+ 	   - N cardrs_sds_rings */
+-	char data[0];
++	char data[];
+ } __packed;
  
-+static int hci_suspend_wait_event(struct hci_dev *hdev)
-+{
-+#define WAKE_COND                                                              \
-+	(find_first_bit(hdev->suspend_tasks, __SUSPEND_NUM_TASKS) ==           \
-+	 __SUSPEND_NUM_TASKS)
-+
-+	int i;
-+	int ret = wait_event_timeout(hdev->suspend_wait_q,
-+				     WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
-+
-+	if (ret == 0) {
-+		BT_DBG("Timed out waiting for suspend");
-+		for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
-+			if (test_bit(i, hdev->suspend_tasks))
-+				BT_DBG("Bit %d is set", i);
-+			clear_bit(i, hdev->suspend_tasks);
-+		}
-+
-+		ret = -ETIMEDOUT;
-+	} else {
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
-+static void hci_prepare_suspend(struct work_struct *work)
-+{
-+	struct hci_dev *hdev =
-+		container_of(work, struct hci_dev, suspend_prepare);
-+
-+	hci_dev_lock(hdev);
-+	hci_req_prepare_suspend(hdev, hdev->suspend_state_next);
-+	hci_dev_unlock(hdev);
-+}
-+
-+static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
-+				void *data)
-+{
-+	struct hci_dev *hdev =
-+		container_of(nb, struct hci_dev, suspend_notifier);
-+	int ret = 0;
-+
-+	if (action == PM_SUSPEND_PREPARE) {
-+		hdev->suspend_state_next = BT_SUSPENDED;
-+		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
-+
-+		ret = hci_suspend_wait_event(hdev);
-+	} else if (action == PM_POST_SUSPEND) {
-+		hdev->suspend_state_next = BT_RUNNING;
-+		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
-+
-+		ret = hci_suspend_wait_event(hdev);
-+	}
-+
-+	return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
-+}
- /* Alloc HCI device */
- struct hci_dev *hci_alloc_dev(void)
- {
-@@ -3319,6 +3380,7 @@ struct hci_dev *hci_alloc_dev(void)
- 	INIT_WORK(&hdev->tx_work, hci_tx_work);
- 	INIT_WORK(&hdev->power_on, hci_power_on);
- 	INIT_WORK(&hdev->error_reset, hci_error_reset);
-+	INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
- 
- 	INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
- 
-@@ -3327,6 +3389,7 @@ struct hci_dev *hci_alloc_dev(void)
- 	skb_queue_head_init(&hdev->raw_q);
- 
- 	init_waitqueue_head(&hdev->req_wait_q);
-+	init_waitqueue_head(&hdev->suspend_wait_q);
- 
- 	INIT_DELAYED_WORK(&hdev->cmd_timer, hci_cmd_timeout);
- 
-@@ -3438,6 +3501,11 @@ int hci_register_dev(struct hci_dev *hdev)
- 	hci_sock_dev_event(hdev, HCI_DEV_REG);
- 	hci_dev_hold(hdev);
- 
-+	hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
-+	error = register_pm_notifier(&hdev->suspend_notifier);
-+	if (error)
-+		goto err_wqueue;
-+
- 	queue_work(hdev->req_workqueue, &hdev->power_on);
- 
- 	return id;
-@@ -3471,6 +3539,8 @@ void hci_unregister_dev(struct hci_dev *hdev)
- 
- 	hci_dev_do_close(hdev);
- 
-+	unregister_pm_notifier(&hdev->suspend_notifier);
-+
- 	if (!test_bit(HCI_INIT, &hdev->flags) &&
- 	    !hci_dev_test_flag(hdev, HCI_SETUP) &&
- 	    !hci_dev_test_flag(hdev, HCI_CONFIG)) {
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index 2a1b64dbf76e..08908469c043 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -918,6 +918,25 @@ static u8 get_adv_instance_scan_rsp_len(struct hci_dev *hdev, u8 instance)
- 	return adv_instance->scan_rsp_len;
- }
- 
-+/* Call with hci_dev_lock */
-+void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
-+{
-+	int old_state;
-+	struct hci_conn *conn;
-+	struct hci_request req;
-+
-+	if (next == hdev->suspend_state) {
-+		BT_DBG("Same state before and after: %d", next);
-+		goto done;
-+	}
-+
-+	hdev->suspend_state = next;
-+
-+done:
-+	clear_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+	wake_up(&hdev->suspend_wait_q);
-+}
-+
- static u8 get_cur_adv_instance_scan_rsp_len(struct hci_dev *hdev)
- {
- 	u8 instance = hdev->cur_adv_instance;
-diff --git a/net/bluetooth/hci_request.h b/net/bluetooth/hci_request.h
-index a7019fbeadd3..0e81614d235e 100644
---- a/net/bluetooth/hci_request.h
-+++ b/net/bluetooth/hci_request.h
-@@ -68,6 +68,8 @@ void __hci_req_update_eir(struct hci_request *req);
- void hci_req_add_le_scan_disable(struct hci_request *req);
- void hci_req_add_le_passive_scan(struct hci_request *req);
- 
-+void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next);
-+
- void hci_req_reenable_advertising(struct hci_dev *hdev);
- void __hci_req_enable_advertising(struct hci_request *req);
- void __hci_req_disable_advertising(struct hci_request *req);
+ #define SIZEOF_HOSTRQ_RX(HOSTRQ_RX, rds_rings, sds_rings)	\
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.25.0
 
