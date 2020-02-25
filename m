@@ -2,120 +2,114 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F2DC4BA03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E162C4BA00
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28ECA21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582668130;
-	bh=ASA6axefWklSU78pWejTSwer0ZOaWKFTnH47gYDjOZA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QLDci1qTdIJbN4550MmZLNB7hlbJ8vKYqsRqpMXVITcwZQ75Egf5+YoEbKeKwHuOQ
-	 nfR5hOaHW1kSKV6OusC/6XEwXhF+jypJYlKGobQq2M//Xnx0epV7R6YxSoIKMZ7Fjw
-	 yST/UO1R+D/PdBgEyujTkfBZ9ne59s/wAsM86J5k=
+	by mail.kernel.org (Postfix) with ESMTP id DEBA82176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QMkbvLLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgBYWCJ (ORCPT
+        id S1729170AbgBYWCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:02:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbgBYWCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:02:07 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BABEF2467B;
-        Tue, 25 Feb 2020 22:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582668126;
-        bh=ASA6axefWklSU78pWejTSwer0ZOaWKFTnH47gYDjOZA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CTCD9kg9XuK/5B5/i8D8A/5G6NN6eG+R/lePr4JYYbypdV7FZygukNX4N2vScKNMR
-         AcowiA3TsPtPrp9pjfqln0aJMCgno1iOeRyF4hIx8g2f5Ai/mJTN4X1rrllv43N8WQ
-         yeXIAeDINI5iDpqzRb+S/V40752h2KdAmsoPsWz0=
-Received: by mail-qk1-f182.google.com with SMTP id 11so763049qkd.1;
-        Tue, 25 Feb 2020 14:02:06 -0800 (PST)
-X-Gm-Message-State: APjAAAXovnpnqOnxO6TIMLj1I1Q7o6ie4wdbK3YAQfHoY7wP6QY/+mQF
-        ty23BTDM2NQtFgs0W1Isrn4f1OKezLZdVWydnw==
-X-Google-Smtp-Source: APXvYqw5XKZGdHCXY9u0tVRDbjlPaa0iutz4jC8T9d3E9Z8AVXYJLUY39qJiOoxuGit3bif1zq9Awqp6HaEj5QU++i0=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr1310560qkg.152.1582668125762;
- Tue, 25 Feb 2020 14:02:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20200218171321.30990-1-robh@kernel.org> <20200218171321.30990-7-robh@kernel.org>
- <20200218172000.GF1133@willie-the-truck>
-In-Reply-To: <20200218172000.GF1133@willie-the-truck>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Feb 2020 16:01:54 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
-Message-ID: <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode quirk
-To:     Will Deacon <will@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        Tue, 25 Feb 2020 17:02:52 -0500
+Received: from mail-pj1-f43.google.com ([209.85.216.43]:37702 "EHLO
+        mail-pj1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgBYWCw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:02:52 -0500
+Received: by mail-pj1-f43.google.com with SMTP id m13so342004pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Bvro5bqgLoB7Q+QOnUukmSXnFk4BT1NY/ZAFMUfpRmI=;
+        b=QMkbvLLyqttt8K0Za0EOq8KWcm6weijM62KcldL6NQ2fIoAXY026AK/Dgog7qX2hbG
+         S3i2NIWMVWvBd2LzrF/4EBNAgxk2GuDRyHGFUyDGtsfJ3er50UMq46NMGX0gLE2GRn7a
+         ZcKtvDacIkE97cApgIrf38ItG6/pao5IHz4cA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bvro5bqgLoB7Q+QOnUukmSXnFk4BT1NY/ZAFMUfpRmI=;
+        b=Ld80AB6epJuSGyp1hlBFp0afSF6gvmojvQ4DniUDhQNFG/hBV1JoYOVy/7K6ZAxA5L
+         Yj36Nwqa3gvhB6/PlyzbH1QYADUdly+zJJcZ+PSiN3snaSUNCkzDwTvhaHLojwVASliN
+         JGHgnAmGs3wDqKVFYRe0o6gpFloBdP9rMc4lMACpZcY/34YOb7b4pCmn4lXvljLVpeIE
+         fVp61vkUS7W2RKgVfK7RcazeLB0p01C+b/xfxkMRYYRzpC06qSLdPPxEzvIq3x15xL4c
+         Ftf7n22HkrwuXZZ8T63aF+9ZuSUYB+BqY5pw/X0LFBR3pY3F+PIffT2+rIvXnsp4UgmT
+         7Q1Q==
+X-Gm-Message-State: APjAAAW+yk22FRHF6q3hPXPhB/RuKxuedQeVSKlDjX1w6blYibb0BjIq
+        XGC0Jt0QMRpbcgfmfjTJ5i4+Fw==
+X-Google-Smtp-Source: APXvYqyi/IdFHOhdoTujGGepz1gv+utlp506jhon2zXTaTyUOqxNnQ3SSyYbl/1S710zwjPG+xsLSA==
+X-Received: by 2002:a17:90a:cc16:: with SMTP id b22mr1268428pju.65.1582668171246;
+        Tue, 25 Feb 2020 14:02:51 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a19sm94740pju.11.2020.02.25.14.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 14:02:49 -0800 (PST)
+Date:   Tue, 25 Feb 2020 14:02:48 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Fangrui Song <maskray@google.com>,
         Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>
+Subject: Re: --orphan-handling=warn
+Message-ID: <202002251358.EDA50C11F@keescook>
+References: <20200222065521.GA11284@zn.tnic>
+ <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
+ <20200222072144.asqaxlv364s6ezbv@google.com>
+ <20200222074254.GB11284@zn.tnic>
+ <20200222162225.GA3326744@rani.riverdale.lan>
+ <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
+ <202002242122.AA4D1B8@keescook>
+ <20200225182951.GA1179890@rani.riverdale.lan>
+ <202002251140.4F28F0A4F@keescook>
+ <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 11:20 AM Will Deacon <will@kernel.org> wrote:
->
-> On Tue, Feb 18, 2020 at 11:13:16AM -0600, Rob Herring wrote:
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: iommu@lists.linux-foundation.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Do not apply yet.
->
-> Pleeeeease? ;)
->
-> >  drivers/iommu/arm-smmu-impl.c | 43 -----------------------------------
-> >  1 file changed, 43 deletions(-)
->
-> Yes, I'm happy to get rid of this. Sadly, I don't think we can remove
-> anything from 'struct arm_smmu_impl' because most implementations fall
-> just short of perfect.
->
-> Anyway, let me know when I can push the button and I'll queue this in
-> the arm-smmu tree.
+On Tue, Feb 25, 2020 at 12:37:26PM -0800, Nick Desaulniers wrote:
+> On Tue, Feb 25, 2020 at 11:43 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Tue, Feb 25, 2020 at 01:29:51PM -0500, Arvind Sankar wrote:
+> > > On Mon, Feb 24, 2020 at 09:35:04PM -0800, Kees Cook wrote:
+> > > > Note that cheating and doing the 1-to-1 mapping by handy with a 40,000
+> > > > entry linker script ... made ld.lld take about 15 minutes to do the
+> > > > final link. :(
+> > >
+> > > Out of curiosity, how long does ld.bfd take on that linker script :)
+> >
+> > A single CPU at 100% for 15 minutes. :)
+> 
+> I can see the implementers of linker script handling thinking "surely
+> no one would ever have >10k entries." Then we invented things like
+> -ffunction-sections, -fdata-sections, (per basic block equivalents:
+> https://reviews.llvm.org/D68049) and then finally FGKASLR. "640k ought
+> to be enough for anybody" and such.
 
-Seems we're leaving the platform support for now, but I think we never
-actually enabled SMMU support. It's not in the dts either in mainline
-nor the version I have which should be close to what shipped in
-firmware. So as long as Andre agrees, this one is good to apply.
+Heh, yeah. I had no expectation that it would work _well_; I just
+wanted to test if it _could_ work. And it did: FGKASLR up and running
+on Clang+LLD. I stopped there before attempting the next step:
+FGKASLR+LTO+CFI, which I assume would be hilariously slow linking.
 
-Rob
+-- 
+Kees Cook
