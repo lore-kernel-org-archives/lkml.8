@@ -2,99 +2,97 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D000FC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA561C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0DCC21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9180921744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wd1ymYRw"
+	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="O2bTX0JN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgBYIYH (ORCPT
+        id S1729749AbgBYIYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:24:07 -0500
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:38138 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729725AbgBYIYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:24:07 -0500
-Received: by mail-lj1-f178.google.com with SMTP id w1so13014788ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:24:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+KBmyMZAeqjL/dWehJYWIZj/HK+sTTg1x4dJjtWNJz4=;
-        b=Wd1ymYRw9ghLg/v6CP8+SveZ4OsVVukkCJXUZ+7SUt/vxJsv4eaS/BLi0CELES5LvM
-         u+/5grfOt1wKhyrfkyIMNumcHaIsS/tUhp7iedp58BWEj9mKJf9q6edsZseaFujO/J4v
-         vFK+l9T1tlyC4e1Z+oXvztoTGVSB9/eTRDALR35uR10+F6mqe6PqCelVTTZItYMW/TH2
-         6vbJnSD2DsMY6074zMOVSqSZnGve+cPA4QB9rI6piJ+EHbuQrknS8NdnTxQjF5TGYjfl
-         Oa2EzmUjgPGCTm+2M+zdwtZWMq555nr4lUMRqirC+hurQ8IW6s8rJO6WJlegs6yfrV9a
-         nN8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+KBmyMZAeqjL/dWehJYWIZj/HK+sTTg1x4dJjtWNJz4=;
-        b=Lb1unyNe8Br188ljcmp3Xho/dKEtZxQNGXZM8sdnffRdD8jQZ1q7ZEVac8CiW4qiFB
-         xl7kqWZ6UJ/BgdjTcqulhziw7WqIkt/e5suq2xCHJt000TAnlAEl1tHFHbf8OAS/2kcf
-         piNziAcUhWd2ARyzl22BlyD0j1NpHIhyB6RMmorTUqtO7UKFlqnzGIyJEo7Q3w2liglf
-         ghQGy+gzlfM1Zh0g6WtEb/+IvzXENn/CTlhDWvpttaqQa6BzbpSCEE9mwWgyhT2nRjdm
-         V8qyt3dNy+fwJBtVMUqvyky6+ICzhsMYpOSUe/VQsI0WI46Skf1b2Y1tyMkPIOvR0q2S
-         HPEg==
-X-Gm-Message-State: APjAAAXRis/AtRjM3meakS/TBZBZbibU8BmtzC80RDjrQYTTkmSF8yc+
-        oBNOLddoteDJgkVicpgwd63bq5FpVNbi5EImyY3aKA==
-X-Google-Smtp-Source: APXvYqy8RsIavee13RX2Ng/Iy0dV1rVHxkrrl/x6+fmkPYOKcK8Y0NEg8xCGCBuHo+/9wPVTBt/y2eFuiRQQ6SmYM7o=
-X-Received: by 2002:a2e:9596:: with SMTP id w22mr30879694ljh.21.1582619045157;
- Tue, 25 Feb 2020 00:24:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20200224095223.13361-9-mgorman@techsingularity.net>
- <158255763157.28353.3693734020236686000.tip-bot2@tip-bot2> <jhj36b06klb.fsf@arm.com>
-In-Reply-To: <jhj36b06klb.fsf@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 25 Feb 2020 09:23:53 +0100
-Message-ID: <CAKfTPtDSYRaLsxBLi4+=Z8zT4mpXo269MX3TYdxkjD1GSq5d7A@mail.gmail.com>
-Subject: Re: [tip: sched/core] sched/pelt: Add a new runnable average signal
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Feb 2020 03:24:53 -0500
+Received: from mx.blih.net ([212.83.155.74]:11540 "EHLO mx.blih.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729130AbgBYIYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:24:53 -0500
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Feb 2020 03:24:52 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bidouilliste.com;
+        s=mx; t=1582618691;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C0tcNFyVSsvx4uBxNJ3TEZd+6Xexrm+/hZD6rEjDx54=;
+        b=O2bTX0JNfY45haLEpKC8/F3DIkMGLDTYBe/RcW0POYHl+h+maQ8bCqBeDPIrFCD1YUQYeQ
+        DCX/9dT0oiOxiWL6fmcofK8pJ4R+hzW/RvA59osWcks6awF07oxBWm2cWEUitxK3tH5rdp
+        dfmTukNqQCSoyrGJCHLIr9Lr4l09ON0=
+Received: from tails.home (lfbn-idf2-1-900-181.w86-238.abo.wanadoo.fr [86.238.131.181])
+        by mx.blih.net (OpenSMTPD) with ESMTPSA id d2c06a04 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 25 Feb 2020 08:18:11 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 09:18:10 +0100
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Emmanuel Vadot <manu@FreeBSD.org>,
+        Jani Nikula <jani.nikula@intel.com>, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        efremov@linux.com, kraxel@redhat.com, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        noralf@tronnes.org, sam@ravnborg.org, tzimmermann@suse.de,
+        Emmanuel Vadot <manu@FreeBSD.Org>
+Subject: Re: [PATCH v2 1/2] drm/client: Dual licence the file in GPL-2 and
+ MIT
+Message-Id: <20200225091810.1de39ea4e0d578d363420412@bidouilliste.com>
+In-Reply-To: <158254443806.15220.5582277260130009235@skylake-alporthouse-com>
+References: <20200215180911.18299-1-manu@FreeBSD.org>
+        <20200215180911.18299-2-manu@FreeBSD.org>
+        <877e0n66qi.fsf@intel.com>
+        <158254443806.15220.5582277260130009235@skylake-alporthouse-com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 at 17:01, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> tip-bot2 for Vincent Guittot writes:
->
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
-> > Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
->
-> With the fork time initialization thing being sorted out, the rest of the
-> runnable series can claim my
->
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+On Mon, 24 Feb 2020 11:40:38 +0000
+Chris Wilson <chris@chris-wilson.co.uk> wrote:
 
-Thanks
+> Quoting Jani Nikula (2020-02-15 18:33:09)
+> > On Sat, 15 Feb 2020, Emmanuel Vadot <manu@FreeBSD.org> wrote:
+> > > From: Emmanuel Vadot <manu@FreeBSD.Org>
+> > >
+> > > Contributors for this file are :
+> > > Chris Wilson <chris@chris-wilson.co.uk>
+> > > Denis Efremov <efremov@linux.com>
+> > > Jani Nikula <jani.nikula@intel.com>
+> > > Maxime Ripard <mripard@kernel.org>
+> > > Noralf Tr=F8nnes <noralf@tronnes.org>
+> > > Sam Ravnborg <sam@ravnborg.org>
+> > > Thomas Zimmermann <tzimmermann@suse.de>
+> > >
+> > > Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
+> >=20
+> > I've only converted some logging.
+> >=20
+> > Acked-by: Jani Nikula <jani.nikula@intel.com>
+>=20
+> Bonus ack from another Intel employee to cover all Intel copyright in
+> this file,
+> Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
+> -Chris
 
->
-> but I doubt any of that is worth the hassle since it's in tip already. Just
-> figured I'd mention it, being in Cc and all :-)
+ Thanks Chris,
+
+ Daniel, if I'm counting right this was the last ack needed.
+
+--=20
+Emmanuel Vadot <manu@bidouilliste.com>
