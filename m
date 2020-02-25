@@ -2,198 +2,125 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5845C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238B6C35E0A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E36D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="NAMzzxg4"
+	by mail.kernel.org (Postfix) with ESMTP id EFA0F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731111AbgBYPiG (ORCPT
+        id S1730275AbgBYPjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:38:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43055 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729501AbgBYPiG (ORCPT
+        Tue, 25 Feb 2020 10:39:10 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44332 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYPjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:38:06 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so12396939oth.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jwm+TSOeImzPHrCD9+lr7kAphC4tuL6RMLlaxgsWLqw=;
-        b=NAMzzxg4+soT+611ryWdedqsp05j0VTIolEkKeHONvyN311QDu89YCrHUICEQqTdvn
-         M5nooEvKfDPn2IASXdOmA5n22+QBKB8XZDW6Abj9n7gTea3irchcWoJFVw5OA0kJXv8M
-         OiUOg2+xDp1m/SmIVM8xXJdxaVUeMxf0N+0hj0UAo2CTclY+95z5ie5j1eW4RpFs3qpL
-         shKJzM3XAkjG2kpAvh1pevfSU4byujyD5nrdhMlL0PbU7rqph2LIxx1dxMSin3aD0lb/
-         sSVnAAR/gmsTKft1GakaEONG1M3olZrYg+RE0Q//C2Db7mQj6B+YeGlJjOzgEvAuNI7T
-         HJ2g==
+        Tue, 25 Feb 2020 10:39:09 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so15224184wrx.11;
+        Tue, 25 Feb 2020 07:39:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jwm+TSOeImzPHrCD9+lr7kAphC4tuL6RMLlaxgsWLqw=;
-        b=BHmWMNJDUbX7wtdd3pXnRoSJIa9bB/9ymHV5e6unlXOKzaP+T7+weV0f+plU41TQQc
-         18Q9nwS7gz9tebMd2o5eGA4R87UQsGJxUm/5jrjCOzRDnV0dT3zYSEcObZsFN6tqRCgA
-         ciZFlxKBYGMYuvxH6SxBa7NmlgxHOgfAAenBNN0e8wej47XKUKePBmbjjEalkCmyjxfj
-         BpsASS4RxfB6b10UfM3uSeOW2eZu3lBDlnmFqVNXo9yosKMtNc+HWYME1mWsZh2Mwlch
-         nSrRSF9lACaPhxtTh0CdbSwUAbU+tAZY7+fMVAKV2T+uTbKGPBSQaqy2fvg+oq3KgY7n
-         Rm3Q==
-X-Gm-Message-State: APjAAAUtgV3MYc4aO68QVvPQx0C0kljy39k4qQEOPFwsJBqY42AJIy+G
-        1s/G0MYj3MdbbUD+LLHjgS8PWQ==
-X-Google-Smtp-Source: APXvYqzHldmwrTqVl+AAsrIVCTX7Jlh9PnwFXlMGuP+jUutbKK3H1p0bCLeuppv2h2dFsswPzzKHLg==
-X-Received: by 2002:a9d:5d09:: with SMTP id b9mr44627552oti.207.1582645084501;
-        Tue, 25 Feb 2020 07:38:04 -0800 (PST)
-Received: from minyard.net ([2001:470:b8f6:1b:4db:878f:ca6f:b716])
-        by smtp.gmail.com with ESMTPSA id l8sm2363087otn.31.2020.02.25.07.38.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Feb 2020 07:38:03 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:38:01 -0600
-From:   Corey Minyard <cminyard@mvista.com>
-To:     James Morse <james.morse@arm.com>
-Cc:     minyard@acm.org, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
-Message-ID: <20200225153801.GD3865@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20200219152403.3495-1-minyard@acm.org>
- <20200220142214.GC14459@willie-the-truck>
- <20200220163038.GJ3704@minyard.net>
- <20200220213040.GA2919@minyard.net>
- <9e2eac0b-ab60-6316-4976-686a8ab7ac8f@arm.com>
+        h=x-gm-message-state:subject:from:to:cc:reply-to:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UydO7AEhxXmWMXVvC3vVfDa/G7mimTMlc7pcI/QW8UE=;
+        b=uQEDo8FZRWIkQp0CxBMRVYO+OwFDqvAIshGZ1DBPQpPxxFHmL6zDc9HTv4v5Yib2Sn
+         ZvutI1eeapNmIIX4y8HA4/aLckFiGqdaSsihlxOMXkmE7MwdEDixRB+SnXNDJr0jJsQU
+         LwB+8KEuIwb+iktqm/ALmjGvgdETaFFh/ymLEIlKR1jez+ksTliUz5ogfGpysNIt+KS4
+         6r4sJV11Wu0ivLiy2lqd2ui1XcCx5ep2aAydNG4PgcPp/eV+fQfKl2G9yoJvLOalM29L
+         e2v4mmSswc4R+1txeIhQ36/z1jO2OcPRlgKfSYrr5NKNTtfiii7YoAIrblN1M/B2L7Bn
+         DKeA==
+X-Gm-Message-State: APjAAAXTZLj7KqHtG0RIoEG3pglWyCnRY1otajxQXb9Gw2XQc7Y+R43d
+        G9WCa/HXMks3nKbsU3eZDk4h4IXY
+X-Google-Smtp-Source: APXvYqz4ZE4l1iYQzAmhUYFA4PK1pJy8s9XpgPlBUJai74tCM6qjwwFu6sdA79h+odNmaidqxTOWuw==
+X-Received: by 2002:a5d:4807:: with SMTP id l7mr7754925wrq.250.1582645147719;
+        Tue, 25 Feb 2020 07:39:07 -0800 (PST)
+Received: from [10.10.2.174] (winnie.ispras.ru. [83.149.199.91])
+        by smtp.gmail.com with ESMTPSA id f8sm23180403wru.12.2020.02.25.07.39.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 07:39:06 -0800 (PST)
+Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
+From:   Denis Efremov <efremov@linux.com>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Reply-To: efremov@linux.com, efremov@linux.com
+References: <20200224212352.8640-1-w@1wt.eu> <20200224212352.8640-2-w@1wt.eu>
+ <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
+ <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
+ <20200225034529.GA8908@1wt.eu>
+ <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
+ <20200225140207.GA31782@1wt.eu>
+ <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <9c22a4ce-1108-d1aa-49c3-5fe7c3bb74f1@linux.com>
+Date:   Tue, 25 Feb 2020 18:39:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e2eac0b-ab60-6316-4976-686a8ab7ac8f@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 06:07:17PM +0000, James Morse wrote:
-> Hi Corey,
-> 
-> On 20/02/2020 21:30, Corey Minyard wrote:
-> > On Thu, Feb 20, 2020 at 10:30:38AM -0600, Corey Minyard wrote:
-> >> On Thu, Feb 20, 2020 at 02:22:14PM +0000, Will Deacon wrote:
-> >>> On Wed, Feb 19, 2020 at 09:24:03AM -0600, minyard@acm.org wrote:
-> >>>> After fixing this and doing some more testing, I ran into another issue:
-> >>>>
-> >>>> * Kernel enables the pt_regs single step
-> >>>> * Kernel returns from the exception with ERET.
-> >>>> * An interrupt or page fault happens on the instruction, causing the
-> >>>>   instruction to not be run, but the exception handler runs.
-> >>>
-> >>> This sounds like you've broken debug; we should take the step exception
-> >>> in the exception handler. That's the way this is supposed to work.
-> >>
-> >> Ok, here is the disconnect, I think.  If that is the case, then what I'm
-> >> seeing is working like it should.  That doesn't work with gdb, though,
-> >> gdb expects to be able to single-step and get to the next instruction.
-> >> The scenario I mentioned at the top of this email.
-> >>
-> >> Let me look at this a bit more.  I'll look at this on qemu and maybe a
-> >> pi.
-> 
-> > Ok, this is the disconnect.  I was assuming that single step would stop
-> > at the next instruction after returning from an exception.  qemu works
-> > the same way the hardware I have does.  So I'm assuming arm64 doesn't
-> > clear PTRACE.SS on an exception, even though that seems to be what the
-> > manual says.
-> 
-> PSTATE.SS isn't an enable bit for single step ... its part of a bigger state-machine.
-> (my made-up terminology for it is 'PSTATE.Suppress-Step'...)
-> 
-> The diagram in the Arm-Arm's D2.12.3 "The software step state machine" may help.
-> 
-> MDSCR_EL1.SS enables single-step, if PSTATE.D is clear the CPU will now take step
-> exceptions instead of pretty much anything else. (active pending state)
-> To execute one instruction you need to ERET with SPSR_ELx.SS set. (active, not pending)
-> The CPU will execute one instruction, then clear PSTATE.SS. (taking us back to active pending)
-> 
-> Taking an exception clears PSTATE.SS so that you know you're in active-pending state, and
-> will take a step exception once you re-enable debug with PSTATE.D. This lets you step the
-> exception handlers.
-> (if it was set, you wouldn't see the first instruction in the step handler, if it was
-> inherited, you couldn't know if you would see the first instruction or not).
-> If you take something other than a step exception, PSTATE.SS will be preserved in SPSR_EL1.SS.
-> 
-> 
-> What I think you are seeing is the step exception once debug is re-enabled, after taking
-> an exception you didn't want. This happens because MDSCR_EL1.SS is still set.
+On 2/25/20 6:22 PM, Denis Efremov wrote:
+> As for now, I can see that only floppy.c includes fdreg.h file
+> with define FDPATCHES. If it's true then #define FD_IOPORT 0x3f0 
+> branch is never used and we can try to fix remaining FD_* macro
+> in the next round.
 
-Ok, I was familiar with that diagram, but I was trying to fit it into
-how the other architectures where I have done this type of work.  This
-is a little bizarre to me, but I understand now.  Your explaination was
-very helpful, though the code I have is correct either way.
+Ah, I forgot that fdregs.h is uapi. Thus, we can't simplify FDPATCHES.
 
-The problem is that kgdb doesn't work right with the current
-implementation.  If you continue from a breakpoint, it does not
-continue.  It just stops at the same place.  What happens is:
-
-* gdb remove the breakpoint and single steps.
-* An exception happens and the single step stops in the kernel entry.
-  Thus the state machine goes to inactive.
-* gdb re-inserts the breakpoint and continues.
-* When the exception returns, the breakpoint is there and is hit again.
-
-You can never continue from a breakpoint without removing it, because
-there's alway a timer interrupt pending.  You can't single-step through
-instructions (stepi) because it always stops in the kernel entry.  If
-you do a normal gdb single step in code it just hangs because it keeps
-trying to single step through instructions and keeps stopping in kernel
-entry.  So gdb does not expect the behavior that is currently
-implemented.
-
-The patch as I have posted it is probably the simplest way to fix it.
-It basically makes single-step work like other architectures, and like
-the userspace single step works.  I could ifdef it so that the entry
-code is only there if kgdb is enabled.  You can single step through
-instructions that cause page faults, so it's a little more general.
-
-The other way is to run the single-stepped instruction with interrupts
-disabled and emulate any messing with the DAIF bits.  I assume
-that's only "MRS <Xt>, DAIF", "MSR DAIF, <Xt>", "MSR DAIFSet, #<imm>",
-and "MSR DAIFClr, #<imm>".  Well, I guess ERET also does that, but maybe
-that's ok, probably not a big deal.  In this case you can't single step
-over instructions that take page faults.  I'm not sure if that's a big
-deal or not, but I assume users would do that.  And it's more complex
-since you have to emulate those instructions messing with DAIF.
-
-I would like to get this fixed, either way.
-
-Thanks,
-
--corey
-
-> 
-> 
-> > You can reproduce this by setting up kgdb on the kernel and hooking up
-> > gdb, setting a breakpoint somewhere that has interrupts enabled, then
-> > doing a "continue".  It will hit the same breakpoint again and again
-> > because the PC doesn't get advanced by the single step and the timer
-> > interrupt is always going to be pending.  I can do a more detailed set
-> > of instructions with qemu, if you like.
-> 
-> > I looked at kprobes a bit.  I don't think kprobes will have a problem
-> > with this particular issue, it disables interrupts while single
-> > stepping and doesn't allow a probe on any instruction that would modify
-> > the interrupt settings.  I didn't look at page faults, but I assume that
-> > it also won't allow a probe where there can be a page fault.
-> 
-> Yes, arch_prepare_kprobe() checks search_exception_tables() for locations that we know may
-> cause page faults. These are blacklisted.
-> 
-> 
-> Thanks,
-> 
-> James
+Denis
