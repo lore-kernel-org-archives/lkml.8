@@ -2,127 +2,116 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A174DC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF448C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7067121744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB7821744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7mnFD0e"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cV2wzTUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgBYKkR (ORCPT
+        id S1730358AbgBYKmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:40:17 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33893 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbgBYKkR (ORCPT
+        Tue, 25 Feb 2020 05:42:07 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10267 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729417AbgBYKmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:40:17 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so9418337lfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 02:40:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lB/ixEiBalyhvhRiB5xSxt+Xn0mrFFaoIJOp9ZDTEVw=;
-        b=U7mnFD0eB+14p5WXU8eODfJJrt//+UySWxh8iW6iKBny2kTkaFgkEdVhHYUkXpRAUA
-         7g7Mmd2YzBV+3I5oYA7FDrKM3VpchtBzkta7WmR6zZxPW/G0ydgkd1NqescWG7rFbIgk
-         bPIrzs50xbCoNfa9nFT/+p4zpbKLgAk7XAcbSuwi3cW0spcv/TYjbaLsMnI1UM4x8CXJ
-         Y4Anr+HhIjaJ+WLwg5MbE8JW5ERuVOBwkJXcLZfFBkOXIoKXlPtFC55LSPqUrAnqyWX6
-         B/c+gYEDdP2sUseoxBmcjNri2hGBRzywJd6uONo9ZRJi0f6BZ3gLMXMbzw5mi7LXdwC6
-         R/0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lB/ixEiBalyhvhRiB5xSxt+Xn0mrFFaoIJOp9ZDTEVw=;
-        b=qadEF1iM3OkIkFMPnrDaT8oZvIeqXiz2ZPC7pWFQPzUKWdyDM2rkosLq2+MWesTLXF
-         ZnHd6JL0CoQ/S9DDDVx0vBykl4dSC4ii8rXbyycs4K8ZfIDe95xix4C2LyK9iEp3j9JC
-         bNddNvitxxorzBuPYQZ3gxbVpaiWwaYXIgRKz7NxaVbTMpBldhVWCACi8/2vaKXcyOJA
-         5MXwL/SJBJFKnqzuzhutCuvlfSCRfgVxkYW0vBqGJsNIeEzAAkSzR564mEwQfBxOxHo0
-         ihrEwybaQ2mRXD2Wg1NrEPVZKQ+KakGxN0DjxFZEDxuNA2c1FZA7VW4IlsCJrP+ZmZxr
-         2JRg==
-X-Gm-Message-State: APjAAAX1tfXHW17xsrFCylb9fR+wH/rAgq3dCw9OXyh7M3vsSk99dobq
-        T6P6258TKgbJvveVoBGZhRYdAvqqYFJdrX50Oxg=
-X-Google-Smtp-Source: APXvYqyk/IFNidAB1quALylWpIE3a/t1bvpbndPuBZnjoxy39NP9ssSpKbGX5hPEkyRTtFbOI5O8eKLBMfSiip8LJqE=
-X-Received: by 2002:ac2:52a2:: with SMTP id r2mr29634067lfm.33.1582627213967;
- Tue, 25 Feb 2020 02:40:13 -0800 (PST)
+        Tue, 25 Feb 2020 05:42:06 -0500
+X-UUID: 1872ab0ccbd84197b00233eb8f8611a7-20200225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=F/HwmP2nkakeOJe6rb/hTQ+jcOaAno58DR/mM7/DDU0=;
+        b=cV2wzTUVO9sdNTTO5c2ZuOmuT47xPenpLJHqKSZz1K0MNz60SZOumoAx3FgC/RMOXFUwIZhrvojGlWTFaH95fdAa9ftmXOKCzHQm6zUGF69CN8jAtm5+NstBASQomDBEF1Pvt7+HZhcAcadma5n2lW0A+/fLunNhSJT3RrsnrkM=;
+X-UUID: 1872ab0ccbd84197b00233eb8f8611a7-20200225
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1569439019; Tue, 25 Feb 2020 18:42:01 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 25 Feb 2020 18:37:53 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 25 Feb 2020 18:41:57 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, <stable@vger.kernel.org>
+CC:     Macpaul Lin <macpaul.lin@mediatek.com>
+Subject: [PATCH v3] usb: gadget: f_fs: try to fix AIO issue under ARM 64 bit TAGGED mode
+Date:   Tue, 25 Feb 2020 18:41:55 +0800
+Message-ID: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1582472947-22471-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1582472947-22471-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-References: <cover.1572437285.git.vpillai@digitalocean.com>
- <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com> <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
- <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
- <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com> <20200212230705.GA25315@sinkpad>
- <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com> <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
- <20200225034438.GA617271@ziqianlu-desktop.localdomain> <CAERHkrs_WX=gS0sQ2Wg_SZuAcf_qhKfT05co0uYgaQk8cFj0ag@mail.gmail.com>
- <20200225073446.GA618392@ziqianlu-desktop.localdomain>
-In-Reply-To: <20200225073446.GA618392@ziqianlu-desktop.localdomain>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Tue, 25 Feb 2020 18:40:02 +0800
-Message-ID: <CAERHkrtraNqWj+RZnUFBaR8Cxk_cprQnzyKEgZ=6K+1mb1Jifw@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-To:     Aaron Lu <aaron.lwe@gmail.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 861415B116ECAEBFF54A79652E47A283856E8F4245AD425BB9510418B61F86902000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 3:34 PM Aaron Lu <aaron.lwe@gmail.com> wrote:
->
-> On Tue, Feb 25, 2020 at 01:32:35PM +0800, Aubrey Li wrote:
-> > Aaron - did you test this before? In other words, if you reset repo to your
-> > last commit:
->
-> I did this test only recently when I started to think if I can use
-> coresched to boost main workload's performance in a colocated
-> environment.
->
-> >
-> > - 5bd3c80 sched/fair : Wake up forced idle siblings if needed
-> >
-> > Does the problem remain? Just want to check if this is a regression
-> >  introduced by the subsequent patchset.
->
-> The problem isn't there with commit 5bd3c80 as the head, so yes, it
-> looks like indeed a regression introduced by subsequent patchset.
->
-> P.S. I will need to take a closer look if each cgA's task is running
-> on a different core later but the cpu usage of cgA is back to 800% with
-> commit 5bd3c80.
+VGhpcyBpc3N1ZSB3YXMgZm91bmQgd2hlbiBhZGJkIHRyeWluZyB0byBvcGVuIGZ1bmN0aW9uZnMg
+d2l0aCBBSU8gbW9kZS4NClVzdWFsbHksIHdlIG5lZWQgdG8gc2V0ICJzZXRwcm9wIHN5cy51c2Iu
+ZmZzLmFpb19jb21wYXQgMCIgdG8gZW5hYmxlDQphZGJkIHdpdGggQUlPIG1vZGUgb24gQW5kcm9p
+ZC4NCg0KV2hlbiBhZGJkIGlzIG9wZW5pbmcgZnVuY3Rpb25mcywgaXQgd2lsbCB0cnkgdG8gcmVh
+ZCAyNCBieXRlcyBhdCB0aGUNCmZpcnN0IHJlYWQgSS9PIGNvbnRyb2wuIElmIHRoaXMgcmVhZGlu
+ZyBoYXMgYmVlbiBmYWlsZWQsIGFkYmQgd2lsbA0KdHJ5IHRvIHNlbmQgRlVOQ1RJT05GU19DTEVB
+Ul9IQUxUIHRvIGZ1bmN0aW9uZnMuIFdoZW4gYWRiZCBpcyBpbiBBSU8NCm1vZGUsIGZ1bmN0aW9u
+ZnMgd2lsbCBiZSBhY3RlZCB3aXRoIGFzeW5jcm9uaXplZCBJL08gcGF0aC4gQWZ0ZXIgdGhlDQpz
+dWNjZXNzZnVsIHJlYWQgdHJhbnNmZXIgaGFzIGJlZW4gY29tcGxldGVkIGJ5IGdhZGdldCBoYXJk
+d2FyZSwgdGhlDQpmb2xsb3dpbmcgc2VyaWVzIG9mIGZ1bmN0aW9ucyB3aWxsIGJlIGNhbGxlZC4N
+CiAgZmZzX2VwZmlsZV9hc3luY19pb19jb21wbGV0ZSgpIC0+IGZmc191c2VyX2NvcHlfd29ya2Vy
+KCkgLT4NCiAgICBjb3B5X3RvX2l0ZXIoKSAtPiBfY29weV90b19pdGVyKCkgLT4gY29weW91dCgp
+IC0+DQogICAgaXRlcmF0ZV9hbmRfYWR2YW5jZSgpIC0+IGl0ZXJhdGVfaW92ZWMoKQ0KDQpBZGRp
+bmcgZGVidWcgdHJhY2UgdG8gdGhlc2UgZnVuY3Rpb25zLCBpdCBoYXMgYmVlbiBmb3VuZCB0aGF0
+IGluDQpjb3B5b3V0KCksIGFjY2Vzc19vaygpIHdpbGwgY2hlY2sgaWYgdGhlIHVzZXIgc3BhY2Ug
+YWRkcmVzcyBpcyB2YWxpZA0KdG8gd3JpdGUuIEhvd2V2ZXIgaWYgQ09ORklHX0FSTTY0X1RBR0dF
+RF9BRERSX0FCSSBpcyBlbmFibGVkLCBhZGJkDQphbHdheXMgcGFzc2VzIHVzZXIgc3BhY2UgYWRk
+cmVzcyBzdGFydCB3aXRoICIweDNDIiB0byBnYWRnZXQncyBBSU8NCmJsb2Nrcy4gVGhpcyB0YWdn
+ZWQgYWRkcmVzcyB3aWxsIGNhdXNlIGFjY2Vzc19vaygpIGNoZWNrIGFsd2F5cyBmYWlsLg0KV2hp
+Y2ggY2F1c2VzIGxhdGVyIGNhbGN1bGF0aW9uIGluIGl0ZXJhdGVfaW92ZWMoKSB0dXJuIHplcm8u
+DQpDb3B5b3V0KCkgd29uJ3QgY29weSBkYXRhIHRvIHVzZXJzcGFjZSBzaW5jZSB0aGUgbGVuZ3Ro
+IHRvIGJlIGNvcGllZA0KInYuaW92X2xlbiIgd2lsbCBiZSB6ZXJvLiBGaW5hbGx5IGxlYWRzIGZm
+c19jb3B5X3RvX2l0ZXIoKSBhbHdheXMgcmV0dXJuDQotRUZBVUxULCBjYXVzZXMgYWRiZCBjYW5u
+b3Qgb3BlbiBmdW5jdGlvbmZzIGFuZCBzZW5kDQpGVU5DVElPTkZTX0NMRUFSX0hBTFQuDQoNClNp
+Z25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVsLmxpbkBtZWRpYXRlay5jb20+DQotLS0N
+CkNoYW5nZXMgZm9yIHYzOg0KICAtIEZpeCBtaXNzcGVsbGluZyBpbiBjb21taXQgbWVzc2FnZS4N
+Cg0KQ2hhbmdlcyBmb3IgdjI6DQogIC0gRml4IGJ1aWxkIGVycm9yIGZvciAzMi1iaXQgbG9hZC4g
+QW4gI2lmIGRlZmluZWQoQ09ORklHX0FSTTY0KSBzdGlsbCBuZWVkDQogICAgZm9yIGF2b2lkaW5n
+IHVuZGVjbGFyZWQgZGVmaW5lcy4NCg0KIGRyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX2Zz
+LmMgfCAgICA1ICsrKysrDQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfZnMuYyBiL2RyaXZlcnMvdXNi
+L2dhZGdldC9mdW5jdGlvbi9mX2ZzLmMNCmluZGV4IGNlMWQwMjMuLjcyOGMyNjAgMTAwNjQ0DQot
+LS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9mcy5jDQorKysgYi9kcml2ZXJzL3Vz
+Yi9nYWRnZXQvZnVuY3Rpb24vZl9mcy5jDQpAQCAtMzUsNiArMzUsNyBAQA0KICNpbmNsdWRlIDxs
+aW51eC9tbXVfY29udGV4dC5oPg0KICNpbmNsdWRlIDxsaW51eC9wb2xsLmg+DQogI2luY2x1ZGUg
+PGxpbnV4L2V2ZW50ZmQuaD4NCisjaW5jbHVkZSA8bGludXgvdGhyZWFkX2luZm8uaD4NCiANCiAj
+aW5jbHVkZSAidV9mcy5oIg0KICNpbmNsdWRlICJ1X2YuaCINCkBAIC04MjYsNiArODI3LDEwIEBA
+IHN0YXRpYyB2b2lkIGZmc191c2VyX2NvcHlfd29ya2VyKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29y
+aykNCiAJaWYgKGlvX2RhdGEtPnJlYWQgJiYgcmV0ID4gMCkgew0KIAkJbW1fc2VnbWVudF90IG9s
+ZGZzID0gZ2V0X2ZzKCk7DQogDQorI2lmIGRlZmluZWQoQ09ORklHX0FSTTY0KQ0KKwkJaWYgKElT
+X0VOQUJMRUQoQ09ORklHX0FSTTY0X1RBR0dFRF9BRERSX0FCSSkpDQorCQkJc2V0X3RocmVhZF9m
+bGFnKFRJRl9UQUdHRURfQUREUik7DQorI2VuZGlmDQogCQlzZXRfZnMoVVNFUl9EUyk7DQogCQl1
+c2VfbW0oaW9fZGF0YS0+bW0pOw0KIAkJcmV0ID0gZmZzX2NvcHlfdG9faXRlcihpb19kYXRhLT5i
+dWYsIHJldCwgJmlvX2RhdGEtPmRhdGEpOw0KLS0gDQoxLjcuOS41DQo=
 
-Hmm..., I went through the subsequent patches, and I think this one
-
-- 4041eeb8f3 sched/fair: don't migrate task if cookie not match
-
-is probably the major cause, can you please revert this one to see
-if the problem is gone?
-
-From what I can tell, if 16 threads in cgB occupied 8 cores, this
-patch prevents any thread in cgA from migrating when load balance
-is triggered, and yes, cpu.shares is ignored at this point.
-
-Thanks,
--Aubrey
