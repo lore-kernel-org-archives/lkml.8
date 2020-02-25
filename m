@@ -3,150 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57216C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C056C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0692176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F232176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgBYSB3 (ORCPT
+        id S1730436AbgBYSCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:01:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46726 "EHLO mx2.suse.de"
+        Tue, 25 Feb 2020 13:02:30 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31541 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgBYSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:01:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 641A4AD48;
-        Tue, 25 Feb 2020 18:01:26 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 19:01:25 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     Petr Mladek <pmladek@suse.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        akpm@linux-foundation.org,
-        "K . Prasad" <prasad@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Quentin Perret <qperret@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
- kallsyms_on_each_symbol()
-In-Reply-To: <943e7093-2862-53c6-b7f4-96c7d65789b9@redhat.com>
-Message-ID: <alpine.LSU.2.21.2002251854550.1630@pobox.suse.cz>
-References: <20200221114404.14641-1-will@kernel.org> <alpine.LSU.2.21.2002251104130.11531@pobox.suse.cz> <20200225121125.psvuz6e7coa77vxe@pathway.suse.cz> <943e7093-2862-53c6-b7f4-96c7d65789b9@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726953AbgBYSC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:02:29 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01PI2Jho001120;
+        Tue, 25 Feb 2020 19:02:19 +0100
+Date:   Tue, 25 Feb 2020 19:02:19 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
+Message-ID: <20200225180219.GA395@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <20200224212352.8640-2-w@1wt.eu>
+ <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
+ <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
+ <20200225034529.GA8908@1wt.eu>
+ <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
+ <20200225140207.GA31782@1wt.eu>
+ <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="1678380546-697660208-1582653686=:1630"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Feb 25, 2020 at 06:22:47PM +0300, Denis Efremov wrote:
+> I think that for the first attempt changing will be enough:
+> -static int fdc;                        /* current fdc */
+> +static int current_fdc;                        /* current fdc */
+> and
+> -#define FD_IOPORT fdc_state[fdc].address
+> +#define FD_IOPORT fdc_state[current_fdc].address
+> and for fd_setdor in ./arch/arm/include/asm/floppy.h
 
---1678380546-697660208-1582653686=:1630
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+So after a bit more digging, that should not be correct because:
+  - disk_change() uses a local "fdc" variable with expectations that
+    it will be used by fd_inb(FD_DIR)
+    
+  - set_dor() uses a local fdc argument that's used by
+    fd_outb(newdor, FD_DOR)
 
-On Tue, 25 Feb 2020, Joe Lawrence wrote:
+Here we have "fdc" hidden in:
+  - FD_DOR/FD_DIR (referencing FD_IOPORT) on x86
+  - fd_outb(), relying on fd_setdor() on ARM
 
-> On 2/25/20 7:11 AM, Petr Mladek wrote:
-> > On Tue 2020-02-25 11:05:39, Miroslav Benes wrote:
-> >> CC live-patching ML, because this could affect many of its users...
-> >>
-> >> On Fri, 21 Feb 2020, Will Deacon wrote:
-> >>
-> >>> Hi folks,
-> >>>
-> >>> Despite having just a single modular in-tree user that I could spot,
-> >>> kallsyms_lookup_name() is exported to modules and provides a mechanism
-> >>> for out-of-tree modules to access and invoke arbitrary, non-exported
-> >>> kernel symbols when kallsyms is enabled.
-> > 
-> > Just to explain how this affects livepatching users.
-> > 
-> > Livepatch is a module that inludes fixed copies of functions that
-> > are buggy in the running kernel. These functions often
-> > call functions or access variables that were defined static in
-> > the original source code. There are two ways how this is currently
-> > solved.
-> > 
-> > Some livepatch authors use kallsyms_lookup_name() to locate the
-> > non-exported symbols in the running kernel and then use these
-> > address in the fixed code.
-> > 
-> 
-> FWIW, kallsyms was historically used by the out-of-tree kpatch support module
-> to resolve external symbols as well as call set_memory_r{w,o}() API.  All of
-> that support code has been merged upstream, so modern kpatch modules* no
-> longer leverage kallsyms by default.
+I'm now looking how to change fd_outb() to pass the fdc in argument,
+after all it's not that many places and that's exactly what we need.
+Maybe afterwards we'll figure that some of them are still wrong :-)
 
-Good. Quick grep through the sources gave me a couple of hits, so I was 
-not sure.
- 
-> * That said, there are still some users who still use the deprecated support
-> module with newer kernels, but that is not officially supported by the
-> project.
-> 
-> > Another possibility is to used special relocation sections,
-> > see Documentation/livepatch/module-elf-format.rst
-> > 
-> > The problem with the special relocations sections is that the support
-> > to generate them is not ready yet. The main piece would klp-convert
-> > tool. Its development is pretty slow. The last version can be
-> > found at
-> > https://lkml.kernel.org/r/20190509143859.9050-1-joe.lawrence@redhat.com
-> > 
-> > I am not sure if this use case is enough to keep the symbols exported.
-> > Anyway, there are currently some out-of-tree users.
-> > 
-> 
-> Another (temporary?) klp-relocation issue is that binutils has limited support
-> for them as currently implemented:
-> 
->   https://sourceware.org/ml/binutils/2020-02/msg00317.html
-> 
-> For example, try running strip or objcopy on a .ko that includes them and you
-> may find surprising results :(
-> 
-> 
-> As far as the klp-convert patchset goes, I forget whether or not we tied its
-> use case to source-based livepatch creation.  If kallsyms goes unexported,
-> perhaps it finds more immediate users.
->
-> However since klp-convert provides nearly the same functionality as kallsyms,
-> i.e. both can be used to circumvent symbol export licensing -- one could make
-> similar arguments against its inclusion.
-
-In a way yes, but as Masami described elsewhere in the thread there are 
-more convenient ways to circumvent it even now. Not as convenient as 
-kallsyms, of course. 
- 
-> If there is renewed (or greater, to be more accurate) interest in the
-> klp-convert patchset, we can dust it off and see what's left.  AFAIK it was
-> blocked on arch-specific klp-relocations and whether per-object​ livepatch
-> modules would remove that requirement.
-
-Yes, I think it is on standby now. I thought about it while walking 
-through Petr's module split patch set and it seemed to me that klp-convert 
-could be made much much simpler on top of that. So we should start there.
-
-Anyway, as far as Will's patch set is concerned, there is no real obstacle 
-on our side, is there?
-
-Alexei mentioned ksplice from git history, but no one cares about ksplice 
-in upstream now, I would say.
-
-Thanks
-Miroslav
---1678380546-697660208-1582653686=:1630--
+Willy
