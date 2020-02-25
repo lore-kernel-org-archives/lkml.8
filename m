@@ -2,114 +2,79 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E162C4BA00
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AAEC4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBA82176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299C92176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QMkbvLLy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gbA5lK2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgBYWCw (ORCPT
+        id S1729068AbgBYWFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:02:52 -0500
-Received: from mail-pj1-f43.google.com ([209.85.216.43]:37702 "EHLO
-        mail-pj1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgBYWCw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:02:52 -0500
-Received: by mail-pj1-f43.google.com with SMTP id m13so342004pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:02:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Bvro5bqgLoB7Q+QOnUukmSXnFk4BT1NY/ZAFMUfpRmI=;
-        b=QMkbvLLyqttt8K0Za0EOq8KWcm6weijM62KcldL6NQ2fIoAXY026AK/Dgog7qX2hbG
-         S3i2NIWMVWvBd2LzrF/4EBNAgxk2GuDRyHGFUyDGtsfJ3er50UMq46NMGX0gLE2GRn7a
-         ZcKtvDacIkE97cApgIrf38ItG6/pao5IHz4cA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bvro5bqgLoB7Q+QOnUukmSXnFk4BT1NY/ZAFMUfpRmI=;
-        b=Ld80AB6epJuSGyp1hlBFp0afSF6gvmojvQ4DniUDhQNFG/hBV1JoYOVy/7K6ZAxA5L
-         Yj36Nwqa3gvhB6/PlyzbH1QYADUdly+zJJcZ+PSiN3snaSUNCkzDwTvhaHLojwVASliN
-         JGHgnAmGs3wDqKVFYRe0o6gpFloBdP9rMc4lMACpZcY/34YOb7b4pCmn4lXvljLVpeIE
-         fVp61vkUS7W2RKgVfK7RcazeLB0p01C+b/xfxkMRYYRzpC06qSLdPPxEzvIq3x15xL4c
-         Ftf7n22HkrwuXZZ8T63aF+9ZuSUYB+BqY5pw/X0LFBR3pY3F+PIffT2+rIvXnsp4UgmT
-         7Q1Q==
-X-Gm-Message-State: APjAAAW+yk22FRHF6q3hPXPhB/RuKxuedQeVSKlDjX1w6blYibb0BjIq
-        XGC0Jt0QMRpbcgfmfjTJ5i4+Fw==
-X-Google-Smtp-Source: APXvYqyi/IdFHOhdoTujGGepz1gv+utlp506jhon2zXTaTyUOqxNnQ3SSyYbl/1S710zwjPG+xsLSA==
-X-Received: by 2002:a17:90a:cc16:: with SMTP id b22mr1268428pju.65.1582668171246;
-        Tue, 25 Feb 2020 14:02:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a19sm94740pju.11.2020.02.25.14.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 14:02:49 -0800 (PST)
-Date:   Tue, 25 Feb 2020 14:02:48 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Fangrui Song <maskray@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>
-Subject: Re: --orphan-handling=warn
-Message-ID: <202002251358.EDA50C11F@keescook>
-References: <20200222065521.GA11284@zn.tnic>
- <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan>
- <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <202002242122.AA4D1B8@keescook>
- <20200225182951.GA1179890@rani.riverdale.lan>
- <202002251140.4F28F0A4F@keescook>
- <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
+        Tue, 25 Feb 2020 17:05:35 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34146 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726607AbgBYWFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:05:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=5Nu7vVzAgRjIOT3nTKCs9kz7QufjSh2yf/3fHkW8+Zs=; b=gbA5lK2wqlsFBRMia+r1AyPz0b
+        tI5grpHd3hS6O4tWDbZ00K4LMxYGrInJxRaPM1+HdS6L2NmzX4Rzcldr7uaWM+89LuY7SvascB2hS
+        z0etRRCqMroh8OIE8DqzS5i5I0z+1yetLDNfPvOgSHhd5fA1cAyybEWNz5Z1Xpovpu1U=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j6iKZ-0001ct-9M; Tue, 25 Feb 2020 23:05:31 +0100
+Date:   Tue, 25 Feb 2020 23:05:31 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX325x (AC3x)
+Message-ID: <20200225220531.GH7663@lunn.ch>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+ <20200225163025.9430-2-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
+In-Reply-To: <20200225163025.9430-2-vadym.kochan@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:37:26PM -0800, Nick Desaulniers wrote:
-> On Tue, Feb 25, 2020 at 11:43 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, Feb 25, 2020 at 01:29:51PM -0500, Arvind Sankar wrote:
-> > > On Mon, Feb 24, 2020 at 09:35:04PM -0800, Kees Cook wrote:
-> > > > Note that cheating and doing the 1-to-1 mapping by handy with a 40,000
-> > > > entry linker script ... made ld.lld take about 15 minutes to do the
-> > > > final link. :(
-> > >
-> > > Out of curiosity, how long does ld.bfd take on that linker script :)
-> >
-> > A single CPU at 100% for 15 minutes. :)
-> 
-> I can see the implementers of linker script handling thinking "surely
-> no one would ever have >10k entries." Then we invented things like
-> -ffunction-sections, -fdata-sections, (per basic block equivalents:
-> https://reviews.llvm.org/D68049) and then finally FGKASLR. "640k ought
-> to be enough for anybody" and such.
+> +static int mvsw_pr_port_obj_attr_set(struct net_device *dev,
+> +				     const struct switchdev_attr *attr,
+> +				     struct switchdev_trans *trans)
+> +{
+> +	int err = 0;
+> +	struct mvsw_pr_port *port = netdev_priv(dev);
+> +
+> +	switch (attr->id) {
+> +	case SWITCHDEV_ATTR_ID_PORT_STP_STATE:
+> +		err = -EOPNOTSUPP;
+> +		break;
 
-Heh, yeah. I had no expectation that it would work _well_; I just
-wanted to test if it _could_ work. And it did: FGKASLR up and running
-on Clang+LLD. I stopped there before attempting the next step:
-FGKASLR+LTO+CFI, which I assume would be hilariously slow linking.
+That is interesting. Is the linux bridge happy with this? Particularly
+when you have other interfaces in the Linux SW bridge, which cause a
+loop via the switch ports? I assume the network then dies in a
+broadcast storm, since there is nothing Linux can do to solve the
+loop.
 
--- 
-Kees Cook
+       Andrew
