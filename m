@@ -2,126 +2,129 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E387FC35DEA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10D3C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B7721D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yn59aePW"
+	by mail.kernel.org (Postfix) with ESMTP id C2DD62176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgBYBpK (ORCPT
+        id S1728728AbgBYBsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:45:10 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:60836 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728011AbgBYBpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:45:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=DUOOeFia5Ij2c83y1NLw8MEtTRsgVwOpA+cJVz9zg3I=; b=yn59aePWZJpEYwiNIGPoO4HkLl
-        Drsv+74wPPHFuvK0dzN6clqf8hJfznT1CE3Dx5WrZNjHsU5dtXwH0RH7ZUSg4JaUmm7tfFWH+9zmb
-        M3RCvwUO1HGoJotuQARPUMLIdcryWbMAd1AGo2qTYqcgcHavuTAKZKkuoIVzacX0612M=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j6PHQ-0003fb-FX; Tue, 25 Feb 2020 02:45:00 +0100
-Date:   Tue, 25 Feb 2020 02:45:00 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/2] net: mdio: add ipq8064 mdio driver
-Message-ID: <20200225014500.GC9749@lunn.ch>
-References: <20200224211035.16897-1-ansuelsmth@gmail.com>
+        Mon, 24 Feb 2020 20:48:14 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:49211 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbgBYBsN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 20:48:13 -0500
+Received: by mail-il1-f197.google.com with SMTP id p7so21998291ilq.16
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:48:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=DwOxWulic73RxjwFhGbAWG6xr0sogpuOtGMOVnENdpw=;
+        b=NwQGGv2izcZhSD+sIEw7x3kD9Vh67H7I5pIBUmBI8QvhY9NVzo69ruuSlFrQQlVhg7
+         u3jlBxLmSxcdN/54VBxR0aFsywELiwvjyBBYMa+Tg+o9D769nsA2gquWWxC4dkNv3LbO
+         0kQ39hDVw3wzBajfIYahe3CI2VBaLJtXe1/p1Gj1pq9upsvv4LI2LA2rU0gaZwVmqbjy
+         K8nSY+Abc+FMFien0vJ3Y5IVg/OB5hfiQIio5BlpDkuhXZaLphJ1BWV2GcXxwfdH75rf
+         7ntEC+AU8XAMId8Bt1GkDgZOrfD27isZU8SQTjUNza1mWln9BNMjjGJsQJk/HGAAK/kY
+         dttA==
+X-Gm-Message-State: APjAAAXqNSYbqs6yMBLyIdeJTi4xzVwGBcdUK18o5t0j6wbIc08dSGIR
+        5Xpj8d2AypYR/vME96J0+Hgi3jEsUsUdZ6/AOUWrtYMSTgk+
+X-Google-Smtp-Source: APXvYqysWAPjtehiszFnrhai12UfjdJ3bI84iQaIcNhRqURAGFrtrNs42drBRzQjHNh7uUtIidVuEt9Zu2YpT4DSFhngSQf2Dkt/
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224211035.16897-1-ansuelsmth@gmail.com>
+X-Received: by 2002:a02:cdd9:: with SMTP id m25mr53570273jap.123.1582595293217;
+ Mon, 24 Feb 2020 17:48:13 -0800 (PST)
+Date:   Mon, 24 Feb 2020 17:48:13 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000046895c059f5cae37@google.com>
+Subject: INFO: trying to register non-static key in xa_destroy
+From:   syzbot <syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com>
+To:     bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static int
-> +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
-> +{
-> +	struct ipq8064_mdio *priv = bus->priv;
-> +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
-> +	u32 ret_val;
-> +	int err;
+Hello,
 
-Hi Ansuel
+syzbot found the following crash on:
 
-Reverse Christmas tree. priv needs to move down a line.
+HEAD commit:    2045e158 r8169: remove RTL_EVENT_NAPI constants
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14791c81e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
+dashboard link: https://syzkaller.appspot.com/bug?extid=2e80962bedd9559fe0b3
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1277fe09e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=108d9109e00000
 
-> +
-> +	/* Reject clause 45 */
-> +	if (reg_offset & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-> +
-> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> +	usleep_range(8, 10);
-> +
-> +	err = ipq8064_mdio_wait_busy(priv);
-> +	if (err)
-> +		return err;
-> +
-> +	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
-> +	return (int)ret_val;
-> +}
-> +
-> +static int
-> +ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
-> +{
-> +	struct ipq8064_mdio *priv = bus->priv;
-> +	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com
 
-Same here.
+RBP: 00007ffcc52aa360 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 9669 Comm: syz-executor271 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:880 [inline]
+ register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1189
+ __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3836
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+ xa_destroy+0xb8/0x2f0 lib/xarray.c:1990
+ siw_device_cleanup+0x19/0x30 drivers/infiniband/sw/siw/siw_main.c:86
+ ib_dealloc_device+0x48/0x230 drivers/infiniband/core/device.c:617
+ siw_device_create drivers/infiniband/sw/siw/siw_main.c:436 [inline]
+ siw_newlink drivers/infiniband/sw/siw/siw_main.c:556 [inline]
+ siw_newlink+0x10aa/0x1310 drivers/infiniband/sw/siw/siw_main.c:542
+ nldev_newlink+0x28a/0x430 drivers/infiniband/core/nldev.c:1538
+ rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441219
+Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcc52aa348 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441219
+RDX: 0000000000000000 RSI: 00000000200031c0 RDI: 0000000000000003
+RBP: 00007ffcc52aa360 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
 
-> +static int
-> +ipq8064_mdio_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct ipq8064_mdio *priv;
-> +	struct mii_bus *bus;
-> +	int ret;
-> +
-> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	bus->name = "ipq8064_mdio_bus";
-> +	bus->read = ipq8064_mdio_read;
-> +	bus->write = ipq8064_mdio_write;
-> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-> +	bus->parent = &pdev->dev;
-> +
-> +	priv = bus->priv;
-> +	priv->base = syscon_node_to_regmap(np);
-> +	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
-> +		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
 
-"master" is not documented in the binding. Do we really need two
-different ways to get the base address?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-	  Andrew
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
