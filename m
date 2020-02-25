@@ -2,150 +2,73 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C138C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EAFC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54B22084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ERjzs/tX"
+	by mail.kernel.org (Postfix) with ESMTP id 06F102084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731633AbgBYSkT (ORCPT
+        id S1731645AbgBYSka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:40:19 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39661 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731439AbgBYSkT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:40:19 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y8so132840qvk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 10:40:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=i2CV/HrBlB038Ie8Qimmh82koD0NdKzml2lxz77LIw8=;
-        b=ERjzs/tXZewLwer9YDYr/IYsZ/pnkPxN3//YU6bP7CHHDRMWHkIbtg/nZJaTXwNmK7
-         4Qs4eXYUyB3Ezg+amypKAA20yzqDlEMeDIBpWdXMJnLR0PY7mXMKbXfnv97c2RPJisPX
-         mm5VxvL+kqkeqFK9E7EdHKna0JtlAdztQzV/q7yA8TjapZ/6iFqjVEf2XjpalFBXfJY5
-         qX3jcf2q9XJ5LFRVJQgHZWN8TzNR4va/XA3U7FJ79+PGCItxdnPc4CUAhu+up/bX+Tfn
-         Vfdfg2Pcea2m37AoNJ0Xto0D2JDL0rkW2eLIM8KMNVqsT+PYB2rqxqoqatC4WbAuFM49
-         3yDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=i2CV/HrBlB038Ie8Qimmh82koD0NdKzml2lxz77LIw8=;
-        b=StCLVzL3BPl1OjY+HQgUS45mR/xJMs4keAbNAElZLO57kSbUAfGf/2TZzVGwY1T9xI
-         mD8A8TQEpiIwXSCLcgFx0Sdhjamm2LmS6kh8q1LsaQEsbHAFZRg6X+u8eRPzybvMsn4Q
-         WCIL1EuqacHS8jX4AozWWL1CwXK3trF5ge3W8MH3RYPSKPmNKaE5O8tMOTBpRuWHBtPk
-         YodixToIrqZb2GygdiLxA+TY+B0fIHuGPHA4tB2ECm9P7oLRaRKFB6JjbHcfbQnic8Zn
-         xBi8aXdNqfgzmL9x+nTlPn6aFnc60ORMYJoXH+i6MlSTsC0NmkaQkhxisSR48GF9SBEP
-         23dg==
-X-Gm-Message-State: APjAAAUPAwGVXfUbW97IwdZRUkou8NqGuJuE5WWAEzvKgVXKStEH0jkz
-        +RMY9Tg7MyMe1m9gMWcJNBLUyw==
-X-Google-Smtp-Source: APXvYqykB1tvyK9fp2RnMOVCx8rSnGK9lnKsMu0SxzRDZPYVode1NoBodz4tt48PVsQOPvJqzVRHrQ==
-X-Received: by 2002:a0c:da08:: with SMTP id x8mr313476qvj.166.1582656018181;
-        Tue, 25 Feb 2020 10:40:18 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:4d9c])
-        by smtp.gmail.com with ESMTPSA id u26sm6102857qkk.18.2020.02.25.10.40.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 10:40:17 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:40:14 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 2/3] mm: memcontrol: clean up and document effective
- low/min calculations
-Message-ID: <20200225184014.GC10257@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-3-hannes@cmpxchg.org>
- <20200221171024.GA23476@blackbody.suse.cz>
+        Tue, 25 Feb 2020 13:40:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:54624 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731547AbgBYSka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:40:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E89E328;
+        Tue, 25 Feb 2020 09:52:54 -0800 (PST)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E061D3F6CF;
+        Tue, 25 Feb 2020 09:52:52 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, patrick.bellasi@matbug.net,
+        qais.yousef@arm.com
+Subject: [PATCH 3/3] sched/debug: Add task uclamp values to SCHED_DEBUG procfs
+Date:   Tue, 25 Feb 2020 17:52:27 +0000
+Message-Id: <20200225175227.22090-4-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200225175227.22090-1-valentin.schneider@arm.com>
+References: <20200225175227.22090-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221171024.GA23476@blackbody.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michal,
+Requested and effective uclamp values can be a bit tricky to decipher when
+playing with cgroup hierarchies. Add them to a task's procfs when
+SCHED_DEBUG is enabled.
 
-On Fri, Feb 21, 2020 at 06:10:24PM +0100, Michal Koutný wrote:
-> On Thu, Dec 19, 2019 at 03:07:17PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > + *    Consider the following example tree:
-> >   *
-> > + *        A      A/memory.low = 2G, A/memory.current = 6G
-> > + *       //\\
-> > + *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
-> > + *               C/memory.low = 1G  C/memory.current = 2G
-> > + *               D/memory.low = 0   D/memory.current = 2G
-> > + *               E/memory.low = 10G E/memory.current = 0
-> >   *
-> > + *    and memory pressure is applied, the following memory
-> > + *    distribution is expected (approximately*):
-> >   *
-> > + *      A/memory.current = 2G
-> > + *      B/memory.current = 1.3G
-> > + *      C/memory.current = 0.6G
-> > + *      D/memory.current = 0
-> > + *      E/memory.current = 0
-> >   *
-> > + *    *assuming equal allocation rate and reclaimability
-> I think the assumptions for this example don't hold (anymore).
-> Because reclaim rate depends on the usage above protection, the siblings
-> won't be reclaimed equally and so the low_usage proportionality will
-> change over time and the equilibrium distribution is IMO different (I'm
-> attaching an Octave script to calculate it).
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+ kernel/sched/debug.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hm, this example doesn't change with my patch because there is no
-"floating" protection that gets distributed among the siblings.
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 47411a85087c..4086bdd9915d 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -946,6 +946,12 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 	P(se.avg.last_update_time);
+ 	P(se.avg.util_est.ewma);
+ 	P(se.avg.util_est.enqueued);
++#endif
++#ifdef CONFIG_UCLAMP_TASK
++	__PS("uclamp.min", p->uclamp[UCLAMP_MIN].value);
++	__PS("uclamp.max", p->uclamp[UCLAMP_MAX].value);
++	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
++	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
+ #endif
+ 	P(policy);
+ 	P(prio);
+-- 
+2.24.0
 
-In my testing with the above parameters, the equilibrium still comes
-out to roughly this distribution.
-
-> As it depends on the initial usage, I don't think there can be given
-> such a general example (for overcommit).
-
-It's just to illustrate the pressure weight, not to reflect each
-factor that can influence the equilibrium.
-
-I think it still has value to gain understanding of how it works, no?
-
-> > @@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
-> >   * for next usage. This part is intentionally racy, but it's ok,
-> >   * as memory.low is a best-effort mechanism.
-> Although it's a different issue but since this updates the docs I'm
-> mentioning it -- we treat memory.min the same, i.e. it's subject to the
-> same race, however, it's not meant to be best effort. I didn't look into
-> outcomes of potential misaccounting but the comment seems to miss impact
-> on memory.min protection.
-
-Yeah I think we can delete that bit.
-
-> > @@ -6292,52 +6333,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
-> > [...]
-> > +	if (parent == root) {
-> > +		memcg->memory.emin = memcg->memory.min;
-> > +		memcg->memory.elow = memcg->memory.low;
-> > +		goto out;
-> >  	}
-> Shouldn't this condition be 'if (parent == root_mem_cgroup)'? (I.e. 1st
-> level takes direct input, but 2nd and further levels redistribute only
-> what they really got from parent.)
-
-I believe we cleared this up in the parallel thread, but just in case:
-reclaim can happen due to a memory.max set lower in the
-tree. memory.low propagation is always relative from the reclaim
-scope, not the system-wide root cgroup.
