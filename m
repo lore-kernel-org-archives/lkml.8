@@ -2,279 +2,211 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7992EC35E02
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B97C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4599024650
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A510F222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AHZjaVU0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="m0bJra4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgBYN7d (ORCPT
+        id S1730307AbgBYOBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:59:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20327 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729411AbgBYN7d (ORCPT
+        Tue, 25 Feb 2020 09:01:37 -0500
+Received: from gateway31.websitewelcome.com ([192.185.144.29]:31766 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730111AbgBYOBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:59:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582639170;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y3IBwje837IyONOoLtNsymFYKPCGbjc1mWh+UydCIPE=;
-        b=AHZjaVU07fXKChCP5eTqnCWeaLWZ2l9jFSRhOfVktxEN3avBnXN0bDkn7otDvvh6dSj46Y
-        LZRQCznZZQQFfPcg4Uopjw3dZj7TDnhzBq/zr7VfcNs/z18P/h1+SMMaE2nibBsJKtNwCT
-        9CxtCi6F1Q5JgbUIEnFSKQNPrZlXpWs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-GGALqD2INnGl1G_d27_Krw-1; Tue, 25 Feb 2020 08:59:29 -0500
-X-MC-Unique: GGALqD2INnGl1G_d27_Krw-1
-Received: by mail-wr1-f72.google.com with SMTP id u8so7347457wrp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 05:59:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=y3IBwje837IyONOoLtNsymFYKPCGbjc1mWh+UydCIPE=;
-        b=pcRYA1WaA3CLzS8G8YuFbXPPsuqSc3gImkNcTWE13UEaQlsgfvft/CUmfm/IHYmqDL
-         FuOAEu50itgvdpjuD7SeDw3cTkyk87uCvSAcnxQN7jKsPofDIJ9hrDtX3wjx/CpyYBr7
-         WF6sw8L1jhlWtklHtBqTdxZcxaCJZl+HMuO5i4xwAhBoSYskNc3cA7hr1WjaxsJ6FOpe
-         iARXCOdhWIXTJRva/0tnXAkHy7+Dj67k4dIFPry6jDmzOUC/jAu/c8tvcW/Dsx1vZLkp
-         yzW18WnV2AI9mPGUzRS/IX289CZof+v9qiJJCNGld6/aIxqzqXEYk/UJCM8e4EBpZp+x
-         xANQ==
-X-Gm-Message-State: APjAAAXGQ1JF63Eh2D1pK+8uMyhrvuzCpTeUcRufjbtoC1JrYnvrMkTl
-        6K2oiR9qjMHE2D9kUEqNxbgDdbCZO6XKX5FLjh7WUDIuDhu2QW1U7Go1bbrLsb3RTd6BUE41whf
-        1lhKSMI+TMBwBYjRnEqWVqIc4
-X-Received: by 2002:a7b:c416:: with SMTP id k22mr5738393wmi.10.1582639167981;
-        Tue, 25 Feb 2020 05:59:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxmJ9qM0rhSH+CtvgaqXuX7teBSwrKccTsQFRql6zCJnMnH4wZcIMQJI2Ywf5PV9lQoBxvlng==
-X-Received: by 2002:a7b:c416:: with SMTP id k22mr5738375wmi.10.1582639167715;
-        Tue, 25 Feb 2020 05:59:27 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z25sm4334882wmf.14.2020.02.25.05.59.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 05:59:27 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        Tue, 25 Feb 2020 09:01:36 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 2B3FE11D42F
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 08:01:35 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6amFjq8tc8vkB6amFjlVIE; Tue, 25 Feb 2020 08:01:35 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=r8Lc+tZ9X8OdwKV6l2Zw8M7UkDdOOthqyCbUCkNpWms=; b=m0bJra4Lu5bIWxynx+Tefu91KF
+        LY1aRxC3YPjxD0V0BN6jKbmjqD4gD9I5RqyoC3eJbRfHb5ePf5ftgdbP5VppvYH+aDuE9+jLA3ohu
+        r2mGicqOKbZ7/kVg1pwOLqskOtGyYjZnYUNZlim82l2cQN3Gq+pGCyYBNCD4O+d0NEWjbqGGIW04U
+        jTVERLg83c+VPuA+D8l1w2+Nn8dY0oIVbrinXq/gaK/GmnxnzxiJoYGOWt2EugzM+wL/TWeOQmKNM
+        TgZftGRGvh7Z5q/jAEMhe57Vy7PhDtWt3tOZXYZrjYP+OujOdnXbd5A9TfUJRnaupFnWuwI3J9YeG
+        K/Q0TFuA==;
+Received: from [201.162.241.105] (port=10609 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6amE-001PC4-IN; Tue, 25 Feb 2020 08:01:34 -0600
+Subject: Re: [PATCH][next] sfc: Replace zero-length array with flexible-array
+ member
+To:     Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 50/61] KVM: x86: Set emulated/transmuted feature bits via kvm_cpu_caps
-In-Reply-To: <20200201185218.24473-51-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-51-sean.j.christopherson@intel.com>
-Date:   Tue, 25 Feb 2020 14:59:26 +0100
-Message-ID: <87y2sqlqdd.fsf@vitty.brq.redhat.com>
+References: <20200225000647.GA17795@embeddedor>
+ <6a100eb2-4ba1-32ac-35de-d02c38503785@solarflare.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <7963b6dc-cafe-f427-e634-a043c688c78a@embeddedor.com>
+Date:   Tue, 25 Feb 2020 08:01:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <6a100eb2-4ba1-32ac-35de-d02c38503785@solarflare.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.241.105
+X-Source-L: No
+X-Exim-ID: 1j6amE-001PC4-IN
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [201.162.241.105]:10609
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 34
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> Set emulated and transmuted (set based on other features) feature bits
-> via kvm_cpu_caps now that the CPUID output for KVM_GET_SUPPORTED_CPUID
-> is direcly overidden with kvm_cpu_caps.
->
-> Note, VMX emulation of UMIP already sets kvm_cpu_caps.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c   | 72 +++++++++++++++++++++---------------------
->  arch/x86/kvm/svm.c     | 10 +++---
->  arch/x86/kvm/vmx/vmx.c | 13 +-------
->  3 files changed, 42 insertions(+), 53 deletions(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 871c0bd04e19..a37cb6fda979 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -341,6 +341,8 @@ void kvm_set_cpu_caps(void)
->  		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
->  		F(F16C) | F(RDRAND)
->  	);
-> +	/* KVM emulates x2apic in software irrespective of host support. */
-> +	kvm_cpu_cap_set(X86_FEATURE_X2APIC);
->  
->  	kvm_cpu_cap_mask(CPUID_7_0_EBX,
->  		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
-> @@ -366,6 +368,17 @@ void kvm_set_cpu_caps(void)
->  		F(MD_CLEAR)
->  	);
->  
-> +	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
-> +	kvm_cpu_cap_set(X86_FEATURE_TSC_ADJUST);
-> +	kvm_cpu_cap_set(X86_FEATURE_ARCH_CAPABILITIES);
-> +
-> +	if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
-> +		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL);
-> +	if (boot_cpu_has(X86_FEATURE_STIBP))
-> +		kvm_cpu_cap_set(X86_FEATURE_INTEL_STIBP);
-> +	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> +		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
-> +
->  	kvm_cpu_cap_mask(CPUID_7_1_EAX,
->  		F(AVX512_BF16)
->  	);
-> @@ -388,6 +401,29 @@ void kvm_set_cpu_caps(void)
->  		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
->  	);
->  
-> +	/*
-> +	 * AMD has separate bits for each SPEC_CTRL bit.
-> +	 * arch/x86/kernel/cpu/bugs.c is kind enough to
-> +	 * record that in cpufeatures so use them.
-> +	 */
-> +	if (boot_cpu_has(X86_FEATURE_IBPB))
-> +		kvm_cpu_cap_set(X86_FEATURE_AMD_IBPB);
-> +	if (boot_cpu_has(X86_FEATURE_IBRS))
-> +		kvm_cpu_cap_set(X86_FEATURE_AMD_IBRS);
-> +	if (boot_cpu_has(X86_FEATURE_STIBP))
-> +		kvm_cpu_cap_set(X86_FEATURE_AMD_STIBP);
-> +	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
-> +		kvm_cpu_cap_set(X86_FEATURE_AMD_SSBD);
-> +	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-> +		kvm_cpu_cap_set(X86_FEATURE_AMD_SSB_NO);
-> +	/*
-> +	 * The preference is to use SPEC CTRL MSR instead of the
-> +	 * VIRT_SPEC MSR.
-> +	 */
-> +	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
-> +	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> +		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-> +
->  	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
->  		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
->  		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
-> @@ -490,9 +526,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  	case 1:
->  		cpuid_entry_override(entry, CPUID_1_EDX);
->  		cpuid_entry_override(entry, CPUID_1_ECX);
-> -		/* we support x2apic emulation even if host does not support
-> -		 * it since we emulate x2apic in software */
-> -		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
->  		break;
->  	case 2:
->  		/*
-> @@ -547,17 +580,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		cpuid_entry_override(entry, CPUID_7_ECX);
->  		cpuid_entry_override(entry, CPUID_7_EDX);
->  
-> -		/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
-> -		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
-> -		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
-> -
-> -		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
-> -			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
-> -		if (boot_cpu_has(X86_FEATURE_STIBP))
-> -			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
-> -		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> -			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
-> -
->  		/* KVM only supports 0x7.0 and 0x7.1, capped above via min(). */
->  		if (entry->eax == 1) {
->  			entry = do_host_cpuid(array, function, 1);
-> @@ -729,28 +751,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		entry->eax = g_phys_as | (virt_as << 8);
->  		entry->edx = 0;
->  		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
-> -		/*
-> -		 * AMD has separate bits for each SPEC_CTRL bit.
-> -		 * arch/x86/kernel/cpu/bugs.c is kind enough to
-> -		 * record that in cpufeatures so use them.
-> -		 */
-> -		if (boot_cpu_has(X86_FEATURE_IBPB))
-> -			cpuid_entry_set(entry, X86_FEATURE_AMD_IBPB);
-> -		if (boot_cpu_has(X86_FEATURE_IBRS))
-> -			cpuid_entry_set(entry, X86_FEATURE_AMD_IBRS);
-> -		if (boot_cpu_has(X86_FEATURE_STIBP))
-> -			cpuid_entry_set(entry, X86_FEATURE_AMD_STIBP);
-> -		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
-> -			cpuid_entry_set(entry, X86_FEATURE_AMD_SSBD);
-> -		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-> -			cpuid_entry_set(entry, X86_FEATURE_AMD_SSB_NO);
-> -		/*
-> -		 * The preference is to use SPEC CTRL MSR instead of the
-> -		 * VIRT_SPEC MSR.
-> -		 */
-> -		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
-> -		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> -			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
->  		break;
->  	}
->  	case 0x80000019:
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index e1ed5726964c..f4434816dcdf 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1360,6 +1360,11 @@ static __init void svm_set_cpu_caps(void)
->  	if (nested)
->  		kvm_cpu_cap_set(X86_FEATURE_SVM);
->  
-> +	/* CPUID 0x80000008 */
-> +	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
-> +	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> +		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-> +
->  	/* CPUID 0x8000000A */
->  	/* Support next_rip if host supports it */
->  	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
-> @@ -6053,11 +6058,6 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
->  static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
->  {
->  	switch (entry->function) {
-> -	case 0x80000008:
-> -		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
-> -		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> -			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
-> -		break;
->  	case 0x8000000A:
->  		entry->eax = 1; /* SVM revision 1 */
->  		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index cd5a624610c9..2a1df1b714db 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7101,18 +7101,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
->  
->  static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
->  {
-> -	switch (entry->function) {
-> -	case 0x7:
-> -		/*
-> -		 * UMIP needs to be manually set even though vmx_set_cpu_caps()
-> -		 * also sets UMIP since do_host_cpuid() will drop it.
-> -		 */
-> -		if (vmx_umip_emulated())
-> -			cpuid_entry_set(entry, X86_FEATURE_UMIP);
-> -		break;
-> -	default:
-> -		break;
-> -	}
-> +
->  }
 
-Ok, feel free to ignore my previous comment about the need to document
-what goes to caps and what to vmx_supported_cpuid() as the answer is
-simple: everything goes to caps (at least on VMX) :-)
+On 2/25/20 07:42, Martin Habets wrote:
+> On 25/02/2020 00:06, Gustavo A. R. Silva wrote:
+>> The current codebase makes use of the zero-length array language
+>> extension to the C90 standard, but the preferred mechanism to declare
+>> variable-length types such as these ones is a flexible array member[1][2],
+>> introduced in C99:
+>>
+>> struct foo {
+>>         int stuff;
+>>         struct boo array[];
+>> };
+>>
+>> By making use of the mechanism above, we will get a compiler warning
+>> in case the flexible array does not occur last in the structure, which
+>> will help us prevent some kind of undefined behavior bugs from being
+>> inadvertently introduced[3] to the codebase from now on.
+>>
+>> Also, notice that, dynamic memory allocations won't be affected by
+>> this change:
+>>
+>> "Flexible array members have incomplete type, and so the sizeof operator
+>> may not be applied. As a quirk of the original implementation of
+>> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> These padding fields are only used to enforce alignment of the struct.
+> But the patch is still ok.
+> 
 
->  
->  static __init void vmx_set_cpu_caps(void)
+Correct.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> This issue was found with the help of Coccinelle.
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Acked-by: Martin Habets <mhabets@solarflare.com>
+> 
 
--- 
-Vitaly
+Thanks, Martin.
+--
+Gustavo
 
+>> ---
+>>  drivers/net/ethernet/sfc/falcon/net_driver.h | 2 +-
+>>  drivers/net/ethernet/sfc/net_driver.h        | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/sfc/falcon/net_driver.h b/drivers/net/ethernet/sfc/falcon/net_driver.h
+>> index a49ea2e719b6..a529ff395ead 100644
+>> --- a/drivers/net/ethernet/sfc/falcon/net_driver.h
+>> +++ b/drivers/net/ethernet/sfc/falcon/net_driver.h
+>> @@ -288,7 +288,7 @@ struct ef4_rx_buffer {
+>>  struct ef4_rx_page_state {
+>>  	dma_addr_t dma_addr;
+>>  
+>> -	unsigned int __pad[0] ____cacheline_aligned;
+>> +	unsigned int __pad[] ____cacheline_aligned;
+>>  };
+>>  
+>>  /**
+>> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
+>> index 9f9886f222c8..392bd5b7017e 100644
+>> --- a/drivers/net/ethernet/sfc/net_driver.h
+>> +++ b/drivers/net/ethernet/sfc/net_driver.h
+>> @@ -336,7 +336,7 @@ struct efx_rx_buffer {
+>>  struct efx_rx_page_state {
+>>  	dma_addr_t dma_addr;
+>>  
+>> -	unsigned int __pad[0] ____cacheline_aligned;
+>> +	unsigned int __pad[] ____cacheline_aligned;
+>>  };
+>>  
+>>  /**
+>>
