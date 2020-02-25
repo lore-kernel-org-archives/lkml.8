@@ -2,117 +2,200 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4156BC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969D8C35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E0A222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582664279;
-	bh=bUd27AwJqBzkc+a/YzHr6t7aDFALZiBJW37pwoR3XXw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=pNHduHgm63BMyPI1y6MJVE7zzAs38XP7njCo/sz/pf5/WG8260MvEqDE6XdwBkkiw
-	 fYZjiQ7vzBAHFwLKVqwf4MXTScK2y1H5KKmhcIiA6EmA91oP180IKDWy6DSoT4/nxp
-	 r0Mlv9NXuGPDJ53Nbb+yETG4NhEdHbUXi2mAZM9o=
+	by mail.kernel.org (Postfix) with ESMTP id 62638222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jwk9kPFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgBYU56 (ORCPT
+        id S1729512AbgBYU7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:57:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgBYU55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:57:57 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB8AE22464;
-        Tue, 25 Feb 2020 20:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582664277;
-        bh=bUd27AwJqBzkc+a/YzHr6t7aDFALZiBJW37pwoR3XXw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BxtqlrmxhXqEjmzPLOMEH4gAcfxztB1ZobBuZtd6KtV8zavbIcXdKhoIqzNceIFRd
-         gsfa1PMXi0a4n6ESV2XY98VfAkGfLzpPbHT71/C2Vscc04pgwcqC2ZEcr4posnKKcq
-         W0dQ7tn9goQRnaQIP8dPPAK5YNcA5EZ3DkXlE/bY=
-Date:   Tue, 25 Feb 2020 14:57:55 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 0/8] PCI: add and use constant PCI_STATUS_ERROR_BITS
- and helper pci_status_get_and_clear_errors
-Message-ID: <20200225205755.GA199380@google.com>
+        Tue, 25 Feb 2020 15:59:04 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46719 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbgBYU7E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:59:04 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so293143pll.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8dX5wGDp7/7RsShn+G7Hibf511wFtQ+pPngKimjNxu4=;
+        b=Jwk9kPFJM5a5cMiSmyglbYvymQaWI+0Gd2bok0pF2yDJjBVyB4ypgMVYnkhvHZBskU
+         awRC2Wrz2BPMSVl/HcdJAxTGcUgu8+Afk5Wd46vG4ulAXoicWcgKpp72XA+FY46HMWdT
+         kiPA3E07NGXbdh2+9CYQ4kSt958zqN9ltfGR0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8dX5wGDp7/7RsShn+G7Hibf511wFtQ+pPngKimjNxu4=;
+        b=E4sgBUdcy1kcDmtSNlxjfcRaE6r6noDSD/ERydAXnaXyDgW/2Q9P1Rx0V3BkS1eVM/
+         kQlrAWHyEDn/iZ200j7u0yvTV9lERyIWCVhG9OAJIOC2Wjqjz+16YsAt6RSbjhwxLlrS
+         DWbYPhN4Jadystf1Wj/LU2Lz/F6ll3Y/rcCCYKtPDhnBNI16imtQKscZPFY+QPSj4YEE
+         cQXx7lgF2+AxQjvshsswGRCAheld4Nx9CUTRc3OVC2+rt9E7a29rwdBDh5jdSqXJOWfA
+         oM7cw5VmIkaaDERd0RgXyUhRK5dz32FcWPanh5evRj7I6XnosRd79gSoMN6VdyT62jCg
+         dx3A==
+X-Gm-Message-State: APjAAAUk+K+/LmYRN6qkf16hVTyk8/OQUf0Pn/GpCwTEFgF3BEFHhXGe
+        1elLV/2nGAWIkQX9+mkbCf5hxg==
+X-Google-Smtp-Source: APXvYqy7twXol1ZzVJucdwTIs4N2cjv5l0rTxkBOo20OqiQFr1W86iRpQPhEogyZW0rHsPhwBYPDdQ==
+X-Received: by 2002:a17:90a:d985:: with SMTP id d5mr1051052pjv.73.1582664342668;
+        Tue, 25 Feb 2020 12:59:02 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e6sm17859883pfh.32.2020.02.25.12.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:59:01 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:59:00 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 15/27] mm: Handle THP/HugeTLB Shadow Stack page
+ fault
+Message-ID: <202002251258.7D6DA92@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-16-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20ca7c1f-7530-2d89-40a6-d97a65aa25ef@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200205181935.3712-16-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 03:03:05PM +0100, Heiner Kallweit wrote:
-> Few drivers have own definitions for this constant, so move it to the
-> PCI core. In addition there are several places where the following
-> code sequence is used:
-> 1. Read PCI_STATUS
-> 2. Mask out non-error bits
-> 3. Action based on set error bits
-> 4. Write back set error bits to clear them
+On Wed, Feb 05, 2020 at 10:19:23AM -0800, Yu-cheng Yu wrote:
+> This patch implements THP Shadow Stack (SHSTK) copying in the same way as
+> in the previous patch for regular PTE.
 > 
-> As this is a repeated pattern, add a helper to the PCI core.
-> 
-> Most affected drivers are network drivers. But as it's about core
-> PCI functionality, I suppose the series should go through the PCI
-> tree.
+> In copy_huge_pmd(), clear the dirty bit from the PMD to cause a page fault
+> upon the next SHSTK access to the PMD.  At that time, fix the PMD and
+> copy/re-use the page.
 
-Makes good sense to me, thanks for doing this.
+Now is as good a time as any to ask: do you have selftests for all this?
+It seems like it would be really nice to have a way to verify SHSTK is
+working correctly.
 
-> v2:
-> - fix formal issue with cover letter
-> v3:
-> - fix dumb typo in patch 7
+-Kees
+
 > 
-> Heiner Kallweit (8):
->   PCI: add constant PCI_STATUS_ERROR_BITS
->   PCI: add pci_status_get_and_clear_errors
->   r8169: use pci_status_get_and_clear_errors
->   net: cassini: use pci_status_get_and_clear_errors
->   net: sungem: use pci_status_get_and_clear_errors
->   net: skfp: use PCI_STATUS_ERROR_BITS
->   PCI: pci-bridge-emul: use PCI_STATUS_ERROR_BITS
->   sound: bt87x: use pci_status_get_and_clear_errors
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  arch/x86/mm/pgtable.c         |  8 ++++++++
+>  include/asm-generic/pgtable.h | 11 +++++++++++
+>  mm/huge_memory.c              |  4 ++++
+>  3 files changed, 23 insertions(+)
 > 
->  drivers/net/ethernet/marvell/skge.h       |  6 -----
->  drivers/net/ethernet/marvell/sky2.h       |  6 -----
->  drivers/net/ethernet/realtek/r8169_main.c | 15 +++++-------
->  drivers/net/ethernet/sun/cassini.c        | 28 ++++++++-------------
->  drivers/net/ethernet/sun/sungem.c         | 30 +++++++----------------
->  drivers/net/fddi/skfp/drvfbi.c            |  2 +-
->  drivers/net/fddi/skfp/h/skfbi.h           |  5 ----
->  drivers/pci/pci-bridge-emul.c             | 14 ++---------
->  drivers/pci/pci.c                         | 23 +++++++++++++++++
->  include/linux/pci.h                       |  1 +
->  include/uapi/linux/pci_regs.h             |  7 ++++++
->  sound/pci/bt87x.c                         |  7 +-----
->  12 files changed, 60 insertions(+), 84 deletions(-)
-> 
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index 2eb33794c08d..3340b1d4e9da 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -886,4 +886,12 @@ inline pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma)
+>  	else
+>  		return pte;
+>  }
+> +
+> +inline pmd_t pmd_set_vma_features(pmd_t pmd, struct vm_area_struct *vma)
+> +{
+> +	if (vma->vm_flags & VM_SHSTK)
+> +		return pmd_mkdirty_shstk(pmd);
+> +	else
+> +		return pmd;
+> +}
+>  #endif /* CONFIG_X86_INTEL_SHADOW_STACK_USER */
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index 9cb2f9ba5895..a9df093fdf45 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -1201,9 +1201,20 @@ static inline pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma)
+>  {
+>  	return pte;
+>  }
+> +
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +static inline pmd_t pmd_set_vma_features(pmd_t pmd, struct vm_area_struct *vma)
+> +{
+> +	return pmd;
+> +}
+> +#endif
+>  #else
+>  bool arch_copy_pte_mapping(vm_flags_t vm_flags);
+>  pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma);
+> +
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +pmd_t pmd_set_vma_features(pmd_t pmd, struct vm_area_struct *vma);
+> +#endif
+>  #endif
+>  #endif /* CONFIG_MMU */
+>  
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index a88093213674..93ef368df2dd 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -636,6 +636,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
+>  
+>  		entry = mk_huge_pmd(page, vma->vm_page_prot);
+>  		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> +		entry = pmd_set_vma_features(entry, vma);
+>  		page_add_new_anon_rmap(page, vma, haddr, true);
+>  		mem_cgroup_commit_charge(page, memcg, false, true);
+>  		lru_cache_add_active_or_unevictable(page, vma);
+> @@ -1278,6 +1279,7 @@ static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
+>  		pte_t entry;
+>  		entry = mk_pte(pages[i], vma->vm_page_prot);
+>  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> +		entry = pte_set_vma_features(entry, vma);
+>  		memcg = (void *)page_private(pages[i]);
+>  		set_page_private(pages[i], 0);
+>  		page_add_new_anon_rmap(pages[i], vmf->vma, haddr, false);
+> @@ -1360,6 +1362,7 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
+>  		pmd_t entry;
+>  		entry = pmd_mkyoung(orig_pmd);
+>  		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> +		entry = pmd_set_vma_features(entry, vma);
+>  		if (pmdp_set_access_flags(vma, haddr, vmf->pmd, entry,  1))
+>  			update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+>  		ret |= VM_FAULT_WRITE;
+> @@ -1432,6 +1435,7 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
+>  		pmd_t entry;
+>  		entry = mk_huge_pmd(new_page, vma->vm_page_prot);
+>  		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> +		entry = pmd_set_vma_features(entry, vma);
+>  		pmdp_huge_clear_flush_notify(vma, haddr, vmf->pmd);
+>  		page_add_new_anon_rmap(new_page, vma, haddr, true);
+>  		mem_cgroup_commit_charge(new_page, memcg, false, true);
 > -- 
-> 2.25.1
+> 2.21.0
 > 
-> 
-> 
+
+-- 
+Kees Cook
