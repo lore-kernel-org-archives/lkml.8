@@ -2,164 +2,88 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29165C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD1EC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7792072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FDC20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:00:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FV1+Hvp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbgBYPxn (ORCPT
+        id S1730600AbgBYQAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:53:43 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:55262 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbgBYPxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:53:41 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 32887FB02;
-        Tue, 25 Feb 2020 16:53:39 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rzxrP2PCQqbW; Tue, 25 Feb 2020 16:53:36 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 077B9405AD; Tue, 25 Feb 2020 16:53:34 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/1] phy: fsl-imx8-mipi-dphy: Hook into runtime pm
-Date:   Tue, 25 Feb 2020 16:53:34 +0100
-Message-Id: <ab30161e026bf57846c2803de360983c83840d68.1582645780.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582645780.git.agx@sigxcpu.org>
-References: <cover.1582645780.git.agx@sigxcpu.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Feb 2020 11:00:13 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:28701 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729189AbgBYQAM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:00:12 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582646412; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=zeDEzoojLU88NbBHozItxRJyl9qy5f1LSm9zWMnLSUk=; b=FV1+Hvp1KFhZNH9/5cJxopVp8U3PpEn+69KJsHo/XwI2Q6lW4dlJHBMTKcVDxoKLtB0cTtiD
+ KfkF7Ae+Xqlu4ksOCrxc2HtPM6C2tG/TvEAaQPKyY7RkhZNU8LuqePdIbT4ZKi53aYRixRgG
+ s7jU7+4u0aHj+sU6pLhYFYRApcI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e55447e.7fc04c639b20-smtp-out-n01;
+ Tue, 25 Feb 2020 15:59:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 87F86C447A3; Tue, 25 Feb 2020 15:59:57 +0000 (UTC)
+Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0029FC43383;
+        Tue, 25 Feb 2020 15:59:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0029FC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [V4, 0/3] Add SC7180 interconnect provider driver
+Date:   Tue, 25 Feb 2020 21:29:41 +0530
+Message-Id: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows us to shut down the mipi power domain on the SOC.  The
-alternative would be to drop the dphy from the mipi power domain in the
-SOCs device tree and only have the DSI host controller visible there
-(and rely on the phy layer's built in runtime pm handling) but this
-would make the power domain dependency less explicit.
+Add driver to support scaling of the on-chip interconnects on
+the SC7180-based platforms.
 
-Currently the pm domain can't be shut off when blanking the panel:
+Depends-on: Split SDM845 interconnect nodes and consolidate RPMh support
+Depends-on: Add device tree support for sc7180
 
-pm_genpd_summary
-domain                          status          slaves
-    /device                                             runtime status
-----------------------------------------------------------------------
-mipi                            on
-    /devices/platform/soc@0/soc@0:bus@30800000/30a00300.dphy  unsupported
-    /devices/platform/soc@0/soc@0:bus@30800000/30a00000.mipi_dsi  suspended
+Odelu Kukatla (3):
+  dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+  interconnect: qcom: Add SC7180 interconnect provider driver
+  arm64: dts: sc7180: Add interconnect provider DT nodes
 
-while with this change we can shut down the power domain on panel blank:
+ .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |  95 +++
+ drivers/interconnect/qcom/Kconfig                  |   9 +
+ drivers/interconnect/qcom/Makefile                 |   2 +
+ drivers/interconnect/qcom/sc7180.c                 | 641 +++++++++++++++++++++
+ drivers/interconnect/qcom/sc7180.h                 | 149 +++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 161 ++++++
+ 7 files changed, 1142 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 drivers/interconnect/qcom/sc7180.c
+ create mode 100644 drivers/interconnect/qcom/sc7180.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
 
-mipi                            off-0
-    /devices/platform/soc@0/soc@0:bus@30800000/30a00300.dphy  suspended
-    /devices/platform/soc@0/soc@0:bus@30800000/30a00000.mipi_dsi  suspended
-
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-index 9f2c1da14f5a..75bfcc49466f 100644
---- a/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-@@ -14,6 +14,7 @@
- #include <linux/of_platform.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- 
- /* DPHY registers */
-@@ -93,6 +94,7 @@ struct mixel_dphy_cfg {
- };
- 
- struct mixel_dphy_priv {
-+	struct device *dev;
- 	struct mixel_dphy_cfg cfg;
- 	struct regmap *regmap;
- 	struct clk *phy_ref_clk;
-@@ -382,6 +384,7 @@ static int mixel_dphy_power_on(struct phy *phy)
- 	ret = clk_prepare_enable(priv->phy_ref_clk);
- 	if (ret < 0)
- 		return ret;
-+	pm_runtime_get_sync(priv->dev);
- 
- 	phy_write(phy, PWR_ON, DPHY_PD_PLL);
- 	ret = regmap_read_poll_timeout(priv->regmap, DPHY_LOCK, locked,
-@@ -395,6 +398,7 @@ static int mixel_dphy_power_on(struct phy *phy)
- 
- 	return 0;
- clock_disable:
-+	pm_runtime_put(priv->dev);
- 	clk_disable_unprepare(priv->phy_ref_clk);
- 	return ret;
- }
-@@ -406,6 +410,7 @@ static int mixel_dphy_power_off(struct phy *phy)
- 	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
- 	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
- 
-+	pm_runtime_put(priv->dev);
- 	clk_disable_unprepare(priv->phy_ref_clk);
- 
- 	return 0;
-@@ -469,6 +474,7 @@ static int mixel_dphy_probe(struct platform_device *pdev)
- 	dev_dbg(dev, "phy_ref clock rate: %lu\n",
- 		clk_get_rate(priv->phy_ref_clk));
- 
-+	priv->dev = dev;
- 	dev_set_drvdata(dev, priv);
- 
- 	phy = devm_phy_create(dev, np, &mixel_dphy_phy_ops);
-@@ -479,12 +485,26 @@ static int mixel_dphy_probe(struct platform_device *pdev)
- 	phy_set_drvdata(phy, priv);
- 
- 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
- 
--	return PTR_ERR_OR_ZERO(phy_provider);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+}
-+
-+static int mixel_dphy_remove(struct platform_device *pdev)
-+{
-+	struct mixel_dphy_priv *priv = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(priv->dev);
-+
-+	return 0;
- }
- 
- static struct platform_driver mixel_dphy_driver = {
- 	.probe	= mixel_dphy_probe,
-+	.remove = mixel_dphy_remove,
- 	.driver = {
- 		.name = "mixel-mipi-dphy",
- 		.of_match_table	= mixel_dphy_of_match,
 -- 
-2.23.0
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
