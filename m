@@ -2,192 +2,125 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E203C35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191D8C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4168A21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E388E21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZP4B0m1M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bxex5n5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgBYBdJ (ORCPT
+        id S1728671AbgBYBe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:33:09 -0500
-Received: from gateway30.websitewelcome.com ([192.185.196.18]:47242 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728226AbgBYBdH (ORCPT
+        Mon, 24 Feb 2020 20:34:58 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44630 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbgBYBe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:33:07 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 389DD81C9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:11:28 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 6OkyjEyG5Efyq6OkyjLGMD; Mon, 24 Feb 2020 19:11:28 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rzMLcS2/ZUpYVpdJI43BRpgzSfEuuyjXrY5HzICY5lU=; b=ZP4B0m1M6tm079nzgpmYt0ILyG
-        5Pybfw+yRZIJ15oHp4SO0AwAHczetoTrQ48NxdpDGb6sL/+/GdP9UJ5HQYEDaNT91J4/DHIlPVnyq
-        GAZqMVydJBxNvDSVxxWkiKhhtzPnmFdxoQkrIc3/Rj0wPBz4y0zuufu+yCqDA9UYhr/nOEw09VkyJ
-        H2Wnpt/2NW10dEU2hH1bBcMb0CinWZAYChiW88tyGTLFYTof+Kyfy92pbzJBB1dkYI9IZIUlYDntt
-        7YtgeVjuUbU0Jlg6798SX21xl+tSImTvq6oTVXnhwVLVgMjYxM+YPozm0IbjOXf93w0O9UReeVO09
-        0PBXnLSA==;
-Received: from [201.166.191.54] (port=58506 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j6Okw-002sYf-D4; Mon, 24 Feb 2020 19:11:26 -0600
-Date:   Mon, 24 Feb 2020 19:14:15 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] orinoco: Replace zero-length array with flexible-array
- member
-Message-ID: <20200225011415.GA31868@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.191.54
-X-Source-L: No
-X-Exim-ID: 1j6Okw-002sYf-D4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.191.54]:58506
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 24 Feb 2020 20:34:58 -0500
+Received: by mail-io1-f68.google.com with SMTP id z16so625752iod.11;
+        Mon, 24 Feb 2020 17:34:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sMy0D4t4BEz+I62Pa6Ixc/TtcpxG23tmRPXSx/fbdfA=;
+        b=Bxex5n5ihE8BOt/P+mikL+dJSM3ex/S8YWwgHIsDlsA1WPxMfiLLNQGYgzQogWVLQn
+         Gi7ZSTeKYZZE9dNXK45XteWf1sBSrKMWxweXs53uvh2YfipDvEG6GyFIYNXq+0Se+E6l
+         RjxvD+dSSShWAOWtQL7HoSlP3H0NUzgLafBfHVo//WYWHMqbWo8rwo8JzNda95FOSRYz
+         2e4TCvUlic4ZNMC1qQrenVWc/0FFsLcRHkfqLD950fON+K3S630px2DclwsTxFQR5ARz
+         b2EVTue95HQS4eG3crkYAbuku93JWC1wRnmABjTaihH3XOavNvL1SzCvxxI4y0qVp63d
+         wggw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sMy0D4t4BEz+I62Pa6Ixc/TtcpxG23tmRPXSx/fbdfA=;
+        b=K2MrbAtrXnu/dxPma+ZSoj02JZmYyZvxVkrBx7B5XZyyy8SvNAq70o+mWvx/I1PRsM
+         dfrLzGUU5/x7/u/l21hDrg2VopB7wAFGNiMXzxy/LMdtLISuQJRlG3Y41e2FCxI1OdTb
+         p2vYQGEd7JXjni8k97gQmMu5xFEURbPFpUEezQM7Fyy+hVkvDSGcL4F1S0QPneegUHpd
+         a1rHAFnJR2y/F8lJZUMp5BhL2Dos0NNcLWYAAqAReIOk8gONVtEQwsDcymKdnfdxUtwF
+         osnKflmoMp8T7O8pbEn+nPSoFHGggNDaOCUIkBFXoytyCW21mJPPKLjKMlS3FrSB3ey+
+         BzHg==
+X-Gm-Message-State: APjAAAXhvWSv/A+5e/Gsru4YVTCJrm+GAPbeaGImKd/uhAkk728ns9qR
+        YtyMNC7BkwiGzyZEZaPn5eA=
+X-Google-Smtp-Source: APXvYqx7ANfXYY3vlxOfYrESs9/zK1XANM1oYSy6o5tVQHylmMMevdRVd+EiNYUXGYDFn1Lfvd/Zmg==
+X-Received: by 2002:a6b:1490:: with SMTP id 138mr3357877iou.8.1582594496980;
+        Mon, 24 Feb 2020 17:34:56 -0800 (PST)
+Received: from timdesk.hsd1.ca.comcast.net ([108.165.36.110])
+        by smtp.gmail.com with ESMTPSA id b1sm4888798ilc.33.2020.02.24.17.34.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Feb 2020 17:34:56 -0800 (PST)
+From:   tbird20d@gmail.com
+X-Google-Original-From: tim.bird@sony.com
+To:     mchehab@kernel.org, corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tbird20d@gmail.com, tim.bird@sony.com
+Subject: [PATCH] scripts/sphinx-pre-install: add '-p python3' to virtualenv
+Date:   Mon, 24 Feb 2020 18:34:41 -0700
+Message-Id: <1582594481-23221-1-git-send-email-tim.bird@sony.com>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+From: Tim Bird <tim.bird@sony.com>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+With Ubuntu 16.04 (and presumably Debian distros of the same age),
+the instructions for setting up a python virtual environment should
+do so with the python 3 interpreter.  On these older distros, the
+default python (and virtualenv command) might be python2 based.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Some of the packages that sphinx relies on are now only available
+for python3.  If you don't specify the python3 interpreter for
+the virtualenv, you get errors when doing the pip installs for
+various packages
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Fix this by adding '-p python3' to the virtualenv recommendation
+line.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Tim Bird <tim.bird@sony.com>
 ---
- drivers/net/wireless/intersil/orinoco/fw.c          | 2 +-
- drivers/net/wireless/intersil/orinoco/hermes.h      | 2 +-
- drivers/net/wireless/intersil/orinoco/hermes_dld.c  | 6 +++---
- drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ scripts/sphinx-pre-install | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intersil/orinoco/fw.c b/drivers/net/wireless/intersil/orinoco/fw.c
-index 400a35217644..015af782881b 100644
---- a/drivers/net/wireless/intersil/orinoco/fw.c
-+++ b/drivers/net/wireless/intersil/orinoco/fw.c
-@@ -49,7 +49,7 @@ struct orinoco_fw_header {
- 	__le32 pdr_offset;      /* Offset to PDR data from eof header */
- 	__le32 pri_offset;      /* Offset to primary plug data */
- 	__le32 compat_offset;   /* Offset to compatibility data*/
--	char signature[0];      /* FW signature length headersize-20 */
-+	char signature[];      /* FW signature length headersize-20 */
- } __packed;
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index a8f0c00..fa3fb05 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -701,11 +701,26 @@ sub check_needs()
+ 		} else {
+ 			my $rec_activate = "$virtenv_dir/bin/activate";
+ 			my $virtualenv = findprog("virtualenv-3");
++			my $rec_python3 = "";
+ 			$virtualenv = findprog("virtualenv-3.5") if (!$virtualenv);
+ 			$virtualenv = findprog("virtualenv") if (!$virtualenv);
+ 			$virtualenv = "virtualenv" if (!$virtualenv);
  
- /* Check the range of various header entries. Return a pointer to a
-diff --git a/drivers/net/wireless/intersil/orinoco/hermes.h b/drivers/net/wireless/intersil/orinoco/hermes.h
-index 121fdd8e5da2..9f668185b7d2 100644
---- a/drivers/net/wireless/intersil/orinoco/hermes.h
-+++ b/drivers/net/wireless/intersil/orinoco/hermes.h
-@@ -341,7 +341,7 @@ struct agere_ext_scan_info {
- 	__le64	timestamp;
- 	__le16	beacon_interval;
- 	__le16	capabilities;
--	u8	data[0];
-+	u8	data[];
- } __packed;
- 
- #define HERMES_LINKSTATUS_NOT_CONNECTED   (0x0000)
-diff --git a/drivers/net/wireless/intersil/orinoco/hermes_dld.c b/drivers/net/wireless/intersil/orinoco/hermes_dld.c
-index 4a10b7aca043..dbeadfcfefe2 100644
---- a/drivers/net/wireless/intersil/orinoco/hermes_dld.c
-+++ b/drivers/net/wireless/intersil/orinoco/hermes_dld.c
-@@ -64,7 +64,7 @@
- struct dblock {
- 	__le32 addr;		/* adapter address where to write the block */
- 	__le16 len;		/* length of the data only, in bytes */
--	char data[0];		/* data to be written */
-+	char data[];		/* data to be written */
- } __packed;
- 
- /*
-@@ -76,7 +76,7 @@ struct pdr {
- 	__le32 id;		/* record ID */
- 	__le32 addr;		/* adapter address where to write the data */
- 	__le32 len;		/* expected length of the data, in bytes */
--	char next[0];		/* next PDR starts here */
-+	char next[];		/* next PDR starts here */
- } __packed;
- 
- /*
-@@ -87,7 +87,7 @@ struct pdr {
- struct pdi {
- 	__le16 len;		/* length of ID and data, in words */
- 	__le16 id;		/* record ID */
--	char data[0];		/* plug data */
-+	char data[];		/* plug data */
- } __packed;
- 
- /*** FW data block access functions ***/
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-index e753f43e0162..a77bbcd544d6 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-@@ -202,7 +202,7 @@ struct ezusb_packet {
- 	__le16 crc;		/* CRC up to here */
- 	__le16 hermes_len;
- 	__le16 hermes_rid;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- /* Table of devices that work or may work with this driver */
+-			printf "\t$virtualenv $virtenv_dir\n";
++			my $rel = "";
++			if (index($system_release, "Ubuntu") != -1) {
++				$rel = $1 if ($system_release =~ /Ubuntu\s+(\d+)[.]/);
++				if ($rel && $rel >= 16) {
++					$rec_python3 = " -p python3";
++				}
++			}
++			if (index($system_release, "Debian") != -1) {
++				$rel = $1 if ($system_release =~ /Debian\s+(\d+)/);
++				if ($rel && $rel >= 7) {
++					$rec_python3 = " -p python3";
++				}
++			}
++
++			printf "\t$virtualenv$rec_python3 $virtenv_dir\n";
+ 			printf "\t. $rec_activate\n";
+ 			printf "\tpip install -r $requirement_file\n";
+ 			deactivate_help();
 -- 
-2.25.0
+2.1.4
 
