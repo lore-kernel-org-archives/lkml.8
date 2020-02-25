@@ -2,123 +2,394 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825BCC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70EEC35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560EA21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C28E20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ENWuIsFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgBYUtA (ORCPT
+        id S1729189AbgBYUte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:49:00 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36169 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgBYUs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:48:59 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1j6h8O-0007zu-1r; Tue, 25 Feb 2020 21:48:52 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 993DC4C09D6;
-        Tue, 25 Feb 2020 20:48:49 +0000 (UTC)
-Subject: Re: [PATCH linux-master 1/3] can: tcan4x5x: Move clock init to TCAN
- driver
-To:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-can@vger.kernel.org, wg@grandegger.com,
-        sriram.dash@samsung.com
-Cc:     davem@davemloft.net
-References: <20200131183433.11041-1-dmurphy@ti.com>
- <20200131183433.11041-2-dmurphy@ti.com>
- <06af6e1d-aec4-189c-378a-77af4073a1a6@ti.com>
- <fed1d801-e284-eada-d5b3-ae78089b3ead@pengutronix.de>
- <e420c667-23d8-9739-1905-4a89570ddb72@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <74993360-b643-51d5-f6f2-aa50ce647a16@pengutronix.de>
-Date:   Tue, 25 Feb 2020 21:48:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 25 Feb 2020 15:49:34 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34072 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728119AbgBYUtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:49:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=1Jp4AsY95+F3uN+zvxx3OxTatSAeEzZsq49QkrF0bNg=; b=ENWuIsFqrSLEL5s2SyWRoPmAWC
+        CxqSge1BqzF3d7vpwhaonrnVh9c3C5SJwITb+pLaSsIkKW6W06IX/bZhhw+uY2XEJ7kYyPkHWXOIT
+        IZPqNlm9nFq2sZmZgPHSyk5UgGRVqw9TmbJQPWXw6KlNXQqCs4Q5VJrDvnB/8kMsb3kw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j6h8z-0001Gr-Fs; Tue, 25 Feb 2020 21:49:29 +0100
+Date:   Tue, 25 Feb 2020 21:49:29 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+Subject: Re: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
+ support
+Message-ID: <20200225204929.GG7663@lunn.ch>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+ <20200225163025.9430-3-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
-In-Reply-To: <e420c667-23d8-9739-1905-4a89570ddb72@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225163025.9430-3-vadym.kochan@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 6:45 PM, Dan Murphy wrote:
-> Marc
+On Tue, Feb 25, 2020 at 04:30:55PM +0000, Vadym Kochan wrote:
+> Add PCI interface driver for Prestera Switch ASICs family devices, which
+> provides:
 > 
-> On 2/21/20 8:43 AM, Marc Kleine-Budde wrote:
->> On 2/21/20 3:25 PM, Dan Murphy wrote:
->>> Hello
->>>
->>> On 1/31/20 12:34 PM, Dan Murphy wrote:
->>>> Move the clock discovery and initialization from the m_can framework to
->>>> the registrar.  This allows for registrars to have unique clock
->>>> initialization.  The TCAN device only needs the CAN clock reference.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>> I would like to have these 3 patches reviewed and integrated (post
->>> review) so I can work on other issues identified.
->> Applied to linux-can-next/testing.
+>     - Firmware loading mechanism
+>     - Requests & events handling to/from the firmware
+>     - Access to the firmware on the bus level
 > 
-> I am not seeing these patches applied
+> The firmware has to be loaded each time device is reset. The driver is
+> loading it from:
 > 
-> I am looking here 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git/log/?h=testing
+>     /lib/firmware/marvell/prestera_fw_img.bin
 > 
-> But they could be in a different repo
+> The firmware image version is located within internal header and consists
+> of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has hard-coded
+> minimum supported firmware version which it can work with:
+> 
+>     MAJOR - reflects the support on ABI level between driver and loaded
+>             firmware, this number should be the same for driver and loaded
+>             firmware.
+> 
+>     MINOR - this is the minimal supported version between driver and the
+>             firmware.
+> 
+>     PATCH - indicates only fixes, firmware ABI is not changed.
+> 
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
 
-I've just pushed to that branch.
+Nice to see a driver for this hardware.
 
-Marc
+> +#define mvsw_wait_timeout(cond, waitms) \
+> +({ \
+> +	unsigned long __wait_end = jiffies + msecs_to_jiffies(waitms); \
+> +	bool __wait_ret = false; \
+> +	do { \
+> +		if (cond) { \
+> +			__wait_ret = true; \
+> +			break; \
+> +		} \
+> +		cond_resched(); \
+> +	} while (time_before(jiffies, __wait_end)); \
+> +	__wait_ret; \
+> +})
 
--- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Please try to use include/linux/iopoll.h
+
+> +#define FW_VER_MIN(v) \
+> +	(((v) - (FW_VER_MAJ(v) * FW_VER_MAJ_MUL)) / FW_VER_MIN_MUL)
+> +
+> +#define FW_VER_PATCH(v) \
+> +	(v - (FW_VER_MAJ(v) * FW_VER_MAJ_MUL) - (FW_VER_MIN(v) * FW_VER_MIN_MUL))
+> +
+> +#define mvsw_ldr_write(fw, reg, val) \
+> +	writel(val, (fw)->ldr_regs + (reg))
+> +#define mvsw_ldr_read(fw, reg)	\
+> +	readl((fw)->ldr_regs + (reg))
+
+You have a lot of macro magic in this file. Please try to replace most
+of it with simple functions. The compiler will inline it, giving you
+the same performance, but you gain better type checking.
+
+> +#define mvsw_fw_dev(fw)	((fw)->dev.dev)
+
+Macros like this don't bring much value.
+
+
+> +static int mvsw_pr_fw_hdr_parse(struct mvsw_pr_fw *fw,
+> +				const struct firmware *img)
+> +{
+> +	struct mvsw_pr_fw_header *hdr = (struct mvsw_pr_fw_header *)img->data;
+> +	struct mvsw_fw_rev *rev = &fw->dev.fw_rev;
+> +	u32 magic;
+> +
+> +	magic = be32_to_cpu(hdr->magic_number);
+> +	if (magic != MVSW_FW_HDR_MAGIC) {
+> +		dev_err(mvsw_fw_dev(fw), "FW img type is invalid");
+> +		return -EINVAL;
+> +	}
+> +
+> +	mvsw_pr_fw_rev_parse(hdr, rev);
+> +
+> +	dev_info(mvsw_fw_dev(fw), "FW version '%u.%u.%u'\n",
+> +		 rev->maj, rev->min, rev->sub);
+
+ethtool can return this. Don't spam the kernel log.
+
+> +
+> +	return mvsw_pr_fw_rev_check(fw);
+> +}
+> +
+> +static int mvsw_pr_fw_load(struct mvsw_pr_fw *fw)
+> +{
+> +	size_t hlen = sizeof(struct mvsw_pr_fw_header);
+> +	const struct firmware *f;
+> +	bool has_ldr;
+> +	int err;
+> +
+> +	has_ldr = mvsw_wait_timeout(mvsw_pr_ldr_is_ready(fw), 1000);
+> +	if (!has_ldr) {
+> +		dev_err(mvsw_fw_dev(fw), "waiting for FW loader is timed out");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	fw->ldr_ring_buf = fw->ldr_regs +
+> +		mvsw_ldr_read(fw, MVSW_LDR_BUF_OFFS_REG);
+> +
+> +	fw->ldr_buf_len =
+> +		mvsw_ldr_read(fw, MVSW_LDR_BUF_SIZE_REG);
+> +
+> +	fw->ldr_wr_idx = 0;
+> +
+> +	err = request_firmware_direct(&f, MVSW_FW_FILENAME, &fw->pci_dev->dev);
+> +	if (err) {
+> +		dev_err(mvsw_fw_dev(fw), "failed to request firmware file\n");
+> +		return err;
+> +	}
+> +
+> +	if (!IS_ALIGNED(f->size, 4)) {
+> +		dev_err(mvsw_fw_dev(fw), "FW image file is not aligned");
+> +		release_firmware(f);
+> +		return -EINVAL;
+> +	}
+
+This is size, so has nothing to do with alignment. Do you mean truncated?
+
+
+> +
+> +	err = mvsw_pr_fw_hdr_parse(fw, f);
+> +	if (err) {
+> +		dev_err(mvsw_fw_dev(fw), "FW image header is invalid\n");
+> +		release_firmware(f);
+> +		return err;
+> +	}
+> +
+> +	mvsw_ldr_write(fw, MVSW_LDR_IMG_SIZE_REG, f->size - hlen);
+> +	mvsw_ldr_write(fw, MVSW_LDR_CTL_REG, MVSW_LDR_CTL_DL_START);
+> +
+> +	dev_info(mvsw_fw_dev(fw), "Loading prestera FW image ...");
+
+How slow is this? If the machine is blocked for 10 minutes, doing
+nothing than load firmware, maybe it would be good to spam the
+console, but otherwise....
+
+> +
+> +	err = mvsw_pr_ldr_send(fw, f->data + hlen, f->size - hlen);
+> +
+> +	release_firmware(f);
+> +	return err;
+> +}
+> +
+> +static int mvsw_pr_pci_probe(struct pci_dev *pdev,
+> +			     const struct pci_device_id *id)
+> +{
+> +	const char *driver_name = pdev->driver->name;
+> +	struct mvsw_pr_fw *fw;
+> +	u8 __iomem *mem_addr;
+> +	int err;
+> +
+> +	err = pci_enable_device(pdev);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "pci_enable_device failed\n");
+> +		goto err_pci_enable_device;
+> +	}
+> +
+> +	err = pci_request_regions(pdev, driver_name);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "pci_request_regions failed\n");
+> +		goto err_pci_request_regions;
+> +	}
+> +
+> +	mem_addr = pci_ioremap_bar(pdev, 2);
+> +	if (!mem_addr) {
+> +		dev_err(&pdev->dev, "ioremap failed\n");
+> +		err = -EIO;
+> +		goto err_ioremap;
+> +	}
+> +
+> +	pci_set_master(pdev);
+> +
+> +	fw = kzalloc(sizeof(*fw), GFP_KERNEL);
+> +	if (!fw) {
+> +		err = -ENOMEM;
+> +		goto err_pci_dev_alloc;
+> +	}
+> +
+> +	fw->pci_dev = pdev;
+> +	fw->dev.dev = &pdev->dev;
+> +	fw->dev.send_req = mvsw_pr_fw_send_req;
+> +	fw->mem_addr = mem_addr;
+> +	fw->ldr_regs = mem_addr;
+> +	fw->hw_regs = mem_addr;
+> +
+> +	fw->wq = alloc_workqueue("mvsw_fw_wq", WQ_HIGHPRI, 1);
+> +	if (!fw->wq)
+> +		goto err_wq_alloc;
+> +
+> +	INIT_WORK(&fw->evt_work, mvsw_pr_fw_evt_work_fn);
+> +
+> +	err = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "MSI IRQ init failed\n");
+> +		goto err_irq_alloc;
+> +	}
+> +
+> +	err = request_irq(pci_irq_vector(pdev, 0), mvsw_pci_irq_handler,
+> +			  0, driver_name, fw);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "fail to request IRQ\n");
+> +		goto err_request_irq;
+> +	}
+> +
+> +	pci_set_drvdata(pdev, fw);
+> +
+> +	err = mvsw_pr_fw_init(fw);
+> +	if (err)
+> +		goto err_mvsw_fw_init;
+> +
+> +	dev_info(mvsw_fw_dev(fw), "Prestera Switch FW is ready\n");
+> +
+> +	err = mvsw_pr_device_register(&fw->dev);
+> +	if (err)
+> +		goto err_mvsw_dev_register;
+> +
+> +	return 0;
+> +
+> +err_mvsw_dev_register:
+> +	mvsw_pr_fw_uninit(fw);
+> +err_mvsw_fw_init:
+> +	free_irq(pci_irq_vector(pdev, 0), fw);
+> +err_request_irq:
+> +	pci_free_irq_vectors(pdev);
+> +err_irq_alloc:
+> +	destroy_workqueue(fw->wq);
+> +err_wq_alloc:
+> +	kfree(fw);
+> +err_pci_dev_alloc:
+> +	iounmap(mem_addr);
+> +err_ioremap:
+> +	pci_release_regions(pdev);
+> +err_pci_request_regions:
+> +	pci_disable_device(pdev);
+> +err_pci_enable_device:
+> +	return err;
+> +}
+> +
+> +static void mvsw_pr_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct mvsw_pr_fw *fw = pci_get_drvdata(pdev);
+> +
+> +	free_irq(pci_irq_vector(pdev, 0), fw);
+> +	pci_free_irq_vectors(pdev);
+> +	mvsw_pr_device_unregister(&fw->dev);
+> +	flush_workqueue(fw->wq);
+> +	destroy_workqueue(fw->wq);
+> +	mvsw_pr_fw_uninit(fw);
+> +	iounmap(fw->mem_addr);
+> +	pci_release_regions(pdev);
+> +	pci_disable_device(pdev);
+> +	kfree(fw);
+> +}
+> +
+
+
+> +static int __init mvsw_pr_pci_init(void)
+> +{
+> +	struct mvsw_pr_pci_match *match;
+> +	int err;
+> +
+> +	for (match = mvsw_pci_devices; match->driver.name; match++) {
+> +		match->driver.probe = mvsw_pr_pci_probe;
+> +		match->driver.remove = mvsw_pr_pci_remove;
+> +		match->driver.id_table = &match->id;
+> +
+> +		err = pci_register_driver(&match->driver);
+> +		if (err) {
+> +			pr_err("prestera_pci: failed to register %s\n",
+> +			       match->driver.name);
+> +			break;
+> +		}
+> +
+> +		match->registered = true;
+> +	}
+
+Please don't reinvent the wheel. You should just do something like:
+
+static const struct pci_device_id ilo_devices[] = {
+        { PCI_DEVICE(PCI_VENDOR_ID_COMPAQ, 0xB204) },
+        { PCI_DEVICE(PCI_VENDOR_ID_HP, 0x3307) },
+        { }
+};
+MODULE_DEVICE_TABLE(pci, ilo_devices);
+
+static struct pci_driver ilo_driver = {
+        .name     = ILO_NAME,
+        .id_table = ilo_devices,
+        .probe    = ilo_probe,
+        .remove   = ilo_remove,
+};
+
+        error = pci_register_driver(&ilo_driver);
+
+If you need extra information, you can make use of pci_device_id:driver_data.
+
+> +	if (err) {
+> +		for (match = mvsw_pci_devices; match->driver.name; match++) {
+> +			if (!match->registered)
+> +				break;
+> +
+> +			pci_unregister_driver(&match->driver);
+> +		}
+> +
+> +		return err;
+> +	}
+> +
+> +	pr_info("prestera_pci: Registered Marvell Prestera PCI driver\n");
+
+Don't spam the kernel log.
+
+> +static void __exit mvsw_pr_pci_exit(void)
+> +{
+> +	struct mvsw_pr_pci_match *match;
+> +
+> +	for (match = mvsw_pci_devices; match->driver.name; match++) {
+> +		if (!match->registered)
+> +			break;
+> +
+> +		pci_unregister_driver(&match->driver);
+> +	}
+> +
+> +	pr_info("prestera_pci: Unregistered Marvell Prestera PCI driver\n");
+
+More spamming of the kernel log.
+
+     Andrew
