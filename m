@@ -2,144 +2,140 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F72C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DDBC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE84321744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582613920;
-	bh=cYrQahZtEf1FG7o2yJxkGVa10d9d3RxwRQx6A+9wOvQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=bz3VlwA/kBn2dVPcGe7KSkuK8bRkRBb9aIy/GBiEoKLt9XtiSmC8Evk13V1jMyWmd
-	 tMcg9eq0YiCA/gMz2C/8uCpkgnAtyU5th0o2I3oDFbvyi2x7bfevSGGO0kh+45l3pn
-	 w+HjPOzLZcM9inumcm3f0njfjPixQseCBiWuGfwg=
+	by mail.kernel.org (Postfix) with ESMTP id C3831222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgBYG6j (ORCPT
+        id S1729253AbgBYG7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:58:39 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41088 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBYG6j (ORCPT
+        Tue, 25 Feb 2020 01:59:44 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:30171 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgBYG7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:58:39 -0500
-Received: by mail-pf1-f194.google.com with SMTP id j9so6665814pfa.8;
-        Mon, 24 Feb 2020 22:58:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=CzQ3KncUgYSz3MC9ExRBxLk8UvHns5L2mGX87wVc37U=;
-        b=oggrB+In/wbOiqPZkuXluM1AP5HoUi58A/5YTr8Iql4s5G8a8b1Gv3LHbiJbUIXY9b
-         kn74Npkl41OnHH7esNQWgS+Rx7OpVVmJF9J9MC1Z+H4h/J7/PFzC5S5x8akKjgAkCwy+
-         HXKUqYaaiqx0pt9PagKJn7IFyXjzc58LBUsgLsWyIvjxKEcrnCwLKThnJ0Ilo7wEd7G8
-         6jZ+4rOJ5WYDcr4+a+cSVmGBV5rdNhznedzOKgbqgDFAbdSyEzvjFR5BfDcB8h7+Gapc
-         Lnd594VZlO8nGnn5dsPqZYNig+SD8hPbZDIQvM+SAiMkYV8h/m6vRmDOSXL3mv/yutS9
-         cWvg==
-X-Gm-Message-State: APjAAAVShsdHyOo1deact5kbSccUJcyGdQ+p2c3YhpIsBVc9SNfjf0Tt
-        OZp56cfLEfKxErWdPLBJMpZ2p7PP44AHiw==
-X-Google-Smtp-Source: APXvYqxzF43CzmsXLczZFZFmK9ilWsi6pnWsT7ryPEiBbjqzJXHPUUXVyL7qYZHpSUu8yV+hjhSrxQ==
-X-Received: by 2002:a63:f454:: with SMTP id p20mr32313402pgk.149.1582613918078;
-        Mon, 24 Feb 2020 22:58:38 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id g9sm15725491pfm.150.2020.02.24.22.58.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 22:58:37 -0800 (PST)
-Date:   Mon, 24 Feb 2020 22:58:31 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MIPS fixes
-Message-ID: <20200225065831.hl7ewk2s5trvhp4a@lantea.localdomain>
+        Tue, 25 Feb 2020 01:59:44 -0500
+X-IronPort-AV: E=Sophos;i="5.70,483,1574092800"; 
+   d="scan'208";a="83893039"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 25 Feb 2020 14:59:35 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 4DEF750A9967;
+        Tue, 25 Feb 2020 14:49:48 +0800 (CST)
+Received: from [10.167.226.60] (10.167.226.60) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1395.4; Tue, 25 Feb 2020 14:59:26 +0800
+Subject: Re: [RFC PATCH 1/2] x86/acpi: Improve code readablity of early madt
+ processing
+To:     Borislav Petkov <bp@alien8.de>
+CC:     <x86@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>
+References: <20200123014144.19155-1-caoj.fnst@cn.fujitsu.com>
+ <20200123014144.19155-2-caoj.fnst@cn.fujitsu.com>
+ <20200224132152.GB29318@zn.tnic>
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+Message-ID: <8b19ed2f-2470-c522-cc47-f615c615be20@cn.fujitsu.com>
+Date:   Tue, 25 Feb 2020 15:02:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y2bvbnogdcmp5lwj"
-Content-Disposition: inline
+In-Reply-To: <20200224132152.GB29318@zn.tnic>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.226.60]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 4DEF750A9967.AAB10
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/24/20 9:21 PM, Borislav Petkov wrote:
+> On Thu, Jan 23, 2020 at 09:41:43AM +0800, Cao jin wrote:
+>> Current processing logic is confusing.
+>>
+>> Return value of early_acpi_parse_madt_lapic_addr_ovr() indicates error(< 0),
+>> parsed entry number(>= 0).
+> 
+> You mean, the count of table entries parsed successfully?
 
---y2bvbnogdcmp5lwj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, 0 for no override sub-table.
 
-Hi Linus,
+> 
+>> So, it makes no sense to initialize acpi_lapic & smp_found_config
+>> seeing no override entry, instead, initialize them seeing MADT.
+> 
+> Err, that logical conclusion is not really clear to me - pls try
+> again with more detail. I kinda see what you mean by looking at
+> acpi_process_madt() but before I commit a change like that, I better
+> have the warm and fuzzy feeling that it is correct and properly
+> explained in its commit message.
+> 
 
-Here are a few MIPS fixes, and a MAINTAINERS update to hand over MIPS
-maintenance to Thomas Bogendoerfer - this will be my final pull request
-as MIPS maintainer. Thanks for your helpful comments, useful corrections
-& responsiveness during the time I've fulfilled the role, and I'm sure
-I'll pop up elsewhere in the tree somewhere down the line. Anyway,
-please pull.
+My understanding of early_acpi_process_madt(): mainly for getting APIC
+register base address(acpi_lapic_addr) from MADT, then process it via
+register_lapic_address().  acpi_lapic_addr could be got from one of
+following 2 places:
 
-Thanks,
-    Paul
+  1. MADT header (32-bit address, always exist)
+  2. MADT sub-table: Local APIC Address Override (64-bit address,
+     optional, high priority and use it if present)
+
+So the making-sense logic to me goes like:
+
+  1. get (32-bit) acpi_lapic_addr from MADT header.
+  2. check if there is MADT override structure & get 64-bit
+     acpi_lapic_addr if present.
+  3. register_lapic_address(acpi_lapic_addr);
+
+Then, it looks weird to me putting register_lapic_address() into
+early_acpi_parse_madt_lapic_addr_ovr(), the result is not wrong, but the
+code logic is hard for newbie. (these 2 functions both does more than
+its name tells, register_lapic_address() also get boot cpu APIC ID &
+version.)
+
+Variable acpi_lapic and its counterpart smp_found_config from MPS
+indicate whether it is SMP system, right? The following code:
 
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+	error = early_acpi_parse_madt_lapic_addr_ovr();
+	if (!error) {
+		acpi_lapic = 1;
+		smp_found_config = 1;
+	}
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+means setting them when there is no override sub-table, so why can't
+moving the setting operation out? Another issue: if there *is* override
+sub-table, don't set those two?
 
-are available in the Git repository at:
+> So why did
+> 
+>   cbf9bd603ab1 ("acpi: get boot_cpu_id as early for k8_scan_nodes")
+> 
+> do it this way? Was it wrong or why?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git mips-fixes
+Not a clue... The title says it wants boot_cpu_physical_apicid, but did
+many other things. Maybe Thomas could provide some insights?
 
-for you to fetch changes up to 3234f4ed3066a58cd5ce8edcf752fa4fe0c95cb5:
+> 
+> I'm very wary about touching ACPI parsing code for no good reason
+> because, well, it is ACPI...
 
-  MAINTAINERS: Hand MIPS over to Thomas (2020-02-24 22:43:18 -0800)
+I was expecting ACPI guys could help to confirm;) I also understand this
+should be tested widely, but I just have a normal PC, so it is a RFC:)
+-- 
+Sincerely,
+Cao jin
 
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      MIPS: VPE: Fix a double free and a memory leak in 'release_vpe()'
 
-Mark Tomlinson (1):
-      MIPS: cavium_octeon: Fix syncw generation.
-
-Nathan Chancellor (1):
-      MIPS: vdso: Wrap -mexplicit-relocs in cc-option
-
-Paul Burton (2):
-      MIPS: Disable VDSO time functionality on microMIPS
-      MAINTAINERS: Hand MIPS over to Thomas
-
-Paul Cercueil (1):
-      MIPS: ingenic: DTS: Fix watchdog nodes
-
-Victor Kamensky (2):
-      mips: vdso: fix 'jalr t9' crash in vdso code
-      mips: vdso: add build time check that no 'jalr t9' calls left
-
-=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) (1):
-      MIPS: X1000: Fix clock of watchdog node.
-
- CREDITS                                |  5 +++++
- MAINTAINERS                            |  6 ++----
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 17 +++++++++--------
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++--------
- arch/mips/boot/dts/ingenic/x1000.dtsi  |  6 ++----
- arch/mips/include/asm/sync.h           |  4 +++-
- arch/mips/kernel/vpe.c                 |  2 +-
- arch/mips/vdso/Makefile                | 28 +++++++++++++++++++++++++---
- 8 files changed, 56 insertions(+), 29 deletions(-)
-
---y2bvbnogdcmp5lwj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXlTFlwAKCRA+p5+stXUA
-3TlOAP97o0+wz/dV5uhXiNBbCL2oaqzzUhEgvVnFOgnNQoGM9gD/UPjJUkYqx35H
-UFE/GKQ+wGH3G7IQn9HWEivYmNfLdgk=
-=wEA6
------END PGP SIGNATURE-----
-
---y2bvbnogdcmp5lwj--
