@@ -2,92 +2,239 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E01C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B670C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D19C20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:42:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UlXGXTar"
+	by mail.kernel.org (Postfix) with ESMTP id 48B8320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgBYJmK (ORCPT
+        id S1729867AbgBYJmf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:42:10 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:21523 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729324AbgBYJmJ (ORCPT
+        Tue, 25 Feb 2020 04:42:35 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55397 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbgBYJme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:42:09 -0500
-X-UUID: 715bc4b9216941a88e154c325204f587-20200225
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=SYqjf55bgEilwKvR5E5iUnNYlLZi0fnyp+qvXPo+QZU=;
-        b=UlXGXTaryjo9Zr/L96T9UCjX4VdUBLj45xcMxo5jbSJ6dDUfd3I+x9a7q6LJgREwY4Dltqguodmmr+tTRBXQ8DePjqRlqnSwOy+sAL8YRKYljz0V1dSAO9qnEGizf58bXVmWmow28OYZsJNiAH7ARyZf9soToYLBSoU9cgqyOVQ=;
-X-UUID: 715bc4b9216941a88e154c325204f587-20200225
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 319737610; Tue, 25 Feb 2020 17:41:12 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Feb
- 2020 17:37:15 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 25 Feb 2020 17:39:50 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v8 4/7] dt-bindings: display: mediatek: dpi sample data in dual edge support
-Date:   Tue, 25 Feb 2020 17:40:54 +0800
-Message-ID: <20200225094057.120144-5-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200225094057.120144-1-jitao.shi@mediatek.com>
-References: <20200225094057.120144-1-jitao.shi@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 4B0FB546FF66D627201F8C17E97E65579B3C837BCC58C8EA2829E5A0F820878A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 25 Feb 2020 04:42:34 -0500
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1j6WjY-0007FT-Dk
+        for linux-kernel@vger.kernel.org; Tue, 25 Feb 2020 09:42:32 +0000
+Received: by mail-pl1-f198.google.com with SMTP id g5so7044915plq.17
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 01:42:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qW9RGA2yoPMiW3Kx/nzk+m/gnWxZba3lZu/gpv/Ykio=;
+        b=R0BZXoXQEAqXJzCbSJhkSG5MP4Tde9MPffcQgN4V2yngbi1pKQWOYdMpyY4m5dsTyL
+         I5rVEVLTJsZ4ddf/+Oh4V9Ju4DgQ3IVzXIByECwy2cGB/eDzta8YfszfbzyiTTf4jnr/
+         7Nya6JrzoaOD7PChdpmbpLy1Ng9W0E33dt4dnXYuiwptfwSCeDpXfmAM2hs1Dro+Z7qQ
+         ZA8g+UCVnhVNzpgLKbgoJVaQimDLuwirZQJ1wwpPw51neF3Cqck2cTf596KjEo6HLdMC
+         2oI0qXxAd4ennlLrssJxe5fEwusOeuHfF5yKycs0eZunJ+Iv3yRGU/satL0j9ihOW28c
+         xf7w==
+X-Gm-Message-State: APjAAAWgVi1Y19vQG3DSlFFeWZXqmRYh8fEhrmiOlx2vwlem8jkySxmC
+        uqbu65Nq6Y4C6CibLDAIC1QBABV4mp4nzX+mx/SJRnlvAUlPymJwgoOpJddojdfVwsE6e3AhtpV
+        iBd706AnsCjjqadbJpQjJhyRFKNhW1H41llmt5dwuLQ==
+X-Received: by 2002:a17:902:b089:: with SMTP id p9mr54667616plr.42.1582623751054;
+        Tue, 25 Feb 2020 01:42:31 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzXiUrpXHoo48RK24Wp0HqIr5ldhZ93iqCXYewVgNjhMgIUvCWcxmth/JlUGNfosIYuNKD1nw==
+X-Received: by 2002:a17:902:b089:: with SMTP id p9mr54667588plr.42.1582623750614;
+        Tue, 25 Feb 2020 01:42:30 -0800 (PST)
+Received: from 2001-b011-380f-3214-6d62-6b9e-e5b8-db59.dynamic-ip6.hinet.net (2001-b011-380f-3214-6d62-6b9e-e5b8-db59.dynamic-ip6.hinet.net. [2001:b011:380f:3214:6d62:6b9e:e5b8:db59])
+        by smtp.gmail.com with ESMTPSA id e18sm16697476pfm.24.2020.02.25.01.42.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 01:42:30 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [RFC PATCH v2] e1000e: Use rtnl_lock to prevent race conditions
+ between net and pci/pm
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20191007172559.11166.29328.stgit@localhost.localdomain>
+Date:   Tue, 25 Feb 2020 17:42:26 +0800
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        zdai@linux.vnet.ibm.com,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        zdai@us.ibm.com, David Miller <davem@davemloft.net>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <681404C7-9015-4C64-B8FE-2C93D75A7318@canonical.com>
+References: <CAKgT0UdwqGGKvaSJ+3vd-_d-6t9MB=No+7SpkbOT2PnynRK+2w@mail.gmail.com>
+ <20191007172559.11166.29328.stgit@localhost.localdomain>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable <stable@vger.kernel.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHByb3BlcnR5ICJwY2xrLXNhbXBsZSIgdG8gY29uZmlnIHRoZSBkcGkgc2FtcGxlIG9uIGZh
-bGxpbmcgKDApLA0KcmlzaW5nICgxKSwgYm90aCBmYWxsaW5nIGFuZCByaXNpbmcgKDIpLg0KDQpT
-aWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQg
-ICAgIHwgNCArKysrDQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsv
-bWVkaWF0ZWssZHBpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCmluZGV4IGE3YjFiOGJmYjY1ZS4uZjM2MmZm
-ZjUxNDM3IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KQEAgLTIw
-LDYgKzIwLDkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCiBPcHRpb25hbCBwcm9wZXJ0aWVzOg0K
-IC0gcGluY3RybC1uYW1lczogQ29udGFpbiAiZ3Bpb21vZGUiIGFuZCAiZHBpbW9kZSIuDQogICBw
-aW5jdHJsLW5hbWVzIHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3Ry
-bHBpbmN0cmwtYmluZGluZ3MudHh0DQorLSBwY2xrLXNhbXBsZTogMDogc2FtcGxlIGluIGZhbGxp
-bmcgZWRnZSwgMTogc2FtcGxlIGluIHJpc2luZyBlZGdlLCAyOiBzYW1wbGUNCisgIGluIGJvdGgg
-ZmFsbGluZyBhbmQgcmlzaW5nIGVkZ2UuDQorICBwY2xrLXNhbXBsZSBzZWUgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Lg0KIA0KIEV4
-YW1wbGU6DQogDQpAQCAtMzcsNiArNDAsNyBAQCBkcGkwOiBkcGlAMTQwMWQwMDAgew0KIA0KIAlw
-b3J0IHsNCiAJCWRwaTBfb3V0OiBlbmRwb2ludCB7DQorCQkJcGNsay1zYW1wbGUgPSAwOw0KIAkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaTBfaW4+Ow0KIAkJfTsNCiAJfTsNCi0tIA0KMi4yMS4w
-DQo=
+Hi Greg,
+
+> On Oct 8, 2019, at 01:27, Alexander Duyck <alexander.duyck@gmail.com> wrote:
+> 
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> This patch is meant to address possible race conditions that can exist
+> between network configuration and power management. A similar issue was
+> fixed for igb in commit 9474933caf21 ("igb: close/suspend race in
+> netif_device_detach").
+> 
+> In addition it consolidates the code so that the PCI error handling code
+> will essentially perform the power management freeze on the device prior to
+> attempting a reset, and will thaw the device afterwards if that is what it
+> is planning to do. Otherwise when we call close on the interface it should
+> see it is detached and not attempt to call the logic to down the interface
+> and free the IRQs again.
+> 
+>> From what I can tell the check that was adding the check for __E1000_DOWN
+> in e1000e_close was added when runtime power management was added. However
+> it should not be relevant for us as we perform a call to
+> pm_runtime_get_sync before we call e1000_down/free_irq so it should always
+> be back up before we call into this anyway.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+Please merge this commit, a7023819404ac9bd2bb311a4fafd38515cfa71ec to stable v5.14.
+
+`modprobe -r e1000e` triggers a null pointer dereference [1] after the the following two patches are applied to v5.4.y:
+d635e7c4b34e6a630c7a1e8f1a8fd52c3e3ceea7 e1000e: Revert "e1000e: Make watchdog use delayed work"
+21c6137939723ed6f5e4aec7882cdfc247304c27 e1000e: Drop unnecessary __E1000_DOWN bit twiddling
+
+[1] https://bugs.launchpad.net/bugs/1864303
+
+Kai-Heng
+
+> ---
+> 
+> RFC v2: Dropped some unused variables
+> 	Added logic to check for device present before removing to pm_freeze
+> 	Fixed misplaced err_irq to before rtnl_unlock()
+> 
+> drivers/net/ethernet/intel/e1000e/netdev.c |   40 +++++++++++++++-------------
+> 1 file changed, 21 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> index d7d56e42a6aa..8b4e589aca36 100644
+> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> @@ -4715,12 +4715,12 @@ int e1000e_close(struct net_device *netdev)
+> 
+> 	pm_runtime_get_sync(&pdev->dev);
+> 
+> -	if (!test_bit(__E1000_DOWN, &adapter->state)) {
+> +	if (netif_device_present(netdev)) {
+> 		e1000e_down(adapter, true);
+> 		e1000_free_irq(adapter);
+> 
+> 		/* Link status message must follow this format */
+> -		pr_info("%s NIC Link is Down\n", adapter->netdev->name);
+> +		pr_info("%s NIC Link is Down\n", netdev->name);
+> 	}
+> 
+> 	napi_disable(&adapter->napi);
+> @@ -6298,10 +6298,14 @@ static int e1000e_pm_freeze(struct device *dev)
+> {
+> 	struct net_device *netdev = dev_get_drvdata(dev);
+> 	struct e1000_adapter *adapter = netdev_priv(netdev);
+> +	bool present;
+> 
+> +	rtnl_lock();
+> +
+> +	present = netif_device_present(netdev);
+> 	netif_device_detach(netdev);
+> 
+> -	if (netif_running(netdev)) {
+> +	if (present && netif_running(netdev)) {
+> 		int count = E1000_CHECK_RESET_COUNT;
+> 
+> 		while (test_bit(__E1000_RESETTING, &adapter->state) && count--)
+> @@ -6313,6 +6317,8 @@ static int e1000e_pm_freeze(struct device *dev)
+> 		e1000e_down(adapter, false);
+> 		e1000_free_irq(adapter);
+> 	}
+> +	rtnl_unlock();
+> +
+> 	e1000e_reset_interrupt_capability(adapter);
+> 
+> 	/* Allow time for pending master requests to run */
+> @@ -6626,27 +6632,31 @@ static int __e1000_resume(struct pci_dev *pdev)
+> 	return 0;
+> }
+> 
+> -#ifdef CONFIG_PM_SLEEP
+> static int e1000e_pm_thaw(struct device *dev)
+> {
+> 	struct net_device *netdev = dev_get_drvdata(dev);
+> 	struct e1000_adapter *adapter = netdev_priv(netdev);
+> +	int rc = 0;
+> 
+> 	e1000e_set_interrupt_capability(adapter);
+> -	if (netif_running(netdev)) {
+> -		u32 err = e1000_request_irq(adapter);
+> 
+> -		if (err)
+> -			return err;
+> +	rtnl_lock();
+> +	if (netif_running(netdev)) {
+> +		rc = e1000_request_irq(adapter);
+> +		if (rc)
+> +			goto err_irq;
+> 
+> 		e1000e_up(adapter);
+> 	}
+> 
+> 	netif_device_attach(netdev);
+> +err_irq:
+> +	rtnl_unlock();
+> 
+> -	return 0;
+> +	return rc;
+> }
+> 
+> +#ifdef CONFIG_PM_SLEEP
+> static int e1000e_pm_suspend(struct device *dev)
+> {
+> 	struct pci_dev *pdev = to_pci_dev(dev);
+> @@ -6818,16 +6828,11 @@ static void e1000_netpoll(struct net_device *netdev)
+> static pci_ers_result_t e1000_io_error_detected(struct pci_dev *pdev,
+> 						pci_channel_state_t state)
+> {
+> -	struct net_device *netdev = pci_get_drvdata(pdev);
+> -	struct e1000_adapter *adapter = netdev_priv(netdev);
+> -
+> -	netif_device_detach(netdev);
+> +	e1000e_pm_freeze(&pdev->dev);
+> 
+> 	if (state == pci_channel_io_perm_failure)
+> 		return PCI_ERS_RESULT_DISCONNECT;
+> 
+> -	if (netif_running(netdev))
+> -		e1000e_down(adapter, true);
+> 	pci_disable_device(pdev);
+> 
+> 	/* Request a slot slot reset. */
+> @@ -6893,10 +6898,7 @@ static void e1000_io_resume(struct pci_dev *pdev)
+> 
+> 	e1000_init_manageability_pt(adapter);
+> 
+> -	if (netif_running(netdev))
+> -		e1000e_up(adapter);
+> -
+> -	netif_device_attach(netdev);
+> +	e1000e_pm_thaw(&pdev->dev);
+> 
+> 	/* If the controller has AMT, do not set DRV_LOAD until the interface
+> 	 * is up.  For all other cases, let the f/w know that the h/w is now
+> 
 
