@@ -2,93 +2,110 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A021C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176AC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3053321556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24AF021556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zcb+sFn7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPhjHWWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgBYLxG (ORCPT
+        id S1730522AbgBYLy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:53:06 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:28900 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729976AbgBYLxF (ORCPT
+        Tue, 25 Feb 2020 06:54:29 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44767 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729976AbgBYLy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:53:05 -0500
-X-UUID: aa67ac5ae26f4ba2b599abbbc8d65009-20200225
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=39ui2Wv99GeSAlafK/9HYk45gaD1Wuxeozd4Opspg4c=;
-        b=Zcb+sFn7eztRNcILpfmwWXSazfCYE4Hus6AKWm1782CYimlDTwsEc2saoZP7Jqes3qFaTEgEfAU3xl2EBO083brcXHJ0lkF4vZAGYvgyxdiaIyJQK6hR33fQyL6CbUQJQ10w6XvhMZBgRLGCnip+/S1d4+M68aA+al0T+cCuepI=;
-X-UUID: aa67ac5ae26f4ba2b599abbbc8d65009-20200225
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 777796048; Tue, 25 Feb 2020 19:47:40 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Feb
- 2020 19:43:44 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 25 Feb 2020 19:46:19 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v2 2/4] dt-binds: display: mediatek: get mipitx calibration data from nvmem
-Date:   Tue, 25 Feb 2020 19:47:28 +0800
-Message-ID: <20200225114730.124939-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200225114730.124939-1-jitao.shi@mediatek.com>
-References: <20200225114730.124939-1-jitao.shi@mediatek.com>
+        Tue, 25 Feb 2020 06:54:29 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so11766055otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 03:54:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GBqfeZcpRIHjSMJmkcL+KGMw0iUXwGNGFcmuo3qETB4=;
+        b=RPhjHWWqpPnyYD8gytcIKpGvtrZ60aPxevvkvbwXV2c/CQhJDm90XAXCp2ZYzn765O
+         BRKZRI971z+Q8yOMrhKG5ljEUJnYVfMkMEpf/ud3ZaaqdC0X3hxjzFvOXmdZCc1sbNpa
+         7vTCfGWVg7ZfbR1I+DNoB2EYpr/sDYggL1gwc+OOoo3T9+1jNxUHWxtu3UHNVJHzPdS4
+         0hc8Usu9TrzkZ8CJq4trvKfIUeIOHIm7aw5PpM3WvQH44hc5v9axSAoTqO8zPoqyENv2
+         vpYPITRtOFpKus3mfLAXbSLEORFf/++UhopSfRPOdPOnD92o0Qx57wHKq3MoLevy1/hT
+         q/3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GBqfeZcpRIHjSMJmkcL+KGMw0iUXwGNGFcmuo3qETB4=;
+        b=Iz9zuVfwMNrLYTuGngGLRUP1Ex4qRaTUeix9ptr6eXFSDpGYaxTmDvDQHoZHb72qDX
+         mIZXeLclSVg/LiKsgioQB7E7HdOOKmfWZ7wDEKwJ+Igdmwxhou3ogbEkhWuhSvZS3j3X
+         RvUstka8R6EB3GJePtGqVXJ61G2/srBqXus699oGsX7Q8xISlOzFWOV1JbJnyAbvK/P4
+         RYtYNU7wz3XKRpkCvWbARGUJUzFA6Wv8YeC2UcMXaw/VEean/it2BaISB17uGNvSJOXD
+         A7wNo39P//AKhiuc7sjnuakA4X6ThCsZnCI2l9M84FlpIx4RhT/dLvviP3+QNiwsUuhb
+         aQHA==
+X-Gm-Message-State: APjAAAWRZg3+kJ+IYong+LLvailf5MzFgu/sGgBVk59YLL65xuHminBq
+        IdHLi0VSjq1V9SBlx5ecj4g58c+Gi+yBkg6TGc+YfPKY
+X-Google-Smtp-Source: APXvYqwj5QZ4nVwoicybq/QMT35xCBOTZ0K4Wc044VPVf5J2evGgHYJBiRga/FpllgwOo4ufA4NlM4TBundQ3fJ7rS0=
+X-Received: by 2002:a05:6830:612:: with SMTP id w18mr45345595oti.160.1582631668857;
+ Tue, 25 Feb 2020 03:54:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: CE2C1B199D80B5DA7756133ED194042CE19C7AAF0C02D93751A82EB184EDC9BD2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200225112401.5151-1-ttayar@habana.ai>
+In-Reply-To: <20200225112401.5151-1-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Tue, 25 Feb 2020 13:53:46 +0200
+Message-ID: <CAFCwf11xWc3jZ-WFJeBXOPMrq=0AdYSVXbUg_djZ--s6J_KRew@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: Remove unused parse_cnt variable
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHByb3BlcnRpZXMgdG8gZ2V0IGdldCBtaXBpdHggY2FsaWJyYXRpb24gZGF0YS4NCg0KU2ln
-bmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0ICAg
-IHwgNSArKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21l
-ZGlhdGVrLGRzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0DQppbmRleCA3ODAyMDFkZGNkNWMuLjdmMTJlYjcy
-OTc5MSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L21lZGlhdGVrL21lZGlhdGVrLGRzaS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRzaS50eHQNCkBAIC0zNCw2
-ICszNCw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogLSAjcGh5LWNlbGxzOiBtdXN0IGJlIDww
-Pi4NCiANCiBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KKy0gbnZtZW0tY2VsbHM6IEEgcGhhbmRsZSB0
-byB0aGUgY2FsaWJyYXRpb24gZGF0YSBwcm92aWRlZCBieSBhIG52bWVtIGRldmljZS4gSWYNCisg
-ICAgICAgICAgICAgICB1bnNwZWNpZmllZCBkZWZhdWx0IHZhbHVlcyBzaGFsbCBiZSB1c2VkLg0K
-Ky0gbnZtZW0tY2VsbC1uYW1lczogU2hvdWxkIGJlICJjYWxpYnJhdGlvbi1kYXRhIg0KIC0gbWlw
-aXR4LWN1cnJlbnQtZHJpdmU6IGFkanVzdCBkcml2aW5nIGN1cnJlbnQsIHNob3VsZCBiZSAxIH4g
-MHhGDQogDQogRXhhbXBsZToNCkBAIC00NSw2ICs0OCw4IEBAIG1pcGlfdHgwOiBtaXBpLWRwaHlA
-MTAyMTUwMDAgew0KIAljbG9jay1vdXRwdXQtbmFtZXMgPSAibWlwaV90eDBfcGxsIjsNCiAJI2Ns
-b2NrLWNlbGxzID0gPDA+Ow0KIAkjcGh5LWNlbGxzID0gPDA+Ow0KKwludm1lbS1jZWxscz0gPCZt
-aXBpX3R4X2NhbGlicmF0aW9uPjsNCisJbnZtZW0tY2VsbC1uYW1lcyA9ICJjYWxpYnJhdGlvbi1k
-YXRhIjsNCiAJbWlwaXR4LWN1cnJlbnQtZHJpdmUgPSA8MHg4PjsNCiB9Ow0KIA0KLS0gDQoyLjIx
-LjANCg==
+On Tue, Feb 25, 2020 at 1:24 PM Tomer Tayar <ttayar@habana.ai> wrote:
+>
+> The "parse_cnt" variable is incremented while validating the CS chunks,
+> but it is actually not being used.
+>
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> ---
+>  drivers/misc/habanalabs/command_submission.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+> index 73ef0f9d758a..409276b6374d 100644
+> --- a/drivers/misc/habanalabs/command_submission.c
+> +++ b/drivers/misc/habanalabs/command_submission.c
+> @@ -509,7 +509,7 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __user *chunks,
+>         struct hl_cb *cb;
+>         bool int_queues_only = true;
+>         u32 size_to_copy;
+> -       int rc, i, parse_cnt;
+> +       int rc, i;
+>
+>         *cs_seq = ULLONG_MAX;
+>
+> @@ -549,7 +549,7 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __user *chunks,
+>         hl_debugfs_add_cs(cs);
+>
+>         /* Validate ALL the CS chunks before submitting the CS */
+> -       for (i = 0, parse_cnt = 0 ; i < num_chunks ; i++, parse_cnt++) {
+> +       for (i = 0 ; i < num_chunks ; i++) {
+>                 struct hl_cs_chunk *chunk = &cs_chunk_array[i];
+>                 enum hl_queue_type queue_type;
+>                 bool is_kernel_allocated_cb;
+> --
+> 2.17.1
+>
 
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Applied to -next
+Thanks,
+Oded
