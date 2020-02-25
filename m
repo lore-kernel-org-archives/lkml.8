@@ -2,197 +2,166 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98565C35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAE4C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638A924684
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C3D24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CjAlLRcC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfzMx3Oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgBYFQU (ORCPT
+        id S1728725AbgBYFQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:16:20 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38701 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBYFQT (ORCPT
+        Tue, 25 Feb 2020 00:16:50 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:32864 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgBYFQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:16:19 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d6so6298256pgn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:16:19 -0800 (PST)
+        Tue, 25 Feb 2020 00:16:50 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m7so641004pjs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 21:16:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=U6Wt/LenosPR0Sx0SmEySrtroNHk0FTBlW4IV6YiiMg=;
-        b=CjAlLRcClG0VLkuNyIO9/QTuQ1crb4nJN7Ei+88NEFieNYHXTldlqvWRyC3yHQUUo7
-         Wg/5YaAStuyQ1MJGta9daj7RlBnPIPJ3aReGwAgeNQpWUZdkQTfiKw7DNVpjaHnu4XyE
-         JhqVUYtujl/gVANQ91Gq143qIqyFwJLLxHKEI=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ka0sLhQPFaXTwv3tDELStRrEtg68nriJ9HVXgH82wMY=;
+        b=MfzMx3OoAyEtSqpOZ0WtdfDaIjNPNeuyzCbpqjIHCgRZgMdnb82+zNuqvO6REVU3Iz
+         o+3zenb5smKGh3pixYR+Th7xOVONXMP31NIJZl757/wtxGpCjkDfZ4NUgK1hIosRnjwv
+         MHyju43+Ea0LICvpxU2VsKsh0K5P+E5xBE/ehqeDUd06hWz3g+VuMRdGemx5p9pnMFhD
+         /1599Z4dFSIqEqyA5RkpiSdFKbiDLUMeavkbuhE6aWYllSUgVgsqCHV5ML0pToE/OKAI
+         UNtCr8UEjxEPce8u3sf5Lk0XrmZy6+7fHf4CLiFctxKfHk+/zeXH/1VF6oRpWHxlgtzc
+         oU/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=U6Wt/LenosPR0Sx0SmEySrtroNHk0FTBlW4IV6YiiMg=;
-        b=aNwyx2TvKf7IY6Uldo74qdBPHXjAAjeJdG0fBE0Fi7KwRprUMYAzpaiuW79V5Y5hR/
-         jrdR79YI1cHf31R7h6VxCFCl1Z+wi5G1FOJGe18DtUgsZWW72BQZYvwz1x4UyvDwiZ5B
-         4gzveNTavHOIVJv+LSolavg3RXLNVTrt305w9maRKYOh2RJCBiA4XnWvYKVAVtsEmY1r
-         v9I4znBTQDYMcmh6vwGQkDoU/B1IuSDJ3Z0P6Mv0D9QSr3YSnuKVtACwY2rZIidoHKH6
-         F9wnpUfNzrOhDhF5OCFQF8nqNNSQxvGnbDGl/pqvOrmUYLrhRM5A0XeAfILY3++E2hLz
-         VsAQ==
-X-Gm-Message-State: APjAAAWM0ihFCfVrpwUqxuUFcG22scbFXKtCI/MeacSWlys2Hv6o64rq
-        oTD+KEYra0glHWPCkPVX1Z8a9A==
-X-Google-Smtp-Source: APXvYqxbtsVYkZjGvUrOjcRDv596Y0cYc435LUeOQfjMG0mCl0eJzQVykAP7z8nr0Sxk5qefm6bfOw==
-X-Received: by 2002:a63:8e44:: with SMTP id k65mr11985018pge.452.1582607778850;
-        Mon, 24 Feb 2020 21:16:18 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r13sm1169792pjp.14.2020.02.24.21.16.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ka0sLhQPFaXTwv3tDELStRrEtg68nriJ9HVXgH82wMY=;
+        b=HOhckhHc8e6Bv3/bNX7RdnQnnZWbGJNQPZUeVIiM7vY99UsuxIglYeVhXf5CjKcXDD
+         njQ3LOO6nQO8o/PjdxO1XufgFXB77Bks5z9tqRuKNweCvzHCYYCJhzrhltsvzcfJ2SiB
+         eB4dV2dPzqxfeRK2f62H0wsk9mXkq5rceqVT9sp/FR//km2SeQH0ohjZulfda4FuX3mD
+         YurmazfTmmghaQExKEX37V5aUMNug4rTuAC8eO3bmJ0CfgS33kaSOuiWUjxHRDHT9woR
+         PmktfMFmCf/sXtfwxQoecPUnzmeeUgoszZ3Opy8AdcD1I6S4c1oUwVO0yiUq76wiZme8
+         vB1w==
+X-Gm-Message-State: APjAAAUkoqC4OqJJAba2mrftOKEaZN8kTEH/+qFz9w1O3xRyqs/4tW9I
+        2bmyvYuqxjX+whxegGLnlhqBeQ==
+X-Google-Smtp-Source: APXvYqwE3DS3Lo/dEPP82F1RYKX99PIFmYhZi/GdGxhG2n/gVblaUuZg64+xGY3KaryvIrqLQbTarw==
+X-Received: by 2002:a17:902:7048:: with SMTP id h8mr54903891plt.64.1582607808882;
+        Mon, 24 Feb 2020 21:16:48 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c184sm15092223pfa.39.2020.02.24.21.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 21:16:18 -0800 (PST)
-Date:   Mon, 24 Feb 2020 21:16:17 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: Remove debug info from kallsyms linking
-Message-ID: <202002242114.CBED7F1@keescook>
+        Mon, 24 Feb 2020 21:16:47 -0800 (PST)
+Date:   Mon, 24 Feb 2020 21:16:45 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     georgi.djakov@linaro.org
+Cc:     Sibi Sankar <sibis@codeaurora.org>, robh+dt@kernel.org,
+        evgreen@chromium.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 0/6]     Split SDM845 interconnect nodes and
+ consolidate RPMh support
+Message-ID: <20200225051645.GX3948@builder>
+References: <20200209183411.17195-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200209183411.17195-1-sibis@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
-time collecting and writing the dwarf sections to the temporary output
-files. kallsyms does not need this information, and leaving it off
-halves their linking time. This is especially noticeable without
-CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
-need those details.
+On Sun 09 Feb 10:34 PST 2020, Sibi Sankar wrote:
 
-Refactor the BTF and kallsyms generation stages slightly for more
-regularized temporary names. Skip debug during kallsyms links.
+Hi Georgi,
 
-For a full debug info build with BTF, my link time goes from 1m06s to
-0m54s, saving about 12 seconds, or 18%.
+Will you pick up the bindings and driver patches for v5.7? So that I can
+apply the dts patches.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+Regards,
+Bjorn
 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index dd484e92752e..ac569e197bfa 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -63,12 +63,18 @@ vmlinux_link()
- 	local lds="${objtree}/${KBUILD_LDS}"
- 	local output=${1}
- 	local objects
-+	local strip_debug
- 
- 	info LD ${output}
- 
- 	# skip output file argument
- 	shift
- 
-+	# The kallsyms linking does not need debug symbols included.
-+	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
-+		strip_debug=-Wl,--strip-debug
-+	fi
-+
- 	if [ "${SRCARCH}" != "um" ]; then
- 		objects="--whole-archive			\
- 			${KBUILD_VMLINUX_OBJS}			\
-@@ -79,6 +85,7 @@ vmlinux_link()
- 			${@}"
- 
- 		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
-+			${strip_debug#-Wl,}			\
- 			-o ${output}				\
- 			-T ${lds} ${objects}
- 	else
-@@ -91,6 +98,7 @@ vmlinux_link()
- 			${@}"
- 
- 		${CC} ${CFLAGS_vmlinux}				\
-+			${strip_debug}				\
- 			-o ${output}				\
- 			-Wl,-T,${lds}				\
- 			${objects}				\
-@@ -106,6 +114,8 @@ gen_btf()
- {
- 	local pahole_ver
- 	local bin_arch
-+	local bin_format
-+	local bin_file
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
- 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-@@ -118,8 +128,9 @@ gen_btf()
- 		return 1
- 	fi
- 
--	info "BTF" ${2}
- 	vmlinux_link ${1}
-+
-+	info "BTF" ${2}
- 	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
- 
- 	# dump .BTF section into raw binary file to link with final vmlinux
-@@ -127,11 +138,12 @@ gen_btf()
- 		cut -d, -f1 | cut -d' ' -f2)
- 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
- 		awk '{print $4}')
-+	bin_file=.btf.vmlinux.bin
- 	${OBJCOPY} --change-section-address .BTF=0 \
- 		--set-section-flags .BTF=alloc -O binary \
--		--only-section=.BTF ${1} .btf.vmlinux.bin
-+		--only-section=.BTF ${1} $bin_file
- 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
--		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
-+		--rename-section .data=.BTF $bin_file ${2}
- }
- 
- # Create ${2} .o file with all symbols from the ${1} object file
-@@ -166,8 +178,8 @@ kallsyms()
- kallsyms_step()
- {
- 	kallsymso_prev=${kallsymso}
--	kallsymso=.tmp_kallsyms${1}.o
--	kallsyms_vmlinux=.tmp_vmlinux${1}
-+	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
-+	kallsymso=${kallsyms_vmlinux}.o
- 
- 	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
- 	kallsyms ${kallsyms_vmlinux} ${kallsymso}
-@@ -190,7 +202,6 @@ cleanup()
- {
- 	rm -f .btf.*
- 	rm -f .tmp_System.map
--	rm -f .tmp_kallsyms*
- 	rm -f .tmp_vmlinux*
- 	rm -f System.map
- 	rm -f vmlinux
-@@ -257,9 +268,8 @@ tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
- 
- btf_vmlinux_bin_o=""
- if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
--	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
--		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
--	else
-+	btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-+	if ! gen_btf .tmp_vmlinux.btf $btf_vmlinux_bin_o ; then
- 		echo >&2 "Failed to generate BTF for vmlinux"
- 		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
- 		exit 1
--- 
-2.20.1
-
-
--- 
-Kees Cook
+> While there are no current consumers of the SDM845 interconnect device in
+> devicetree, take this opportunity to redefine the interconnect device nodes
+> as the previous definitions of using a single child node under the apps_rsc
+> device did not accurately capture the description of the hardware.
+> The Network-On-Chip (NoC) interconnect devices should be represented in a
+> manner akin to QCS404 platforms[1] where there is a separation of NoC devices
+> and its RPM/RPMh counterparts.
+> 
+> The bcm-voter devices are representing the RPMh devices that the interconnect
+> providers need to communicate with and there can be more than one instance of
+> the Bus Clock Manager (BCM) which can live under different instances of Resource
+> State Coordinators (RSC). There are display use cases where consumers may need
+> to target a different bcm-voter (Some display specific RSC) than the default,
+> and there needs to be a way to represent this connection in devicetree.
+> 
+> This patches series extends the discussions[2][3] involving the SDM845
+> interconnect bindings by adding accompanying driver implementations
+> using the split NoC devices. Some of the code used to support the SDM845
+> provider driver are refactored into common modules that can used by other
+> RPMh based interconnect providers such as SC7180[4]. This patch series also
+> updates existing sdm845 binding documentation to DT schema format using
+> json-schema.
+> 
+> v3:
+> - Picked up Robs R-b for patch 1 
+> - Fixup qcom,bcm-voter.yaml. comments (Rob)
+> - Use qcom,bcm-voter instead of SoC specific compatible for
+>   SDM845 and SC7180 (Odelu/Sibi)
+> - Fixup bindings check failures for qcom,sdm845.yaml
+> - Fixup the misc bugs. comments (Evan/Sibi)
+> - Fixup reg size for aggre1/2_noc
+> 
+> v2: 
+> - Reorganized dt-binding patches
+> - Fixed a bug that adds duplicate BCM node to voter (Georgi)
+> - Addressed misc. comments (Georgi)
+> 
+> v1: https://lkml.org/lkml/2019/12/16/15
+> 
+> [1]: https://lkml.org/lkml/2019/6/13/143
+> [2]: https://lkml.org/lkml/2019/7/19/1063
+> [3]: https://lkml.org/lkml/2019/10/16/1793
+> [4]: https://lkml.org/lkml/2019/11/26/389
+> 
+> David Dai (6):
+>   dt-bindings: interconnect: Convert qcom,sdm845 to DT schema
+>   dt-bindings: interconnect: Add YAML schemas for QCOM bcm-voter
+>   dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
+>   interconnect: qcom: Consolidate interconnect RPMh support
+>   interconnect: qcom: sdm845: Split qnodes into their respective NoCs
+>   arm64: dts: sdm845: Redefine interconnect provider DT nodes
+> 
+>  .../bindings/interconnect/qcom,bcm-voter.yaml |   45 +
+>  .../bindings/interconnect/qcom,sdm845.txt     |   24 -
+>  .../bindings/interconnect/qcom,sdm845.yaml    |   74 +
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   65 +-
+>  drivers/interconnect/qcom/Kconfig             |   13 +-
+>  drivers/interconnect/qcom/Makefile            |    4 +
+>  drivers/interconnect/qcom/bcm-voter.c         |  366 +++++
+>  drivers/interconnect/qcom/bcm-voter.h         |   27 +
+>  drivers/interconnect/qcom/icc-rpmh.c          |  147 ++
+>  drivers/interconnect/qcom/icc-rpmh.h          |  149 +++
+>  drivers/interconnect/qcom/sdm845.c            | 1185 +++++++----------
+>  .../dt-bindings/interconnect/qcom,sdm845.h    |  263 ++--
+>  12 files changed, 1516 insertions(+), 846 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.c
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.h
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.c
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.h
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
