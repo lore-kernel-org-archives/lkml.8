@@ -2,295 +2,279 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85739C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0926DC35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A2B21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67A421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgBYHiR (ORCPT
+        id S1729560AbgBYHiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:38:17 -0500
-Received: from mga02.intel.com ([134.134.136.20]:27315 "EHLO mga02.intel.com"
+        Tue, 25 Feb 2020 02:38:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55676 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbgBYHiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:38:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 23:38:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
-   d="scan'208";a="317001077"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 24 Feb 2020 23:38:16 -0800
-Received: from [10.226.38.25] (unknown [10.226.38.25])
-        by linux.intel.com (Postfix) with ESMTP id 9325558043A;
-        Mon, 24 Feb 2020 23:38:13 -0800 (PST)
-Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        simon.k.r.goldschmidt@gmail.com, Dinh Nguyen <dinguyen@kernel.org>,
-        tien.fong.chee@intel.com,
-        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
- <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
- <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
-Date:   Tue, 25 Feb 2020 15:38:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1725837AbgBYHiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:38:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 29611AD7B;
+        Tue, 25 Feb 2020 07:38:51 +0000 (UTC)
+Subject: Re: [PATCH RFC v3 2/6] drm/sprd: add Unisoc's drm kms master
+To:     tang pengchuan <kevin3.tang@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     mark.rutland@arm.com, Baolin Wang <baolin.wang@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        robh+dt@kernel.org, Orson Zhai <orsonzhai@gmail.com>
+References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com>
+ <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
+ <20200221213652.GD3456@ravnborg.org>
+ <CAFPSGXacMKTPrxk_FOrwrvH_XfmO3dYCCa_GoPCe_HUfQFPHtw@mail.gmail.com>
+ <20200222212713.GA30872@ravnborg.org>
+ <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <3acf15ff-6a41-ca13-e219-301fcef983fa@suse.de>
+Date:   Tue, 25 Feb 2020 08:38:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2
+Content-Type: multipart/mixed; boundary="FMsG9sLQC920eSt6ZJLnytyVsciYT0LhQ";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: tang pengchuan <kevin3.tang@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: mark.rutland@arm.com, Baolin Wang <baolin.wang@linaro.org>,
+ David Airlie <airlied@linux.ie>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>, robh+dt@kernel.org,
+ Orson Zhai <orsonzhai@gmail.com>
+Message-ID: <3acf15ff-6a41-ca13-e219-301fcef983fa@suse.de>
+Subject: Re: [PATCH RFC v3 2/6] drm/sprd: add Unisoc's drm kms master
+References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com>
+ <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
+ <20200221213652.GD3456@ravnborg.org>
+ <CAFPSGXacMKTPrxk_FOrwrvH_XfmO3dYCCa_GoPCe_HUfQFPHtw@mail.gmail.com>
+ <20200222212713.GA30872@ravnborg.org>
+ <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
+In-Reply-To: <CAFPSGXZWC7dASrVP3MTWS+oJjcwQEK0T+BLiwZ-cxk2OyeNZQw@mail.gmail.com>
 
-On 25/2/2020 2:41 PM, Vignesh Raghavendra wrote:
->
-> On 25/02/20 11:54 am, Ramuthevar, Vadivel MuruganX wrote:
->> Hi Rob,
->>
->>       Thank you for the review comments...
->>
->> On 24/2/2020 11:54 PM, Rob Herring wrote:
->>> On Tue, Feb 18, 2020 at 8:29 PM Ramuthevar,Vadivel MuruganX
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>> From: Ramuthevar Vadivel Murugan
->>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>> Cc the DT list if you want this reviewed.
->> Sorry,  next patch will add DT list in CC.
->>>> Add dt-bindings documentation for Cadence-QSPI controller to support
->>>> spi based flash memories.
->>>>
->>>> Signed-off-by: Ramuthevar Vadivel Murugan
->>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> ---
->>>>    .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147
->>>> +++++++++++++++++++++
->>>>    1 file changed, 147 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>>> b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>>> new file mode 100644
->>>> index 000000000000..1a4d6e8d0d0b
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>>> @@ -0,0 +1,147 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
->>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>> +
->>>> +title: Cadence QSPI Flash Controller support
->>>> +
->>>> +maintainers:
->>>> +  - Ramuthevar Vadivel Murugan
->>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> +
->>>> +allOf:
->>>> +  - $ref: "spi-controller.yaml#"
->>>> +
->>>> +description: |
->>>> +  Binding Documentation for Cadence QSPI controller,This controller is
->>>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
->>>> +  has been tested On Intel's LGM SoC.
->>>> +
->>>> +  - compatible : should be one of the following:
->>>> +        Generic default - "cdns,qspi-nor".
->>>> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
->>>> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
->>>> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    oneOf:
->>>> +      - items:
->>>> +        - enum:
->>>> +           - ti,k2g-qspi
->>>> +        - const: cdns,qspi-nor
->>>> +
->>>> +      - items:
->>>> +        - enum:
->>>> +           - ti,am654-ospi
->>>> +        - const: cdns,qspi-nor
->>>> +
->>>> +      - items:
->>>> +        - enum:
->>>> +           - intel,lgm-qspi
->>>> +        - const: cdns,qspi-nor
->>>> +
->>>> +      - items:
->>>> +        - const: cdns,qspi-nor
->>>> +
->>>> +  reg:
->>>> +    maxItems: 2
->>>> +
->>>> +  interrupts:
->>>> +    maxItems: 1
->>>> +
->>>> +  clocks:
->>>> +    maxItems: 1
->>>> +
->>>> +  cdns,fifo-depth:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description:
->>>> +      Size of the data FIFO in words.
->>> A 4GB fifo is valid? Add some constraints.
->> 128 is valid, will update.
-> Nope, the width of this field is 8bits -> 256 bytes 
+--FMsG9sLQC920eSt6ZJLnytyVsciYT0LhQ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-correct me if I am wrong, the width of this field is 4bits -> 128 bytes 
-(based on QUAD mode) .
+Hi
 
->>>> +
->>>> +  cdns,fifo-width:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description:
->>>> +      Bus width of the data FIFO in bytes.
->>> Add some constraints.
->> 4 is valid , will fix it.
->>>> +
->>>> +  cdns,trigger-address:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description:
->>>> +      32-bit indirect AHB trigger address.
->>>> +
->>>> +  cdns,rclk-en:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description: |
->>>> +      Flag to indicate that QSPI return clock is used to latch the
->>>> read data
->>>> +      rather than the QSPI clock. Make sure that QSPI return clock
->>>> is populated
->>>> +      on the board before using this property.
->>>> +
->>>> +# subnode's properties
->>>> +patternProperties:
->>>> +  "^.*@[0-9a-fA-F]+$":
->>>> +    type: object
->>>> +    description:
->>>> +      flash device uses the subnodes below defined properties.
->>>> +
->>>> +  cdns,read-delay:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description:
->>>> +      Delay for read capture logic, in clock cycles.
->>> 4 billion clock delay is valid?
->> based on the ref_clk , will add it.
->>>> +
->>>> +  cdns,tshsl-ns:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> You can drop this, anything with a standard unit suffix already has a
->>> type.
->> sure , will drop it.
->>>> +    description: |
->>>> +      Delay in nanoseconds for the length that the master mode chip
->>>> select
->>>> +      outputs are de-asserted between transactions.
->>> Constraints...?
->> 50ns, will add it.
->>
-> This really depends on the input clk:
->
-> Clock Delay for Chip Select Deassert:
->
-> Delay in master reference clocks for the length that the master mode
->
-> chip select outputs are de-asserted between transactions The
->
-> minimum delay is always SCLK period to ensure the chip select is
->
-> never re-asserted within an SCLK period.
->
-> I don't see a easy way of verifying constraints in yaml.
->
-> Same applies for below 3 properties as well.
+Am 23.02.20 um 05:26 schrieb tang pengchuan:
+>=20
+>=20
+> On Sun, Feb 23, 2020 at 5:27 AM Sam Ravnborg <sam@ravnborg.org
+> <mailto:sam@ravnborg.org>> wrote:
+>=20
+>     Hi Kevin/tang.
+>=20
+>     Thanks for the quick and detailed feedback.
+>     Your questions are addressed below.
+>=20
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 Sam
+>=20
+>=20
+>     > > > +static int sprd_drm_bind(struct device *dev)
+>     > > > +{
+>     > > > +=C2=A0 =C2=A0 =C2=A0struct drm_device *drm;
+>     > > > +=C2=A0 =C2=A0 =C2=A0struct sprd_drm *sprd;
+>     > > > +=C2=A0 =C2=A0 =C2=A0int err;
+>     > > > +
+>     > > > +=C2=A0 =C2=A0 =C2=A0drm =3D drm_dev_alloc(&sprd_drm_drv, dev=
+);
+>     > > > +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(drm))
+>     > > > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_E=
+RR(drm);
+>     > > You should embed drm_device in struct sprd_drm.
+>     > > See example code in drm/drm_drv.c
+>     > >
+>     > > This is what modern drm drivers do.
+>     > >
+>     > > I *think* you can drop the component framework if you do this.
+>     > >
+>     > I have read it(drm/drm_drv.c) carefully, if drop the component
+>     framework,
+>     > the whole our drm driver maybe need to redesign, so i still want
+>     to keep
+>     > current design.
+>     OK, fine.
+>=20
+>     > > > +=C2=A0 =C2=A0 =C2=A0sprd_drm_mode_config_init(drm);
+>     > > > +
+>     > > > +=C2=A0 =C2=A0 =C2=A0/* bind and init sub drivers */
+>     > > > +=C2=A0 =C2=A0 =C2=A0err =3D component_bind_all(drm->dev, drm=
+);
+>     > > > +=C2=A0 =C2=A0 =C2=A0if (err) {
+>     > > > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0DRM_ERROR("f=
+ailed to bind all component.\n");
+>     > > > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err_dc_=
+cleanup;
+>     > > > +=C2=A0 =C2=A0 =C2=A0}
+>     > > When you have a drm_device - which you do here.
+>     > > Then please use drm_err() and friends for error messages.
+>     > > Please verify all uses of DRM_XXX
+>     > >
+>     >=C2=A0 =C2=A0modern drm drivers need drm_xxx to replace DRM_XXX?
+>     Yes, use of DRM_XXX is deprecated - when you have a drm_device.
+>=20
+>     > >
+>     > > > +=C2=A0 =C2=A0 =C2=A0/* with irq_enabled =3D true, we can use=
+ the vblank
+>     feature. */
+>     > > > +=C2=A0 =C2=A0 =C2=A0drm->irq_enabled =3D true;
+>     > > I cannot see any irq being installed. This looks wrong.
+>     > >
+>     > Our display controller isr is been register on crtc
+>     driver(sprd_dpu.c), not
+>     > here.
+>=20
+>     I think you just need to move this to next patch and then it is fin=
+e.
+>=20
+> Here is the advice given by Thomas Zimmermann, similar to the advice yo=
+u
+> gave.
+> I have given thomas feedback about my questions, maybe thomas didn't se=
+e
+> my email, so there is no reply.
 
-Thank you vignesh for  the detailed explanation.
+I have been busy last week. Sorry for not getting back to you.
 
-Regards
-Vadivel
-> Regards
-> Vignesh
->
->> Regards
->> Vadivel
->>>> +
->>>> +  cdns,tsd2d-ns:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description: |
->>>> +      Delay in nanoseconds between one chip select being de-activated
->>>> +      and the activation of another.
->>>> +
->>>> +  cdns,tchsh-ns:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description: |
->>>> +      Delay in nanoseconds between last bit of current transaction and
->>>> +      deasserting the device chip select (qspi_n_ss_out).
->>>> +
->>>> +  cdns,tslch-ns:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description: |
->>>> +      Delay in nanoseconds between setting qspi_n_ss_out low and
->>>> +      first bit transfer.
->>>> +
->>>> +required:
->>>> +  - compatible
->>>> +  - reg
->>>> +  - interrupts
->>>> +  - clocks
->>>> +  - cdns,fifo-depth
->>>> +  - cdns,fifo-width
->>>> +  - cdns,trigger-address
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    qspi: spi@ff705000 {
->>>> +          compatible = "cdns,qspi-nor";
->>>> +          #address-cells = <1>;
->>>> +          #size-cells = <0>;
->>>> +          reg = <0xff705000 0x1000>,
->>>> +                <0xffa00000 0x1000>;
->>>> +          interrupts = <0 151 4>;
->>>> +          clocks = <&qspi_clk>;
->>>> +          cdns,fifo-depth = <128>;
->>>> +          cdns,fifo-width = <4>;
->>>> +          cdns,trigger-address = <0x00000000>;
->>>> +
->>>> +          flash0: n25q00@0 {
->>>> +              compatible = "jedec,spi-nor";
->>>> +              reg = <0x0>;
->>>> +              cdns,read-delay = <4>;
->>>> +              cdns,tshsl-ns = <50>;
->>>> +              cdns,tsd2d-ns = <50>;
->>>> +              cdns,tchsh-ns = <4>;
->>>> +              cdns,tslch-ns = <4>;
->>>> +          };
->>>> +    };
->>>> +
->>>> -- 
->>>> 2.11.0
->>>>
+>=20
+> But I've always been confused, because irq is initialized in drm driver=
+
+> for other guys, why not for me?
+
+Do you have an example?
+
+Best regards
+Thomas
+
+> Can you help to tell the reason in detail, looking forward to your answ=
+ers.
+>=20
+> Thomas's suggestion=EF=BC=9A
+> -----------------------------------------------------------------------=
+--------------------
+>=20
+> This line indicates the problem's design. The irq is initialized in the=
+
+> sub-device code, but the device state is set here. Instead both should
+> be set in the same place.
+>=20
+>> +
+>> +=C2=A0 =C2=A0 =C2=A0/* reset all the states of crtc/plane/encoder/con=
+nector */
+>> +=C2=A0 =C2=A0 =C2=A0drm_mode_config_reset(drm);
+>> +
+>> +=C2=A0 =C2=A0 =C2=A0/* init kms poll for handling hpd */
+>> +=C2=A0 =C2=A0 =C2=A0drm_kms_helper_poll_init(drm);
+>=20
+> Most of this function's code should be moved into the sub-device bind
+> function.
+>=20
+> Here, maybe do:
+>=20
+> =C2=A0* allocate device structures
+> =C2=A0* call component_bind_all()
+> =C2=A0* on success, register device
+>=20
+> The sub-device function should then do
+>=20
+> =C2=A0* init modesetting, crtc, planes, etc.
+> =C2=A0* do drm_mode_config_reset()
+> =C2=A0* init vblanking
+> =C2=A0* init the irq
+> =C2=A0* do drm_kms_helper_poll_init()
+>=20
+> roughtly in that order. It makes sense to call drm_vblank_init() after
+> drm_mode_config_reset(), as vblanking uses some of the mode-config fiel=
+ds.=C2=A0
+> -----------------------------------------------------------------------=
+-------------------------------
+>=20
+>=20
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 Sam
+>=20
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--FMsG9sLQC920eSt6ZJLnytyVsciYT0LhQ--
+
+--QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5UzwcACgkQaA3BHVML
+eiMf5wf8DivhAr6LFIIlZXxbo6hEtUbn4XxT+xFzFM4rPbYbJjCj9VC+CST8sq4P
+HLLVDYxngnpIclwUF9UlprIBpXNCuZobb+koJXkKIBEP17+imX3n7oc8Tqq+yOyY
+Wb45hWUwOtM4uAS4ULrIppnGPOye8GLCVJpc+XbrLSVlglI/OCkBrxGuwQ0VM/Ck
+fe0/i7H0Eoq+/Jrll+abcxUF3fYrbeVG62PPIzfVh5d3hu0cElMPJwLngtYq7/0x
+IRW5S5PcAP6XUTC2kpfZyCjc9++B3vIkYcy0Hpq4j7HaOkXTuEn24ipBNkR32s2U
+g4HMCrbA4NKmiSrYloLnID3DGZYlhw==
+=fwAf
+-----END PGP SIGNATURE-----
+
+--QNt4NcLl3wKtObHjm3OlGfiLZqiXIcCI2--
