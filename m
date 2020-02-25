@@ -2,117 +2,127 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0A3C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB57C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C81E20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D802082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:58:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qtkWQ55A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbgBYQ6G (ORCPT
+        id S1731261AbgBYQ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:58:06 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:42138 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgBYQ6F (ORCPT
+        Tue, 25 Feb 2020 11:58:25 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:27966 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731215AbgBYQ6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:58:05 -0500
-Received: from mail-pl1-f198.google.com ([209.85.214.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1j6dX0-0000Pe-PI
-        for linux-kernel@vger.kernel.org; Tue, 25 Feb 2020 16:58:02 +0000
-Received: by mail-pl1-f198.google.com with SMTP id 91so7778952plf.23
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 08:58:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Tmq5/QscEAlIKXHg+Ug+knf6u6cqRVBxVv3NqJuFm50=;
-        b=boJLdgBANprUxgXis8kUw+nd4thrUvYk8anHyxVODTwYOVjvw4/pTnbqPNW6cZwPPk
-         ijU6hlUx8nLvvwQ7X+KJOFZ98fynwk/nIcnwhBinqI6eIqtKicl5UpdlN5Xp2IejQ+SQ
-         DptP340EAf9NWzNJSFBBj1kR7OcFSu28CCYP5BYTXvNkp2HmlT64MRyNumQwFjGFKYRr
-         BCWk+OpO0v2kH9HroUDQowvSH8YThJENduNr3IR3+mw8Yb5QhmxCVKmfV6g0LauCtUrl
-         d12umRTudm+511lmPGuXiX35FNnkArYGLJ52JBTFsuVxxEoD8jZUAjB9DRK3xjWoWa08
-         GnHg==
-X-Gm-Message-State: APjAAAWy1PX4DXZaRDbCQT+83UP2dlY5FXusv6e8xkJxFAHL0qmXlVZs
-        6Amaz/1/O55MTaq4XcnYPSYeYXYjiwcWJZgQlR7VCUE32DIX6+7MpdOOMZ9X3ZdSH3tq3F7ikUK
-        VC3GoSNtONx9qQZE9Vh++Bbp9kHvXnJ6VUp/PTxkg
-X-Received: by 2002:a63:7d46:: with SMTP id m6mr56273069pgn.38.1582649881488;
-        Tue, 25 Feb 2020 08:58:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzDCUsO23WLo7Kej+kPuOKSIr5NpcgPj7a/xYcGbZxHSW4SNQ4GSRF97BOQStSuVJhPvD3Zbg==
-X-Received: by 2002:a63:7d46:: with SMTP id m6mr56273040pgn.38.1582649881092;
-        Tue, 25 Feb 2020 08:58:01 -0800 (PST)
-Received: from localhost.localdomain (223-137-37-84.emome-ip.hinet.net. [223.137.37.84])
-        by smtp.gmail.com with ESMTPSA id i22sm3558212pgi.69.2020.02.25.08.57.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 08:58:00 -0800 (PST)
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-To:     linux-kselftest@vger.kernel.org
-Cc:     shuah@kernel.org, sboyd@kernel.org, tglx@linutronix.de,
-        john.stultz@linaro.org, joe.lawrence@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCHv2] selftests/timers: Turn off timeout setting
-Date:   Wed, 26 Feb 2020 00:57:49 +0800
-Message-Id: <20200225165749.6399-1-po-hsu.lin@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Feb 2020 11:58:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582649904; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=gW7KKTafC5UnPh4r9NHeJkvVzV8LOu3rxJ2WBv0Sl28=; b=qtkWQ55A9V3DKIK8tvAa3Un6VEROqkM46IrX+QSavT3yQmaU7PT3Osw7mfFr5TVut0izI0E4
+ Xjii0vCCBEiiD7Ch7ArF8jtbJUd8G0YgLb5SWVT7KAvEdefU5yiHxAHiGNJaOjjcxPmk4cYD
+ VSUXF5fVsuxiISkrqkJHX2Ec6J8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e55522f.7fb60110b7d8-smtp-out-n01;
+ Tue, 25 Feb 2020 16:58:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 655EFC447A3; Tue, 25 Feb 2020 16:58:23 +0000 (UTC)
+Received: from [10.71.154.194] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8146EC43383;
+        Tue, 25 Feb 2020 16:58:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8146EC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v2 2/2] scsi: ufs-qcom: Apply QUIRK_HOST_TACTIVATE for WDC
+ UFS devices
+To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1582517363-11536-1-git-send-email-cang@codeaurora.org>
+ <1582517363-11536-3-git-send-email-cang@codeaurora.org>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <3fd54f3f-c580-71b4-1e05-ba9802dff995@codeaurora.org>
+Date:   Tue, 25 Feb 2020 08:58:22 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1582517363-11536-3-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following 4 tests in timers can take longer than the default 45
-seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
-Add 45 second timeout per test) to run:
-  * nsleep-lat - 2m7.350s
-  * set-timer-lat - 2m0.66s
-  * inconsistency-check - 1m45.074s
-  * raw_skew - 2m0.013s
+On 2/23/2020 8:09 PM, Can Guo wrote:
+> Western Digital UFS devices require host's PA_TACTIVATE to be lower than
+> device's PA_TACTIVATE, otherwise it may get stuck during hibern8 sequence.
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
 
-Thus they will be marked as failed with the current 45s setting:
-  not ok 3 selftests: timers: nsleep-lat # TIMEOUT
-  not ok 4 selftests: timers: set-timer-lat # TIMEOUT
-  not ok 6 selftests: timers: inconsistency-check # TIMEOUT
-  not ok 7 selftests: timers: raw_skew # TIMEOUT
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-Disable the timeout setting for timers can make these tests finish
-properly:
-  ok 3 selftests: timers: nsleep-lat
-  ok 4 selftests: timers: set-timer-lat
-  ok 6 selftests: timers: inconsistency-check
-  ok 7 selftests: timers: raw_skew
+>   drivers/scsi/ufs/ufs-qcom.c   | 3 +++
+>   drivers/scsi/ufs/ufs_quirks.h | 1 +
+>   2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index c69c29a1c..4caa57f 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -956,6 +956,9 @@ static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba)
+>   	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME)
+>   		err = ufs_qcom_quirk_host_pa_saveconfigtime(hba);
+>   
+> +	if (hba->dev_info.wmanufacturerid == UFS_VENDOR_WDC)
+> +		hba->dev_quirks |= UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE;
+> +
+>   	return err;
+>   }
+>   
+> diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
+> index d0ab147..df7a1e6 100644
+> --- a/drivers/scsi/ufs/ufs_quirks.h
+> +++ b/drivers/scsi/ufs/ufs_quirks.h
+> @@ -15,6 +15,7 @@
+>   #define UFS_VENDOR_TOSHIBA     0x198
+>   #define UFS_VENDOR_SAMSUNG     0x1CE
+>   #define UFS_VENDOR_SKHYNIX     0x1AD
+> +#define UFS_VENDOR_WDC         0x145
+>   
+>   /**
+>    * ufs_dev_fix - ufs device quirk info
+> 
 
-https://bugs.launchpad.net/bugs/1864626
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
----
- tools/testing/selftests/timers/Makefile | 1 +
- tools/testing/selftests/timers/settings | 1 +
- 2 files changed, 2 insertions(+)
- create mode 100644 tools/testing/selftests/timers/settings
 
-diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
-index 7656c7c..0e73a16 100644
---- a/tools/testing/selftests/timers/Makefile
-+++ b/tools/testing/selftests/timers/Makefile
-@@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
- 
- TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
- 
-+TEST_FILES := settings
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/timers/settings
-@@ -0,0 +1 @@
-+timeout=0
 -- 
-2.7.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
