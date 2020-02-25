@@ -2,161 +2,228 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A85DC35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43CFC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0AB2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F73F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BgKA2hJa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h008BtY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgBYNh2 (ORCPT
+        id S1730111AbgBYNiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:37:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40678 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgBYNh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:37:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1B551AD3C;
-        Tue, 25 Feb 2020 13:37:26 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 14:37:20 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200225133720.GA6709@blackbody.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200221171256.GB23476@blackbody.suse.cz>
- <20200221185839.GB70967@cmpxchg.org>
+        Tue, 25 Feb 2020 08:38:23 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:54805 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729436AbgBYNiW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:38:22 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2E0387327;
+        Tue, 25 Feb 2020 08:38:19 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 25 Feb 2020 08:38:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=XHaUvlijZEsg3EFrKcfQygP/UZp
+        K1ifb+/vCmhWP8Pw=; b=BgKA2hJaGKTWOjrTVF03BtGXWT9oHUx+Jj47WMj3UXV
+        jdPknS2fUGKj/K4kvHW6TXNO1/ZKn81719sVWU9UptRjlItOLH/RbrLdM1tfpnib
+        5rSEaeHXIsSg1L4ubTzdYcafLcXkEfxsMXp3/ZmSmAaSEEpW/sCkGmobb50ZCp7P
+        2xQ/XJCQ3gSiGL6cMod2zlZlMB6ljd2VJRDsP6gcSaV7sYUYTXwXo5S1gUXfYp9w
+        dJRvANgOmFBXKn87Xd8oJ16pSP1OJnxVv7mQnaWeKI2TOUACz0g7q2I2k1Qoe+mR
+        8VNtLoKvGMHuNdUp+gBaHQiFRLXdhjY2SCfDsWqKBPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XHaUvl
+        ijZEsg3EFrKcfQygP/UZpK1ifb+/vCmhWP8Pw=; b=h008BtY19KbCXG9bwTtPsY
+        fLalGqCbFUpPeXqp7DtGedL7MmxOH8e6GWa2KstF8Xr2P9qDi8JEQPsZ+r64Mz6L
+        rkGs7W58pePKAXhS37CLRUWKW4Xfh8MNP9pcspIhV7iC3SUkN/0OAhGn5De5f6WB
+        oBCgA1j68pvOaf/VX8WB9MESenvkfdHqxPEYQ2dCb/O8wBWxN0J+DcD5huB9iiXJ
+        /mV5HICdHpFoFE/uLjAxDhHT6z8BqTi6zzLHJw8Nwqvi0GrDKJJGPfS7/AX0yzlu
+        FVxwpwdaKO+qU8gMpPN4/CGNtQKii7g99qyCT0TwB8vZR2ijn9UVs7bG52fl814A
+        ==
+X-ME-Sender: <xms:SSNVXj106x4HTh1FwKiOrawGvpwvbaNBW0snEiQJ5aSAWUtgE8XgGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledvgdehfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epkhgvrhhnvghltghirdhorhhgpdhkvghrnhgvlhdrohhrghenucfkphepledtrdekledr
+    ieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:SSNVXvku2TyTh66yP6HJEp_Iafm9x906fULQ8P_OfAIErlE8Js2yBQ>
+    <xmx:SSNVXmip_uEcN6WEJC3h0XX4P3y76diGaoYRkVmiLIaY_IB-AFTDQw>
+    <xmx:SSNVXuTe-Cglgsrp1bYJHXTe210gaLtqt3Sx8Mx7Ct6n7Y-KAZqkJQ>
+    <xmx:SyNVXnfV79h51ErPZzTMCkle-6B6MB3HKgLlw5DyLTJi7kVR0V4c-g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 89362328005D;
+        Tue, 25 Feb 2020 08:38:17 -0500 (EST)
+Date:   Tue, 25 Feb 2020 14:38:15 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>, broonie@kernel.org,
+        tomeu.vizoso@collabora.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        enric.balletbo@collabora.com, khilman@baylibre.com,
+        mgalka@collabora.com, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: next/master bisection: baseline.login on
+ sun8i-h2-plus-orangepi-zero
+Message-ID: <20200225133815.fjc6apts3ns5zcm5@gilmour.lan>
+References: <5e4b4889.1c69fb81.bc072.65a9@mx.google.com>
+ <50f9ce8b-c303-3b25-313b-cfb62d7e8735@collabora.com>
+ <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+        protocol="application/pgp-signature"; boundary="36i66r5gn7suledg"
 Content-Disposition: inline
-In-Reply-To: <20200221185839.GB70967@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---SUOF0GtieIMvvwua
+--36i66r5gn7suledg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello.
+On Wed, Feb 19, 2020 at 03:49:47PM -0800, Stephen Boyd wrote:
+> Adding some Allwinner folks. Presumably there is some sort of clk that
+> is failing to calculate a phase when it gets registered. Maybe that's
+> because the parent isn't registered yet?
 
-On Fri, Feb 21, 2020 at 01:58:39PM -0500, Johannes Weiner <hannes@cmpxchg.o=
-rg> wrote:
-> When you set task's and logger's memory.low to "max" or 10G or any
-> bogus number like this, a limit reclaim in job treats this as origin
-> protection and tries hard to avoid reclaiming anything in either of
-> the two cgroups.
-What do you mean by origin protection? (I'm starting to see some
-misunderstanding here, c.f. my remark regarding the parent=3D=3Droot
-condition in the other patch [1]).
+It's simpler than that :)
 
-> memory.events::low skyrockets even though no intended
-> protection was violated, we'll have reclaim latencies (especially when
-> there are a few dying cgroups accumluated in subtree).
-Hopefully, I see where are you coming from. There would be no (false)
-low notifications if the elow was calculated all they way top-down from
-the real root. Would such calculation be the way to go?
+> Quoting Guillaume Tucker (2020-02-17 23:45:41)
+> > Hi Stephen,
+> >
+> > Please see the bisection report below about a boot failure.
+> >
+> > Reports aren't automatically sent to the public while we're
+> > trialing new bisection features on kernelci.org but this one
+> > looks valid.
+> >
+> > There's nothing in the serial console log, probably because it's
+> > crashing too early during boot.  I'm not sure if other platforms
+> > on kernelci.org were hit by this in the same way, it's tricky to
+> > tell partly because there is no output.  It should possible to
+> > run it again with earlyprintk enabled in BayLibre's test lab
+> > though.
+> >
+> > Thanks,
+> > Guillaume
+> >
+> >
+> > On 18/02/2020 02:14, kernelci.org bot wrote:
+> > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > > * This automated bisection report was sent to you on the basis  *
+> > > * that you may be involved with the breaking commit it has      *
+> > > * found.  No manual investigation has been done to verify it,   *
+> > > * and the root cause of the problem may be somewhere else.      *
+> > > *                                                               *
+> > > * If you do send a fix, please include this trailer:            *
+> > > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> > > *                                                               *
+> > > * Hope this helps!                                              *
+> > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > >
+> > > next/master bisection: baseline.login on sun8i-h2-plus-orangepi-zero
+> > >
+> > > Summary:
+> > >   Start:      c25a951c50dc Add linux-next specific files for 20200217
+> > >   Plain log:  https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.txt
+> > >   HTML log:   https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.html
+> > >   Result:     2760878662a2 clk: Bail out when calculating phase fails during clk registration
+> > >
+> > > Checks:
+> > >   revert:     PASS
+> > >   verify:     PASS
+> > >
+> > > Parameters:
+> > >   Tree:       next
+> > >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > >   Branch:     master
+> > >   Target:     sun8i-h2-plus-orangepi-zero
+> > >   CPU arch:   arm
+> > >   Lab:        lab-baylibre
+> > >   Compiler:   gcc-8
+> > >   Config:     multi_v7_defconfig
+> > >   Test case:  baseline.login
+> > >
+> > > Breaking commit found:
+> > >
+> > > -------------------------------------------------------------------------------
+> > > commit 2760878662a290ac57cff8a5a8d8bda8f4dddc37
+> > > Author: Stephen Boyd <sboyd@kernel.org>
+> > > Date:   Wed Feb 5 15:28:02 2020 -0800
+> > >
+> > >     clk: Bail out when calculating phase fails during clk registration
+> > >
+> > >     Bail out of clk registration if we fail to get the phase for a clk that
+> > >     has a clk_ops::get_phase() callback. Print a warning too so that driver
+> > >     authors can easily figure out that some clk is unable to read back phase
+> > >     information at boot.
+> > >
+> > >     Cc: Douglas Anderson <dianders@chromium.org>
+> > >     Cc: Heiko Stuebner <heiko@sntech.de>
+> > >     Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
+> > >     Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > >     Link: https://lkml.kernel.org/r/20200205232802.29184-5-sboyd@kernel.org
+> > >     Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+> > >
+> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > index dc8bdfbd6a0c..ed1797857bae 100644
+> > > --- a/drivers/clk/clk.c
+> > > +++ b/drivers/clk/clk.c
+> > > @@ -3457,7 +3457,12 @@ static int __clk_core_init(struct clk_core *core)
+> > >        * Since a phase is by definition relative to its parent, just
+> > >        * query the current clock phase, or just assume it's in phase.
+> > >        */
+> > > -     clk_core_get_phase(core);
+> > > +     ret = clk_core_get_phase(core);
+> > > +     if (ret < 0) {
+> > > +             pr_warn("%s: Failed to get phase for clk '%s'\n", __func__,
+> > > +                     core->name);
+> > > +             goto out;
+> > > +     }
 
-> that job can't possibly *know* about the top-level host
-> protection that lies beyond the delegation point and outside its own
-> namespace,
-Yes, I agree.
+The thing is, clk_core_get_phase actually returns the phase on success :)
 
-> and that it needs to propagate protection against rpm upgrades into
-> its own leaf groups for each tasklet and component.
-If a job wants to use concrete protection than it sets it, if it wants
-to use protection from above, then it can express it with the infinity
-(after changing the effective calculation I described above).
+So, when you actually have a phase returned, and not an error, you end
+up with a positive, non-zero, value for ret.
 
-Now, you may argue that the infinity would be nonsensical if it's not a
-subordinate job. Simplest approach would be likely to introduce the
-special "inherit" value (such a literal name may be misleading as it
-would be also "dont-care").
+And since it's the latest assignment of that value, and that we return
+ret all the time, even on success, we end up returning that positive,
+non-zero value to __clk_register, which in turn tests whether it's
+non-zero for success (it's not), and then proceeds to garbage collect
+everything.
 
-> Again, in practice we have found this to be totally unmanageable and
-> routinely first forgot and then had trouble hacking the propagation
-> into random jobs that create their own groups.
-I've been bitten by this as well. However, the protection defaults to
-off and I find it this matches the general rule that kernel provides the
-mechanism and user(space) the policy.
+I guess we're just the odd ones actually returning non-zero phases at
+init time and in kernelci.
 
-> And when you add new hardware configurations, you cannot just make a
-> top-level change in the host config, you have to update all the job
-> specs of workloads running in the fleet.
-(I acknowledge the current mechanism lacks an explicit way to express
-the inherit/dont-care value.)
+I'll send a patch
 
+Maxime
 
-> My patch brings memory configuration in line with other cgroup2
-> controllers.
-Other controllers mostly provide the limit or weight controls, I'd say
-protection semantics is specific only to the memory controller so
-far [2]. I don't think (at least by now) it can be aligned as the weight
-or limit semantics.
-
-> I've made the case why it's not a supported usecase, and why it is a
-> meaningless configuration in practice due to the way other controllers
-> already behave.
-I see how your reasoning works for limits (you set memory limit and you
-need to control io/cpu too to maintain intended isolation). I'm confused
-why having a scapegoat (or donor) sibling for protection should not be
-supported or how it breaks protection for others if not combined with
-io/cpu controllers. Feel free to point me to the message if I overlooked
-it.
-
-> I think at this point in the discussion, the only thing I can do is
-> remind you=20
-I think there is different perception on both sides because of unclear
-definitions, so I seek to clarify that.
-
-> that the behavior I'm introducing is gated behind a mount
-> option that nobody is forced to enable if they insist on disagreeing
-> against all evidence to the contrary.
-Sure, but I think it's better to (try reaching|reach) a consensus than
-to introduce split behavior (maintenance, debugging).
-
-Thanks,
-Michal
-
-[1] https://lore.kernel.org/lkml/20200221171024.GA23476@blackbody.suse.cz/
-[2] I admit I didn't look into io.latency that much and IIRC
-    cpu.uclamp.{min,max} don't have the overcommit issue.
-
---SUOF0GtieIMvvwua
+--36i66r5gn7suledg
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl5VIwwACgkQia1+riC5
-qSg1Fw//bVszZ/T8JtDrhpquRDNMB5s1WtL4D0yBcZ3SV24IpMMW83Hm5sRww4z2
-BSfu0H5HcHy0zMmgd5MjxT6SJdQNlpa6aCmw4R4m3DaTv4Ygt2y/EYWAB29jK3S8
-5DmClF3VJjDOPaGYRb7bNrawq93rWjXS4DcbsPyRM+GAnX+7fJRP3q4dUKuABlxI
-h/GH2QtwGD9iWWResAmBEM/8YWkMFEpowZENLTzDiDVbYeF/PP9dqbUAWt+mwHDC
-Rk6SxE0TlUio0LxdYVOlBP+PFRp9fIhHPJCZgs6qJgyW/nJ2YVxiaNkF57I4zWt2
-lgTC6fXn9faO51uTV3b7damLC77fKPc35K1xK7s4dlUGS9Tw1uX8xqN3uD9Iyjrk
-AQFwjkaNNj+/7asLJo9HyYwO7wByfMcDqEnlMJmyjynb5Pav39I2irQqMQsBpoou
-bWqbeB/53S1FMkasqGhfTYsXcdjLgUtv2ot/vU0g6HiCsyqXTUaOZhPw43oodCUa
-TYRubNo7y3Wx8PGTYxpGLE1esXS17EST6hsqv/ilm8Ss8Lu/kk7YXxOuDnYRFaAV
-mqPMvXd60X6kXdGDhHlr2E4uoGg98B0R+6mUak6PbQm5/qow1/0wo1G9FnneIETR
-bQaz4lNRZeqN6rzoNjUM+GTaMRY+dVgbHKOfiMbXud5w5xluCP0=
-=7BYP
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlUjRwAKCRDj7w1vZxhR
+xXDtAP9b8T02oSuEhYCHu4pRnLvlbOzVVLv+yrH96OD/76ivzAEAoXZ6tx7R81ZF
+dHtemdtSh6+UbDVjmKYL94RSfqOIiwM=
+=4lXL
 -----END PGP SIGNATURE-----
 
---SUOF0GtieIMvvwua--
+--36i66r5gn7suledg--
