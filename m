@@ -2,194 +2,89 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C7C4BA09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D24C4BA06
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C97E24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A6D24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbgBYX3Y (ORCPT
+        id S1729868AbgBYX31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:29:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55692 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729998AbgBYX0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:26:13 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j6jaM-0004j1-C7; Wed, 26 Feb 2020 00:25:55 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id D11DC10409A;
-        Wed, 26 Feb 2020 00:25:38 +0100 (CET)
-Message-Id: <20200225222649.260398529@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:16:17 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 11/24] x86/entry: Convert Bounds exception to IDTENTRY
-References: <20200225221606.511535280@linutronix.de>
+        Tue, 25 Feb 2020 18:29:27 -0500
+Received: from mga04.intel.com ([192.55.52.120]:35713 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729928AbgBYX3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 18:29:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 15:29:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
+   d="scan'208";a="231618923"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Feb 2020 15:29:00 -0800
+Date:   Tue, 25 Feb 2020 15:29:00 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jacob Keller <jacob.e.keller@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+Message-ID: <20200225232900.GO9245@linux.intel.com>
+References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+ <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+ <20200225221234.GL9245@linux.intel.com>
+ <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert #BR to IDTENTRY:
-  - Implement the C entry point with DEFINE_IDTENTRY
-  - Emit the ASM stub with DECLARE_IDTENTRY
-  - Remove the ASM idtentry in 64bit
-  - Remove the open coded ASM entry code in 32bit
-  - Fixup the XEN/PV code
-  - Remove the old prototyoes
+On Tue, Feb 25, 2020 at 02:52:32PM -0800, Jacob Keller wrote:
+> On 2/25/2020 2:12 PM, Sean Christopherson wrote:
+> > On Tue, Feb 25, 2020 at 01:49:13PM -0800, Jacob Keller wrote:
+> >> Hi Sean,
+> >>
+> >> I suspect something is wrong and the features are enabled even though
+> >> the BIOS has it disabled, leading to later failure because of this.
+> > 
+> > Hrm.  On the failing kernel, what are the values of MSR 0x3a for all CPUs,
+> > i.e. what's the output of 'sudo rdmsr -a 0x3a'?
+> > 
+> 
+> On the old (fedora 30) kernel, every cpu reports as '1'.
+> 
+> I can't easily test the failing kernel because it crashes during boot.
 
-No functional change.
+No need, your BIOS is likely locking the MSR, I doubt the value is any
+different when running the new kernel.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/entry_32.S       |    7 -------
- arch/x86/entry/entry_64.S       |    1 -
- arch/x86/include/asm/idtentry.h |    1 +
- arch/x86/include/asm/traps.h    |    3 ---
- arch/x86/kernel/idt.c           |    2 +-
- arch/x86/kernel/traps.c         |   10 +++++-----
- arch/x86/xen/enlighten_pv.c     |    2 +-
- arch/x86/xen/xen-asm_64.S       |    2 +-
- 8 files changed, 9 insertions(+), 19 deletions(-)
+Does reverting commit a4d0b2fdbcf7 ("KVM: VMX: Use VMX feature flag to
+query BIOS enabling") resolve the issue?
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1334,13 +1334,6 @@ SYM_CODE_START(native_iret)
- SYM_CODE_END(native_iret)
- #endif
- 
--SYM_CODE_START(bounds)
--	ASM_CLAC
--	pushl	$0
--	pushl	$do_bounds
--	jmp	common_exception
--SYM_CODE_END(bounds)
--
- SYM_CODE_START(invalid_op)
- 	ASM_CLAC
- 	pushl	$0
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1061,7 +1061,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  * Exception entry points.
-  */
- 
--idtentry	X86_TRAP_BR		bounds			do_bounds			has_error_code=0
- idtentry	X86_TRAP_UD		invalid_op		do_invalid_op			has_error_code=0
- idtentry	X86_TRAP_NM		device_not_available	do_device_not_available		has_error_code=0
- idtentry	X86_TRAP_OLD_MF		coprocessor_segment_overrun	do_coprocessor_segment_overrun	has_error_code=0
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -80,5 +80,6 @@ static __always_inline void __##func(str
- DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
- DECLARE_IDTENTRY(X86_TRAP_BP,		exc_int3);
- DECLARE_IDTENTRY(X86_TRAP_OF,		exc_overflow);
-+DECLARE_IDTENTRY(X86_TRAP_BR,		exc_bounds);
- 
- #endif
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -13,7 +13,6 @@
- 
- asmlinkage void debug(void);
- asmlinkage void nmi(void);
--asmlinkage void bounds(void);
- asmlinkage void invalid_op(void);
- asmlinkage void device_not_available(void);
- #ifdef CONFIG_X86_64
-@@ -37,7 +36,6 @@ asmlinkage void simd_coprocessor_error(v
- #if defined(CONFIG_X86_64) && defined(CONFIG_XEN_PV)
- asmlinkage void xen_xennmi(void);
- asmlinkage void xen_xendebug(void);
--asmlinkage void xen_bounds(void);
- asmlinkage void xen_invalid_op(void);
- asmlinkage void xen_device_not_available(void);
- asmlinkage void xen_double_fault(void);
-@@ -58,7 +56,6 @@ asmlinkage void xen_simd_coprocessor_err
- 
- dotraplinkage void do_debug(struct pt_regs *regs, long error_code);
- dotraplinkage void do_nmi(struct pt_regs *regs, long error_code);
--dotraplinkage void do_bounds(struct pt_regs *regs, long error_code);
- dotraplinkage void do_invalid_op(struct pt_regs *regs, long error_code);
- dotraplinkage void do_device_not_available(struct pt_regs *regs, long error_code);
- #if defined(CONFIG_X86_64) || defined(CONFIG_DOUBLEFAULT)
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -72,7 +72,7 @@ static const __initconst struct idt_data
- static const __initconst struct idt_data def_idts[] = {
- 	INTG(X86_TRAP_DE,		asm_exc_divide_error),
- 	INTG(X86_TRAP_NMI,		nmi),
--	INTG(X86_TRAP_BR,		bounds),
-+	INTG(X86_TRAP_BR,		asm_exc_bounds),
- 	INTG(X86_TRAP_UD,		invalid_op),
- 	INTG(X86_TRAP_NM,		device_not_available),
- 	INTG(X86_TRAP_OLD_MF,		coprocessor_segment_overrun),
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -446,18 +446,18 @@ dotraplinkage void do_double_fault(struc
- }
- #endif
- 
--dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
-+DEFINE_IDTENTRY(exc_bounds)
- {
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
--	if (notify_die(DIE_TRAP, "bounds", regs, error_code,
--			X86_TRAP_BR, SIGSEGV) == NOTIFY_STOP)
-+	if (notify_die(DIE_TRAP, "bounds", regs, 0,
-+		       X86_TRAP_BR, SIGSEGV) == NOTIFY_STOP)
- 		return;
- 	cond_local_irq_enable(regs);
- 
- 	if (!user_mode(regs))
--		die("bounds", regs, error_code);
-+		die("bounds", regs, 0);
- 
--	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
-+	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, 0, 0, NULL);
- }
- 
- enum kernel_gp_hint {
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -621,7 +621,7 @@ static struct trap_array_entry trap_arra
- #endif
- 	{ page_fault,                  xen_page_fault,                  false },
- 	TRAP_ENTRY(exc_divide_error,			false ),
--	{ bounds,                      xen_bounds,                      false },
-+	TRAP_ENTRY(exc_bounds,				false ),
- 	{ invalid_op,                  xen_invalid_op,                  false },
- 	{ device_not_available,        xen_device_not_available,        false },
- 	{ coprocessor_segment_overrun, xen_coprocessor_segment_overrun, false },
---- a/arch/x86/xen/xen-asm_64.S
-+++ b/arch/x86/xen/xen-asm_64.S
-@@ -34,7 +34,7 @@ xen_pv_trap xendebug
- xen_pv_trap asm_exc_int3
- xen_pv_trap xennmi
- xen_pv_trap asm_exc_overflow
--xen_pv_trap bounds
-+xen_pv_trap asm_exc_bounds
- xen_pv_trap invalid_op
- xen_pv_trap device_not_available
- xen_pv_trap double_fault
-
+Is the failing kernel an (umodified) upstream kernel?  A stable kernel?
+Or something else?  Assuming it's an unmodified upstream kernel, can you
+send your .config?  I've tried all the obvious Kconfig combinations but
+haven't been able to reproduce the problem.  Staring at the code hasn't
+yielded any revelations either.
