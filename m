@@ -2,132 +2,323 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_CSS,URIBL_CSS_A autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497CEC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE11C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D674222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWCtNvbv"
+	by mail.kernel.org (Postfix) with ESMTP id 9F7392064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgBYODP (ORCPT
+        id S1730392AbgBYOGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:03:15 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43505 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729680AbgBYODO (ORCPT
+        Tue, 25 Feb 2020 09:06:20 -0500
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:51982
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYOGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:03:14 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r11so14864570wrq.10;
-        Tue, 25 Feb 2020 06:03:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=gT5zrM2j7XEtMlB7rHoEuszlfwjRx6IJBGVhnWU8za8=;
-        b=hWCtNvbvUOUdk4K2EShu9FzOHbBorzKRWJunvJI4ZLaV/J+MGAuQb3AYW1Mn5+jcbn
-         ZTtDmexNlmcBaSl5uuWo+w8hLruzzQ/wbfRnMWAYJmgsQMtLoC59sPePZugKWJEYfD1g
-         9T82BYG5cdxvkUSaOAdQbMR0Tk2Kch+5VODE/it0LOUb7emCWewH6eqNAWPBpQYdeNPi
-         G/HuJG2TvTBhPk0gJwVqN8cAlZTRC6mnjCP5eP/ea2gZGVG73SmG/w7vdN/BPGExb1rv
-         +Emu9lFoHa/YvTQoGcV8yJgaP4gvQxzM+hakIcI0ns8OK45ZhdlUXVNyL7wrRgp8Fp31
-         SjLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=gT5zrM2j7XEtMlB7rHoEuszlfwjRx6IJBGVhnWU8za8=;
-        b=uc+wrjEndL6mFV0idYjrZeTNosHZRxGIyS0MIgfP48JvL7hK1adsrM7LUGMfsxBr7F
-         U9uHz2d66lZw/LtryVrsqYPG4yLxSin250Y+KywsWA6W1DYu4KHtC54zoNclSlm+4Pc5
-         D56WZAFknFAzI0H4c6gGaMrN9IEJwNvfG6UaGiyBpVW2jSM5HlXanLCwQwkOwO+mz4Zh
-         jkIS3B3en7KohhdVjGmtUqiAOua5PQIdXa2Js4LEMcLFIfc+SgaHkmEmXQ+HQ2Zedx3Y
-         JUPKoGzvQCmI0amQvc8iOJm6zv5uINuwedo7HfOOH6+J05bUUxp/wHGVbKI83EqVFMSj
-         pumQ==
-X-Gm-Message-State: APjAAAWiSHYRumFAlWz6UvWpFU0nbFW+uu/SVeM3dphbXBytan+mQG4/
-        undrnWQtbxC1LZqnLE5Iw2Y=
-X-Google-Smtp-Source: APXvYqzjvPCANPXCFeieo7Z7xtgMjQdPoQ0t/NA8OENUa0brXY7/kaqZFx/zHdDvsPU6g66uUU9LsQ==
-X-Received: by 2002:adf:a35e:: with SMTP id d30mr68333564wrb.33.1582639390815;
-        Tue, 25 Feb 2020 06:03:10 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:30a8:e117:ed7d:d145? (p200300EA8F29600030A8E117ED7DD145.dip0.t-ipconnect.de. [2003:ea:8f29:6000:30a8:e117:ed7d:d145])
-        by smtp.googlemail.com with ESMTPSA id u8sm4297464wmm.15.2020.02.25.06.03.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:03:10 -0800 (PST)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v3 0/8] PCI: add and use constant PCI_STATUS_ERROR_BITS and
- helper pci_status_get_and_clear_errors
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-Message-ID: <20ca7c1f-7530-2d89-40a6-d97a65aa25ef@gmail.com>
-Date:   Tue, 25 Feb 2020 15:03:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 09:06:20 -0500
+X-Greylist: delayed 326 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Feb 2020 09:06:19 EST
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id B4ADC4139C1;
+        Tue, 25 Feb 2020 14:00:52 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Date:   Tue, 25 Feb 2020 22:00:52 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming.com
+Subject: Setting Up Mail Server Operation for CentOS Web Panel Web Hosting
+ Control Panel on Amazon AWS Cloud
+Message-ID: <d2c38734a4a2e7f82e1a7d4e4b082317@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few drivers have own definitions for this constant, so move it to the
-PCI core. In addition there are several places where the following
-code sequence is used:
-1. Read PCI_STATUS
-2. Mask out non-error bits
-3. Action based on set error bits
-4. Write back set error bits to clear them
+Subject: Setting Up Mail Server Operation for CentOS Web Panel Web 
+Hosting Control Panel on Amazon AWS Cloud
 
-As this is a repeated pattern, add a helper to the PCI core.
+Author: Mr. Turritopsis Dohrnii Teo En Ming, Singapore
+Date: 25 Feb 2020 Tuesday
 
-Most affected drivers are network drivers. But as it's about core
-PCI functionality, I suppose the series should go through the PCI
-tree.
+PREREQUISITES
+=============
 
-v2:
-- fix formal issue with cover letter
-v3:
-- fix dumb typo in patch 7
+Before embarking on this guide, you should read the following guide 
+first.
 
-Heiner Kallweit (8):
-  PCI: add constant PCI_STATUS_ERROR_BITS
-  PCI: add pci_status_get_and_clear_errors
-  r8169: use pci_status_get_and_clear_errors
-  net: cassini: use pci_status_get_and_clear_errors
-  net: sungem: use pci_status_get_and_clear_errors
-  net: skfp: use PCI_STATUS_ERROR_BITS
-  PCI: pci-bridge-emul: use PCI_STATUS_ERROR_BITS
-  sound: bt87x: use pci_status_get_and_clear_errors
+Guide: Mr. Teo En Ming's Guide to Deploying CentOS Web Panel (CWP) Web 
+Hosting Control Panel on Amazon AWS Cloud
 
- drivers/net/ethernet/marvell/skge.h       |  6 -----
- drivers/net/ethernet/marvell/sky2.h       |  6 -----
- drivers/net/ethernet/realtek/r8169_main.c | 15 +++++-------
- drivers/net/ethernet/sun/cassini.c        | 28 ++++++++-------------
- drivers/net/ethernet/sun/sungem.c         | 30 +++++++----------------
- drivers/net/fddi/skfp/drvfbi.c            |  2 +-
- drivers/net/fddi/skfp/h/skfbi.h           |  5 ----
- drivers/pci/pci-bridge-emul.c             | 14 ++---------
- drivers/pci/pci.c                         | 23 +++++++++++++++++
- include/linux/pci.h                       |  1 +
- include/uapi/linux/pci_regs.h             |  7 ++++++
- sound/pci/bt87x.c                         |  7 +-----
- 12 files changed, 60 insertions(+), 84 deletions(-)
+Redundant blog links:
 
--- 
-2.25.1
+[1] 
+https://tdtemcerts.blogspot.com/2020/02/mr-teo-en-mings-guide-to-deploying.html
+
+[2] 
+https://tdtemcerts.wordpress.com/2020/02/23/mr-teo-en-mings-guide-to-deploying-centos-web-panel-cwp-web-hosting-control-panel-on-amazon-aws-cloud/
+
+EXTREMELY DETAILED INSTRUCTIONS OF TEO EN MING'S GUIDE
+======================================================
+
+Teo En Ming's DNS Zone File for domain teo-en-ming.com on Primary DNS 
+Server
+============================================================================
+
+$TTL    300
+@       IN      SOA     ns1.teo-en-ming.com. ceo.teo-en-ming.com. (
+          2020022502     ; Serial
+              604800     ; Refresh
+               86400     ; Retry
+             2419200     ; Expire
+              604800 )   ; Negative Cache TTL
+;
+; name servers - NS records
+      IN      NS      ns1.teo-en-ming.com.
+      IN      NS      ns2.teo-en-ming.com.
+
+; mail servers - MX records
+      IN	     MX	     0		mail.teo-en-ming.com.
+
+; name servers - A records
+ns1.teo-en-ming.com.          IN      A       13.58.253.162
+ns2.teo-en-ming.com.          IN      A       3.20.186.205
+
+; mail servers - A records
+mail.teo-en-ming.com.	      IN      A       3.21.30.127
+
+; Additional A records
+www.teo-en-ming.com.          IN      A       3.21.30.127
+teo-en-ming.com.	      IN      A       3.21.30.127
+
+; Sender Policy Framework (SPF) TXT records
+teo-en-ming.com.	      IN      TXT     "v=spf1 ip4:3.21.30.127 -all"
+
+===EOF===
+
+REFERENCE
+=========
+
+Guide: Mail Exchange Record (MX)
+
+Link: https://www.zytrax.com/books/dns/ch8/mx.html
+
+REFERENCE
+=========
+
+Guide: How To: Lowering Your DNS TTLs
+
+Link: https://www.liquidweb.com/kb/how-to-lowering-your-dns-ttls/
+
+REFERENCE
+=========
+
+Discussion: Postfix: “Connection timed out” on all outbound email 
+[closed]
+
+Link: 
+https://serverfault.com/questions/585503/postfix-connection-timed-out-on-all-outbound-email
+
+QUOTE:
+
+"For anyone who found this question but is on AWS EC2: outgoing SMTP 
+intentionally rate limited, but you can ask to have it relaxed."
+
+REFERENCE
+=========
+
+Discussion: Intermittent exim gmail smtp connection timeout
+
+Link: 
+https://forums.cpanel.net/threads/intermittent-exim-gmail-smtp-connection-timeout.523911/
+
+QUOTE:
+
+"Just an update for anyone with a similar issue - with some fresh eyes 
+and some more googling it sounds like this may be caused by some SMTP 
+rate limitations built into the AWS EC2 network as Spam prevention.
+
+They have a form to register to remove outgoing smtp connection 
+limitations here:
+
+https://aws.amazon.com/forms/ec2-email-limit-rdns-request
+
+I've submitted and will update if this resolves the issues I was 
+seeing."
+
+QUOTE:
+
+"Amazon SMTP traffic management indeed seems to have been the cause. 
+Within a couple of hours of filling out the above form, I got an email 
+confirmation from AWS that "traffic restrictions had been removed" and 
+normal function resumed immediately.
+
+Confusing the matters is that this SMTP traffic management is not 
+documented well (and sometimes with contradicting information). It does 
+not appear to be a hard cap limit, nor does it trigger any notification 
+when it's applied - it actually appears to be a *throttle* on common 
+SMTP ports, triggered by a very small number of connections, beyond 
+which it allows a certain number of connections per/hour - which would 
+absolutely create the kind of "intermittent" connectivity issues I saw 
+(and the odd delivery order of mail in the queue depending on when a 
+retry "won the lottery" to negotiate a connection).
+
+Anyway - I hope that info is of some use to others in the future!"
+
+REFERENCE
+=========
+
+Guide: Installing Telnet In CentOS/RHEL/Scientific Linux 6 & 7
+
+Link: 
+https://www.unixmen.com/installing-telnet-centosrhelscientific-linux-6-7/
+
+Amazon Web Services' Reply to Teo En Ming
+=========================================
+
+Hello,
+
+We approved your request for the removal of the EC2 email sending 
+limitations on your Amazon Web Services account! If you requested 
+removal of email sending limits on any other Amazon Elastic IPs, they've 
+also been removed.
+
+Because reverse DNS record entries are commonly considered in anti-spam 
+filters, we recommend assigning a reverse DNS record to the Elastic IP 
+address you use to send email to third parties. Please use the form 
+located at this link to request a reverse DNS entry:
+https://aws-portal.amazon.com/gp/aws/html-forms-controller/contactus/ec2-email-limit-rdns-request
+
+If you'd like to proceed with assigning a reverse DNS record to the 
+Elastic IP, the first step would be to configure the A record for the 
+domain to match the desired PTR record on your side.
+
+Please follow the instructions at the link below to create the A record:
+https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html
+
+Please let us know if you have any questions.
+
+Regards,
+Amazon Web Services
+
+REFERENCE
+=========
+
+Guide: How to create an SPF TXT record?
+
+Link: https://www.dmarcanalyzer.com/spf/how-to-create-an-spf-txt-record/
+
+REFERENCE
+=========
+
+Guide: Linux BIND DNS Configure Sender Policy Framework ( SPF ) an 
+e-mail Anti Forgery System
+
+Link: 
+https://www.cyberciti.biz/faq/howto-bind-djbdns-spf-antispam-dns-configuration/
+
+Creating New User Account in CentOS Web Panel
+=============================================
+
+Login to CentOS Web Panel Admin Panel.
+
+ From the left menu, click on User Accounts, then select New Account.
+
+Domain name: teo-en-ming.com
+
+Username:
+
+Password:
+
+Admin Email:
+
+Server IPs:
+
+Package: Default
+
+Reseller: Not checked
+
+Inode: 0
+
+Process limit: 40
+
+Open files: 150
+
+Backup user account: checked
+
+Shell Access: Disabled by default for security reasons: Unchecked
+
+AutoSSL: Domain must be pointed to the server: Unchecked
+
+Click Create.
+
+Setting Up New Email Account
+============================
+
+Login to CentOS Web Panel User Panel.
+
+ From the left menu, click Email Accounts, then click Email Accounts.
+
+Click Add a New MailBox.
+
+Email Address: ceo@teo-en-ming.com
+
+Password:
+
+Quota MB: 16000
+
+Click Add.
+
+Using Your New Email Account
+============================
+
+Login to Roundcube Webmail.
+
+Click Settings.
+
+ From the left menu, click Identities, then click ceo@teo-en-ming.com
+
+Display Name: Turritopsis Dohrnii Teo En Ming
+
+Click Save.
+
+Congratulations! You can now start using your new email account.
 
 
 
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
