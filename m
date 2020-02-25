@@ -2,238 +2,174 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB6C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1467DC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A561E2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D246F20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RTr6M0KP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bqhRVH0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgBYH7t (ORCPT
+        id S1729507AbgBYIA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:59:49 -0500
-Received: from mail-eopbgr10046.outbound.protection.outlook.com ([40.107.1.46]:55958
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729124AbgBYH7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:59:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZqVM29P0YgG88van8qLI4YQzXyUMP01TJ3TQojQzsmwqtGTUuaRaBBtLfa20hu0N4HLNqAKE+1Zlt5xWJdDgxOGHAcGIRMYggxUet/GWAoHG78905A0QOd0QRA5J/XViMQOX3YZg+GacnmQQ4zzVhJD31xrdYUFUBthGIWr8B1dLksNI/zOuUM9KZw7xMh3/CoN0oXVey2fKFa4clHHCsdjn/ZIlO/Sc8SWuddeqtV6xP5XUVWPvdEWSlVqIFfWapyzzGEItNAq1QlYW/PYMDaBWcR5FA84fU2AhjBUaOc/L2bJB+RNUlL2S4AAAWIcOo+AziAPiBKd0/YeHtJijDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GX8fKWMT2TGso3W6qdgGQwr3Z9kdVI2IrloZXF52YGA=;
- b=PvScxyGGUnaGrqfvkXsN7jdTV3D4y9Y54kMisdJBBDgcRikoYcY/VQLmpnrevUdmZo7NOjhBbBF3Vi8d2y7PACbMPMeerY5jksmtyfOX99BfEB4+9Dq5QVZIv5Ru2kxzu3HQ8TYqQ7r5ZLLOGCmGaHwbR1HkNOv36M6Ix/FG+TygH0xkssZKhVoyxQ+7iVSJZfKbQDz74YExcuhvz29PJbsdoCIA3ER32R0G/j9WFTaUF2PkC6YqKtvDQ3CkMEKywfH64YS7ThJC1WauA6zN98wncigfaqq2iETVau7MO8LrmLJT9wSb6YnMol8Rjh7SS1uJvpzPsa+h2lSjmeSTag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GX8fKWMT2TGso3W6qdgGQwr3Z9kdVI2IrloZXF52YGA=;
- b=RTr6M0KPj4v9bhzLKEnZ9fryA0QGsWBAF+sqLv81Ja1Qlil28tpNv96c3tvQ03dTw+QKEq6ENPe37Y/ujmmE02eNivGzpF/IrCPklv7TzrNmQt12suj+8D/1eGfolfO2+zKcHmshM1cFPc/FzwcIn55mP2EZyxbXSnpp2mBA0lI=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6372.eurprd04.prod.outlook.com (20.179.252.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Tue, 25 Feb 2020 07:59:39 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 07:59:39 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH V2 1/2] mailbox: imx: support SCU channel type
-Thread-Topic: [PATCH V2 1/2] mailbox: imx: support SCU channel type
-Thread-Index: AQHV64rzmpuHn9CB6EK33/QrFlZgT6grcuiAgAAYJKA=
-Date:   Tue, 25 Feb 2020 07:59:39 +0000
-Message-ID: <AM0PR04MB4481432C679679A782E89DA688ED0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1582600627-28415-1-git-send-email-peng.fan@nxp.com>
- <1582600627-28415-2-git-send-email-peng.fan@nxp.com>
- <fcd868b0-2a8b-c13e-e773-3626a1cfda32@pengutronix.de>
-In-Reply-To: <fcd868b0-2a8b-c13e-e773-3626a1cfda32@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 439b4d2f-e857-408a-9297-08d7b9c8aa4c
-x-ms-traffictypediagnostic: AM0PR04MB6372:|AM0PR04MB6372:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6372D0012A3630E76FDC527C88ED0@AM0PR04MB6372.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(366004)(396003)(136003)(199004)(189003)(2906002)(86362001)(15650500001)(81166006)(6506007)(186003)(53546011)(26005)(66946007)(110136005)(66476007)(8676002)(966005)(81156014)(45080400002)(4326008)(8936002)(478600001)(54906003)(9686003)(66446008)(316002)(55016002)(71200400001)(33656002)(44832011)(52536014)(66556008)(7696005)(5660300002)(76116006)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6372;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mgfrEQXr+7vS6DPrutUVIAw2/sJKTQukwwNqdOyoyUqVG4bKmgy2Fn2tbkH+u1leZLic9TOTuLS9MBDbPvLKOw3JWfvjClb+0X0cSwHKMKXUxejZeUaKoSXKGe2UFHEVBcVFLQ0Tsgonav9zLRY4EUfH/cnUH/J6fgibRg6YFeV1dDd7GIdo1P6dnAyvPah4h9vk8vlQn1THlHa3wvThbr14yUTlX/3y3sR9cM3kUZKjjWwKfh3hOVqeCVzQQSuSC6bV5mFVV5Q7SJzUmFuieOpnHr6UCa882wJcj07Dywy98dGCCfOD4rhk7AUgtFn351JyjttrMgmNHbcMXsD9ggdlcrEmqGlk6zfyQMVNjbut7VxrbQ1lQacO232OkUZ6JWm89NSVye+jF6o4hZcnF6rOCVyqUQZKULAvULdPotVbAHoj6LMy7+7B7zdtj96X+1hGuhJNgHFABYP5JI55qZHl7p5EuLliXmLf88vSgIWVhkOldAOAaIzeGtjaVQ2QsQdNxlc6zFibGXXURm5eaw==
-x-ms-exchange-antispam-messagedata: ZBbXGH6QrkcPrhfXu4/6m2qHG0W/JkwhqYjdTy/Fp9YaUk+YSp+RhpX1+PrMi3S+Cp9RJtZ6Li+P64Q/JfS+HxRB3uPKdKsua+/vC5TUqT4+6AKyvdtlPvAM3HD91ZfqZRSxW2remIkwN3gqbQuLzA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 25 Feb 2020 03:00:59 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46786 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729001AbgBYIA7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:00:59 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P80o69051240;
+        Tue, 25 Feb 2020 02:00:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582617650;
+        bh=4O0ikGYh4/tavxMZ/AO6uLr8sOwU8CxwwTO2EYFCJtI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bqhRVH0Hb82uxMkVAxykwDpPwqiTZHpHOK2ljBWur/HAxwhlKoHjkP8Z6+6uy5csU
+         XjpLP4iLnMyM8ylLn6pE2aIbhios4Wh+btQA7LgcUEHAirRxQA2jTizJGXSItGCFd2
+         uWypX4Z7CmVGbCIq6Srx8zAivwDJ+kaZPVRKJcrk=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P80ojB064802
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 02:00:50 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 02:00:49 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 02:00:49 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01P80kX3095890;
+        Tue, 25 Feb 2020 02:00:47 -0600
+Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: Do not disable pwm before changing
+ period/duty_cycle
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-4-lokeshvutla@ti.com>
+ <20200224085531.zab5ewr2nfi2shem@pengutronix.de>
+ <4aedb6d4-1823-ab46-b7e6-cc0b30f7747d@ti.com>
+ <20200225064833.kmvaplfqqf53s3iy@pengutronix.de>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <8e22912c-a65f-9efe-27e7-555cd144776f@ti.com>
+Date:   Tue, 25 Feb 2020 13:29:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 439b4d2f-e857-408a-9297-08d7b9c8aa4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 07:59:39.6718
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6U4EbRVEBYZ7diWPVoiVDBmNEKQ5mAeKJRuINahU0ErVxLhKmO0Ig9j2g+4Uk37CWwUmveQqr6dTNwdAhMOihw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6372
+In-Reply-To: <20200225064833.kmvaplfqqf53s3iy@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgT2xla3NpaiwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYyIDEvMl0gbWFpbGJveDogaW14
-OiBzdXBwb3J0IFNDVSBjaGFubmVsIHR5cGUNCj4gDQo+IEhpLA0KPiANCj4gT24gMjUuMDIuMjAg
-MDQ6MTcsIHBlbmcuZmFuQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcu
-ZmFuQG54cC5jb20+DQo+ID4NCj4gPiBQZXIgaS5NWDhRWFAgUmVmZXJlbmNlIG1hbm51YWwsIENo
-YXB0ZXIgIjEyLjkuMi4zLjIgTWVzc2FnaW5nDQo+IEV4YW1wbGVzIiwNCj4gPiAgIFBhc3Npbmcg
-c2hvcnQgbWVzc2FnZXM6IFRyYW5zbWl0IHJlZ2lzdGVyKHMpIGNhbiBiZSB1c2VkIHRvIHBhc3MN
-Cj4gPiAgIHNob3J0IG1lc3NhZ2VzIGZyb20gb25lIHRvIGZvdXIgd29yZHMgaW4gbGVuZ3RoLiBG
-b3IgZXhhbXBsZSwgd2hlbg0KPiA+ICAgYSBmb3VyLXdvcmQgbWVzc2FnZSBpcyBkZXNpcmVkLCBv
-bmx5IG9uZSBvZiB0aGUgcmVnaXN0ZXJzIG5lZWRzIHRvDQo+ID4gICBoYXZlIGl0cyBjb3JyZXNw
-b25kaW5nIGludGVycnVwdCBlbmFibGUgYml0IHNldCBhdCB0aGUgcmVjZWl2ZXIgc2lkZTsNCj4g
-PiAgIHRoZSBtZXNzYWdl4oCZcyBmaXJzdCB0aHJlZSB3b3JkcyBhcmUgd3JpdHRlbiB0byB0aGUg
-cmVnaXN0ZXJzIHdob3NlDQo+ID4gICBpbnRlcnJ1cHQgaXMgbWFza2VkLCBhbmQgdGhlIGZvdXJ0
-aCB3b3JkIGlzIHdyaXR0ZW4gdG8gdGhlIG90aGVyDQo+ID4gICByZWdpc3RlciAod2hpY2ggdHJp
-Z2dlcnMgYW4gaW50ZXJydXB0IGF0IHRoZSByZWNlaXZlciBzaWRlKS4NCj4gPg0KPiA+IGkuTVg4
-LzhYIFNDVSBmaXJtd2FyZSBJUEMgaXMgYW4gaW1wbGVtZW50YXRpb24gb2YgcGFzc2luZyBzaG9y
-dA0KPiA+IG1lc3NhZ2VzLiBCdXQgY3VycmVudCBpbXgtbWFpbGJveCBkcml2ZXIgb25seSBzdXBw
-b3J0IG9uZSB3b3JkDQo+ID4gbWVzc2FnZSwgaS5NWDgvOFggbGludXggc2lkZSBmaXJtd2FyZSBo
-YXMgdG8gcmVxdWVzdCBmb3VyIFRYIGFuZCBmb3VyDQo+ID4gUlggdG8gc3VwcG9ydCBJUEMgdG8g
-U0NVIGZpcm13YXJlLiBUaGlzIGlzIGxvdyBlZmZpY2VudCBhbmQgbW9yZQ0KPiA+IGludGVycnVw
-dHMgdHJpZ2dlcmVkIGNvbXBhcmVkIHdpdGggb25lIFRYIGFuZCBvbmUgUlguDQo+ID4NCj4gPiBU
-byBtYWtlIFNDVSBjaGFubmVsIHR5cGUgd29yaywNCj4gPiAgICAtIHBhcnNlIHRoZSBzaXplIG9m
-IG1zZy4NCj4gPiAgICAtIE9ubHkgZW5hYmxlIFRSMC9SUjAgaW50ZXJydXB0IGZvciB0cmFuc21p
-dC9yZWNlaXZlIG1lc3NhZ2UuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVu
-Zy5mYW5AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvbWFpbGJveC9pbXgtbWFpbGJv
-eC5jIHwgNDYNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0K
-PiA+ICAgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWlsYm94L2lteC1tYWlsYm94LmMNCj4gPiBi
-L2RyaXZlcnMvbWFpbGJveC9pbXgtbWFpbGJveC5jIGluZGV4IDJjZGNkYzVmMTExOS4uMGI0YTMz
-MjU0MTE0DQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tYWlsYm94L2lteC1tYWlsYm94
-LmMNCj4gPiArKysgYi9kcml2ZXJzL21haWxib3gvaW14LW1haWxib3guYw0KPiA+IEBAIC00LDYg
-KzQsNyBAQA0KPiA+ICAgICovDQo+ID4NCj4gPiAgICNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4g
-PiArI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC9pcGMuaD4NCj4gPiAgICNpbmNsdWRlIDxs
-aW51eC9pbnRlcnJ1cHQuaD4NCj4gPiAgICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICAgI2lu
-Y2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPiA+IEBAIC02NSw4ICs2NiwxNCBAQCBzdHJ1Y3QgaW14
-X211X3ByaXYgew0KPiA+ICAgCWludAkJCWlycTsNCj4gPg0KPiA+ICAgCWJvb2wJCQlzaWRlX2I7
-DQo+ID4gKwlib29sCQkJc2N1Ow0KPiA+ICAgfTsNCj4gPg0KPiA+ICtzdHJ1Y3QgaW14X3NjX3Jw
-Y19tc2dfbWF4IHsNCj4gPiArCXN0cnVjdCBpbXhfc2NfcnBjX21zZyBoZHI7DQo+ID4gKwl1MzIg
-ZGF0YVs3XTsNCj4gPiArfSBfX3BhY2tlZCBfX2FsaWduZWQoNCk7Ow0KPiA+ICsNCj4gPiAgIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgaW14X211X2RjZmcgaW14X211X2NmZ19pbXg2c3ggPSB7DQo+ID4g
-ICAJLnhUUgk9IHsweDAsIDB4NCwgMHg4LCAweGN9LA0KPiA+ICAgCS54UlIJPSB7MHgxMCwgMHgx
-NCwgMHgxOCwgMHgxY30sDQo+ID4gQEAgLTEyMyw3ICsxMzAsMTAgQEAgc3RhdGljIGlycXJldHVy
-bl90IGlteF9tdV9pc3IoaW50IGlycSwgdm9pZCAqcCkNCj4gPiAgIAlzdHJ1Y3QgbWJveF9jaGFu
-ICpjaGFuID0gcDsNCj4gPiAgIAlzdHJ1Y3QgaW14X211X3ByaXYgKnByaXYgPSB0b19pbXhfbXVf
-cHJpdihjaGFuLT5tYm94KTsNCj4gPiAgIAlzdHJ1Y3QgaW14X211X2Nvbl9wcml2ICpjcCA9IGNo
-YW4tPmNvbl9wcml2Ow0KPiA+ICsJc3RydWN0IGlteF9zY19ycGNfbXNnX21heCBtc2c7DQo+ID4g
-Kwl1MzIgKnBfbXNnID0gKHUzMiAqKSZtc2c7DQo+ID4gICAJdTMyIHZhbCwgY3RybCwgZGF0Ow0K
-PiA+ICsJaW50IGk7DQo+ID4NCj4gPiAgIAljdHJsID0gaW14X211X3JlYWQocHJpdiwgcHJpdi0+
-ZGNmZy0+eENSKTsNCj4gPiAgIAl2YWwgPSBpbXhfbXVfcmVhZChwcml2LCBwcml2LT5kY2ZnLT54
-U1IpOyBAQCAtMTUyLDggKzE2MiwxOSBAQA0KPiA+IHN0YXRpYyBpcnFyZXR1cm5fdCBpbXhfbXVf
-aXNyKGludCBpcnEsIHZvaWQgKnApDQo+ID4gICAJCWlteF9tdV94Y3Jfcm13KHByaXYsIDAsIElN
-WF9NVV94Q1JfVElFbihjcC0+aWR4KSk7DQo+ID4gICAJCW1ib3hfY2hhbl90eGRvbmUoY2hhbiwg
-MCk7DQo+ID4gICAJfSBlbHNlIGlmICh2YWwgPT0gSU1YX01VX3hTUl9SRm4oY3AtPmlkeCkpIHsN
-Cj4gPiAtCQlkYXQgPSBpbXhfbXVfcmVhZChwcml2LCBwcml2LT5kY2ZnLT54UlJbY3AtPmlkeF0p
-Ow0KPiA+IC0JCW1ib3hfY2hhbl9yZWNlaXZlZF9kYXRhKGNoYW4sICh2b2lkICopJmRhdCk7DQo+
-ID4gKwkJaWYgKCFwcml2LT5zY3UpIHsNCj4gPiArCQkJZGF0ID0gaW14X211X3JlYWQocHJpdiwg
-cHJpdi0+ZGNmZy0+eFJSW2NwLT5pZHhdKTsNCj4gPiArCQkJbWJveF9jaGFuX3JlY2VpdmVkX2Rh
-dGEoY2hhbiwgKHZvaWQgKikmZGF0KTsNCj4gPiArCQl9IGVsc2Ugew0KPiA+ICsJCQlpbXhfbXVf
-eGNyX3Jtdyhwcml2LCAwLCBJTVhfTVVfeENSX1JJRW4oMCkpOw0KPiA+ICsJCQkqcF9tc2crKyA9
-IGlteF9tdV9yZWFkKHByaXYsIHByaXYtPmRjZmctPnhSUlswXSk7DQo+ID4gKwkJCWZvciAoaSA9
-IDE7IGkgPCBtc2cuaGRyLnNpemU7IGkrKykgew0KPiA+ICsJCQkJKnBfbXNnKysgPSBpbXhfbXVf
-cmVhZChwcml2LA0KPiA+ICsJCQkJCQkgICAgICAgcHJpdi0+ZGNmZy0+eFJSW2kgJSA0XSk7DQo+
-ID4gKwkJCX0NCj4gPiArCQkJaW14X211X3hjcl9ybXcocHJpdiwgSU1YX01VX3hDUl9SSUVuKDAp
-LCAwKTsNCj4gPiArCQkJbWJveF9jaGFuX3JlY2VpdmVkX2RhdGEoY2hhbiwgKHZvaWQgKikmbXNn
-KTsNCj4gPiArCQl9DQo+ID4gICAJfSBlbHNlIGlmICh2YWwgPT0gSU1YX01VX3hTUl9HSVBuKGNw
-LT5pZHgpKSB7DQo+ID4gICAJCWlteF9tdV93cml0ZShwcml2LCBJTVhfTVVfeFNSX0dJUG4oY3At
-PmlkeCksDQo+IHByaXYtPmRjZmctPnhTUik7DQo+ID4gICAJCW1ib3hfY2hhbl9yZWNlaXZlZF9k
-YXRhKGNoYW4sIE5VTEwpOyBAQCAtMTY5LDExICsxOTAsMjANCj4gQEAgc3RhdGljDQo+ID4gaW50
-IGlteF9tdV9zZW5kX2RhdGEoc3RydWN0IG1ib3hfY2hhbiAqY2hhbiwgdm9pZCAqZGF0YSkNCj4g
-PiAgIHsNCj4gPiAgIAlzdHJ1Y3QgaW14X211X3ByaXYgKnByaXYgPSB0b19pbXhfbXVfcHJpdihj
-aGFuLT5tYm94KTsNCj4gPiAgIAlzdHJ1Y3QgaW14X211X2Nvbl9wcml2ICpjcCA9IGNoYW4tPmNv
-bl9wcml2Ow0KPiA+ICsJc3RydWN0IGlteF9zY19ycGNfbXNnX21heCAqbXNnID0gZGF0YTsNCj4g
-PiAgIAl1MzIgKmFyZyA9IGRhdGE7DQo+ID4gKwlpbnQgaTsNCj4gPg0KPiA+ICAgCXN3aXRjaCAo
-Y3AtPnR5cGUpIHsNCj4gPiAgIAljYXNlIElNWF9NVV9UWVBFX1RYOg0KPiA+IC0JCWlteF9tdV93
-cml0ZShwcml2LCAqYXJnLCBwcml2LT5kY2ZnLT54VFJbY3AtPmlkeF0pOw0KPiA+ICsJCWlmIChw
-cml2LT5zY3UpIHsNCj4gPiArCQkJZm9yIChpID0gMDsgaSA8IG1zZy0+aGRyLnNpemU7IGkrKykg
-ew0KPiA+ICsJCQkJaW14X211X3dyaXRlKHByaXYsICphcmcrKywNCj4gPiArCQkJCQkgICAgIHBy
-aXYtPmRjZmctPnhUUltpICUgNF0pOw0KPiA+ICsJCQl9DQo+ID4gKwkJfSBlbHNlIHsNCj4gPiAr
-CQkJaW14X211X3dyaXRlKHByaXYsICphcmcsIHByaXYtPmRjZmctPnhUUltjcC0+aWR4XSk7DQo+
-ID4gKwkJfQ0KPiA+ICAgCQlpbXhfbXVfeGNyX3Jtdyhwcml2LCBJTVhfTVVfeENSX1RJRW4oY3At
-PmlkeCksIDApOw0KPiA+ICAgCQlicmVhazsNCj4gPiAgIAljYXNlIElNWF9NVV9UWVBFX1RYREI6
-DQo+ID4gQEAgLTI1OSw2ICsyODksNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG1ib3hfY2hhbl9v
-cHMgaW14X211X29wcyA9IHsNCj4gPiAgIHN0YXRpYyBzdHJ1Y3QgbWJveF9jaGFuICogaW14X211
-X3hsYXRlKHN0cnVjdCBtYm94X2NvbnRyb2xsZXIgKm1ib3gsDQo+ID4gICAJCQkJICAgICAgIGNv
-bnN0IHN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgKnNwKQ0KPiA+ICAgew0KPiA+ICsJc3RydWN0IGlt
-eF9tdV9wcml2ICpwcml2ID0gdG9faW14X211X3ByaXYobWJveCk7DQo+ID4gICAJdTMyIHR5cGUs
-IGlkeCwgY2hhbjsNCj4gPg0KPiA+ICAgCWlmIChzcC0+YXJnc19jb3VudCAhPSAyKSB7DQo+ID4g
-QEAgLTI3MCw3ICszMDEsOSBAQCBzdGF0aWMgc3RydWN0IG1ib3hfY2hhbiAqIGlteF9tdV94bGF0
-ZShzdHJ1Y3QNCj4gbWJveF9jb250cm9sbGVyICptYm94LA0KPiA+ICAgCWlkeCA9IHNwLT5hcmdz
-WzFdOyAvKiBpbmRleCAqLw0KPiA+ICAgCWNoYW4gPSB0eXBlICogNCArIGlkeDsNCj4gPg0KPiA+
-IC0JaWYgKGNoYW4gPj0gbWJveC0+bnVtX2NoYW5zKSB7DQo+ID4gKwkvKiBGb3IgVFgvUlggU0NV
-LCBvbmx5IG9uZSBjaGFubmVsIHN1cHBvcnRlZCAqLw0KPiA+ICsJaWYgKChjaGFuID49IG1ib3gt
-Pm51bV9jaGFucykgfHwNCj4gPiArCSAgICAocHJpdi0+c2N1ICYmIHR5cGUgPCAxICYmIGlkeCA+
-PSAxKSkgew0KPiA+ICAgCQlkZXZfZXJyKG1ib3gtPmRldiwgIk5vdCBzdXBwb3J0ZWQgY2hhbm5l
-bCBudW1iZXI6ICVkLg0KPiAodHlwZTogJWQsIGlkeDogJWQpXG4iLCBjaGFuLCB0eXBlLCBpZHgp
-Ow0KPiA+ICAgCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsNCj4gPiAgIAl9DQo+ID4gQEAgLTM0
-MSw2ICszNzQsMTEgQEAgc3RhdGljIGludCBpbXhfbXVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZQ0KPiAqcGRldikNCj4gPiAgIAl9DQo+ID4NCj4gPiAgIAlwcml2LT5zaWRlX2IgPSBvZl9w
-cm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJmc2wsbXUtc2lkZS1iIik7DQo+ID4gKwlucCA9IG9mX2Zp
-bmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJmc2wsaW14LXNjdSIpOw0KPiANCj4gVGhp
-cyB3aWxsIGNvbmZpZ3VyZSBldmVyeSBNVSBvbiB0aGUgU29DIGFzIFNDVSwgZXZlbiBpdCBpcyBu
-b3QgY29tbXVuaWNhdGluZw0KPiB3aXRoIGl0Lg0KPiANCj4gPiArCWlmIChucCkgew0KPiA+ICsJ
-CXByaXYtPnNjdSA9IHRydWU7DQo+ID4gKwkJb2Zfbm9kZV9wdXQobnApOw0KPiA+ICsJfQ0KPiA+
-DQo+IA0KPiBQbGVhc2UgdGFrZSBhIGxvb2sgYXQgZHJpdmVycy9yZW1vdGVwcm9jL2lteF9ycHJv
-Yy5jIGVzcGVjaWFsbHkgdGhlIHVzZSBvZg0KPiBzdHJ1Y3QgaW14X3Jwcm9jX2RjZmcuDQo+IElu
-dHJvZHVjZSBzaW1pYWxyIHN0cnVjdCBpbiB0aGUgaW14LW1haWxib3guYw0KDQpvaywgSSdsbCBp
-bnRyb2R1Y2Ugc29tZXRoaW5nIGxpa2UgdGhhdC4NCg0KPiANCj4gSXQgd2lsbCBiZSBzb21lIHRo
-aW5nIGxpa2U6DQo+IHN0cnVjdCBpbXhfbXVfZGNmZyB7DQo+IAl1bnNpZ25lZCBpbnQgY2hhbnM7
-IC8qIG51bWJlciBvZiBzdXBwb3J0ZWQgY2hhbm5lbHMgKi8NCj4gCWludCAoKnR4KShzdHJ1Y3Qg
-aW14X211X3ByaXYgKnByaXYsIHN0cnVjdCBpbXhfbXVfY29uX3ByaXYgKmNwKTsNCj4gCWludCAo
-KnJ4KShzdHJ1Y3QgaW14X211X3ByaXYgKnByaXYsIHN0cnVjdCBpbXhfbXVfY29uX3ByaXYgKmNw
-KTsgfQ0KPiANCj4gRGVmaW5lIGZ1bmN0aW9ucyBmb3IgZ2VuZXJpYyB0eC9yeC4gQW5kIGZvciBT
-Q1Ugc3BlY2lmaWMgdHgvcnguIFBsZWFzZSwgYWRkDQo+IHNhbml0eSBjaGVjayBpbiB0byBTQ1Ug
-c3BlY2lmaWMgZnVuY3Rpb25zLiBJbiBjdXJyZW50IGltcGxlbWVudGF0aW9uIGFuIGVycm9yDQo+
-IG9uIFNDVSBzaWRlIHdpbGwgY291c2Ugc3RhY2sgY29ycnVwdGlvbiBvbiBMaW51eCBzaWRlLg0K
-DQpXZSBleHBlY3QgU0NVIG5vdCBjcmFzaCBvciBoYXZlIGVycm9yIGJlaGF2aW9yLiBBbnl3YXkg
-SSdsbCBhZGQgY2hlY2sgaW4gTGludXgNCnNpZGUuDQoNCj4gDQo+IFVzZSBjb21wYXRpYmxlIHN0
-cmluZyAoc29tZSB0aGluZyBsaWtlIGZzbCxpbXg4LW11LXNjdSkgdG8gZGV0ZWN0IHByb3Blcg0K
-PiBtZXRyaWNzIG9mIG5ldyBkZXZpY2UuDQoNCm9rLiBUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlv
-bnMuDQoNClRoYW5rcywNClBlbmcuDQoNCj4gDQo+IEtpbmQgcmVnYXJkcywNCj4gT2xla3NpaiBS
-ZW1wZWwNCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAg
-IHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
-PWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDEl
-N0NwZW5nLmZhbiU0MG54cC5jb20lN0M5NmU0YjUNCj4gZmE5MzlkNDc5MjljNDIwOGQ3YjliYzI2
-YjQlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3DQo+IEMwJTdDMCU3QzYzNzE4
-MjA5MDA2NzMxMzQ4MSZhbXA7c2RhdGE9eSUyQkk3ajA1Q3hzejJlNjdhTmlXRDMNCj4gVGczJTJG
-Q1kxSk5JSUJJZkdtNGoxYkI0JTNEJmFtcDtyZXNlcnZlZD0wICB8DQo+IFBlaW5lciBTdHIuIDYt
-OCwgMzExMzcgSGlsZGVzaGVpbSwgR2VybWFueSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMA0K
-PiB8DQo+IEFtdHNnZXJpY2h0IEhpbGRlc2hlaW0sIEhSQSAyNjg2ICAgICAgICAgICB8IEZheDoN
-Cj4gKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0K
+Hi Uwe,
+
+On 25/02/20 12:18 PM, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Tue, Feb 25, 2020 at 10:32:42AM +0530, Lokesh Vutla wrote:
+>> On 24/02/20 2:25 PM, Uwe Kleine-König wrote:
+>>> Hello,
+>>>
+>>> On Mon, Feb 24, 2020 at 10:51:34AM +0530, Lokesh Vutla wrote:
+>>>> Only the Timer control register(TCLR) can be updated only when the timer
+>>>> is stopped. Registers like Counter register(TCRR), loader register(TLDR),
+>>>> match register(TMAR) can be updated when the counter is running. Since
+>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+>>>> timer for period/duty_cycle update.
+>>>>
+>>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>>> ---
+>>>>  drivers/pwm/pwm-omap-dmtimer.c | 14 --------------
+>>>>  1 file changed, 14 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+>>>> index f13be7216847..58c61559e72f 100644
+>>>> --- a/drivers/pwm/pwm-omap-dmtimer.c
+>>>> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+>>>> @@ -102,7 +102,6 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+>>>>  	u32 load_value, match_value;
+>>>>  	struct clk *fclk;
+>>>>  	unsigned long clk_rate;
+>>>> -	bool timer_active;
+>>>>  
+>>>>  	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
+>>>>  		duty_ns, period_ns);
+>>>> @@ -178,25 +177,12 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+>>>>  	load_value = (DM_TIMER_MAX - period_cycles) + 1;
+>>>>  	match_value = load_value + duty_cycles - 1;
+>>>>  
+>>>> -	/*
+>>>> -	 * We MUST stop the associated dual-mode timer before attempting to
+>>>> -	 * write its registers, but calls to omap_dm_timer_start/stop must
+>>>> -	 * be balanced so check if timer is active before calling timer_stop.
+>>>> -	 */
+>>>> -	timer_active = pm_runtime_active(&omap->dm_timer_pdev->dev);
+>>>> -	if (timer_active)
+>>>> -		omap->pdata->stop(omap->dm_timer);
+>>>> -
+>>>>  	omap->pdata->set_load(omap->dm_timer, true, load_value);
+>>>>  	omap->pdata->set_match(omap->dm_timer, true, match_value);
+>>>
+>>> (Without having looked into the depths of the driver I assume
+>>> .set_load() sets the period of the PWM and .set_match() the duty cycle.)
+>>
+>> Right.
+>>
+>>>
+>>> What happens on a running PWM if you change the period? Consider you
+>>> change from duty_cycle = 1000, period = 5000 to duty_cycle = 4000,
+>>> period = 10000. As you set the period first, can it happen the hardware
+>>> produces a cycle with duty_cycle = 1000, period = 10000?
+>>
+>> No. So, the current cycle is un affected with duty_cycle = 1000 and period =
+>> 5000. Starting from next cycle new settings gets reflected with duty_cycle =
+>> 4000 and period = 10000.
+> 
+> Is the reference manual for this hardware publically available?
+
+AM335x TRM [0] Section 20.1.3.5 Pulse-Width Modulation (Page 4445).
+
+[0] http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+
+> 
+> So the .set_load callback just writes a shadow register and .set_match
+> latches it into hardware atomically with its own register changes? A
+> comment in the source code about this would be good. Also if .set_load
+> doesn't work without .set_match I wonder if it is sane to put their
+> logic in two different functions.
+
+Just to give a little bit of background:
+- The omap timer is an upward counter that can be started and stopped at any time.
+- Once the timer counter overflows, it gets loaded with a predefined load
+value.(Or can be configured to not re load at all).
+- Timer has a configurable output pin which can be toggled in the following two
+cases:
+	- When the counter overflows
+	- When the counter matches with a predefined register(match register).
+
+Using this o/p pin the driver tries to generate a PWM with period = (OVERFLOW -
+LOAD_VALUE) and duty_cycle = (MATCH_VALUE - LOAD_VALUE).
+
+.set_load will configure the load value .set_match will configure the match
+value. The configured values gets effected only in the next cycle of PWM.
+
+I hope this is clear. Let me know if you need more details.
+
+Thanks and regards,
+Lokesh
