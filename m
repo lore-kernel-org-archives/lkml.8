@@ -2,103 +2,169 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C40C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942A0C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22EA21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAA121744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EuHICkRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgBYPH1 (ORCPT
+        id S1730935AbgBYPJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:07:27 -0500
-Received: from mga05.intel.com ([192.55.52.43]:24506 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729510AbgBYPH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:07:27 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 07:07:27 -0800
-X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
-   d="scan'208";a="284693145"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 07:07:22 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 39A9D2089D; Tue, 25 Feb 2020 17:07:21 +0200 (EET)
-Date:   Tue, 25 Feb 2020 17:07:21 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Steve Longerbeam <slongerbeam@gmail.com>
-Cc:     linux-media@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND PATCH v3 02/17] media: v4l2-fwnode: Pass notifier to
- v4l2_async_register_fwnode_subdev()
-Message-ID: <20200225150721.GO5379@paasikivi.fi.intel.com>
-References: <20200215194136.10131-1-slongerbeam@gmail.com>
- <20200215194136.10131-3-slongerbeam@gmail.com>
+        Tue, 25 Feb 2020 10:09:14 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45298 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730867AbgBYPJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 10:09:13 -0500
+Received: by mail-qv1-f68.google.com with SMTP id l14so5813713qvu.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:09:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hfJPS0aSSmWSxrS1z6hdTyQpH7CN51v0RStp/ll4t7o=;
+        b=EuHICkRJTvkHvHmdiItNxQmplfi8eYk+gJ1lsh3yb6qmiy50HtAcW4+6j+Mq7L4S85
+         1Mx2+Xg9Bd/Fg9ATFMej1fO+dpJMo9f24wCo4wzJ0r+xUCzzrioU6ebC2QnfYRvz+h7N
+         0iV6DkwnkxWArUeqWGI26iIDWnkxJ7VYi5YoAnqZl+y1SbyY7eK8rTtO0vGzupfISbV6
+         LcVjw0KL+tiFPRVvoKt9i+kgWphbLlJ+vSNr49lvhFRDJeF5yV4PON4VEypMp1KOWQ8u
+         2aovX5x4le7186emQ53Svd69x3ngLPPEVkyUAzhtjafAfodoZ6pZjS62OEmAa5Y0dki1
+         7NMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hfJPS0aSSmWSxrS1z6hdTyQpH7CN51v0RStp/ll4t7o=;
+        b=eF1+W7Ke+o3GxWmG3T9Pqr2yt3HaoUXEbH9KGYDNP+w3RMsy6/W4vx47f8AwvAo8+o
+         aITtBUiv5Vu5hbo9zQcae+RO3siNNc7gygF1TMRINv3kiPuiTtT2pG6ifVQD610jXoXK
+         lWfuDjDM/7gBTTHuM9BTFGYC2Hx2T9wc9I17kpGodD2zomqF2stqN5x5FCkIHcqY8Bqd
+         3NljXCtY5SnxdXLs8OtTo223+W79krOEz5/tw8KCrX5416zbIRvI/5i613RhZ0jCPyik
+         RdqrzwB1hnHztYjVnsVmjMX17MGhIwhmS7KFwbXd9kpzD4HIT9rDGp0EnMJ87SkheCLD
+         mNJw==
+X-Gm-Message-State: APjAAAXZRX4u910IowxkB5V4zTvXE6ma8jh/l751i+SRY+D/sabADlq+
+        iTfOAymbh3E/Fic+eKNfbXps7UAPZpJADqVCsqdO0g==
+X-Google-Smtp-Source: APXvYqyM4ugTOOU3/Yh4aSow5D9jJTB19rycM3Nqj6TBmlDHljnuFLqRTOLoo/f+9kfOyY6wAHJ5n4n8pCpjxGIRRyQ=
+X-Received: by 2002:ad4:4e50:: with SMTP id eb16mr50742796qvb.34.1582643352427;
+ Tue, 25 Feb 2020 07:09:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200215194136.10131-3-slongerbeam@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <000000000000a719a9059f62246e@google.com> <CAHC9VhTh6s1m7YBZp-3XO3q2EcjtMKUTcXwRzDTj_LSJd+cHTA@mail.gmail.com>
+ <CACT4Y+Y3QN9=c5JvJkecCtdQGTxHYRXMhS4f1itwU5JEZmcYtA@mail.gmail.com> <db643ed6efb6fa04fe5753af68d13f1b2ffcf821.camel@redhat.com>
+In-Reply-To: <db643ed6efb6fa04fe5753af68d13f1b2ffcf821.camel@redhat.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 25 Feb 2020 16:09:01 +0100
+Message-ID: <CACT4Y+a6Lp=YGYrxDubwrXiMKc5R5WhehR+Q5E1jEu452d0tfA@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in cipso_v4_sock_setattr
+To:     Paolo Abeni <pabeni@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        syzbot <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com>,
+        cpaasch@apple.com, David Miller <davem@davemloft.net>,
+        Davide Caratti <dcaratti@redhat.com>,
+        Florian Westphal <fw@strlen.de>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        matthieu.baerts@tessares.net, netdev <netdev@vger.kernel.org>,
+        peter.krystad@linux.intel.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Tue, Feb 25, 2020 at 3:46 PM Paolo Abeni <pabeni@redhat.com> wrote:
+>
+> On Tue, 2020-02-25 at 15:27 +0100, Dmitry Vyukov wrote:
+> > On Tue, Feb 25, 2020 at 3:20 PM Paul Moore <paul@paul-moore.com> wrote:
+> > > On Tue, Feb 25, 2020 at 3:19 AM syzbot
+> > > <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com> wrote:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    ca7e1fd1 Merge tag 'linux-kselftest-5.6-rc3' of git://git...
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=179f0931e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=a61f2164c515c07f
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=f4dfece964792d80b139
+> > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fdfdede00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17667de9e00000
+> > > >
+> > > > The bug was bisected to:
+> > > >
+> > > > commit 2303f994b3e187091fd08148066688b08f837efc
+> > > > Author: Peter Krystad <peter.krystad@linux.intel.com>
+> > > > Date:   Wed Jan 22 00:56:17 2020 +0000
+> > > >
+> > > >     mptcp: Associate MPTCP context with TCP socket
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fbec81e00000
+> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=16fbec81e00000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=12fbec81e00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com
+> > > > Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+> > > >
+> > > > BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > > > #PF: supervisor instruction fetch in kernel mode
+> > > > #PF: error_code(0x0010) - not-present page
+> > > > PGD 8e171067 P4D 8e171067 PUD 93fa2067 PMD 0
+> > > > Oops: 0010 [#1] PREEMPT SMP KASAN
+> > > > CPU: 0 PID: 8984 Comm: syz-executor066 Not tainted 5.6.0-rc2-syzkaller #0
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > > RIP: 0010:0x0
+> > > > Code: Bad RIP value.
+> > > > RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
+> > > > RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
+> > > > RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
+> > > > RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
+> > > > R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
+> > > > R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
+> > > > FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > Call Trace:
+> > > >  cipso_v4_sock_setattr+0x34b/0x470 net/ipv4/cipso_ipv4.c:1888
+> > > >  netlbl_sock_setattr+0x2a7/0x310 net/netlabel/netlabel_kapi.c:989
+> > > >  smack_netlabel security/smack/smack_lsm.c:2425 [inline]
+> > > >  smack_inode_setsecurity+0x3da/0x4a0 security/smack/smack_lsm.c:2716
+> > > >  security_inode_setsecurity+0xb2/0x140 security/security.c:1364
+> > > >  __vfs_setxattr_noperm+0x16f/0x3e0 fs/xattr.c:197
+> > > >  vfs_setxattr fs/xattr.c:224 [inline]
+> > > >  setxattr+0x335/0x430 fs/xattr.c:451
+> > > >  __do_sys_fsetxattr fs/xattr.c:506 [inline]
+> > > >  __se_sys_fsetxattr+0x130/0x1b0 fs/xattr.c:495
+> > > >  __x64_sys_fsetxattr+0xbf/0xd0 fs/xattr.c:495
+> > > >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+> > > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > >
+> > > Netdev folks, I'm not very familiar with the multipath TCP code so I
+> > > was wondering if you might help me out a bit with this report.  Based
+> > > on the stack trace above it looks like for a given AF_INET sock "sk",
+> > > inet_sk(sk)->is_icsk is true but inet_csk(sk) is NULL; should this be
+> > > possible under normal conditions or is there an issue somewhere?
+> >
+> > Paolo has submitted some patch for testing for this bug, not sure if
+> > you have seen it, just in case:
+> > https://groups.google.com/forum/#!msg/syzkaller-bugs/dqwnTBh-MQw/LhgSZYGsBgAJ
+>
+> I sent the patch to the syzbot ML only, for testing before posting on
+> netdev, so Paul likely have not seen it yet, sorry.
+>
+> @Dmitry: I did not get any reply yet from syzbot, are there any
+> problems or is this the usual time-frame?
 
-On Sat, Feb 15, 2020 at 11:41:21AM -0800, Steve Longerbeam wrote:
-> Instead of allocating a notifier in v4l2_async_register_fwnode_subdev(),
-> have the caller provide one. This allows the caller to implement
-> notifier ops (bind, unbind).
-> 
-> The caller is now responsible for first initializing its notifier with a
-> call to v4l2_async_notifier_init().
-> 
-> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-
-Instead of improving v4l2_async_register_fwnode_subdev(), could you convert
-the users (IMX driver in this case) to call the preferred APIs instead? As
-the lines below show, v4l2_async_register_fwnode_subdev() has only two
-users left --- the other one of which is the IMX driver. After converting
-these two, we could just remove this API.
-
-See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c and
-drivers/media/platform/omap3isp/isp.c for examples.
-
-> ---
-> Changes in v3:
-> - added the missing calls to unregister/cleanup the new subdev notifiers.
->   Reported by Rui Silva.
-> ---
->  drivers/media/platform/video-mux.c         |  8 +++++++-
->  drivers/media/v4l2-core/v4l2-fwnode.c      | 11 +----------
->  drivers/staging/media/imx/imx6-mipi-csi2.c |  7 ++++++-
->  drivers/staging/media/imx/imx7-media-csi.c |  7 ++++++-
->  drivers/staging/media/imx/imx7-mipi-csis.c |  9 ++++++++-
->  include/media/v4l2-fwnode.h                | 12 ++++++++----
->  6 files changed, 36 insertions(+), 18 deletions(-)
-
--- 
-Kind regards,
-
-Sakari Ailus
+The testing is queued after bisection of this guy:
+https://syzkaller.appspot.com/bug?id=c0a75a31c5fa84e6e5d3131fd98a5b56e2141b9a
+which has been running since 6pm yesterday...
