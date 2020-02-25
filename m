@@ -2,136 +2,242 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B788C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22560C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DE7222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kRtX+kgw"
+	by mail.kernel.org (Postfix) with ESMTP id EAF4E2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbgBYMIu (ORCPT
+        id S1730624AbgBYMIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:08:50 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37959 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730608AbgBYMIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:08:48 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p7so1037251pli.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 04:08:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+p6H2ZNLGX3Lb58Cw5KgycQ+ehTxEdhQmQiKBPEVO+U=;
-        b=kRtX+kgwVQA0xe9sRwmpzh2Hui+5ZOMUT7TdrKqB2mMpSLgZ86Fqj8SOCnZs3muWGF
-         6vT48SozMlKzlGQ2X8jhOJQC1Z2rxPt0ypBryt23mAIGx+ZD6ZCFvbhqHOa4MSIw/2E2
-         0M0giWjJz5nUIDSxGjUcMyhOt770JuOtcAQwhNnNdxYYn4Of5WIkZ3UZS0mnB+J/oorL
-         8FiX6ksmz+xxIvyrDzA9G/stTptlif7VZhicvZfl1kg5Zk9APlhlSy1JZdmc5LjGEPx1
-         DgC8Gs1hixUADJ/AQBk2r/8GmiJvyTn2Z2QVk60hgQLVo120Ep473xU9hm7EADhF6/R1
-         5ZDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+p6H2ZNLGX3Lb58Cw5KgycQ+ehTxEdhQmQiKBPEVO+U=;
-        b=tzTZX7y/PmYhxtD12VdYYwvqvkwPuZ1mAMO4t/4lcznhq7aYHIeebQldyxwUx8ZrFL
-         Jx/IWkIz1Odqg/gSnZtFPPj+TmS6KJvFNoN6YcDDoIiI9PvgsODRPki3MWW6BW85M5nV
-         wkljlrhjEUQhmJxnKc0vhhVqdJXSQKQfqPW5u0snXnOeieEpWBbiJEj+tjalt9Mf3Tki
-         GlGEaFO7o+TZps3WZ7ERUw+UtZhT6XekOfz2zACf3vbhUW2TRA1o1CyxeKHtYxFcAp0q
-         FoGc88/gYQVo4b9tod6TJ1o6QQOewR49xnt2bPPQLMwQspVfkHW4TJh75SM1pZTdtc5Z
-         KuHg==
-X-Gm-Message-State: APjAAAVvlyeKtAYqFwIipxn9iXg8wt4y4G40OR5NGgiBZuqk0uQzX1JG
-        UYVZEpL2rkgWPz2DR7J7f6yDYnoryZY=
-X-Google-Smtp-Source: APXvYqzxEigKbggFpsVzsSSJ3ezBZ/GPuFc6AHh6gYbU7LdMoKJBXbkvk3VtA9xf3T2FIbWdCZu2bA==
-X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr53776336plb.309.1582632526707;
-        Tue, 25 Feb 2020 04:08:46 -0800 (PST)
-Received: from localhost ([103.195.202.114])
-        by smtp.gmail.com with ESMTPSA id d3sm3353314pjx.10.2020.02.25.04.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 04:08:45 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vkoul@kernel.org, daniel.lezcano@linaro.org,
-        bjorn.andersson@linaro.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 3/3] dt-bindings: thermal: tsens: Make dtbs_check pass for msm8996 tsens
-Date:   Tue, 25 Feb 2020 17:38:29 +0530
-Message-Id: <80eaa4d88a7d9951fed4bd37d42bbae51e926be8.1582632110.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1582632110.git.amit.kucheria@linaro.org>
-References: <cover.1582632110.git.amit.kucheria@linaro.org>
+        Tue, 25 Feb 2020 07:08:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:49958 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729458AbgBYMIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:08:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFD47113E;
+        Tue, 25 Feb 2020 04:08:52 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35F0C3F6CF;
+        Tue, 25 Feb 2020 04:08:51 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:08:41 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
+        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
+ initialization
+Message-ID: <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+ <20200217121036.3057-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217121036.3057-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The qcom-tsens binding requires a SoC-specific and a TSENS
-family-specific binding to be specified in the compatible string.
+On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
+> Add support to defer core initialization and to receive a notifier
+> when core is ready to accommodate platforms where core is not for
+> initialization untile reference clock from host is available.
 
-Since them family-specific binding is not listed in the .dtsi file, we
-see the following warnings in 'make dtbs_check'. Fix them.
+I don't understand this commit log, please reword it and fix
+the typos, I would merge it then, thanks.
 
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is not valid
-under any of the given schemas (Possible causes of the failure):
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is too short
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+Lorenzo
 
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is not valid
-under any of the given schemas (Possible causes of the failure):
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is too short
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-/home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
-['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 7ae082ea14ea..f157cd4f53b4 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -446,7 +446,7 @@
- 		};
- 
- 		tsens0: thermal-sensor@4a9000 {
--			compatible = "qcom,msm8996-tsens";
-+			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
- 			reg = <0x004a9000 0x1000>, /* TM */
- 			      <0x004a8000 0x1000>; /* SROT */
- 			#qcom,sensors = <13>;
-@@ -457,7 +457,7 @@
- 		};
- 
- 		tsens1: thermal-sensor@4ad000 {
--			compatible = "qcom,msm8996-tsens";
-+			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
- 			reg = <0x004ad000 0x1000>, /* TM */
- 			      <0x004ac000 0x1000>; /* SROT */
- 			#qcom,sensors = <8>;
--- 
-2.20.1
-
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> V3:
+> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> V2:
+> * Addressed review comments from Kishon
+> 
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+>  1 file changed, 77 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index bddff15052cc..be04c6220265 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>  			   msecs_to_jiffies(1));
+>  }
+>  
+> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+> -				 void *data)
+> -{
+> -	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> -
+> -	queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+> -			   msecs_to_jiffies(1));
+> -
+> -	return NOTIFY_OK;
+> -}
+> -
+>  static void pci_epf_test_unbind(struct pci_epf *epf)
+>  {
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  	return 0;
+>  }
+>  
+> +static int pci_epf_test_core_init(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_header *header = epf->header;
+> +	const struct pci_epc_features *epc_features;
+> +	struct pci_epc *epc = epf->epc;
+> +	struct device *dev = &epf->dev;
+> +	bool msix_capable = false;
+> +	bool msi_capable = true;
+> +	int ret;
+> +
+> +	epc_features = pci_epc_get_features(epc, epf->func_no);
+> +	if (epc_features) {
+> +		msix_capable = epc_features->msix_capable;
+> +		msi_capable = epc_features->msi_capable;
+> +	}
+> +
+> +	ret = pci_epc_write_header(epc, epf->func_no, header);
+> +	if (ret) {
+> +		dev_err(dev, "Configuration header write failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = pci_epf_test_set_bar(epf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (msi_capable) {
+> +		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> +		if (ret) {
+> +			dev_err(dev, "MSI configuration failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (msix_capable) {
+> +		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> +		if (ret) {
+> +			dev_err(dev, "MSI-X configuration failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+> +				 void *data)
+> +{
+> +	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +	int ret;
+> +
+> +	switch (val) {
+> +	case CORE_INIT:
+> +		ret = pci_epf_test_core_init(epf);
+> +		if (ret)
+> +			return NOTIFY_BAD;
+> +		break;
+> +
+> +	case LINK_UP:
+> +		queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+> +				   msecs_to_jiffies(1));
+> +		break;
+> +
+> +	default:
+> +		dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+> +		return NOTIFY_BAD;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+>  static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  {
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  {
+>  	int ret;
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> -	struct pci_epf_header *header = epf->header;
+>  	const struct pci_epc_features *epc_features;
+>  	enum pci_barno test_reg_bar = BAR_0;
+>  	struct pci_epc *epc = epf->epc;
+> -	struct device *dev = &epf->dev;
+>  	bool linkup_notifier = false;
+> -	bool msix_capable = false;
+> -	bool msi_capable = true;
+> +	bool core_init_notifier = false;
+>  
+>  	if (WARN_ON_ONCE(!epc))
+>  		return -EINVAL;
+> @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	epc_features = pci_epc_get_features(epc, epf->func_no);
+>  	if (epc_features) {
+>  		linkup_notifier = epc_features->linkup_notifier;
+> -		msix_capable = epc_features->msix_capable;
+> -		msi_capable = epc_features->msi_capable;
+> +		core_init_notifier = epc_features->core_init_notifier;
+>  		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>  		pci_epf_configure_bar(epf, epc_features);
+>  	}
+> @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	epf_test->test_reg_bar = test_reg_bar;
+>  	epf_test->epc_features = epc_features;
+>  
+> -	ret = pci_epc_write_header(epc, epf->func_no, header);
+> -	if (ret) {
+> -		dev_err(dev, "Configuration header write failed\n");
+> -		return ret;
+> -	}
+> -
+>  	ret = pci_epf_test_alloc_space(epf);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = pci_epf_test_set_bar(epf);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (msi_capable) {
+> -		ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> -		if (ret) {
+> -			dev_err(dev, "MSI configuration failed\n");
+> -			return ret;
+> -		}
+> -	}
+> -
+> -	if (msix_capable) {
+> -		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> -		if (ret) {
+> -			dev_err(dev, "MSI-X configuration failed\n");
+> +	if (!core_init_notifier) {
+> +		ret = pci_epf_test_core_init(epf);
+> +		if (ret)
+>  			return ret;
+> -		}
+>  	}
+>  
+>  	if (linkup_notifier) {
+> -- 
+> 2.17.1
+> 
