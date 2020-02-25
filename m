@@ -2,127 +2,295 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA368C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85739C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7D724650
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDEi1gYl"
+	by mail.kernel.org (Postfix) with ESMTP id 54A2B21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgBYHh5 (ORCPT
+        id S1729543AbgBYHiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:37:57 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45680 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729481AbgBYHhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:37:48 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so6701559pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 23:37:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ug72A/vgrdmHIVdpr3zMNCL3H56NFZ8NAXeJKxd5VIo=;
-        b=pDEi1gYlasNmPGrqygmBasm60r/FtjxKJbgu4k+fU01Lpbbws9FwI+l0FyggrMrfw8
-         0TywUcVUcE6eDH/x1tLCESNAOLg5GflR/tj1V62c4ij6I0lqgBQCuSOB0ZEO4LteZdlj
-         lCamjaH8M6JaLgIu50NR1uYkqcxu/vEJNkUeYLwHCKUrGVYrDjEdUg4CJBiLgwgRV8EM
-         21cz3AhcL/QT09ImUvOvYnfvW7gSxFXeQJ9BePtmuJbMsKdK4I9GO55KmKdzYFu6Gxr8
-         E8/GMCSYYqKE5Z0UJJP3Tp2X+lv0AcZo20RDJwsgdK3zNUZEv7fyreYvwuC5JS86DFxJ
-         Y6Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ug72A/vgrdmHIVdpr3zMNCL3H56NFZ8NAXeJKxd5VIo=;
-        b=dUdxV7Swsq/CeJd2YqvTVnnMYA+Ee9Ut6+WlkQzesx6uKmJkU5XNvJkOTWxK3CvxjM
-         5b4B/H7IrifzVZhDT/3TSQADQd+6Cad4hQ2fzj64RMmJGqckCEEwFcfUU+OdZiuTK/lH
-         nXDqD3tzMZ+8m5kjrP2BpKq3yv4znWum4PgRQPPDUgKO6UPX1Azck5SiSHd4PxNqPaVn
-         h6XcGYcBhdmwjNMmY98kx9pAVO60+dBq5bnuPdFivL1WCpHdYPtLONj5Nn4bCGHrdcyI
-         yP5PDbeTjd4dIPDV3gGS3i8PKkD6mGanzALGy4QXf7bHcvxQWQaQP/BYBsVfi/tjej41
-         gwqQ==
-X-Gm-Message-State: APjAAAXw9AL5fJ2wKAJ4lrSk7JGazh5XKXq98CioRL4pkc9oRdhFWvrM
-        j/Enbsa7BbT+pQBtdHpCymE0DaBF
-X-Google-Smtp-Source: APXvYqwBnc/F3BTx7cSSKx9yuCG9NgaaS6u4J8P5NdiroM5iqOC7DIhqEjPmkP0xhbxHaeNsEvHanw==
-X-Received: by 2002:a63:d845:: with SMTP id k5mr54501802pgj.183.1582616265720;
-        Mon, 24 Feb 2020 23:37:45 -0800 (PST)
-Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id m128sm15979390pfm.183.2020.02.24.23.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 23:37:45 -0800 (PST)
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrei Vagin <avagin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: [PATCH v2 5/6] arm64/vdso: Restrict splitting VVAR VMA
-Date:   Mon, 24 Feb 2020 23:37:30 -0800
-Message-Id: <20200225073731.465270-6-avagin@gmail.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200225073731.465270-1-avagin@gmail.com>
-References: <20200225073731.465270-1-avagin@gmail.com>
+        Tue, 25 Feb 2020 02:38:17 -0500
+Received: from mga02.intel.com ([134.134.136.20]:27315 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729166AbgBYHiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:38:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 23:38:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
+   d="scan'208";a="317001077"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 24 Feb 2020 23:38:16 -0800
+Received: from [10.226.38.25] (unknown [10.226.38.25])
+        by linux.intel.com (Postfix) with ESMTP id 9325558043A;
+        Mon, 24 Feb 2020 23:38:13 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        simon.k.r.goldschmidt@gmail.com, Dinh Nguyen <dinguyen@kernel.org>,
+        tien.fong.chee@intel.com,
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
+ <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
+ <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
+Date:   Tue, 25 Feb 2020 15:38:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forbid splitting VVAR VMA resulting in a stricter ABI and reducing the
-amount of corner-cases to consider while working further on VDSO time
-namespace support.
+Hi,
 
-As the offset from timens to VVAR page is computed compile-time, the pages
-in VVAR should stay together and not being partically mremap()'ed.
+On 25/2/2020 2:41 PM, Vignesh Raghavendra wrote:
+>
+> On 25/02/20 11:54 am, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi Rob,
+>>
+>>       Thank you for the review comments...
+>>
+>> On 24/2/2020 11:54 PM, Rob Herring wrote:
+>>> On Tue, Feb 18, 2020 at 8:29 PM Ramuthevar,Vadivel MuruganX
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>> From: Ramuthevar Vadivel Murugan
+>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>> Cc the DT list if you want this reviewed.
+>> Sorry,  next patch will add DT list in CC.
+>>>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>>>> spi based flash memories.
+>>>>
+>>>> Signed-off-by: Ramuthevar Vadivel Murugan
+>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>> ---
+>>>>    .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147
+>>>> +++++++++++++++++++++
+>>>>    1 file changed, 147 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>>> b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..1a4d6e8d0d0b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>>> @@ -0,0 +1,147 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>> +
+>>>> +title: Cadence QSPI Flash Controller support
+>>>> +
+>>>> +maintainers:
+>>>> +  - Ramuthevar Vadivel Murugan
+>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: "spi-controller.yaml#"
+>>>> +
+>>>> +description: |
+>>>> +  Binding Documentation for Cadence QSPI controller,This controller is
+>>>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+>>>> +  has been tested On Intel's LGM SoC.
+>>>> +
+>>>> +  - compatible : should be one of the following:
+>>>> +        Generic default - "cdns,qspi-nor".
+>>>> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>>>> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>>>> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    oneOf:
+>>>> +      - items:
+>>>> +        - enum:
+>>>> +           - ti,k2g-qspi
+>>>> +        - const: cdns,qspi-nor
+>>>> +
+>>>> +      - items:
+>>>> +        - enum:
+>>>> +           - ti,am654-ospi
+>>>> +        - const: cdns,qspi-nor
+>>>> +
+>>>> +      - items:
+>>>> +        - enum:
+>>>> +           - intel,lgm-qspi
+>>>> +        - const: cdns,qspi-nor
+>>>> +
+>>>> +      - items:
+>>>> +        - const: cdns,qspi-nor
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 2
+>>>> +
+>>>> +  interrupts:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  clocks:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  cdns,fifo-depth:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description:
+>>>> +      Size of the data FIFO in words.
+>>> A 4GB fifo is valid? Add some constraints.
+>> 128 is valid, will update.
+> Nope, the width of this field is 8bits -> 256 bytes 
 
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
----
- arch/arm64/kernel/vdso.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+correct me if I am wrong, the width of this field is 4bits -> 128 bytes 
+(based on QUAD mode) .
 
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index fb32c6f76078..c003f7ee383a 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -235,6 +235,17 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 	return vmf_insert_pfn(vma, vmf->address, pfn);
- }
- 
-+static int vvar_mremap(const struct vm_special_mapping *sm,
-+		       struct vm_area_struct *new_vma)
-+{
-+	unsigned long new_size = new_vma->vm_end - new_vma->vm_start;
-+
-+	if (new_size != VVAR_NR_PAGES * PAGE_SIZE)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int __setup_additional_pages(enum arch_vdso_type arch_index,
- 				    struct mm_struct *mm,
- 				    struct linux_binprm *bprm,
-@@ -315,6 +326,7 @@ static struct vm_special_mapping aarch32_vdso_spec[C_PAGES] = {
- 	{
- 		.name = "[vvar]",
- 		.fault = vvar_fault,
-+		.mremap = vvar_mremap,
- 	},
- 	{
- 		.name = "[vdso]",
-@@ -497,6 +509,7 @@ static struct vm_special_mapping vdso_spec[A_PAGES] __ro_after_init = {
- 	{
- 		.name	= "[vvar]",
- 		.fault = vvar_fault,
-+		.mremap = vvar_mremap,
- 	},
- 	{
- 		.name	= "[vdso]",
--- 
-2.24.1
+>>>> +
+>>>> +  cdns,fifo-width:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description:
+>>>> +      Bus width of the data FIFO in bytes.
+>>> Add some constraints.
+>> 4 is valid , will fix it.
+>>>> +
+>>>> +  cdns,trigger-address:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description:
+>>>> +      32-bit indirect AHB trigger address.
+>>>> +
+>>>> +  cdns,rclk-en:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: |
+>>>> +      Flag to indicate that QSPI return clock is used to latch the
+>>>> read data
+>>>> +      rather than the QSPI clock. Make sure that QSPI return clock
+>>>> is populated
+>>>> +      on the board before using this property.
+>>>> +
+>>>> +# subnode's properties
+>>>> +patternProperties:
+>>>> +  "^.*@[0-9a-fA-F]+$":
+>>>> +    type: object
+>>>> +    description:
+>>>> +      flash device uses the subnodes below defined properties.
+>>>> +
+>>>> +  cdns,read-delay:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description:
+>>>> +      Delay for read capture logic, in clock cycles.
+>>> 4 billion clock delay is valid?
+>> based on the ref_clk , will add it.
+>>>> +
+>>>> +  cdns,tshsl-ns:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> You can drop this, anything with a standard unit suffix already has a
+>>> type.
+>> sure , will drop it.
+>>>> +    description: |
+>>>> +      Delay in nanoseconds for the length that the master mode chip
+>>>> select
+>>>> +      outputs are de-asserted between transactions.
+>>> Constraints...?
+>> 50ns, will add it.
+>>
+> This really depends on the input clk:
+>
+> Clock Delay for Chip Select Deassert:
+>
+> Delay in master reference clocks for the length that the master mode
+>
+> chip select outputs are de-asserted between transactions The
+>
+> minimum delay is always SCLK period to ensure the chip select is
+>
+> never re-asserted within an SCLK period.
+>
+> I don't see a easy way of verifying constraints in yaml.
+>
+> Same applies for below 3 properties as well.
 
+Thank you vignesh for  the detailed explanation.
+
+Regards
+Vadivel
+> Regards
+> Vignesh
+>
+>> Regards
+>> Vadivel
+>>>> +
+>>>> +  cdns,tsd2d-ns:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: |
+>>>> +      Delay in nanoseconds between one chip select being de-activated
+>>>> +      and the activation of another.
+>>>> +
+>>>> +  cdns,tchsh-ns:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: |
+>>>> +      Delay in nanoseconds between last bit of current transaction and
+>>>> +      deasserting the device chip select (qspi_n_ss_out).
+>>>> +
+>>>> +  cdns,tslch-ns:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: |
+>>>> +      Delay in nanoseconds between setting qspi_n_ss_out low and
+>>>> +      first bit transfer.
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +  - interrupts
+>>>> +  - clocks
+>>>> +  - cdns,fifo-depth
+>>>> +  - cdns,fifo-width
+>>>> +  - cdns,trigger-address
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    qspi: spi@ff705000 {
+>>>> +          compatible = "cdns,qspi-nor";
+>>>> +          #address-cells = <1>;
+>>>> +          #size-cells = <0>;
+>>>> +          reg = <0xff705000 0x1000>,
+>>>> +                <0xffa00000 0x1000>;
+>>>> +          interrupts = <0 151 4>;
+>>>> +          clocks = <&qspi_clk>;
+>>>> +          cdns,fifo-depth = <128>;
+>>>> +          cdns,fifo-width = <4>;
+>>>> +          cdns,trigger-address = <0x00000000>;
+>>>> +
+>>>> +          flash0: n25q00@0 {
+>>>> +              compatible = "jedec,spi-nor";
+>>>> +              reg = <0x0>;
+>>>> +              cdns,read-delay = <4>;
+>>>> +              cdns,tshsl-ns = <50>;
+>>>> +              cdns,tsd2d-ns = <50>;
+>>>> +              cdns,tchsh-ns = <4>;
+>>>> +              cdns,tslch-ns = <4>;
+>>>> +          };
+>>>> +    };
+>>>> +
+>>>> -- 
+>>>> 2.11.0
+>>>>
