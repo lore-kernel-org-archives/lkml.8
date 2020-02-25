@@ -2,225 +2,96 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A72FC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D90C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA84C21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0815C21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2Ft6uL3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPtF6e4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgBYIbH (ORCPT
+        id S1729816AbgBYIbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:31:07 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22847 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729622AbgBYIbH (ORCPT
+        Tue, 25 Feb 2020 03:31:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43523 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbgBYIbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:31:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582619465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JmkjEEqq8m5BjNADnDl327dChnkc9rLHPLw9n41A+qY=;
-        b=J2Ft6uL3qb2pUkrxSzHQSuCdB2OCostH1rV/uFJVI2B/TKrJmxoBV0yberxiiXKVlFyM7u
-        JKS/xUMWIFdWvtFbJ2ye3E+rPUp/98hUpbCF0oEdytKtW/QOkTQgoDlQm9w+aPNnVzFO6L
-        svGPKk94UfJIxUteZKeKnY/AtS+VR6A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432-w9QclnFEMXiaU5aR_jpDMA-1; Tue, 25 Feb 2020 03:31:04 -0500
-X-MC-Unique: w9QclnFEMXiaU5aR_jpDMA-1
-Received: by mail-wm1-f71.google.com with SMTP id k21so556790wmi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:31:04 -0800 (PST)
+        Tue, 25 Feb 2020 03:31:16 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so11305783oth.10;
+        Tue, 25 Feb 2020 00:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T1n3ktw5bPHodKuJWkYqa7LcyNgwBKRduxXfO03KSgk=;
+        b=PPtF6e4g3S/sEpHTe6yWznV3pLLYn4jvkZbGYyT1LHamFseFQCg8aHGs+syAQn4Aob
+         Jp/0iz1n5tZPJA/5IgQuGt3N7bLiUJu3Z2f4/Ris/HNhsLyhhwJj2FrAiYf4I7NPik1H
+         8L8rblY9IPH4PCf2m7g3P+nz8hgRIF4mVCqFLe4y2NKoRItTH/FfKV+MnAGzNzICM2pG
+         o3cyqKEdTSqBbE83IiBv9W4bvAhNOHaWnmYq1gzjBjvecwlPl4PXypHPdpW1A8JWPD3P
+         e8GFfxR5Be8JyXtDUq9rmisQfNyeZvaUvAd97/3q+AoazVyESRbYztISKWjfHprhhJAz
+         b9Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JmkjEEqq8m5BjNADnDl327dChnkc9rLHPLw9n41A+qY=;
-        b=kV+2IfvDBKT2F6n0jYfyDgwPGufDM7VeCbjKOFDYbVqxjrkdDsQxDgKvnpMx3oZo6k
-         aRLvkR63z7+lUKTR52EtzIZNbvZRQfJufEOgsEgHLur7kPx1XKzcCbqdrTs9dphbhCqd
-         y3JS7/NNqHnyhDYuDaby8xocIQ4tmfaWz/QoZjT51prvQpc4BXdsblSR4iWuO101UsxE
-         11snHgtzXlHOOHUFnJcJ1t99a6QquzUfSDze3jw2kpLmkt8Cqu68jLjQZQFG7ZLiv15r
-         LbwSut6oIPJ2bDDAMBzO2KO3IsWaPL3A5w3fvA0pxjS84/JhaIEbc1MaCzj3skY5y2JS
-         PBiw==
-X-Gm-Message-State: APjAAAW9RgVGUTUX/IN1XYB8h6ZMJzkZ5JaSuGgTBaKzL+TBawqEr6XM
-        lcnYx1VdlIpKTT9zYqtWOdpdB5RIEuX72+7eQbgCv1JuNYNf4L7QzOj6IFxB9YLdGz2j2+nI5d1
-        BBW67eg9Ui8S3pGCM0aP8V0v4
-X-Received: by 2002:adf:f586:: with SMTP id f6mr15471140wro.256.1582619462028;
-        Tue, 25 Feb 2020 00:31:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxskh69L3ehEc2A4u9xM0Hn8YDZ+SLMXLTAldmiH302cEMuq/teKvvxsxUwEbCUclTnpJrS4Q==
-X-Received: by 2002:adf:f586:: with SMTP id f6mr15471097wro.256.1582619461690;
-        Tue, 25 Feb 2020 00:31:01 -0800 (PST)
-Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id a13sm5456577wrt.55.2020.02.25.00.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 00:31:01 -0800 (PST)
-Date:   Tue, 25 Feb 2020 09:30:58 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        syzbot <syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: INFO: task hung in lock_sock_nested (2)
-Message-ID: <20200225083058.nfrrvsdgjxj3zcmw@steredhat>
-References: <0000000000004241ff059f2eb8a4@google.com>
- <20200223075025.9068-1-hdanton@sina.com>
- <20200224100853.wd67e7rqmtidfg7y@steredhat>
- <HK0P153MB0148B4C74BA6A60E295A03D8BFED0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T1n3ktw5bPHodKuJWkYqa7LcyNgwBKRduxXfO03KSgk=;
+        b=V6WcyjC3umXuqSCikxx3T32ZJ6Ce2ruR6+MlsxG7aCi3zi384CxMehZAgY2G5rQtSV
+         mrh591uOQ0q5z4eY6+LX9yA0BsaWbY5xUkJMWJsh7MEZ3DlKEpOba6f7OFc8vvvjX+O1
+         8TFf7HwPeIcVh3NwaoIHYI+0tVWlXBgyf1Ef2EVkjZNB74puIOjLL0uVQCxD0/9sXXh9
+         tlBa78/D+aSDQ2B3nNPmCsjhTcfgfBuCcv6Bf0T8Sd4OAVB1hDzqgpHpYZjCOI6p0Spv
+         8kiw0i/Se18YRhHd0rvlBcO9cnlOt8Z2/4lMmY0yInTHIopHm6aGkBeI/RUhrVJE0s46
+         O/fA==
+X-Gm-Message-State: APjAAAVYn+ClDfUBiWCVWt/GsvYSuioZxrcmzGwr7n/IvYlX1UnW0Ntk
+        dwOx/2Ti9OOhPNtAa9q9yksW7zTyA/TCTZF5onZbsTJh
+X-Google-Smtp-Source: APXvYqwf4tYE7xMxbpSLRtRLqsNTEz9tmoizRdcTISzmz8MO4Eb3Ofc4QxUWwhDN9FZG8XrYsxeYa9tB/Itt2Wv2G4s=
+X-Received: by 2002:a05:6830:1011:: with SMTP id a17mr41220600otp.45.1582619475111;
+ Tue, 25 Feb 2020 00:31:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HK0P153MB0148B4C74BA6A60E295A03D8BFED0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <1582022829-27032-1-git-send-email-wanpengli@tencent.com>
+ <87zhdg84n6.fsf@vitty.brq.redhat.com> <CANRm+Cyx+J+YK8FzFBV8LRNPeCaXPc93vjFdpA0D_hA+wrpywQ@mail.gmail.com>
+ <f433ff7e-72de-e2fd-5b71-a9ac92769c03@redhat.com>
+In-Reply-To: <f433ff7e-72de-e2fd-5b71-a9ac92769c03@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 25 Feb 2020 16:31:03 +0800
+Message-ID: <CANRm+CwfaZHHPyxC1qz_uq6ayw6vg2n0apLPoPH5dKXyy4FLeg@mail.gmail.com>
+Subject: Re: [PATCH] KVM: LAPIC: Recalculate apic map in batch
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 05:44:03AM +0000, Dexuan Cui wrote:
-> > From: Stefano Garzarella <sgarzare@redhat.com>
-> > Sent: Monday, February 24, 2020 2:09 AM
-> > ...
-> > > > syz-executor280 D27912  9768   9766 0x00000000
-> > > > Call Trace:
-> > > >  context_switch kernel/sched/core.c:3386 [inline]
-> > > >  __schedule+0x934/0x1f90 kernel/sched/core.c:4082
-> > > >  schedule+0xdc/0x2b0 kernel/sched/core.c:4156
-> > > >  __lock_sock+0x165/0x290 net/core/sock.c:2413
-> > > >  lock_sock_nested+0xfe/0x120 net/core/sock.c:2938
-> > > >  virtio_transport_release+0xc4/0xd60
-> > net/vmw_vsock/virtio_transport_common.c:832
-> > > >  vsock_assign_transport+0xf3/0x3b0 net/vmw_vsock/af_vsock.c:454
-> > > >  vsock_stream_connect+0x2b3/0xc70 net/vmw_vsock/af_vsock.c:1288
-> > > >  __sys_connect_file+0x161/0x1c0 net/socket.c:1857
-> > > >  __sys_connect+0x174/0x1b0 net/socket.c:1874
-> > > >  __do_sys_connect net/socket.c:1885 [inline]
-> > > >  __se_sys_connect net/socket.c:1882 [inline]
-> > > >  __x64_sys_connect+0x73/0xb0 net/socket.c:1882
-> > > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> 
-> My understanding about the call trace is: in vsock_stream_connect() 
-> after we call lock_sock(sk), we call vsock_assign_transport(), which may
-> call vsk->transport->release(vsk), i.e. virtio_transport_release(), and in
-> virtio_transport_release() we try to get the same lock and hang.
+On Tue, 25 Feb 2020 at 16:07, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 19/02/20 01:47, Wanpeng Li wrote:
+> >> An alternative idea: instead of making every caller return bool and
+> >> every call site handle the result (once) just add a
+> >> KVM_REQ_APIC_MAP_RECALC flag or a boolean flag to struct kvm. I
+> >> understand it may not be that easy as it sounds as we may be conunting
+> >> on valid mapping somewhere before we actually get to handiling
+> > Yes.
+> >
+> >> KVM_REQ_APIC_MAP_RECALC but we may preserve *some*
+> >> recalculate_apic_map() calls (and make it reset KVM_REQ_APIC_MAP_RECALC).
+> > Paolo, keep the caller return bool or add a booleen flag to struct
+> > kvm, what do you think?
+>
+> A third possibility: add an apic_map field to struct kvm_lapic, so that
+> you don't have to add bool return values everywhere.
 
-Yes, that's what I got.
+This apic_map field is boolean, right?
 
-> 
-> > > Seems like vsock needs a word to track lock owner in an attempt to
-> > > avoid trying to lock sock while the current is the lock owner.
-> 
-> I'm unfamilar with the g2h/h2g :-) 
-> Here I'm wondering if it's acceptable to add an 'already_locked'
-> parameter like this:
->   bool already_locked = true;
->   vsk->transport->release(vsk, already_locked) ?
-
-Could be acceptable, but I prefer to avoid.
-
->  
-> > Thanks for this possible solution.
-> > What about using sock_owned_by_user()?
->  
-> > We should fix also hyperv_transport, because it could suffer from the same
-> > problem.
-> 
-> IIUC hyperv_transport doesn't supprot the h2g/g2h feature, so it should not
-> suffers from the deadlock issue here?
-
-The h2g/g2h is in the vsock core, and the hyperv_transport is one of the g2h
-transports available.
-
-If we have a L1 VM with hyperv_transport (G2H) to communicate with L0 and a
-nested KVM VM (L2) we need to load also vhost_transport (H2G). If the
-user creates a socket and it tries the following:
-    connect(fd, <2,1234>) - socket assigned to hyperv_transport (because
-                            the user wants to reach the host using CID_HOST)
-        fails
-
-    connect(fd, <3,1234>) - socket must be reassigned to vhost_transport
-                            (because the user wants to reach a nested guest)
-
-So, I think in this case we can have the deadlock.
-
-> 
-> > At this point, it might be better to call vsk->transport->release(vsk)
-> > always with the lock taken and remove it in the transports as in the
-> > following patch.
-> > 
-> > What do you think?
-> > 
-> > 
-> > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> > index 9c5b2a91baad..a073d8efca33 100644
-> > --- a/net/vmw_vsock/af_vsock.c
-> > +++ b/net/vmw_vsock/af_vsock.c
-> > @@ -753,20 +753,18 @@ static void __vsock_release(struct sock *sk, int
-> > level)
-> >  		vsk = vsock_sk(sk);
-> >  		pending = NULL;	/* Compiler warning. */
-> > 
-> > -		/* The release call is supposed to use lock_sock_nested()
-> > -		 * rather than lock_sock(), if a sock lock should be acquired.
-> > -		 */
-> > -		if (vsk->transport)
-> > -			vsk->transport->release(vsk);
-> > -		else if (sk->sk_type == SOCK_STREAM)
-> > -			vsock_remove_sock(vsk);
-> > -
-> >  		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
-> >  		 * version to avoid the warning "possible recursive locking
-> >  		 * detected". When "level" is 0, lock_sock_nested(sk, level)
-> >  		 * is the same as lock_sock(sk).
-> >  		 */
-> >  		lock_sock_nested(sk, level);
-> > +
-> > +		if (vsk->transport)
-> > +			vsk->transport->release(vsk);
-> > +		else if (sk->sk_type == SOCK_STREAM)
-> > +			vsock_remove_sock(vsk);
-> > +
-> >  		sock_orphan(sk);
-> >  		sk->sk_shutdown = SHUTDOWN_MASK;
-> > 
-> > diff --git a/net/vmw_vsock/hyperv_transport.c
-> > b/net/vmw_vsock/hyperv_transport.c
-> > index 3492c021925f..510f25f4a856 100644
-> > --- a/net/vmw_vsock/hyperv_transport.c
-> > +++ b/net/vmw_vsock/hyperv_transport.c
-> > @@ -529,9 +529,7 @@ static void hvs_release(struct vsock_sock *vsk)
-> >  	struct sock *sk = sk_vsock(vsk);
-> >  	bool remove_sock;
-> > 
-> > -	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
-> >  	remove_sock = hvs_close_lock_held(vsk);
-> > -	release_sock(sk);
-> >  	if (remove_sock)
-> >  		vsock_remove_sock(vsk);
-> >  }
-> 
-> This looks good to me, but do we know why vsk->transport->release(vsk)
-> is called without holding the lock for 'sk' in the first place?
-
-Maybe because vmci_transport (the first transport implemented) doesn't
-require holding lock during the release.
-
-Okay, so I'll test this patch and then I'll send it out for reviews.
-
-Thanks for the feedback,
-Stefano
-
+    Wanpeng
