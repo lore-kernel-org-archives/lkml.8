@@ -4,152 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23EAC35E07
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AC8C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774042084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2618B2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 15:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YGb0+qLZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eEmdaWoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbgBYPBK (ORCPT
+        id S1730805AbgBYPCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 10:01:10 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730955AbgBYPBJ (ORCPT
+        Tue, 25 Feb 2020 10:02:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32742 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727983AbgBYPCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:01:09 -0500
+        Tue, 25 Feb 2020 10:02:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582642869;
+        s=mimecast20190719; t=1582642974;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9ULjGkWTIVT0iQqr4VAoSIQ4cPhGUNMPfY7Wm+7UQ8w=;
-        b=YGb0+qLZ0nKwxXeT+qmbbsB3csXANApoSKS/Wo8pia3qJYO68CZTUlklsW1+Gok3C0d44A
-        OBEq30OC4tg0A/wT3q8O/niDmaQms0v2/Bp6/ACDOC2lKZfQW13jvQkifC3Hjl0qoBFp1a
-        jnRgQUTI+1ApVoZkZp54nLUMbQEIo3o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-53fqC5C8MaGqofn20Xz7ew-1; Tue, 25 Feb 2020 10:00:51 -0500
-X-MC-Unique: 53fqC5C8MaGqofn20Xz7ew-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C68B1922965;
-        Tue, 25 Feb 2020 15:00:48 +0000 (UTC)
-Received: from [10.18.17.119] (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A505390F5F;
-        Tue, 25 Feb 2020 15:00:46 +0000 (UTC)
-Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
- kallsyms_on_each_symbol()
-To:     Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, akpm@linux-foundation.org,
-        "K . Prasad" <prasad@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Quentin Perret <qperret@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        live-patching@vger.kernel.org
-References: <20200221114404.14641-1-will@kernel.org>
- <alpine.LSU.2.21.2002251104130.11531@pobox.suse.cz>
- <20200225121125.psvuz6e7coa77vxe@pathway.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <943e7093-2862-53c6-b7f4-96c7d65789b9@redhat.com>
-Date:   Tue, 25 Feb 2020 10:00:45 -0500
+        bh=Qmdty5ApanVXOoViqBDfD6UpwzRENkkg2TmUrzZnyAI=;
+        b=eEmdaWoR1lgeMJaYN6Lxwokm2uCrGuxswseVJo/tdaCwqfUWDLbFIKIEatZH6Q2ZAm12D3
+        kFoEnWhYJlAr2VyWpWCgZut3yT60l5w7CmGLIORJuEfxoIzDuQSLiiOF9wYTolScMDPZWC
+        11E9O1XQAn3zGy+slNy4XiHm1bQ4OjI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-302-X1lG7aU1MU2S9-mCXf-3Ww-1; Tue, 25 Feb 2020 10:02:50 -0500
+X-MC-Unique: X1lG7aU1MU2S9-mCXf-3Ww-1
+Received: by mail-wr1-f72.google.com with SMTP id 90so7433922wrq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:02:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qmdty5ApanVXOoViqBDfD6UpwzRENkkg2TmUrzZnyAI=;
+        b=YvHP7UQM6g7UNciixxYW0m+GhDM03Q6qR9slRCRx8zj5S1Nvb/MiI4CFThE7MIg7UI
+         hMn0HwijwArXsTxfyjmLPLN7f5xcEf2ijnr+TvS6NhTp0dMaLW80YoyVCLv9C113qHFo
+         hfX4XOXmls1bAyhjGwrMC5XnV253ESx8P7QzJj346N862/XIyhcpCZWbjtPjk6Vmwfrq
+         16KXj3dhYRmUPYZF+QpDWD7hUfSD2yVUAWlpBP8dXxZ9uACRU5l7jpI4sqvH2pF9Ihrw
+         rI/S7gcjddXBcuRCjkHlKnq+ATZhMm9BWvRT+WI0qNburii9He+7qsWTjvYSxXUNagfE
+         mROQ==
+X-Gm-Message-State: APjAAAU36bh+cM4o3ynQtWXHnEGkFvuanZABC0xHCl2aFTr/yNfl/WWu
+        aCWg38kfxn99jvD6IXRmsQ+nkl1i1cwhrzEF5537EcF52v4r5mH9DbA7EzNkigEkZ//mo43s8y5
+        4h1whKtq7d8QPhkrxGa/L2Fi8
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr73445797wrs.365.1582642968951;
+        Tue, 25 Feb 2020 07:02:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzkYUCYshbyqHbkPfDvhCptK+3hJnYAP9y9sKsJfO/jrJLdoQQFtOEeiw50aW1MVd2Ye7HybQ==
+X-Received: by 2002:a5d:484f:: with SMTP id n15mr73445770wrs.365.1582642968670;
+        Tue, 25 Feb 2020 07:02:48 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:3577:1cfe:d98a:5fb6? ([2001:b07:6468:f312:3577:1cfe:d98a:5fb6])
+        by smtp.gmail.com with ESMTPSA id x6sm24495600wrr.6.2020.02.25.07.02.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 07:02:48 -0800 (PST)
+Subject: Re: [PATCH 29/61] KVM: x86: Add Kconfig-controlled auditing of
+ reverse CPUID lookups
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-30-sean.j.christopherson@intel.com>
+ <87a758oztt.fsf@vitty.brq.redhat.com>
+ <20200224224613.GO29865@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7f944dd3-aed3-be94-624b-35e7d35cb2db@redhat.com>
+Date:   Tue, 25 Feb 2020 16:02:47 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200225121125.psvuz6e7coa77vxe@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200224224613.GO29865@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 7:11 AM, Petr Mladek wrote:
-> On Tue 2020-02-25 11:05:39, Miroslav Benes wrote:
->> CC live-patching ML, because this could affect many of its users...
+On 24/02/20 23:46, Sean Christopherson wrote:
+>>>  static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+>>>  						  const struct cpuid_reg *cpuid)
+>>>  {
+>>> +#ifdef CONFIG_KVM_CPUID_AUDIT
+>>> +	WARN_ON_ONCE(entry->function != cpuid->function);
+>>> +	WARN_ON_ONCE(entry->index != cpuid->index);
+>>> +#endif
+>>> +
+>>>  	switch (cpuid->reg) {
+>>>  	case CPUID_EAX:
+>>>  		return &entry->eax;
 >>
->> On Fri, 21 Feb 2020, Will Deacon wrote:
->>
->>> Hi folks,
->>>
->>> Despite having just a single modular in-tree user that I could spot,
->>> kallsyms_lookup_name() is exported to modules and provides a mechanis=
-m
->>> for out-of-tree modules to access and invoke arbitrary, non-exported
->>> kernel symbols when kallsyms is enabled.
->=20
-> Just to explain how this affects livepatching users.
->=20
-> Livepatch is a module that inludes fixed copies of functions that
-> are buggy in the running kernel. These functions often
-> call functions or access variables that were defined static in
-> the original source code. There are two ways how this is currently
-> solved.
->=20
-> Some livepatch authors use kallsyms_lookup_name() to locate the
-> non-exported symbols in the running kernel and then use these
-> address in the fixed code.
->=20
+>> Honestly, I was thinking we should BUG_ON() and even in production builds
+>> but not everyone around is so rebellious I guess, so
+> 
+> LOL.  It's a waste of cycles for something that will "never" be hit, i.e.
+> we _really_ dropped the ball if a bug of this natures makes it into a
+> kernel release.
 
-FWIW, kallsyms was historically used by the out-of-tree kpatch support=20
-module to resolve external symbols as well as call set_memory_r{w,o}()=20
-API.  All of that support code has been merged upstream, so modern=20
-kpatch modules* no longer leverage kallsyms by default.
+There are quite a few WARN_ONs like that already.  I'd say each
+non-constant-folded call to __cpuid_enty_get_reg is a waste of cycles,
+if you're counting them. :)
 
-* That said, there are still some users who still use the deprecated=20
-support module with newer kernels, but that is not officially supported=20
-by the project.
-
-> Another possibility is to used special relocation sections,
-> see Documentation/livepatch/module-elf-format.rst
->=20
-> The problem with the special relocations sections is that the support
-> to generate them is not ready yet. The main piece would klp-convert
-> tool. Its development is pretty slow. The last version can be
-> found at
-> https://lkml.kernel.org/r/20190509143859.9050-1-joe.lawrence@redhat.com
->=20
-> I am not sure if this use case is enough to keep the symbols exported.
-> Anyway, there are currently some out-of-tree users.
->=20
-
-Another (temporary?) klp-relocation issue is that binutils has limited=20
-support for them as currently implemented:
-
-   https://sourceware.org/ml/binutils/2020-02/msg00317.html
-
-For example, try running strip or objcopy on a .ko that includes them=20
-and you may find surprising results :(
-
-
-As far as the klp-convert patchset goes, I forget whether or not we tied=20
-its use case to source-based livepatch creation.  If kallsyms goes=20
-unexported, perhaps it finds more immediate users.
-
-However since klp-convert provides nearly the same functionality as=20
-kallsyms, i.e. both can be used to circumvent symbol export licensing --=20
-one could make similar arguments against its inclusion.
-
-
-If there is renewed (or greater, to be more accurate) interest in the=20
-klp-convert patchset, we can dust it off and see what's left.  AFAIK it=20
-was blocked on arch-specific klp-relocations and whether per-object=E2=80=
-=8B=20
-livepatch modules would remove that requirement.
-
--- Joe
+Paolo
 
