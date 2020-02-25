@@ -2,148 +2,127 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D164DC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1E5C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2BE21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582633236;
-	bh=xDY7zai73eC2N8vYG3G690M8QzOxCYfyFxW5diYUeHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fEiJ+dqoSjVNQF3wQTQNKqPSgUu9aQWKmBueNVC1g6bGtmvbon4dWcd+adDWalWnk
-	 74mkdvrPlEhNzn3Kck5p7Dm/AWv5wxlelVO/oWnKRuwobkwyfIXd1R/FJBWjeZMVVx
-	 gbd28xH2JH45xHBmmHE4bWW8gmEAUt8sO7ipHSew=
+	by mail.kernel.org (Postfix) with ESMTP id AD80020CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MSwHJDmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgBYMUf (ORCPT
+        id S1729773AbgBYMYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:20:35 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36161 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgBYMUd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:20:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so2951965wma.1;
-        Tue, 25 Feb 2020 04:20:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=amk92U3UcxsrHm6N5J0I6q5dsvT99hQzwkL/foqerQs=;
-        b=qxh08AFadHE03NTG18Kz0drwFdL/rGmbkwOtVUJioU+uCT/I7+PAiFyQRhayLscUCp
-         0UWVA+Fn2KpeLCb6b5NEGm6jxXAQkbL042gGt3wC1jxQsLD667jEjQ9/JbcVo8vpzTXE
-         4HtVkss6TOWxZ7F7dgdN1qxGfDOzC2LVhqEeReGZ68ty4gQHK+iz1OGHhH8DbKrmx+Hw
-         DMyahZ92OInsXKHMT+QgMKNrREzN3ovAodOmgn+GJF41iS0VsDPtuEEIAzMvyonz3a/o
-         6dtjs9dwszom9i9YlgS0ZBoAgUVhsSMZYqVVZ8pbg51AzdHdpVPChB2cera6N1oACTHi
-         A/4w==
-X-Gm-Message-State: APjAAAU47CkylGhl5PuMaKgMJHUTSi6b9+OJDRVRQSXaHLuLmf995o/r
-        XTISdUD39ot6eZs9lN8r+8I=
-X-Google-Smtp-Source: APXvYqzW7PptqG/eG1Uvb+n2D7V1Fts295o9GejhOs1aKkDOF1kwZ28ZJ9hMkrqHMUoFy66Vx0cyCg==
-X-Received: by 2002:a05:600c:290e:: with SMTP id i14mr4991457wmd.24.1582633230894;
-        Tue, 25 Feb 2020 04:20:30 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id h2sm23815782wrt.45.2020.02.25.04.20.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 04:20:29 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:20:28 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200225122028.GS22443@dhcp22.suse.cz>
-References: <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
- <20200214165311.GA253674@cmpxchg.org>
- <20200217084100.GE31531@dhcp22.suse.cz>
- <20200218195253.GA13406@cmpxchg.org>
- <20200221101147.GO20509@dhcp22.suse.cz>
- <20200221154359.GA70967@cmpxchg.org>
+        Tue, 25 Feb 2020 07:24:03 -0500
+Received: from mail-dm6nam11on2064.outbound.protection.outlook.com ([40.107.223.64]:42817
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729048AbgBYMYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:24:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E1eCxmOoVIF1JLRRu0cCWavvzUqyQeecLVDGWkPshfgnOb3HqQE164AyEluJwc/sPbJQYBWZ2/aw8YddUrRZvRLky/1e6ZJQnQS64K8RlIeO8c79AEvgoh/cU8G9DaxHdY/fA55o9lAcYPPZa3JatHa6PL8FXbGsvC6WTzDhs00vt5nxvp0YZt1Fj0Um/8jbOLaMGi0OHAFxgtLExA8OKjckwb4Z9eBnxmTislOTl09QfAzkiZSy8WrrANhes13U+Z4sHCtL4uns1sVpN0bKPQteyPS27cg+VFJb99jpdAm696wAekMPYVhBn2f9/DdYxfec89VWqDK5j8EIPefYiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zOQYIhAlhsOMcgLdDsJOa46/769a/JFRgnSHKkt9lxs=;
+ b=Xs9mA9Db2wa3lvNqTyMIVZzfW0JZME6byZoHSBU8MYsXJP71tGJp+4zmwHaOtmIkpn7ofrFb7XgiwvacsGZPDwiam2zqcc+MKhhlU9RQlu8YtcN4sckzKmC4rc2lWySdFv2G8kZ9KEDurhggtVYcemkh81gSxrXCyImR3yxaY+G/vASNId0PfurIqedgzxKWUJxHNxrlF4he+QsCBzEU7VtHAIhstnFken6z5FvLgSKpAYkn28GdG7sy4uPvM5O/ybHUuBUaD2lKkftnUEzUCRF5q154JaARdZ2T6Q8Xc2dAzzlk+7jOaNxY0isVdQnu5xwAbSwtblIARy6FADhA5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zOQYIhAlhsOMcgLdDsJOa46/769a/JFRgnSHKkt9lxs=;
+ b=MSwHJDmqFOAZwm/3lwUyCnKkmTi4QW1Ft6uOSuoW3dBFRhi9NDuLE02su5uyLsSi/cFEkMqSImVovkcZCGXC3D4jUq4unoBOJdY/flH5j5nGfdNvAYHvU3Wnw5RdKqblsTf1XGmZxEonEsbxAMXq1SchOopX1RmatPUMoLFRHbs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sudheesh.Mavila@amd.com; 
+Received: from MN2PR12MB2974.namprd12.prod.outlook.com (2603:10b6:208:c1::11)
+ by MN2PR12MB3264.namprd12.prod.outlook.com (2603:10b6:208:104::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Tue, 25 Feb
+ 2020 12:23:57 +0000
+Received: from MN2PR12MB2974.namprd12.prod.outlook.com
+ ([fe80::a142:9294:5865:65c]) by MN2PR12MB2974.namprd12.prod.outlook.com
+ ([fe80::a142:9294:5865:65c%5]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 12:23:57 +0000
+From:   Sudheesh Mavila <sudheesh.mavila@amd.com>
+To:     sudheesh.mavila@amd.com, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: corrected the return value for genphy_check_and_restart_aneg
+Date:   Tue, 25 Feb 2020 17:52:08 +0530
+Message-Id: <20200225122208.6881-1-sudheesh.mavila@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR01CA0133.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:35::27) To MN2PR12MB2974.namprd12.prod.outlook.com
+ (2603:10b6:208:c1::11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221154359.GA70967@cmpxchg.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from yocto-build.amd.com (165.204.156.251) by MA1PR01CA0133.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 12:23:54 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 22d1ec1e-1f6a-4310-51dc-08d7b9ed95f8
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3264:|MN2PR12MB3264:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB32646877CBAF64646084E366FCED0@MN2PR12MB3264.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:595;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(189003)(199004)(36756003)(8676002)(44832011)(316002)(5660300002)(2906002)(7696005)(4744005)(26005)(2616005)(1076003)(66946007)(16526019)(66476007)(81166006)(8936002)(6666004)(186003)(6486002)(66556008)(52116002)(81156014)(956004)(478600001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3264;H:MN2PR12MB2974.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: k3gpn4kbb4t+IlTZza0I7fLJDUO74Q+gvApI9fyfwJuDplLS2Tdp38VCuyQHyo12zhETxk1ZdLOWXo7ZcucqXBdffVyOqV8LRwTchX+5v+a6K47s3ctLfHhSpZJUvnwcsm043q3o0gCaPzVpSvECP8UwuZyNtR9M4QCFQzZizrpgKi8v/49TH1PC7+Zf/MEcvU+3WwgDOxZ1CNPIUC0mDjPZiEnvQnoGQGqnrMeUn3tI0EeT5C06qMvsXP4MjKZVrfSBrSZ9w5fqTspL5xbmsi9yPQP6extUDBglpzsjpebIUIaa1e5tv1Ae/s7iThibfirN4kTCXLMVT/OSlaqk/oZMWy7evs2/uBmeINjK5FPvdDcdhKCprbIkBViPRD7xTrnMqZuuA1J9eZIn/tL/c0XUX9hu7lu3ZFb+xnaN6QsHP2SJsGu9MqH0ya9Dhprd
+X-MS-Exchange-AntiSpam-MessageData: TJxlMYmTgJubDMiPvy/zidSiHq8NdM5XWTS9sDqmB0kdkp4oPJ+l9nWpAtjwTJFdYV14VOJrA+R+ra42QOOg85wALpr8hGnM+BawT4yDFOjc52FJN0MneTxoPFH+GzXdSn8aHXra0v/T3in422tUhA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22d1ec1e-1f6a-4310-51dc-08d7b9ed95f8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 12:23:57.4309
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8bbHyeyTJlMb4O+0j4P96dj9QWhdGhZFmfLOzOhHE++6O6NFw7UGNvJQji4+Ta/3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3264
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When auto-negotiation is not required, return value should be zero.
 
-On Fri 21-02-20 10:43:59, Johannes Weiner wrote:
-> On Fri, Feb 21, 2020 at 11:11:47AM +0100, Michal Hocko wrote:
-[...]
-> > I also have hard time to grasp what you actually mean by the above.
-> > Let's say you have hiearchy where you split out low limit unevenly
-> >               root (5G of memory)
-> >              /    \
-> >    (low 3G) A      D (low 1,5G)
-> >            / \
-> >  (low 1G) B   C (low 2G)
-> >
-> > B gets lower priority than C and D while C gets higher priority than
-> > D? Is there any problem with such a configuration from the semantic
-> > point of view?
-> 
-> No, that's completely fine.
+Signed-off-by: Sudheesh Mavila <sudheesh.mavila@amd.com>
+---
+ drivers/net/phy/phy_device.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-How is B (low $EPS) C (low 3-$EPS) where $EPS->0 so much different
-from the above. You prioritize C over B, D over B in both cases under
-global memory pressure.
-
-[...]
-
-> > > However, that doesn't mean this usecase isn't supported. You *can*
-> > > always split cgroups for separate resource policies.
-> > 
-> > What if the split up is not possible or impractical. Let's say you want
-> > to control how much CPU share does your container workload get comparing
-> > to other containers running on the system? Or let's say you want to
-> > treat the whole container as a single entity from the OOM perspective
-> > (this would be an example of the logical organization constrain) because
-> > you do not want to leave any part of that workload lingering behind if
-> > the global OOM kicks in. I am pretty sure there are many other reasons
-> > to run related workload that doesn't really share the memory protection
-> > demand under a shared cgroup hierarchy.
-> 
-> The problem is that your "pretty sure" has been proven to be very
-> wrong in real life. And that's one reason why these arguments are so
-> frustrating: it's your intuition and gut feeling against the
-> experience of using this stuff hands-on in large scale production
-> deployments.
-
-I am pretty sure you have a lot of experiences from the FB workloads.
-And I haven't ever questioned that. All I am trying to explore here is
-what the consequences of the new proposed semantic are. I have provided
-few examples of when an opt-out from memory protection might be
-practical. You seem to disagree on relevance of those usecases and I can
-live with that. Not that I am fully convinced because there is a
-different between a very tight resource control which is your primary
-usecase and a much simpler deployments focusing on particular resources
-which tend to work most of the time and occasional failures are
-acceptable.
-
-That being said, the new interface requires an explicit opt-in via mount
-option so there is no risk of regressions. So I can live with it. Please
-make sure to document explicitly that the effective low limit protection
-doesn't allow to opt-out even when the limit is set to 0 and the
-propagated protection is fully assigned to a sibling memcg.
-
-It would be also really appreciated if we have some more specific examples
-of priority inversion problems you have encountered previously and place
-them somewhere into our documentation. There is essentially nothing like
-that in the tree.
-
-Thanks!
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 6a5056e0ae77..36cde3dac4c3 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1806,10 +1806,13 @@ int genphy_check_and_restart_aneg(struct phy_device *phydev, bool restart)
+ 			restart = true;
+ 	}
+ 
+-	if (restart)
+-		ret = genphy_restart_aneg(phydev);
++	/* Only restart aneg if we are advertising something different
++	 * than we were before.
++	 */
++	if (restart > 0)
++		return genphy_restart_aneg(phydev);
+ 
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL(genphy_check_and_restart_aneg);
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
