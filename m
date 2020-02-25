@@ -2,302 +2,106 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3550C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF80C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621432176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ms6J+MZw"
+	by mail.kernel.org (Postfix) with ESMTP id 7FFAC2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbgBYUVN (ORCPT
+        id S1731755AbgBYUWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:21:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56397 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731565AbgBYUVM (ORCPT
+        Tue, 25 Feb 2020 15:22:35 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53946 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbgBYUWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:21:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582662071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WSvCqIPOAqpqMoWBgMDqztjHggXWGM6sCOu+ZfnsnV4=;
-        b=Ms6J+MZwAND+3rkOfptdDQvogT8NJ7ARcKU61esZSKN/Qs1B/4gcuu5I6Bh/xiqrk+qkr8
-        JmGcYfkZr8Uwz0IWYXatwSah3yiWKgFWW3Q25hyxX6LHY6wUhc/PNFBBge8zVcHeCeai7q
-        4HrtV8On/qHL8k5WlFxg1hgushysQ24=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-85-NpjRbR7cP2y4ixHLj7tXbw-1; Tue, 25 Feb 2020 15:21:07 -0500
-X-MC-Unique: NpjRbR7cP2y4ixHLj7tXbw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 25 Feb 2020 15:22:34 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 890913C009D;
+        Tue, 25 Feb 2020 21:22:32 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vydUNAF9Bs4E; Tue, 25 Feb 2020 21:22:26 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4FB51005513;
-        Tue, 25 Feb 2020 20:21:05 +0000 (UTC)
-Received: from krava (ovpn-205-170.brq.redhat.com [10.40.205.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AF521001B2C;
-        Tue, 25 Feb 2020 20:20:59 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 21:20:56 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andreas Gerstmayr <agerstmayr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kabbott@redhat.com,
-        skozina@redhat.com, mpetlan@redhat.com, nathans@redhat.com,
-        mgoodwin@redhat.com, linux-perf-users@vger.kernel.org,
-        bgregg@netflix.com, mspier@netflix.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [RFC] perf script: add flamegraph.py script
-Message-ID: <20200225202056.GA160294@krava>
-References: <20200221175500.83774-1-agerstmayr@redhat.com>
- <20200225195418.GA160300@krava>
- <0582d729-0e07-b95d-7cad-8912514b8871@redhat.com>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 824033C005E;
+        Tue, 25 Feb 2020 21:22:26 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 25 Feb
+ 2020 21:22:26 +0100
+Date:   Tue, 25 Feb 2020 21:22:23 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     <linux-usb@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        <scan-admin@coverity.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] usb: hub: Fix unhandled return value of
+ usb_autopm_get_interface()
+Message-ID: <20200225202223.GA9154@lxhi-065.adit-jv.com>
+References: <20200225191241.GA32410@lxhi-065.adit-jv.com>
+ <Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <0582d729-0e07-b95d-7cad-8912514b8871@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 09:03:19PM +0100, Andreas Gerstmayr wrote:
-> On 25.02.20 20:54, Jiri Olsa wrote:
-> > On Fri, Feb 21, 2020 at 06:55:01PM +0100, Andreas Gerstmayr wrote:
-> > > This script works in tandem with d3-flame-graph to generate flame graphs
-> > > from perf. It supports two output formats: JSON and HTML (the default).
-> > > The HTML format will look for a standalone d3-flame-graph template file in
-> > > /usr/share/d3-flame-graph/template.html and fill in the collected stacks.
-> > > 
-> > > Usage:
-> > > 
-> > >      perf script flamegraph -a -F 99 sleep 60
-> > > 
-> > > Alternative usage:
-> > > 
-> > >      perf record -a -g -F 99 sleep 60
-> > >      perf script report flamegraph
-> > 
-> > nice, could this output the output file, like:
-> > 
-> >       # perf script report flamegraph --output krava.html
-> >       dumping data to krava.html
+Hi Alan,
 
-I meant the actual line ^^^^, saying that it's writing to the file
+On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
+> On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
+> > [1] (v5.6-rc3) git grep -En "[^=]\s+usb_autopm_get_interface\("
+> >   drivers/input/touchscreen/usbtouchscreen.c:1788:  usb_autopm_get_interface(intf);
+> >   drivers/media/usb/stkwebcam/stk-webcam.c:628:     usb_autopm_get_interface(dev->interface);
+> >   drivers/net/usb/hso.c:1308:                       usb_autopm_get_interface(serial->parent->interface);
+> >   drivers/net/usb/r8152.c:5231:                     usb_autopm_get_interface(tp->intf);
+> >   sound/usb/usx2y/us122l.c:192:                     usb_autopm_get_interface(iface);
+> 
+> Your regular expression isn't right because it doesn't match lines
+> where the usb_autopm_get_interface() is preceded only by one whitespace
+> character (i.e., a tab).  It also will match lines where there are two
+> space characters between the = sign and the function name.  I think
+> what you want is more like "(^|[^=[:space:]])\s*" at the start of the
+> RE.
 
-thanks,
-jirka
+Agreed. My version filters out some true positives.
 
-> > 
-> > or something in that sense
-> > 
-> > other than that it looks good to me
 > 
-> Yes, it's already implemented.
+> A revised search finds line 997 in drivers/usb/core/hub.c and lines
+> 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
+> other directories.)  AFAICT all three of these should check the return
+> value, although a error message in the kernel log probably isn't
+> needed.
 > 
-> $ perf script report flamegraph --output krava.html
-> 
-> writes the output to krava.html
-> 
-> $ perf script report flamegraph --help
-> 
-> shows the supported arguments.
-> 
-> The only gotcha is that you need to have a perf.data in the same directory
-> when calling this command, otherwise perf complains about a missing
-> perf.data and doesn't call the flamegraph.py script.
-> 
-> 
-> Cheers,
-> Andreas
-> 
-> 
-> > 
-> > thanks,
-> > jirka
-> > 
-> > 
-> > > 
-> > > Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > Cc: Jiri Olsa <jolsa@redhat.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > > 
-> > > I'm currently preparing packages for d3-flame-graph. For Fedora, the copr
-> > > at
-> > > https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-flame-graph/
-> > > can be installed, or alternatively the prebuilt standalone d3-flame-graph
-> > > template can be downloaded from
-> > > https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/js-d3-flame-graph/template.html
-> > > and moved into /usr/share/d3-flame-graph/template.html
-> > > 
-> > >   .../perf/scripts/python/bin/flamegraph-record |   2 +
-> > >   .../perf/scripts/python/bin/flamegraph-report |   3 +
-> > >   tools/perf/scripts/python/flamegraph.py       | 117 ++++++++++++++++++
-> > >   3 files changed, 122 insertions(+)
-> > >   create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
-> > >   create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
-> > >   create mode 100755 tools/perf/scripts/python/flamegraph.py
-> > > 
-> > > diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf/scripts/python/bin/flamegraph-record
-> > > new file mode 100755
-> > > index 000000000000..725d66e71570
-> > > --- /dev/null
-> > > +++ b/tools/perf/scripts/python/bin/flamegraph-record
-> > > @@ -0,0 +1,2 @@
-> > > +#!/usr/bin/sh
-> > > +perf record -g "$@"
-> > > diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
-> > > new file mode 100755
-> > > index 000000000000..b1a79afd903b
-> > > --- /dev/null
-> > > +++ b/tools/perf/scripts/python/bin/flamegraph-report
-> > > @@ -0,0 +1,3 @@
-> > > +#!/usr/bin/sh
-> > > +# description: create flame graphs
-> > > +perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
-> > > diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-> > > new file mode 100755
-> > > index 000000000000..2e9139ef2c4a
-> > > --- /dev/null
-> > > +++ b/tools/perf/scripts/python/flamegraph.py
-> > > @@ -0,0 +1,117 @@
-> > > +# flamegraph.py - create flame graphs from perf samples
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +#
-> > > +# Usage:
-> > > +#
-> > > +#  perf record -a -g -F 99 sleep 60
-> > > +#  perf script report flamegraph
-> > > +#
-> > > +# Combined data collection and flamegraph generation:
-> > > +#
-> > > +#  perf script flamegraph -a -F 99 sleep 60
-> > > +#
-> > > +# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
-> > > +# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
-> > > +# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.com>
-> > > +
-> > > +import sys
-> > > +import os
-> > > +import argparse
-> > > +import json
-> > > +
-> > > +
-> > > +class Node:
-> > > +    def __init__(self, name, libtype=""):
-> > > +        self.name = name
-> > > +        self.libtype = libtype
-> > > +        self.value = 0
-> > > +        self.children = []
-> > > +
-> > > +
-> > > +class FlameGraphCLI:
-> > > +    def __init__(self, args):
-> > > +        self.args = args
-> > > +        self.stack = Node("root")
-> > > +
-> > > +        if self.args.format == "html" and \
-> > > +                not os.path.isfile(self.args.template):
-> > > +            print(f"Flame Graph template '{self.args.template}' does not " +
-> > > +                  f"exist. Please install the d3-flame-graph package, " +
-> > > +                  f"specify an existing flame graph template " +
-> > > +                  f"(--template PATH) or another output format " +
-> > > +                  f"(--format FORMAT).", file=sys.stderr)
-> > > +            sys.exit(1)
-> > > +
-> > > +    def find_or_create_node(self, node, name, dso):
-> > > +        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
-> > > +        if name is None:
-> > > +            name = "[unknown]"
-> > > +
-> > > +        for child in node.children:
-> > > +            if child.name == name and child.libtype == libtype:
-> > > +                return child
-> > > +
-> > > +        child = Node(name, libtype)
-> > > +        node.children.append(child)
-> > > +        return child
-> > > +
-> > > +    def process_event(self, event):
-> > > +        node = self.find_or_create_node(self.stack, event["comm"], None)
-> > > +        if "callchain" in event:
-> > > +            for entry in reversed(event['callchain']):
-> > > +                node = self.find_or_create_node(
-> > > +                    node, entry.get("sym", {}).get("name"), event.get("dso"))
-> > > +        else:
-> > > +            node = self.find_or_create_node(
-> > > +                node, entry.get("symbol"), event.get("dso"))
-> > > +        node.value += 1
-> > > +
-> > > +    def trace_end(self):
-> > > +        def encoder(x): return x.__dict__
-> > > +        json_str = json.dumps(self.stack, default=encoder,
-> > > +                              indent=self.args.indent)
-> > > +
-> > > +        if self.args.format == "html":
-> > > +            try:
-> > > +                with open(self.args.template) as f:
-> > > +                    output_str = f.read().replace("/** @flamegraph_params **/",
-> > > +                                                  json_str)
-> > > +            except IOError as e:
-> > > +                print(f"Error reading template file: {e}", file=sys.stderr)
-> > > +                sys.exit(1)
-> > > +            output_fn = self.args.output or "flamegraph.html"
-> > > +        else:
-> > > +            output_str = json_str
-> > > +            output_fn = self.args.output or "stacks.json"
-> > > +
-> > > +        if output_fn == "-":
-> > > +            sys.stdout.write(output_str)
-> > > +        else:
-> > > +            try:
-> > > +                with open(output_fn, "w") as out:
-> > > +                    out.write(output_str)
-> > > +            except IOError as e:
-> > > +                print(f"Error writing output file: {e}", file=sys.stderr)
-> > > +                sys.exit(1)
-> > > +
-> > > +
-> > > +if __name__ == "__main__":
-> > > +    parser = argparse.ArgumentParser(description="Create flame graphs.")
-> > > +    parser.add_argument("-F", "--format",
-> > > +                        default="html", choices=["json", "html"],
-> > > +                        help="output file format")
-> > > +    parser.add_argument("-o", "--output",
-> > > +                        help="output file name")
-> > > +    parser.add_argument("--indent",
-> > > +                        type=int, help="JSON indentation")
-> > > +    parser.add_argument("--template",
-> > > +                        default="/usr/share/d3-flame-graph/template.html",
-> > > +                        help="path to flamegraph HTML template")
-> > > +    parser.add_argument("-i", "--input",
-> > > +                        help=argparse.SUPPRESS)
-> > > +
-> > > +    args = parser.parse_args()
-> > > +    cli = FlameGraphCLI(args)
-> > > +
-> > > +    process_event = cli.process_event
-> > > +    trace_end = cli.trace_end
-> > > -- 
-> > > 2.24.1
-> > > 
-> > 
-> 
+> Do you want to fix those instances up also, maybe merging them in with
+> the existing patch?
 
+I wonder if squashing all these fixes into one patch is the best option.
+
+There are three commits fixed by the proposed changes in usb core:
+ - v5.6-rc3 commit 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+ - v3.9-rc1 commit 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
+ - v2.6.33-rc1 commit 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
+
+I assume a single fix will create some pain when applying it to the
+stable branches. Do you have any preference/inputs about that?
+
+-- 
+Best Regards
+Eugeniu Rosca
