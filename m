@@ -2,121 +2,120 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BB9C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28FEC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8511D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wd9JVSnN"
+	by mail.kernel.org (Postfix) with ESMTP id 8C7FD21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582658124;
+	bh=me4bSWBpM9FpbQ7Hs5/OQBsgbx4rxsqreuBOjJJ2QUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wHmsKAvx/jTrnwGlCHe5DMlUuyngeRnrrt0k/cD/fhhHrVs1K3sai2ZakPxengb0E
+	 5ZmiidwB+otnL2BZqN/9Q7lnhINO+bJ982MO8Z+4gJ9ljEZ1e28cDODE3ASo0gPDS+
+	 /E0+tAYPFdjuUr2aP6/GRHYmMXCJ7Plmi/bjtsT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbgBYTNn (ORCPT
+        id S1731090AbgBYTPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:13:43 -0500
-Received: from mail-vi1eur05on2045.outbound.protection.outlook.com ([40.107.21.45]:28609
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728443AbgBYTNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:13:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FKHODpIm8zHzSxJJ5mFlTFN0/1c5Q8O7YSIm/ZsKT7Gw2IHcbAZHMYf1eDEIiKw0UeKf/AOS14RfHB6LbimT//i8FF7C3Z4X4knzPmhCnoeXisWBHpcGH3E+6CEeuI/aofqRurE3z7FyyULDEXpKQ1ZDmdU9XpS8lu27ZX7IhBk+Qz7XxPNyrmpvy3xlklTorr9oSl1oXkCCGIhvsiZ4/yW5AuRu6x5gSTjpGquxiIgl1edpL4PjPE838fpxVu/pOsyAotzbtaP4SVv+Lg4Jmk6vd+jABOMx1sZ2RBP2ZcfNEG5wBOVIplLABznKUs3xnRnFHkgThyN36Z0v0tgL2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7890Movu/82sfKLG9cxxkX3toKwcH54/1VGlhI0JCrc=;
- b=KbVoJ/+UaYVewm8DN090E1jYOc8N+L86vrALh+kSAuMl7HJmK+IDmDl7sCsq7x4Bj50kNtEh2RR8mEuJUL5TCOqA8J+wR7DddQTfv0oCpvHEx2SJqubXw9Oeu/XNK4S+M8Nsb2DuXDnHZdgO+YEJOymv427//0K6ih2yruuboFS9r3NXtPlJYAX5G8MIuSzLRUhVc7FKs9uRrg2AKhFP+RwUXmhYDf/O3Trs9uURaP5YFxrTxH6S3hTH5+M+msYC9MSS+l7kipVId2Gk+pdJLzIBjZT8MQeCYMJFuBtqwCiFLt4AYdW32EzYKV6qwJBYVW6M2EsTWPEnRirs5I0KYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7890Movu/82sfKLG9cxxkX3toKwcH54/1VGlhI0JCrc=;
- b=Wd9JVSnNpw4vY3o6eHGly8TgfAmZunzIr7BvgUtfniaAhfub8uGaaHmkl5c0J+NG8DUqRh/SExXzBnWrsv4qnToJxU9Ctw5qyNHHoVQri/M5CYFDihAoNrptK+wGs3J2jj4rTCJLzWxRPp9ZaPzVONRuY3finBHBJ/iJJnL6xEg=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3760.eurprd04.prod.outlook.com (52.134.17.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Tue, 25 Feb 2020 19:13:37 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 19:13:37 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     "Dragos Rosioru (OSS)" <dragos.rosioru@oss.nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Marek Vasut <marex@denx.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: dcp - fix scatterlist linearization for hash
-Thread-Topic: [PATCH] crypto: dcp - fix scatterlist linearization for hash
-Thread-Index: AQHV6+0mo0nTyZiybUyVCvuUuutR/w==
-Date:   Tue, 25 Feb 2020 19:13:37 +0000
-Message-ID: <VI1PR0402MB348546BF33366C0EA219696598ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1582643152-17278-1-git-send-email-dragos.rosioru@oss.nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f8e1fc23-c50a-403b-2d6a-08d7ba26d0df
-x-ms-traffictypediagnostic: VI1PR0402MB3760:|VI1PR0402MB3760:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB37607313282E1822D336C0E598ED0@VI1PR0402MB3760.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(366004)(39860400002)(199004)(189003)(33656002)(4744005)(2906002)(71200400001)(52536014)(7416002)(81166006)(316002)(86362001)(8676002)(8936002)(81156014)(110136005)(44832011)(54906003)(76116006)(4326008)(26005)(6506007)(186003)(5660300002)(478600001)(66556008)(91956017)(66946007)(55016002)(66446008)(64756008)(53546011)(9686003)(7696005)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3760;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bLvnEyaxkNcMFUAgm0X5ptUOWdfze+Td3YdK+vTbF5MP5cMwEjvNRiFNSprvEl0e3Tg8tZrMQlw+GaXV5LUh/ukZkC4iR40NR4GUaVDcSRDyHR/jHgNcaPrun4DX+ByXuD/UAlg9ezt1AzdKSS/jGCWvkZKIi4+I71hD26vliqTDjUH2Rs01SpttFHGDWU4TGK3TftKZ7W34ac5o5SVcvIurz7HL+n2mGlQj0URQrn8SdguNYVxhUqBgx95nDSZ5f63+2K5BNh+PtxDEmLoucg7V5SP3hgxmq6DFwbtSAUvyLPHwWCmzGubUk4igTKIm6/VywSaqrP0gfw88gcmYmD5bsSDDTAlK++L3k8d1222Phjvltzbf090PSNIod40zItdVXVoIUjetmSzs/sstoeSLubj53g0tnETtrkkiugx2O1NFWtVY+VQWPAN4TTFa
-x-ms-exchange-antispam-messagedata: hKqbyBVW3VTvJOFG8BlNwUwvr4mAHGkBV6uWKLViL7J9dI8GyqYZljuuS8o/+wSSJmlGqE7aeqOz2tg0ttlsWHWyz+V+jZNSWTiCcOX+lu+TZuFC3d6psZbegWOW23ElJALlD7joz05B3q7xawY9YQ==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Feb 2020 14:15:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729894AbgBYTPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:15:23 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D5122082F;
+        Tue, 25 Feb 2020 19:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582658121;
+        bh=me4bSWBpM9FpbQ7Hs5/OQBsgbx4rxsqreuBOjJJ2QUU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MEMBlK3ME6vljTGBdu9jyyZWwo+dkSGozqRIa4I2vEpJDdDdkSHGZjgnqPeSlNaTE
+         oXmpLbjTq9TSXk6Ls582/gNiUWv7PDnQjPY/Wh8CwRDzTpareneRzkkhvNDGB/2G4M
+         +FTLIRtV9CNfPxUBBxqM2XlnLry4a9tdUpk0FH9w=
+Date:   Tue, 25 Feb 2020 13:15:19 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Michael ." <keltoiboy@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Philip Langdale <philipl@overt.org>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
+ working on Panasonic Toughbook CF-29]
+Message-ID: <20200225191519.GA172914@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8e1fc23-c50a-403b-2d6a-08d7ba26d0df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 19:13:37.0286
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Di8oV8lt8/3G5/AXZ6vZDmwqp27yivqWl7aTJGKYXNnsgFrcE6qy2F3ruYcW064xA6sVBy5+Pd/IoveaNM4Obw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3760
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/2020 5:06 PM, Dragos Rosioru (OSS) wrote:=0A=
-> From: Rosioru Dragos <dragos.rosioru@nxp.com>=0A=
-> =0A=
-> The incorrect traversal of the scatterlist, during the linearization phas=
-e=0A=
-> lead to computing the hash value of the wrong input buffer.=0A=
-> New implementation uses scatterwalk_map_and_copy()=0A=
-> to address this issue.=0A=
-> =0A=
-> Cc: <stable@vger.kernel.org>=0A=
-> Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")=0A=
-> Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Tue, Feb 25, 2020 at 04:03:32PM +0100, Ulf Hansson wrote:
+> On Sat, 22 Feb 2020 at 17:56, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
+> > > [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
+> > > thread, [2] for problem report and the patch Michael tested]
+> > >
+> > > On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
+> > > > Bjorn and Dominik.
+> > > > I am happy to let you know the patch did the trick, it compiled well
+> > > > on 5.4-rc4 and my friends in the CC list have tested the modified
+> > > > kernel and confirmed that both slots are now working as they should.
+> > > > As a group of dedicated Toughbook users and Linux users please accept
+> > > > our thanks your efforts and assistance is greatly appreciated.
+> > > >
+> > > > Now that we know this patch works what kernel do you think it will be
+> > > > released in? Will it make 5.4 or will it be put into 5.5 development
+> > > > for further testing?
+> > >
+> > > That patch was not intended to be a fix; it was just to test my guess
+> > > that the quirk might be related.
+> > >
+> > > Removing the quirk solved the problem *you're* seeing, but the quirk
+> > > was added in the first place to solve some other problem, and if we
+> > > simply remove the quirk, we may reintroduce the original problem.
+> > >
+> > > So we have to look at the history and figure out some way to solve
+> > > both problems.  I cc'd some people who might have insight.  Here are
+> > > some commits that look relevant:
+> > >
+> > >   5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
+> > >   03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
+> > >
+> > >
+> > > [1] https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+> > > [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
+> >
+> > I guess this problem is still unfixed?  I hate the fact that we broke
+> > something that used to work.
+> >
+> > Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
+> > we skip it for Toughbooks?  Or maybe we limit the quirk to the
+> > machines where it was originally needed?
+> 
+> Both options seems reasonable to me. Do you have time to put
+> together a patch?
+
+I don't really have time, and I'm not sure which way is best.  In
+general I like to avoid quirks, so I would lean toward applying the
+quirk only on the machines that we know need it.  But I'm not sure how
+to identify those.
+
+Bjorn
