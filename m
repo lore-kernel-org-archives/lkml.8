@@ -2,146 +2,302 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627D4C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2F7C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3B21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6B521556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OIpufyJe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8TrvqBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgBYTjv (ORCPT
+        id S1730772AbgBYTlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:39:51 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54593 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbgBYTju (ORCPT
+        Tue, 25 Feb 2020 14:41:16 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37049 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBYTlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:39:50 -0500
-Received: by mail-pj1-f65.google.com with SMTP id dw13so152589pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:39:50 -0800 (PST)
+        Tue, 25 Feb 2020 14:41:16 -0500
+Received: by mail-ed1-f66.google.com with SMTP id t7so789945edr.4;
+        Tue, 25 Feb 2020 11:41:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0uZBykAXAO6jD5DASmZ5tKSqeRVuomezEv1o1XMOkAw=;
-        b=OIpufyJefzUuIE7EA+vuCdCBPFeaGA+AMgAzJCqQxV/f7sEdIWzaqMl7kL2+83hCgS
-         hQtguyMbdtvRAi0gwq8uh4N+z60MLiNwyVSBuxL+q5v2Fy/6skR+l3LTBvpr0kTuIdvx
-         MW3pAjX8d1AQxA9asqm59YyFka0LDCMVWROEs=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ag9UfCbOttlLWSx+g2xd6gLmO4m6wnF3cbni4nCtO7Y=;
+        b=V8TrvqBbaJHYBRfkST5wos2DdVNXVbzpHvUlruLy78zRsXEOLIchDDhCTiFkeTlipa
+         UnbsoiETIP2R9mNBKUk2MHJgGwBWrBjvXvs3Oeu3SclB/Kgz2W4Rf1aJXitnIeFLjdGk
+         Wr7JyIqIfoQ6s9Z7gsVEjvkhKvz0N7aO5KHyHcFnJbjk9NQP9b/PLkIosYu0h/FG+sMv
+         smOBeGaolT3N+BzP3SYTKCkF5w0iBAfUGO8kK0nzkuqi+Ri+/rkB8e0p02toyLxsgmVO
+         wrHshvXwyq6TnpYIGcUlyCL5x7HvDiOHIEz6rSbKsu88m2olWhnyXEaOrUSLJsep53mw
+         KETA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0uZBykAXAO6jD5DASmZ5tKSqeRVuomezEv1o1XMOkAw=;
-        b=Ou7Nmr8FlbN5/4QR/Tk/ffnpvzZK4tCX0jzZbc0bhnUmtUHT9g7YPmmSPXEQQiyAC7
-         1zy0IbFwiiAFLS8PgkZXkbGuRZbFriVmbthk6rvpd8eF131ZL6rm+FIK32FaZt0tsWgp
-         uqL/87ZcVBeq5QpOjFBj9oVhaLrWzms/1V3y2M7YEuBIg/hZMLBA81ubpHKATZvJH6WP
-         lhrHkMZAqOcRAkufqf4TLvWOLDkEIdNk6gjp/fy+a7cFuKWpEuFkOApraPTTow10OS/8
-         64FY3NDNmM4uQyM3xV7MVvErSQNF2K/bRVOKBrcKjHuwhgcCr33jWfqLjQOZxn77YhNr
-         pdzg==
-X-Gm-Message-State: APjAAAUIEmD5wklBEgZiFYyRxMA5+8257b1v6xTj24evLAeQzXC3Jh/H
-        yAX9/josmjTZYRVLDe70vGpyEQ==
-X-Google-Smtp-Source: APXvYqwpdQfkaCcBM5JlG7S4uokaXnpoAWqNofj2820k+ou8GtEmHOSAx7+JVN5Zi3OVDMkBJyavVw==
-X-Received: by 2002:a17:90a:98d:: with SMTP id 13mr694690pjo.102.1582659589946;
-        Tue, 25 Feb 2020 11:39:49 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y5sm18562579pfr.169.2020.02.25.11.39.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 11:39:49 -0800 (PST)
-Date:   Tue, 25 Feb 2020 11:39:48 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Vasily Averin <vvs@virtuozzo.com>, joelaf@google.com
-Cc:     linux-kernel@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v2] pstore: pstore_ftrace_seq_next should increase
- position index
-Message-ID: <202002251136.3816A79E@keescook>
-References: <4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ag9UfCbOttlLWSx+g2xd6gLmO4m6wnF3cbni4nCtO7Y=;
+        b=AZp7Bu+0z4GLaQ/HI62uLQQZa+tpHAsr9RVdZeNHkkVW97VZQRpG8MdV2bjaYC05fn
+         ZqalFhSdaMIQ1P61wtxhBvEJ8FReV26W5IRAXF/AojGyoT4uBEJRhSAiYLWlIJbKgDGu
+         3CqteSO4AxbM7WLIVFUAkp9PlHQ3WE34lDrArK4zmREHnHyqGh5tKv7+j+u/QKHshLBV
+         6Q7ktXGNg6dwxBM2azVGnzznX0rCvRvX+jnaA1hPvGoCIIbGzUHaO1kMUDTxG9LKx2KH
+         TfG3kKyde1uffr5k/9Ay/V/10FRviaViypJOw6nJx77Z4rh5GuRuqhpX78PLk4aLo7yI
+         WAbA==
+X-Gm-Message-State: APjAAAU5GLPcbVtgWAk7mrjQ6we1RFC/ipRc0q6Y3cAJu55VmR4X3Vmb
+        2PVUbe+O5H0lokEABe6TYi8tsnhgHNXXjHBeMwQ=
+X-Google-Smtp-Source: APXvYqzq12vZfTdfYHSsHJzicdcHsX7ksLKD0D4k9tbOBcL5ZakgsvyPPnbhVC7JEh5rajsfyPGJRZXVBqHGOurrABs=
+X-Received: by 2002:a50:e3c5:: with SMTP id c5mr576813edm.7.1582659673599;
+ Tue, 25 Feb 2020 11:41:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com>
+References: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid>
+ <20200219104148.2.I2c848e8f8ab1bcd4042d8ebcf35de737cceec5fe@changeid> <158265922943.177367.14293328114795800228@swboyd.mtv.corp.google.com>
+In-Reply-To: <158265922943.177367.14293328114795800228@swboyd.mtv.corp.google.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 25 Feb 2020 11:41:06 -0800
+Message-ID: <CAF6AEGu6Ys_t38uXNw3-Po1jaQmW3pOvAiZ73axpiAgCjvtC=g@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drm/msm/dpu: Refactor rm iterator
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Drew Davenport <ddavenport@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Fritz Koenig <frkoenig@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Sean Paul <sean@poorly.run>,
+        Shubhashree Dhar <dhar@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        zhengbin <zhengbin13@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[merged threads]
+On Tue, Feb 25, 2020 at 11:33 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Drew Davenport (2020-02-19 09:42:25)
+> > Make iterator implementation private, and add function to
+> > query resources assigned to an encoder.
+> >
+> > Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+>
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> > index f8ac3bf60fd60..6cadeff456f09 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> > @@ -957,11 +957,11 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+> >         struct drm_connector *conn = NULL, *conn_iter;
+> >         struct drm_crtc *drm_crtc;
+> >         struct dpu_crtc_state *cstate;
+> > -       struct dpu_rm_hw_iter hw_iter;
+> >         struct msm_display_topology topology;
+> > -       struct dpu_hw_ctl *hw_ctl[MAX_CHANNELS_PER_ENC] = { NULL };
+> > -       struct dpu_hw_mixer *hw_lm[MAX_CHANNELS_PER_ENC] = { NULL };
+> > -       int num_lm = 0, num_ctl = 0;
+> > +       struct dpu_hw_blk *hw_pp[MAX_CHANNELS_PER_ENC];
+> > +       struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
+> > +       struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+> > +       int num_lm, num_ctl, num_pp;
+>
+> All these should be unsigned too?
+>
+> >         int i, j, ret;
+> >
+> >         if (!drm_enc) {
+> > @@ -1005,42 +1005,31 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+> >                 return;
+> >         }
+> >
+> > -       dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id, DPU_HW_BLK_PINGPONG);
+> > -       for (i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
+> > -               dpu_enc->hw_pp[i] = NULL;
+> > -               if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
+> > -                       break;
+> > -               dpu_enc->hw_pp[i] = (struct dpu_hw_pingpong *) hw_iter.hw;
+> > -       }
+> > -
+> > -       dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id, DPU_HW_BLK_CTL);
+> > -       for (i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
+> > -               if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
+> > -                       break;
+> > -               hw_ctl[i] = (struct dpu_hw_ctl *)hw_iter.hw;
+>
+> Why cast? Isn't it void pointer?
 
-On Tue, Feb 25, 2020 at 11:11:20AM +0300, Vasily Averin wrote:
-> In Aug 2018 NeilBrown noticed 
-> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-> "Some ->next functions do not increment *pos when they return NULL...
-> Note that such ->next functions are buggy and should be fixed. 
-> A simple demonstration is
-> 
-> dd if=/proc/swaps bs=1000 skip=1
-> 
-> Choose any block size larger than the size of /proc/swaps.  This will
-> always show the whole last line of /proc/swaps"
-> 
-> /proc/swaps output was fixed recently, however there are lot of other
-> affected files, and one of them is related to pstore subsystem.
-> 
-> If .next function does not change position index, following .show function
-> will repeat output related to current position index.
-> 
-> There are at least 2 related problems:
-> - read after lseek beyond end of file, described above by NeilBrown
->   "dd if=<AFFECTED_FILE> bs=1000 skip=1" will generate whole last list
-> - read after lseek on in middle of last line will output expected rest of
->   last line but then repeat whole last line once again.
-> 
-> If .show() function generates multy-line output
-> (like pstore_ftrace_seq_show() does ?)
-> following bash script cycles endlessly
-> 
->  $ q=;while read -r r;do echo "$((++q)) $r";done < AFFECTED_FILE
-> 
-> Unfortunately I'm not familiar enough to pstore subsystem and was unable to
-> find affected pstore-related file on my test node.
-> 
-> If .next function does not change position index,
-> following .show function will repeat output related
-> to current position index.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  fs/pstore/inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-> index 7fbe8f0..ea8799b 100644
-> --- a/fs/pstore/inode.c
-> +++ b/fs/pstore/inode.c
-> @@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(struct seq_file *s, void *v, loff_t *pos)
->  	struct pstore_private *ps = s->private;
->  	struct pstore_ftrace_seq_data *data = v;
->  
-> +	(*pos)++;
->  	data->off += REC_SIZE;
->  	if (data->off + REC_SIZE > ps->total_size)
->  		return NULL;
->  
-> -	(*pos)++;
->  	return data;
->  }
->  
-> -- 
-> 1.8.3.1
-> 
+Comments on code that the patch removes is a new thing :-P
 
-I think this make sense, but I figured I'd check with Joel first. Does
-this look sane for how ftrace will merge records?
+BR,
+-R
 
--- 
-Kees Cook
+>
+> > -               num_ctl++;
+> > -       }
+> > +       num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->base.id,
+> > +               DPU_HW_BLK_PINGPONG, hw_pp, ARRAY_SIZE(hw_pp));
+> > +       num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->base.id,
+> > +               DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
+> > +       num_lm = dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->base.id,
+> > +               DPU_HW_BLK_LM, hw_lm, ARRAY_SIZE(hw_lm));
+> >
+> > -       dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id, DPU_HW_BLK_LM);
+> > -       for (i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
+> > -               if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
+> > -                       break;
+> > -               hw_lm[i] = (struct dpu_hw_mixer *)hw_iter.hw;
+>
+> Why cast?
+>
+> > -               num_lm++;
+> > -       }
+> > +       for (i = 0; i < MAX_CHANNELS_PER_ENC; i++)
+> > +               dpu_enc->hw_pp[i] = i < num_pp ? to_dpu_hw_pingpong(hw_pp[i])
+> > +                                               : NULL;
+>
+> This line is pretty hard to read. Maybe use an if/else?
+>
+> >
+> >         cstate = to_dpu_crtc_state(drm_crtc->state);
+> >
+> >         for (i = 0; i < num_lm; i++) {
+> >                 int ctl_idx = (i < num_ctl) ? i : (num_ctl-1);
+> >
+> > -               cstate->mixers[i].hw_lm = hw_lm[i];
+> > -               cstate->mixers[i].lm_ctl = hw_ctl[ctl_idx];
+> > +               cstate->mixers[i].hw_lm = to_dpu_hw_mixer(hw_lm[i]);
+> > +               cstate->mixers[i].lm_ctl = to_dpu_hw_ctl(hw_ctl[ctl_idx]);
+> >         }
+> >
+> >         cstate->num_mixers = num_lm;
+> >
+> >         for (i = 0; i < dpu_enc->num_phys_encs; i++) {
+> > +               int num_blk;
+>
+> unsigned int?
+>
+> > +               struct dpu_hw_blk *hw_blk[MAX_CHANNELS_PER_ENC];
+> >                 struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
+> >
+> >                 if (!dpu_enc->hw_pp[i]) {
+> > @@ -1056,17 +1045,15 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+> >                 }
+> >
+> >                 phys->hw_pp = dpu_enc->hw_pp[i];
+> > -               phys->hw_ctl = hw_ctl[i];
+> > +               phys->hw_ctl = to_dpu_hw_ctl(hw_ctl[i]);
+> >
+> > -               dpu_rm_init_hw_iter(&hw_iter, drm_enc->base.id,
+> > -                                   DPU_HW_BLK_INTF);
+> > -               for (j = 0; j < MAX_CHANNELS_PER_ENC; j++) {
+> > +               num_blk = dpu_rm_get_assigned_resources(&dpu_kms->rm,
+> > +                       drm_enc->base.id, DPU_HW_BLK_INTF, hw_blk,
+> > +                       ARRAY_SIZE(hw_blk));
+> > +               for (j = 0; j < num_blk; j++) {
+> >                         struct dpu_hw_intf *hw_intf;
+> >
+> > -                       if (!dpu_rm_get_hw(&dpu_kms->rm, &hw_iter))
+> > -                               break;
+> > -
+> > -                       hw_intf = (struct dpu_hw_intf *)hw_iter.hw;
+> > +                       hw_intf = to_dpu_hw_intf(hw_blk[i]);
+> >                         if (hw_intf->idx == phys->intf_idx)
+> >                                 phys->hw_intf = hw_intf;
+> >                 }
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+> > index dea1dba441fe7..779df26dc81ae 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+> > @@ -83,7 +97,7 @@ static bool _dpu_rm_get_hw_locked(struct dpu_rm *rm, struct dpu_rm_hw_iter *i)
+> >         return false;
+> >  }
+> >
+> > -bool dpu_rm_get_hw(struct dpu_rm *rm, struct dpu_rm_hw_iter *i)
+> > +static bool dpu_rm_get_hw(struct dpu_rm *rm, struct dpu_rm_hw_iter *i)
+> >  {
+> >         bool ret;
+> >
+> > @@ -635,3 +649,16 @@ int dpu_rm_reserve(
+> >
+> >         return ret;
+> >  }
+> > +
+> > +int dpu_rm_get_assigned_resources(struct dpu_rm *rm, uint32_t enc_id,
+>
+> Return unsigned int?
+>
+> > +       enum dpu_hw_blk_type type, struct dpu_hw_blk **blks, int blks_size)
+>
+> unsigned int blks_size?
+>
+> > +{
+> > +       struct dpu_rm_hw_iter hw_iter;
+> > +       int num_blks = 0;
+>
+> unsigned int?
+>
+> > +
+> > +       dpu_rm_init_hw_iter(&hw_iter, enc_id, type);
+> > +       while (num_blks < blks_size && dpu_rm_get_hw(rm, &hw_iter))
+> > +               blks[num_blks++] = hw_iter.blk->hw;
+> > +
+> > +       return num_blks;
+>
+> It's not possible for it to be negative number right?
+>
+> > +}
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
+> > index 9c580a0170946..982b91e272275 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
+> > @@ -24,26 +24,6 @@ struct dpu_rm {
+> >         struct mutex rm_lock;
+> >  };
+> >
+> > -/**
+> > - *  struct dpu_rm_hw_blk - resource manager internal structure
+> > - *     forward declaration for single iterator definition without void pointer
+> > - */
+> > -struct dpu_rm_hw_blk;
+> > -
+> > -/**
+> > - * struct dpu_rm_hw_iter - iterator for use with dpu_rm
+> > - * @hw: dpu_hw object requested, or NULL on failure
+> > - * @blk: dpu_rm internal block representation. Clients ignore. Used as iterator.
+> > - * @enc_id: DRM ID of Encoder client wishes to search for, or 0 for Any Encoder
+>
+> Why is Encoder and Any capitalized?
+>
+> > - * @type: Hardware Block Type client wishes to search for.
+> > - */
+> > -struct dpu_rm_hw_iter {
+> > -       void *hw;
+> > -       struct dpu_rm_hw_blk *blk;
+> > -       uint32_t enc_id;
+> > -       enum dpu_hw_blk_type type;
+> > -};
+> > -
+> >  /**
+> >   * dpu_rm_init - Read hardware catalog and create reservation tracking objects
+> >   *     for all HW blocks.
+> > @@ -93,28 +73,9 @@ int dpu_rm_reserve(struct dpu_rm *rm,
+> >  void dpu_rm_release(struct dpu_rm *rm, struct drm_encoder *enc);
+> >
+> >  /**
+> > - * dpu_rm_init_hw_iter - setup given iterator for new iteration over hw list
+> > - *     using dpu_rm_get_hw
+> > - * @iter: iter object to initialize
+> > - * @enc_id: DRM ID of Encoder client wishes to search for, or 0 for Any Encoder
+> > - * @type: Hardware Block Type client wishes to search for.
+>
+> Ah I guess it's copied from here.
