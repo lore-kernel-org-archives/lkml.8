@@ -2,120 +2,122 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF1BC35E03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EF9C35E03
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B775F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OSiSB30S"
+	by mail.kernel.org (Postfix) with ESMTP id DBC1F24650
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgBYOiP (ORCPT
+        id S1730486AbgBYOkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:38:15 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33074 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729721AbgBYOiP (ORCPT
+        Tue, 25 Feb 2020 09:40:08 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729992AbgBYOkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:38:15 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d5so9176328qto.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:38:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=K85rzbISZ9phjPe7qHH/4r4BQnNPXo7AftTkrTSEUyg=;
-        b=OSiSB30S+FpwCoVnFe4ufZ+25rEIL9+NPkxPHyt7xfEzRaVVb+JniyRS8Qpfo4WMiS
-         mRgKnYcFu7TY9VuYzSBRCSYw+XN99WbOSRhXLnsuzB9dWFilpMX1uvz1Esbhl3akWBA/
-         Irq7rVhMnX32uVSnN5ll9lp5sy39c2Rl/wvuKsqd7dnCsaKVT4G8t7mDxyQE6C1ScWLA
-         /loulP0o7DpmVk04hkznH+UShJmAWMqy15BEzn6LsxIk9R06XXLq9Cw66RaCQUG/FNeR
-         7u1VdRnULkSoD0rmuIDZBWc1SEp+yo0kBQjyHzV1ItiuNisZRSS4ENJ+RFFJuhLmKTTN
-         iCzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K85rzbISZ9phjPe7qHH/4r4BQnNPXo7AftTkrTSEUyg=;
-        b=ZZCAhkWTpYoxENuZFu7MaJqIDzbbL6j2ijuUiAIEfXukkQBNan/zrIvEafJFBKAmum
-         2xhRh8TibQg6vVCDj3KAMy/YY7GmOF8uyUOYZdgG3ReJWkG2IsulftSHrCKaRiqoG9zf
-         D3Q9DTmdK5Gq4zME5e8dPuEoJu3UCVwtYG9/1PAUM9VAW44Adj7ehlEYYPIzlogMHXfM
-         GubEc6sdqCT5lZ6sQgxq2534bmLxxbd6L8iZHAxFqbYAOey8FftRWl6auMVJ4CKEiSPH
-         9SQEGRfb0ISUBZ+VyPKjg1fF1yIyKIPGxQQUh4jAdPabvak8EN54L5nr4A0GVCZ0QmKG
-         5mjg==
-X-Gm-Message-State: APjAAAXl5udPZCbnJFyn6Kvf2n4p/6GToMKrpH5kmdi2XuhCsPKZkaao
-        20h7kVSGdcC5Ze5dly2t+MuvzA==
-X-Google-Smtp-Source: APXvYqyJ0BZR9+pbLb0Aj+10J/A1VPEvpuu8G0xNNkjWUuaHQbs5tKZg8iXhIaGWIb1WkI6kORpKkg==
-X-Received: by 2002:aed:3324:: with SMTP id u33mr52349364qtd.322.1582641492085;
-        Tue, 25 Feb 2020 06:38:12 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id a13sm7387061qkh.123.2020.02.25.06.38.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:38:11 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] xfs: fix an undefined behaviour in _da3_path_shift
-Date:   Tue, 25 Feb 2020 09:37:57 -0500
-Message-Id: <1582641477-4011-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 25 Feb 2020 09:40:08 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PEa6aR006411
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:40:05 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yd41jkacs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:40:00 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Tue, 25 Feb 2020 14:39:52 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Feb 2020 14:39:48 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PEdl1F29884502
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 14:39:47 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6230142045;
+        Tue, 25 Feb 2020 14:39:47 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D04D4203F;
+        Tue, 25 Feb 2020 14:39:46 +0000 (GMT)
+Received: from funtu.home (unknown [9.145.63.208])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Feb 2020 14:39:46 +0000 (GMT)
+Subject: Re: s390 crypto: explicitly memzero stack key material in aes_s390.c
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200221165511.GB6928@lst.de>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Tue, 25 Feb 2020 15:39:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200221165511.GB6928@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20022514-0008-0000-0000-000003564EB0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022514-0009-0000-0000-00004A776AAC
+Message-Id: <5b185871-d94e-2f79-ff42-07b2a10c490c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_05:2020-02-21,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 clxscore=1011 impostorscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=906 suspectscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-state->path.active could be 1 in xfs_da3_node_lookup_int() and then in
-xfs_da3_path_shift() could see state->path.blk[-1].
-
- UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
- index -1 is out of range for type 'xfs_da_state_blk_t [5]'
- Call trace:
-  dump_backtrace+0x0/0x2c8
-  show_stack+0x20/0x2c
-  dump_stack+0xe8/0x150
-  __ubsan_handle_out_of_bounds+0xe4/0xfc
-  xfs_da3_path_shift+0x860/0x86c [xfs]
-  xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
-  xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
-  xfs_dir_createname+0x348/0x38c [xfs]
-  xfs_create+0x6b0/0x8b4 [xfs]
-  xfs_generic_create+0x12c/0x1f8 [xfs]
-  xfs_vn_mknod+0x3c/0x4c [xfs]
-  xfs_vn_create+0x34/0x44 [xfs]
-  do_last+0xd4c/0x10c8
-  path_openat+0xbc/0x2f4
-  do_filp_open+0x74/0xf4
-  do_sys_openat2+0x98/0x180
-  __arm64_sys_openat+0xf8/0x170
-  do_el0_svc+0x170/0x240
-  el0_sync_handler+0x150/0x250
-  el0_sync+0x164/0x180
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- fs/xfs/libxfs/xfs_da_btree.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-index 875e04f82541..0906b7748a3f 100644
---- a/fs/xfs/libxfs/xfs_da_btree.c
-+++ b/fs/xfs/libxfs/xfs_da_btree.c
-@@ -1986,7 +1986,11 @@ static inline int xfs_dabuf_nfsb(struct xfs_mount *mp, int whichfork)
- 	ASSERT(path != NULL);
- 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
- 	level = (path->active-1) - 1;	/* skip bottom layer in path */
--	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
-+
-+	if (level >= 0)
-+		blk = &path->blk[level];
-+
-+	for (; level >= 0; blk--, level--) {
- 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
- 					   blk->bp->b_addr);
- 
--- 
-1.8.3.1
+On 21.02.20 17:55, Torsten Duwe wrote:
+> From: Torsten Duwe <duwe@suse.de>
+>
+> s390 crypto: explicitly memzero stack key material in aes_s390.c
+>
+> aes_s390.c has several functions which allocate space for key material on
+> the stack and leave the used keys there. It is considered good practice
+> to clean these locations before the function returns.
+>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> ---
+> This popped up during our FIPS certification.
+> It's obviously a good idea not to leave key material on the stack.
+>
+> --- a/arch/s390/crypto/aes_s390.c
+> +++ b/arch/s390/crypto/aes_s390.c
+> @@ -392,6 +392,7 @@ static int cbc_aes_crypt(struct blkciphe
+>  		ret = blkcipher_walk_done(desc, walk, nbytes - n);
+>  	}
+>  	memcpy(walk->iv, param.iv, AES_BLOCK_SIZE);
+> +	memzero_explicit(&param, sizeof(param));
+>  	return ret;
+>  }
+>
+> @@ -576,6 +577,8 @@ static int xts_aes_crypt(struct blkciphe
+>  			 walk->dst.virt.addr, walk->src.virt.addr, n);
+>  		ret = blkcipher_walk_done(desc, walk, nbytes - n);
+>  	}
+> +	memzero_explicit(&pcc_param, sizeof(pcc_param));
+> +	memzero_explicit(&xts_param, sizeof(xts_param));
+>  	return ret;
+>  }
+>
+>
+Thanks Torsten, I've picked this patch. It will go upstream via the s390 subsystem with the next kernel merge window.
+regards Harald Freudenberger
 
