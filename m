@@ -2,80 +2,123 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C989DC4BA09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA992C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8A521D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gEPI1Qt8"
+	by mail.kernel.org (Postfix) with ESMTP id C0BBD2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgBYXuo (ORCPT
+        id S1729631AbgBYXxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:50:44 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:34256 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgBYXun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:50:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=crD2rzOD48/+GNJtyVFGr73/eJ540szR74AUVuFwdtQ=; b=gEPI1Qt8UVfR1Ty9MHSk/HzY4f
-        Z84ANp9jx40kWebm8SQ1qV0WWeQQeWkIU6rzyr2045LJnDelAxePGD+JkGSDWstqMz1D/SXrWHzJJ
-        b5D1o58Yc0V3MzsGWwBPBGCWUIGzJMESx6D0Yza1GzQEpAewxPQPd7GIpTSPKi5CRPRk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j6jyK-00028g-N5; Wed, 26 Feb 2020 00:50:40 +0100
-Date:   Wed, 26 Feb 2020 00:50:40 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [RFC PATCH 0/2] AT8031 PHY timestamping support
-Message-ID: <20200225235040.GF9749@lunn.ch>
-References: <20200225230819.7325-1-michael@walle.cc>
+        Tue, 25 Feb 2020 18:53:09 -0500
+Received: from mail.willitsonline.com ([216.7.65.54]:51378 "EHLO
+        mail.willitsonline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729182AbgBYXxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 18:53:09 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.willitsonline.com (Postfix) with ESMTP id B93B7111E08
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:46:50 -0800 (PST)
+X-Virus-Scanned: Debian amavisd-new at iredmail2.willitsonline.com
+Received: from mail.willitsonline.com ([127.0.0.1])
+        by localhost (iredmail2.willitsonline.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bmK5K-ZCg5s5 for <linux-kernel@vger.kernel.org>;
+        Tue, 25 Feb 2020 15:46:50 -0800 (PST)
+Received: from _ (localhost.localdomain [127.0.0.1])
+        (Authenticated sender: bluerocksaddles@willitsonline.com)
+        by mail.willitsonline.com (Postfix) with ESMTPSA id E6052111D61;
+        Tue, 25 Feb 2020 15:46:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225230819.7325-1-michael@walle.cc>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 25 Feb 2020 15:46:35 -0800
+From:   bluerocksaddles@willitsonline.com
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Michael ." <keltoiboy@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Philip Langdale <philipl@overt.org>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        linux-mmc@vger.kernel.org
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+In-Reply-To: <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+References: <20191029170250.GA43972@google.com>
+ <20200222165617.GA207731@google.com>
+ <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+Message-ID: <37a39a53a54ca4ae09b4cfa9d999a47e@willitsonline.com>
+X-Sender: bluerocksaddles@willitsonline.com
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 12:08:17AM +0100, Michael Walle wrote:
-> This patchset is the current state of my work for adding PHY timestamping
-> support. I just wanted to post this to the mailinglist before I never do
-> it. Maybe its a starting point for other people. That being said, I
-> wouldn't mind comments ;) The code basically works but there are three
-> major caveats:
+Bjorn,
+
+If you folks need a test unit or five, let me know. I can donate any 
+Mark CF-29 to the project. (MK 2 or 3 will duplicate the "problem".) 
+They are non-pae 386.
+
+Jeff
+
+On 2020-02-25 07:03, Ulf Hansson wrote:
+> On Sat, 22 Feb 2020 at 17:56, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> 
+>> On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
+>> > [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
+>> > thread, [2] for problem report and the patch Michael tested]
+>> >
+>> > On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
+>> > > Bjorn and Dominik.
+>> > > I am happy to let you know the patch did the trick, it compiled well
+>> > > on 5.4-rc4 and my friends in the CC list have tested the modified
+>> > > kernel and confirmed that both slots are now working as they should.
+>> > > As a group of dedicated Toughbook users and Linux users please accept
+>> > > our thanks your efforts and assistance is greatly appreciated.
+>> > >
+>> > > Now that we know this patch works what kernel do you think it will be
+>> > > released in? Will it make 5.4 or will it be put into 5.5 development
+>> > > for further testing?
+>> >
+>> > That patch was not intended to be a fix; it was just to test my guess
+>> > that the quirk might be related.
+>> >
+>> > Removing the quirk solved the problem *you're* seeing, but the quirk
+>> > was added in the first place to solve some other problem, and if we
+>> > simply remove the quirk, we may reintroduce the original problem.
+>> >
+>> > So we have to look at the history and figure out some way to solve
+>> > both problems.  I cc'd some people who might have insight.  Here are
+>> > some commits that look relevant:
+>> >
+>> >   5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
+>> >   03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
+>> >
+>> >
+>> > [1] https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+>> > [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
+>> 
+>> I guess this problem is still unfixed?  I hate the fact that we broke
+>> something that used to work.
+>> 
+>> Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
+>> we skip it for Toughbooks?  Or maybe we limit the quirk to the
+>> machines where it was originally needed?
 > 
->  (1) The reading of timestamps via MDIO sometimes return wrong values. What
->      I see is that a part of the timestamp corresponds to the new timestamp
-> 	 while another part still contains old values. Thus at the moment, I'm
-> 	 reading the registers twice. I don't know if the reading actually
-> 	 affects the update of the timestamp or the different timing (my MDIO
-> 	 bus is rather slow, so reading the timestamp a second time take some
-> 	 amount of time; but I've also tested with some delays and it didn't
-> 	 had any effects). There is also no possibility to read the timestamp
-> 	 atomically :(
-
-Hi Michael
-
-That sounds fundamentally broken. Which would be odd. Sometimes there
-is a way to take a snapshot of the value. Reading the first word could
-trigger this snapshot. Or the last word, or some status register. One
-would hope the datasheet would talk about this.
-
-      Andrew
+> Both options seems reasonable to me. Do you have time to put together a 
+> patch?
+> 
+> Kind regards
+> Uffe
