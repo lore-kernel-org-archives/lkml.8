@@ -2,246 +2,182 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C322BC35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060AFC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C7F2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A2D218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:17:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VZLIHq/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgBYHRB (ORCPT
+        id S1729426AbgBYHRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:17:01 -0500
-Received: from mga05.intel.com ([192.55.52.43]:56462 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729282AbgBYHRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:17:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 23:17:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
-   d="scan'208";a="230068218"
-Received: from plaxmina-desktop.iind.intel.com ([10.145.162.62])
-  by fmsmga007.fm.intel.com with ESMTP; 24 Feb 2020 23:16:54 -0800
-From:   Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-To:     jani.nikula@linux.intel.com, daniel@ffwll.ch,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        ville.syrjala@linux.intel.com, airlied@linux.ie,
-        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        mripard@kernel.org, mihail.atanassov@arm.com,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>
-Cc:     pankaj.laxminarayan.bharadiya@intel.com,
-        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
-Subject: [RFC][PATCH 5/5] drm/i915/display: Add Nearest-neighbor based integer scaling support
-Date:   Tue, 25 Feb 2020 12:35:45 +0530
-Message-Id: <20200225070545.4482-6-pankaj.laxminarayan.bharadiya@intel.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
-References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+        Tue, 25 Feb 2020 02:17:13 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46097 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYHRN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:17:13 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200225071711euoutp01d95056eb99e0011cc9465a8ba778bdd0~2k-yDg4hS0707007070euoutp01A
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200225071711euoutp01d95056eb99e0011cc9465a8ba778bdd0~2k-yDg4hS0707007070euoutp01A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582615031;
+        bh=Bojt6DKlC7Lzwtf06r54tTUllKU5i9UGy8RX11FRzVo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=VZLIHq/M5FnARW8q6915EjZfge+z+HlfGk5oEEoKVTC1rrtHkJUCGfGJw9H5VYYhb
+         0tq12IoFyHZqTdHB8drjJ00MwA3eNmyWhXbsWTQhIDdO7Xb1+rHD6KwiAUbXlg7RB6
+         WAsPEGzKbziHP5muUe0HKfRWp1zbwCm269M8/dpE=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200225071711eucas1p20d9822a03d85955f01a9e074761ed5e0~2k-x1LB4r0695706957eucas1p2b;
+        Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1B.AD.60698.7F9C45E5; Tue, 25
+        Feb 2020 07:17:11 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200225071711eucas1p1c91a3df0b578bdf14cbd1fa3432553d7~2k-xYsL5o0726307263eucas1p1_;
+        Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200225071711eusmtrp237ddec7c479fa631d97ca876dd418432~2k-xX8T7l2759227592eusmtrp2Z;
+        Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-8b-5e54c9f77b62
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 51.79.08375.7F9C45E5; Tue, 25
+        Feb 2020 07:17:11 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200225071710eusmtip10f8f9e9df04817865fa3ca3abb9c94d5~2k-wy6VN20421204212eusmtip1k;
+        Tue, 25 Feb 2020 07:17:10 +0000 (GMT)
+Subject: Re: [PATCH v3] clocksource: Fix arm_arch_timer clockmode when vDSO
+ disabled
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
+        linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org,
+        maz@kernel.org, Mark.Rutland@arm.com
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <368f9cf7-5d9c-c671-8355-82f0f6e549aa@samsung.com>
+Date:   Tue, 25 Feb 2020 08:17:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200224151552.57274-1-vincenzo.frascino@arm.com>
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3b3brtbsbho+qBSMCpLSxMirhSaEDSKKin5Is6ZeVHJqu2ra
+        jzK/WyZ+DXWKZpim+JGbii6UnORc2kxnJvbFUgKNWWlSmmhuV8t/55znPO9zDrwEJhrguhEx
+        cYm0Ik4WK+Y54p0Dy6bDv4yXwo6YtR7Ut7o8ROXqlnBKMz3Bpcy6Sh6lV/UgakTXzKUevx3l
+        UN2VRi6l1agwqmdtGadmfwziJ3dImqqakMQ8MYpJNI33eJJ5k4kv0dbekSxq9pznhTqeiKRj
+        Y5JphXfgNcdopakPS/jjkjL6+RlKQzqhEjkQQB6FV99HOErkSIjIJwg+dM1tkp8IMi1fN8ki
+        gg5jGW9r5eVEB8YO6hHUP0jbJFYE5uelyOZyJi/DwBs9bhu4kCoEpfezkI1gZAmCactDrs3F
+        I31AaVXa3xWQgdCUm23XcXI/pC/08m14NymFioZ+nPUIwVg+Y8cOZBC8yNHb/Ri5FzI6KjAW
+        u8LUTLU9OJATfCjuqsfZ4KfAtP5lEzvDnKGdz2IPWO/eWshAYDE181mSt1EovQyxruPw3rSy
+        EZXYOHEQWnXerBwMKksOxyYD6QSTViEbwgmKOksxVhZAbraIdR8AtaHl39m+12NYARKrt1VT
+        b6uj3lZH/f/uQ4Q3Ilc6iZFH0YxvHH3Ti5HJmaS4KK+IeLkGbfyuoTXDUhfqXQ3XI5JA4p0C
+        6LkYJuLKkplUuR4BgYldBGfQhTCRIFKWeotWxF9VJMXSjB65E7jYVeD7aFYqIqNkifR1mk6g
+        FVtTDuHglob83c/1LfgNtzBZIdPrJQU1vdW1WXWf+BWRuwKGbpNuAeNSoX/6aMJcxmS4zOeG
+        tlCRspofGGGomm5QtXkO8/fhuisVfqGZdeXz5sbyYm1r+xT3Y7fknVfQ2KFi6BVak9vG7z5d
+        Dz4WsqqLlcqDajLPFjJTg0Wno7L7f+fPL62IcSZa5uOJKRjZX04ZU6NZAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xu7rfT4bEGVzpZrZ4v6yH0aJj11cW
+        i02Pr7FaXN41h83i0NS9jBbnd61ltVh6/SKTxc45J1ktNm+aymyx999PFouXH0+wOHB7rJm3
+        htHj8rWLzB6bVnWyebw7d47dY/OSeo/Pm+QC2KL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxM
+        LPUMjc1jrYxMlfTtbFJSczLLUov07RL0MrrOHWQu+C1ScfHRbsYGxl2CXYycHBICJhKnrm1l
+        7mLk4hASWMoo8ftJGwtEQkbi5LQGVghbWOLPtS42iKLXjBKnbnxhBkkIC4RJHLt6CKxBRGAq
+        o8SMI5ogRcwCUxglZq7qZ4LomMQosWN9H1gVm4ChRNdbkFGcHLwCdhJrOtrAVrAIqEo0fdrH
+        DmKLCsRK3JjZwQRRIyhxcuYTsF5OAXuJo+2HwOqZBcwk5m1+yAxhy0s0b50NZYtL3Hoyn2kC
+        o9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xYZ6xYm5xaV56XrJ+bmbGIGRuu3Yz807GC9t
+        DD7EKMDBqMTDK7E3OE6INbGsuDL3EKMEB7OSCK83Y1CcEG9KYmVValF+fFFpTmrxIUZToOcm
+        MkuJJucDk0heSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGmbfe
+        dRwr+r/7m7VuSOrONS9l1sVO1Vg/ST/jt2AX57UPc+uKk/57iYUe9P3Cu9vHf6Lb5stb9x/5
+        /2bSu45tOmsfZWSZ7lgyIdCzUI25mS32sNvRCa/8HmS869/SHyLR6HWw+2jIsnifTp6v4fWp
+        l7nOWhilGEYcYd/qXXFYt3Yez8Y8pkWblFiKMxINtZiLihMBYLGeC+oCAAA=
+X-CMS-MailID: 20200225071711eucas1p1c91a3df0b578bdf14cbd1fa3432553d7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200224151611eucas1p2d5e9492e4497edd18a322fdfc33547bf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200224151611eucas1p2d5e9492e4497edd18a322fdfc33547bf
+References: <CGME20200224151611eucas1p2d5e9492e4497edd18a322fdfc33547bf@eucas1p2.samsung.com>
+        <20200224151552.57274-1-vincenzo.frascino@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Integer scaling (IS) is a nearest-neighbor upscaling technique that
-simply scales up the existing pixels by an integer
-(i.e., whole number) multiplier.Nearest-neighbor (NN) interpolation
-works by filling in the missing color values in the upscaled image
-with that of the coordinate-mapped nearest source pixel value.
+Hi,
 
-Both IS and NN preserve the clarity of the original image. Integer
-scaling is particularly useful for pixel art games that rely on
-sharp, blocky images to deliver their distinctive look.
+On 24.02.2020 16:15, Vincenzo Frascino wrote:
+> The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
+> defined to compile correctly. On arm the vDSO can be disabled and when
+> this is the case the compilation ends prematurely with an error:
+>
+>   $ make ARCH=arm multi_v7_defconfig
+>   $ ./scripts/config -d VDSO
+>   $ make
+>
+> drivers/clocksource/arm_arch_timer.c:73:44: error:
+> ‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
+>    static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
+>                                               ^
+> scripts/Makefile.build:267: recipe for target
+> 'drivers/clocksource/arm_arch_timer.o' failed
+> make[2]: *** [drivers/clocksource/arm_arch_timer.o] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> scripts/Makefile.build:505: recipe for target 'drivers/clocksource' failed
+> make[1]: *** [drivers/clocksource] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> Makefile:1683: recipe for target 'drivers' failed
+> make: *** [drivers] Error 2
+>
+> Define VDSO_CLOCKMODE_ARCHTIMER as VDSO_CLOCKMODE_NONE when the vDSOs are
+> not enabled to address the issue.
+>
+> Fixes: 5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <Mark.Rutland@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Program the scaler filter coefficients to enable the NN filter if
-scaling filter property is set to DRM_SCALING_FILTER_NEAREST_NEIGHBOR
-and enable integer scaling.
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Bspec: 49247
+> ---
+>   drivers/clocksource/arm_arch_timer.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> This patch has been rebased and tested on tip/timers/core.
+>
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index ee2420d56f67..d53f4c7ccaae 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -69,7 +69,11 @@ static enum arch_timer_ppi_nr arch_timer_uses_ppi = ARCH_TIMER_VIRT_PPI;
+>   static bool arch_timer_c3stop;
+>   static bool arch_timer_mem_use_virtual;
+>   static bool arch_counter_suspend_stop;
+> +#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+>   static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
+> +#else
+> +static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_NONE;
+> +#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+>   
+>   static cpumask_t evtstrm_available = CPU_MASK_NONE;
+>   static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
 
-Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
----
- drivers/gpu/drm/i915/display/intel_display.c | 83 +++++++++++++++++++-
- drivers/gpu/drm/i915/display/intel_display.h |  2 +
- drivers/gpu/drm/i915/display/intel_sprite.c  | 20 +++--
- 3 files changed, 97 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index b5903ef3c5a0..6d5f59203258 100644
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -6237,6 +6237,73 @@ void skl_scaler_disable(const struct intel_crtc_state *old_crtc_state)
- 		skl_detach_scaler(crtc, i);
- }
- 
-+/**
-+ *  Theory behind setting nearest-neighbor integer scaling:
-+ *
-+ *  17 phase of 7 taps requires 119 coefficients in 60 dwords per set.
-+ *  The letter represents the filter tap (D is the center tap) and the number
-+ *  represents the coefficient set for a phase (0-16).
-+ *
-+ *         +------------+------------------------+------------------------+
-+ *         |Index value | Data value coeffient 1 | Data value coeffient 2 |
-+ *         +------------+------------------------+------------------------+
-+ *         |   00h      |          B0            |          A0            |
-+ *         +------------+------------------------+------------------------+
-+ *         |   01h      |          D0            |          C0            |
-+ *         +------------+------------------------+------------------------+
-+ *         |   02h      |          F0            |          E0            |
-+ *         +------------+------------------------+------------------------+
-+ *         |   03h      |          A1            |          G0            |
-+ *         +------------+------------------------+------------------------+
-+ *         |   04h      |          C1            |          B1            |
-+ *         +------------+------------------------+------------------------+
-+ *         |   ...      |          ...           |          ...           |
-+ *         +------------+------------------------+------------------------+
-+ *         |   38h      |          B16           |          A16           |
-+ *         +------------+------------------------+------------------------+
-+ *         |   39h      |          D16           |          C16           |
-+ *         +------------+------------------------+------------------------+
-+ *         |   3Ah      |          F16           |          C16           |
-+ *         +------------+------------------------+------------------------+
-+ *         |   3Bh      |        Reserved        |          G16           |
-+ *         +------------+------------------------+------------------------+
-+ *
-+ *  To enable nearest-neighbor scaling:  program scaler coefficents with
-+ *  the center tap (Dxx) values set to 1 and all other values set to 0 as per
-+ *  SCALER_COEFFICIENT_FORMAT
-+ *
-+ */
-+void skl_setup_nearest_neighbor_filter(struct drm_i915_private *dev_priv,
-+				  enum pipe pipe, int scaler_id)
-+{
-+
-+	int coeff = 0;
-+	int phase = 0;
-+	int tap;
-+	int val = 0;
-+
-+	/*enable the index auto increment.*/
-+	intel_de_write_fw(dev_priv, SKL_PS_COEF_INDEX_SET0(pipe, scaler_id),
-+			  _PS_COEE_INDEX_AUTO_INC);
-+
-+	for (phase = 0; phase < 17; phase++) {
-+		for (tap = 0; tap < 7; tap++) {
-+			coeff++;
-+			if (tap == 3)
-+				val = (phase % 2) ? (0x800) : (0x800 << 16);
-+
-+			if (coeff % 2 == 0) {
-+				intel_de_write_fw(dev_priv, SKL_PS_COEF_DATA_SET0(pipe, scaler_id), val);
-+				val = 0;
-+			}
-+
-+		}
-+
-+	}
-+
-+	intel_de_write_fw(dev_priv, SKL_PS_COEF_DATA_SET0(pipe, scaler_id), 0);
-+}
-+
- static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
- {
- 	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-@@ -6260,9 +6327,23 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
- 		pfit_w = (crtc_state->pch_pfit.size >> 16) & 0xFFFF;
- 		pfit_h = crtc_state->pch_pfit.size & 0xFFFF;
- 
-+		id = scaler_state->scaler_id;
-+
- 		if (state->scaling_filter ==
- 		    DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
- 			scaling_filter = PS_FILTER_PROGRAMMED;
-+			skl_setup_nearest_neighbor_filter(dev_priv, pipe, id);
-+
-+			/* Make the scaling window size to integer multiple of
-+			 * source.
-+			 *
-+			 * TODO: Should userspace take desision to round
-+			 * scaling window to integer multiple?
-+			 */
-+			pfit_w = rounddown(pfit_w,
-+					   (crtc_state->pipe_src_w << 16));
-+			pfit_h = rounddown(pfit_h,
-+					   (crtc_state->pipe_src_h << 16));
- 		}
- 
- 		hscale = (crtc_state->pipe_src_w << 16) / pfit_w;
-@@ -6271,8 +6352,6 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
- 		uv_rgb_hphase = skl_scaler_calc_phase(1, hscale, false);
- 		uv_rgb_vphase = skl_scaler_calc_phase(1, vscale, false);
- 
--		id = scaler_state->scaler_id;
--
- 		spin_lock_irqsave(&dev_priv->uncore.lock, irqflags);
- 
- 		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
-diff --git a/drivers/gpu/drm/i915/display/intel_display.h b/drivers/gpu/drm/i915/display/intel_display.h
-index f92efbbec838..49f58d3c98fe 100644
---- a/drivers/gpu/drm/i915/display/intel_display.h
-+++ b/drivers/gpu/drm/i915/display/intel_display.h
-@@ -586,6 +586,8 @@ void intel_crtc_arm_fifo_underrun(struct intel_crtc *crtc,
- u16 skl_scaler_calc_phase(int sub, int scale, bool chroma_center);
- int skl_update_scaler_crtc(struct intel_crtc_state *crtc_state);
- void skl_scaler_disable(const struct intel_crtc_state *old_crtc_state);
-+void skl_setup_nearest_neighbor_filter(struct drm_i915_private *dev_priv,
-+				  enum pipe pipe, int scaler_id);
- void ilk_pfit_disable(const struct intel_crtc_state *old_crtc_state);
- u32 glk_plane_color_ctl(const struct intel_crtc_state *crtc_state,
- 			const struct intel_plane_state *plane_state);
-diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c b/drivers/gpu/drm/i915/display/intel_sprite.c
-index fd7b31a21723..5bef5c031374 100644
---- a/drivers/gpu/drm/i915/display/intel_sprite.c
-+++ b/drivers/gpu/drm/i915/display/intel_sprite.c
-@@ -415,18 +415,26 @@ skl_program_scaler(struct intel_plane *plane,
- 	u16 y_vphase, uv_rgb_vphase;
- 	int hscale, vscale;
- 	const struct drm_plane_state *state = &plane_state->uapi;
-+	u32 src_w = drm_rect_width(&plane_state->uapi.src) >> 16;
-+	u32 src_h = drm_rect_height(&plane_state->uapi.src) >> 16;
- 	u32 scaling_filter = PS_FILTER_MEDIUM;
-+	struct drm_rect dst;
- 
- 	if (state->scaling_filter == DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
- 		scaling_filter = PS_FILTER_PROGRAMMED;
-+		skl_setup_nearest_neighbor_filter(dev_priv, pipe, scaler_id);
-+
-+		/* Make the scaling window size to integer multiple of source
-+		 * TODO: Should userspace take desision to round scaling window
-+		 * to integer multiple?
-+		 */
-+		crtc_w = rounddown(crtc_w, src_w);
-+		crtc_h = rounddown(crtc_h, src_h);
- 	}
- 
--	hscale = drm_rect_calc_hscale(&plane_state->uapi.src,
--				      &plane_state->uapi.dst,
--				      0, INT_MAX);
--	vscale = drm_rect_calc_vscale(&plane_state->uapi.src,
--				      &plane_state->uapi.dst,
--				      0, INT_MAX);
-+	drm_rect_init(&dst, crtc_x, crtc_y, crtc_w, crtc_h);
-+	hscale = drm_rect_calc_hscale(&plane_state->uapi.src, &dst, 0, INT_MAX);
-+	vscale = drm_rect_calc_vscale(&plane_state->uapi.src, &dst, 0, INT_MAX);
- 
- 	/* TODO: handle sub-pixel coordinates */
- 	if (intel_format_info_is_yuv_semiplanar(fb->format, fb->modifier) &&
+Best regards
 -- 
-2.23.0
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
