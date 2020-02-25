@@ -2,77 +2,131 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD6AC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A9C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC062176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284DC2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:12:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="erp5opGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgBYILe (ORCPT
+        id S1729710AbgBYIMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:11:34 -0500
-Received: from relay.sw.ru ([185.231.240.75]:41990 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgBYILe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:11:34 -0500
-Received: from vvs-ws.sw.ru ([172.16.24.21])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1j6VJJ-00055H-CR; Tue, 25 Feb 2020 11:11:21 +0300
-From:   Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH v2] pstore: pstore_ftrace_seq_next should increase position
- index
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Message-ID: <4e49830d-4c88-0171-ee24-1ee540028dad@virtuozzo.com>
-Date:   Tue, 25 Feb 2020 11:11:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 03:12:07 -0500
+Received: from mail-bn7nam10on2093.outbound.protection.outlook.com ([40.107.92.93]:14656
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729253AbgBYIMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:12:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fsD5EU5wRtbgctz0dD2GkGcx+fuOesP+SvS20d5VJ80AyFoHU65meDm9jQ1u6hoiCRwjIvEJ07k4+MaSrfXXoyVXSE3caBTLoNJR81KtiYr9ot+mdKI/it0mynjo66hSMCd/GUWcJECaXJs+qm9U06LJdFI/cYP2E77zk0wUfV+As22JAED45hwQDXamPbV34WlfNdJJXHeDVU/GzcqB2zRGD+yuhBgK6acjdUUOLU9zONgpOQg6Gyrkxv+DSUx1qEWCyQ816HguYRXT7oUgv8MZ4Iokqrm93Gsu7mXklEH39Aj1YS68eaJwueRaVBbofNZb6fkG7SHfAi/DUHTzPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uWmD5YkrDPV/XQt4ubPOCeJJPXa81yAu7g7dESfiDrc=;
+ b=VSAacKu5z7O7KsUWlCdX4Yc6sXH0tZW+dox4hcHm+TRwjY7ezl+Y2tSz5sZtNslmHbvlENAQ9oA75X75pUSj1go7ndOZJ3Q5EO4/X4b0gILz1eowcHDrMADeASF81nGSm6mjTKGyxCXJ3XxcaZSi72jQPTUZ3LvfHYU/Zc4v1vyWqTxnuUQp3kNjJct3ovowCrKsPouVtMiYkHVDFebrFd6sUOvn93aROwCnb3pzplcb/lVYME1zolbPWq0iKaaxu2WfXO0BpNt+IEaj7d8NScQ57SwZg6yTxhBV0MDza1emy/D6U3f/nJP590+ddg3vzIktHaGV0Vp2oX/Ie98IzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uWmD5YkrDPV/XQt4ubPOCeJJPXa81yAu7g7dESfiDrc=;
+ b=erp5opGmb+HHuUcfO2eDgloODJP2lODbqLb7F/1xAqaAqSjzbIBVyGZYvQjKVx8fQqW0vhsVmwEro+1Lr5eb6pfT99+nL7womAdBYFH/VjuO2cQ2l61xyCPmsFbX0Uc4seVnNnOvr7FrCRpIF0cdvcyT3muBmF4GQHxisrmOo1g=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com (2603:10b6:805:a5::18)
+ by SN6PR04MB5151.namprd04.prod.outlook.com (2603:10b6:805:90::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
+ 2020 08:12:01 +0000
+Received: from SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::9598:7ff:b397:ba56]) by SN6PR04MB4543.namprd04.prod.outlook.com
+ ([fe80::9598:7ff:b397:ba56%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 08:12:01 +0000
+Date:   Tue, 25 Feb 2020 16:11:52 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v7 0/2] Add initial support for slimport anx7625
+Message-ID: <20200225081152.GA12531@xin-VirtualBox>
+References: <cover.1582529411.git.xji@analogixsemi.com>
+ <20200225074200.GC3308@kadam>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225074200.GC3308@kadam>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK0PR03CA0101.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::17) To SN6PR04MB4543.namprd04.prod.outlook.com
+ (2603:10b6:805:a5::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK0PR03CA0101.apcprd03.prod.outlook.com (2603:1096:203:b0::17) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 08:11:59 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0b4418f5-7903-4f1c-65e8-08d7b9ca63d5
+X-MS-TrafficTypeDiagnostic: SN6PR04MB5151:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR04MB5151A43B41707F0ECB6CFE1BC7ED0@SN6PR04MB5151.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39850400004)(346002)(396003)(376002)(199004)(189003)(54906003)(9686003)(55016002)(66556008)(956004)(8676002)(5660300002)(107886003)(81166006)(66946007)(33716001)(8936002)(86362001)(81156014)(316002)(66476007)(6496006)(6916009)(186003)(52116002)(7416002)(6666004)(1076003)(16526019)(33656002)(2906002)(478600001)(26005)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5151;H:SN6PR04MB4543.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s33h31BvSZP/qc5y4wPM+R/TktdtW7Hw26vlA2IaT3HyoM/cqeYPB/b3usofkslL4yKg/cBIe94W3V9+mSjIE/ejwA5lncgJzQbEGXz7+kCCOap+gvTDUhLNsYVOQyxhQvarYqj15vt3mrqHoaeHtguIMrBe4pV196KNG0PUkq8p6MI13AWOdJQNfaso9AhkXpogkejmoACN+H3UY//dLkvEJOO6kZWHUR8JtsvlistaOXhE6/q2mtagib+3Y+rVqKBg5g+8pqd34coTfwJHfczkYKkhTGgBEqKKVpkEQ0Xu62onsr3Xk8+FyMy1VG9uB0UEodIl8Unin0h96HvRxQSWH8jEV5X50WFsm0/+VtCfWBytYHsmoKPl9QmauIWm5CdprEdBQakTebNbMpAtePF/bxvP+O6XEEnMDqppWUea5ElgTGr3iIPqVYCaSx7y
+X-MS-Exchange-AntiSpam-MessageData: F8uXcJU1WJ20Vgq1xT+eTl9ETnmMvHsxnxgyQCRDNIDB+7f65OicJUUrFkdlUmxGCzGiaCeDX7tVT5sPgYsSzrn86vY/uI4UlgSYv75ex7idkddR5kz0e9u36wOfj7Me6TOkTH+peJ/rBx8j6bxJPQ==
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b4418f5-7903-4f1c-65e8-08d7b9ca63d5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 08:12:01.0223
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BT7IFtwJTyjxK19oyywgICGlMNit9WMdS9QT6dS0f76hSV5G9JqvRICHXWuWehb1pJb18/ACqanmG9N4G3rl4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If .next function does not change position index,
-following .show function will repeat output related
-to current position index.
-
-Cc: stable@vger.kernel.org
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code ...")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
----
- fs/pstore/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 7fbe8f0..ea8799b 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -87,11 +87,11 @@ static void *pstore_ftrace_seq_next(struct seq_file *s, void *v, loff_t *pos)
- 	struct pstore_private *ps = s->private;
- 	struct pstore_ftrace_seq_data *data = v;
- 
-+	(*pos)++;
- 	data->off += REC_SIZE;
- 	if (data->off + REC_SIZE > ps->total_size)
- 		return NULL;
- 
--	(*pos)++;
- 	return data;
- }
- 
--- 
-1.8.3.1
-
+On Tue, Feb 25, 2020 at 10:42:00AM +0300, Dan Carpenter wrote:
+> On Tue, Feb 25, 2020 at 02:11:39PM +0800, Xin Ji wrote:
+> > Hi all,
+> > 
+> > The following series add initial support for the Slimport ANX7625 transmitter, a
+> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
+> > 
+> > This is the initial version, any mistakes, please let me know, I will fix it in
+>               ^^^^^^^^^^^^^^^
+> > the next series.
+> 
+> This is actually the v7 version, but the patch zero cover letter hasn't
+> been updated.  :P  The last time anyone responded to these patches was
+> to point out three simple bugs which you fixed in v4 last November.
+Sorry, I missed it, I'll resend the cover letter.
+> 
+> What changed in this version?  My guess is that nothing changed and you
+> are just prodding us to re-review it...  Feel free to say that also
+> because we can't read your mind.
+I added a new bridge interface "mode_fixup" for processing critical
+timing. And add MIPI RX tolerance by setting register 0x1B to 0x3D.
+> 
+> regards,
+> dan carpenter
