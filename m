@@ -2,80 +2,97 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F825C4BA05
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5561EC4BA01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394F121927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC6C20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ML4KwGNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgBYWwe (ORCPT
+        id S1729336AbgBYWwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:52:34 -0500
-Received: from mga05.intel.com ([192.55.52.43]:63034 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbgBYWwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:52:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 14:52:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
-   d="scan'208";a="230266734"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.78]) ([134.134.177.78])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Feb 2020 14:52:32 -0800
-Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
- IA32_FEAT_CTL is configured
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
-        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
-        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
-        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
-        lenb@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
-        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
-        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
- <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
- <20200225221234.GL9245@linux.intel.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
-Date:   Tue, 25 Feb 2020 14:52:32 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 17:52:40 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:46187 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729266AbgBYWwj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 17:52:39 -0500
+Received: by mail-vk1-f195.google.com with SMTP id u6so229896vkn.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:52:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/7MQONwXqnHZRXQDO+5cFHOizIPUenx2kjrngECUQSQ=;
+        b=ML4KwGNSQIrO0D7ruk1fYSg4pB4VLASqOhJQ3+uvt30zctxClfPEpcN/raNLCNmle0
+         SzlFwyCZJpsknAC2v7Mx6mWCveGnkD2zRjQq6VBxAdF6c4ozhJ2E419eCZdmA/VTqlB5
+         gtjdkt9Xhdv+Hl8JBcTplN/eAA3umRtDZL0Ks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/7MQONwXqnHZRXQDO+5cFHOizIPUenx2kjrngECUQSQ=;
+        b=ATe2DudB5PQW6qKDQDNb9vg+eXCA061TMO47Tbw0d+yLaAsst+2B8VaJaGEBqXUjxi
+         1bOTQ2LyKJoHeIjO8tY7aw6dQS5AVG+98ogM/Nnodvxts3qmYzY3s2J0zONwH7ugtJmg
+         4k43lTNl/icIWQ9iLlESQMIlPinGmG4e3rXWcFmioe0lSyk0f1Pd2Nlzt+je7ljRXccE
+         A/TXZvVLCHsnd9/I/t0nBXdY0/Qpx0qUeL783+U8cUarUTJOuVDLcRfX2E8LwwKiqjQ1
+         q2brhH2C3RjdVAESNjogzmsehqtUmJ095Ozb/HazXTZFf6WapdK8hpsHgvK7bEpuWB4A
+         hT/g==
+X-Gm-Message-State: APjAAAVZH5rzMSA3so9DDiM8akvX4hij0bzU2YGn7lTGqUVmSPAneFnJ
+        PPqT62ot5ee5mGU+bif2v1OvgFBDs1g=
+X-Google-Smtp-Source: APXvYqyr+vn9RfOcYhk5/I0/1qgj3NcN5PdMOZMUXXc92/JpgCFe0oDmIQAC194f7qjn0ImWrSg5Qw==
+X-Received: by 2002:a1f:c686:: with SMTP id w128mr1261768vkf.34.1582671157806;
+        Tue, 25 Feb 2020 14:52:37 -0800 (PST)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id b20sm48511vsq.20.2020.02.25.14.52.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 14:52:36 -0800 (PST)
+Received: by mail-vs1-f46.google.com with SMTP id n27so598595vsa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:52:36 -0800 (PST)
+X-Received: by 2002:a67:e342:: with SMTP id s2mr1474052vsm.198.1582671156402;
+ Tue, 25 Feb 2020 14:52:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200225221234.GL9245@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200103045016.12459-1-wgong@codeaurora.org> <20200105.144704.221506192255563950.davem@davemloft.net>
+In-Reply-To: <20200105.144704.221506192255563950.davem@davemloft.net>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 25 Feb 2020 14:52:24 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WiceRwLUS1sdL_W=ELKYZ9zKE13e8vx9SO0+tRvX74QQ@mail.gmail.com>
+Message-ID: <CAD=FV=WiceRwLUS1sdL_W=ELKYZ9zKE13e8vx9SO0+tRvX74QQ@mail.gmail.com>
+Subject: Re: [PATCH v2] net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc:     Wen Gong <wgong@codeaurora.org>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ath11k@lists.infradead.org,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/2020 2:12 PM, Sean Christopherson wrote:
-> On Tue, Feb 25, 2020 at 01:49:13PM -0800, Jacob Keller wrote:
->> Hi Sean,
->>
->> I suspect something is wrong and the features are enabled even though
->> the BIOS has it disabled, leading to later failure because of this.
-> 
-> Hrm.  On the failing kernel, what are the values of MSR 0x3a for all CPUs,
-> i.e. what's the output of 'sudo rdmsr -a 0x3a'?
-> 
+Hi,
 
-On the old (fedora 30) kernel, every cpu reports as '1'.
 
-I can't easily test the failing kernel because it crashes during boot.
+On Sun, Jan 5, 2020 at 2:47 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Wen Gong <wgong@codeaurora.org>
+> Date: Fri,  3 Jan 2020 12:50:16 +0800
+>
+> > The len used for skb_put_padto is wrong, it need to add len of hdr.
+>
+> Thanks, applied.
 
-Thanks,
-Jake
+I noticed this patch is in mainline now as:
+
+ce57785bf91b net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+
+Though I'm not an expert on the code, it feels like a stable candidate
+unless someone objects.
+
+-Doug
