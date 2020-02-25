@@ -2,98 +2,165 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7468EC35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A903AC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE5124650
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DE4222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e/gRUEp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgBYOCR (ORCPT
+        id S1730540AbgBYOC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:02:17 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31526 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbgBYOCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:02:16 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01PE27FN031971;
-        Tue, 25 Feb 2020 15:02:07 +0100
-Date:   Tue, 25 Feb 2020 15:02:07 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
-Message-ID: <20200225140207.GA31782@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
- <20200224212352.8640-2-w@1wt.eu>
- <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
- <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
- <20200225034529.GA8908@1wt.eu>
- <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
+        Tue, 25 Feb 2020 09:02:58 -0500
+Received: from gateway23.websitewelcome.com ([192.185.50.119]:48619 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729952AbgBYOC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 09:02:57 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id F32845B0F
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 08:02:56 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6anYjSa02Efyq6anYjYiZw; Tue, 25 Feb 2020 08:02:56 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=GMuAd5dZj+lxOQwLZa8ILnXzQggMnWK5MX/QtmcsnzE=; b=e/gRUEp+9rCkEAFpJI8Znrbawl
+        NImLh5kQqxCSaGFx+SZXc9uzNliOwJRCrnl8FevcZ7KyFf+LOXRcj8gkzQX6NFSFXs+3nmcmJJDkq
+        nhdg/YhIv+0VIcURCGZ/Zh9bldpm/EHunQd1pykV9PtY8VubK+M1/8KsALR3ih1h9ruy9x939DJBt
+        lkvxdUzlQinKDediwNJAYzYNyVcv6U8oVlNeOQpMgEZauO4FKjEWtiLWEK7jjkM4g5GeaiALDO78j
+        B2v6QCAghuwFbMjqy3JMhnwtv/5OnQrGh3Db/gNtEEEHtdzwfZmdZTClPGyGCJkCqwE+y11hVnNAk
+        M7i8XH0w==;
+Received: from [201.162.241.105] (port=31829 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6anY-001ShE-6A; Tue, 25 Feb 2020 08:02:56 -0600
+Subject: Re: [PATCH] s390: Replace zero-length array with flexible-array
+ member
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200221150612.GA9717@embeddedor>
+ <your-ad-here.call-01582639032-ext-1911@work.hours>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <4a25a1a3-be56-e1b3-9c4f-fd902849d4bc@embeddedor.com>
+Date:   Tue, 25 Feb 2020 08:05:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <your-ad-here.call-01582639032-ext-1911@work.hours>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.241.105
+X-Source-L: No
+X-Exim-ID: 1j6anY-001ShE-6A
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [201.162.241.105]:31829
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 61
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:14:40AM +0300, Denis Efremov wrote:
+
+
+On 2/25/20 07:57, Vasily Gorbik wrote:
+
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  arch/s390/appldata/appldata_os.c      | 2 +-
+>>  drivers/s390/block/dasd_diag.c        | 2 +-
+>>  drivers/s390/block/dasd_eckd.h        | 2 +-
+>>  drivers/s390/char/raw3270.h           | 2 +-
+>>  drivers/s390/char/sclp_pci.c          | 2 +-
+>>  drivers/s390/cio/idset.c              | 2 +-
+>>  drivers/s390/crypto/pkey_api.c        | 2 +-
+>>  drivers/s390/crypto/zcrypt_ccamisc.h  | 2 +-
+>>  drivers/s390/crypto/zcrypt_msgtype6.c | 2 +-
+>>  9 files changed, 9 insertions(+), 9 deletions(-)
+>>
 > 
+> Applied, thanks
 > 
-> On 2/25/20 6:45 AM, Willy Tarreau wrote:
-> > On Tue, Feb 25, 2020 at 02:13:42AM +0300, Denis Efremov wrote:
-> >> On 2/25/20 12:53 AM, Linus Torvalds wrote:
-> >>> So I'd like to see that second step that does the
-> >>>
-> >>>     -static int fdc;                 /* current fdc */
-> >>>     +static int current_fdc;
-> >>>
-> >>> change.
-> >>>
-> >>> We already call the global 'drive' variable 'current_drive', so it
-> >>> really is 'fdc' that is misnamed and ambiguous because it then has two
-> >>> different cases: the global 'fdc' and then the various shadowing local
-> >>> 'fdc' variables (or function arguments).
-> >>>
-> >>> Mind adding that too? Slightly less automatic, I agree, because then
-> >>> you really do have to disambiguate between the "is this the shadowed
-> >>> use of a local 'fdc'" case or the "this is the global 'fdc' use" case.
-> > 
-> > I definitely agree. I first wanted to be sure the patches were acceptable
-> > as a principle, but disambiguating the variables is easy to do now.
-> 
-> Ok, I don't want to break in the middle of your changes in this case.
 
-So I started this and discovered the nice joke you were telling me
-about regarding FD_IOPORT which references fdc. Then the address
-registers FD_STATUS, FD_DATA, FD_DOR, FD_DIR, FD_DCR which are
-based on FD_IOPORT also depend on it.
-
-These ones are used by fd_outb() which is arch-dependent, so if we
-want to pass a third argument we have to change them all and make sure
-not to break them too much.
-
-In addition the FD_* macros defined above are used by x86, and FD_DOR is
-also used by arm while all other archs hard-code all the values. ARM also
-uses floppy_selects[fdc] and new_dor... I'm starting to feel the trap here!
-I also feel a bit concerned that these are exported in uapi with a hard-coded
-0x3f0 base address. I'm just not sure how portable all of this is in
-the end :-/
-
-Now I'm wondering, how far should we go and how much is it acceptable to
-change ? I'd rather not have "#define fdc current_fdc" just so that it
-builds, but on the other hand this problem clearly outlights the roots
-of the issue, which lies in "fdc" being silently accessed by macros with
-nobody noticing!
-
-Willy
+Thanks, Vasily.
+--
+Gustavo
