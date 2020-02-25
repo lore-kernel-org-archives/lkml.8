@@ -2,80 +2,116 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDBC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F54C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBBF20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B859521744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C27S/EX7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ut9PFhHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgBYUqg (ORCPT
+        id S1729868AbgBYUrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:46:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58062 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgBYUqg (ORCPT
+        Tue, 25 Feb 2020 15:47:01 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47388 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728847AbgBYUq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:46:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=o/1QFZxzNT826m7JFIAME3+yVzvEsCUL19H0/+ZaGD0=; b=C27S/EX74cPZD/Vexlr8p3tKtQ
-        728obkNdVPjtjHZvyhB6xDUhJvo4kt/VU30ZNqgzPAqX5gF7l5kxxnqDLlGY+NKKC05zby3lHtz/b
-        YH5brjngTWrhNfaC1aD0vv3E6EeO8OSHzNvkWhfGo+WiKgkEg/wm778jgIjOd8clQ1y1eEFZY3gzJ
-        /AkM/+qjw29NQew9qQ0gELKGnqD2c78UNKJ5/SA5EapGxrdXG0eVurrZNnJdnIdcT3npCToYqVKNp
-        OKqDar1kDgw95WD1AJBYj+ALBetyYNEmKK4gkVmd4y9v2yJiXHdV/XfvU2jwKotN1MUqM/3HWFkQT
-        4uf8RPaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6h68-00036M-Ke; Tue, 25 Feb 2020 20:46:32 +0000
-Date:   Tue, 25 Feb 2020 12:46:32 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Qian Cai <cai@lca.pw>, elver@google.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix data races in inode->i_*time
-Message-ID: <20200225204632.GA6191@infradead.org>
-References: <1582661385-30210-1-git-send-email-cai@lca.pw>
- <20200225202829.GV6740@magnolia>
+        Tue, 25 Feb 2020 15:46:58 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkuW6117213;
+        Tue, 25 Feb 2020 14:46:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582663616;
+        bh=IBcnW0j8YJKkAvVMwDo1qdY20Qq2L6G9BlQ+7hZpKMA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Ut9PFhHNrfXtWVws7xzEdhlSQmIm014xhwQVfdKLX92zKA2yielA+dVgRqDp04ewg
+         YsP2Ue4TGECxXswKEBqSD1HADMJH6cacFOcKGKTuJ4tLvTt/UGYk7HOKv9lBTrO2Xq
+         IqvX2D9wzO3WpNsAk9A1uLevI6t+01ihiB2qMs8k=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PKkugm022016
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 14:46:56 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 14:46:56 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 14:46:56 -0600
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PKktZj108197;
+        Tue, 25 Feb 2020 14:46:56 -0600
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01PKktGK025460;
+        Tue, 25 Feb 2020 14:46:55 -0600
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 01/12] dt-bindings: bus: ti-sysc: Add support for PRUSS SYSC type
+Date:   Tue, 25 Feb 2020 14:46:38 -0600
+Message-ID: <20200225204649.28220-2-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200225204649.28220-1-s-anna@ti.com>
+References: <20200225204649.28220-1-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225202829.GV6740@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:28:29PM -0800, Darrick J. Wong wrote:
-> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > index 81f2f93caec0..2d5ca13ee9da 100644
-> > --- a/fs/xfs/xfs_iops.c
-> > +++ b/fs/xfs/xfs_iops.c
-> > @@ -547,9 +547,9 @@
-> >  	stat->uid = inode->i_uid;
-> >  	stat->gid = inode->i_gid;
-> >  	stat->ino = ip->i_ino;
-> > -	stat->atime = inode->i_atime;
-> > -	stat->mtime = inode->i_mtime;
-> > -	stat->ctime = inode->i_ctime;
-> > +	stat->atime = READ_ONCE(inode->i_atime);
-> > +	stat->mtime = READ_ONCE(inode->i_mtime);
-> > +	stat->ctime = READ_ONCE(inode->i_ctime);
-> 
-> Seeing as one is supposed to take ILOCK_SHARED before reading inode core
-> information, why don't we do that here?  Is there some huge performance
-> benefit to be realized from READ_ONCE vs. waiting for the lock that
-> protects all the writes from each other?
+From: Roger Quadros <rogerq@ti.com>
 
-Yes, I don't see how READ_ONCE works on a structure.
+The PRUSS module has a SYSCFG which is unique. The SYSCFG
+has two additional unique fields called STANDBY_INIT and
+SUB_MWAIT in addition to regular IDLE_MODE and STANDBY_MODE
+fields. Add the bindings for this new sysc type.
 
-I think you should look into fixing this race in generic_fillattr
-first, and we then piggy back on that fix in XFS once it has all been
-sorted out.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ Documentation/devicetree/bindings/bus/ti-sysc.txt | 1 +
+ include/dt-bindings/bus/ti-sysc.h                 | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+index 233eb8294204..c984143d08d2 100644
+--- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
++++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+@@ -38,6 +38,7 @@ Required standard properties:
+ 		"ti,sysc-dra7-mcasp"
+ 		"ti,sysc-usb-host-fs"
+ 		"ti,sysc-dra7-mcan"
++		"ti,sysc-pruss"
+ 
+ - reg		shall have register areas implemented for the interconnect
+ 		target module in question such as revision, sysc and syss
+diff --git a/include/dt-bindings/bus/ti-sysc.h b/include/dt-bindings/bus/ti-sysc.h
+index babd08a1d226..76b07826ed05 100644
+--- a/include/dt-bindings/bus/ti-sysc.h
++++ b/include/dt-bindings/bus/ti-sysc.h
+@@ -18,6 +18,10 @@
+ 
+ #define SYSC_DRA7_MCAN_ENAWAKEUP	(1 << 4)
+ 
++/* PRUSS sysc found on AM33xx/AM43xx/AM57xx */
++#define SYSC_PRUSS_SUB_MWAIT		(1 << 5)
++#define SYSC_PRUSS_STANDBY_INIT		(1 << 4)
++
+ /* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
+ #define SYSC_IDLE_FORCE			0
+ #define SYSC_IDLE_NO			1
+-- 
+2.23.0
+
