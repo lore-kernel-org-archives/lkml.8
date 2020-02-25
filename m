@@ -2,111 +2,141 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E42C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A9EC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C76021744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582641408;
-	bh=4Z/rPRDF1OAUC8yRceV/KqQY81/AC6Or4/e79DSK8pk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTEck7KsOQESMGEB6PWSLFBfjX4bshnJg5HfsFhnyRkIYd5hl3o6DjBMgZoOqzXCh
-	 2LFiPt2nK1lAz42kqw/laqnt1Nwe+JDbiL+mohYoUI75w7BM6BgigSwFgB7I7zRrQR
-	 Xx8uLNCiyxr2vBfG5X9IukDBoSLIhIEHo8lw+gyo=
+	by mail.kernel.org (Postfix) with ESMTP id C8DF12064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:37:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZI8D8+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbgBYOgr (ORCPT
+        id S1730784AbgBYOhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:36:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbgBYOgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:36:46 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E2E2064A;
-        Tue, 25 Feb 2020 14:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582641406;
-        bh=4Z/rPRDF1OAUC8yRceV/KqQY81/AC6Or4/e79DSK8pk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fV9QFyBOfm2hRADqJJrH5U3C0hQ/XIYiX3iaBEkuD2U+JlQEtyqwZNUtIaDu7NacU
-         FQ6ubrlBeimWAgr0iwBemQUTL1Kz+kU4plj9HWKV2deAJPrhGSLXwnCpgUStwe0gG6
-         vbowaXfgurl6KokgmGUe7Dx14AviXCr+dyursZTA=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH] bootconfig: Fix CONFIG_BOOTTIME_TRACING dependency issue
-Date:   Tue, 25 Feb 2020 23:36:41 +0900
-Message-Id: <158264140162.23842.11237423518607465535.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200225220551.d9a409bc04b77cdf48eae3ea@kernel.org>
-References: <20200225220551.d9a409bc04b77cdf48eae3ea@kernel.org>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 25 Feb 2020 09:37:12 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41673 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgBYOhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 09:37:12 -0500
+Received: by mail-pl1-f193.google.com with SMTP id t14so5567638plr.8;
+        Tue, 25 Feb 2020 06:37:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ipevhSF8N9M3cyotJYXUjwn4UfTuGovT1aQqFV/X9qA=;
+        b=qZI8D8+Q392/bA/HphKfRiLKSbZMGKrKBqpeCmjuJSyeb6hbvqgyZ+lZA7WHB1+GZp
+         KHge0+WsP3W8x9WW2swiydXqKYDTMvkUNAVI3qZa4c4as9SoseNFbXw3I1+K8kwCmxQ+
+         CnW6bLm+CcsHIC5nUg7UPzKXgVHVwxhsQt5cR6Cc/qUpnBFyjMlMb+INsbajimwv1yNA
+         cIG2hiEK4wM1k65tVbfkiOh0GI8ffmIl2z0liEG3e08o7yN9hzUv43dATicf/d7oAD+A
+         GCG5fGYeSd9q/NcidYPUeMHzd9rwLYPGpafIpbiG5tZvitvtEgkNVLeZyryHxJtd01wC
+         7v4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ipevhSF8N9M3cyotJYXUjwn4UfTuGovT1aQqFV/X9qA=;
+        b=KGPhC+557V9kSslKmzvBgo1hZOu4i2+ibtWdVwmlTqxPnrTYvcMqk5Hf3CKmEKQKV/
+         qE5palE32KfNUQnF881Q7VDPPDUycCsOHDIX+W+kFis7qGZ6ncX3Rz63SPdHKhZUUxKe
+         hns/4SCZMaXg8qfONabL9GEiktFliN5EJCOxB++MDNUcpwu6RGBNj0atCo0PYtfLkKhD
+         6nO6aoHYdWZmCCMP2Th07+ZsDlg+5G+hi+qpKZd8J9IrWXsoP2Au2Sv1H8elf6j0P6Ns
+         5odZ3aUXHHJd2kr6gU+dsmHnmwz3/2a/2gyZdRYnThLi3JCLW5KP2t0GhchLIRWwGVHU
+         RZvw==
+X-Gm-Message-State: APjAAAUb4DbMiixhaKFXPs1iAZgEjhCOPycLpSjV9JB351ihWtZGFr7H
+        SW9wtOQV8w5asbFRhcwQIw4=
+X-Google-Smtp-Source: APXvYqwETdgLZFN5OPBfpsGlLn4WflSJ106UwC0zYPQepTknpnzAG/rvZl0HqyHBw6s84ZuOHuvSVA==
+X-Received: by 2002:a17:90b:254:: with SMTP id fz20mr5468567pjb.25.1582641431565;
+        Tue, 25 Feb 2020 06:37:11 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g13sm16993177pgh.82.2020.02.25.06.37.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 06:37:10 -0800 (PST)
+Date:   Tue, 25 Feb 2020 06:37:09 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Martin Volf <martin.volf.42@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] watchdog: iTCO_wdt: Make ICH_RES_IO_SMI optional
+Message-ID: <20200225143709.GA450@roeck-us.net>
+References: <20200225123802.88984-1-mika.westerberg@linux.intel.com>
+ <20200225123802.88984-3-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225123802.88984-3-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by
-default") also changed the CONFIG_BOOTTIME_TRACING to select
-CONFIG_BOOT_CONFIG to show the boot-time tracing on the menu,
-it introduced wrong dependencies with BLK_DEV_INITRD as below.
+On Tue, Feb 25, 2020 at 03:38:01PM +0300, Mika Westerberg wrote:
+> The iTCO_wdt driver only needs ICH_RES_IO_SMI I/O resource when either
+> turn_SMI_watchdog_clear_off module parameter is set to match ->iTCO_version
+> (or higher), and when legacy iTCO_vendorsupport is set. Modify the driver
+> so that ICH_RES_IO_SMI is optional if the two conditions are not met.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/watchdog/iTCO_wdt.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/watchdog/iTCO_wdt.c b/drivers/watchdog/iTCO_wdt.c
+> index 156360e37714..f1692452bc25 100644
+> --- a/drivers/watchdog/iTCO_wdt.c
+> +++ b/drivers/watchdog/iTCO_wdt.c
+> @@ -460,7 +460,7 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  
+>  	p->smi_res = platform_get_resource(pdev, IORESOURCE_IO, ICH_RES_IO_SMI);
+> -	if (!p->smi_res)
+> +	if (!p->smi_res && iTCO_vendorsupport)
+>  		return -ENODEV;
+>  
+>  	p->iTCO_version = pdata->version;
+> @@ -492,15 +492,19 @@ static int iTCO_wdt_probe(struct platform_device *pdev)
+>  	/* Set the NO_REBOOT bit to prevent later reboots, just for sure */
+>  	p->update_no_reboot_bit(p->no_reboot_priv, true);
+>  
+> -	/* The TCO logic uses the TCO_EN bit in the SMI_EN register */
+> -	if (!devm_request_region(dev, p->smi_res->start,
+> -				 resource_size(p->smi_res),
+> -				 pdev->name)) {
+> -		pr_err("I/O address 0x%04llx already in use, device disabled\n",
+> -		       (u64)SMI_EN(p));
+> -		return -EBUSY;
+> -	}
+>  	if (turn_SMI_watchdog_clear_off >= p->iTCO_version) {
+> +		if (!p->smi_res) {
+> +			pr_err("SMI I/O resource is missing\n");
+> +			return -EINVAL;
+> +		}
+> +		/* The TCO logic uses the TCO_EN bit in the SMI_EN register */
+> +		if (!devm_request_region(dev, p->smi_res->start,
+> +					 resource_size(p->smi_res),
+> +					 pdev->name)) {
+> +			pr_err("I/O address 0x%04llx already in use, device disabled\n",
+> +			       (u64)SMI_EN(p));
+> +			return -EBUSY;
+> +		}
 
-WARNING: unmet direct dependencies detected for BOOT_CONFIG
-  Depends on [n]: BLK_DEV_INITRD [=n]
-  Selected by [y]:
-  - BOOTTIME_TRACING [=y] && TRACING_SUPPORT [=y] && FTRACE [=y] && TRACING [=y]
+The request_region call is also needed if iTCO_vendorsupport is true.
+Well, not strictly speaking, I guess, but then one could argue that
+it isn't needed at all.
 
-This makes the CONFIG_BOOT_CONFIG selects CONFIG_BLK_DEV_INITRD to
-fix this error and make CONFIG_BOOTTIME_TRACING=n by default, so
-that both boot-time tracing and boot configuration off but those
-appear on the menu list.
+In this context - looking into the vendorsupport code, I wonder if
+it is time to retire it. Separate patch, of course, but still.
+Any thoughts ?
 
-Fixes: d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by default")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- init/Kconfig         |    2 +-
- kernel/trace/Kconfig |    1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/init/Kconfig b/init/Kconfig
-index a84e7aa89a29..8b4c3e8c05ea 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1217,7 +1217,7 @@ endif
- 
- config BOOT_CONFIG
- 	bool "Boot config support"
--	depends on BLK_DEV_INITRD
-+	select BLK_DEV_INITRD
- 	help
- 	  Extra boot config allows system admin to pass a config file as
- 	  complemental extension of kernel cmdline when booting.
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 795c3e02d3f1..402eef84c859 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -145,7 +145,6 @@ config BOOTTIME_TRACING
- 	bool "Boot-time Tracing support"
- 	depends on TRACING
- 	select BOOT_CONFIG
--	default y
- 	help
- 	  Enable developer to setup ftrace subsystem via supplemental
- 	  kernel cmdline at boot time for debugging (tracing) driver
-
+Guenter
