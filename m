@@ -2,107 +2,73 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3DCC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C57AC35DF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958D421556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P16WgDzs"
+	by mail.kernel.org (Postfix) with ESMTP id 7290D22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582609521;
+	bh=j47OslZ9784bwULG/PPlCt7joegvFmVDiWVpyxhkBOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ijPveRCREF/uH/6KUwxJJRlfYwr7XI6DJLRGni2459+0YHaCDMC45gwqw/b9gzptu
+	 JDASqptuj9rj2mccle1wwjMXOfDPuTTZvcSZ5m1WD8+flXXcH3pYNM73rYochYe3om
+	 hXKdu6lcEZTnnl84QLtq74xOoCkrZnoKk9nrtrdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgBYFpK (ORCPT
+        id S1728970AbgBYFpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:45:10 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32601 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726019AbgBYFpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:45:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582609508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Eko79gUr9+logn8fvR3Vy0N8FeE/3ZDnWVRg/X1bank=;
-        b=P16WgDzsifKDxlILGSJzfUuv3rXJC+melnZB2eWAfzw27uB9f0Hblu2SaqM10HRPBHd5QB
-        SI/zRKVLCxzED9KIn9QrbA2qpikKiDi6b2Gz8CBMVkLrA9HatjgISzMXXTk2xswVQG9TAD
-        AQSV59Q6Ii4bxjC+Sm18lI0mmCqFgz4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-FwuNFUYyOjyMm7LAhuO5ZA-1; Tue, 25 Feb 2020 00:45:05 -0500
-X-MC-Unique: FwuNFUYyOjyMm7LAhuO5ZA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 25 Feb 2020 00:45:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbgBYFpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 00:45:19 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFBB28017CC;
-        Tue, 25 Feb 2020 05:45:02 +0000 (UTC)
-Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A5821001B09;
-        Tue, 25 Feb 2020 05:44:55 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v6 1/2] virtio_net: keep vnet header zeroed if
- XDP is loaded for small buffer
-To:     Yuya Kusakabe <yuya.kusakabe@gmail.com>
-Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, songliubraving@fb.com, yhs@fb.com
-References: <20200225033103.437305-1-yuya.kusakabe@gmail.com>
- <20200225033212.437563-1-yuya.kusakabe@gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1b3045d0-edc0-3f6f-5442-06f6f927ff94@redhat.com>
-Date:   Tue, 25 Feb 2020 13:44:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 421E2222C2;
+        Tue, 25 Feb 2020 05:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582609519;
+        bh=j47OslZ9784bwULG/PPlCt7joegvFmVDiWVpyxhkBOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GMw66R3/uvqjEjYGCq2fhzTOA1W2l6ouvKd+EQSx4Zj472u9nMo+0nEKWCsAHdkWT
+         7ccU6etf4Zy7O3d3E8Psqsc3YajJkmx2m9AP0PoRpYUCbJFybI2muZOQ2DhMBTu7np
+         zr3YDDKZkWx2d9lbYmIt1G2f134h89TdhzXFIXsY=
+Date:   Tue, 25 Feb 2020 11:15:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH 0/8] STM32 DMA driver fixes and improvements
+Message-ID: <20200225054514.GG2618@vkoul-mobl>
+References: <20200129153628.29329-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200225033212.437563-1-yuya.kusakabe@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129153628.29329-1-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 29-01-20, 16:36, Amelie Delaunay wrote:
+> This series brings improvements to the STM32 DMA driver, with support of
+> power management and descriptor reuse. Probe function gets a cleanup and
+> properties like copy_align and max_segment_size are set.
+> A "sleeping function called from invalid context" bug is also fixed. And
+> to avoid a race with vchan_complete, driver now adopts
+> vchan_terminate_vdesc().
 
-On 2020/2/25 =E4=B8=8A=E5=8D=8811:32, Yuya Kusakabe wrote:
-> We do not want to care about the vnet header in receive_small() if XDP
-> is loaded, since we can not know whether or not the packet is modified
-> by XDP.
->
-> Fixes: f6b10209b90d ("virtio-net: switch to use build_skb() for small b=
-uffer")
-> Signed-off-by: Yuya Kusakabe <yuya.kusakabe@gmail.com>
-> ---
->   drivers/net/virtio_net.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 2fe7a3188282..f39d0218bdaa 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -735,10 +735,10 @@ static struct sk_buff *receive_small(struct net_d=
-evice *dev,
->   	}
->   	skb_reserve(skb, headroom - delta);
->   	skb_put(skb, len);
-> -	if (!delta) {
-> +	if (!xdp_prog) {
->   		buf +=3D header_offset;
->   		memcpy(skb_vnet_hdr(skb), buf, vi->hdr_len);
-> -	} /* keep zeroed vnet hdr since packet was changed by bpf */
-> +	} /* keep zeroed vnet hdr since XDP is loaded */
->  =20
->   err:
->   	return skb;
+Applied, thanks
 
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
+-- 
+~Vinod
