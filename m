@@ -2,135 +2,244 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD72C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CE8C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF2221927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="RVOmYHbf"
+	by mail.kernel.org (Postfix) with ESMTP id 8580421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgBYLYM (ORCPT
+        id S1730491AbgBYLYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:24:12 -0500
-Received: from mail-eopbgr60139.outbound.protection.outlook.com ([40.107.6.139]:32165
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Tue, 25 Feb 2020 06:24:21 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10689 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728981AbgBYLYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:24:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A7PPdaJhFRXj2zZKtQmyue2Wfwdp7/K+SqK0D4fd8EhV9g7rDU9i8b0R96Yq1Y7AdnqU1NntbagxiBcPEY9eGOuKiM5J4GDR2n08G8Hh/qDrP8cuU5kJ1f5JI+JWT9Lwjg4IJgjK/nMxsXqIAXuXAq5EGKhaFVg7rc3p7lmzNtZ8LGFpV50aK0w78qUbNsjDa/w8mODYrYaOIftv7TeslxKt4E1rpVjeG47crX/evmXvHXACW+2ZSTG2yuqpT0mEZ3/r7gvY02agf9QgJPmk5x7f1qJTuKqgx2E499Dz9AR7DdW6L1BaU4BE/LV5gHeLp50mxx5JjHGynE3HQpF3Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/UX7xCLy8ZIvnXc7sXddBMHruhG+sfjr2KKeOkGov94=;
- b=mi4bSyb3GQYEa+O5X8CbY3biZ56yorTR0z//fo6448sCqFMYvdiC4GB9JXBgfQTIE4kmDI6LUuNeTfDy0x02DS8eHUKaUk3b8KuI2ieULjj4aXEmlnccXijw+ai7kbnCwCHzesKVp9UhYr1LKJBvE4gLRypVK+wZMKvJymUOvXLaDWMM/eHp4uoT9RUryK3jcjSD1dP1KM5wdM/0ZzZWYmMsUmCkdq1Drl50fjdPD/ka43Z9RtgsrkjyEGtasV9FpkMng6/rWgqEZM9VK4CTUgZ8eH1gEGrB6eYHXhnGPHHmoqpN9RwY4ntemH0aVZWw4dx8JNKRhpQgWyz6quJ+WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/UX7xCLy8ZIvnXc7sXddBMHruhG+sfjr2KKeOkGov94=;
- b=RVOmYHbfMQm0Xiqs8j7w9osdRQq4M60TWlz5NkOB8YUAucnn/mShc4yQesyPQOD6bvQdM3oktV30Us11LLC0HnoOzFVjAzMRX1xlr5DeQ9Was9S3gFMFAZlvS9rE9hNNCRtDAf6dJV0glWpNcskbULNfpRQx8eGbrs8TiXZLOxA=
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (10.255.19.214) by
- DB8PR02MB5692.eurprd02.prod.outlook.com (10.255.17.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Tue, 25 Feb 2020 11:24:08 +0000
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::2989:ba7f:c6b3:c93d]) by DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::2989:ba7f:c6b3:c93d%6]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 11:24:08 +0000
-Received: from ttayar-VM.habana-labs.com (31.154.190.6) by AM0PR06CA0104.eurprd06.prod.outlook.com (2603:10a6:208:fa::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Tue, 25 Feb 2020 11:24:07 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] habanalabs: Remove unused parse_cnt variable
-Thread-Topic: [PATCH] habanalabs: Remove unused parse_cnt variable
-Thread-Index: AQHV684YAjkxXbcV4kao3EYTxNeXYw==
-Date:   Tue, 25 Feb 2020 11:24:08 +0000
-Message-ID: <20200225112401.5151-1-ttayar@habana.ai>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR06CA0104.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::45) To DB8PR02MB5468.eurprd02.prod.outlook.com
- (2603:10a6:10:ef::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ttayar@habana.ai; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [31.154.190.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04b38161-86d3-4c99-c5c5-08d7b9e53a9e
-x-ms-traffictypediagnostic: DB8PR02MB5692:
-x-microsoft-antispam-prvs: <DB8PR02MB56927A8D7BE9B5053139E100D2ED0@DB8PR02MB5692.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(396003)(136003)(39850400004)(189003)(199004)(86362001)(6916009)(1076003)(16526019)(26005)(186003)(36756003)(52116002)(5660300002)(6512007)(64756008)(66946007)(6486002)(81156014)(8676002)(956004)(2906002)(81166006)(478600001)(66556008)(6506007)(71200400001)(66476007)(66446008)(8936002)(4326008)(2616005)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB8PR02MB5692;H:DB8PR02MB5468.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UdHbFURjOZVfadIbFB3CbXOsbiZ3qxmJNMqaAxXRgvZJZIXOAWYDwicqDH34uFZJFZ//3s7460NTDJTwZSWHNuA8DCvlFwlsdQs+UOzjLmwlERhyZgyGL04y9Tr5QZ+qCWXIAPduciCE9Cj29KU1lBb03wJq8kwOWcv22z1tRObERz1Z/le7t9qiEmIRo8ST9XROEJLWrA4aUgBzuivYJk6p7C6hEB0XWCivgur1/AoDXVKW0BuPm52kejnpW6Rjk8w3MCZPoE4KhhCZ0y2bvYGYjA66C1nBeKttZGs2p9W8i+i8kke6cMr5wgp/CpkP693nD29TGrtJ4AePOfuh1fcH8QkZx4GvFZpVuOae6jVjAGXQ6Ovp93r+cD55htiVm/iRR8YKYwEbkUVBJx9SGp9YRtojMHWtZARTQLeOCSp9g6b1vZVP9XBWXVKzpuuW
-x-ms-exchange-antispam-messagedata: LRhraGJK0bHu/g5LrcadwUwe4K8wCJBMfEgy86V/dVEf9+kfEInUMHJ/paAwIpgbi/Op7bM33+8H4V4k3gF9ekLli9tba4yBS83vkT575Sav5ry/HmtSL5pYh5uBRES23pQJM8b/93wuz4VOMntkNw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1728981AbgBYLYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:24:21 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5AC988B14A407D73EA4C;
+        Tue, 25 Feb 2020 19:24:17 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 25 Feb
+ 2020 19:24:13 +0800
+Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
+ support was added
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191209222345.1078-1-jaegeuk@kernel.org>
+ <20200222044617.pfrhnz2iavkrtdn6@core.my.home>
+ <20200222181721.tzrrohep5l3yklpf@core.my.home>
+ <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
+ <b1eb9b22-b570-41ab-5177-2c89105428a2@huawei.com>
+ <20200224135837.k54ke4ppca26ibec@core.my.home>
+ <20200224140349.74yagjdwewmclx4v@core.my.home>
+ <20200224143149.au6hvmmfw4ajsq2g@core.my.home>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <39712bf4-210b-d7b6-cbb1-eb57585d991a@huawei.com>
+Date:   Tue, 25 Feb 2020 19:24:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04b38161-86d3-4c99-c5c5-08d7b9e53a9e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 11:24:08.0446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VY0/lL4iYi98Te2mbX8hJXFxGnESgixL48yNH8Ir4EkhTec9kBQY63GEQfcM7ZcGIwOBNY+/6WfIN9CZxpW2uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5692
+In-Reply-To: <20200224143149.au6hvmmfw4ajsq2g@core.my.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "parse_cnt" variable is incremented while validating the CS chunks,
-but it is actually not being used.
+On 2020/2/24 22:31, Ondřej Jirman wrote:
+> On Mon, Feb 24, 2020 at 03:03:49PM +0100, megi xff wrote:
+>> On Mon, Feb 24, 2020 at 02:58:37PM +0100, megi xff wrote:
+>>> Hello,
+>>>
+>>> On Mon, Feb 24, 2020 at 06:41:03PM +0800, Chao Yu wrote:
+>>>> On 2020/2/24 18:37, Chao Yu wrote:
+>>>>> Hi,
+>>>>>
+>>>>> Thanks for the report.
+>>>>>
+>>>>> Could you dump all other task stack info via "echo "t" > /proc/sysrq-trigger"?
+>>>>>
+>>>>>>
+>>>>>> [  246.758021] INFO: task kworker/u16:1:58 blocked for more than 122 seconds.
+>>>>>> [  246.758040]       Not tainted 5.6.0-rc2-00590-g9983bdae4974e #11
+>>>>>> [  246.758044] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>>>>>> [  246.758052] kworker/u16:1   D    0    58      2 0x00000000
+>>>>>> [  246.758090] Workqueue: writeback wb_workfn (flush-179:0)
+>>>>>> [  246.758099] Backtrace:
+>>>>>> [  246.758121] [<c0912b90>] (__schedule) from [<c0913234>] (schedule+0x78/0xf4)
+>>>>>> [  246.758130]  r10:da644000 r9:00000000 r8:da645a60 r7:da283e10 r6:00000002 r5:da644000
+>>>>>> [  246.758132]  r4:da4d3600
+>>>>>> [  246.758148] [<c09131bc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
+>>>>>> [  246.758152]  r5:00000001 r4:da283e00
+>>>>>> [  246.758161] [<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f2c>] (down_write+0x6c/0x70)
+>>>>>> [  246.758167]  r10:da283e00 r9:da645d80 r8:d9ed0000 r7:00000001 r6:00000000 r5:eff213b0
+>>>>>> [  246.758169]  r4:da283e00
+>>>>>> [  246.758187] [<c0915ec0>] (down_write) from [<c0435b80>] (f2fs_write_single_data_page+0x608/0x7ac)
+>>>>>
+>>>>> I'm not sure what is this semaphore, I suspect this is F2FS_I(inode)->i_sem, in order to make
+>>>>> sure of this, can you help to add below function, and use them to replace
+>>>>> all {down,up}_{write,read}(&.i_sem) invoking? then reproduce this issue and catch the log.
+>>>>
+>>>> Sorry, just forgot attaching below function.
+>>>>
+>>>> void inode_down_write(struct inode *inode)
+>>>> {
+>>>> 	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+>>>> 	down_write(&F2FS_I(inode)->i_sem);
+>>>> }
+>>>>
+>>>> void inode_up_write(struct inode *inode)
+>>>> {
+>>>> 	up_write(&F2FS_I(inode)->i_sem);
+>>>> 	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+>>>> }
+>>>>
+>>>> void inode_down_read(struct inode *inode)
+>>>> {
+>>>> 	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+>>>> 	down_read(&F2FS_I(inode)->i_sem);
+>>>> }
+>>>>
+>>>> void inode_up_read(struct inode *inode)
+>>>> {
+>>>> 	up_read(&F2FS_I(inode)->i_sem);
+>>>> 	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+>>>> }
+>>>>
+>>>
+>>> Here's the log and vmlinux file that may help mapping the code addresses back to
+>>> code, hope it helps:
+>>>
+>>> https://megous.com/dl/tmp/f2fs-dmesg-log
+>>> https://megous.com/dl/tmp/f2fs-log-build-artifacts.tar.gz
+>>
+>> Just by a looks of it:
+>>
+>> root@tbs2[/proc/sys/kernel] # dmesg | grep up_write | wc -l
+>> 324
+>> root@tbs2[/proc/sys/kernel] # dmesg | grep down_write | wc -l
+>> 347
+>>
+>> there seems to be a mismatch of lock/unlock counts.
+>  
+> Sorry, a wrong grep expression.
+> 
+> root@tbs2[~] # dmesg | grep inode_down_write | wc -l
+> 357
+> root@tbs2[~] # dmesg | grep inode_up_write | wc -l
+> 357
+> root@tbs2[~] # dmesg | grep inode_up_read | wc -l
+> 16
+> root@tbs2[~] # dmesg | grep inode_down_read | wc -l
+> 16
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
----
- drivers/misc/habanalabs/command_submission.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't know why we have consistent down/up pair, but through disassembled
+code, I doubt it's the f2fs_inode->i_sem.
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/ha=
-banalabs/command_submission.c
-index 73ef0f9d758a..409276b6374d 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -509,7 +509,7 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __=
-user *chunks,
- 	struct hl_cb *cb;
- 	bool int_queues_only =3D true;
- 	u32 size_to_copy;
--	int rc, i, parse_cnt;
-+	int rc, i;
-=20
- 	*cs_seq =3D ULLONG_MAX;
-=20
-@@ -549,7 +549,7 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __=
-user *chunks,
- 	hl_debugfs_add_cs(cs);
-=20
- 	/* Validate ALL the CS chunks before submitting the CS */
--	for (i =3D 0, parse_cnt =3D 0 ; i < num_chunks ; i++, parse_cnt++) {
-+	for (i =3D 0 ; i < num_chunks ; i++) {
- 		struct hl_cs_chunk *chunk =3D &cs_chunk_array[i];
- 		enum hl_queue_type queue_type;
- 		bool is_kernel_allocated_cb;
---=20
-2.17.1
+c0435d7c:       ebf54af8        bl      c0188964 <printk>
+c0435d80:       e1a00006        mov     r0, r6
+c0435d84:       eb138135        bl      c0916260 <down_write>
 
+inode_down_write()
+
+c0435d88:       e284ce1d        add     ip, r4, #464    ; 0x1d0
+
+We are stuck here.
+
+[  430.675754] [<c0916260>] (down_write) from [<c0435d88>] (f2fs_write_single_data_page+0x600/0x7d8)
+                                                ^^^^^^^^^
+[  430.675764] [<c0435788>] (f2fs_write_single_data_page) from [<c0436214>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+
+
+c0435d8c:       e14b0ad4        ldrd    r0, [fp, #-164] ; 0xffffff5c
+c0435d90:       e1cc20d0        ldrd    r2, [ip]
+c0435d94:       e1520000        cmp     r2, r0
+c0435d98:       e0d33001        sbcs    r3, r3, r1
+c0435d9c:       b1cc00f0        strdlt  r0, [ip]
+c0435da0:       e1a00006        mov     r0, r6
+c0435da4:       ebf52227        bl      c017e648 <up_write>
+c0435da8:       e51b2098        ldr     r2, [fp, #-152] ; 0xffffff68
+c0435dac:       e30c0730        movw    r0, #50992      ; 0xc730
+c0435db0:       e59f11a4        ldr     r1, [pc, #420]  ; c0435f5c <f2fs_write_single_data_page+0x7d4>
+c0435db4:       e34c00b6        movt    r0, #49334      ; 0xc0b6
+c0435db8:       ebf54ae9        bl      c0188964 <printk>
+
+inode_up_write()
+
+Thanks,
+
+> 
+> So it's probably not inode locking.
+> 
+>> root@tbs2[/proc/sys/kernel] # dmesg | grep down_read | wc -l
+>> 16
+>> root@tbs2[/proc/sys/kernel] # dmesg | grep up_read | wc -l
+>> 16
+>>
+>> regards,
+>> 	o.
+>>
+>>> thank you,
+>>> 	o.
+>>>
+>>>>> Thanks,
+>>>>>
+>>>>>> [  246.758190]  r5:eff213b0 r4:da283c60
+>>>>>> [  246.758198] [<c0435578>] (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+>>>>>> [  246.758204]  r10:da645c28 r9:da283d60 r8:da283c60 r7:0000000f r6:da645d80 r5:00000001
+>>>>>> [  246.758206]  r4:eff213b0
+>>>>>> [  246.758214] [<c0435d24>] (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
+>>>>>> [  246.758220]  r10:00000000 r9:d9ed002c r8:d9ed0000 r7:00000004 r6:da283d60 r5:da283c60
+>>>>>> [  246.758223]  r4:da645d80
+>>>>>> [  246.758238] [<c04364e8>] (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
+>>>>>> [  246.758244]  r10:0000000a r9:c0e03d00 r8:00000c00 r7:c0264ddc r6:da645d80 r5:da283d60
+>>>>>> [  246.758246]  r4:da283c60
+>>>>>> [  246.758254] [<c0267eac>] (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
+>>>>>> [  246.758259]  r7:da283d60 r6:da645eac r5:da645d80 r4:da283c60
+>>>>>> [  246.758266] [<c0310c78>] (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
+>>>>>> [  246.758272]  r10:0000000a r9:c0e03d00 r8:da283cc8 r7:da283c60 r6:da645eac r5:da283d08
+>>>>>> [  246.758274]  r4:d9dc9848
+>>>>>> [  246.758281] [<c03110cc>] (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
+>>>>>> [  246.758287]  r10:da3797a8 r9:c0e03d00 r8:d9dc985c r7:da645eac r6:00000000 r5:d9dc9848
+>>>>>> [  246.758289]  r4:da5a8800
+>>>>>> [  246.758296] [<c031157c>] (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
+>>>>>> [  246.758302]  r10:fffbf200 r9:da644000 r8:c0e04e64 r7:d9dc9848 r6:d9dc9874 r5:da645eac
+>>>>>> [  246.758305]  r4:d9dc9848
+>>>>>> [  246.758312] [<c0311660>] (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
+>>>>>> [  246.758318]  r10:da5f2005 r9:d9dc984c r8:d9dc9948 r7:d9dc9848 r6:00000000 r5:d9dc9954
+>>>>>> [  246.758321]  r4:000031e6
+>>>>>> [  246.758334] [<c0312a50>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+>>>>>> [  246.758340]  r10:da5f2005 r9:00000200 r8:00000000 r7:da5f2000 r6:ef044400 r5:da5eb000
+>>>>>> [  246.758343]  r4:d9dc9954
+>>>>>> [  246.758350] [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+>>>>>> [  246.758357]  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:da5eb014
+>>>>>> [  246.758359]  r4:da5eb000
+>>>>>> [  246.758368] [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+>>>>>> [  246.758374]  r10:ec9e5e90 r9:dabf325c r8:da5eb000 r7:da644000 r6:00000000 r5:da5fe000
+>>>>>> [  246.758377]  r4:dabf3240
+>>>>>> [  246.758386] [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>>>>>> [  246.758391] Exception stack(0xda645fb0 to 0xda645ff8)
+>>>>>> [  246.758397] 5fa0:                                     00000000 00000000 00000000 00000000
+>>>>>> [  246.758402] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>>>>>> [  246.758407] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>>>>>> [  246.758413]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
+>>>>>> [  246.758416]  r4:da5fe000
+>>>>>> .
+>>>>>>
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> Linux-f2fs-devel mailing list
+>>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>>>
+> .
+> 
