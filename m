@@ -2,177 +2,120 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270B1C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36C8C35E07
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F322084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D672084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:54:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3bkCqEm"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="jGWepyEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgBYOyh (ORCPT
+        id S1730646AbgBYOyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:54:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50661 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729510AbgBYOyh (ORCPT
+        Tue, 25 Feb 2020 09:54:47 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41760 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbgBYOyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:54:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582642475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QMvNXoW6psDe1PxL4MB925CUo6es0He3gLgCnJQuh1A=;
-        b=c3bkCqEmPrVmJaJ+fZHMWu/HL1vfXxQAqvcqfDCFg6n6mJBsIEqlRdp8PqTQ1mjOguuKAU
-        EW40y584/p/1WHJgiCMGJW5UukUwNT6S3lBj2NJsgaz5i45GP/ooYdBdfXQRcxA9XYTBAy
-        okFg7x1nLgpX5Y9jP7QMNtYENcGuYpM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-hv_p7hdhOdCQZbWjrxSTCQ-1; Tue, 25 Feb 2020 09:54:28 -0500
-X-MC-Unique: hv_p7hdhOdCQZbWjrxSTCQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45DEC102CE15;
-        Tue, 25 Feb 2020 14:54:27 +0000 (UTC)
-Received: from lithium.redhat.com (unknown [10.36.118.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 545361BC6D;
-        Tue, 25 Feb 2020 14:54:25 +0000 (UTC)
-From:   Giuseppe Scrivano <gscrivan@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     rcu@vger.kernel.org, ebiederm@xmission.com, paulmck@kernel.org,
-        viro@zeniv.linux.org.uk
-Subject: [PATCH v3] ipc: use a work queue to free_ipc
-Date:   Tue, 25 Feb 2020 15:54:19 +0100
-Message-Id: <20200225145419.527994-1-gscrivan@redhat.com>
+        Tue, 25 Feb 2020 09:54:47 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v4so2216109wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:54:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=y++kI/5dCtw5fZaeSgXh8lWKMSaGQmRYxWkHHDDsYEE=;
+        b=jGWepyEIkZ1p0tED+rauWwmW4k3RG+6zN0X4+Bky/2ByebPFpB9k5sL2WKPs6Odb+c
+         E5MFAI285mX4zdtjqORrRKQDBBJwXm1myO7nslK+AtFUxk5GUzxOs1R8v73pHgKaV2X0
+         7R/bLi/0hyOhShc0bz1uYhtozSNWxm0TGVRbDAkkvl0P/UQ1ljuyPwdVM1Nj0jSzRkLz
+         hmkndN0H37fZzshO4I7DzEGHOxlvrPfvsAt9p7Naj81CWN4vKqrl+nuY6mZlh+N4Rj07
+         7gnDQ/sDjdKgaWRUy/RfRO+i8ZglHkuBPTxsb18n4eB0SPCdfQsiuh1wa857P0BP4fUo
+         TgIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=y++kI/5dCtw5fZaeSgXh8lWKMSaGQmRYxWkHHDDsYEE=;
+        b=PM/1qSvnddFadW8v/rEcl3ywjh/iGtwFdDr6+n/LOlkjQm4mjn0OeVX+wNMObpJhlf
+         Xw5UNsQ5doJ/BmywZa77YVuk3Rw5ob5dsmwhcf8nP1jdeVS6F9NR6RMAstuVR9Y6LB1f
+         E1g25aExc2fGdoA6Bwol0/CC8VlVAJBDIV4aGduf+bev8efYqncU0wd51k3Fc2XfKaxS
+         BrffRBUxdK4oMndNBwt8VtSKYQzpsylZITUgxb4hERIehLZ1zNJTZD+YSp7Je4hdYUE3
+         WxQpDH/1NNYqTlUgpFk/mdzMg1HU9Iwsa64tQqxhQ3u/AJMZOoMcjn3/T4aF495DmFyS
+         FPOQ==
+X-Gm-Message-State: APjAAAVr8RgSrQLhJR9OsH++U7c70ygtpVFyb32NNkBk8vHmoaaYemjV
+        Ny0tMLSXvWJfgLgOyBAFhtYwxw==
+X-Google-Smtp-Source: APXvYqwfSaJ8pCA6BhtoWHv0t8xFZnZrK/CzrI1X29nZWXWlh6LSoOIjxsxgH2SsHYgerYZIkRUP+w==
+X-Received: by 2002:adf:f244:: with SMTP id b4mr20457380wrp.413.1582642485266;
+        Tue, 25 Feb 2020 06:54:45 -0800 (PST)
+Received: from [192.168.1.10] ([194.35.116.65])
+        by smtp.gmail.com with ESMTPSA id v131sm4674454wme.23.2020.02.25.06.54.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 06:54:44 -0800 (PST)
+Subject: Re: [PATCH bpf-next v2 5/5] selftests/bpf: Add test for "bpftool
+ feature" command
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200221031702.25292-1-mrostecki@opensuse.org>
+ <20200221031702.25292-6-mrostecki@opensuse.org>
+ <d178dc6c-7696-8e58-9df9-887152104a1c@isovalent.com>
+ <c24d2b7a-889b-9294-cd30-6938f00b645a@opensuse.org>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <424b3804-a6ec-750c-bc90-753bbdf512ce@isovalent.com>
+Date:   Tue, 25 Feb 2020 14:54:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c24d2b7a-889b-9294-cd30-6938f00b645a@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the reason is to avoid a delay caused by the synchronize_rcu() call in
-kern_umount() when the mqueue mount is freed.
+2020-02-25 14:55 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> On 2/21/20 12:28 PM, Quentin Monnet wrote:
+>>> +    @default_iface
+>>> +    def test_feature_dev(self, iface):
+>>> +        expected_patterns = [
+>>> +            SECTION_SYSCALL_CONFIG_PATTERN,
+>>> +            SECTION_PROGRAM_TYPES_PATTERN,
+>>> +            SECTION_MAP_TYPES_PATTERN,
+>>> +            SECTION_HELPERS_PATTERN,
+>>> +            SECTION_MISC_PATTERN,
+>>> +        ]
+>>
+>> Mixed feeling on the tests with plain output, as we keep telling people
+>> that plain output should not be parsed (not reliable, may change). But
+>> if you want to run one or two tests with it, why not, I guess.
+> 
+> I thought about that and yes, testing the plain output is probably
+> redundant and makes those tests less readable. However, the only plain
+> output test which I would like to keep there is test_feature_macros -
+> because I guess that we are not planning to change names or patterns of
+> generated macros (or if so, we should test that change).
+> 
 
-the code:
+I did not mentally include the header/macros output in “plain output”, 
+but yeah I guess I was not explicit on this one. So: Agreed, with 
+“macros” it should not change and it is welcome in the tests, feel free 
+to keep it :)
 
-\#define _GNU_SOURCE
-\#include <sched.h>
-\#include <error.h>
-\#include <errno.h>
-\#include <stdlib.h>
-int main()
-{
-  int i;
-  for (i  =3D 0; i < 1000; i++)
-    if (unshare (CLONE_NEWIPC) < 0)
-      error (EXIT_FAILURE, errno, "unshare");
-}
-
-gets from:
-
-	Command being timed: "./ipc-namespace"
-	User time (seconds): 0.00
-	System time (seconds): 0.06
-	Percent of CPU this job got: 0%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
-
-to:
-
-	Command being timed: "./ipc-namespace"
-	User time (seconds): 0.00
-	System time (seconds): 0.02
-	Percent of CPU this job got: 96%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
-
-Signed-off-by: Giuseppe Scrivano <gscrivan@redhat.com>
----
-v3:
-- added comment for free_ipc_work
-- commit message rephrased
-
-v2: https://lkml.org/lkml/2020/2/17/839
-- comment added in free_ipc_ns()
-
-v1: https://lkml.org/lkml/2020/2/11/692
-
- include/linux/ipc_namespace.h |  2 ++
- ipc/namespace.c               | 24 ++++++++++++++++++++++--
- 2 files changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/ipc_namespace.h b/include/linux/ipc_namespace.=
-h
-index c309f43bde45..a06a78c67f19 100644
---- a/include/linux/ipc_namespace.h
-+++ b/include/linux/ipc_namespace.h
-@@ -68,6 +68,8 @@ struct ipc_namespace {
- 	struct user_namespace *user_ns;
- 	struct ucounts *ucounts;
-=20
-+	struct llist_node mnt_llist;
-+
- 	struct ns_common ns;
- } __randomize_layout;
-=20
-diff --git a/ipc/namespace.c b/ipc/namespace.c
-index b3ca1476ca51..c0470aef41a0 100644
---- a/ipc/namespace.c
-+++ b/ipc/namespace.c
-@@ -117,6 +117,10 @@ void free_ipcs(struct ipc_namespace *ns, struct ipc_=
-ids *ids,
-=20
- static void free_ipc_ns(struct ipc_namespace *ns)
- {
-+	/* mq_put_mnt() waits for a grace period as kern_unmount()
-+	 * uses synchronize_rcu().
-+	 */
-+	mq_put_mnt(ns);
- 	sem_exit_ns(ns);
- 	msg_exit_ns(ns);
- 	shm_exit_ns(ns);
-@@ -127,6 +131,21 @@ static void free_ipc_ns(struct ipc_namespace *ns)
- 	kfree(ns);
- }
-=20
-+static LLIST_HEAD(free_ipc_list);
-+static void free_ipc(struct work_struct *unused)
-+{
-+	struct llist_node *node =3D llist_del_all(&free_ipc_list);
-+	struct ipc_namespace *n, *t;
-+
-+	llist_for_each_entry_safe(n, t, node, mnt_llist)
-+		free_ipc_ns(n);
-+}
-+
-+/*
-+ * The work queue is used to avoid the cost of synchronize_rcu in kern_u=
-nmount.
-+ */
-+static DECLARE_WORK(free_ipc_work, free_ipc);
-+
- /*
-  * put_ipc_ns - drop a reference to an ipc namespace.
-  * @ns: the namespace to put
-@@ -148,8 +167,9 @@ void put_ipc_ns(struct ipc_namespace *ns)
- 	if (refcount_dec_and_lock(&ns->count, &mq_lock)) {
- 		mq_clear_sbinfo(ns);
- 		spin_unlock(&mq_lock);
--		mq_put_mnt(ns);
--		free_ipc_ns(ns);
-+
-+		if (llist_add(&ns->mnt_llist, &free_ipc_list))
-+			schedule_work(&free_ipc_work);
- 	}
- }
-=20
---=20
-2.24.1
-
+Quentin
