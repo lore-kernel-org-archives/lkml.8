@@ -2,147 +2,272 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23809C35DEA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C161C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46A62176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:50:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sHhKFEev"
+	by mail.kernel.org (Postfix) with ESMTP id E32F2218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgBYBuU (ORCPT
+        id S1728682AbgBYBvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:50:20 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:37635 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgBYBuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:50:20 -0500
-Received: by mail-qv1-f66.google.com with SMTP id ci20so3703437qvb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 17:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=658+MST6tRLPpeSgmfQnL9jvRO2fL056h095yosRw9k=;
-        b=sHhKFEevj+QRdk9OGUJHHHzCoP9/juukTB80Etwxnnci+MUyhhBdHYuwU8/0Nxh7tJ
-         16yONm0GtU6JkStXRdQLZi1aYoEkKZ5d3mdJd2LhL7yoOm4Plpi6KN7GEBXzQ0dv0PDc
-         OS9Zq1GnczNJhHpcOPrjZ0ZD0n1JuX2IfzahhJUCPUnwFnKX1fuUH9+X0KqrNkkQE73D
-         7EGdo6JCQ7gSZ8n9iMH908JQMkKZAeRuwo8EwUSGXOKiYu7wFYObHtfijSMObyh3pSbY
-         xiqPWUazXwH3GcuAiDtqt9YhLn1CbCKJ8vwTMloG7REI956s2VTFaXGpaTEm9bcQXCwd
-         RToA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=658+MST6tRLPpeSgmfQnL9jvRO2fL056h095yosRw9k=;
-        b=WNFerRzt/7ynx3pDXOBeRG/PhjoxSMFrzyFWcJlEEokiuUwFeqS8fgq6D7fzcLX8WV
-         jbySYD2ynUQ2rZOVzd6rd3wpFr6fyKuTDVCP6Cjc4b9NO8jOZZqTpJOaABxwDnXReVcE
-         9QGkHg4DVU3Dr46SuoEBalioET9avD/s6UVpEM1Ho369gdedbQxZvdqNjdgLk1YkuSD9
-         18I/FLa9i/dsrZ73t6Ys5aJivVdyFs93g3MbnBCNP0RZroOG0FuIcgxMp7tM1kLz11pe
-         kiRdE2AMktPD1e888ekP/5ig+mHwG6CmgOw3r1AvZbwPVSM3SBdVawcpmv3h37JvMcVT
-         BDKQ==
-X-Gm-Message-State: APjAAAXXXZ/M4Hfh+7vKimYRD4o26PNfRnUlHpxY6mxD4SHQuxyd0g37
-        mQmjfBwfYhuzErPTXPC142b4CaFFt5KZbrhiQAxEPA==
-X-Google-Smtp-Source: APXvYqyU1bEoiWQ++12wo9LNv5vQ3PXb1Q+3VdJ86d0Dplyj19+BGuWRmXdcdPAim6V57ZV5/iSI6TGn8trP0RzSrQ0=
-X-Received: by 2002:ad4:486f:: with SMTP id u15mr33166366qvy.235.1582595419053;
- Mon, 24 Feb 2020 17:50:19 -0800 (PST)
+        Mon, 24 Feb 2020 20:51:44 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726962AbgBYBvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 20:51:44 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CE461DE503E800B389C1;
+        Tue, 25 Feb 2020 09:46:32 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 25 Feb
+ 2020 09:46:30 +0800
+Subject: Re: [RFC PATCH 2/2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200221100922.16781-1-yuchao0@huawei.com>
+ <20200221100922.16781-2-yuchao0@huawei.com>
+ <20200224214605.GA77839@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <db505852-345d-05d0-4555-437093d2af14@huawei.com>
+Date:   Tue, 25 Feb 2020 09:46:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CABk29NvMS87uGnFRWoN3Ce0t+UQ--qnjRmQCPJCCEcSASs25uQ@mail.gmail.com>
- <20191219001418.234372-1-joshdon@google.com> <CAKfTPtDBuzVUZmqZo2MZNDrrnX=iMEN=pq6pid0NJ7PRzGjKjw@mail.gmail.com>
-In-Reply-To: <CAKfTPtDBuzVUZmqZo2MZNDrrnX=iMEN=pq6pid0NJ7PRzGjKjw@mail.gmail.com>
-From:   Josh Don <joshdon@google.com>
-Date:   Mon, 24 Feb 2020 17:50:08 -0800
-Message-ID: <CABk29NtG32iuBRdTMqz9P=FynpMH=RzLaMpF+h07TwTCCQ7iEQ@mail.gmail.com>
-Subject: Re: [PATCH v3] sched/fair: Do not set skip buddy up the sched hierarchy
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200224214605.GA77839@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bumping in case this fell through the cracks of the patch queue
+On 2020/2/25 5:46, Jaegeuk Kim wrote:
+> On 02/21, Chao Yu wrote:
+>> There are still reserved blocks on compressed inode, this patch
+>> introduce a new ioctl to help release reserved blocks back to
+>> filesystem, so that userspace can reuse those freed space.
+> 
+> I thought we can add compressed_blocks into free space, after converting
+> the file to immutable one. Otherwise, this patch is able to corrupt the
 
-On Thu, Dec 26, 2019 at 7:05 AM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Thu, 19 Dec 2019 at 01:14, Josh Don <joshdon@google.com> wrote:
-> >
-> > From: Venkatesh Pallipadi <venki@google.com>
-> >
-> > Setting the skip buddy up the hierarchy effectively means that a thread
-> > calling yield will also end up skipping the other tasks in its hierarchy
-> > as well. However, a yielding thread shouldn't end up causing this
-> > behavior on behalf of its entire hierarchy.
-> >
-> > For typical uses of yield, setting the skip buddy up the hierarchy is
-> > counter-productive, as that results in CPU being yielded to a task in
-> > some other cgroup.
-> >
-> > So, limit the skip effect only to the task requesting it.
-> >
-> > Co-developed-by: Josh Don <joshdon@google.com>
-> > Signed-off-by: Josh Don <joshdon@google.com>
->
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
->
-> > ---
-> > v2: Only clear skip buddy on the current cfs_rq
-> >
-> > v3: Modify comment describing the justification for this change.
-> >
-> >  kernel/sched/fair.c | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 08a233e97a01..0056b57d52cb 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4051,13 +4051,10 @@ static void __clear_buddies_next(struct sched_entity *se)
-> >
-> >  static void __clear_buddies_skip(struct sched_entity *se)
-> >  {
-> > -       for_each_sched_entity(se) {
-> > -               struct cfs_rq *cfs_rq = cfs_rq_of(se);
-> > -               if (cfs_rq->skip != se)
-> > -                       break;
-> > +       struct cfs_rq *cfs_rq = cfs_rq_of(se);
-> >
-> > +       if (cfs_rq->skip == se)
-> >                 cfs_rq->skip = NULL;
-> > -       }
-> >  }
-> >
-> >  static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
-> > @@ -6552,8 +6549,12 @@ static void set_next_buddy(struct sched_entity *se)
-> >
-> >  static void set_skip_buddy(struct sched_entity *se)
-> >  {
-> > -       for_each_sched_entity(se)
-> > -               cfs_rq_of(se)->skip = se;
-> > +       /*
-> > +        * Only set the skip buddy for the task requesting it. Setting the skip
-> > +        * buddy up the hierarchy would result in skipping all other tasks in
-> > +        * the hierarchy as well.
-> > +        */
-> > +       cfs_rq_of(se)->skip = se;
-> >  }
-> >
-> >  /*
-> > --
-> > 2.24.1.735.g03f4e72817-goog
-> >
+Yes, I remember that.
+
+So any suggestion on this patch? we can:
+- check immutable flag before releasing space, or
+- we can add immutable flag on compressed inode in this ioctl interface?
+
+Thanks,
+
+> filesystem very easily.
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/f2fs.h |   6 +++
+>>  fs/f2fs/file.c | 129 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>>  2 files changed, 134 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 15199df5d40a..468f807fd917 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+>>  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+>>  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
+>> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
+>> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+>>  
+>>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+>>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+>> @@ -3957,6 +3959,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+>>  {
+>>  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+>>  
+>> +	/* don't update i_compr_blocks if saved blocks were released */
+>> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
+>> +		return;
+>> +
+>>  	if (add) {
+>>  		F2FS_I(inode)->i_compr_blocks += diff;
+>>  		stat_add_compr_blocks(inode, diff);
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index 235708c892af..613f87151d90 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -557,6 +557,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>>  	bool compressed_cluster = false;
+>>  	int cluster_index = 0, valid_blocks = 0;
+>>  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+>> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+>>  
+>>  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+>>  		base = get_extra_isize(dn->inode);
+>> @@ -595,7 +596,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+>>  
+>>  		f2fs_invalidate_blocks(sbi, blkaddr);
+>> -		nr_free++;
+>> +
+>> +		if (released && blkaddr != COMPRESS_ADDR)
+>> +			nr_free++;
+>>  	}
+>>  
+>>  	if (compressed_cluster)
+>> @@ -3416,6 +3419,127 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+>>  	return put_user(blocks, (u64 __user *)arg);
+>>  }
+>>  
+>> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+>> +{
+>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+>> +	unsigned int released_blocks = 0;
+>> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+>> +
+>> +	while (count) {
+>> +		int compr_blocks = 0;
+>> +		block_t blkaddr = f2fs_data_blkaddr(dn);
+>> +		int i;
+>> +
+>> +		if (blkaddr != COMPRESS_ADDR) {
+>> +			dn->ofs_in_node += cluster_size;
+>> +			goto next;
+>> +		}
+>> +
+>> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
+>> +			blkaddr = f2fs_data_blkaddr(dn);
+>> +
+>> +			if (__is_valid_data_blkaddr(blkaddr)) {
+>> +				compr_blocks++;
+>> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
+>> +							DATA_GENERIC_ENHANCE)))
+>> +					return -EFSCORRUPTED;
+>> +			}
+>> +
+>> +			if (blkaddr != NEW_ADDR)
+>> +				continue;
+>> +
+>> +			dn->data_blkaddr = NULL_ADDR;
+>> +			f2fs_set_data_blkaddr(dn);
+>> +		}
+>> +
+>> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
+>> +		dec_valid_block_count(sbi, dn->inode,
+>> +					cluster_size - compr_blocks);
+>> +
+>> +		released_blocks += cluster_size - compr_blocks;
+>> +next:
+>> +		count -= cluster_size;
+>> +	}
+>> +
+>> +	return released_blocks;
+>> +}
+>> +
+>> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>> +{
+>> +	struct inode *inode = file_inode(filp);
+>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>> +	pgoff_t page_idx = 0, last_idx;
+>> +	unsigned int released_blocks = 0;
+>> +	int ret;
+>> +
+>> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (!f2fs_compressed_file(inode))
+>> +		return -EINVAL;
+>> +
+>> +	if (f2fs_readonly(sbi->sb))
+>> +		return -EROFS;
+>> +
+>> +	ret = mnt_want_write_file(filp);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (!F2FS_I(inode)->i_compr_blocks)
+>> +		goto out;
+>> +
+>> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
+>> +
+>> +	inode_lock(inode);
+>> +
+>> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>> +	down_write(&F2FS_I(inode)->i_mmap_sem);
+>> +
+>> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+>> +
+>> +	while (page_idx < last_idx) {
+>> +		struct dnode_of_data dn;
+>> +		pgoff_t end_offset, count;
+>> +
+>> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+>> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
+>> +		if (ret) {
+>> +			if (ret == -ENOENT) {
+>> +				page_idx = f2fs_get_next_page_offset(&dn,
+>> +								page_idx);
+>> +				ret = 0;
+>> +				continue;
+>> +			}
+>> +			break;
+>> +		}
+>> +
+>> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+>> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+>> +
+>> +		ret = release_compress_blocks(&dn, count);
+>> +
+>> +		f2fs_put_dnode(&dn);
+>> +
+>> +		if (ret < 0)
+>> +			break;
+>> +
+>> +		page_idx += count;
+>> +		released_blocks += ret;
+>> +	}
+>> +
+>> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+>> +
+>> +	inode_unlock(inode);
+>> +out:
+>> +	mnt_drop_write_file(filp);
+>> +
+>> +	if (!ret)
+>> +		ret = put_user(released_blocks, (u64 __user *)arg);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>  {
+>>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+>> @@ -3496,6 +3620,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>  		return f2fs_set_volume_name(filp, arg);
+>>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>>  		return f2fs_get_compress_blocks(filp, arg);
+>> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>> +		return f2fs_release_compress_blocks(filp, arg);
+>>  	default:
+>>  		return -ENOTTY;
+>>  	}
+>> @@ -3654,6 +3780,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>>  	case F2FS_IOC_GET_VOLUME_NAME:
+>>  	case F2FS_IOC_SET_VOLUME_NAME:
+>>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>>  		break;
+>>  	default:
+>>  		return -ENOIOCTLCMD;
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
