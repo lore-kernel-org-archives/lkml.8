@@ -2,199 +2,106 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05223C35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9792C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D6520675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="J0Lq4tpy"
+	by mail.kernel.org (Postfix) with ESMTP id 9226021744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:41:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582663318;
+	bh=YYC4xaOlh2BnEG7cTijsktqQkfUcqWoUPp+Gy0hHL5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wwLmcx8nqkuUtwqbC9OMPLIOhI6I1gbVWXc3OUtluZFImTNm3GJC/IXCOwJmcBgfB
+	 SYBZWAJSfdySFh9CcMNvpxdSVUQ4znhkQinZB3fPAeqycWbDk62L7ohgFxB5Ar4Qtd
+	 FSf91uPHz/r91wUbrHumjekIbIoVQqxDAtpdsxbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgBYUlu (ORCPT
+        id S1729386AbgBYUl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:41:50 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39313 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbgBYUlu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:41:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o15so392203ljg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:41:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=f1wxzQHgzbozsllzgNDGZLVCDjLuH9+6YSKgsfnh4N0=;
-        b=J0Lq4tpycMq9o8u1bSrvUCSf0FdOD2Nyvd3Uo9ooIZeu3cp8b0a+4H56oOncPBS1R7
-         GOw5V3B9Wt5Tn3PA/+5Y5Nw2El7pOACROliHYypQ2usaadr00To1fDV+i9SaaBPq8KF9
-         JnLOYV2nhi7LSFyFMQGJZASywoO+ZoZa0qUB4jDWDyVWKuz8s5syYf4/3ASmAzLLMLGl
-         2XBkjNhxfl4ATAYxSjNFijwCURknw0D0Eq3rjhgqAPpORoXGk/M6dd+Pfb+I2kA7bUV9
-         z6Ho8xi5Wm3Q5qSVPjiqkTE+HPGGKN5NYjpnnQEsD5o969WyJ/RkywxbNHjHFmN694ta
-         nyRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=f1wxzQHgzbozsllzgNDGZLVCDjLuH9+6YSKgsfnh4N0=;
-        b=J7apRjziA8ANlO3JGqaMBZ+pur0XvaBJzLmqbffS62p+SdYUB4VvHdzMWVay4k+Xcu
-         uBBNCduG1kGa3O+LErHiVUtnzxBj8EIcOTTfHu3ESHKfos1vrO5VtowvRsD0YE//ICU5
-         Y7b7oQXyrrjMKxmoACOUVi3ACmCMXjWyIAxYZPp8e5bW0tlmiD5x1Ha8U9aa6cKk4Dmf
-         F0tbXa64Dfcwh8GziUjhL3jNLtzCLBYG0m7vXbVHbWgA0G5FFO9jU5o7X76EXU78wqKc
-         3ogD3M74eGOrG7prV9E9NJdPuWkJ7dW36+91y5PbYoqjvhy4vEey045L//AQg+1rjACe
-         tfMw==
-X-Gm-Message-State: APjAAAVRICQjrzgJUjklN8RQAbZ9tNo5970OY2sninGmRIekivDQVZDb
-        R7RCjCAZU9C6DEB42UH8xt97SA==
-X-Google-Smtp-Source: ADFU+vsMS3caqJMbwRsF+MEpr24wt3YBnbgXGcWdeW2WuNzdWjviBCz6CpLXlq5tWMkXPS/oSyZFgw==
-X-Received: by 2002:a2e:5854:: with SMTP id x20mr453488ljd.287.1582663307339;
-        Tue, 25 Feb 2020 12:41:47 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:2ac:dee3:544c:cd2b:7405:7aec])
-        by smtp.gmail.com with ESMTPSA id f14sm4247328lfh.40.2020.02.25.12.41.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 12:41:46 -0800 (PST)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
-To:     "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
- <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
- <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
- <5603f393-554d-e2a8-c2d8-6bafc20f4169@cogentembedded.com>
- <cba1e2ec-4896-23ef-ef7b-0f80d4310127@de.bosch.com>
- <ec545462-54ed-9e23-049e-1807d24ec084@cogentembedded.com>
- <3a182ac7-8d41-cdc7-2b87-7c503f68a426@de.bosch.com>
-Organization: Cogent Embedded
-Message-ID: <f21a9444-9541-6558-f5f5-ca0b733768ff@cogentembedded.com>
-Date:   Tue, 25 Feb 2020 23:41:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 25 Feb 2020 15:41:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729183AbgBYUl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:41:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F88F20675;
+        Tue, 25 Feb 2020 20:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582663315;
+        bh=YYC4xaOlh2BnEG7cTijsktqQkfUcqWoUPp+Gy0hHL5U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oyQo5IPJ8L0EIKxeaAFS2wAcDllxRfr2eyVyy1hLk8AAcr8z8/gIQPFmVOAcK45//
+         0PSaDa7pEC5LX/x8Hl6kxwy8zvjscYilZIkwDkR1kel/bGuxKAII++UJ/QCGZ7bqbi
+         CL+pgiEvxS2wgZ9W/4jpN7F68Cg0E7zmzKk678t0=
+Date:   Tue, 25 Feb 2020 21:41:51 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Donghoon Yu <hoony.yu@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shinbeom Choi <sbeom.choi@samsung.com>,
+        Hyunki Koo <kkoos00@naver.com>, Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        HYUN-KI KOO <hyunki00.koo@samsung.com>
+Subject: Re: [PATCH 1/2] tty: serial: samsung_tty: build it for any platform
+Message-ID: <20200225204151.GA13254@kroah.com>
+References: <CGME20200220121333eucas1p26befa95831b44a793822b4f07b37d2cc@eucas1p2.samsung.com>
+ <20200220102628.3371996-1-gregkh@linuxfoundation.org>
+ <b04ad319-9986-c357-ad37-937bbb06bc02@samsung.com>
+ <CAMuHMdXzPPNqQom82frY1B6LMre+VD9fPAf98BZ3eo2DhgwoYg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3a182ac7-8d41-cdc7-2b87-7c503f68a426@de.bosch.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXzPPNqQom82frY1B6LMre+VD9fPAf98BZ3eo2DhgwoYg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/25/2020 12:33 PM, Behme Dirk (CM/ESO2) wrote:
+On Tue, Feb 25, 2020 at 09:52:38AM +0100, Geert Uytterhoeven wrote:
+> On Thu, Feb 20, 2020 at 1:13 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+> > On 2/20/20 11:26 AM, Greg Kroah-Hartman wrote:
+> > > There is no need to tie this driver to only a specific SoC, or compile
+> > > test, so remove that dependancy from the Kconfig rules.
+> >
+> > samsung_tty driver is hardware specific driver so why should we
+> > build it for any platform?
 
->>>>>   From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
->>>>> From: Dirk Behme <dirk.behme@de.bosch.com>
->>>>> Date: Tue, 4 Feb 2020 08:39:31 +0100
->>>>> Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
->>>>>    clean up
->>>>>
->>>>> This is required to make the driver work correctly in my M3 environment.
->>>>>
->>>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
->>>>> ---
->>>>>    drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
->>>>>    1 file changed, 25 insertions(+), 17 deletions(-)
->>>>>
->>>>> diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
->>>>> index 04be92b64bfa..f4356b066384 100644
->>>>> --- a/drivers/memory/renesas-rpc-if.c
->>>>> +++ b/drivers/memory/renesas-rpc-if.c
->>>> [...]
->>>>> @@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 offs, size_t len, void *buf)
->>>>>        pm_runtime_get_sync(rpc->dev);
->>>>>
->>>>>        regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
->>>>> -    regmap_write(rpc->regmap, RPCIF_DRCR,
->>>>> -             RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
->>>>> -    regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
->>>>> -    regmap_write(rpc->regmap, RPCIF_DREAR,
->>>>> -             RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
->>>>> -    regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
->>>>> -    regmap_write(rpc->regmap, RPCIF_DRENR,
->>>>> -             rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
->>>>> -    regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
->>>>> -    regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
->>>>
->>>>      The driver somehow works only with this left in place (with 2 bytes eaten
->>>> as before), otherwise all the flash reads all 0xff (via dirmap).
->>>
->>>
->>> Do you boot from hyperflash?
->>
->>     No, I have arewto say 'cpld write 30 1' in U-Boot before a boot a kernel.
+Why not?
 
-   s/arewto/to/. :-)
+Seriously, this "only this one specific SoC is allowed to build this
+driver" is crazy.  It prevents anyone from building a generic kernel
+with drivers as a module which are loaded as needed.
 
->> Normally, the V3x Starter Kit boards are wired for the QSPI flash chips.
->>
->>> The system I'm using for testing boots from hyperflash. So most probably all registers
->>> I don't touch in the driver are put into a reasonable state by the boot code, already.
->>> If you don't boot from hyperflash, that at least would explain our different behavior.
->>
->>     Yes. Mind dumping the registers and sending to me?
-> 
-> Using the attached debug patch (0001-memory-renesas-rpc-if-DEBUG-Dump-register-
-> content.patch) on a r8a7796 system booting from Hyperflash with above register
-dropping reverted (i.e. including touching these registers) I get
-> 
-> Before:
-> RPCIF_DRCR:    0x00000000
-> RPCIF_DRCMR:   0x00a00000
-> RPCIF_DREAR:   0x00000000
-> RPCIF_DROPR:   0x00000000
-> RPCIF_DRENR:   0xa222d400
-> RPCIF_DRDMCR:  0x0000000e
-> RPCIF_DRDRENR: 0x00005101
-> 
-> After:
-> RPCIF_DRCR:    0x001f0100
-> RPCIF_DRCMR:   0x00a00000
-> RPCIF_DREAR:   0x00010001
-> RPCIF_DROPR:   0x00000000
-> RPCIF_DRENR:   0xa202d400
-> RPCIF_DRDMCR:  0x0000000e
-> RPCIF_DRDRENR: 0x00005101
-> 
-> Comparing that, just 3 registers are different between my working version ("Before") and the version which shows the 2-byte offset ("After"): RPCIF_DRCR, RPCIF_DREAR and RPCIF_DRENR. With try & error, at least in my setup, I was able to reduce this to just RPCIF_DRCR. Dropping the burst mode I was able to 'fix' the two byte offset issue.
+That needs to be fixed, and removing this unneeded dependancy on this
+driver allows it to be build for any system and then only loaded when
+needed.
 
-   ACK! Thanks a lot for finding it! :-)
-   That's what I get on the first dirmap read:
+> > This change seems to defeat the whole purpose behind COMPILE_TEST
+> > config option (which allows us to build hardware-specific drivers
+> > without needlessly presenting the user with tons of non-relevant
+> > config options).
+> >
+> > Please explain this change some more, are you planing to remove
+> > COMPILE_TEST config option?
 
-Before:
-RPCIF_CMNCR:   0x81fff301
-RPCIF_DRCR:    0x00000000
-RPCIF_DRCMR:   0x00030000
-RPCIF_DREAR:   0x00000000
-RPCIF_DROPR:   0x00000000
-RPCIF_DRENR:   0x00004700
-RPCIF_DRDMCR:  0x00000000
-RPCIF_DRDRENR: 0x00000000
+I want to get rid of this:
 
-After:                                                                          
-RPCIF_CMNCR:   0x01fff301                                                       
-RPCIF_DRCR:    0x001f0100                                                       
-RPCIF_DRCMR:   0x00800000                                                       
-RPCIF_DREAR:   0x00000001                                                       
-RPCIF_DROPR:   0x00000000                                                       
-RPCIF_DRENR:   0xa202d400                                                       
-RPCIF_DRDMCR:  0x0000000e                                                       
-RPCIF_DRDRENR: 0x00005101                                                       
+> > > -     depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
 
-> Do you like to give the attached 0001-memory-renesas-rpc-if-Don-t-use-burst-mode-on-read.patch a try in your setup?
+We should not need PLAT_SAMSUNG or ARCH_EXYNOS at all, we should be able
+to build an arm64 kernel for all platforms.
 
-   Works like charm! :-)
-   Unfortunately, the SPI dirmap and/or writes are still broken.
+thanks,
 
-> Best regards
-> 
-> Dirk
-
-MBR, Sergei
+greg k-h
