@@ -2,228 +2,119 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43CFC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79653C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F73F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4885F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BgKA2hJa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h008BtY1"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KiUKguGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbgBYNiX (ORCPT
+        id S1730148AbgBYNjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:38:23 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:54805 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729436AbgBYNiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:38:22 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2E0387327;
-        Tue, 25 Feb 2020 08:38:19 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 25 Feb 2020 08:38:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=XHaUvlijZEsg3EFrKcfQygP/UZp
-        K1ifb+/vCmhWP8Pw=; b=BgKA2hJaGKTWOjrTVF03BtGXWT9oHUx+Jj47WMj3UXV
-        jdPknS2fUGKj/K4kvHW6TXNO1/ZKn81719sVWU9UptRjlItOLH/RbrLdM1tfpnib
-        5rSEaeHXIsSg1L4ubTzdYcafLcXkEfxsMXp3/ZmSmAaSEEpW/sCkGmobb50ZCp7P
-        2xQ/XJCQ3gSiGL6cMod2zlZlMB6ljd2VJRDsP6gcSaV7sYUYTXwXo5S1gUXfYp9w
-        dJRvANgOmFBXKn87Xd8oJ16pSP1OJnxVv7mQnaWeKI2TOUACz0g7q2I2k1Qoe+mR
-        8VNtLoKvGMHuNdUp+gBaHQiFRLXdhjY2SCfDsWqKBPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XHaUvl
-        ijZEsg3EFrKcfQygP/UZpK1ifb+/vCmhWP8Pw=; b=h008BtY19KbCXG9bwTtPsY
-        fLalGqCbFUpPeXqp7DtGedL7MmxOH8e6GWa2KstF8Xr2P9qDi8JEQPsZ+r64Mz6L
-        rkGs7W58pePKAXhS37CLRUWKW4Xfh8MNP9pcspIhV7iC3SUkN/0OAhGn5De5f6WB
-        oBCgA1j68pvOaf/VX8WB9MESenvkfdHqxPEYQ2dCb/O8wBWxN0J+DcD5huB9iiXJ
-        /mV5HICdHpFoFE/uLjAxDhHT6z8BqTi6zzLHJw8Nwqvi0GrDKJJGPfS7/AX0yzlu
-        FVxwpwdaKO+qU8gMpPN4/CGNtQKii7g99qyCT0TwB8vZR2ijn9UVs7bG52fl814A
-        ==
-X-ME-Sender: <xms:SSNVXj106x4HTh1FwKiOrawGvpwvbaNBW0snEiQJ5aSAWUtgE8XgGg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledvgdehfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epkhgvrhhnvghltghirdhorhhgpdhkvghrnhgvlhdrohhrghenucfkphepledtrdekledr
-    ieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:SSNVXvku2TyTh66yP6HJEp_Iafm9x906fULQ8P_OfAIErlE8Js2yBQ>
-    <xmx:SSNVXmip_uEcN6WEJC3h0XX4P3y76diGaoYRkVmiLIaY_IB-AFTDQw>
-    <xmx:SSNVXuTe-Cglgsrp1bYJHXTe210gaLtqt3Sx8Mx7Ct6n7Y-KAZqkJQ>
-    <xmx:SyNVXnfV79h51ErPZzTMCkle-6B6MB3HKgLlw5DyLTJi7kVR0V4c-g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 89362328005D;
-        Tue, 25 Feb 2020 08:38:17 -0500 (EST)
-Date:   Tue, 25 Feb 2020 14:38:15 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Chen-Yu Tsai <wens@csie.org>, broonie@kernel.org,
-        tomeu.vizoso@collabora.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        enric.balletbo@collabora.com, khilman@baylibre.com,
-        mgalka@collabora.com, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: next/master bisection: baseline.login on
- sun8i-h2-plus-orangepi-zero
-Message-ID: <20200225133815.fjc6apts3ns5zcm5@gilmour.lan>
-References: <5e4b4889.1c69fb81.bc072.65a9@mx.google.com>
- <50f9ce8b-c303-3b25-313b-cfb62d7e8735@collabora.com>
- <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com>
+        Tue, 25 Feb 2020 08:39:48 -0500
+Received: from mail-db8eur05on2068.outbound.protection.outlook.com ([40.107.20.68]:6081
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729602AbgBYNjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:39:47 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cYOqOiVNvWI6NsqzCX5dEBrjZjkDDadp3Qzvwry/A+MzVzZ9ivKPMZEmQVKqwJiGyJGmKKLbzV1FptjrIkGUXLcOD87AMKIM2PA6jLj1EYi8PlhjT3IR4dACAHBKVCCnh7jBS0f58uj4QqKOMWQZS4c2qqWiTY5QasRIOtg8RlP56VlARZTFwEaFy8bHXJdOtf3RL37cp9O8M1b0Ui74fa6xevOPrCyFgHaz9AOUKISl3EqaB7F2L663zK8nv1XEC8n+o4UQTiamov9Cou1vFiw1Lp3Y/+wGRmVI8RR6h2fpZ3xS6fVu1N0L7/aHfdIzPLhNWBCI4MwXfNoiP0HA8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MdaQfyRbeHEkAESmyzeQ0IZZaFXVk8OWr4bJ52L5xvE=;
+ b=cKyEplqRsImplauw4WRD8Nf8H+EuSM4AwktKOdW4NOm9Kwwqq3VpvIG3nSiEgK22iWtLTkNHncaDU3Wv4LJL8AOdvtcwpwxjgImN6FznSL9SI/K4lLIOATWIf6PyqrvqAa9apb00aQ2mpJtEqVA9HNC18uPV2w0pihRlvuM9WebnYlAcmMqq/5tpp/AM8yXMDJGjrL+FCGTquoKnNN+6e62G/Q53o+vpb40IQ/Ddr/2EQ4h0JFuHWFnSMgLXWqjYn1t/sfNqxMVY3GiGEHBjkj8LkXE6XpxLRyCmS+4+xkMThRZC/N9b66BzknWE65SP3nluFbXZFa4h3+Z/tUESWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MdaQfyRbeHEkAESmyzeQ0IZZaFXVk8OWr4bJ52L5xvE=;
+ b=KiUKguGcVTSTEPdbQ/Fy/z70rIko31Tn33adDnQlL4fykTALEFIphCyDgSq3QovpJSBPDsA4ymD62GnkKGLye9Y7ivYJteZIR+Tte6SR2xERlR5DXgW9uoC9RdupOnjz8hDpTgS4gBb0bemoEXiVB3/SmDHCqmHpojp4BW2i5ZU=
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB2734.eurprd04.prod.outlook.com (10.172.255.142) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Tue, 25 Feb 2020 13:39:43 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1%4]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
+ 13:39:43 +0000
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>,
+        "Daniel Baluta (OSS)" <daniel.baluta@oss.nxp.com>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH] ASoC: fsl: Add generic CPU DAI driver
+Thread-Topic: [PATCH] ASoC: fsl: Add generic CPU DAI driver
+Thread-Index: AQHV1endWlacWLF960CV3VuNFcs0VqgsE0OAgAAC+gA=
+Date:   Tue, 25 Feb 2020 13:39:43 +0000
+Message-ID: <c1c56c52-656c-cc06-02d1-abefd330ebc8@nxp.com>
+References: <20200128144707.21833-1-daniel.baluta@oss.nxp.com>
+ <CAOMZO5CKda0TEai5CDdkmADNSMnn3WvY_xD42a=PMpzUFO4Z-w@mail.gmail.com>
+In-Reply-To: <CAOMZO5CKda0TEai5CDdkmADNSMnn3WvY_xD42a=PMpzUFO4Z-w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1ee9ce09-dae9-4e58-8c66-08d7b9f82bc4
+x-ms-traffictypediagnostic: VI1PR0402MB2734:|VI1PR0402MB2734:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB27346707F82971AF71FA203EF9ED0@VI1PR0402MB2734.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 0324C2C0E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(136003)(366004)(346002)(199004)(189003)(66946007)(6506007)(2616005)(31696002)(110136005)(76116006)(186003)(2906002)(26005)(6486002)(316002)(54906003)(64756008)(66556008)(66476007)(66446008)(71200400001)(36756003)(44832011)(4326008)(86362001)(5660300002)(4744005)(53546011)(8676002)(81166006)(81156014)(31686004)(8936002)(6512007)(478600001)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2734;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZwRnqtggfqXMtK8bXMUYxEY3uHTSRNdN+vzLxQqp+YAU5s6nFiL2LpcPg0MQLfx9hEJ3WJ+hMGBrEr5OGFJGxoqYYnuhIY5RFPz5hQ4GDkFgb4rSI4vOkhOBPiVbI3V6BEaPckEt3IR8eklw2B5L1sa6CH6caAs5yP3nDuTEZXTrO73mazjJMXEztbmPf31+2lzagMDyTUbnSulJLjNJzc9H1t+0tQXx/6l3O93jJ0GmwCuJxIrKD/6q5BDEA6TsUyzzLmIvIMqrke/ItfAq9vZD2bbtnaMMbPJIRhgbEd1MBdR+/naJp8qRWGX0Re/MzD5zEubAHpBjzk2TaQ6WMeQ3F5Xxlvk3eTTWD0zKyI7oehBSojkmHvYvN2CJ3xKtAAtBNEeT+kq+nHs7YGFJhevzBUrHU2aHfGojrqqX54+7sMKWuNhfLvdhqVlwKAwtHNsVb9QHKhccCq397BmRDr4bRYCaPd6ynJSdeQVkUYXXCaFuPZwyZO3cY7/oP8Y5
+x-ms-exchange-antispam-messagedata: m3HKLXKl/afU6/ZwUVzOOCTSlL1s2NahS0U7FmoJ64w7Du1fkpu9lMG24HA9yTiyvhaDkNXofyT/rT5RzyKVIspioJyzuc81m5ldp8w+imbbGGXx31/EqAl6rAZnvRc7S52bMXuRHbxf+I/einB4bg==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <99217B1ED332554493BB3F3EC0F659A1@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="36i66r5gn7suledg"
-Content-Disposition: inline
-In-Reply-To: <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ee9ce09-dae9-4e58-8c66-08d7b9f82bc4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 13:39:43.2114
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GrFea58jDesGEMo3cCb863OrdYtaOU4WbKqofym/EXcNkpvad0Vxp2XFgh/T019JDv5pd1pjyVN2wlaFWC2hnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2734
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---36i66r5gn7suledg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Feb 19, 2020 at 03:49:47PM -0800, Stephen Boyd wrote:
-> Adding some Allwinner folks. Presumably there is some sort of clk that
-> is failing to calculate a phase when it gets registered. Maybe that's
-> because the parent isn't registered yet?
-
-It's simpler than that :)
-
-> Quoting Guillaume Tucker (2020-02-17 23:45:41)
-> > Hi Stephen,
-> >
-> > Please see the bisection report below about a boot failure.
-> >
-> > Reports aren't automatically sent to the public while we're
-> > trialing new bisection features on kernelci.org but this one
-> > looks valid.
-> >
-> > There's nothing in the serial console log, probably because it's
-> > crashing too early during boot.  I'm not sure if other platforms
-> > on kernelci.org were hit by this in the same way, it's tricky to
-> > tell partly because there is no output.  It should possible to
-> > run it again with earlyprintk enabled in BayLibre's test lab
-> > though.
-> >
-> > Thanks,
-> > Guillaume
-> >
-> >
-> > On 18/02/2020 02:14, kernelci.org bot wrote:
-> > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > > * This automated bisection report was sent to you on the basis  *
-> > > * that you may be involved with the breaking commit it has      *
-> > > * found.  No manual investigation has been done to verify it,   *
-> > > * and the root cause of the problem may be somewhere else.      *
-> > > *                                                               *
-> > > * If you do send a fix, please include this trailer:            *
-> > > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> > > *                                                               *
-> > > * Hope this helps!                                              *
-> > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > >
-> > > next/master bisection: baseline.login on sun8i-h2-plus-orangepi-zero
-> > >
-> > > Summary:
-> > >   Start:      c25a951c50dc Add linux-next specific files for 20200217
-> > >   Plain log:  https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.txt
-> > >   HTML log:   https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.html
-> > >   Result:     2760878662a2 clk: Bail out when calculating phase fails during clk registration
-> > >
-> > > Checks:
-> > >   revert:     PASS
-> > >   verify:     PASS
-> > >
-> > > Parameters:
-> > >   Tree:       next
-> > >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > >   Branch:     master
-> > >   Target:     sun8i-h2-plus-orangepi-zero
-> > >   CPU arch:   arm
-> > >   Lab:        lab-baylibre
-> > >   Compiler:   gcc-8
-> > >   Config:     multi_v7_defconfig
-> > >   Test case:  baseline.login
-> > >
-> > > Breaking commit found:
-> > >
-> > > -------------------------------------------------------------------------------
-> > > commit 2760878662a290ac57cff8a5a8d8bda8f4dddc37
-> > > Author: Stephen Boyd <sboyd@kernel.org>
-> > > Date:   Wed Feb 5 15:28:02 2020 -0800
-> > >
-> > >     clk: Bail out when calculating phase fails during clk registration
-> > >
-> > >     Bail out of clk registration if we fail to get the phase for a clk that
-> > >     has a clk_ops::get_phase() callback. Print a warning too so that driver
-> > >     authors can easily figure out that some clk is unable to read back phase
-> > >     information at boot.
-> > >
-> > >     Cc: Douglas Anderson <dianders@chromium.org>
-> > >     Cc: Heiko Stuebner <heiko@sntech.de>
-> > >     Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
-> > >     Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> > >     Link: https://lkml.kernel.org/r/20200205232802.29184-5-sboyd@kernel.org
-> > >     Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-> > >
-> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > > index dc8bdfbd6a0c..ed1797857bae 100644
-> > > --- a/drivers/clk/clk.c
-> > > +++ b/drivers/clk/clk.c
-> > > @@ -3457,7 +3457,12 @@ static int __clk_core_init(struct clk_core *core)
-> > >        * Since a phase is by definition relative to its parent, just
-> > >        * query the current clock phase, or just assume it's in phase.
-> > >        */
-> > > -     clk_core_get_phase(core);
-> > > +     ret = clk_core_get_phase(core);
-> > > +     if (ret < 0) {
-> > > +             pr_warn("%s: Failed to get phase for clk '%s'\n", __func__,
-> > > +                     core->name);
-> > > +             goto out;
-> > > +     }
-
-The thing is, clk_core_get_phase actually returns the phase on success :)
-
-So, when you actually have a phase returned, and not an error, you end
-up with a positive, non-zero, value for ret.
-
-And since it's the latest assignment of that value, and that we return
-ret all the time, even on success, we end up returning that positive,
-non-zero value to __clk_register, which in turn tests whether it's
-non-zero for success (it's not), and then proceeds to garbage collect
-everything.
-
-I guess we're just the odd ones actually returning non-zero phases at
-init time and in kernelci.
-
-I'll send a patch
-
-Maxime
-
---36i66r5gn7suledg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlUjRwAKCRDj7w1vZxhR
-xXDtAP9b8T02oSuEhYCHu4pRnLvlbOzVVLv+yrH96OD/76ivzAEAoXZ6tx7R81ZF
-dHtemdtSh6+UbDVjmKYL94RSfqOIiwM=
-=4lXL
------END PGP SIGNATURE-----
-
---36i66r5gn7suledg--
+T24gMjUuMDIuMjAyMCAxNToyOSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4gT24gVHVlLCBKYW4g
+MjgsIDIwMjAgYXQgMTE6NDcgQU0gRGFuaWVsIEJhbHV0YSAoT1NTKQ0KPiA8ZGFuaWVsLmJhbHV0
+YUBvc3MubnhwLmNvbT4gd3JvdGU6DQo+DQo+PiArc3RhdGljIHN0cnVjdCBzbmRfc29jX2RhaV9k
+cml2ZXIgZnNsX2VzYWlfZGFpID0gew0KPj4gKyAgICAgICAubmFtZSA9ICJlc2FpMCIsDQo+PiAr
+fTsNCj4+ICsNCj4+ICtzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFpX2RyaXZlciBmc2xfc2FpX2Rh
+aSA9IHsNCj4+ICsgICAgICAgLm5hbWUgPSAic2FpMSIsDQo+IFNvIHRoZSBuYW1lIHdpbGwgYmUg
+aGFyZGNvZGVkIHRvIHNhaTEgZXZlbiBpZiBTQUkyLCBTQUkzLCBldGMgaXMgdXNlZD8NCg0KDQpJ
+bmRlZWQgdGhpcyBpcyBhIGdvb2QgcG9pbnQuIEluIG91ciB1c2UgY2FzZSB3aXRoIERTUCB3ZSBh
+cmUgb25seSB1c2luZyANClNBSTEvRVNBSTAgZm9yIG5vdy4NCg0KTGV0IG1lIHRyeSB0byBnZXQg
+YSBtb3JlIGdlbmVyaWMgYXBwcm9hY2ggYW5kIHJlc2VuZC4NCg0KDQp0aGFua3MsDQoNCkRhbmll
+bC4NCg0K
