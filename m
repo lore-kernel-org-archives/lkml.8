@@ -2,546 +2,128 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CB6C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1A6C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D3720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9855521927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgBYKab (ORCPT
+        id S1730297AbgBYKav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:30:31 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37596 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729698AbgBYKab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:30:31 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 39F48393E27649FFF872;
-        Tue, 25 Feb 2020 18:30:27 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 25 Feb 2020 18:30:20 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <viro@zeniv.linux.org.uk>
-CC:     <dhowells@redhat.com>, <linux-erofs@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <gaoxiang25@huawei.com>,
-        <chao@kernel.org>, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v5] erofs: convert to use the new mount fs_context api
-Date:   Tue, 25 Feb 2020 18:30:12 +0800
-Message-ID: <20200225103012.43930-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 25 Feb 2020 05:30:51 -0500
+Received: from mga01.intel.com ([192.55.52.88]:21797 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729698AbgBYKav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:30:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 02:30:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
+   d="scan'208";a="230108009"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Feb 2020 02:30:48 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j6XUI-004dNp-0i; Tue, 25 Feb 2020 12:30:50 +0200
+Date:   Tue, 25 Feb 2020 12:30:50 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        dan.j.williams@intel.com, peterz@infradead.org
+Subject: Re: [PATCH v5 1/2] x86: fix bitops.h warning with a moved cast
+Message-ID: <20200225103050.GD10400@smile.fi.intel.com>
+References: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224225020.2212544-1-jesse.brandeburg@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the erofs to use new internal mount API as the old one will
-be obsoleted and removed.  This allows greater flexibility in
-communication of mount parameters between userspace, the VFS and the
-filesystem.
+On Mon, Feb 24, 2020 at 02:50:19PM -0800, Jesse Brandeburg wrote:
+> Fix many sparse warnings when building with C=1.
+> 
+> When the kernel is compiled with C=1, there are lots of messages like:
+>   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
+> 
+> CONST_MASK() is using a signed integer "1" to create the mask which
+> is later cast to (u8) when used, in order to yield an 8-bit value
+> for the assembly instructions to use. Simplify the expressions used to
+> clearly indicate they are working on 8-bit values only, which still
+> keeps sparse happy without an accidental promotion to a 32 bit integer.
+> 
 
-See Documentation/filesystems/mount_api.txt for more information.
+> The reason the warning was occurring is because certain bitmasks that
+> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
+> with a mask like 0x7f, which then results in sign extension when doing
+> an invert (but I'm not a compiler expert). It was really only
+> "clear_bit" that was having problems, and it was only on bit checks next
+> to a byte boundary (top bit).
 
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: David Howells <dhowells@redhat.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-v5:
-- introduce struct erofs_fs_context to wrap all configs in erofs
- fs/erofs/internal.h |  27 +++--
- fs/erofs/super.c    | 251 ++++++++++++++++++++------------------------
- fs/erofs/xattr.c    |   4 +-
- fs/erofs/zdata.c    |   4 +-
- 4 files changed, 132 insertions(+), 154 deletions(-)
+I guess this describes it incorrectly.
+The problem is integer promotion of negation operation for any bit basically.
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index c4c6dcdc89ad..dea2dbbe52c5 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -46,6 +46,17 @@ typedef u64 erofs_off_t;
- /* data type for filesystem-wide blocks number */
- typedef u32 erofs_blk_t;
- 
-+struct erofs_fs_context {
-+#ifdef CONFIG_EROFS_FS_ZIP
-+	/* current strategy of how to use managed cache */
-+	unsigned char cache_strategy;
-+
-+	/* threshold for decompression synchronously */
-+	unsigned int max_sync_decompress_pages;
-+#endif
-+	unsigned int mount_opt;
-+};
-+
- struct erofs_sb_info {
- #ifdef CONFIG_EROFS_FS_ZIP
- 	/* list for all registered superblocks, mainly for shrinker */
-@@ -55,14 +66,8 @@ struct erofs_sb_info {
- 	/* the dedicated workstation for compression */
- 	struct radix_tree_root workstn_tree;
- 
--	/* threshold for decompression synchronously */
--	unsigned int max_sync_decompress_pages;
--
- 	unsigned int shrinker_run_no;
- 
--	/* current strategy of how to use managed cache */
--	unsigned char cache_strategy;
--
- 	/* pseudo inode to manage cached pages */
- 	struct inode *managed_cache;
- #endif	/* CONFIG_EROFS_FS_ZIP */
-@@ -88,7 +93,7 @@ struct erofs_sb_info {
- 	u32 feature_compat;
- 	u32 feature_incompat;
- 
--	unsigned int mount_opt;
-+	struct erofs_fs_context ctx;	/* options */
- };
- 
- #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
-@@ -98,17 +103,17 @@ struct erofs_sb_info {
- #define EROFS_MOUNT_XATTR_USER		0x00000010
- #define EROFS_MOUNT_POSIX_ACL		0x00000020
- 
--#define clear_opt(sbi, option)	((sbi)->mount_opt &= ~EROFS_MOUNT_##option)
--#define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
--#define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
-+#define clear_opt(ctx, option)	((ctx)->mount_opt &= ~EROFS_MOUNT_##option)
-+#define set_opt(ctx, option)	((ctx)->mount_opt |= EROFS_MOUNT_##option)
-+#define test_opt(ctx, option)	((ctx)->mount_opt & EROFS_MOUNT_##option)
- 
--#ifdef CONFIG_EROFS_FS_ZIP
- enum {
- 	EROFS_ZIP_CACHE_DISABLED,
- 	EROFS_ZIP_CACHE_READAHEAD,
- 	EROFS_ZIP_CACHE_READAROUND
- };
- 
-+#ifdef CONFIG_EROFS_FS_ZIP
- #define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
- 
- /* basic unit of the workstation of a super_block */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 057e6d7b5b7f..765ffa49db16 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -10,6 +10,8 @@
- #include <linux/parser.h>
- #include <linux/seq_file.h>
- #include <linux/crc32c.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -192,53 +194,18 @@ static int erofs_read_superblock(struct super_block *sb)
- 	return ret;
- }
- 
--#ifdef CONFIG_EROFS_FS_ZIP
--static int erofs_build_cache_strategy(struct super_block *sb,
--				      substring_t *args)
--{
--	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	const char *cs = match_strdup(args);
--	int err = 0;
--
--	if (!cs) {
--		erofs_err(sb, "Not enough memory to store cache strategy");
--		return -ENOMEM;
--	}
--
--	if (!strcmp(cs, "disabled")) {
--		sbi->cache_strategy = EROFS_ZIP_CACHE_DISABLED;
--	} else if (!strcmp(cs, "readahead")) {
--		sbi->cache_strategy = EROFS_ZIP_CACHE_READAHEAD;
--	} else if (!strcmp(cs, "readaround")) {
--		sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
--	} else {
--		erofs_err(sb, "Unrecognized cache strategy \"%s\"", cs);
--		err = -EINVAL;
--	}
--	kfree(cs);
--	return err;
--}
--#else
--static int erofs_build_cache_strategy(struct super_block *sb,
--				      substring_t *args)
--{
--	erofs_info(sb, "EROFS compression is disabled, so cache strategy is ignored");
--	return 0;
--}
--#endif
--
- /* set up default EROFS parameters */
--static void erofs_default_options(struct erofs_sb_info *sbi)
-+static void erofs_default_options(struct erofs_fs_context *ctx)
- {
- #ifdef CONFIG_EROFS_FS_ZIP
--	sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
--	sbi->max_sync_decompress_pages = 3;
-+	ctx->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
-+	ctx->max_sync_decompress_pages = 3;
- #endif
- #ifdef CONFIG_EROFS_FS_XATTR
--	set_opt(sbi, XATTR_USER);
-+	set_opt(ctx, XATTR_USER);
- #endif
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
--	set_opt(sbi, POSIX_ACL);
-+	set_opt(ctx, POSIX_ACL);
- #endif
- }
- 
-@@ -251,73 +218,62 @@ enum {
- 	Opt_err
- };
- 
--static match_table_t erofs_tokens = {
--	{Opt_user_xattr, "user_xattr"},
--	{Opt_nouser_xattr, "nouser_xattr"},
--	{Opt_acl, "acl"},
--	{Opt_noacl, "noacl"},
--	{Opt_cache_strategy, "cache_strategy=%s"},
--	{Opt_err, NULL}
-+static const struct constant_table erofs_param_cache_strategy[] = {
-+	{"disabled",	EROFS_ZIP_CACHE_DISABLED},
-+	{"readahead",	EROFS_ZIP_CACHE_READAHEAD},
-+	{"readaround",	EROFS_ZIP_CACHE_READAROUND},
-+	{}
- };
- 
--static int erofs_parse_options(struct super_block *sb, char *options)
--{
--	substring_t args[MAX_OPT_ARGS];
--	char *p;
--	int err;
--
--	if (!options)
--		return 0;
--
--	while ((p = strsep(&options, ","))) {
--		int token;
-+static const struct fs_parameter_spec erofs_fs_parameters[] = {
-+	fsparam_flag_no("user_xattr",	Opt_user_xattr),
-+	fsparam_flag_no("acl",		Opt_acl),
-+	fsparam_enum("cache_strategy",	Opt_cache_strategy,
-+		     erofs_param_cache_strategy),
-+	{}
-+};
- 
--		if (!*p)
--			continue;
-+static int erofs_fc_parse_param(struct fs_context *fc,
-+				struct fs_parameter *param)
-+{
-+	struct erofs_fs_context *ctx __maybe_unused = fc->fs_private;
-+	struct fs_parse_result result;
-+	int opt;
- 
--		args[0].to = args[0].from = NULL;
--		token = match_token(p, erofs_tokens, args);
-+	opt = fs_parse(fc, erofs_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
- 
--		switch (token) {
-+	switch (opt) {
-+	case Opt_user_xattr:
- #ifdef CONFIG_EROFS_FS_XATTR
--		case Opt_user_xattr:
--			set_opt(EROFS_SB(sb), XATTR_USER);
--			break;
--		case Opt_nouser_xattr:
--			clear_opt(EROFS_SB(sb), XATTR_USER);
--			break;
-+		if (result.boolean)
-+			set_opt(ctx, XATTR_USER);
-+		else
-+			clear_opt(ctx, XATTR_USER);
- #else
--		case Opt_user_xattr:
--			erofs_info(sb, "user_xattr options not supported");
--			break;
--		case Opt_nouser_xattr:
--			erofs_info(sb, "nouser_xattr options not supported");
--			break;
-+		errorfc(fc, "{,no}user_xattr options not supported");
- #endif
-+		break;
-+	case Opt_acl:
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
--		case Opt_acl:
--			set_opt(EROFS_SB(sb), POSIX_ACL);
--			break;
--		case Opt_noacl:
--			clear_opt(EROFS_SB(sb), POSIX_ACL);
--			break;
-+		if (result.boolean)
-+			set_opt(ctx, POSIX_ACL);
-+		else
-+			clear_opt(ctx, POSIX_ACL);
- #else
--		case Opt_acl:
--			erofs_info(sb, "acl options not supported");
--			break;
--		case Opt_noacl:
--			erofs_info(sb, "noacl options not supported");
--			break;
-+		errorfc(fc, "{,no}acl options not supported");
- #endif
--		case Opt_cache_strategy:
--			err = erofs_build_cache_strategy(sb, args);
--			if (err)
--				return err;
--			break;
--		default:
--			erofs_err(sb, "Unrecognized mount option \"%s\" or missing value", p);
--			return -EINVAL;
--		}
-+		break;
-+	case Opt_cache_strategy:
-+#ifdef CONFIG_EROFS_FS_ZIP
-+		ctx->cache_strategy = result.uint_32;
-+#else
-+		errorfc(fc, "compression not supported, cache_strategy ignored");
-+#endif
-+		break;
-+	default:
-+		return -ENOPARAM;
- 	}
- 	return 0;
- }
-@@ -381,10 +337,11 @@ static int erofs_init_managed_cache(struct super_block *sb)
- static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
- #endif
- 
--static int erofs_fill_super(struct super_block *sb, void *data, int silent)
-+static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
- 	struct erofs_sb_info *sbi;
-+	struct erofs_fs_context *ctx = fc->fs_private;
- 	int err;
- 
- 	sb->s_magic = EROFS_SUPER_MAGIC;
-@@ -412,18 +369,14 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- #ifdef CONFIG_EROFS_FS_XATTR
- 	sb->s_xattr = erofs_xattr_handlers;
- #endif
--	/* set erofs default mount options */
--	erofs_default_options(sbi);
- 
--	err = erofs_parse_options(sb, data);
--	if (err)
--		return err;
--
--	if (test_opt(sbi, POSIX_ACL))
-+	if (test_opt(ctx, POSIX_ACL))
- 		sb->s_flags |= SB_POSIXACL;
- 	else
- 		sb->s_flags &= ~SB_POSIXACL;
- 
-+	sbi->ctx = *ctx;
-+
- #ifdef CONFIG_EROFS_FS_ZIP
- 	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
- #endif
-@@ -450,15 +403,58 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (err)
- 		return err;
- 
--	erofs_info(sb, "mounted with opts: %s, root inode @ nid %llu.",
--		   (char *)data, ROOT_NID(sbi));
-+	erofs_info(sb, "mounted with root inode @ nid %llu.", ROOT_NID(sbi));
-+	return 0;
-+}
-+
-+static int erofs_fc_get_tree(struct fs_context *fc)
-+{
-+	return get_tree_bdev(fc, erofs_fc_fill_super);
-+}
-+
-+static int erofs_fc_reconfigure(struct fs_context *fc)
-+{
-+	struct super_block *sb = fc->root->d_sb;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	struct erofs_fs_context *ctx = fc->fs_private;
-+
-+	DBG_BUGON(!sb_rdonly(sb));
-+
-+	if (test_opt(ctx, POSIX_ACL))
-+		fc->sb_flags |= SB_POSIXACL;
-+	else
-+		fc->sb_flags &= ~SB_POSIXACL;
-+
-+	sbi->ctx = *ctx;
-+
-+	fc->sb_flags |= SB_RDONLY;
- 	return 0;
- }
- 
--static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
--				  const char *dev_name, void *data)
-+static void erofs_fc_free(struct fs_context *fc)
-+{
-+	kfree(fc->fs_private);
-+}
-+
-+static const struct fs_context_operations erofs_context_ops = {
-+	.parse_param	= erofs_fc_parse_param,
-+	.get_tree       = erofs_fc_get_tree,
-+	.reconfigure    = erofs_fc_reconfigure,
-+	.free		= erofs_fc_free,
-+};
-+
-+static int erofs_init_fs_context(struct fs_context *fc)
- {
--	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
-+	fc->fs_private = kzalloc(sizeof(struct erofs_fs_context), GFP_KERNEL);
-+	if (!fc->fs_private)
-+		return -ENOMEM;
-+
-+	/* set default mount options */
-+	erofs_default_options(fc->fs_private);
-+
-+	fc->ops = &erofs_context_ops;
-+
-+	return 0;
- }
- 
- /*
-@@ -497,7 +493,7 @@ static void erofs_put_super(struct super_block *sb)
- static struct file_system_type erofs_fs_type = {
- 	.owner          = THIS_MODULE,
- 	.name           = "erofs",
--	.mount          = erofs_mount,
-+	.init_fs_context = erofs_init_fs_context,
- 	.kill_sb        = erofs_kill_sb,
- 	.fs_flags       = FS_REQUIRES_DEV,
- };
-@@ -578,61 +574,38 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
- static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- {
- 	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
-+	struct erofs_fs_context *ctx __maybe_unused = &sbi->ctx;
- 
- #ifdef CONFIG_EROFS_FS_XATTR
--	if (test_opt(sbi, XATTR_USER))
-+	if (test_opt(ctx, XATTR_USER))
- 		seq_puts(seq, ",user_xattr");
- 	else
- 		seq_puts(seq, ",nouser_xattr");
- #endif
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
--	if (test_opt(sbi, POSIX_ACL))
-+	if (test_opt(ctx, POSIX_ACL))
- 		seq_puts(seq, ",acl");
- 	else
- 		seq_puts(seq, ",noacl");
- #endif
- #ifdef CONFIG_EROFS_FS_ZIP
--	if (sbi->cache_strategy == EROFS_ZIP_CACHE_DISABLED) {
-+	if (ctx->cache_strategy == EROFS_ZIP_CACHE_DISABLED) {
- 		seq_puts(seq, ",cache_strategy=disabled");
--	} else if (sbi->cache_strategy == EROFS_ZIP_CACHE_READAHEAD) {
-+	} else if (ctx->cache_strategy == EROFS_ZIP_CACHE_READAHEAD) {
- 		seq_puts(seq, ",cache_strategy=readahead");
--	} else if (sbi->cache_strategy == EROFS_ZIP_CACHE_READAROUND) {
-+	} else if (ctx->cache_strategy == EROFS_ZIP_CACHE_READAROUND) {
- 		seq_puts(seq, ",cache_strategy=readaround");
- 	}
- #endif
- 	return 0;
- }
- 
--static int erofs_remount(struct super_block *sb, int *flags, char *data)
--{
--	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	unsigned int org_mnt_opt = sbi->mount_opt;
--	int err;
--
--	DBG_BUGON(!sb_rdonly(sb));
--	err = erofs_parse_options(sb, data);
--	if (err)
--		goto out;
--
--	if (test_opt(sbi, POSIX_ACL))
--		sb->s_flags |= SB_POSIXACL;
--	else
--		sb->s_flags &= ~SB_POSIXACL;
--
--	*flags |= SB_RDONLY;
--	return 0;
--out:
--	sbi->mount_opt = org_mnt_opt;
--	return err;
--}
--
- const struct super_operations erofs_sops = {
- 	.put_super = erofs_put_super,
- 	.alloc_inode = erofs_alloc_inode,
- 	.free_inode = erofs_free_inode,
- 	.statfs = erofs_statfs,
- 	.show_options = erofs_show_options,
--	.remount_fs = erofs_remount,
- };
- 
- module_init(erofs_module_init);
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index b766c3ee5fa8..87e437e7b34f 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -422,7 +422,7 @@ static int shared_getxattr(struct inode *inode, struct getxattr_iter *it)
- 
- static bool erofs_xattr_user_list(struct dentry *dentry)
- {
--	return test_opt(EROFS_SB(dentry->d_sb), XATTR_USER);
-+	return test_opt(&EROFS_SB(dentry->d_sb)->ctx, XATTR_USER);
- }
- 
- static bool erofs_xattr_trusted_list(struct dentry *dentry)
-@@ -469,7 +469,7 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
- 
- 	switch (handler->flags) {
- 	case EROFS_XATTR_INDEX_USER:
--		if (!test_opt(sbi, XATTR_USER))
-+		if (!test_opt(&sbi->ctx, XATTR_USER))
- 			return -EOPNOTSUPP;
- 		break;
- 	case EROFS_XATTR_INDEX_TRUSTED:
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 80e47f07d946..b21aaf1b3998 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -613,7 +613,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		goto err_out;
- 
- 	/* preload all compressed pages (maybe downgrade role if necessary) */
--	if (should_alloc_managed_pages(fe, sbi->cache_strategy, map->m_la))
-+	if (should_alloc_managed_pages(fe, sbi->ctx.cache_strategy, map->m_la))
- 		cache_strategy = DELAYEDALLOC;
- 	else
- 		cache_strategy = DONTALLOC;
-@@ -1300,7 +1300,7 @@ static int z_erofs_readpage(struct file *file, struct page *page)
- static bool should_decompress_synchronously(struct erofs_sb_info *sbi,
- 					    unsigned int nr)
- {
--	return nr <= sbi->max_sync_decompress_pages;
-+	return nr <= sbi->ctx.max_sync_decompress_pages;
- }
- 
- static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+For example, if we have bit 3 (nr = 3) and got it in the clear bit we will
+get (according to what I see in the warnings) 0xfffffff7. Which is simple
+~(1 << 3) promoted to integer.
+
+I think it is a C standard which dictates this, compiler just follows.
+
+> Verified with a test module (see next patch) and assembly inspection
+> that the patch doesn't introduce any change in generated code.
+> 
+> Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> ---
+> v5: changed code to use simple AND and XOR, updated commit message
+> v4: reverse argument order as suggested by David Laight, added reviewed-by
+> v3: Clean up the header file changes as per peterz.
+> v2: use correct CC: list
+> ---
+>  arch/x86/include/asm/bitops.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index 062cdecb2f24..53f246e9df5a 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+>  	if (__builtin_constant_p(nr)) {
+>  		asm volatile(LOCK_PREFIX "orb %1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" ((u8)CONST_MASK(nr))
+> +			: "iq" (CONST_MASK(nr) & 0xff)
+>  			: "memory");
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+>  	if (__builtin_constant_p(nr)) {
+>  		asm volatile(LOCK_PREFIX "andb %1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" ((u8)~CONST_MASK(nr)));
+> +			: "iq" (CONST_MASK(nr) ^ 0xff));
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+>  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+> 
+> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+> -- 
+> 2.24.1
+> 
+
 -- 
-2.18.0.rc1
+With Best Regards,
+Andy Shevchenko
+
 
