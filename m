@@ -2,180 +2,172 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D33C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA08EC35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797E520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816B020CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ln0sQVdZ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nNIJ0ufs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbgBYUHz (ORCPT
+        id S1731403AbgBYUJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:07:55 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32990 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731226AbgBYUHy (ORCPT
+        Tue, 25 Feb 2020 15:09:59 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34387 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729007AbgBYUJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:07:54 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n7so140240pfn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:07:53 -0800 (PST)
+        Tue, 25 Feb 2020 15:09:59 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l16so585688qtq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:09:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pLqQrmSsfufbn5Lcx5rtfXc4bHifFStx1l8So98nJPs=;
-        b=ln0sQVdZxk7+oBHy4Mw4CgpRf4BL0Gsj5oTETS0kuKyPfhtz+uBGKpJEGEwWx+jr2K
-         +ovoysMjt8c67QUjI18K1ZPwf6c+o1q95zCWZZiqR/coNQwp4fzR9gE2yB5t0U6YpEA3
-         gBkN9TYn1tzX4z2DSPhulsCAEqf9iA84ez2u0=
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Tim+DLUAfFeDyhqD6kF9gBE+5IE19Obb7iXnkkMIXUE=;
+        b=nNIJ0ufsH4VX2yJe5hHsXZRbrjB2QGvyHTUhnDGJ729iI3IWfYfcSrHlI6pogdXUco
+         EU/ebHZF8GhhN0ZpwXX3UeoZi4qMkV09ktdBU9ZHOFRHE1gbBKw3pOPgCR9EzR4IStkH
+         5+W35rirNzdEz7QouUWCfrvp8VHpopTE+HObvvNYhnzbi7ifbDpIWGveEr0e4rbIXDt0
+         UbTYn1NwXf9sYb79HlbjVJSECv4WsdprvQlXsdVmluFeHEyhaSFSTrsBS/UUNgVionRY
+         hVtrEDxO7m+jEXvzmCuNnLle63KT3s8eURdlTVs46ZGpvXUU8Uz4nmdzrz3O0nd9IdWL
+         Odkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pLqQrmSsfufbn5Lcx5rtfXc4bHifFStx1l8So98nJPs=;
-        b=G/Il7l8f/BJ54e+x5QA9i0TiRdhD8qKiVNFsrWtDEvDu8H9JrSQm3YnUL9XvA+dNTT
-         VanrPXTmUqJElymP8EeDxWvNHAgOe6ZKihtAgc2t31HRArkue1bv+6aaKcfftVBT5SWY
-         6ARetVQgJYcRpO7lbXv7l+Db9wmLFq9gcvnsWJGySFuvGaLnm9/OxNIrczzcLGiQI1Dq
-         rOIIwoRsbmUFwpt06wCcMxhud1r8A2ncqGFRgWWtsiaZaYzG6vDqQr9DZ38wkAHWC4Vo
-         MvP5kulFhC9DTbd3BYDPSl77+xkH+aJ+TjTq78WXITdWcUS3f1BbKnY+KK+kKjvmqVMR
-         KaKQ==
-X-Gm-Message-State: APjAAAVBRzCRfPuqgKneGK9VnMfFRJ9z6pZvl06bFfrxVDiSmBNaHYrX
-        Rjc6l8jPbCQGcIvyIe/lpCuwGg==
-X-Google-Smtp-Source: APXvYqxMX/WV3XkMcn5ipPdDK8VHcVF6Rk0rk84BxmiB5bgazlkLe7cj/gWW6MgxEhOkWPEKKhUWUA==
-X-Received: by 2002:a63:4a47:: with SMTP id j7mr241277pgl.196.1582661272585;
-        Tue, 25 Feb 2020 12:07:52 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v7sm17487346pfn.61.2020.02.25.12.07.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 12:07:51 -0800 (PST)
-Date:   Tue, 25 Feb 2020 12:07:50 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Subject: Re: [RFC PATCH v9 06/27] mm: Introduce VM_SHSTK for Shadow Stack
- memory
-Message-ID: <202002251207.8EB036A712@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-7-yu-cheng.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205181935.3712-7-yu-cheng.yu@intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Tim+DLUAfFeDyhqD6kF9gBE+5IE19Obb7iXnkkMIXUE=;
+        b=issRJXqIeeiSehwJS+3+nWtT4l7aAlahQm5etAe81Eljcka/+3j+XDTlSjdmBE1UDn
+         55nwgReeDE067MkPGcP62Tkr9z9P8JHQLMKufDvtI2eTbfP+eUKCezJ5mwkq1vgvVe0c
+         ZhCL3d4Uu3RLFxB8VlVXhmnfmU+1UG9dphaeNZS9nQyZVpBOSJj2w9wBUnIBF+dXrvyv
+         JKOT1uiTnrSZOK6xZKdg7Zgzp2ym/1dxnDW/l0YM+MCE+N3EWZoeOPq4AdXwSONWw+5z
+         mN3/Gc2tho5WjGii6peGBdytM/xwubnJ0JocTU8nsSG9Ij0gmuzkDwODfI8pCiv1ctbY
+         3xzA==
+X-Gm-Message-State: APjAAAUV/Fo0M28ei+oTvE+BzhVS/dfJ+9cO/WYxBKxIVauiKAeGSo/T
+        kfEAoAMqmSCsN6lfkuQNi6iqIQ==
+X-Google-Smtp-Source: APXvYqyeuw4PTwffQvUbSdbTrorvpXA+z80Gkiy4Wn3zLV3XMj+sRQJrg6D4RfuzoazhHUX5wHoHRw==
+X-Received: by 2002:ac8:7152:: with SMTP id h18mr389503qtp.349.1582661398025;
+        Tue, 25 Feb 2020 12:09:58 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id e130sm7786253qkb.72.2020.02.25.12.09.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 12:09:57 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     darrick.wong@oracle.com
+Cc:     elver@google.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] xfs: fix data races in inode->i_*time
+Date:   Tue, 25 Feb 2020 15:09:45 -0500
+Message-Id: <1582661385-30210-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:19:14AM -0800, Yu-cheng Yu wrote:
-> A Shadow Stack (SHSTK) PTE must be read-only and have _PAGE_DIRTY set.
-> However, read-only and Dirty PTEs also exist for copy-on-write (COW) pages.
-> These two cases are handled differently for page faults and a new VM flag
-> is necessary for tracking SHSTK VMAs.
-> 
-> v9:
-> - Add VM_SHSTK case to arch_vma_name().
-> - Revise the commit log to explain why a new VM flag is needed.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+inode->i_*time could be accessed concurrently. The plain reads in
+xfs_vn_getattr() is lockless which result in data races. To avoid bad
+compiler optimizations like load tearing, adding pairs of
+READ|WRITE_ONCE(). While at it, also take care of xfs_setattr_time()
+which presumably could run concurrently with xfs_vn_getattr() as well.
+The data races were reported by KCSAN,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+ write to 0xffff9275a1920ad8 of 16 bytes by task 47311 on cpu 46:
+  xfs_vn_update_time+0x1b0/0x400 [xfs]
+  xfs_vn_update_time at fs/xfs/xfs_iops.c:1122
+  update_time+0x57/0x80
+  file_update_time+0x143/0x1f0
+  __xfs_filemap_fault+0x1be/0x3d0 [xfs]
+  xfs_filemap_page_mkwrite+0x25/0x40 [xfs]
+  do_page_mkwrite+0xf7/0x250
+  do_fault+0x679/0x920
+  __handle_mm_fault+0xc9f/0xd40
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
--Kees
+ 4 locks held by doio/47311:
+  #0: ffff9275e7d70808 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x143/0x6f9
+  #1: ffff9274864394d8 (sb_pagefaults){.+.+}, at: __xfs_filemap_fault+0x19b/0x3d0 [xfs]
+  #2: ffff9274864395b8 (sb_internal){.+.+}, at: xfs_trans_alloc+0x2af/0x3c0 [xfs]
+  #3: ffff9275a1920920 (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0x116/0x2c0 [xfs]
+ irq event stamp: 42649
+ hardirqs last  enabled at (42649): [<ffffffffb22dcdb3>] _raw_spin_unlock_irqrestore+0x53/0x60
+ hardirqs last disabled at (42648): [<ffffffffb22dcad1>] _raw_spin_lock_irqsave+0x21/0x60
+ softirqs last  enabled at (42306): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
+ softirqs last disabled at (42299): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
 
-> ---
->  arch/x86/mm/mmap.c | 2 ++
->  fs/proc/task_mmu.c | 3 +++
->  include/linux/mm.h | 8 ++++++++
->  3 files changed, 13 insertions(+)
-> 
-> diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-> index aae9a933dfd4..482813b4c659 100644
-> --- a/arch/x86/mm/mmap.c
-> +++ b/arch/x86/mm/mmap.c
-> @@ -165,6 +165,8 @@ const char *arch_vma_name(struct vm_area_struct *vma)
->  {
->  	if (vma->vm_flags & VM_MPX)
->  		return "[mpx]";
-> +	else if (vma->vm_flags & VM_SHSTK)
-> +		return "[shadow stack]";
->  	return NULL;
->  }
->  
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 9442631fd4af..590b58ee008a 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -687,6 +687,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->  		[ilog2(VM_PKEY_BIT4)]	= "",
->  #endif
->  #endif /* CONFIG_ARCH_HAS_PKEYS */
-> +#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-> +		[ilog2(VM_SHSTK)]	= "ss",
-> +#endif
->  	};
->  	size_t i;
->  
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index cfaa8feecfe8..b5145fbe102e 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -298,11 +298,13 @@ extern unsigned int kobjsize(const void *objp);
->  #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
->  #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
->  #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
-> +#define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
->  #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
->  #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
->  #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
->  #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
->  #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
-> +#define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
->  #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
->  
->  #ifdef CONFIG_ARCH_HAS_PKEYS
-> @@ -340,6 +342,12 @@ extern unsigned int kobjsize(const void *objp);
->  # define VM_MPX		VM_NONE
->  #endif
->  
-> +#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-> +# define VM_SHSTK	VM_HIGH_ARCH_5
-> +#else
-> +# define VM_SHSTK	VM_NONE
-> +#endif
-> +
->  #ifndef VM_GROWSUP
->  # define VM_GROWSUP	VM_NONE
->  #endif
-> -- 
-> 2.21.0
-> 
+ read to 0xffff9275a1920ad8 of 16 bytes by task 47312 on cpu 40:
+  xfs_vn_getattr+0x20c/0x6a0 [xfs]
+  xfs_vn_getattr at fs/xfs/xfs_iops.c:551
+  vfs_getattr_nosec+0x11a/0x170
+  vfs_statx_fd+0x54/0x90
+  __do_sys_newfstat+0x40/0x90
+  __x64_sys_newfstat+0x3a/0x50
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+ no locks held by doio/47312.
+ irq event stamp: 43883
+ hardirqs last  enabled at (43883): [<ffffffffb1805119>] do_syscall_64+0x39/0xb05
+ hardirqs last disabled at (43882): [<ffffffffb1803ede>] trace_hardirqs_off_thunk+0x1a/0x1c
+ softirqs last  enabled at (43844): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
+ softirqs last disabled at (43141): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ fs/xfs/xfs_iops.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index 81f2f93caec0..2d5ca13ee9da 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -547,9 +547,9 @@
+ 	stat->uid = inode->i_uid;
+ 	stat->gid = inode->i_gid;
+ 	stat->ino = ip->i_ino;
+-	stat->atime = inode->i_atime;
+-	stat->mtime = inode->i_mtime;
+-	stat->ctime = inode->i_ctime;
++	stat->atime = READ_ONCE(inode->i_atime);
++	stat->mtime = READ_ONCE(inode->i_mtime);
++	stat->ctime = READ_ONCE(inode->i_ctime);
+ 	stat->blocks =
+ 		XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
+ 
+@@ -614,11 +614,11 @@
+ 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+ 
+ 	if (iattr->ia_valid & ATTR_ATIME)
+-		inode->i_atime = iattr->ia_atime;
++		WRITE_ONCE(inode->i_atime, iattr->ia_atime);
+ 	if (iattr->ia_valid & ATTR_CTIME)
+-		inode->i_ctime = iattr->ia_ctime;
++		WRITE_ONCE(inode->i_ctime, iattr->ia_ctime);
+ 	if (iattr->ia_valid & ATTR_MTIME)
+-		inode->i_mtime = iattr->ia_mtime;
++		WRITE_ONCE(inode->i_mtime, iattr->ia_mtime);
+ }
+ 
+ static int
+@@ -1117,11 +1117,11 @@
+ 
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 	if (flags & S_CTIME)
+-		inode->i_ctime = *now;
++		WRITE_ONCE(inode->i_ctime, *now);
+ 	if (flags & S_MTIME)
+-		inode->i_mtime = *now;
++		WRITE_ONCE(inode->i_mtime, *now);
+ 	if (flags & S_ATIME)
+-		inode->i_atime = *now;
++		WRITE_ONCE(inode->i_atime, *now);
+ 
+ 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+ 	xfs_trans_log_inode(tp, ip, log_flags);
 -- 
-Kees Cook
+1.8.3.1
+
