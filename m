@@ -2,178 +2,167 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32682C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3393FC4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F423221D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3B32176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="qBqQtyvD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mGnOqthE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgBYXIz (ORCPT
+        id S1729203AbgBYXOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:08:55 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:36999 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728806AbgBYXIz (ORCPT
+        Tue, 25 Feb 2020 18:14:30 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35854 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728989AbgBYXO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:08:55 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 501A22304C;
-        Wed, 26 Feb 2020 00:08:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582672133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lu9/4txrqSbNm1WLkzOFGzQzJ4skJABQr2+n6FdHMgQ=;
-        b=qBqQtyvDMbuQT+9D7uL71AfMzBul8U6m8h45VHhFjmOUlViFlhUL7RMUPqyjGNFWJ4axOj
-        kvD6SOKQvmE0gdhmBXp3ihkpWGHjOD3ZFR4BKI5ztQFZ5m1rrO+U2sPBJKzQv25kCTVXBk
-        qBw9bToymiPhYrYZ48zNXUmmJr/7JEQ=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [RFC PATCH 1/2] net: phy: let the driver register its own IRQ handler
-Date:   Wed, 26 Feb 2020 00:08:18 +0100
-Message-Id: <20200225230819.7325-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200225230819.7325-1-michael@walle.cc>
-References: <20200225230819.7325-1-michael@walle.cc>
+        Tue, 25 Feb 2020 18:14:29 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 185so390318pfv.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:14:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ik1zuiqE8i76YJubrnNTmer8KABpIWbp2agVMhEd0M4=;
+        b=mGnOqthEowg2FBXNkXluMN/hRl1lQRj0tN9t5NB1i2gWmfosFiPkJONAvhfT1xHrpU
+         oFKHf+ib2VqZgZN1/abWJvJ5NkBYY9WoXLPdrL45U4fjYYOF390hDPCIo0cwMj9846xy
+         qb1tnlwKk8nzmFrJmtCs1aI5w/oJWQOhdTJb4L0Sv/zqZNUccZUWdoAFMVc61Xtizm0H
+         THNvtbfv35/H2buOTn1Rtq1VkI/BbGTr6Jo15myWk9gRq4BEhEjRnEytFdJ6mue3jSfz
+         L50sbyM4EuxkZKY0mm9oU8CcZyDzDRL8IvLxS+ejiqSOVUAOA+f1/c74w7XTKaooSDh1
+         VAog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ik1zuiqE8i76YJubrnNTmer8KABpIWbp2agVMhEd0M4=;
+        b=WaENS0FK46hPz7U1+mXArNfZGtAn4mdJHIv6eR1YI/hTdHswDDE1+vtWdy2kCqdpAB
+         VeEHpUQ8ivtPAJX8J1QWwDwd3wAmVNJId1gWZ612b9DabMW9eYFFB75vg6rLsJvTnr0C
+         PjBvSs9Hust4zAy/u1K28GfA2r+KNFT5aI+k+JK6NDGgLuEH2NB0QBd0p3V89sOftxyr
+         45bWFQlt6wHWP62dGRbi5qwmgRzHht0ov3H9BLhr0L8BVPCYXa7VxqOhDvLtTau7i4uW
+         X4J+eW5UxW3FhnxnVnjn/3qqJuV5TJZV9RjArwMkaupZ7Zps8I+I1vbLok4YM9jWPB55
+         cLlw==
+X-Gm-Message-State: APjAAAVQxRqWFb+WF/UlGfK4poj0gvPkHk+2mV3vx4vPbQxOLs7rdhtq
+        9f3p5Zn5I8xLkIX7JaHaOBukHA==
+X-Google-Smtp-Source: APXvYqwDkSgemuveBIsYIy/dIT5xtOS3wUx5uGf0cTYtvCxSEWAdnhLqNQZgETOPI9K2NzHT19/+Ug==
+X-Received: by 2002:a62:3892:: with SMTP id f140mr1097196pfa.190.1582672467127;
+        Tue, 25 Feb 2020 15:14:27 -0800 (PST)
+Received: from [100.112.92.218] ([104.133.9.106])
+        by smtp.gmail.com with ESMTPSA id w8sm134400pfn.186.2020.02.25.15.14.25
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 25 Feb 2020 15:14:26 -0800 (PST)
+Date:   Tue, 25 Feb 2020 15:14:05 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Chris Down <chris@chrisdown.name>
+cc:     Hugh Dickins <hughd@google.com>,
+        Dave Chinner <david@fromorbit.com>, Chris Mason <clm@fb.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Mikael Magnusson <mikachu@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
+In-Reply-To: <20200120151117.GA81113@chrisdown.name>
+Message-ID: <alpine.LSU.2.11.2002251422370.8029@eggly.anvils>
+References: <20200107001643.GA485121@chrisdown.name> <20200107003944.GN23195@dread.disaster.area> <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com> <alpine.LSU.2.11.2001070002040.1496@eggly.anvils> <CAOQ4uxiMQ3Oz4M0wKo5FA_uamkMpM1zg7ydD8FXv+sR9AH_eFA@mail.gmail.com>
+ <20200107210715.GQ23195@dread.disaster.area> <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com> <alpine.LSU.2.11.2001080259350.1884@eggly.anvils> <20200110164503.GA1697@chrisdown.name> <alpine.LSU.2.11.2001122259120.3471@eggly.anvils>
+ <20200120151117.GA81113@chrisdown.name>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 501A22304C
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.962];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[9];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are more and more PHY drivers which has more than just the PHY
-link change interrupts. For example, temperature thresholds or PTP
-interrupts.
+On Mon, 20 Jan 2020, Chris Down wrote:
+> Hi Hugh,
+> 
+> Sorry this response took so long, I had some non-work issues that took a lot
+> of time last week.
 
-At the moment it is not possible to correctly handle interrupts for PHYs
-which has a clear-on-read interrupt status register. It is also likely
-that the current approach of the phylib isn't working for all PHYs out
-there.
+No, clearly it's I who must apologize to you for very slow response.
 
-Therefore, this patch let the PHY driver register its own interrupt
-handler. To notify the phylib about a link change, the interrupt handler
-has to call the new function phy_drv_interrupt().
+> 
+> Hugh Dickins writes:
+> > 
+> > So the "inode64" option will be accepted but redundant on mounting,
+> > but exists for use as a remount option after mounting or remounting
+> > with "inode32": allowing the admin to switch temporarily to mask off
+> > the high ino bits with "inode32" when needing to run a limited binary.
+> > 
+> > Documentation and commit message to alert Andrew and Linus and distros
+> > that we are risking some breakage with this, but supplying the antidote
+> > (not breakage of any distros themselves, no doubt they're all good;
+> > but breakage of what some users might run on them).
+> 
+> Sounds good.
+> 
+> > > 
+> > > Other than that, the first patch could be similar to how it is now,
+> > > incorporating Hugh's improvements to the first patch to put everything
+> > > under
+> > > the same stat_lock in shmem_reserve_inode.
+> > 
+> > So, I persuaded Amir to the other aspects my version, but did not
+> > persuade you?  Well, I can live with that (or if not, can send mods
+> > on top of yours): but please read again why I was uncomfortable with
+> > yours, to check that you still prefer it (I agree that your patch is
+> > simpler, and none of my discomfort decisive).
+> 
+> Hmm, which bit were you thinking of? The lack of batching, shmem_encode_fh(),
+> or the fact that nr_inodes can now be 0 on non-internal mounts?
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/phy/phy.c        | 15 +++++++++++++++
- drivers/net/phy/phy_device.c |  6 ++++--
- include/linux/phy.h          |  2 ++
- 3 files changed, 21 insertions(+), 2 deletions(-)
+I was uncomfortable with tmpfs depleting get_next_ino()'s pool in some
+configurations, and wanted the (get_next_ino-like) per-cpu but per-sb
+batching for nr_inodes=0, to minimize its stat_lock contention.
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index d76e038cf2cb..f25aacbcf1d9 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -942,6 +942,21 @@ void phy_mac_interrupt(struct phy_device *phydev)
- }
- EXPORT_SYMBOL(phy_mac_interrupt);
- 
-+/**
-+ * phy_drv_interrupt - PHY drivers says the link has changed
-+ * @phydev: phy_device struct with changed link
-+ *
-+ * The PHY driver may implement his own interrupt handler. It will call this
-+ * function to notify us about a link change. Trigger the state machine and
-+ * work a work queue.
-+ */
-+void phy_drv_interrupt(struct phy_device *phydev)
-+{
-+	/* Trigger a state machine change */
-+	phy_trigger_machine(phydev);
-+}
-+EXPORT_SYMBOL(phy_drv_interrupt);
-+
- static void mmd_eee_adv_to_linkmode(unsigned long *advertising, u16 eee_adv)
- {
- 	linkmode_zero(advertising);
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6a5056e0ae77..6d8c94e61251 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -965,7 +965,8 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
- 		return rc;
- 
- 	phy_prepare_link(phydev, handler);
--	if (phy_interrupt_is_valid(phydev))
-+	if (phy_interrupt_is_valid(phydev) &&
-+	    phydev->drv->flags & PHY_HAS_OWN_IRQ_HANDLER)
- 		phy_request_interrupt(phydev);
- 
- 	return 0;
-@@ -2411,7 +2412,8 @@ EXPORT_SYMBOL(phy_validate_pause);
- 
- static bool phy_drv_supports_irq(struct phy_driver *phydrv)
- {
--	return phydrv->config_intr && phydrv->ack_interrupt;
-+	return ((phydrv->config_intr && phydrv->ack_interrupt) ||
-+		phydrv->flags & PHY_HAS_OWN_IRQ_HANDLER);
- }
- 
- /**
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index c570e162e05e..46f73b94fd60 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -75,6 +75,7 @@ extern const int phy_10gbit_features_array[1];
- 
- #define PHY_IS_INTERNAL		0x00000001
- #define PHY_RST_AFTER_CLK_EN	0x00000002
-+#define PHY_HAS_OWN_IRQ_HANDLER	0x00000004
- #define MDIO_DEVICE_IS_PHY	0x80000000
- 
- /* Interface Mode definitions */
-@@ -1235,6 +1236,7 @@ int phy_drivers_register(struct phy_driver *new_driver, int n,
- void phy_state_machine(struct work_struct *work);
- void phy_queue_state_machine(struct phy_device *phydev, unsigned long jiffies);
- void phy_mac_interrupt(struct phy_device *phydev);
-+void phy_drv_interrupt(struct phy_device *phydev);
- void phy_start_machine(struct phy_device *phydev);
- void phy_stop_machine(struct phy_device *phydev);
- void phy_ethtool_ksettings_get(struct phy_device *phydev,
--- 
-2.20.1
+I did not have a patch to shmem_encode_fh(), had gone through thinking
+that 64-bit inos made an additional fix there necessary; but Amir then
+educated us that it is safe as is, though could be cleaned up later.
 
+nr_inodes can be 0 on non-internal mounts, for many years.
+
+> 
+> For batching, I'm neutral. I'm happy to use the approach from your patch and
+> integrate it (and credit you, of course).
+
+Credit not important, but you may well want to blame me for that
+complication :)
+
+> 
+> For shmem_encode_fh, I'm not totally sure I understand the concern, if that's
+> what you mean.
+
+My concern had been that shmem_encode_fh() builds up an fh from i_ino
+and more, looks well prepared for a 64-bit ino, but appeared to be
+announcing a 32-bit ino in its return value: Amir reassures us that
+that return value does not matter.
+
+> 
+> For nr_inodes, I agree that intentional or unintentional, we should at least
+> handle this case for now and can adjust later if the behaviour changes.
+
+nr_inodes=0 is an intentional configuration (but 0 denoting infinity:
+not very clean, and I've sometimes regretted that choice).
+
+If there's any behavior change, that's a separate matter from these
+64-bit ino patches; maybe I mentioned it in passing and confused us -
+that we seem to have recently allowed a remounting limited<->unlimited
+that was not permitted before, and might or might not need a fix patch.
+
+Sorry again for delaying you, Chris: not at all what I'd wanted to do.
+Hugh
