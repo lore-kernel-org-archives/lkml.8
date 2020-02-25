@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D95C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC626C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6963620726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7AF22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgBYNWd (ORCPT
+        id S1730468AbgBYNWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:22:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33185 "EHLO
+        Tue, 25 Feb 2020 08:22:15 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33159 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730430AbgBYNWQ (ORCPT
+        with ESMTP id S1730384AbgBYNWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:22:16 -0500
+        Tue, 25 Feb 2020 08:22:14 -0500
 Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j6aA9-0008Ie-Qg; Tue, 25 Feb 2020 13:22:13 +0000
+        id 1j6aA8-0008Ie-2w; Tue, 25 Feb 2020 13:22:12 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -36,9 +35,9 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Stephen Hemminger <stephen@networkplumber.org>,
         linux-pm@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v6 9/9] net: fix sysfs permssions when device changes network namespace
-Date:   Tue, 25 Feb 2020 14:19:38 +0100
-Message-Id: <20200225131938.120447-10-christian.brauner@ubuntu.com>
+Subject: [PATCH v6 6/9] drivers/base/power: add dpm_sysfs_change_owner()
+Date:   Tue, 25 Feb 2020 14:19:35 +0100
+Message-Id: <20200225131938.120447-7-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200225131938.120447-1-christian.brauner@ubuntu.com>
 References: <20200225131938.120447-1-christian.brauner@ubuntu.com>
@@ -49,64 +48,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we moved all the helpers in place and make use netdev_change_owner()
-to fixup the permissions when moving network devices between network
-namespaces.
+Add a helper to change the owner of a device's power entries. This
+needs to happen when the ownership of a device is changed, e.g. when
+moving network devices between network namespaces.
+This function will be used to correctly account for ownership changes,
+e.g. when moving network devices between network namespaces.
 
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v2 */
-unchanged
+- "Rafael J. Wysocki" <rafael@kernel.org>:
+  -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
+     if (device_can_wakeup(dev)) check since the former can never be true if
+     the latter is false.
+
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
+    CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
+    when this config option is set.
 
 /* v3 */
-unchanged
+-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+   - Add explicit uid/gid parameters.
 
 /* v4 */
-unchanged
+- "Rafael J. Wysocki" <rafael@kernel.org>:
+   - Remove in-function #ifdef in favor of separate helper that is a nop
+     whenver !CONFIG_PM_SLEEP.
 
 /* v5 */
-unchanged
+- "Rafael J. Wysocki" <rafael@kernel.org>:
+   - Return directly if condition is true in dpm_sysfs_wakeup_change_owner()
+     instead of using additional variable.
 
 /* v6 */
-unchanged
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Make dpm_sysfs_wakeup_change_owner() static inline.
 ---
- net/core/dev.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/base/core.c        |  4 +++
+ drivers/base/power/power.h |  3 +++
+ drivers/base/power/sysfs.c | 55 +++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index a69e8bd7ed74..0f9c4684fcbd 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10016,6 +10016,7 @@ EXPORT_SYMBOL(unregister_netdev);
- 
- int dev_change_net_namespace(struct net_device *dev, struct net *net, const char *pat)
- {
-+	struct net *net_old = dev_net(dev);
- 	int err, new_nsid, new_ifindex;
- 
- 	ASSERT_RTNL();
-@@ -10031,7 +10032,7 @@ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char
- 
- 	/* Get out if there is nothing todo */
- 	err = 0;
--	if (net_eq(dev_net(dev), net))
-+	if (net_eq(net_old, net))
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 988f34ce2eb0..fb8b7990f6fd 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3552,6 +3552,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+ 	if (error)
  		goto out;
  
- 	/* Pick the destination device name, and ensure
-@@ -10107,6 +10108,12 @@ int dev_change_net_namespace(struct net_device *dev, struct net *net, const char
- 	err = device_rename(&dev->dev, dev->name);
- 	WARN_ON(err);
- 
-+	/* Adapt owner in case owning user namespace of target network
-+	 * namespace is different from the original one.
-+	 */
-+	err = netdev_change_owner(dev, net_old, net);
-+	WARN_ON(err);
++	error = dpm_sysfs_change_owner(dev, kuid, kgid);
++	if (error)
++		goto out;
 +
- 	/* Add the device back in the hashes */
- 	list_netdevice(dev);
+ #ifdef CONFIG_BLOCK
+ 	if (sysfs_deprecated && dev->class == &block_class)
+ 		goto out;
+diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+index 444f5c169a0b..54292cdd7808 100644
+--- a/drivers/base/power/power.h
++++ b/drivers/base/power/power.h
+@@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
+ extern void pm_qos_sysfs_remove_flags(struct device *dev);
+ extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
+ extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
++extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
  
+ #else /* CONFIG_PM */
+ 
+@@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
+ 
+ static inline int dpm_sysfs_add(struct device *dev) { return 0; }
+ static inline void dpm_sysfs_remove(struct device *dev) {}
++static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
++					 kgid_t kgid) { return 0; }
+ 
+ #endif
+ 
+diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+index d7d82db2e4bc..2b99fe1eb207 100644
+--- a/drivers/base/power/sysfs.c
++++ b/drivers/base/power/sysfs.c
+@@ -480,6 +480,14 @@ static ssize_t wakeup_last_time_ms_show(struct device *dev,
+ 	return enabled ? sprintf(buf, "%lld\n", msec) : sprintf(buf, "\n");
+ }
+ 
++static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
++						kgid_t kgid)
++{
++	if (dev->power.wakeup && dev->power.wakeup->dev)
++		return device_change_owner(dev->power.wakeup->dev, kuid, kgid);
++	return 0;
++}
++
+ static DEVICE_ATTR_RO(wakeup_last_time_ms);
+ 
+ #ifdef CONFIG_PM_AUTOSLEEP
+@@ -501,7 +509,13 @@ static ssize_t wakeup_prevent_sleep_time_ms_show(struct device *dev,
+ 
+ static DEVICE_ATTR_RO(wakeup_prevent_sleep_time_ms);
+ #endif /* CONFIG_PM_AUTOSLEEP */
+-#endif /* CONFIG_PM_SLEEP */
++#else /* CONFIG_PM_SLEEP */
++static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
++						kgid_t kgid)
++{
++	return 0;
++}
++#endif
+ 
+ #ifdef CONFIG_PM_ADVANCED_DEBUG
+ static ssize_t runtime_usage_show(struct device *dev,
+@@ -684,6 +698,45 @@ int dpm_sysfs_add(struct device *dev)
+ 	return rc;
+ }
+ 
++int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
++{
++	int rc;
++
++	if (device_pm_not_required(dev))
++		return 0;
++
++	rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
++	if (rc)
++		return rc;
++
++	if (pm_runtime_callbacks_present(dev)) {
++		rc = sysfs_group_change_owner(
++			&dev->kobj, &pm_runtime_attr_group, kuid, kgid);
++		if (rc)
++			return rc;
++	}
++
++	if (device_can_wakeup(dev)) {
++		rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
++					      kuid, kgid);
++		if (rc)
++			return rc;
++
++		rc = dpm_sysfs_wakeup_change_owner(dev, kuid, kgid);
++		if (rc)
++			return rc;
++	}
++
++	if (dev->power.set_latency_tolerance) {
++		rc = sysfs_group_change_owner(
++			&dev->kobj, &pm_qos_latency_tolerance_attr_group, kuid,
++			kgid);
++		if (rc)
++			return rc;
++	}
++	return 0;
++}
++
+ int wakeup_sysfs_add(struct device *dev)
+ {
+ 	return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
 -- 
 2.25.1
 
