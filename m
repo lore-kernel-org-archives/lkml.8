@@ -2,137 +2,112 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92923C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D58EC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66BC821744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B9C21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqRWDHUP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JhDOg00k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbgBYNKv (ORCPT
+        id S1730370AbgBYNLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:10:51 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37149 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBYNKu (ORCPT
+        Tue, 25 Feb 2020 08:11:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52800 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgBYNLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:10:50 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so7168581pfn.4;
-        Tue, 25 Feb 2020 05:10:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NdIi3p1G+pK48BoZW2xQ7s8pQgL985dQmFMs11pogIQ=;
-        b=SqRWDHUPS48bv05ymWTtEWbtaU6DtthfFLOZ1wsFsdOFONm1ay26GExnGv9Tl345Tl
-         HVuFnYYTPNXOPMDICvlrv62A73Uw8gGvceNrRTsyT9bENOEKnCGiBRiJD4rImS8VRZPA
-         VK19KMOxAJIclJoijNvCVwyIpuWLeQDqg6mPEGyPks+595xkaytNoCB6mBqGijGKkDvY
-         Yv7a6pEVGsPGKn1a4KH6Y52oEjKVSZeJfaQmuuv5yfStcW+GPvEalRurj+W8FJ/gXbHo
-         eXwEsLj+M9o/BPp7PtNkAg9zrZmlkSjdythQnWvnPPWKKSlXzpf5K91Z8mJ4NP8URcUP
-         FKMA==
+        Tue, 25 Feb 2020 08:11:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582636281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SrvIza9mOSZ4BvN1tdCV2aqsL8mIKXTuoDQsYHobl7Q=;
+        b=JhDOg00kiFCxaR6G9w1rjs1+2nBr49q+lu7R4YXAh0mDUGIz5qd53S54Xvo+fkSFlvYyuE
+        /xDc/tE76WBcGg73dwdzcbAkPbERulCNO/rFgzH7czhjC8WAj4PWLUNPH5H9WOaj2cduMn
+        f6UHzyW2kt/t9hXdOqwpINgJIvbaOLY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-46-JZvQRT5OMCCtVB_2acBDEA-1; Tue, 25 Feb 2020 08:11:20 -0500
+X-MC-Unique: JZvQRT5OMCCtVB_2acBDEA-1
+Received: by mail-wr1-f69.google.com with SMTP id o6so7256897wrp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 05:11:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NdIi3p1G+pK48BoZW2xQ7s8pQgL985dQmFMs11pogIQ=;
-        b=Gw2HnRY90LtjDBLhqEURiUyYNhj2bQz8ORYVAIPVtscT1KSkLK1qSNxsN/80CXLt7K
-         VvX1eudM5ll/4Q+CdGXNyPTGFzLg677gPzYfWDAqj8r2zU0Lx2N7RgFmnMeAAOPuwX/i
-         1IxgB2vT/7lBPg01x3NlJeB4ue8gFix1u0yisto6Z5UVYlcrLqRvit1pv9C8TpJzh2Jl
-         a3bi9Xqns8J6/nNjvmQ3pb3oMySo8nnR6WBNgPNNvn4XeN/kaUgJ5UvimQd0ysyzZyGf
-         IcJAtVW5SaEUQn1ubt3Vta97wr5wXLimgRYtjz8gxkqT839mb6O/uAYbEkIh837HNieS
-         3niA==
-X-Gm-Message-State: APjAAAURgq0d9V0cg8b7Y3l8+AQmWO5gHAiuOMswAPBtMIxU2h8UrR6x
-        okZ6bOW0fau0OywWKD2hWVQ=
-X-Google-Smtp-Source: APXvYqym5rY6K9md/Bot2AiUakY1J+acKKuoxOz41x81VdMxJZeV6UGEPQhMOPZsxtH1Co4cyMHbnQ==
-X-Received: by 2002:a63:1926:: with SMTP id z38mr56722083pgl.303.1582636250052;
-        Tue, 25 Feb 2020 05:10:50 -0800 (PST)
-Received: from workstation-portable ([103.87.56.186])
-        by smtp.gmail.com with ESMTPSA id d1sm16084363pgi.63.2020.02.25.05.10.45
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=SrvIza9mOSZ4BvN1tdCV2aqsL8mIKXTuoDQsYHobl7Q=;
+        b=i7WqZP6IV21mPv8eSckwaoop9kSeH8pp7opmScnjZCos3OIDUjyDnK7EpBYuwmfjQJ
+         yyhEOoPX3tZ0AnaAOe6dw23dzxuscFmIlpM1LLuD7zFr5C/KdIwJeKv1l0AZcJSB2oRw
+         AlUjhFxm86ZWpGeoa3CnutQgo3Lf7PJqWzfaLzKp2E+u4CMSa4HAa+oe+/Ndqsvq4mSH
+         GSo3YMJhG6TwUjtb0FlV8RbY9564+8zGz6ZuGE4HsbLT03d4e7ci4CKJt0CwRxny4rdU
+         sPXdoCNsjGZm3D7KJy7YkpRShlWl8WtQPLnFX+cU8f+wbEhXg+sCFG67FnIBvECzUmqg
+         0DUg==
+X-Gm-Message-State: APjAAAV7+lZPV+c+yFJax5qpSuqqqc6JlTapCI5khwdINlIS4DYoWMbe
+        BeUCZ60T5CchY28fX1S/mE+Rij6zG5LVgiDWi4qIrivw0cgLnhOfUt2bvbNLMq7UE0QnbAIxIw9
+        91JU3KhfkVw5iqdIa07deR+0a
+X-Received: by 2002:adf:ecc2:: with SMTP id s2mr74647039wro.263.1582636279021;
+        Tue, 25 Feb 2020 05:11:19 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxpadiCu4wJadbmfz9YW8gpthFBOSPDdgS5RXo5AREoIYALFfuLJhgF1HiTZB17D3Z3e8IlUg==
+X-Received: by 2002:adf:ecc2:: with SMTP id s2mr74647024wro.263.1582636278846;
+        Tue, 25 Feb 2020 05:11:18 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a26sm4057339wmm.18.2020.02.25.05.11.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 05:10:49 -0800 (PST)
-Date:   Tue, 25 Feb 2020 18:40:41 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com,
-        paulmck@kernel.org
-Subject: Re: [PATCH 2/2] ipmr: Add lockdep expression to ipmr_for_each_table
- macro
-Message-ID: <20200225131041.GA8660@workstation-portable>
-References: <20200222063835.14328-1-frextrite@gmail.com>
- <20200222063835.14328-2-frextrite@gmail.com>
- <20200224.131801.2179562246092982372.davem@davemloft.net>
+        Tue, 25 Feb 2020 05:11:17 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the specific VM EXIT
+In-Reply-To: <716806df-c0e4-43d5-b082-627d2c312f53@oracle.com>
+References: <20200224020751.1469-1-xiaoyao.li@intel.com> <20200224020751.1469-2-xiaoyao.li@intel.com> <87lfosp9xs.fsf@vitty.brq.redhat.com> <d9744594-4a66-d867-f785-64ce4d42b848@intel.com> <716806df-c0e4-43d5-b082-627d2c312f53@oracle.com>
+Date:   Tue, 25 Feb 2020 14:11:16 +0100
+Message-ID: <877e0an763.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224.131801.2179562246092982372.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:18:01PM -0800, David Miller wrote:
-> From: Amol Grover <frextrite@gmail.com>
-> Date: Sat, 22 Feb 2020 12:08:36 +0530
-> 
-> > ipmr_for_each_table() uses list_for_each_entry_rcu() for
-> > traversing outside of an RCU read-side critical section but
-> > under the protection of pernet_ops_rwsem. Hence add the
-> > corresponding lockdep expression to silence the following
-> > false-positive warning at boot:
-> > 
-> > [    0.645292] =============================
-> > [    0.645294] WARNING: suspicious RCU usage
-> > [    0.645296] 5.5.4-stable #17 Not tainted
-> > [    0.645297] -----------------------------
-> > [    0.645299] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-> > 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> 
-> This patch series causes build problems, please fix and resubmit the entire
-> series:
-> 
-> [davem@localhost net-next]$ make net/ipv4/ipmr.o 
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   DESCEND  objtool
->   CC      net/ipv4/ipmr.o
-> In file included from ./include/linux/rculist.h:11,
->                  from ./include/linux/pid.h:5,
->                  from ./include/linux/sched.h:14,
->                  from ./include/linux/uaccess.h:5,
->                  from net/ipv4/ipmr.c:24:
-> net/ipv4/ipmr.c: In function ‘ipmr_get_table’:
-> ./include/linux/rculist.h:63:25: warning: suggest parentheses around ‘&&’ within ‘||’ [-Wparentheses]
->   RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
-> ./include/linux/rcupdate.h:263:52: note: in definition of macro ‘RCU_LOCKDEP_WARN’
->    if (debug_lockdep_rcu_enabled() && !__warned && (c)) { \
->                                                     ^
-> ./include/linux/rculist.h:381:7: note: in expansion of macro ‘__list_check_rcu’
->   for (__list_check_rcu(dummy, ## cond, 0),   \
->        ^~~~~~~~~~~~~~~~
-> net/ipv4/ipmr.c:113:2: note: in expansion of macro ‘list_for_each_entry_rcu’
->   list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
->   ^~~~~~~~~~~~~~~~~~~~~~~
-> net/ipv4/ipmr.c:138:2: note: in expansion of macro ‘ipmr_for_each_table’
->   ipmr_for_each_table(mrt, net) {
->   ^~~~~~~~~~~~~~~~~~~
+Krish Sadhukhan <krish.sadhukhan@oracle.com> writes:
 
-This is a build warning due to incorrect operator precedence in
-__list_check_rcu macro. This has already been reported and the patch
-submitted [1]. Infact the patch is currently queued for v5.7.
+>
+> We have a macro for bit 31,
+>
+>      VMX_EXIT_REASONS_FAILED_VMENTRY                0x80000000
+>
+>
+> Does it make sense to define a macro like that instead ? Say,
+>
+>      VMX_BASIC_EXIT_REASON        0x0000ffff
+>
 
-[1] https://lore.kernel.org/patchwork/patch/1181886/
+0xffffU ?
 
-Thanks
-Amol
+> and then we do,
+>
+>      u32 exit_reason = vmx->exit_reason;
+>      u16 basic_exit_reason = exit_reason & VMX_BASIC_EXIT_REASON;
+>
+
+Just a naming suggestion: if we decide to go down this road, let's name
+it e.g. VMX_BASIC_EXIT_REASON_MASK to make it clear this is *not* an
+exit reason.  
+
+-- 
+Vitaly
+
