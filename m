@@ -2,115 +2,122 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A82C35DFB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CC7C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80FB21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582625036;
-	bh=C7opyRW/+l907HNE0jf96begBCh8Snm95dN6DgLEDv4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MjxgQwx6p1k+aQZ9IKGLYEAA31sf5LL5r9Y6DUQ6tc3wqOBQvkTDHIvw4Lt668Rbf
-	 JXaw8DqPTvfkRBlOoFErAHhFnLuFcDytFj6Yp/5esNto3sMyM9h1zUEI/Qy4JTTWJR
-	 Bvub8obITAgXlsNOaO5b0/3lii4ppkdZX8DyQ4lc=
+	by mail.kernel.org (Postfix) with ESMTP id 02F1E21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:04:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfMioKOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgBYKDz (ORCPT
+        id S1729878AbgBYKE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:03:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39864 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgBYKDz (ORCPT
+        Tue, 25 Feb 2020 05:04:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33784 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbgBYKE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:03:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so5148524wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 02:03:53 -0800 (PST)
+        Tue, 25 Feb 2020 05:04:28 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so5297715plb.0;
+        Tue, 25 Feb 2020 02:04:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q1TTBZmS5hI2KOUyiQtNES1cxUuECkupynSXNPqJhto=;
+        b=IfMioKOEb4ZGX4URyCr39nDMmmuVD98Q0qIp9+PE2+ehmkIG0Oh8yhQ4HK31B34j8y
+         ya1EA1uK64SnW09YA4XJ96uEB1iFRh/nBBZ97NEAPZMIUEwazKYuQOwK8e19HHNg4lQs
+         vL1ddR7+31PUBBBLovKlEOfNY8wl0ChJdBNubKX4N1uD+RZurVKMhezCLU8xyQLRHq4c
+         1d3qHjbftOktkOTInmKyq+RydeVADbvN4pJvrYP3PB7Wf761F+dKmlbg72RR+BvM3LuT
+         UYjWC6wN6OxrJE4cvjGR2d/BELfi9K1kl7/3ScyqPoWRXxX36U7LoWoLmE6VuFa18td9
+         pFZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J5sz8+yP/6v8aTbTC8x2kZvJpVVQE6WGcOOQCZp7IGA=;
-        b=Psj4qjNOBoDFGEeX8GGJ0PIiG+0tkEZLZ81GoQDVoS5QJzQEHJZ1R/gdtGtmTgDvto
-         znNx5vYL1vlLi0EFSYb6wxdThrco0J0yOBCGLlAj0weqvYDGeAH5mjZrMt8TKOCJ77ce
-         ElAWBHNKG/cwnlpN7Ng1TkgcOVdY62ewpdKASc1/U9WzC2sO0xvM4yZwQnjS7YHJ/X74
-         2hl/g1n1Js5Ft6xBXt3mdl7/89u00bdDqkbnhMKiS9go288J8MqDAOfZY7SjnEM3r9hD
-         1MdH0A3N8FZ+nNqvr1eUnzCVwB0QRK0ax/o5lGJ99FXcxFH3tlcQGvDmI+Wjn9Prh6Pb
-         qF9Q==
-X-Gm-Message-State: APjAAAVNBkVAU3kp0zkQF4zaXUlEypJTzpfUTkM+599MoNWHHllfU24w
-        rQmQu3CmeqkHVpAidSI8LOaYxvyD
-X-Google-Smtp-Source: APXvYqyFr5546l3wp5CiUlxS7XTkzokuV9gkuAos6nPjQfHymkckcp313EWNWoGbu0G328zdI7DHdA==
-X-Received: by 2002:adf:cd03:: with SMTP id w3mr73494632wrm.191.1582625033174;
-        Tue, 25 Feb 2020 02:03:53 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id n13sm3612685wmd.21.2020.02.25.02.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 02:03:52 -0800 (PST)
-Date:   Tue, 25 Feb 2020 11:03:52 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        david@redhat.com, osalvador@suse.de, dan.j.williams@intel.com,
-        rppt@linux.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
- case
-Message-ID: <20200225100352.GN22443@dhcp22.suse.cz>
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220103849.GG20509@dhcp22.suse.cz>
- <20200221142847.GG4937@MiWiFi-R3L-srv>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221142847.GG4937@MiWiFi-R3L-srv>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q1TTBZmS5hI2KOUyiQtNES1cxUuECkupynSXNPqJhto=;
+        b=L0/MCxA4xHXeT+1CpnGO0MwOJNqwsajdAzUS2I1QWg3u+DYpC5uuIz+RXXN98tUcMQ
+         LBKTU7Z+soMTFMTQyuNwND2HuNKoANtpdJTeIjf/PhvDlgi7TgmcsgfophhaDSNDBP29
+         P4ghS6yeSfOPJwIRFTm5TGEH2kfCUkpujhSJQLwqXe/ubYETBMRihIMNiLgJ6A/RWJ2w
+         TVHHYmRmWxRCgTCBbcKTHiW3kJLjAFNlZBOyxbvn8sg92E8vGybbsGrAv+4a+GKZrFQ/
+         LuKDzYqu/BSy3Pg0e0cKYyCbmEXSNC8az98FTVWHF/n3I67NnarUFxytodaj6jllqYJg
+         4Qfw==
+X-Gm-Message-State: APjAAAWb1zEuK/znH7ab7Hs5xYhPf6PHiqdjIqWagna5rDzgivyD4lQ6
+        9+bWyTIzgrGyG+vu3rKfKU4=
+X-Google-Smtp-Source: APXvYqwyKcwx0OfZ2G3eLBjW2d/FUQ74r0ivbu0yGG0sOiBjxUPnVeq3OCbhlIEl0ihomfzutmeD3g==
+X-Received: by 2002:a17:90b:34b:: with SMTP id fh11mr4377690pjb.8.1582625067907;
+        Tue, 25 Feb 2020 02:04:27 -0800 (PST)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id w18sm16172365pge.4.2020.02.25.02.04.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 02:04:27 -0800 (PST)
+From:   guosongsu@gmail.com
+To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guosong Su <suguosong@xiaomi.com>
+Subject: [PATCH] SCSI: use kobj_to_dev
+Date:   Tue, 25 Feb 2020 18:04:11 +0800
+Message-Id: <20200225100411.10250-1-guosongsu@gmail.com>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 21-02-20 22:28:47, Baoquan He wrote:
-> On 02/20/20 at 11:38am, Michal Hocko wrote:
-> > On Thu 20-02-20 12:33:09, Baoquan He wrote:
-> > > Memory sub-section hotplug was added to fix the issue that nvdimm could
-> > > be mapped at non-section aligned starting address. A subsection map is
-> > > added into struct mem_section_usage to implement it. However, sub-section
-> > > is only supported in VMEMMAP case.
-> > 
-> > Why? Is there any fundamental reason or just a lack of implementation?
-> > VMEMMAP should be really only an implementation detail unless I am
-> > missing something subtle.
-> 
-> Thanks for checking.
-> 
-> VMEMMAP is one of two ways to convert a PFN to the corresponding
-> 'struct page' in SPARSE model. I mentioned them as VMEMMAP case, or
-> !VMEMMAP case because we called them like this previously when reviewed
-> patches, hope it won't cause confusion.
-> 
-> Currently, config ZONE_DEVICE depends on SPARSEMEM_VMEMMAP. The
-> subsection_map is added to struct mem_section_usage to track which sub
-> section is present, VMEMMAP fills those bits which corresponding
-> sub-sections are present, while !VMEMMAP, namely classic SPARSE, fills
-> the whole map always.
-> 
-> As we know, VMEMMAP builds page table to map a cluster of 'struct page'
-> into the corresponding area of 'vmemmap'. Subsection hotplug can be
-> supported naturally, w/o any change, just map needed region related to
-> sub-sections on demand. For !VMEMMAP, it allocates memmap with
-> alloc_pages() or vmalloc, thing is a little complicated, e.g the mixed
-> section, boot memory occupies the starting area, later pmem hot added to
-> the rear part.
-> 
-> About !VMEMMAP which doesn't support sub-section hotplog, Dan said 
-> it's more because the effort and maintenance burden outweighs the
-> benefit. And the current 64 bit ARCHes all enable
-> SPARSEMEM_VMEMMAP_ENABLE by default.
+From: Guosong Su <suguosong@xiaomi.com>
 
-OK, if this is the primary argument then make sure to document it in the
-changelog (cover letter).
+Use kobj_to_dev to instead of open-coding it.
+
+Signed-off-by: Guosong Su <suguosong@xiaomi.com>
+---
+ drivers/scsi/scsi_sysfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+index 677b5c5403d2..c3a30ba4ae08 100644
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -856,7 +856,7 @@ show_vpd_##_page(struct file *filp, struct kobject *kobj,	\
+ 		 struct bin_attribute *bin_attr,			\
+ 		 char *buf, loff_t off, size_t count)			\
+ {									\
+-	struct device *dev = container_of(kobj, struct device, kobj);	\
++	struct device *dev = kobj_to_dev(kobj);				\
+ 	struct scsi_device *sdev = to_scsi_device(dev);			\
+ 	struct scsi_vpd *vpd_page;					\
+ 	int ret = -EINVAL;						\
+@@ -884,7 +884,7 @@ static ssize_t show_inquiry(struct file *filep, struct kobject *kobj,
+ 			    struct bin_attribute *bin_attr,
+ 			    char *buf, loff_t off, size_t count)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 
+ 	if (!sdev->inquiry)
+@@ -1181,7 +1181,7 @@ static DEVICE_ATTR(queue_ramp_up_period, S_IRUGO | S_IWUSR,
+ static umode_t scsi_sdev_attr_is_visible(struct kobject *kobj,
+ 					 struct attribute *attr, int i)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 
+ 
+@@ -1207,7 +1207,7 @@ static umode_t scsi_sdev_attr_is_visible(struct kobject *kobj,
+ static umode_t scsi_sdev_bin_attr_is_visible(struct kobject *kobj,
+ 					     struct bin_attribute *attr, int i)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.14.1
+
