@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFA1C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5715C35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C722084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706582084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582651658;
-	bh=eV1aHR34IIGv0aY19DVu54nCFvM3+QmTcuBvtEDQzB8=;
+	s=default; t=1582651750;
+	bh=TSvugZ6AZMmjmOOlSYDQ/kbWU5mPi4HOwCKdo0Hmtg8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z3RlesXqkde2ja6F4cX3vTdS7ifLfV793woYTF3j3s2WplgWU6Ekuzq8yechKkG6G
-	 9tnP1EkBHhaF8B/yXfLqkr4wMUyXEHAlWl5j8Ist/gjcirMXY+73nPYN/7O6AX45GH
-	 CBGid93P1MBap7WTIQ108v4zMqmGUaNLOqvBL7sk=
+	b=UpQPjCnEq5foa7yK8Vw++AuCtMyX3RK2d3FoxyZ85i5MhAgh0GMdBC17zdjbsn974
+	 swov5X73Av3g1ZZ2DoSQrlrBMi3YRDqKa9c5vYg6eUyzJiseDv0JIGSole2lEDr/ci
+	 jEkQ4uomXic9/T0yfNJQgs+K5cTKx4QhQoU+bcmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgBYR1h (ORCPT
+        id S1730865AbgBYR3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:27:37 -0500
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:33012 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728096AbgBYR1h (ORCPT
+        Tue, 25 Feb 2020 12:29:09 -0500
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:38809 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730427AbgBYR3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:27:37 -0500
-Received: by mail-oi1-f172.google.com with SMTP id q81so120267oig.0;
-        Tue, 25 Feb 2020 09:27:36 -0800 (PST)
+        Tue, 25 Feb 2020 12:29:09 -0500
+Received: by mail-oi1-f180.google.com with SMTP id r137so96254oie.5;
+        Tue, 25 Feb 2020 09:29:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ebAN88jVZ70OZv/ZiSU6793X1uKdNcuYESO2iPOfVaw=;
-        b=SaboRLcHnqLOYEAl/QU0TqVW6CdodpSmtWVGW72TJ1Wum9gMsaxXKgmmw9IL1MnTuH
-         SrDSbPT5Tr/Ka+MNiOC/aL0aKFvJRf3nENfOeb13jHFhE7bjIs+8MboT8r9XANwHSj1x
-         QUWPR7RK0lY9vG5pV25A/wGqAcQBgTF/LNmns2FbSv6IuKbh44TDAuLf4tJeY0jiklmr
-         O0b77NIBx7YWIxuPh/uG3OvNCT8kbZsI7XWzRlYmZh4LCXT74TNYTkkVZzk43LNADnmV
-         ez0gQTnjVOMMzNJuYDVbUaRjXvBG5KWeMjaZPKrxq2PSUDU8/7cTzCsJgtpNOPEfFgvc
-         klyg==
-X-Gm-Message-State: APjAAAW0PWxsrWbm/J38h62sCwWGjCzSKLMPMe9QLAIgVSGbbYTyiK8/
-        zKrGWIi3naXrHO1g5FHcXQ==
-X-Google-Smtp-Source: APXvYqxKdXjLhhTfBoU5bclLJIrauIz7kg2W3zD/IxQzo8vji39As2vKYYVeyXaDJd1U5ojWwtMUJQ==
-X-Received: by 2002:a05:6808:618:: with SMTP id y24mr49994oih.86.1582651656206;
-        Tue, 25 Feb 2020 09:27:36 -0800 (PST)
+        bh=i9WEf1lopTCh9mdPytEzlIgO8LHEQJZa98yyLvLlAnU=;
+        b=YGdatUY6i4BnMbFHinnrw6EPSeFhMB5PxvaOQ6+8XAcxwsFYc4PA/z+C6zkMQtktQg
+         scSUQB1jjKlppomho99EwKbWz7zcJ/7IZ4CTfdkP48IF/FCuplIh1oKgbWl7mS25XqK4
+         zaYjqum/HHzh8MQ7IfldC+ubzsRDm0RMrrYvjRHLcDmn+CFWAZB3n1xGHRXikbE6KXoD
+         2WFZRART+BLQJSDL0BPa5b0FDYqBu/4CC53bge7T4wpyRFUh3umCwbHnk5McU+1S2ljf
+         BfLAch5AQf7GBTODau97Lh/PsuClWIbFlzCEQe56J/YzDc3/zEEwlmXRm8RkhTsDfyCT
+         vDuw==
+X-Gm-Message-State: APjAAAWAo8MsInj4SsXcXHH4wB5mQ+gKayl62L5WVm21gv4XmFQEcYVX
+        lXvGNCZfENIzpNeH0XiYbw==
+X-Google-Smtp-Source: APXvYqzgsk4urqoB9f9mZtdmWpTL+TsxcDZcfRf6WQFt93aPBTQJUvh5VIyWcFQZlnJ5HpZnb1J2xQ==
+X-Received: by 2002:aca:c514:: with SMTP id v20mr61682oif.62.1582651748014;
+        Tue, 25 Feb 2020 09:29:08 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i13sm5380358oik.7.2020.02.25.09.27.35
+        by smtp.gmail.com with ESMTPSA id m18sm5848296otf.6.2020.02.25.09.29.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 09:27:35 -0800 (PST)
-Received: (nullmailer pid 29505 invoked by uid 1000);
-        Tue, 25 Feb 2020 17:27:34 -0000
-Date:   Tue, 25 Feb 2020 11:27:34 -0600
+        Tue, 25 Feb 2020 09:29:07 -0800 (PST)
+Received: (nullmailer pid 31776 invoked by uid 1000);
+        Tue, 25 Feb 2020 17:29:06 -0000
+Date:   Tue, 25 Feb 2020 11:29:06 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     richard.gong@linux.intel.com
 Cc:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
@@ -60,30 +60,30 @@ Cc:     gregkh@linuxfoundation.org, mdf@kernel.org, robh+dt@kernel.org,
         linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, richard.gong@linux.intel.com,
         Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1 1/7] dt-bindings: fpga: add compatible value to
- Stratix10 SoC FPGA manager binding
-Message-ID: <20200225172734.GA29404@bogus>
+Subject: Re: [PATCHv1 4/7] dt-bindings, firmware: add compatible value Intel
+ Stratix10 service layer binding
+Message-ID: <20200225172906.GA31720@bogus>
 References: <1581696052-11540-1-git-send-email-richard.gong@linux.intel.com>
- <1581696052-11540-2-git-send-email-richard.gong@linux.intel.com>
+ <1581696052-11540-5-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581696052-11540-2-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <1581696052-11540-5-git-send-email-richard.gong@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 10:00:46 -0600, richard.gong@linux.intel.com wrote:
+On Fri, 14 Feb 2020 10:00:49 -0600, richard.gong@linux.intel.com wrote:
 > From: Richard Gong <richard.gong@intel.com>
 > 
-> Add a compatible property value to Stratix10 SoC FPGA manager binding file
+> A a compatible property value to Intel Stratix10 service layer binding
 > 
 > Signed-off-by: Richard Gong <richard.gong@intel.com>
 > ---
->  .../devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt          | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
