@@ -2,108 +2,105 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5565EC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568E1C35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5EB20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D370218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582626601;
+	bh=UH7mnXQX8TGZmYFmHR4KakrBGZds/E7LEwiWffJij6k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=z31/k11Q6wrQBvRTM4dNnsm2gCngs/FqbGwh0SNH/pJ1cclRelstoXD1MY18M0Tp8
+	 S9r8+PVte/F+XrQgEl2/41nZb54W+UcaBujCMh7hVlURMgRd/D6BKnOC6g75IqE6qe
+	 8OEdptUOeS7kfl2TRuRVihdI2NbSNNF5ZAefJpIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgBYK2M (ORCPT
+        id S1730269AbgBYKaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:28:12 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39558 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730175AbgBYK2M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:28:12 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 6237F1C0411; Tue, 25 Feb 2020 11:28:10 +0100 (CET)
-Date:   Tue, 25 Feb 2020 11:28:09 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Aditya Pakki <pakki001@umn.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 079/191] orinoco: avoid assertion in case of NULL
- pointer
-Message-ID: <20200225102809.GA2591@amd>
-References: <20200221072250.732482588@linuxfoundation.org>
- <20200221072300.728391700@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
-In-Reply-To: <20200221072300.728391700@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 25 Feb 2020 05:30:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729698AbgBYK37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:29:59 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC1A20714;
+        Tue, 25 Feb 2020 10:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582626598;
+        bh=UH7mnXQX8TGZmYFmHR4KakrBGZds/E7LEwiWffJij6k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qkv3SvT8Prc7UvYr6MT7wTG9G8meGk6KuBuhQ1BP74jz/+JsREiCcJehdnV3FTKfQ
+         JskiNxhN4naOKqd0eyc2s8rvO9UOVn8MurcmfBQSg2uFu9+kMPoWR59xbjbC7Tjfqc
+         JaWWBGGjgHU4tXzbANp3HSw5qyNictjtRJM92A90=
+Date:   Tue, 25 Feb 2020 19:29:51 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Bird <Tim.Bird@sony.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: Re: [for-next][12/26] Documentation: bootconfig: Add a doc for
+ extended boot config
+Message-Id: <20200225192951.b7753d3cf31fda2dcaa12fdb@kernel.org>
+In-Reply-To: <8c99a63b-b1b9-a1ba-fa2a-38d1573f18b1@web.de>
+References: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
+        <20200220221340.2b66fd2051a5da74775c474b@kernel.org>
+        <5ed96b7b-7485-1ea0-16e2-d39c14ae266d@web.de>
+        <20200221191637.e9eed4268ff607a98200628c@kernel.org>
+        <5ade73b0-a3e8-e71a-3685-6485f37ac8b7@web.de>
+        <20200222131833.56a5be2d36033dc5a77a9f0b@kernel.org>
+        <370e675a-598e-71db-8213-f5494b852a71@web.de>
+        <20200223005615.79f308e2ca0717132bb2887b@kernel.org>
+        <8cc7e621-c5e3-28fa-c789-0bb7c55d77d6@web.de>
+        <20200224121302.5b730b519d550eb34da720a5@kernel.org>
+        <25dd284f-6122-c01b-ef22-901c3e0bdf37@web.de>
+        <20200225154903.f636acde809a304bfccf4995@kernel.org>
+        <8c99a63b-b1b9-a1ba-fa2a-38d1573f18b1@web.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 25 Feb 2020 08:56:41 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> How do you think about to clarify any additional software design options
+> >> around involved data structures?
+> >
+> > Sorry, what would you mean the "involved data structures" here?
+> > Would you mean the usage of APIs or when to use bootconfig or command line?
+> 
+> Additional system boot parameters can be managed also by a single file.
+> The file format will trigger specific parsing efforts.
 
-Hi!
+Maybe. If someone is interested in expanding their command, (e.g. vim)
+they can use EBNF to understand syntax, or directly reuse lib/bootconfig.c
+which provides a compact parser. :)
 
-> From: Aditya Pakki <pakki001@umn.edu>
->=20
-> [ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
->=20
-> In ezusb_init, if upriv is NULL, the code crashes. However, the caller
-> in ezusb_probe can handle the error and print the failure message.
-> The patch replaces the BUG_ON call to error return.
+Thank you,
 
-The caller already checked that upriv is not NULL, AFAICT.
-
-    priv =3D alloc_orinocodev(sizeof(*upriv), &udev->dev,
-    	                         ezusb_hard_reset, NULL);
-    if (!priv) {
-        err("Couldn't allocate orinocodev");
-        retval =3D -ENOMEM;
-        goto exit;
-    }
-				=20
-I don't see this as an improvement.
-
-Best regards,
-							Pavel
-						=09
-
-> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-> @@ -1364,7 +1364,8 @@ static int ezusb_init(struct hermes *hw)
->  	int retval;
-> =20
->  	BUG_ON(in_interrupt());
-> -	BUG_ON(!upriv);
-> +	if (!upriv)
-> +		return -EINVAL;
-> =20
->  	upriv->reply_count =3D 0;
->  	/* Write the MAGIC number on the simulated registers to keep
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5U9rkACgkQMOfwapXb+vKmjQCgwzqrB0WO/uxLdAnnaigxtoxo
-tcwAn1E7yollUJFJJh4qsgtVH6WaXjZX
-=dz+r
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
