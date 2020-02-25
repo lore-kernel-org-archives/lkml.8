@@ -2,104 +2,206 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7D7C4BA06
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1CBC4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1266B2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E72621D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qVegK2nr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LdFi92iG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgBYXps (ORCPT
+        id S1729445AbgBYXpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:45:48 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51833 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbgBYXps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:45:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48RwY66pLTz9sPk;
-        Wed, 26 Feb 2020 10:45:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582674347;
-        bh=fKVIVyscS5daYgdSxfbEf05yg+Mb5e/kjWVc93gdnBI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qVegK2nrWk4WQWs5KnuQtEl3lx+Orp7y3jRl5kKB3pBq4kevJJ2uHrujbHRAPX+Z7
-         8WXHyTqDLmcmGcTxj8v2aDZw84Euck+0Auu2snX3iHKrE/wAxIcxwX6KJ58rZiRD46
-         1GTk6LjIspFVZ4qUjE5LLCUfbkknvMk4PqoKntb0Nx8UBsh94rWbb9q3AycmWTnh/K
-         jXkm/EqvNAf7Z/WTmEbXLFOWaAksU2bFPcBG6Beel31V8u74d2TvRZHrSEqcK5QTIw
-         63PnJd6eDkmK5POH2Lizqfscz6Ckc6PK+vue/fvc/ik+JUyeGMKXMRUZNuTOacgBkB
-         vrFQ+DV7vnNlA==
-Date:   Wed, 26 Feb 2020 10:45:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: error when fetching the kasan-bitops tree
-Message-ID: <20200226104546.5260bdce@canb.auug.org.au>
-In-Reply-To: <87o8tmz14c.fsf@mpe.ellerman.id.au>
-References: <20200226080344.609a0bf8@canb.auug.org.au>
-        <87o8tmz14c.fsf@mpe.ellerman.id.au>
+        Tue, 25 Feb 2020 18:45:53 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.38]:26538 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729391AbgBYXpv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 18:45:51 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 8AFBE400C57F9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:45:49 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6jtdj8zHERP4z6jtdjXtwJ; Tue, 25 Feb 2020 17:45:49 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8kpppuVxEfbw1HY9gBs/P7x/njX6QXOO1jMPxsNR6sQ=; b=LdFi92iGDpBZAOEsGks8AdD4mT
+        auLnIL2SJ/JwRgBeofSCcegK3Uv5sAHC2DZfOZ2k2yOpHIy8hWmokqXZojvcnp5U5t5C18ared7y4
+        fH2sRDUIpzmxnyX/j2/hnOOcik3PohMovNqK/m2+9LZve2J6y71A7vYqydRumrArUNyeeiZ8k+gUX
+        uGUwCFc0WJH2XLrMxyivzrz6wLTpe81q2ysj3PJv4emwPEmXQFMKNZqtHBF7iwdfZfOCfztLJPwzt
+        ErqJagG72z1hQ/8Nx5Rj/HvJgsLQJLBqmtKcW47hVisLRS2ET9m5tGNkUYyb3VU1gTMnzPvHiH2UT
+        0cwKBDeQ==;
+Received: from [201.162.241.105] (port=30500 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6jtb-001yzF-GN; Tue, 25 Feb 2020 17:45:48 -0600
+Date:   Tue, 25 Feb 2020 17:48:37 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "Richard Russon (FlatCap)" <ldm@flatcap.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>
+Cc:     linux-ntfs-dev@lists.sourceforge.net, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        ceph-devel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] block: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200225234836.GA31741@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WP/sZYvK9C++J_JEmSPg6g1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.241.105
+X-Source-L: No
+X-Exim-ID: 1j6jtb-001yzF-GN
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.241.105]:30500
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/WP/sZYvK9C++J_JEmSPg6g1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Hi Michael,
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-On Wed, 26 Feb 2020 10:41:07 +1100 Michael Ellerman <mpe@ellerman.id.au> wr=
-ote:
->
-> Stephen Rothwell <sfr@canb.auug.org.au> writes:
-> >
-> > Fetching the kasan-bitops tree
-> > (git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git#topic/=
-kasan-bitops)
-> > produces this error:
-> >
-> > fatal: couldn't find remote ref refs/heads/topic/kasan-bitops
-> >
-> > Should I just remove it? =20
->=20
-> Yes please.
->=20
-> It was merged a while back. Sorry I forgot you had it in linux-next.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Consider it gone.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
---=20
-Cheers,
-Stephen Rothwell
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
---Sig_/WP/sZYvK9C++J_JEmSPg6g1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This issue was found with the help of Coccinelle.
 
------BEGIN PGP SIGNATURE-----
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5VsaoACgkQAVBC80lX
-0GxfvggApSkMXwuIDuTXQ/FPkKZ21vvdT9NM61j7weK30XJXdNfVr+u4G05ofTNn
-0J5ErE8DAZJAfi1dyZ9WVYDLmFA0XX7wOZ9h/GHi7prZmnP/wCxn3TOXZkoQyRtf
-71Furt2IKrLBlj8Rl6KdmI6E8TC0zmwMnPDapxO7rj8CkMkg5I3edGU9s5GV3gv6
-pHfgm4CGzrL8Cz5/0rdUm2Ln9Y6OxzNXeAseoQ/o+7dczmF+vaI/YdpddoeCypht
-c+vcxWRdeDymt0AINbarKjP82QHYMoK6xEPLCB65AXKdmnxjU7dU+dIJuFVCLXVP
-OMLWPiHJ9+12sa+ESea0Uu1U1CCxMg==
-=QhQc
------END PGP SIGNATURE-----
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ block/partitions/ldm.h             | 2 +-
+ drivers/block/drbd/drbd_int.h      | 2 +-
+ drivers/block/drbd/drbd_protocol.h | 8 ++++----
+ drivers/block/rbd_types.h          | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
---Sig_/WP/sZYvK9C++J_JEmSPg6g1--
+diff --git a/block/partitions/ldm.h b/block/partitions/ldm.h
+index 1ca63e97bccc..172432ce5c0f 100644
+--- a/block/partitions/ldm.h
++++ b/block/partitions/ldm.h
+@@ -93,7 +93,7 @@ struct frag {				/* VBLK Fragment handling */
+ 	u8		num;		/* Total number of records */
+ 	u8		rec;		/* This is record number n */
+ 	u8		map;		/* Which portions are in use */
+-	u8		data[0];
++	u8		data[];
+ };
+ 
+ /* In memory LDM database structures. */
+diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
+index aae99a2d7bd4..a3314dd781a7 100644
+--- a/drivers/block/drbd/drbd_int.h
++++ b/drivers/block/drbd/drbd_int.h
+@@ -620,7 +620,7 @@ struct fifo_buffer {
+ 	unsigned int head_index;
+ 	unsigned int size;
+ 	int total; /* sum of all values */
+-	int values[0];
++	int values[];
+ };
+ extern struct fifo_buffer *fifo_alloc(unsigned int fifo_size);
+ 
+diff --git a/drivers/block/drbd/drbd_protocol.h b/drivers/block/drbd/drbd_protocol.h
+index e6fc5ad72501..dea59c92ecc1 100644
+--- a/drivers/block/drbd/drbd_protocol.h
++++ b/drivers/block/drbd/drbd_protocol.h
+@@ -271,7 +271,7 @@ struct p_rs_param {
+ 	u32 resync_rate;
+ 
+ 	      /* Since protocol version 88 and higher. */
+-	char verify_alg[0];
++	char verify_alg[];
+ } __packed;
+ 
+ struct p_rs_param_89 {
+@@ -305,7 +305,7 @@ struct p_protocol {
+ 	u32 two_primaries;
+ 
+ 	/* Since protocol version 87 and higher. */
+-	char integrity_alg[0];
++	char integrity_alg[];
+ 
+ } __packed;
+ 
+@@ -360,7 +360,7 @@ struct p_sizes {
+ 	u16	    dds_flags; /* use enum dds_flags here. */
+ 
+ 	/* optional queue_limits if (agreed_features & DRBD_FF_WSAME) */
+-	struct o_qlim qlim[0];
++	struct o_qlim qlim[];
+ } __packed;
+ 
+ struct p_state {
+@@ -409,7 +409,7 @@ struct p_compressed_bm {
+ 	 */
+ 	u8 encoding;
+ 
+-	u8 code[0];
++	u8 code[];
+ } __packed;
+ 
+ struct p_delay_probe93 {
+diff --git a/drivers/block/rbd_types.h b/drivers/block/rbd_types.h
+index ac98ab6ccd3b..a600e0eb6b6f 100644
+--- a/drivers/block/rbd_types.h
++++ b/drivers/block/rbd_types.h
+@@ -93,7 +93,7 @@ struct rbd_image_header_ondisk {
+ 	__le32 snap_count;
+ 	__le32 reserved;
+ 	__le64 snap_names_len;
+-	struct rbd_image_snap_ondisk snaps[0];
++	struct rbd_image_snap_ondisk snaps[];
+ } __attribute__((packed));
+ 
+ 
+-- 
+2.25.0
+
