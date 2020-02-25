@@ -2,190 +2,233 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75198C35E0D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD3AC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E6F2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9FD2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Igc+J9rE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WP2YoCeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgBYTIL (ORCPT
+        id S1731029AbgBYTJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:08:11 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36174 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgBYTIK (ORCPT
+        Tue, 25 Feb 2020 14:09:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45336 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgBYTJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:08:10 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PJ3MAK010143;
-        Tue, 25 Feb 2020 19:08:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=NLjjaROJFUNToOjOL5le64tYJ0+s5GfAPzigtAlgZiU=;
- b=Igc+J9rEM6WCMJaE0Vw0YOs3TIt8PpGPC15tEOA95At3L4m/nn4Dpdy2wCh0xwNaLoLm
- SRCV2Vd6qJMGJSyCVN/3nHIZ1dw30bkWxeUgOquEz11wa1ij6MySppu/aKdh08p4nLA3
- MvYhljvUDhaLFua/JIL4zVLgTjlCNZM6uvA9pfO9pEiSs0d2yc67FlnmXezGmi/UfiDI
- tdAQTLrUq/W41ycQNsU9s4bkvMOEV85ZP39TX9BZZQkplMe3L+95xDHyeRZH16v2OOJP
- rWBfWc9LzkgDb7AQnXwihawjY0ZQd8baBDcxp2tg6tPGfOh1BQSUV4geLxyRc2gvDuui iw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2yd0njkgf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 19:08:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01PJ295b164470;
-        Tue, 25 Feb 2020 19:08:07 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yd09b9hqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 19:08:06 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01PJ8534007022;
-        Tue, 25 Feb 2020 19:08:05 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Feb 2020 11:08:05 -0800
-Date:   Tue, 25 Feb 2020 11:08:04 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix an undefined behaviour in _da3_path_shift
-Message-ID: <20200225190804.GP6740@magnolia>
-References: <1582641477-4011-1-git-send-email-cai@lca.pw>
- <20200225152805.GG6740@magnolia>
- <1582645616.7365.118.camel@lca.pw>
+        Tue, 25 Feb 2020 14:09:34 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so21605pfg.12;
+        Tue, 25 Feb 2020 11:09:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tKYsibVFHkrZBgD1jlWBgEW7yNgW2PUyB+FLYlBg/mc=;
+        b=WP2YoCeQVOwi1nDjT/v9ne2/hwyO9I8YZuKOxlvnUwUXq9vs51BCFGKB8081FVtdEf
+         /5fdeEvRXDYvIrW2IpVitJmQkqlpogH4tQ8U1YweMPYrQyaXSvKtji3O6bHSR9qHjDpQ
+         n9Gw+l1NVgbEijUw92KiSZtH5OfMlQeVZfagnUl1k6K/+I6FAMkNskzMK+3+cxCQWa9m
+         lm9RGfgOYHIE2abf6bA0D+l2MULEb1na7WeFXj1vtQlszVirSClw26HMMQfDR6ou3HVS
+         DpCz9AjvHaGY42yjluRcd2lpKfv4LNMIy4+hjwBMokz+VAeFzD+u4HeMeG6vXtseurPU
+         ztSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tKYsibVFHkrZBgD1jlWBgEW7yNgW2PUyB+FLYlBg/mc=;
+        b=OxF8rzm8Qr/bEEyy5+h1hTpbSsXxHwABptLEAizVPfH+Zqxg9VaUbi/WHxXAvR+96k
+         uI95FnsQFqWECQJlikriz3wyvI9U0x2OZXVVoyGZCYJET2Z7CO8JpFPP++N1kqYy+JGA
+         +qGmqgRe3KuZ+PoVqXs3a57YkIfCqILVgY0Vh9BE9I7eq8/fcEFjpEkNtbcwo3uWtY1r
+         q93kqCocpfUMoJDR4LuVQn9Tn2t6hkvIjOtrjio7+EmoWgQoaW9jvRIQKjMyLFWSoalE
+         4dWoBXI8r63Hw0PhlQujIpIZAlZoN6aMKITaX8KARSI9R6QUmARjn8MBTKClEDSr4uQQ
+         zP4A==
+X-Gm-Message-State: APjAAAXQe5msT2FtgiXi3Op59wh4vWsMwxW3pBbzHzIT3LPZpGgiUybP
+        3QxDGkOCNf6nCYeSA7n1Oa2kNNWt
+X-Google-Smtp-Source: APXvYqwpflDB0hyXUjQO+UZfyUhQQVKIr8nrv0cBvQIIGyTHqsEDe/WO12C9LAccejwgcJ/HiaBusg==
+X-Received: by 2002:a62:1a16:: with SMTP id a22mr214212pfa.34.1582657773864;
+        Tue, 25 Feb 2020 11:09:33 -0800 (PST)
+Received: from ziggy.stardust ([47.180.236.82])
+        by smtp.gmail.com with ESMTPSA id h185sm18359369pfg.135.2020.02.25.11.09.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 11:09:32 -0800 (PST)
+Subject: Re: [PATCH v2 3/4] drm/mediatek: add the mipitx driving control
+To:     Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
+References: <20200225114730.124939-1-jitao.shi@mediatek.com>
+ <20200225114730.124939-4-jitao.shi@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f8932588-eab8-4f08-c902-341fd83d7542@gmail.com>
+Date:   Tue, 25 Feb 2020 20:09:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582645616.7365.118.camel@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=31
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250135
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0 mlxscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- suspectscore=31 bulkscore=0 spamscore=0 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250135
+In-Reply-To: <20200225114730.124939-4-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:46:56AM -0500, Qian Cai wrote:
-> On Tue, 2020-02-25 at 07:28 -0800, Darrick J. Wong wrote:
-> > On Tue, Feb 25, 2020 at 09:37:57AM -0500, Qian Cai wrote:
-> > > state->path.active could be 1 in xfs_da3_node_lookup_int() and then in
-> > > xfs_da3_path_shift() could see state->path.blk[-1].
-> > 
-> > Under what circumstancs can it be 1?  Is this a longstanding bug in XFS?
-> > A corrupted filesystem?  A deliberately corrupted filesystem?
-> 
-> in xfs_da3_node_lookup_int(),
-> 
-> 	for (blk = &state->path.blk[0], state->path.active = 1;
-> 			 state->path.active <= XFS_DA_NODE_MAXDEPTH;
-> 			 blk++, state->path.active++) {
-> <snip>
-> 		if (magic == XFS_ATTR_LEAF_MAGIC ||
-> 		    magic == XFS_ATTR3_LEAF_MAGIC) {
-> 			blk->magic = XFS_ATTR_LEAF_MAGIC;
-> 			blk->hashval = xfs_attr_leaf_lasthash(blk->bp, NULL);
-> 			break;
-> 		}
-> 
-> 		if (magic == XFS_DIR2_LEAFN_MAGIC ||
-> 		    magic == XFS_DIR3_LEAFN_MAGIC) {
-> 			blk->magic = XFS_DIR2_LEAFN_MAGIC;
-> 			blk->hashval = xfs_dir2_leaf_lasthash(args->dp,
-> 							      blk->bp, NULL);
-> 			break;
-> 
-> Isn't that if the first iteration in the loop calls any of those "break", it
-> will have state->path.active = 1 ?
 
-Yes.  The commit message ought to state that active == 1 is a valid
-state when we're trying to add an entry to a single dir leaf block and
-are trying to shift forward to see if there's a sibling block that would
-be a better place to put the new entry.
 
-This is to build confidence in future readers that we actually
-understood the circumstances of the UBSAN error and aren't just
-monkeypatching the code to shut up the automated checks.
-
---D
-
-> I suppose this is a long-standing bug that need UBSAN (no obvious harm could be
-> done later because it will bail out immediately in xfs_da3_path_shift()) and a
-> set of specific conditions to met to trigger.
+On 25/02/2020 12:47, Jitao Shi wrote:
+> Add a property in device tree to control the driving by different
+> board.
 > 
-> > 
-> > > 
-> > >  UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
-> > >  index -1 is out of range for type 'xfs_da_state_blk_t [5]'
-> > >  Call trace:
-> > >   dump_backtrace+0x0/0x2c8
-> > >   show_stack+0x20/0x2c
-> > >   dump_stack+0xe8/0x150
-> > >   __ubsan_handle_out_of_bounds+0xe4/0xfc
-> > >   xfs_da3_path_shift+0x860/0x86c [xfs]
-> > >   xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
-> > >   xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
-> > >   xfs_dir_createname+0x348/0x38c [xfs]
-> > >   xfs_create+0x6b0/0x8b4 [xfs]
-> > >   xfs_generic_create+0x12c/0x1f8 [xfs]
-> > >   xfs_vn_mknod+0x3c/0x4c [xfs]
-> > >   xfs_vn_create+0x34/0x44 [xfs]
-> > >   do_last+0xd4c/0x10c8
-> > >   path_openat+0xbc/0x2f4
-> > >   do_filp_open+0x74/0xf4
-> > >   do_sys_openat2+0x98/0x180
-> > >   __arm64_sys_openat+0xf8/0x170
-> > >   do_el0_svc+0x170/0x240
-> > >   el0_sync_handler+0x150/0x250
-> > >   el0_sync+0x164/0x180
-> > > 
-> > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > ---
-> > >  fs/xfs/libxfs/xfs_da_btree.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-> > > index 875e04f82541..0906b7748a3f 100644
-> > > --- a/fs/xfs/libxfs/xfs_da_btree.c
-> > > +++ b/fs/xfs/libxfs/xfs_da_btree.c
-> > > @@ -1986,7 +1986,11 @@ static inline int xfs_dabuf_nfsb(struct xfs_mount *mp, int whichfork)
-> > >  	ASSERT(path != NULL);
-> > >  	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
-> > >  	level = (path->active-1) - 1;	/* skip bottom layer in path */
-> > > -	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
-> > > +
-> > > +	if (level >= 0)
-> > > +		blk = &path->blk[level];
-> > 
-> > ...because if the reason is "corrupt metadata" then perhaps this should
-> > return -EFSCORRUPTED?  But I don't know enough about the context to know
-> > the answer to that question.
-> > 
-> > --D
-> > 
-> > > +
-> > > +	for (; level >= 0; blk--, level--) {
-> > >  		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
-> > >  					   blk->bp->b_addr);
-> > >  
-> > > -- 
-> > > 1.8.3.1
-> > > 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 6 ++++++
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        | 1 +
+>  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 7 +++++++
+>  3 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> index e4d34484ecc8..ec8406c86bfb 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> @@ -125,6 +125,12 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	ret = of_property_read_u32(dev->of_node, "mipitx-current-drive",
+> +				   &mipi_tx->mipitx_drive);
+> +	/* If can't get the "mipi_tx->mipitx_drive", set it default 0x8 */
+> +	if (ret < 0)
+> +		mipi_tx->mipitx_drive = 0x8;
+> +
+>  	ref_clk_name = __clk_get_name(ref_clk);
+>  
+>  	ret = of_property_read_string(dev->of_node, "clock-output-names",
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> index 413f35d86219..eea44327fe9f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> @@ -27,6 +27,7 @@ struct mtk_mipi_tx {
+>  	struct device *dev;
+>  	void __iomem *regs;
+>  	u32 data_rate;
+> +	u32 mipitx_drive;
+>  	const struct mtk_mipitx_data *driver_data;
+>  	struct clk_hw pll_hw;
+>  	struct clk *pll;
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> index 91f08a351fd0..124fdf95f1e5 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> @@ -17,6 +17,9 @@
+>  #define RG_DSI_BG_CORE_EN		BIT(7)
+>  #define RG_DSI_PAD_TIEL_SEL		BIT(8)
+>  
+> +#define MIPITX_VOLTAGE_SEL	0x0010
+> +#define RG_DSI_HSTX_LDO_REF_SEL		(0xf << 6)
+> +
+>  #define MIPITX_PLL_PWR		0x0028
+>  #define MIPITX_PLL_CON0		0x002c
+>  #define MIPITX_PLL_CON1		0x0030
+> @@ -123,6 +126,10 @@ static void mtk_mipi_tx_power_on_signal(struct phy *phy)
+>  	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
+>  	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
+>  
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_VOLTAGE_SEL,
+> +				RG_DSI_HSTX_LDO_REF_SEL,
+> +				mipi_tx->mipitx_drive << 6);
+> +
+>  	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_EN);
+>  }
+>  
+> 
