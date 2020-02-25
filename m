@@ -7,107 +7,141 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6ACC35E02
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B50EC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDFB21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07C4218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgBYK4s (ORCPT
+        id S1729841AbgBYK6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:56:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:49072 "EHLO foss.arm.com"
+        Tue, 25 Feb 2020 05:58:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:49144 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbgBYK4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:56:47 -0500
+        id S1726916AbgBYK6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:58:15 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80E7A30E;
-        Tue, 25 Feb 2020 02:56:46 -0800 (PST)
-Received: from [10.37.12.155] (unknown [10.37.12.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75D703F6CF;
-        Tue, 25 Feb 2020 02:56:36 -0800 (PST)
-Subject: Re: [PATCH v3 1/4] PM / EM: add devices to Energy Model
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com
-References: <20200221194731.13814-1-lukasz.luba@arm.com>
- <20200221194731.13814-2-lukasz.luba@arm.com>
- <4ac6a187-1a09-335d-5c05-bf810ff81aaa@infradead.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <cf0d6bf7-ad87-4fbf-0392-646d5aa6d52b@arm.com>
-Date:   Tue, 25 Feb 2020 10:56:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B426C31B;
+        Tue, 25 Feb 2020 02:58:14 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E928E3F6CF;
+        Tue, 25 Feb 2020 02:58:13 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:58:08 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, rgummal@xilinx.com
+Subject: Re: [PATCH 1/2] PCI: Versal CPM: Add device tree binding forversal
+ CPM host controller
+Message-ID: <20200225105808.GA5089@e121166-lin.cambridge.arm.com>
+References: <1576842072-32027-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1576842072-32027-2-git-send-email-bharat.kumar.gogada@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <4ac6a187-1a09-335d-5c05-bf810ff81aaa@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576842072-32027-2-git-send-email-bharat.kumar.gogada@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Fri, Dec 20, 2019 at 05:11:11PM +0530, Bharat Kumar Gogada wrote:
+> Adding device tree binding documentation for versal CPM Root Port driver.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.txt  | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> new file mode 100644
+> index 0000000..35f8556
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+> @@ -0,0 +1,66 @@
+> +* Xilinx Versal CPM DMA Root Port Bridge DT description
+> +
+> +Required properties:
+> +- #address-cells: Address representation for root ports, set to <3>
+> +- #size-cells: Size representation for root ports, set to <2>
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +- compatible: Should contain "xlnx,versal-cpm-host-1.00"
+> +- reg: Should contain configuration space (includes bridge registers) and
+> +	CPM system level control and status registers, and length
+> +- reg-names: Must include the following entries:
+> +	"cfg": configuration space region and bridge registers
+> +	"cpm_slcr": CPM system level control and status registers
+> +- interrupts: Should contain AXI PCIe interrupt
+> +- interrupt-map-mask,
+> +  interrupt-map: standard PCI properties to define the mapping of the
+> +	PCI interface to interrupt numbers.
+> +- ranges: ranges for the PCI memory regions (I/O space region is not
+> +	supported by hardware)
+> +	Please refer to the standard PCI bus binding document for a more
+> +	detailed explanation
+> +- msi-map: Maps a Requester ID to an MSI controller and associated MSI
+> +	sideband data
+> +- interrupt-names: Must include the following entries:
+> +	"misc": interrupt asserted when legacy or error interrupt is received
+> +
+> +Interrupt controller child node
+> ++++++++++++++++++++++++++++++++
+> +Required properties:
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #address-cells: specifies the number of cells needed to encode an
+> +	address. The value must be 0.
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +
+> +
+> +Refer to the following binding document for more detailed description on
+> +the use of 'msi-map':
+> +	 Documentation/devicetree/bindings/pci/pci-msi.txt
+> +
+> +Example:
+> +	pci@fca10000 {
+> +		#address-cells = <3>;
+> +		#interrupt-cells = <1>;
+> +		#size-cells = <2>;
+> +		compatible = "xlnx,versal-cpm-host-1.00";
+> +		interrupt-map = <0 0 0 1 &pcie_intc_0 1>,
+> +				<0 0 0 2 &pcie_intc_0 2>,
+> +				<0 0 0 3 &pcie_intc_0 3>,
+> +				<0 0 0 4 &pcie_intc_0 4>;
 
-Thank you for taking the time to look into this patch.
+This is wrong, interrupts map to pin 0,1,2,3 of pcie_intc.
 
-On 2/22/20 12:42 AM, Randy Dunlap wrote:
-> Hi,
-> One minor nit. Please see inline:
-> 
-> On 2/21/20 11:47 AM, Lukasz Luba wrote:
->> Add support of other devices into the Energy Model framework not only the
->> CPUs. Change the interface to be more unified which can handle other
->> devices as well.
->>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
->>   Documentation/power/energy-model.rst     | 133 ++++----
->>
->> diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
->> index 90a345d57ae9..7576820664e5 100644
->> --- a/Documentation/power/energy-model.rst
->> +++ b/Documentation/power/energy-model.rst
-> 
->> @@ -85,13 +89,20 @@ API.
->>   2.3 Accessing performance domains
->>   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>   
->> +There is two API functions which provide the access to the energy model:
-> 
->     There are two
+That's what's forcing you to use the pci_irqd_intx_xlate()
+function and that's completely wrong.
 
-Indeed a mistake, I will fix it.
+I should find a way to write a common binding for all the
+host bridges interrupt-map since this comes up over and over
+again.
 
-> 
->> +em_cpu_get() which takes CPU id as an argument and em_pd_get() with device
->> +pointer as an argument. It depends on the subsystem which interface it is
->> +going to use, but in case of CPU devices both functions return the same
->> +performance domain.
->> +
-> 
-> 
-> cheers.
-> 
+Please have a look at:
 
-Regards,
-Lukasz
+Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+
+
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-parent = <&gic>;
+> +		interrupt-names = "misc";
+> +		interrupts = <0 72 4>;
+> +		ranges = <0x02000000 0x00000000 0xE0000000 0x0 0xE0000000 0x00000000 0x10000000>,
+> +			 <0x43000000 0x00000080 0x00000000 0x00000080 0x00000000 0x00000000 0x80000000>;
+> +		msi-map = <0x0 &its_gic 0x0 0x10000>;
+> +		reg = <0x6 0x00000000 0x0 0x1000000>,
+> +		      <0x0 0xFCA10000 0x0 0x1000>;
+> +		reg-names = "cfg", "cpm_slcr";
+> +		pcie_intc_0: pci-interrupt-controller {
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller ;
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
