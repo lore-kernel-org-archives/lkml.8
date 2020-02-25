@@ -2,111 +2,110 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE87BC35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79852C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A032176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582652722;
-	bh=3Poz7jxq/qrWijhX+h0LsAxU+LowS2xjr5QXZRUEM/M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ATjCW9tyvzjlQqNYnklk/13n39KVlYChkVRNE6Q85u+Uj9Vmm2KvMSm/1gCRyMwSd
-	 iIJ4v+bquPaYZzIqk24tTbOhKtha4iwih628DIe8+gJo6UT/pdJVDWB5y9egWi5mDt
-	 e/N8/8v6QO2j8H/0j7zznpTc7nOoNVht/krtjG24=
+	by mail.kernel.org (Postfix) with ESMTP id 432D62082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uKkLyZCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbgBYRpV (ORCPT
+        id S1730911AbgBYRp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:45:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgBYRpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:45:20 -0500
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E1D22464
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582652720;
-        bh=3Poz7jxq/qrWijhX+h0LsAxU+LowS2xjr5QXZRUEM/M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qVWyRsciCPkSKXc5vXMsH44IvYNi1Ru2klseSGmoInTcEJ7iupPoCumWQvacsEgDP
-         Dkaf799PKHDMNJ1k54tRReZpvSlxbq4izq3YNkqHGvYWL6Y4K6QLk+RrMMCe+Pzhuc
-         ZWsKGd7NaoAkvLu39t+5FdorfzPSqo69GLF0dSgQ=
-Received: by mail-wm1-f54.google.com with SMTP id z12so59889wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:45:19 -0800 (PST)
-X-Gm-Message-State: APjAAAWITPV+gc9/tW+Ch9xFS0VAJwjxbvVNKXCCMubXmU/JY39kvuc8
-        +B3ubvFxtQlcgaY6pP5rl5s8jHlbn79zinKLBdmC2g==
-X-Google-Smtp-Source: APXvYqyZRwLTc1nkXaComsaLWbhJtUqWzzkDg2dRKUkmo7/fXBOi/XyjC/Y/6v14bvpDRDK/fkAw2IXpcmtzTQP/G/k=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr363473wmj.1.1582652718055;
- Tue, 25 Feb 2020 09:45:18 -0800 (PST)
+        Tue, 25 Feb 2020 12:45:29 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34060 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730222AbgBYRp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 12:45:28 -0500
+Received: by mail-ot1-f67.google.com with SMTP id j16so352832otl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 09:45:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4W5yVK824wX/ACwE2yGPoPcMjZTyMfgcOXv/yEgNjeQ=;
+        b=uKkLyZCUtPdgiKg3PGXf08p4v/Wr8tyhxNp18NjbvMyPzgm58MceHf4ZIpxrg6Wg5q
+         SdfNub575PSu8R78Ys9EITNYTsGPg5Z20m7jlo42FdDf4GccxHi31AMkvf1ulDOHfHR8
+         YxXf2ctZ4NO7l6SxSVxpYF4BVR4bHWg9IFG+Rq+jes56uxE5bQt8q7iYHGhqWh9rGNOV
+         uMsUxfBQjewaDBhioiqEB4x3F/HXWepJbfvGw3TeHV5DKwjiZdSJln4ermrwjvJx3mPR
+         rNgmxdKnsDBCXhFtjJXUN91jh6lsVeuZigljIzAOO2M7sUIPUVFWE/e4DJpXYKFsAfRT
+         nf9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4W5yVK824wX/ACwE2yGPoPcMjZTyMfgcOXv/yEgNjeQ=;
+        b=P3B9IQ1NnRY21XEKlo1m9YrN/9Bgfzmz8XGSUz0NHpNgjEpvstxkGLGJbUEEZhAhgy
+         oe3cEcnjeSxiLd4oFJKKNR9oIzC8BoWcJL0GQeaEFju2qXgKZ4VjLm3jTFfdIz3pcrgb
+         3Tqtr8sf/5exnKa9LbIk/RpZghPGnjAedNauGxMHy+TSaVnBHc4rzPKVW36uov6J/nD/
+         +1RQDv67OelZ6R2wVobChAK9yFsZyD1Pok9tfhgTwUr54zzQWWU7QqvSxaeofhV7EnoL
+         xmiWK23k2qayzFufzIx/lABj35tIoU/zGLe6VyCHN35kIDvRny3Nb7GXLN5q4TTVgG6z
+         akQA==
+X-Gm-Message-State: APjAAAWvwLQWmIRWUmuWxF9YjXFcrUBBP6HFzqHO/J2Ol/LOBon8SFzo
+        VIgwtJLap0AFJL3HBQtDUlHNVsGeYa/Vvo4lr1lLjA==
+X-Google-Smtp-Source: APXvYqytDZ822JdwgytUa3aflcsu3+aF5ibkKtr0TDDApdeO3lI9rr+7EmJu1Dz44Vm4BBkwPeLM15R88Rclo7Se15I=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr2217318otp.12.1582652727731;
+ Tue, 25 Feb 2020 09:45:27 -0800 (PST)
 MIME-Version: 1.0
-References: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
-In-Reply-To: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 25 Feb 2020 18:45:06 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
-Message-ID: <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/efi: Add additional efi tables for unencrypted
- mapping checks
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200224235824.126361-1-john.stultz@linaro.org>
+ <a8af6c423501d5d49f1d81997b3a2295c0df7b9e.camel@perches.com>
+ <CALAqxLW7xjPh8SZtZ+ES9fghdMDQZfG_ToSrX+u7DMAOixyQ1Q@mail.gmail.com> <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
+In-Reply-To: <187fa03a3690806748ca7cfd2b61728c0d33dcf0.camel@perches.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 25 Feb 2020 09:45:17 -0800
+Message-ID: <CALAqxLW1K00cWkYjQCNjUdZQZsCnbi22LnAMnT56J8tYeRmoMQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] checkpatch: Properly warn if Change-Id comes after
+ first Signed-off-by line
+To:     Joe Perches <joe@perches.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@canonical.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 18:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+On Mon, Feb 24, 2020 at 10:50 PM Joe Perches <joe@perches.com> wrote:
+> > Since I have a few kernel repos that I use for both upstream work and
+> > work targeting AOSP trees, I usually have the gerrit commit hook
+> > enabled in my tree (its easier to strip with sed then it is to re-add
+> > after submitting to gerrit), and at least the commit-msg hook I have
+> > will usually append a Change-Id: line at the end of the commit
+> > message, usually after the signed-off-by line.
 >
-> When booting with SME active, EFI tables must be mapped unencrypted since
-> they were built by UEFI in unencrypted memory. Update the list of tables
-> to be checked during early_memremap() processing to account for new EFI
-> tables.
->
-> This fixes a bug where an EFI TPM log table has been created by UEFI, but
-> it lives in memory that has been marked as usable rather than reserved.
->
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->
+> Perhaps this is better:
 > ---
-> Changes since v1:
-> - Re-spun against EFI tree
+>  scripts/checkpatch.pl | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index a63380..698c7c8 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2721,9 +2721,9 @@ sub process {
+>                 }
+>
+>  # Check for unwanted Gerrit info
+> -               if ($in_commit_log && $line =~ /^\s*change-id:/i) {
+> +               if ($realfile eq '' && $line =~ /^\s*change-id:/i) {
+>                         ERROR("GERRIT_CHANGE_ID",
+> -                             "Remove Gerrit Change-Id's before submitting upstream.\n" . $herecurr);
+> +                             "Remove Gerrit Change-Id's before submitting upstream\n" . $herecurr);
+>                 }
+>
+>  # Check if the commit log is in a possible stack dump
+>
 
-Which one? Surely not the one in the link I included?
+Yep. This works well for me, catching Change-Id lines that are missed
+by the current code.
 
-> ---
->  arch/x86/platform/efi/efi.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 43b24e149312..c6ca959e2366 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -88,6 +88,9 @@ static const unsigned long * const efi_tables[] = {
->  #ifdef CONFIG_EFI_RCI2_TABLE
->         &rci2_table_phys,
->  #endif
-> +       &efi.rng_seed,
-> +       &efi.tpm_log,
-> +       &efi.tpm_final_log,
->  };
->
->  u64 efi_setup;         /* efi setup_data physical address */
-> --
-> 2.17.1
->
+Tested-by: John Stultz <john.stultz@linaro.org>
+
+Thanks so much!
+-john
