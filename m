@@ -2,200 +2,126 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46200C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A40C35E0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC7C2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582647868;
-	bh=yWwM6NwH9zQfOWRSF6NwiqphPCJ8H+CIPFFFdKMrl9A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=POHcvF7Dp3iqYWlgzvfcogIFyhfvUpjBrlHObeH7/4wuMaGY6D0Ljfe6QmIit4sx3
-	 z7CGZiHzqo3JkCdo5yX6s+zAvh/l1fy++mU1u45HLw9LKyihA+Guhdk9TqN4ahy/2S
-	 ZzPJHx2UHN/GpAzf/5VCwhiCHLB/pj7a8WAri7oo=
+	by mail.kernel.org (Postfix) with ESMTP id 667892082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kWdhcXQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbgBYQY0 (ORCPT
+        id S1730906AbgBYQYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:24:26 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33201 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729817AbgBYQY0 (ORCPT
+        Tue, 25 Feb 2020 11:24:46 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14686 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729817AbgBYQYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:24:26 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w6so97133otk.0;
-        Tue, 25 Feb 2020 08:24:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ElkWtD05bpJz0nVAaK9Zxby7+iR2LvCo6qCQ1kcJkb8=;
-        b=BFwOjgb3qvMkPpj6BbgzqCHGtSsgrYnpMbTPViSmlIYBr1/I90E1m5KqxOwxy/QIJU
-         QhlYsuroRBS8D7BCw3fMIqVTFW/JMaL0tZeUVjvTnzhVLfE024hCRGbmj4OBepcdtx3A
-         pLSnay+IMX96O5OqCqrG7izEBmrofrsdecl202qr0QxQ/Av5dZQ7obT8B4+R0kBOiwlC
-         QU25R+e0QBtKvzn6xzpOxZEXE2lRcy6l4UAHM8I8lObaW+h+CTu9GEUtndMlIifH6kV9
-         IIvhf8iVWomOuvT8P0t6v8UQSsocDj+bRUZxHoZemUjcljiHiAknrbO17TzNl/zZiHWE
-         n8+Q==
-X-Gm-Message-State: APjAAAVtEjp21OxHPIAGrcwJmTYAtl/LNDgbqQZRhZm6vCDcCSpCru7O
-        izCuwzjdwQLMqbni4NqN80x046MTKHsI0+IqFF8=
-X-Google-Smtp-Source: APXvYqwKdQMsgAI31D0CTHFGEH5+24plVvLyCRNnBzVO50zYXso/wv+RUoxfNGl/HfCpSc/O7agAGNn8m2aboYQmg88=
-X-Received: by 2002:a9d:7653:: with SMTP id o19mr43593382otl.118.1582647864921;
- Tue, 25 Feb 2020 08:24:24 -0800 (PST)
+        Tue, 25 Feb 2020 11:24:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e554a3f0000>; Tue, 25 Feb 2020 08:24:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 25 Feb 2020 08:24:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 25 Feb 2020 08:24:44 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Feb
+ 2020 16:24:41 +0000
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+CC:     Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Jens Axboe" <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
+ <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
+ <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+Date:   Tue, 25 Feb 2020 16:24:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200225050828.56458-1-john.stultz@linaro.org> <20200225050828.56458-2-john.stultz@linaro.org>
-In-Reply-To: <20200225050828.56458-2-john.stultz@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Feb 2020 17:24:13 +0100
-Message-ID: <CAJZ5v0husR3hgnSKOhQuGTaDVsQxS477JGLC2pdW=k2qJuA5mw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] driver core: Fix driver_deferred_probe_check_state()
- logic
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582647871; bh=d+k2oADQBKeJHCExPW9X42DfdEf4wTEDT/QfdHMU5IM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kWdhcXQKSJH4GXa6xSkXVhbj0mroRtOyJ6fnisSE9GfHmcEkd+fFWgatHxHs9IYib
+         TIT861jiVMWct2KGXdBFUnuz93ncHEEos7SfypX0n4Lb8z+0RL8QGT5xJWD75wupir
+         yz0sPoHdlKRuA1JlUgef7zx/r24mxhiIiuTPFFT08JwydZt+Skpkum8t5c6F2IhzXz
+         jKEYhTQyc2xHXPD8GHsN18TntYROuk+3yZd/5IUGoCfMszcdk9oFv4u+4gyjxVaEeZ
+         0EFR+RoPiIATIToqWkAMtrrtqId6IKNMS08ObahXZPI9ib6XI09J9/cGGQcqlsu8zP
+         VP3GAeLJ37K4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 6:08 AM John Stultz <john.stultz@linaro.org> wrote:
->
-> driver_deferred_probe_check_state() has some uninituitive behavior.
->
-> * From boot to late_initcall, it returns -EPROBE_DEFER
->
-> * From late_initcall to the deferred_probe_timeout (if set)
->   it returns -ENODEV
->
-> * If the deferred_probe_timeout it set, after it fires, it
->   returns -ETIMEDOUT
->
-> This is a bit confusing, as its useful to have the function
-> return -EPROBE_DEFER while the timeout is still running. This
-> behavior has resulted in the somwhat duplicative
-> driver_deferred_probe_check_state_continue() function being
-> added.
->
-> Thus this patch tries to improve the logic, so that it behaves
-> as such:
->
-> * If late_initcall has passed, and modules are not enabled
->   it returns -ENODEV
->
-> * If modules are enabled and deferred_probe_timeout is set,
->   it returns -EPROBE_DEFER until the timeout, afterwhich it
->   returns -ETIMEDOUT.
->
-> * In all other cases, it returns -EPROBE_DEFER
->
-> This will make the deferred_probe_timeout value much more
-> functional, and will allow us to consolidate the
-> driver_deferred_probe_check_state() and
-> driver_deferred_probe_check_state_continue() logic in a later
-> patch.
->
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 25/02/2020 14:26, Ulf Hansson wrote:
 
-> ---
-> v4:
-> * Simplified logic suggested by Andy Shevchenko
-> * Clarified commit message to focus on logic change
-> v5:
-> * Cleanup comment wording as suggested by Rafael
-> * Tweaked the logic to use Saravana's suggested conditionals
-> ---
->  drivers/base/dd.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index b25bcab2a26b..d75b34de6964 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -237,24 +237,26 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
->
->  static int __driver_deferred_probe_check_state(struct device *dev)
->  {
-> -       if (!initcalls_done)
-> -               return -EPROBE_DEFER;
-> +       if (!IS_ENABLED(CONFIG_MODULES) && initcalls_done)
-> +               return -ENODEV;
->
->         if (!deferred_probe_timeout) {
->                 dev_WARN(dev, "deferred probe timeout, ignoring dependency");
->                 return -ETIMEDOUT;
->         }
->
-> -       return 0;
-> +       return -EPROBE_DEFER;
->  }
->
->  /**
->   * driver_deferred_probe_check_state() - Check deferred probe state
->   * @dev: device to check
->   *
-> - * Returns -ENODEV if init is done and all built-in drivers have had a chance
-> - * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
-> - * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
-> + * Return:
-> + * -ENODEV if initcalls have completed and modules are disabled.
-> + * -ETIMEDOUT if the deferred probe timeout was set and has expired
-> + *  and modules are enabled.
-> + * -EPROBE_DEFER in other cases.
->   *
->   * Drivers or subsystems can opt-in to calling this function instead of directly
->   * returning -EPROBE_DEFER.
-> @@ -264,7 +266,7 @@ int driver_deferred_probe_check_state(struct device *dev)
->         int ret;
->
->         ret = __driver_deferred_probe_check_state(dev);
-> -       if (ret < 0)
-> +       if (ret != -ENODEV)
->                 return ret;
->
->         dev_warn(dev, "ignoring dependency for device, assuming no driver");
-> @@ -292,7 +294,7 @@ int driver_deferred_probe_check_state_continue(struct device *dev)
->         int ret;
->
->         ret = __driver_deferred_probe_check_state(dev);
-> -       if (ret < 0)
-> +       if (ret != -ENODEV)
->                 return ret;
->
->         return -EPROBE_DEFER;
-> --
-> 2.17.1
->
+...
+
+> However, from the core point of view, the response is still requested,
+> only that we don't want the driver to wait for the card to stop
+> signaling busy. Instead we want to deal with that via "polling" from
+> the core.
+> 
+> This is a rather worrying behaviour, as it seems like the host driver
+> doesn't really follow this expectations from the core point of view.
+> And mmc_flush_cache() is not the only case, as we have erase, bkops,
+> sanitize, etc. Are all these working or not really well tested?
+
+I don't believe that they are well tested. We have a simple test to
+mount an eMMC partition, create a file, check the contents, remove the
+file and unmount. The timeouts always occur during unmounting.
+
+> Earlier, before my three patches, if the provided timeout_ms parameter
+> to __mmc_switch() was zero, which was the case for
+> mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
+> ignored validating host->max_busy_timeout, which was wrong. In any
+> case, this also meant that an R1B response was always used for
+> mmc_flush_cache(), as you also indicated above. Perhaps this is the
+> critical part where things can go wrong.
+> 
+> BTW, have you tried erase commands for sdhci tegra driver? If those
+> are working fine, do you have any special treatments for these?
+
+That I am not sure, but I will check.
+
+Cheers
+Jon
+
+-- 
+nvpublic
