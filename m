@@ -2,188 +2,96 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFA6C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA3AC35E0D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5361021556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC682084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zmL044VI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmFIV2bC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgBYTgF (ORCPT
+        id S1730506AbgBYThW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:36:05 -0500
-Received: from mail-mw2nam10on2042.outbound.protection.outlook.com ([40.107.94.42]:11681
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728146AbgBYTgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:36:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMd09N4olYPyDHm8xl4Oh53XsO3BthlCW581RfU61vn8umYMb2kyqQhiqqZOte2EwFYrMRrQMQXfp7DfphGbTXGl5ZnIh6e5LGlwLSUAEB/q1U1pXtTSJRPJf5qsN5U0NEktDEIZ9y5egK5GhQFLLW1M1c+CYo+hmc4b79pYOJ/4ZwyR5Vv6OsfaDX1egrykFk2rsW6poEeLJMNUIMgF39/Clv3PT1tdPiiM/2pTLm0iKmTk3StiwaZ/nop5szxyyTLyTFLB9f415+K6jB+4XUWqezhk6sepRelWY+dMHXah2F4gxWHTiTsrncKnu4nFwtlwzAwRyHuPVx9pWNb72g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nlgVn6QYCOVLsl+Rn2qJslCl7d1klt5M045bXNO/BmM=;
- b=BmkT/UXFtb583iRlqKJdbFdY2ax4HQjmXSWSvRoTKhjGVLM1HSIb8UFts4JNU9qT0H55Mo/nxHTgUCtGshg0OYru8XoKtCHl1E4ZGEai+geKo+MlvF9iDtMiRbM1V/ZqEIVUQCwX0AbSbL4dowkfUXgZw79oOI++6fboOcs8eGBDK6z21SA0VoygO1D4SBjUKhM4mmxS/Hg5ndvYA149h5hI9dd9tMRzHiHbEPD9wmRmEtknZJTbP0NM6Z/PIcVFYIXbIPwxJk39PEBgPmiZf6sevXlkdhmaD88Y1kmYk7bqN33lm3LcxFrLLpySoFSMrRg3uC/ID+jU322yUjFEAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nlgVn6QYCOVLsl+Rn2qJslCl7d1klt5M045bXNO/BmM=;
- b=zmL044VIS7oRNCckUkxv9cW1imahpgdJBqIuUf9nHGpAUtj0StJwFtMQzs2/DKgHnb80gZB156AeehSqCR6on96zv6wHeDxzLqHqF62qifSk7ukOqjN2bxzdYLs1DhSDrTs0+fz/eR/8FrMVoFrsXNnt1dQwEhzImgrKWHh2vWk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
- by DM6PR12MB2731.namprd12.prod.outlook.com (2603:10b6:5:45::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Tue, 25 Feb
- 2020 19:36:01 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 19:36:01 +0000
-Subject: Re: [PATCH v2] x86/efi: Add additional efi tables for unencrypted
- mapping checks
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <261ea8108c6290e95962be2638bd204f90787c1c.1582652466.git.thomas.lendacky@amd.com>
- <CAKv+Gu_FJeiaY5yw9=ER4XyBZrDFZ5L4igrqxP6hhJ7Z8easpw@mail.gmail.com>
- <9e16fed9-4399-5c78-cbfb-6be75c295f31@amd.com>
- <CAKv+Gu_0LUY67DwSLU1tyijuF+0mKPpvq1j3RSMy5HBxYE-3qw@mail.gmail.com>
- <96417897-8bf0-e60c-6285-7286673ecd01@amd.com>
- <CAKv+Gu-5=5bKBdO_r=Z3bAqCM36vfH=vLcCcaFtKcwYpe=AP7g@mail.gmail.com>
- <b2374776-6499-0b99-9df0-b17a4d84b0e4@amd.com>
- <CAKv+Gu8M5LMjA+JnJ57+BU4jmpgz0OqLyt1W9LXj_UDH=5DgjQ@mail.gmail.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <48d68a64-fc23-a59e-4f07-4913075eaf5b@amd.com>
-Date:   Tue, 25 Feb 2020 13:35:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <CAKv+Gu8M5LMjA+JnJ57+BU4jmpgz0OqLyt1W9LXj_UDH=5DgjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0015.namprd05.prod.outlook.com
- (2603:10b6:803:40::28) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        Tue, 25 Feb 2020 14:37:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40722 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728753AbgBYThW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:37:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582659441;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3454YjUXRoDS+24Lzxnu4Pv0NqG7YV73o/VGu7/5u2E=;
+        b=MmFIV2bCFfKsScL4zbRKXb9IbJaKNNlhasHYPnSW6EodaAzOvlGhIFBPFqnHN2hU2xfdmc
+        6IZuIE8eXvoviUr+/7eQLNDd9ekMwTwuGpgD/oH4iQg2jCOn2fAejJX50YRRR0sEn1RQZh
+        WXBCorgyRMvo86IbzlBo0yzLQoCcLLI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-9ulGlCEBOoewJwoiFtQzDg-1; Tue, 25 Feb 2020 14:37:17 -0500
+X-MC-Unique: 9ulGlCEBOoewJwoiFtQzDg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2852C8017CC;
+        Tue, 25 Feb 2020 19:37:15 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0FC65C296;
+        Tue, 25 Feb 2020 19:37:13 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>, jhallida@redhat.com
+Cc:     Dave Chinner <david@fromorbit.com>, ira.weiny@intel.com,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space operations state
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+        <20200221004134.30599-8-ira.weiny@intel.com>
+        <20200221174449.GB11378@lst.de>
+        <20200221224419.GW10776@dread.disaster.area>
+        <20200224175603.GE7771@lst.de>
+        <20200225000937.GA10776@dread.disaster.area>
+        <20200225173633.GA30843@lst.de>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Tue, 25 Feb 2020 14:37:12 -0500
+In-Reply-To: <20200225173633.GA30843@lst.de> (Christoph Hellwig's message of
+        "Tue, 25 Feb 2020 18:36:33 +0100")
+Message-ID: <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.30.74] (165.204.77.1) by SN4PR0501CA0015.namprd05.prod.outlook.com (2603:10b6:803:40::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.10 via Frontend Transport; Tue, 25 Feb 2020 19:36:00 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 41f046d2-e197-4c28-de55-08d7ba29f1b4
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2731:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2731D4E1424BA80C293D5FFCECED0@DM6PR12MB2731.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0324C2C0E2
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(376002)(39860400002)(199004)(189003)(54906003)(8676002)(316002)(8936002)(81156014)(6486002)(36756003)(956004)(2616005)(7416002)(2906002)(31686004)(81166006)(16576012)(66476007)(31696002)(86362001)(6916009)(66946007)(53546011)(5660300002)(16526019)(4326008)(26005)(66556008)(478600001)(52116002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2731;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TM0R9+G6j+rluv1qPN5Gwz8X55b5HR/4i9lGjCEkexg+44Jc/b6Vk4AK5ndm8OYUTC600n29Aq3AEBuq9LWe1Y84Fcf0D1vFmoWej3Y1qYbudBrcLu4wroY8UwNF2B6LzXyID6UjK1Au+7I7FbRViPOs4m1kBWYyOh8IlsyKBI++fPzNWq6etthZ/J2jDXRY0202iFl9zF2GE6czUKIfs52PkXHnRetBc2Gq8DKlVYsgM3BtLW/q9fSG55OssE4/x1hEH5nwAzDL76YbaNm853MZoKJ93ic1ij0YgRla/evan2BhZklClWCp7yUcoaUc8ii0Bca3lr5tzBIRUteAezlP2Zulo1mYS0wOv4wFUnVcp6OK5fY98Kd5/4cTDi1Bk5HcnwFNtSGmpBwBtYTLuNlMjTUzb9H2PTVgsStu6mdeiDV+c/UhrhGw2NE+sct0
-X-MS-Exchange-AntiSpam-MessageData: cs65LHp2wOElEsF4VQyEBtAXVgPuKfp+FICKEe3+JuqM9pi25mAu5dOfXsK8KAMkJZ7IlIGV6+vKgTv4N0YlFzs+GOZT35q1IAiMCeuu0d3QzvM/I0L2xBn2eZ77vkwkMhLMI/QMIlVHnkrRcrfcbQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41f046d2-e197-4c28-de55-08d7ba29f1b4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 19:36:00.9471
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jt3XLgHxw/OlfH3VB1FP1b9isFRjoPRwbUEW9l+rd+npRWwOOWAd99Ky+v0Jti/wc4b4OSeJzksD+uxZ3lSPqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2731
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 1:28 PM, Ard Biesheuvel wrote:
-> On Tue, 25 Feb 2020 at 20:21, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->>
->> On 2/25/20 12:12 PM, Ard Biesheuvel wrote:
->>> On Tue, 25 Feb 2020 at 19:10, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->>>>
->>>> On 2/25/20 11:58 AM, Ard Biesheuvel wrote:
->>>>> On Tue, 25 Feb 2020 at 18:54, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->>>>>>
->>>>>> On 2/25/20 11:45 AM, Ard Biesheuvel wrote:
->>>>>>> On Tue, 25 Feb 2020 at 18:41, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->>>>>>>>
->>>>>>>> When booting with SME active, EFI tables must be mapped unencrypted since
->>>>>>>> they were built by UEFI in unencrypted memory. Update the list of tables
->>>>>>>> to be checked during early_memremap() processing to account for new EFI
->>>>>>>> tables.
->>>>>>>>
->>>>>>>> This fixes a bug where an EFI TPM log table has been created by UEFI, but
->>>>>>>> it lives in memory that has been marked as usable rather than reserved.
->>>>>>>>
->>>>>>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->>>>>>>>
->>>>>>>> ---
->>>>>>>> Changes since v1:
->>>>>>>> - Re-spun against EFI tree
->>>>>>>
->>>>>>> Which one? Surely not the one in the link I included?
->>>>>>
->>>>>> I did a git clone of
->>>>>>
->>>>>>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
->>>>>>
->>>>>> and checked out branch next. Not sure what I missed...
->>>>>>
->>>>>
->>>>> Weird. Do you see commit 5d288dbd88606d8f215c7138b10649115d79cadd on
->>>>> that branch? It removes rng_seed from struct efi, hence my request to
->>>>> rebase your patch.
->>>>
->>>> I had just assumed you wanted a cleaner version and didn't realize that
->>>> rng_seed was removed from struct efi. My bad for not building.
->>>>
->>>>>
->>>>> IMO, best is to simply drop the 'static' from rng_seed, rename it to
->>>>> efi_rng_seed, and drop an extern declaration in linux/efi.h so it is
->>>>> accessible from your code. I'm reluctant to put it back in struct efi.
->>>>
->>>> Ok, I'll re-work the patch.
->>>>
->>>
->>> OK
->>>
->>> Btw if you want the TPM part of the fix to go to -stable, better to
->>> split them in two (and I'll put a cc:stable on the tpm one)
->>
->> I had thought about stable, but the fix gets tricky since the two tables
->> were added at different times (4.16 and 5.3) and the efi_tables array was
->> moved from drivers/firmware/efi/efi.c to arch/x86/platform/efi/efi.c in 5.4.
->>
->> I could do the two TPM tables each as their own patch and add an
->> appropriate Cc: stable # v4.16.x-, etc., if you don't think that's
->> overkill. The array move shouldn't be too hard to adjust for in stable.
->> Thoughts?
->>
-> 
-> So v5.4/v5.5 seems straight-forward then, no? Once that one is in, we
-> can do one specially for v4.19
+Christoph Hellwig <hch@lst.de> writes:
 
-Works for me.
+> And my point is that if we ensure S_DAX can only be checked if there
+> are no blocks on the file, is is fairly easy to provide the same
+> guarantee.  And I've not heard any argument that we really need more
+> flexibility than that.  In fact I think just being able to change it
+> on the parent directory and inheriting the flag might be more than
+> plenty, which would lead to a very simple implementation without any
+> of the crazy overhead in this series.
 
-Thanks,
-Tom
+I know of one user who had at least mentioned it to me, so I cc'd him.
+Jonathan, can you describe your use case for being able to change a
+file between dax and non-dax modes?  Or, if I'm misremembering, just
+correct me?
 
-> 
+Thanks!
+Jeff
+
