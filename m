@@ -4,136 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F19AC35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FAEC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817992051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1979E2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbgBYQpz (ORCPT
+        id S1730870AbgBYQtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:45:55 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:41069 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731203AbgBYQpy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:45:54 -0500
-Received: from [109.168.11.45] (port=37076 helo=pc-ceresoli.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1j6dLD-00DPYO-Q0; Tue, 25 Feb 2020 17:45:51 +0100
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] of: overlay: log the error cause on resolver failure
-Date:   Tue, 25 Feb 2020 17:45:40 +0100
-Message-Id: <20200225164540.4520-1-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.25.0
+        Tue, 25 Feb 2020 11:49:16 -0500
+Received: from mga05.intel.com ([192.55.52.43]:33228 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbgBYQtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:49:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 08:49:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="436319437"
+Received: from sorin-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.45.43])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Feb 2020 08:49:14 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH] soundwire: bus: provide correct return value on error
+Date:   Tue, 25 Feb 2020 10:49:07 -0600
+Message-Id: <20200225164907.23358-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some of its error paths, of_resolve_phandles() only logs a very generic
-error which does not help much in finding the origin of the problem:
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-  OF: resolver: overlay phandle fixup failed: -22
+It seems to be a typo. It makes more sense to return the return value
+of sdw_update() instead of the value we want to update.
 
-Add error messages for all the error paths that don't have one. Now a
-specific message is always emitted, thus also remove the generic catch-all
-message emitted before returning.
-
-For example, in case a DT overlay has a fixup node that is not present in
-the base DT __symbols__, this error is now logged:
-
-  OF: resolver: node gpio9 not found in base DT, fixup failed
-
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
+ drivers/soundwire/bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't know in detail the meaning of the adjust_local_phandle_references()
-and update_usages_of_a_phandle_reference() error paths, thus I have put
-pretty generic messages. Any suggestion on better wording would be welcome.
-
-Changed in v2:
-
- - add a message for each error path that does not have one yet
----
- drivers/of/resolver.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 83c766233181..a80d673621bc 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -291,8 +291,10 @@ int of_resolve_phandles(struct device_node *overlay)
- 			break;
- 
- 	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
--	if (err)
-+	if (err) {
-+		pr_err("cannot adjust local phandle references\n");
- 		goto out;
-+	}
- 
- 	overlay_fixups = NULL;
- 
-@@ -321,11 +323,15 @@ int of_resolve_phandles(struct device_node *overlay)
- 
- 		err = of_property_read_string(tree_symbols,
- 				prop->name, &refpath);
--		if (err)
-+		if (err) {
-+			pr_err("node %s not found in base DT, fixup failed\n",
-+			       prop->name);
- 			goto out;
-+		}
- 
- 		refnode = of_find_node_by_path(refpath);
- 		if (!refnode) {
-+			pr_err("cannot find node for %s\n", refpath);
- 			err = -ENOENT;
- 			goto out;
- 		}
-@@ -334,13 +340,14 @@ int of_resolve_phandles(struct device_node *overlay)
- 		of_node_put(refnode);
- 
- 		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
--		if (err)
-+		if (err) {
-+			pr_err("cannot update usages of a phandle reference (%s)\n",
-+				prop->name);
- 			break;
-+		}
+diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+index 13887713f311..b8a7a84aca1c 100644
+--- a/drivers/soundwire/bus.c
++++ b/drivers/soundwire/bus.c
+@@ -1070,7 +1070,7 @@ static int sdw_initialize_slave(struct sdw_slave *slave)
+ 	if (ret < 0) {
+ 		dev_err(slave->bus->dev,
+ 			"SDW_DP0_INTMASK read failed:%d\n", ret);
+-		return val;
++		return ret;
  	}
  
- out:
--	if (err)
--		pr_err("overlay phandle fixup failed: %d\n", err);
- 	of_node_put(tree_symbols);
- 
- 	return err;
+ 	return 0;
 -- 
-2.25.0
+2.20.1
 
