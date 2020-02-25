@@ -2,140 +2,205 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE98C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41E2C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435DD20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CF520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALwgoG0q"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gkTk2rb6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NMiDvNMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgBYJK4 (ORCPT
+        id S1729934AbgBYJLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:10:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20729 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726867AbgBYJKz (ORCPT
+        Tue, 25 Feb 2020 04:11:02 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:53333 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgBYJLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:10:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582621854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=wISzkN9lNxlHaad+ndVdLEhfVnbh/wXEoAaxWEoERhA=;
-        b=ALwgoG0qoDZJW1SnrFMWPiEQOl3/rTSob/UHCzLMazVilPedOMqnpZf1SSXyGU/rx7d2f7
-        2ZxtZpFV0Tkj9Yig3gMpcKawuvu2RyyFb+3UHM4vMl9mCu4KibI4z0fCrpUDCYVnnJPwt7
-        VPztwVOv/bC36qtEUWOivTJ1KzyxmkE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-uXNH8L6dNxyxXPRjl0kCdA-1; Tue, 25 Feb 2020 04:10:50 -0500
-X-MC-Unique: uXNH8L6dNxyxXPRjl0kCdA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE7E9102CE15;
-        Tue, 25 Feb 2020 09:10:48 +0000 (UTC)
-Received: from [10.36.117.12] (ovpn-117-12.ams2.redhat.com [10.36.117.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F0C95D9CD;
-        Tue, 25 Feb 2020 09:10:46 +0000 (UTC)
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
- case
-To:     Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        osalvador@suse.de, dan.j.williams@intel.com, rppt@linux.ibm.com,
-        robin.murphy@arm.com
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220103849.GG20509@dhcp22.suse.cz>
- <20200221142847.GG4937@MiWiFi-R3L-srv>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <75b4f840-7454-d6d0-5453-f0a045c852fa@redhat.com>
-Date:   Tue, 25 Feb 2020 10:10:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 04:11:01 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0BAF57BFE;
+        Tue, 25 Feb 2020 04:11:00 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 25 Feb 2020 04:11:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=2vqTwRAj8rKUQI5FEi3ykYXRB1k
+        4zegHIlQuKg4fomE=; b=gkTk2rb6Z/D8ORisKTkhB1y+SH06kgCf5Pq2c476/O9
+        IyltflJ/+Dq1fp8678f7e0wjFdNroQdoEQfkWrZ7jkhee54vE0VgFRSGgVwZNWK/
+        hYA8P/IBn2LNbe/E/VjX+XE1jz62u6aNeki0I314o2eF08T3uzJXuFZ1ZzPnrkB1
+        NlxT0bqCry1qAf1Sn39Na0uag9CHe2raGK8OSdHZeRuYpC6yjm4FwLo+mOluDtdW
+        afnbMbWMf4sFzgZFB4lmqKlsFRkVgrqpotkYUAh/zF8Ddj5EBxHnYhwXjsGHHZr2
+        +cZvHITZW2+R3OddfyYrAaoPGZ3AClo39aO+q0Q/EKg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2vqTwR
+        Aj8rKUQI5FEi3ykYXRB1k4zegHIlQuKg4fomE=; b=NMiDvNMajHaTcmhNhHJDRJ
+        LxoRolymMSLrRfnC6Zfe/tdjtSgorGcRt1KUNOWEg4u15nFEsCcFtE4ewc3ogqL/
+        /YYDfhOep/u7JiXTdaCLcXTZQR3JN/kegTt1PRz/EYH+DkX3DkTcRaaAxj0oCT5G
+        sJulfl9NbYp35pwmTNBMdN1TpxWWN/K36nu9tJ9XJWBPfZs0HoaR9MACuL60h+7G
+        Wm3f8epOGNHXg0IRoulAKrt0c3sZpHM9rpcJm5gjSbP0K9ym3e58a0ySCOqymwz1
+        h90IrxnC5daRJ707E3rPtzRO3VF5wOdicWVwDQbJF/y4Os0VMUmbGCqZPM4V6G+g
+        ==
+X-ME-Sender: <xms:oeRUXrAI_D5lMyeQrh8Y3PI5agSSN74a1OXVEw6YYsKhXaM1zzQ5zQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledvgddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:oeRUXpPp_tWwjZ5pBvF__9IjfA7_SYFMb_fJkhiPTMNqcPYv5Z1Vyg>
+    <xmx:oeRUXoyVlVMIhiKZ2a7RhVmWsEvryuZPI8XFgXhn9RlgLUovu5sL2A>
+    <xmx:oeRUXsf5xQiPAdVua7pKGb6rMMxFptU4NPlbe0O8ISHJTfAaJfrrjg>
+    <xmx:pORUXsDYLuWCdLiFjcC3j_NZSInmV5T-JKOadfkUFxS16bPHqlZLdw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BE2CB328005D;
+        Tue, 25 Feb 2020 04:10:56 -0500 (EST)
+Date:   Tue, 25 Feb 2020 10:10:55 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: soc: document LiteX SoC Controller
+ bindings
+Message-ID: <20200225091055.ubm5r3p6r4ydchyh@gilmour.lan>
+References: <20200225094437.4170502-0-mholenko@antmicro.com>
+ <20200225094437.4170502-2-mholenko@antmicro.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221142847.GG4937@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7qlwsrkwbcxhj43j"
+Content-Disposition: inline
+In-Reply-To: <20200225094437.4170502-2-mholenko@antmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>  include/linux/mmzone.h |   2 +
->>>  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
->>>  2 files changed, 127 insertions(+), 53 deletions(-)
->>
->> Why do we need to add so much code to remove a functionality from one
->> memory model?
-> 
-> Hmm, Dan also asked this before.
-> 
-> The adding mainly happens in patch 2, 3, 4, including the two newly
-> added function defitions, the code comments above them, and those added
-> dummy functions for !VMEMMAP.
 
-AFAIKS, it's mostly a bunch of newly added comments on top of functions.
-E.g., the comment for fill_subsection_map() alone spans 12 LOC in total.
-I do wonder if we have to be that verbose. We are barely that verbose on
-MM code (and usually I don't see much benefit unless it's a function
-with many users from many different places).
+--7qlwsrkwbcxhj43j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Thanks,
+Hi Mateusz,
 
-David / dhildenb
+On Tue, Feb 25, 2020 at 09:46:45AM +0100, Mateusz Holenko wrote:
+> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+>
+> Add documentation for LiteX SoC Controller bindings.
+>
+> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> ---
+>
+> Notes:
+>     This commit has been introduced in v3 of the patchset.
+>
+>  .../soc/litex/litex,soc_controller.yaml       | 46 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+> new file mode 100644
+> index 000000000000..039894265319
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+> @@ -0,0 +1,46 @@
+> +PDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/litex/litex,soc_controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LiteX SoC Controller driver
+> +
+> +description: |
+> +  This is the SoC Controller driver for the LiteX SoC Builder.
+> +  It's purpose is to verify LiteX CSR (Control&Status Register) access
+> +  operations and provide function for other drivers to read/write CSRs
+> +  and to check if those accessors are ready to use.
+> +
+> +maintainers:
+> +  - Karol Gugala <kgugala@antmicro.com>
+> +  - Mateusz Holenko <mholenko@antmicro.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: litex,soc_controller
 
+Usually compatible will use dash as separators, not underscores.
+
+> +  reg:
+> +    description: Base address and length of the register space
+
+This is usually removed since it's what's expected from the property
+anyway. However, what you should really test for in the number of
+address/size couples being set, and you can do that using maxItems: 1
+
+> +  status:
+> +    description: |
+> +      disables or enables node
+> +
+> +    const: "okay"
+
+This is added automatically by the tooling, so you can leave it out.
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - status
+
+And in general, status is not required. Leaving status out is
+equivalent to status = "okay"
+
+> +examples:
+> +  - |
+> +
+> +  soc_ctrl0: soc_controller@f0000000 {
+> +			compatible = "litex,soc_controller";
+> +			reg = <0x0 0xf0000000 0x0 0xC>;
+> +			status = "okay";
+> +  };
+
+The indentation looks weird here?
+
+Maxime
+
+--7qlwsrkwbcxhj43j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlTknwAKCRDj7w1vZxhR
+xTU6AQD8Cy+uoGwSrrpsJlekRlGK1bt9y8kmOWrOWFI/wEg4sgEA1FuWrfWI4m9J
+4Mg4k4q9o4wFx3JoZnsWCNziqQYXugU=
+=agyM
+-----END PGP SIGNATURE-----
+
+--7qlwsrkwbcxhj43j--
