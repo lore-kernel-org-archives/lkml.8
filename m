@@ -2,83 +2,89 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83FCC35DFB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4502C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9985B20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916312467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TbCOTLvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgBYLrh (ORCPT
+        id S1730329AbgBYLrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:47:37 -0500
-Received: from mga03.intel.com ([134.134.136.65]:30644 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729510AbgBYLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:47:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 03:47:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
-   d="scan'208";a="384447662"
-Received: from ayakove1-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.12.5])
-  by orsmga004.jf.intel.com with ESMTP; 25 Feb 2020 03:47:31 -0800
-Date:   Tue, 25 Feb 2020 13:47:28 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     swboyd@chromium.org, kernel@collabora.com,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 1/1] Add TPM 2.0 compatible I2C interface for chips with
- cr50 firmware.
-Message-ID: <20200225114728.GA15662@linux.intel.com>
-References: <20200225110810.1321686-1-fabien.lahoudere@collabora.com>
+        Tue, 25 Feb 2020 06:47:52 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34005 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729221AbgBYLrw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:47:52 -0500
+X-UUID: 4e1207c9983546bbb40cbe2c083f0038-20200225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=uG/aJuarO3hgV1jRiJvimGDQyEGjg4zprETLw6mHtxc=;
+        b=TbCOTLvKvSO0DfRTVDpIAnaEw2IPfHLGbeB7W350MqTT7uhtyir12Zrcp6L1ulVMNV+CrWXBeStFUJyu12+Nr8m4lngsf/Qrlt1DkkEIX5r1DmfN4Ri0JQSgEeSUwAH4ysA0BjVCTQjJjU8aE7z8IaR3RjTPvCkp27lySoZteSY=;
+X-UUID: 4e1207c9983546bbb40cbe2c083f0038-20200225
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 468850720; Tue, 25 Feb 2020 19:47:39 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Feb
+ 2020 19:46:17 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Tue, 25 Feb 2020 19:46:18 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v2 1/4] dt-binds: display: mediatek: add property to control mipi tx drive current
+Date:   Tue, 25 Feb 2020 19:47:27 +0800
+Message-ID: <20200225114730.124939-2-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200225114730.124939-1-jitao.shi@mediatek.com>
+References: <20200225114730.124939-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225110810.1321686-1-fabien.lahoudere@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 40DE30FEC415DA454AAABC48CB3544E2F670014FB02503C8587B9B19739D33C22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:08:07PM +0100, Fabien Lahoudere wrote:
-> The firmware running on the currently supported H1 MCU requires a
-> special driver to handle its specific protocol, and this makes it
-> unsuitable to use tpm_tis_core_* and instead it must implement the
-> underlying TPM protocol similar to the other I2C TPM drivers.
-> 
-> - All 4 byes of status register must be read/written at once.
-> - FIFO and burst count is limited to 63 and must be drained by AP.
-> - Provides an interrupt to indicate when read response data is ready
-> and when the TPM is finished processing write data.
-> 
-> This driver is based on the existing infineon I2C TPM driver, which
-> most closely matches the cr50 i2c protocol behavior.  The driver is
-> intentionally kept very similar in structure and style to the
-> corresponding drivers in coreboot and depthcharge.
-> 
-> Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
-> [swboyd@chromium.org: Depend on i2c even if it's a module, replace
-> boilier plate with SPDX tag, drop asm/byteorder.h include, simplify
-> return from probe]
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+QWRkIGEgcHJvcGVydHkgdG8gY29udHJvbCBtaXBpIHR4IGRyaXZlIGN1cnJlbnQ6DQoibWlwaXR4
+LWN1cnJlbnQtZHJpdmUiDQoNClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
+ZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0
+ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICAgfCA0ICsrKysNCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNl
+cnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dA0KaW5kZXgg
+YTE5YTZjYzM3NWVkLi43ODAyMDFkZGNkNWMgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0DQorKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRp
+YXRlayxkc2kudHh0DQpAQCAtMzMsNiArMzMsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIC0g
+I2Nsb2NrLWNlbGxzOiBtdXN0IGJlIDwwPjsNCiAtICNwaHktY2VsbHM6IG11c3QgYmUgPDA+Lg0K
+IA0KK09wdGlvbmFsIHByb3BlcnRpZXM6DQorLSBtaXBpdHgtY3VycmVudC1kcml2ZTogYWRqdXN0
+IGRyaXZpbmcgY3VycmVudCwgc2hvdWxkIGJlIDEgfiAweEYNCisNCiBFeGFtcGxlOg0KIA0KIG1p
+cGlfdHgwOiBtaXBpLWRwaHlAMTAyMTUwMDAgew0KQEAgLTQyLDYgKzQ1LDcgQEAgbWlwaV90eDA6
+IG1pcGktZHBoeUAxMDIxNTAwMCB7DQogCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJtaXBpX3R4MF9w
+bGwiOw0KIAkjY2xvY2stY2VsbHMgPSA8MD47DQogCSNwaHktY2VsbHMgPSA8MD47DQorCW1pcGl0
+eC1jdXJyZW50LWRyaXZlID0gPDB4OD47DQogfTsNCiANCiBkc2kwOiBkc2lAMTQwMWIwMDAgew0K
+LS0gDQoyLjIxLjANCg==
 
-The code quality looks overally decent, checkpatch.pl does not complain
-and neither does sparse.
-
-My only concern is the lack of tested-by's.
-
-/Jarkko
