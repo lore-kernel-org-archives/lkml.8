@@ -2,106 +2,68 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF80C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB7DC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFAC2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6692084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731755AbgBYUWf (ORCPT
+        id S1731758AbgBYUYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:22:35 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53946 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731565AbgBYUWe (ORCPT
+        Tue, 25 Feb 2020 15:24:35 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46829 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbgBYUYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:22:34 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 890913C009D;
-        Tue, 25 Feb 2020 21:22:32 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vydUNAF9Bs4E; Tue, 25 Feb 2020 21:22:26 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 824033C005E;
-        Tue, 25 Feb 2020 21:22:26 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 25 Feb
- 2020 21:22:26 +0100
-Date:   Tue, 25 Feb 2020 21:22:23 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-CC:     <linux-usb@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        <scan-admin@coverity.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] usb: hub: Fix unhandled return value of
- usb_autopm_get_interface()
-Message-ID: <20200225202223.GA9154@lxhi-065.adit-jv.com>
-References: <20200225191241.GA32410@lxhi-065.adit-jv.com>
- <Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org>
+        Tue, 25 Feb 2020 15:24:34 -0500
+Received: by mail-ot1-f67.google.com with SMTP id g64so717309otb.13;
+        Tue, 25 Feb 2020 12:24:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=SarAUtwSg/du3J2AkC0iqKUiVmVTqsDv5t7WA8bnfZJvWzelWPe+bORPKJbA7yxEGV
+         aE8na/uE2+zJo9unRXvVxRxA3P2jhuQTGdc0iP6jcuXQZ9decqzCNMsd4mp7GXJxkxiK
+         4OPhbSwBTFqrKJw4HcXUlruDflQw/cLpR5/ud/U+ABmuKtFq06Y0hzCoy2+dKvEImDIS
+         mIv4yD82LiyLxst1iBRLaIrLFUUbg1IoOnaBdcMWi69/NfVvnkUic5SsFoopzTLk/KSM
+         l5tGpY9CrLnP7FVlVIqdOuHiNEfZ6dRHPJBiFrXBB/fH0kk35d3s9+yvOZn86EajREky
+         ArJQ==
+X-Gm-Message-State: APjAAAXV/pHYEyGWsWH+wrkPEnqTOsbD8pnD4WvyWmzttrUWdVEPNW5m
+        0m8AwX4IAjRSu727Ifa8zHM=
+X-Google-Smtp-Source: APXvYqx5EGiLCfIm35x2UQKiBboqPVfPqsypKW8ua6yYrgulykDBfuhSzfywyh1HFj30yx2LA9MC4A==
+X-Received: by 2002:a9d:76d6:: with SMTP id p22mr294967otl.37.1582662274074;
+        Tue, 25 Feb 2020 12:24:34 -0800 (PST)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id l8sm2643863otn.31.2020.02.25.12.24.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 12:24:33 -0800 (PST)
+Subject: Re: [PATCH v2 4/5] drivers/nvme/host/core.c: Convert to use
+ set_capacity_revalidate_and_notify
+To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     axboe@kernel.dk, Chaitanya.Kulkarni@wdc.com, mst@redhat.com,
+        jejb@linux.ibm.com, hch@lst.de
+References: <20200225200129.6687-1-sblbir@amazon.com>
+ <20200225200129.6687-5-sblbir@amazon.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <ef01984d-1052-70cf-f0b9-d46557c2af51@grimberg.me>
+Date:   Tue, 25 Feb 2020 12:24:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org>
-X-Originating-IP: [10.72.93.66]
+In-Reply-To: <20200225200129.6687-5-sblbir@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
-
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
-> On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
-> > [1] (v5.6-rc3) git grep -En "[^=]\s+usb_autopm_get_interface\("
-> >   drivers/input/touchscreen/usbtouchscreen.c:1788:  usb_autopm_get_interface(intf);
-> >   drivers/media/usb/stkwebcam/stk-webcam.c:628:     usb_autopm_get_interface(dev->interface);
-> >   drivers/net/usb/hso.c:1308:                       usb_autopm_get_interface(serial->parent->interface);
-> >   drivers/net/usb/r8152.c:5231:                     usb_autopm_get_interface(tp->intf);
-> >   sound/usb/usx2y/us122l.c:192:                     usb_autopm_get_interface(iface);
-> 
-> Your regular expression isn't right because it doesn't match lines
-> where the usb_autopm_get_interface() is preceded only by one whitespace
-> character (i.e., a tab).  It also will match lines where there are two
-> space characters between the = sign and the function name.  I think
-> what you want is more like "(^|[^=[:space:]])\s*" at the start of the
-> RE.
-
-Agreed. My version filters out some true positives.
-
-> 
-> A revised search finds line 997 in drivers/usb/core/hub.c and lines
-> 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
-> other directories.)  AFAICT all three of these should check the return
-> value, although a error message in the kernel log probably isn't
-> needed.
-> 
-> Do you want to fix those instances up also, maybe merging them in with
-> the existing patch?
-
-I wonder if squashing all these fixes into one patch is the best option.
-
-There are three commits fixed by the proposed changes in usb core:
- - v5.6-rc3 commit 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
- - v3.9-rc1 commit 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
- - v2.6.33-rc1 commit 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
-
-I assume a single fix will create some pain when applying it to the
-stable branches. Do you have any preference/inputs about that?
-
--- 
-Best Regards
-Eugeniu Rosca
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
