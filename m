@@ -2,117 +2,197 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BD7C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87505C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F5D21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582657879;
-	bh=BeJpMvaZahOUlbA/bPHsDH8N/5uG+Ua83qMFtzOB9ms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VuUvDsIw5JyUxv5BXwtyHWm4tWTYghHY/kS5syVd6yvnirfa7lJze38xj0pOF9WQW
-	 DvWf4KKZTQrqItSmAMwJ4e0SNp9t0c5VieIPH61goiLy9sUGAzrPU5hLuzNnWrmNdb
-	 QdEJjqqGLGUVj5MPEjJFAWdJYTBOKri7wAkaQYSI=
+	by mail.kernel.org (Postfix) with ESMTP id 598E921556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1PgCMWXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbgBYTLS (ORCPT
+        id S1731309AbgBYTMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:11:18 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38501 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729489AbgBYTLS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:11:18 -0500
-Received: by mail-pg1-f195.google.com with SMTP id d6so13154pgn.5;
-        Tue, 25 Feb 2020 11:11:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6fj2i98wrBqHNFBClWRPI0aXIGQwNsnnkHZjmeFx4vo=;
-        b=lEmnenjDQ2KVRDWbKgSezI5Y9S8HulB2boliEz/CIatSs7pal+yLKXus2dAQKcc8LX
-         TnTu6evVNMB5AFZAiBL5L/0Y+tEsExAwiZbkh8KkBVmyXV37DRwgjo4kIGhTYMRzN640
-         9kwkEwnsRs/C/nzTUBppNb8rsAJm+9ICP7ygdS10CVfnHO4yQ1U3waNFCPpRLBV7B2s9
-         L4XjYATIPTELXyBUKL5DkT9D9HAuZsh8KRUU1oGNJIgF9yzCaPJ+wkOZMyG/q3lnMDh/
-         eqDoCIOFAZHgIETVWFbOK7UCY6/h+W+Q6EQDdD2++5clWLHdGKXE0lB/IE6thDr5VGcV
-         QgUw==
-X-Gm-Message-State: APjAAAXj2550UR9JP2QfjExfG0C3JND9uApKkZ/I/u1DfSuf7dJdRWmD
-        uyhV7VyyYhG/d71rFCGiXHQ=
-X-Google-Smtp-Source: APXvYqwPLMBR9bomYY3aI/v3GcwJxrQRcety3+JoHAeMIv2R3wYeF8p6mSSAyFUeGQtBIirNlQUkag==
-X-Received: by 2002:a63:48f:: with SMTP id 137mr2886pge.245.1582657875635;
-        Tue, 25 Feb 2020 11:11:15 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id s125sm17944724pgc.53.2020.02.25.11.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 11:11:13 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 59BFA40297; Tue, 25 Feb 2020 19:11:12 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 19:11:12 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 3/7] test_firmware: add partial read support for
- request_firmware_into_buf
-Message-ID: <20200225191112.GX11244@42.do-not-panic.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-4-scott.branden@broadcom.com>
- <20200220084255.GW7838@kadam>
- <9afab7f8-1b5f-a7bb-6b76-f7b19efb2979@broadcom.com>
- <4a666590-461d-17f9-5580-31a41869383f@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Tue, 25 Feb 2020 14:12:02 -0500
+Received: from mail-mw2nam12on2054.outbound.protection.outlook.com ([40.107.244.54]:46761
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728913AbgBYTMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:12:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BatMAKBtFr4SEieHwCIo9dp1aSzKIDfPDrL8u04wRmIdGAUC/ct+s5hkox6euU/lyT6+qvuqN0aESbf/KqFZUtJN4JlqUlq+UVHJz9qX+grVBkb4ga4u6JKddlNKdGOahl3m+T2uhHjtjH8YHRnE9ZjviBTi2nk8dI+lvihzZG6EC2uMYnuiCVap3I8oJ4Lhfm2kOA9X7wrRGV4GSY+ksYyZ6VmJPmolZjGt8EK8wTU5BxmcU3hcejqiPf+e6gzZyeg7dxIhQWU8zGVYRz9l4mjxqvjgXyLxb+jl6OQImlVcYOtG6pEe7kNVoYTwcB1KUbpLzHYjFOiRc1pPDfdYDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PtU6v/jCEZ2hu/8tfy4y3eHBCWQByApfdOOb+N1qRA0=;
+ b=U61J+t7UP/Va8W5CS5iKgzz+uV0HTs3yTGjsmkRpprl8JpAIcN82S25u9giOf3QEuy/VL3IIN3nBlTJ7ksk7H2uBnqd9o6LZZJKCq2Ez90Rk3qcpmrGZ3bNDEzdU/ImnSZkHaMN+h0TgKAOCdA0DfhG7muGdCjbUgENhbexTxplLhLlmYFORx6QUO4JccTktaxzKZe/4+DztzqCGUeZd0R9kxhj5tXWNLV8qhqoa5vHUWvXSrMJVLdA4qRdU8gRlLqDi4TcV5OlXp9YPuotO/v0T7ZCXOCC54gfbqmvSNt3tezHsUWjVM4wldaeOF7TTHNvBO9FkKWMcz9wf1vv2ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PtU6v/jCEZ2hu/8tfy4y3eHBCWQByApfdOOb+N1qRA0=;
+ b=1PgCMWXZpbHMAscrkrML7pp7tEkap85SSbLm5SKDzIM5Ef/iEdXQ4eZgYgx1u37/NYnHcT8Lo+6Xc7jy3jrECHQHRSe6KN6kRX/Zs1V+Crr9JZPTaw1jFmTbe/wNrBcGrwj/MUWtZjuca+uzUpnmKahq+h/ReVIof4gyFWSW5O4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
+ by DM5PR12MB1593.namprd12.prod.outlook.com (2603:10b6:4:10::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
+ 2020 19:11:58 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2750.021; Tue, 25 Feb
+ 2020 19:11:58 +0000
+Subject: Re: [PATCH] dma-buf: Fix missing excl fence waiting
+To:     "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>
+References: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
+ <7a2eb42a-2dd9-4303-3947-6bbb4de7a888@amd.com>
+ <20200225172355.GO2363188@phenom.ffwll.local>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <484ce316-55f2-b85e-a1e4-730db94f3fe3@amd.com>
+Date:   Tue, 25 Feb 2020 20:11:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20200225172355.GO2363188@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4a666590-461d-17f9-5580-31a41869383f@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-ClientProxiedBy: AM4PR0701CA0003.eurprd07.prod.outlook.com
+ (2603:10a6:200:42::13) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR0701CA0003.eurprd07.prod.outlook.com (2603:10a6:200:42::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.13 via Frontend Transport; Tue, 25 Feb 2020 19:11:55 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b69dfaa3-a790-410d-e8f1-08d7ba2695bf
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1593:|DM5PR12MB1593:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1593ECA93D70861682F8B59D83ED0@DM5PR12MB1593.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(189003)(199004)(8676002)(110136005)(316002)(16526019)(6666004)(5660300002)(186003)(478600001)(86362001)(66476007)(8936002)(2906002)(31696002)(66946007)(36756003)(52116002)(66574012)(2616005)(66556008)(81156014)(6486002)(31686004)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1593;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9O7QAB7YHVvHcpHVrF2a6vknygV3eGMwFSn28taGfUGHV1v9xN6NpCahLIRO8EneE83n3sDBqaUSS0+UlyGY7p28UMpnHVuT8sODqE7IRVVYKJUdMZhLlKTB10hG+qoknMN7q0wZlYaVFpBFdQR2jj5KZl/xV3a+fHzxuQCph2C8OvOBgcza/oQ4KDNFPrflIf//6dPCcsXh1L4zwnK8Zn7684a5n4fPePgf/ChV+3xZ4og6LT2I68rBz2OHbHiKiZxlAzqpM2OyvJQctcvI24ckVb6ACnxd7F8wY+Ovfqv9M7XeCz2XwMB6z08BaiexQPNfzqAFxdKQgk84aElDAqxuy4WXev/W5ERlQII0/QP5mSqn/YPAb/K+GY9bzMFSwttofbrP1XSLy7RHNAZVkDWy+jM3xnO6Zc2fHA1juUh/3lUMmdCg5nZjUaE1La0K
+X-MS-Exchange-AntiSpam-MessageData: PFZpdjxEOePgsBso5/Cf7XYTOHqn8C2JT/lHpdXLwRTVWnLTs+r2AvLzKovtRXHwjGe3m2s9CXc4abfIhc3x/LbJXU9O1Una8n6/nyC14G8+9wxUDta7fY2b3wLu3TRg+61gltTrwjusvThfF5ls/7gz7PqQH2JgYcZD4jX9k1XZMOjUtu7YG6deo9cIZ103r9917Qh3ykQuQzgaQE8UxA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b69dfaa3-a790-410d-e8f1-08d7ba2695bf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 19:11:58.2519
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7j0x8XM9HYcPM6bgeimA8Q1kvFMSb7zzuaRiXLzk3Y8jDjXRL0hiWmbk2VdQLXRl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1593
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:13:08PM -0800, Scott Branden wrote:
-> > > > +static ssize_t test_dev_config_show_size_t(char *buf, int cfg)
-> > > > +{
-> > > > +    size_t val;
-> > > > +
-> > > > +    mutex_lock(&test_fw_mutex);
-> > > > +    val = cfg;
-> > > > +    mutex_unlock(&test_fw_mutex);
-> > > Both val and cfg are stack variables so there is no need for locking.
-> > > Probably you meant to pass a pointer to cfg?
-> I am following the existing code as was done for
-> test_dev_config_show_bool(),
-> test_dev_config_show_int(),
-> test_dev_config_show_u8()
-> 
-> Mutex probably not needed but I don't think I need to deviate from the rest
-> of the test code.
-> 
-> Luis, could you please explain what the rest of your code is doing?
+Am 25.02.20 um 18:23 schrieb Daniel Vetter:
+> On Sun, Feb 23, 2020 at 01:04:15PM +0100, Christian KÃ¶nig wrote:
+>> Am 23.02.20 um 12:56 schrieb Pan, Xinhui:
+>>> If shared fence list is not empty, even we want to test all fences, excl fence is ignored.
+>>> That is abviously wrong, so fix it.
+>> Yeah that is a known issue and I completely agree with you, but other
+>> disagree.
+>>
+>> See the shared fences are meant to depend on the exclusive fence. So all
+>> shared fences must finish only after the exclusive one has finished as well.
+>>
+>> The problem now is that for error handling this isn't necessary true. In
+>> other words when a shared fence completes with an error it is perfectly
+>> possible that he does this before the exclusive fence is finished.
+>>
+>> I'm trying to convince Daniel that this is a problem for years :)
+> I thought the consensus is that reasonable gpu schedulers and gpu reset
+> code should try to make really, really sure it only completes stuff in
+> sequence? That's at least my take away from the syncobj timeline
+> discussion, where you convinced me we shouldn't just crash&burn.
+>
+> I think as long as your scheduler is competent and your gpu reset tries to
+> limit damage (i.e. kill offending ctx terminally, mark everything else
+> that didn't complete for re-running) we should end up with everything
+> completing in sequence. I guess if you do kill a lot more stuff, then
+> you'd have to push these through your scheduler as dummy jobs, i.e. they
+> still wait for their dependencies, but then all they do is set the
+> dma_fence error and complete it. Maybe something the common scheduler
+> could do.
 
-The lock is indeed not needed in the functions you mentioned, so you can
-also remove the other locks as a precursor patch. It would be a seperate
-patch.
+Yes, that's exactly how we currently implement it. But I still think 
+that this is not necessary the best approach :)
 
-  Luis
+Anyway Xinhui's problem turned out to be deeper. We somehow add an old 
+stale fence to the dma_resv object sometimes and that can result in 
+quite a bunch of problems.
+
+I'm currently trying to hunt down what's going wrong here in more detail.
+
+Regards,
+Christian.
+
+> -Daniel
+>
+>> Regards,
+>> Christian.
+>>
+>>> Signed-off-by: xinhui pan <xinhui.pan@amd.com>
+>>> ---
+>>>    drivers/dma-buf/dma-resv.c | 9 +++++----
+>>>    1 file changed, 5 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+>>> index 4264e64788c4..44dc64c547c6 100644
+>>> --- a/drivers/dma-buf/dma-resv.c
+>>> +++ b/drivers/dma-buf/dma-resv.c
+>>> @@ -632,14 +632,14 @@ static inline int dma_resv_test_signaled_single(struct dma_fence *passed_fence)
+>>>     */
+>>>    bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+>>>    {
+>>> -	unsigned seq, shared_count;
+>>> +	unsigned int seq, shared_count, left;
+>>>    	int ret;
+>>>    	rcu_read_lock();
+>>>    retry:
+>>>    	ret = true;
+>>>    	shared_count = 0;
+>>> -	seq = read_seqcount_begin(&obj->seq);
+>>> +	left = seq = read_seqcount_begin(&obj->seq);
+>>>    	if (test_all) {
+>>>    		unsigned i;
+>>> @@ -647,7 +647,7 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+>>>    		struct dma_resv_list *fobj = rcu_dereference(obj->fence);
+>>>    		if (fobj)
+>>> -			shared_count = fobj->shared_count;
+>>> +			left = shared_count = fobj->shared_count;
+>>>    		for (i = 0; i < shared_count; ++i) {
+>>>    			struct dma_fence *fence = rcu_dereference(fobj->shared[i]);
+>>> @@ -657,13 +657,14 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+>>>    				goto retry;
+>>>    			else if (!ret)
+>>>    				break;
+>>> +			left--;
+>>>    		}
+>>>    		if (read_seqcount_retry(&obj->seq, seq))
+>>>    			goto retry;
+>>>    	}
+>>> -	if (!shared_count) {
+>>> +	if (!left) {
+>>>    		struct dma_fence *fence_excl = rcu_dereference(obj->fence_excl);
+>>>    		if (fence_excl) {
+
