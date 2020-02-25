@@ -2,116 +2,285 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0186EC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A024C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C714C20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKhOPmQ1"
+	by mail.kernel.org (Postfix) with ESMTP id 0D73420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgBYIlP (ORCPT
+        id S1729698AbgBYIo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:41:15 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42176 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgBYIlP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:41:15 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so11357640otd.9;
-        Tue, 25 Feb 2020 00:41:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q0vy786giS+lfp9bUB7XCIUFz0pQEN7EOGsmAN4eRm4=;
-        b=nKhOPmQ12wJJY6QSzkKm4CK+u010U9hKN8hfKFhUBkr97meisT8QguznR33/Z4Kl7z
-         Ub8spInGXBKTZE5yO2/VfS1vd4WJR/Xbf/TthA/OP/McjtwnLL2Av2EeM4VrrRjGaYwI
-         pI3xKVxC6wqvftu25MA08OL3HhAfyJhxCJbwDl+0T7LN7u5ckm0QfkuLmfxv1K6AVNkd
-         lLv5o4VeZBvi0BBtF6Fb4l+ppbV4hs994DBkXPaY/dq76RkBvW335kqEZH60kswOPAiL
-         u3YETeq6nnY6U3lt5CL6ACiqoQFZllNSrxS8eJnlCkhbNH/gwMGfR14B1mybcHBVckEa
-         eaxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q0vy786giS+lfp9bUB7XCIUFz0pQEN7EOGsmAN4eRm4=;
-        b=Hiq8lOr7j2o3kt3zma0UU2V70bF1zzYvuiNbWVy/ZAUt5LqcvI90OM4OuCdDp+LOWQ
-         ynfdLdveMeuKvgNOeFdv/+ORcnbBYm/rfeNsFLfFNGkkV34MRo0g6sr7YMOXiXT5azmM
-         0wovHjTgxCq2v+/zDuja/HYKpqa9hky76dN3ZwYXeGuwX9SZdz9iJRZqL+SFlthsdp6V
-         09IqMALS/VxNGO+21bJxfRI0UV9y5k8LP1rXuQev9kWxuZ9xgIAdUsuAbUdS8h8GEOFS
-         pQajJ918eBjsZzkTFYWANbtYIU+lEzjeyUTJvMbUBkeyQ7FcOdoQQM52d6F1RjSTMkrP
-         v+lw==
-X-Gm-Message-State: APjAAAVwNO/xcFWt5Tq3wub1N2eGwp8aKnOlD8QlYUC/AKWBWYMOiu2O
-        BsOflYVPlbSv9DMFMN/mzvxBWqJkWCUJ9rfV9+M=
-X-Google-Smtp-Source: APXvYqzA2EItrptKtNT16zTMptHEmpZx46ZO+RBh1Rcrb41daUqfBQ8kLLZi82Lj75DFkuBbEx1awmuMPp2y/3v4QUM=
-X-Received: by 2002:a9d:7ccd:: with SMTP id r13mr42256692otn.56.1582620074234;
- Tue, 25 Feb 2020 00:41:14 -0800 (PST)
+        Tue, 25 Feb 2020 03:44:58 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50946 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726039AbgBYIo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:44:58 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1B2F263DB4E41E85B3DA;
+        Tue, 25 Feb 2020 16:44:51 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 25 Feb
+ 2020 16:44:47 +0800
+Subject: Re: [PATCH] f2fs: use kmem_cache pool during inline xattr lookups
+To:     Ju Hyung Park <qkrwngud825@gmail.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>
+References: <20200225014257.83903-1-yuchao0@huawei.com>
+ <CAD14+f0e5RsntWQk+0=_6f0rJt=0GNBQBZZ3BqjbQzZqJ7f4iw@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <1a938ebc-27ec-9e6d-e108-7a4c813aa1c4@huawei.com>
+Date:   Tue, 25 Feb 2020 16:44:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <07348bb2-c8a5-41d0-afca-26c1056570a5.bangcai.hrg@alibaba-inc.com>
- <CANRm+CwZq=FbCwRcyO=C7YinLevmMuVVu9auwPqyho3o-4Y-wQ@mail.gmail.com> <660daad7-afb0-496d-9f40-a1162d5451e2.bangcai.hrg@alibaba-inc.com>
-In-Reply-To: <660daad7-afb0-496d-9f40-a1162d5451e2.bangcai.hrg@alibaba-inc.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 25 Feb 2020 16:41:02 +0800
-Message-ID: <CANRm+Cw08uxwW8iUi96CJjmvfbtSd6ePXpAPPScByhoNLCrAWQ@mail.gmail.com>
-Subject: Re: [RFC] Question about async TLB flush and KVM pv tlb improvements
-To:     =?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?= <bangcai.hrg@alibaba-inc.com>
-Cc:     namit <namit@vmware.com>, peterz <peterz@infradead.org>,
-        pbonzini <pbonzini@redhat.com>,
-        "dave.hansen" <dave.hansen@intel.com>, mingo <mingo@redhat.com>,
-        tglx <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "dave.hansen" <dave.hansen@linux.intel.com>, bp <bp@alien8.de>,
-        luto <luto@kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?5p6X5rC45ZCsKOa1t+aeqyk=?= <yongting.lyt@alibaba-inc.com>,
-        =?UTF-8?B?5ZC05ZCv57++KOWQr+e/vik=?= <qixuan.wqx@alibaba-inc.com>,
-        herongguang <herongguang@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD14+f0e5RsntWQk+0=_6f0rJt=0GNBQBZZ3BqjbQzZqJ7f4iw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 15:53, =E4=BD=95=E5=AE=B9=E5=85=89(=E9=82=A6=E9=87=
-=87) <bangcai.hrg@alibaba-inc.com> wrote:
->
-> > On Tue, 25 Feb 2020 at 12:12, =E4=BD=95=E5=AE=B9=E5=85=89(=E9=82=A6=E9=
-=87=87) <bangcai.hrg@alibaba-inc.com> wrote:
-> >>
-> >> Hi there,
-> >>
-> >> I saw this async TLB flush patch at https://lore.kernel.org/patchwork/=
-patch/1082481/ , and I am wondering after one year, do you think if this pa=
-tch is practical or there are functional flaws?
-> >> From my POV, Nadav's patch seems has no obvious flaw. But I am not fam=
-iliar about the relationship between CPU's speculation exec and stale TLB, =
-since it's usually transparent from programing. In which condition would ma=
-chine check occurs? Is there some reference I can learn?
-> >> BTW, I am trying to improve kvm pv tlb flush that if a vCPU is preempt=
-ed, as initiating CPU is not sending IPI to and waiting for the preempted v=
-CPU, when the preempted vCPU is resuming, I want the VMM to inject an inter=
-rupt, perhaps NMI, to the vCPU and letting vCPU flush TLB instead of flush =
-TLB for the vCPU, in case the vCPU is not in kernel mode or disabled interr=
-upt, otherwise stick to VMM flush. Since VMM flush using INVVPID would flus=
-h all TLB of all PCID thus has some negative performance impacting on the p=
-reempted vCPU. So is there same problem as the async TLB flush patch?
->
-> > PV TLB Shootdown is disabled in dedicated scenario, I believe there
-> > are already heavy tlb misses in overcommit scenarios before this
-> > feature, so flush all TLB associated with one specific VPID will not
-> > worse that much.
->
-> If vcpus running on one pcpu is limited to a few, from my test, there
-> can still be some beneficial. Especially if we can move all the logic to
+Hi Ju Hyung,
 
-Unless the vCPU is preempted.
+Thanks for the reply.
 
-> VMM eliminating waiting of IPI, however correctness of functionally
-> is a concern. This is also why I found Nadav's patch, do you have
-> any advice on this?
+On 2020/2/25 14:37, Ju Hyung Park wrote:
+> Hi Chao.
+> 
+> Sorry for the late reply, I've been busy with my uni stuffs.
+> 
+> It's nice to see this issue getting some attentions back, but
+> unfortunately, I can't test it at the moment.
+> 
+> Here's the patch we used to see the alloc statistics:
+> https://pastebin.com/bhBh2dgs by Sultan Alsawaf.
+
+Thanks for providing statistic patch, let me check this latter.
+
+Thanks,
+
+> 
+> Hope it helps.
+> 
+> On Tue, Feb 25, 2020 at 10:43 AM Chao Yu <yuchao0@huawei.com> wrote:
+>>
+>> It's been observed that kzalloc() on lookup_all_xattrs() are called millions
+>> of times on Android, quickly becoming the top abuser of slub memory allocator.
+>>
+>> Use a dedicated kmem cache pool for xattr lookups to mitigate this.
+>>
+>> Signed-off-by: Park Ju Hyung <qkrwngud825@gmail.com>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>
+>> Hi, Ju Hyung,
+>>
+>> Let me know if you have any objection on this patch. :)
+>>
+>>  fs/f2fs/f2fs.h  |  3 +++
+>>  fs/f2fs/super.c | 10 ++++++++-
+>>  fs/f2fs/xattr.c | 54 ++++++++++++++++++++++++++++++++++++++++++++-----
+>>  fs/f2fs/xattr.h |  4 ++++
+>>  4 files changed, 65 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 12a197e89a3e..23b93a116c73 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1486,6 +1486,9 @@ struct f2fs_sb_info {
+>>         __u32 s_chksum_seed;
+>>
+>>         struct workqueue_struct *post_read_wq;  /* post read workqueue */
+>> +
+>> +       struct kmem_cache *inline_xattr_slab;   /* inline xattr entry */
+>> +       unsigned int inline_xattr_slab_size;    /* default inline xattr slab size */
+>>  };
+>>
+>>  struct f2fs_private_dio {
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index d241e07c0bfa..0b16204d3b7d 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -1201,6 +1201,7 @@ static void f2fs_put_super(struct super_block *sb)
+>>         kvfree(sbi->raw_super);
+>>
+>>         destroy_device_list(sbi);
+>> +       f2fs_destroy_xattr_caches(sbi);
+>>         mempool_destroy(sbi->write_io_dummy);
+>>  #ifdef CONFIG_QUOTA
+>>         for (i = 0; i < MAXQUOTAS; i++)
+>> @@ -3457,12 +3458,17 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>                 }
+>>         }
+>>
+>> +       /* init per sbi slab cache */
+>> +       err = f2fs_init_xattr_caches(sbi);
+>> +       if (err)
+>> +               goto free_io_dummy;
+>> +
+>>         /* get an inode for meta space */
+>>         sbi->meta_inode = f2fs_iget(sb, F2FS_META_INO(sbi));
+>>         if (IS_ERR(sbi->meta_inode)) {
+>>                 f2fs_err(sbi, "Failed to read F2FS meta data inode");
+>>                 err = PTR_ERR(sbi->meta_inode);
+>> -               goto free_io_dummy;
+>> +               goto free_xattr_cache;
+>>         }
+>>
+>>         err = f2fs_get_valid_checkpoint(sbi);
+>> @@ -3735,6 +3741,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>         make_bad_inode(sbi->meta_inode);
+>>         iput(sbi->meta_inode);
+>>         sbi->meta_inode = NULL;
+>> +free_xattr_cache:
+>> +       f2fs_destroy_xattr_caches(sbi);
+>>  free_io_dummy:
+>>         mempool_destroy(sbi->write_io_dummy);
+>>  free_percpu:
+>> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+>> index a3360a97e624..e46a10eb0e42 100644
+>> --- a/fs/f2fs/xattr.c
+>> +++ b/fs/f2fs/xattr.c
+>> @@ -23,6 +23,25 @@
+>>  #include "xattr.h"
+>>  #include "segment.h"
+>>
+>> +static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
+>> +{
+>> +       *is_inline = (size == sbi->inline_xattr_slab_size);
+>> +
+>> +       if (*is_inline)
+>> +               return kmem_cache_zalloc(sbi->inline_xattr_slab, GFP_NOFS);
+>> +
+>> +       return f2fs_kzalloc(sbi, size, GFP_NOFS);
+>> +}
+>> +
+>> +static void xattr_free(struct f2fs_sb_info *sbi, void *xattr_addr,
+>> +                                                       bool is_inline)
+>> +{
+>> +       if (is_inline)
+>> +               kmem_cache_free(sbi->inline_xattr_slab, xattr_addr);
+>> +       else
+>> +               kvfree(xattr_addr);
+>> +}
+>> +
+>>  static int f2fs_xattr_generic_get(const struct xattr_handler *handler,
+>>                 struct dentry *unused, struct inode *inode,
+>>                 const char *name, void *buffer, size_t size)
+>> @@ -301,7 +320,8 @@ static int read_xattr_block(struct inode *inode, void *txattr_addr)
+>>  static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>>                                 unsigned int index, unsigned int len,
+>>                                 const char *name, struct f2fs_xattr_entry **xe,
+>> -                               void **base_addr, int *base_size)
+>> +                               void **base_addr, int *base_size,
+>> +                               bool *is_inline)
+>>  {
+>>         void *cur_addr, *txattr_addr, *last_txattr_addr;
+>>         void *last_addr = NULL;
+>> @@ -313,7 +333,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>>                 return -ENODATA;
+>>
+>>         *base_size = XATTR_SIZE(inode) + XATTR_PADDING_SIZE;
+>> -       txattr_addr = f2fs_kzalloc(F2FS_I_SB(inode), *base_size, GFP_NOFS);
+>> +       txattr_addr = xattr_alloc(F2FS_I_SB(inode), *base_size, is_inline);
+>>         if (!txattr_addr)
+>>                 return -ENOMEM;
+>>
+>> @@ -362,7 +382,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>>         *base_addr = txattr_addr;
+>>         return 0;
+>>  out:
+>> -       kvfree(txattr_addr);
+>> +       xattr_free(F2FS_I_SB(inode), txattr_addr, *is_inline);
+>>         return err;
+>>  }
+>>
+>> @@ -499,6 +519,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+>>         unsigned int size, len;
+>>         void *base_addr = NULL;
+>>         int base_size;
+>> +       bool is_inline;
+>>
+>>         if (name == NULL)
+>>                 return -EINVAL;
+>> @@ -509,7 +530,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+>>
+>>         down_read(&F2FS_I(inode)->i_xattr_sem);
+>>         error = lookup_all_xattrs(inode, ipage, index, len, name,
+>> -                               &entry, &base_addr, &base_size);
+>> +                               &entry, &base_addr, &base_size, &is_inline);
+>>         up_read(&F2FS_I(inode)->i_xattr_sem);
+>>         if (error)
+>>                 return error;
+>> @@ -532,7 +553,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+>>         }
+>>         error = size;
+>>  out:
+>> -       kvfree(base_addr);
+>> +       xattr_free(F2FS_I_SB(inode), base_addr, is_inline);
+>>         return error;
+>>  }
+>>
+>> @@ -767,3 +788,26 @@ int f2fs_setxattr(struct inode *inode, int index, const char *name,
+>>         f2fs_update_time(sbi, REQ_TIME);
+>>         return err;
+>>  }
+>> +
+>> +int f2fs_init_xattr_caches(struct f2fs_sb_info *sbi)
+>> +{
+>> +       dev_t dev = sbi->sb->s_bdev->bd_dev;
+>> +       char slab_name[32];
+>> +
+>> +       sprintf(slab_name, "f2fs_xattr_entry-%u:%u", MAJOR(dev), MINOR(dev));
+>> +
+>> +       sbi->inline_xattr_slab_size = F2FS_OPTION(sbi).inline_xattr_size *
+>> +                                       sizeof(__le32) + XATTR_PADDING_SIZE;
+>> +
+>> +       sbi->inline_xattr_slab = f2fs_kmem_cache_create(slab_name,
+>> +                                       sbi->inline_xattr_slab_size);
+>> +       if (!sbi->inline_xattr_slab)
+>> +               return -ENOMEM;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +void f2fs_destroy_xattr_caches(struct f2fs_sb_info *sbi)
+>> +{
+>> +       kmem_cache_destroy(sbi->inline_xattr_slab);
+>> +}
+>> diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
+>> index 574beea46494..7345dfa7b7a9 100644
+>> --- a/fs/f2fs/xattr.h
+>> +++ b/fs/f2fs/xattr.h
+>> @@ -131,6 +131,8 @@ extern int f2fs_setxattr(struct inode *, int, const char *,
+>>  extern int f2fs_getxattr(struct inode *, int, const char *, void *,
+>>                                                 size_t, struct page *);
+>>  extern ssize_t f2fs_listxattr(struct dentry *, char *, size_t);
+>> +extern int f2fs_init_xattr_caches(struct f2fs_sb_info *);
+>> +extern void f2fs_destroy_xattr_caches(struct f2fs_sb_info *);
+>>  #else
+>>
+>>  #define f2fs_xattr_handlers    NULL
+>> @@ -151,6 +153,8 @@ static inline ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer,
+>>  {
+>>         return -EOPNOTSUPP;
+>>  }
+>> +static int f2fs_init_xattr_caches(struct f2fs_sb_info *sbi) { return 0; }
+>> +static void f2fs_destroy_xattr_caches(struct f2fs_sb_info *sbi) { return 0; }
+>>  #endif
+>>
+>>  #ifdef CONFIG_F2FS_FS_SECURITY
+>> --
+>> 2.18.0.rc1
+>>
+> .
+> 
