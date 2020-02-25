@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA03C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4350C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745602082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E0D2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MC4+e4if"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNgOVtUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgBYHPn (ORCPT
+        id S1729430AbgBYHPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:15:43 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33049 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729304AbgBYHPh (ORCPT
+        Tue, 25 Feb 2020 02:15:39 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33993 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729335AbgBYHPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:15:37 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so13385574wrt.0;
-        Mon, 24 Feb 2020 23:15:35 -0800 (PST)
+        Tue, 25 Feb 2020 02:15:34 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z15so5020364wrl.1;
+        Mon, 24 Feb 2020 23:15:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ArTAv9akc7/LkDwjVGNvRKjk3sNTR9LtjKLQSrks0NI=;
-        b=MC4+e4ife2Gh64bc+EMgs/BG3MJuzNXdKx07cPWb8fE+IasPplxhjc9iKuE+CDe5Y/
-         FXN9Ys8T/wrGEohteL4dNX2p233OmXqhXS9IcCPcFOI0NnLHSptilSvTMQZvmJ1FnEnf
-         K70iLwE/h7c5RibI7XjnPvd53atMlbgyXpq+AZhcLW+B2sJ8detn6G6uD8xO2jZyBKRy
-         9/sxOUwOba8qaC8Jbb4yE8OLmGwpkb+qp2OyluKeFUnzREqPQYmE/PPZe84UDfpAmd7/
-         YrxD/RgKzda2GZJHnD1ar/UDxVCgbfP/p9XWl+77TqalROJYpr4VWhMh6B67qDbMRv/9
-         TH6g==
+        bh=JL4Q1l1W07XAcq8S0r/D3xLT9kgasro6XokOt1NtSiI=;
+        b=sNgOVtUtBVH9g4vHbaTnPbYePvXiqDx75+340BiDMuOpXp9D2fUVOG6x/LF5k/VJCF
+         yJiA9O46SYgz5H3XqhRYwI86U12ki8T0PVox6cPpFwiryC84YBQIBAOMXaWeHDmOK2+n
+         kwJCyypXPel8Ywhsak/7vYtGrGu7Yw+miyVBkLOt+vbOs8a+58S9HCXdIP64oPLNtSIo
+         jubXOnuK55vYfMDCEMNQWBOumuubD17x9fPi9Vr/EnTBvxh1hmyNNmmr4HG65Igq2U6w
+         EFAAqj56T90TCqBTAF82BGtkG3jmezYa2RCTcu7bbrcPneGjAexqEuxGZpC9Iu/CF3UC
+         xWew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ArTAv9akc7/LkDwjVGNvRKjk3sNTR9LtjKLQSrks0NI=;
-        b=l2wYxQ0qPeEr87SWxEJy2OMmxG1BxqiKT/VaAnA5xn7SDLmlA91YMCZFFrM1oNmXHT
-         Fk3jytfAYxWhDnnWFkGc3SfYZuI3uiG5dgc1qNjmWOhuBioO5c6H+5efuQxkX1wLvQHj
-         px2uQkzwVuH3doM2uiALxPpKzkYmiko57xoyV765kwSOM2CTerfst4YM+qmnyaQLMgPD
-         JRzc/+J73RaYIZ2IzjEpLl5Blr6b+lXFv5nFS7IGMEDR5md9zXNiPjPNaPE2cvDr649p
-         BSuLsvWN5TCz98mB3T2UDx/lTB+iG+/+71P1jj/IBmBpPMSAYQnaYYtchJq64rXFNlDE
-         tIiw==
-X-Gm-Message-State: APjAAAUlvI4vJ+OcQqmACgYTyCYTglrcpN0tWuAG6Sobo5aHvIBqVb2A
-        mmJ5z+5Q17oJEIoqJEXpHjE=
-X-Google-Smtp-Source: APXvYqy704kFsRRnKtcQSoh4hwSgxANV9/Noxui7kaUUbuPb/g1nSEMuKwvVA1VKPuNfK7wgJqQDtQ==
-X-Received: by 2002:adf:f310:: with SMTP id i16mr73552955wro.326.1582614934975;
-        Mon, 24 Feb 2020 23:15:34 -0800 (PST)
+        bh=JL4Q1l1W07XAcq8S0r/D3xLT9kgasro6XokOt1NtSiI=;
+        b=sh7sk24Npz78ufkrrn5LIwu+1X6tmJuFgeAl7ED6NKTmzoCdbEuth8AGddzShqzdzF
+         Bbla7Yu7FmOTZ/epUm3CL/LFKUNCtM+SDHaZ54AIUZet8lXCXYXjkHWTb12TbR58fAwT
+         E5SC4rHGNdRhcymYzxb2lbVS/wV0piD05MgygQ9qSRLTSOGA9W0e1t4KVQZr2fcbdE2d
+         DNL9DNFjSmocg4CAhKTyTKdG8+qJbMV2UDe417lDZUyCG5ywBxTLn0ojqVxZYiESgH5G
+         7tyFFFOe2sDoPaqCyGM5Q8TUI2UfkrTlF7U3orChL6yYDuzrVRrOMm0HSZ6vf3mBYxFv
+         z6UQ==
+X-Gm-Message-State: APjAAAUYifxsp6KWEKzcdmpMQ24JnTAX7W98ISWq/3MTamvSUbMyPGB2
+        tMt4yfyqPQp8WcLJkqrJ5Rk=
+X-Google-Smtp-Source: APXvYqxRH1CfkaC6NYmv8P3XK4t9Z0BT0pxO8BzU8Jd3hsvMCCwytEBSex/5aJ0YLvHECYsEOiRDMA==
+X-Received: by 2002:a5d:4446:: with SMTP id x6mr70507172wrr.312.1582614932475;
+        Mon, 24 Feb 2020 23:15:32 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:6c81:a415:de47:1314? (p200300EA8F2960006C81A415DE471314.dip0.t-ipconnect.de. [2003:ea:8f29:6000:6c81:a415:de47:1314])
-        by smtp.googlemail.com with ESMTPSA id d13sm23566806wrc.64.2020.02.24.23.15.34
+        by smtp.googlemail.com with ESMTPSA id u62sm2970426wmu.17.2020.02.24.23.15.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 23:15:34 -0800 (PST)
-Subject: [PATCH v2 8/8] sound: bt87x: use pci_status_get_and_clear_errors
+        Mon, 24 Feb 2020 23:15:32 -0800 (PST)
+Subject: [PATCH v2 6/8] net: skfp: use PCI_STATUS_ERROR_BITS
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Realtek linux nic maintainers <nic_swsd@realtek.com>,
@@ -72,8 +72,8 @@ Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         alsa-devel@alsa-project.org
 References: <c1a84adc-a864-4f46-c8de-7ea533a7fdc3@gmail.com>
-Message-ID: <76570497-71b6-f507-8743-77ab4b4e51a5@gmail.com>
-Date:   Tue, 25 Feb 2020 08:14:51 +0100
+Message-ID: <63935965-d8e9-cbc1-99ed-a7f0c1180c99@gmail.com>
+Date:   Tue, 25 Feb 2020 08:12:49 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -86,32 +86,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new helper pci_status_get_and_clear_errors() to simplify the code.
+Use new constant PCI_STATUS_ERROR_BITS to simplify the code.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- sound/pci/bt87x.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/net/fddi/skfp/drvfbi.c  | 2 +-
+ drivers/net/fddi/skfp/h/skfbi.h | 5 -----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/sound/pci/bt87x.c b/sound/pci/bt87x.c
-index 8c48864c8..656750466 100644
---- a/sound/pci/bt87x.c
-+++ b/sound/pci/bt87x.c
-@@ -271,13 +271,8 @@ static void snd_bt87x_free_risc(struct snd_bt87x *chip)
+diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
+index 9c8aa3a95..d5937aff5 100644
+--- a/drivers/net/fddi/skfp/drvfbi.c
++++ b/drivers/net/fddi/skfp/drvfbi.c
+@@ -112,7 +112,7 @@ static void card_start(struct s_smc *smc)
+ 	 */
+ 	outp(ADDR(B0_TST_CTRL), TST_CFG_WRITE_ON) ;	/* enable for writes */
+ 	word = inpw(PCI_C(PCI_STATUS)) ;
+-	outpw(PCI_C(PCI_STATUS), word | PCI_ERRBITS) ;
++	outpw(PCI_C(PCI_STATUS), word | PCI_STATUS_ERROR_BITS) ;
+ 	outp(ADDR(B0_TST_CTRL), TST_CFG_WRITE_OFF) ;	/* disable writes */
  
- static void snd_bt87x_pci_error(struct snd_bt87x *chip, unsigned int status)
- {
--	u16 pci_status;
-+	int pci_status = pci_status_get_and_clear_errors(chip->pci);
+ 	/*
+diff --git a/drivers/net/fddi/skfp/h/skfbi.h b/drivers/net/fddi/skfp/h/skfbi.h
+index 480795681..ccee00b71 100644
+--- a/drivers/net/fddi/skfp/h/skfbi.h
++++ b/drivers/net/fddi/skfp/h/skfbi.h
+@@ -33,11 +33,6 @@
+  */
+ #define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */ 
  
--	pci_read_config_word(chip->pci, PCI_STATUS, &pci_status);
--	pci_status &= PCI_STATUS_PARITY | PCI_STATUS_SIG_TARGET_ABORT |
--		PCI_STATUS_REC_TARGET_ABORT | PCI_STATUS_REC_MASTER_ABORT |
--		PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_DETECTED_PARITY;
--	pci_write_config_word(chip->pci, PCI_STATUS, pci_status);
- 	if (pci_status != PCI_STATUS_DETECTED_PARITY)
- 		dev_err(chip->card->dev,
- 			"Aieee - PCI error! status %#08x, PCI status %#04x\n",
+-
+-#define PCI_ERRBITS	(PCI_STATUS_DETECTED_PARITY | PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_REC_MASTER_ABORT | PCI_STATUS_SIG_TARGET_ABORT | PCI_STATUS_PARITY)
+-
+-
+-
+ /*
+  *	Control Register File:
+  *	Bank 0
 -- 
 2.25.1
 
