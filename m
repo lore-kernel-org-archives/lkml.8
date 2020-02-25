@@ -2,140 +2,159 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB97FC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7B8C35DFA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BC62176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06482176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgBYIQd (ORCPT
+        id S1729715AbgBYITP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:16:33 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729360AbgBYIQd (ORCPT
+        Tue, 25 Feb 2020 03:19:15 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:41259 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729633AbgBYITP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:16:33 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01P8E7U6014007
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 03:16:31 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yayb0jy27-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 03:16:31 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Tue, 25 Feb 2020 08:16:29 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Feb 2020 08:16:24 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01P8GNgE47513644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 08:16:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E38152051;
-        Tue, 25 Feb 2020 08:16:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.187])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8DCE75204E;
-        Tue, 25 Feb 2020 08:16:20 +0000 (GMT)
-Subject: Re: [PATCH v4 2/4] sched/core: Propagate parent task's latency
- requirements to the child task
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        chris.hyser@oracle.com, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, David.Laight@ACULAB.COM,
-        pjt@google.com, pavel@ucw.cz, tj@kernel.org,
-        dhaval.giani@oracle.com, qperret@google.com,
-        tim.c.chen@linux.intel.com
-References: <20200224085918.16955-1-parth@linux.ibm.com>
- <20200224085918.16955-3-parth@linux.ibm.com>
- <20200225063226.GJ28029@codeaurora.org>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Tue, 25 Feb 2020 13:46:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 25 Feb 2020 03:19:15 -0500
+Received: by mail-il1-f198.google.com with SMTP id k9so23684889ili.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:19:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JnIpG0/J61WLiO1q3oM1jxlRNVDltdBX+u0kfHknrM0=;
+        b=C7Zbx+bDjSg9zQ9GwWqrnYkUIfixzmZigPtJvuwg1Zfi+39nqQhN8cXHLWqGWaZxOF
+         i6V3qJk2xlf1jBzjyzSaV+bllPAeF2omdC90k1RRsZpi6NItROqFim6h+tk8palSxiqm
+         6OBGw4JkQoWpYsh7qbG5p+B+ToMvGqHx3ni0DXbOZPas85wJlPPZygsqbbluNxe7kbJH
+         hf+2FZ/SeXg7IMEzELNoxLCOQRFIMwnCEUcjpigoo7BB41i2CGs7QewAnoOqpTwy3Ffc
+         CGVhb5pTBMA7Nyh3v4cx1jnlOBBP7OCMNZO9WCLOJsEVXylI9hy4YxfzY7awx9wSRh4+
+         AQAg==
+X-Gm-Message-State: APjAAAUTOkJhmImyIog+lr3jrkDUROE/4cHuYPrFT+2TAmHF8Irvf4Vk
+        p+0lH7+gGRvvOnx8Vx0uusFiQeI/du7jTzN2GRXCJXe6G+f0
+X-Google-Smtp-Source: APXvYqwdgK4/CB1G+y2zoTGVO2dnzPpAkdWqc/vppUT1sAz5Si0TeFiOlyF2DMYMfya2tZy2jf2ZxRpyPS0GWUZbY+QD6OcnYT1N
 MIME-Version: 1.0
-In-Reply-To: <20200225063226.GJ28029@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022508-0012-0000-0000-0000038A094B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022508-0013-0000-0000-000021C6AB0C
-Message-Id: <a954a83b-ff3c-1fc2-a70e-7d1482502ed6@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_02:2020-02-21,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1015 suspectscore=0 spamscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250068
+X-Received: by 2002:a92:cb8c:: with SMTP id z12mr65405884ilo.5.1582618754093;
+ Tue, 25 Feb 2020 00:19:14 -0800 (PST)
+Date:   Tue, 25 Feb 2020 00:19:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a719a9059f62246e@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in cipso_v4_sock_setattr
+From:   syzbot <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com>
+To:     cpaasch@apple.com, davem@davemloft.net, dcaratti@redhat.com,
+        fw@strlen.de, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        matthieu.baerts@tessares.net, netdev@vger.kernel.org,
+        pabeni@redhat.com, paul@paul-moore.com,
+        peter.krystad@linux.intel.com, syzkaller-bugs@googlegroups.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    ca7e1fd1 Merge tag 'linux-kselftest-5.6-rc3' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=179f0931e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a61f2164c515c07f
+dashboard link: https://syzkaller.appspot.com/bug?extid=f4dfece964792d80b139
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fdfdede00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17667de9e00000
+
+The bug was bisected to:
+
+commit 2303f994b3e187091fd08148066688b08f837efc
+Author: Peter Krystad <peter.krystad@linux.intel.com>
+Date:   Wed Jan 22 00:56:17 2020 +0000
+
+    mptcp: Associate MPTCP context with TCP socket
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fbec81e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16fbec81e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12fbec81e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com
+Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 8e171067 P4D 8e171067 PUD 93fa2067 PMD 0 
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8984 Comm: syz-executor066 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
+RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
+RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
+RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
+R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
+R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
+FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ cipso_v4_sock_setattr+0x34b/0x470 net/ipv4/cipso_ipv4.c:1888
+ netlbl_sock_setattr+0x2a7/0x310 net/netlabel/netlabel_kapi.c:989
+ smack_netlabel security/smack/smack_lsm.c:2425 [inline]
+ smack_inode_setsecurity+0x3da/0x4a0 security/smack/smack_lsm.c:2716
+ security_inode_setsecurity+0xb2/0x140 security/security.c:1364
+ __vfs_setxattr_noperm+0x16f/0x3e0 fs/xattr.c:197
+ vfs_setxattr fs/xattr.c:224 [inline]
+ setxattr+0x335/0x430 fs/xattr.c:451
+ __do_sys_fsetxattr fs/xattr.c:506 [inline]
+ __se_sys_fsetxattr+0x130/0x1b0 fs/xattr.c:495
+ __x64_sys_fsetxattr+0xbf/0xd0 fs/xattr.c:495
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440199
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcadc19e48 EFLAGS: 00000246 ORIG_RAX: 00000000000000be
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440199
+RDX: 0000000020000200 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000003 R09: 00000000004002c8
+R10: 0000000000000009 R11: 0000000000000246 R12: 0000000000401a20
+R13: 0000000000401ab0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 9bbc7bb8e1061a42 ]---
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
+RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
+RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
+RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
+R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
+R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
+FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 2/25/20 12:02 PM, Pavan Kondeti wrote:
-> On Mon, Feb 24, 2020 at 02:29:16PM +0530, Parth Shah wrote:
->> Clone parent task's latency_nice attribute to the forked child task.
->>
->> Reset the latency_nice value to default value when the child task is
->> set to sched_reset_on_fork.
->>
->> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
->> ---
->>  kernel/sched/core.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index 377ec26e9159..65b6c00d6dac 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -2860,6 +2860,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
->>  	 */
->>  	p->prio = current->normal_prio;
->>  
->> +	/* Propagate the parent's latency requirements to the child as well */
->> +	p->latency_nice = current->latency_nice;
->> +
->>  	uclamp_fork(p);
->>  
->>  	/*
->> @@ -2876,6 +2879,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
->>  		p->prio = p->normal_prio = __normal_prio(p);
->>  		set_load_weight(p, false);
->>  
->> +		p->latency_nice = DEFAULT_LATENCY_NICE;
->>  		/*
->>  		 * We don't need the reset flag anymore after the fork. It has
->>  		 * fulfilled its duty:
->> -- 
->> 2.17.2
->>
-> 
-> LGTM.
-> 
-> latency_nice value initialization is missing for the init_task.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-good catch. Will add that part too. Thanks for pointing out.
-
-- Parth
-
-> 
-> Thanks,
-> Pavan
-> 
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
