@@ -2,119 +2,158 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7E2C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD440C35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D48D218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582629220;
-	bh=7Dsqpi8G7LyEQIVE/pV6dEyEOad7PC+WrvHTlc3eFMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=df0SsE3CIKModJmh2ehTEIC1XHyVaI8K5w7YxStDUXHse7oyMYuFjU6WcBOvxJrUM
-	 A/RnpFW2uFWAgKbzi4KXrRMAD6J+4NYebwDkRvSM2bGJzCNOHjEaOfSnhcnmbevf74
-	 3/xlCj4OMbCRxNNcR4S0niQ5gaXoaXB/jxrp5Bls=
+	by mail.kernel.org (Postfix) with ESMTP id 924E121556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 11:16:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="mn0UxObk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgBYLNj (ORCPT
+        id S1730440AbgBYLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 06:13:39 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33922 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgBYLNj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 06:13:39 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x7so13584382ljc.1;
-        Tue, 25 Feb 2020 03:13:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6veU3zcurqB+x87LSW0HY63Q2hg6fVyMJOo0byrm8sg=;
-        b=ZmZFtszWqzFPoZiFWlaULNwsTdJXaqUwvRMSH/on5mfPkUvO7KPKBei7E4r0HVNigJ
-         UpKdwsXkez9Shs48ruAvHD2AnfD2Yy1tatPLPXfkUSsvCdEFpSEuaVeLsvbXqsSDuUgz
-         3i0THu5/kby4ByJD8xhxv0wQtZandVhyGSv1M+vAgpG24ZtQwU1nbiaAeySZ+BkHLevV
-         77/MIKngPipiFuNBYwBXkFKWjmJVrZ5xGt5mu5be4mK4OvZIxox6cCIY3I/GtDtasG2f
-         QEKmbRmwqCYkoYKh5d8Ky2DeW+kBjizmxRvqFgqIaeKKR187h4wCzRuB/ry8XAtRLHFz
-         +15Q==
-X-Gm-Message-State: APjAAAW7lLF0FTjuIHJzC7rr2zAvtbNs6/E4OQHNaggwloaNwCuMby+X
-        xSvF1hPupyhFh35GE5NTxGQ=
-X-Google-Smtp-Source: APXvYqzLFHczADJ4b8XpCz0/I5LO2U0TGFDGPa9dMaKX1VWKuFNfuIKyPJzUpsGCxmDfd7mxe07tnA==
-X-Received: by 2002:a2e:3e10:: with SMTP id l16mr32689721lja.286.1582629217302;
-        Tue, 25 Feb 2020 03:13:37 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id q17sm7584872ljg.23.2020.02.25.03.13.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 03:13:36 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j6Y9c-0004aG-Lw; Tue, 25 Feb 2020 12:13:32 +0100
-Date:   Tue, 25 Feb 2020 12:13:32 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V3 4/6] USB: serial: f81232: Add F81534A support
-Message-ID: <20200225111332.GS32540@localhost>
-References: <20200130054752.9368-1-hpeter+linux_kernel@gmail.com>
- <20200130054752.9368-5-hpeter+linux_kernel@gmail.com>
+        Tue, 25 Feb 2020 06:16:26 -0500
+Received: from mail-eopbgr20136.outbound.protection.outlook.com ([40.107.2.136]:17796
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727068AbgBYLQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 06:16:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I8cYd4EM+c0Yf+/6035Z7su3G3S8W3mpmeSqtsU0I/OFix2KOLaVYQyYHkwFXNgaPTpikrnW13zUhaCzZiGXECbmZ7GUtFDk5kX/ej/R9fmDejzPjh3XR6Sm8+n6K6JLBiMp+wEQ7A164d+nlysp3MUoN7VV3zcJHzJPoP9lytsLiqAqxVW0YVEAwxJlgHBLkk12K1eM+hIeqOvc/JmHQTkufDEOG1rWmbj7uv1GY9Uap+rq7wglq2kdN8rgWSJoOlEFGHqCIDKQUaGNVKQXiAPiFnzVN/oDd+I82Gst7nMyUQswsrovQDsra2d9cT4jchR/oHR6wPtuS63B/oztAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3pEIAqFmMc+HyX6sqDhJusCinRHMtUlAnpH1EffPAFw=;
+ b=Qtc4EexUHbjMFjdRtyIHXk75Vh1Vl0UJfk17GLAKVHvxpHbgM5NKy18se+kxU/ChdPgVN+ZvqgnnZbowEDsnUNZapAnLjA1M36PZq0BY5R6DdBHBYv3ShBjPC7I6wQRiMwtpnRTwBZAPGjHTZYzJYqQj6YUdQHKP5uyNrVF/XtECfFMO8ZNs8fDCKiAvA+BMczVDRobCpZXA/WAQ0FG8ozFEfUI+J4mIuk9VHcWdsy26mhCRxUGiTFNqlq+/Fz96k4S1HoOg+9nbJuCaSHQfZUYTish4voVwMotn/jj0JGmmW7rAwQVrRuOIrqxbwt6L8KbahwU2IhRz2e6r+vRzOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3pEIAqFmMc+HyX6sqDhJusCinRHMtUlAnpH1EffPAFw=;
+ b=mn0UxObkbQEgrfO9PKwTH3G/1gx7v2D0fu3AxkbRyP8+BMDEnXtReM6YOJZYfaVValJAMnNzDh+OKQjgaMOAdoHXyr/lOO9Fgiv3GgDzlQFYzHZM0U0H2IwwcfPc+EwL1SsxMmIPYnLP5oLm3U4coxOe9eirh5dCnwaaBFx8bTQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=aaro.koskinen@nokia.com; 
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com (20.178.9.83) by
+ VI1PR07MB4782.eurprd07.prod.outlook.com (20.177.53.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.11; Tue, 25 Feb 2020 11:16:21 +0000
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::7514:700c:669b:3c8f]) by VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::7514:700c:669b:3c8f%7]) with mapi id 15.20.2772.012; Tue, 25 Feb 2020
+ 11:16:21 +0000
+From:   aaro.koskinen@nokia.com
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>
+Subject: [PATCH] net: stmmac: move notifier block to private data
+Date:   Tue, 25 Feb 2020 13:16:15 +0200
+Message-Id: <20200225111615.17964-1-aaro.koskinen@nokia.com>
+X-Mailer: git-send-email 2.11.0
+Content-Type: text/plain
+X-ClientProxiedBy: HE1PR0701CA0083.eurprd07.prod.outlook.com
+ (2603:10a6:3:64::27) To VI1PR07MB6174.eurprd07.prod.outlook.com
+ (2603:10a6:803:a5::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130054752.9368-5-hpeter+linux_kernel@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ak-desktop.emea.nsn-net.net (131.228.2.28) by HE1PR0701CA0083.eurprd07.prod.outlook.com (2603:10a6:3:64::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.10 via Frontend Transport; Tue, 25 Feb 2020 11:16:20 +0000
+X-Mailer: git-send-email 2.11.0
+X-Originating-IP: [131.228.2.28]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 99692b57-cb48-4a62-ace0-08d7b9e4245b
+X-MS-TrafficTypeDiagnostic: VI1PR07MB4782:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR07MB47825237F8E20B56C34E2142F4ED0@VI1PR07MB4782.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:576;
+X-Forefront-PRVS: 0324C2C0E2
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(189003)(199004)(16526019)(66556008)(5660300002)(66476007)(6506007)(52116002)(86362001)(66946007)(81166006)(316002)(110136005)(478600001)(8936002)(2616005)(8676002)(956004)(6666004)(81156014)(36756003)(6512007)(9686003)(4326008)(26005)(107886003)(186003)(2906002)(1076003)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4782;H:VI1PR07MB6174.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lQh1RD7NPY0jNEbQGs3kvHNov9MRnL0/SL4BzaI+djyxldKh4D2u2e6npclnWqEHii2lvJ9MAYzBk/3P5zY7dGfGH39ul0pg4Wt6gxn5nsKhijZkNo0EmepbiQ0NSYTo/SWcK+S14a0fAqlMbJqL6ZM0vm+q/nqOT3YMoeMV+Dd4uLQfu16uTwIMuTfa7z9uuqesRcMp8FEtnkCnHe4HA9jbthC0zX1WvjrN6NwIcsJ1mchzak2u1zuIEAPn45RDp15OchskDKBd1fmVNLKQdHVBD7hqSgyJEjyT3rAiO5icG5JRTCRYOMuetpGuerZhmscOPzO2zx+Vjw2JlFXySZLKH+tMEeIUfHhkoUzzDDLyxm5kzTHHTZoYygsA7o5ER2ZXUs6ny+UUH+Fz/szTfL+DTsmUEjxmHjMkkxol5r3ocRIk4iGs047pcOdd4OP8
+X-MS-Exchange-AntiSpam-MessageData: cAgglFMwIyyNhkol/ZslfIe2tyEEIgj8EXbknJ56iKdGgFP9ZbcLrMdrjcT9tvfQL6ePHJWJHCTarQxmo4w3rHq5yWPb4LFTNebj+8g3aUulcoGusSfTt+8BpgU5Z/fTrXZb1+C9ZCtN4p5fnCjXaQ==
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99692b57-cb48-4a62-ace0-08d7b9e4245b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 11:16:21.1443
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YuXkS3nnEhiyDLbLiE+CTyTQDH8f9DH3Pn7rbftMFTPM9D480azefp7+pvZgExr+wrTBSPlDJqaW5qorEhxp4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4782
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 01:47:50PM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device
-> and the serial port is default disabled when plugin computer.
-> 
-> The IC is contains devices as following:
-> 	1. HUB (all devices is connected with this hub)
-> 	2. GPIO/Control device. (enable serial port and control GPIOs)
-> 	3. serial port 1 to x (2/4/8/12)
-> 
-> It's most same with F81232, the UART device is difference as follow:
-> 	1. TX/RX bulk size is 128/512bytes
-> 	2. RX bulk layout change:
-> 		F81232: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
-> 		F81534A:[LEN][Data.....][LSR]
-> 
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
+
+Move notifier block to private data. Otherwise notifier code will complain
+about double register with multiple stmmac instances.
+
+Fixes: 481a7d154cbb ("stmmac: debugfs entry name is not be changed when udev rename device name.")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h      | 1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 9 +++------
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index 9c02fc754bf1..20621b964e6a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -222,6 +222,7 @@ struct stmmac_priv {
  
-> +static void f81534a_process_read_urb(struct urb *urb)
-> +{
-> +	struct usb_serial_port *port = urb->context;
-> +	unsigned char *data = urb->transfer_buffer;
-> +	char tty_flag;
-> +	unsigned int i;
-> +	u8 lsr;
-> +	u8 len;
-> +
-> +	if (urb->actual_length < 3) {
-> +		dev_err(&port->dev, "short message received: %d\n",
-> +				urb->actual_length);
-> +		return;
-> +	}
-> +
-> +	len = data[0];
-> +	if (len != urb->actual_length) {
-> +		dev_err(&port->dev, "unexpected length: %d %d\n", len,
-> +				urb->actual_length);
-> +		return;
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *dbgfs_dir;
++	struct notifier_block nb;
+ #endif
+ 
+ 	unsigned long state;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 5836b21edd7e..bf0ce8e4424b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4397,10 +4397,6 @@ static int stmmac_device_event(struct notifier_block *unused,
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block stmmac_notifier = {
+-	.notifier_call = stmmac_device_event,
+-};
+-
+ static void stmmac_init_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+@@ -4416,14 +4412,15 @@ static void stmmac_init_fs(struct net_device *dev)
+ 	debugfs_create_file("dma_cap", 0444, priv->dbgfs_dir, dev,
+ 			    &stmmac_dma_cap_fops);
+ 
+-	register_netdevice_notifier(&stmmac_notifier);
++	priv->nb.notifier_call = stmmac_device_event;
++	register_netdevice_notifier(&priv->nb);
+ }
+ 
+ static void stmmac_exit_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 
+-	unregister_netdevice_notifier(&stmmac_notifier);
++	unregister_netdevice_notifier(&priv->nb);
+ 	debugfs_remove_recursive(priv->dbgfs_dir);
+ }
+ #endif /* CONFIG_DEBUG_FS */
+-- 
+2.11.0
 
-I rephrased this as
-
-		dev_err(&port->dev, "malformed message received: %d (%d)\n",
-				urb->actual_length, len);
-
-before applying.
-
-Johan
