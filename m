@@ -2,113 +2,224 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A913C35DF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36731C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B4920CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB57521556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdNQZQrA"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aXgNOssT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgBYFns (ORCPT
+        id S1728943AbgBYFoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:43:48 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33912 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgBYFnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:43:47 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so8748808lfc.1;
-        Mon, 24 Feb 2020 21:43:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=p5/5vEBubNjmt22m/UMeJDFdXk5YFn70ecwWdjPyPE8=;
-        b=GdNQZQrARMDie/sTWPxRiOwmun0GRWKpBmT1CnCPcTs7WcNLJae8K6mPa6eFJo/n7U
-         nyFXy5GBFeey2tSZjlCb3bkAwuRVqfJsBiwH2pKxufIMo4crV00Fxkg24dIm/7y+kQCz
-         2oDJEPKBDsWe+ITLLhuZOOTOXZAZbEJ0jzx+r7oARptjNvD4owwRhpEydDUqtQQ9gXZ9
-         lthmfGtiv2GxmHanh0COZMw9FGVC3hUQnzo6YoKC/DAToVqme/MtaVtiQS/YnyiarSk2
-         2TvuzXpdq5D4yGUFPDK5Z+vHhKiluOLZAP2NJnxFRDWSLKCkloIcT2AxekjPrl/8zCPU
-         wCig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p5/5vEBubNjmt22m/UMeJDFdXk5YFn70ecwWdjPyPE8=;
-        b=hRohDoOX0WPqKkXDN1iB7SYHriKcEYsGnpGS8Vii1IBBtQIMCSZU03k+emigQkTjnb
-         j/9tDaZD8WK1F8x3HE29tuTeg+FhQRltNLmys31fe9dB8y2CPPyE5+BQLlTAVKZri4x6
-         65sHxk8P2e3tkHnAKknO1kfNdfxKIy08x4OzfH1ygRPCecp9qMfcO78jKKF1vGEjRUsS
-         AZZrVPKgB1bQSH/lrnXJajlSIdkqjF5M2ogzrcxh6oam8LfPukVYQNjbcnltYTJsg70z
-         WxS/vJp/nRePHZvZfrcF+xse5H5U61sEPUIo9DAxLF6O9kP22ae1OSt20viTd+hgAjpo
-         H1Iw==
-X-Gm-Message-State: APjAAAWSj42LWa2uz9FGDakboHeNOucIqjbZrBPIsZ81v7AVgWujaOoA
-        56Rg3SOqt7XH1fONLxT4nve7jS14CkovBGiiYq4=
-X-Google-Smtp-Source: APXvYqx+WlziPWsLP6bLP2Ka9u56rRfhqByB/DBn0OjicY5J8svu/TUsBz7aMQWPnU+NZwrE2hzSp+HaK5Vx7ZHzFzQ=
-X-Received: by 2002:a05:6512:304d:: with SMTP id b13mr3576611lfb.134.1582609425105;
- Mon, 24 Feb 2020 21:43:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221165801.32687-1-steve@sk2.org> <CAADnVQ+QNxFk97fnsY1NL1PQWykdok_ha_KajCc68bRT1BLp2A@mail.gmail.com>
- <20200224205028.0f283991@heffalump.sk2.org>
-In-Reply-To: <20200224205028.0f283991@heffalump.sk2.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 24 Feb 2020 21:43:33 -0800
-Message-ID: <CAADnVQKb-3fzx1xKLwms8pcPiJNLsmFsHyj_gnsE8DKVp1jhYQ@mail.gmail.com>
-Subject: Re: [PATCH] docs: sysctl/kernel: document BPF entries
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Feb 2020 00:44:08 -0500
+Received: from mail-eopbgr1300098.outbound.protection.outlook.com ([40.107.130.98]:49755
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbgBYFoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 00:44:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xcb8Oa/oFANdDUXq5AzJSZK/J/PwXJLCrif76rxvJGrXy8IA6JBUgHsdb0Arc0uj4qEC2iA4ntv8cOxGOB7vgdmn1kL1xGstjCxKIhAdQM/dF6FJ/YMbt5NuM3V2IP+GwUVQ0+SHH73yVgrBtqSnjgMicl5cCfaetYaLxTb6vQo7okLIQ0TZdGHFw9p5SB0gEQNxizmFU3xUNp7Z2CSuYY9AY8Q8suoEpUsJPjoGH4jn6TZoBibYw/qJm1DO8Wt2zUuuJzxsPvBJfYqecvIBD2YovrFZaF2dnei/047/gRhaRGNA16SwXqP6ieDKEKr1b4RuX6pcRPANP/+VnCnuVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cJ544hrnEvPO4y3apa1/ZMmRMPQl/dOGTkbKlXDPPxc=;
+ b=Lzqh2Ug+y96+iRAPdD90sYF8aJAoVgs/St3lLIe7xGqdjbobKe7dA1xrGQhLw01SY8Nm76PQ9iY2i7oHOwtI7dxXdPgje+hoFyvyUB3pEBPTovOuLAs1hsck+aOWjTof0av4o5pxa3M/9NyvEYcyZnQgr2YqKLnjPLe/fWJ11W2lL9Tr36HchsSfw/1dxH4vYh0I/tQvrfWxFrG+X+CAbHWgJa3L/CpE3nUSFe4Uq3rbhXZYAIK+Pwu6Ej+DtJBHy2QUQ7ZZTvPX0i7Se36javZ53Qwu8zfreuMuEfYvJDszdMWl5CZONnYY0hekQ3cuCnSJx9YX87R0H7uxHEwnPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cJ544hrnEvPO4y3apa1/ZMmRMPQl/dOGTkbKlXDPPxc=;
+ b=aXgNOssTUHDQ7wfRHYvzF31ANtA7D/Bd+/5Jch1/I48D33bl5QeY5LxRinJcg1H501ik1/rIMq3skLVww+zjrKrmD2bQbbKMSva/wK8h/tnmOwwJyG13TqrN7VVFrbKlfn0u4nrEex02i7Wiraf2ubQQYUuZEVqDrGEMH8Tr6mg=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0323.APCP153.PROD.OUTLOOK.COM (52.132.237.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.1; Tue, 25 Feb 2020 05:44:03 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::a02a:44fa:5f1:dd74]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::a02a:44fa:5f1:dd74%2]) with mapi id 15.20.2793.003; Tue, 25 Feb 2020
+ 05:44:03 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+CC:     syzbot <syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: RE: INFO: task hung in lock_sock_nested (2)
+Thread-Topic: INFO: task hung in lock_sock_nested (2)
+Thread-Index: AQHV6vp3dmjBMCIIPkOhqBCQTbJmP6gq7WJg
+Date:   Tue, 25 Feb 2020 05:44:03 +0000
+Message-ID: <HK0P153MB0148B4C74BA6A60E295A03D8BFED0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <0000000000004241ff059f2eb8a4@google.com>
+ <20200223075025.9068-1-hdanton@sina.com>
+ <20200224100853.wd67e7rqmtidfg7y@steredhat>
+In-Reply-To: <20200224100853.wd67e7rqmtidfg7y@steredhat>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-25T05:44:01.4499098Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d56ff2b7-befc-4546-a08f-b67215e9b71c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:b028:3e64:8d77:da03]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0e07591d-bb34-408e-52cb-08d7b9b5b8ec
+x-ms-traffictypediagnostic: HK0P153MB0323:
+x-microsoft-antispam-prvs: <HK0P153MB03239F97DA1BD1B151625EE9BFED0@HK0P153MB0323.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0324C2C0E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(189003)(199004)(86362001)(81166006)(7696005)(8936002)(8990500004)(8676002)(5660300002)(71200400001)(6506007)(9686003)(55016002)(186003)(478600001)(10290500003)(316002)(52536014)(76116006)(66946007)(54906003)(66556008)(4326008)(66446008)(81156014)(64756008)(110136005)(66476007)(33656002)(2906002)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0323;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v9cCIv7Mcf7+9RH0cjq0gRZ6SYEuGMIbcwvZXJqYLGGMSAjwM/PzkJxTqePvoXKgZGq9ZOG/PVdNYQ7Pl5qrkELTVQ66qu4/spqQgGMMPO0jIAZCft+TEO349xly3PxiyI5C8U9ISsjTqnzGE5QZ45KY4HCnXsA145B9MyjryvxAr2A2mTcH4YYDYqCPbWtGTbr89H+CCX6eTVKGAnDbwU+1hz836urq1mpewz8TeK3GJEPzPfblRoGRGlvl7T/QI6J9T4nCQtWN2dRTySmV6szJPgXcF5LOTU9cImnkuGaqi5GGwFJ2U/yQRxtnXRnTG/FCjkQFxOEgSAJwA+La9eB7HEqI7rIygb4uneiYHNX4Jb7TbBb2rZwmw3Nmi/LNvqZRqh2+53gDEbOSItmf9V5WTfFIUqhuPfKIRH8s9QpJsAeslB8xVA9ix08aCKKt
+x-ms-exchange-antispam-messagedata: QftfeL3GIGVBZ6K7+3W/Sn88F41hnZRawL4vx2prJuJwYcpwdwvSvz+w4gZDARfWjh3Lt71uBBxm/AP2pEfNn9ri/nXod/r2TvyoRmDo54YdfE9xZKCJJzd0jZmisTTOJBJv8pjhfAAhX0S6V+g5PGBlErqaoS7zfYU0HItAgSTxYcBRjCWPip/TBb0MnwJnaJzevLM41XHsf+h2Wl9OXQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e07591d-bb34-408e-52cb-08d7b9b5b8ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 05:44:03.4761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2ZSCqWt4vyQlVnXpWJS77SEPzyx2Me4wK9M9dn9y1RWwgNIlC6anJT2PTL0CMuDR/kiAp4rFnBuH0ZgXd6Iz3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:50 AM Stephen Kitt <steve@sk2.org> wrote:
->
-> On Sun, 23 Feb 2020 14:44:31 -0800, Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> > On Fri, Feb 21, 2020 at 10:18 AM Stephen Kitt <steve@sk2.org> wrote:
-> > > @@ -1152,6 +1166,16 @@ NMI switch that most IA32 servers have fires
-> > > unknown NMI up, for example.  If a system hangs up, try pressing the =
-NMI
-> > > switch.
-> > >
-> > >
-> > > +unprivileged_bpf_disabled
-> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> > > +
-> > > +Writing 1 to this entry will disabled unprivileged calls to ``bpf()`=
-`;
-> >
-> > 'will disable' ?
->
-> Indeed, thanks.
->
-> > It doesn't apply to bpf-next with:
-> > error: sha1 information is lacking or useless
-> > (Documentation/admin-guide/sysctl/kernel.rst).
-> > error: could not build fake ancestor
-> > Patch failed at 0001 docs: sysctl/kernel: Document BPF entries
->
-> Sorry, I forgot to include the base commit information; this is against
-> 8f21f54b8a95 in docs-next.
->
-> I=E2=80=99ll wait for that to make it to Linus=E2=80=99 tree and re-submi=
-t the patch (with
-> the fix above).
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> Sent: Monday, February 24, 2020 2:09 AM
+> ...
+> > > syz-executor280 D27912  9768   9766 0x00000000
+> > > Call Trace:
+> > >  context_switch kernel/sched/core.c:3386 [inline]
+> > >  __schedule+0x934/0x1f90 kernel/sched/core.c:4082
+> > >  schedule+0xdc/0x2b0 kernel/sched/core.c:4156
+> > >  __lock_sock+0x165/0x290 net/core/sock.c:2413
+> > >  lock_sock_nested+0xfe/0x120 net/core/sock.c:2938
+> > >  virtio_transport_release+0xc4/0xd60
+> net/vmw_vsock/virtio_transport_common.c:832
+> > >  vsock_assign_transport+0xf3/0x3b0 net/vmw_vsock/af_vsock.c:454
+> > >  vsock_stream_connect+0x2b3/0xc70 net/vmw_vsock/af_vsock.c:1288
+> > >  __sys_connect_file+0x161/0x1c0 net/socket.c:1857
+> > >  __sys_connect+0x174/0x1b0 net/socket.c:1874
+> > >  __do_sys_connect net/socket.c:1885 [inline]
+> > >  __se_sys_connect net/socket.c:1882 [inline]
+> > >  __x64_sys_connect+0x73/0xb0 net/socket.c:1882
+> > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
 
-Please use bpf-next tree as a base for your patch.
+My understanding about the call trace is: in vsock_stream_connect()=20
+after we call lock_sock(sk), we call vsock_assign_transport(), which may
+call vsk->transport->release(vsk), i.e. virtio_transport_release(), and in
+virtio_transport_release() we try to get the same lock and hang.
+
+> > Seems like vsock needs a word to track lock owner in an attempt to
+> > avoid trying to lock sock while the current is the lock owner.
+
+I'm unfamilar with the g2h/h2g :-)=20
+Here I'm wondering if it's acceptable to add an 'already_locked'
+parameter like this:
+  bool already_locked =3D true;
+  vsk->transport->release(vsk, already_locked) ?
+=20
+> Thanks for this possible solution.
+> What about using sock_owned_by_user()?
+=20
+> We should fix also hyperv_transport, because it could suffer from the sam=
+e
+> problem.
+
+IIUC hyperv_transport doesn't supprot the h2g/g2h feature, so it should not
+suffers from the deadlock issue here?
+
+> At this point, it might be better to call vsk->transport->release(vsk)
+> always with the lock taken and remove it in the transports as in the
+> following patch.
+>=20
+> What do you think?
+>=20
+>=20
+> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> index 9c5b2a91baad..a073d8efca33 100644
+> --- a/net/vmw_vsock/af_vsock.c
+> +++ b/net/vmw_vsock/af_vsock.c
+> @@ -753,20 +753,18 @@ static void __vsock_release(struct sock *sk, int
+> level)
+>  		vsk =3D vsock_sk(sk);
+>  		pending =3D NULL;	/* Compiler warning. */
+>=20
+> -		/* The release call is supposed to use lock_sock_nested()
+> -		 * rather than lock_sock(), if a sock lock should be acquired.
+> -		 */
+> -		if (vsk->transport)
+> -			vsk->transport->release(vsk);
+> -		else if (sk->sk_type =3D=3D SOCK_STREAM)
+> -			vsock_remove_sock(vsk);
+> -
+>  		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
+>  		 * version to avoid the warning "possible recursive locking
+>  		 * detected". When "level" is 0, lock_sock_nested(sk, level)
+>  		 * is the same as lock_sock(sk).
+>  		 */
+>  		lock_sock_nested(sk, level);
+> +
+> +		if (vsk->transport)
+> +			vsk->transport->release(vsk);
+> +		else if (sk->sk_type =3D=3D SOCK_STREAM)
+> +			vsock_remove_sock(vsk);
+> +
+>  		sock_orphan(sk);
+>  		sk->sk_shutdown =3D SHUTDOWN_MASK;
+>=20
+> diff --git a/net/vmw_vsock/hyperv_transport.c
+> b/net/vmw_vsock/hyperv_transport.c
+> index 3492c021925f..510f25f4a856 100644
+> --- a/net/vmw_vsock/hyperv_transport.c
+> +++ b/net/vmw_vsock/hyperv_transport.c
+> @@ -529,9 +529,7 @@ static void hvs_release(struct vsock_sock *vsk)
+>  	struct sock *sk =3D sk_vsock(vsk);
+>  	bool remove_sock;
+>=20
+> -	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+>  	remove_sock =3D hvs_close_lock_held(vsk);
+> -	release_sock(sk);
+>  	if (remove_sock)
+>  		vsock_remove_sock(vsk);
+>  }
+
+This looks good to me, but do we know why vsk->transport->release(vsk)
+is called without holding the lock for 'sk' in the first place?
+
+Thanks,
+Dexuan
+
