@@ -2,172 +2,162 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA08EC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19883C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816B020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F4A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nNIJ0ufs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dfWRdqyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbgBYUJ7 (ORCPT
+        id S1731577AbgBYULO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:09:59 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34387 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729007AbgBYUJ7 (ORCPT
+        Tue, 25 Feb 2020 15:11:14 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46635 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729018AbgBYULN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:09:59 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l16so585688qtq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:09:58 -0800 (PST)
+        Tue, 25 Feb 2020 15:11:13 -0500
+Received: by mail-pg1-f195.google.com with SMTP id y30so68696pga.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:11:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Tim+DLUAfFeDyhqD6kF9gBE+5IE19Obb7iXnkkMIXUE=;
-        b=nNIJ0ufsH4VX2yJe5hHsXZRbrjB2QGvyHTUhnDGJ729iI3IWfYfcSrHlI6pogdXUco
-         EU/ebHZF8GhhN0ZpwXX3UeoZi4qMkV09ktdBU9ZHOFRHE1gbBKw3pOPgCR9EzR4IStkH
-         5+W35rirNzdEz7QouUWCfrvp8VHpopTE+HObvvNYhnzbi7ifbDpIWGveEr0e4rbIXDt0
-         UbTYn1NwXf9sYb79HlbjVJSECv4WsdprvQlXsdVmluFeHEyhaSFSTrsBS/UUNgVionRY
-         hVtrEDxO7m+jEXvzmCuNnLle63KT3s8eURdlTVs46ZGpvXUU8Uz4nmdzrz3O0nd9IdWL
-         Odkw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=81meCRrUd7FkyT9G9NN+yX4/OPtkzRjFPOeZBX9Bs6g=;
+        b=dfWRdqyGZUBC0WYr813Wit4XuNySCIYQYI7uwQeBtD1+p62LdSaeOa/XYxguHnyqTG
+         YI9ua5i3FpeOwDCAABc4Q4vXBEcTAv3OUnJczyjKgQbNtigSlxM3Ur+Puwyx3aOprLMP
+         RX+0xUGtLeAHXo+MWGokm5cRYVMrwOUJ4xlFg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Tim+DLUAfFeDyhqD6kF9gBE+5IE19Obb7iXnkkMIXUE=;
-        b=issRJXqIeeiSehwJS+3+nWtT4l7aAlahQm5etAe81Eljcka/+3j+XDTlSjdmBE1UDn
-         55nwgReeDE067MkPGcP62Tkr9z9P8JHQLMKufDvtI2eTbfP+eUKCezJ5mwkq1vgvVe0c
-         ZhCL3d4Uu3RLFxB8VlVXhmnfmU+1UG9dphaeNZS9nQyZVpBOSJj2w9wBUnIBF+dXrvyv
-         JKOT1uiTnrSZOK6xZKdg7Zgzp2ym/1dxnDW/l0YM+MCE+N3EWZoeOPq4AdXwSONWw+5z
-         mN3/Gc2tho5WjGii6peGBdytM/xwubnJ0JocTU8nsSG9Ij0gmuzkDwODfI8pCiv1ctbY
-         3xzA==
-X-Gm-Message-State: APjAAAUV/Fo0M28ei+oTvE+BzhVS/dfJ+9cO/WYxBKxIVauiKAeGSo/T
-        kfEAoAMqmSCsN6lfkuQNi6iqIQ==
-X-Google-Smtp-Source: APXvYqyeuw4PTwffQvUbSdbTrorvpXA+z80Gkiy4Wn3zLV3XMj+sRQJrg6D4RfuzoazhHUX5wHoHRw==
-X-Received: by 2002:ac8:7152:: with SMTP id h18mr389503qtp.349.1582661398025;
-        Tue, 25 Feb 2020 12:09:58 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id e130sm7786253qkb.72.2020.02.25.12.09.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 12:09:57 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     darrick.wong@oracle.com
-Cc:     elver@google.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] xfs: fix data races in inode->i_*time
-Date:   Tue, 25 Feb 2020 15:09:45 -0500
-Message-Id: <1582661385-30210-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=81meCRrUd7FkyT9G9NN+yX4/OPtkzRjFPOeZBX9Bs6g=;
+        b=LuFVGeO5+qK44p8Pa7ZmIr1Ke9Xy3FmDDazy7xo4R1Y/oRXVANvlPHDQX3C3/RP5Hx
+         uxI9xpiduNJW4YoL/kjDXFsZGXnKNPR7dZ0m8l5bQJFgMU882nvwFKGKiyhl4KDea/cg
+         vJbRTdLiZd4VKNz2oIiNW9yBoNFXDdDVSsXlLxhvGcPNJKYYYbUqT4CjJflIzcmFpESP
+         22QpYzYjoBfe//+nt6+PgMBXt0mmdtSgCeyaKgr39y5baObXi2l1NoP2goEvFyDQ7DFv
+         eR41CwrMadZFZ6U4ny1YjDibOPGFPDeJqVYKHSAWZkWl3AhWTydRfTLsAWDdpMOq3KWj
+         sRRg==
+X-Gm-Message-State: APjAAAXdLzIKEOvcHJ48OwnjSdhX6qZYUn/nrKBruZDL7pxUgzAWAI11
+        CjxO1kNfvhY1Yx0nzrVr8/iucw==
+X-Google-Smtp-Source: APXvYqyQ3YSUXoahHHRKuSddjeb4Zh7NvSdcT1SPZAvErg+AuOzuJXA1Bi+uG2m6xS0+k4tS2i+PGA==
+X-Received: by 2002:a65:6459:: with SMTP id s25mr255868pgv.74.1582661473165;
+        Tue, 25 Feb 2020 12:11:13 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v25sm17783531pfe.147.2020.02.25.12.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:11:12 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:11:11 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 07/27] Add guard pages around a Shadow Stack.
+Message-ID: <202002251209.A2079ECA4@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-8-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205181935.3712-8-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-inode->i_*time could be accessed concurrently. The plain reads in
-xfs_vn_getattr() is lockless which result in data races. To avoid bad
-compiler optimizations like load tearing, adding pairs of
-READ|WRITE_ONCE(). While at it, also take care of xfs_setattr_time()
-which presumably could run concurrently with xfs_vn_getattr() as well.
-The data races were reported by KCSAN,
+On Wed, Feb 05, 2020 at 10:19:15AM -0800, Yu-cheng Yu wrote:
+> INCSSPD/INCSSPQ instruction is used to unwind a Shadow Stack (SHSTK).  It
+> performs 'pop and discard' of the first and last element from SHSTK in the
+> range specified in the operand.  The maximum value of the operand is 255,
+> and the maximum moving distance of the SHSTK pointer is 255 * 4 for
+> INCSSPD, 255 * 8 for INCSSPQ.
+> 
+> Since SHSTK has a fixed size, creating a guard page above prevents
+> INCSSP/RET from moving beyond.  Likewise, creating a guard page below
+> prevents CALL from underflowing the SHSTK.
 
- write to 0xffff9275a1920ad8 of 16 bytes by task 47311 on cpu 46:
-  xfs_vn_update_time+0x1b0/0x400 [xfs]
-  xfs_vn_update_time at fs/xfs/xfs_iops.c:1122
-  update_time+0x57/0x80
-  file_update_time+0x143/0x1f0
-  __xfs_filemap_fault+0x1be/0x3d0 [xfs]
-  xfs_filemap_page_mkwrite+0x25/0x40 [xfs]
-  do_page_mkwrite+0xf7/0x250
-  do_fault+0x679/0x920
-  __handle_mm_fault+0xc9f/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+This commit log doesn't really explain why the code changes below are
+needed? stack_guard_gap is configurable at boot, etc. This appears to be
+limiting it? I don't follow this change...
 
- 4 locks held by doio/47311:
-  #0: ffff9275e7d70808 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x143/0x6f9
-  #1: ffff9274864394d8 (sb_pagefaults){.+.+}, at: __xfs_filemap_fault+0x19b/0x3d0 [xfs]
-  #2: ffff9274864395b8 (sb_internal){.+.+}, at: xfs_trans_alloc+0x2af/0x3c0 [xfs]
-  #3: ffff9275a1920920 (&xfs_nondir_ilock_class){++++}, at: xfs_ilock+0x116/0x2c0 [xfs]
- irq event stamp: 42649
- hardirqs last  enabled at (42649): [<ffffffffb22dcdb3>] _raw_spin_unlock_irqrestore+0x53/0x60
- hardirqs last disabled at (42648): [<ffffffffb22dcad1>] _raw_spin_lock_irqsave+0x21/0x60
- softirqs last  enabled at (42306): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (42299): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
+-Kees
 
- read to 0xffff9275a1920ad8 of 16 bytes by task 47312 on cpu 40:
-  xfs_vn_getattr+0x20c/0x6a0 [xfs]
-  xfs_vn_getattr at fs/xfs/xfs_iops.c:551
-  vfs_getattr_nosec+0x11a/0x170
-  vfs_statx_fd+0x54/0x90
-  __do_sys_newfstat+0x40/0x90
-  __x64_sys_newfstat+0x3a/0x50
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  include/linux/mm.h | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index b5145fbe102e..75de07674649 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2464,9 +2464,15 @@ static inline struct vm_area_struct * find_vma_intersection(struct mm_struct * m
+>  static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
+>  {
+>  	unsigned long vm_start = vma->vm_start;
+> +	unsigned long gap = 0;
+>  
+> -	if (vma->vm_flags & VM_GROWSDOWN) {
+> -		vm_start -= stack_guard_gap;
+> +	if (vma->vm_flags & VM_GROWSDOWN)
+> +		gap = stack_guard_gap;
+> +	else if (vma->vm_flags & VM_SHSTK)
+> +		gap = PAGE_SIZE;
+> +
+> +	if (gap != 0) {
+> +		vm_start -= gap;
+>  		if (vm_start > vma->vm_start)
+>  			vm_start = 0;
+>  	}
+> @@ -2476,9 +2482,15 @@ static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
+>  static inline unsigned long vm_end_gap(struct vm_area_struct *vma)
+>  {
+>  	unsigned long vm_end = vma->vm_end;
+> +	unsigned long gap = 0;
+> +
+> +	if (vma->vm_flags & VM_GROWSUP)
+> +		gap = stack_guard_gap;
+> +	else if (vma->vm_flags & VM_SHSTK)
+> +		gap = PAGE_SIZE;
+>  
+> -	if (vma->vm_flags & VM_GROWSUP) {
+> -		vm_end += stack_guard_gap;
+> +	if (gap != 0) {
+> +		vm_end += gap;
+>  		if (vm_end < vma->vm_end)
+>  			vm_end = -PAGE_SIZE;
+>  	}
+> -- 
+> 2.21.0
+> 
 
- no locks held by doio/47312.
- irq event stamp: 43883
- hardirqs last  enabled at (43883): [<ffffffffb1805119>] do_syscall_64+0x39/0xb05
- hardirqs last disabled at (43882): [<ffffffffb1803ede>] trace_hardirqs_off_thunk+0x1a/0x1c
- softirqs last  enabled at (43844): [<ffffffffb260034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (43141): [<ffffffffb18c6762>] irq_exit+0xa2/0xc0
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- fs/xfs/xfs_iops.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 81f2f93caec0..2d5ca13ee9da 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -547,9 +547,9 @@
- 	stat->uid = inode->i_uid;
- 	stat->gid = inode->i_gid;
- 	stat->ino = ip->i_ino;
--	stat->atime = inode->i_atime;
--	stat->mtime = inode->i_mtime;
--	stat->ctime = inode->i_ctime;
-+	stat->atime = READ_ONCE(inode->i_atime);
-+	stat->mtime = READ_ONCE(inode->i_mtime);
-+	stat->ctime = READ_ONCE(inode->i_ctime);
- 	stat->blocks =
- 		XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
- 
-@@ -614,11 +614,11 @@
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
- 
- 	if (iattr->ia_valid & ATTR_ATIME)
--		inode->i_atime = iattr->ia_atime;
-+		WRITE_ONCE(inode->i_atime, iattr->ia_atime);
- 	if (iattr->ia_valid & ATTR_CTIME)
--		inode->i_ctime = iattr->ia_ctime;
-+		WRITE_ONCE(inode->i_ctime, iattr->ia_ctime);
- 	if (iattr->ia_valid & ATTR_MTIME)
--		inode->i_mtime = iattr->ia_mtime;
-+		WRITE_ONCE(inode->i_mtime, iattr->ia_mtime);
- }
- 
- static int
-@@ -1117,11 +1117,11 @@
- 
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	if (flags & S_CTIME)
--		inode->i_ctime = *now;
-+		WRITE_ONCE(inode->i_ctime, *now);
- 	if (flags & S_MTIME)
--		inode->i_mtime = *now;
-+		WRITE_ONCE(inode->i_mtime, *now);
- 	if (flags & S_ATIME)
--		inode->i_atime = *now;
-+		WRITE_ONCE(inode->i_atime, *now);
- 
- 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
- 	xfs_trans_log_inode(tp, ip, log_flags);
 -- 
-1.8.3.1
-
+Kees Cook
