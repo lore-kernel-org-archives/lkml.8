@@ -2,64 +2,67 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C76C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8210FC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A41F20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B93D20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JiJBQZ+O"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Qf+LGa3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbgBYUCC (ORCPT
+        id S1731641AbgBYUCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:02:02 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:17726 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731480AbgBYUB6 (ORCPT
+        Tue, 25 Feb 2020 15:02:18 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:16699 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731480AbgBYUCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:01:58 -0500
+        Tue, 25 Feb 2020 15:02:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582660917; x=1614196917;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=MiZmJA9pUK0ijDarkYLGiDBqwKVr4yTOHuXUxcsXrBg=;
-  b=JiJBQZ+O4SCPC85IVQKfZXX2kORvujEpbDbYEo/QBSvdXqxRmHvvsxIi
-   0dzKgDIzE2pvwUniwLAUyEgwq2Xa9qEvADy+Z9wLSGtj7TQw+mBCCjxyo
-   Wj3/F+RvwOfku66tHBw4JlJX3ODadUbxUFabUJgQu3TXskTJRXZnhm1xI
-   4=;
-IronPort-SDR: sN/t/WJn64u0lZCt/DO/e1weHM2PLgt2TP5iya85xnAuukMZpJzpojl5JPgQLB/IleWexU2A2q
- KP+DmoyZ55sA==
+  t=1582660937; x=1614196937;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=cWa6Fn7t0zpgUPTzyy7cZ2J7YPrWlvJCca1owelSg8I=;
+  b=Qf+LGa3vsYgn342XorIdZGTC3jMFPjjCaeD99AWOl6C+kOCwLeqAahSO
+   x0ajxIlgdbyFSHxU++u4zo7HW+Lq2JGfb7cpDPL2Ssf25LNOhq7Wq6zJg
+   9K290JmJBVqjMblEb7f6l5HimlE+/CqCmJL6wsYNvcVMbi0GWeNC968HX
+   E=;
+IronPort-SDR: 0CTfqoGrztyFkxdWl7N+5xyPS/L7yzb0LCX1wGufvVj4n5Lfie5aXLi34SDtZ1xsd6Elp+FXKS
+ Vw9pMSA3ejrg==
 X-IronPort-AV: E=Sophos;i="5.70,485,1574121600"; 
-   d="scan'208";a="18550457"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 25 Feb 2020 20:01:45 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id DB45EA18EF;
-        Tue, 25 Feb 2020 20:01:42 +0000 (UTC)
-Received: from EX13D01UWA002.ant.amazon.com (10.43.160.74) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 25 Feb 2020 20:01:41 +0000
+   d="scan'208";a="19066438"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 25 Feb 2020 20:02:14 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 23DF6A2E94;
+        Tue, 25 Feb 2020 20:02:11 +0000 (UTC)
+Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 25 Feb 2020 20:01:42 +0000
 Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13d01UWA002.ant.amazon.com (10.43.160.74) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 25 Feb 2020 20:01:41 +0000
+ EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 25 Feb 2020 20:01:42 +0000
 Received: from localhost (10.2.75.237) by mail-relay.amazon.com
  (10.43.162.232) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
- Transport; Tue, 25 Feb 2020 20:01:41 +0000
+ Transport; Tue, 25 Feb 2020 20:01:42 +0000
 From:   Balbir Singh <sblbir@amazon.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
         <linux-nvme@lists.infradead.org>
 CC:     <axboe@kernel.dk>, <Chaitanya.Kulkarni@wdc.com>, <mst@redhat.com>,
         <jejb@linux.ibm.com>, <hch@lst.de>,
         Balbir Singh <sblbir@amazon.com>
-Subject: [PATCH v2 0/5] Add support for block disk resize notification
-Date:   Tue, 25 Feb 2020 20:01:24 +0000
-Message-ID: <20200225200129.6687-1-sblbir@amazon.com>
+Subject: [PATCH v2 5/5] drivers/scsi/sd.c: Convert to use set_capacity_revalidate_and_notify
+Date:   Tue, 25 Feb 2020 20:01:29 +0000
+Message-ID: <20200225200129.6687-6-sblbir@amazon.com>
 X-Mailer: git-send-email 2.16.6
+In-Reply-To: <20200225200129.6687-1-sblbir@amazon.com>
+References: <20200225200129.6687-1-sblbir@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,54 +70,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow block/genhd to notify user space about disk size changes using a
-new helper set_capacity_revalidate_and_notify(), which is a wrapper
-on top of set_capacity(). set_capacity_revalidate_and_notify() will only notify
-iff the current capacity or the target capacity is not zero and the
-capacity really changes.
+block/genhd provides set_capacity_revalidate_and_notify() for sending RESIZE
+notifications via uevents. This notification is newly added to scsi sd.
 
-Background:
+Signed-off-by: Balbir Singh <sblbir@amazon.com>
+---
+ drivers/scsi/sd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-As a part of a patch to allow sending the RESIZE event on disk capacity
-change, Christoph (hch@lst.de) requested that the patch be made generic
-and the hacks for virtio block and xen block devices be removed and
-merged via a generic helper.
-
-This series consists of 5 changes. The first one adds the basic
-support for changing the size and notifying. The follow up patches
-are per block subsystem changes. Other block drivers can add their
-changes as necessary on top of this series. Since not all devices
-are resizable, the default was to add a new API and let users
-slowly convert over as needed.
-
-Testing:
-1. I did some basic testing with an NVME device, by resizing it in
-the backend and ensured that udevd received the event.
-
-
-Changelog v2:
-- Rename disk_set_capacity to set_capacity_revalidate_and_notify
-- set_capacity_revalidate_and_notify can call revalidate disk
-  if needed, a new bool parameter is passed (suggested by Bob Liu)
-
-Balbir Singh (5):
-  block/genhd: Notify udev about capacity change
-  drivers/block/virtio_blk.c: Convert to use
-    set_capacity_revalidate_and_notify
-  drivers/block/xen-blkfront.c: Convert to use
-    set_capacity_revalidate_and_notify
-  drivers/nvme/host/core.c: Convert to use
-    set_capacity_revalidate_and_notify
-  drivers/scsi/sd.c: Convert to use set_capacity_revalidate_and_notify
-
- block/genhd.c                | 24 ++++++++++++++++++++++++
- drivers/block/virtio_blk.c   |  5 +----
- drivers/block/xen-blkfront.c |  6 +-----
- drivers/nvme/host/core.c     |  2 +-
- drivers/scsi/sd.c            |  3 ++-
- include/linux/genhd.h        |  2 ++
- 6 files changed, 31 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 8ca9299ffd36..707f47c0ec98 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3187,7 +3187,8 @@ static int sd_revalidate_disk(struct gendisk *disk)
+ 
+ 	sdkp->first_scan = 0;
+ 
+-	set_capacity(disk, logical_to_sectors(sdp, sdkp->capacity));
++	set_capacity_revalidate_and_notify(disk,
++		logical_to_sectors(sdp, sdkp->capacity), false);
+ 	sd_config_write_same(sdkp);
+ 	kfree(buffer);
+ 
 -- 
 2.16.6
 
