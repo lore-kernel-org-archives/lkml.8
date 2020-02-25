@@ -2,95 +2,98 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFC7C4BA01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3067C4BA00
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A272176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A980224653
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 22:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="fQ/sKKht"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FpPAphSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgBYWZx (ORCPT
+        id S1729097AbgBYWaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 17:25:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44063 "EHLO
+        Tue, 25 Feb 2020 17:30:16 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46861 "EHLO
         mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgBYWZx (ORCPT
+        with ESMTP id S1726421AbgBYWaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 17:25:53 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h9so1043739otj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:25:52 -0800 (PST)
+        Tue, 25 Feb 2020 17:30:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id g64so1043460otb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 14:30:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XdH+yxbAhUB4UY/s7QjGS1gpAo5FXhyFRsa4xxUTp5A=;
-        b=fQ/sKKht62Wl7N94VjMHNK/K4I/aKoxyhqQyngIB+7G6dmIF77e43Dhcx2NPFKf1Hl
-         JMJ9P1uOpE99hvIkdE9+o7JvuwJKd0q4fJDVyZAXMd2hyBCVoiJEjpc+40AaARhYZ2P5
-         k151SykV9p9yuPK61UxwkIViDIEs5Mx8DV8ObsNC7hejaLVsaHxxfWxHO0RoLJE9ls/0
-         C0xPOQ///z1oz136gbT/dTZNmKrQ1iKKlnhOJF6sSViOR8d1eZFqksjhxbu9AlhTrOtz
-         kxcqcwq5gnGaCCXKOtxHqh28GczNoMDba0jDWH+XWl9GFklYcKMrPZXVzfvec4CrB275
-         DVXg==
+        bh=BrEPbLqTlFfWhG7c3GGQgt9yFg0pALuIdjeT0xABLMg=;
+        b=FpPAphSHXLYsaE+3UvRxPBgDOnB7MzMk7Kmlh3zw4TOfEWCHWfGUJgRgDJ8VBkWILC
+         fkPyQAdZf3U7B8Vug+ANb3jafZttPSBVWEuvQ+oaghABbjg7S+yasje27XW2Gu0fCaNu
+         89eHuQHxDrywCsMb3ncajsBSzC6mY0iFSYJBxqyDaIfWBePiwJr81FaFpJ9Zou6QkEyc
+         Jjip7c/AKq914jb039x4fbGuobk8OlrDk3vD7f5J1zxZ3/H7tBDa0NLjdmJ08s2jnUhV
+         wYGXLf+gK0mSec/DY3pPLGZVF60swBgnM79xrVAANmXb/r5JP1+NLcbk1UcVDSUMQnB6
+         Jmng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XdH+yxbAhUB4UY/s7QjGS1gpAo5FXhyFRsa4xxUTp5A=;
-        b=ZxIuN5vWhBbb9lYHXRhSnGuIHaFl9uoxvYIKQPxZZbYZ5BGB1w5xM18CeGr1wRBqc3
-         7PTkfvMhqIna6dhkIqdmA0CFw19kZQVdoQeMPzcTMeI6B1wc2TMgMgaONj0ThpalrsjT
-         RMdE8X9cKvxBUzDvh/T8/L/nAEsMcJhXqSd29hoCYgvgU5qTfYH8pa7I4oOdGcxhoiMx
-         YU6axH89zhOMeG/wFfbRKViW+VUQc4jfmbUO2hZJp6b8pIMEKlaU+nz+jsELxMKVwH5/
-         ckB0Ku8zziJ0Q3cmIfmfKWM3+rH18V3+iAuGkK/kLC8cRDeXhvQmZAQmZAs2j5jOMVqa
-         X9gg==
-X-Gm-Message-State: APjAAAXhMu0KkM2v5heXJYqbSY15yz74e48G55rg94gbh9Zuj9Hzs9AJ
-        /6XBOHtOjB5gKzWp3ow9PdCREKrIQpcC9hNr2A2LUg==
-X-Google-Smtp-Source: APXvYqx2/YsTotylW/r2EQUH4xN/RZ5uHi/ZTmKKH3C1Ka03nm+cOU0HFAzZNbSQVAM/gv7aJ8sUW6vHA7/KZMqdduo=
-X-Received: by 2002:a9d:7842:: with SMTP id c2mr591161otm.252.1582669552159;
- Tue, 25 Feb 2020 14:25:52 -0800 (PST)
+        bh=BrEPbLqTlFfWhG7c3GGQgt9yFg0pALuIdjeT0xABLMg=;
+        b=rgBr7ZnTMaL+C8u9FmxqYcwjZIgx9YgXsLNg4RiMMJ+0P0Vm0SEBINzvZDRpMVdYNW
+         L2g9ILXe4ZznJ2joq+I9asO8H0NZrMm2Sbe1lE/qQRkm/SlECj8SaJ6qxAP68oe8FIFt
+         AGwbz8Q/wJE/3XK0iGpRwEELzDrmgaUdVGpc+WrT094+FDW2BQmA6AvcqGnTWrl6czN+
+         yUM248iZKsyrW66WsRo3vK5H4HYwiu7HMG+IvKutkx7fiYM77wWzFKy2BQfvTzvky7uR
+         5//PVvy0bT2f4TWKmrOPLM3d/I+orMCgIGQjmUPoAHPvmtjhcWtXv1ts6TUedvLPlFT3
+         dr6w==
+X-Gm-Message-State: APjAAAUhdUJaA15OL8gctHICbzCuXy2rBN0EmR4FF1QMhLbK9zWYePt/
+        aM+QfJZAo1klnXdODTz9rm2yZOwkDh2W5GmduOC1mj+h
+X-Google-Smtp-Source: APXvYqxPfciH6Z5eK4o0F5Fulc1nBBSG9d5q8Wk5//UKojl8rjqHpyXrdfeCEpLJu+rhzG9/1VevJv49Kiuqtk+U318=
+X-Received: by 2002:a9d:6ac2:: with SMTP id m2mr630339otq.191.1582669814963;
+ Tue, 25 Feb 2020 14:30:14 -0800 (PST)
 MIME-Version: 1.0
-References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com> <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
-In-Reply-To: <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Tue, 25 Feb 2020 14:25:40 -0800
-Message-ID: <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
-Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
-        =?UTF-8?B?VGltbyBTY2hsw7zDn2xlcg==?= <schluessler@krause.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
+ <20200219194006.GA3075@sultan-book.localdomain> <20200219200527.GF11847@dhcp22.suse.cz>
+ <20200219204220.GA3488@sultan-book.localdomain> <20200219214513.GL3420@suse.de>
+ <20200219224231.GA5190@sultan-book.localdomain> <20200220101945.GN3420@suse.de>
+ <20200221042232.GA2197@sultan-book.localdomain> <20200221080737.GK20509@dhcp22.suse.cz>
+ <20200221210824.GA3605@sultan-book.localdomain> <20200225090945.GJ22443@dhcp22.suse.cz>
+In-Reply-To: <20200225090945.GJ22443@dhcp22.suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 25 Feb 2020 14:30:03 -0800
+Message-ID: <CALvZod6MW62-+nEw-d0jKxFK9mspOY_tt2JRTDYOrOVyM9_QHw@mail.gmail.com>
+Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
+ free pages
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 1:43 PM Marc Kleine-Budde <mkl@pengutronix.de> wrote:
+On Tue, Feb 25, 2020 at 1:10 AM Michal Hocko <mhocko@kernel.org> wrote:
 >
-> On 2/25/20 7:35 PM, Tim Harvey wrote:
-> > Some SPI host controllers such as the Cavium Thunder do not support
-> > full-duplex SPI. Using half-duplex transfers allows the driver to work
-> > with those host controllers.
+[snip]
 >
-> There are several transfers left in the driver, where both rx_buf and
-> tx_buf are set. How does your host controller driver know which one to
-> handle?
+> The proper fix should, however, check the amount of reclaimable pages
+> and back off if they cannot meet the target IMO. We cannot rely on the
+> general reclaimability here because that could really be thrashing.
 >
 
-Marc,
+"check the amount of reclaimable pages" vs "cannot rely on the general
+reclaimability"? Can you clarify?
 
-Your right... there is the mcp251x_hw_rx_frame() call that also uses
-spi_rx_buf after a synchronous transfer (I didn't see any others).
-I'll look at this again.
+BTW we are seeing a similar situation in our production environment.
+We have swappiness=0, no swap from kswapd (because we don't swapout on
+pressure, only on cold age) and too few file pages, the kswapd goes
+crazy on shrink_slab and spends 100% cpu on it.
 
-In general is it an ok approach to switch the driver to half-duplex
-for this issue without the need of complicating things with a
-module/dt param?
-
-Regards,
-
-Tim
+Shakeel
