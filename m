@@ -2,214 +2,113 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA10AC35DF2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EE3C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D8A24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582602952;
-	bh=5tJzdcoeiG0a/NdvM1WlkwWPgQw0vN8nQAVA/U78gF4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Phxq7bJAAPXsjW3Q19RHvz6RgpVSx3MlGZYmQbsPFlJ9K79CaF6GuzANUmKZ7cI4H
-	 WqcsKoew74IwJxShVl1+FgUt7g7fRH/JjP6tTFLK1ALK4fzl/s3rjBQOMQ1Gf9A1Ag
-	 wCP3+OSvtTiviaRBP+KkHAhraRVVFspzjCwvowz4=
+	by mail.kernel.org (Postfix) with ESMTP id 0F46B24650
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=waifu.club header.i=@waifu.club header.b="Kv7jHqmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgBYDzv (ORCPT
+        id S1728932AbgBYD4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:55:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgBYDzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:55:51 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A75AE24650;
-        Tue, 25 Feb 2020 03:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582602949;
-        bh=5tJzdcoeiG0a/NdvM1WlkwWPgQw0vN8nQAVA/U78gF4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=WdKlOpafYQHz7RiV86vGWYLjy60o4hy06qWK0pP8YUgosJOPCzYll3kGaBsjgaokg
-         jRfP5YtN30F3n273BGxc8fwSfKuPWRxHn8XxT9nHIozTDFdQcf3EK8ZSCtA9oiJN1b
-         U074ZHX2SkgjV63LryrwXTInj6SHiJVd5Gn2unh0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4E491352270D; Mon, 24 Feb 2020 19:55:49 -0800 (PST)
-Date:   Mon, 24 Feb 2020 19:55:49 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200225035549.GU2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200220045233.GC476845@mit.edu>
- <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com>
- <20200223011018.GB2935@paulmck-ThinkPad-P72>
- <20200224174030.GA22138@pc636>
- <20200225020705.GA253171@google.com>
+        Mon, 24 Feb 2020 22:56:49 -0500
+Received: from mx1.cock.li ([185.10.68.5]:44443 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726962AbgBYD4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 22:56:49 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225020705.GA253171@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=waifu.club; s=mail;
+        t=1582603005; bh=btnYEUoxM2lY7tAOZNUCienv1ZMrRKlySzePRr4n7oQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kv7jHqmJYvHDHIRb1elIE+/xmowJ8x2vdz41WWMiRJWThK/CfVf7qyOJOMuS4348T
+         cBEMOiou23qlWp9pEmyJjnUEEeS0HEzpSgHJVzipQrTrdoOWcUnN4w2vQqIl5SR5J4
+         qBHG9GW4RbtvH0gzR44Wm8nukaymhfNDBktmHGV1AdCL8KjXwIFhb7i38TcJysirsT
+         7/HIyoEhaa3W9GuObrPVNVfNDPIDUWy3KSkYzAUnEOQODfS+2B7kmepB53CJ4Nmlwf
+         ge/ds1rQZVM39rclhkZdO87N1dJYrG7C5vNJBXORRmTH30yGP3IOyngo4x1M4VXd48
+         BHVOBb9pDjXRA==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 25 Feb 2020 03:56:44 +0000
+From:   whywontyousue@waifu.club
+To:     Stephan von Krawczynski <skraw.ml@ithnet.com>
+Cc:     linux-kernel@vger.kernel.org, bruce@perens.com, rms@gnu.org,
+        moglen@columbia.edu, blukashev@sempervictus.com,
+        tcallawa@redhat.com, editor@lwn.net, skraw.ml@ithnet.com,
+        torvalds@osdl.org
+Subject: Re: General Discussion about GPLness
+In-Reply-To: <20200224150124.7c88cb8a@ithnet.com>
+References: <8b0e828da35ab77c1ad4603768c6eab6@waifu.club>
+ <20200223133301.03eab91d@ithnet.com>
+ <2241a3e0c8dcba5b69b4f670e181d7cd@waifu.club>
+ <20200223153909.1ba91bae@ithnet.com>
+ <dadb648cd23ee79dacf5992ff5ca6094@waifu.club>
+ <20200223214757.5adf49e4@ithnet.com>
+ <9c062aed49c1484d435e1a394e979c83@waifu.club>
+ <20200224150124.7c88cb8a@ithnet.com>
+Message-ID: <e02b9131897a194aaec834c9393aab68@waifu.club>
+X-Sender: whywontyousue@waifu.club
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:07:05PM -0500, Joel Fernandes wrote:
-> On Mon, Feb 24, 2020 at 06:40:30PM +0100, Uladzislau Rezki wrote:
-> > On Sat, Feb 22, 2020 at 05:10:18PM -0800, Paul E. McKenney wrote:
-> > > On Sat, Feb 22, 2020 at 05:24:15PM -0500, Joel Fernandes wrote:
-> > > > On Fri, Feb 21, 2020 at 12:22:50PM -0800, Paul E. McKenney wrote:
-> > > > > On Fri, Feb 21, 2020 at 02:14:55PM +0100, Uladzislau Rezki wrote:
-> > > > > > On Thu, Feb 20, 2020 at 04:30:35PM -0800, Paul E. McKenney wrote:
-> > > > > > > On Wed, Feb 19, 2020 at 11:52:33PM -0500, Theodore Y. Ts'o wrote:
-> > > > > > > > On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
-> > > > > > > > > now it becomes possible to use it like: 
-> > > > > > > > > 	...
-> > > > > > > > > 	void *p = kvmalloc(PAGE_SIZE);
-> > > > > > > > > 	kvfree_rcu(p);
-> > > > > > > > > 	...
-> > > > > > > > > also have a look at the example in the mm/list_lru.c diff.
-> > > > > > > > 
-> > > > > > > > I certainly like the interface, thanks!  I'm going to be pushing
-> > > > > > > > patches to fix this using ext4_kvfree_array_rcu() since there are a
-> > > > > > > > number of bugs in ext4's online resizing which appear to be hitting
-> > > > > > > > multiple cloud providers (with reports from both AWS and GCP) and I
-> > > > > > > > want something which can be easily backported to stable kernels.
-> > > > > > > > 
-> > > > > > > > But once kvfree_rcu() hits mainline, I'll switch ext4 to use it, since
-> > > > > > > > your kvfree_rcu() is definitely more efficient than my expedient
-> > > > > > > > jury-rig.
-> > > > > > > > 
-> > > > > > > > I don't feel entirely competent to review the implementation, but I do
-> > > > > > > > have one question.  It looks like the rcutiny implementation of
-> > > > > > > > kfree_call_rcu() isn't going to do the right thing with kvfree_rcu(p).
-> > > > > > > > Am I missing something?
-> > > > > > > 
-> > > > > > > Good catch!  I believe that rcu_reclaim_tiny() would need to do
-> > > > > > > kvfree() instead of its current kfree().
-> > > > > > > 
-> > > > > > > Vlad, anything I am missing here?
-> > > > > > >
-> > > > > > Yes something like that. There are some open questions about
-> > > > > > realization, when it comes to tiny RCU. Since we are talking
-> > > > > > about "headless" kvfree_rcu() interface, i mean we can not link
-> > > > > > freed "objects" between each other, instead we should place a
-> > > > > > pointer directly into array that will be drained later on.
-> > > > > > 
-> > > > > > It would be much more easier to achieve that if we were talking
-> > > > > > about the interface like: kvfree_rcu(p, rcu), but that is not our
-> > > > > > case :)
-> > > > > > 
-> > > > > > So, for CONFIG_TINY_RCU we should implement very similar what we
-> > > > > > have done for CONFIG_TREE_RCU or just simply do like Ted has done
-> > > > > > with his
-> > > > > > 
-> > > > > > void ext4_kvfree_array_rcu(void *to_free)
-> > > > > > 
-> > > > > > i mean:
-> > > > > > 
-> > > > > >    local_irq_save(flags);
-> > > > > >    struct foo *ptr = kzalloc(sizeof(*ptr), GFP_ATOMIC);
-> > > > > > 
-> > > > > >    if (ptr) {
-> > > > > >            ptr->ptr = to_free;
-> > > > > >            call_rcu(&ptr->rcu, kvfree_callback);
-> > > > > >    }
-> > > > > >    local_irq_restore(flags);
-> > > > > 
-> > > > > We really do still need the emergency case, in this case for when
-> > > > > kzalloc() returns NULL.  Which does indeed mean an rcu_head in the thing
-> > > > > being freed.  Otherwise, you end up with an out-of-memory deadlock where
-> > > > > you could free memory only if you had memor to allocate.
-> > > > 
-> > > > Can we rely on GFP_ATOMIC allocations for these? These have emergency memory
-> > > > pools which are reserved.
-> > > 
-> > > You can, at least until the emergency memory pools are exhausted.
-> > > 
-> > > > I was thinking a 2 fold approach (just thinking out loud..):
-> > > > 
-> > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
-> > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
-> > > > queue that.
-> > > > 
-> > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
-> > gets failed in atomic context? Or we can just consider it as out of
-> > memory and another variant is to say that headless object can be called
-> > from preemptible context only.
-> 
-> Yes that makes sense, and we can always put disclaimer in the API's comments
-> saying if this object is expected to be freed a lot, then don't use the
-> headless-API to be extra safe.
-> 
-> BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
-> the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
-> there seems to be bigger problems in the system any way. I would say let us
-> write a patch to allocate there and see what the -mm guys think.
-> 
-> > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
-> > > > synchronize_rcu() inline with it.
-> > > > 
-> > > >
-> > What do you mean here, Joel? "grow an rcu_head on the stack"?
-> 
-> By "grow on the stack", use the compiler-allocated rcu_head on the
-> kfree_rcu() caller's stack.
-> 
-> I meant here to say, if we are not in atomic context, then we use regular
-> GFP_KERNEL allocation, and if that fails, then we just use the stack's
-> rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
-> the allocation failure would mean the need for RCU to free some memory is
-> probably great.
-> 
-> > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
-> > > > between the 2 cases.
-> > > > 
-> > If the current context is preemptable then we can inline synchronize_rcu()
-> > together with freeing to handle such corner case, i mean when we are run
-> > out of memory.
-> 
-> Ah yes, exactly what I mean.
-> 
-> > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
-> > have a look at preempt_count of current process? If we have for example
-> > nested rcu_read_locks:
-> > 
-> > <snip>
-> > rcu_read_lock()
-> >     rcu_read_lock()
-> >         rcu_read_lock()
-> > <snip>
-> > 
-> > the counter would be 3.
-> 
-> No, because preempt_count is not incremented during rcu_read_lock(). RCU
-> reader sections can be preempted, they just cannot goto sleep in a reader
-> section (unless the kernel is RT).
+I see that you're just going to ignore
+Universal City Studios Inc v Reimerdes
 
-You are both right.
+Instead you address your emotional issues. This is the making of a 
+beast: which is what you are. Driven by your instincts.
 
-Vlad is correct for CONFIG_PREEMPT=n and CONFIG_DEBUG_ATOMIC_SLEEP=y
-and Joel is correct otherwise, give or take the possibility of other
-late-breaking corner cases.  ;-)
+You want to violate the linux copyright. You announced your intent 
+(which increases the damages you are liable for under US jurisprudence.)
 
-							Thanx, Paul
+The facts are simple: You may not execute the scheme you are suggesting. 
+If you do execute the scheme you or suggesting, or if you assist others 
+in doing so then you are liable for copyright infringement (direct or 
+contributory). If you make over 1000 dollars off of this infringement 
+you are liable for criminal penalties as-well.
+
+The courts see unlicensed modification of another copyright-holders 
+work, in memory, while running, as the creation of an unlicensed 
+derivative work.
+
+It does not matter how you try to sugar coat it or change your 
+description, nor do your complaints of me CC'ing relevant parties (a 
+diversion technique by you) who could explain this all to you in ways 
+you could understand, change anything. The courts in the USA see this 
+type of action you suggest as the creation of a derivative work.
+
+Thus you must follow the permissions and must not overstep them. That is 
+all. Having non-gpl modules work as you describe violates the linux 
+kernel copyright just as the plugin in the Reimerdes case violated the 
+RealPlayer copyright: in both cases the situation involves "modules" 
+extending the running program in real-time, in both cases the "modules" 
+are not permitted by the copyright owners to do as they wish: and the 
+Court agreed.
+
+On 2020-02-24 14:01, Stephan von Krawczynski wrote:
+> On Mon, 24 Feb 2020 07:46:33 +0000
+> whywontyousue@waifu.club wrote:
+> 
+>> > Hm, really it is quite hard to stay calm reading your constant insults
+>> > on
+>> 
+>> If such is so, it is shown to all that you are a stupid white man, 
+>> what
+>> can I say. You can't separate facts from fiction (opinion)
+>> [...]
+> 
+> Please stop spamming people completely unrelated to this thread.
+> And please stop spamming this thread with insults and blatant 
+> ignorance.
+> Thank you.
+> No more answers from me to you.
+> --
+> Regards,
+> Stephan
