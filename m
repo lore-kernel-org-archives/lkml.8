@@ -2,106 +2,112 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EF0C35E17
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A37FC35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E013A2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ftkdQ2hg"
+	by mail.kernel.org (Postfix) with ESMTP id D5C212176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgBYVLW (ORCPT
+        id S1728999AbgBYVLb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:11:22 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34496 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBYVLW (ORCPT
+        Tue, 25 Feb 2020 16:11:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54641 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBYVLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:11:22 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j4so172374pgi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:11:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tF+IlVAI+HS6Y0f+cneOLEXoT8cWlqM5wUtgnJmBx14=;
-        b=ftkdQ2hgfFVI+hwU2MK6zYKrQrPOSgrXXuFofv2ARHivbmdOfs3ssBMzmdjnP5ZzPD
-         Dr8MiMS654nUEZnmSv/nnA2aODa8F5AWISMWIlq2W5JbZQho0BgYPNraYWZPAoryyXSH
-         G+T5SQyrCZgGe4xBrhoQedScDHGxcrOiKer9O53ygw/vEXo5vFkJl3NoPmX+MdWgsP1L
-         Qan28rYEmUbwHA0ZPySQNAZQwsCrfKb4qnKz3CxjPFQlrY9yQBNHzugggZ0UiAAmEP++
-         ITepZHHQcsLZT8uewbRgRRN9T9ryRH/AJL5KBei+/II26JUJl+y9nBjMNa/GET7EKb29
-         WFlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tF+IlVAI+HS6Y0f+cneOLEXoT8cWlqM5wUtgnJmBx14=;
-        b=djqlA2qd4QvDijP9zGhY+5PytzpSyw9/gx73suTUZVV7y+sxMz7E0XyuGlCptflwFj
-         o9bdv5Vq9jhPcmBQ1L85iYq3OdE9+5xjXyO9DXouo5tVMb7AaHoJSQyBf+0XHjiX+YrV
-         REgl9mNbVd0EIZ+mEN7BwvaS0FogNAgB4tiqtiv/4G9TzHNUw3e4jg2aBzHWgmXzNKvT
-         Kc33T1D9X4x2SflpBIpKKLkgIwxV5aa+eD883/hh7Z6Fhj/hANhRF47mCIrqy2mclJW6
-         dg6beoSAEMFWB9IU3N3itUQBqvxvMLZ24us3MyTO4WbNAl5190uFCNavFQa1Lv9rwmrF
-         gTIA==
-X-Gm-Message-State: APjAAAUc+LDdSKvK/8LaJZK/SQ51Yr6X4V7N5UA10QwkXwwl8enqbvCU
-        WkP490Ltp2S9CKooWTH4E/hKjQ==
-X-Google-Smtp-Source: APXvYqwWoqLqv60gI3Mi9a6nyAllDkJGT9fQ6YDrQ3DDVc1ZKlkRjfSci7qWel5KG88MecI6TkZFBg==
-X-Received: by 2002:a63:d90c:: with SMTP id r12mr486886pgg.106.1582665081210;
-        Tue, 25 Feb 2020 13:11:21 -0800 (PST)
-Received: from nuc7.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id h3sm17862064pfo.102.2020.02.25.13.11.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Feb 2020 13:11:20 -0800 (PST)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     kishon@ti.com
-Cc:     alan.mikhak@sifive.com, amurray@thegoodpenguin.co.uk,
-        arnd@arndb.de, bhelgaas@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com
-Subject: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer data
-Date:   Tue, 25 Feb 2020 13:11:07 -0800
-Message-Id: <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200225091130.29467-1-kishon@ti.com>
-References: <20200225091130.29467-1-kishon@ti.com>
+        Tue, 25 Feb 2020 16:11:31 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j6hUE-0002y5-DK; Tue, 25 Feb 2020 22:11:26 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0F93C1C2154;
+        Tue, 25 Feb 2020 22:11:26 +0100 (CET)
+Date:   Tue, 25 Feb 2020 21:11:25 -0000
+From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] clocksource/drivers/arm_arch_timer: Fix vDSO
+ clockmode when vDSO disabled
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200224151552.57274-1-vincenzo.frascino@arm.com>
+References: <20200224151552.57274-1-vincenzo.frascino@arm.com>
+MIME-Version: 1.0
+Message-ID: <158266508571.28353.6918690655943094425.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-@@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
-        int bar;
+The following commit has been merged into the timers/core branch of tip:
 
-        cancel_delayed_work(&epf_test->cmd_handler);
-+       pci_epf_clean_dma_chan(epf_test);
-        pci_epc_stop(epc);
-        for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-                epf_bar = &epf->bar[bar];
-@@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-                }
-        }
+Commit-ID:     a67de48b3075cbb6ec030205d7b78981def6596d
+Gitweb:        https://git.kernel.org/tip/a67de48b3075cbb6ec030205d7b78981def6596d
+Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
+AuthorDate:    Mon, 24 Feb 2020 15:15:52 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 25 Feb 2020 22:08:39 +01:00
 
-+       epf_test->dma_supported = true;
-+
-+       ret = pci_epf_init_dma_chan(epf_test);
-+       if (ret)
-+               epf_test->dma_supported = false;
-+
-        if (linkup_notifier) {
-                epf->nb.notifier_call = pci_epf_test_notifier;
-                pci_epc_register_notifier(epc, &epf->nb);
+clocksource/drivers/arm_arch_timer: Fix vDSO clockmode when vDSO disabled
 
-Hi Kishon,
+The arm_arch_timer requires VDSO_CLOCKMODE_ARCHTIMER to be defined to
+compile correctly. On ARM the vDSO can be disabled and when this is the
+case the compilation ends prematurely with an error:
 
-Looking forward to building and trying this patch series on
-a platform I work on.
+ $ make ARCH=arm multi_v7_defconfig
+ $ ./scripts/config -d VDSO
+ $ make
 
-Would you please point me to where I can find the patches
-which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
-to Linux PCI Endpoint Framework?
+drivers/clocksource/arm_arch_timer.c:73:44: error:
+‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
+  static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
 
-Regards,
-Alan Mikhak
+Make the usage of VDSO_CLOCKMODE_ARCHTIMER depend on the VDSO enablement
+and initialize the vdso clockmode variable with VDSO_CLOCKMODE_NONE
+otherwise.
+
+[ tglx: Match changelog and patch content. ]
+
+Fixes: 5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200224151552.57274-1-vincenzo.frascino@arm.com
+
+---
+ drivers/clocksource/arm_arch_timer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index ee2420d..d53f4c7 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -69,7 +69,11 @@ static enum arch_timer_ppi_nr arch_timer_uses_ppi = ARCH_TIMER_VIRT_PPI;
+ static bool arch_timer_c3stop;
+ static bool arch_timer_mem_use_virtual;
+ static bool arch_counter_suspend_stop;
++#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+ static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
++#else
++static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_NONE;
++#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+ 
+ static cpumask_t evtstrm_available = CPU_MASK_NONE;
+ static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
