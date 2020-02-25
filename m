@@ -2,162 +2,121 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28545C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033E7C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBF421744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582647687;
-	bh=VtQY2mCmUh7VCyLEDecUcNrtXfnW5VJRfcEoBJHt+JQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mvqoBAfw6lsbnWM7xSBCcsAhcM78oWyV0o8pBNZKzYy6yMj8czX8YvpOgP33LfrCH
-	 cmwMbNiLHoIHHYxtiof90N+u37i58qdQDaZqNOb+wdlUDZ+NA/OWQ7V/l8wlxzo7Lc
-	 2tQG8/9n424j4kfm8BMvpOxy2dQYvyh7eV6CWOrw=
+	by mail.kernel.org (Postfix) with ESMTP id C78CA21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kz5vmBt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbgBYQVZ (ORCPT
+        id S1730741AbgBYQVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:21:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBYQVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:21:25 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10D0A2082F;
-        Tue, 25 Feb 2020 16:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582647684;
-        bh=VtQY2mCmUh7VCyLEDecUcNrtXfnW5VJRfcEoBJHt+JQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ns40aypklqKuUib1m+hVxyk4tzndPZn+0n2YHFsg/Mu/i6dixmRh51yNFslCwXZ7H
-         lMfJapxdHIoPdvn51ZLCmVcjEXIc7zWO+4LnkmQtz/HJBYI1aoP3gqjq4HUdUwj2G1
-         aSw2SlVYtE5XSpJtvskYH64IiSVFA8YBr+9q9AZk=
-Date:   Tue, 25 Feb 2020 17:21:21 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200225162121.GA9599@lenoir>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
- <20200224161318.GG14897@hirez.programming.kicks-ass.net>
- <20200225030905.GB28329@lenoir>
- <20200225154111.GM18400@hirez.programming.kicks-ass.net>
+        Tue, 25 Feb 2020 11:21:35 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55338 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBYQVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:21:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=J3p3P1Xs0O9vBplWiDfg1XuROWQome6tzfHEzwiApJU=; b=Kz5vmBt0G2YWRfEPqm9mUBVMss
+        cPiRtJ23JAwKdJiDWEcQn6d9h7UzBhbjjgDJPBXzpxPD5zPKnkixFabpBou2UJGkwQgOMDFvX432+
+        Jy0ogOtBMxdji+YUDDm4EREXv5uLplk7GBPmOYpM+JQwTauVHYCUovkLaUV+7DbnKbN3gDgIU0f4I
+        lohHkNFlNlsdqekU+IG+wMdRQWgYVVGlZ0CwscvUWxDO8ITwsrWA7uL7NNOo+dB2Ru/AnYeTD6Rwn
+        WVS6KlYp7cyECY4cbvgwFXRwQ+ccyRBY6iMychwLSb2vvFzHr4nDnPelXTtgxC0u4N2aaiDaPb3k7
+        r40hwkmQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6cxi-0003cc-4t; Tue, 25 Feb 2020 16:21:34 +0000
+Subject: Re: [PATCH v4 9/9] power: supply: Support ROHM bd99954 charger
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <529dd6298be245051f333ab4d9264902bf889aa6.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c187bb77-e804-93bd-64db-9418be58f191@infradead.org>
+Date:   Tue, 25 Feb 2020 08:21:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225154111.GM18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <529dd6298be245051f333ab4d9264902bf889aa6.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:41:11PM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 25, 2020 at 04:09:06AM +0100, Frederic Weisbecker wrote:
-> > On Mon, Feb 24, 2020 at 05:13:18PM +0100, Peter Zijlstra wrote:
-> 
-> > > +#define arch_nmi_enter()						\
-> > > +do {									\
-> > > +	struct nmi_ctx *___ctx;						\
-> > > +	unsigned int ___cnt;						\
-> > > +									\
-> > > +	if (!is_kernel_in_hyp_mode() || in_nmi())			\
-> > > +		break;							\
-> > > +									\
-> > > +	___ctx = this_cpu_ptr(&nmi_contexts);				\
-> > > +	___cnt = ___ctx->cnt;						\
-> > > +	if (!(___cnt & 1) && __cnt) {					\
-> > > +		___ctx->cnt += 2;					\
-> > > +		break;							\
-> > > +	}								\
-> > > +									\
-> > > +	___ctx->cnt |= 1;						\
-> > > +	barrier();							\
-> > > +	nmi_ctx->hcr = read_sysreg(hcr_el2);				\
-> > > +	if (!(nmi_ctx->hcr & HCR_TGE)) {				\
-> > > +		write_sysreg(nmi_ctx->hcr | HCR_TGE, hcr_el2);		\
-> > > +		isb();							\
-> > > +	}								\
-> > > +	barrier();							\
-> > 
-> > Suppose the first NMI is interrupted here. nmi_ctx->hcr has HCR_TGE unset.
-> > The new NMI is going to overwrite nmi_ctx->hcr with HCR_TGE set. Then the
-> > first NMI will not restore the correct value upon arch_nmi_exit().
-> > 
-> > So perhaps the below, but I bet I overlooked something obvious.
-> 
-> Well, none of this is obvious :/
-> 
-> The basic idea was that the LSB signifies 'pending/in-progress' and when
-> that is set, nobody else touches no nothing. Enter will unconditionally
-> (re) write_sysreg(), exit will nothing.
-> 
-> Obviously I messed that up.
-> 
-> How's this? 
-> 
-> #define arch_nmi_enter()						\
-> do {									\
-> 	struct nmi_ctx *___ctx;						\
-> 	unsigned int ___cnt;						\
-> 									\
-> 	if (!is_kernel_in_hyp_mode() || in_nmi())			\
-> 		break;							\
-> 									\
-> 	___ctx = this_cpu_ptr(&nmi_contexts);				\
-> 	___cnt = ___ctx->cnt;						\
-> 	if (!(___cnt & 1)) { /* !IN-PROGRESS */				\
-> 		if (___cnt) {						\
-> 			___ctx->cnt += 2;				\
-> 			break;						\
-> 		}							\
-> 									\
-> 		___ctx->hcr = read_sysreg(hcr_el2);			\
-> 		barrier();						\
-> 		___ctx->cnt |= 1; /* IN-PROGRESS */			\
-> 		barrier();						\
-> 	}								\
-> 									\
-> 	if (!(___ctx->hcr & HCR_TGE)) {					\
-> 		write_sysreg(___ctx->hcr | HCR_TGE, hcr_el2);		\
-> 		isb();							\
-> 	}								\
-> 	barrier();							\
-> 	if (!(___cnt & 1))						\
-> 		___ctx->cnt++; /* COMPLETE */				\
-> } while (0)
-> 
-> #define arch_nmi_exit()							\
-> do {									\
-> 	struct nmi_ctx *___ctx;						\
-> 									\
-> 	if (!is_kernel_in_hyp_mode() || in_nmi())			\
-> 		break;							\
-> 									\
-> 	___ctx = this_cpu_ptr(&nmi_contexts);				\
-> 	if ((___ctx->cnt & 1) || (___ctx->cnt -= 2))			\
-> 		break;							\
+On 2/25/20 12:55 AM, Matti Vaittinen wrote:
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index 8781c674ed07..0b3bad6fc736 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -702,6 +702,16 @@ config CHARGER_BD70528
+>  	 information and altering charger configurations from charger
+>  	 block of the ROHM BD70528 Power Management IC.
+>  
 
-If you're interrupted here and __ctx->cnt == 0, the new NMI is in its right
-to overwrite __ctx->hcr. It will find HCR_TGE set in the sysreg and write it back to
-___ctx->hcr. So the following restore will fail.
+Hi,
 
-\
-> 	if (!(___ctx->hcr & HCR_TGE))					\
-> 		write_sysreg(___ctx->hcr, hcr_el2);			\
-> } while (0)
+> +config CHARGER_BD99954
+> +	tristate "ROHM bd99954 charger driver"
+> +	depends on I2C
+> +	select LINEAR_RANGES
+> +	default n
+
+Drop the "default n", since it is already the default.
+
+> +	help
+> +	 Say Y here to enable support for getting battery and charger
+> +	 information and altering charger configurations from the ROHM
+> +	 BD99954 charger IC.
+
+Please indent the 3 lines of help text with one additional space (2 total).
+See Documentation/process/coding-style.rst:
+
+10) Kconfig configuration files
+-------------------------------
+
+For all of the Kconfig* configuration files throughout the source tree,
+the indentation is somewhat different.  Lines under a ``config`` definition
+are indented with one tab, while help text is indented an additional two
+spaces.  Example::
+
+  config AUDIT
+	bool "Auditing support"
+	depends on NET
+	help
+	  Enable auditing infrastructure that can be used with another
+	  kernel subsystem, such as SELinux (which requires this for
+	  logging of avc messages output).  Does not do system-call
+	  auditing without CONFIG_AUDITSYSCALL.
+
+> +
+>  config CHARGER_WILCO
+>  	tristate "Wilco EC based charger for ChromeOS"
+>  	depends on WILCO_EC
+
+thanks.
+-- 
+~Randy
+
