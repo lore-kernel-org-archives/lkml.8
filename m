@@ -2,214 +2,97 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51999C35E09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80400C35E09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251CB2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="noWYwqMs"
+	by mail.kernel.org (Postfix) with ESMTP id 5F8FB2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbgBYQB7 (ORCPT
+        id S1731015AbgBYQCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:01:59 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14417 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730628AbgBYQB6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:01:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582646518; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Jt+IAVS9xM4+4RfW6VNL2gtvTWM4sE89zEqE8H9YrCc=; b=noWYwqMsYrlm6snjkRetK36dYayqYkBsgcyiVYp3gTqcolluaQEwr2/3pvrckGrEuHxzkPiE
- 7PI5u3egt0dJLAx+/8siNRXbleufakUZfhtxX0SsgXgpa0H9CY74H1QlcRfnFTH2flzHz4fT
- kgTJtDyeKRySa1JI/gqrDxQST1o=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e554496.7f8d2debeae8-smtp-out-n02;
- Tue, 25 Feb 2020 16:00:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D200AC447A3; Tue, 25 Feb 2020 16:00:20 +0000 (UTC)
-Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: okukatla)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9764BC447A3;
-        Tue, 25 Feb 2020 16:00:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9764BC447A3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
-From:   Odelu Kukatla <okukatla@codeaurora.org>
-To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@google.com,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
-        elder@linaro.org, linux-pm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Subject: [V4, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
-Date:   Tue, 25 Feb 2020 21:29:44 +0530
-Message-Id: <1582646384-1458-4-git-send-email-okukatla@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
-References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+        Tue, 25 Feb 2020 11:02:53 -0500
+Received: from mga03.intel.com ([134.134.136.65]:47504 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730616AbgBYQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:02:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 08:02:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="438109107"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Feb 2020 08:02:50 -0800
+Subject: Re: [PATCH] MAINTAINERS: add maintainers for uacce
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
+Date:   Tue, 25 Feb 2020 09:02:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT nodes for the network-on-chip interconnect buses found
-on sc7180-based platforms.
 
-Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 95 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index cc5a94f..3e28f34 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -748,6 +748,69 @@
- 			};
- 		};
- 
-+		config_noc: interconnect@1500000 {
-+			compatible = "qcom,sc7180-config-noc";
-+			reg = <0 0x01500000 0 0x28000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		system_noc: interconnect@1620000 {
-+			compatible = "qcom,sc7180-system-noc";
-+			reg = <0 0x01620000 0 0x17080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		mc_virt: interconnect@1638000 {
-+			compatible = "qcom,sc7180-mc-virt";
-+			reg = <0 0x01638000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		qup_virt: interconnect@1650000 {
-+			compatible = "qcom,sc7180-qup-virt";
-+			reg = <0 0x01650000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		aggre1_noc: interconnect@16e0000 {
-+			compatible = "qcom,sc7180-aggre1-noc";
-+			reg = <0 0x016e0000 0 0x15080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		aggre2_noc: interconnect@1705000 {
-+			compatible = "qcom,sc7180-aggre2-noc";
-+			reg = <0 0x01705000 0 0x9000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		compute_noc: interconnect@170e000 {
-+			compatible = "qcom,sc7180-compute-noc";
-+			reg = <0 0x0170e000 0 0x6000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		mmss_noc: interconnect@1740000 {
-+			compatible = "qcom,sc7180-mmss-noc";
-+			reg = <0 0x01740000 0 0x1c100>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		ipa_virt: interconnect@1e00000 {
-+			compatible = "qcom,sc7180-ipa-virt";
-+			reg = <0 0x01e00000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
- 			reg = <0 0x01f40000 0 0x40000>;
-@@ -1103,6 +1166,13 @@
- 			};
- 		};
- 
-+		dc_noc: interconnect@9160000 {
-+			compatible = "qcom,sc7180-dc-noc";
-+			reg = <0 0x09160000 0 0x03200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		system-cache-controller@9200000 {
- 			compatible = "qcom,sc7180-llcc";
- 			reg = <0 0x09200000 0 0x200000>, <0 0x09600000 0 0x50000>;
-@@ -1110,6 +1180,20 @@
- 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		gem_noc: interconnect@9680000 {
-+			compatible = "qcom,sc7180-gem-noc";
-+			reg = <0 0x09680000 0 0x3e200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		npu_noc: interconnect@9990000 {
-+			compatible = "qcom,sc7180-npu-noc";
-+			reg = <0 0x09990000 0 0x1600>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
- 			reg = <0 0x0a6f8800 0 0x400>;
-@@ -1154,6 +1238,13 @@
- 			};
- 		};
- 
-+		camnoc_virt: interconnect@ac00000 {
-+			compatible = "qcom,sc7180-camnoc-virt";
-+			reg = <0 0x0ac00000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
-@@ -1481,6 +1572,10 @@
- 					};
- 				};
- 			};
-+
-+			apps_bcm_voter: bcm_voter {
-+				compatible = "qcom,bcm-voter";
-+			};
- 		};
- 
- 		cpufreq_hw: cpufreq@18323000 {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 2/24/20 11:17 PM, Zhangfei Gao wrote:
+> Add Zhangfei Gao and Zhou Wang as maintainers for uacce
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> ---
+>   MAINTAINERS | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 38fe2f3..22e647f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17039,6 +17039,16 @@ W:	http://linuxtv.org
+>   S:	Maintained
+>   F:	drivers/media/pci/tw686x/
+>   
+> +UACCE ACCELERATOR FRAMEWORK
+> +M:	Zhangfei Gao <zhangfei.gao@linaro.org>
+> +M:	Zhou Wang <wangzhou1@hisilicon.com>
+> +S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-driver-uacce
+> +F:	Documentation/misc-devices/uacce.rst
+> +F:	drivers/misc/uacce/
+> +F:	include/linux/uacce.h
+> +F:	include/uapi/misc/uacce/
+
+Mailing list for patch submission?
++L: linux-accelerators@lists.ozlabs.org ?
+
+> +
+>   UBI FILE SYSTEM (UBIFS)
+>   M:	Richard Weinberger <richard@nod.at>
+>   L:	linux-mtd@lists.infradead.org
+> 
