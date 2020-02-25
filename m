@@ -2,125 +2,81 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9582BC4BA01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031CEC4BA00
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B62220675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:56:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fcql3YFv"
+	by mail.kernel.org (Postfix) with ESMTP id C889A22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgBYV4N (ORCPT
+        id S1729130AbgBYV7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:56:13 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36523 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgBYV4M (ORCPT
+        Tue, 25 Feb 2020 16:59:15 -0500
+Received: from www62.your-server.de ([213.133.104.62]:54314 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgBYV7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:56:12 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so290259pfv.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:56:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=P0m56hgWfY+fSgLqZHYe9e+4kClDl7jR0dEcmYtm2LE=;
-        b=fcql3YFvPmHGZI6Q8rQ5z40BgpbCCg+a/WSVyCNRZw82gO+QncFPhs+IByADEdVe9O
-         la8dw8lRoMszKoFcvQDeqEpOQQjNt7Som1vTVOmlymqqVGqsb9pyrojpyu9pO/fRbhOn
-         S9D7diL06Rjt+SATWhlkZEqem3mLI8ww6A2XM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P0m56hgWfY+fSgLqZHYe9e+4kClDl7jR0dEcmYtm2LE=;
-        b=ucEBQzuZHbiRAt7Ib0E9nd5/SKe0D5zzJGq8Qidhu0Z7gduxbmzRzYt865QTOcAs8M
-         FWYyoWXQsydilLciZ8O1RJQ5WA2cDnT826H7C6ce4JN1FLd8H8YSYm+X9ODKLVJB6W2k
-         ahGhs7qVBfkjUqCtMIHpbOT/4wUF4YmY+GJfaO6Iu0AvwhKCYjTndruPFuYYqdMq0fe8
-         8hSjl+p2BampdGwLIrQaly1ezHP46gdCe1vu58Fafxl14J/N08T/C+1G4yYo02tbQMtD
-         MAm7j3cbr9t+v2GbdDK2HBfnUKzrgN1J7p4V4ggPghox/mI0EHGo1lzLfkg+F2vBfH2t
-         m4Mw==
-X-Gm-Message-State: APjAAAXqZ6O2m4yHgkSWShH7zgTVPUpmjLVyqSn3Knki3f+k40Z9hgro
-        NayeF0c2qYLFt/rnE26mktz0Wg==
-X-Google-Smtp-Source: APXvYqxj+J+PuaBuGfM3BsQalMWNQHuh15kFlAIJuvZpyf3cuDJJkvtochBwcj5obIr1O3qqDWizZA==
-X-Received: by 2002:a62:f251:: with SMTP id y17mr853017pfl.204.1582667771408;
-        Tue, 25 Feb 2020 13:56:11 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b12sm60452pfr.26.2020.02.25.13.56.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 13:56:10 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:56:09 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
- Clang/LLVM
-Message-ID: <202002251353.25A016CD@keescook>
-References: <20200224174129.2664-1-ndesaulniers@google.com>
- <202002242003.870E5F80@keescook>
- <20200225041643.GA17425@ubuntu-m2-xlarge-x86>
- <CAKwvOdn0_EETGtBVhbRKMPqv2K04Z1N4PuOZDZ6++Ejbi9-B-w@mail.gmail.com>
+        Tue, 25 Feb 2020 16:59:15 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j6iEO-0003fq-6M; Tue, 25 Feb 2020 22:59:08 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j6iEN-000Noq-ND; Tue, 25 Feb 2020 22:59:07 +0100
+Subject: Re: [PATCH bpf-next v6 0/2] virtio_net: add XDP meta data support
+To:     Yuya Kusakabe <yuya.kusakabe@gmail.com>, jasowang@redhat.com
+Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
+        kafai@fb.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        mst@redhat.com, netdev@vger.kernel.org, songliubraving@fb.com,
+        yhs@fb.com
+References: <20200225033103.437305-1-yuya.kusakabe@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4ae12070-b6ed-af69-52ec-995d59242a42@iogearbox.net>
+Date:   Tue, 25 Feb 2020 22:59:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdn0_EETGtBVhbRKMPqv2K04Z1N4PuOZDZ6++Ejbi9-B-w@mail.gmail.com>
+In-Reply-To: <20200225033103.437305-1-yuya.kusakabe@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25734/Tue Feb 25 15:06:17 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:59:25PM -0800, Nick Desaulniers wrote:
-> On Mon, Feb 24, 2020 at 8:16 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > > Should this also include an update to Documentation/process/changes.rst
-> > > with the minimum version required? (I would expect this to be "9" for Clang,
-> > > and "11" for ld.lld.)
-> >
-> > I think the clang one should be added in a separate patch that
-> > solidifies that in include/linux/compiler-clang.h with a CLANG_VERSION
-> > macro and version check, like in include/linux/compiler-gcc.h.
-> >
-> > ld.lld's minimum version should also be 9, what is the blocking issue
-> > that makes it 11?
+On 2/25/20 4:31 AM, Yuya Kusakabe wrote:
+> This patch series has 2 patches.
 > 
-> I'm super hesitant to put a minimally required version of Clang, since
-> it really depends on the configs you're using.  Sure, clang-9 will
-> probably work better than clang-4 for some configs, but I would say
+> Patch 1/2: keep vnet header zeroed if XDP is loaded for small buffer
+> With this fix, we do not need to care about vnet header in XDP meta data
+> support for small buffer, even though XDP meta data uses in front of
+> packet as same as vnet header.
+> It would be best if this patch goes into stable.
+> This patch is based on the feedback by Jason Wang and Michael S. Tsirkin.
+> https://lore.kernel.org/netdev/9a0a1469-c8a7-8223-a4d5-dad656a142fc@redhat.com/
+> https://lore.kernel.org/netdev/20200223031314-mutt-send-email-mst@kernel.org/
+> 
+> Patch 2/2: add XDP meta data support
+> 
+> Thanks to Jason Wang, Daniel Borkmann and Michael S. Tsirkin for the feedback.
+> 
+> Yuya Kusakabe (2):
+>    virtio_net: keep vnet header zeroed if XDP is loaded for small buffer
+>    virtio_net: add XDP meta data support
+> 
+>   drivers/net/virtio_net.c | 56 ++++++++++++++++++++++++----------------
+>   1 file changed, 34 insertions(+), 22 deletions(-)
+> 
 
-I think it's not unreasonable to say clang-9 due to x86 not building
-prior to clang-9. (Yes, other archs can build with earlier clang, but
-that's true for earlier gccs too.)
-
-> ToT clang built from source would be even better, as unrealistic as
-> that is for most people.  The question of "what's our support model"
-> hasn't realistically come up yet, so I don't really want to make a
-> decision on that right now and potentially pigeonhole us into some
-> support scheme that's theoretical or hypothetical.  We need to expand
-> out the CI more, and get more people to even care about Clang, before
-> we start to concern ourselves with providing an answer to the question
-> "what versions of clang are supported?"  But it's just a strong
-> opinion of mine, held loosely.
-
-"Supported" is hand-wavey anyway. I would say, "this version is
-_expected_ to build the kernel", etc.
-
-> Either way, it can be done (or not) in a follow up patch.  I would
-> like to land some Documentation/ even if it's not perfect, we can go
-> from there.
-
-Sounds fine, but I think we should take a specific version stand as the
-"minimum" version. Being able to build x86 defconfig is a good minimum
-IMO.
-
--- 
-Kees Cook
+Applied, thanks!
