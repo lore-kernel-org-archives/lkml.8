@@ -2,101 +2,104 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58327C35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C851AC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBC421D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582614251;
-	bh=NMPFUZiFDj4QHklT0HPS3y58SQFsxneE6tCKPPGaeJM=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=tHqoVIY03XY4mJmDjwHn78P9EsaPNfmWTS5BQcUUMGHfRgWo7RJYxrImG1kUKJuhD
-	 9ipRjzqRjggLtZLkbXJBcgbJRAa5fHM6Z4vPY/NyELon9dSIhtQl3q206fZgqhy8el
-	 BkZo5hhJjTQWqkZfmjiVpoy2a0DqMPC2XXsEx0No=
+	by mail.kernel.org (Postfix) with ESMTP id 9FF66218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8vnnMgD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgBYHEJ (ORCPT
+        id S1729173AbgBYHFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:04:09 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41000 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBYHEJ (ORCPT
+        Tue, 25 Feb 2020 02:05:18 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33174 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYHFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:04:09 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t14so5101630plr.8;
-        Mon, 24 Feb 2020 23:04:08 -0800 (PST)
+        Tue, 25 Feb 2020 02:05:17 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so12856304lji.0;
+        Mon, 24 Feb 2020 23:05:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=D6g4FFN+2/oVw+clsWyRcWM8iKy7VGLHSR27Eox3yHM=;
+        b=g8vnnMgDO/kKH9FnhFtWoxZa4r+k8oIrtEVXMSPL/rAA3SNVTo3zhywXPgyZaHdvkz
+         yyuIlnbgLXQ3cXGldW9tr3T9bj4NhUTDaWCwn4nF8NCL4C7cOJTymqJbmg1wX9yOAOHT
+         Y2FThsgRQAxmkQeIwh4oEUIMAQHS9v9YGO9X9XGCtC7jkkNsEaI0PTFEvLJCQbny1yRs
+         KoFXK1vjuJvD6wPBlAlsTjMrAwRO/7UDy8ld/koZ0PQbU5RL8swznH7Cq70MTJ5JpbCN
+         PWM8aIN0yupzeriDf46m86JxZvearD7ef6QkSrThcu80Bmaf1wEql/YlABav0mCMWYs7
+         wvRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=iYcb5A6UzA2Shk8jjtL3apQZNq8xVehLtpqARp80zYk=;
-        b=VXAPUK4Rl/ReAcodLmMjLrxuTe4YQXk6AeDGov8QK71S9/RLr+THuX4RoKKDhpVHrG
-         lTyIF31HLLj1h+3mrlRjH/DEs1yFX/5F0qFahS7NNf80DgDWlPkVcxsE+cdLSO/F/ouZ
-         H3bre8cQQ6ycfDGQY+T/7S3RqFe5Ay8cIVtnblQnigCEmNzylAa/wXC2tSrY8l1GS1zN
-         m53hRSqZmeyBT3XHds6O6yn+i64dKk7Em1NdzgxaGX2IG4rSU5TwzWLQJWSR36MTqbfC
-         J9k3AW3N5IzSTAuw+/5fDjmslZ6J6aUDDoE68mAPlxlny8oet/dSk12HDDjWuybo/HAq
-         qJZg==
-X-Gm-Message-State: APjAAAXUkkuPZEW7n3jnZDtJ6I1hUCw1X6r/ES9wDBenZBQZFqVGyTTw
-        8ZLox94c6a3wyOUn9Pq1c7I=
-X-Google-Smtp-Source: APXvYqzD6D5xMLYJA5CvMIbTvN5K9gW/ZqKWDK+ekhwz+ssY3ksY81LFSi4rnKrzKMe4b76xgJ0ixA==
-X-Received: by 2002:a17:902:6a84:: with SMTP id n4mr53128896plk.294.1582614248011;
-        Mon, 24 Feb 2020 23:04:08 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id 13sm15331394pfi.78.2020.02.24.23.04.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 23:04:07 -0800 (PST)
-Message-ID: <5e54c6e7.1c69fb81.ef5e1.a15a@mx.google.com>
-Date:   Mon, 24 Feb 2020 23:04:01 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Paul Burton <paulburton@kernel.org>
-CC:     linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2] MAINTAINERS: Hand MIPS over to Thomas
-References:  <20200222170417.1531867-1-paulburton@kernel.org>
-In-Reply-To:  <20200222170417.1531867-1-paulburton@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D6g4FFN+2/oVw+clsWyRcWM8iKy7VGLHSR27Eox3yHM=;
+        b=NrTKYV06D2m6LFxp7atVpb9p/jbFJGJlJYyDPo131M9iMwO1Zz+b1tKFLP7z9KCtw8
+         UwwYMz0233E6JRNIWHptZGZe8rZyz4Xzbrtjgyn7qLm0fWr0TrTv3d/mPSYDtrq8W2Du
+         G1ThdvcbhL9QTiwL3nrNmC6PZWK+KyPGoSclxOtoraxfTjex7DAIE9gNuS2naUTeuaoe
+         dgS22UkxSZgjStrY4wIke4LjH+cB6SrmzIMipDXdKp5I167AUUAx6sTzenO/HG32xucU
+         yQwV2WzWnuLl49L4FbA9PQtIGj2Bpb1WGx29VFlWRZ0CC8ahjg+JvsKtnUuMitFvDGj2
+         Ho0Q==
+X-Gm-Message-State: APjAAAWC/6rFLPJb6Mi3PpkDWnhOJvOb58WStAa5/DLZlsP795ZpQ31n
+        9Mk0zv34cxaGkTvDOnh3FSWPXPRQ
+X-Google-Smtp-Source: APXvYqxqb3bIiRuvkdOQq4qHLS9yorrChDkfPCKN/aAxnhXVtgL2Fb/IO7BcwvR4aRVVc8zExU7BaQ==
+X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr33756662ljn.277.1582614314466;
+        Mon, 24 Feb 2020 23:05:14 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id b30sm6788895lfc.39.2020.02.24.23.05.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 23:05:13 -0800 (PST)
+Subject: Re: [PATCH v8 00/19] NVIDIA Tegra APB DMA driver fixes and
+ improvements
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200209163356.6439-1-digetx@gmail.com>
+ <20200225063200.GL2618@vkoul-mobl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <84308985-5417-eead-7edc-4984193009b0@gmail.com>
+Date:   Tue, 25 Feb 2020 10:05:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200225063200.GL2618@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Paul Burton wrote:
-> My time with MIPS the company has reached its end, and so at best I'll
-> have little time spend on maintaining arch/mips/.
+25.02.2020 09:32, Vinod Koul пишет:
+> On 09-02-20, 19:33, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This series fixes some problems that I spotted recently, secondly the
+>> driver's code gets a cleanup. Please review and apply, thanks in advance!
 > 
-> Ralf last authored a patch over 2 years ago, the last time he committed
-> one is even further back & activity was sporadic for a while before
-> that. The reality is that he isn't active.
+> Applied, thanks
 > 
-> Having a new maintainer with time to do things properly will be
-> beneficial all round. Thomas Bogendoerfer has been involved in MIPS
-> development for a long time & has offered to step up as maintainer, so
-> add Thomas and remove myself & Ralf from the MIPS entry.
+> One note I would like to add thanking you and Jon for the series :)
 > 
-> Ralf already has an entry in CREDITS to honor his contributions, so this
-> just adds one for me.
-
-Applied to mips-fixes.
-
-> commit 3234f4ed3066
-> https://git.kernel.org/mips/c/3234f4ed3066
+> This version was pleasure to read. A patch should do *one* thing and
+> this series really illustrates this principal and as a result I enjoyed
+> reading the series and was able to do a quick review of the series,
+> notwithstanding the fact that it had 19 patches. So thanks to you and
+> Jon (i know he pushed for split etc) for the wonderful read.
 > 
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-> Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-> Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Thank you very much!
