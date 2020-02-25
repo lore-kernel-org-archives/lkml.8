@@ -2,133 +2,115 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C16C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41288C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F5E2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFQ8s76S"
+	by mail.kernel.org (Postfix) with ESMTP id 20FD92082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgBYHQC (ORCPT
+        id S1729478AbgBYHQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:16:02 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36240 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729306AbgBYHPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:15:32 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so1946251wma.1;
-        Mon, 24 Feb 2020 23:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eyXZbYhJwbPUHpTlxOFb8ilZjqXa8eHWzE7fBgVE9Xk=;
-        b=lFQ8s76SQxs/TPgj46U5q4nM69WPMtbhckVXYhlQkTZj0xwgXgyc3eN91REL3/q7vx
-         xUsWoDafZKGKCm3xrhsxt8pRKI/jBNqzH6tyUNdDa/FbQ2irKs0MAib4LzbRq7oJRD1+
-         /7YiBSXV9KzonCscTVHvOKw7AM51L3iby8P+X+vI7hn5yx8xRUjb19Sy6zGqDlraAQVn
-         xzLgJT+4hhiG/YqbcJQkqfU31lJ0JMz88Gii2Z1pzy1NUc+489kDpnKd/EwhlULF6Vx2
-         T9EJSmcUk/fqfFYqdnJFf0asSC6N4AHc/D/+aN3qyZrf/DhTJBPWfcVe7eUCFE2Een03
-         HWOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eyXZbYhJwbPUHpTlxOFb8ilZjqXa8eHWzE7fBgVE9Xk=;
-        b=leH/gIIDq/niDnM2xXExc094mKiIBGH0uVEg+QlexRExH/8FxfJyPiy8ATkRQoIuTF
-         AqKFu6ooB1oqdfvr6Qf7Du7mELHtb2JpmBTj5HjYXuQhgl9NIiJr4dvHHsa5xvkKUn+1
-         p3WeTcGMwV60TWDyNRNhQ6mokxnmXzraUQt/kVpzRMPiX1UaL4qsY3dkFddb8Y9S3yMH
-         pvGMRvS+O9lcwZcPGTV7N3EUYmATr2z9BL6JxA1SSKPZsNFPZLh43GDV1UtbhgdLXysC
-         IDFskoazN4bpMaTrNQn2PWlr+s8aBqrqDgTRbI64mbEoeh9eoLRcHFco33dZi4RMiRw8
-         ouvw==
-X-Gm-Message-State: APjAAAXS7PdL2PJQ8UXFx/q6aIlPU2WNnC9unZqXhhDhA5kvVLhx2cIo
-        aXhDf3aqmpnxCYUMIthmnFU=
-X-Google-Smtp-Source: APXvYqzrrDcVi2I2IosglXQ3ELaLAkdyVpNi1dkCdPizuR3Nlwl0rBChT04mSg4oJj5ZbDEALIRNKw==
-X-Received: by 2002:a05:600c:251:: with SMTP id 17mr3525800wmj.59.1582614928558;
-        Mon, 24 Feb 2020 23:15:28 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:6c81:a415:de47:1314? (p200300EA8F2960006C81A415DE471314.dip0.t-ipconnect.de. [2003:ea:8f29:6000:6c81:a415:de47:1314])
-        by smtp.googlemail.com with ESMTPSA id r6sm23019115wrq.92.2020.02.24.23.15.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 23:15:28 -0800 (PST)
-Subject: [PATCH v2 3/8] r8169: use pci_status_get_and_clear_errors
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-References: <c1a84adc-a864-4f46-c8de-7ea533a7fdc3@gmail.com>
-Message-ID: <591b94fd-9d52-9a81-ad94-c593fb4c7b17@gmail.com>
-Date:   Tue, 25 Feb 2020 08:10:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 02:16:19 -0500
+Received: from mga17.intel.com ([192.55.52.151]:55875 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729036AbgBYHQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:16:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 23:16:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
+   d="scan'208";a="230068082"
+Received: from plaxmina-desktop.iind.intel.com ([10.145.162.62])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Feb 2020 23:16:13 -0800
+From:   Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+To:     jani.nikula@linux.intel.com, daniel@ffwll.ch,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        ville.syrjala@linux.intel.com, airlied@linux.ie,
+        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+        mripard@kernel.org, mihail.atanassov@arm.com
+Cc:     pankaj.laxminarayan.bharadiya@intel.com,
+        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
+Subject: [RFC][PATCH 0/5] Introduce drm scaling filter property 
+Date:   Tue, 25 Feb 2020 12:35:40 +0530
+Message-Id: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <c1a84adc-a864-4f46-c8de-7ea533a7fdc3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new helper pci_status_get_and_clear_errors() to simplify the code.
+Integer scaling (IS) is a nearest-neighbor upscaling technique that
+simply scales up the existing pixels by an integer (i.e., whole
+number) multiplier. Nearest-neighbor (NN) interpolation works by
+filling in the missing color values in the upscaled image with that of
+the coordinate-mapped nearest source pixel value.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+Both IS and NN preserve the clarity of the original image. In
+contrast, traditional upscaling algorithms, such as bilinear or
+bicubic interpolation, result in blurry upscaled images because they
+employ interpolation techniques that smooth out the transition from
+one pixel to another.  Therefore, integer scaling is particularly
+useful for pixel art games that rely on sharp, blocky images to
+deliver their distinctive look.
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index f081007a2..4495a3cf9 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4357,13 +4357,15 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- {
- 	struct rtl8169_private *tp = netdev_priv(dev);
- 	struct pci_dev *pdev = tp->pci_dev;
--	u16 pci_status, pci_cmd;
-+	int pci_status_errs;
-+	u16 pci_cmd;
- 
- 	pci_read_config_word(pdev, PCI_COMMAND, &pci_cmd);
--	pci_read_config_word(pdev, PCI_STATUS, &pci_status);
- 
--	netif_err(tp, intr, dev, "PCI error (cmd = 0x%04x, status = 0x%04x)\n",
--		  pci_cmd, pci_status);
-+	pci_status_errs = pci_status_get_and_clear_errors(pdev);
-+
-+	netif_err(tp, intr, dev, "PCI error (cmd = 0x%04x, status_errs = 0x%04x)\n",
-+		  pci_cmd, pci_status_errs);
- 
- 	/*
- 	 * The recovery sequence below admits a very elaborated explanation:
-@@ -4380,11 +4382,6 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- 
- 	pci_write_config_word(pdev, PCI_COMMAND, pci_cmd);
- 
--	pci_write_config_word(pdev, PCI_STATUS,
--		pci_status & (PCI_STATUS_DETECTED_PARITY |
--		PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_REC_MASTER_ABORT |
--		PCI_STATUS_REC_TARGET_ABORT | PCI_STATUS_SIG_TARGET_ABORT));
--
- 	rtl_schedule_task(tp, RTL_FLAG_TASK_RESET_PENDING);
- }
- 
+Many gaming communities have been asking for integer-mode scaling
+support, some links and background:
+
+https://software.intel.com/en-us/articles/integer-scaling-support-on-intel-graphics
+http://tanalin.com/en/articles/lossless-scaling/
+https://community.amd.com/thread/209107
+https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1002/feature-request-nonblurry-upscaling-at-integer-rat/
+
+This patch series -
+  - Introduces new scaling filter property to allow userspace to
+    select  the driver's default scaling filter or Nearest-neighbor(NN)
+    filter for scaling operations on crtc/plane.
+  - Implements and enable integer scaling for i915
+
+Userspace patch series link: TBD.
+
+Thanks to Shashank for initiating this work. His initial RFC can be
+found here [1]
+
+[1] https://patchwork.freedesktop.org/patch/337082/
+
+Modifications done in this series -
+   - refactored code and incorporated initial review comments and
+     added 2 scaling filter types (default and NN) to begin with.
+   - added scaling filter property support for planes and new API
+     helpers for drivers to setup this property.
+   - rewrote code to enable integer scaling and NN filter for i915
+
+
+Pankaj Bharadiya (5):
+  drm: Introduce scaling filter property
+  drm/drm-kms.rst: Add Scaling filter property documentation
+  drm/i915: Enable scaling filter for plane and pipe
+  drm/i915: Introduce scaling filter related registers and bit fields.
+  drm/i915/display: Add Nearest-neighbor based integer scaling support
+
+ Documentation/gpu/drm-kms.rst                |   6 ++
+ drivers/gpu/drm/drm_atomic_uapi.c            |   8 ++
+ drivers/gpu/drm/drm_crtc.c                   |  16 +++
+ drivers/gpu/drm/drm_mode_config.c            |  13 +++
+ drivers/gpu/drm/drm_plane.c                  |  35 +++++++
+ drivers/gpu/drm/i915/display/intel_display.c | 100 ++++++++++++++++++-
+ drivers/gpu/drm/i915/display/intel_display.h |   2 +
+ drivers/gpu/drm/i915/display/intel_sprite.c  |  32 ++++--
+ drivers/gpu/drm/i915/i915_reg.h              |  21 ++++
+ include/drm/drm_crtc.h                       |  10 ++
+ include/drm/drm_mode_config.h                |   6 ++
+ include/drm/drm_plane.h                      |  14 +++
+ 12 files changed, 252 insertions(+), 11 deletions(-)
+
 -- 
-2.25.1
+2.23.0
 
