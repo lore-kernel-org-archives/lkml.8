@@ -2,166 +2,135 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894FBC35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938D7C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EEC24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB9124650
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582600151;
-	bh=2ugqGAfgR7XY1wEzho4bIPRcCNr3Gcnq7CFvoR6LJAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rzIASIoGz+tF2NR1PCvfCiwn9SSvba4ZwQJvnM2PxyCRpxrYQagl9q7qzu1Ytnov5
-	 SD4ZXFeyoHHy2+IgiVCm4sCBNLVNgh2YnuEOmN4GRodH7kXP5kXwhVjL7tADEKjBeY
-	 JlS8+nygI4nHnjGVo7uBo4aiziludzbzpvlTQbTM=
+	s=default; t=1582600538;
+	bh=4/738ROLcMk6EwkI0GXh9S9IDhGAtYOzpN5m2pdwMa8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GPakBc7RW5H7+Ut3BpdhEMBh7rq9XVOXN/d2EVw5R2yI1k6NkdAbyGFgZYMo3/DxS
+	 o1JM7cWj4V3SKCredUSdLDkRjz7xuX/YMHHyliJfINFRe2U0Fdb5HkZx8DjGSX2y82
+	 PNsQm3DqIndx1/g74wx8yCboWiO1fd7SkcT9BEuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgBYDJK (ORCPT
+        id S1728857AbgBYDPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:09:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728011AbgBYDJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:09:09 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6685722525;
-        Tue, 25 Feb 2020 03:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582600148;
-        bh=2ugqGAfgR7XY1wEzho4bIPRcCNr3Gcnq7CFvoR6LJAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wyOo4CvMazKWjax1ssMAtII/j0lZ9iWkyM1/JwJuHO/j2Ve03aV3zvOjEeZ4ZqQU6
-         u5DHEmpaOeeQgV+ZzLBDPu6IFkHzct7XGGmBjRfxbZ3MlqcpVUkYw9V2i58qU+6l8V
-         pk4RNyy4j2CHgR6TZ5eLz6ifnlXUsAnpT3lIFq/A=
-Date:   Tue, 25 Feb 2020 04:09:06 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200225030905.GB28329@lenoir>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
- <20200224161318.GG14897@hirez.programming.kicks-ass.net>
+        Mon, 24 Feb 2020 22:15:36 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37444 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgBYDPf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 22:15:35 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so8495296lfc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:15:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r5iO+nfOzfSwxO6ToL6xARGMrYF2zRJGQAu030DOWTo=;
+        b=P6H/YKWKyDVsql7YMRodJEnjF4ZNaNn5Pk68Y7ZSMh+oX50E9/cBWKJ+0YfbeZGqvq
+         wnsLwom/z89O9knX0O4dSodyQyI4C4JoP17iZecB4gxQt+0FP9nBfB5hduHcyDmJTSlx
+         xBEO8Fj+XkTYXxuEaJY7w9EL5Wu0GPbiNcpU4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r5iO+nfOzfSwxO6ToL6xARGMrYF2zRJGQAu030DOWTo=;
+        b=tj9at0WklyzgAOpH/8wVvM6PglYwVPybQWVdH5UAo0XJBqmNybIu62j43FG4Dur8Cl
+         dgbl1iTbXtWpmDLWS11U6gPmr+o2f19UXDqE6MMx+zoVc3n2aFKSfaC7GQzOo+0B/82T
+         adPkmpR/DX+ReAyuZz537t+2XdlG31vZX1qc2IoE8kCZGZQnRUdP4KsI1ZWHMWpgYAwC
+         /sim3IyFiPCLXSMW7ur9KNJHUvBNit3bQlVFvT1PhvSYnXk0BxCO1hADEj/aqZi/i2dw
+         zRm1cuHoBfgJ69+VYxwJ07VOq9TTrCsfcI3PooQQOpMrapu8wWHAZqsxR7aP3BtynmRz
+         1IMg==
+X-Gm-Message-State: APjAAAWZsIrFSqiPzjmdL3yTiJkj02e9dV6mjw4PDADMPiNBDo2cLD9l
+        Qm1UE0/g+4dBenQsO3viUI8cE7DW+f4=
+X-Google-Smtp-Source: APXvYqwTDJm6Gt+cUPcAxho0at2OL9N4i5hOIRiGCtZj8buEO6ujd1gZG6bLjROW5M3GYP7s3igi2A==
+X-Received: by 2002:a19:5e41:: with SMTP id z1mr29153056lfi.101.1582600533197;
+        Mon, 24 Feb 2020 19:15:33 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id n132sm1903733lfd.81.2020.02.24.19.15.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 19:15:32 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id w1so12383268ljh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:15:31 -0800 (PST)
+X-Received: by 2002:a2e:909a:: with SMTP id l26mr30710614ljg.209.1582600531273;
+ Mon, 24 Feb 2020 19:15:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224161318.GG14897@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200221080325.GA67807@shbuild999.sh.intel.com>
+ <20200221132048.GE652992@krava> <20200223141147.GA53531@shbuild999.sh.intel.com>
+ <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com> <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+ <20200224021915.GC5061@shbuild999.sh.intel.com> <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
+ <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+ <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com> <20200225025748.GB63065@shbuild999.sh.intel.com>
+In-Reply-To: <20200225025748.GB63065@shbuild999.sh.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 24 Feb 2020 19:15:15 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wisa2xZHaCV=kh3seU-1kFDTjyWW9Ak3w5HH8nDvv7Snw@mail.gmail.com>
+Message-ID: <CAHk-=wisa2xZHaCV=kh3seU-1kFDTjyWW9Ak3w5HH8nDvv7Snw@mail.gmail.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 05:13:18PM +0100, Peter Zijlstra wrote:
-> Damn, true. That also means I need to fix the arm64 bits, and that's a
-> little more tricky.
-> 
-> Something like so perhaps.. hmm?
-> 
-> ---
-> --- a/arch/arm64/include/asm/hardirq.h
-> +++ b/arch/arm64/include/asm/hardirq.h
-> @@ -32,30 +32,52 @@ u64 smp_irq_stat_cpu(unsigned int cpu);
->  
->  struct nmi_ctx {
->  	u64 hcr;
-> +	unsigned int cnt;
->  };
->  
->  DECLARE_PER_CPU(struct nmi_ctx, nmi_contexts);
->  
-> -#define arch_nmi_enter()							\
-> -	do {									\
-> -		if (is_kernel_in_hyp_mode() && !in_nmi()) {			\
-> -			struct nmi_ctx *nmi_ctx = this_cpu_ptr(&nmi_contexts);	\
-> -			nmi_ctx->hcr = read_sysreg(hcr_el2);			\
-> -			if (!(nmi_ctx->hcr & HCR_TGE)) {			\
-> -				write_sysreg(nmi_ctx->hcr | HCR_TGE, hcr_el2);	\
-> -				isb();						\
-> -			}							\
-> -		}								\
-> -	} while (0)
-> +#define arch_nmi_enter()						\
-> +do {									\
-> +	struct nmi_ctx *___ctx;						\
-> +	unsigned int ___cnt;						\
-> +									\
-> +	if (!is_kernel_in_hyp_mode() || in_nmi())			\
-> +		break;							\
-> +									\
-> +	___ctx = this_cpu_ptr(&nmi_contexts);				\
-> +	___cnt = ___ctx->cnt;						\
-> +	if (!(___cnt & 1) && __cnt) {					\
-> +		___ctx->cnt += 2;					\
-> +		break;							\
-> +	}								\
-> +									\
-> +	___ctx->cnt |= 1;						\
-> +	barrier();							\
-> +	nmi_ctx->hcr = read_sysreg(hcr_el2);				\
-> +	if (!(nmi_ctx->hcr & HCR_TGE)) {				\
-> +		write_sysreg(nmi_ctx->hcr | HCR_TGE, hcr_el2);		\
-> +		isb();							\
-> +	}								\
-> +	barrier();							\
+On Mon, Feb 24, 2020 at 6:57 PM Feng Tang <feng.tang@intel.com> wrote:
+>
+> Thanks for the optimization patch for signal!
+>
+> It makes a big difference, that the performance score is tripled!
+> bump from original 17000 to 54000. Also the gap between 5.0-rc6 and
+> 5.0-rc6+Jiri's patch is reduced to around 2%.
 
-Suppose the first NMI is interrupted here. nmi_ctx->hcr has HCR_TGE unset.
-The new NMI is going to overwrite nmi_ctx->hcr with HCR_TGE set. Then the
-first NMI will not restore the correct value upon arch_nmi_exit().
+Ok, so what I think is happening is that the exact same issue still
+exists, but now with less contention it's not quite as noticeable.
 
-So perhaps the below, but I bet I overlooked something obvious.
+Can you find some Intel CPU hardware person who could spend a moment
+on that odd 32-byte sub-block issue?
 
-#define arch_nmi_enter()                                             \
-do {                                                                 \
-     struct nmi_ctx *___ctx;                                         \
-     u64 ___hcr;                                                     \
-                                                                     \
-     if (!is_kernel_in_hyp_mode())                                   \
-             break;                                                  \
-                                                                     \
-     ___ctx = this_cpu_ptr(&nmi_contexts);                           \
-     if (___ctx->cnt) {                                              \
-             ___ctx->cnt++;                                          \
-             break;                                                  \
-     }                                                               \
-                                                                     \
-     ___hcr = read_sysreg(hcr_el2);                                  \
-     if (!(___hcr & HCR_TGE)) {                                      \
-             write_sysreg(___hcr | HCR_TGE, hcr_el2);                \
-             isb();                                                  \
-     }                                                               \
-     ___ctx->cnt = 1;                                                \
-     barrier();                                                      \
-     ___ctx->hcr = ___hcr;                                           \
-} while (0)
+Considering that this effect apparently doesn't happen on any other
+platform you've tested, and this Cascade Lake platform is the newly
+released current Intel server platform, I think it's worth looking at.
 
-#define arch_nmi_exit()                                         \
-do {                                                            \
-        struct nmi_ctx *___ctx;                                 \
-        u64 ___hcr;                                             \
-                                                                \
-        if (!is_kernel_in_hyp_mode())                           \
-            break;                                              \
-                                                                \
-        ___ctx = this_cpu_ptr(&nmi_contexts);                   \
-	___hcr = nmi_ctx->hcr;                                  \
-        barrier();                                              \
-        --___ctx->cnt;                                          \
-	barrier();                                              \
-	if (!___ctx->cnt && !(___hcr & HCR_TGE))                  \
-            write_sysreg(___hcr, hcr_el2);                       \
-} while (0)
+That microbenchmark is not important on its own, but the odd timing
+behaviour it has would be good to have explained.
 
+And while the signal sending microbenchmark is not likely to be very
+relevant to much anything else, I guess I'll apply the patch. Even if
+it's just a microbenchmark, it's not like we haven't used those before
+to pinpoint some very specific behavior. We used lmbench (and whatever
+that odd page cache benchmark was) to do some fairly fundamental
+optimizations back in the days.
+
+If you fix the details on all the microbenchmarks you find, eventually
+you probably do well on real loads too..
+
+           Linus
