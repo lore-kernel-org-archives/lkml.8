@@ -2,115 +2,167 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65492C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E54C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF1721744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B919121556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cIrW0Pac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgBYSkd (ORCPT
+        id S1731648AbgBYSoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:40:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:54622 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731636AbgBYSka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:40:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26FE131B;
-        Tue, 25 Feb 2020 09:52:52 -0800 (PST)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0DF573F6CF;
-        Tue, 25 Feb 2020 09:52:50 -0800 (PST)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, patrick.bellasi@matbug.net,
-        qais.yousef@arm.com
-Subject: [PATCH 2/3] sched/debug: Bunch up printing formats in common macros
-Date:   Tue, 25 Feb 2020 17:52:26 +0000
-Message-Id: <20200225175227.22090-3-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200225175227.22090-1-valentin.schneider@arm.com>
-References: <20200225175227.22090-1-valentin.schneider@arm.com>
+        Tue, 25 Feb 2020 13:44:30 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52759 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731611AbgBYSoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:44:30 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ep11so82313pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 10:44:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=1CE9EkzllE22YSZQFXrk7AEdGrXn0xLSmb4MyQM/dV8=;
+        b=cIrW0PacpFrEunWwPMJQpcxefvyCDLw9uZMnGlwc8cfk6ZGnFu30zLYkZYVqpbbDyR
+         d4FQPk8YSzKVG3YU27u7hjGlDRWqdCAbfl1pnOLyjJOqqEiv+jvxzQWV4UbWL3bARPcF
+         r5H+CPsNRDfXWbQFInKE+SKzTHiUgYBfhJKp0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=1CE9EkzllE22YSZQFXrk7AEdGrXn0xLSmb4MyQM/dV8=;
+        b=aPd8e6WJDsIWu/CkWWAZV1bMTDwAmJ4gQt/XnMSJDDfijbRHRp58v2hP1fx2+Ujlti
+         /Sw5m2cWjGOSVRBIeZ9Lj7DEcKjqdboBrcMyI0/0hbr6pxRGel35YAyDuLibJoywj01K
+         M85ma9AoqKT51Ez+cuPdo1Iq08jiz7fxUlBGWw4XDWqRlcwh5T2rEqAnWfBAJrsU+v89
+         7Q6uv3kOdHUjYXi61QorBwnmtdFXI+2KDQNN80z4pi/FFuUFwGcTqdpRNOno0SQh5puS
+         WwGT+MGrNtZHp45112tiPbn+7zSAS+sFcLzgL4TZsnp1N9TNseKEMqXk6znlPh73XgNl
+         xdrA==
+X-Gm-Message-State: APjAAAVtZUPWbgiit/dpmprml79ScGxX0Fwn5z8YSXKq+tC8tiw+94G4
+        4OyVEi86eKwpTshTUbsCG/7uxw==
+X-Google-Smtp-Source: APXvYqza5a3NT6TpX//kqpYcrzwyVsvWZhehiWD3dIUtwZHKQKxsUPhAHkcexY1C9MlqwHfOCUMTMQ==
+X-Received: by 2002:a17:902:6944:: with SMTP id k4mr57380356plt.214.1582656269583;
+        Tue, 25 Feb 2020 10:44:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s7sm17341197pgp.44.2020.02.25.10.44.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:44:28 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:44:27 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Igor M. Liplianin" <liplianin@netup.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org
+Subject: [PATCH drivers/misc] altera-stapl: altera_get_note: prevent write
+ beyond end of 'key'
+Message-ID: <202002251042.D898E67AC@keescook>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The printing macros in debug.c keep redefining the same output
-format. Collect each output format in a single definition, and reuse that
-definition in the other macros. While at it, replace printf's redefining
-those formats with the newly introduced macros.
+From: Daniel Axtens <dja@axtens.net>
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+altera_get_note is called from altera_init, where key is kzalloc(33).
+
+When the allocation functions are annotated to allow the compiler to see
+the sizes of objects, and with FORTIFY_SOURCE, we see:
+
+In file included from drivers/misc/altera-stapl/altera.c:14:0:
+In function ‘strlcpy’,
+    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
+include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
+    __write_overflow();
+    ^~~~~~~~~~~~~~~~~~
+
+That refers to this code in altera_get_note:
+
+    if (key != NULL)
+            strlcpy(key, &p[note_strings +
+                            get_unaligned_be32(
+                            &p[note_table + (8 * i)])],
+                    length);
+
+The error triggers because the length of 'key' is 33, but the copy
+uses length supplied as the 'length' parameter, which is always
+256. Split the size parameter into key_len and val_len, and use the
+appropriate length depending on what is being copied.
+
+Detected by compiler error, only compile-tested.
+
+Cc: "Igor M. Liplianin" <liplianin@netup.ru>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/sched/debug.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+Resending with Greg in To:
+---
+ drivers/misc/altera-stapl/altera.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 4670151eb131..47411a85087c 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -816,10 +816,12 @@ static int __init init_sched_debug_procfs(void)
+diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
+index 25e5f24b3fec..5bdf57472314 100644
+--- a/drivers/misc/altera-stapl/altera.c
++++ b/drivers/misc/altera-stapl/altera.c
+@@ -2112,8 +2112,8 @@ static int altera_execute(struct altera_state *astate,
+ 	return status;
+ }
  
- __initcall(init_sched_debug_procfs);
+-static int altera_get_note(u8 *p, s32 program_size,
+-			s32 *offset, char *key, char *value, int length)
++static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
++			   char *key, char *value, int keylen, int vallen)
+ /*
+  * Gets key and value of NOTE fields in the JBC file.
+  * Can be called in two modes:  if offset pointer is NULL,
+@@ -2170,7 +2170,7 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 						&p[note_table + (8 * i) + 4])];
  
--#define __P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)F)
--#define   P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)p->F)
--#define __PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
--#define   PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
-+#define __PS(S, F) SEQ_printf(m, "%-45s:%21Ld\n", S, (long long)F)
-+#define __P(F) __PS(#F, F)
-+#define   P(F) __PS(#F, p->F)
-+#define __PSN(S, F) SEQ_printf(m, "%-45s:%14Ld.%06ld\n", S, SPLIT_NS((long long)F))
-+#define __PN(F) __PSN(#F, F)
-+#define   PN(F) __PSN(#F, p->F)
+ 				if (value != NULL)
+-					strlcpy(value, value_ptr, length);
++					strlcpy(value, value_ptr, vallen);
  
+ 			}
+ 		}
+@@ -2189,13 +2189,13 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 				strlcpy(key, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i)])],
+-					length);
++					keylen);
  
- #ifdef CONFIG_NUMA_BALANCING
-@@ -868,10 +870,9 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 	SEQ_printf(m,
- 		"---------------------------------------------------------"
- 		"----------\n");
--#define P_SCHEDSTAT(F) \
--	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)schedstat_val(p->F))
--#define PN_SCHEDSTAT(F) \
--	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)schedstat_val(p->F)))
-+
-+#define P_SCHEDSTAT(F)  __PS(#F, schedstat_val(p->F))
-+#define PN_SCHEDSTAT(F) __PSN(#F, schedstat_val(p->F))
+ 			if (value != NULL)
+ 				strlcpy(value, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i) + 4])],
+-					length);
++					vallen);
  
- 	PN(se.exec_start);
- 	PN(se.vruntime);
-@@ -931,10 +932,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 			*offset = i + 1;
+ 		}
+@@ -2449,7 +2449,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
+ 			__func__, (format_version == 2) ? "Jam STAPL" :
+ 						"pre-standardized Jam 1.1");
+ 		while (altera_get_note((u8 *)fw->data, fw->size,
+-					&offset, key, value, 256) == 0)
++					&offset, key, value, 32, 256) == 0)
+ 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
+ 					__func__, key, value);
  	}
- 
- 	__P(nr_switches);
--	SEQ_printf(m, "%-45s:%21Ld\n",
--		   "nr_voluntary_switches", (long long)p->nvcsw);
--	SEQ_printf(m, "%-45s:%21Ld\n",
--		   "nr_involuntary_switches", (long long)p->nivcsw);
-+	__PS("nr_voluntary_switches", p->nvcsw);
-+	__PS("nr_involuntary_switches", p->nivcsw);
- 
- 	P(se.load.weight);
- #ifdef CONFIG_SMP
-@@ -963,8 +962,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 
- 		t0 = cpu_clock(this_cpu);
- 		t1 = cpu_clock(this_cpu);
--		SEQ_printf(m, "%-45s:%21Ld\n",
--			   "clock-delta", (long long)(t1-t0));
-+		__PS("clock-delta", t1-t0);
- 	}
- 
- 	sched_show_numa(p, m);
 -- 
-2.24.0
+2.20.1
 
+
+-- 
+Kees Cook
