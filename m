@@ -2,110 +2,164 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C8DC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF04C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985A421744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D0A21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QszlcDQT"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="T0YorMCf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lA/EzX47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgBYIeM (ORCPT
+        id S1729458AbgBYIe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:34:12 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44219 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgBYIeL (ORCPT
+        Tue, 25 Feb 2020 03:34:59 -0500
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:48853 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725783AbgBYIe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:34:11 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d9so5181046plo.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:34:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=EIG5peTBvtZ2crp8lRotOHODI8wwfFW0u8sMOW/L1sk=;
-        b=QszlcDQTF2Q2LkffTbIRI3lryFDMXd0PvmTxvgXjQgWVs4b+u9xfRQUq/q2qapPqNX
-         6fOPzA5/MBsQgoclTc8R1RazJoG0IS7T8sos5KrxMx5nBAW3g4033Z3oFaDO0Eyvi8m3
-         zKy6Qi4OpF8r2sA/VDjAV9GgFmLoehFxHt654aIZejm36g9ICrWPyQKq0Lu15SjcQ4RO
-         NPGZbO9dCZs/ib/WPLdzP7z8+gzQOA9Pv/qeO4Gi8PGifICutSTCGxHk0vCYhwwtfgIw
-         hrVeyJ9wDt3tGfUHHyS4FZgjozzQzt4g4KuNlUS6KvgJqNGeWsBMVWSXZ+QrBZT3VSJk
-         s1Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=EIG5peTBvtZ2crp8lRotOHODI8wwfFW0u8sMOW/L1sk=;
-        b=anrvFW9sss5c3r6OVaxYDkXoQOSED/UezVIg3/XLXqyv6BlH3agPTC1LbAShm61pHh
-         Nvr9nNclLgmEPXajH8vNkczb1A96HuduKDp0iKYeyu9uEaDt1CQMnHp9cXLsjdjAy5Vx
-         Nv1aUtiiIKPqAi8/qWcKruJxxRGy19q30aa4C/j+2hea+5j/B6ty/ZIhkTH9az5HD0Uv
-         3El82EgiHYwO80jPEVPEl0F8dlne7trYdbGTXgnFRDlZCA5uQPzH+16D0ua/7FOZalUH
-         Y2Wf4/rM6ZCCvP+p5b+Y6bh0TPBEZaaRcebABhNSrSleWd0+/r8WDdQffrosvKlYGx6L
-         G40w==
-X-Gm-Message-State: APjAAAWT0pM9vAMFN1WJbHb7fLoTYhNqbPOfGPq+CuFyTfPQiCzs68hD
-        qmAQ4ngTruDdgM3MkL5Pfyd5NA==
-X-Google-Smtp-Source: APXvYqzAbMNZB07THyLuieZ3+XL0SoHji7KzYKVpxSVKAYezqzD3vcQYoYbTfpEkMi2a8G49muU0DA==
-X-Received: by 2002:a17:90a:c084:: with SMTP id o4mr3747200pjs.35.1582619651238;
-        Tue, 25 Feb 2020 00:34:11 -0800 (PST)
-Received: from ?IPv6:240e:362:421:7f00:524:e1bd:8061:a346? ([240e:362:421:7f00:524:e1bd:8061:a346])
-        by smtp.gmail.com with ESMTPSA id f1sm2106681pjq.31.2020.02.25.00.33.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 00:34:10 -0800 (PST)
-Subject: Re: [PATCH] uacce: unmap remaining mmapping from user space
-To:     Xu Zaibo <xuzaibo@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-accelerators@lists.ozlabs.org, linux-crypto@vger.kernel.org
-References: <1582528016-2873-1-git-send-email-zhangfei.gao@linaro.org>
- <a4716453-0607-d613-e632-173d1ebc424e@huawei.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <cf1f7ec2-7181-63fd-598d-b74d5a3efa15@linaro.org>
-Date:   Tue, 25 Feb 2020 16:33:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 25 Feb 2020 03:34:59 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 3B8DE853;
+        Tue, 25 Feb 2020 03:34:57 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 25 Feb 2020 03:34:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=9kSU8w3jBGIrw5Q053Vxj9KY2Y+
+        nKYIvGD2PhfyOey4=; b=T0YorMCf0+rEEa934N7nzZBdWBY0o/SVFDZ+XhifHgr
+        WgLeGOeD4yV8pcCJBSjhwDhfnUNdb+uLRDYSQ9lnsHuQFD8rOSr4r4dC7y/j3E3a
+        JtXiCAFIw7N6ewGenf/5JzlkYGpbDPeIMJW8C7fc/ePaszsZrVfKmN8T8YTcIMQ4
+        m4JCeqP2PM3+FwuFK4lmlxCBo9rQrOmeTKM3HIQqvfou+baH5kA/BOMstDsLXaqa
+        j0F3tzzj892+CKAsnwOeCXKYazYf0fwiPshsJL3EkXhhmFZjYAkAwEf+lvtM9AXn
+        UqsvpyQC4owftpUe6H3pCpuuPz35qTkvx4lTgC6R14w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=9kSU8w
+        3jBGIrw5Q053Vxj9KY2Y+nKYIvGD2PhfyOey4=; b=lA/EzX47ZBx2aQdDy2KC4a
+        AdyZm/wlaYQlEObqpB91w+5eR69bZWfc00djRaFamhSCaMLpKqrD9UhWjj+ZYj+c
+        ovIe7GiSkfUfwZnN2gtqjyqQrqIWevWCipGjdjdN/edj4rcUAf6Ko38wbVK6zCpV
+        HXxbOQ0jPsIHYjP0EX0mSnIlkpycTR9UJ2kNslKyFwL9gQVwfIZRgbJ0rNCmV9L+
+        9O66fQSZ0dcUU6VgH6aYx6Wc9QIbYFnf1yrpZjY8V2oMk9A4z/E3Im4BKSKYIDHq
+        AkoL4SapeiVR0lp6+geO88IqFTkaTlVjmpAqW0Z7wdAQiKyxcAlfAjWNM3DPaxKA
+        ==
+X-ME-Sender: <xms:K9xUXrTQWHvyUtmDUxF7eyqK4j3o9FDdueedOd8v1wBsVIwpp1Pssg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledugdduvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:K9xUXtjyGMnPTuA0UZsF1FgUemWAiOaXjjJKPoTTsN71B-UunWMaow>
+    <xmx:K9xUXkq14szlvdvqLPJ3dUbO0Ifslgh_Ej04b7Le-2EIIQDG36sdgw>
+    <xmx:K9xUXslauZGdPj6MDsRVbk4CVQ4da7oqdN_UHSxFhiiyIvPB7E5OZg>
+    <xmx:MNxUXvFnhCewy2L7KIuYi2X0NBlYPEoURX5_jpKCGGffgvJI6LwMyQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C15AE3280059;
+        Tue, 25 Feb 2020 03:34:50 -0500 (EST)
+Date:   Tue, 25 Feb 2020 09:34:48 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] drm/sun4i: de2: Don't return de2_fmt_info struct
+Message-ID: <20200225083448.6upblnctjjrbarje@gilmour.lan>
+References: <20200224173901.174016-1-jernej.skrabec@siol.net>
+ <20200224173901.174016-7-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <a4716453-0607-d613-e632-173d1ebc424e@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="57z5sn3fwlsnyvo7"
+Content-Disposition: inline
+In-Reply-To: <20200224173901.174016-7-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Zaibo
 
-On 2020/2/24 下午3:17, Xu Zaibo wrote:
->>   @@ -585,6 +595,13 @@ void uacce_remove(struct uacce_device *uacce)
->>           cdev_device_del(uacce->cdev, &uacce->dev);
->>       xa_erase(&uacce_xa, uacce->dev_id);
->>       put_device(&uacce->dev);
->> +
->> +    /*
->> +     * unmap remainning mapping from user space, preventing user still
->> +     * access the mmaped area while parent device is already removed
->> +     */
->> +    if (uacce->inode)
->> +        unmap_mapping_range(uacce->inode->i_mapping, 0, 0, 1);
-> Should we unmap them at the first of 'uacce_remove',  and before 
-> 'uacce_put_queue'?
+--57z5sn3fwlsnyvo7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Mon, Feb 24, 2020 at 06:39:00PM +0100, Jernej Skrabec wrote:
+> Now that de2_fmt_info contains only DRM <-> HW format mapping, it
+> doesn't make sense to return pointer to structure when searching by DRM
+> format. Rework that to return only HW format instead.
 >
-We can do this,
-Though it does not matter, since user space can not interrupt kernel 
-function uacce_remove.
+> This doesn't make any functional change.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 15 +++++++++++----
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  7 +------
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 10 +++++-----
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 12 ++++++------
+>  4 files changed, 23 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> index e078ec96de2d..56cc037fd312 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> @@ -27,6 +27,11 @@
+>  #include "sun8i_vi_layer.h"
+>  #include "sunxi_engine.h"
+>
+> +struct de2_fmt_info {
+> +	u32	drm_fmt;
+> +	u32	de2_fmt;
+> +};
+> +
+>  static const struct de2_fmt_info de2_formats[] = {
+>  	{
+>  		.drm_fmt = DRM_FORMAT_ARGB8888,
+> @@ -230,15 +235,17 @@ static const struct de2_fmt_info de2_formats[] = {
+>  	},
+>  };
+>
+> -const struct de2_fmt_info *sun8i_mixer_format_info(u32 format)
+> +int sun8i_mixer_drm_format_to_hw(u32 format, u32 *hw_format)
+>  {
+>  	unsigned int i;
+>
+>  	for (i = 0; i < ARRAY_SIZE(de2_formats); ++i)
+> -		if (de2_formats[i].drm_fmt == format)
+> -			return &de2_formats[i];
+> +		if (de2_formats[i].drm_fmt == format) {
+> +			*hw_format = de2_formats[i].de2_fmt;
+> +			return 0;
+> +		}
+>
+> -	return NULL;
+> +	return -EINVAL;
+>  }
 
-Thanks
+I'm not too sure about that one. It breaks the consistency with the
+other functions, and I don't really see a particular benefit to it?
+
+The rest of the series is
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Maxime
+
+--57z5sn3fwlsnyvo7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlTcKAAKCRDj7w1vZxhR
+xbG/AQCdfXPdzBwfYeiileC/tgUBlbw25nOpOnTqJMZ6pUn9BAD+LjaVwxmeURaM
+km8XKQrZgLqfHMwMSCXbyzvGpMgUegU=
+=YHGI
+-----END PGP SIGNATURE-----
+
+--57z5sn3fwlsnyvo7--
