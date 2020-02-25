@@ -2,196 +2,106 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD7EC35E1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EF8C35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B16321927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277D121927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="er2wAeec"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plHyvHNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgBYVWv (ORCPT
+        id S1727494AbgBYV0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:22:51 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46252 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbgBYVWu (ORCPT
+        Tue, 25 Feb 2020 16:26:00 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37339 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBYVZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:22:50 -0500
-Received: by mail-pf1-f196.google.com with SMTP id k29so217310pfp.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:22:49 -0800 (PST)
+        Tue, 25 Feb 2020 16:25:59 -0500
+Received: by mail-pl1-f193.google.com with SMTP id q4so345900pls.4;
+        Tue, 25 Feb 2020 13:25:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2zye8CzKnlnL3hA+RUHlbvvqNNCO2c7gcM4lHhCQD7I=;
-        b=er2wAeecxK4UnrRNkC9cYYNiionMSp5Smjcbl6UiT0KNH69ScSdC7Jsx08Dy0furLI
-         jWCR/e8g60UHKVgZgkBWxWKRSwhcOEQym0+qXug/oVndKzvKxq60+XOxqdlr0IwaMYKC
-         OiAkSi9GgJSOqn1fDGi9cbYAWXPsC7HlVh27E=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FPDGrkCD8XV4N0CFECk/Fo/6WIr98Mi9mTdpZPJjshw=;
+        b=plHyvHNMHKMGxxSpNv9E5U1d3FvZ331qORHmu38BPZCjX3COmE3+TdlcRD9eCVT3kK
+         2n/aZ62zcxjP0sujlhGfC+hzmpoY7Mq9TDd+iWdhdIlcr22DLTKl1vJ2vWb10QNkuRrR
+         YpfSze2OGI38eE3tQgCt9jvKAREhizfuLDICy1q3mfHEd96XPO6OIQD71xuE/SJXDkFX
+         nlWYijAfxCJmkJkKEcXdRLov0Hydsuo3qzLPfebVHQuW65Oyh2ihETcibQf2rrlTdfh4
+         LT08mVFMfZr7+FgH5oVZtjqsxaj1zdvVDwalw0WgNcAofs3WRU4H2oL/2q4LWWj48XHj
+         9PKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2zye8CzKnlnL3hA+RUHlbvvqNNCO2c7gcM4lHhCQD7I=;
-        b=DQw9w5VCQM6UNjaTpYh/oypKhOW7G6Q35saQLtwacaXaKnttKFY9AzTQTOZ+DESYSh
-         ybZbQ9hg3i4eqgHvMhS23eP0M7X/WVB450bJuYlciG3B1geHBA8affGUxiar1aQcngcB
-         +/YtRLPHmlYWKtYJSfC/8pnyAL+ZUlrTqznnHax+HcZ28tbQEOZmrwscF434/mv5c04v
-         pcXlii5ERiRpuOhQrzgfTw6f0iCvj4yX96BRNS93E3JezJ519eCeQX/x40M5OM+uwXkp
-         2igce2JdTnpEWPHu9MveA24jHFfEVBQru+Q+0eart99N/zKc/MbxLRqMP0D1tDKH/sbU
-         XZ6A==
-X-Gm-Message-State: APjAAAUzW91a+owEw99uC7shaSb9gfXEDPO9Md9Q+wS+42skTu7uQtw5
-        LUbeM0JjWrYoXt9cz/O8xbaObQ==
-X-Google-Smtp-Source: APXvYqxxA9M2zklRloHbo/iqZPq+qupQCqxsxip0cOp0qvCs8wbLa9ELHMTKt7NR8+CPB8YZDGuC8A==
-X-Received: by 2002:a63:e4d:: with SMTP id 13mr433732pgo.343.1582665769122;
-        Tue, 25 Feb 2020 13:22:49 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s7sm17525973pgp.44.2020.02.25.13.22.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 13:22:48 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:22:47 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Subject: Re: [RFC PATCH v9 24/27] x86/cet/shstk: ELF header parsing for
- Shadow Stack
-Message-ID: <202002251321.6C21B71F@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-25-yu-cheng.yu@intel.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FPDGrkCD8XV4N0CFECk/Fo/6WIr98Mi9mTdpZPJjshw=;
+        b=C1mAJmRDENdUkYb3Ezisa4t32K5s875qxvS1mHZB2RrF1ciiH+OzYoLy7eoonBl5ph
+         uyHcDPSy9FAnFis2lkhfZG4rV9WaH0QvLibILVCGRorRXhh0K6FE2e1zyW+yR/ybHQ31
+         b/ROyzImTi13y4Rnt/Lkg5EHhA2al7ecCeS7TnDuGr5+xexneJyfxk1oQnw4E+C2GmsA
+         BW6aY1b6k5Dz/u2bDd0fiuUILXUXnn358EaQmPs5q+DZK21f3lX7+CA7s81w1I96fmlY
+         oBsF/QF41ygx5IhkIRya1sRG0aQo81scdxzP8A/nGren3uT0Q+j+VNO+FtzvzT8T6PM9
+         4kzw==
+X-Gm-Message-State: APjAAAXyGy+5Pom5+SDFte3myaHZwlnoCHBKnqtXK037sP+sE9k+51ez
+        38QNYx/Uvjrr4kdlnhaOSzc=
+X-Google-Smtp-Source: APXvYqyGMsKYokbIG/GnOn1XwZxyxhGAg5N7eX19vUHX4fyo0lGMcr4zI6rm5ULDYMj+xj/76vjqAA==
+X-Received: by 2002:a17:90a:b381:: with SMTP id e1mr1164952pjr.38.1582665958752;
+        Tue, 25 Feb 2020 13:25:58 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s206sm11201pfs.100.2020.02.25.13.25.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 13:25:57 -0800 (PST)
+Date:   Tue, 25 Feb 2020 13:25:56 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vadim Pasternak <vadimp@mellanox.com>
+Subject: Re: linux-next: build failure after merge of the hwmon-fixes tree
+Message-ID: <20200225212556.GA31742@roeck-us.net>
+References: <20200226081228.3adcf58e@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205181935.3712-25-yu-cheng.yu@intel.com>
+In-Reply-To: <20200226081228.3adcf58e@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:19:32AM -0800, Yu-cheng Yu wrote:
-> Check an ELF file's .note.gnu.property, and setup Shadow Stack if the
-> application supports it.
+On Wed, Feb 26, 2020 at 08:12:28AM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> v9:
-> - Change cpu_feature_enabled() to static_cpu_has().
+> After merging the hwmon-fixes tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
 > 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> ---
->  arch/x86/Kconfig             |  2 ++
->  arch/x86/include/asm/elf.h   | 13 +++++++++++++
->  arch/x86/kernel/process_64.c | 31 +++++++++++++++++++++++++++++++
->  3 files changed, 46 insertions(+)
+> drivers/hwmon/pmbus/xdpe12284.c: In function 'xdpe122_read_word_data':
+> drivers/hwmon/pmbus/xdpe12284.c:33:9: error: too many arguments to function 'pmbus_read_word_data'
+>    33 |   ret = pmbus_read_word_data(client, page, phase, reg);
+>       |         ^~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/hwmon/pmbus/xdpe12284.c:13:
+> drivers/hwmon/pmbus/pmbus.h:458:5: note: declared here
+>   458 | int pmbus_read_word_data(struct i2c_client *client, int page, u8 reg);
+>       |     ^~~~~~~~~~~~~~~~~~~~
+> drivers/hwmon/pmbus/xdpe12284.c: At top level:
+> drivers/hwmon/pmbus/xdpe12284.c:127:20: error: initialization of 'int (*)(struct i2c_client *, int,  int)' from incompatible pointer type 'int (*)(struct i2c_client *, int,  int,  int)' [-Werror=incompatible-pointer-types]
+>   127 |  .read_word_data = xdpe122_read_word_data,
+>       |                    ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/hwmon/pmbus/xdpe12284.c:127:20: note: (near initialization for 'xdpe122_info.read_word_data')
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 6c34b701c588..d1447380e02e 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1987,6 +1987,8 @@ config X86_INTEL_SHADOW_STACK_USER
->  	select ARCH_USES_HIGH_VMA_FLAGS
->  	select X86_INTEL_CET
->  	select ARCH_HAS_SHSTK
-> +	select ARCH_USE_GNU_PROPERTY
-> +	select ARCH_BINFMT_ELF_STATE
->  	---help---
->  	  Shadow Stack (SHSTK) provides protection against program
->  	  stack corruption.  It is active when the kernel has this
-> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> index 69c0f892e310..fac79b621e0a 100644
-> --- a/arch/x86/include/asm/elf.h
-> +++ b/arch/x86/include/asm/elf.h
-> @@ -367,6 +367,19 @@ extern int compat_arch_setup_additional_pages(struct linux_binprm *bprm,
->  					      int uses_interp);
->  #define compat_arch_setup_additional_pages compat_arch_setup_additional_pages
->  
-> +#ifdef CONFIG_ARCH_BINFMT_ELF_STATE
-> +struct arch_elf_state {
-> +	unsigned int gnu_property;
-> +};
-> +
-> +#define INIT_ARCH_ELF_STATE {	\
-> +	.gnu_property = 0,	\
-> +}
-> +
-> +#define arch_elf_pt_proc(ehdr, phdr, elf, interp, state) (0)
-> +#define arch_check_elf(ehdr, interp, interp_ehdr, state) (0)
-> +#endif
-> +
->  /* Do not change the values. See get_align_mask() */
->  enum align_flags {
->  	ALIGN_VA_32	= BIT(0),
-> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-> index 506d66830d4d..99548cde0cc6 100644
-> --- a/arch/x86/kernel/process_64.c
-> +++ b/arch/x86/kernel/process_64.c
-> @@ -732,3 +732,34 @@ unsigned long KSTK_ESP(struct task_struct *task)
->  {
->  	return task_pt_regs(task)->sp;
->  }
-> +
-> +#ifdef CONFIG_ARCH_USE_GNU_PROPERTY
-> +int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
-> +			     bool compat, struct arch_elf_state *state)
-> +{
-> +	if (type != GNU_PROPERTY_X86_FEATURE_1_AND)
-> +		return 0;
-> +
-> +	if (datasz != sizeof(unsigned int))
-> +		return -ENOEXEC;
-> +
-> +	state->gnu_property = *(unsigned int *)data;
-> +	return 0;
-> +}
-> +
-> +int arch_setup_elf_property(struct arch_elf_state *state)
-> +{
-> +	int r = 0;
-> +
-> +	memset(&current->thread.cet, 0, sizeof(struct cet_status));
-> +
-> +	if (static_cpu_has(X86_FEATURE_SHSTK)) {
-> +		if (state->gnu_property & GNU_PROPERTY_X86_FEATURE_1_SHSTK)
-> +			r = cet_setup_shstk();
-> +		if (r < 0)
-> +			return r;
-
-This test is redundant; there's no loop. This can just fall through to
-the final return.
-
--Kees
-
-> +	}
-> +
-> +	return r;
-> +}
-> +#endif
-> -- 
-> 2.21.0
+> Caused by commit
+> 
+>   47555027eae2 ("hwmon: (pmbus/xdpe12284) Add callback for vout limits conversion")
+> 
+> I have reverted that commit for today.
 > 
 
--- 
-Kees Cook
+Bummer. My fault; sorry for that. Fixed up now.
+
+Thanks,
+Guenter
