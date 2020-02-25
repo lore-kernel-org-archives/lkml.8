@@ -2,127 +2,111 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9D2C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E4DC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6459B20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF79520732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582655572;
+	bh=1D4jirQeNh+WIUAMHeozJMkSPoS8G5BWpbdXxGpUSCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qQbuD176Bv2Zy5Rm43vvPR7uq9XjhfW5b5B5scsya+Ti9GJoxyMNNgiHprX8iX+tW
+	 sFjzaLY7TfEvp/dM7oog/c70d+CR8M+Igf2hYXyybqqvRG7AeZ6kNDnBEeMXSZ8XIz
+	 HkMxdZAfEYsUBdEG3KoRNhV/VA1lFKun01dPTDV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbgBYSbg (ORCPT
+        id S1731592AbgBYScv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 13:31:36 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53558 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbgBYSbf (ORCPT
+        Tue, 25 Feb 2020 13:32:51 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40233 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbgBYScv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:31:35 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E09013C009D;
-        Tue, 25 Feb 2020 19:31:31 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XMi49W9SirJX; Tue, 25 Feb 2020 19:31:22 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9D4043C005E;
-        Tue, 25 Feb 2020 19:31:22 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 25 Feb
- 2020 19:31:22 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        <linux-usb@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        <scan-admin@coverity.com>
-Subject: [PATCH v2] usb: hub: Fix unhandled return value of usb_autopm_get_interface()
-Date:   Tue, 25 Feb 2020 19:30:57 +0100
-Message-ID: <20200225183057.31953-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 25 Feb 2020 13:32:51 -0500
+Received: by mail-pj1-f65.google.com with SMTP id 12so60746pjb.5;
+        Tue, 25 Feb 2020 10:32:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gtj6sfpwxnSvCoIT+3yBy4O0RWgU8ztecOyfPUaR5NQ=;
+        b=Cd1CdW9AgP19f7zfGsPZ6oKzH5xsVOx/HI+wWOVS1hHnxlVO9k2Q/H26QTOmMuv3dg
+         s5MraD1SeqUIGRPy5YFDeboPdx4xgCUMnPqFYrKHewyIswCcLN8YuGxHc4knypF6RYgI
+         ScICm6lJ5goFp4P7aNDOlK8AiPn0aptOPw76SE4Gz553MMT041HC72xqvdyvgCmUydZU
+         gQ0FRwXicBM4IF51V/dKuMLRHq5dYAWwiwdhnY3nRW+m3XZUFCBaY5SoJyaM2hQ3Nidr
+         Lu44Y8cxtuIKJmMjCMrv2Y3VokZaTOZukNyHcO4JEFIMJycWR/c4/eALxRFIl4ioy0Pf
+         lOQg==
+X-Gm-Message-State: APjAAAXD9bp0cvGz3CTKMghnrD7k/638ar1rbqU6IckK4wspBB6s65dU
+        PJLypLr2Gj/4DA3cn1ccC4pkLAE8h2Y=
+X-Google-Smtp-Source: APXvYqy5Eejjl7FYcMgUbawWDTZYklvZad8p1POrGVXn9AYhsH8Kabt/I0I6dh39XVbEmadkOID1hg==
+X-Received: by 2002:a17:90b:309:: with SMTP id ay9mr377200pjb.22.1582655570290;
+        Tue, 25 Feb 2020 10:32:50 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id t65sm17796978pfd.178.2020.02.25.10.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 10:32:48 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 1079A40297; Tue, 25 Feb 2020 18:32:48 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 18:32:48 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] prism54: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200225183247.GW11244@42.do-not-panic.com>
+References: <20200225012008.GA4309@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.66]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225012008.GA4309@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Address below Coverity complaint (Feb 25, 2020, 8:06 AM CET):
+On Mon, Feb 24, 2020 at 07:20:08PM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-*** CID 1458999:  Error handling issues  (CHECKED_RETURN)
-/drivers/usb/core/hub.c: 1869 in hub_probe()
-1863
-1864            if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
-1865                    hub->quirk_check_port_auto_suspend = 1;
-1866
-1867            if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
-1868                    hub->quirk_disable_autosuspend = 1;
- >>>     CID 1458999:  Error handling issues  (CHECKED_RETURN)
- >>>     Calling "usb_autopm_get_interface" without checking return value (as is done elsewhere 97 out of 111 times).
-1869                    usb_autopm_get_interface(intf);
-1870            }
-1871
-1872            if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
-1873                    return 0;
-1874
+I'd rather we just remove this driver completely, as it has a
+replacement upstream p54, and remained upstream just for a theoretical
+period of time someone was not able to use p54 anymore. I'll follow up
+with a removal of the driver.
 
-Rather than checking the return value of 'usb_autopm_get_interface()',
-switch to the usb_autpm_get_interface_no_resume() API, as per:
-
-On Tue, Feb 25, 2020 at 10:32:32AM -0500, Alan Stern wrote:
- ------ 8< ------
- > This change (i.e. 'ret = usb_autopm_get_interface') is not necessary,
- > because the resume operation cannot fail at this point (interfaces
- > are always powered-up during probe). A better solution would be to
- > call usb_autpm_get_interface_no_resume() instead.
- ------ 8< ------
-
-Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
-Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reported-by: scan-admin@coverity.com
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
-
-v2:
- - [Alan Stern] Use usb_autpm_get_interface_no_resume() instead of
-   usb_autopm_get_interface()
- - Augment commit description to provide background
-
-v1:
- - Link: https://lore.kernel.org/lkml/20200225130846.20236-1-erosca@de.adit-jv.com
----
- drivers/usb/core/hub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 1d212f82c69b..1105983b5c1c 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1866,7 +1866,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 
- 	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
- 		hub->quirk_disable_autosuspend = 1;
--		usb_autopm_get_interface(intf);
-+		usb_autopm_get_interface_no_resume(intf);
- 	}
- 
- 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
--- 
-2.25.1
-
+  Luis
