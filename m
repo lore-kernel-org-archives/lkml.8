@@ -2,88 +2,137 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728BCC35DF0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C17C35DF0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEF422527
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DCF24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 03:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVTjx6gL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XxoYKCEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgBYDd4 (ORCPT
+        id S1728850AbgBYDi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 22:33:56 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:41070 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgBYDdz (ORCPT
+        Mon, 24 Feb 2020 22:38:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41088 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727402AbgBYDi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 22:33:55 -0500
-Received: by mail-ot1-f44.google.com with SMTP id r27so10798506otc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:33:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/AtHRSTtrgdpxX7I9KkYj8t+4xP5KBWvQCkTpEy+3KU=;
-        b=pVTjx6gLDVSqirZcMfRkxTMBQy+HPbUBDYKIPzvhxPVQDlljeZa8FR8gILTA0HOUKE
-         68LfM0OV9T3nGwGa0R38F4M1VPAMD8SE9yLQ3dBnS3cTvly+m9o51ujOWtHXI5bFgKqC
-         F4JcSM81rtvzr0X+QPgs82S+fY8SHpjGeSkiXWrmy3FGJNLukuqD01iZHN2t4RfLTJ9B
-         zdOXzMxdwfusXVmubgd2Ssl4JW7DTUslWvfuiT3rB5Y8eUvOag6R3YC/n7hQISRQW4mH
-         20XW+/Ib+yFmr++JsxHxsSacy4U4Ie7N42UILVRHZMknVTlfDtUu55b/TRi8eKDf08QJ
-         /ZWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/AtHRSTtrgdpxX7I9KkYj8t+4xP5KBWvQCkTpEy+3KU=;
-        b=r42cb1mVCFZORaS69m1w8xmD1ZCLRKQR5FPqPbNfB5ElHbGxGUcVOKuxlmKyY7hLKF
-         5e+1PC1/AGykbhfU5N4NJtOvDjYx3b2ZSkQltEkOatTo1qzGW6K5KpX3SoF8Hwslj3iO
-         a1Gh6Zklg9Jp9juwijJknDhEpzHxO89pujxy4V65wjDGY+wIx1BHlW8xBmxgR4YtH2nt
-         QnF4wBtZVI/mo2YBTHHKti5rfECSpxnseL5cBDn2RHqelVPa+lyQ8tv6BbQ0d23vSj8+
-         bCGTRXMzE/M91N7Xe6ij6oZzFrfXdc017lB3+1rPPHbdpguwh9TjJTJxzao8NTTh8CCF
-         b04A==
-X-Gm-Message-State: APjAAAXHsugsrfksS2Iq/ZDkbfcEvCard0nnd4tD961FYE9O4oombkr+
-        1MtUyOQckw4L68kfxjGF5ZAT1Dsiuwwec5b6anU=
-X-Google-Smtp-Source: APXvYqwHUUEHXCJbBdkJoX9BDITo2hdWfvSbhL0O1Efu2QWpvI2GZeU35fVK5ueGzDNohKTUnHOLtZ+vBHupavqkCJA=
-X-Received: by 2002:a9d:4f04:: with SMTP id d4mr42798017otl.78.1582601634987;
- Mon, 24 Feb 2020 19:33:54 -0800 (PST)
+        Mon, 24 Feb 2020 22:38:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582601934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FxhGFYz6fAwKel+McHgyPZZNImtqGnzaPwux7zsd3N0=;
+        b=XxoYKCEoC+5UvrsdzSDj5dlaY9CQe+Urx96zy50d72pYFfgMgZhf7T0+/pIhoOA71ngSZn
+        GUBvL//IU3TVWtpNOgo7Hm8DpVNEj3s8K8eQZzhHnL74yXIHRCtgx0K+YuaeCkISiwPDk/
+        o8Cc18A15t6dKyu0H1zJtVZY6nz8xxA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-r7S_sd4lOT-zPkHlkyjcCg-1; Mon, 24 Feb 2020 22:38:50 -0500
+X-MC-Unique: r7S_sd4lOT-zPkHlkyjcCg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F27813E4;
+        Tue, 25 Feb 2020 03:38:48 +0000 (UTC)
+Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 64A1B60BF7;
+        Tue, 25 Feb 2020 03:38:36 +0000 (UTC)
+Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
+ VIRTIO_F_IOMMU_PLATFORM
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
+ <20200221155602.4de41fa7.pasic@linux.ibm.com>
+ <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
+ <20200224010607-mutt-send-email-mst@kernel.org>
+ <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
+ <20200224024641-mutt-send-email-mst@kernel.org>
+ <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
+ <20200224083845-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ac15de73-8c61-5e82-4ed2-760b7f3055bb@redhat.com>
+Date:   Tue, 25 Feb 2020 11:38:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CADDKRnBq6oFFfVzqDRwwx2Eoc74M7f_9Z7UCdSVmS_xGMD1wdQ@mail.gmail.com>
- <CAHk-=wh101Kcdby3UwzGWcCVELdGJoyduQ7Hwp2B6tavzx8ULw@mail.gmail.com> <158257881650.26598.5580907010251811605@skylake-alporthouse-com>
-In-Reply-To: <158257881650.26598.5580907010251811605@skylake-alporthouse-com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 25 Feb 2020 13:33:43 +1000
-Message-ID: <CAPM=9twmxKz97jMNjMq7U47tZ_3QiZp73EZrcwrYuwLhApcx4Q@mail.gmail.com>
-Subject: Re: i915 GPU-hang regression in v5.6-rcx
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200224083845-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 07:13, Chris Wilson <chris@chris-wilson.co.uk> wrote:
+
+On 2020/2/24 =E4=B8=8B=E5=8D=889:40, Michael S. Tsirkin wrote:
+>> Subject: [PATCH] vhost: do not set VIRTIO_F_IOMMU_PLATFORM when IOMMU =
+is not
+>>   used
+>>
+>> We enable device IOTLB unconditionally when VIRTIO_F_IOMMU_PLATFORM is
+>> negotiated. This lead unnecessary IOTLB miss/update transactions when
+>> IOMMU is used. This patch fixes this.
+>>
+>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>> ---
+>>   hw/net/virtio-net.c | 3 +++
+>>   hw/virtio/vhost.c   | 4 +---
+>>   2 files changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/hw/net/virtio-net.c b/hw/net/virtio-net.c
+>> index 3627bb1717..0d50e8bd34 100644
+>> --- a/hw/net/virtio-net.c
+>> +++ b/hw/net/virtio-net.c
+>> @@ -879,6 +879,9 @@ static void virtio_net_set_features(VirtIODevice *=
+vdev, uint64_t features)
+>>           virtio_net_apply_guest_offloads(n);
+>>       }
+>>  =20
+>> +    if (vdev->dma_as =3D=3D &address_space_memory)
+>> +        features &=3D ~(1ULL << VIRTIO_F_IOMMU_PLATFORM);
+>> +
+>>       for (i =3D 0;  i < n->max_queues; i++) {
+>>           NetClientState *nc =3D qemu_get_subqueue(n->nic, i);
+> This pokes at acked features. I think they are also
+> guest visible ...
+
+
+It's the acked features of vhost device, so I guess not?
+
+E.g virtio_set_features_nocheck() did:
+
+ =C2=A0=C2=A0=C2=A0 val &=3D vdev->host_features;
+ =C2=A0=C2=A0=C2=A0 if (k->set_features) {
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 k->set_features(vdev, val);
+ =C2=A0=C2=A0=C2=A0 }
+ =C2=A0=C2=A0=C2=A0 vdev->guest_features =3D val;
+
+Thanks
+
 >
-> Quoting Linus Torvalds (2020-02-24 20:18:03)
-> > Let's add in some of the i915 people and list.
->
-> Haswell eating kittens. The offending patch will be rolled back shortly.
-> -Chris
 
-https://patchwork.freedesktop.org/patch/354775/
-
-is the patch that is working it's way through the system.
-
-Dave.
