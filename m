@@ -2,258 +2,126 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBECC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288EAC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487A621744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A7A21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 09:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vBssXWcV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIa7gBFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgBYJHg (ORCPT
+        id S1729998AbgBYJHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 04:07:36 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47814 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729939AbgBYJHc (ORCPT
+        Tue, 25 Feb 2020 04:07:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26613 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729981AbgBYJHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 04:07:32 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P97OGU037744;
-        Tue, 25 Feb 2020 03:07:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582621644;
-        bh=JRl5ARotx9L0/8W2ZWBpmQ2FofoiaRYaIrBYg+s9K+o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vBssXWcV9JJRIxNEimRPO96+IRamMXSc0g68WQHDEmdBR3Kt8JYEMxoEAwHJnD+EC
-         RrBT+qThMcSefaASiSzK4eqQe2bPisqwauLk5pcbZZz6EbaVfhi6gDmlybYN8o9F0s
-         jjFnyd2xFDU5jCnPiNT3NMDUFWy8iGA8qUbnwUsI=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P97Oag035346
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Feb 2020 03:07:24 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
- Feb 2020 03:07:23 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 25 Feb 2020 03:07:23 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P973Pt052643;
-        Tue, 25 Feb 2020 03:07:21 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Mikhak <alan.mikhak@sifive.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/5] misc: pci_endpoint_test: Add support to get DMA option from userspace
-Date:   Tue, 25 Feb 2020 14:41:30 +0530
-Message-ID: <20200225091130.29467-6-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200225091130.29467-1-kishon@ti.com>
-References: <20200225091130.29467-1-kishon@ti.com>
+        Tue, 25 Feb 2020 04:07:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582621660;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=J9KNb3WVdOxwxKr6MYNPKvXY1jE7XXYkemzIOMy9lrE=;
+        b=VIa7gBFnxsSnb/Eu0UMEy2Af3z7mlZh9CmY4Wxqnhr3aXr2sB0Q+jPsFRCnoDefug/pI67
+        fe9x23vNY/hUWGMsMO5IVzbDKIgoUo8cH8qG0Q6GSu5rv58+RQVtiQRSyoePjt3yzaLuEw
+        1i81taOFj6qonr4r/Bt5GgwWqeexE+c=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-DX25fxXLMJaioJKYoZ2xxw-1; Tue, 25 Feb 2020 04:07:37 -0500
+X-MC-Unique: DX25fxXLMJaioJKYoZ2xxw-1
+Received: by mail-wr1-f71.google.com with SMTP id u18so6957256wrn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 01:07:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=J9KNb3WVdOxwxKr6MYNPKvXY1jE7XXYkemzIOMy9lrE=;
+        b=dfVD9W60nE6lnrQ4bZUMQskhEdnJ4zGdtigB4vKjrRSbm2Ly+meCgKQ3ooFvPeEZ6v
+         ulmj7AtNfqcwtkKLspSv38dW+MH5oZO2hc6PFaPMcw4MrF6lswP4lr/Zh/UNME4PEnSn
+         Meo8cffUsC+cwI6fP5s11CoMC3KtGKqTvU7b9Jj5GoZRIwyCyfUrzIpDhf7M/LD3KpPh
+         qFhyQrnqregWXYGI7HOgCdrt+F6I3U5F34W3EGI+07nGwi3VuKFlflSoMmiHesaaDXMs
+         gP4sGKSCqkfbNVnh/H8Y3/2aDKsZcUV4j5VmxvwWR5SPoVjeYwSNpKNCrsQ7lqVIeaag
+         3gFQ==
+X-Gm-Message-State: APjAAAXrD9sAEpQ/Hs+2M94CDDiQd918Iw8kqAY78Q0hODoIN5quu/j6
+        xGO2UKKMPz31memR0a8Pf8A7vlL+SB/iiaVKPEplgF0nGdUA8DY1HCkd1Mac/M/H+sNBXtjpKZr
+        fbRIUAdsR2Ms7iGYbJr/TVFs0
+X-Received: by 2002:a5d:504e:: with SMTP id h14mr13354437wrt.82.1582621655917;
+        Tue, 25 Feb 2020 01:07:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyvXTw1dY0/iQ7fl5rVkhMh/4ortONYEYN8tZpl8lKh5OB5cJe57Upw2uu6Y8P8dd7G6t5LXg==
+X-Received: by 2002:a5d:504e:: with SMTP id h14mr13354415wrt.82.1582621655699;
+        Tue, 25 Feb 2020 01:07:35 -0800 (PST)
+Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id s1sm22666564wro.66.2020.02.25.01.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 01:07:35 -0800 (PST)
+Date:   Tue, 25 Feb 2020 10:07:32 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        syzbot <syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuba@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux-foundation.org
+Subject: Re: INFO: task hung in lock_sock_nested (2)
+Message-ID: <20200225090732.kge6bdf46ji6mbb5@steredhat>
+References: <0000000000004241ff059f2eb8a4@google.com>
+ <20200223075025.9068-1-hdanton@sina.com>
+ <20200224134428.12256-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224134428.12256-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'pcitest' utility now uses '-d' option to allow the user to test DMA.
-Add support to parse option to use DMA from userspace application.
+On Mon, Feb 24, 2020 at 09:44:28PM +0800, Hillf Danton wrote:
+> 
+> On Mon, 24 Feb 2020 11:08:53 +0100 Stefano Garzarella wrote:
+> > On Sun, Feb 23, 2020 at 03:50:25PM +0800, Hillf Danton wrote:
+> > > 
+> > > Seems like vsock needs a word to track lock owner in an attempt to
+> > > avoid trying to lock sock while the current is the lock owner.
+> > 
+> > Thanks for this possible solution.
+> > What about using sock_owned_by_user()?
+> > 
+> No chance for vsock_locked() if it works.
+> 
+> > We should fix also hyperv_transport, because it could suffer from the same
+> > problem.
+> > 
+> You're right. My diff is at most for introducing vsk's lock owner.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/misc/pci_endpoint_test.c | 65 ++++++++++++++++++++++++++++++--
- 1 file changed, 62 insertions(+), 3 deletions(-)
+Sure, thanks for this!
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 5998df1c84e9..3f102356b600 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -17,6 +17,7 @@
- #include <linux/mutex.h>
- #include <linux/random.h>
- #include <linux/slab.h>
-+#include <linux/uaccess.h>
- #include <linux/pci.h>
- #include <linux/pci_ids.h>
- 
-@@ -52,6 +53,7 @@
- #define STATUS_SRC_ADDR_INVALID			BIT(7)
- #define STATUS_DST_ADDR_INVALID			BIT(8)
- 
-+#define PCI_ENDPOINT_TEST_STATUS		0x8
- #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
- #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
- 
-@@ -64,6 +66,9 @@
- #define PCI_ENDPOINT_TEST_IRQ_TYPE		0x24
- #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
- 
-+#define PCI_ENDPOINT_TEST_FLAGS			0x2c
-+#define FLAG_USE_DMA				BIT(0)
-+
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- 
- #define is_am654_pci_dev(pdev)		\
-@@ -315,11 +320,16 @@ static bool pci_endpoint_test_msi_irq(struct pci_endpoint_test *test,
- 	return false;
- }
- 
--static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
-+static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
-+				   unsigned long arg)
- {
-+	struct pci_endpoint_test_xfer_param param;
- 	bool ret = false;
- 	void *src_addr;
- 	void *dst_addr;
-+	u32 flags = 0;
-+	bool use_dma;
-+	size_t size;
- 	dma_addr_t src_phys_addr;
- 	dma_addr_t dst_phys_addr;
- 	struct pci_dev *pdev = test->pdev;
-@@ -332,10 +342,22 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	size_t alignment = test->alignment;
- 	u32 src_crc32;
- 	u32 dst_crc32;
-+	int err;
-+
-+	err = copy_from_user(&param, (void *)arg, sizeof(param));
-+	if (err) {
-+		dev_err(dev, "Failed to get transfer param\n");
-+		return false;
-+	}
- 
-+	size = param.size;
- 	if (size > SIZE_MAX - alignment)
- 		goto err;
- 
-+	use_dma = param.use_dma;
-+	if (use_dma)
-+		flags |= FLAG_USE_DMA;
-+
- 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		goto err;
-@@ -406,6 +428,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE,
- 				 size);
- 
-+	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-@@ -434,9 +457,13 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test, size_t size)
- 	return ret;
- }
- 
--static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
-+static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
-+				    unsigned long arg)
- {
-+	struct pci_endpoint_test_xfer_param param;
- 	bool ret = false;
-+	u32 flags = 0;
-+	bool use_dma;
- 	u32 reg;
- 	void *addr;
- 	dma_addr_t phys_addr;
-@@ -446,11 +473,24 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	size_t size;
- 	u32 crc32;
-+	int err;
- 
-+	err = copy_from_user(&param, (void *)arg, sizeof(param));
-+	if (err != 0) {
-+		dev_err(dev, "Failed to get transfer param\n");
-+		return false;
-+	}
-+
-+	size = param.size;
- 	if (size > SIZE_MAX - alignment)
- 		goto err;
- 
-+	use_dma = param.use_dma;
-+	if (use_dma)
-+		flags |= FLAG_USE_DMA;
-+
- 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		goto err;
-@@ -493,6 +533,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
- 
-+	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-@@ -514,9 +555,14 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test, size_t size)
- 	return ret;
- }
- 
--static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
-+static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
-+				   unsigned long arg)
- {
-+	struct pci_endpoint_test_xfer_param param;
- 	bool ret = false;
-+	u32 flags = 0;
-+	bool use_dma;
-+	size_t size;
- 	void *addr;
- 	dma_addr_t phys_addr;
- 	struct pci_dev *pdev = test->pdev;
-@@ -526,10 +572,22 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 	size_t offset;
- 	size_t alignment = test->alignment;
- 	u32 crc32;
-+	int err;
- 
-+	err = copy_from_user(&param, (void *)arg, sizeof(param));
-+	if (err) {
-+		dev_err(dev, "Failed to get transfer param\n");
-+		return false;
-+	}
-+
-+	size = param.size;
- 	if (size > SIZE_MAX - alignment)
- 		goto err;
- 
-+	use_dma = param.use_dma;
-+	if (use_dma)
-+		flags |= FLAG_USE_DMA;
-+
- 	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
- 		dev_err(dev, "Invalid IRQ type option\n");
- 		goto err;
-@@ -566,6 +624,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test, size_t size)
- 
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
- 
-+	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
--- 
-2.17.1
+> 
+> > At this point, it might be better to call vsk->transport->release(vsk)
+> > always with the lock taken and remove it in the transports as in the
+> > following patch.
+> > 
+> > What do you think?
+> > 
+> Yes and ... please take a look at the output of grep
+> 
+> 	grep -n lock_sock linux/net/vmw_vsock/af_vsock.c
+> 
+> as it drove me mad.
+
+:-) I'll go in this direction and I'll check all the cases.
+
+We should avoid to take lock_sock in the transports when it is possible.
+
+Thanks for the help,
+Stefano
 
