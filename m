@@ -2,108 +2,98 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03D7C35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7468EC35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7341A24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:01:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZGlAvXv"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE5124650
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgBYOB6 (ORCPT
+        id S1730512AbgBYOCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:01:58 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21218 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730335AbgBYOB5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:01:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582639316;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cy4Mge9KuRHZ+vguZEp3MFbF3jZxqc31nOjzMlddL7c=;
-        b=QZGlAvXvakbPs8PlUpsfD0qiL1FzvFc3WLfy/6NvELUEYO056IzfFtetfUD5oT+ocCQQ9o
-        CEDdyMOSrGt8yQJcCWIPKpGOyjMKpIardnooa9pn30HzIP5fmITiXhFDfZbL2t1BqpXat9
-        DRXzWvxWJCHi65DCyZ32P+Gif3gGwGc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-08VYskdEM_m2fGQdewWolQ-1; Tue, 25 Feb 2020 09:01:55 -0500
-X-MC-Unique: 08VYskdEM_m2fGQdewWolQ-1
-Received: by mail-wr1-f69.google.com with SMTP id r1so7332576wrc.15
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:01:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Cy4Mge9KuRHZ+vguZEp3MFbF3jZxqc31nOjzMlddL7c=;
-        b=BDWA4JG0jGmGpX2p4vkq9FRJ6A11YnllFpm4FC8YMRsGSQxX+7UAcs/nVJu4zpIvxt
-         IvdNbk4sd3LIwfRP4qxn8lFSpnMYdDwDm6curV1ePRF+DlNuIjdWFW9yWcf5wMdePwFm
-         DQFR1/ogEEkIDBf3CXJSkn9MqcJ7uJ3kH8DY4N1fuKWsVz62SPg1GyDjjT0E2c1Z7tzM
-         1W9foJS2WyCGE2Zy6HbG6mKGY2zi2K+wqvzs2OKTfSE/9swDEefFnMPAUZPD2nSvaBGi
-         EEd6ifaHmiSlAbxOQQyKkrJdn0+FACte4z52s0+/dbfy59tqK1S8Pz1AJUxYx51cILQs
-         bJZw==
-X-Gm-Message-State: APjAAAXZtknOVtzL6IXmbQEFiivUaJLDS6oQGWE89awsAo1We5Oz1M0b
-        cIDEfD+0v4ZO0qZLMlT2xD1DWkuFfCbuVX7mS6rXtiEU3Sk4o840KtjvEXC1OkLx/276S/OInob
-        oBChk16kZXrEg1zAeg6gpDgLa
-X-Received: by 2002:a1c:cc06:: with SMTP id h6mr5676613wmb.118.1582639313900;
-        Tue, 25 Feb 2020 06:01:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwcqZv16UHutDm/y3gCnBP3VcZYojhMIJsMMUPRJNFOL5jWS8OmVMbBl1uO6UKRP4W4maomyw==
-X-Received: by 2002:a1c:cc06:: with SMTP id h6mr5676587wmb.118.1582639313626;
-        Tue, 25 Feb 2020 06:01:53 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:3577:1cfe:d98a:5fb6? ([2001:b07:6468:f312:3577:1cfe:d98a:5fb6])
-        by smtp.gmail.com with ESMTPSA id c9sm4324260wmc.47.2020.02.25.06.01.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:01:52 -0800 (PST)
-Subject: Re: [PATCH] KVM: SVM: allocate AVIC data structures based on kvm_amd
- moduleparameter
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     rmuncrief@humanavance.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1582617278-50338-1-git-send-email-pbonzini@redhat.com>
- <874kven5kv.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d2c3471d-3234-5e0a-0c76-872040a65bb6@redhat.com>
-Date:   Tue, 25 Feb 2020 15:01:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 09:02:17 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31526 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729952AbgBYOCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 09:02:16 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01PE27FN031971;
+        Tue, 25 Feb 2020 15:02:07 +0100
+Date:   Tue, 25 Feb 2020 15:02:07 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
+Message-ID: <20200225140207.GA31782@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <20200224212352.8640-2-w@1wt.eu>
+ <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
+ <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
+ <20200225034529.GA8908@1wt.eu>
+ <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <874kven5kv.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/02/20 14:45, Vitaly Kuznetsov wrote:
->>  	int ret;
->> +	struct kvm_vcpu *vcpu = &svm->vcpu;
->>  
->> -	if (!kvm_vcpu_apicv_active(&svm->vcpu))
->> +	if (!avic || !irqchip_in_kernel(vcpu->kvm))
->>  		return 0;
->>  
->>  	ret = avic_init_backing_page(&svm->vcpu);
-> Out of pure curiosity,
+On Tue, Feb 25, 2020 at 10:14:40AM +0300, Denis Efremov wrote:
 > 
-> when irqchip_in_kernel() is false, can we still get to .update_pi_irte()
-> (svm_update_pi_irte()) -> get_pi_vcpu_info() -> "vcpu_info->pi_desc_addr
-> = __sme_set(page_to_phys((*svm)->avic_backing_page));" -> crash! or is
-> there anything which make this impossible?
+> 
+> On 2/25/20 6:45 AM, Willy Tarreau wrote:
+> > On Tue, Feb 25, 2020 at 02:13:42AM +0300, Denis Efremov wrote:
+> >> On 2/25/20 12:53 AM, Linus Torvalds wrote:
+> >>> So I'd like to see that second step that does the
+> >>>
+> >>>     -static int fdc;                 /* current fdc */
+> >>>     +static int current_fdc;
+> >>>
+> >>> change.
+> >>>
+> >>> We already call the global 'drive' variable 'current_drive', so it
+> >>> really is 'fdc' that is misnamed and ambiguous because it then has two
+> >>> different cases: the global 'fdc' and then the various shadowing local
+> >>> 'fdc' variables (or function arguments).
+> >>>
+> >>> Mind adding that too? Slightly less automatic, I agree, because then
+> >>> you really do have to disambiguate between the "is this the shadowed
+> >>> use of a local 'fdc'" case or the "this is the global 'fdc' use" case.
+> > 
+> > I definitely agree. I first wanted to be sure the patches were acceptable
+> > as a principle, but disambiguating the variables is easy to do now.
+> 
+> Ok, I don't want to break in the middle of your changes in this case.
 
-No, because kvm_arch_irqfd_allowed returns false so you cannot create
-any irqfd (svm_update_pi_irte is called when virt/lib/irqbypass.c finds
-a match between two eventfds in KVM and VFIO).
+So I started this and discovered the nice joke you were telling me
+about regarding FD_IOPORT which references fdc. Then the address
+registers FD_STATUS, FD_DATA, FD_DOR, FD_DIR, FD_DCR which are
+based on FD_IOPORT also depend on it.
 
-Paolo
+These ones are used by fd_outb() which is arch-dependent, so if we
+want to pass a third argument we have to change them all and make sure
+not to break them too much.
 
+In addition the FD_* macros defined above are used by x86, and FD_DOR is
+also used by arm while all other archs hard-code all the values. ARM also
+uses floppy_selects[fdc] and new_dor... I'm starting to feel the trap here!
+I also feel a bit concerned that these are exported in uapi with a hard-coded
+0x3f0 base address. I'm just not sure how portable all of this is in
+the end :-/
+
+Now I'm wondering, how far should we go and how much is it acceptable to
+change ? I'd rather not have "#define fdc current_fdc" just so that it
+builds, but on the other hand this problem clearly outlights the roots
+of the issue, which lies in "fdc" being silently accessed by macros with
+nobody noticing!
+
+Willy
