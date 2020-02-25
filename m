@@ -2,73 +2,88 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C57AC35DF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AF2C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7290D22464
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582609521;
-	bh=j47OslZ9784bwULG/PPlCt7joegvFmVDiWVpyxhkBOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ijPveRCREF/uH/6KUwxJJRlfYwr7XI6DJLRGni2459+0YHaCDMC45gwqw/b9gzptu
-	 JDASqptuj9rj2mccle1wwjMXOfDPuTTZvcSZ5m1WD8+flXXcH3pYNM73rYochYe3om
-	 hXKdu6lcEZTnnl84QLtq74xOoCkrZnoKk9nrtrdk=
+	by mail.kernel.org (Postfix) with ESMTP id EAEAF222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 05:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRTRVwf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgBYFpU (ORCPT
+        id S1728983AbgBYFqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 00:45:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgBYFpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 00:45:19 -0500
-Received: from localhost (unknown [122.167.120.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 25 Feb 2020 00:46:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37234 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726039AbgBYFqN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 00:46:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582609572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wlfZHi7K31IEzsSyN0TR6qKfuLEZhiUXhJhGkDqDhGM=;
+        b=IRTRVwf87h5Rpw/8aSfMX5W/Iip1sEJmRT5Tj/RxdB7GsuAnF+lP4g20z4kbfVZ4UkwrrR
+        GodffJM9RkTPS8yeIT5xh9VlBOhWmQWy/tiVPsrx7U8NC18T0LPLJgpzJlsKwxwFSOjbf5
+        672nrOmTVt7AgWDM3gZqmicUUMDKUXA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-130-PDwaCRNBMDKJk1t0HT-9Hg-1; Tue, 25 Feb 2020 00:46:05 -0500
+X-MC-Unique: PDwaCRNBMDKJk1t0HT-9Hg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421E2222C2;
-        Tue, 25 Feb 2020 05:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582609519;
-        bh=j47OslZ9784bwULG/PPlCt7joegvFmVDiWVpyxhkBOo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GMw66R3/uvqjEjYGCq2fhzTOA1W2l6ouvKd+EQSx4Zj472u9nMo+0nEKWCsAHdkWT
-         7ccU6etf4Zy7O3d3E8Psqsc3YajJkmx2m9AP0PoRpYUCbJFybI2muZOQ2DhMBTu7np
-         zr3YDDKZkWx2d9lbYmIt1G2f134h89TdhzXFIXsY=
-Date:   Tue, 25 Feb 2020 11:15:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH 0/8] STM32 DMA driver fixes and improvements
-Message-ID: <20200225054514.GG2618@vkoul-mobl>
-References: <20200129153628.29329-1-amelie.delaunay@st.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4ED101005512;
+        Tue, 25 Feb 2020 05:46:03 +0000 (UTC)
+Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E06FA60BF7;
+        Tue, 25 Feb 2020 05:45:55 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v6 2/2] virtio_net: add XDP meta data support
+To:     Yuya Kusakabe <yuya.kusakabe@gmail.com>
+Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, mst@redhat.com,
+        netdev@vger.kernel.org, songliubraving@fb.com, yhs@fb.com
+References: <20200225033103.437305-1-yuya.kusakabe@gmail.com>
+ <20200225033212.437563-1-yuya.kusakabe@gmail.com>
+ <20200225033212.437563-2-yuya.kusakabe@gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <4c3ca8e7-2ab0-8d57-7361-7909fba3905d@redhat.com>
+Date:   Tue, 25 Feb 2020 13:45:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129153628.29329-1-amelie.delaunay@st.com>
+In-Reply-To: <20200225033212.437563-2-yuya.kusakabe@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-01-20, 16:36, Amelie Delaunay wrote:
-> This series brings improvements to the STM32 DMA driver, with support of
-> power management and descriptor reuse. Probe function gets a cleanup and
-> properties like copy_align and max_segment_size are set.
-> A "sleeping function called from invalid context" bug is also fixed. And
-> to avoid a race with vchan_complete, driver now adopts
-> vchan_terminate_vdesc().
 
-Applied, thanks
+On 2020/2/25 =E4=B8=8A=E5=8D=8811:32, Yuya Kusakabe wrote:
+> Implement support for transferring XDP meta data into skb for
+> virtio_net driver; before calling into the program, xdp.data_meta point=
+s
+> to xdp.data, where on program return with pass verdict, we call
+> into skb_metadata_set().
+>
+> Tested with the script at
+> https://github.com/higebu/virtio_net-xdp-metadata-test.
+>
+> Signed-off-by: Yuya Kusakabe <yuya.kusakabe@gmail.com>
 
--- 
-~Vinod
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
