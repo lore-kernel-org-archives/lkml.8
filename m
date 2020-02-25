@@ -2,150 +2,90 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81D1C35E17
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCE0C35E15
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A29320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594DF20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YfFQpEC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgBYVDI (ORCPT
+        id S1728654AbgBYVDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:03:08 -0500
-Received: from mga14.intel.com ([192.55.52.115]:16033 "EHLO mga14.intel.com"
+        Tue, 25 Feb 2020 16:03:50 -0500
+Received: from ozlabs.org ([203.11.71.1]:53599 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbgBYVDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:03:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 13:03:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,485,1574150400"; 
-   d="scan'208";a="436393557"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Feb 2020 13:03:06 -0800
-Date:   Tue, 25 Feb 2020 13:03:06 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200225210306.GA15810@iweiny-DESK2.sc.intel.com>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-8-ira.weiny@intel.com>
- <20200221174449.GB11378@lst.de>
- <20200221224419.GW10776@dread.disaster.area>
- <20200224175603.GE7771@lst.de>
- <20200225000937.GA10776@dread.disaster.area>
- <20200225173633.GA30843@lst.de>
+        id S1728315AbgBYVDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 16:03:50 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48RryC5xCzz9sPK;
+        Wed, 26 Feb 2020 08:03:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582664627;
+        bh=HPqXkIn+MgJBZsNBSijjuS9LP2UjJf6VabZzx7IxYd4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YfFQpEC6yskyvsN3rUFpUb+aL7qEsfxAJZUqcb+uxaJHIpAueW5oH8oCKyPBRiZE5
+         EH+qx69XzEdluP0I6BDE5CFpVmYok8X0HAx7h+GrJx8nxunlz/VTYL8UVRW5J9X3E6
+         DwVeB71NfAnH+TFLJnOGSyZ9496GhoW5y12yZQuY0h/B/282K7nZ4DNHCEfnRGo2O1
+         3me2eUZVJgIYHX3j/IRbC76mmhXk5C7HcZQgAmAL9xvNHojSyDCQ4DmKZs4TOFikEl
+         htzDob37wsebS7czP0zRQ6gO/VvzPRUDFsq3q53VLaC8DdyDhdedwfv9BzmfdEe7Ym
+         mOKjs/mSChzVA==
+Date:   Wed, 26 Feb 2020 08:03:44 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: error when fetching the kasan-bitops tree
+Message-ID: <20200226080344.609a0bf8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225173633.GA30843@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: multipart/signed; boundary="Sig_/RfhLAwFap6JBP49g.cDIL9O";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 06:36:33PM +0100, Christoph Hellwig wrote:
-> On Tue, Feb 25, 2020 at 11:09:37AM +1100, Dave Chinner wrote:
-> > > No, the original code was broken because it didn't serialize between
-> > > DAX and buffer access.
-> > > 
-> > > Take a step back and look where the problems are, and they are not
-> > > mostly with the aops.  In fact the only aop useful for DAX is
-> > > is ->writepages, and how it uses ->writepages is actually a bit of
-> > > an abuse of that interface.
-> > 
-> > The races are all through the fops, too, which is one of the reasons
-> > Darrick mentioned we should probably move this up to file ops
-> > level...
-> 
-> But the file ops are very simple to use.  Pass the flag in the iocb,
-> and make sure the flag can only changed with i_rwsem held.  That part
-> is pretty trivial, the interesting case is mmap because it is so
-> spread out.
-> 
-> > > So what we really need it just a way to prevent switching the flag
-> > > when a file is mapped,
-> > 
-> > That's not sufficient.
-> > 
-> > We also have to prevent the file from being mapped *while we are
-> > switching*. Nothing in the mmap() path actually serialises against
-> > filesystem operations, and the initial behavioural checks in the
-> > page fault path are similarly unserialised against changing the
-> > S_DAX flag.
-> 
-> And the important part here is ->mmap.  If ->mmap doesn't get through
-> we are not going to see page faults.
+--Sig_/RfhLAwFap6JBP49g.cDIL9O
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The series already blocks mmap'ed files from a switch.  That was not crazy
-hard.  I don't see a use case to support changing the mode while the file is
-mapped.
+Hi all,
 
-> 
-> > > and in the normal read/write path ensure the
-> > > flag can't be switch while I/O is going on, which could either be
-> > > done by ensuring it is only switched under i_rwsem or equivalent
-> > > protection, or by setting the DAX flag once in the iocb similar to
-> > > IOCB_DIRECT.
-> > 
-> > The iocb path is not the problem - that's entirely serialised
-> > against S_DAX changes by the i_rwsem. The problem is that we have no
-> > equivalent filesystem level serialisation for the entire mmap/page
-> > fault path, and it checks S_DAX all over the place.
-> 
-> Not right now.  We have various IS_DAX checks outside it.  But it is
-> easily fixable indeed.
-> 
-> > /me wonders if the best thing to do is to add a ->fault callout to
-> > tell the filesystem to lock/unlock the inode right up at the top of
-> > the page fault path, outside even the mmap_sem.  That means all the
-> > methods that the page fault calls are protected against S_DAX
-> > changes, and it gives us a low cost method of serialising page
-> > faults against DIO (e.g. via inode_dio_wait())....
-> 
-> Maybe.  Especially if it solves real problems and isn't just new
-> overhead to add an esoteric feature.
+Fetching the kasan-bitops tree
+(git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git#topic/kasa=
+n-bitops)
+produces this error:
 
-I thought about doing something like this but it seemed easier to block the
-change while the file was mapped.
+fatal: couldn't find remote ref refs/heads/topic/kasan-bitops
 
-> 
-> > 
-> > > And they easiest way to get all this done is as a first step to
-> > > just allowing switching the flag when no blocks are allocated at
-> > > all, similar to how the rt flag works.
-> > 
-> > False equivalence - it is not similar because the RT flag changes
-> > and their associated state checks are *already fully serialised* by
-> > the XFS_ILOCK_EXCL. S_DAX accesses have no such serialisation, and
-> > that's the problem we need to solve...
-> 
-> And my point is that if we ensure S_DAX can only be checked if there
-> are no blocks on the file, is is fairly easy to provide the same
-> guarantee.  And I've not heard any argument that we really need more
-> flexibility than that.  In fact I think just being able to change it
-> on the parent directory and inheriting the flag might be more than
-> plenty, which would lead to a very simple implementation without any
-> of the crazy overhead in this series.
+Should I just remove it?
 
-Inherit on file creation or also if a file was moved under the directory?
+--=20
+Cheers,
+Stephen Rothwell
 
-Do we need to consider hard or soft links?
+--Sig_/RfhLAwFap6JBP49g.cDIL9O
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Ira
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Vi7AACgkQAVBC80lX
+0GxQVQf/ZELYJXfHaIlnuQoBcOBXpiu9R/+uBoefy+iIW5iQ65iG1HTsnqvON4RV
++t1DFr2TjuYdP6EXhoUP8gCt819b50ANkDqOdFUjma0y/HnIjRa6GO0F0S0EJ4JT
+Zq5JlMIsEHtSkpVbQBCwVhL4Yr9EqfOblP3vlJ7QPFG9Tf+dGZ0AaJ96X64uPT5X
+0VWRx9/1mmmTVYgqxva5D3+W03p7ZLk5eLaJp3jCsBED37zbBBO62dm9yzmIXhkD
+0aMXF6+6WW/Y37OEoeEpGh7FIaxUZqnFk/4OsOHNLyvcPInYAgSuSTWryc/llAkR
+OamAddC1woWVLDQc6LWDlNMHcIXr4g==
+=Bbjl
+-----END PGP SIGNATURE-----
+
+--Sig_/RfhLAwFap6JBP49g.cDIL9O--
