@@ -2,280 +2,314 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A02C4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DCFC4BA04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DD22075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8120C2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="VrekEnVt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="uh/33vTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgBYXzZ (ORCPT
+        id S1729277AbgBYX7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:55:25 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:56316 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgBYXzY (ORCPT
+        Tue, 25 Feb 2020 18:59:11 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40540 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgBYX7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:55:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582674921; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q4khEgr11bSaZz/W5RhgH6UXM1xe3uRUoWDhehDIYyM=;
-        b=VrekEnVtqSgBb+yUhjfM50aXuFca92ZdampoX7gL+eMBTsj81Y5CbHc7ncqMFWzKU616AA
-        G2Hlm2Q5IlaOldAI+xItsollfnIjQ3krJ/WNst4V3G9ONKVIioC5vMzjBh4tf3VorPGK60
-        iULGFZ9OvN08w1lf8ZP7ArxwdioG1/A=
-Date:   Tue, 25 Feb 2020 20:55:07 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 1/3] pwm: jz4740: Use clocks from TCU driver
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1582674907.3.1@crapouillou.net>
-In-Reply-To: <1581440859.3.2@crapouillou.net>
-References: <20191210152734.39588-1-paul@crapouillou.net>
-        <20200211164625.2z4i5w6gp23eiszx@pengutronix.de>
-        <1581440859.3.2@crapouillou.net>
+        Tue, 25 Feb 2020 18:59:11 -0500
+Received: by mail-pj1-f66.google.com with SMTP id 12so450887pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:59:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AF4yId+y/TfljEnxGOV4fCMRwsfaIal7EqJaU81pYYw=;
+        b=uh/33vTQP+CF+n38KTauF2k2uBHZqxp8SnnNcBSRoRZX/gQ3o0rdcAYdUzw4HPkWGR
+         39YqylYPPNc8n/zdAzMqETA+F2vLwSR/MIMkOFfx2M4Aucz5qFquRZJ2QMIyE+ZzNCXq
+         mYV7d6JH3e23j+QqLFAD1PhCm8c1QHkz6PxBRfBxIs2JpbHw9NWeo14B3v+W5s51E/n/
+         ngD2N0zbmXYJTCiuiykcrb5/0Pc0B3rCcdcBpiAZwwxoOsKoLY7v68ZAfraqUmgUCT5N
+         JWzvd84LRlIzYA1QNK2UyXZxXY4EmZh8c3UafeF7oUHItNOBO34cvDbj6JcXiUpypxkF
+         bOUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AF4yId+y/TfljEnxGOV4fCMRwsfaIal7EqJaU81pYYw=;
+        b=GVNlg9Ugv0N8yJ6Mcqin+Ls98N716gCpYnr6UirqT/0HTn5tZAX1mBPqpA0e5AlOvU
+         VIh68sQwcI6bbxkTyNVmjgRbmpBFlNP4a/5AstyshdcqFc7uWyfX8/uDrs6mVCyOK4rx
+         E+2Y5MiFiTSUoVPtuJ0gTsM7QR9jSecat7KWpf43aKmn7MQ7rIfKLdRP0WbauibNB7C0
+         0izr8OGszBUCrnGZD2Sx9gxs7tYPAzdvEHLMvI3ndqkC/5/fsgobrw/0EBOerqjxtSGQ
+         wxYGB6k5zQQpa/IEGX0Z+gc1uiQHyu6qAvvr+cbGmo/l70NeckfGJY4W1r3+VVpAocR7
+         9sJQ==
+X-Gm-Message-State: APjAAAVaNEvlzi8vcKM+NGX1muQZV8R8grfMqtG5kuGxaO8qiMF4iHul
+        a6/nfKl6CCd7YzhJgVdTLa2aCg==
+X-Google-Smtp-Source: APXvYqyaHbelULqZTMmN5KRFJiybbwwtp/zlDU+4paYLXPdoByk2DmIr7ueSCRJEhZcykFH/Cj08IQ==
+X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr1002292plb.309.1582675148262;
+        Tue, 25 Feb 2020 15:59:08 -0800 (PST)
+Received: from omlet.com ([2605:6000:1026:c273::594])
+        by smtp.gmail.com with ESMTPSA id b15sm213974pft.58.2020.02.25.15.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 15:59:07 -0800 (PST)
+From:   Jason Ekstrand <jason@jlekstrand.net>
+Cc:     airlied@redhat.com, daniel.vetter@ffwll.ch, jessehall@google.com,
+        jajones@nvidia.com, bas@basnieuwenhuizen.nl,
+        christian.koenig@amd.com, daniels@collabora.com,
+        hoegsberg@google.com, Jason Ekstrand <jason@jlekstrand.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync files
+Date:   Tue, 25 Feb 2020 17:58:55 -0600
+Message-Id: <20200225235856.975366-1-jason@jlekstrand.net>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+Explicit synchronization is the future.  At least, that seems to be what
+most userspace APIs are agreeing on at this point.  However, most of our
+Linux APIs (both userspace and kernel UAPI) are currently built around
+implicit synchronization with dma-buf.  While work is ongoing to change
+many of the userspace APIs and protocols to an explicit synchronization
+model, switching over piecemeal is difficult due to the number of
+potential components involved.  On the kernel side, many drivers use
+dma-buf including GPU (3D/compute), display, v4l, and others.  In
+userspace, we have X11, several Wayland compositors, 3D drivers, compute
+drivers (OpenCL etc.), media encode/decode, and the list goes on.
 
-Le mar., f=E9vr. 11, 2020 at 14:07, Paul Cercueil <paul@crapouillou.net>=20
-a =E9crit :
-> Hi Uwe,
->=20
->=20
-> Le mar., f=E9vr. 11, 2020 at 17:46, Uwe Kleine-K=F6nig=20
-> <u.kleine-koenig@pengutronix.de> a =E9crit :
->> hello Paul,
->>=20
->> thanks for the ping, I lost your series from my radar.
->>=20
->> On Tue, Dec 10, 2019 at 04:27:32PM +0100, Paul Cercueil wrote:
->>>  The ingenic-timer "TCU" driver provides us with clocks, that can be
->>>  (un)gated, reparented or reclocked from devicetree, instead of=20
->>> =7F=7Fhaving
->>>  these settings hardcoded in this driver.
->>>=20
->>>  Each PWM channel's clk pointer is stored in PWM chip data to keep
->>>  the code simple. The calls to arch-specific timer code is replaced=20
->>> =7F=7Fwith
->>>  standard clock API calls to start and stop each channel's clock.
->>>=20
->>>  While this driver is devicetree-compatible, it is never (as of now)
->>>  probed from devicetree, so this change does not introduce a ABI=20
->>> =7F=7Fproblem
->>>  with current devicetree files.
->>>=20
->>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>>  ---
->>>=20
->>>  Notes:
->>>      v2: This patch is now before the patch introducing regmap, so=20
->>> =7F=7Fthe code
->>>      	has changed a bit.
->>>      v3: - Use %pe printf specifier to print error
->>>      	- Update commit message
->>>      	- Removed call to jz4740_timer_set_ctrl() in=20
->>> jz4740_pwm_free() =7F=7Fwhich
->>>      	  was reseting the clock's parent.
->>>=20
->>>   drivers/pwm/Kconfig      |  1 +
->>>   drivers/pwm/pwm-jz4740.c | 53=20
->>> =7F=7F+++++++++++++++++++++++++++++-----------
->>>   2 files changed, 40 insertions(+), 14 deletions(-)
->>>=20
->>>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->>>  index bd21655c37a6..15d3816341f3 100644
->>>  --- a/drivers/pwm/Kconfig
->>>  +++ b/drivers/pwm/Kconfig
->>>  @@ -225,6 +225,7 @@ config PWM_IMX_TPM
->>>   config PWM_JZ4740
->>>   	tristate "Ingenic JZ47xx PWM support"
->>>   	depends on MACH_INGENIC
->>>  +	depends on COMMON_CLK
->>>   	help
->>>   	  Generic PWM framework driver for Ingenic JZ47xx based
->>>   	  machines.
->>>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
->>>  index 9d78cc21cb12..ee50ac5fabb6 100644
->>>  --- a/drivers/pwm/pwm-jz4740.c
->>>  +++ b/drivers/pwm/pwm-jz4740.c
->>>  @@ -24,7 +24,6 @@
->>>=20
->>>   struct jz4740_pwm_chip {
->>>   	struct pwm_chip chip;
->>>  -	struct clk *clk;
->>>   };
->>>=20
->>>   static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip=20
->>> =7F=7F*chip)
->>>  @@ -34,6 +33,11 @@ static inline struct jz4740_pwm_chip=20
->>> =7F=7F*to_jz4740(struct pwm_chip *chip)
->>>=20
->>>   static int jz4740_pwm_request(struct pwm_chip *chip, struct=20
->>> =7F=7Fpwm_device *pwm)
->>>   {
->>>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
->>>  +	struct clk *clk;
->>>  +	char clk_name[16];
->>>  +	int ret;
->>>  +
->>>   	/*
->>>   	 * Timers 0 and 1 are used for system tasks, so they are=20
->>> =7F=7Funavailable
->>>   	 * for use as PWMs.
->>>  @@ -41,16 +45,32 @@ static int jz4740_pwm_request(struct pwm_chip=20
->>> =7F=7F*chip, struct pwm_device *pwm)
->>>   	if (pwm->hwpwm < 2)
->>>   		return -EBUSY;
->>>=20
->>>  -	jz4740_timer_start(pwm->hwpwm);
->>>  +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
->>>  +
->>>  +	clk =3D clk_get(chip->dev, clk_name);
->>>  +	if (IS_ERR(clk)) {
->>>  +		if (PTR_ERR(clk) !=3D -EPROBE_DEFER)
->>>  +			dev_err(chip->dev, "Failed to get clock: %pe", clk);
->>>  +		return PTR_ERR(clk);
->>>  +	}
->>>  +
->>>  +	ret =3D clk_prepare_enable(clk);
->>>  +	if (ret) {
->>>  +		clk_put(clk);
->>>  +		return ret;
->>>  +	}
->>>  +
->>>  +	pwm_set_chip_data(pwm, clk);
->>>=20
->>>   	return 0;
->>>   }
->>>=20
->>>   static void jz4740_pwm_free(struct pwm_chip *chip, struct=20
->>> =7F=7Fpwm_device *pwm)
->>>   {
->>>  -	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
->>>  +	struct clk *clk =3D pwm_get_chip_data(pwm);
->>>=20
->>>  -	jz4740_timer_stop(pwm->hwpwm);
->>>  +	clk_disable_unprepare(clk);
->>>  +	clk_put(clk);
->>>   }
->>>=20
->>>   static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
->>> =7F=7Fpwm_device *pwm)
->>>  @@ -91,17 +111,22 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->>> =7F=7F*chip, struct pwm_device *pwm,
->>>   			    const struct pwm_state *state)
->>>   {
->>>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>>  +	struct clk *clk =3D pwm_get_chip_data(pwm),
->>>  +		   *parent_clk =3D clk_get_parent(clk);
->>>  +	unsigned long rate, period, duty;
->>>   	unsigned long long tmp;
->>>  -	unsigned long period, duty;
->>>   	unsigned int prescaler =3D 0;
->>>   	uint16_t ctrl;
->>>  +	int err;
->>>=20
->>>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
->>> =7F=7Fstate->period;
->>>  +	rate =3D clk_get_rate(parent_clk);
->>>  +	tmp =3D (unsigned long long)rate * state->period;
->>>   	do_div(tmp, 1000000000);
->>>   	period =3D tmp;
->>>=20
->>>   	while (period > 0xffff && prescaler < 6) {
->>>   		period >>=3D 2;
->>>  +		rate >>=3D 2;
->>>   		++prescaler;
->>>   	}
->>>=20
->>>  @@ -117,14 +142,18 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->>> =7F=7F*chip, struct pwm_device *pwm,
->>>=20
->>>   	jz4740_pwm_disable(chip, pwm);
->>>=20
->>>  +	err =3D clk_set_rate(clk, rate);
->>>  +	if (err) {
->>>  +		dev_err(chip->dev, "Unable to set rate: %d", err);
->>>  +		return err;
->>>  +	}
->>=20
->> What I don't like here is that you use internal knowledge about the
->> clock to set a specific rate. Given this is a 1:1 conversion to hide=20
->> =7Fthe
->> previously contained register accesses behind the clk API (which is a
->> fine move) this is ok. But IMHO this should be cleaned up to rely on=20
->> =7Fthe
->> clk code. The more natural thing to do here would be to calculate the
->> rate you can work with and request that. Maybe add a todo-comment to
->> clean this up?
->=20
-> Yes, I am very aware of that - I had a patch to clean it up but we=20
-> disagreed on the algorithm, so I left it for later, since these three=20
-> patches are much more important for now. Not sure it needs a TODO, I=20
-> plan to submit the cleanup patch once these are merged, but I can=20
-> send a v4 if you prefer.
+This patch provides a path forward by allowing userspace to manually
+manage the fences attached to a dma-buf.  Alternatively, one can think
+of this as making dma-buf's implicit synchronization simply a carrier
+for an explicit fence.  This is accomplished by adding two IOCTLs to
+dma-buf for importing and exporting a sync file to/from the dma-buf.
+This way a userspace component which is uses explicit synchronization,
+such as a Vulkan driver, can manually set the write fence on a buffer
+before handing it off to an implicitly synchronized component such as a
+Wayland compositor or video encoder.  In this way, each of the different
+components can be upgraded to an explicit synchronization model one at a
+time as long as the userspace pieces connecting them are aware of it and
+import/export fences at the right times.
 
-Should I respin this?
+There is a potential race condition with this API if userspace is not
+careful.  A typical use case for implicit synchronization is to wait for
+the dma-buf to be ready, use it, and then signal it for some other
+component.  Because a sync_file cannot be created until it is guaranteed
+to complete in finite time, userspace can only signal the dma-buf after
+it has already submitted the work which uses it to the kernel and has
+received a sync_file back.  There is no way to atomically submit a
+wait-use-signal operation.  This is not, however, really a problem with
+this API so much as it is a problem with explicit synchronization
+itself.  The way this is typically handled is to have very explicit
+ownership transfer points in the API or protocol which ensure that only
+one component is using it at any given time.  Both X11 (via the PRESENT
+extension) and Wayland provide such ownership transfer points via
+explicit present and idle messages.
 
-Cheers,
--Paul
+The decision was intentionally made in this patch to make the import and
+export operations IOCTLs on the dma-buf itself rather than as a DRM
+IOCTL.  This makes it the import/export operation universal across all
+components which use dma-buf including GPU, display, v4l, and others.
+It also means that a userspace component can do the import/export
+without access to the DRM fd which may be tricky to get in cases where
+the client communicates with DRM via a userspace API such as OpenGL or
+Vulkan.  At a future date we may choose to add direct import/export APIs
+to components such as drm_syncobj to avoid allocating a file descriptor
+and going through two ioctls.  However, that seems to be something of a
+micro-optimization as import/export operations are likely to happen at a
+rate of a few per frame of rendered or decoded video.
+
+Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+---
+
+This is marked as an RFC because I intend it to start a discussion about
+how to solve a problem.  The current patch compiles but that's it for now.
+I'll be writing IGT tests and Vulkan driver patches which exercise it over
+the next couple of days.  In the mean time, feel free to tell me why you
+think this is a great and/or terrible idea. :-)
+
+--Jason
 
 
->>>  +
->>>   	jz4740_timer_set_count(pwm->hwpwm, 0);
->>>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
->>>   	jz4740_timer_set_period(pwm->hwpwm, period);
->>>=20
->>>  -	ctrl =3D JZ_TIMER_CTRL_PRESCALER(prescaler) |=20
->>> JZ_TIMER_CTRL_SRC_EXT =7F=7F|
->>>  -		JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->>>  -
->>>  -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
->>>  +	ctrl =3D jz4740_timer_get_ctrl(pwm->hwpwm);
->>>  +	ctrl |=3D JZ_TIMER_CTRL_PWM_ABBRUPT_SHUTDOWN;
->>>=20
->>>   	switch (state->polarity) {
->>>   	case PWM_POLARITY_NORMAL:
->>>  @@ -158,10 +187,6 @@ static int jz4740_pwm_probe(struct=20
->>> =7F=7Fplatform_device *pdev)
->>>   	if (!jz4740)
->>>   		return -ENOMEM;
->>>=20
->>>  -	jz4740->clk =3D devm_clk_get(&pdev->dev, "ext");
->>>  -	if (IS_ERR(jz4740->clk))
->>>  -		return PTR_ERR(jz4740->clk);
->>=20
->> Huh, jz4740->clk was never enabled?
->=20
-> Correct. The "ext" clock is an external oscillator that is always=20
-> enabled, so the code just didn't bother calling clk_enable (but it's=20
-> a bug of course).
->=20
-> Cheers,
-> -Paul
->=20
+ drivers/dma-buf/dma-buf.c    | 115 +++++++++++++++++++++++++++++++++++
+ include/uapi/linux/dma-buf.h |  13 +++-
+ 2 files changed, 126 insertions(+), 2 deletions(-)
 
-=
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index d4097856c86b..3845b87e209e 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -20,6 +20,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/seq_file.h>
++#include <linux/sync_file.h>
+ #include <linux/poll.h>
+ #include <linux/dma-resv.h>
+ #include <linux/mm.h>
+@@ -348,6 +349,114 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 	return ret;
+ }
+ 
++static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
++				   const void __user *user_data)
++{
++	struct dma_buf_sync_file arg;
++	struct dma_fence *fence;
++
++	if (copy_from_user(&arg, user_data, sizeof(arg)))
++		return -EFAULT;
++
++	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
++		return -EINVAL;
++
++	fence = sync_file_get_fence(arg.fd);
++	if (!fence)
++		return -EINVAL;
++
++	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
++		dma_resv_add_excl_fence(dmabuf->resv, fence);
++	} else {
++		dma_resv_add_shared_fence(dmabuf->resv, fence);
++	}
++
++	return 0;
++}
++
++static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
++				     void __user *user_data)
++{
++	struct dma_buf_sync_file arg;
++	struct dma_fence *fence = NULL;
++	struct sync_file *sync_file;
++	int fd, ret;
++
++	if (copy_from_user(&arg, user_data, sizeof(arg)))
++		return -EFAULT;
++
++	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
++		return -EINVAL;
++
++	fd = get_unused_fd_flags(O_CLOEXEC);
++	if (fd < 0)
++		return fd;
++
++	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
++		/* We need to include both the exclusive fence and all of
++		 * the shared fences in our fence.
++		 */
++		struct dma_fence **fences = NULL;
++		unsigned i, num_fences = 0;
++
++		ret = dma_resv_get_fences_rcu(dmabuf->resv, NULL,
++					      &num_fences, &fences);
++		if (ret)
++			goto err_put_fd;
++
++		if (num_fences == 0) {
++			fence = dma_fence_get_stub();
++		} else if (num_fences == 1) {
++			fence = fences[0];
++			kfree(fences);
++		} else {
++			struct dma_fence_array *fence_arr;
++
++			fence_arr = dma_fence_array_create(num_fences, fences,
++							   dma_fence_context_alloc(1),
++							   1, false);
++			if (!fence_arr) {
++				for (i = 0; i < num_fences; i++)
++					dma_fence_put(fences[i]);
++				kfree(fences);
++				ret = -ENOMEM;
++				goto err_put_fd;
++			}
++
++			/* The fence array now owns fences_arr and our
++			 * references to each of the individual fences.  We
++			 * only own a reference to the one array fence.
++			 */
++			fence = &fence_arr->base;
++		}
++	} else {
++		fence = dma_resv_get_excl_rcu(dmabuf->resv);
++		if (!fence)
++			fence = dma_fence_get_stub();
++	}
++
++	sync_file = sync_file_create(fence);
++
++	dma_fence_put(fence);
++
++	if (!sync_file) {
++		ret = -EINVAL;
++		goto err_put_fd;
++	}
++
++	fd_install(fd, sync_file->file);
++
++	arg.fd = fd;
++	if (copy_to_user(user_data, &arg, sizeof(arg)))
++		return -EFAULT;
++
++	return 0;
++
++err_put_fd:
++	put_unused_fd(fd);
++	return ret;
++}
++
+ static long dma_buf_ioctl(struct file *file,
+ 			  unsigned int cmd, unsigned long arg)
+ {
+@@ -390,6 +499,12 @@ static long dma_buf_ioctl(struct file *file,
+ 	case DMA_BUF_SET_NAME:
+ 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
+ 
++	case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
++		return dma_buf_wait_sync_file(dmabuf, (const void __user *)arg);
++
++	case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
++		return dma_buf_signal_sync_file(dmabuf, (void __user *)arg);
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+index dbc7092e04b5..825b9a913c89 100644
+--- a/include/uapi/linux/dma-buf.h
++++ b/include/uapi/linux/dma-buf.h
+@@ -37,8 +37,17 @@ struct dma_buf_sync {
+ 
+ #define DMA_BUF_NAME_LEN	32
+ 
++struct dma_buf_sync_file {
++	__u32 flags;
++	__s32 fd;
++};
++
++#define DMA_BUF_SYNC_FILE_SYNC_WRITE	(1 << 0)
++
+ #define DMA_BUF_BASE		'b'
+-#define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
+-#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
++#define DMA_BUF_IOCTL_SYNC	    _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++#define DMA_BUF_SET_NAME	    _IOW(DMA_BUF_BASE, 1, const char *)
++#define DMA_BUF_IOCTL_WAIT_SYNC_FILE	_IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
++#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE	_IOW(DMA_BUF_BASE, 3, struct dma_buf_sync)
+ 
+ #endif
+-- 
+2.24.1
 
