@@ -2,196 +2,311 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013BCC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4DFC35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FFC21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3485D21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e6tqftTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgBYGl0 (ORCPT
+        id S1729171AbgBYGle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:41:26 -0500
-Received: from mga04.intel.com ([192.55.52.120]:25525 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgBYGl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:41:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 22:41:25 -0800
-X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
-   d="scan'208";a="230925164"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.151]) ([10.249.174.151])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Feb 2020 22:41:22 -0800
-Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
- specific VM EXIT
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200224020751.1469-1-xiaoyao.li@intel.com>
- <20200224020751.1469-2-xiaoyao.li@intel.com>
- <87lfosp9xs.fsf@vitty.brq.redhat.com>
- <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
- <87imjwp24x.fsf@vitty.brq.redhat.com>
- <20200224161728.GC29865@linux.intel.com>
- <50134028-ef7a-46c6-7602-095c47406ed7@intel.com>
- <20200225061317.GV29865@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <bb2d36b4-a077-691e-d59e-f65bf534d1ff@intel.com>
-Date:   Tue, 25 Feb 2020 14:41:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Feb 2020 01:41:34 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39556 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729155AbgBYGld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:41:33 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01P6fK5U076501;
+        Tue, 25 Feb 2020 00:41:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582612880;
+        bh=fvUombhv6ByuU1uVxkhxFbRmF7R2pCT1XyyR8Md97m0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e6tqftTiScqZLoc6llUyGIthgFqrx39ySZfaBwDgSZKasIkPTIXjTZV+wRvwhzEyY
+         0HuShYu0+2vZhSQV6m5wcT2hH1wFgN6sMRiwFJoxf2C1OIXqEpMlm91XG0DdwMSC/7
+         V7B09JWTLMsxfI9LbvzLAeIuUoOGeZrna0gOb91M=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01P6fKBF090868
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 00:41:20 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 00:41:20 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 00:41:20 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01P6fGiG000928;
+        Tue, 25 Feb 2020 00:41:17 -0600
+Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        <simon.k.r.goldschmidt@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>, <tien.fong.chee@intel.com>,
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
+ <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
+Date:   Tue, 25 Feb 2020 12:11:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200225061317.GV29865@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/2020 2:13 PM, Sean Christopherson wrote:
-> On Tue, Feb 25, 2020 at 08:13:15AM +0800, Xiaoyao Li wrote:
->> On 2/25/2020 12:17 AM, Sean Christopherson wrote:
->>> On Mon, Feb 24, 2020 at 02:04:46PM +0100, Vitaly Kuznetsov wrote:
->>>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>>>
->>>>> On 2/24/2020 6:16 PM, Vitaly Kuznetsov wrote:
->>>>>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>>>>>
->>>>> Here variable basic_exit_reason is added for the cases where only basic
->>>>> exit reason number is needed.
->>>>>
->>>>
->>>> Can we do the other way around, i.e. introduce 'extended_exit_reason'
->>>> and use it where all 32 bits are needed? I'm fine with the change, just
->>>> trying to minimize the (unneeded) code churn.
->>>
->>> 100% agree.  Even better than adding a second field to vcpu_vmx would be
->>> to make it a union, though we'd probably want to call it something like
->>> full_exit_reason in that case.  That should give us compile-time checks on
->>> exit_reason, e.g. if we try to query one of the upper bits using a u16, e.g.
->>
->> I have thought about union, but it seems
->>
->> union {
->> 	u16 exit_reason;
->> 	u32 full_exit_reason;
->> }
->>
->> is not a good name. Since there are many codes in vmx.c and nested.c assume
->> that exit_reason stands for 32-bit EXIT REASON vmcs field as well as
->> evmcs->vm_exit_reason and vmcs12->vm_exit_reason. Do we really want to also
->> rename them to full_exit_reason?
-> 
-> It's actually the opposite, almost all of the VMX code assumes exit_reason
-> holds only the basic exit reason, i.e. a 16-bit value.  For example, SGX
-> adds a modifier flag to denote a VM-Exit was from enclave mode, and that
-> bit needs to be stripped from exit_reason, otherwise all the checks like
-> "if (exit_reason == blah_blah_blah)" fail.
-> 
-> Making exit_reason a 16-bit alias of the full/extended exit_reason neatly
-> sidesteps that issue.  And it is an issue that has caused actual problems
-> in the past, e.g. see commit beb8d93b3e42 ("KVM: VMX: Fix handling of #MC
-> that occurs during VM-Entry").  Coincidentally, that commit also removes a
-> local "u16 basic_exit_reason" :-).
-> 
-> Except for one mistake, the pseudo-patch below is the entirety of required
-> changes.  Most (all?) of the functions that take "u32 exit_reason" can (and
-> should) continue to take a u32.
-> 
-> As for the name, I strongly prefer keeping the exit_reason name for the
-> basic exit reason.  The vast majority of VM-Exits do not have modifiers
-> set, i.e. "basic exit reason" == vmcs.EXIT_REASON for nearly all normal
-> usage.  This holds true in every form of communication, e.g. when discussing
-> VM-Exit reasons, it's never qualified with "basic", it's simply the exit
-> reason.  IMO the code is better off following the colloquial usage of "exit
-> reason".  A simple comment above the union would suffice to clear up any
-> confusion with respect to the SDM.
 
-Well, for this reason we can keep exit_reason for 16-bit usage, and 
-define full/extended_exit_reason for 32-bit cases. This makes less code 
-churn.
 
-But after we choose to use exit_reason and full/extended_exit_reason, 
-what if someday new modifier flags are added and we want to enable some 
-modifier flags for nested case?
-I guess we need to change existing exit_reason to 
-full/extended_exit_reason in nested.c/nested.h to keep the naming rule 
-consistent.
-
->> Maybe we name it
->>
->> union {
->> 	u16 basic_exit_reason;
->> 	u32 exit_reason;
->> }
->>
->> as what SDM defines?
->>
->>> --- a/arch/x86/kvm/vmx/vmx.c
->>> +++ b/arch/x86/kvm/vmx/vmx.c
->>> @@ -5818,7 +5818,7 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
->>>          if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
->>>                  return nested_vmx_reflect_vmexit(vcpu, exit_reason);
->>>
->>> -       if (exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
->>> +       if (vmx->full_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
+On 25/02/20 11:54 am, Ramuthevar, Vadivel MuruganX wrote:
+> Hi Rob,
 > 
-> If we do go the union route, this snippet of code is insufficient, the
-> full/extended exit reason needs to be snapshotted early for use in the
-> tracepoint and in fail_entry.hardware_entry_failure_reason.
+>      Thank you for the review comments...
 > 
->>>                  dump_vmcs();
->>>                  vcpu->run->exit_reason = KVM_EXIT_FAIL_ENTRY;
->>>                  vcpu->run->fail_entry.hardware_entry_failure_reason
->>> @@ -6620,11 +6620,12 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>>          vmx->nested.nested_run_pending = 0;
->>>          vmx->idt_vectoring_info = 0;
+> On 24/2/2020 11:54 PM, Rob Herring wrote:
+>> On Tue, Feb 18, 2020 at 8:29 PM Ramuthevar,Vadivel MuruganX
+>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>> From: Ramuthevar Vadivel Murugan
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Cc the DT list if you want this reviewed.
+> Sorry,  next patch will add DT list in CC.
+>>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>>> spi based flash memories.
 >>>
->>> -       vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
->>> -       if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
->>> +       vmx->full_exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
->>> +       if (vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
->>>                  kvm_machine_check();
+>>> Signed-off-by: Ramuthevar Vadivel Murugan
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>> ---
+>>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147
+>>> +++++++++++++++++++++
+>>>   1 file changed, 147 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
 >>>
->>> -       if (vmx->fail || (vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
->>> +       if (vmx->fail ||
->>> +           (vmx->full_exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
->>>                  return;
->>>
->>>          vmx->loaded_vmcs->launched = 1;
->>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->>> index 7f42cf3dcd70..60c09640ea59 100644
->>> --- a/arch/x86/kvm/vmx/vmx.h
->>> +++ b/arch/x86/kvm/vmx/vmx.h
->>> @@ -260,7 +260,10 @@ struct vcpu_vmx {
->>>          int vpid;
->>>          bool emulation_required;
->>>
->>> -       u32 exit_reason;
->>> +       union {
->>> +               u16 exit_reason;
->>> +               u32 full_exit_reason;
->>> +       }
->>>
->>>          /* Posted interrupt descriptor */
->>>          struct pi_desc pi_desc;
->>>
->>>
->>>
->>>
->>>
->>>> -- 
->>>> Vitaly
->>>>
->>
+>>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>> b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>> new file mode 100644
+>>> index 000000000000..1a4d6e8d0d0b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>> @@ -0,0 +1,147 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>> +
+>>> +title: Cadence QSPI Flash Controller support
+>>> +
+>>> +maintainers:
+>>> +  - Ramuthevar Vadivel Murugan
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>> +
+>>> +allOf:
+>>> +  - $ref: "spi-controller.yaml#"
+>>> +
+>>> +description: |
+>>> +  Binding Documentation for Cadence QSPI controller,This controller is
+>>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+>>> +  has been tested On Intel's LGM SoC.
+>>> +
+>>> +  - compatible : should be one of the following:
+>>> +        Generic default - "cdns,qspi-nor".
+>>> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>>> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>>> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - items:
+>>> +        - enum:
+>>> +           - ti,k2g-qspi
+>>> +        - const: cdns,qspi-nor
+>>> +
+>>> +      - items:
+>>> +        - enum:
+>>> +           - ti,am654-ospi
+>>> +        - const: cdns,qspi-nor
+>>> +
+>>> +      - items:
+>>> +        - enum:
+>>> +           - intel,lgm-qspi
+>>> +        - const: cdns,qspi-nor
+>>> +
+>>> +      - items:
+>>> +        - const: cdns,qspi-nor
+>>> +
+>>> +  reg:
+>>> +    maxItems: 2
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 1
+>>> +
+>>> +  clocks:
+>>> +    maxItems: 1
+>>> +
+>>> +  cdns,fifo-depth:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description:
+>>> +      Size of the data FIFO in words.
+>> A 4GB fifo is valid? Add some constraints.
+> 128 is valid, will update.
 
+
+Nope, the width of this field is 8bits -> 256 bytes
+
+>>> +
+>>> +  cdns,fifo-width:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description:
+>>> +      Bus width of the data FIFO in bytes.
+>> Add some constraints.
+> 4 is valid , will fix it.
+>>> +
+>>> +  cdns,trigger-address:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description:
+>>> +      32-bit indirect AHB trigger address.
+>>> +
+>>> +  cdns,rclk-en:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Flag to indicate that QSPI return clock is used to latch the
+>>> read data
+>>> +      rather than the QSPI clock. Make sure that QSPI return clock
+>>> is populated
+>>> +      on the board before using this property.
+>>> +
+>>> +# subnode's properties
+>>> +patternProperties:
+>>> +  "^.*@[0-9a-fA-F]+$":
+>>> +    type: object
+>>> +    description:
+>>> +      flash device uses the subnodes below defined properties.
+>>> +
+>>> +  cdns,read-delay:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description:
+>>> +      Delay for read capture logic, in clock cycles.
+>> 4 billion clock delay is valid?
+> based on the ref_clk , will add it.
+>>> +
+>>> +  cdns,tshsl-ns:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> You can drop this, anything with a standard unit suffix already has a
+>> type.
+> sure , will drop it.
+>>> +    description: |
+>>> +      Delay in nanoseconds for the length that the master mode chip
+>>> select
+>>> +      outputs are de-asserted between transactions.
+>> Constraints...?
+> 
+> 50ns, will add it.
+> 
+
+This really depends on the input clk:
+
+Clock Delay for Chip Select Deassert:
+
+Delay in master reference clocks for the length that the master mode
+
+chip select outputs are de-asserted between transactions The
+
+minimum delay is always SCLK period to ensure the chip select is
+
+never re-asserted within an SCLK period.
+
+I don't see a easy way of verifying constraints in yaml.
+
+Same applies for below 3 properties as well.
+
+Regards
+Vignesh
+
+> Regards
+> Vadivel
+>>> +
+>>> +  cdns,tsd2d-ns:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Delay in nanoseconds between one chip select being de-activated
+>>> +      and the activation of another.
+>>> +
+>>> +  cdns,tchsh-ns:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Delay in nanoseconds between last bit of current transaction and
+>>> +      deasserting the device chip select (qspi_n_ss_out).
+>>> +
+>>> +  cdns,tslch-ns:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Delay in nanoseconds between setting qspi_n_ss_out low and
+>>> +      first bit transfer.
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +  - interrupts
+>>> +  - clocks
+>>> +  - cdns,fifo-depth
+>>> +  - cdns,fifo-width
+>>> +  - cdns,trigger-address
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    qspi: spi@ff705000 {
+>>> +          compatible = "cdns,qspi-nor";
+>>> +          #address-cells = <1>;
+>>> +          #size-cells = <0>;
+>>> +          reg = <0xff705000 0x1000>,
+>>> +                <0xffa00000 0x1000>;
+>>> +          interrupts = <0 151 4>;
+>>> +          clocks = <&qspi_clk>;
+>>> +          cdns,fifo-depth = <128>;
+>>> +          cdns,fifo-width = <4>;
+>>> +          cdns,trigger-address = <0x00000000>;
+>>> +
+>>> +          flash0: n25q00@0 {
+>>> +              compatible = "jedec,spi-nor";
+>>> +              reg = <0x0>;
+>>> +              cdns,read-delay = <4>;
+>>> +              cdns,tshsl-ns = <50>;
+>>> +              cdns,tsd2d-ns = <50>;
+>>> +              cdns,tchsh-ns = <4>;
+>>> +              cdns,tslch-ns = <4>;
+>>> +          };
+>>> +    };
+>>> +
+>>> -- 
+>>> 2.11.0
+>>>
+
+-- 
+Regards
+Vignesh
