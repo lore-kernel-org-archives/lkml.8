@@ -2,254 +2,139 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571BAC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32594C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C7E20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jfC5okCc"
+	by mail.kernel.org (Postfix) with ESMTP id 1208A2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgBYOdI (ORCPT
+        id S1730777AbgBYOd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:33:08 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:45919 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729065AbgBYOdI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:33:08 -0500
-Received: by mail-wr1-f73.google.com with SMTP id t14so832809wrs.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:33:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=K+gSCW97RfUzEfcHuqWjNaS4orn1ZLbZApAUp8Q7WZI=;
-        b=jfC5okCcJbkk6EDoS7HrDMEyUDxTijx6e+pyv8vtAjubLDkRWV7+SeCyn/gfdgSbqL
-         Jf9cpzYrTZE2tPborF0hrQxHP4zVrVGRSTZMJBw9Pvj1vka03YZedQ2XPswNijNT6OJa
-         wdlBAgSPm9mQ1ayP2q2q7hn2ehGG4lsP/C/ZXskVgWfdwuo2gvPNTox7snNP6xbO8Z+D
-         V6juoBS79qQ598YSqm6vUwvylP9YAjt5HfKpvJ51hyzK2EJI4cjLIvxnnATsimIbT/3z
-         ux0jFWlfx71rDytUiJwqCuCXCDRmrFZt9KatJgpe8ZbhKcgI8PCO9jHhLtmlFofTAHi5
-         ivGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=K+gSCW97RfUzEfcHuqWjNaS4orn1ZLbZApAUp8Q7WZI=;
-        b=Kgojzxb2WiMdOGD1MCN1EFHw8KWAE7pP6MmNL0Lb4GkcrDSyJ8d6/0vGYBymJceKUc
-         iWT77JutUlhZBN8XoNIuVq88ScbGvsLweZCJgezquh1jZps/k5xgGhz7MVkin+eDCvia
-         zovGrFC43DYBm3VJ5WKIs5ypbxzUoASSvP0BuoHL561xzjaNinZnwHFaFZ9Gj9Qqtcdl
-         UgciabeSzCN6hTwFFIjG8Wjfsbo/dHuV0F/F0AW0ba1G3sHGyr1Hwt3pPR7sC+sZir0R
-         fNEyVZy3Ddo+UfEGoEbCqt6+gtBqq2S0EhfBrX8jt7f99XKjRRgncXgvLW4NR6uK6RKs
-         TduQ==
-X-Gm-Message-State: APjAAAVJfqxuHwdthJvTOjJ3esQM4UhcN3W6585JII76poL3O6PDgvtq
-        yzTSNYhLU8+qzEd8OAWTmSUesUCu+A==
-X-Google-Smtp-Source: APXvYqxN12aDbYjc1oANAnnIDaFDCplZoCi1/k1RCxSWyeMoHNruV9akf/oIrGfzhy1+aOZsNs1BPtwsqg==
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr72959617wrn.245.1582641185618;
- Tue, 25 Feb 2020 06:33:05 -0800 (PST)
-Date:   Tue, 25 Feb 2020 15:32:58 +0100
-Message-Id: <20200225143258.97949-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] kcsan: Add current->state to implicitly atomic accesses
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Feb 2020 09:33:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43716 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729048AbgBYOd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 09:33:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BCCD8B14B;
+        Tue, 25 Feb 2020 14:33:25 +0000 (UTC)
+Message-ID: <5754451af3663ba39e8358dd15e586ee1485f86a.camel@suse.de>
+Subject: Re: [PATCH 16/89] clk: bcm: rpi: Add clock id to data
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 25 Feb 2020 15:33:23 +0100
+In-Reply-To: <20200225095433.tyxamibqyrgw5355@gilmour.lan>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <3028e04887c7b8a6ffc150c016aa63281461b434.1582533919.git-series.maxime@cerno.tech>
+         <67855a10-f7cb-b6b3-7b9f-d9c9baa5f105@i2se.com>
+         <20200225095433.tyxamibqyrgw5355@gilmour.lan>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-k9G+OdjwEzh2rr0BSMKX"
+User-Agent: Evolution 3.34.4 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add volatile current->state to list of implicitly atomic accesses. This
-is in preparation to eventually enable KCSAN on kernel/sched (which
-currently still has KCSAN_SANITIZE := n).
 
-Since accesses that match the special check in atomic.h are rare, it
-makes more sense to move this check to the slow-path, avoiding the
-additional compare in the fast-path. With the microbenchmark, a speedup
-of ~6% is measured.
+--=-k9G+OdjwEzh2rr0BSMKX
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Marco Elver <elver@google.com>
----
+Hi Maxime,
 
-Example data race that was reported with KCSAN enabled on kernel/sched:
+On Tue, 2020-02-25 at 10:54 +0100, Maxime Ripard wrote:
+> Hi Stefan,
+>=20
+> On Mon, Feb 24, 2020 at 08:25:46PM +0100, Stefan Wahren wrote:
+> > Hi Maxime,
+> >=20
+> > Am 24.02.20 um 10:06 schrieb Maxime Ripard:
+> > > The driver has really only supported one clock so far and has hardcod=
+ed
+> > > the
+> > > ID used in communications with the firmware in all the functions
+> > > implementing the clock framework hooks. Let's store that in the clock=
+ data
+> > > structure so that we can support more clocks later on.
+> >=20
+> > thank you for this series. I looked through it but i couldn't find an
+> > explanation why we need to expose firmware clocks via DT instead of
+> > extending clk-bcm2835. The whole pllb / clk-raspberrypi stuff was an
+> > exception to get cpufreq working. I prefer to keep it an exception.
+>=20
+> Thanks for pointing this out, I indeed forgot to address it in my
+> cover letter or my commit log.
+>=20
+> I'm not quite sure what the situation was with the previous
+> RaspberryPi, but the RPi4 firmware does a bunch of things under the
+> hood to make sure that everything works as expected:
+>=20
+>  - The HSM (and V3D) clocks will be reparented to multiple PLLs
+>    depending on the rate being asked for.
+>  - Still depending on the rate, the firmware will adjust the voltage
+>    of the various PLLs.
+>  - Depending on the temperature of the CPU and GPU, the firmware will
+>    change the rate of clocks to throttle in case of the cores
+>    overheating, with all the fallout that might happen to clocks
+>    deriving from it.
+>  - No matter what we choose to do in Linux, this will happen so
+>    whether or not we want to do it, so doing it behind the firmware's
+>    back (or the firmware doing it behind Linux's back) will only
+>    result in troubles, with voltages too low, or the firmware trying
+>    to access the same register at the same time than the Linux driver
+>    would, etc.
+>=20
+> So all in all, it just seems much easier and safer to use the firmware
+> clocks.
 
-write to 0xffff9e42c4400050 of 8 bytes by task 311 on cpu 7:
- ttwu_do_wakeup.isra.0+0x48/0x1f0 kernel/sched/core.c:2222
- ttwu_remote kernel/sched/core.c:2286 [inline]
- try_to_wake_up+0x9f8/0xbe0 kernel/sched/core.c:2585
- wake_up_process+0x1e/0x30 kernel/sched/core.c:2669
- __up.isra.0+0xb5/0xe0 kernel/locking/semaphore.c:261
- ...
+I agree with your assesment. Both DVFS and overheating/overvoltage protecti=
+ons
+will cause trouble, if not, make a Linux solution impossible while using th=
+e
+Foundation's firmware.
 
-read to 0xffff9e42c4400050 of 8 bytes by task 310 on cpu 0:
- sched_submit_work kernel/sched/core.c:4109 [inline]  <--- current->state read
- schedule+0x3a/0x1a0 kernel/sched/core.c:4153
- schedule_timeout+0x202/0x250 kernel/time/timer.c:1872
- ...
----
- kernel/kcsan/atomic.h  | 21 +++++++--------------
- kernel/kcsan/core.c    | 22 +++++++++++++++-------
- kernel/kcsan/debugfs.c | 27 ++++++++++++++++++---------
- 3 files changed, 40 insertions(+), 30 deletions(-)
+Please note that, as Stefan says, it'd be nice to keep track of those argum=
+ents
+somewhere in the commit messages.
 
-diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
-index a9c1930534914..be9e625227f3b 100644
---- a/kernel/kcsan/atomic.h
-+++ b/kernel/kcsan/atomic.h
-@@ -4,24 +4,17 @@
- #define _KERNEL_KCSAN_ATOMIC_H
- 
- #include <linux/jiffies.h>
-+#include <linux/sched.h>
- 
- /*
-- * Helper that returns true if access to @ptr should be considered an atomic
-- * access, even though it is not explicitly atomic.
-- *
-- * List all volatile globals that have been observed in races, to suppress
-- * data race reports between accesses to these variables.
-- *
-- * For now, we assume that volatile accesses of globals are as strong as atomic
-- * accesses (READ_ONCE, WRITE_ONCE cast to volatile). The situation is still not
-- * entirely clear, as on some architectures (Alpha) READ_ONCE/WRITE_ONCE do more
-- * than cast to volatile. Eventually, we hope to be able to remove this
-- * function.
-+ * Special rules for certain memory where concurrent conflicting accesses are
-+ * common, however, the current convention is to not mark them; returns true if
-+ * access to @ptr should be considered atomic. Called from slow-path.
-  */
--static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
-+static bool kcsan_is_atomic_special(const volatile void *ptr)
- {
--	/* only jiffies for now */
--	return ptr == &jiffies;
-+	/* volatile globals that have been observed in data races. */
-+	return ptr == &jiffies || ptr == &current->state;
- }
- 
- #endif /* _KERNEL_KCSAN_ATOMIC_H */
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 065615df88eaa..eb30ecdc8c009 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -188,12 +188,13 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
- 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
- }
- 
-+/* Rules for generic atomic accesses. Called from fast-path. */
- static __always_inline bool
- is_atomic(const volatile void *ptr, size_t size, int type)
- {
- 	struct kcsan_ctx *ctx;
- 
--	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
-+	if (type & KCSAN_ACCESS_ATOMIC)
- 		return true;
- 
- 	/*
-@@ -201,16 +202,16 @@ is_atomic(const volatile void *ptr, size_t size, int type)
- 	 * as atomic. This allows using them also in atomic regions, such as
- 	 * seqlocks, without implicitly changing their semantics.
- 	 */
--	if ((type & KCSAN_ACCESS_ASSERT) != 0)
-+	if (type & KCSAN_ACCESS_ASSERT)
- 		return false;
- 
- 	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
--	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
-+	    (type & KCSAN_ACCESS_WRITE) && size <= sizeof(long) &&
- 	    IS_ALIGNED((unsigned long)ptr, size))
- 		return true; /* Assume aligned writes up to word size are atomic. */
- 
- 	ctx = get_ctx();
--	if (unlikely(ctx->atomic_next > 0)) {
-+	if (ctx->atomic_next > 0) {
- 		/*
- 		 * Because we do not have separate contexts for nested
- 		 * interrupts, in case atomic_next is set, we simply assume that
-@@ -224,10 +225,8 @@ is_atomic(const volatile void *ptr, size_t size, int type)
- 			--ctx->atomic_next; /* in task, or outer interrupt */
- 		return true;
- 	}
--	if (unlikely(ctx->atomic_nest_count > 0 || ctx->in_flat_atomic))
--		return true;
- 
--	return kcsan_is_atomic(ptr);
-+	return ctx->atomic_nest_count > 0 || ctx->in_flat_atomic;
- }
- 
- static __always_inline bool
-@@ -367,6 +366,15 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	if (!kcsan_is_enabled())
- 		goto out;
- 
-+	/*
-+	 * Special atomic rules: unlikely to be true, so we check them here in
-+	 * the slow-path, and not in the fast-path in is_atomic(). Call after
-+	 * kcsan_is_enabled(), as we may access memory that is not yet
-+	 * initialized during early boot.
-+	 */
-+	if (!is_assert && kcsan_is_atomic_special(ptr))
-+		goto out;
-+
- 	if (!check_encodable((unsigned long)ptr, size)) {
- 		kcsan_counter_inc(KCSAN_COUNTER_UNENCODABLE_ACCESSES);
- 		goto out;
-diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index 2ff1961239778..72ee188ebc54a 100644
---- a/kernel/kcsan/debugfs.c
-+++ b/kernel/kcsan/debugfs.c
-@@ -74,25 +74,34 @@ void kcsan_counter_dec(enum kcsan_counter_id id)
-  */
- static noinline void microbenchmark(unsigned long iters)
- {
-+	const struct kcsan_ctx ctx_save = current->kcsan_ctx;
-+	const bool was_enabled = READ_ONCE(kcsan_enabled);
- 	cycles_t cycles;
- 
-+	/* We may have been called from an atomic region; reset context. */
-+	memset(&current->kcsan_ctx, 0, sizeof(current->kcsan_ctx));
-+	/*
-+	 * Disable to benchmark fast-path for all accesses, and (expected
-+	 * negligible) call into slow-path, but never set up watchpoints.
-+	 */
-+	WRITE_ONCE(kcsan_enabled, false);
-+
- 	pr_info("KCSAN: %s begin | iters: %lu\n", __func__, iters);
- 
- 	cycles = get_cycles();
- 	while (iters--) {
--		/*
--		 * We can run this benchmark from multiple tasks; this address
--		 * calculation increases likelyhood of some accesses
--		 * overlapping. Make the access type an atomic read, to never
--		 * set up watchpoints and test the fast-path only.
--		 */
--		unsigned long addr =
--			iters % (CONFIG_KCSAN_NUM_WATCHPOINTS * PAGE_SIZE);
--		__kcsan_check_access((void *)addr, sizeof(long), KCSAN_ACCESS_ATOMIC);
-+		unsigned long addr = iters & ((PAGE_SIZE << 8) - 1);
-+		int type = !(iters & 0x7f) ? KCSAN_ACCESS_ATOMIC :
-+				(!(iters & 0xf) ? KCSAN_ACCESS_WRITE : 0);
-+		__kcsan_check_access((void *)addr, sizeof(long), type);
- 	}
- 	cycles = get_cycles() - cycles;
- 
- 	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
-+
-+	WRITE_ONCE(kcsan_enabled, was_enabled);
-+	/* restore context */
-+	current->kcsan_ctx = ctx_save;
- }
- 
- /*
--- 
-2.25.0.265.gbab2e86ba0-goog
+Regards,
+Nicolas
+
+
+--=-k9G+OdjwEzh2rr0BSMKX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VMDMACgkQlfZmHno8
+x/4/WQf+Kyv1s3y5c1zna47wu/wkKyIjrM7qRGSnveL9N9nIqBjK0Z4BH7iLDXBx
+25kFxVsa9SyNx5ipe612NlRgWcyYHbOxwaWI7SynhXnoSHvAd990CGpEAMA/WZx4
+jvB2Ll/SRJuHXtpAyRmZyOOBUE6vX7hnM/wC/Rl3pdd9jvc6phjEza5bB54BTGXW
+/CLu1E+DR/Yr1KPkeP6odZ+Xfc5UIuyYGqDi9lALXg7mPJhYjKYdMRHtbueyyNMI
+VGh5So6ZKwPMRCqruOh8C2A2+UqHg2Q8vq5x52uFBUC4PZXKgzpgDRWJBiPJLqhu
+pVGAeN2+7Odf4HzO6fexgYGCxlooRg==
+=yNC6
+-----END PGP SIGNATURE-----
+
+--=-k9G+OdjwEzh2rr0BSMKX--
 
