@@ -2,135 +2,108 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8827BC35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BED8C35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FDE21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3563B21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582613354;
+	bh=DgXDiUaDUM9m4hJUwy/jMW/TY8iDZez/caDnBcs+TS8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jxn21u3FrZ1uorCiPSoo56s4arHeBRYl4c7J56/GWnqBgvLigmTUF0OTCoZjYR4ej
+	 UzvScu6dJSKqDuI6+QrcF1PCco0aE94ET80+HVod/VTznddWK/jtbjgu0m1ICF7Ypi
+	 SnC2a0JoDb6pACwR13ydLV65o52BfqbKxgEcNkwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgBYGsg (ORCPT
+        id S1729240AbgBYGtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:48:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37011 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgBYGsg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:48:36 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6U1C-0007Ok-Cf; Tue, 25 Feb 2020 07:48:34 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6U1B-0006eH-R5; Tue, 25 Feb 2020 07:48:33 +0100
-Date:   Tue, 25 Feb 2020 07:48:33 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200225064833.kmvaplfqqf53s3iy@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-4-lokeshvutla@ti.com>
- <20200224085531.zab5ewr2nfi2shem@pengutronix.de>
- <4aedb6d4-1823-ab46-b7e6-cc0b30f7747d@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4aedb6d4-1823-ab46-b7e6-cc0b30f7747d@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 25 Feb 2020 01:49:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728988AbgBYGtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:49:13 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B6321744;
+        Tue, 25 Feb 2020 06:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582613352;
+        bh=DgXDiUaDUM9m4hJUwy/jMW/TY8iDZez/caDnBcs+TS8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b3RVTcQJfBNPwsb4skoqS2dVbQxIWH6roiPfXWm2KtrVipw+BbELKguGsR4dgLle9
+         tzpnSsYo02/LUUpDAm3BAS3u6VvWME0nsYCRgRRL/1zz+hLQwYmAKxHQfjjfP2CxVF
+         xeBLEZHGTmFqAMOZW5sjDFIY0sq4AuUKUJfBj0aI=
+Date:   Tue, 25 Feb 2020 15:49:03 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Bird <Tim.Bird@sony.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: Re: [for-next][12/26] Documentation: bootconfig: Add a doc for
+ extended boot config
+Message-Id: <20200225154903.f636acde809a304bfccf4995@kernel.org>
+In-Reply-To: <25dd284f-6122-c01b-ef22-901c3e0bdf37@web.de>
+References: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
+        <20200220221340.2b66fd2051a5da74775c474b@kernel.org>
+        <5ed96b7b-7485-1ea0-16e2-d39c14ae266d@web.de>
+        <20200221191637.e9eed4268ff607a98200628c@kernel.org>
+        <5ade73b0-a3e8-e71a-3685-6485f37ac8b7@web.de>
+        <20200222131833.56a5be2d36033dc5a77a9f0b@kernel.org>
+        <370e675a-598e-71db-8213-f5494b852a71@web.de>
+        <20200223005615.79f308e2ca0717132bb2887b@kernel.org>
+        <8cc7e621-c5e3-28fa-c789-0bb7c55d77d6@web.de>
+        <20200224121302.5b730b519d550eb34da720a5@kernel.org>
+        <25dd284f-6122-c01b-ef22-901c3e0bdf37@web.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-On Tue, Feb 25, 2020 at 10:32:42AM +0530, Lokesh Vutla wrote:
-> On 24/02/20 2:25 PM, Uwe Kleine-König wrote:
-> > Hello,
-> > 
-> > On Mon, Feb 24, 2020 at 10:51:34AM +0530, Lokesh Vutla wrote:
-> >> Only the Timer control register(TCLR) can be updated only when the timer
-> >> is stopped. Registers like Counter register(TCRR), loader register(TLDR),
-> >> match register(TMAR) can be updated when the counter is running. Since
-> >> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> >> timer for period/duty_cycle update.
-> >>
-> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> >> ---
-> >>  drivers/pwm/pwm-omap-dmtimer.c | 14 --------------
-> >>  1 file changed, 14 deletions(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-> >> index f13be7216847..58c61559e72f 100644
-> >> --- a/drivers/pwm/pwm-omap-dmtimer.c
-> >> +++ b/drivers/pwm/pwm-omap-dmtimer.c
-> >> @@ -102,7 +102,6 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
-> >>  	u32 load_value, match_value;
-> >>  	struct clk *fclk;
-> >>  	unsigned long clk_rate;
-> >> -	bool timer_active;
-> >>  
-> >>  	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
-> >>  		duty_ns, period_ns);
-> >> @@ -178,25 +177,12 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
-> >>  	load_value = (DM_TIMER_MAX - period_cycles) + 1;
-> >>  	match_value = load_value + duty_cycles - 1;
-> >>  
-> >> -	/*
-> >> -	 * We MUST stop the associated dual-mode timer before attempting to
-> >> -	 * write its registers, but calls to omap_dm_timer_start/stop must
-> >> -	 * be balanced so check if timer is active before calling timer_stop.
-> >> -	 */
-> >> -	timer_active = pm_runtime_active(&omap->dm_timer_pdev->dev);
-> >> -	if (timer_active)
-> >> -		omap->pdata->stop(omap->dm_timer);
-> >> -
-> >>  	omap->pdata->set_load(omap->dm_timer, true, load_value);
-> >>  	omap->pdata->set_match(omap->dm_timer, true, match_value);
-> > 
-> > (Without having looked into the depths of the driver I assume
-> > .set_load() sets the period of the PWM and .set_match() the duty cycle.)
+On Mon, 24 Feb 2020 11:00:31 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
+
+> > OK, I'll try to make a split EBNF file and include it.
 > 
-> Right.
+> Thanks for your positive feedback.
 > 
-> > 
-> > What happens on a running PWM if you change the period? Consider you
-> > change from duty_cycle = 1000, period = 5000 to duty_cycle = 4000,
-> > period = 10000. As you set the period first, can it happen the hardware
-> > produces a cycle with duty_cycle = 1000, period = 10000?
 > 
-> No. So, the current cycle is un affected with duty_cycle = 1000 and period =
-> 5000. Starting from next cycle new settings gets reflected with duty_cycle =
-> 4000 and period = 10000.
+> How do you think about to clarify any additional software design options
+> around involved data structures?
 
-Is the reference manual for this hardware publically available?
+Sorry, what would you mean the "involved data structures" here?
+Would you mean the usage of APIs or when to use bootconfig or command line?
 
-So the .set_load callback just writes a shadow register and .set_match
-latches it into hardware atomically with its own register changes? A
-comment in the source code about this would be good. Also if .set_load
-doesn't work without .set_match I wonder if it is sane to put their
-logic in two different functions.
+Thank you,
 
-Best regards
-Uwe
+> 
+> Regards,
+> Markus
+
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Masami Hiramatsu <mhiramat@kernel.org>
