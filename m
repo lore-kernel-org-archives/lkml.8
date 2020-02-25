@@ -2,226 +2,505 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D677DC35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B646C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C7921744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D024221744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vhhX1pB4"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Mwvr6TGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgBYQmm (ORCPT
+        id S1731156AbgBYQmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:42:42 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:38558 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728499AbgBYQmm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:42:42 -0500
-Received: by mail-il1-f195.google.com with SMTP id f5so11367373ilq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 08:42:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e/LX9XNhUE11/OIZMbEr4Ajar8HsvmlKhhiknvCsycI=;
-        b=vhhX1pB4UEvGJm9ScD/HunfF61LfSOlTrZOOsE9ePWGshDfnw0/FkOz1uKt4rNd91F
-         Yj3vTKDLp7/kQynwpcM/ChuY0meT8IHXYubvOnTq68xmH8gwy+/R2HkxnOBHnaecV3Ej
-         1J/+PC8LEavy/qfdQ00lRC/6Tx8TXpPsqoUUbDIsFip1XMAuIRCbMHB9QwPksab5YnPY
-         DnSbubLyv1Fn07Hzm4FaaZHVo6KTWdNSXKmVUZ9xihahJYz/XA0Yehga8gV/utarfx5u
-         A9vfxFUEkwo3exsY4oTkORFfuTqoAG6lkunAMMbL628c0aL10uFCv1sP9CZ9ISOggxmT
-         bNRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e/LX9XNhUE11/OIZMbEr4Ajar8HsvmlKhhiknvCsycI=;
-        b=K83WI0BO8rlT9JN5KF0+AYVRY3IZxDKpKcDDspfI9ra23G6chDeGn0U3cot3MuJ4vY
-         oINPrMALwJij5/UjFEnhZXTF0C7j6NYyUpg9CRZ4yQxfEfgfMxtXrtD9YnvnY5kjEltg
-         ne7lHQvWqpbXyKsmmpyBSqXdfTj3SU9Ab+xxYHruRzeUvpCdEIKnzb/5MdPendOy6JiS
-         pOztAzpCv1AhKLmbRH41WaIsG66A+YzrAQ0GTogAL6xufoXVywPD6FqKHnCYLIUMO5Vo
-         GCyfsxvsZyEUD/Vahfr7b28J6W7RaGXhyskZxaImyPcK2WwfCz0iXotnF8K3DHXSewAG
-         j27w==
-X-Gm-Message-State: APjAAAWVeYm7DwMmdaYj8FCSQhOVrG7y4pS+k7ZjmImNmQtHSTYBZ3w0
-        StHrv6acdkgX+kasKbPdM2ZgIZeJN6sUWujARnc=
-X-Google-Smtp-Source: APXvYqwib/81OTAZBeJWH60Xfj4oh8o6WoK5rj9DBjLeHUbvnHYW+38uGTYgNPOW1+OQuw87PzQh36tVKNi2emb+9Vw=
-X-Received: by 2002:a92:dac3:: with SMTP id o3mr71110937ilq.237.1582648960946;
- Tue, 25 Feb 2020 08:42:40 -0800 (PST)
+        Tue, 25 Feb 2020 11:42:49 -0500
+Received: from mail-vi1eur05on2084.outbound.protection.outlook.com ([40.107.21.84]:25985
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729769AbgBYQmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:42:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yphu+98lR1PVxz95zO10QDo+req6Xab63lSWToLxpcuqlVk8A7vhQr7c24nVCCkmiapHawjT2VKhbbOjCtTQGtuOksZKGN5tqF9bvLFQs9hPWYB5rpb4ZrJy7/Cl15G7gggcvCfzQWKz2pc9vazt1HQo5TnQDvBzW+rrA05hsDRvhN7TaXmbf9bSU7Y8S7oj7gmcBiubMM+WoglYiW/z6+0tCJHj54NQ4hemeiIq1MEnyiUm/6Gy0QQyml22O0F0HskC2keAqm+21x89XB7RDGUTTrfXKsEHbgKke1fUMj8REyPqTKnI4+oRixRyIXnCj0KxS/foiDUu3eYmA5RHaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sFyOb9ph73SP8bDWXkKf7bCUtQRxdhuSRjk6KbH5BVs=;
+ b=Lqm3C4WCUYzDP2ZlKcCB98AS+6CH4O2spAblsWpVcdR+eQ9r9Vacm8wmcA1mia3tQK7PgWfSeIw17U/r5PWHBOt5eNHV+Ykgp0c3vjtkKmmGYqQNUWRHyamyNznpAqIHH9+Zd5maI8EvtO2rUAaR/IqIz5E5Kyob2TJ8qx8dMNSFLegcmXHDP4pnoqu+9q2/Jt99EqN/CbS0yoOdIOFVtFMMH1MK9Hu0gxjErlTXxS8GP3REROt+EtAZTVxP3KVV+e7+DCclMmKBb5XzSRzvsgEDkqwtkEoVmSHg96reQz4DqHytCLcOCYqfaiJASDGcn0jO19PePJzr8gWp1ieTLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sFyOb9ph73SP8bDWXkKf7bCUtQRxdhuSRjk6KbH5BVs=;
+ b=Mwvr6TGkcXH+/IUkt3HUn5tm2xQDQxaBxSWFpfkP3yykUzG9aV9r2DvhODMGsyVmGmJ5RCitnhcm2jatf755OM06sjscEiwPGENFHhrZLi7yFiDynPBVhlVxTl0Bg6+h+td5uRnD2ipSQtYvzcBMI4nH1GxVi6Z08uTy5V7rQ0U=
+Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com (10.172.225.17) by
+ DB6PR0501MB2614.eurprd05.prod.outlook.com (10.172.225.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.22; Tue, 25 Feb 2020 16:42:32 +0000
+Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com
+ ([fe80::58ec:69b7:ac09:8614]) by DB6PR0501MB2712.eurprd05.prod.outlook.com
+ ([fe80::58ec:69b7:ac09:8614%11]) with mapi id 15.20.2750.021; Tue, 25 Feb
+ 2020 16:42:32 +0000
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/1] gpio: add driver for Mellanox BlueField 2 GPIO
+ controller
+Thread-Topic: [PATCH v2 1/1] gpio: add driver for Mellanox BlueField 2 GPIO
+ controller
+Thread-Index: AQHV6/lSb3twwXT1NEWAYUP399Otg6gsGvTA
+Date:   Tue, 25 Feb 2020 16:42:32 +0000
+Message-ID: <DB6PR0501MB27121431EA6DCCB476B73F1DDAED0@DB6PR0501MB2712.eurprd05.prod.outlook.com>
+References: <cover.1582647809.git.Asmaa@mellanox.com>
+ <7ef84476a00e8771cf1edf5745c378273b760f5d.1582647809.git.Asmaa@mellanox.com>
+In-Reply-To: <7ef84476a00e8771cf1edf5745c378273b760f5d.1582647809.git.Asmaa@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Asmaa@mellanox.com; 
+x-originating-ip: [216.156.69.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e331183c-b801-4fd5-444d-08d7ba11b5e2
+x-ms-traffictypediagnostic: DB6PR0501MB2614:
+x-microsoft-antispam-prvs: <DB6PR0501MB26142FBA24C9BA40D43980CEDAED0@DB6PR0501MB2614.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0324C2C0E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(5660300002)(2906002)(53546011)(6506007)(26005)(66946007)(66446008)(76116006)(55016002)(478600001)(66476007)(4326008)(30864003)(64756008)(66556008)(7696005)(86362001)(186003)(81156014)(8936002)(33656002)(110136005)(316002)(9686003)(71200400001)(52536014)(81166006)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2614;H:DB6PR0501MB2712.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MfiL6xGakT/yKZENxx7KvjPc8U64NJPvDH85vvghKpZ8A+gizA1B1KtYRhnQLzMd9iSj/4PA5lelW49ppQlYe5RGpNvO6IbflKxipzdgtil9B/k+ik7AByGogjSfTQnXHyi2DrhDHDOf1dfZV2VTWZFHLbxsD6ORhLAARCs3D6PAHM2GbO8JL35+bXEX2SxuKmdSUehqtj/AdTfUT5Eup1U04gYXyaBBStkKnOvhtqea/dKII4e+pzI2tiMw0ef6XpS+FNBUtZEmetvaXcleQQYLl2S9w90mS+wsyISATzn4q1iPh1baaAr5G0uVQsxUnxBelaG0xpW5Wnvw7Y5NhuFSQszwmaDt9pcZuX4vU3J/mMThbFEFzluR3x33P9rl1hsGY5ah7n9Mh4dhIJGkRnrToH5h84L9OXIj5ToI7SIwfIHdP3c489H+MwVBhcVZ
+x-ms-exchange-antispam-messagedata: l8/tUGO7nC4Js7ZxnnBhSChjiyQU4xxpG34vAmjNEh18KZKcewF9iMxjbl3wLJb/pkSVX2qOJrUhuX7yKgLn6gRMjQuX9KHbCU2HIyUhqLXN6CCgqqW9rSIpy7X42Qax/eEdEJIjuMu66tz43a8cMA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
- <CAKgT0UdHhZznoS0kMdacCqgc=sFXj1Djmpd-DbPvAmyrhJq6CA@mail.gmail.com>
- <20200221040237-mutt-send-email-mst@kernel.org> <f1be1da2-1acc-ddd9-3c06-bf11c0f39b8e@redhat.com>
- <CAKgT0UeZzcigv65xjgNucFaohVHKu8MSg+-_8=YG3WiC590Xzw@mail.gmail.com>
- <939de9de-d82a-aed2-6a51-57a55d81cbff@redhat.com> <CAKgT0UfGYqNbiFUTTbVRz3=-zftsJ5fNKeRT21PJGD+a1Knceg@mail.gmail.com>
- <c11572bd-f4ff-421f-a9d8-46603641521c@redhat.com>
-In-Reply-To: <c11572bd-f4ff-421f-a9d8-46603641521c@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 25 Feb 2020 08:42:29 -0800
-Message-ID: <CAKgT0Udw7PNJWzTPJNt8-akburMKHKjDbLMUdGWc-i=RfzxQ-w@mail.gmail.com>
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP partially
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e331183c-b801-4fd5-444d-08d7ba11b5e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 16:42:32.2805
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a5YLTI98noYUqFYUhj7opf3zXMQ/GnUa6D8YPv/IgPihJYa1RGK/zCiSevpJYjvV8lzFnkXLz9gPl+3Q981fLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2614
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:09 AM David Hildenbrand <david@redhat.com> wrote:
->
-> [...]
->
-> > I guess the question is if pressuring the guest to compact the memory
-> > to create more THP pages would add value versus letting the pressure
-> > from the inflation cause more potential fragmentation.
->
-> Would be interesting to see some actual numbers. Right now, it's just
-> speculations. I know that there are ideas to do proactive compaction,
-> maybe that has a similar effect.
->
-> [...]
->
-> >
-> >>>
-> >>>> There was some work on huge page ballooning in a paper I read. But once
-> >>>> the guest is out of huge pages to report, it would want to fallback to
-> >>>> smaller granularity (down to 4k, to create real memory pressure), where
-> >>>> you would end up in the very same situation you are right now. So it's -
-> >>>> IMHO - only of limited used.
-> >>>
-> >>> I wouldn't think it would be that limited of a use case. By having the
-> >>> balloon inflate with higher order pages you should be able to put more
-> >>> pressure on the guest to compact the memory and reduce fragmentation
-> >>> instead of increasing it. If you have the balloon flushing out the
-> >>> lower order pages it is sitting on when there is pressure it seems
-> >>> like it would be more likely to reduce fragmentation further.
-> >>
-> >> As we have balloon compaction in place and balloon pages are movable, I
-> >> guess fragmentation is not really an issue.
-> >
-> > I'm not sure that is truly the case. My concern is that by allocating
-> > the 4K pages we are breaking up the higher order pages and we aren't
-> > necessarily guaranteed to obtain all pieces of the higher order page
-> > when we break it up. As a result we could end up causing the THP pages
-> > to be broken up and scattered between the balloon and other consumers
->
-> We are allocating movable memory. We should be working on/creating
-> movable pageblocks. Yes, other concurrent allcoations can race with the
-> allocation. But after all, they are likely movable as well (because they
-> are allocating from a movable pageblock) and we do have compaction in
-> place. There are corner cases but in don't think they are very relevant.
->
-> [...]
+Hi Linus,
 
-The main advantage as I see it though is that you can much more likely
-inflate an entire THP page if you are allocating 2M pages versus 4K
-pages simply because if another thread ends up stealing one of those
-pages while you are trying to inflate the balloon it will be
-problematic. In addition by switching over to the scatterlist approach
-it would be possible to process 512 pages as a single entry which is
-already more than double the number of PFNs currently supported by
-virtio balloon.
+Thank you for your feedback!=20
+I have addressed your comments and tested the code. Please note that the YU=
+_ARM_GPIO_LOCK is a shared resource between the 3 gpio blocks instances.
+So now that we have split up the gpio_chip into 3 instances, we need to sha=
+re that LOCK resource accordingly. I have created a global variable for tha=
+t purpose.
+Also note, that although it is not supported in this driver at the moment, =
+some gpio interrupt registers will be similar to that LOCK i.e. they are sh=
+ared among the  3 gpio block instances.
 
-> >> Especially page compaction/migration in the guest might be tricky. AFAIK
-> >> it only works on oder-0 pages. E.g., whenever you allocated a
-> >> higher-order page in the guest and reported it to your hypervisor, you
-> >> want to split it into separate order-0 pages before adding them to the
-> >> balloon list. Otherwise, you won't be able to tag them as movable and
-> >> handle them via the existing balloon compaction framework - and that
-> >> would be a major step backwards, because you would be heavily
-> >> fragmenting your guest (and even turning MAX_ORDER - 1 into unmovable
-> >> pages means that memory offlining/alloc_contig_range() users won't be
-> >> able to move such pages around anymore).
-> >
-> > Yes, from what I can tell compaction will not touch anything that is
-> > pageblock size or larger. I am not sure if that is an issue or not.
-> >
-> > For migration is is a bit of a different story. It looks like there is
-> > logic in place for migrating huge and transparent huge pages, but not
-> > higher order pages. I'll have to take a look through the code some
-> > more to see just how difficult it would be to support migrating a 2M
-> > page. I can probably make it work if I just configure it as a
-> > transparent huge page with the appropriate flags and bits in the page
-> > being set.
->
-> Note: With virtio-balloon you actually don't necessarily want to migrate
-> the higher-order page. E.g., migrating a higher-order page might fail
-> because there is no migration target available. Instead, you would want
-> "migrate" to multiple smaller pieces. This is esp., interesting for
-> alloc_contig_range() users. Something that the current 4k pages can
-> handle just nicely.
+-----Original Message-----
+From: Asmaa Mnebhi <Asmaa@mellanox.com>=20
+Sent: Tuesday, February 25, 2020 11:33 AM
+To: bgolaszewski@baylibre.com; linus.walleij@linaro.org
+Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] gpio: add driver for Mellanox BlueField 2 GPIO cont=
+roller
 
-That is why I am thinking it would be worthwhile to explore the
-current THP approaches being used. If I could get virtio balloon to
-act as though it is allocating THP pages then what I would get is the
-ability to handle migration and the fact that THP pages already get
-broken up into lower order pages if they cannot be allocated as a
-higher order page. In reality the balloon driver doesn't really care
-about if the page is mapped as 1 2M page or 512 4K ones, however it
-would be preferred if we could get the linear 2M mapping.
+This patch adds support for the GPIO controller used by Mellanox BlueField =
+2 SOCs.
 
-> >
-> >> But then, the balloon compaction will result in single 4k pages getting
-> >> moved and deflated+inflated. Once you have order-0 pages in your list,
-> >> deflating higher-order pages becomes trickier.
-> >
-> > I probably wouldn't want to maintain them as individual lists. In my
-> > mind it would make more sense to have two separate lists with separate
-> > handlers for each. Then in the event of something such as a deflate we
-> > could choose what we free based on the number of pages we need to
-> > free. That would allow us to deflate the balloon quicker in the case
-> > of a low-memory condition which should improve our responsiveness. In
-> > addition with the driver sitting on a reserve of higher-order pages it
-> > could help to alleviate fragmentation in such a case as well since it
-> > could release larger contiguous blocks of memory.
-> >
-> >> E.g., have a look at the vmware balloon (drivers/misc/vmw_balloon.c). It
-> >> will allocate either 4k or 2MB pages, but won't be able to handle them
-> >> for balloon compaction. They don't even bother about other granularity.
-> >>
-> >>
-> >> Long story short: Inflating higher-order pages could be good for
-> >> inflation performance in some setups, but I think you'll have to fall
-> >> back to lower-order allocations +  balloon compaction on 4k.
-> >
-> > I'm not entirely sure that is the case. It seems like with a few
-> > tweaks to things we could look at doing something like splitting the
-> > balloon so that we have a 4K and a 2M balloon. At that point it would
-> > just be a matter of registering a pair of address space handlers so
-> > that the 2M balloons are handled correctly if there is a request to
-> > migrate their memory. As far as compaction that is another story since
-> > it looks like 2M pages will not be compacted.
->
-> I am not convinced what you describe is a real issue that needs such a
-> solution. Maybe we can come up with numbers that prove this. (e.g.,
-> #THP, fragmentation, benchmark performance in your guest, etc.).
+Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
+---
+ drivers/gpio/Kconfig       |   7 +
+ drivers/gpio/Makefile      |   1 +
+ drivers/gpio/gpio-mlxbf2.c | 345 +++++++++++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 353 insertions(+)
+ create mode 100644 drivers/gpio/gpio-mlxbf2.c
 
-As I see it there are several issues to be addressed here.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig index b8013cf..623=
+4ccc 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1399,6 +1399,13 @@ config GPIO_MLXBF
+ 	help
+ 	  Say Y here if you want GPIO support on Mellanox BlueField SoC.
+=20
++config GPIO_MLXBF2
++	tristate "Mellanox BlueField 2 SoC GPIO"
++	depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || (64BIT && COMPILE_TEST=
+)
++	select GPIO_GENERIC
++	help
++	  Say Y here if you want GPIO support on Mellanox BlueField 2 SoC.
++
+ config GPIO_ML_IOH
+ 	tristate "OKI SEMICONDUCTOR ML7213 IOH GPIO support"
+ 	depends on X86 || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile index 0b57126..b=
+2cfc21 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -93,6 +93,7 @@ obj-$(CONFIG_GPIO_MENZ127)		+=3D gpio-menz127.o
+ obj-$(CONFIG_GPIO_MERRIFIELD)		+=3D gpio-merrifield.o
+ obj-$(CONFIG_GPIO_ML_IOH)		+=3D gpio-ml-ioh.o
+ obj-$(CONFIG_GPIO_MLXBF)		+=3D gpio-mlxbf.o
++obj-$(CONFIG_GPIO_MLXBF2)		+=3D gpio-mlxbf2.o
+ obj-$(CONFIG_GPIO_MM_LANTIQ)		+=3D gpio-mm-lantiq.o
+ obj-$(CONFIG_GPIO_MOCKUP)		+=3D gpio-mockup.o
+ obj-$(CONFIG_GPIO_MOXTET)		+=3D gpio-moxtet.o
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c new fi=
+le mode 100644 index 0000000..0d35d4e
+--- /dev/null
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -0,0 +1,345 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/acpi.h>
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/gpio/driver.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/resource.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/version.h>
++
++/*
++ * There are 3 YU GPIO blocks:
++ * gpio[0]: HOST_GPIO0->HOST_GPIO31
++ * gpio[1]: HOST_GPIO32->HOST_GPIO63
++ * gpio[2]: HOST_GPIO64->HOST_GPIO69
++ */
++#define MLXBF2_GPIO_MAX_PINS_PER_BLOCK 32
++
++/*
++ * arm_gpio_lock register:
++ * bit[31]	lock status: active if set
++ * bit[15:0]	set lock
++ * The lock is enabled only if 0xd42f is written to this field  */
++#define YU_ARM_GPIO_LOCK_ADDR		0x2801088
++#define YU_ARM_GPIO_LOCK_SIZE		0x8
++#define YU_LOCK_ACTIVE_BIT(val)		(val >> 31)
++#define YU_ARM_GPIO_LOCK_ACQUIRE	0xd42f
++#define YU_ARM_GPIO_LOCK_RELEASE	0x0
++
++/*
++ * gpio[x] block registers and their offset  */
++#define YU_GPIO_DATAIN			0x04
++#define YU_GPIO_MODE1			0x08
++#define YU_GPIO_MODE0			0x0c
++#define YU_GPIO_DATASET			0x14
++#define YU_GPIO_DATACLEAR		0x18
++#define YU_GPIO_MODE1_CLEAR		0x50
++#define YU_GPIO_MODE0_SET		0x54
++#define YU_GPIO_MODE0_CLEAR		0x58
++
++#ifdef CONFIG_PM
++struct mlxbf2_gpio_context_save_regs {
++	u32 gpio_mode0;
++	u32 gpio_mode1;
++};
++#endif
++
++/* BlueField-2 gpio block state structure. */ struct mlxbf2_gpio_state=20
++{
++	struct gpio_chip gc;
++
++	/* YU GPIO blocks address */
++	void __iomem *gpio_io;
++
++#ifdef CONFIG_PM
++	struct mlxbf2_gpio_context_save_regs *csave_regs; #endif };
++
++/* BlueField-2 gpio shared structure. */ struct mlxbf2_gpio_param {
++	void __iomem *io;
++	struct resource *res;
++	struct mutex *lock;
++};
++
++static struct resource yu_arm_gpio_lock_res =3D {
++	.start =3D YU_ARM_GPIO_LOCK_ADDR,
++	.end   =3D YU_ARM_GPIO_LOCK_ADDR + YU_ARM_GPIO_LOCK_SIZE - 1,
++	.name  =3D "YU_ARM_GPIO_LOCK",
++};
++
++static DEFINE_MUTEX(yu_arm_gpio_lock_mutex);
++
++static struct mlxbf2_gpio_param yu_arm_gpio_lock_param =3D {
++	.res =3D &yu_arm_gpio_lock_res,
++	.lock =3D &yu_arm_gpio_lock_mutex,
++};
++
++/* Request memory region and map yu_arm_gpio_lock resource */ static=20
++int mlxbf2_gpio_get_lock_res(struct platform_device *pdev) {
++	struct device *dev =3D &pdev->dev;
++	struct resource *res;
++	resource_size_t size;
++	int ret =3D 0;
++
++	mutex_lock(yu_arm_gpio_lock_param.lock);
++
++	/* Check if the memory map already exists */
++	if (yu_arm_gpio_lock_param.io)
++		goto exit;
++
++	res =3D yu_arm_gpio_lock_param.res;
++	size =3D resource_size(res);
++
++	if (!devm_request_mem_region(dev, res->start, size, res->name)) {
++		ret =3D -EFAULT;
++		goto exit;
++	}
++
++	yu_arm_gpio_lock_param.io =3D devm_ioremap_nocache(dev, res->start, size)=
+;
++	if (IS_ERR(yu_arm_gpio_lock_param.io))
++		ret =3D PTR_ERR(yu_arm_gpio_lock_param.io);
++
++exit:
++	mutex_unlock(yu_arm_gpio_lock_param.lock);
++
++	return ret;
++}
++
++/*
++ * Acquire the YU arm_gpio_lock to be able to change the direction
++ * mode. If the lock_active bit is already set, return an error.
++ */
++static int mlxbf2_gpio_lock_acquire(void) {
++	u32 arm_gpio_lock_val;
++
++	mutex_lock(yu_arm_gpio_lock_param.lock);
++
++	arm_gpio_lock_val =3D readl(yu_arm_gpio_lock_param.io);
++
++	/*
++	 * When lock active bit[31] is set, ModeX is write enabled
++	 */
++	if (YU_LOCK_ACTIVE_BIT(arm_gpio_lock_val)) {
++		mutex_unlock(yu_arm_gpio_lock_param.lock);
++		return -EINVAL;
++	}
++
++	writel(YU_ARM_GPIO_LOCK_ACQUIRE, yu_arm_gpio_lock_param.io);
++
++	mutex_unlock(yu_arm_gpio_lock_param.lock);
++
++	return 0;
++}
++
++/*
++ * Release the YU arm_gpio_lock after changing the direction mode.
++ */
++static void mlxbf2_gpio_lock_release(void) {
++	mutex_lock(yu_arm_gpio_lock_param.lock);
++	writel(YU_ARM_GPIO_LOCK_RELEASE, yu_arm_gpio_lock_param.io);
++	mutex_unlock(yu_arm_gpio_lock_param.lock);
++}
++
++/*
++ * mode0 and mode1 are both locked by the gpio_lock field.
++ *
++ * Together, mode0 and mode1 define the gpio Mode dependeing also
++ * on Reg_DataOut.
++ *
++ * {mode1,mode0}:{Reg_DataOut=3D0,Reg_DataOut=3D1}->{DataOut=3D0,DataOut=
+=3D1}
++ *
++ * {0,0}:Reg_DataOut{0,1}->{Z,Z} Input PAD
++ * {0,1}:Reg_DataOut{0,1}->{0,1} Full drive Output PAD
++ * {1,0}:Reg_DataOut{0,1}->{0,Z} 0-set PAD to low, 1-float
++ * {1,1}:Reg_DataOut{0,1}->{Z,1} 0-float, 1-set PAD to high  */
++
++/*
++ * Set input direction:
++ * {mode1,mode0} =3D {0,0}
++ */
++static int mlxbf2_gpio_direction_input(struct gpio_chip *chip,
++				       unsigned int offset)
++{
++	struct mlxbf2_gpio_state *gs =3D gpiochip_get_data(chip);
++	int ret;
++
++	/*
++	 * Although the arm_gpio_lock was set in the probe function, check again
++	 * if it is still enabled to be able to write to the ModeX registers.
++	 */
++	spin_lock(&gs->gc.bgpio_lock);
++	ret =3D mlxbf2_gpio_lock_acquire();
++	if (ret < 0) {
++		spin_unlock(&gs->gc.bgpio_lock);
++		return ret;
++	}
++
++	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE0_CLEAR);
++	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE1_CLEAR);
++
++	mlxbf2_gpio_lock_release();
++	spin_unlock(&gs->gc.bgpio_lock);
++
++	return ret;
++}
++
++/*
++ * Set output direction:
++ * {mode1,mode0} =3D {0,1}
++ */
++static int mlxbf2_gpio_direction_output(struct gpio_chip *chip,
++					unsigned int offset,
++					int value)
++{
++	struct mlxbf2_gpio_state *gs =3D gpiochip_get_data(chip);
++	int ret =3D 0;
++
++	/*
++	 * Although the arm_gpio_lock was set in the probe function,
++	 * check again it is still enabled to be able to write to the
++	 * ModeX registers.
++	 */
++	spin_lock(&gs->gc.bgpio_lock);
++	ret =3D mlxbf2_gpio_lock_acquire();
++	if (ret < 0) {
++		spin_unlock(&gs->gc.bgpio_lock);
++		return ret;
++	}
++
++	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE1_CLEAR);
++	writel(BIT(offset), gs->gpio_io + YU_GPIO_MODE0_SET);
++
++	mlxbf2_gpio_lock_release();
++	spin_unlock(&gs->gc.bgpio_lock);
++
++	return ret;
++}
++
++/* BlueField-2 GPIO driver initialization routine. */ static int=20
++mlxbf2_gpio_probe(struct platform_device *pdev) {
++	struct mlxbf2_gpio_state *gs;
++	struct device *dev =3D &pdev->dev;
++	struct gpio_chip *gc;
++	struct resource *res;
++	unsigned int npins;
++	int ret;
++
++	gs =3D devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
++	if (!gs)
++		return -ENOMEM;
++
++	/* YU GPIO block address */
++	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENODEV;
++
++	gs->gpio_io =3D devm_ioremap(dev, res->start, resource_size(res));
++	if (!gs->gpio_io)
++		return -ENOMEM;
++
++	ret =3D mlxbf2_gpio_get_lock_res(pdev);
++	if (ret) {
++		dev_err(dev, "Failed to get yu_arm_gpio_lock resource\n");
++		return ret;
++	}
++
++	if (device_property_read_u32(dev, "npins", &npins))
++		npins =3D MLXBF2_GPIO_MAX_PINS_PER_BLOCK;
++
++	gc =3D &gs->gc;
++
++	ret =3D bgpio_init(gc, dev, 4,
++			gs->gpio_io + YU_GPIO_DATAIN,
++			gs->gpio_io + YU_GPIO_DATASET,
++			gs->gpio_io + YU_GPIO_DATACLEAR,
++			NULL,
++			NULL,
++			0);
++
++	gc->direction_input =3D mlxbf2_gpio_direction_input;
++	gc->direction_output =3D mlxbf2_gpio_direction_output;
++	gc->ngpio =3D npins;
++	gc->owner =3D THIS_MODULE;
++
++	platform_set_drvdata(pdev, gs);
++
++	ret =3D devm_gpiochip_add_data(dev, &gs->gc, gs);
++	if (ret) {
++		dev_err(dev, "Failed adding memory mapped gpiochip\n");
++		return ret;
++	}
++
++	dev_info(dev, "Registered Mellanox BlueField-2 GPIO");
++
++	return 0;
++}
++
++#ifdef CONFIG_PM
++static int mlxbf2_gpio_suspend(struct platform_device *pdev,
++				pm_message_t state)
++{
++	struct mlxbf2_gpio_state *gs =3D platform_get_drvdata(pdev);
++
++	gs->csave_regs->gpio_mode0 =3D readl(gs->gpio_io +
++		YU_GPIO_MODE0);
++	gs->csave_regs->gpio_mode1 =3D readl(gs->gpio_io +
++		YU_GPIO_MODE1);
++
++	return 0;
++}
++
++static int mlxbf2_gpio_resume(struct platform_device *pdev) {
++	struct mlxbf2_gpio_state *gs =3D platform_get_drvdata(pdev);
++
++	writel(gs->csave_regs->gpio_mode0, gs->gpio_io +
++		YU_GPIO_MODE0);
++	writel(gs->csave_regs->gpio_mode1, gs->gpio_io +
++		YU_GPIO_MODE1);
++
++	return 0;
++}
++#endif
++
++static const struct acpi_device_id mlxbf2_gpio_acpi_match[] =3D {
++	{ "MLNXBF22", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, mlxbf2_gpio_acpi_match);
++
++static struct platform_driver mlxbf2_gpio_driver =3D {
++	.driver =3D {
++		.name =3D "mlxbf2_gpio",
++		.acpi_match_table =3D ACPI_PTR(mlxbf2_gpio_acpi_match),
++	},
++	.probe    =3D mlxbf2_gpio_probe,
++#ifdef CONFIG_PM
++	.suspend  =3D mlxbf2_gpio_suspend,
++	.resume   =3D mlxbf2_gpio_resume,
++#endif
++};
++
++module_platform_driver(mlxbf2_gpio_driver);
++
++MODULE_DESCRIPTION("Mellanox BlueField-2 GPIO Driver");=20
++MODULE_AUTHOR("Mellanox Technologies"); MODULE_LICENSE("GPL v2");
+--
+2.1.2
 
-1. As the size of memory increases I am not certain that operating a
-balloon at 4K page size is going to make sense for much longer.
-2. Inflating with 4K pages is likely to force the guest memory to be
-split up at the host level, and will be expensive as it requires an
-operation per 4K page on the host.
-3. Inflating with 4K pages makes it impossible to currently identify
-if the entire THP has been freed since we can only inflate half of a
-THP page at a time.
-
-> I'll try digging out that huge page ballooning for KVM paper, maybe that
-> has any value.
-
-Thanks. Also if you have any specific benchmarks in mind that would be
-useful as well for establishing the criteria for what a
-proof-of-concept would need to accomplish.
