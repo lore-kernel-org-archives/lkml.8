@@ -2,177 +2,162 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27072C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F2DC35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED31B20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B791F21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmxfSUoS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CWKAFxy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbgBYTam (ORCPT
+        id S1730964AbgBYTbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:30:42 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51172 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728753AbgBYTam (ORCPT
+        Tue, 25 Feb 2020 14:31:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41749 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730719AbgBYTbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:30:42 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so149017pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:30:40 -0800 (PST)
+        Tue, 25 Feb 2020 14:31:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id v4so10096wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:31:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=c7YvBhKYaRcug4SwCX6amT8Yl2lrmhMSeuLnOwXOQgU=;
-        b=RmxfSUoSe9xuTRu3f6VvCjX9p3RqTXhWYFzxRKDqm+y+JTdxrf832YSyahg7MZHNLX
-         xPJ2kfmZTGtuVhfDmeeI2m3eLecVz5um8uOSdxZNnifiBTLy/ZzPCVo7WiCz/lyxUok6
-         FWNVoaH1gkLXuOBrEU7qUhC+MMtTUR0yvbIhclvQTQKShrsbsa40s2xq9HGpuZsX5+tv
-         I+cIv38b4L6tdkJYnodzLG8SbLgqZz/SyCc33w4YePCS7JW64TnWRI3gPc2HmTNY+3gS
-         +esf0ZNXY+FkNEn6yHHD9N6Et03JhmWvGDVQW5olU6DN7Qh7Ryv4stkQrnZJKfjQ/jxK
-         w1Qg==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LlBxXO82SnjJ6YAbFFiOmvHTdiQt/bwkAdND6MM2qHM=;
+        b=CWKAFxy9a32tMI17qQoLdEtkjjrlAcX9YJDmjUVVKSG4h9NutRtLDmYCLK2nFmHJwB
+         NQFyAkimI5H97b5ALHt4fWJGRofXmtFQt6cKtyL09lVP/iJUDLu9RJEwzIJ0vNrRWR6E
+         uhcMmxqbUpdl/rg78QZHMRqXH0qsvX4l+qhD4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=c7YvBhKYaRcug4SwCX6amT8Yl2lrmhMSeuLnOwXOQgU=;
-        b=ch8RVgJzm1P2Emu2A8URWtx//SDJ1XrOtIjiKJIp+Q8xce0Fw29cgQA+HyrSiP7Ibz
-         w/lLz/LErIzofZqn4p/lW4uJT9opUjYOodDP5tKD7aSH2yate7WVoQND1sT0OOXSlIYq
-         k91m2ramHP/H4IaEfVnpj60D8f+viUWeUb6z53i6opyZljjRppLCKYsMZ4wKotbNKN1Z
-         xidFPkhrOKUYpGrR4910CwKf8BHLlVXwi5tg/8YBb+OXRq44VD1Q+Qal5E1x2QqNiKOJ
-         BTvAX6X+FQmAPrmMEt/QDGcPY4oO0YtllpJaqxwL2x9CbY8qvcebYsPZ315NZchPa2Ie
-         zlEg==
-X-Gm-Message-State: APjAAAUsTflSl8fvOrAFx6fTfY2EzGkr8yCXSAs9NU9/Ot5nYBC0tBft
-        WGGaIDn50zSASK1hgvdm4H5cZ5FVQTHI7OG6DMwRtg==
-X-Google-Smtp-Source: APXvYqwIehtIWayl8Y2Zzqxv3rR2U4RBBVtCMsCkBtRJPuhdGxnRrSPGxX3OGXxqFFIKBjfFx9viR7GDqI+5iiuIcmo=
-X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr587460pjn.117.1582659039680;
- Tue, 25 Feb 2020 11:30:39 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LlBxXO82SnjJ6YAbFFiOmvHTdiQt/bwkAdND6MM2qHM=;
+        b=e6+zEeul2Zhokg+BmMuqISnjXWGB/Ht3bq4Ss3GMQ+C4WIqlOEnMwqzYmUd3/XRJHr
+         fxVWl11IoZhZiT1IMxRaDDl78VWdwVzeJnHJGF5RM7gEtXyADQBXf8wCHk/xgNH82sg8
+         TktsjogQNqM+QBd7TcPR8icfshHGrnWiJzCzbW6ch4Dd3zYNbuesgEKiNfVA25jdIi2u
+         1Yoba+tqXPoKjXTCvYp9uYcf+Ko8otWoMiJYHsPZSCeno8brwyieosc5Xu7xR4Zz6T0P
+         jM1d6CXP8gRhhJwID/2202SKfSveaEuGimJUZ78TZgvmygG3Kc2/7TBsE0we6pFbxF9e
+         MGuA==
+X-Gm-Message-State: APjAAAXc/YO5d96DhLlECySNq5p42gbXDxdjC1bMPk8J8hBtX1AC3gcO
+        DBk/ZD5RFaHyq05/rkJ5n3ObmQ==
+X-Google-Smtp-Source: APXvYqzz0xbe63IL/CAtvmuQXSgsaD0L9stv95M/mevMi1AFwc0CmqJCxfn5wOXcrgY82hZGANGWeQ==
+X-Received: by 2002:a5d:4b91:: with SMTP id b17mr641380wrt.325.1582659070262;
+        Tue, 25 Feb 2020 11:31:10 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id d76sm5569661wmd.39.2020.02.25.11.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 11:31:09 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 25 Feb 2020 20:31:08 +0100
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200225193108.GB22391@chromium.org>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
+ <202002211946.A23A987@keescook>
+ <20200223220833.wdhonzvven7payaw@ast-mbp>
+ <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
+ <20200224171305.GA21886@chromium.org>
+ <00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com>
+ <202002241136.C4F9F7DFF@keescook>
+ <20200225054125.dttrc3fvllzu4mx5@ast-mbp>
 MIME-Version: 1.0
-References: <20191121095350.158689-1-tali.perry1@gmail.com>
- <20191121095350.158689-3-tali.perry1@gmail.com> <20191125151618.GE2412@kunai>
- <CAHb3i=tGTcu2q15E5CL_od1rDgRDyx=ygoGSCu88AfBrnFn71w@mail.gmail.com> <CAHb3i=s+u1gHXwi7j7V_N-c8f8n7c1XB3QhkY8EAJuv6PA5GNw@mail.gmail.com>
-In-Reply-To: <CAHb3i=s+u1gHXwi7j7V_N-c8f8n7c1XB3QhkY8EAJuv6PA5GNw@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 25 Feb 2020 11:30:22 -0800
-Message-ID: <CAFd5g47z8Lo1usLRDLL32Pw8LB40+bpcbnJdcvW5ffoVhKM-uA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] i2c: npcm: Add Nuvoton NPCM I2C controller driver
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Patrick Venture <venture@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Tomer Maimon <tmaimon77@gmail.com>, syniurge@gmail.com,
-        linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225054125.dttrc3fvllzu4mx5@ast-mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 26, 2019 at 1:23 AM Tali Perry <tali.perry1@gmail.com> wrote:
->
-> Hi Wolfram,
->
-> Thanks for your comments.
->
-> The NPCM7XX BMC I2C\SMB controller HW module supports both SMB and I2C.
-> It's main features are:
-> 1. Supports Fast-Mode (400 KHz clock) I2C and Fast-Mode-plus (1 MHz clock=
-) I2C
-> 2. Supports the =E2=80=98fairness=E2=80=99 arbitration protocol defined b=
-y the MCTP
-> SMBus/I2C Transport Binding Specification v1.0.0
-> 3. 32KB packets : this is an I2C spec limitation. The HW has no limit
-> on packets size. It has a 16 bytes FIFO which can be reloaded over and
-> over.
-> 4. w\o size byte (for SMB block protocol).
-> 5. Both master and slave. It can also replace modes in run time
-> (requirement for IPMB and MCTP).
-> 6. Bus timing is selected to support both specs.
->
-> Originally the HW spec stated SMB everywhere .
+On 24-Feb 21:41, Alexei Starovoitov wrote:
+> On Mon, Feb 24, 2020 at 01:41:19PM -0800, Kees Cook wrote:
+> > 
+> > But the LSM subsystem doesn't want special cases (Casey has worked very
+> > hard to generalize everything there for stacking). It is really hard to
+> > accept adding a new special case when there are still special cases yet
+> > to be worked out even in the LSM code itself[2].
+> > [2] Casey's work to generalize the LSM interfaces continues and it quite
+> > complex:
+> > https://lore.kernel.org/linux-security-module/20200214234203.7086-1-casey@schaufler-ca.com/
+> 
+> I think the key mistake we made is that we classified KRSI as LSM.
+> LSM stacking, lsmblobs that the above set is trying to do are not necessary for KRSI.
+> I don't see anything in LSM infra that KRSI can reuse.
+> The only thing BPF needs is a function to attach to.
+> It can be a nop function or any other.
+> security_*() functions are interesting from that angle only.
+> Hence I propose to reconsider what I was suggesting earlier.
+> No changes to secruity/ directory.
+> Attach to security_*() funcs via bpf trampoline.
+> The key observation vs what I was saying earlier is KRSI and LSM are wrong names.
+> I think "security" is also loaded word that should be avoided.
+> I'm proposing to rename BPF_PROG_TYPE_LSM into BPF_PROG_TYPE_OVERRIDE_RETURN.
 
-Alright, so it sounds like the HW supports I2C and also has SMBus
-specific support?
+The BPF_PROG_TYPE_OVERRIDE_RETURN seems to be useful in general as
+well and we have the implementation already figured out as a part of
+the LSM work. I will split that bit into a separate series.
 
-> Should I rename the SMB to I2C all over the driver?
+- KP
 
-If the HW supports general I2C; then yes, you should use the I2C
-naming scheme. If you have SMBus specific support for some things, it
-might be helpful to tag on smb in the name for only those
-functions/data structures.
-
-Also, please don't top-post.
-
-> On Tue, Nov 26, 2019 at 8:47 AM Tali Perry <tali.perry1@gmail.com> wrote:
-> >
-> > Hi Wolfram,
-> >
-> > Thanks for your comments.
-> >
-> > The NPCM7XX BMC I2C\SMB controller HW module supports both SMB and I2C.
-> > It's main features are:
-> > 1. Supports Fast-Mode (400 KHz clock) I2C and Fast-Mode-plus (1 MHz clo=
-ck) I2C
-> > 2. Supports the =E2=80=98fairness=E2=80=99 arbitration protocol defined=
- by the MCTP SMBus/I2C Transport Binding Specification v1.0.0
-> > 3. 32KB packets : this is an I2C spec limitation. The HW has no limit o=
-n packets size. It has a 16 bytes FIFO which can be reloaded over and over.
-> > 4. w\o size byte (for SMB block protocol).
-> > 5. Both master and slave. It can also replace modes in run time (requir=
-ement for IPMB and MCTP).
-> > 6. Bus timing is selected to support both specs.
-> >
-> > Originally the HW spec stated SMB everywhere .
-> >
-> > Should I rename the SMB to I2C all over the driver?
-
-And please don't reiterate yourself like this; it can confuse the conversat=
-ion.
-
-> > On Mon, Nov 25, 2019 at 5:16 PM Wolfram Sang <wsa@the-dreams.de> wrote:
-> >>
-> >> On Thu, Nov 21, 2019 at 11:53:50AM +0200, Tali Perry wrote:
-> >> > Add Nuvoton NPCM BMC i2c controller driver.
-> >> >
-> >> > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> >>
-> >> Looking at all this SMB_* naming of the registers and also the quirks,
-> >> this looks more like an SMBUS controller to me?
-> >>
-> >> > +     // currently I2C slave IF only supports single byte operations=
-.
-> >> > +     // in order to utilyze the npcm HW FIFO, the driver will ask f=
-or 16bytes
-> >> > +     // at a time, pack them in buffer, and then transmit them all =
-together
-> >> > +     // to the FIFO and onward to the bus .
-> >> > +     // NACK on read will be once reached to bus->adap->quirks->max=
-_read_len
-> >> > +     // sending a NACK whever the backend requests for it is not su=
-pported.
-> >>
-> >> This for example...
-> >>
-> >> > +static const struct i2c_adapter_quirks npcm_i2c_quirks =3D {
-> >> > +     .max_read_len =3D 32768,
-> >> > +     .max_write_len =3D 32768,
-> >> > +     .max_num_msgs =3D 2,
-> >> > +     .flags =3D I2C_AQ_COMB_WRITE_THEN_READ
-> >> > +};
-> >>
-> >> ... and this. Like SMBus with the only exception of being able to send
-> >> 32K in a row. Or?
-> >>
+> 
+> > So, unless James is going to take this over Casey's objections, the path
+> > forward I see here is:
+> > 
+> > - land a "slow" KRSI (i.e. one that hooks every hook with a stub).
+> > - optimize calling for all LSMs
+> 
+> I'm very much surprised how 'slow' KRSI is an option at all.
+> 'slow' KRSI means that CONFIG_SECURITY_KRSI=y adds indirect calls to nop
+> functions for every place in the kernel that calls security_*().
+> This is not an acceptable overhead. Even w/o retpoline
+> this is not something datacenter servers can use.
+> 
+> Another option is to do this:
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 64b19f050343..7887ce636fb1 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -240,7 +240,7 @@ static inline const char *kernel_load_data_id_str(enum kernel_load_data_id id)
+>         return kernel_load_data_str[id];
+>  }
+> 
+> -#ifdef CONFIG_SECURITY
+> +#if defined(CONFIG_SECURITY) || defined(CONFIG_BPF_OVERRIDE_RETURN)
+> 
+> Single line change to security.h and new file kernel/bpf/override_security.c
+> that will look like:
+> int security_binder_set_context_mgr(struct task_struct *mgr)
+> {
+>         return 0;
+> }
+> 
+> int security_binder_transaction(struct task_struct *from,
+>                                 struct task_struct *to)
+> {
+>         return 0;
+> }
+> Essentially it will provide BPF side with a set of nop functions.
+> CONFIG_SECURITY is off. It may seem as a downside that it will force a choice
+> on kernel users. Either they build the kernel with CONFIG_SECURITY and their
+> choice of LSMs or build the kernel with CONFIG_BPF_OVERRIDE_RETURN and use
+> BPF_PROG_TYPE_OVERRIDE_RETURN programs to enforce any kind of policy. I think
+> it's a pro not a con.
