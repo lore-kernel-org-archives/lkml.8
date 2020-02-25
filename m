@@ -2,97 +2,134 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D79C35DFB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FECC35DFB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9551B21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9D5218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582625782;
+	bh=xhugCcXsdvxmy9hj5XGYrT1xM/LDjkFC5Qq8nX+dKIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=niX32F+mV7xZDmKe0nmULX8iuLX4JiO4XE/wYusdcBU7r0TrLMTevNULOtu+lytJW
+	 XZSOsJpLrBR5L3LfpyEXB6AnFMJWeI2DmmtU1OlsX/kKbSepqlnK9i8mmsnE3TP8pb
+	 eqkfdO7+3fuJWgqMKkoRrgYe7J71tQPdky5DT9To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgBYKPY (ORCPT
+        id S1730116AbgBYKQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:15:24 -0500
-Received: from mga18.intel.com ([134.134.136.126]:61964 "EHLO mga18.intel.com"
+        Tue, 25 Feb 2020 05:16:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgBYKPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:15:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 02:15:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
-   d="scan'208";a="226299412"
-Received: from ayakove1-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.12.5])
-  by orsmga007.jf.intel.com with ESMTP; 25 Feb 2020 02:15:10 -0800
-Date:   Tue, 25 Feb 2020 12:15:03 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     =?utf-8?B?5LiJ5LufKOaDoOaYpemYsyk=?= <sanqian.hcy@antfin.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v24 00/24] Intel SGX foundations
-Message-ID: <20200225101503.GA7350@linux.intel.com>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20200224063451.GA30331@sanqian-simulation2>
+        id S1729702AbgBYKQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:16:21 -0500
+Received: from localhost (unknown [122.167.120.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9062121556;
+        Tue, 25 Feb 2020 10:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582625780;
+        bh=xhugCcXsdvxmy9hj5XGYrT1xM/LDjkFC5Qq8nX+dKIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KwZAkaiSP/Br/sdl4/u9ZJClNk6MnLu9FyxNTiCesQcjS+dpDBmMt3I6zuxlr1gKJ
+         GB95oUUG/U90zRpBYQbeDmcvN78yrD752Xux8kUDorEjy0Y6GzkYgyhokB1MwIa1j1
+         BGcTW1j2iPmDjPic8M5mNpyfFCKIXhBvQ2Gj+nvw=
+Date:   Tue, 25 Feb 2020 15:46:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: thermal: tsens: Make dtbs_check pass
+ for sc7180 tsens
+Message-ID: <20200225101614.GN2618@vkoul-mobl>
+References: <cover.1582615616.git.amit.kucheria@linaro.org>
+ <0f506cfdd8eb9d50b5eb43c9dca510284ac8ded1.1582615616.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200224063451.GA30331@sanqian-simulation2>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0f506cfdd8eb9d50b5eb43c9dca510284ac8ded1.1582615616.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:34:56PM +0800, 三仟(惠春阳) wrote:
-> On Sat, Nov 30, 2019 at 01:13:02AM +0200, Jarkko Sakkinen wrote:
-> > Intel(R) SGX is a set of CPU instructions that can be used by applications
-> > to set aside private regions of code and data. The code outside the enclave
-> > is disallowed to access the memory inside the enclave by the CPU access
-> > control.
-> > 
-> > There is a new hardware unit in the processor called Memory Encryption
-> > Engine (MEE) starting from the Skylake microacrhitecture. BIOS can define
-> > one or many MEE regions that can hold enclave data by configuring them with
-> > PRMRR registers.
-> > 
-> > The MEE automatically encrypts the data leaving the processor package to
-> > the MEE regions. The data is encrypted using a random key whose life-time
-> > is exactly one power cycle.
-> > 
-> > The current implementation requires that the firmware sets
-> > IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
-> > decide what enclaves it wants run. The implementation does not create
-> > any bottlenecks to support read-only MSRs later on.
-> > 
-> > You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
-> > 
-> > 	cat /proc/cpuinfo  | grep sgx
+On 25-02-20, 13:01, Amit Kucheria wrote:
+> Fixes the following warnings:
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible: ['qcom,sc7180-tsens',
+> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
+> causes of the failure):
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v0_1' was expected
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c263000: compatible:1: 'qcom,tsens-v1' was expected
+
+I think the patch title should be "add qcom,sc7180-tsens to  qcom-tsens.yaml"
+
+and it would be great to see explanation on how adding it fixes these
+warns.
+
+Relooking at series I think this applies to rest of the series too :)
+
+Thanks
+
+
 > 
-> Tested-by: Chunyang Hui <sanqian.hcy@antfin.com>
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible: ['qcom,sc7180-tsens',
+> 'qcom,tsens-v2'] is not valid under any of the given schemas (Possible
+> causes of the failure):
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:0: 'qcom,sc7180-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v0_1' was expected
+> builds/arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml:
+> thermal-sensor@c265000: compatible:1: 'qcom,tsens-v1' was expected
 > 
-> Occlum project (https://github.com/occlum/occlum) is a libOS built on top of
-> Intel SGX feature. We ran Occlum tests using patch v24 on SGX hardware with
-> the Flexible Launch Control (FLC) feature and didn't find any problems.
-> As Occlum core developers, we would like these patches to be merged soon.
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index eef13b9446a8..13e294328932 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -39,6 +39,7 @@ properties:
+>                - qcom,msm8996-tsens
+>                - qcom,msm8998-tsens
+>                - qcom,sdm845-tsens
+> +              - qcom,sc7180-tsens
+>            - const: qcom,tsens-v2
+>  
+>    reg:
+> -- 
+> 2.20.1
 
-Thank you.
-
-I updated the commit:
-
-https://github.com/jsakkine-intel/linux-sgx/commit/3475daeca0793d9ef69204d4981af3cacd888409
-
-/Jarkko
+-- 
+~Vinod
