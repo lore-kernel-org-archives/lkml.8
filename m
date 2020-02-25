@@ -2,314 +2,299 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB53C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F501C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8204120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F151F20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uwo5VWlb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P8MDT0cC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731409AbgBYUDc (ORCPT
+        id S1731560AbgBYUEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:03:32 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47847 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728162AbgBYUDb (ORCPT
+        Tue, 25 Feb 2020 15:04:21 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45517 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730961AbgBYUEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:03:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582661010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/yy6FQSIXVHCl6/oQ1qiTHAMtDv0IsPNQRSwlDwUY7w=;
-        b=Uwo5VWlbtMIshDrUuxUAadU3gZR8SkPBS4fW3l04CSTI7lljjExJLCbRRrbtHKual550Bu
-        925q/S7oYpmAr01Y4yDnSV7LNYbzJ0vzw9m70c/Jt8NYA4GYwEWEaOU86AnGSoNjtx4Htn
-        fWBvq4UevOGSNWUlMLLfWeZLJG5AFUQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-mCCtnLXNNkyrzghBhZwdRQ-1; Tue, 25 Feb 2020 15:03:24 -0500
-X-MC-Unique: mCCtnLXNNkyrzghBhZwdRQ-1
-Received: by mail-wr1-f69.google.com with SMTP id p8so307252wrw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:03:24 -0800 (PST)
+        Tue, 25 Feb 2020 15:04:21 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so103476pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:04:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BpgzSDf6JhhZfg51iKdhAMMJbNC3r3UORVH5eKhoGB8=;
+        b=P8MDT0cC5XXhSyYyx5TXU139qSIZ/xhuoGwRng4lZAmicF++O+72wdGpXydxjjkgFa
+         H4vkNdlhIhv5JR6vbLSURhaY9tLDlh6H0DsHibawIoSvdFOEeNyiXIv50fTJxqAVYNNd
+         6cAG3sXIgbEYIb7BLdbgbbget3GIHMemSl1aA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/yy6FQSIXVHCl6/oQ1qiTHAMtDv0IsPNQRSwlDwUY7w=;
-        b=GUtOntbL4+pdGqUHy/SK0wfkicIYq0bf6D8d+cggvmoDsqluXt0WJgzR+TUe0vaa2A
-         NFpd0Vigys3zk+EbkyB+/C0lcNyqvnxe0h0r+f7acw/UFUdF8sFVvcX+j5JuBDA9gYOl
-         8OT5z04l4I0AEVB0bWfbcCTd66Sx6aB0fqtUf3mWAFDcSkKZEupp1Ajd72h9d0hfQyo8
-         2mv98KWPIIoz8MpSE4QGH5E1tCvrjL1f9V9FWdnwzxtf3FQ7riQPL/YDiRzBS0aKewQT
-         5UbmwyYsVcNYdD6Z2Gsrz6m+hTmEHpExo2TaQWwsrMUPnBQC3LGRHlCwSFIXOGWSs5kY
-         zNug==
-X-Gm-Message-State: APjAAAXdmghTG/0kyYQIEqqFxOlPfN7uKGd462TegZtKqdnlh+/+4vo0
-        ZzN30MQq7yB7Q2pI+HQhJ9YCwPTXviR7vjxDrnDlQt9psZ1YMCZIrgWtgM16F7G8Bt+d3uJ/psj
-        H0eHOy/YNziLh5e7mUn6rFNsJ
-X-Received: by 2002:adf:fac3:: with SMTP id a3mr809096wrs.370.1582661003343;
-        Tue, 25 Feb 2020 12:03:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyZq5RdHWDYfWgtmZBuQGQsC+xtabu9o1m9axfA4ERdyp18Vw7FRfI8mxoIp2dEzh3aDb/5/g==
-X-Received: by 2002:adf:fac3:: with SMTP id a3mr809066wrs.370.1582661003038;
-        Tue, 25 Feb 2020 12:03:23 -0800 (PST)
-Received: from ?IPv6:2a02:8388:7c1:1280:a281:9dab:554b:2fdc? (2a02-8388-07c1-1280-a281-9dab-554b-2fdc.cable.dynamic.v6.surfer.at. [2a02:8388:7c1:1280:a281:9dab:554b:2fdc])
-        by smtp.gmail.com with ESMTPSA id 25sm5607118wmi.32.2020.02.25.12.03.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 12:03:21 -0800 (PST)
-Subject: Re: [RFC] perf script: add flamegraph.py script
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kabbott@redhat.com,
-        skozina@redhat.com, mpetlan@redhat.com, nathans@redhat.com,
-        mgoodwin@redhat.com, linux-perf-users@vger.kernel.org,
-        bgregg@netflix.com, mspier@netflix.com,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BpgzSDf6JhhZfg51iKdhAMMJbNC3r3UORVH5eKhoGB8=;
+        b=NTFUH9CelgWM1S62dmEnR68DVycFwtnGdIzKm7MjXpXaEpweSm++0JhGFyvN46c0BE
+         WCOZQ9XZs3EQLUxTO+bgb2OP7Insn0Snb6a6UB4ZiDhtaMIEhjrvuwVsDRphXUjZWnCk
+         YLsGri2xkGHI4UQDujTOqU3iTRm2B8AqbC2HSwaZulNmnNlOgGJcJ39qAN8vo3miR5Xd
+         vZMxMsB2JKLaYOnoUwZgWhBcQ+8dRxVhWkU2YKX+h4QPtllg6xgazb0GXyeD+SR1ZCjB
+         L2DVrbmNGPOqazyQV+CZGze6DqAZ1ytbTedEXm4zPfqK9lyh6l2LzPndejHiZwtekKgK
+         iuuw==
+X-Gm-Message-State: APjAAAW7ioQ4KDITqL1V5bp8QLQQDAHFDr9jcGniRT5QrtrG0f5QbyaO
+        +kBZaT5MeVIgTG5/ed7qoyVgZA==
+X-Google-Smtp-Source: APXvYqzTnsAiIZPOowEHcZB0wbT1W7YT7argEgciEcgKnK9iDdlzqhQbhsBMCk6QBQAjW+qazXItWQ==
+X-Received: by 2002:a62:37c7:: with SMTP id e190mr377399pfa.165.1582661060202;
+        Tue, 25 Feb 2020 12:04:20 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y18sm18433773pfe.19.2020.02.25.12.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 12:04:19 -0800 (PST)
+Date:   Tue, 25 Feb 2020 12:04:18 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20200221175500.83774-1-agerstmayr@redhat.com>
- <20200225195418.GA160300@krava>
-From:   Andreas Gerstmayr <agerstmayr@redhat.com>
-Message-ID: <0582d729-0e07-b95d-7cad-8912514b8871@redhat.com>
-Date:   Tue, 25 Feb 2020 21:03:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 03/27] x86/fpu/xstate: Introduce CET MSR XSAVES
+ supervisor states
+Message-ID: <202002251204.BFA4DC797@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-4-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200225195418.GA160300@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205181935.3712-4-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.02.20 20:54, Jiri Olsa wrote:
-> On Fri, Feb 21, 2020 at 06:55:01PM +0100, Andreas Gerstmayr wrote:
->> This script works in tandem with d3-flame-graph to generate flame graphs
->> from perf. It supports two output formats: JSON and HTML (the default).
->> The HTML format will look for a standalone d3-flame-graph template file in
->> /usr/share/d3-flame-graph/template.html and fill in the collected stacks.
->>
->> Usage:
->>
->>      perf script flamegraph -a -F 99 sleep 60
->>
->> Alternative usage:
->>
->>      perf record -a -g -F 99 sleep 60
->>      perf script report flamegraph
+On Wed, Feb 05, 2020 at 10:19:11AM -0800, Yu-cheng Yu wrote:
+> Control-flow Enforcement Technology (CET) adds five MSRs.  Introduce them
+> and their XSAVES supervisor states:
 > 
-> nice, could this output the output file, like:
+>     MSR_IA32_U_CET (user-mode CET settings),
+>     MSR_IA32_PL3_SSP (user-mode Shadow Stack pointer),
+>     MSR_IA32_PL0_SSP (kernel-mode Shadow Stack pointer),
+>     MSR_IA32_PL1_SSP (Privilege Level 1 Shadow Stack pointer),
+>     MSR_IA32_PL2_SSP (Privilege Level 2 Shadow Stack pointer).
 > 
->       # perf script report flamegraph --output krava.html
->       dumping data to krava.html
+> v6:
+> - Remove __packed from struct cet_user_state, struct cet_kernel_state.
 > 
-> or something in that sense
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  arch/x86/include/asm/fpu/types.h            | 22 ++++++++++++++++++
+>  arch/x86/include/asm/fpu/xstate.h           |  5 +++--
+>  arch/x86/include/asm/msr-index.h            | 18 +++++++++++++++
+>  arch/x86/include/uapi/asm/processor-flags.h |  2 ++
+>  arch/x86/kernel/fpu/xstate.c                | 25 +++++++++++++++++++--
+>  5 files changed, 68 insertions(+), 4 deletions(-)
 > 
-> other than that it looks good to me
-
-Yes, it's already implemented.
-
-$ perf script report flamegraph --output krava.html
-
-writes the output to krava.html
-
-$ perf script report flamegraph --help
-
-shows the supported arguments.
-
-The only gotcha is that you need to have a perf.data in the same 
-directory when calling this command, otherwise perf complains about a 
-missing perf.data and doesn't call the flamegraph.py script.
-
-
-Cheers,
-Andreas
-
-
-> 
-> thanks,
-> jirka
-> 
-> 
->>
->> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Jiri Olsa <jolsa@redhat.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> ---
->>
->> I'm currently preparing packages for d3-flame-graph. For Fedora, the copr
->> at
->> https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-flame-graph/
->> can be installed, or alternatively the prebuilt standalone d3-flame-graph
->> template can be downloaded from
->> https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/js-d3-flame-graph/template.html
->> and moved into /usr/share/d3-flame-graph/template.html
->>
->>   .../perf/scripts/python/bin/flamegraph-record |   2 +
->>   .../perf/scripts/python/bin/flamegraph-report |   3 +
->>   tools/perf/scripts/python/flamegraph.py       | 117 ++++++++++++++++++
->>   3 files changed, 122 insertions(+)
->>   create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
->>   create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
->>   create mode 100755 tools/perf/scripts/python/flamegraph.py
->>
->> diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf/scripts/python/bin/flamegraph-record
->> new file mode 100755
->> index 000000000000..725d66e71570
->> --- /dev/null
->> +++ b/tools/perf/scripts/python/bin/flamegraph-record
->> @@ -0,0 +1,2 @@
->> +#!/usr/bin/sh
->> +perf record -g "$@"
->> diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
->> new file mode 100755
->> index 000000000000..b1a79afd903b
->> --- /dev/null
->> +++ b/tools/perf/scripts/python/bin/flamegraph-report
->> @@ -0,0 +1,3 @@
->> +#!/usr/bin/sh
->> +# description: create flame graphs
->> +perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
->> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
->> new file mode 100755
->> index 000000000000..2e9139ef2c4a
->> --- /dev/null
->> +++ b/tools/perf/scripts/python/flamegraph.py
->> @@ -0,0 +1,117 @@
->> +# flamegraph.py - create flame graphs from perf samples
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Usage:
->> +#
->> +#  perf record -a -g -F 99 sleep 60
->> +#  perf script report flamegraph
->> +#
->> +# Combined data collection and flamegraph generation:
->> +#
->> +#  perf script flamegraph -a -F 99 sleep 60
->> +#
->> +# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
->> +# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
->> +# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.com>
->> +
->> +import sys
->> +import os
->> +import argparse
->> +import json
->> +
->> +
->> +class Node:
->> +    def __init__(self, name, libtype=""):
->> +        self.name = name
->> +        self.libtype = libtype
->> +        self.value = 0
->> +        self.children = []
->> +
->> +
->> +class FlameGraphCLI:
->> +    def __init__(self, args):
->> +        self.args = args
->> +        self.stack = Node("root")
->> +
->> +        if self.args.format == "html" and \
->> +                not os.path.isfile(self.args.template):
->> +            print(f"Flame Graph template '{self.args.template}' does not " +
->> +                  f"exist. Please install the d3-flame-graph package, " +
->> +                  f"specify an existing flame graph template " +
->> +                  f"(--template PATH) or another output format " +
->> +                  f"(--format FORMAT).", file=sys.stderr)
->> +            sys.exit(1)
->> +
->> +    def find_or_create_node(self, node, name, dso):
->> +        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
->> +        if name is None:
->> +            name = "[unknown]"
->> +
->> +        for child in node.children:
->> +            if child.name == name and child.libtype == libtype:
->> +                return child
->> +
->> +        child = Node(name, libtype)
->> +        node.children.append(child)
->> +        return child
->> +
->> +    def process_event(self, event):
->> +        node = self.find_or_create_node(self.stack, event["comm"], None)
->> +        if "callchain" in event:
->> +            for entry in reversed(event['callchain']):
->> +                node = self.find_or_create_node(
->> +                    node, entry.get("sym", {}).get("name"), event.get("dso"))
->> +        else:
->> +            node = self.find_or_create_node(
->> +                node, entry.get("symbol"), event.get("dso"))
->> +        node.value += 1
->> +
->> +    def trace_end(self):
->> +        def encoder(x): return x.__dict__
->> +        json_str = json.dumps(self.stack, default=encoder,
->> +                              indent=self.args.indent)
->> +
->> +        if self.args.format == "html":
->> +            try:
->> +                with open(self.args.template) as f:
->> +                    output_str = f.read().replace("/** @flamegraph_params **/",
->> +                                                  json_str)
->> +            except IOError as e:
->> +                print(f"Error reading template file: {e}", file=sys.stderr)
->> +                sys.exit(1)
->> +            output_fn = self.args.output or "flamegraph.html"
->> +        else:
->> +            output_str = json_str
->> +            output_fn = self.args.output or "stacks.json"
->> +
->> +        if output_fn == "-":
->> +            sys.stdout.write(output_str)
->> +        else:
->> +            try:
->> +                with open(output_fn, "w") as out:
->> +                    out.write(output_str)
->> +            except IOError as e:
->> +                print(f"Error writing output file: {e}", file=sys.stderr)
->> +                sys.exit(1)
->> +
->> +
->> +if __name__ == "__main__":
->> +    parser = argparse.ArgumentParser(description="Create flame graphs.")
->> +    parser.add_argument("-F", "--format",
->> +                        default="html", choices=["json", "html"],
->> +                        help="output file format")
->> +    parser.add_argument("-o", "--output",
->> +                        help="output file name")
->> +    parser.add_argument("--indent",
->> +                        type=int, help="JSON indentation")
->> +    parser.add_argument("--template",
->> +                        default="/usr/share/d3-flame-graph/template.html",
->> +                        help="path to flamegraph HTML template")
->> +    parser.add_argument("-i", "--input",
->> +                        help=argparse.SUPPRESS)
->> +
->> +    args = parser.parse_args()
->> +    cli = FlameGraphCLI(args)
->> +
->> +    process_event = cli.process_event
->> +    trace_end = cli.trace_end
->> -- 
->> 2.24.1
->>
+> diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
+> index f098f6cab94b..d7ef4d9c7ad5 100644
+> --- a/arch/x86/include/asm/fpu/types.h
+> +++ b/arch/x86/include/asm/fpu/types.h
+> @@ -114,6 +114,9 @@ enum xfeature {
+>  	XFEATURE_Hi16_ZMM,
+>  	XFEATURE_PT_UNIMPLEMENTED_SO_FAR,
+>  	XFEATURE_PKRU,
+> +	XFEATURE_RESERVED,
+> +	XFEATURE_CET_USER,
+> +	XFEATURE_CET_KERNEL,
+>  
+>  	XFEATURE_MAX,
+>  };
+> @@ -128,6 +131,8 @@ enum xfeature {
+>  #define XFEATURE_MASK_Hi16_ZMM		(1 << XFEATURE_Hi16_ZMM)
+>  #define XFEATURE_MASK_PT		(1 << XFEATURE_PT_UNIMPLEMENTED_SO_FAR)
+>  #define XFEATURE_MASK_PKRU		(1 << XFEATURE_PKRU)
+> +#define XFEATURE_MASK_CET_USER		(1 << XFEATURE_CET_USER)
+> +#define XFEATURE_MASK_CET_KERNEL	(1 << XFEATURE_CET_KERNEL)
+>  
+>  #define XFEATURE_MASK_FPSSE		(XFEATURE_MASK_FP | XFEATURE_MASK_SSE)
+>  #define XFEATURE_MASK_AVX512		(XFEATURE_MASK_OPMASK \
+> @@ -229,6 +234,23 @@ struct pkru_state {
+>  	u32				pad;
+>  } __packed;
+>  
+> +/*
+> + * State component 11 is Control-flow Enforcement user states
+> + */
+> +struct cet_user_state {
+> +	u64 user_cet;			/* user control-flow settings */
+> +	u64 user_ssp;			/* user shadow stack pointer */
+> +};
+> +
+> +/*
+> + * State component 12 is Control-flow Enforcement kernel states
+> + */
+> +struct cet_kernel_state {
+> +	u64 kernel_ssp;			/* kernel shadow stack */
+> +	u64 pl1_ssp;			/* privilege level 1 shadow stack */
+> +	u64 pl2_ssp;			/* privilege level 2 shadow stack */
+> +};
+> +
+>  struct xstate_header {
+>  	u64				xfeatures;
+>  	u64				xcomp_bv;
+> diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+> index 9ebfdd543576..952d2515dae4 100644
+> --- a/arch/x86/include/asm/fpu/xstate.h
+> +++ b/arch/x86/include/asm/fpu/xstate.h
+> @@ -33,13 +33,14 @@
+>  				       XFEATURE_MASK_BNDCSR)
+>  
+>  /* All currently supported supervisor features */
+> -#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (0)
+> +#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_CET_USER)
+>  
+>  /*
+>   * Unsupported supervisor features. When a supervisor feature in this mask is
+>   * supported in the future, move it to the supported supervisor feature mask.
+>   */
+> -#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT)
+> +#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT | \
+> +					       XFEATURE_MASK_CET_KERNEL)
+>  
+>  /* All supervisor states including supported and unsupported states. */
+>  #define ALL_XFEATURES_MASK_SUPERVISOR (SUPPORTED_XFEATURES_MASK_SUPERVISOR | \
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 084e98da04a7..114e77f5bb6b 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -872,4 +872,22 @@
+>  #define MSR_VM_IGNNE                    0xc0010115
+>  #define MSR_VM_HSAVE_PA                 0xc0010117
+>  
+> +/* Control-flow Enforcement Technology MSRs */
+> +#define MSR_IA32_U_CET		0x6a0 /* user mode cet setting */
+> +#define MSR_IA32_S_CET		0x6a2 /* kernel mode cet setting */
+> +#define MSR_IA32_PL0_SSP	0x6a4 /* kernel shstk pointer */
+> +#define MSR_IA32_PL1_SSP	0x6a5 /* ring-1 shstk pointer */
+> +#define MSR_IA32_PL2_SSP	0x6a6 /* ring-2 shstk pointer */
+> +#define MSR_IA32_PL3_SSP	0x6a7 /* user shstk pointer */
+> +#define MSR_IA32_INT_SSP_TAB	0x6a8 /* exception shstk table */
+> +
+> +/* MSR_IA32_U_CET and MSR_IA32_S_CET bits */
+> +#define MSR_IA32_CET_SHSTK_EN		0x0000000000000001ULL
+> +#define MSR_IA32_CET_WRSS_EN		0x0000000000000002ULL
+> +#define MSR_IA32_CET_ENDBR_EN		0x0000000000000004ULL
+> +#define MSR_IA32_CET_LEG_IW_EN		0x0000000000000008ULL
+> +#define MSR_IA32_CET_NO_TRACK_EN	0x0000000000000010ULL
+> +#define MSR_IA32_CET_WAIT_ENDBR	0x00000000000000800UL
+> +#define MSR_IA32_CET_BITMAP_MASK	0xfffffffffffff000ULL
+> +
+>  #endif /* _ASM_X86_MSR_INDEX_H */
+> diff --git a/arch/x86/include/uapi/asm/processor-flags.h b/arch/x86/include/uapi/asm/processor-flags.h
+> index bcba3c643e63..a8df907e8017 100644
+> --- a/arch/x86/include/uapi/asm/processor-flags.h
+> +++ b/arch/x86/include/uapi/asm/processor-flags.h
+> @@ -130,6 +130,8 @@
+>  #define X86_CR4_SMAP		_BITUL(X86_CR4_SMAP_BIT)
+>  #define X86_CR4_PKE_BIT		22 /* enable Protection Keys support */
+>  #define X86_CR4_PKE		_BITUL(X86_CR4_PKE_BIT)
+> +#define X86_CR4_CET_BIT		23 /* enable Control-flow Enforcement */
+> +#define X86_CR4_CET		_BITUL(X86_CR4_CET_BIT)
+>  
+>  /*
+>   * x86-64 Task Priority Register, CR8
+> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+> index 04f7c6b8dbbc..ec08a2b6feca 100644
+> --- a/arch/x86/kernel/fpu/xstate.c
+> +++ b/arch/x86/kernel/fpu/xstate.c
+> @@ -38,6 +38,9 @@ static const char *xfeature_names[] =
+>  	"Processor Trace (unused)"	,
+>  	"Protection Keys User registers",
+>  	"unknown xstate feature"	,
+> +	"Control-flow User registers"	,
+> +	"Control-flow Kernel registers"	,
+> +	"unknown xstate feature"	,
+>  };
+>  
+>  static short xsave_cpuid_features[] __initdata = {
+> @@ -51,6 +54,9 @@ static short xsave_cpuid_features[] __initdata = {
+>  	X86_FEATURE_AVX512F,
+>  	X86_FEATURE_INTEL_PT,
+>  	X86_FEATURE_PKU,
+> +	-1,		   /* Unused */
+> +	X86_FEATURE_SHSTK, /* XFEATURE_CET_USER */
+> +	X86_FEATURE_SHSTK, /* XFEATURE_CET_KERNEL */
+>  };
+>  
+>  /*
+> @@ -316,6 +322,8 @@ static void __init print_xstate_features(void)
+>  	print_xstate_feature(XFEATURE_MASK_ZMM_Hi256);
+>  	print_xstate_feature(XFEATURE_MASK_Hi16_ZMM);
+>  	print_xstate_feature(XFEATURE_MASK_PKRU);
+> +	print_xstate_feature(XFEATURE_MASK_CET_USER);
+> +	print_xstate_feature(XFEATURE_MASK_CET_KERNEL);
+>  }
+>  
+>  /*
+> @@ -563,6 +571,8 @@ static void check_xstate_against_struct(int nr)
+>  	XCHECK_SZ(sz, nr, XFEATURE_ZMM_Hi256, struct avx_512_zmm_uppers_state);
+>  	XCHECK_SZ(sz, nr, XFEATURE_Hi16_ZMM,  struct avx_512_hi16_state);
+>  	XCHECK_SZ(sz, nr, XFEATURE_PKRU,      struct pkru_state);
+> +	XCHECK_SZ(sz, nr, XFEATURE_CET_USER,   struct cet_user_state);
+> +	XCHECK_SZ(sz, nr, XFEATURE_CET_KERNEL, struct cet_kernel_state);
+>  
+>  	/*
+>  	 * Make *SURE* to add any feature numbers in below if
+> @@ -770,8 +780,19 @@ void __init fpu__init_system_xstate(void)
+>  	 * Clear XSAVE features that are disabled in the normal CPUID.
+>  	 */
+>  	for (i = 0; i < ARRAY_SIZE(xsave_cpuid_features); i++) {
+> -		if (!boot_cpu_has(xsave_cpuid_features[i]))
+> -			xfeatures_mask_all &= ~BIT_ULL(i);
+> +		if (xsave_cpuid_features[i] == X86_FEATURE_SHSTK) {
+> +			/*
+> +			 * X86_FEATURE_SHSTK and X86_FEATURE_IBT share
+> +			 * same states, but can be enabled separately.
+> +			 */
+> +			if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
+> +			    !boot_cpu_has(X86_FEATURE_IBT))
+> +				xfeatures_mask_all &= ~BIT_ULL(i);
+> +		} else {
+> +			if ((xsave_cpuid_features[i] == -1) ||
+> +			    !boot_cpu_has(xsave_cpuid_features[i]))
+> +				xfeatures_mask_all &= ~BIT_ULL(i);
+> +		}
+>  	}
+>  
+>  	xfeatures_mask_all &= fpu__get_supported_xfeatures_mask();
+> -- 
+> 2.21.0
 > 
 
+-- 
+Kees Cook
