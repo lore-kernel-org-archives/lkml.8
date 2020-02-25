@@ -2,87 +2,151 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77697C35E0C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57216C35E0C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7EC2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 17:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AcufC8xS"
+	by mail.kernel.org (Postfix) with ESMTP id 3B0692176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 18:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgBYR72 (ORCPT
+        id S1730017AbgBYSB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 12:59:28 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39164 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730829AbgBYR72 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 12:59:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=/kPd72L2NTbA3prrCkJX+T5HQUkpWtEmXQRVd+BkfJ0=; b=AcufC8xSi1fboQhsUYGFToSFOR
-        78qYe41745VJ22m4tMZ1rEHdv7ghQ8RZZ9FQFWO9KN3O87ToWyXBaJiMxGBRT4qLo/Vaa1S3TTY5K
-        Bg+chVynEZjdk3F6MhkRnBWxvWwvDDQzqLOZbbh3FTOz57vEOtDO9CWTmEAbrru8adqN8M1bq4n7N
-        7tkGFSV2aAdu+P9HEb3HiZAlmUsfr85SfCGusyQA7994aaRrs/EqkNdTotVK8Yd3bug0hV1MjssMg
-        CnqwnjynmSwuZYTeSKl9+9tMgrIRCYfz7gubrrGTuH5kfyRPM6ca/aaBUbY8OAeE+ZFS/iM4+/urK
-        ntXvLOEw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6eUQ-00043g-VW; Tue, 25 Feb 2020 17:59:27 +0000
-Subject: Re: [PATCH] bootconfig: Fix CONFIG_BOOTTIME_TRACING dependency issue
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200225220551.d9a409bc04b77cdf48eae3ea@kernel.org>
- <158264140162.23842.11237423518607465535.stgit@devnote2>
- <c9604764-bd0f-67e9-56c8-fb6ffaf9b430@infradead.org>
- <20200225125335.5bbc3ed4@gandalf.local.home>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <aa78add3-a6d9-e316-cfba-3432e347bec4@infradead.org>
-Date:   Tue, 25 Feb 2020 09:59:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 13:01:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46726 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727983AbgBYSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 13:01:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 641A4AD48;
+        Tue, 25 Feb 2020 18:01:26 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 19:01:25 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     Petr Mladek <pmladek@suse.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        akpm@linux-foundation.org,
+        "K . Prasad" <prasad@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Quentin Perret <qperret@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
+ kallsyms_on_each_symbol()
+In-Reply-To: <943e7093-2862-53c6-b7f4-96c7d65789b9@redhat.com>
+Message-ID: <alpine.LSU.2.21.2002251854550.1630@pobox.suse.cz>
+References: <20200221114404.14641-1-will@kernel.org> <alpine.LSU.2.21.2002251104130.11531@pobox.suse.cz> <20200225121125.psvuz6e7coa77vxe@pathway.suse.cz> <943e7093-2862-53c6-b7f4-96c7d65789b9@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200225125335.5bbc3ed4@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="1678380546-697660208-1582653686=:1630"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 9:53 AM, Steven Rostedt wrote:
-> On Tue, 25 Feb 2020 09:49:25 -0800
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->>> Fixes: d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by default")
->>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->>> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>  
->>
->> Hi,
->> I'm no fan of "select", but this does fix the kconfig warnings and
->> build errors that I have reported.  Thanks.
-> 
-> I'm not big on select either, but this is fine (I'm running it through my
-> tests now).
-> 
->>
->> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-> 
-> Is it OK if I change this to "Tested-by:"?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yes, as long as someone doesn't read (interpret) that as runtime-tested-by. :)
+--1678380546-697660208-1582653686=:1630
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
--- 
-~Randy
+On Tue, 25 Feb 2020, Joe Lawrence wrote:
 
+> On 2/25/20 7:11 AM, Petr Mladek wrote:
+> > On Tue 2020-02-25 11:05:39, Miroslav Benes wrote:
+> >> CC live-patching ML, because this could affect many of its users...
+> >>
+> >> On Fri, 21 Feb 2020, Will Deacon wrote:
+> >>
+> >>> Hi folks,
+> >>>
+> >>> Despite having just a single modular in-tree user that I could spot,
+> >>> kallsyms_lookup_name() is exported to modules and provides a mechanism
+> >>> for out-of-tree modules to access and invoke arbitrary, non-exported
+> >>> kernel symbols when kallsyms is enabled.
+> > 
+> > Just to explain how this affects livepatching users.
+> > 
+> > Livepatch is a module that inludes fixed copies of functions that
+> > are buggy in the running kernel. These functions often
+> > call functions or access variables that were defined static in
+> > the original source code. There are two ways how this is currently
+> > solved.
+> > 
+> > Some livepatch authors use kallsyms_lookup_name() to locate the
+> > non-exported symbols in the running kernel and then use these
+> > address in the fixed code.
+> > 
+> 
+> FWIW, kallsyms was historically used by the out-of-tree kpatch support module
+> to resolve external symbols as well as call set_memory_r{w,o}() API.  All of
+> that support code has been merged upstream, so modern kpatch modules* no
+> longer leverage kallsyms by default.
+
+Good. Quick grep through the sources gave me a couple of hits, so I was 
+not sure.
+ 
+> * That said, there are still some users who still use the deprecated support
+> module with newer kernels, but that is not officially supported by the
+> project.
+> 
+> > Another possibility is to used special relocation sections,
+> > see Documentation/livepatch/module-elf-format.rst
+> > 
+> > The problem with the special relocations sections is that the support
+> > to generate them is not ready yet. The main piece would klp-convert
+> > tool. Its development is pretty slow. The last version can be
+> > found at
+> > https://lkml.kernel.org/r/20190509143859.9050-1-joe.lawrence@redhat.com
+> > 
+> > I am not sure if this use case is enough to keep the symbols exported.
+> > Anyway, there are currently some out-of-tree users.
+> > 
+> 
+> Another (temporary?) klp-relocation issue is that binutils has limited support
+> for them as currently implemented:
+> 
+>   https://sourceware.org/ml/binutils/2020-02/msg00317.html
+> 
+> For example, try running strip or objcopy on a .ko that includes them and you
+> may find surprising results :(
+> 
+> 
+> As far as the klp-convert patchset goes, I forget whether or not we tied its
+> use case to source-based livepatch creation.  If kallsyms goes unexported,
+> perhaps it finds more immediate users.
+>
+> However since klp-convert provides nearly the same functionality as kallsyms,
+> i.e. both can be used to circumvent symbol export licensing -- one could make
+> similar arguments against its inclusion.
+
+In a way yes, but as Masami described elsewhere in the thread there are 
+more convenient ways to circumvent it even now. Not as convenient as 
+kallsyms, of course. 
+ 
+> If there is renewed (or greater, to be more accurate) interest in the
+> klp-convert patchset, we can dust it off and see what's left.  AFAIK it was
+> blocked on arch-specific klp-relocations and whether per-object​ livepatch
+> modules would remove that requirement.
+
+Yes, I think it is on standby now. I thought about it while walking 
+through Petr's module split patch set and it seemed to me that klp-convert 
+could be made much much simpler on top of that. So we should start there.
+
+Anyway, as far as Will's patch set is concerned, there is no real obstacle 
+on our side, is there?
+
+Alexei mentioned ksplice from git history, but no one cares about ksplice 
+in upstream now, I would say.
+
+Thanks
+Miroslav
+--1678380546-697660208-1582653686=:1630--
