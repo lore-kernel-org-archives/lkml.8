@@ -2,176 +2,94 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D28AC4BA00
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E395C4BA00
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3588220675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E2220675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WMlJ8w13"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bBjNplWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgBYVw0 (ORCPT
+        id S1726130AbgBYV4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:52:26 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51184 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgBYVw0 (ORCPT
+        Tue, 25 Feb 2020 16:56:02 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:32891 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgBYV4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:52:26 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so331620pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:52:25 -0800 (PST)
+        Tue, 25 Feb 2020 16:56:02 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d5so816147qto.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:56:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=67FIIq1D+V+asq39t76M7ReKeHhVxdkAMjdLa3hjO4A=;
-        b=WMlJ8w13eGrO7Kbvy/9m9s0u5Yu0HmI3lHoSYEAYxlrTLRzW/t99dMlQdrxXWUTA0D
-         zKAmdbiNd8kRXlpySjM2lvvcC2Hrmo0HP4YW9rpS6oFMjb29MVFYxZGh5TjKHEklLotV
-         /G3J3usnTgzRuBApWWMw7tLWKjHmtDNeTGVBw=
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=C8tXnjBIgXhQmik6V01XoZCiutz1pInKjAZnnialvzs=;
+        b=bBjNplWyyCrqAUpuEWmZ2tK7IJIcfZIxvmc9JcrzLs9vOpSuWqAgC3YEhCajpARc9d
+         w0AYS2sY0ySMIbmYG26KZHOkre6asZDZzVjvXsCgWGCTHP2GFDUZYmaZH6DleB2x2lyM
+         8SAzy/D6s7PhDXPeR78X+egGb+MDrUjHHRBJozSTI8T9iPw5RpYz6mRUvczCMye3Fk08
+         pysDv6iXU0lgq2u1duoRF3+J6B4+suUVn/Y2PH07x+XLyI+Cb7kry9j4CywVwTD3eGg9
+         fkIDiZ5GM1OdJ8G3JuU/WBR/4FwSZ+5zjPH6k4fgz1w5CjEezPy/6ihhoH4xJnfjtyIB
+         /9Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=67FIIq1D+V+asq39t76M7ReKeHhVxdkAMjdLa3hjO4A=;
-        b=c0Fb5Ih6+jbCPL+71Pq13CeJgS+uOauXE88/seJQ4HW5sULUy85CCgRW6rdxq+g1IP
-         HBaAMoF640bgREICpmmzXo98cF66CLsCVSDEOXs7CYziL9UIpAnM4jKN1rKiPA3h6eyG
-         br1fYEEm86QMWzgNJk3kU4ytbzQCRIdSgk1OkUKTiItqJGhdnc61Jp5F4zVyGG2+iWE/
-         v7JWjjOJrVjauMjXY6WodaUnWCQ8fCqo63lsVTxt2ncHsgNFqEv2zQZEkRmY20T2MAGf
-         QuQAtY7SEoNf3y/4aCpflNbFdo89FtJNe0L6KVx4kDMFfm/bmt8abXvv2oAvhK3KkNda
-         jSFQ==
-X-Gm-Message-State: APjAAAWi5pt2TA+uQZGSNUXgGRvCUPl4lvLKdPYOmwPZY6Smk2bhDtcX
-        Ud0qNKKQvFefseGQTMZ2UHfrrw==
-X-Google-Smtp-Source: APXvYqytfJllWL3kvVcykyzU2VtupNrDrUaLjpP3rd5JD3s1hTnEWkeZBgHal8imd07uv+qMVVQhdg==
-X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr1311964pjq.5.1582667545448;
-        Tue, 25 Feb 2020 13:52:25 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f18sm7161pgn.2.2020.02.25.13.52.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 13:52:24 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:52:23 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>, dan.carpenter@oracle.com,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ben Hutchings <ben@decadent.org.uk>, will@kernel.org,
-        ebiederm@xmission.com, linux-arch@vger.kernel.org,
-        security@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
-Message-ID: <202002251341.48BC06E@keescook>
-References: <20191208171918.GC19716@avx2>
- <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
-MIME-Version: 1.0
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=C8tXnjBIgXhQmik6V01XoZCiutz1pInKjAZnnialvzs=;
+        b=bwq0jgszzacR2XJu4MrcqXtSM0BRZPi2LAAU6A/+L1gBNAUuRxvcGoNwa0rW2g9FFb
+         0evMTb6SpU1i+nCbbzYc0hWZrWuXl7b0pj5F/pgXX2mn60d9JZANDBCRkh57oKCwg4KL
+         bnyhRmA+P20Rjw+cYs48YfIOe87etccvYTP1nmAPuYxcYwM+6tKvAuFH5WZfyQnWx1m9
+         ES8xHO03nmvP7xRDC3nKWCVqwHVNj/6olytR6xvY4TQ4/84HveRaXyKjwUI2h5xuSBOh
+         S2UISwUvQRgI+ZB+7+8tedkfXXEpV1/FnP0CuHoirA38mnfvjzK9WYMqT+owHyytpO/I
+         0PvA==
+X-Gm-Message-State: APjAAAXeXJgPA7GdxY6/TGOPTCBkgcwMGyQ6kTImVtQ+6Fk20bUBjy+P
+        OVrqp8pLgpv/htjIG1UKr17HLMeo9i7rsw==
+X-Google-Smtp-Source: APXvYqzvjWTHfIbMSPafdGZwfSymc/7EJ4WF17lit6vE8LsmIjAbQXCrFiuwL6xOXZhKvx6VwJzwjg==
+X-Received: by 2002:ac8:70d5:: with SMTP id g21mr940800qtp.46.1582667761333;
+        Tue, 25 Feb 2020 13:56:01 -0800 (PST)
+Received: from ?IPv6:2600:1000:b055:f4c4:c87c:3bb6:b6bc:1aae? ([2600:1000:b055:f4c4:c87c:3bb6:b6bc:1aae])
+        by smtp.gmail.com with ESMTPSA id 131sm3148669qkl.86.2020.02.25.13.56.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 13:56:00 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
+Content-Transfer-Encoding: 7bit
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] xfs: fix an undefined behaviour in _da3_path_shift
+Date:   Tue, 25 Feb 2020 16:55:56 -0500
+Message-Id: <F151ED18-55CF-482E-98BE-45A5A4D9A565@lca.pw>
+References: <20200225214045.GA14399@infradead.org>
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200225214045.GA14399@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 05:47:26PM -0800, Andrew Morton wrote:
-> On Sun, 8 Dec 2019 20:19:18 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+
+
+> On Feb 25, 2020, at 4:40 PM, Christoph Hellwig <hch@infradead.org> wrote:
 > 
-> > There were few episodes of silent downgrade to an executable stack over
-> > years:
-> > 
-> > 1) linking innocent looking assembly file will silently add executable
-> >    stack if proper linker options is not given as well:
-> > 
-> > 	$ cat f.S
-> > 	.intel_syntax noprefix
-> > 	.text
-> > 	.globl f
-> > 	f:
-> > 	        ret
-> > 
-> > 	$ cat main.c
-> > 	void f(void);
-> > 	int main(void)
-> > 	{
-> > 	        f();
-> > 	        return 0;
-> > 	}
-> > 
-> > 	$ gcc main.c f.S
-> > 	$ readelf -l ./a.out
-> > 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
-> >                          0x0000000000000000 0x0000000000000000  RWE    0x10
-> > 			 					 ^^^
-> > 
-> > 2) converting C99 nested function into a closure
-> > https://nullprogram.com/blog/2019/11/15/
-> > 
-> > 	void intsort2(int *base, size_t nmemb, _Bool invert)
-> > 	{
-> > 	    int cmp(const void *a, const void *b)
-> > 	    {
-> > 	        int r = *(int *)a - *(int *)b;
-> > 	        return invert ? -r : r;
-> > 	    }
-> > 	    qsort(base, nmemb, sizeof(*base), cmp);
-> > 	}
-> > 
-> > will silently require stack trampolines while non-closure version will not.
-> > 
-> > Without doubt this behaviour is documented somewhere, add a warning so that
-> > developers and users can at least notice. After so many years of x86_64 having
-> > proper executable stack support it should not cause too many problems.
-> 
-> hm, OK, let's give it a trial run.
+> In xfs_da3_path_shift() blk can be assigned to state->path.blk[-1] if
+> state->path.active is 1 (which is a valid state) when it tries to add an
+> entry > to a single dir leaf block and then to shift forward to see if
+> there's a sibling block that would be a better place to put the new
+> entry.  This causes a KASAN warning given
 
-So, I'm a fan of the sentiment here, but this check is bogus for
-several architectural and programmatic combinations. Sometimes
-it's an intentional choice, not an "accident". e.g. klibc
-uses trampolines for its setjmp implementation:
-https://lists.zytor.com/archives/klibc/2020-February/004271.html
+s/KASAN/UBSAN/
 
-So now all the klibc initrds are throwing this warning (and then never
-warning again, so it's extra pointless for such machines as "legitimate"
-cases will never be discovered).
+> negative array indices are
+> undefined behavior in C.  In practice the warning is entirely harmless
+> given that blk is never dereference in this case, but it is still better
+> to fix up the warning and slightly improve the code.
 
-I've got a series up to fix the much sneakier version of this
-(READ_IMPLIES_EXEC[1]), but at this point, I think this problem is well
-addressed by distros scanning for this kind of thing in their repos.
-For example, Ubuntu did this years ago (and flagged klibc as having
-this condition):
-https://wiki.ubuntu.com/SecurityTeam/Roadmap/ExecutableStacks
+Agree. This is better.
 
-> 
-> > --- a/fs/exec.c
-> > +++ b/fs/exec.c
-> > @@ -761,6 +761,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
-> >  		goto out_unlock;
-> >  	BUG_ON(prev != vma);
-> >  
-> > +	if (unlikely(vm_flags & VM_EXEC)) {
-> > +		pr_warn_once("process '%pD4' started with executable stack\n",
-> > +			     bprm->file);
-> > +	}
-> > +
-> >  	/* Move stack pages down in memory. */
-> >  	if (stack_shift) {
-> >  		ret = shift_arg_pages(vma, stack_shift);
-> 
-> What are poor users supposed to do if this message comes out? 
-> Hopefully google the message and end up at this thread.  What do you
-> want to tell them?
-
-And that's the other problem (for which I see there is a thread). The
-user can't actually do anything here.
-
-I would really like something like this check, but maintaining a whitelist
-of architectures or binaries to ignore is going to be awful, and there
-is a very non-zero amount of software is built this way intentionally...
-
--Kees
-
-[1] https://lore.kernel.org/lkml/20200225051307.6401-1-keescook@chromium.org/#r
-
--- 
-Kees Cook
+Darrick, do you need me to send a v3 for it or you could squash this in?
