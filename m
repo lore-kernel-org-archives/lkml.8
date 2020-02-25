@@ -2,341 +2,167 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92004C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3221EC35E0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5080A2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:00:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wvAxKBI5"
+	by mail.kernel.org (Postfix) with ESMTP id 0EB302072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbgBYQA6 (ORCPT
+        id S1730950AbgBYQBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:00:58 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:12738 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730422AbgBYQA5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:00:57 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582646456; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=zvao9QwjNuld6femRd5qmfHH4dLsz5VX2JdoSaRTyBQ=; b=wvAxKBI5tjGUv7HfEBP4fkoHz+TiVUPtfmV4NJJgznGFYOEn4U4jpuavZ2hXyBhMXeE0n1P8
- FtgvdK0u6vL9wzPujHVPR2x317iqkvOX/LnN/T3QOtl25vLgIqNu2QHlNeHQN/oSRnPf9v0S
- okUiGDqRfSIH81T7PLZCF8OsozY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e55448b.7fde1b0bb5a8-smtp-out-n02;
- Tue, 25 Feb 2020 16:00:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C1ACFC4479D; Tue, 25 Feb 2020 16:00:09 +0000 (UTC)
-Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: okukatla)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41E79C433A2;
-        Tue, 25 Feb 2020 16:00:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41E79C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
-From:   Odelu Kukatla <okukatla@codeaurora.org>
-To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@google.com,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
-        elder@linaro.org, linux-arm-msm-owner@vger.kernel.org,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Subject: [V4, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
-Date:   Tue, 25 Feb 2020 21:29:42 +0530
-Message-Id: <1582646384-1458-2-git-send-email-okukatla@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
-References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+        Tue, 25 Feb 2020 11:01:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41860 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730422AbgBYQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:01:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2B30FADBE;
+        Tue, 25 Feb 2020 16:00:58 +0000 (UTC)
+Message-ID: <71cd7b35af81ee91c3b4dc5e7c05760ecd590c5d.camel@suse.de>
+Subject: Re: [PATCH 07/89] clk: bcm: rpi: Allow the driver to be probed by DT
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Tue, 25 Feb 2020 17:00:56 +0100
+In-Reply-To: <c358081207dcf4f320a6b7e2932f0d5365bf3242.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <c358081207dcf4f320a6b7e2932f0d5365bf3242.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-rHY9rlJOyK3Y6KPoBaSb"
+User-Agent: Evolution 3.34.4 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Qualcomm SC7180 platform has several bus fabrics that could be
-controlled and tuned dynamically according to the bandwidth demand.
 
-Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++++++++++
- include/dt-bindings/interconnect/qcom,sc7180.h     | 161 +++++++++++++++++++++
- 2 files changed, 246 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
- create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
+--=-rHY9rlJOyK3Y6KPoBaSb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-new file mode 100644
-index 0000000..2cb7d4e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title:  Qualcomm SC7180 Network-On-Chip Interconnect
-+
-+maintainers:
-+  - Georgi Djakov <georgi.djakov@linaro.org>
-+
-+description: |
-+   SC7180 interconnect providers support system bandwidth requirements through
-+   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
-+   able to communicate with the BCM through the Resource State Coordinator (RSC)
-+   associated with each execution environment. Provider nodes must point to at
-+   least one RPMh device child node pertaining to their RSC and each provider
-+   can map to multiple RPMh resources.
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+
-+  compatible:
-+    enum:
-+      - qcom,sc7180-aggre1-noc
-+      - qcom,sc7180-aggre2-noc
-+      - qcom,sc7180-camnoc-virt
-+      - qcom,sc7180-compute-noc
-+      - qcom,sc7180-config-noc
-+      - qcom,sc7180-dc-noc
-+      - qcom,sc7180-gem-noc
-+      - qcom,sc7180-ipa-virt
-+      - qcom,sc7180-mc-virt
-+      - qcom,sc7180-mmss-noc
-+      - qcom,sc7180-npu-noc
-+      - qcom,sc7180-qup-virt
-+      - qcom,sc7180-system-noc
-+
-+  '#interconnect-cells':
-+    const: 1
-+
-+  qcom,bcm-voters:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      List of phandles to qcom,bcm-voter nodes that are required by
-+      this interconnect to send RPMh commands.
-+
-+  qcom,bcm-voter-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+      Names for each of the qcom,bcm-voters specified.
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#interconnect-cells'
-+  - qcom,bcm-voters
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+      #include <dt-bindings/interconnect/qcom,sc7180.h>
-+
-+      config_noc: interconnect@1500000 {
-+            compatible = "qcom,sc7180-config-noc";
-+            reg = <0 0x01500000 0 0x28000>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-+
-+      system_noc: interconnect@1620000 {
-+            compatible = "qcom,sc7180-system-noc";
-+            reg = <0 0x01620000 0 0x17080>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-+
-+      mmss_noc: interconnect@1740000 {
-+            compatible = "qcom,sc7180-mmss-noc";
-+            reg = <0 0x01740000 0 0x1c100>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h b/include/dt-bindings/interconnect/qcom,sc7180.h
-new file mode 100644
-index 0000000..f9970f6
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,sc7180.h
-@@ -0,0 +1,161 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Qualcomm SC7180 interconnect IDs
-+ *
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
-+
-+#define MASTER_A1NOC_CFG			0
-+#define MASTER_QSPI			1
-+#define MASTER_QUP_0			2
-+#define MASTER_SDCC_2			3
-+#define MASTER_EMMC			4
-+#define MASTER_UFS_MEM			5
-+#define SLAVE_A1NOC_SNOC			6
-+#define SLAVE_SERVICE_A1NOC			7
-+
-+#define MASTER_A2NOC_CFG			0
-+#define MASTER_QDSS_BAM			1
-+#define MASTER_QUP_1			2
-+#define MASTER_USB3			3
-+#define MASTER_CRYPTO			4
-+#define MASTER_IPA			5
-+#define MASTER_QDSS_ETR			6
-+#define SLAVE_A2NOC_SNOC			7
-+#define SLAVE_SERVICE_A2NOC			8
-+
-+#define MASTER_CAMNOC_HF0_UNCOMP			0
-+#define MASTER_CAMNOC_HF1_UNCOMP			1
-+#define MASTER_CAMNOC_SF_UNCOMP			2
-+#define SLAVE_CAMNOC_UNCOMP			3
-+
-+#define MASTER_NPU			0
-+#define MASTER_NPU_PROC			1
-+#define SLAVE_CDSP_GEM_NOC			2
-+
-+#define MASTER_SNOC_CNOC			0
-+#define MASTER_QDSS_DAP			1
-+#define SLAVE_A1NOC_CFG			2
-+#define SLAVE_A2NOC_CFG			3
-+#define SLAVE_AHB2PHY_SOUTH			4
-+#define SLAVE_AHB2PHY_CENTER			5
-+#define SLAVE_AOP			6
-+#define SLAVE_AOSS			7
-+#define SLAVE_BOOT_ROM			8
-+#define SLAVE_CAMERA_CFG				9
-+#define SLAVE_CAMERA_NRT_THROTTLE_CFG			10
-+#define SLAVE_CAMERA_RT_THROTTLE_CFG			11
-+#define SLAVE_CLK_CTL			12
-+#define SLAVE_RBCPR_CX_CFG			13
-+#define SLAVE_RBCPR_MX_CFG			14
-+#define SLAVE_CRYPTO_0_CFG			15
-+#define SLAVE_DCC_CFG			16
-+#define SLAVE_CNOC_DDRSS			17
-+#define SLAVE_DISPLAY_CFG			18
-+#define SLAVE_DISPLAY_RT_THROTTLE_CFG			19
-+#define SLAVE_DISPLAY_THROTTLE_CFG			20
-+#define SLAVE_EMMC_CFG			21
-+#define SLAVE_GLM					22
-+#define SLAVE_GFX3D_CFG			23
-+#define SLAVE_IMEM_CFG			24
-+#define SLAVE_IPA_CFG			25
-+#define SLAVE_CNOC_MNOC_CFG			26
-+#define SLAVE_CNOC_MSS			27
-+#define SLAVE_NPU_CFG			28
-+#define SLAVE_NPU_DMA_BWMON_CFG			29
-+#define SLAVE_NPU_PROC_BWMON_CFG			30
-+#define SLAVE_PDM			31
-+#define SLAVE_PIMEM_CFG			32
-+#define SLAVE_PRNG			33
-+#define SLAVE_QDSS_CFG			34
-+#define SLAVE_QM_CFG			35
-+#define SLAVE_QM_MPU_CFG			36
-+#define SLAVE_QSPI_0			37
-+#define SLAVE_QUP_0			38
-+#define SLAVE_QUP_1			39
-+#define SLAVE_SDCC_2			40
-+#define SLAVE_SECURITY			41
-+#define SLAVE_SNOC_CFG			42
-+#define SLAVE_TCSR			43
-+#define SLAVE_TLMM_WEST			44
-+#define SLAVE_TLMM_NORTH			45
-+#define SLAVE_TLMM_SOUTH			46
-+#define SLAVE_UFS_MEM_CFG			47
-+#define SLAVE_USB3			48
-+#define SLAVE_VENUS_CFG			49
-+#define SLAVE_VENUS_THROTTLE_CFG			50
-+#define SLAVE_VSENSE_CTRL_CFG			51
-+#define SLAVE_SERVICE_CNOC			52
-+
-+#define MASTER_CNOC_DC_NOC			0
-+#define SLAVE_GEM_NOC_CFG			1
-+#define SLAVE_LLCC_CFG			2
-+
-+#define MASTER_APPSS_PROC		0
-+#define MASTER_SYS_TCU			1
-+#define MASTER_GEM_NOC_CFG			2
-+#define MASTER_COMPUTE_NOC			3
-+#define MASTER_MNOC_HF_MEM_NOC			4
-+#define MASTER_MNOC_SF_MEM_NOC			5
-+#define MASTER_SNOC_GC_MEM_NOC			6
-+#define MASTER_SNOC_SF_MEM_NOC			7
-+#define MASTER_GFX3D			8
-+#define SLAVE_MSS_PROC_MS_MPU_CFG			9
-+#define SLAVE_GEM_NOC_SNOC			10
-+#define SLAVE_LLCC			11
-+#define SLAVE_SERVICE_GEM_NOC			12
-+
-+#define MASTER_IPA_CORE			0
-+#define SLAVE_IPA_CORE			1
-+
-+#define MASTER_LLCC			0
-+#define SLAVE_EBI1			1
-+
-+#define MASTER_CNOC_MNOC_CFG			0
-+#define MASTER_CAMNOC_HF0			1
-+#define MASTER_CAMNOC_HF1			2
-+#define MASTER_CAMNOC_SF			3
-+#define MASTER_MDP0			4
-+#define MASTER_ROTATOR			5
-+#define MASTER_VIDEO_P0			6
-+#define MASTER_VIDEO_PROC			7
-+#define SLAVE_MNOC_HF_MEM_NOC			8
-+#define SLAVE_MNOC_SF_MEM_NOC			9
-+#define SLAVE_SERVICE_MNOC			10
-+
-+#define MASTER_NPU_SYS			0
-+#define MASTER_NPU_NOC_CFG			1
-+#define SLAVE_NPU_CAL_DP0			2
-+#define SLAVE_NPU_CP			3
-+#define SLAVE_NPU_INT_DMA_BWMON_CFG			4
-+#define SLAVE_NPU_DPM			5
-+#define SLAVE_ISENSE_CFG			6
-+#define SLAVE_NPU_LLM_CFG			7
-+#define SLAVE_NPU_TCM			8
-+#define SLAVE_NPU_COMPUTE_NOC			9
-+#define SLAVE_SERVICE_NPU_NOC			10
-+
-+#define MASTER_QUP_CORE_0			0
-+#define MASTER_QUP_CORE_1			1
-+#define SLAVE_QUP_CORE_0			2
-+#define SLAVE_QUP_CORE_1			3
-+
-+#define MASTER_SNOC_CFG			0
-+#define MASTER_A1NOC_SNOC			1
-+#define MASTER_A2NOC_SNOC			2
-+#define MASTER_GEM_NOC_SNOC			3
-+#define MASTER_PIMEM			4
-+#define SLAVE_APPSS			5
-+#define SLAVE_SNOC_CNOC			6
-+#define SLAVE_SNOC_GEM_NOC_GC			7
-+#define SLAVE_SNOC_GEM_NOC_SF			8
-+#define SLAVE_IMEM			9
-+#define SLAVE_PIMEM			10
-+#define SLAVE_SERVICE_SNOC			11
-+#define SLAVE_QDSS_STM			12
-+#define SLAVE_TCU			13
-+
-+#endif
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hi Maxime,
+
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> The current firmware clock driver for the RaspberryPi can only be probed =
+by
+> manually registering an associated platform_device.
+>=20
+> While this works fine for cpufreq where the device gets attached a clkdev
+> lookup, it would be tedious to maintain a table of all the devices using
+> one of the clocks exposed by the firmware.
+>=20
+> Since the DT on the other hand is the perfect place to store those
+> associations, make the firmware clocks driver probe-able through the devi=
+ce
+> tree so that we can represent it as a node.
+
+I'm not convinced this is the right approach, and if we decide to go this w=
+ay,
+there are more changes to take into account.
+
+For one, if we create a dt node for this driver, we'd have to delete the
+platform device creation in firmware/raspberrypi.c and then we'd be even ab=
+le
+to bypass raspberrypi-cpufreq altogether by creating opp tables in dt. But
+there are reasons we didn't go that way at the time.
+
+We've made an effort to avoid using dt for firmware interfaces whenever
+possible as, on one hand, it's arguable they don't fit device-tree's hardwa=
+re
+description paradigm and, on the other, the lack of flexibility they impose
+once the binding is defined. VC4's firmware interfaces are not set in stone=
+,
+nor standardized like SCMI, so the more flexible we are to future changes t=
+he
+better.
+
+Another thing I'm not all that happy about it's how dynamic clock registeri=
+ng
+is handled in patch #22 (but I'll keep it here as relevant to the discussio=
+n):
+
+- Some of those fw managed clocks you're creating have their mmio counterpa=
+rt
+  being registered by clk-bcm238. IMO either register one or the other, giv=
+ing
+  precedence to the mmio counterpart. Note that for pllb, we deleted the
+  relevant code from clk-bcm2385.
+
+- The same way we were able to map the fw CPU clock into the clk tree
+  (pllb/pllb_arm) there are no reasons we shouldn't be able to do the same =
+for
+  the VPU clocks. It's way nicer and less opaque to users (this being a
+  learning platform adds to the argument).
+
+- On top of that, having a special case for the CPU clock registration is
+  nasty. Lets settle for one solution and make everyone follow it.
+
+- I don't see what's so bad about creating clock lookups. IIUC there are on=
+ly
+  two clocks that need this special handling CPU & HDMI, It's manageable. Y=
+ou
+  don't even have to mess with the consumer driver, if there was ever to be=
+ a
+  dt provided mmio option to this clock.
+
+>  drivers/clk/bcm/clk-raspberrypi.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
+> raspberrypi.c
+> index 1654fd0eedc9..94870234824c 100644
+> --- a/drivers/clk/bcm/clk-raspberrypi.c
+> +++ b/drivers/clk/bcm/clk-raspberrypi.c
+> @@ -255,15 +255,13 @@ static int raspberrypi_clk_probe(struct platform_de=
+vice
+> *pdev)
+>  	struct raspberrypi_clk *rpi;
+>  	int ret;
+> =20
+> -	firmware_node =3D of_find_compatible_node(NULL, NULL,
+> -					"raspberrypi,bcm2835-firmware");
+> +	firmware_node =3D of_parse_phandle(dev->of_node, "raspberrypi,firmware"=
+,
+> 0);
+
+There is no such phandle in the upstream device tree. Maybe this was aimed =
+at
+the downstream dt?
+
+Regards,
+Nicolas
+
+
+--=-rHY9rlJOyK3Y6KPoBaSb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VRLgACgkQlfZmHno8
+x/6Q2gf+ISkwE0dJhNaeauh1TOB9Ymx8NHoZYccWJLmwg4vqH+nOGwxQM4O26qbu
+lXwrXTBzGcDwvdJkGmBsrTqRGGRbgtmeBQu4siPFNjD7hl775Uz2FIfNlWnUEieQ
+lKbdquRkNjoHvXoDDuHEHuBlHQ2W0IckhNFiEMhdDGb2n9eAvBaILoba+pgjgwP6
+IAnRGDlk7JBf7kuWHk6RWEOjOwKoCJlHJsNA09ZK2tjXMkaOqKLWnGIVGFMECm7/
+ThGgG9gqv65WG/8uK1E/F5hnR3qVbYXLcXAXZLK28nxkXODDw7fNBEXEUfXHJKqT
+TtEHMJ79mu2FeQA32GE0G3lduoWGjg==
+=HBgi
+-----END PGP SIGNATURE-----
+
+--=-rHY9rlJOyK3Y6KPoBaSb--
+
