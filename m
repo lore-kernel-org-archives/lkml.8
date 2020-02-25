@@ -2,182 +2,121 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060AFC35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EF6C35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A2D218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5DE2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VZLIHq/M"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tUljZGnP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgBYHRN (ORCPT
+        id S1729130AbgBYHUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:17:13 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46097 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBYHRN (ORCPT
+        Tue, 25 Feb 2020 02:20:00 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17905 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgBYHUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:17:13 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200225071711euoutp01d95056eb99e0011cc9465a8ba778bdd0~2k-yDg4hS0707007070euoutp01A
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200225071711euoutp01d95056eb99e0011cc9465a8ba778bdd0~2k-yDg4hS0707007070euoutp01A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582615031;
-        bh=Bojt6DKlC7Lzwtf06r54tTUllKU5i9UGy8RX11FRzVo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=VZLIHq/M5FnARW8q6915EjZfge+z+HlfGk5oEEoKVTC1rrtHkJUCGfGJw9H5VYYhb
-         0tq12IoFyHZqTdHB8drjJ00MwA3eNmyWhXbsWTQhIDdO7Xb1+rHD6KwiAUbXlg7RB6
-         WAsPEGzKbziHP5muUe0HKfRWp1zbwCm269M8/dpE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200225071711eucas1p20d9822a03d85955f01a9e074761ed5e0~2k-x1LB4r0695706957eucas1p2b;
-        Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1B.AD.60698.7F9C45E5; Tue, 25
-        Feb 2020 07:17:11 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200225071711eucas1p1c91a3df0b578bdf14cbd1fa3432553d7~2k-xYsL5o0726307263eucas1p1_;
-        Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200225071711eusmtrp237ddec7c479fa631d97ca876dd418432~2k-xX8T7l2759227592eusmtrp2Z;
-        Tue, 25 Feb 2020 07:17:11 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-8b-5e54c9f77b62
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 51.79.08375.7F9C45E5; Tue, 25
-        Feb 2020 07:17:11 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200225071710eusmtip10f8f9e9df04817865fa3ca3abb9c94d5~2k-wy6VN20421204212eusmtip1k;
-        Tue, 25 Feb 2020 07:17:10 +0000 (GMT)
-Subject: Re: [PATCH v3] clocksource: Fix arm_arch_timer clockmode when vDSO
- disabled
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
-        linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org,
-        maz@kernel.org, Mark.Rutland@arm.com
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <368f9cf7-5d9c-c671-8355-82f0f6e549aa@samsung.com>
-Date:   Tue, 25 Feb 2020 08:17:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.5.0
+        Tue, 25 Feb 2020 02:20:00 -0500
+X-UUID: 9ade63481b624ac88117bad3741b3709-20200225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vtL1iILHsFW94yP0jBQ/SNoSG9C8HGFiyrsycu7XsME=;
+        b=tUljZGnPBYfB+xLMxjzAar5PvLc7DRpXaXOHfOU/tQGO/7uSIty2ySbze5cBCjPAVzvzsMVGgjEPZJLKWTdKJHGHoz/9ZwRxeNuog933GVYoztDsmCHWnLySewgi8/TxVu32hWQSN2a172t3Fr8+bam/TqLiC86t7/lWNaamO9w=;
+X-UUID: 9ade63481b624ac88117bad3741b3709-20200225
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 135438566; Tue, 25 Feb 2020 15:19:55 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 25 Feb 2020 15:18:01 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 25 Feb 2020 15:19:40 +0800
+Message-ID: <1582615193.21887.15.camel@mtksdaap41>
+Subject: Re: [PATCH v7 1/4] dt-bindings: display: mediatek: update dpi
+ supported chips
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <stonea168@163.com>,
+        <huijuan.xie@mediatek.com>
+Date:   Tue, 25 Feb 2020 15:19:53 +0800
+In-Reply-To: <20200225064638.112282-2-jitao.shi@mediatek.com>
+References: <20200225064638.112282-1-jitao.shi@mediatek.com>
+         <20200225064638.112282-2-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200224151552.57274-1-vincenzo.frascino@arm.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3b3brtbsbho+qBSMCpLSxMirhSaEDSKKin5Is6ZeVHJqu2ra
-        jzK/WyZ+DXWKZpim+JGbii6UnORc2kxnJvbFUgKNWWlSmmhuV8t/55znPO9zDrwEJhrguhEx
-        cYm0Ik4WK+Y54p0Dy6bDv4yXwo6YtR7Ut7o8ROXqlnBKMz3Bpcy6Sh6lV/UgakTXzKUevx3l
-        UN2VRi6l1agwqmdtGadmfwziJ3dImqqakMQ8MYpJNI33eJJ5k4kv0dbekSxq9pznhTqeiKRj
-        Y5JphXfgNcdopakPS/jjkjL6+RlKQzqhEjkQQB6FV99HOErkSIjIJwg+dM1tkp8IMi1fN8ki
-        gg5jGW9r5eVEB8YO6hHUP0jbJFYE5uelyOZyJi/DwBs9bhu4kCoEpfezkI1gZAmCactDrs3F
-        I31AaVXa3xWQgdCUm23XcXI/pC/08m14NymFioZ+nPUIwVg+Y8cOZBC8yNHb/Ri5FzI6KjAW
-        u8LUTLU9OJATfCjuqsfZ4KfAtP5lEzvDnKGdz2IPWO/eWshAYDE181mSt1EovQyxruPw3rSy
-        EZXYOHEQWnXerBwMKksOxyYD6QSTViEbwgmKOksxVhZAbraIdR8AtaHl39m+12NYARKrt1VT
-        b6uj3lZH/f/uQ4Q3Ilc6iZFH0YxvHH3Ti5HJmaS4KK+IeLkGbfyuoTXDUhfqXQ3XI5JA4p0C
-        6LkYJuLKkplUuR4BgYldBGfQhTCRIFKWeotWxF9VJMXSjB65E7jYVeD7aFYqIqNkifR1mk6g
-        FVtTDuHglob83c/1LfgNtzBZIdPrJQU1vdW1WXWf+BWRuwKGbpNuAeNSoX/6aMJcxmS4zOeG
-        tlCRspofGGGomm5QtXkO8/fhuisVfqGZdeXz5sbyYm1r+xT3Y7fknVfQ2KFi6BVak9vG7z5d
-        Dz4WsqqLlcqDajLPFjJTg0Wno7L7f+fPL62IcSZa5uOJKRjZX04ZU6NZAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xu7rfT4bEGVzpZrZ4v6yH0aJj11cW
-        i02Pr7FaXN41h83i0NS9jBbnd61ltVh6/SKTxc45J1ktNm+aymyx999PFouXH0+wOHB7rJm3
-        htHj8rWLzB6bVnWyebw7d47dY/OSeo/Pm+QC2KL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxM
-        LPUMjc1jrYxMlfTtbFJSczLLUov07RL0MrrOHWQu+C1ScfHRbsYGxl2CXYycHBICJhKnrm1l
-        7mLk4hASWMoo8ftJGwtEQkbi5LQGVghbWOLPtS42iKLXjBKnbnxhBkkIC4RJHLt6CKxBRGAq
-        o8SMI5ogRcwCUxglZq7qZ4LomMQosWN9H1gVm4ChRNdbkFGcHLwCdhJrOtrAVrAIqEo0fdrH
-        DmKLCsRK3JjZwQRRIyhxcuYTsF5OAXuJo+2HwOqZBcwk5m1+yAxhy0s0b50NZYtL3Hoyn2kC
-        o9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xYZ6xYm5xaV56XrJ+bmbGIGRuu3Yz807GC9t
-        DD7EKMDBqMTDK7E3OE6INbGsuDL3EKMEB7OSCK83Y1CcEG9KYmVValF+fFFpTmrxIUZToOcm
-        MkuJJucDk0heSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGmbfe
-        dRwr+r/7m7VuSOrONS9l1sVO1Vg/ST/jt2AX57UPc+uKk/57iYUe9P3Cu9vHf6Lb5stb9x/5
-        /2bSu45tOmsfZWSZ7lgyIdCzUI25mS32sNvRCa/8HmS869/SHyLR6HWw+2jIsnifTp6v4fWp
-        l7nOWhilGEYcYd/qXXFYt3Yez8Y8pkWblFiKMxINtZiLihMBYLGeC+oCAAA=
-X-CMS-MailID: 20200225071711eucas1p1c91a3df0b578bdf14cbd1fa3432553d7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200224151611eucas1p2d5e9492e4497edd18a322fdfc33547bf
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200224151611eucas1p2d5e9492e4497edd18a322fdfc33547bf
-References: <CGME20200224151611eucas1p2d5e9492e4497edd18a322fdfc33547bf@eucas1p2.samsung.com>
-        <20200224151552.57274-1-vincenzo.frascino@arm.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 24.02.2020 16:15, Vincenzo Frascino wrote:
-> The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
-> defined to compile correctly. On arm the vDSO can be disabled and when
-> this is the case the compilation ends prematurely with an error:
->
->   $ make ARCH=arm multi_v7_defconfig
->   $ ./scripts/config -d VDSO
->   $ make
->
-> drivers/clocksource/arm_arch_timer.c:73:44: error:
-> ‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
->    static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
->                                               ^
-> scripts/Makefile.build:267: recipe for target
-> 'drivers/clocksource/arm_arch_timer.o' failed
-> make[2]: *** [drivers/clocksource/arm_arch_timer.o] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> scripts/Makefile.build:505: recipe for target 'drivers/clocksource' failed
-> make[1]: *** [drivers/clocksource] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1683: recipe for target 'drivers' failed
-> make: *** [drivers] Error 2
->
-> Define VDSO_CLOCKMODE_ARCHTIMER as VDSO_CLOCKMODE_NONE when the vDSOs are
-> not enabled to address the issue.
->
-> Fixes: 5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mark Rutland <Mark.Rutland@arm.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-> ---
->   drivers/clocksource/arm_arch_timer.c | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> This patch has been rebased and tested on tip/timers/core.
->
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index ee2420d56f67..d53f4c7ccaae 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -69,7 +69,11 @@ static enum arch_timer_ppi_nr arch_timer_uses_ppi = ARCH_TIMER_VIRT_PPI;
->   static bool arch_timer_c3stop;
->   static bool arch_timer_mem_use_virtual;
->   static bool arch_counter_suspend_stop;
-> +#ifdef CONFIG_GENERIC_GETTIMEOFDAY
->   static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
-> +#else
-> +static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_NONE;
-> +#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
->   
->   static cpumask_t evtstrm_available = CPU_MASK_NONE;
->   static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+SGksIEppdGFvOg0KDQpPbiBUdWUsIDIwMjAtMDItMjUgYXQgMTQ6NDYgKzA4MDAsIEppdGFvIFNo
+aSB3cm90ZToNCj4gQWRkIGRlY3JpcHRpb25zIGFib3V0IHN1cHBvcnRlZCBjaGlwcywgaW5jbHVk
+aW5nIE1UMjcwMSAmIE1UODE3MyAmDQo+IG10ODE4Mw0KDQpkZXNjcmlwdGlvbnMNCg0KPiANCj4g
+MS4gQWRkIG1vcmUgY2hpcHMgc3VwcG9ydC4gZXguIE1UMjcwMSAmIE1UODE3MyAmIE1UODE4Mw0K
+PiAyLiBBZGQgcHJvcGVydHkgInBpbmN0cmwtbmFtZXMiIHRvIHN3YXAgcGluIG1vZGUgYmV0d2Vl
+biBncGlvIGFuZCBkcGkgbW9kZS4gU2V0DQo+ICAgIHBpbiBtb2RlIHRvIGdwaW8gb3VwcHV0LWxv
+dyB0byBhdm9pZCBsZWFrYWdlIGN1cnJlbnQgd2hlbiBkcGkgZGlzYWJsZS4NCj4gMy4gQWRkIHBy
+b3BlcnR5ICJwY2xrLXNhbXBsZSIgdG8gY29uZmlnIHRoZSBkcGkgc2FtcGxlIG9uIGZhbGxpbmcg
+KDApLA0KPiAgICByaXNpbmcgKDEpLCBib3RoIGZhbGxpbmcgYW5kIHJpc2luZyAoMikuDQoNClRo
+ZSB0aXRsZSBpcyBqdXN0IGFib3V0IHN1cHBvcnRlZCBjaGlwcywgc28gSSBwcmVmZXIgeW91IG1v
+dmUgb3RoZXINCm1vZGlmaWNhdGlvbiB0byBhbm90aGVyIHBhdGNoLiBPZiBjb3Vyc2UsIHlvdSBj
+b3VsZCB1c2UgYSBtb3JlIHJvdWdoDQp0aXRsZSB0byBpbmNsdWRlIGFsbCB3aGF0IHlvdSBkbyBz
+byB5b3UgbmVlZCBub3QgdG8gYnJlYWsgdGhpcyBwYXRjaC4NCg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIC4uLi9iaW5k
+aW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgICAgICAgICB8IDEwICsrKysr
+KysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsv
+bWVkaWF0ZWssZHBpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCj4gaW5kZXggYjZhN2U3Mzk3YjhiLi4wZGVl
+NGY3YTIyN2UgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0K
+PiBAQCAtNyw2ICs3LDcgQEAgb3V0cHV0IGJ1cy4NCj4gIA0KPiAgUmVxdWlyZWQgcHJvcGVydGll
+czoNCj4gIC0gY29tcGF0aWJsZTogIm1lZGlhdGVrLDxjaGlwPi1kcGkiDQo+ICsgIHRoZSBzdXBw
+b3J0ZWQgY2hpcHMgYXJlIG10MjcwMSAsIG10ODE3MyBhbmQgbXQ4MTgzLg0KPiAgLSByZWc6IFBo
+eXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0
+ZXJzDQo+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGZ1bmN0
+aW9uIGJsb2NrLg0KPiAgLSBjbG9ja3M6IGRldmljZSBjbG9ja3MNCj4gQEAgLTE2LDYgKzE3LDEx
+IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9ncmFwaC50eHQuIFRoaXMgcG9ydCBzaG91bGQgYmUgY29ubmVjdGVkDQo+ICAgIHRv
+IHRoZSBpbnB1dCBwb3J0IG9mIGFuIGF0dGFjaGVkIEhETUkgb3IgTFZEUyBlbmNvZGVyIGNoaXAu
+DQo+ICANCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICstIHBpbmN0cmwtbmFtZXM6IENvbnRh
+aW4gImdwaW9tb2RlIiBhbmQgImRwaW1vZGUiLg0KPiArLSBwY2xrLXNhbXBsZTogMDogc2FtcGxl
+IGluIGZhbGxpbmcgZWRnZSwgMTogc2FtcGxlIGluIHJpc2luZyBlZGdlLCAyOiBzYW1wbGUNCj4g
+KyAgaW4gYm90aCBmYWxsaW5nIGFuZCByaXNpbmcgZWRnZS4NCg0KcGluY3RybC1uYW1lcyAmIHBj
+bGstc2FtcGxlIGFyZSBkZWZpbmVkIGluIGFub3RoZXIgZG9jdW1lbnQsIHBsZWFzZSBsaXN0DQp0
+aGUgcmVmZXJlbmNlIGRvY3VtZW50LCBbMV0gaXMgdGhlIHNhbXBsZS4gRm9yIHBjbGstc2FtcGxl
+LCBJIHRoaW5rIHlvdQ0Kc2hvdWxkIG1vZGlmeSBbMl0gdG8gYWRkICdzYW1wbGluZyBpbiBib3Ro
+IGZhaWxpbmcgYW5kIHJpc2luZyBlZGdlJy4NCg0KWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0MTAudHh0DQpbMl0gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0DQoNCj4gKw0K
+PiAgRXhhbXBsZToNCj4gIA0KPiAgZHBpMDogZHBpQDE0MDFkMDAwIHsNCj4gQEAgLTI2LDYgKzMy
+LDEwIEBAIGRwaTA6IGRwaUAxNDAxZDAwMCB7DQo+ICAJCSA8Jm1tc3lzIENMS19NTV9EUElfRU5H
+SU5FPiwNCj4gIAkJIDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9UVkRQTEw+Ow0KPiAgCWNsb2Nr
+LW5hbWVzID0gInBpeGVsIiwgImVuZ2luZSIsICJwbGwiOw0KPiArCXBjbGstc2FtcGxlID0gMDsN
+Cg0KSSB0aGluayB5b3Ugc2hvdWxkIG1vdmUgcGNsay1zYW1wbGUgaW50byB0aGUgcG9ydCBub2Rl
+IGFjY29yZGluZyB0byBbMl0uDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJcGluY3RybC1uYW1lcyA9
+ICJncGlvbW9kZSIsICJkcGltb2RlIjsNCj4gKwlwaW5jdHJsLTAgPSA8JmRwaV9waW5fZ3Bpbz47
+DQo+ICsJcGluY3RybC0xID0gPCZkcGlfcGluX2Z1bmM+Ow0KPiAgDQo+ICAJcG9ydCB7DQo+ICAJ
+CWRwaTBfb3V0OiBlbmRwb2ludCB7DQoNCg==
 
