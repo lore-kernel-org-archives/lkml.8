@@ -2,250 +2,191 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95F4C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12B3C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC3720726
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEDC21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgBYMvH (ORCPT
+        id S1729843AbgBYMvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:51:07 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:60250 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729673AbgBYMuF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:50:05 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j6Zf0-0005kT-T1; Tue, 25 Feb 2020 12:50:03 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v5 3/9] sysfs: add sysfs_group{s}_change_owner()
-Date:   Tue, 25 Feb 2020 13:49:42 +0100
-Message-Id: <20200225124948.80682-4-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200225124948.80682-1-christian.brauner@ubuntu.com>
-References: <20200225124948.80682-1-christian.brauner@ubuntu.com>
+        Tue, 25 Feb 2020 07:51:46 -0500
+Received: from mga02.intel.com ([134.134.136.20]:47567 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728913AbgBYMvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:51:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 04:51:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="350143106"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 25 Feb 2020 04:51:42 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 25 Feb 2020 14:51:41 +0200
+Date:   Tue, 25 Feb 2020 14:51:41 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v1 1/3] nvmem: Add support for write-only instances
+Message-ID: <20200225125141.GA2667@lahna.fi.intel.com>
+References: <PSXP216MB043899D4B8F693E1E5C3ECCE80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <PSXP216MB043820B6E11AE4E78374C7F980EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB043820B6E11AE4E78374C7F980EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helpers to change the owner of sysfs groups.
-This function will be used to correctly account for kobject ownership
-changes, e.g. when moving network devices between network namespaces.
+On Mon, Feb 24, 2020 at 05:42:33PM +0000, Nicholas Johnson wrote:
+> Mika Westerberg requires write-only nvmem for the Thunderbolt driver.
+> Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if non-active NVMem
+> file is read"). Hence, there is at least one real-world use for
+> write-only nvmem instances.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
--  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-   - Add comment how ownership of sysfs object is changed.
+Well, I don't require anything ;-) It is the thunderbolt driver that has
+one nvmem device that is write-only and it may take advantage of this.
 
-/* v3 */
--  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-   - Add explicit uid/gid parameters.
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Collapse groups ownership helper patches into a single patch.
+> Add support for write-only nvmem instances by changing the nvmem attrs
+> to 0222 if the .reg_read callback is not populated.
+> 
+> Add a WARN_ON in case a driver populates neither .reg_read nor
+> .reg_write because this behaviour should clearly never occur.
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>  drivers/nvmem/nvmem-sysfs.c | 77 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 70 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+> index 9e0c429cd..be3b94f0b 100644
+> --- a/drivers/nvmem/nvmem-sysfs.c
+> +++ b/drivers/nvmem/nvmem-sysfs.c
+> @@ -147,6 +147,30 @@ static const struct attribute_group *nvmem_ro_dev_groups[] = {
+>  	NULL,
+>  };
+>  
+> +/* write only permission */
+> +static struct bin_attribute bin_attr_wo_nvmem = {
+> +	.attr	= {
+> +		.name	= "nvmem",
+> +		.mode	= 0222,
 
-/* v4 */
-unchanged
+I would say no sysfs attribute should ever be writable by the world.
 
-/* v5 */
-unchanged
----
- fs/sysfs/group.c      | 117 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/sysfs.h |  20 ++++++++
- 2 files changed, 137 insertions(+)
+Actually I think maybe we make this one only writeable by root, in other
+words it would always require ->root_only to be set.
 
-diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-index c4ab045926b7..7436f729dd07 100644
---- a/fs/sysfs/group.c
-+++ b/fs/sysfs/group.c
-@@ -13,6 +13,7 @@
- #include <linux/dcache.h>
- #include <linux/namei.h>
- #include <linux/err.h>
-+#include <linux/fs.h>
- #include "sysfs.h"
- 
- 
-@@ -457,3 +458,119 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
- 	return PTR_ERR_OR_ZERO(link);
- }
- EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
-+
-+static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
-+					  const struct attribute_group *grp,
-+					  struct iattr *newattrs)
-+{
-+	struct kernfs_node *kn;
-+	int error;
-+
-+	if (grp->attrs) {
-+		struct attribute *const *attr;
-+
-+		for (attr = grp->attrs; *attr; attr++) {
-+			kn = kernfs_find_and_get(grp_kn, (*attr)->name);
-+			if (!kn)
-+				return -ENOENT;
-+
-+			error = kernfs_setattr(kn, newattrs);
-+			kernfs_put(kn);
-+			if (error)
-+				return error;
-+		}
-+	}
-+
-+	if (grp->bin_attrs) {
-+		struct bin_attribute *const *bin_attr;
-+
-+		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
-+			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
-+			if (!kn)
-+				return -ENOENT;
-+
-+			error = kernfs_setattr(kn, newattrs);
-+			kernfs_put(kn);
-+			if (error)
-+				return error;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * sysfs_group_change_owner - change owner of an attribute group.
-+ * @kobj:	The kobject containing the group.
-+ * @grp:	The attribute group.
-+ * @kuid:	new owner's kuid
-+ * @kgid:	new owner's kgid
-+ *
-+ * Returns 0 on success or error code on failure.
-+ */
-+int sysfs_group_change_owner(struct kobject *kobj,
-+			     const struct attribute_group *grp, kuid_t kuid,
-+			     kgid_t kgid)
-+{
-+	struct kernfs_node *grp_kn;
-+	kuid_t uid;
-+	kgid_t gid;
-+	int error;
-+	struct iattr newattrs = {
-+		.ia_valid = ATTR_UID | ATTR_GID,
-+		.ia_uid = kuid,
-+		.ia_gid = kgid,
-+	};
-+
-+	if (!kobj->state_in_sysfs)
-+		return -EINVAL;
-+
-+	if (grp->name) {
-+		grp_kn = kernfs_find_and_get(kobj->sd, grp->name);
-+	} else {
-+		kernfs_get(kobj->sd);
-+		grp_kn = kobj->sd;
-+	}
-+	if (!grp_kn)
-+		return -ENOENT;
-+
-+	error = kernfs_setattr(grp_kn, &newattrs);
-+	if (!error)
-+		error = sysfs_group_attrs_change_owner(grp_kn, grp, &newattrs);
-+
-+	kernfs_put(grp_kn);
-+
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(sysfs_group_change_owner);
-+
-+/**
-+ * sysfs_groups_change_owner - change owner of a set of attribute groups.
-+ * @kobj:	The kobject containing the groups.
-+ * @groups:	The attribute groups.
-+ * @kuid:	new owner's kuid
-+ * @kgid:	new owner's kgid
-+ *
-+ * Returns 0 on success or error code on failure.
-+ */
-+int sysfs_groups_change_owner(struct kobject *kobj,
-+			      const struct attribute_group **groups,
-+			      kuid_t kuid, kgid_t kgid)
-+{
-+	int error = 0, i;
-+
-+	if (!kobj->state_in_sysfs)
-+		return -EINVAL;
-+
-+	if (!groups)
-+		return 0;
-+
-+	for (i = 0; groups[i]; i++) {
-+		error = sysfs_group_change_owner(kobj, groups[i], kuid, kgid);
-+		if (error)
-+			break;
-+	}
-+
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(sysfs_groups_change_owner);
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 7e15ebfd750e..3fcaabdb05ef 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -314,6 +314,12 @@ int sysfs_file_change_owner(struct kobject *kobj, const char *name, kuid_t kuid,
- 			    kgid_t kgid);
- int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
- 			    const char *name, kuid_t kuid, kgid_t kgid);
-+int sysfs_groups_change_owner(struct kobject *kobj,
-+			      const struct attribute_group **groups,
-+			      kuid_t kuid, kgid_t kgid);
-+int sysfs_group_change_owner(struct kobject *kobj,
-+			     const struct attribute_group *groups, kuid_t kuid,
-+			     kgid_t kgid);
- 
- #else /* CONFIG_SYSFS */
- 
-@@ -542,6 +548,20 @@ static inline int sysfs_link_change_owner(struct kobject *kobj,
- 	return 0;
- }
- 
-+static inline int sysfs_groups_change_owner(struct kobject *kobj,
-+			  const struct attribute_group **groups,
-+			  kuid_t kuid, kgid_t kgid)
-+{
-+	return 0;
-+}
-+
-+static inline int sysfs_group_change_owner(struct kobject *kobj,
-+			 const struct attribute_group **groups,
-+			 kuid_t kuid, kgid_t kgid)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_SYSFS */
- 
- static inline int __must_check sysfs_create_file(struct kobject *kobj,
--- 
-2.25.1
+> +	},
+> +	.write	= bin_attr_nvmem_write,
+> +};
+> +
+> +static struct bin_attribute *nvmem_bin_wo_attributes[] = {
+> +	&bin_attr_wo_nvmem,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group nvmem_bin_wo_group = {
+> +	.bin_attrs	= nvmem_bin_wo_attributes,
+> +	.attrs		= nvmem_attrs,
+> +};
+> +
+> +static const struct attribute_group *nvmem_wo_dev_groups[] = {
+> +	&nvmem_bin_wo_group,
+> +	NULL,
+> +};
+> +
+>  /* default read/write permissions, root only */
+>  static struct bin_attribute bin_attr_rw_root_nvmem = {
+>  	.attr	= {
+> @@ -196,16 +220,50 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
+>  	NULL,
+>  };
+>  
+> +/* write only permission, root only */
+> +static struct bin_attribute bin_attr_wo_root_nvmem = {
+> +	.attr	= {
+> +		.name	= "nvmem",
+> +		.mode	= 0200,
+> +	},
+> +	.write	= bin_attr_nvmem_write,
+> +};
+> +
+> +static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
+> +	&bin_attr_wo_root_nvmem,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group nvmem_bin_wo_root_group = {
+> +	.bin_attrs	= nvmem_bin_wo_root_attributes,
+> +	.attrs		= nvmem_attrs,
+> +};
+> +
+> +static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
+> +	&nvmem_bin_wo_root_group,
+> +	NULL,
+> +};
+> +
+>  const struct attribute_group **nvmem_sysfs_get_groups(
+>  					struct nvmem_device *nvmem,
+>  					const struct nvmem_config *config)
+>  {
+> -	if (config->root_only)
+> -		return nvmem->read_only ?
+> -			nvmem_ro_root_dev_groups :
+> -			nvmem_rw_root_dev_groups;
+> -
+> -	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
+> +	/*
+> +	 * If neither reg_read nor reg_write are provided, we cannot use this
+> +	 * nvmem entry, as any operation will cause kernel mode NULL reference.
+> +	 */
+> +	WARN_ON(!nvmem->reg_read && !nvmem->reg_write);
 
+This should also be documented in kernel-doc of struct nvmem_config.
+
+> +
+> +	if (nvmem->reg_read && nvmem->reg_write)
+> +		return config->root_only ?
+> +			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
+> +
+> +	if (nvmem->reg_read && !nvmem->reg_write)
+> +		return config->root_only ?
+> +			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
+> +
+> +	return config->root_only ?
+> +		nvmem_wo_root_dev_groups : nvmem_wo_dev_groups;
+>  }
+>  
+>  /*
+> @@ -224,11 +282,16 @@ int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
+>  	if (!config->base_dev)
+>  		return -EINVAL;
+>  
+> -	if (nvmem->read_only) {
+> +	if (nvmem->reg_read && !nvmem->reg_write) {
+>  		if (config->root_only)
+>  			nvmem->eeprom = bin_attr_ro_root_nvmem;
+>  		else
+>  			nvmem->eeprom = bin_attr_ro_nvmem;
+> +	} else if (!nvmem->reg_read && nvmem->reg_write) {
+> +		if (config->root_only)
+> +			nvmem->eeprom = bin_attr_wo_root_nvmem;
+> +		else
+> +			nvmem->eeprom = bin_attr_wo_nvmem;
+>  	} else {
+>  		if (config->root_only)
+>  			nvmem->eeprom = bin_attr_rw_root_nvmem;
+> -- 
+> 2.25.1
