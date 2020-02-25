@@ -2,66 +2,237 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0493AC35E09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F40EC35E09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE0320CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BA02084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582647205;
+	bh=NSkebQCWE7xdULDE77JJ/S8AyzPx1Omet//km+sAlIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KXBM78lU68H2DBsrR02rKcR7Nt4QonGFe35u3gJdr3JRMfOnllW3t2WDcuRdSrZPC
+	 OCojXOBKTvpC5nTSHJvLi7k8LWkqO1136QTdViWay5cIl6rt/029FRWozukvcD0WTL
+	 quUOLe28ZxEsa85HeOSm+bhY8qL17uiZbYsbFVrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbgBYQMm (ORCPT
+        id S1730792AbgBYQNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:12:42 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31532 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbgBYQMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:12:42 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01PGCUr0032043;
-        Tue, 25 Feb 2020 17:12:30 +0100
-Date:   Tue, 25 Feb 2020 17:12:30 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     efremov@linux.com
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
-Message-ID: <20200225161230.GA32037@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
- <20200224212352.8640-2-w@1wt.eu>
- <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
- <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
- <20200225034529.GA8908@1wt.eu>
- <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
- <20200225140207.GA31782@1wt.eu>
- <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
- <9c22a4ce-1108-d1aa-49c3-5fe7c3bb74f1@linux.com>
+        Tue, 25 Feb 2020 11:13:24 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35462 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729189AbgBYQNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:13:24 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r16so50324otd.2;
+        Tue, 25 Feb 2020 08:13:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VL+DlyeyetOp4hj4Wd5H2StakcvzqSai3gD2cxZNaVU=;
+        b=TCJFthGcpQjUV/t0A1xP4NxNmzxtaPk8RQ9L0c7x7ukdLOADNc4qsmFQrs3s1cmoF8
+         12OJSRL5wKhACXCm27oGkuuYuW7pO9CAg5YbTrV7Vei+8vsE0t4TuP1G0LmpPC9VTaip
+         w5j0I5h/f15lY1x+pA/NDnOrH26xHCVTAZJ/kx21em7dlwQt2iS8k/IbfYGGvwTfCXse
+         R3zQYnBAD8W47X7+04bYE3DzPXpddDYSdUsmwuQvcZwTvtEdmtM3ew2rNtqsgVY/mx1M
+         Kcbdu3XfjKovb6hlbilsLbL8M5YdCd+KOxDlAnRvhHsPAPSjgm5/0yhnrHk4qvaqLlyb
+         oWWQ==
+X-Gm-Message-State: APjAAAW7ljdwiaM5XkKnXBJ86E0jKvTp2+SvMU9QbCSl1TJJgRiC9XFu
+        sIYuvWsTI40kP9k57U7gE1bIQDY8Ci/PWouK5HA=
+X-Google-Smtp-Source: APXvYqy63J+4B+eRAxGKURNWKgaKqO36eFLFSszHvTNIVZUAJvPu1RoqON1pZkTd0zEjWOHRd5HvC3NhPplF8VrLqMI=
+X-Received: by 2002:a9d:7653:: with SMTP id o19mr43546746otl.118.1582647202902;
+ Tue, 25 Feb 2020 08:13:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c22a4ce-1108-d1aa-49c3-5fe7c3bb74f1@linux.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+References: <20200225131938.120447-1-christian.brauner@ubuntu.com> <20200225131938.120447-7-christian.brauner@ubuntu.com>
+In-Reply-To: <20200225131938.120447-7-christian.brauner@ubuntu.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 25 Feb 2020 17:13:11 +0100
+Message-ID: <CAJZ5v0ip8Z78_tOrDB+dR_t+V6YfKi6qY14nr6j6fW=zPu99wQ@mail.gmail.com>
+Subject: Re: [PATCH v6 6/9] drivers/base/power: add dpm_sysfs_change_owner()
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 06:39:05PM +0300, Denis Efremov wrote:
-> On 2/25/20 6:22 PM, Denis Efremov wrote:
-> > As for now, I can see that only floppy.c includes fdreg.h file
-> > with define FDPATCHES. If it's true then #define FD_IOPORT 0x3f0 
-> > branch is never used and we can try to fix remaining FD_* macro
-> > in the next round.
-> 
-> Ah, I forgot that fdregs.h is uapi. Thus, we can't simplify FDPATCHES.
+On Tue, Feb 25, 2020 at 2:22 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> Add a helper to change the owner of a device's power entries. This
+> needs to happen when the ownership of a device is changed, e.g. when
+> moving network devices between network namespaces.
+> This function will be used to correctly account for ownership changes,
+> e.g. when moving network devices between network namespaces.
+>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Yep, that's why we can't do it. I also agree with the other change of
-fdc->current_fdc in floppy.h, I think it's the most reasonable. And if
-it breaks anywhere, it will simply have uncovered new latent bugs
-because it will mean that it was using the wrong fdc.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Willy
+> ---
+> /* v2 */
+> - "Rafael J. Wysocki" <rafael@kernel.org>:
+>   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
+>      if (device_can_wakeup(dev)) check since the former can never be true if
+>      the latter is false.
+>
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
+>     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
+>     when this config option is set.
+>
+> /* v3 */
+> -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+>    - Add explicit uid/gid parameters.
+>
+> /* v4 */
+> - "Rafael J. Wysocki" <rafael@kernel.org>:
+>    - Remove in-function #ifdef in favor of separate helper that is a nop
+>      whenver !CONFIG_PM_SLEEP.
+>
+> /* v5 */
+> - "Rafael J. Wysocki" <rafael@kernel.org>:
+>    - Return directly if condition is true in dpm_sysfs_wakeup_change_owner()
+>      instead of using additional variable.
+>
+> /* v6 */
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - Make dpm_sysfs_wakeup_change_owner() static inline.
+> ---
+>  drivers/base/core.c        |  4 +++
+>  drivers/base/power/power.h |  3 +++
+>  drivers/base/power/sysfs.c | 55 +++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 61 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 988f34ce2eb0..fb8b7990f6fd 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3552,6 +3552,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+>         if (error)
+>                 goto out;
+>
+> +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
+> +       if (error)
+> +               goto out;
+> +
+>  #ifdef CONFIG_BLOCK
+>         if (sysfs_deprecated && dev->class == &block_class)
+>                 goto out;
+> diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+> index 444f5c169a0b..54292cdd7808 100644
+> --- a/drivers/base/power/power.h
+> +++ b/drivers/base/power/power.h
+> @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
+>  extern void pm_qos_sysfs_remove_flags(struct device *dev);
+>  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
+>  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
+> +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
+>
+>  #else /* CONFIG_PM */
+>
+> @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
+>
+>  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
+>  static inline void dpm_sysfs_remove(struct device *dev) {}
+> +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
+> +                                        kgid_t kgid) { return 0; }
+>
+>  #endif
+>
+> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> index d7d82db2e4bc..2b99fe1eb207 100644
+> --- a/drivers/base/power/sysfs.c
+> +++ b/drivers/base/power/sysfs.c
+> @@ -480,6 +480,14 @@ static ssize_t wakeup_last_time_ms_show(struct device *dev,
+>         return enabled ? sprintf(buf, "%lld\n", msec) : sprintf(buf, "\n");
+>  }
+>
+> +static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
+> +                                               kgid_t kgid)
+> +{
+> +       if (dev->power.wakeup && dev->power.wakeup->dev)
+> +               return device_change_owner(dev->power.wakeup->dev, kuid, kgid);
+> +       return 0;
+> +}
+> +
+>  static DEVICE_ATTR_RO(wakeup_last_time_ms);
+>
+>  #ifdef CONFIG_PM_AUTOSLEEP
+> @@ -501,7 +509,13 @@ static ssize_t wakeup_prevent_sleep_time_ms_show(struct device *dev,
+>
+>  static DEVICE_ATTR_RO(wakeup_prevent_sleep_time_ms);
+>  #endif /* CONFIG_PM_AUTOSLEEP */
+> -#endif /* CONFIG_PM_SLEEP */
+> +#else /* CONFIG_PM_SLEEP */
+> +static inline int dpm_sysfs_wakeup_change_owner(struct device *dev, kuid_t kuid,
+> +                                               kgid_t kgid)
+> +{
+> +       return 0;
+> +}
+> +#endif
+>
+>  #ifdef CONFIG_PM_ADVANCED_DEBUG
+>  static ssize_t runtime_usage_show(struct device *dev,
+> @@ -684,6 +698,45 @@ int dpm_sysfs_add(struct device *dev)
+>         return rc;
+>  }
+>
+> +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> +{
+> +       int rc;
+> +
+> +       if (device_pm_not_required(dev))
+> +               return 0;
+> +
+> +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+> +       if (rc)
+> +               return rc;
+> +
+> +       if (pm_runtime_callbacks_present(dev)) {
+> +               rc = sysfs_group_change_owner(
+> +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       if (device_can_wakeup(dev)) {
+> +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
+> +                                             kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +
+> +               rc = dpm_sysfs_wakeup_change_owner(dev, kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       if (dev->power.set_latency_tolerance) {
+> +               rc = sysfs_group_change_owner(
+> +                       &dev->kobj, &pm_qos_latency_tolerance_attr_group, kuid,
+> +                       kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +       return 0;
+> +}
+> +
+>  int wakeup_sysfs_add(struct device *dev)
+>  {
+>         return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> --
+> 2.25.1
+>
