@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7B8C35DFA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FFAC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06482176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CAB2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbgBYITP (ORCPT
+        id S1729763AbgBYITR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:19:15 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:41259 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729633AbgBYITP (ORCPT
+        Tue, 25 Feb 2020 03:19:17 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:37702 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729730AbgBYITQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:19:15 -0500
-Received: by mail-il1-f198.google.com with SMTP id k9so23684889ili.8
+        Tue, 25 Feb 2020 03:19:16 -0500
+Received: by mail-io1-f71.google.com with SMTP id p4so19668968ioo.4
         for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:19:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JnIpG0/J61WLiO1q3oM1jxlRNVDltdBX+u0kfHknrM0=;
-        b=C7Zbx+bDjSg9zQ9GwWqrnYkUIfixzmZigPtJvuwg1Zfi+39nqQhN8cXHLWqGWaZxOF
-         i6V3qJk2xlf1jBzjyzSaV+bllPAeF2omdC90k1RRsZpi6NItROqFim6h+tk8palSxiqm
-         6OBGw4JkQoWpYsh7qbG5p+B+ToMvGqHx3ni0DXbOZPas85wJlPPZygsqbbluNxe7kbJH
-         hf+2FZ/SeXg7IMEzELNoxLCOQRFIMwnCEUcjpigoo7BB41i2CGs7QewAnoOqpTwy3Ffc
-         CGVhb5pTBMA7Nyh3v4cx1jnlOBBP7OCMNZO9WCLOJsEVXylI9hy4YxfzY7awx9wSRh4+
-         AQAg==
-X-Gm-Message-State: APjAAAUTOkJhmImyIog+lr3jrkDUROE/4cHuYPrFT+2TAmHF8Irvf4Vk
-        p+0lH7+gGRvvOnx8Vx0uusFiQeI/du7jTzN2GRXCJXe6G+f0
-X-Google-Smtp-Source: APXvYqwdgK4/CB1G+y2zoTGVO2dnzPpAkdWqc/vppUT1sAz5Si0TeFiOlyF2DMYMfya2tZy2jf2ZxRpyPS0GWUZbY+QD6OcnYT1N
+        bh=fknWivdZdylQd6n3hF9x0FMP6gbTR7dvL1d/+DVgu9o=;
+        b=d+ztDh1t+j69aVTKZTkLH6P/5FhUUkIANZhAilzIVZ7qim04+2jqxISF6HN4SgLSw3
+         CnzfstbZxhMD602AIbL/ngMoz9Ax8kMoLLyqu+aQZzR/TmOx/03vnkNvYVKQsIL2SgI8
+         9c12S6LaF2U0txQgqGD8SKDAZFbVJeno8IkheyKLlpQDYMH94+ZajuJnT/4JO/kou2lE
+         uFsqlhB3mGUhyGKAtR5iBd4FgCxicOKgVZPpngk9IOaLy2hfvONS32XAyJwm7FWXjKUf
+         RkP1OKsEKw2oAt+2QBEF5SZ13jf0kqS0VqnjM0x1jeVqR1aoLHgTJQcCQqudUcenXO8a
+         OcTw==
+X-Gm-Message-State: APjAAAUWjzFZrXlI3n03xNhzZ4MZ2zSpd5sCDRlk4SaEOH8iXPnTUEr8
+        /JivW/p28YTlQCgetu6yL7Ly+orHAL7Llu0qTsCHgiOpLeq1
+X-Google-Smtp-Source: APXvYqw7phfHXyUr0ZQFG8MFqWynB5POAYL/oSJipgpWsjOEAqXwZMq4coUrso6NwbtisLFzRiYb3hOYI0PIikeLuYF0NjQ36gXW
 MIME-Version: 1.0
-X-Received: by 2002:a92:cb8c:: with SMTP id z12mr65405884ilo.5.1582618754093;
+X-Received: by 2002:a92:d18a:: with SMTP id z10mr67819892ilz.48.1582618754323;
  Tue, 25 Feb 2020 00:19:14 -0800 (PST)
 Date:   Tue, 25 Feb 2020 00:19:14 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a719a9059f62246e@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in cipso_v4_sock_setattr
-From:   syzbot <syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com>
-To:     cpaasch@apple.com, davem@davemloft.net, dcaratti@redhat.com,
-        fw@strlen.de, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        matthieu.baerts@tessares.net, netdev@vger.kernel.org,
-        pabeni@redhat.com, paul@paul-moore.com,
-        peter.krystad@linux.intel.com, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org
+Message-ID: <000000000000aa9a23059f62246a@google.com>
+Subject: WARNING in sk_stream_kill_queues (4)
+From:   syzbot <syzbot+fbe81b56f7df4c0fb21b@syzkaller.appspotmail.com>
+To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net, edumazet@google.com,
+        jbaron@akamai.com, john.fastabend@gmail.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        ncardwell@google.com, netdev@vger.kernel.org, shuah@kernel.org,
+        soheil@google.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,89 +61,81 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    ca7e1fd1 Merge tag 'linux-kselftest-5.6-rc3' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=179f0931e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a61f2164c515c07f
-dashboard link: https://syzkaller.appspot.com/bug?extid=f4dfece964792d80b139
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fdfdede00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17667de9e00000
+HEAD commit:    0c0ddd6a Merge tag 'linux-watchdog-5.6-rc3' of git://www.l..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=17c0fde9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
+dashboard link: https://syzkaller.appspot.com/bug?extid=fbe81b56f7df4c0fb21b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12025de9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a4d245e00000
 
 The bug was bisected to:
 
-commit 2303f994b3e187091fd08148066688b08f837efc
-Author: Peter Krystad <peter.krystad@linux.intel.com>
-Date:   Wed Jan 22 00:56:17 2020 +0000
+commit fb99bce7120014307dde57b3d7def6977a9a62a1
+Author: Dave Watson <davejwatson@fb.com>
+Date:   Wed Jan 30 21:58:05 2019 +0000
 
-    mptcp: Associate MPTCP context with TCP socket
+    net: tls: Support 256 bit keys
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fbec81e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16fbec81e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12fbec81e00000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14898931e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16898931e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12898931e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f4dfece964792d80b139@syzkaller.appspotmail.com
-Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
+Reported-by: syzbot+fbe81b56f7df4c0fb21b@syzkaller.appspotmail.com
+Fixes: fb99bce71200 ("net: tls: Support 256 bit keys")
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD 8e171067 P4D 8e171067 PUD 93fa2067 PMD 0 
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8984 Comm: syz-executor066 Not tainted 5.6.0-rc2-syzkaller #0
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 9607 at net/core/stream.c:208 sk_stream_kill_queues+0x40d/0x590 net/core/stream.c:208
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9607 Comm: syz-executor386 Not tainted 5.6.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
-RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
-RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
-RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
-R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
-R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
-FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- cipso_v4_sock_setattr+0x34b/0x470 net/ipv4/cipso_ipv4.c:1888
- netlbl_sock_setattr+0x2a7/0x310 net/netlabel/netlabel_kapi.c:989
- smack_netlabel security/smack/smack_lsm.c:2425 [inline]
- smack_inode_setsecurity+0x3da/0x4a0 security/smack/smack_lsm.c:2716
- security_inode_setsecurity+0xb2/0x140 security/security.c:1364
- __vfs_setxattr_noperm+0x16f/0x3e0 fs/xattr.c:197
- vfs_setxattr fs/xattr.c:224 [inline]
- setxattr+0x335/0x430 fs/xattr.c:451
- __do_sys_fsetxattr fs/xattr.c:506 [inline]
- __se_sys_fsetxattr+0x130/0x1b0 fs/xattr.c:495
- __x64_sys_fsetxattr+0xbf/0xd0 fs/xattr.c:495
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:sk_stream_kill_queues+0x40d/0x590 net/core/stream.c:208
+Code: 48 c1 ea 03 0f b6 04 02 84 c0 74 04 3c 03 7e 41 44 8b a3 f8 01 00 00 e9 5f ff ff ff e8 0c 7f 40 fb 0f 0b eb 96 e8 03 7f 40 fb <0f> 0b eb a1 e8 fa 7e 40 fb 0f 0b e9 9f fe ff ff 4c 89 ef e8 7b 24
+RSP: 0018:ffffc9000c6efb30 EFLAGS: 00010293
+RAX: ffff8880a3102380 RBX: 0000000000000000 RCX: ffffffff8635085d
+RDX: 0000000000000000 RSI: ffffffff863508bd RDI: 0000000000000005
+RBP: ffffc9000c6efb70 R08: ffff8880a3102380 R09: ffffed1015d2707c
+R10: ffffed1015d2707b R11: ffff8880ae9383db R12: 0000000000000fe3
+R13: ffff88808f618238 R14: ffffffff8c406240 R15: ffff88808f618178
+ inet_csk_destroy_sock+0x1b7/0x4c0 net/ipv4/inet_connection_sock.c:846
+ tcp_close+0xe17/0x12b0 net/ipv4/tcp.c:2503
+ inet_release+0xed/0x200 net/ipv4/af_inet.c:427
+ __sock_release+0xce/0x280 net/socket.c:605
+ sock_close+0x1e/0x30 net/socket.c:1283
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xba9/0x2f50 kernel/exit.c:801
+ do_group_exit+0x135/0x360 kernel/exit.c:899
+ __do_sys_exit_group kernel/exit.c:910 [inline]
+ __se_sys_exit_group kernel/exit.c:908 [inline]
+ __x64_sys_exit_group+0x44/0x50 kernel/exit.c:908
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440199
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcadc19e48 EFLAGS: 00000246 ORIG_RAX: 00000000000000be
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440199
-RDX: 0000000020000200 RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000003 R09: 00000000004002c8
-R10: 0000000000000009 R11: 0000000000000246 R12: 0000000000401a20
-R13: 0000000000401ab0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: 0000000000000000
----[ end trace 9bbc7bb8e1061a42 ]---
-RIP: 0010:0x0
+RIP: 0033:0x43eff8
 Code: Bad RIP value.
-RSP: 0018:ffffc900020b7b80 EFLAGS: 00010246
-RAX: 1ffff110124ba600 RBX: 0000000000000000 RCX: ffff88809fefa600
-RDX: ffff8880994cdb18 RSI: 0000000000000000 RDI: ffff8880925d3140
-RBP: ffffc900020b7bd8 R08: ffffffff870225be R09: fffffbfff140652a
-R10: fffffbfff140652a R11: 0000000000000000 R12: ffff8880925d35d0
-R13: ffff8880925d3140 R14: dffffc0000000000 R15: 1ffff110124ba6ba
-FS:  0000000001a0b880(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a6d6f000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+RSP: 002b:00007ffca386cb68 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043eff8
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004be808 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 00000000200001c0 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
