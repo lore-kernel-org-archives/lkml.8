@@ -2,111 +2,70 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD91C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6283C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67672222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:38:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mTmj8gEH"
+	by mail.kernel.org (Postfix) with ESMTP id C43D720637
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 12:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgBYMiy (ORCPT
+        id S1729454AbgBYMlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 07:38:54 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:57950 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729411AbgBYMiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 07:38:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7il1HEPle9QWK8/fn+8p2ZW7O17syNxn3S0cD/+iqSQ=; b=mTmj8gEH/PDUSZrnwqB/k2HnS
-        8MBf7jbbYVViLuW2wqdDKg9jHs8mupOQCGoz6I86x8v9A7f/8ChSVtL8Eoh2xHimayo1IuYEmqGBa
-        NPn510WZTRozrgM7Q8GofRL+OZe1MDaK6eoEW/fe/mxPhrXKoFJ7eFHXTk7RrTzxncsT7nledbpG+
-        CD1vAEZVCVajSsZFfPeoXwv8INm+fWQ2o6F5nGnULeqDqlXdrCrVLEUi0VIs+O4y8A1YlC8aOKpHC
-        Y2ok8TmkoetW0RPg7+GbRCJzugXtMQRZ6LDT1eCgDZBxrWN15YKtcLRWUt0Wwf9UDkZHMEbjGgPth
-        ZUbM9B93A==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:52570)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j6ZU4-0000tE-DH; Tue, 25 Feb 2020 12:38:44 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j6ZTz-0007QW-GB; Tue, 25 Feb 2020 12:38:39 +0000
-Date:   Tue, 25 Feb 2020 12:38:39 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sudheesh Mavila <sudheesh.mavila@amd.com>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: corrected the return value for
- genphy_check_and_restart_aneg
-Message-ID: <20200225123839.GT25745@shell.armlinux.org.uk>
-References: <20200225122208.6881-1-sudheesh.mavila@amd.com>
+        Tue, 25 Feb 2020 07:41:22 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11105 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725788AbgBYMlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 07:41:21 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CA47237A79C3964632B6;
+        Tue, 25 Feb 2020 20:41:12 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 25 Feb 2020 20:41:04 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <corbet@lwn.net>, <linux-doc@vger.kernel.org>
+CC:     <paulmck@kernel.org>, <tj@kernel.org>, <jiangshanlai@gmail.com>,
+        <wanghaibin.wang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH] Documentation: kthread: Fix WQ_SYSFS workqueues path name
+Date:   Tue, 25 Feb 2020 20:40:52 +0800
+Message-ID: <20200225124052.1506-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225122208.6881-1-sudheesh.mavila@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 05:52:08PM +0530, Sudheesh Mavila wrote:
-> When auto-negotiation is not required, return value should be zero.
-> 
-> Signed-off-by: Sudheesh Mavila <sudheesh.mavila@amd.com>
+The set of WQ_SYSFS workqueues should be displayed using
+"ls /sys/devices/virtual/workqueue", add the missing '/'.
 
-Hi,
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
+ Documentation/admin-guide/kernel-per-CPU-kthreads.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for spotting this problem. However, it looks like the same
-problem also exists in genphy_c45_check_and_restart_aneg(). It would
-be a good idea to fix both at the same time.
-
-Thanks.
-
-> ---
->  drivers/net/phy/phy_device.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 6a5056e0ae77..36cde3dac4c3 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -1806,10 +1806,13 @@ int genphy_check_and_restart_aneg(struct phy_device *phydev, bool restart)
->  			restart = true;
->  	}
->  
-> -	if (restart)
-> -		ret = genphy_restart_aneg(phydev);
-> +	/* Only restart aneg if we are advertising something different
-> +	 * than we were before.
-> +	 */
-> +	if (restart > 0)
-> +		return genphy_restart_aneg(phydev);
->  
-> -	return ret;
-> +	return 0;
->  }
->  EXPORT_SYMBOL(genphy_check_and_restart_aneg);
->  
-> -- 
-> 2.17.1
-> 
-> 
-
+diff --git a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+index baeeba8762ae..21818aca4708 100644
+--- a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
++++ b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+@@ -234,7 +234,7 @@ To reduce its OS jitter, do any of the following:
+ 	Such a workqueue can be confined to a given subset of the
+ 	CPUs using the ``/sys/devices/virtual/workqueue/*/cpumask`` sysfs
+ 	files.	The set of WQ_SYSFS workqueues can be displayed using
+-	"ls sys/devices/virtual/workqueue".  That said, the workqueues
++	"ls /sys/devices/virtual/workqueue".  That said, the workqueues
+ 	maintainer would like to caution people against indiscriminately
+ 	sprinkling WQ_SYSFS across all the workqueues.	The reason for
+ 	caution is that it is easy to add WQ_SYSFS, but because sysfs is
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.19.1
+
+
