@@ -2,167 +2,85 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18839C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100E0C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBAE2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D05218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:26:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alibaba-inc.com header.i=@alibaba-inc.com header.b="K2Ve2LO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgBYHVv (ORCPT
+        id S1729188AbgBYH0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:21:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50670 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgBYHVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:21:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CB620AE3C;
-        Tue, 25 Feb 2020 07:21:48 +0000 (UTC)
-Subject: Re: [PATCH v2] drm/hisilicon: Fixed pcie resource conflict between
- drm and firmware
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1582524112-5628-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <a56bb7dd-a038-a219-54af-5f829b00f936@suse.de>
-Date:   Tue, 25 Feb 2020 08:21:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Feb 2020 02:26:11 -0500
+Received: from out0-141.mail.aliyun.com ([140.205.0.141]:46939 "EHLO
+        out0-141.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBYH0K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 02:26:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=alibaba-inc.com; s=default;
+        t=1582615534; h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type;
+        bh=MyP2VYm6zQxeLDqMP64k6CcffU+U8M2ZC8LHKjDk8bg=;
+        b=K2Ve2LO/mAKUwK9dK6JBkupp8BTScujoitCLDgg+S3dpm6QnK5nyQbM97FUKFJlZf6uFRiVb7JxxTRUo6Du2Dvdj5jebWMHZM9eKlWyo85DLTR1noJCrRvs13Qm0I01NgmzP+/SmvE+fAa63JUn74ajfMv18+2Hs0DE2T+oEue0=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01a16378;MF=bangcai.hrg@alibaba-inc.com;NM=1;PH=DW;RN=16;SR=0;TI=W4_5790132_DEFAULT_0AC26464_1582614793747_o7001c540a;
+Received: from WS-web (bangcai.hrg@alibaba-inc.com[W4_5790132_DEFAULT_0AC26464_1582614793747_o7001c540a]) by e02c03293.eu6 at Tue, 25 Feb 2020 15:25:30 +0800
+Date:   Tue, 25 Feb 2020 15:25:30 +0800
+From:   "=?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?=" <bangcai.hrg@alibaba-inc.com>
+To:     "Nadav Amit" <namit@vmware.com>
+Cc:     "peterz" <peterz@infradead.org>, "kernellwp" <kernellwp@gmail.com>,
+        "pbonzini" <pbonzini@redhat.com>,
+        "dave.hansen" <dave.hansen@intel.com>, "mingo" <mingo@redhat.com>,
+        "tglx" <tglx@linutronix.de>, "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "dave.hansen" <dave.hansen@linux.intel.com>, "bp" <bp@alien8.de>,
+        "luto" <luto@kernel.org>, "kvm" <kvm@vger.kernel.org>,
+        "=?UTF-8?B?5p6X5rC45ZCsKOa1t+aeqyk=?=" <yongting.lyt@alibaba-inc.com>,
+        "=?UTF-8?B?5ZC05ZCv57++KOWQr+e/vik=?=" <qixuan.wqx@alibaba-inc.com>,
+        "herongguang" <herongguang@linux.alibaba.com>
+Reply-To: "=?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?=" 
+          <bangcai.hrg@alibaba-inc.com>
+Message-ID: <600a0d33-b995-453e-b678-0436908cd857.bangcai.hrg@alibaba-inc.com>
+Subject: =?UTF-8?B?5Zue5aSN77yaW1JGQ10gUXVlc3Rpb24gYWJvdXQgYXN5bmMgVExCIGZsdXNoIGFuZCBLVk0g?=
+  =?UTF-8?B?cHYgdGxiIGltcHJvdmVtZW50cw==?=
+X-Mailer: [Alimail-Mailagent revision 59873560][W4_5790132][DEFAULT][Chrome]
 MIME-Version: 1.0
-In-Reply-To: <1582524112-5628-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="sNTCz6iMWuEeEnKXWwJKxAq1gE0lp69ta"
+References: <07348bb2-c8a5-41d0-afca-26c1056570a5.bangcai.hrg@alibaba-inc.com>,<C6DFCB69-25A6-43FE-92E9-C9E675CAB615@vmware.com>
+x-aliyun-mail-creator: W4_5790132_DEFAULT_M2ITW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzgwLjAuMzk4Ny4xMTYgU2FmYXJpLzUzNy4zNg==3L
+In-Reply-To: <C6DFCB69-25A6-43FE-92E9-C9E675CAB615@vmware.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---sNTCz6iMWuEeEnKXWwJKxAq1gE0lp69ta
-Content-Type: multipart/mixed; boundary="29zXd6nu4MuRQxn3qbpBzJvLTMPqc18M6";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <a56bb7dd-a038-a219-54af-5f829b00f936@suse.de>
-Subject: Re: [PATCH v2] drm/hisilicon: Fixed pcie resource conflict between
- drm and firmware
-References: <1582524112-5628-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1582524112-5628-1-git-send-email-tiantao6@hisilicon.com>
-
---29zXd6nu4MuRQxn3qbpBzJvLTMPqc18M6
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 24.02.20 um 07:01 schrieb Tian Tao:
-> use the drm_fb_helper_remove_conflicting_pci_framebuffer to remove
-> the framebuffer initialized by fireware/bootloader to avoid resource
-> conflict.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
->=20
-> ---
-> v2: 	use the general API to remove the conflict resource instead of rol=
-ling
-> 	our own.
-
-Nit: the patch's version info is usually a part of the commit messages.
-It goes between the description and the Signed-off-by line.
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index 4a8a4cf..7518980 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -327,6 +327,11 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
->  	struct drm_device *dev;
->  	int ret;
-> =20
-> +	ret =3D drm_fb_helper_remove_conflicting_pci_framebuffers(pdev,
-> +							"hibmcdrmfb");
-> +	if (ret)
-> +		return ret;
-> +
->  	dev =3D drm_dev_alloc(&hibmc_driver, &pdev->dev);
->  	if (IS_ERR(dev)) {
->  		DRM_ERROR("failed to allocate drm_device\n");
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---29zXd6nu4MuRQxn3qbpBzJvLTMPqc18M6--
-
---sNTCz6iMWuEeEnKXWwJKxAq1gE0lp69ta
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5UywsACgkQaA3BHVML
-eiPSEQgAh3FK+NW6XRP0xd2a35Hfj9hACFnZt2G1nYWFrMuNey3qg+4mw+0vVfLD
-2q9Ji9D+nPtU4axZgnUHewB1r3fbmiyoiTI6x2MCrIhTBd5j/xXGNv4I1v3lO3df
-+Y439tdI+nDVzjdIAJFsxuuXeJHWqc/VTnDkhvlzWdGvDp8Qfyb3J7euJKiczHPY
-m5g4Kk3a5muHo559A7aWxD+HdNxmVPdoKt0OHI/VXca7jFugbW7A8v5DffVlcvc6
-igwyrL4++uRt6u7efVCtO3hPZo7b4byo3arn6Q+hLgD/rNOD55py2/P3+nI3bh4F
-jeNPQBWWSGRXfdWB2adPEpCGl4QkNw==
-=q7D9
------END PGP SIGNATURE-----
-
---sNTCz6iMWuEeEnKXWwJKxAq1gE0lp69ta--
+Pj4gT24gRmViIDI0LCAyMDIwLCBhdCA4OjEyIFBNLCDkvZXlrrnlhYko6YKm6YeHKSA8YmFuZ2Nh
+aS5ocmdAYWxpYmFiYS1pbmMuY29tPiB3cm90ZToKPj4gCj4+IEhpIHRoZXJlLAo+PiAKPj4gSSBz
+YXcgdGhpcyBhc3luYyBUTEIgZmx1c2ggcGF0Y2ggYXQKPj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvcGF0Y2h3b3JrL3BhdGNoLzEwODI0ODEvICwgYW5kIEkgYW0gd29uZGVyaW5nCj4+IGFmdGVy
+IG9uZSB5ZWFyLCBkbyB5b3UgdGhpbmsgaWYgdGhpcyBwYXRjaCBpcyBwcmFjdGljYWwgb3IgdGhl
+cmUgYXJlCj4+IGZ1bmN0aW9uYWwgZmxhd3M/IEZyb20gbXkgUE9WLCBOYWRhdidzIHBhdGNoIHNl
+ZW1zIGhhcyBubyBvYnZpb3VzIGZsYXcuCj4+IEJ1dCBJIGFtIG5vdCBmYW1pbGlhciBhYm91dCB0
+aGUgcmVsYXRpb25zaGlwIGJldHdlZW4gQ1BVJ3Mgc3BlY3VsYXRpb24KPj4gZXhlYyBhbmQgc3Rh
+bGUgVExCLCBzaW5jZSBpdCdzIHVzdWFsbHkgdHJhbnNwYXJlbnQgZnJvbSBwcm9ncmFtaW5nLiBJ
+bgo+PiB3aGljaCBjb25kaXRpb24gd291bGQgbWFjaGluZSBjaGVjayBvY2N1cnM/IElzIHRoZXJl
+IHNvbWUgcmVmZXJlbmNlIEkgY2FuCj4+IGxlYXJuPwoKPiBJIHdhcy9hbSBoZWxkIGJhY2sgYnkg
+cGVyc29uYWwgaXNzdWVzIHRoYXQgY29uc3VtZSBteSBmcmVlIHRpbWUsIHdoaWNoCj4gcHJldmVu
+dGVkIG1lIGZyb20gc2VuZGluZyBhIG5ldyB2ZXJzaW9uIHNvIGZhci4KCkdvb2QgdG8gaGVhciB0
+aGF0IDopCgo+IEFzIGZvciB0aGUgcGF0Y2gtc2V0IC0gdGhlIGdyZWF0ZXN0IGJlbmVmaXQgaW4g
+cGVyZm9ybWFuY2UgY29tZXMgZnJvbQo+IHJ1bm5pbmcgbG9jYWwvcmVtb3RlIFRMQiBmbHVzaGVz
+IGNvbmN1cnJlbnRseSwgYW5kIEkgd2lsbCByZXNwaW4gYW5vdGhlcgo+IHZlcnNpb24gb2YgdGhh
+dCBpbiB0d28gd2Vla3MgdGltZS4gSSB3aWxsIHNlbmQgdGhlIGFzeW5jIGZsdXNoZXMgYWZ0ZXJ3
+YXJkcy4KCkluIG5vbi1vdmVyY29tbWl0bWVudCB2aXJ0dWFsaXphdGlvbiBlbnZpcm9ubWVudCwg
+SSB0aGluayB0aGlzIHdpbGwgYmUgCmJlbmVmaWNpYWwuIFNpbmNlIHRoZSBhc3luYyBpbXBsZW1l
+bnRhdGlvbiBzdGlsbCBuZWVkIHJlbW90ZSBDUFXigJlzIElQSSAKcmVzcG9uc2UsIHB2IHRsYiBm
+bHVzaCBjYW4gYWRkcmVzcyB0aGlzIHNjZW5hcmlv4oCZcyBuZWVkLgoKRG8geW91IGhhdmUgYW55
+IHJlZmVyZW5jZSBhYm91dCByZWxhdGlvbnNoaXAgYmV0d2VlbiBDUFUncyBzcGVjdWxhdGlvbgph
+bmQgc3RhbGUgVExCLCBlc3BlY2lhbGx5IGNhdXNpbmcgbWFjaGluZSBjaGVjaz8gSSB3YW50IHRv
+IGxlYXJuIGFib3V0IHRoaXMsIAp0aGFua3Mu
