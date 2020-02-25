@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A20BC35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073BCC35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D9221744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EF221744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+Ml/upn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7KUzQsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgBYHhm (ORCPT
+        id S1729470AbgBYHhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:37:42 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36783 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgBYHhl (ORCPT
+        Tue, 25 Feb 2020 02:37:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34256 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729409AbgBYHho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:37:41 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so5142758plm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 23:37:41 -0800 (PST)
+        Tue, 25 Feb 2020 02:37:44 -0500
+Received: by mail-pj1-f66.google.com with SMTP id f2so775415pjq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 23:37:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fTm63vWBfzb1BdQ6B/CmE6SJCijkNB09UHlH94Y5uzA=;
-        b=K+Ml/upn0oxvTo+3gRr3MfXbq8amghsNv5GktyPa1Bz9dIl4nWMHbaBhQYNQ6aszrz
-         zm8G7MUyUXlzA1GvJ/5600wGmPeJXbjNXy/8mpDOuGJugnA7guDIbK8h/76jQQDmuUI8
-         i6hbT8QosV3VkssGwCBeHYXolDg6ws+D9G7fX2VcSSOa4ITxIhhs5mxnjXCiD3HrjS4s
-         mzGmmR0k0trfs8P3tZhMTBXB2o/Z+A8BC1jt/KfCY8ATrXdkQaNTPAcxtY1ZkGmaUtKY
-         mFqk7ByJPLfAelkxnmvMvKy6IUbUMWgCf0+YqNGTdve3w12izGIve8+fAIUrtppB8Xec
-         audQ==
+        bh=kNwttvmFKoYVBH0KVogMBrXT//L/sy9v0dzLcDssBsw=;
+        b=b7KUzQsAoWHyfp9zwaZIuUaeAkRrU5/nwfll3d2KlLtHX+VODsX5PmwXRxhguDwywI
+         bbR20zCWD5JOGbTKKx/+QgE8DzKm6jrCiYK9glzgrD4wr6pl66d5nIAgzTaWRKVulUEb
+         Hmhq1/M+KNLkASmPoAmVbCYZO3lw1MSCCSwEkmxWrTBChBJQZJMi13SKVmRWM0mSjZzA
+         GWtU0LpsYsQiVd2MV+OxeJctj6CqXaTs1kputEflsrPf2BsxkxqJL6Se7miXMT0e91tN
+         8eoSOV7r/+ee+O1XrqG7IIbemkxpG6VqnF6YPG6Tp3RceCWgl5zuou+j7MO4LJxnZX3b
+         H7lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fTm63vWBfzb1BdQ6B/CmE6SJCijkNB09UHlH94Y5uzA=;
-        b=Gok2w5PyIduMi6RNt1BQQ2MKEAqzbr1tmqQCj9pnwQ3AN8fzlGlvvPN4rbboqoA+GF
-         f3ZpUm2YH9WALbeRdjq3i3LJE15WYO2JsAORI4R9lUAqlaeI8z2bvbvlYxwiTrxYZo/I
-         h2qfAUHjhXdj49XOh2bj7uIoAnAazQaOwBv8DqjgjXLVj9UjE+TWl1YRD1wTRvDgHSoz
-         eR/X6GqTZKDS/dRwB8gZLo5GhhpAacpgpaQg5AytTP9jQ1qmySEUK/ooyWtfpX3YD0dO
-         B8uYH03OU1WouLMdBrSu7xq/F3ErDtfUkTA0ofQ2ltt9+v4fW2nWlKiHkEjw9wVG9+iD
-         MKoQ==
-X-Gm-Message-State: APjAAAX3SU+f3pfplNS91TikBSHRVBu2bA2r1qCWDm/hmwra6Ndm2UCy
-        y/4m4S0kvWr4vEh1s2+I+i4=
-X-Google-Smtp-Source: APXvYqxqGvlZHIvXAmalhDezZDCnSGjb/EEDWYMB9RmGsUbBfPun/pC4HedAaHvGDMV4hAB9Smnhhw==
-X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr3595342pjq.47.1582616260726;
-        Mon, 24 Feb 2020 23:37:40 -0800 (PST)
+        bh=kNwttvmFKoYVBH0KVogMBrXT//L/sy9v0dzLcDssBsw=;
+        b=U9OpZLiMfP9YQOqw0/K6jAz/eQAj2/uiwFjfrpu//q4aOv7izi3XVj414bZZM+M8+v
+         msK/dnjYUXksCM8BEsGzmv+YveKEQJMgB73lEBuXUrzmMko0gAJpYfPqE3oHVDwODoct
+         GqwFplIuZLXiXGVhc/L/Yd/5nyCXy5obzNaiw3b22GuVT54VNfe+NkXP8riKAsrKC9DI
+         5xYejASTofdtqVyQiLTtyoa+qCgnhWyEvmUVObPB7J4pKpxw5OSabWodilPbHVIwsWjY
+         F+IIKSeM7dPFU22CR+04n72vEd24hg5C/2DXPpeC4+371Vz+QAFKBFSLQxDeNSULtRtc
+         NTBg==
+X-Gm-Message-State: APjAAAU4js5Np0kWJBaeRks+3nyUYkI0ihODy64Va+3wbSWIGH1DeizX
+        CKzgwlibLKQvHctxLjcBpio=
+X-Google-Smtp-Source: APXvYqyi1PJgnKEARP1Ltype9QnDI3KSzgGnb7rFcRO9Tex4jDvYFLH3xS1tRJuHl2dDv13U5h51Vw==
+X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr3675614pjt.131.1582616263620;
+        Mon, 24 Feb 2020 23:37:43 -0800 (PST)
 Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id m128sm15979390pfm.183.2020.02.24.23.37.39
+        by smtp.gmail.com with ESMTPSA id m128sm15979390pfm.183.2020.02.24.23.37.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 23:37:40 -0800 (PST)
+        Mon, 24 Feb 2020 23:37:42 -0800 (PST)
 From:   Andrei Vagin <avagin@gmail.com>
 To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Andrei Vagin <avagin@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Dmitry Safonov <dima@arista.com>
-Subject: [PATCH v2 1/6] arm64/vdso: use the fault callback to map vvar pages
-Date:   Mon, 24 Feb 2020 23:37:26 -0800
-Message-Id: <20200225073731.465270-2-avagin@gmail.com>
+Subject: [PATCH v2 3/6] arm64/vdso: Add time napespace page
+Date:   Mon, 24 Feb 2020 23:37:28 -0800
+Message-Id: <20200225073731.465270-4-avagin@gmail.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200225073731.465270-1-avagin@gmail.com>
 References: <20200225073731.465270-1-avagin@gmail.com>
@@ -73,84 +73,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is required to support time namespaces where a time namespace data
-page is different for each namespace.
+Allocate the time namespace page among VVAR pages.  Provide
+__arch_get_timens_vdso_data() helper for VDSO code to get the
+code-relative position of VVARs on that special page.
+
+If a task belongs to a time namespace then the VVAR page which contains
+the system wide VDSO data is replaced with a namespace specific page
+which has the same layout as the VVAR page. That page has vdso_data->seq
+set to 1 to enforce the slow path and vdso_data->clock_mode set to
+VCLOCK_TIMENS to enforce the time namespace handling path.
+
+The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+update of the VDSO data is in progress, is not really affecting regular
+tasks which are not part of a time namespace as the task is spin waiting
+for the update to finish and vdso_data->seq to become even again.
+
+If a time namespace task hits that code path, it invokes the corresponding
+time getter function which retrieves the real VVAR page, reads host time
+and then adds the offset for the requested clock which is stored in the
+special VVAR page.
 
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 ---
- arch/arm64/kernel/vdso.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ arch/arm64/include/asm/vdso.h                 |  6 ++++++
+ .../include/asm/vdso/compat_gettimeofday.h    | 11 ++++++++++
+ arch/arm64/include/asm/vdso/gettimeofday.h    |  8 ++++++++
+ arch/arm64/kernel/vdso.c                      | 20 ++++++++++++++++---
+ arch/arm64/kernel/vdso/vdso.lds.S             |  5 ++++-
+ arch/arm64/kernel/vdso32/vdso.lds.S           |  5 ++++-
+ include/vdso/datapage.h                       |  1 +
+ 7 files changed, 51 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 354b11e27c07..290c36d74e03 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -114,28 +114,32 @@ static int __vdso_init(enum arch_vdso_type arch_index)
- 			PAGE_SHIFT;
+diff --git a/arch/arm64/include/asm/vdso.h b/arch/arm64/include/asm/vdso.h
+index 07468428fd29..351c145d3808 100644
+--- a/arch/arm64/include/asm/vdso.h
++++ b/arch/arm64/include/asm/vdso.h
+@@ -12,6 +12,12 @@
+  */
+ #define VDSO_LBASE	0x0
  
- 	/* Allocate the vDSO pagelist, plus a page for the data. */
--	vdso_pagelist = kcalloc(vdso_lookup[arch_index].vdso_pages + 1,
-+	vdso_pagelist = kcalloc(vdso_lookup[arch_index].vdso_pages,
- 				sizeof(struct page *),
- 				GFP_KERNEL);
- 	if (vdso_pagelist == NULL)
- 		return -ENOMEM;
++#ifdef CONFIG_TIME_NS
++#define __VVAR_PAGES    2
++#else
++#define __VVAR_PAGES    1
++#endif
++
+ #ifndef __ASSEMBLY__
  
--	/* Grab the vDSO data page. */
--	vdso_pagelist[0] = phys_to_page(__pa_symbol(vdso_data));
--
--
- 	/* Grab the vDSO code pages. */
- 	pfn = sym_to_pfn(vdso_lookup[arch_index].vdso_code_start);
- 
- 	for (i = 0; i < vdso_lookup[arch_index].vdso_pages; i++)
--		vdso_pagelist[i + 1] = pfn_to_page(pfn + i);
-+		vdso_pagelist[i] = pfn_to_page(pfn + i);
- 
--	vdso_lookup[arch_index].dm->pages = &vdso_pagelist[0];
--	vdso_lookup[arch_index].cm->pages = &vdso_pagelist[1];
-+	vdso_lookup[arch_index].cm->pages = vdso_pagelist;
- 
- 	return 0;
+ #include <generated/vdso-offsets.h>
+diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+index 81b0c394f1d8..042814339a63 100644
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -160,6 +160,17 @@ static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
+ 	return ret;
  }
  
-+static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
-+			     struct vm_area_struct *vma, struct vm_fault *vmf)
++#ifdef CONFIG_TIME_NS
++static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
 +{
-+	if (vmf->pgoff == 0)
-+		return vmf_insert_pfn(vma, vmf->address,
-+				sym_to_pfn(vdso_data));
-+	return VM_FAULT_SIGBUS;
++	const struct vdso_data *ret;
++
++	asm volatile("mov %0, %1" : "=r"(ret) : "r"(_timens_data));
++
++	return ret;
++}
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
+index 5a534432aa5d..553bdc19a91f 100644
+--- a/arch/arm64/include/asm/vdso/gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+@@ -97,6 +97,14 @@ const struct vdso_data *__arch_get_vdso_data(void)
+ 	return _vdso_data;
+ }
+ 
++#ifdef CONFIG_TIME_NS
++static __always_inline
++const struct vdso_data *__arch_get_timens_vdso_data(void)
++{
++	return _timens_data;
++}
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 6ac9cdeac5be..b3e7ce24e59b 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -46,6 +46,14 @@ enum arch_vdso_type {
+ #define VDSO_TYPES		(ARM64_VDSO + 1)
+ #endif /* CONFIG_COMPAT_VDSO */
+ 
++enum vvar_pages {
++	VVAR_DATA_PAGE_OFFSET = 0,
++#ifdef CONFIG_TIME_NS
++	VVAR_TIMENS_PAGE_OFFSET = 1,
++#endif /* CONFIG_TIME_NS */
++	VVAR_NR_PAGES = __VVAR_PAGES,
++};
++
+ struct __vdso_abi {
+ 	const char *name;
+ 	const char *vdso_code_start;
+@@ -81,6 +89,12 @@ static union {
+ } vdso_data_store __page_aligned_data;
+ struct vdso_data *vdso_data = vdso_data_store.data;
+ 
++
++struct vdso_data *arch_get_vdso_data(void *vvar_page)
++{
++	return (struct vdso_data *)(vvar_page);
 +}
 +
- static int __setup_additional_pages(enum arch_vdso_type arch_index,
- 				    struct mm_struct *mm,
- 				    struct linux_binprm *bprm,
-@@ -155,7 +159,7 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
+ static int __vdso_remap(enum arch_vdso_type arch_index,
+ 			const struct vm_special_mapping *sm,
+ 			struct vm_area_struct *new_vma)
+@@ -182,7 +196,7 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
+ 
+ 	vdso_text_len = vdso_lookup[arch_index].vdso_pages << PAGE_SHIFT;
+ 	/* Be sure to map the data page */
+-	vdso_mapping_len = vdso_text_len + PAGE_SIZE;
++	vdso_mapping_len = vdso_text_len + VVAR_NR_PAGES * PAGE_SIZE;
+ 
+ 	vdso_base = get_unmapped_area(NULL, 0, vdso_mapping_len, 0, 0);
+ 	if (IS_ERR_VALUE(vdso_base)) {
+@@ -190,13 +204,13 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
+ 		goto up_fail;
  	}
  
- 	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
--				       VM_READ|VM_MAYREAD,
-+				       VM_READ|VM_MAYREAD|VM_PFNMAP,
+-	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
++	ret = _install_special_mapping(mm, vdso_base, VVAR_NR_PAGES * PAGE_SIZE,
+ 				       VM_READ|VM_MAYREAD|VM_PFNMAP,
  				       vdso_lookup[arch_index].dm);
  	if (IS_ERR(ret))
  		goto up_fail;
-@@ -215,6 +219,7 @@ static struct vm_special_mapping aarch32_vdso_spec[C_PAGES] = {
- #ifdef CONFIG_COMPAT_VDSO
- 	{
- 		.name = "[vvar]",
-+		.fault = vvar_fault,
- 	},
- 	{
- 		.name = "[vdso]",
-@@ -396,6 +401,7 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
- static struct vm_special_mapping vdso_spec[A_PAGES] __ro_after_init = {
- 	{
- 		.name	= "[vvar]",
-+		.fault = vvar_fault,
- 	},
- 	{
- 		.name	= "[vdso]",
+ 
+-	vdso_base += PAGE_SIZE;
++	vdso_base += VVAR_NR_PAGES * PAGE_SIZE;
+ 	mm->context.vdso = (void *)vdso_base;
+ 	ret = _install_special_mapping(mm, vdso_base, vdso_text_len,
+ 				       VM_READ|VM_EXEC|
+diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
+index 7ad2d3a0cd48..d808ad31e01f 100644
+--- a/arch/arm64/kernel/vdso/vdso.lds.S
++++ b/arch/arm64/kernel/vdso/vdso.lds.S
+@@ -17,7 +17,10 @@ OUTPUT_ARCH(aarch64)
+ 
+ SECTIONS
+ {
+-	PROVIDE(_vdso_data = . - PAGE_SIZE);
++	PROVIDE(_vdso_data = . - __VVAR_PAGES * PAGE_SIZE);
++#ifdef CONFIG_TIME_NS
++	PROVIDE(_timens_data = _vdso_data + PAGE_SIZE);
++#endif
+ 	. = VDSO_LBASE + SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+diff --git a/arch/arm64/kernel/vdso32/vdso.lds.S b/arch/arm64/kernel/vdso32/vdso.lds.S
+index a3944927eaeb..06cc60a9630f 100644
+--- a/arch/arm64/kernel/vdso32/vdso.lds.S
++++ b/arch/arm64/kernel/vdso32/vdso.lds.S
+@@ -17,7 +17,10 @@ OUTPUT_ARCH(arm)
+ 
+ SECTIONS
+ {
+-	PROVIDE_HIDDEN(_vdso_data = . - PAGE_SIZE);
++	PROVIDE_HIDDEN(_vdso_data = . - __VVAR_PAGES * PAGE_SIZE);
++#ifdef CONFIG_TIME_NS
++	PROVIDE_HIDDEN(_timens_data = _vdso_data + PAGE_SIZE);
++#endif
+ 	. = VDSO_LBASE + SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+index 30c4cb0428d1..3494b5536b63 100644
+--- a/include/vdso/datapage.h
++++ b/include/vdso/datapage.h
+@@ -98,6 +98,7 @@ struct vdso_data {
+  * relocation, and this is what we need.
+  */
+ extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")));
++extern struct vdso_data _timens_data[CS_BASES] __attribute__((visibility("hidden")));
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
 -- 
 2.24.1
 
