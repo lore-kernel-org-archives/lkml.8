@@ -5,30 +5,30 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C660C35DEA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC766C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8652072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DC120732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xjMuCcfD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="C/ezcuvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgBYAED (ORCPT
+        id S1728376AbgBYAGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:04:03 -0500
-Received: from gateway31.websitewelcome.com ([192.185.144.91]:17431 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728087AbgBYAEC (ORCPT
+        Mon, 24 Feb 2020 19:06:53 -0500
+Received: from gateway33.websitewelcome.com ([192.185.146.195]:14169 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726651AbgBYAGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:04:02 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id E363024C2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:04:00 -0600 (CST)
+        Mon, 24 Feb 2020 19:06:53 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 98403333E7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:06:52 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 6NhgjOUWdXVkQ6Nhgjk6BM; Mon, 24 Feb 2020 18:04:00 -0600
+        id 6NkSjJ0HlSl8q6NkSjy2tK; Mon, 24 Feb 2020 18:06:52 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,27 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=q67V6wkz/vP58iDZWoblidrn9lVnubX/pXsOU2x0CG0=; b=xjMuCcfDK2IR1n0XjWR9lmhBDv
-        42BFoVIxSRVzKvH836FTURQOhCmJtGhYH/r5hHyXOuzILas2/BCeCkMw+nLzPnCgOH6f47dFqxCnP
-        4komlYZTAvGklfkzV7OPVXrB15ou3eGQGOtga65+8wR8O/OjiZjYJ5H0YLY2cqnIgNbI2qD4i2H1H
-        Q9hGdi8lpTi8V8JTCfoxOyZLpsBKVExitmnr+x75I4PPz0M1QdbdjPkNYJLFvAOVN9JkSdlfwgkSV
-        JiRSsZ3Sg3G0wLiDkDQswEP+zI3mufPkEE7QGomr13FvlkUHYKUENi2VWwAh/vYk6ZnY8uHE+r1B1
-        yqMpge3g==;
-Received: from [201.166.190.71] (port=54310 helo=embeddedor)
+        bh=W2nVCBOC3RQtFd1bJm8Y55rMfod2dkAr8hWnPOcjNNM=; b=C/ezcuvREGquXC4mgNW/H88+ug
+        TVAa6onqkKTEYBN++tieBb1vLd2PnxxGpJ99XXjMhkF3X5vm3yFh+dX31VyJS4lN0jNOp8h8BWxKO
+        q9EhUxG3KUKxBWkkCy7Q88JqK0vy8o5Q8Xxn/1qhrxnSP80grhsxxAYOBBL0I6q6NzKSGQrH8hFEA
+        0LfXdZIgDC4fV+88I9t5k0KJXM+zYMDi1GnGYqMQlJU6zPeVuqemnXl7DSfa7osY2LhJuvY5TOHP6
+        0tbshf9NfwsYuh7Ks/fAYtdqwRhI+1hm7Q63aemirVaCFA0ytK48jW68iC397zTuMZSu+VZyND0De
+        5+WkfkSg==;
+Received: from [201.166.190.177] (port=54400 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j6Nhe-002MWf-3D; Mon, 24 Feb 2020 18:03:59 -0600
-Date:   Mon, 24 Feb 2020 18:06:47 -0600
+        id 1j6NkQ-002Nmd-0p; Mon, 24 Feb 2020 18:06:51 -0600
+Date:   Mon, 24 Feb 2020 18:09:39 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
+To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] sfc: Replace zero-length array with flexible-array
- member
-Message-ID: <20200225000647.GA17795@embeddedor>
+Subject: [PATCH][next] net: hns: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200225000939.GA18897@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,15 +66,15 @@ X-AntiAbuse: Original Domain - vger.kernel.org
 X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
 X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
-X-Source-IP: 201.166.190.71
+X-Source-IP: 201.166.190.177
 X-Source-L: No
-X-Exim-ID: 1j6Nhe-002MWf-3D
+X-Exim-ID: 1j6NkQ-002Nmd-0p
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.190.71]:54310
+X-Source-Sender: (embeddedor) [201.166.190.177]:54400
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
+X-Email-Count: 21
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -113,36 +112,36 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/net/ethernet/sfc/falcon/net_driver.h | 2 +-
- drivers/net/ethernet/sfc/net_driver.h        | 2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h | 2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/sfc/falcon/net_driver.h b/drivers/net/ethernet/sfc/falcon/net_driver.h
-index a49ea2e719b6..a529ff395ead 100644
---- a/drivers/net/ethernet/sfc/falcon/net_driver.h
-+++ b/drivers/net/ethernet/sfc/falcon/net_driver.h
-@@ -288,7 +288,7 @@ struct ef4_rx_buffer {
- struct ef4_rx_page_state {
- 	dma_addr_t dma_addr;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
+index 2721f1f1ab42..0f0e16f9afc0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
+@@ -92,7 +92,7 @@ struct ppe_common_cb {
+ 	u8 comm_index;   /*ppe_common index*/
  
--	unsigned int __pad[0] ____cacheline_aligned;
-+	unsigned int __pad[] ____cacheline_aligned;
+ 	u32 ppe_num;
+-	struct hns_ppe_cb ppe_cb[0];
++	struct hns_ppe_cb ppe_cb[];
+ 
  };
  
- /**
-diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-index 9f9886f222c8..392bd5b7017e 100644
---- a/drivers/net/ethernet/sfc/net_driver.h
-+++ b/drivers/net/ethernet/sfc/net_driver.h
-@@ -336,7 +336,7 @@ struct efx_rx_buffer {
- struct efx_rx_page_state {
- 	dma_addr_t dma_addr;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h
+index 3741befb914e..a9f805925699 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h
+@@ -108,7 +108,7 @@ struct rcb_common_cb {
+ 	u32 ring_num;
+ 	u32 desc_num; /*  desc num per queue*/
  
--	unsigned int __pad[0] ____cacheline_aligned;
-+	unsigned int __pad[] ____cacheline_aligned;
+-	struct ring_pair_cb ring_pair_cb[0];
++	struct ring_pair_cb ring_pair_cb[];
  };
  
- /**
+ int hns_rcb_buf_size2type(u32 buf_size);
 -- 
 2.25.0
 
