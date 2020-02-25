@@ -2,164 +2,106 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54CEC35E1C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EF0C35E17
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4032176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E013A2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h+pDnoGO"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ftkdQ2hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgBYVKS (ORCPT
+        id S1728585AbgBYVLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:10:18 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36585 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgBYVKS (ORCPT
+        Tue, 25 Feb 2020 16:11:22 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34496 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBYVLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:10:18 -0500
-Received: by mail-pj1-f68.google.com with SMTP id gv17so278380pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:10:17 -0800 (PST)
+        Tue, 25 Feb 2020 16:11:22 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so172374pgi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 13:11:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RJKpOOFGEfUAGGLqO1NUhiGzKjVzNOK2IgBZIyJHxc0=;
-        b=h+pDnoGOYsk+E8Wt6TpmxUxdwV6kjF4atGpRldLId/Yw8w9WfMNnrM8XJReblD9SwC
-         8LeJhqiafUtArcvC4wLH1Ri6+yqFHMw0jvz4WTjgvML3xSZUD/c8wIZT5mi6IVRxMhSV
-         aNZy8mj/AVPfjzspIlHT7j9dhhuOVWKWW+0mY=
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tF+IlVAI+HS6Y0f+cneOLEXoT8cWlqM5wUtgnJmBx14=;
+        b=ftkdQ2hgfFVI+hwU2MK6zYKrQrPOSgrXXuFofv2ARHivbmdOfs3ssBMzmdjnP5ZzPD
+         Dr8MiMS654nUEZnmSv/nnA2aODa8F5AWISMWIlq2W5JbZQho0BgYPNraYWZPAoryyXSH
+         G+T5SQyrCZgGe4xBrhoQedScDHGxcrOiKer9O53ygw/vEXo5vFkJl3NoPmX+MdWgsP1L
+         Qan28rYEmUbwHA0ZPySQNAZQwsCrfKb4qnKz3CxjPFQlrY9yQBNHzugggZ0UiAAmEP++
+         ITepZHHQcsLZT8uewbRgRRN9T9ryRH/AJL5KBei+/II26JUJl+y9nBjMNa/GET7EKb29
+         WFlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RJKpOOFGEfUAGGLqO1NUhiGzKjVzNOK2IgBZIyJHxc0=;
-        b=S8VIsSjTJIG9lrlpgrh8nl/qVcpWdg6U7eGtueQ6jW0Q4W+Jq6ni42PcXwvn6xtfyD
-         TkAh3B4pDFvVTYNVh+Grx9yT07ttXJtA1z1TW4RKmu72NChFsfRuTMkDNwFEAl0CBhVt
-         vqFno2VZA3SGzb25VdS0lpsHRtdLCsr6ZQU9szQRkfniPGjx3VscK/uwPOKblf/yIE9H
-         gjagra0qAIfqXzdu7vK98ebnBoR/FFVmKakh8880AtB/u/vGfwdeFmjoWqDSumtB36nh
-         5mz5zNDJET07JSyKXV1S9ryxhWt9Z+hB7/mN+uyjKhKd207QQi0sJrO4HJNLRZzZir5d
-         Y7JA==
-X-Gm-Message-State: APjAAAU5snO+5eEPQX5UiBNG6CduFp/0+IbOJDxt9BuN+Q1+ZKRpnq63
-        A+8RK5rZ7OFWDHeHbNINn4rPWA==
-X-Google-Smtp-Source: APXvYqzQAbfYXF5TtmiNKwyw9CCTemc+ykrjzmXEtfYjXSRlSbhEiGrlXLqSnZ/Ps0gefcUFE6oD5g==
-X-Received: by 2002:a17:902:bb93:: with SMTP id m19mr467640pls.310.1582665016973;
-        Tue, 25 Feb 2020 13:10:16 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w81sm18583961pff.95.2020.02.25.13.10.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 13:10:16 -0800 (PST)
-Date:   Tue, 25 Feb 2020 13:10:14 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Subject: Re: [RFC PATCH v9 18/27] x86/cet/shstk: Introduce WRUSS instruction
-Message-ID: <202002251309.E238DFEEB4@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-19-yu-cheng.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205181935.3712-19-yu-cheng.yu@intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tF+IlVAI+HS6Y0f+cneOLEXoT8cWlqM5wUtgnJmBx14=;
+        b=djqlA2qd4QvDijP9zGhY+5PytzpSyw9/gx73suTUZVV7y+sxMz7E0XyuGlCptflwFj
+         o9bdv5Vq9jhPcmBQ1L85iYq3OdE9+5xjXyO9DXouo5tVMb7AaHoJSQyBf+0XHjiX+YrV
+         REgl9mNbVd0EIZ+mEN7BwvaS0FogNAgB4tiqtiv/4G9TzHNUw3e4jg2aBzHWgmXzNKvT
+         Kc33T1D9X4x2SflpBIpKKLkgIwxV5aa+eD883/hh7Z6Fhj/hANhRF47mCIrqy2mclJW6
+         dg6beoSAEMFWB9IU3N3itUQBqvxvMLZ24us3MyTO4WbNAl5190uFCNavFQa1Lv9rwmrF
+         gTIA==
+X-Gm-Message-State: APjAAAUc+LDdSKvK/8LaJZK/SQ51Yr6X4V7N5UA10QwkXwwl8enqbvCU
+        WkP490Ltp2S9CKooWTH4E/hKjQ==
+X-Google-Smtp-Source: APXvYqwWoqLqv60gI3Mi9a6nyAllDkJGT9fQ6YDrQ3DDVc1ZKlkRjfSci7qWel5KG88MecI6TkZFBg==
+X-Received: by 2002:a63:d90c:: with SMTP id r12mr486886pgg.106.1582665081210;
+        Tue, 25 Feb 2020 13:11:21 -0800 (PST)
+Received: from nuc7.sifive.com ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id h3sm17862064pfo.102.2020.02.25.13.11.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 25 Feb 2020 13:11:20 -0800 (PST)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     kishon@ti.com
+Cc:     alan.mikhak@sifive.com, amurray@thegoodpenguin.co.uk,
+        arnd@arndb.de, bhelgaas@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com
+Subject: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer data
+Date:   Tue, 25 Feb 2020 13:11:07 -0800
+Message-Id: <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200225091130.29467-1-kishon@ti.com>
+References: <20200225091130.29467-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:19:26AM -0800, Yu-cheng Yu wrote:
-> WRUSS is a new kernel-mode instruction but writes directly to user Shadow
-> Stack (SHSTK) memory.  This is used to construct a return address on SHSTK
-> for the signal handler.
-> 
-> This instruction can fault if the user SHSTK is not valid SHSTK memory.
-> In that case, the kernel does a fixup.
+@@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+        int bar;
 
-Since these functions aren't used in this patch, should this get merged
-with patch 19?
+        cancel_delayed_work(&epf_test->cmd_handler);
++       pci_epf_clean_dma_chan(epf_test);
+        pci_epc_stop(epc);
+        for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+                epf_bar = &epf->bar[bar];
+@@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+                }
+        }
 
--Kees
++       epf_test->dma_supported = true;
++
++       ret = pci_epf_init_dma_chan(epf_test);
++       if (ret)
++               epf_test->dma_supported = false;
++
+        if (linkup_notifier) {
+                epf->nb.notifier_call = pci_epf_test_notifier;
+                pci_epc_register_notifier(epc, &epf->nb);
 
-> 
-> v4:
-> - Change to asm goto.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> ---
->  arch/x86/include/asm/special_insns.h | 32 ++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-> index 6d37b8fcfc77..1b9b2e79c353 100644
-> --- a/arch/x86/include/asm/special_insns.h
-> +++ b/arch/x86/include/asm/special_insns.h
-> @@ -222,6 +222,38 @@ static inline void clwb(volatile void *__p)
->  		: [pax] "a" (p));
->  }
->  
-> +#ifdef CONFIG_X86_INTEL_CET
-> +#if defined(CONFIG_IA32_EMULATION) || defined(CONFIG_X86_X32)
-> +static inline int write_user_shstk_32(unsigned long addr, unsigned int val)
-> +{
-> +	asm_volatile_goto("1: wrussd %1, (%0)\n"
-> +			  _ASM_EXTABLE(1b, %l[fail])
-> +			  :: "r" (addr), "r" (val)
-> +			  :: fail);
-> +	return 0;
-> +fail:
-> +	return -EPERM;
-> +}
-> +#else
-> +static inline int write_user_shstk_32(unsigned long addr, unsigned int val)
-> +{
-> +	WARN_ONCE(1, "%s used but not supported.\n", __func__);
-> +	return -EFAULT;
-> +}
-> +#endif
-> +
-> +static inline int write_user_shstk_64(unsigned long addr, unsigned long val)
-> +{
-> +	asm_volatile_goto("1: wrussq %1, (%0)\n"
-> +			  _ASM_EXTABLE(1b, %l[fail])
-> +			  :: "r" (addr), "r" (val)
-> +			  :: fail);
-> +	return 0;
-> +fail:
-> +	return -EPERM;
-> +}
-> +#endif /* CONFIG_X86_INTEL_CET */
-> +
->  #define nop() asm volatile ("nop")
->  
->  
-> -- 
-> 2.21.0
-> 
+Hi Kishon,
 
--- 
-Kees Cook
+Looking forward to building and trying this patch series on
+a platform I work on.
+
+Would you please point me to where I can find the patches
+which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
+to Linux PCI Endpoint Framework?
+
+Regards,
+Alan Mikhak
