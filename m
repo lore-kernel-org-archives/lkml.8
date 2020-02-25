@@ -2,143 +2,93 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A88AC35DFB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE395C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665712176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB2C218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgBYIz1 (ORCPT
+        id S1730021AbgBYIzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:55:27 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35051 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729557AbgBYIz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:55:27 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q8so13107463ljb.2;
-        Tue, 25 Feb 2020 00:55:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BMNDx585fWxvgvlqixFKa4jgKDaCj9UHtNp0mLIEiig=;
-        b=T606kywBV4wlGT87vjNaDu+wSnyc2RGUvoZjkaf2xAY55SN13Z5Lg0mVaQd3d/KgA0
-         3YV1dVGjY0Nj3UfPjBhG7xIb28op389hqxLgdH2jHzXyuU0rSBo1x3JsS16eQ8lwdTr0
-         1/QCsJ85kyEIXkQ4lSv8b70M+tqSDU7qIInvDa11TZ+wSTeIkNW98k41Ohrzl5k5IL7u
-         iUpVHSqj+UoxxbwCvjcrhZIoYRYHLHOTelFLfnzRsWRHbgu9kmkcHlPRbft/LKI7iT/b
-         oalHws99fPyLsrYrtdzsU6j5JRYmljPkE6q/y0VjzbzJ1nBSYDunrOiy5Xk+9j5LFWCV
-         Z7gw==
-X-Gm-Message-State: APjAAAWWfnjmCF1ZT/w32ygcecMXxyUBdePYGeYZQJjBQVz7CRmp8DlI
-        FX3BGA+vtsV063aqBmG9MqE=
-X-Google-Smtp-Source: APXvYqwNr/URCRocLnXgacWQCtdANw129IINYcnCMkxl4+Zrzz8qldyha3qyp+tGkV1sx1K4fYwSHg==
-X-Received: by 2002:a2e:9213:: with SMTP id k19mr30045818ljg.141.1582620925102;
-        Tue, 25 Feb 2020 00:55:25 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id z3sm7379477ljh.83.2020.02.25.00.55.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 00:55:24 -0800 (PST)
-Date:   Tue, 25 Feb 2020 10:55:18 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: [PATCH v4 8/9] power: supply: add battery parameters
-Message-ID: <4a4edf57e3328b8bf4cbe1a95224944b8286516d.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 25 Feb 2020 03:55:31 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:43778 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729557AbgBYIza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:55:30 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 68C081B35C6;
+        Tue, 25 Feb 2020 09:55:28 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D294D1B35AE;
+        Tue, 25 Feb 2020 09:55:20 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1FCDF402B3;
+        Tue, 25 Feb 2020 16:55:12 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, abel.vesa@nxp.com, peng.fan@nxp.com,
+        ping.bai@nxp.com, fugang.duan@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/4] clk: imx8mn: A53 core clock no need to be critical
+Date:   Tue, 25 Feb 2020 16:49:11 +0800
+Message-Id: <1582620554-32689-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add parsing of new device-tree battery bindings.
+'A53_CORE' is just a mux and no need to be critical, being critical
+will cause its parent clock always ON which does NOT make sense,
+to make sure CPU's hardware clock source NOT being disabled during
+clock tree setup, need to move the 'A53_SRC'/'A53_CORE' reparent
+operations to after critical clock 'ARM_CLK' setup finished.
 
-     - trickle-charge-current-microamp
-     - precharge-upper-limit-microvolt
-     - re-charge-voltage-microvolt
-     - over-voltage-threshold-microvolt
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ drivers/clk/imx/clk-imx8mn.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-No changes since rfc-v3
-
- drivers/power/supply/power_supply_core.c | 8 ++++++++
- include/linux/power_supply.h             | 4 ++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 1a9a9fae73d3..02b37fe6061c 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -620,10 +620,18 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 			     &info->voltage_min_design_uv);
- 	of_property_read_u32(battery_np, "voltage-max-design-microvolt",
- 			     &info->voltage_max_design_uv);
-+	of_property_read_u32(battery_np, "trickle-charge-current-microamp",
-+			     &info->tricklecharge_current_ua);
- 	of_property_read_u32(battery_np, "precharge-current-microamp",
- 			     &info->precharge_current_ua);
-+	of_property_read_u32(battery_np, "precharge-upper-limit-microvolt",
-+			     &info->precharge_voltage_max_uv);
- 	of_property_read_u32(battery_np, "charge-term-current-microamp",
- 			     &info->charge_term_current_ua);
-+	of_property_read_u32(battery_np, "re-charge-voltage-microvolt",
-+			     &info->charge_restart_voltage_uv);
-+	of_property_read_u32(battery_np, "over-voltage-threshold-microvolt",
-+			     &info->overvoltage_limit_uv);
- 	of_property_read_u32(battery_np, "constant-charge-current-max-microamp",
- 			     &info->constant_charge_current_max_ua);
- 	of_property_read_u32(battery_np, "constant-charge-voltage-max-microvolt",
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..d01322d1ab52 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -346,8 +346,12 @@ struct power_supply_battery_info {
- 	int charge_full_design_uah;	    /* microAmp-hours */
- 	int voltage_min_design_uv;	    /* microVolts */
- 	int voltage_max_design_uv;	    /* microVolts */
-+	int tricklecharge_current_ua;	    /* microAmps */
- 	int precharge_current_ua;	    /* microAmps */
-+	int precharge_voltage_max_uv;	    /* microVolts */
- 	int charge_term_current_ua;	    /* microAmps */
-+	int charge_restart_voltage_uv;	    /* microVolts */
-+	int overvoltage_limit_uv;	    /* microVolts */
- 	int constant_charge_current_max_ua; /* microAmps */
- 	int constant_charge_voltage_max_uv; /* microVolts */
- 	int factory_internal_resistance_uohm;   /* microOhms */
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index 83618af..0bc7070 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -428,7 +428,7 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
+ 	hws[IMX8MN_CLK_GPU_SHADER_DIV] = hws[IMX8MN_CLK_GPU_SHADER];
+ 
+ 	/* CORE SEL */
+-	hws[IMX8MN_CLK_A53_CORE] = imx_clk_hw_mux2_flags("arm_a53_core", base + 0x9880, 24, 1, imx8mn_a53_core_sels, ARRAY_SIZE(imx8mn_a53_core_sels), CLK_IS_CRITICAL);
++	hws[IMX8MN_CLK_A53_CORE] = imx_clk_hw_mux2("arm_a53_core", base + 0x9880, 24, 1, imx8mn_a53_core_sels, ARRAY_SIZE(imx8mn_a53_core_sels));
+ 
+ 	/* BUS */
+ 	hws[IMX8MN_CLK_MAIN_AXI] = imx8m_clk_hw_composite_critical("main_axi", imx8mn_main_axi_sels, base + 0x8800);
+@@ -559,15 +559,15 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
+ 
+ 	hws[IMX8MN_CLK_DRAM_ALT_ROOT] = imx_clk_hw_fixed_factor("dram_alt_root", "dram_alt", 1, 4);
+ 
+-	clk_hw_set_parent(hws[IMX8MN_CLK_A53_SRC], hws[IMX8MN_SYS_PLL1_800M]);
+-	clk_hw_set_parent(hws[IMX8MN_CLK_A53_CORE], hws[IMX8MN_ARM_PLL_OUT]);
+-
+ 	hws[IMX8MN_CLK_ARM] = imx_clk_hw_cpu("arm", "arm_a53_core",
+ 					   hws[IMX8MN_CLK_A53_CORE]->clk,
+ 					   hws[IMX8MN_CLK_A53_CORE]->clk,
+ 					   hws[IMX8MN_ARM_PLL_OUT]->clk,
+ 					   hws[IMX8MN_CLK_A53_DIV]->clk);
+ 
++	clk_hw_set_parent(hws[IMX8MN_CLK_A53_SRC], hws[IMX8MN_SYS_PLL1_800M]);
++	clk_hw_set_parent(hws[IMX8MN_CLK_A53_CORE], hws[IMX8MN_ARM_PLL_OUT]);
++
+ 	imx_check_clk_hws(hws, IMX8MN_CLK_END);
+ 
+ 	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
 -- 
-2.21.0
+2.7.4
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
