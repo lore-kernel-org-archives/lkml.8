@@ -2,131 +2,116 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A364C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0186EC35DF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC2120CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C714C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKhOPmQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgBYIiv (ORCPT
+        id S1729829AbgBYIlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:38:51 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60959 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgBYIiu (ORCPT
+        Tue, 25 Feb 2020 03:41:15 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42176 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgBYIlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:38:50 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6Vjs-0003He-0o; Tue, 25 Feb 2020 09:38:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6Vjq-00021D-FT; Tue, 25 Feb 2020 09:38:46 +0100
-Date:   Tue, 25 Feb 2020 09:38:46 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, kernel@pengutronix.de
-Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200225083846.4l4tnbjcpm6uggtl@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-4-lokeshvutla@ti.com>
- <20200224085531.zab5ewr2nfi2shem@pengutronix.de>
- <4aedb6d4-1823-ab46-b7e6-cc0b30f7747d@ti.com>
- <20200225064833.kmvaplfqqf53s3iy@pengutronix.de>
- <8e22912c-a65f-9efe-27e7-555cd144776f@ti.com>
+        Tue, 25 Feb 2020 03:41:15 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so11357640otd.9;
+        Tue, 25 Feb 2020 00:41:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q0vy786giS+lfp9bUB7XCIUFz0pQEN7EOGsmAN4eRm4=;
+        b=nKhOPmQ12wJJY6QSzkKm4CK+u010U9hKN8hfKFhUBkr97meisT8QguznR33/Z4Kl7z
+         Ub8spInGXBKTZE5yO2/VfS1vd4WJR/Xbf/TthA/OP/McjtwnLL2Av2EeM4VrrRjGaYwI
+         pI3xKVxC6wqvftu25MA08OL3HhAfyJhxCJbwDl+0T7LN7u5ckm0QfkuLmfxv1K6AVNkd
+         lLv5o4VeZBvi0BBtF6Fb4l+ppbV4hs994DBkXPaY/dq76RkBvW335kqEZH60kswOPAiL
+         u3YETeq6nnY6U3lt5CL6ACiqoQFZllNSrxS8eJnlCkhbNH/gwMGfR14B1mybcHBVckEa
+         eaxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q0vy786giS+lfp9bUB7XCIUFz0pQEN7EOGsmAN4eRm4=;
+        b=Hiq8lOr7j2o3kt3zma0UU2V70bF1zzYvuiNbWVy/ZAUt5LqcvI90OM4OuCdDp+LOWQ
+         ynfdLdveMeuKvgNOeFdv/+ORcnbBYm/rfeNsFLfFNGkkV34MRo0g6sr7YMOXiXT5azmM
+         0wovHjTgxCq2v+/zDuja/HYKpqa9hky76dN3ZwYXeGuwX9SZdz9iJRZqL+SFlthsdp6V
+         09IqMALS/VxNGO+21bJxfRI0UV9y5k8LP1rXuQev9kWxuZ9xgIAdUsuAbUdS8h8GEOFS
+         pQajJ918eBjsZzkTFYWANbtYIU+lEzjeyUTJvMbUBkeyQ7FcOdoQQM52d6F1RjSTMkrP
+         v+lw==
+X-Gm-Message-State: APjAAAVwNO/xcFWt5Tq3wub1N2eGwp8aKnOlD8QlYUC/AKWBWYMOiu2O
+        BsOflYVPlbSv9DMFMN/mzvxBWqJkWCUJ9rfV9+M=
+X-Google-Smtp-Source: APXvYqzA2EItrptKtNT16zTMptHEmpZx46ZO+RBh1Rcrb41daUqfBQ8kLLZi82Lj75DFkuBbEx1awmuMPp2y/3v4QUM=
+X-Received: by 2002:a9d:7ccd:: with SMTP id r13mr42256692otn.56.1582620074234;
+ Tue, 25 Feb 2020 00:41:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e22912c-a65f-9efe-27e7-555cd144776f@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <07348bb2-c8a5-41d0-afca-26c1056570a5.bangcai.hrg@alibaba-inc.com>
+ <CANRm+CwZq=FbCwRcyO=C7YinLevmMuVVu9auwPqyho3o-4Y-wQ@mail.gmail.com> <660daad7-afb0-496d-9f40-a1162d5451e2.bangcai.hrg@alibaba-inc.com>
+In-Reply-To: <660daad7-afb0-496d-9f40-a1162d5451e2.bangcai.hrg@alibaba-inc.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 25 Feb 2020 16:41:02 +0800
+Message-ID: <CANRm+Cw08uxwW8iUi96CJjmvfbtSd6ePXpAPPScByhoNLCrAWQ@mail.gmail.com>
+Subject: Re: [RFC] Question about async TLB flush and KVM pv tlb improvements
+To:     =?UTF-8?B?5L2V5a655YWJKOmCpumHhyk=?= <bangcai.hrg@alibaba-inc.com>
+Cc:     namit <namit@vmware.com>, peterz <peterz@infradead.org>,
+        pbonzini <pbonzini@redhat.com>,
+        "dave.hansen" <dave.hansen@intel.com>, mingo <mingo@redhat.com>,
+        tglx <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "dave.hansen" <dave.hansen@linux.intel.com>, bp <bp@alien8.de>,
+        luto <luto@kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?5p6X5rC45ZCsKOa1t+aeqyk=?= <yongting.lyt@alibaba-inc.com>,
+        =?UTF-8?B?5ZC05ZCv57++KOWQr+e/vik=?= <qixuan.wqx@alibaba-inc.com>,
+        herongguang <herongguang@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Lokesh,
-
-On Tue, Feb 25, 2020 at 01:29:57PM +0530, Lokesh Vutla wrote:
-> On 25/02/20 12:18 PM, Uwe Kleine-König wrote:
-> > On Tue, Feb 25, 2020 at 10:32:42AM +0530, Lokesh Vutla wrote:
-> >> On 24/02/20 2:25 PM, Uwe Kleine-König wrote:
-> >>> On Mon, Feb 24, 2020 at 10:51:34AM +0530, Lokesh Vutla wrote:
-> >>>>  	omap->pdata->set_load(omap->dm_timer, true, load_value);
-> >>>>  	omap->pdata->set_match(omap->dm_timer, true, match_value);
-> >>>
-> >>> (Without having looked into the depths of the driver I assume
-> >>> .set_load() sets the period of the PWM and .set_match() the duty cycle.)
+On Tue, 25 Feb 2020 at 15:53, =E4=BD=95=E5=AE=B9=E5=85=89(=E9=82=A6=E9=87=
+=87) <bangcai.hrg@alibaba-inc.com> wrote:
+>
+> > On Tue, 25 Feb 2020 at 12:12, =E4=BD=95=E5=AE=B9=E5=85=89(=E9=82=A6=E9=
+=87=87) <bangcai.hrg@alibaba-inc.com> wrote:
 > >>
-> >> Right.
+> >> Hi there,
 > >>
-> >>>
-> >>> What happens on a running PWM if you change the period? Consider you
-> >>> change from duty_cycle = 1000, period = 5000 to duty_cycle = 4000,
-> >>> period = 10000. As you set the period first, can it happen the hardware
-> >>> produces a cycle with duty_cycle = 1000, period = 10000?
-> >>
-> >> No. So, the current cycle is un affected with duty_cycle = 1000 and period =
-> >> 5000. Starting from next cycle new settings gets reflected with duty_cycle =
-> >> 4000 and period = 10000.
-> > 
-> > Is the reference manual for this hardware publically available?
-> 
-> AM335x TRM [0] Section 20.1.3.5 Pulse-Width Modulation (Page 4445).
-> 
-> [0] http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+> >> I saw this async TLB flush patch at https://lore.kernel.org/patchwork/=
+patch/1082481/ , and I am wondering after one year, do you think if this pa=
+tch is practical or there are functional flaws?
+> >> From my POV, Nadav's patch seems has no obvious flaw. But I am not fam=
+iliar about the relationship between CPU's speculation exec and stale TLB, =
+since it's usually transparent from programing. In which condition would ma=
+chine check occurs? Is there some reference I can learn?
+> >> BTW, I am trying to improve kvm pv tlb flush that if a vCPU is preempt=
+ed, as initiating CPU is not sending IPI to and waiting for the preempted v=
+CPU, when the preempted vCPU is resuming, I want the VMM to inject an inter=
+rupt, perhaps NMI, to the vCPU and letting vCPU flush TLB instead of flush =
+TLB for the vCPU, in case the vCPU is not in kernel mode or disabled interr=
+upt, otherwise stick to VMM flush. Since VMM flush using INVVPID would flus=
+h all TLB of all PCID thus has some negative performance impacting on the p=
+reempted vCPU. So is there same problem as the async TLB flush patch?
+>
+> > PV TLB Shootdown is disabled in dedicated scenario, I believe there
+> > are already heavy tlb misses in overcommit scenarios before this
+> > feature, so flush all TLB associated with one specific VPID will not
+> > worse that much.
+>
+> If vcpus running on one pcpu is limited to a few, from my test, there
+> can still be some beneficial. Especially if we can move all the logic to
 
-Great. This is BTW an opportunity to increase your patch count: Create a
-patch that adds a reference to this document at the top of the driver.
+Unless the vCPU is preempted.
 
-> > So the .set_load callback just writes a shadow register and .set_match
-> > latches it into hardware atomically with its own register changes? A
-> > comment in the source code about this would be good. Also if .set_load
-> > doesn't work without .set_match I wonder if it is sane to put their
-> > logic in two different functions.
-> 
-> Just to give a little bit of background:
-
-Thanks, very appreciated.
-
-> - The omap timer is an upward counter that can be started and stopped at any time.
-> - Once the timer counter overflows, it gets loaded with a predefined load
-> value.(Or can be configured to not re load at all).
-> - Timer has a configurable output pin which can be toggled in the following two
-> cases:
-> 	- When the counter overflows
-> 	- When the counter matches with a predefined register(match register).
-> 
-> Using this o/p pin the driver tries to generate a PWM with period = (OVERFLOW -
-> LOAD_VALUE) and duty_cycle = (MATCH_VALUE - LOAD_VALUE).
-> 
-> .set_load will configure the load value .set_match will configure the match
-> value. The configured values gets effected only in the next cycle of PWM.
-
-Ah, so back to my original question: If you change from
-duty_cycle/period = 1000/5000 to duty_cycle/period = 4000/10000 and
-after you set the period but before you set the duty_cycle a period
-happens to end, you get indeed a cycle with mixed settings, right?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> VMM eliminating waiting of IPI, however correctness of functionally
+> is a concern. This is also why I found Nadav's patch, do you have
+> any advice on this?
