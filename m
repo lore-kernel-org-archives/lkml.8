@@ -2,217 +2,122 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F24BC35DE1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCB2C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F2021744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="mC54EQb8"
+	by mail.kernel.org (Postfix) with ESMTP id 5BF55218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 13:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbgBYNxp (ORCPT
+        id S1730427AbgBYNzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 08:53:45 -0500
-Received: from mail-bn8nam11on2077.outbound.protection.outlook.com ([40.107.236.77]:7257
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729065AbgBYNxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:53:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y0EOgh4w5cj9Anx+rpU2R/knvqGIgnOlJYfR26xHR1f4WDzA6+iuOJikunj0y7pYOMDnLCsMsOKeFPU2c0dt379l8XiIEFl+HluSE08OtEPUwE/gpSYZDGgQUUd0Bdm5IlheUedCH/H4ITgEAtLrECeKaABlusgm4OPwM/Txc+Nog6WNOTjTp9Z6Y+pI+uqPjszdGJxEyixupQvFfVhjABu+3e/g83LlUUH+G03qiE8QHjjIYoKdzTaS2YPuRPYTuOGUgCdFSCcZzn7xruBr5sHns2iBgOaRnCXsrZY+qYoI2gn3WGRuGR33o782gfB037UCsZZskoVFp0ktjvVT7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z/tRXFh5cywy7PlV5Q88yHHPDOWdqiruyWu5By+svX0=;
- b=i/fM6Jv3B1Ksib90CuZ1bRmYv+2N9XUXP+83cVYWPuhgrP47ViHSR/AOG1/9DBNJoLlIaBOO7+mHosk9BODHqKDIsa4RQFmEzqsJ/hcaabXSABeG1NbMAZOnYlSO+M5FwypPurgN/nyD4MBT0gioo47dZnz2qwRmZSgB9vv36A7MeFWGFI1kE++GQOIxEtmJ1KHWAzSjPF49pgrziX0/eQEGzLGtL/WZzZSBubwrzb72N2FihPE0DGYMpcl3EMnCJUjgldpKQvwHi/2Ai8yJodDYJGqxiHjQKfhIb5jtyp6NLOWvw/XzC36laMn7kmsk+3ybdilE+3If08C22UHGIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z/tRXFh5cywy7PlV5Q88yHHPDOWdqiruyWu5By+svX0=;
- b=mC54EQb8nWDoaxQ0pwVlN4idoCQXsvwAvfL6aR9mBAWNg3mcjCRggQv6ZHBvMTxksKGmO2gKmNIlZMgmy3HnByX+911JdpLgyIecjBpuhJhKaS3q2pIlGFn654ddBzqn0Jkwz+nDTN9CoJ5j5nHc9qS0DHoWRo62SJ+Muw6d4Is=
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com (2603:10b6:208:1b8::30)
- by MN2PR02MB6975.namprd02.prod.outlook.com (2603:10b6:208:205::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
- 2020 13:53:39 +0000
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::f452:65fb:14c7:dd6b]) by MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::f452:65fb:14c7:dd6b%7]) with mapi id 15.20.2750.021; Tue, 25 Feb 2020
- 13:53:39 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: RE: [PATCH 1/2] PCI: Versal CPM: Add device tree binding forversal
- CPM host controller
-Thread-Topic: [PATCH 1/2] PCI: Versal CPM: Add device tree binding forversal
- CPM host controller
-Thread-Index: AQHVtypssK4lIAAUvEC8dXg0z5iyHagsJpcAgAAw40A=
-Date:   Tue, 25 Feb 2020 13:53:38 +0000
-Message-ID: <MN2PR02MB6336EE21A8BBBD36788D2108A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
-References: <1576842072-32027-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1576842072-32027-2-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200225105808.GA5089@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200225105808.GA5089@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 739b0ecd-ddae-46ce-db24-08d7b9fa1e05
-x-ms-traffictypediagnostic: MN2PR02MB6975:|MN2PR02MB6975:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB69753E5A57B1683D3906F02EA5ED0@MN2PR02MB6975.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0324C2C0E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(199004)(189003)(2906002)(81156014)(81166006)(8676002)(6506007)(66946007)(316002)(71200400001)(54906003)(5660300002)(55016002)(52536014)(9686003)(66446008)(64756008)(66556008)(66476007)(4326008)(8936002)(107886003)(33656002)(6916009)(7696005)(86362001)(26005)(76116006)(478600001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6975;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5tBqFWZzBis9RO3HSqaFLHTCGIhzQ4yfNtLYQhVFciy5iWjvegWUprW+axBBZWmCEUIxtG9uYqq0SgClO6Z/bcNlHlkSjX/0HTh8YWbUh3Gk4wsMPQ8hsslXAl2z6HbWwM7jvJmy/2/qKpXvE+rS3crNB5xFyXPtXGQlXzdp1qKrsQGUDxexk3J5B1R/dw0ZZV5VIPmvDv1W/pTQWr4qwJnLD0KnmCqZfvf2YEdedYsHwbrrTwLSe2zxH7tZMMPeacTkE0w/Wx/D5FO73+K1TnElSCaLQj12dpobG5DEFcVg/sG8NHM2+Xml0lD0GoL0Mgv5osy/tcqR2aPIATUuQtwDNtBZTPktgM0FWMixMzz4w/qwqDKdWY4nY70fvY9ln5lesH8l+b3hAoupz0DHTDW7J8VRa6LsWR8b6WKgkkYqb0+O3Q/4FxZ3nk82bCFH
-x-ms-exchange-antispam-messagedata: ZI2TgfKw3bHMKg3Fbl8naL6X1VdxP6GQWFzG8lvXbx9ZTY6u7aK9IN8Q8nvAjvDEorEI8/AenpDzUVA5G38R6vARcT8ySglK/LOeb2z2//5ZV8MTZ/VJY7e3K5h3qY4T1jTLahgEojMG91B9H0+6Bg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Feb 2020 08:55:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49614 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729680AbgBYNzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:55:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5F7DBAC5C;
+        Tue, 25 Feb 2020 13:55:13 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v2 5/5] selftests/bpf: Add test for "bpftool
+ feature" command
+To:     Quentin Monnet <quentin@isovalent.com>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200221031702.25292-1-mrostecki@opensuse.org>
+ <20200221031702.25292-6-mrostecki@opensuse.org>
+ <d178dc6c-7696-8e58-9df9-887152104a1c@isovalent.com>
+From:   Michal Rostecki <mrostecki@opensuse.org>
+Autocrypt: addr=mrostecki@opensuse.org; keydata=
+ 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
+ ZURUUA==
+Message-ID: <c24d2b7a-889b-9294-cd30-6938f00b645a@opensuse.org>
+Date:   Tue, 25 Feb 2020 14:55:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 739b0ecd-ddae-46ce-db24-08d7b9fa1e05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2020 13:53:39.1538
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Yb3LO5H5Quoili6h5CCV6vV05SDrwnl4LH53WvIIzdRau4YRBsH/89UO/HbwwyH0krhs5y+T7xjAGccATziNFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6975
+In-Reply-To: <d178dc6c-7696-8e58-9df9-887152104a1c@isovalent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> On Fri, Dec 20, 2019 at 05:11:11PM +0530, Bharat Kumar Gogada wrote:
-> > Adding device tree binding documentation for versal CPM Root Port drive=
-r.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/pci/xilinx-versal-cpm.txt  | 66
-> > ++++++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> > b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> > new file mode 100644
-> > index 0000000..35f8556
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> > @@ -0,0 +1,66 @@
-> > +* Xilinx Versal CPM DMA Root Port Bridge DT description
-> > +
-> > +Required properties:
-> > +- #address-cells: Address representation for root ports, set to <3>
-> > +- #size-cells: Size representation for root ports, set to <2>
-> > +- #interrupt-cells: specifies the number of cells needed to encode an
-> > +	interrupt source. The value must be 1.
-> > +- compatible: Should contain "xlnx,versal-cpm-host-1.00"
-> > +- reg: Should contain configuration space (includes bridge registers) =
-and
-> > +	CPM system level control and status registers, and length
-> > +- reg-names: Must include the following entries:
-> > +	"cfg": configuration space region and bridge registers
-> > +	"cpm_slcr": CPM system level control and status registers
-> > +- interrupts: Should contain AXI PCIe interrupt
-> > +- interrupt-map-mask,
-> > +  interrupt-map: standard PCI properties to define the mapping of the
-> > +	PCI interface to interrupt numbers.
-> > +- ranges: ranges for the PCI memory regions (I/O space region is not
-> > +	supported by hardware)
-> > +	Please refer to the standard PCI bus binding document for a more
-> > +	detailed explanation
-> > +- msi-map: Maps a Requester ID to an MSI controller and associated MSI
-> > +	sideband data
-> > +- interrupt-names: Must include the following entries:
-> > +	"misc": interrupt asserted when legacy or error interrupt is
-> > +received
-> > +
-> > +Interrupt controller child node
-> > ++++++++++++++++++++++++++++++++
-> > +Required properties:
-> > +- interrupt-controller: identifies the node as an interrupt
-> > +controller
-> > +- #address-cells: specifies the number of cells needed to encode an
-> > +	address. The value must be 0.
-> > +- #interrupt-cells: specifies the number of cells needed to encode an
-> > +	interrupt source. The value must be 1.
-> > +
-> > +
-> > +Refer to the following binding document for more detailed description
-> > +on the use of 'msi-map':
-> > +	 Documentation/devicetree/bindings/pci/pci-msi.txt
-> > +
-> > +Example:
-> > +	pci@fca10000 {
-> > +		#address-cells =3D <3>;
-> > +		#interrupt-cells =3D <1>;
-> > +		#size-cells =3D <2>;
-> > +		compatible =3D "xlnx,versal-cpm-host-1.00";
-> > +		interrupt-map =3D <0 0 0 1 &pcie_intc_0 1>,
-> > +				<0 0 0 2 &pcie_intc_0 2>,
-> > +				<0 0 0 3 &pcie_intc_0 3>,
-> > +				<0 0 0 4 &pcie_intc_0 4>;
->=20
-> This is wrong, interrupts map to pin 0,1,2,3 of pcie_intc.
->=20
-> That's what's forcing you to use the pci_irqd_intx_xlate() function and t=
-hat's
-> completely wrong.
->=20
-> I should find a way to write a common binding for all the host bridges in=
-terrupt-
-> map since this comes up over and over again.
->=20
-> Please have a look at:
->=20
-> Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
-Thanks Lorenzo, will fix this in next patch.
->=20
->=20
-> > +		interrupt-map-mask =3D <0 0 0 7>;
-> > +		interrupt-parent =3D <&gic>;
-> > +		interrupt-names =3D "misc";
-> > +		interrupts =3D <0 72 4>;
-> > +		ranges =3D <0x02000000 0x00000000 0xE0000000 0x0
-> 0xE0000000 0x00000000 0x10000000>,
-> > +			 <0x43000000 0x00000080 0x00000000 0x00000080
-> 0x00000000 0x00000000 0x80000000>;
-> > +		msi-map =3D <0x0 &its_gic 0x0 0x10000>;
-> > +		reg =3D <0x6 0x00000000 0x0 0x1000000>,
-> > +		      <0x0 0xFCA10000 0x0 0x1000>;
-> > +		reg-names =3D "cfg", "cpm_slcr";
-> > +		pcie_intc_0: pci-interrupt-controller {
-> > +			#address-cells =3D <0>;
-> > +			#interrupt-cells =3D <1>;
-> > +			interrupt-controller ;
-> > +		};
-> > +	};
-> > --
-> > 2.7.4
-> >
+On 2/21/20 12:28 PM, Quentin Monnet wrote:
+>> +    @default_iface
+>> +    def test_feature_dev(self, iface):
+>> +        expected_patterns = [
+>> +            SECTION_SYSCALL_CONFIG_PATTERN,
+>> +            SECTION_PROGRAM_TYPES_PATTERN,
+>> +            SECTION_MAP_TYPES_PATTERN,
+>> +            SECTION_HELPERS_PATTERN,
+>> +            SECTION_MISC_PATTERN,
+>> +        ]
+> 
+> Mixed feeling on the tests with plain output, as we keep telling people
+> that plain output should not be parsed (not reliable, may change). But
+> if you want to run one or two tests with it, why not, I guess.
+
+I thought about that and yes, testing the plain output is probably
+redundant and makes those tests less readable. However, the only plain
+output test which I would like to keep there is test_feature_macros -
+because I guess that we are not planning to change names or patterns of
+generated macros (or if so, we should test that change).
