@@ -2,109 +2,90 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C43C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4C4C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEC02084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582647432;
-	bh=l1kpRAXXYq9H4NhUC8N2qXkQy/OJyYRbQ9OH2Dk8bWE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sh9qKM4qDV022FwIo05eqP4GqZAGSaCqUWJL5BYRiUlVS89zjHhOXVzPrQUWq5w8A
-	 OV7h/YhOcpOhLrL1RJ29wOQEPnc1jVJpIn+Onpl3+9hYpAmb8N+cbRvRFas5LFhwx2
-	 ptvLyE6Ooukt90IqjdrzBNT5UxD9HI/Jpo+k/W2M=
+	by mail.kernel.org (Postfix) with ESMTP id DBDEC20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgBYQRL (ORCPT
+        id S1730567AbgBYQRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:17:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 11:17:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49060 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBYQRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:17:10 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 050F820CC7;
-        Tue, 25 Feb 2020 16:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582647430;
-        bh=l1kpRAXXYq9H4NhUC8N2qXkQy/OJyYRbQ9OH2Dk8bWE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nKiwBpAGLLBuQKBfn37X2vtqT259Mb9XHd5bOP1nZZRGOl6JQzS8GWAsJ7PBuXfwx
-         gZ6TH88rnVq9XSgu26VHUwMb8Qordy829i2btfle/acgmc9QPiO5X8ME6MccexZiKP
-         BCtHM4o8WqXWNHav/CW6STmUhy/9w4kW6sWKCE+4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j6ctQ-007rqy-BK; Tue, 25 Feb 2020 16:17:08 +0000
+        id S1728096AbgBYQRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:17:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 290E6B1AE;
+        Tue, 25 Feb 2020 16:17:51 +0000 (UTC)
+Message-ID: <343bf33c29e640241d1ca64f67b05af6d0a0bb43.camel@suse.de>
+Subject: Re: [PATCH 13/89] clk: bcm: rpi: Switch to clk_hw_register_clkdev
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Tue, 25 Feb 2020 17:17:48 +0100
+In-Reply-To: <75dd8f658a253649c176509f0d8d3dd10354ce51.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <75dd8f658a253649c176509f0d8d3dd10354ce51.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-AEsyYIEmDz/ZPvq2SNJG"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Feb 2020 16:17:08 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Heyi Guo <guoheyi@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH] irq-gic-v3-its: fix access width for gicr_syncr
-In-Reply-To: <20200225090023.28020-1-guoheyi@huawei.com>
-References: <20200225090023.28020-1-guoheyi@huawei.com>
-Message-ID: <740ba8790b72a42d400cc9fc317c4dba@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: guoheyi@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, tglx@linutronix.de, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-25 09:00, Heyi Guo wrote:
-> GICR_SYNCR is a 32bit register, so it is better to access it with
-> 32bit access width, though we have not seen any real problem.
-> 
-> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
-> 
-> ---
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index 65a11257d220..5c6790e3bfbf 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -1321,7 +1321,7 @@ static void lpi_write_config(struct irq_data *d,
-> u8 clr, u8 set)
-> 
->  static void wait_for_syncr(void __iomem *rdbase)
->  {
-> -	while (gic_read_lpir(rdbase + GICR_SYNCR) & 1)
-> +	while (readl_relaxed(rdbase + GICR_SYNCR) & 1)
->  		cpu_relax();
->  }
 
-Yup, nice catch. Looks like no implementation really cares about it,
-but still worth fixing.
+--=-AEsyYIEmDz/ZPvq2SNJG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I'll take it for 5.7.
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> Since we don't care about retrieving the clk_lookup structure pointer
+> returned by clkdev_hw_create, we can just use the clk_hw_register_clkdev
+> function.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-Thanks,
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks!
+Nicolas
+
+
+--=-AEsyYIEmDz/ZPvq2SNJG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VSKwACgkQlfZmHno8
+x/6pGAf/RhH46fsKWEbXOnAY4VW48kY55Oo5HIdgFz30Cf1FEHGSIbvJ5ybQk47Y
+T2YNRaoxvcqqYAmOT6nB4LVHUE3HDBt4qWC/yNF7R0vfpVMCCAymZ63hDODXmn7R
+kdfhBPmuUsEkJr6hxW3KzqjRjBoEt1KwRdj+Y7UMF/ufb6nt8rSiRtwX6oa7yomn
+L+gIpiZY/Cz6Z3ALHkbyfIwrAeXNsoXCle8bFAVa5MENX0hlUc+NdbfYOn40Zm5f
+SVl46yPakAdj0LUVEyUDzsaWESwRJfT8NHgz/4OWSnzqsrJ9zsfWvjyfqgJn1LrD
+vtIuk4MlrJ50e8tCyoFLOTrEqWUgEA==
+=uZJp
+-----END PGP SIGNATURE-----
+
+--=-AEsyYIEmDz/ZPvq2SNJG--
+
