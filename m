@@ -2,123 +2,125 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA992C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FCCC4BA09
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BBD2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE37B2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MbmqYJ3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbgBYXxJ (ORCPT
+        id S1729493AbgBYXyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:53:09 -0500
-Received: from mail.willitsonline.com ([216.7.65.54]:51378 "EHLO
-        mail.willitsonline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729182AbgBYXxJ (ORCPT
+        Tue, 25 Feb 2020 18:54:31 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40566 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729090AbgBYXyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:53:09 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.willitsonline.com (Postfix) with ESMTP id B93B7111E08
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:46:50 -0800 (PST)
-X-Virus-Scanned: Debian amavisd-new at iredmail2.willitsonline.com
-Received: from mail.willitsonline.com ([127.0.0.1])
-        by localhost (iredmail2.willitsonline.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bmK5K-ZCg5s5 for <linux-kernel@vger.kernel.org>;
-        Tue, 25 Feb 2020 15:46:50 -0800 (PST)
-Received: from _ (localhost.localdomain [127.0.0.1])
-        (Authenticated sender: bluerocksaddles@willitsonline.com)
-        by mail.willitsonline.com (Postfix) with ESMTPSA id E6052111D61;
-        Tue, 25 Feb 2020 15:46:35 -0800 (PST)
+        Tue, 25 Feb 2020 18:54:31 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i6so1265129otr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:54:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oAqDSepBGZ4n0kSIgLmpw4sGTwUtrjb0cUzefUU3KuM=;
+        b=MbmqYJ3bTxMe7ILHkl8V1BpKi1o65X47MQwpIZFrKvtnxk5Ia7N4Yxh5jXyzl2UHvg
+         LFq79hPlxXf+vrVpK/EaB0+1KrISSykbDer85dM71TmGGfWgEsppOzZcSB5V83fUgmF7
+         aDssLGD4jKvmaA4YHFtgPZ5gPfHlhFTuFPJtyqzseOdWael2CHhcynNMr4O0jrAt3Evz
+         LEAQjMvnMx0lLTC2hu5KJWQmalT4BxaNRZmUwh14P5YNkQW2oUMFpeOtu9xr1IoumhII
+         5nQzlJtlv4Itjcmv5ROdVTh+fM0ynFs6JeOFmnDPyps9PFIgACjP8ZuyJySV304cOToe
+         mK2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oAqDSepBGZ4n0kSIgLmpw4sGTwUtrjb0cUzefUU3KuM=;
+        b=g+gYggqnIrjzHnY67pn3kDm0nagpgr9kkmvPl0cqzApSEgJca+5IVVaLf3bfgpXC4E
+         ulkk9dWTVzosXzob2KOplp4jcrDLdQLnomf6oXCvHY+kNBX1eBS8acjHE6DbbsfPRfZ9
+         P2JAgJ9sZjqKPq+SeROtrBe3vpAgvmyEWpNlGVAP4woCXcdnz8kTrwnJNDbVkKxTXeZ8
+         rCdAtRhFt87KLa9qf+BJ/YjN4bvcqtSVGuatqhTPcoOC0WuYswWlsMg+PKX/BxJYkPVv
+         a8/XYrdIXPfOSYdXSsBMBg0svLrqMYJiRtV0dW1n9sK5VCEkbCrRYUp8NsmyVBBfZEls
+         UUYA==
+X-Gm-Message-State: APjAAAVgvr2F9dijdy2zQwUMmJfESJAUCkcMRX3maHv0X+gbDAcj1K4/
+        FB7Sjc5GgCD8phGRHeRgxIfD7dIJNI0ViOWXOA0OYg==
+X-Google-Smtp-Source: APXvYqxHExvDxP3YDUCsYTbRz8HnGzFZhKBTxskzmLJjMa5mreChK7b0tovjYeFp4V6uvGP5Rvmqe9fzCWzwee3BXhU=
+X-Received: by 2002:a05:6830:1184:: with SMTP id u4mr791163otq.221.1582674870075;
+ Tue, 25 Feb 2020 15:54:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Feb 2020 15:46:35 -0800
-From:   bluerocksaddles@willitsonline.com
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Michael ." <keltoiboy@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Philip Langdale <philipl@overt.org>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        linux-mmc@vger.kernel.org
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-In-Reply-To: <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
-References: <20191029170250.GA43972@google.com>
- <20200222165617.GA207731@google.com>
- <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
-Message-ID: <37a39a53a54ca4ae09b4cfa9d999a47e@willitsonline.com>
-X-Sender: bluerocksaddles@willitsonline.com
-User-Agent: Roundcube Webmail
+References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org> <1582223216-23459-5-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1582223216-23459-5-git-send-email-jcrouse@codeaurora.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 25 Feb 2020 15:54:19 -0800
+Message-ID: <CALAqxLWc4QQPyh=R6=0uFnLLicTYJ3NMO6QSc_yF31bJ2Z_rkQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] drm/msm/a6xx: Use the DMA API for GMU memory objects
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Sean Paul <sean@poorly.run>,
+        Stephen Boyd <swboyd@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        Todd Kjos <tkjos@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn,
+On Thu, Feb 20, 2020 at 10:27 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> The GMU has very few memory allocations and uses a flat memory space so
+> there is no good reason to go out of our way to bypass the DMA APIs which
+> were basically designed for this exact scenario.
+>
+> v2: Pass force_dma false to of_dma_configure to require that the DMA
+> region be set up and return error from of_dma_configure to fail probe.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 112 +++-------------------------------
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   5 +-
+>  2 files changed, 11 insertions(+), 106 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 983afea..c36b38b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+...
+> -       count = bo->size >> PAGE_SHIFT;
+> +       bo->virt = dma_alloc_attrs(gmu->dev, bo->size, &bo->iova, GFP_KERNEL,
+> +               bo->attrs);
+>
+...
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> index 2af91ed..31bd1987 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> @@ -13,7 +13,7 @@ struct a6xx_gmu_bo {
+>         void *virt;
+>         size_t size;
+>         u64 iova;
+> -       struct page **pages;
+> +       unsigned long attrs;
+>  };
 
-If you folks need a test unit or five, let me know. I can donate any 
-Mark CF-29 to the project. (MK 2 or 3 will duplicate the "problem".) 
-They are non-pae 386.
+As a head up, Todd reported that this patch is causing build trouble
+w/ arm32, as the iova needs to be a dma_attr_t.
 
-Jeff
+I've got a patch for the android-mainline tree to fix this, but you
+might want to spin a v3 to address this.
+  https://android-review.googlesource.com/c/kernel/common/+/1243928
 
-On 2020-02-25 07:03, Ulf Hansson wrote:
-> On Sat, 22 Feb 2020 at 17:56, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> 
->> On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
->> > [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
->> > thread, [2] for problem report and the patch Michael tested]
->> >
->> > On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
->> > > Bjorn and Dominik.
->> > > I am happy to let you know the patch did the trick, it compiled well
->> > > on 5.4-rc4 and my friends in the CC list have tested the modified
->> > > kernel and confirmed that both slots are now working as they should.
->> > > As a group of dedicated Toughbook users and Linux users please accept
->> > > our thanks your efforts and assistance is greatly appreciated.
->> > >
->> > > Now that we know this patch works what kernel do you think it will be
->> > > released in? Will it make 5.4 or will it be put into 5.5 development
->> > > for further testing?
->> >
->> > That patch was not intended to be a fix; it was just to test my guess
->> > that the quirk might be related.
->> >
->> > Removing the quirk solved the problem *you're* seeing, but the quirk
->> > was added in the first place to solve some other problem, and if we
->> > simply remove the quirk, we may reintroduce the original problem.
->> >
->> > So we have to look at the history and figure out some way to solve
->> > both problems.  I cc'd some people who might have insight.  Here are
->> > some commits that look relevant:
->> >
->> >   5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
->> >   03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
->> >
->> >
->> > [1] https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
->> > [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
->> 
->> I guess this problem is still unfixed?  I hate the fact that we broke
->> something that used to work.
->> 
->> Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
->> we skip it for Toughbooks?  Or maybe we limit the quirk to the
->> machines where it was originally needed?
-> 
-> Both options seems reasonable to me. Do you have time to put together a 
-> patch?
-> 
-> Kind regards
-> Uffe
+thanks
+-john
