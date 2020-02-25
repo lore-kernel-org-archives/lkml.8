@@ -2,105 +2,126 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6D5C35E03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C629CC35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815C820732
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:17:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Zo0jrRpi"
+	by mail.kernel.org (Postfix) with ESMTP id A874520732
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgBYORX (ORCPT
+        id S1730698AbgBYORu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:17:23 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45627 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729952AbgBYORX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:17:23 -0500
-Received: by mail-il1-f196.google.com with SMTP id p8so2641605iln.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:17:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jv5c5LXoG9g5yRO+OixJLRTnRGPRBiLVL4S6lEJwqPU=;
-        b=Zo0jrRpiiyUzkvYLsp1Q5GrZDcP5YdfYNgbW+SescRTA6MLU7acUT6CIBq1tTHeb6s
-         2VlvzyZEk13CHU224wkG5kKxn2tX2XYOWZrstHodhsTKe0/R3Hrz0/DxLert2NyjAr4V
-         QZ3gMmPmFlOm45vjwhfanS8YzlV2cIN3mX+yY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jv5c5LXoG9g5yRO+OixJLRTnRGPRBiLVL4S6lEJwqPU=;
-        b=b+/7yqWWRKFRYayM1BDIQNH1OJfMAoQSePc41oPVroclbqgBq11vskBSQXNaFK3dyR
-         Wlhp/20gmgiMuqkANRPPtlcJh1/4bgyjmSi++Nfq76Eu6/660H4eBnAjEPi6Jn735pIL
-         3yD3eUukcX10D4L2GiisBGvstn3sBFjrVs3TREjZK0u16cRyG8C8OxVJvo8UB8U5ldQC
-         PvClSNHNPNFBv7RjtCwgsygrQc/xb5uqp+BGoTzmj0WyCKg2EZgY2kBaec7XUDoeSjaI
-         hwGudMPRF8kUrLXQJyZ0QkORuogQX3VCN2RVwjDDmh2Wg8CZdrG0qjP0lRNwT/3RvSPq
-         gSrQ==
-X-Gm-Message-State: APjAAAUdGqlTGP4io8EPi06AfoXc+UMsJGxqladctpEzZ2VmXegWSv6d
-        t9I/HavG1TTOortWV6X+Uo+jw6NJdxCBXuAI/ERV0g==
-X-Google-Smtp-Source: APXvYqx2G1UiiQHlaZm9+ZCojsU629t4LuXTiUCWFpeJA1s2BONyb8B82mAO7djG1+xbOGv9TyYXbqJImVE3NA0YLrU=
-X-Received: by 2002:a92:5a59:: with SMTP id o86mr52888923ilb.171.1582640242301;
- Tue, 25 Feb 2020 06:17:22 -0800 (PST)
+        Tue, 25 Feb 2020 09:17:50 -0500
+Received: from mga03.intel.com ([134.134.136.65]:39891 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730389AbgBYORu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 09:17:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 06:17:49 -0800
+X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
+   d="scan'208";a="231032368"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 06:17:38 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Eric Anholt <eric@anholt.net>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] drm: Replace zero-length array with flexible-array member
+In-Reply-To: <20200225140347.GA22864@embeddedor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200225140347.GA22864@embeddedor>
+Date:   Tue, 25 Feb 2020 16:17:35 +0200
+Message-ID: <87a756sqdc.fsf@intel.com>
 MIME-Version: 1.0
-References: <20200217193314.GA12604@mit.edu> <20200218170857.GA28774@pc636>
- <20200220045233.GC476845@mit.edu> <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636> <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com> <20200223011018.GB2935@paulmck-ThinkPad-P72>
- <20200224174030.GA22138@pc636> <20200225020705.GA253171@google.com> <20200225035549.GU2935@paulmck-ThinkPad-P72>
-In-Reply-To: <20200225035549.GU2935@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 25 Feb 2020 09:17:11 -0500
-Message-ID: <CAEXW_YQbiHW=yKiYAs0=8Mp84W6UunM6OOkHE66yXT6cSchm7A@mail.gmail.com>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 10:55 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-[...]
-> > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
-> > > have a look at preempt_count of current process? If we have for example
-> > > nested rcu_read_locks:
-> > >
-> > > <snip>
-> > > rcu_read_lock()
-> > >     rcu_read_lock()
-> > >         rcu_read_lock()
-> > > <snip>
-> > >
-> > > the counter would be 3.
-> >
-> > No, because preempt_count is not incremented during rcu_read_lock(). RCU
-> > reader sections can be preempted, they just cannot goto sleep in a reader
-> > section (unless the kernel is RT).
+On Tue, 25 Feb 2020, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 >
-> You are both right.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 >
-> Vlad is correct for CONFIG_PREEMPT=n and CONFIG_DEBUG_ATOMIC_SLEEP=y
-> and Joel is correct otherwise, give or take the possibility of other
-> late-breaking corner cases.  ;-)
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_gem.h         | 2 +-
+>  drivers/gpu/drm/gma500/intel_bios.h           | 2 +-
+>  drivers/gpu/drm/i915/display/intel_vbt_defs.h | 4 ++--
+>  drivers/gpu/drm/i915/gt/intel_lrc.c           | 2 +-
+>  drivers/gpu/drm/i915/i915_gpu_error.h         | 2 +-
 
-Oh yes, but even for PREEMPT=n, rcu_read_lock() is just a NOOP for
-that configuration and doesn't really mess around with preempt_count
-if I recall :-D. (doesn't need to mess with preempt_count because
-being in kernel mode is non-preemptible for PREEMPT=n anyway).
+Please split out the i915 changes to a separate patch.
 
-thanks,
+>  drivers/gpu/drm/msm/msm_gem.h                 | 2 +-
+>  drivers/gpu/drm/qxl/qxl_cmd.c                 | 2 +-
+>  drivers/gpu/drm/vboxvideo/vboxvideo.h         | 2 +-
+>  drivers/gpu/drm/vc4/vc4_drv.h                 | 2 +-
+>  drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c    | 2 +-
+>  drivers/gpu/drm/vmwgfx/vmwgfx_surface.c       | 2 +-
+>  include/drm/bridge/mhl.h                      | 4 ++--
+>  include/drm/drm_displayid.h                   | 2 +-
+>  include/uapi/drm/i915_drm.h                   | 4 ++--
 
-- Joel
+Not sure it's worth touching uapi headers. They're full of both [0] and
+[]. Again, please at least split it to a separate patch to be decided
+separately.
+
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
