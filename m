@@ -2,97 +2,91 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80400C35E09
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14878C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8FB2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC06220CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbgBYQCx (ORCPT
+        id S1731061AbgBYQFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:02:53 -0500
-Received: from mga03.intel.com ([134.134.136.65]:47504 "EHLO mga03.intel.com"
+        Tue, 25 Feb 2020 11:05:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44234 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730616AbgBYQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:02:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 08:02:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,484,1574150400"; 
-   d="scan'208";a="438109107"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Feb 2020 08:02:50 -0800
-Subject: Re: [PATCH] MAINTAINERS: add maintainers for uacce
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
-Date:   Tue, 25 Feb 2020 09:02:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1728051AbgBYQFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:05:12 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7540FACB8;
+        Tue, 25 Feb 2020 16:05:10 +0000 (UTC)
+Message-ID: <1ac802c877be35f9065230fb657b5249b201c36d.camel@suse.de>
+Subject: Re: [PATCH 08/89] clk: bcm: rpi: Statically init clk_init_data
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Tue, 25 Feb 2020 17:05:09 +0100
+In-Reply-To: <9ca2cfd02a75d6680533233a9a4e2b60d2ad0ff5.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <9ca2cfd02a75d6680533233a9a4e2b60d2ad0ff5.1582533919.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-QEtcQAOM4pSVPW/kdM3g"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-In-Reply-To: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--=-QEtcQAOM4pSVPW/kdM3g
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/24/20 11:17 PM, Zhangfei Gao wrote:
-> Add Zhangfei Gao and Zhou Wang as maintainers for uacce
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> Instead of declaring the clk_init_data and then calling memset on it, jus=
+t
+> initialise properly.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->   MAINTAINERS | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 38fe2f3..22e647f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17039,6 +17039,16 @@ W:	http://linuxtv.org
->   S:	Maintained
->   F:	drivers/media/pci/tw686x/
->   
-> +UACCE ACCELERATOR FRAMEWORK
-> +M:	Zhangfei Gao <zhangfei.gao@linaro.org>
-> +M:	Zhou Wang <wangzhou1@hisilicon.com>
-> +S:	Maintained
-> +F:	Documentation/ABI/testing/sysfs-driver-uacce
-> +F:	Documentation/misc-devices/uacce.rst
-> +F:	drivers/misc/uacce/
-> +F:	include/linux/uacce.h
-> +F:	include/uapi/misc/uacce/
 
-Mailing list for patch submission?
-+L: linux-accelerators@lists.ozlabs.org ?
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-> +
->   UBI FILE SYSTEM (UBIFS)
->   M:	Richard Weinberger <richard@nod.at>
->   L:	linux-mtd@lists.infradead.org
-> 
+Thanks!
+Nicolas
+
+
+--=-QEtcQAOM4pSVPW/kdM3g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5VRbUACgkQlfZmHno8
+x/5Lkgf/RGwXdMhFQQIz9ZY+f+MAzsSdRjRkEHxy3s5tJqSgI6muZTrC1I1Zt85a
+XrQKG44hswhNqI+fPduksGqRQwj5j3Neh4QTyNlSfNPW1kQ2mHR5PqUgNt4husNz
+wQCIafF/scKUWXFSZLFHS7GJXaqmlE+u7wQqeYOzRuklJXtG1LG2+0DnaYKBHFLT
+vPJC96MYKxW0+bP3QD3P3vwXwoNSc7cH0d6Y8FVy0ttKZrh3Y1VPBAYMSnCgUdaQ
+/rNcJqD/dJsfEsMpn02gDZm7IXJgX6noCPWklw4HDXfKI9u8/jmBN8IgE352F4fg
+ASIY8V7SpueYJCk2A/L3/1i2l/bHFQ==
+=jbQQ
+-----END PGP SIGNATURE-----
+
+--=-QEtcQAOM4pSVPW/kdM3g--
+
