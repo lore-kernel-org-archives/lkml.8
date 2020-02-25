@@ -2,113 +2,110 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31ECC35DF8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C0C35DF8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBBA21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IqLNv0IV"
+	by mail.kernel.org (Postfix) with ESMTP id 930B821927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 07:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgBYHmu (ORCPT
+        id S1729631AbgBYHn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 02:42:50 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48914 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgBYHmu (ORCPT
+        Tue, 25 Feb 2020 02:43:58 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:28838 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgBYHn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 02:42:50 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P7WhOP083265;
-        Tue, 25 Feb 2020 07:42:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=INcxH8t3MgyfLDXX5UOFFnVC3hnSuE6BlWvYpUVNJV8=;
- b=IqLNv0IVyVhYAv5zYqoGT8dpI6rqjyLiUsDSFAPxSbRK9FCfnAW0dbtIk386xschnjbr
- GWabdrYR+wSOqNMA19PtdkmA10KVko7yH2LmvvEdvodTKc578bbYS9WfyyvGnEF5v1H9
- LL/cCOhAgOCpaRn3jd42gWojL+wLxYrAvl6N2A2ML2MoCKUrj0StTTVYbrXXNMKwviiz
- sfFd4CwsMkmXu3XZok+2IAWqdisHK4o3tliydjPE8ciduNLh1tqCoq3XYn6zMU9r5uKa
- c8Oip+9S2h4mZDgTEOgOzaJtRm7auLra1zs4+4PvSJw78AS2x6284HQjdsaHVDnyKkrk Pg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yavxrm67b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 07:42:24 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01P7fuoM007682;
-        Tue, 25 Feb 2020 07:42:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2ybe137d9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 07:42:24 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01P7gDRV011335;
-        Tue, 25 Feb 2020 07:42:13 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 23:42:12 -0800
-Date:   Tue, 25 Feb 2020 10:42:00 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Xin Ji <xji@analogixsemi.com>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v7 0/2] Add initial support for slimport anx7625
-Message-ID: <20200225074200.GC3308@kadam>
-References: <cover.1582529411.git.xji@analogixsemi.com>
+        Tue, 25 Feb 2020 02:43:57 -0500
+Received: from [10.28.90.149] (10.28.90.149) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 25 Feb 2020
+ 15:44:21 +0800
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Julius Werner <jwerner@chromium.org>
+CC:     Evan Benn <evanbenn@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net>
+ <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
+ <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+ <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com>
+Date:   Tue, 25 Feb 2020 15:44:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582529411.git.xji@analogixsemi.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250062
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1011 suspectscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002250061
+In-Reply-To: <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.28.90.149]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:11:39PM +0800, Xin Ji wrote:
-> Hi all,
-> 
-> The following series add initial support for the Slimport ANX7625 transmitter, a
-> ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
-> 
-> This is the initial version, any mistakes, please let me know, I will fix it in
-              ^^^^^^^^^^^^^^^
-> the next series.
+Hi, Julius
 
-This is actually the v7 version, but the patch zero cover letter hasn't
-been updated.  :P  The last time anyone responded to these patches was
-to point out three simple bugs which you fixed in v4 last November.
+On 2020/2/25 9:23, Julius Werner wrote:
+>> The SMC function ID may be solved by the DTS, but the wdt indexs(Eg:
+>> SMCWD_INFO) are also different
+>> for each vendor. The imx_sc_wdt.c is also use the SMC to operate the
+>> WDT, but the wdt indexs(Eg: IMX_SIP_TIMER_START_WDOG)
+>> are different from ours. IMO, If the ATF can implement a common hal
+>> interface and index for watchdog, then writing a
+>> common smc wdt driver will be easier to compatible with all vendors.
+> The MediaTek driver is still in flux (e.g. still being reviewed in
+> Trusted Firmware here:
+> https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405),
+> we can still change it. So if we can now decide on making this a
+> "standard" driver, we can change the MediaTek interface to match IMX
+> and standardize on that. (There are existing Chromebooks shipped with
+> a different interface, but we could handle those separately with
+> downstream patches. I think having a unified interface that will
+> prevent this problem in the future would be worth some extra
+> complication right now.)
+If the ATF provides a common watchdog hal interface and index, I am 
+happy to match
+the generic sec wdt driver. Compared to the current MTK wdt index [0], 
+the following
+indexes need to be supported for meson wdt [1].
+- *_INIT.
+- *_GETTIMEOUT.
+- *_RESETNOW.  It is used to reset the system right now, similar to your 
+SOFT RESET.
 
-What changed in this version?  My guess is that nothing changed and you
-are just prodding us to re-review it...  Feel free to say that also
-because we can't read your mind.
+For another platform-specific parameter "SMC function ID", the generic 
+sec wdt driver can get it from the dts, but if
+the driver want to compatible with more vendors in the future, maybe we 
+should consider Guenter's suggestion at [2]
 
-regards,
-dan carpenter
+[0]: https://patchwork.kernel.org/patch/11395579/
+[1]: https://patchwork.kernel.org/patch/11331271/
+[2]: 
+https://lore.kernel.org/linux-watchdog/20200220155159.GB29658@roeck-us.net/T/#md00328548222965054cd19ec7dda074f8fc09fe2
 
+Best Regards
+> .
