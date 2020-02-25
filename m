@@ -2,65 +2,127 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF2CC35DF9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A174DC35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1A521744
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7067121744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 10:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7mnFD0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgBYKjj (ORCPT
+        id S1730355AbgBYKkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 05:39:39 -0500
-Received: from ms.lwn.net ([45.79.88.28]:53262 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgBYKjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:39:39 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 37F2B738;
-        Tue, 25 Feb 2020 10:39:38 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 03:39:33 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: kref: Clarify the use of two kref_put() in
- example code
-Message-ID: <20200225033933.190a259d@lwn.net>
-In-Reply-To: <20200219111055.GA4552@mani>
-References: <20200213125311.21256-1-manivannan.sadhasivam@linaro.org>
-        <20200219035818.08ad246f@lwn.net>
-        <20200219111055.GA4552@mani>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 25 Feb 2020 05:40:17 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33893 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729417AbgBYKkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 05:40:17 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l18so9418337lfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 02:40:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lB/ixEiBalyhvhRiB5xSxt+Xn0mrFFaoIJOp9ZDTEVw=;
+        b=U7mnFD0eB+14p5WXU8eODfJJrt//+UySWxh8iW6iKBny2kTkaFgkEdVhHYUkXpRAUA
+         7g7Mmd2YzBV+3I5oYA7FDrKM3VpchtBzkta7WmR6zZxPW/G0ydgkd1NqescWG7rFbIgk
+         bPIrzs50xbCoNfa9nFT/+p4zpbKLgAk7XAcbSuwi3cW0spcv/TYjbaLsMnI1UM4x8CXJ
+         Y4Anr+HhIjaJ+WLwg5MbE8JW5ERuVOBwkJXcLZfFBkOXIoKXlPtFC55LSPqUrAnqyWX6
+         B/c+gYEDdP2sUseoxBmcjNri2hGBRzywJd6uONo9ZRJi0f6BZ3gLMXMbzw5mi7LXdwC6
+         R/0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lB/ixEiBalyhvhRiB5xSxt+Xn0mrFFaoIJOp9ZDTEVw=;
+        b=qadEF1iM3OkIkFMPnrDaT8oZvIeqXiz2ZPC7pWFQPzUKWdyDM2rkosLq2+MWesTLXF
+         ZnHd6JL0CoQ/S9DDDVx0vBykl4dSC4ii8rXbyycs4K8ZfIDe95xix4C2LyK9iEp3j9JC
+         bNddNvitxxorzBuPYQZ3gxbVpaiWwaYXIgRKz7NxaVbTMpBldhVWCACi8/2vaKXcyOJA
+         5MXwL/SJBJFKnqzuzhutCuvlfSCRfgVxkYW0vBqGJsNIeEzAAkSzR564mEwQfBxOxHo0
+         ihrEwybaQ2mRXD2Wg1NrEPVZKQ+KakGxN0DjxFZEDxuNA2c1FZA7VW4IlsCJrP+ZmZxr
+         2JRg==
+X-Gm-Message-State: APjAAAX1tfXHW17xsrFCylb9fR+wH/rAgq3dCw9OXyh7M3vsSk99dobq
+        T6P6258TKgbJvveVoBGZhRYdAvqqYFJdrX50Oxg=
+X-Google-Smtp-Source: APXvYqyk/IFNidAB1quALylWpIE3a/t1bvpbndPuBZnjoxy39NP9ssSpKbGX5hPEkyRTtFbOI5O8eKLBMfSiip8LJqE=
+X-Received: by 2002:ac2:52a2:: with SMTP id r2mr29634067lfm.33.1582627213967;
+ Tue, 25 Feb 2020 02:40:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com> <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com> <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com> <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <20200225034438.GA617271@ziqianlu-desktop.localdomain> <CAERHkrs_WX=gS0sQ2Wg_SZuAcf_qhKfT05co0uYgaQk8cFj0ag@mail.gmail.com>
+ <20200225073446.GA618392@ziqianlu-desktop.localdomain>
+In-Reply-To: <20200225073446.GA618392@ziqianlu-desktop.localdomain>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Tue, 25 Feb 2020 18:40:02 +0800
+Message-ID: <CAERHkrtraNqWj+RZnUFBaR8Cxk_cprQnzyKEgZ=6K+1mb1Jifw@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 16:40:55 +0530
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+On Tue, Feb 25, 2020 at 3:34 PM Aaron Lu <aaron.lwe@gmail.com> wrote:
+>
+> On Tue, Feb 25, 2020 at 01:32:35PM +0800, Aubrey Li wrote:
+> > Aaron - did you test this before? In other words, if you reset repo to your
+> > last commit:
+>
+> I did this test only recently when I started to think if I can use
+> coresched to boost main workload's performance in a colocated
+> environment.
+>
+> >
+> > - 5bd3c80 sched/fair : Wake up forced idle siblings if needed
+> >
+> > Does the problem remain? Just want to check if this is a regression
+> >  introduced by the subsequent patchset.
+>
+> The problem isn't there with commit 5bd3c80 as the head, so yes, it
+> looks like indeed a regression introduced by subsequent patchset.
+>
+> P.S. I will need to take a closer look if each cgA's task is running
+> on a different core later but the cpu usage of cgA is back to 800% with
+> commit 5bd3c80.
 
-> Jakub mistakenly spotted one refcounting issue in one of my patchset:
-> https://lkml.org/lkml/2020/2/3/926
-> 
-> Then I tried to show him the kernel doc for kref and that's where I got this
-> example code slightly confusing. And while looking into the log, I noticed that
-> someone deleted the kref_put in error path mistakenly and that commit got
-> reverted after that. This issue was even discussed in stack overflow.
-> 
-> http://stackoverflow.com/questions/20093127/why-kref-doc-of-linux-kernel-omits-kref-put-when-kthread-run-fail
-> 
-> So I thought about making it more clear of why the kref_put is needed in error
-> path.
+Hmm..., I went through the subsequent patches, and I think this one
 
-OK, I've applied it, thanks.
+- 4041eeb8f3 sched/fair: don't migrate task if cookie not match
 
-jon
+is probably the major cause, can you please revert this one to see
+if the problem is gone?
+
+From what I can tell, if 16 threads in cgB occupied 8 cores, this
+patch prevents any thread in cgA from migrating when load balance
+is triggered, and yes, cpu.shares is ignored at this point.
+
+Thanks,
+-Aubrey
