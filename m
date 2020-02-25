@@ -2,134 +2,124 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206C6C35E03
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33762C35DE1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68122176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AFC621744
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 14:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tgejs1Rt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ERzYkvnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgBYOJL (ORCPT
+        id S1730575AbgBYOKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 09:09:11 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34245 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730240AbgBYOIe (ORCPT
+        Tue, 25 Feb 2020 09:10:38 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34536 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729386AbgBYOKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 09:08:34 -0500
-Received: by mail-wm1-f66.google.com with SMTP id i10so1194234wmd.1;
-        Tue, 25 Feb 2020 06:08:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eyXZbYhJwbPUHpTlxOFb8ilZjqXa8eHWzE7fBgVE9Xk=;
-        b=Tgejs1RtD9lZ+fRHFgFRqCifXvDscbHRfyDTGXGn0LqTsGZFT317qnA7hcWbiFLu8M
-         Lpa/15GZjxT3Jw4gE03oBiGU6A+WHcGTMotw+3umW1XJV7g/mc8QVkemIRLW55Swfsfq
-         7PoUpdINm7YdDlNtUG1/ntJdzm6A9E80YsVwjY8mfH1Kyso92x9Gt13dqex8C95iZfw7
-         dfJl4/9+muKn6GE3MAFqWrjvKfwCi7j6FVX0vC8ne9KM082fGmqiFhBw4eQk2hHB+EUd
-         0P8etoJHwBaGNF8SWxjRpX0ry2OP8PB2mc0D1P0qnIL2BRuZLSkYDLpElkVmpZMyTIw8
-         d71Q==
+        Tue, 25 Feb 2020 09:10:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582639837;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bJJoWuth8QbpTnsnD04jwK92kDVW6k9Hdy8WzY5Xvx4=;
+        b=ERzYkvnI48Px9DMruy1utbY/YqLXTI2Ij6SQH+WoVKfb5KQ4zu7Yk/StB/LxUAOvRiptXy
+        m+Pxy2B4VNoMwS0Av+Yec78gAhCD0D1iztWKtGcZpi7PWBvUG3NKE5QN5/ALWL+2Bd2Na6
+        9n+g3rf15WM55Rd6vlaQk9wIwF5Fb14=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-zr-iCqlPOrC3ZEgBY3dciw-1; Tue, 25 Feb 2020 09:10:35 -0500
+X-MC-Unique: zr-iCqlPOrC3ZEgBY3dciw-1
+Received: by mail-wr1-f70.google.com with SMTP id r1so7346867wrc.15
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 06:10:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eyXZbYhJwbPUHpTlxOFb8ilZjqXa8eHWzE7fBgVE9Xk=;
-        b=liXk7zhvNNWOko7NXjWU2sRQSujLiMKaSr6Ap7i9qav7exw1Dhb60USuOxO6pAdU3l
-         HZnbsQi0kzvtU55APi8SlnaZQyi+qu9roOZK+d9Qyv7+McbE9uUBIMQEIkA7jLrDbXUl
-         WtbGNRgTRsvt5iTLg193ATeWrvuSuauybIq3JyKUxa0VFNY0rBCnn3XI+Y2tvvyOcCBN
-         kVeR+UStKRUHrgEUxbpRrohV8Whx9IFe5SgWF5Pghn4Hv6AQ1HNkXKq+//0Yrheb44dA
-         /u6qgQXorE4F4J57gKj3FUGAy5d4KsatkAqMdlf+GpuutacpjKK15dMj+WO47c2LfBAT
-         U2gA==
-X-Gm-Message-State: APjAAAWhJ7HnmlUjlU4RoW1zQEGftRl6ilVJQTz6dMD+5051LdiRqWni
-        o7QDIDSEvOD1Ui4HpCMMvcQ=
-X-Google-Smtp-Source: APXvYqwXEQTkS3WWQVIpWtCGM/LaodNCg+YS2vwu9PPvca4AxsHvS9RRpsvVW5dKB+nF3MM94zFx3A==
-X-Received: by 2002:a1c:a1c3:: with SMTP id k186mr5466464wme.179.1582639712042;
-        Tue, 25 Feb 2020 06:08:32 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:30a8:e117:ed7d:d145? (p200300EA8F29600030A8E117ED7DD145.dip0.t-ipconnect.de. [2003:ea:8f29:6000:30a8:e117:ed7d:d145])
-        by smtp.googlemail.com with ESMTPSA id c9sm4347680wmc.47.2020.02.25.06.08.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 06:08:31 -0800 (PST)
-Subject: [PATCH v3 3/8] r8169: use pci_status_get_and_clear_errors
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        alsa-devel@alsa-project.org
-References: <20ca7c1f-7530-2d89-40a6-d97a65aa25ef@gmail.com>
-Message-ID: <d11d10d9-aeeb-e31f-29f6-02de977f29bf@gmail.com>
-Date:   Tue, 25 Feb 2020 15:04:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bJJoWuth8QbpTnsnD04jwK92kDVW6k9Hdy8WzY5Xvx4=;
+        b=TlsIy/ae5XMW76lMs/OuQyCe9NGbHLVuT+2wer0SVmBa/aSR5yQ/zBgjMS3v2x6Vf6
+         Py8ye4j4QxPnKAOR4fU2z8Ywbp+0DxWfdN3NRqukNrFVlLP1JhmxeDrgOFDTkHZ+kmGC
+         DJibLNCKQMTwDnUWjiewfOzlX47QM+XEjHh6jrZQIlf2IfOTHCtuFJN3F10Uh0+B4Dgw
+         wG6pmluLBgabte2W/RKrEe8ILJkXzkoo2wM0oY73Q3U+F6n3x8bScSyUYY9D+oCVjcGr
+         nrWJJ5taMZ+yLf7VQS/MqR+Qk5xBc8uImlShVRnBJUpeqRrZopdGFgr6k/lFCJPhRRSj
+         7bxQ==
+X-Gm-Message-State: APjAAAWp9LZ61L4cawSghD/gk/vDQwgYwTRdJ5EafIsqcttHucmLljqm
+        x1lu2gd0d9RpoYNs8hg9eLCV9hbr1ugxpEY0zqND4wdXWBm1vutg1aAjqc0tXVcD4G8VVqLoMok
+        e0UEefmg3joIY5UT9v2OlfoE2
+X-Received: by 2002:adf:80cb:: with SMTP id 69mr69878679wrl.320.1582639833816;
+        Tue, 25 Feb 2020 06:10:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyCkU2zj4QT64VJRCvumUqbgag/wgbT3Dvdebf3V4A+WrmdWNFreecb/1BXJJIvkYPXUEvNkQ==
+X-Received: by 2002:adf:80cb:: with SMTP id 69mr69878666wrl.320.1582639833593;
+        Tue, 25 Feb 2020 06:10:33 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h13sm23118178wrw.54.2020.02.25.06.10.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 06:10:33 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 53/61] KVM: VMX: Directly use VMX capabilities helper to detect RDTSCP support
+In-Reply-To: <20200201185218.24473-54-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-54-sean.j.christopherson@intel.com>
+Date:   Tue, 25 Feb 2020 15:10:32 +0100
+Message-ID: <87pne2lpuv.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20ca7c1f-7530-2d89-40a6-d97a65aa25ef@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new helper pci_status_get_and_clear_errors() to simplify the code.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+> Use cpu_has_vmx_rdtscp() directly when computing secondary exec controls
+> and drop the now defunct vmx_rdtscp_supported().
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index c3577f11f538..98d54cfa0cbe 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1651,11 +1651,6 @@ static void vmx_queue_exception(struct kvm_vcpu *vcpu)
+>  	vmx_clear_hlt(vcpu);
+>  }
+>  
+> -static bool vmx_rdtscp_supported(void)
+> -{
+> -	return cpu_has_vmx_rdtscp();
+> -}
+> -
+>  /*
+>   * Swap MSR entry in host/guest MSR entry array.
+>   */
+> @@ -4051,7 +4046,7 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
+>  		}
+>  	}
+>  
+> -	if (vmx_rdtscp_supported()) {
+> +	if (cpu_has_vmx_rdtscp()) {
+>  		bool rdtscp_enabled = guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP);
+>  		if (!rdtscp_enabled)
+>  			exec_control &= ~SECONDARY_EXEC_RDTSCP;
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index f081007a2..4495a3cf9 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4357,13 +4357,15 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- {
- 	struct rtl8169_private *tp = netdev_priv(dev);
- 	struct pci_dev *pdev = tp->pci_dev;
--	u16 pci_status, pci_cmd;
-+	int pci_status_errs;
-+	u16 pci_cmd;
- 
- 	pci_read_config_word(pdev, PCI_COMMAND, &pci_cmd);
--	pci_read_config_word(pdev, PCI_STATUS, &pci_status);
- 
--	netif_err(tp, intr, dev, "PCI error (cmd = 0x%04x, status = 0x%04x)\n",
--		  pci_cmd, pci_status);
-+	pci_status_errs = pci_status_get_and_clear_errors(pdev);
-+
-+	netif_err(tp, intr, dev, "PCI error (cmd = 0x%04x, status_errs = 0x%04x)\n",
-+		  pci_cmd, pci_status_errs);
- 
- 	/*
- 	 * The recovery sequence below admits a very elaborated explanation:
-@@ -4380,11 +4382,6 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- 
- 	pci_write_config_word(pdev, PCI_COMMAND, pci_cmd);
- 
--	pci_write_config_word(pdev, PCI_STATUS,
--		pci_status & (PCI_STATUS_DETECTED_PARITY |
--		PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_REC_MASTER_ABORT |
--		PCI_STATUS_REC_TARGET_ABORT | PCI_STATUS_SIG_TARGET_ABORT));
--
- 	rtl_schedule_task(tp, RTL_FLAG_TASK_RESET_PENDING);
- }
- 
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.25.1
-
+Vitaly
 
