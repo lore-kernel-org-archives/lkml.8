@@ -2,125 +2,270 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D9C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE02C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E60A2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D7921556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NrFkWA9r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q66BZyz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbgBYTx0 (ORCPT
+        id S1731173AbgBYTyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:53:26 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44219 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgBYTxZ (ORCPT
+        Tue, 25 Feb 2020 14:54:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34085 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728443AbgBYTyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:53:25 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j23so497596qtr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 11:53:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=J3naM9gb9grCSaWWa+1M/iL95mfUymHnR7a3z5k6V4Q=;
-        b=NrFkWA9rGIEJMWAg0A6hL55J4EEPLK8A2piMwRH3XBYsJ4Oh+ew87GSHLKENFWK93g
-         DgOYBBd6XA78gFNhO1PyPeD4IbRhUbKB1mU3+zq4cqdmLTHvp77im926+EOJii1Shc7l
-         K7laDUM7E5SF27us9tSPPSKaORprnM2bPq3nFYFQxj1tkCExz+Po8W453NNroEZUsfB7
-         hgdSpkVWeylNW+sqclAWHcWyy8vDOAdlLcgQNLhQCQV5L9ECH0vvZBLRlJZLWbJaM8nj
-         aUR3It7p2aDBeaI7sLK0SLUMtwayKS+6S+hvekwi38pTPrK/0dsfInDKSga8D2wiY/Ew
-         oBUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=J3naM9gb9grCSaWWa+1M/iL95mfUymHnR7a3z5k6V4Q=;
-        b=TpQL1lm5ih4+agGwdU1w4d/kvI4tsc4/riMWY5x8GM+uC6XSnBUP5t/FqZl+jHZ6zu
-         UTL1tXEKXiPvQyJcKH6s2rK5aipn0m3xxszAm6HXyU26WPXEWd6TT179zgMAZN58ybZK
-         wt7Xh7xNSAfUodEFpP4dBfhbIL2vufMH4n96sYVDA877ewFTjEjRTO+ZtYQ/uPzgtRkc
-         LAKT1IUNEcye8Gp2OsfV4FqqijJFySj+MzbrXXs4sGSNGK/Kh1Rg2oQWD5BAVPbNmZ8q
-         K2zoafK02U3C6AdtPFRzvAsqCxa+jTHMu7qhJQtPY8GyRTrSLKIfyJ1KjpXvzd5dqdGP
-         E6uw==
-X-Gm-Message-State: APjAAAWilwKFBnwI7W1dxQeIVE8QxXEs3XGr5w90GhH/GNVp4UzOkJIP
-        KONjuy3c4i8bIjDVomLMZCTLwg==
-X-Google-Smtp-Source: APXvYqzYUX8K2Ym17H9QdktALmz12JDdqhf3sSHdZqZh3SbaJthw84CNOXt2gx89+7gBMSuTcxESsA==
-X-Received: by 2002:aed:3e6d:: with SMTP id m42mr303755qtf.187.1582660404577;
-        Tue, 25 Feb 2020 11:53:24 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l6sm7981936qti.10.2020.02.25.11.53.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 11:53:23 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     darrick.wong@oracle.com
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] xfs: fix an undefined behaviour in _da3_path_shift
-Date:   Tue, 25 Feb 2020 14:53:08 -0500
-Message-Id: <1582660388-28735-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 25 Feb 2020 14:54:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582660478;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yU3ceQzKK/6x6sON/Vrv/ktCdA6JsXx9gNkjI3MyGys=;
+        b=Q66BZyz2QmLeq4Fn7tfeRDYvjDHFWEFLCkJl0wp9NWdmA4ilVJgxx3M/f2hbBrGh+o4oXM
+        KztRFOPVren2eLYLD6LiEsCaKhD8tLoafk86Vf5K3lWXnD9Kb1V1hjgOLUE/rQlY5xTk5X
+        BExLPcBIKJxQUApdFAvI2awuD1+nQDs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-TIXlGtCmN_CKnIBSC-BKEw-1; Tue, 25 Feb 2020 14:54:30 -0500
+X-MC-Unique: TIXlGtCmN_CKnIBSC-BKEw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B3611088380;
+        Tue, 25 Feb 2020 19:54:28 +0000 (UTC)
+Received: from krava (ovpn-205-170.brq.redhat.com [10.40.205.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 722F25C21B;
+        Tue, 25 Feb 2020 19:54:21 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 20:54:18 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kabbott@redhat.com,
+        skozina@redhat.com, mpetlan@redhat.com, nathans@redhat.com,
+        mgoodwin@redhat.com, linux-perf-users@vger.kernel.org,
+        bgregg@netflix.com, mspier@netflix.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [RFC] perf script: add flamegraph.py script
+Message-ID: <20200225195418.GA160300@krava>
+References: <20200221175500.83774-1-agerstmayr@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221175500.83774-1-agerstmayr@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xfs_da3_path_shift() could see state->path.blk[-1] because
-state->path.active == 1 is a valid state when it tries to add an entry
-to a single dir leaf block and then to shift forward to see if
-there's a sibling block that would be a better place to put the new
-entry.
+On Fri, Feb 21, 2020 at 06:55:01PM +0100, Andreas Gerstmayr wrote:
+> This script works in tandem with d3-flame-graph to generate flame graphs
+> from perf. It supports two output formats: JSON and HTML (the default).
+> The HTML format will look for a standalone d3-flame-graph template file in
+> /usr/share/d3-flame-graph/template.html and fill in the collected stacks.
+> 
+> Usage:
+> 
+>     perf script flamegraph -a -F 99 sleep 60
+> 
+> Alternative usage:
+> 
+>     perf record -a -g -F 99 sleep 60
+>     perf script report flamegraph
 
- UBSAN: Undefined behaviour in fs/xfs/libxfs/xfs_da_btree.c:1989:14
- index -1 is out of range for type 'xfs_da_state_blk_t [5]'
- Call trace:
-  dump_backtrace+0x0/0x2c8
-  show_stack+0x20/0x2c
-  dump_stack+0xe8/0x150
-  __ubsan_handle_out_of_bounds+0xe4/0xfc
-  xfs_da3_path_shift+0x860/0x86c [xfs]
-  xfs_da3_node_lookup_int+0x7c8/0x934 [xfs]
-  xfs_dir2_node_addname+0x2c8/0xcd0 [xfs]
-  xfs_dir_createname+0x348/0x38c [xfs]
-  xfs_create+0x6b0/0x8b4 [xfs]
-  xfs_generic_create+0x12c/0x1f8 [xfs]
-  xfs_vn_mknod+0x3c/0x4c [xfs]
-  xfs_vn_create+0x34/0x44 [xfs]
-  do_last+0xd4c/0x10c8
-  path_openat+0xbc/0x2f4
-  do_filp_open+0x74/0xf4
-  do_sys_openat2+0x98/0x180
-  __arm64_sys_openat+0xf8/0x170
-  do_el0_svc+0x170/0x240
-  el0_sync_handler+0x150/0x250
-  el0_sync+0x164/0x180
+nice, could this output the output file, like:
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+     # perf script report flamegraph --output krava.html
+     dumping data to krava.html
 
-v2: update the commit log thanks to Darrick.
-    simplify the code.
+or something in that sense
 
- fs/xfs/libxfs/xfs_da_btree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+other than that it looks good to me
 
-diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-index 875e04f82541..e864c3d47f60 100644
---- a/fs/xfs/libxfs/xfs_da_btree.c
-+++ b/fs/xfs/libxfs/xfs_da_btree.c
-@@ -1986,7 +1986,8 @@ static inline int xfs_dabuf_nfsb(struct xfs_mount *mp, int whichfork)
- 	ASSERT(path != NULL);
- 	ASSERT((path->active > 0) && (path->active < XFS_DA_NODE_MAXDEPTH));
- 	level = (path->active-1) - 1;	/* skip bottom layer in path */
--	for (blk = &path->blk[level]; level >= 0; blk--, level--) {
-+	for (; level >= 0; level--) {
-+		blk = &path->blk[level];
- 		xfs_da3_node_hdr_from_disk(dp->i_mount, &nodehdr,
- 					   blk->bp->b_addr);
- 
--- 
-1.8.3.1
+thanks,
+jirka
+
+
+> 
+> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> ---
+> 
+> I'm currently preparing packages for d3-flame-graph. For Fedora, the copr
+> at
+> https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-flame-graph/
+> can be installed, or alternatively the prebuilt standalone d3-flame-graph
+> template can be downloaded from
+> https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/js-d3-flame-graph/template.html
+> and moved into /usr/share/d3-flame-graph/template.html
+> 
+>  .../perf/scripts/python/bin/flamegraph-record |   2 +
+>  .../perf/scripts/python/bin/flamegraph-report |   3 +
+>  tools/perf/scripts/python/flamegraph.py       | 117 ++++++++++++++++++
+>  3 files changed, 122 insertions(+)
+>  create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
+>  create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
+>  create mode 100755 tools/perf/scripts/python/flamegraph.py
+> 
+> diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf/scripts/python/bin/flamegraph-record
+> new file mode 100755
+> index 000000000000..725d66e71570
+> --- /dev/null
+> +++ b/tools/perf/scripts/python/bin/flamegraph-record
+> @@ -0,0 +1,2 @@
+> +#!/usr/bin/sh
+> +perf record -g "$@"
+> diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
+> new file mode 100755
+> index 000000000000..b1a79afd903b
+> --- /dev/null
+> +++ b/tools/perf/scripts/python/bin/flamegraph-report
+> @@ -0,0 +1,3 @@
+> +#!/usr/bin/sh
+> +# description: create flame graphs
+> +perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> new file mode 100755
+> index 000000000000..2e9139ef2c4a
+> --- /dev/null
+> +++ b/tools/perf/scripts/python/flamegraph.py
+> @@ -0,0 +1,117 @@
+> +# flamegraph.py - create flame graphs from perf samples
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Usage:
+> +#
+> +#  perf record -a -g -F 99 sleep 60
+> +#  perf script report flamegraph
+> +#
+> +# Combined data collection and flamegraph generation:
+> +#
+> +#  perf script flamegraph -a -F 99 sleep 60
+> +#
+> +# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
+> +# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
+> +# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.com>
+> +
+> +import sys
+> +import os
+> +import argparse
+> +import json
+> +
+> +
+> +class Node:
+> +    def __init__(self, name, libtype=""):
+> +        self.name = name
+> +        self.libtype = libtype
+> +        self.value = 0
+> +        self.children = []
+> +
+> +
+> +class FlameGraphCLI:
+> +    def __init__(self, args):
+> +        self.args = args
+> +        self.stack = Node("root")
+> +
+> +        if self.args.format == "html" and \
+> +                not os.path.isfile(self.args.template):
+> +            print(f"Flame Graph template '{self.args.template}' does not " +
+> +                  f"exist. Please install the d3-flame-graph package, " +
+> +                  f"specify an existing flame graph template " +
+> +                  f"(--template PATH) or another output format " +
+> +                  f"(--format FORMAT).", file=sys.stderr)
+> +            sys.exit(1)
+> +
+> +    def find_or_create_node(self, node, name, dso):
+> +        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
+> +        if name is None:
+> +            name = "[unknown]"
+> +
+> +        for child in node.children:
+> +            if child.name == name and child.libtype == libtype:
+> +                return child
+> +
+> +        child = Node(name, libtype)
+> +        node.children.append(child)
+> +        return child
+> +
+> +    def process_event(self, event):
+> +        node = self.find_or_create_node(self.stack, event["comm"], None)
+> +        if "callchain" in event:
+> +            for entry in reversed(event['callchain']):
+> +                node = self.find_or_create_node(
+> +                    node, entry.get("sym", {}).get("name"), event.get("dso"))
+> +        else:
+> +            node = self.find_or_create_node(
+> +                node, entry.get("symbol"), event.get("dso"))
+> +        node.value += 1
+> +
+> +    def trace_end(self):
+> +        def encoder(x): return x.__dict__
+> +        json_str = json.dumps(self.stack, default=encoder,
+> +                              indent=self.args.indent)
+> +
+> +        if self.args.format == "html":
+> +            try:
+> +                with open(self.args.template) as f:
+> +                    output_str = f.read().replace("/** @flamegraph_params **/",
+> +                                                  json_str)
+> +            except IOError as e:
+> +                print(f"Error reading template file: {e}", file=sys.stderr)
+> +                sys.exit(1)
+> +            output_fn = self.args.output or "flamegraph.html"
+> +        else:
+> +            output_str = json_str
+> +            output_fn = self.args.output or "stacks.json"
+> +
+> +        if output_fn == "-":
+> +            sys.stdout.write(output_str)
+> +        else:
+> +            try:
+> +                with open(output_fn, "w") as out:
+> +                    out.write(output_str)
+> +            except IOError as e:
+> +                print(f"Error writing output file: {e}", file=sys.stderr)
+> +                sys.exit(1)
+> +
+> +
+> +if __name__ == "__main__":
+> +    parser = argparse.ArgumentParser(description="Create flame graphs.")
+> +    parser.add_argument("-F", "--format",
+> +                        default="html", choices=["json", "html"],
+> +                        help="output file format")
+> +    parser.add_argument("-o", "--output",
+> +                        help="output file name")
+> +    parser.add_argument("--indent",
+> +                        type=int, help="JSON indentation")
+> +    parser.add_argument("--template",
+> +                        default="/usr/share/d3-flame-graph/template.html",
+> +                        help="path to flamegraph HTML template")
+> +    parser.add_argument("-i", "--input",
+> +                        help=argparse.SUPPRESS)
+> +
+> +    args = parser.parse_args()
+> +    cli = FlameGraphCLI(args)
+> +
+> +    process_event = cli.process_event
+> +    trace_end = cli.trace_end
+> -- 
+> 2.24.1
+> 
 
