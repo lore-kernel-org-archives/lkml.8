@@ -2,389 +2,146 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA79C35DEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F391C35DEA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B0B22464
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3424E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 00:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dBAl+L53"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="d6UovJ/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgBYABV (ORCPT
+        id S1728608AbgBYACz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 19:01:21 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40394 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbgBYAAw (ORCPT
+        Mon, 24 Feb 2020 19:02:55 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.122]:25451 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728511AbgBYACy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 19:00:52 -0500
-Received: by mail-pg1-f195.google.com with SMTP id t24so1568909pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:00:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eCXHKHSG5tUPSj/yQUn0bkQviD7fnjUbdLXbxBcttuo=;
-        b=dBAl+L53PGN6bN4IcYwOx4NFEh5M4UIEVmBXUT9yEG+bVp5/kNlc3e2bhadpz5/IhR
-         K26yQomUUpkY+eQp/bwMnp3ZqekXI48Mxjvt3NkxZqC23y2UKy1fOM9mEAaHvuDxEf11
-         9+kc+GQFC9Lw7sQRxBRWdobYz/5qwJCM3nhB0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eCXHKHSG5tUPSj/yQUn0bkQviD7fnjUbdLXbxBcttuo=;
-        b=OI4vGaFpGw8vmIZ40a7loS3tZzriijlBAgtmT3x29bx6w0GcfFDN//FRtr7PmGM6vu
-         vK5FuD9ISuN+DmxB+e1G8ueMHMGtQCOcMQ9vg6u/dtJOK3VqIY5NNbLfF2y7+Vz7XyAP
-         3R1nA9tLwbr8EzSoe0w703+UsXBthSqFx3X2Cy7zurXYci0PISypC9dp+ssLrDgeItrF
-         cVQmYjxHv70YwLQHUiT2Jo/gDuqrb/GBctkVfngCUqQSUpOqgBump0I4EoMjVCsvLgYh
-         gdtJgePUD6bEC+VIN17EdDcl3P5YVrJsn9obePo0qIaisMGh9YNbXw8+RyViIhOat5vo
-         +R+w==
-X-Gm-Message-State: APjAAAX4ASBJmrEtuZXnDxqwKJJatZoGmftQb/QBt2DAHtWd5S5yVk/o
-        wqhP0e/aTK9BWLRqm1DvvqXbZc+3JI4=
-X-Google-Smtp-Source: APXvYqwOWjtbYtWknl4UkWTjpQEhekZVVkt8T8cNU9N7dgD8W9ctQnQV3fXsHsv11R0fWzIAKQ9FVQ==
-X-Received: by 2002:a63:3048:: with SMTP id w69mr26679991pgw.184.1582588850449;
-        Mon, 24 Feb 2020 16:00:50 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id c188sm14477657pfb.151.2020.02.24.16.00.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 16:00:49 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [RFC PATCH v3 3/5] Bluetooth: Handle BR/EDR devices during suspend
-Date:   Mon, 24 Feb 2020 16:00:34 -0800
-Message-Id: <20200224160019.RFC.v3.3.Icc7c35e1cabf10f8a383a009694987520f1d1b35@changeid>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200225000036.156250-1-abhishekpandit@chromium.org>
-References: <20200225000036.156250-1-abhishekpandit@chromium.org>
+        Mon, 24 Feb 2020 19:02:54 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 2273115AAF2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:02:52 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6Ngajmy4kAGTX6NgajwdDE; Mon, 24 Feb 2020 18:02:52 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hRo5JBsRC43JRVkqXcN4Ax5NWNUEA7ADgecfjU2+sAw=; b=d6UovJ/c91uaXJG2Q7vZjh3kAr
+        OeaccZrN8C8cFXdcr/RbOjs8b4zgOQj9rGWmBvNBRb16VNhVgfAfzF871WfhMXhmCe6CGgmucTOs/
+        tdWxoMrxbCfTVBIzwBd0o7xFmj6Y56goijkit7HizOUsJuLdMNoZLfzLAxlE92NLxrskJxRIDv9AD
+        7IZE0rxL3fipVJZF4XJhFHk+UGvyOjXh21XKqQC6IRZFRK6ftkNs+jjRK58q9Aj4AtEY6bcOzjUKj
+        sTwP+iH+DQtKww3IYYWF4APLdVaQwRpR/gb6zgd0BadcjuS3dh+/7Wzf9ip/9P/K/bjRAFO0w8yBS
+        O7fICQRA==;
+Received: from [201.166.191.20] (port=51398 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6NgZ-002Lmz-Fx; Mon, 24 Feb 2020 18:02:51 -0600
+Subject: Re: [PATCH net-next] chelsio: Replace zero-length array with
+ flexible-array member
+To:     David Miller <davem@davemloft.net>
+Cc:     vishal@chelsio.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200224163024.GA27867@embeddedor>
+ <20200224.152635.883427110923588122.davem@davemloft.net>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <1e4c007e-68fa-2809-118e-f645d18fa2d6@embeddedor.com>
+Date:   Mon, 24 Feb 2020 18:05:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224.152635.883427110923588122.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.191.20
+X-Source-L: No
+X-Exim-ID: 1j6NgZ-002Lmz-Fx
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [201.166.191.20]:51398
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To handle BR/EDR devices, we first disable page scan and disconnect all
-connected devices. Once that is complete, we add event filters (for
-devices that can wake the system) and re-enable page scan.
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
 
-Changes in v3:
-* Refactored to only handle BR/EDR devices
+On 2/24/20 17:26, David Miller wrote:
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Applied.
+> 
 
-Changes in v2:
-* Refactored filters and whitelist settings to its own patch
-* Refactored update_white_list to have clearer edge cases
-* Add connected devices to whitelist (previously missing corner case)
-
- include/net/bluetooth/hci.h      |  17 ++++--
- include/net/bluetooth/hci_core.h |   9 ++-
- net/bluetooth/hci_core.c         |  21 ++++++-
- net/bluetooth/hci_event.c        |  24 ++++++++
- net/bluetooth/hci_request.c      | 101 +++++++++++++++++++++++++++++++
- 5 files changed, 162 insertions(+), 10 deletions(-)
-
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 6293bdd7d862..720d8e633f7e 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -932,10 +932,14 @@ struct hci_cp_sniff_subrate {
- #define HCI_OP_RESET			0x0c03
- 
- #define HCI_OP_SET_EVENT_FLT		0x0c05
--struct hci_cp_set_event_flt {
--	__u8     flt_type;
--	__u8     cond_type;
--	__u8     condition[0];
-+#define HCI_SET_EVENT_FLT_SIZE		9
-+struct hci_cp_set_event_filter {
-+	__u8		flt_type;
-+	__u8		cond_type;
-+	struct {
-+		bdaddr_t bdaddr;
-+		__u8 auto_accept;
-+	} __packed	addr_conn_flt;
- } __packed;
- 
- /* Filter types */
-@@ -949,8 +953,9 @@ struct hci_cp_set_event_flt {
- #define HCI_CONN_SETUP_ALLOW_BDADDR	0x02
- 
- /* CONN_SETUP Conditions */
--#define HCI_CONN_SETUP_AUTO_OFF	0x01
--#define HCI_CONN_SETUP_AUTO_ON	0x02
-+#define HCI_CONN_SETUP_AUTO_OFF		0x01
-+#define HCI_CONN_SETUP_AUTO_ON		0x02
-+#define HCI_CONN_SETUP_AUTO_ON_WITH_RS	0x03
- 
- #define HCI_OP_READ_STORED_LINK_KEY	0x0c0d
- struct hci_cp_read_stored_link_key {
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index bc9620e5b65b..2723a608183e 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -91,13 +91,18 @@ struct discovery_state {
- #define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
- 
- enum suspend_tasks {
-+	SUSPEND_SCAN_DISABLE,
-+	SUSPEND_SCAN_ENABLE,
-+	SUSPEND_DISCONNECTING,
-+
- 	SUSPEND_PREPARE_NOTIFIER,
- 	__SUSPEND_NUM_TASKS
- };
- 
- enum suspended_state {
- 	BT_RUNNING = 0,
--	BT_SUSPENDED,
-+	BT_SUSPEND_DISCONNECT,
-+	BT_SUSPEND_COMPLETE,
- };
- 
- struct hci_conn_hash {
-@@ -406,6 +411,8 @@ struct hci_dev {
- 	struct work_struct	suspend_prepare;
- 	enum suspended_state	suspend_state_next;
- 	enum suspended_state	suspend_state;
-+	bool			scanning_paused;
-+	bool			suspended;
- 
- 	wait_queue_head_t	suspend_wait_q;
- 	DECLARE_BITMAP(suspend_tasks, __SUSPEND_NUM_TASKS);
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 6ca0aa8d30dd..66b5dbbe8ea0 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3287,16 +3287,31 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
- 	int ret = 0;
- 
- 	if (action == PM_SUSPEND_PREPARE) {
--		hdev->suspend_state_next = BT_SUSPENDED;
-+		/* Suspend consists of two actions:
-+		 *  - First, disconnect everything and make the controller not
-+		 *    connectable (disabling scanning)
-+		 *  - Second, program event filter/whitelist and enable scan
-+		 */
-+		hdev->suspend_state_next = BT_SUSPEND_DISCONNECT;
- 		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
- 		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
--
- 		ret = hci_suspend_wait_event(hdev);
-+
-+		/* If the disconnect portion failed, don't attempt to complete
-+		 * by configuring the whitelist. The suspend notifier will
-+		 * follow a cancelled suspend with a PM_POST_SUSPEND
-+		 * notification.
-+		 */
-+		if (!ret) {
-+			hdev->suspend_state_next = BT_SUSPEND_COMPLETE;
-+			set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+			queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
-+			ret = hci_suspend_wait_event(hdev);
-+		}
- 	} else if (action == PM_POST_SUSPEND) {
- 		hdev->suspend_state_next = BT_RUNNING;
- 		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
- 		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
--
- 		ret = hci_suspend_wait_event(hdev);
- 	}
- 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 591e7477e925..e3c36230f705 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -2474,6 +2474,7 @@ static void hci_inquiry_result_evt(struct hci_dev *hdev, struct sk_buff *skb)
- static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct hci_ev_conn_complete *ev = (void *) skb->data;
-+	struct inquiry_entry *ie;
- 	struct hci_conn *conn;
- 
- 	BT_DBG("%s", hdev->name);
-@@ -2482,6 +2483,21 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
- 
- 	conn = hci_conn_hash_lookup_ba(hdev, ev->link_type, &ev->bdaddr);
- 	if (!conn) {
-+		/* Connection may not exist if auto-connected. Check the inquiry
-+		 * cache to see if we've already discovered this bdaddr before.
-+		 * If found and link is an ACL type, create a connection class
-+		 * automatically.
-+		 */
-+		ie = hci_inquiry_cache_lookup(hdev, &ev->bdaddr);
-+		if (ie && ev->link_type == ACL_LINK) {
-+			conn = hci_conn_add(hdev, ev->link_type, &ev->bdaddr,
-+					    HCI_ROLE_SLAVE);
-+			if (!conn) {
-+				bt_dev_err(hdev, "no memory for new conn");
-+				goto unlock;
-+			}
-+		}
-+
- 		if (ev->link_type != SCO_LINK)
- 			goto unlock;
- 
-@@ -2743,6 +2759,14 @@ static void hci_disconn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
- 	hci_disconn_cfm(conn, ev->reason);
- 	hci_conn_del(conn);
- 
-+	/* The suspend notifier is waiting for all devices to disconnect so
-+	 * clear the bit from pending tasks and inform the wait queue.
-+	 */
-+	if (list_empty(&hdev->conn_hash.list) &&
-+	    test_and_clear_bit(SUSPEND_DISCONNECTING, hdev->suspend_tasks)) {
-+		wake_up(&hdev->suspend_wait_q);
-+	}
-+
- 	/* Re-enable advertising if necessary, since it might
- 	 * have been disabled by the connection. From the
- 	 * HCI_LE_Set_Advertise_Enable command description in
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index 08908469c043..4d67b1d08608 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -918,12 +918,62 @@ static u8 get_adv_instance_scan_rsp_len(struct hci_dev *hdev, u8 instance)
- 	return adv_instance->scan_rsp_len;
- }
- 
-+static void hci_req_clear_event_filter(struct hci_request *req)
-+{
-+	struct hci_cp_set_event_filter f;
-+
-+	memset(&f, 0, sizeof(f));
-+	f.flt_type = HCI_FLT_CLEAR_ALL;
-+	hci_req_add(req, HCI_OP_SET_EVENT_FLT, 1, &f);
-+
-+	/* Update page scan state (since we may have modified it when setting
-+	 * the event filter).
-+	 */
-+	__hci_req_update_scan(req);
-+}
-+
-+static void hci_req_set_event_filter(struct hci_request *req)
-+{
-+	struct bdaddr_list *b;
-+	struct hci_cp_set_event_filter f;
-+	struct hci_dev *hdev = req->hdev;
-+	u8 scan;
-+
-+	/* Always clear event filter when starting */
-+	hci_req_clear_event_filter(req);
-+
-+	list_for_each_entry(b, &hdev->wakeable, list) {
-+		memset(&f, 0, sizeof(f));
-+		bacpy(&f.addr_conn_flt.bdaddr, &b->bdaddr);
-+		f.flt_type = HCI_FLT_CONN_SETUP;
-+		f.cond_type = HCI_CONN_SETUP_ALLOW_BDADDR;
-+		f.addr_conn_flt.auto_accept = HCI_CONN_SETUP_AUTO_ON;
-+
-+		BT_DBG("Adding event filters for %pMR", &b->bdaddr);
-+		hci_req_add(req, HCI_OP_SET_EVENT_FLT, sizeof(f), &f);
-+	}
-+
-+	scan = !list_empty(&hdev->wakeable) ? SCAN_PAGE : SCAN_DISABLED;
-+	hci_req_add(req, HCI_OP_WRITE_SCAN_ENABLE, 1, &scan);
-+}
-+
-+static void suspend_req_complete(struct hci_dev *hdev, u8 status, u16 opcode)
-+{
-+	BT_DBG("Request complete opcode=0x%x, status=0x%x", opcode, status);
-+	if (test_and_clear_bit(SUSPEND_SCAN_ENABLE, hdev->suspend_tasks) ||
-+	    test_and_clear_bit(SUSPEND_SCAN_DISABLE, hdev->suspend_tasks)) {
-+		wake_up(&hdev->suspend_wait_q);
-+	}
-+}
-+
- /* Call with hci_dev_lock */
- void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
- {
- 	int old_state;
- 	struct hci_conn *conn;
- 	struct hci_request req;
-+	u8 page_scan;
-+	int disconnect_counter;
- 
- 	if (next == hdev->suspend_state) {
- 		BT_DBG("Same state before and after: %d", next);
-@@ -931,6 +981,54 @@ void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
- 	}
- 
- 	hdev->suspend_state = next;
-+	hci_req_init(&req, hdev);
-+
-+	if (next == BT_SUSPEND_DISCONNECT) {
-+		/* Mark device as suspended */
-+		hdev->suspended = true;
-+
-+		/* Disable page scan */
-+		page_scan = SCAN_DISABLED;
-+		hci_req_add(&req, HCI_OP_WRITE_SCAN_ENABLE, 1, &page_scan);
-+
-+		/* Mark task needing completion */
-+		set_bit(SUSPEND_SCAN_DISABLE, hdev->suspend_tasks);
-+
-+		/* Prevent disconnects from causing scanning to be re-enabled */
-+		hdev->scanning_paused = true;
-+
-+		/* Run commands before disconnecting */
-+		hci_req_run(&req, suspend_req_complete);
-+
-+		disconnect_counter = 0;
-+		/* Soft disconnect everything (power off) */
-+		list_for_each_entry(conn, &hdev->conn_hash.list, list) {
-+			hci_disconnect(conn, HCI_ERROR_REMOTE_POWER_OFF);
-+			disconnect_counter++;
-+		}
-+
-+		if (disconnect_counter > 0) {
-+			BT_DBG("Had %d disconnects. Will wait on them",
-+			       disconnect_counter);
-+			set_bit(SUSPEND_DISCONNECTING, hdev->suspend_tasks);
-+		}
-+	} else if (next == BT_SUSPEND_COMPLETE) {
-+		/* Unpause to take care of updating scanning params */
-+		hdev->scanning_paused = false;
-+		/* Enable event filter for paired devices */
-+		hci_req_set_event_filter(&req);
-+		/* Pause scan changes again. */
-+		hdev->scanning_paused = true;
-+		hci_req_run(&req, suspend_req_complete);
-+	} else {
-+		hdev->suspended = false;
-+		hdev->scanning_paused = false;
-+
-+		hci_req_clear_event_filter(&req);
-+		hci_req_run(&req, suspend_req_complete);
-+	}
-+
-+	hdev->suspend_state = next;
- 
- done:
- 	clear_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-@@ -2034,6 +2132,9 @@ void __hci_req_update_scan(struct hci_request *req)
- 	if (mgmt_powering_down(hdev))
- 		return;
- 
-+	if (hdev->scanning_paused)
-+		return;
-+
- 	if (hci_dev_test_flag(hdev, HCI_CONNECTABLE) ||
- 	    disconnected_whitelist_entries(hdev))
- 		scan = SCAN_PAGE;
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Thanks, Dave.
+--
+Gustavo
