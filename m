@@ -2,136 +2,147 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8271C35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D1AC35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86990222C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582594218;
-	bh=GjtdDzSg925EvRvuss62o0/Sozp5pFNL+UBdSosNKu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XFLD2U4BF5bUiu9JaIkLQ2G6fQb/5kAqqeuDhKv6nD45F5NV53j0YgH+9Dw5CUZql
-	 3Jpna6Bjc6JYkEymNcdHuBWJo9Z1OtC5vO3NiOSZnEnHYD+lX8mAm9QR79JFgk3hBO
-	 G/O2YfGTs530+k6OKhZ6H1Hem7lI6pDLsQ0ljDMI=
+	by mail.kernel.org (Postfix) with ESMTP id 4E17C21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 01:33:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oBmrIz9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgBYBaR (ORCPT
+        id S1728646AbgBYBdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 20:30:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbgBYBaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 20:30:17 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D1E72072D;
-        Tue, 25 Feb 2020 01:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582594216;
-        bh=GjtdDzSg925EvRvuss62o0/Sozp5pFNL+UBdSosNKu0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ncFXRFn3EfzgklPksvD1a/YxzHLICZpHk76ZwRvrXjd6jg8xJ7LdePWTIoHid4fZX
-         oWxN5CtX9Q5a57E2JHcZTJW/h6bHoSTkFzbfXYLuwR96L5zFdy0AUnn7x46mU4Qgyc
-         mHF746mIYaTvnskI8RAlUnKc/qivqIU/UVPONVbw=
-Date:   Tue, 25 Feb 2020 02:30:14 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200225013013.GA28329@lenoir>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
- <20200224121331.tnkvp6mmjchm4s2i@pathway.suse.cz>
+        Mon, 24 Feb 2020 20:33:07 -0500
+Received: from gateway30.websitewelcome.com ([192.185.196.18]:21391 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728011AbgBYBdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 20:33:07 -0500
+X-Greylist: delayed 1440 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 20:33:06 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 75C97CFFD
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 19:09:04 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 6OiejiXsMRP4z6Oiej7ehP; Mon, 24 Feb 2020 19:09:04 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=c98g6WeC58NkLgTxbAHyTHrMsSRtYF/+CmdBm9wFx1c=; b=oBmrIz9lcLMYNVxyceXUi64LhN
+        R8bn0YkI5rDDRrS/advScUhcNp+BYBkCreXmX/0S4G+jGoBdPwIxm3cR9VMB55ECU1Zt8t/pFwYzj
+        wnTS+gDFDxK3HRygcf2W8jZGc1m/99WeWur14UrZ11trJZHygvdSRcfZzYUge9nSEhF9MUuNHxaTC
+        mTJuL5Hlcq3iB+Jyn4EJ+2t3HAVyd1ZQUndUfOVAXMt7Sp69zvtnLfR/sFpc7+nlxDMlvEsUSntx8
+        TEvBW0idcOql4aAo1KnpVJdPmCVKgAREfEafCLkGTxQhu6QzoDdgDaIzLudK+b7vCEAnL7aCQThOj
+        7ygB7Rkg==;
+Received: from [201.166.190.254] (port=58460 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j6Oib-002rNH-ID; Mon, 24 Feb 2020 19:09:01 -0600
+Date:   Mon, 24 Feb 2020 19:11:51 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jouni Malinen <j@w1.fi>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] hostap: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200225011151.GA30675@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224121331.tnkvp6mmjchm4s2i@pathway.suse.cz>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.190.254
+X-Source-L: No
+X-Exim-ID: 1j6Oib-002rNH-ID
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.190.254]:58460
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:13:31PM +0100, Petr Mladek wrote:
-> On Fri 2020-02-21 23:21:30, Frederic Weisbecker wrote:
-> > If the outermost NMI is interrupted while between printk_nmi_enter()
-> > and preempt_count_add(), there is still a risk that we race and clear?
-> 
-> Great catch!
-> 
-> There is plenty of space in the printk_context variable. I would
-> reserve one byte there for the NMI context to be on the safe side
-> and be done with it.
-> 
-> It should never overflow. The BUG_ON(in_nmi() == NMI_MASK)
-> in nmi_enter() will trigger much earlier.
-> 
-> Also I hope that printk_context will get removed with
-> the lockless printk() implementation soon anyway.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Cool, because it's sad that we have to mimic/mirror the preempt count
-with printk_context just for the sake of debugging preempt_count_add()
-and other early code in nmi_enter().
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-The diff below looks good, thanks!
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-> 
-> 
-> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-> index c8e6ab689d42..109c5ab70a0c 100644
-> --- a/kernel/printk/internal.h
-> +++ b/kernel/printk/internal.h
-> @@ -6,9 +6,11 @@
->  
->  #ifdef CONFIG_PRINTK
->  
-> -#define PRINTK_SAFE_CONTEXT_MASK	 0x3fffffff
-> -#define PRINTK_NMI_DIRECT_CONTEXT_MASK	 0x40000000
-> -#define PRINTK_NMI_CONTEXT_MASK		 0x80000000
-> +#define PRINTK_SAFE_CONTEXT_MASK	0x007ffffff
-> +#define PRINTK_NMI_DIRECT_CONTEXT_MASK	0x008000000
-> +#define PRINTK_NMI_CONTEXT_MASK		0xff0000000
-> +
-> +#define PRINTK_NMI_CONTEXT_OFFSET	0x010000000
->  
->  extern raw_spinlock_t logbuf_lock;
->  
-> diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-> index b4045e782743..e8989418a139 100644
-> --- a/kernel/printk/printk_safe.c
-> +++ b/kernel/printk/printk_safe.c
-> @@ -296,12 +296,12 @@ static __printf(1, 0) int vprintk_nmi(const char *fmt, va_list args)
->  
->  void notrace printk_nmi_enter(void)
->  {
-> -	this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
-> +	this_cpu_add(printk_context, PRINTK_NMI_CONTEXT_OFFSET);
->  }
->  
->  void notrace printk_nmi_exit(void)
->  {
-> -	this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
-> +	this_cpu_sub(printk_context, PRINTK_NMI_CONTEXT_OFFSET);
->  }
->  
->  /*
-> 
-> Best Regards,
-> Petr
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/intersil/hostap/hostap_common.h | 2 +-
+ drivers/net/wireless/intersil/hostap/hostap_wlan.h   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_common.h b/drivers/net/wireless/intersil/hostap/hostap_common.h
+index 22543538239b..dd29a8e8d349 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_common.h
++++ b/drivers/net/wireless/intersil/hostap/hostap_common.h
+@@ -322,7 +322,7 @@ struct prism2_download_param {
+ 		u32 addr; /* wlan card address */
+ 		u32 len;
+ 		void __user *ptr; /* pointer to data in user space */
+-	} data[0];
++	} data[];
+ };
+ 
+ #define PRISM2_MAX_DOWNLOAD_AREA_LEN 131072
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_wlan.h b/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+index 487883fbb58c..dd2603d9b5d3 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_wlan.h
++++ b/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+@@ -615,7 +615,7 @@ struct prism2_download_data {
+ 		u32 addr; /* wlan card address */
+ 		u32 len;
+ 		u8 *data; /* allocated data */
+-	} data[0];
++	} data[];
+ };
+ 
+ 
+-- 
+2.25.0
+
