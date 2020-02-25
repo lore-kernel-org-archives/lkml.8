@@ -2,394 +2,593 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70EEC35E0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF04C35E0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C28E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7B321D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ENWuIsFq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ltEi9IHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgBYUte (ORCPT
+        id S1729238AbgBYUu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:49:34 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:34072 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbgBYUtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 15:49:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1Jp4AsY95+F3uN+zvxx3OxTatSAeEzZsq49QkrF0bNg=; b=ENWuIsFqrSLEL5s2SyWRoPmAWC
-        CxqSge1BqzF3d7vpwhaonrnVh9c3C5SJwITb+pLaSsIkKW6W06IX/bZhhw+uY2XEJ7kYyPkHWXOIT
-        IZPqNlm9nFq2sZmZgPHSyk5UgGRVqw9TmbJQPWXw6KlNXQqCs4Q5VJrDvnB/8kMsb3kw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j6h8z-0001Gr-Fs; Tue, 25 Feb 2020 21:49:29 +0100
-Date:   Tue, 25 Feb 2020 21:49:29 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-Subject: Re: [RFC net-next 2/3] net: marvell: prestera: Add PCI interface
- support
-Message-ID: <20200225204929.GG7663@lunn.ch>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
- <20200225163025.9430-3-vadym.kochan@plvision.eu>
+        Tue, 25 Feb 2020 15:50:29 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43578 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728200AbgBYUu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:50:26 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so804895oth.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 12:50:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cN7Q4dVydT4xYlRzhXk1sRwtrE826VFs1l2/vxQJcvQ=;
+        b=ltEi9IHcymn8kA5Bo4Q/bznz0r5VMTRacX6R3LcY9xUZ3gClNFcfJIRVk3gRVpQkQX
+         +VE9xCNeUAfxtq5wIkeG95u3mhdPhLQCtHsvHgfRsLVZXjMSAKQOj1cVLFCftpXMsOGS
+         z+FMROp6M+Q7DxtzA7btZo0irkZY/QhK2N2jz/FDvywurbv2KAbuQZVZPahVmp25r5MG
+         qt/hViiWH/XAcpfyYzzQoL8JGKogorzR5nrIMCBxQiutr3g+WPUEHxHcmxRYa1moIpij
+         xyODtMiCAw0boQmMPJ4WOt9xZdnkN/vdbtHWxzmnnVjX/WCpVqWTlkzJUp6moh0ltyZo
+         /PQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cN7Q4dVydT4xYlRzhXk1sRwtrE826VFs1l2/vxQJcvQ=;
+        b=Ag7MkG9uehNdE7QmiJIAmthQDUrv580DhTKnXv/VtqlTwg2rcdKyceVqAYjThFed4X
+         tdv+4g5m93EWh7cvDLhppDImR7R591i9cp3VbMl/lYDdKCxIUIeiDVsIRSI+9531uUus
+         wSfjnYL4y6KoTte2P8hT33fx9D/+Og/2PpCWIAc0EsP2LpV5KGZEcoGO4V0nYjXZ69DG
+         oSD+vCWhz1N3VucNtlwXIzln6Qcqrc4rkic+GdHKX4M31FwB9c859IfcFMxgB2IRafuS
+         Gsthjgnj8pXhK53x9GIEjPZIo6hPzFHSEPPYOkio5Vsu7UWYfUf5TxukFLg6bIdeuVTY
+         I3oQ==
+X-Gm-Message-State: APjAAAUaxfWutlRHHVqfTOqWYoeG75NshMxE2aZevkdUh1bT/4WYyIi6
+        rKiVgw0ZShjRXs4lxbDfdd0Cg71+z1ls08+i0keAOQ==
+X-Google-Smtp-Source: APXvYqy0mDp21Y+Hj6qrkPvHOelZCXjMBtpFN8Bj28fsPkz/lgS1es5GWIVnhOXNkqbFeOM6C9PbvDEEeYWXWEOuc/Y=
+X-Received: by 2002:a9d:5e8b:: with SMTP id f11mr381742otl.110.1582663823821;
+ Tue, 25 Feb 2020 12:50:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225163025.9430-3-vadym.kochan@plvision.eu>
+References: <20200224160215.4136-1-mic@digikod.net> <20200224160215.4136-2-mic@digikod.net>
+In-Reply-To: <20200224160215.4136-2-mic@digikod.net>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 25 Feb 2020 21:49:57 +0100
+Message-ID: <CAG48ez1FN0B05r35c-EDuQNoW=5ZTy1iBzksbkt+toqs+_tdqg@mail.gmail.com>
+Subject: Re: [RFC PATCH v14 01/10] landlock: Add object and rule management
+To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:30:55PM +0000, Vadym Kochan wrote:
-> Add PCI interface driver for Prestera Switch ASICs family devices, which
-> provides:
-> 
->     - Firmware loading mechanism
->     - Requests & events handling to/from the firmware
->     - Access to the firmware on the bus level
-> 
-> The firmware has to be loaded each time device is reset. The driver is
-> loading it from:
-> 
->     /lib/firmware/marvell/prestera_fw_img.bin
-> 
-> The firmware image version is located within internal header and consists
-> of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has hard-coded
-> minimum supported firmware version which it can work with:
-> 
->     MAJOR - reflects the support on ABI level between driver and loaded
->             firmware, this number should be the same for driver and loaded
->             firmware.
-> 
->     MINOR - this is the minimal supported version between driver and the
->             firmware.
-> 
->     PATCH - indicates only fixes, firmware ABI is not changed.
-> 
-> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-
-Nice to see a driver for this hardware.
-
-> +#define mvsw_wait_timeout(cond, waitms) \
-> +({ \
-> +	unsigned long __wait_end = jiffies + msecs_to_jiffies(waitms); \
-> +	bool __wait_ret = false; \
-> +	do { \
-> +		if (cond) { \
-> +			__wait_ret = true; \
-> +			break; \
-> +		} \
-> +		cond_resched(); \
-> +	} while (time_before(jiffies, __wait_end)); \
-> +	__wait_ret; \
-> +})
-
-Please try to use include/linux/iopoll.h
-
-> +#define FW_VER_MIN(v) \
-> +	(((v) - (FW_VER_MAJ(v) * FW_VER_MAJ_MUL)) / FW_VER_MIN_MUL)
+On Mon, Feb 24, 2020 at 5:05 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
+wrote:
+> A Landlock object enables to identify a kernel object (e.g. an inode).
+> A Landlock rule is a set of access rights allowed on an object.  Rules
+> are grouped in rulesets that may be tied to a set of processes (i.e.
+> subjects) to enforce a scoped access-control (i.e. a domain).
+>
+> Because Landlock's goal is to empower any process (especially
+> unprivileged ones) to sandbox themselves, we can't rely on a system-wide
+> object identification such as file extended attributes.  Indeed, we need
+> innocuous, composable and modular access-controls.
+>
+> The main challenge with this constraints is to identify kernel objects
+> while this identification is useful (i.e. when a security policy makes
+> use of this object).  But this identification data should be freed once
+> no policy is using it.  This ephemeral tagging should not and may not be
+> written in the filesystem.  We then need to manage the lifetime of a
+> rule according to the lifetime of its object.  To avoid a global lock,
+> this implementation make use of RCU and counters to safely reference
+> objects.
+>
+> A following commit uses this generic object management for inodes.
+[...]
+> diff --git a/security/landlock/Kconfig b/security/landlock/Kconfig
+> new file mode 100644
+> index 000000000000..4a321d5b3f67
+> --- /dev/null
+> +++ b/security/landlock/Kconfig
+> @@ -0,0 +1,15 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 > +
-> +#define FW_VER_PATCH(v) \
-> +	(v - (FW_VER_MAJ(v) * FW_VER_MAJ_MUL) - (FW_VER_MIN(v) * FW_VER_MIN_MUL))
+> +config SECURITY_LANDLOCK
+> +       bool "Landlock support"
+> +       depends on SECURITY
+> +       default n
+
+(I think "default n" is implicit?)
+
+> +       help
+> +         This selects Landlock, a safe sandboxing mechanism.  It enables=
+ to
+> +         restrict processes on the fly (i.e. enforce an access control p=
+olicy),
+> +         which can complement seccomp-bpf.  The security policy is a set=
+ of access
+> +         rights tied to an object, which could be a file, a socket or a =
+process.
 > +
-> +#define mvsw_ldr_write(fw, reg, val) \
-> +	writel(val, (fw)->ldr_regs + (reg))
-> +#define mvsw_ldr_read(fw, reg)	\
-> +	readl((fw)->ldr_regs + (reg))
-
-You have a lot of macro magic in this file. Please try to replace most
-of it with simple functions. The compiler will inline it, giving you
-the same performance, but you gain better type checking.
-
-> +#define mvsw_fw_dev(fw)	((fw)->dev.dev)
-
-Macros like this don't bring much value.
-
-
-> +static int mvsw_pr_fw_hdr_parse(struct mvsw_pr_fw *fw,
-> +				const struct firmware *img)
+> +         See Documentation/security/landlock/ for further information.
+> +
+> +         If you are unsure how to answer this question, answer N.
+[...]
+> diff --git a/security/landlock/object.c b/security/landlock/object.c
+> new file mode 100644
+> index 000000000000..38fbbb108120
+> --- /dev/null
+> +++ b/security/landlock/object.c
+> @@ -0,0 +1,339 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Landlock LSM - Object and rule management
+> + *
+> + * Copyright =C2=A9 2016-2020 Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> + * Copyright =C2=A9 2018-2020 ANSSI
+> + *
+> + * Principles and constraints of the object and rule management:
+> + * - Do not leak memory.
+> + * - Try as much as possible to free a memory allocation as soon as it i=
+s
+> + *   unused.
+> + * - Do not use global lock.
+> + * - Do not charge processes other than the one requesting a Landlock
+> + *   operation.
+> + */
+> +
+> +#include <linux/bug.h>
+> +#include <linux/compiler.h>
+> +#include <linux/compiler_types.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/fs.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/rbtree.h>
+> +#include <linux/rcupdate.h>
+> +#include <linux/refcount.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/workqueue.h>
+> +
+> +#include "object.h"
+> +
+> +struct landlock_object *landlock_create_object(
+> +               const enum landlock_object_type type, void *underlying_ob=
+ject)
 > +{
-> +	struct mvsw_pr_fw_header *hdr = (struct mvsw_pr_fw_header *)img->data;
-> +	struct mvsw_fw_rev *rev = &fw->dev.fw_rev;
-> +	u32 magic;
+> +       struct landlock_object *object;
 > +
-> +	magic = be32_to_cpu(hdr->magic_number);
-> +	if (magic != MVSW_FW_HDR_MAGIC) {
-> +		dev_err(mvsw_fw_dev(fw), "FW img type is invalid");
-> +		return -EINVAL;
-> +	}
-> +
-> +	mvsw_pr_fw_rev_parse(hdr, rev);
-> +
-> +	dev_info(mvsw_fw_dev(fw), "FW version '%u.%u.%u'\n",
-> +		 rev->maj, rev->min, rev->sub);
+> +       if (WARN_ON_ONCE(!underlying_object))
+> +               return NULL;
+> +       object =3D kzalloc(sizeof(*object), GFP_KERNEL);
+> +       if (!object)
+> +               return NULL;
+> +       refcount_set(&object->usage, 1);
+> +       refcount_set(&object->cleaners, 1);
+> +       spin_lock_init(&object->lock);
+> +       INIT_LIST_HEAD(&object->rules);
+> +       object->type =3D type;
+> +       WRITE_ONCE(object->underlying_object, underlying_object);
 
-ethtool can return this. Don't spam the kernel log.
+`object` is not globally visible at this point, so WRITE_ONCE() is unnecess=
+ary.
 
-> +
-> +	return mvsw_pr_fw_rev_check(fw);
+> +       return object;
 > +}
 > +
-> +static int mvsw_pr_fw_load(struct mvsw_pr_fw *fw)
+> +struct landlock_object *landlock_get_object(struct landlock_object *obje=
+ct)
+> +       __acquires(object->usage)
 > +{
-> +	size_t hlen = sizeof(struct mvsw_pr_fw_header);
-> +	const struct firmware *f;
-> +	bool has_ldr;
-> +	int err;
-> +
-> +	has_ldr = mvsw_wait_timeout(mvsw_pr_ldr_is_ready(fw), 1000);
-> +	if (!has_ldr) {
-> +		dev_err(mvsw_fw_dev(fw), "waiting for FW loader is timed out");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	fw->ldr_ring_buf = fw->ldr_regs +
-> +		mvsw_ldr_read(fw, MVSW_LDR_BUF_OFFS_REG);
-> +
-> +	fw->ldr_buf_len =
-> +		mvsw_ldr_read(fw, MVSW_LDR_BUF_SIZE_REG);
-> +
-> +	fw->ldr_wr_idx = 0;
-> +
-> +	err = request_firmware_direct(&f, MVSW_FW_FILENAME, &fw->pci_dev->dev);
-> +	if (err) {
-> +		dev_err(mvsw_fw_dev(fw), "failed to request firmware file\n");
-> +		return err;
-> +	}
-> +
-> +	if (!IS_ALIGNED(f->size, 4)) {
-> +		dev_err(mvsw_fw_dev(fw), "FW image file is not aligned");
-> +		release_firmware(f);
-> +		return -EINVAL;
-> +	}
-
-This is size, so has nothing to do with alignment. Do you mean truncated?
-
-
-> +
-> +	err = mvsw_pr_fw_hdr_parse(fw, f);
-> +	if (err) {
-> +		dev_err(mvsw_fw_dev(fw), "FW image header is invalid\n");
-> +		release_firmware(f);
-> +		return err;
-> +	}
-> +
-> +	mvsw_ldr_write(fw, MVSW_LDR_IMG_SIZE_REG, f->size - hlen);
-> +	mvsw_ldr_write(fw, MVSW_LDR_CTL_REG, MVSW_LDR_CTL_DL_START);
-> +
-> +	dev_info(mvsw_fw_dev(fw), "Loading prestera FW image ...");
-
-How slow is this? If the machine is blocked for 10 minutes, doing
-nothing than load firmware, maybe it would be good to spam the
-console, but otherwise....
-
-> +
-> +	err = mvsw_pr_ldr_send(fw, f->data + hlen, f->size - hlen);
-> +
-> +	release_firmware(f);
-> +	return err;
+> +       __acquire(object->usage);
+> +       /*
+> +        * If @object->usage equal 0, then it will be ignored by writers,=
+ and
+> +        * underlying_object->object may be replaced, but this is not an =
+issue
+> +        * for release_object().
+> +        */
+> +       if (object && refcount_inc_not_zero(&object->usage)) {
+> +               /*
+> +                * It should not be possible to get a reference to an obj=
+ect if
+> +                * its underlying object is being terminated (e.g. with
+> +                * landlock_release_object()), because an object is only
+> +                * modifiable through such underlying object.  This is no=
+t the
+> +                * case with landlock_get_object_cleaner().
+> +                */
+> +               WARN_ON_ONCE(!READ_ONCE(object->underlying_object));
+> +               return object;
+> +       }
+> +       return NULL;
 > +}
 > +
-> +static int mvsw_pr_pci_probe(struct pci_dev *pdev,
-> +			     const struct pci_device_id *id)
+> +static struct landlock_object *get_object_cleaner(
+> +               struct landlock_object *object)
+> +       __acquires(object->cleaners)
 > +{
-> +	const char *driver_name = pdev->driver->name;
-> +	struct mvsw_pr_fw *fw;
-> +	u8 __iomem *mem_addr;
-> +	int err;
-> +
-> +	err = pci_enable_device(pdev);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "pci_enable_device failed\n");
-> +		goto err_pci_enable_device;
-> +	}
-> +
-> +	err = pci_request_regions(pdev, driver_name);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "pci_request_regions failed\n");
-> +		goto err_pci_request_regions;
-> +	}
-> +
-> +	mem_addr = pci_ioremap_bar(pdev, 2);
-> +	if (!mem_addr) {
-> +		dev_err(&pdev->dev, "ioremap failed\n");
-> +		err = -EIO;
-> +		goto err_ioremap;
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +
-> +	fw = kzalloc(sizeof(*fw), GFP_KERNEL);
-> +	if (!fw) {
-> +		err = -ENOMEM;
-> +		goto err_pci_dev_alloc;
-> +	}
-> +
-> +	fw->pci_dev = pdev;
-> +	fw->dev.dev = &pdev->dev;
-> +	fw->dev.send_req = mvsw_pr_fw_send_req;
-> +	fw->mem_addr = mem_addr;
-> +	fw->ldr_regs = mem_addr;
-> +	fw->hw_regs = mem_addr;
-> +
-> +	fw->wq = alloc_workqueue("mvsw_fw_wq", WQ_HIGHPRI, 1);
-> +	if (!fw->wq)
-> +		goto err_wq_alloc;
-> +
-> +	INIT_WORK(&fw->evt_work, mvsw_pr_fw_evt_work_fn);
-> +
-> +	err = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
-> +	if (err < 0) {
-> +		dev_err(&pdev->dev, "MSI IRQ init failed\n");
-> +		goto err_irq_alloc;
-> +	}
-> +
-> +	err = request_irq(pci_irq_vector(pdev, 0), mvsw_pci_irq_handler,
-> +			  0, driver_name, fw);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "fail to request IRQ\n");
-> +		goto err_request_irq;
-> +	}
-> +
-> +	pci_set_drvdata(pdev, fw);
-> +
-> +	err = mvsw_pr_fw_init(fw);
-> +	if (err)
-> +		goto err_mvsw_fw_init;
-> +
-> +	dev_info(mvsw_fw_dev(fw), "Prestera Switch FW is ready\n");
-> +
-> +	err = mvsw_pr_device_register(&fw->dev);
-> +	if (err)
-> +		goto err_mvsw_dev_register;
-> +
-> +	return 0;
-> +
-> +err_mvsw_dev_register:
-> +	mvsw_pr_fw_uninit(fw);
-> +err_mvsw_fw_init:
-> +	free_irq(pci_irq_vector(pdev, 0), fw);
-> +err_request_irq:
-> +	pci_free_irq_vectors(pdev);
-> +err_irq_alloc:
-> +	destroy_workqueue(fw->wq);
-> +err_wq_alloc:
-> +	kfree(fw);
-> +err_pci_dev_alloc:
-> +	iounmap(mem_addr);
-> +err_ioremap:
-> +	pci_release_regions(pdev);
-> +err_pci_request_regions:
-> +	pci_disable_device(pdev);
-> +err_pci_enable_device:
-> +	return err;
+> +       __acquire(object->cleaners);
+> +       if (object && refcount_inc_not_zero(&object->cleaners))
+> +               return object;
+> +       return NULL;
+> +}
+
+I don't get this whole "cleaners" thing. Can you give a quick
+description of why this is necessary, and what benefits it has over a
+standard refcounting+RCU scheme? I don't immediately see anything that
+requires this.
+
+> +/*
+> + * There is two cases when an object should be free and the reference to=
+ the
+> + * underlying object should be put:
+> + * - when the last rule tied to this object is removed, which is handled=
+ by
+> + *   landlock_put_rule() and then release_object();
+> + * - when the object is being terminated (e.g. no more reference to an i=
+node),
+> + *   which is handled by landlock_put_object().
+> + */
+> +static void put_object_free(struct landlock_object *object)
+> +       __releases(object->cleaners)
+> +{
+> +       __release(object->cleaners);
+> +       if (!refcount_dec_and_test(&object->cleaners))
+> +               return;
+> +       WARN_ON_ONCE(refcount_read(&object->usage));
+> +       /*
+> +        * Ensures a safe use of @object in the RCU block from
+> +        * landlock_put_rule().
+> +        */
+> +       kfree_rcu(object, rcu_free);
 > +}
 > +
-> +static void mvsw_pr_pci_remove(struct pci_dev *pdev)
+> +/*
+> + * Destroys a newly created and useless object.
+> + */
+> +void landlock_drop_object(struct landlock_object *object)
 > +{
-> +	struct mvsw_pr_fw *fw = pci_get_drvdata(pdev);
-> +
-> +	free_irq(pci_irq_vector(pdev, 0), fw);
-> +	pci_free_irq_vectors(pdev);
-> +	mvsw_pr_device_unregister(&fw->dev);
-> +	flush_workqueue(fw->wq);
-> +	destroy_workqueue(fw->wq);
-> +	mvsw_pr_fw_uninit(fw);
-> +	iounmap(fw->mem_addr);
-> +	pci_release_regions(pdev);
-> +	pci_disable_device(pdev);
-> +	kfree(fw);
+> +       if (WARN_ON_ONCE(!refcount_dec_and_test(&object->usage)))
+> +               return;
+> +       __acquire(object->cleaners);
+> +       put_object_free(object);
 > +}
 > +
-
-
-> +static int __init mvsw_pr_pci_init(void)
+> +/*
+> + * Puts the underlying object (e.g. inode) if it is the first request to
+> + * release @object, without calling landlock_put_object().
+> + *
+> + * Return true if this call effectively marks @object as released, false
+> + * otherwise.
+> + */
+> +static bool release_object(struct landlock_object *object)
+> +       __releases(&object->lock)
 > +{
-> +	struct mvsw_pr_pci_match *match;
-> +	int err;
+> +       void *underlying_object;
 > +
-> +	for (match = mvsw_pci_devices; match->driver.name; match++) {
-> +		match->driver.probe = mvsw_pr_pci_probe;
-> +		match->driver.remove = mvsw_pr_pci_remove;
-> +		match->driver.id_table = &match->id;
+> +       lockdep_assert_held(&object->lock);
 > +
-> +		err = pci_register_driver(&match->driver);
-> +		if (err) {
-> +			pr_err("prestera_pci: failed to register %s\n",
-> +			       match->driver.name);
-> +			break;
-> +		}
+> +       underlying_object =3D xchg(&object->underlying_object, NULL);
+> +       spin_unlock(&object->lock);
+> +       might_sleep();
+> +       if (!underlying_object)
+> +               return false;
 > +
-> +		match->registered = true;
-> +	}
-
-Please don't reinvent the wheel. You should just do something like:
-
-static const struct pci_device_id ilo_devices[] = {
-        { PCI_DEVICE(PCI_VENDOR_ID_COMPAQ, 0xB204) },
-        { PCI_DEVICE(PCI_VENDOR_ID_HP, 0x3307) },
-        { }
-};
-MODULE_DEVICE_TABLE(pci, ilo_devices);
-
-static struct pci_driver ilo_driver = {
-        .name     = ILO_NAME,
-        .id_table = ilo_devices,
-        .probe    = ilo_probe,
-        .remove   = ilo_remove,
-};
-
-        error = pci_register_driver(&ilo_driver);
-
-If you need extra information, you can make use of pci_device_id:driver_data.
-
-> +	if (err) {
-> +		for (match = mvsw_pci_devices; match->driver.name; match++) {
-> +			if (!match->registered)
-> +				break;
+> +       switch (object->type) {
+> +       case LANDLOCK_OBJECT_INODE:
+> +               break;
+> +       default:
+> +               WARN_ON_ONCE(1);
+> +       }
+> +       return true;
+> +}
 > +
-> +			pci_unregister_driver(&match->driver);
-> +		}
-> +
-> +		return err;
-> +	}
-> +
-> +	pr_info("prestera_pci: Registered Marvell Prestera PCI driver\n");
-
-Don't spam the kernel log.
-
-> +static void __exit mvsw_pr_pci_exit(void)
+> +static void put_object_cleaner(struct landlock_object *object)
+> +       __releases(object->cleaners)
 > +{
-> +	struct mvsw_pr_pci_match *match;
+> +       /* Let's try an early lockless check. */
+> +       if (list_empty(&object->rules) &&
+> +                       READ_ONCE(object->underlying_object)) {
+> +               /*
+> +                * Puts @object if there is no rule tied to it and the
+> +                * remaining user is the underlying object.  This check i=
+s
+> +                * atomic because @object->rules and @object->underlying_=
+object
+> +                * are protected by @object->lock.
+> +                */
+> +               spin_lock(&object->lock);
+> +               if (list_empty(&object->rules) &&
+> +                               READ_ONCE(object->underlying_object) &&
+> +                               refcount_dec_if_one(&object->usage)) {
+> +                       /*
+> +                        * Releases @object, in place of
+> +                        * landlock_release_object().
+> +                        *
+> +                        * @object is already empty, implying that all it=
+s
+> +                        * previous rules are already disabled.
+> +                        *
+> +                        * Unbalance the @object->cleaners counter to ref=
+lect
+> +                        * the underlying object release.
+> +                        */
+> +                       if (!WARN_ON_ONCE(!release_object(object))) {
+> +                               __acquire(object->cleaners);
+> +                               put_object_free(object);
+> +                       }
+> +               } else {
+> +                       spin_unlock(&object->lock);
+> +               }
+> +       }
+> +       put_object_free(object);
+> +}
 > +
-> +	for (match = mvsw_pci_devices; match->driver.name; match++) {
-> +		if (!match->registered)
-> +			break;
+> +/*
+> + * Putting an object is easy when the object is being terminated, but it=
+ is
+> + * much more tricky when the reason is that there is no more rule tied t=
+o this
+> + * object.  Indeed, new rules could be added at the same time.
+> + */
+> +void landlock_put_object(struct landlock_object *object)
+> +       __releases(object->usage)
+> +{
+> +       struct landlock_object *object_cleaner;
 > +
-> +		pci_unregister_driver(&match->driver);
-> +	}
+> +       __release(object->usage);
+> +       might_sleep();
+> +       if (!object)
+> +               return;
+> +       /*
+> +        * Guards against concurrent termination to be able to terminate
+> +        * @object if it is empty and not referenced by another rule-appe=
+nder
+> +        * other than the underlying object.
+> +        */
+> +       object_cleaner =3D get_object_cleaner(object);
+> +       if (WARN_ON_ONCE(!object_cleaner)) {
+> +               __release(object->cleaners);
+> +               return;
+> +       }
+> +       /*
+> +        * Decrements @object->usage and if it reach zero, also decrement
+> +        * @object->cleaners.  If both reach zero, then release and free
+> +        * @object.
+> +        */
+> +       if (refcount_dec_and_test(&object->usage)) {
+> +               struct landlock_rule *rule_walker, *rule_walker2;
 > +
-> +	pr_info("prestera_pci: Unregistered Marvell Prestera PCI driver\n");
+> +               spin_lock(&object->lock);
+> +               /*
+> +                * Disables all the rules tied to @object when it is forb=
+idden
+> +                * to add new rule but still allowed to remove them with
+> +                * landlock_put_rule().  This is crucial to be able to sa=
+fely
+> +                * free a rule according to landlock_rule_is_disabled().
+> +                */
+> +               list_for_each_entry_safe(rule_walker, rule_walker2,
+> +                               &object->rules, list)
+> +                       list_del_rcu(&rule_walker->list);
+> +
+> +               /*
+> +                * Releases @object if it is not already released (e.g. w=
+ith
+> +                * landlock_release_object()).
+> +                */
+> +               release_object(object);
+> +               /*
+> +                * Unbalances the @object->cleaners counter to reflect th=
+e
+> +                * underlying object release.
+> +                */
+> +               __acquire(object->cleaners);
+> +               put_object_free(object);
+> +       }
+> +       put_object_cleaner(object_cleaner);
+> +}
+> +
+> +void landlock_put_rule(struct landlock_object *object,
+> +               struct landlock_rule *rule)
+> +{
+> +       if (!rule)
+> +               return;
+> +       WARN_ON_ONCE(!object);
+> +       /*
+> +        * Guards against a concurrent @object self-destruction with
+> +        * landlock_put_object() or put_object_cleaner().
+> +        */
+> +       rcu_read_lock();
+> +       if (landlock_rule_is_disabled(rule)) {
+> +               rcu_read_unlock();
+> +               if (refcount_dec_and_test(&rule->usage))
+> +                       kfree_rcu(rule, rcu_free);
+> +               return;
+> +       }
+> +       if (refcount_dec_and_test(&rule->usage)) {
+> +               struct landlock_object *safe_object;
+> +
+> +               /*
+> +                * Now, @rule may still be enabled, or in the process of =
+being
+> +                * untied to @object by put_object_cleaner().  However, w=
+e know
+> +                * that @object will not be freed until rcu_read_unlock()=
+ and
+> +                * until @object->cleaners reach zero.  Furthermore, we m=
+ay not
+> +                * be the only one willing to free a @rule linked with @o=
+bject.
+> +                * If we succeed to hold @object with get_object_cleaner(=
+), we
+> +                * know that until put_object_cleaner(), we can safely us=
+e
+> +                * @object to remove @rule.
+> +                */
+> +               safe_object =3D get_object_cleaner(object);
+> +               rcu_read_unlock();
+> +               if (!safe_object) {
+> +                       __release(safe_object->cleaners);
+> +                       /*
+> +                        * We can safely free @rule because it is already
+> +                        * removed from @object's list.
+> +                        */
+> +                       WARN_ON_ONCE(!landlock_rule_is_disabled(rule));
+> +                       kfree_rcu(rule, rcu_free);
+> +               } else {
+> +                       spin_lock(&safe_object->lock);
+> +                       if (!landlock_rule_is_disabled(rule))
+> +                               list_del(&rule->list);
+> +                       spin_unlock(&safe_object->lock);
+> +                       kfree_rcu(rule, rcu_free);
+> +                       put_object_cleaner(safe_object);
+> +               }
+> +       } else {
+> +               rcu_read_unlock();
+> +       }
+> +       /*
+> +        * put_object_cleaner() might sleep, but it is only reachable if
+> +        * !landlock_rule_is_disabled().  Therefore, clean_ref() can not =
+sleep.
+> +        */
+> +       might_sleep();
+> +}
+> +
+> +void landlock_release_object(struct landlock_object __rcu *rcu_object)
+> +{
+> +       struct landlock_object *object;
+> +
+> +       if (!rcu_object)
+> +               return;
+> +       rcu_read_lock();
+> +       object =3D get_object_cleaner(rcu_dereference(rcu_object));
 
-More spamming of the kernel log.
+This is not how RCU works. You need the rcu annotation on the access
+to the data structure member (or global variable) that's actually
+being accessed. A "struct foo __rcu *foo" argument is essentially
+always wrong.
 
-     Andrew
+> +struct landlock_rule {
+> +       struct landlock_access access;
+> +       /*
+> +        * @list: Linked list with other rules tied to the same object, w=
+hich
+> +        * enable to manage their lifetimes.  This is also used to identi=
+fy if
+> +        * a rule is still valid, thanks to landlock_rule_is_disabled(), =
+which
+> +        * is important in the matching process because the original obje=
+ct
+> +        * address might have been recycled.
+> +        */
+> +       struct list_head list;
+> +       union {
+> +               /*
+> +                * @usage: Number of rulesets pointing to this rule.  Thi=
+s
+> +                * field is never used by RCU readers.
+> +                */
+> +               refcount_t usage;
+> +               struct rcu_head rcu_free;
+> +       };
+> +};
+
+An object that is subject to RCU but whose refcount must not be
+accessed from RCU context? That seems a weird.
+
+> +enum landlock_object_type {
+> +       LANDLOCK_OBJECT_INODE =3D 1,
+> +};
+> +
+> +struct landlock_object {
+> +       /*
+> +        * @usage: Main usage counter, used to tie an object to it's unde=
+rlying
+> +        * object (i.e. create a lifetime) and potentially add new rules.
+
+I can't really follow this by reading this patch on its own. As one
+suggestion to make things at least a bit better, how about documenting
+here that `usage` always reaches zero before `cleaners` does?
+
+> +        */
+> +       refcount_t usage;
+> +       /*
+> +        * @cleaners: Usage counter used to free a rule from @rules (than=
+ks to
+> +        * put_rule()).  Enables to get a reference to this object until =
+it
+> +        * really become freed.  Cf. put_object().
+
+Maybe add: @usage being non-zero counts as one reference to @cleaners.
+Once @cleaners has become zero, the object is freed after an RCU grace
+period.
+
+> +        */
+> +       refcount_t cleaners;
+> +       union {
+> +               /*
+> +                * The use of this struct is controlled by @usage and
+> +                * @cleaners, which makes it safe to union it with @rcu_f=
+ree.
+> +                */
+[...]
+> +               struct rcu_head rcu_free;
+> +       };
+> +};
+[...]
+> +static inline bool landlock_rule_is_disabled(
+> +               struct landlock_rule *rule)
+> +{
+> +       /*
+> +        * Disabling (i.e. unlinking) a landlock_rule is a one-way operat=
+ion.
+> +        * It is not possible to re-enable such a rule, then there is no =
+need
+> +        * for smp_load_acquire().
+> +        *
+> +        * LIST_POISON2 is set by list_del() and list_del_rcu().
+> +        */
+> +       return !rule || READ_ONCE(rule->list.prev) =3D=3D LIST_POISON2;
+
+You're not allowed to do this, the comment above list_del() states:
+
+ * Note: list_empty() on entry does not return true after this, the entry i=
+s
+ * in an undefined state.
+
+If you want to be able to test whether the element is on a list
+afterwards, use stuff like list_del_init().
+
+> +}
