@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A47C4BA02
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E4AC4BA02
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4C320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9238222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 21:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H2P25tKR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CsHGUAep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgBYVuw (ORCPT
+        id S1729787AbgBYVur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 16:50:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43510 "EHLO
+        Tue, 25 Feb 2020 16:50:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43534 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729004AbgBYVsl (ORCPT
+        with ESMTP id S1729065AbgBYVsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:48:41 -0500
+        Tue, 25 Feb 2020 16:48:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=PUKrIRd3Ve0Id+Di+t5ZQHR+Lkt5XgaaLxXGGrJVDyM=; b=H2P25tKRd6DOh+v9jBKxvQraZA
-        Z45sTSCSVYGiH/sXqv7Rei8a1qD26fep5gG02v/sU0YI66JAXsRFAgvH7KDq3AppZuWIGDwadiNNh
-        NF9+m1W21fjPH00gVIaHQJV6iQvYyRdGJs8SHeHSJkCyxL9s000WXuTy3nrvrtcZRyq9Lr4rBlC2r
-        ukS8kkblNjNhc5+dlP7yhzwP04xd6vf//CYeYWSzTDE04xpgA7rMo/n0zifPqncStzIuBrN8hdJSd
-        SKiVrnyfP0gZUFc5QEjNAU1lrQZ/AH89c80EuB/Jttzzo+Cz9TCaD8KrSHY3HZ3YBhcyhRajZM0Tj
-        WK7IOFag==;
+        bh=rMcV50ueBpteR9LXkwAudPimKgybkJUfXQ/lOrRcnKc=; b=CsHGUAep6LhQaabD2KWiIEV0lW
+        8DzIJa2XG+iXaLddhcZ23/dmd2k5EZnrcQ74J51wciR1hgoSNbc07DtcMBmJjf8yyCvZ6/Ye2/fu2
+        WTYV8ip/Zgyetuqd6clnSc5g/hOOXCbR2cV1Zuelv24mymOSeD/9fW28DdjpprDygAIt51QdbcBFc
+        CuE2dNblQkzefXmFZ674DMRoBtzt4iQHjZzP/0qEqWOOuHJ+VL1dUl/8KeQCv5Mr7B05kR/SFysTl
+        tRi9sSlJITXI8GhIQCORoNBQ8NnvPpLbqtyiyjOYMlqjf2s1PoAZU8yLlEPjQupkO5XyPWMVw+y/j
+        gwcVsQxQ==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6i4H-0007qN-Gf; Tue, 25 Feb 2020 21:48:41 +0000
+        id 1j6i4H-0007qB-Dl; Tue, 25 Feb 2020 21:48:41 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -42,10 +42,11 @@ Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
         linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
         cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v8 17/25] btrfs: Convert from readpages to readahead
-Date:   Tue, 25 Feb 2020 13:48:30 -0800
-Message-Id: <20200225214838.30017-18-willy@infradead.org>
+        linux-xfs@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH v8 15/25] mm: Use memalloc_nofs_save in readahead path
+Date:   Tue, 25 Feb 2020 13:48:28 -0800
+Message-Id: <20200225214838.30017-16-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200225214838.30017-1-willy@infradead.org>
 References: <20200225214838.30017-1-willy@infradead.org>
@@ -58,153 +59,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Implement the new readahead method in btrfs.  Add a readahead_page_batch()
-to optimise fetching a batch of pages at once.
+Ensure that memory allocations in the readahead path do not attempt to
+reclaim file-backed pages, which could lead to a deadlock.  It is
+possible, though unlikely this is the root cause of a problem observed
+by Cong Wang.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
 ---
- fs/btrfs/extent_io.c | 46 ++++++++++++++------------------------------
- fs/btrfs/extent_io.h |  3 +--
- fs/btrfs/inode.c     | 16 +++++++--------
- 3 files changed, 22 insertions(+), 43 deletions(-)
+ mm/readahead.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index c0f202741e09..e70f14c1de60 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4278,52 +4278,34 @@ int extent_writepages(struct address_space *mapping,
- 	return ret;
- }
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 0afb55a49909..7f2d54fb1691 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -22,6 +22,7 @@
+ #include <linux/mm_inline.h>
+ #include <linux/blk-cgroup.h>
+ #include <linux/fadvise.h>
++#include <linux/sched/mm.h>
  
--int extent_readpages(struct address_space *mapping, struct list_head *pages,
--		     unsigned nr_pages)
-+void extent_readahead(struct readahead_control *rac)
- {
- 	struct bio *bio = NULL;
- 	unsigned long bio_flags = 0;
- 	struct page *pagepool[16];
- 	struct extent_map *em_cached = NULL;
--	struct extent_io_tree *tree = &BTRFS_I(mapping->host)->io_tree;
--	int nr = 0;
-+	struct extent_io_tree *tree = &BTRFS_I(rac->mapping->host)->io_tree;
- 	u64 prev_em_start = (u64)-1;
-+	int nr;
+ #include "internal.h"
  
--	while (!list_empty(pages)) {
--		u64 contig_end = 0;
--
--		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
--			struct page *page = lru_to_page(pages);
--
--			prefetchw(&page->flags);
--			list_del(&page->lru);
--			if (add_to_page_cache_lru(page, mapping, page->index,
--						readahead_gfp_mask(mapping))) {
--				put_page(page);
--				break;
--			}
--
--			pagepool[nr++] = page;
--			contig_end = page_offset(page) + PAGE_SIZE - 1;
--		}
-+	while ((nr = readahead_page_batch(rac, pagepool))) {
-+		u64 contig_start = page_offset(pagepool[0]);
-+		u64 contig_end = page_offset(pagepool[nr - 1]) + PAGE_SIZE - 1;
+@@ -185,6 +186,18 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ 	};
+ 	unsigned long i;
  
--		if (nr) {
--			u64 contig_start = page_offset(pagepool[0]);
-+		ASSERT(contig_start + nr * PAGE_SIZE - 1 == contig_end);
- 
--			ASSERT(contig_start + nr * PAGE_SIZE - 1 == contig_end);
--
--			contiguous_readpages(tree, pagepool, nr, contig_start,
--				     contig_end, &em_cached, &bio, &bio_flags,
--				     &prev_em_start);
--		}
-+		contiguous_readpages(tree, pagepool, nr, contig_start,
-+				contig_end, &em_cached, &bio, &bio_flags,
-+				&prev_em_start);
- 	}
- 
- 	if (em_cached)
- 		free_extent_map(em_cached);
- 
--	if (bio)
--		return submit_one_bio(bio, 0, bio_flags);
--	return 0;
-+	if (bio) {
-+		if (submit_one_bio(bio, 0, bio_flags))
-+			return;
-+	}
- }
- 
- /*
-diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
-index 5d205bbaafdc..bddac32948c7 100644
---- a/fs/btrfs/extent_io.h
-+++ b/fs/btrfs/extent_io.h
-@@ -198,8 +198,7 @@ int extent_writepages(struct address_space *mapping,
- 		      struct writeback_control *wbc);
- int btree_write_cache_pages(struct address_space *mapping,
- 			    struct writeback_control *wbc);
--int extent_readpages(struct address_space *mapping, struct list_head *pages,
--		     unsigned nr_pages);
-+void extent_readahead(struct readahead_control *rac);
- int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 		__u64 start, __u64 len);
- void set_page_extent_mapped(struct page *page);
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 7d26b4bfb2c6..61d5137ce4e9 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4802,8 +4802,8 @@ static void evict_inode_truncate_pages(struct inode *inode)
- 
++	/*
++	 * Partway through the readahead operation, we will have added
++	 * locked pages to the page cache, but will not yet have submitted
++	 * them for I/O.  Adding another page may need to allocate memory,
++	 * which can trigger memory reclaim.  Telling the VM we're in
++	 * the middle of a filesystem operation will cause it to not
++	 * touch file-backed pages, preventing a deadlock.  Most (all?)
++	 * filesystems already specify __GFP_NOFS in their mapping's
++	 * gfp_mask, but let's be explicit here.
++	 */
++	unsigned int nofs = memalloc_nofs_save();
++
  	/*
- 	 * Keep looping until we have no more ranges in the io tree.
--	 * We can have ongoing bios started by readpages (called from readahead)
--	 * that have their endio callback (extent_io.c:end_bio_extent_readpage)
-+	 * We can have ongoing bios started by readahead that have
-+	 * their endio callback (extent_io.c:end_bio_extent_readpage)
- 	 * still in progress (unlocked the pages in the bio but did not yet
- 	 * unlocked the ranges in the io tree). Therefore this means some
- 	 * ranges can still be locked and eviction started because before
-@@ -7004,11 +7004,11 @@ static int lock_extent_direct(struct inode *inode, u64 lockstart, u64 lockend,
- 			 * for it to complete) and then invalidate the pages for
- 			 * this range (through invalidate_inode_pages2_range()),
- 			 * but that can lead us to a deadlock with a concurrent
--			 * call to readpages() (a buffered read or a defrag call
-+			 * call to readahead (a buffered read or a defrag call
- 			 * triggered a readahead) on a page lock due to an
- 			 * ordered dio extent we created before but did not have
- 			 * yet a corresponding bio submitted (whence it can not
--			 * complete), which makes readpages() wait for that
-+			 * complete), which makes readahead wait for that
- 			 * ordered extent to complete while holding a lock on
- 			 * that page.
- 			 */
-@@ -8247,11 +8247,9 @@ static int btrfs_writepages(struct address_space *mapping,
- 	return extent_writepages(mapping, wbc);
+ 	 * Preallocate as many pages as we will need.
+ 	 */
+@@ -229,6 +242,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ 	 * will then handle the error.
+ 	 */
+ 	read_pages(&rac, &page_pool, false);
++	memalloc_nofs_restore(nofs);
  }
+ EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
  
--static int
--btrfs_readpages(struct file *file, struct address_space *mapping,
--		struct list_head *pages, unsigned nr_pages)
-+static void btrfs_readahead(struct readahead_control *rac)
- {
--	return extent_readpages(mapping, pages, nr_pages);
-+	extent_readahead(rac);
- }
- 
- static int __btrfs_releasepage(struct page *page, gfp_t gfp_flags)
-@@ -10456,7 +10454,7 @@ static const struct address_space_operations btrfs_aops = {
- 	.readpage	= btrfs_readpage,
- 	.writepage	= btrfs_writepage,
- 	.writepages	= btrfs_writepages,
--	.readpages	= btrfs_readpages,
-+	.readahead	= btrfs_readahead,
- 	.direct_IO	= btrfs_direct_IO,
- 	.invalidatepage = btrfs_invalidatepage,
- 	.releasepage	= btrfs_releasepage,
 -- 
 2.25.0
 
