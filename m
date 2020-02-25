@@ -4,25 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C84C35E04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229BBC35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716372084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE45821556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgBYTpF (ORCPT
+        id S1731420AbgBYTpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:45:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55630 "EHLO mx2.suse.de"
+        Tue, 25 Feb 2020 14:45:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55652 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731002AbgBYTpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:45:00 -0500
+        id S1731195AbgBYTpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:45:02 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2914BAE78;
-        Tue, 25 Feb 2020 19:44:58 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id F0231B012;
+        Tue, 25 Feb 2020 19:44:59 +0000 (UTC)
 From:   Michal Rostecki <mrostecki@opensuse.org>
 To:     bpf@vger.kernel.org
 Cc:     Alexei Starovoitov <ast@kernel.org>,
@@ -34,9 +35,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v3 3/5] bpftool: Update documentation of "bpftool feature" command
-Date:   Tue, 25 Feb 2020 20:44:41 +0100
-Message-Id: <20200225194446.20651-4-mrostecki@opensuse.org>
+Subject: [PATCH bpf-next v3 4/5] bpftool: Update bash completion for "bpftool feature" command
+Date:   Tue, 25 Feb 2020 20:44:42 +0100
+Message-Id: <20200225194446.20651-5-mrostecki@opensuse.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200225194446.20651-1-mrostecki@opensuse.org>
 References: <20200225194446.20651-1-mrostecki@opensuse.org>
@@ -47,65 +48,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update documentation of "bpftool feature" command with information about
-new arguments: "full".
+Update bash completion for "bpftool feature" command with the new
+argument: "full".
 
 Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
 ---
- .../bpftool/Documentation/bpftool-feature.rst | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ tools/bpf/bpftool/bash-completion/bpftool | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/Documentation/bpftool-feature.rst b/tools/bpf/bpftool/Documentation/bpftool-feature.rst
-index 4d08f35034a2..b04156cfd7a3 100644
---- a/tools/bpf/bpftool/Documentation/bpftool-feature.rst
-+++ b/tools/bpf/bpftool/Documentation/bpftool-feature.rst
-@@ -19,19 +19,24 @@ SYNOPSIS
- FEATURE COMMANDS
- ================
- 
--|	**bpftool** **feature probe** [*COMPONENT*] [**macros** [**prefix** *PREFIX*]]
-+|	**bpftool** **feature probe** [*COMPONENT*] [**full**] [**macros** [**prefix** *PREFIX*]]
- |	**bpftool** **feature help**
- |
- |	*COMPONENT* := { **kernel** | **dev** *NAME* }
- 
- DESCRIPTION
- ===========
--	**bpftool feature probe** [**kernel**] [**macros** [**prefix** *PREFIX*]]
-+	**bpftool feature probe** [**kernel**] [**full**] [**macros** [**prefix** *PREFIX*]]
- 		  Probe the running kernel and dump a number of eBPF-related
- 		  parameters, such as availability of the **bpf()** system call,
- 		  JIT status, eBPF program types availability, eBPF helper
- 		  functions availability, and more.
- 
-+		  By default, bpftool **does not run probes** for
-+		  **bpf_probe_write_user**\ () and **bpf_trace_printk**\()
-+		  helpers which print warnings to kernel logs. To enable them
-+		  and run all probes, the **full** keyword should be used.
-+
- 		  If the **macros** keyword (but not the **-j** option) is
- 		  passed, a subset of the output is dumped as a list of
- 		  **#define** macros that are ready to be included in a C
-@@ -44,16 +49,12 @@ DESCRIPTION
- 		  Keyword **kernel** can be omitted. If no probe target is
- 		  specified, probing the kernel is the default behaviour.
- 
--		  Note that when probed, some eBPF helpers (e.g.
--		  **bpf_trace_printk**\ () or **bpf_probe_write_user**\ ()) may
--		  print warnings to kernel logs.
--
--	**bpftool feature probe dev** *NAME* [**macros** [**prefix** *PREFIX*]]
-+	**bpftool feature probe dev** *NAME* [**full**] [**macros** [**prefix** *PREFIX*]]
- 		  Probe network device for supported eBPF features and dump
- 		  results to the console.
- 
--		  The two keywords **macros** and **prefix** have the same
--		  role as when probing the kernel.
-+		  The keywords **full**, **macros** and **prefix** have the
-+		  same role as when probing the kernel.
- 
- 	**bpftool feature help**
- 		  Print short help message.
+diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
+index 754d8395e451..acd5ea76c91d 100644
+--- a/tools/bpf/bpftool/bash-completion/bpftool
++++ b/tools/bpf/bpftool/bash-completion/bpftool
+@@ -983,11 +983,12 @@ _bpftool()
+                 probe)
+                     [[ $prev == "prefix" ]] && return 0
+                     if _bpftool_search_list 'macros'; then
+-                        COMPREPLY+=( $( compgen -W 'prefix' -- "$cur" ) )
++                        _bpftool_once_attr 'prefix'
+                     else
+                         COMPREPLY+=( $( compgen -W 'macros' -- "$cur" ) )
+                     fi
+                     _bpftool_one_of_list 'kernel dev'
++                    _bpftool_once_attr 'full'
+                     return 0
+                     ;;
+                 *)
 -- 
 2.25.1
 
