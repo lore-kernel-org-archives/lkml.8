@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDF0C35E10
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AFDC35E13
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07ADB20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5417520675
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 20:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cJHecR48"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bKK4GioN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgBYUrQ (ORCPT
+        id S1729790AbgBYUq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 15:47:16 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39068 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbgBYUq7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Feb 2020 15:46:59 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PKku4t045220;
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47386 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727624AbgBYUq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 15:46:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkuAi117219;
         Tue, 25 Feb 2020 14:46:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1582663616;
-        bh=jt1b9+pwL+VDoUt+ggAPbWiuUp8lXp87zn9gGt4fxns=;
+        bh=0RclCTDMsbcU18Jv0+FreBaZYLKgOCR00kgTeuf+GaE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=cJHecR48TlOvrVp2VeMcycRAUwnsTqtysXr5o9fMTR3uiZRzE65hWiFiDyYCBRXUB
-         O43JwZe8S0sPW7OaVWXtgATyDGZPv1+e19CXugldpUTnEc/qZDAY8a2Hgbg+0uD63r
-         P39TroCRmzB5/km9Bm5fooy245IvR71Bs0mwjEvc=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkuQd033125;
+        b=bKK4GioNbIfaCrIl3N8PRuSjeTiniIOK33yOGq/2m2YKSTsaMUSMLLD5k2mGr5hTs
+         vwG7C9EqxRxEGw+9qJxWhCf9Vf1eXqGQj1vrW5O4bsEZP8VBYPzqBQ3ldKF+9WTgyk
+         Rd5aCpuC53+NjBMPdtGTTaJV+Ign5sgEDnxarhng=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PKkuA6023137
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Tue, 25 Feb 2020 14:46:56 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
  Feb 2020 14:46:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
  Frontend Transport; Tue, 25 Feb 2020 14:46:56 -0600
 Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkuSa094912;
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PKkui2059195;
         Tue, 25 Feb 2020 14:46:56 -0600
 Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01PKkuVK025482;
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01PKkuTe025476;
         Tue, 25 Feb 2020 14:46:56 -0600
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 08/12] ARM: dts: am335x-evmsk: Enable PRU-ICSS interconnect node
-Date:   Tue, 25 Feb 2020 14:46:45 -0600
-Message-ID: <20200225204649.28220-9-s-anna@ti.com>
+Subject: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS interconnect node
+Date:   Tue, 25 Feb 2020 14:46:43 -0600
+Message-ID: <20200225204649.28220-7-s-anna@ti.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200225204649.28220-1-s-anna@ti.com>
 References: <20200225204649.28220-1-s-anna@ti.com>
@@ -70,20 +71,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PRU-ICSS target module node was left in disabled state in the
-base am33xx-l4.dtsi file. PRU-ICSS is supported on the AM335x SK
-EVM board, so enable this node to support PRUSS on this board.
+The PRU-ICSS target module node was left in disabled state in the base
+am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
+boards as they mostly use a AM3358 or a AM3359 SoC which do contain
+the PRU-ICSS IP.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm/boot/dts/am335x-evmsk.dts | 4 ++++
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index 32f515a295ee..f0dd66649877 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -717,3 +717,7 @@
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 6c9187bc0f17..e507ef74d8e6 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -397,3 +397,7 @@
  	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
  	clock-names = "ext-clk", "int-clk";
  };
