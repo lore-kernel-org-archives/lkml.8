@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A337BC4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776D8C4BA06
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BB924680
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FAD24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgBYX25 (ORCPT
+        id S1730320AbgBYX3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:28:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55799 "EHLO
+        Tue, 25 Feb 2020 18:29:05 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55778 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730184AbgBYX0Z (ORCPT
+        with ESMTP id S1730158AbgBYX0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:26:25 -0500
+        Tue, 25 Feb 2020 18:26:23 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6jab-0004rL-Fm; Wed, 26 Feb 2020 00:26:10 +0100
+        id 1j6jaX-0004oz-NA; Wed, 26 Feb 2020 00:26:06 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5B2B3104096;
-        Wed, 26 Feb 2020 00:25:44 +0100 (CET)
-Message-Id: <20200225224144.204871995@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4018D1040A5;
+        Wed, 26 Feb 2020 00:25:41 +0100 (CET)
+Message-Id: <20200225222650.340344152@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Feb 2020 23:33:22 +0100
+Date:   Tue, 25 Feb 2020 23:16:28 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,8 +38,8 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [patch 01/16] x86/entry: Provide IDTENTRY_IST
-References: <20200225223321.231477305@linutronix.de>
+Subject: [patch 22/24] x86/entry: Convert Alignment check exception to IDTENTRY
+References: <20200225221606.511535280@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Linutronix-Spam-Score: -1.0
@@ -50,109 +50,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as IDTENTRY but for exceptions which run on Interrupt STacks (IST) on
-64bit. For 32bit this maps to IDTENTRY.
+Convert #AC to IDTENTRY_ERRORCODE:
+  - Implement the C entry point with DEFINE_IDTENTRY
+  - Emit the ASM stub with DECLARE_IDTENTRY
+  - Remove the ASM idtentry in 64bit
+  - Remove the open coded ASM entry code in 32bit
+  - Fixup the XEN/PV code
+  - Remove the old prototyoes
 
-There are 3 variants which will be used:
-      IDTENTRY_MCE
-      IDTENTRY_DB
-      IDTENTRY_NMI
-
-These map to IDTENTRY_IST, but only the MCE and DB variants are emitting
-ASM code as the NMI entry needs hand crafted ASM still.
-
-The function defines do not contain any idtenter/exit calls as these
-exceptions need special treatment.
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/idtentry.h |   70 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ arch/x86/entry/entry_32.S       |    6 ------
+ arch/x86/entry/entry_64.S       |    1 -
+ arch/x86/include/asm/idtentry.h |    1 +
+ arch/x86/include/asm/traps.h    |    3 ---
+ arch/x86/kernel/idt.c           |    2 +-
+ arch/x86/kernel/traps.c         |   12 ++++--------
+ arch/x86/xen/enlighten_pv.c     |    2 +-
+ arch/x86/xen/xen-asm_64.S       |    2 +-
+ 8 files changed, 8 insertions(+), 21 deletions(-)
 
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1320,12 +1320,6 @@ SYM_CODE_START(native_iret)
+ SYM_CODE_END(native_iret)
+ #endif
+ 
+-SYM_CODE_START(alignment_check)
+-	ASM_CLAC
+-	pushl	$do_alignment_check
+-	jmp	common_exception
+-SYM_CODE_END(alignment_check)
+-
+ #ifdef CONFIG_X86_MCE
+ SYM_CODE_START(machine_check)
+ 	ASM_CLAC
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1061,7 +1061,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
+  * Exception entry points.
+  */
+ 
+-idtentry	X86_TRAP_AC		alignment_check		do_alignment_check		has_error_code=1
+ idtentry	X86_TRAP_XF		simd_coprocessor_error	do_simd_coprocessor_error	has_error_code=0
+ 
+ idtentry	X86_TRAP_PF		page_fault		do_page_fault			has_error_code=1
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -111,6 +111,58 @@ NOKPROBE_SYMBOL(func);							\
- static __always_inline void __##func(struct pt_regs *regs,		\
- 				     unsigned long error_code)
+@@ -135,5 +135,6 @@ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_TS,
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_NP,	exc_segment_not_present);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_SS,	exc_stack_segment);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_GP,	exc_general_protection);
++DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_AC,	exc_alignment_check);
  
-+#ifdef CONFIG_X86_64
-+/**
-+ * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
-+ *
-+ * Declares three functions:
-+ * - The ASM entry point: asm_##func
-+ * - The XEN PV trap entry point: xen_##func (maybe unused)
-+ * - The C handler called from the ASM entry point
-+ */
-+#define DECLARE_IDTENTRY_IST(vector, func)				\
-+	asmlinkage void asm_##func(void);				\
-+	asmlinkage void xen_asm_##func(void);				\
-+	__visible void func(struct pt_regs *regs)
-+
-+/**
-+ * DEFINE_IDTENTRY_IST - Emit code for IST entry points
-+ * @func:	Function name of the entry point
-+ *
-+ * This provides two entry points:
-+ * - The real IST based entry
-+ * - The regular stack based entry invoked when coming from user mode
-+ *   or XEN_PV
-+ */
-+#define DEFINE_IDTENTRY_IST(func)					\
-+static __always_inline void __##func(struct pt_regs *regs);		\
-+									\
-+__visible notrace void func(struct pt_regs *regs)			\
-+{									\
-+	__##func (regs);						\
-+}									\
-+NOKPROBE_SYMBOL(func);							\
-+									\
-+static __always_inline void __##func(struct pt_regs *regs)
-+
-+#else	/* CONFIG_X86_64 */
-+/* Maps to a regular IDTENTRY on 32bit for now */
-+# define DECLARE_IDTENTRY_IST		DECLARE_IDTENTRY
-+# define DEFINE_IDTENTRY_IST		DEFINE_IDTENTRY
-+#endif	/* !CONFIG_X86_64 */
-+
-+/* C-Code mapping */
-+#define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
-+
-+#define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_IST
-+
-+#define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
-+#define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
-+
- #else /* !__ASSEMBLY__ */
+ #endif
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -18,7 +18,6 @@ asmlinkage void double_fault(void);
+ #endif
+ asmlinkage void page_fault(void);
+ asmlinkage void async_page_fault(void);
+-asmlinkage void alignment_check(void);
+ #ifdef CONFIG_X86_MCE
+ asmlinkage void machine_check(void);
+ #endif /* CONFIG_X86_MCE */
+@@ -29,7 +28,6 @@ asmlinkage void xen_xennmi(void);
+ asmlinkage void xen_xendebug(void);
+ asmlinkage void xen_double_fault(void);
+ asmlinkage void xen_page_fault(void);
+-asmlinkage void xen_alignment_check(void);
+ #ifdef CONFIG_X86_MCE
+ asmlinkage void xen_machine_check(void);
+ #endif /* CONFIG_X86_MCE */
+@@ -42,7 +40,6 @@ dotraplinkage void do_nmi(struct pt_regs
+ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long cr2);
+ #endif
+ dotraplinkage void do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+-dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
+ #ifdef CONFIG_X86_32
+ dotraplinkage void do_iret_error(struct pt_regs *regs, long error_code);
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -82,7 +82,7 @@ static const __initconst struct idt_data
+ 	INTG(X86_TRAP_GP,		asm_exc_general_protection),
+ 	INTG(X86_TRAP_SPURIOUS,		asm_exc_spurious_interrupt_bug),
+ 	INTG(X86_TRAP_MF,		asm_exc_coprocessor_error),
+-	INTG(X86_TRAP_AC,		alignment_check),
++	INTG(X86_TRAP_AC,		asm_exc_alignment_check),
+ 	INTG(X86_TRAP_XF,		simd_coprocessor_error),
  
- /* Defines for ASM code to construct the IDT entries */
-@@ -123,6 +175,24 @@ static __always_inline void __##func(str
- /* Special case for 32bit IRET 'trap'. Do not emit ASM code */
- #define DECLARE_IDTENTRY_SW(vector, func)
+ #ifdef CONFIG_X86_32
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -320,16 +320,12 @@ DEFINE_IDTENTRY_ERRORCODE(exc_stack_segm
+ 		      0, NULL);
+ }
  
-+#ifdef CONFIG_X86_64
-+# define DECLARE_IDTENTRY_MCE(vector, func)			\
-+	idtentry_mce_db vector asm_##func func
-+
-+# define DECLARE_IDTENTRY_DEBUG(vector, func)			\
-+	idtentry_mce_db vector asm_##func func
-+
-+#else
-+# define DECLARE_IDTENTRY_MCE(vector, func)			\
-+	DECLARE_IDTENTRY(vector, func)
-+
-+# define DECLARE_IDTENTRY_DEBUG(vector, func)			\
-+	DECLARE_IDTENTRY(vector, func)
-+#endif
-+
-+/* No ASM code emitted for NMI */
-+# define DECLARE_IDTENTRY_NMI(vector, func)
-+
- #endif /* __ASSEMBLY__ */
+-#define IP ((void __user *)uprobe_get_trap_addr(regs))
+-#define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
+-dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
+-{									   \
+-	do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
++DEFINE_IDTENTRY_ERRORCODE(exc_alignment_check)
++{
++	do_error_trap(regs, error_code, "alignement check", X86_TRAP_AC,
++		      SIGBUS, BUS_ADRALN, NULL);
+ }
  
- /* Simple exception entries: */
+-DO_ERROR(X86_TRAP_AC,     SIGBUS,  BUS_ADRALN, NULL, "alignment check",     alignment_check)
+-#undef IP
+-
+ #ifdef CONFIG_VMAP_STACK
+ __visible void __noreturn handle_stack_overflow(const char *message,
+ 						struct pt_regs *regs,
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -631,7 +631,7 @@ static struct trap_array_entry trap_arra
+ 	TRAP_ENTRY(exc_general_protection,		false ),
+ 	TRAP_ENTRY(exc_spurious_interrupt_bug,		false ),
+ 	TRAP_ENTRY(exc_coprocessor_error,		false ),
+-	{ alignment_check,             xen_alignment_check,             false },
++	TRAP_ENTRY(exc_alignment_check,			false ),
+ 	{ simd_coprocessor_error,      xen_simd_coprocessor_error,      false },
+ };
+ 
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -46,7 +46,7 @@ xen_pv_trap asm_exc_general_protection
+ xen_pv_trap page_fault
+ xen_pv_trap asm_exc_spurious_interrupt_bug
+ xen_pv_trap asm_exc_coprocessor_error
+-xen_pv_trap alignment_check
++xen_pv_trap asm_exc_alignment_check
+ #ifdef CONFIG_X86_MCE
+ xen_pv_trap machine_check
+ #endif /* CONFIG_X86_MCE */
 
