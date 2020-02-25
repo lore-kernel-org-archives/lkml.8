@@ -2,78 +2,146 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299E5C35DFC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E5C35DF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DCF218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582620343;
-	bh=I1N06m9H8JQ9n2bGaqanCvfsSQpjqak5lJJ5OOW0dUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F+c1Bui+UOUmiibErEywjjuD+iPcbTCoqtPvRLstZPawou+pcq5geeequEuddMoc9
-	 SoUvVCU6wGACKjlIUDiYs+AvQPybB5DKkRU2+PFaxgWcrp4+zzUrGHB+ctRMEykzgY
-	 Gy493HLMN4POvxZwrqBZSOK0t5QCU0QVsoUArOx0=
+	by mail.kernel.org (Postfix) with ESMTP id 574F921556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 08:46:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="JkRNezg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgBYIpm (ORCPT
+        id S1729860AbgBYIq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 03:45:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgBYIpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 03:45:41 -0500
-Received: from localhost (unknown [122.167.120.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B3B420CC7;
-        Tue, 25 Feb 2020 08:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582620341;
-        bh=I1N06m9H8JQ9n2bGaqanCvfsSQpjqak5lJJ5OOW0dUQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GGsnqIh5k9qaitFovTeMIC74Y8ev54Z8gYaHXGKw3uTGmA52z/i0Y/ZskvvFUL8Mv
-         9RC8VaNyPsI+UCC+g/mH1vNhtQkjDQsqVvC9sjgv0HjUAVgojyMRwdX8Fs4qiLo9ec
-         2HwgDw3Ti0QO6+baBzbhEYB4EqZ9/GkNtffE1gwk=
-Date:   Tue, 25 Feb 2020 14:15:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Tue, 25 Feb 2020 03:46:26 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37835 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbgBYIq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 03:46:26 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b15so9125815lfc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 00:46:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=z1Qahvm7KnmiXYASqq9Hf+eApJtHkcbwnGtdfFCR58I=;
+        b=JkRNezg1xTJbkzROqNPOSM7N/KDneMzf5fQc37XnkxK6A7mvmUCD8yCzb0FcbcAYdn
+         h1gK7sDUGueciXFuXPXj+pm+S+9wWeN7p7Uy2Lrml34l54S8shvQe8jh1v73UljsECco
+         AYGiNRWphBxpBmtLFW0lzTz2OXczZJ8G5JMzc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=z1Qahvm7KnmiXYASqq9Hf+eApJtHkcbwnGtdfFCR58I=;
+        b=ObB++mjKrx7hzfdLLwRn/ewEMYnJC5harK59rW28ODbiA6RaZDkP5VLpwGrYh9xpit
+         S4cC6w8GpfDx390eQyV0QRCJyf8N+vx/ELVTQ7dQ+lpkS+zzWI2WrLqLuXeje35Q+/7G
+         m6591OlyiHZQj4iMztYPlo2mH7+sjR7ziPwYVHVgt3RKyq8Qr97yjTDQ3/7pu63i7nBU
+         zX30dHa8h72QwGyG3Oj1HzD6WqbFvipMGOalNI8AmLT7zFyZAuxSnqn0YcJWIKhBeQvS
+         w2kBjOEqDQpWJke5OJOkQV6MLDYJ+pKXWQUidu3UGwmDVYVKzNGZOVCNnRwjW7HqEzwR
+         xVvw==
+X-Gm-Message-State: APjAAAXA7bS5D316FL8xshKfjHVZAJASCNguv0L6SrxEZrOHDNR9I5xs
+        wfWpC+13Whn4CMUJqj20B0jbGw==
+X-Google-Smtp-Source: APXvYqzyNxgyrjZV6JMCkLoX1qWII/B9Gu5Yg1+FK+C9qDt9KG3oE7u+XjroFjv1fnlh1zl/mb5EQQ==
+X-Received: by 2002:a19:6e0f:: with SMTP id j15mr3693486lfc.76.1582620383320;
+        Tue, 25 Feb 2020 00:46:23 -0800 (PST)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id n15sm8343233lfe.54.2020.02.25.00.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 00:46:22 -0800 (PST)
+Date:   Tue, 25 Feb 2020 09:46:18 +0100
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dmaengine: imx-sdma: Fix the event id check to
- include RX event for UART6
-Message-ID: <20200225084537.GM2618@vkoul-mobl>
-References: <20200225082139.7646-1-frieder.schrempf@kontron.de>
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200225094437.4170502-0-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225082139.7646-1-frieder.schrempf@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-02-20, 08:23, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> On i.MX6UL/ULL and i.MX6SX the DMA event id for the RX channel of
-> UART6 is '0'. To fix the broken DMA support for UART6, we change
-> the check for event_id0 to include '0' as a valid id.
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-Applied, thanks
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
+
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
+
+Changes in v3:
+- added Acked-by and Reviewed-by tags
+- introduced LiteX SoC Controller driver
+- removed endianness detection (handled now by LiteX SoC Controller driver)
+- modified litex.h header
+- DTS aliases for LiteUART made optional
+- renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+- changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+- binding description rewritten to a yaml schema file
+- added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc_controller.yaml       |  46 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  14 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 233 ++++++++++
+ drivers/tty/serial/Kconfig                    |  32 +-
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 411 ++++++++++++++++++
+ include/linux/litex.h                         |  45 ++
+ include/uapi/linux/serial_core.h              |   3 +
+ 14 files changed, 838 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
 
 -- 
-~Vinod
+2.25.0
+
