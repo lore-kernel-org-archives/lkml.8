@@ -2,105 +2,92 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ECFC35DEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71922C35DEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E210521927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:12:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Jk1CqHzQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4332A21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 02:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgBYCMW (ORCPT
+        id S1728696AbgBYCNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 21:12:22 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33362 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgBYCMW (ORCPT
+        Mon, 24 Feb 2020 21:13:41 -0500
+Received: from smtprelay0168.hostedemail.com ([216.40.44.168]:37047 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726962AbgBYCNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 21:12:22 -0500
-Received: by mail-qk1-f193.google.com with SMTP id h4so10663599qkm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 18:12:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aV1wtzsixyxbIlgwZVMjWFxlrGFi0X1sLLQ6AvkFw1M=;
-        b=Jk1CqHzQBnOMrF2X0s+N5OdS4ebnoq+q2+n71ELYrkrblxYD9qjWtUaZmVOHPduZuI
-         1L5Va9/zeze48RCRMN+cfSWsT025ckOaGJcLgdDarI76+j27MlzRzUgRajMIR4ctLzy+
-         QqWW4Tq+WqrKM0qSiXYwvYW+auRw5ETve76eU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aV1wtzsixyxbIlgwZVMjWFxlrGFi0X1sLLQ6AvkFw1M=;
-        b=CAXObHEhaZ+SgwxRJrCk4jno3+n9a//MXGRcuy8be1ZzW3QGDfIgWhfVFrzshLKwIZ
-         f8EnBjgLuf0gxSOQD26T7STukBxBaDCMI3c//n3KPcu8UuJ6ewJxYLPtPF1X6FoeHLEt
-         10m24ruzDY2PVCyGQhXXYUMGYqHKWSFbnrz/op62jM9QeHcaKmTrOidB8/1RHq57onDP
-         fpTsGQTsOCYqcMk1IzSe4+BJHNWIIHCZdgSzoDav4xs0EHpY20O3cTUny8pSEfVtDK/M
-         HgNVH0ejNIcyPJ9hQ1YTTBQqL021lgvGMHMKqbG7NF+v04cVchRuSIxGXsGQvv6GSmBR
-         sFRw==
-X-Gm-Message-State: APjAAAWOHfvi3KXRpoBS3LJK7s4IdVt/geH+2I7jueMutMON+TjHGI88
-        Fb8gM4zmTkGJE7OcFpEZdO9Fvznmti4=
-X-Google-Smtp-Source: APXvYqxAJO1y+PRZqaNlPLjpP+h9ynxxQ1fDyUoGCsEl+wBDpiS2urRyLKsL3UMT7hyRdnrkk9GNJw==
-X-Received: by 2002:a37:c07:: with SMTP id 7mr53621921qkm.414.1582596741329;
-        Mon, 24 Feb 2020 18:12:21 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v7sm6856624qkg.103.2020.02.24.18.12.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 18:12:20 -0800 (PST)
-Date:   Mon, 24 Feb 2020 21:12:20 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, luto@kernel.org, tony.luck@intel.com,
-        frederic@kernel.org, dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v4 01/27] lockdep: Teach lockdep about "USED" <- "IN-NMI"
- inversions
-Message-ID: <20200225021220.GD253171@google.com>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.090538203@infradead.org>
- <20200222030843.GA191380@google.com>
- <20200224101050.GE14897@hirez.programming.kicks-ass.net>
+        Mon, 24 Feb 2020 21:13:40 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id A68A2182CED34;
+        Tue, 25 Feb 2020 02:13:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: nest60_772b7ebd10559
+X-Filterd-Recvd-Size: 2237
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 25 Feb 2020 02:13:38 +0000 (UTC)
+Message-ID: <a8af6c423501d5d49f1d81997b3a2295c0df7b9e.camel@perches.com>
+Subject: Re: [RFC][PATCH] checkpatch: Properly warn if Change-Id comes after
+ first Signed-off-by line
+From:   Joe Perches <joe@perches.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Andy Whitcroft <apw@canonical.com>
+Date:   Mon, 24 Feb 2020 18:12:08 -0800
+In-Reply-To: <20200224235824.126361-1-john.stultz@linaro.org>
+References: <20200224235824.126361-1-john.stultz@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224101050.GE14897@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:10:50AM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 21, 2020 at 10:08:43PM -0500, Joel Fernandes wrote:
-> > On Fri, Feb 21, 2020 at 02:34:17PM +0100, Peter Zijlstra wrote:
-> > > nmi_enter() does lockdep_off() and hence lockdep ignores everything.
-> > > 
-> > > And NMI context makes it impossible to do full IN-NMI tracking like we
-> > > do IN-HARDIRQ, that could result in graph_lock recursion.
-> > 
-> > The patch makes sense to me.
-> > 
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > NOTE:
-> > Also, I was wondering if we can detect the graph_lock recursion case and
-> > avoid doing anything bad, that way we enable more of the lockdep
-> > functionality for NMI where possible. Not sure if the suggestion makes sense
-> > though!
+On Mon, 2020-02-24 at 23:58 +0000, John Stultz wrote:
+> Quite often, the Change-Id may be between Signed-off-by: lines or
+> at the end of them. Unfortunately checkpatch won't catch these
+> cases as it disables in_commit_log when it catches the first
+> Signed-off-by line.
 > 
-> Yeah, I considered playing trylock games, but figured I shouldn't make
-> it more complicated that it needs to be.
+> This has bitten me many many times.
 
-Yes, I agree with you. Thanks.
+Hmm.  When is change-id used in your workflow?
 
- - Joel
+> I suspect this patch will break other use cases, so it probably
+> shouldn't be merged, but I wanted to share it just to help
+> illustrate the problem.
+> 
+> Cc: Andy Whitcroft <apw@canonical.com>
+> Cc: Joe Perches <joe@perches.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+
+Yes, I expect this will break things.
+
+And it's probably better to not add a Signed-off-by: when
+you intend this not to be merged.
+
+> ---
+>  scripts/checkpatch.pl | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index a63380c6b0d2..a55340a9e3ea 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2609,7 +2609,8 @@ sub process {
+>  # Check the patch for a signoff:
+>  		if ($line =~ /^\s*signed-off-by:/i) {
+>  			$signoff++;
+> -			$in_commit_log = 0;
+> +			#Disabling in_commit_log here breaks Change-Id checking in some cases
+> +			#$in_commit_log = 0;
+>  			if ($author ne '') {
+>  				my $l = $line;
+>  				$l =~ s/"//g;
 
