@@ -2,197 +2,205 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87505C35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62C8C35E04
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598E921556
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F0D21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 19:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1PgCMWXZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Czs0op2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbgBYTMC (ORCPT
+        id S1731357AbgBYTMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 14:12:02 -0500
-Received: from mail-mw2nam12on2054.outbound.protection.outlook.com ([40.107.244.54]:46761
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728913AbgBYTMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 14:12:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BatMAKBtFr4SEieHwCIo9dp1aSzKIDfPDrL8u04wRmIdGAUC/ct+s5hkox6euU/lyT6+qvuqN0aESbf/KqFZUtJN4JlqUlq+UVHJz9qX+grVBkb4ga4u6JKddlNKdGOahl3m+T2uhHjtjH8YHRnE9ZjviBTi2nk8dI+lvihzZG6EC2uMYnuiCVap3I8oJ4Lhfm2kOA9X7wrRGV4GSY+ksYyZ6VmJPmolZjGt8EK8wTU5BxmcU3hcejqiPf+e6gzZyeg7dxIhQWU8zGVYRz9l4mjxqvjgXyLxb+jl6OQImlVcYOtG6pEe7kNVoYTwcB1KUbpLzHYjFOiRc1pPDfdYDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PtU6v/jCEZ2hu/8tfy4y3eHBCWQByApfdOOb+N1qRA0=;
- b=U61J+t7UP/Va8W5CS5iKgzz+uV0HTs3yTGjsmkRpprl8JpAIcN82S25u9giOf3QEuy/VL3IIN3nBlTJ7ksk7H2uBnqd9o6LZZJKCq2Ez90Rk3qcpmrGZ3bNDEzdU/ImnSZkHaMN+h0TgKAOCdA0DfhG7muGdCjbUgENhbexTxplLhLlmYFORx6QUO4JccTktaxzKZe/4+DztzqCGUeZd0R9kxhj5tXWNLV8qhqoa5vHUWvXSrMJVLdA4qRdU8gRlLqDi4TcV5OlXp9YPuotO/v0T7ZCXOCC54gfbqmvSNt3tezHsUWjVM4wldaeOF7TTHNvBO9FkKWMcz9wf1vv2ZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PtU6v/jCEZ2hu/8tfy4y3eHBCWQByApfdOOb+N1qRA0=;
- b=1PgCMWXZpbHMAscrkrML7pp7tEkap85SSbLm5SKDzIM5Ef/iEdXQ4eZgYgx1u37/NYnHcT8Lo+6Xc7jy3jrECHQHRSe6KN6kRX/Zs1V+Crr9JZPTaw1jFmTbe/wNrBcGrwj/MUWtZjuca+uzUpnmKahq+h/ReVIof4gyFWSW5O4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
- by DM5PR12MB1593.namprd12.prod.outlook.com (2603:10b6:4:10::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Tue, 25 Feb
- 2020 19:11:58 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2750.021; Tue, 25 Feb
- 2020 19:11:58 +0000
-Subject: Re: [PATCH] dma-buf: Fix missing excl fence waiting
-To:     "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        Tue, 25 Feb 2020 14:12:31 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57398 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728913AbgBYTMa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 14:12:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01PHmo2Z000692;
+        Tue, 25 Feb 2020 11:48:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582652930;
+        bh=12s3X3izH7v/kPf++ntOe88qKZbyQH4fY+tAP53VpyY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Czs0op2WyFonLyjwUBBRDqhwgiFz+qFy3ZFROi52MGVp5i4Nspk4g2gJw7YsfyYsR
+         SOiXFE2IWD+gbhjNVDvJY9d0T0e+DvUmvlHXwmu6i4BWQprayuqzyCmTT0jZ6u3I6g
+         YzJIFbdMNrRQHoP6K4/KoP8oqBtXetUZcZDqKBng=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01PHmorR013552
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 11:48:50 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 11:48:49 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 11:48:49 -0600
+Received: from [158.218.117.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01PHmmOj055084;
+        Tue, 25 Feb 2020 11:48:48 -0600
+Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
+ traffic classes
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+CC:     Po Liu <po.liu@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>
-References: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
- <7a2eb42a-2dd9-4303-3947-6bbb4de7a888@amd.com>
- <20200225172355.GO2363188@phenom.ffwll.local>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <484ce316-55f2-b85e-a1e4-730db94f3fe3@amd.com>
-Date:   Tue, 25 Feb 2020 20:11:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200225172355.GO2363188@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: AM4PR0701CA0003.eurprd07.prod.outlook.com
- (2603:10a6:200:42::13) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com>
+ <87v9p93a2s.fsf@linux.intel.com>
+ <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com>
+ <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
+ <87d0bajc3l.fsf@linux.intel.com>
+ <70deb628-d7bc-d2a3-486d-d3e53854c06e@ti.com>
+ <877e0tx71r.fsf@linux.intel.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <b1ef134d-e275-439f-f7a1-038537af4855@ti.com>
+Date:   Tue, 25 Feb 2020 12:55:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR0701CA0003.eurprd07.prod.outlook.com (2603:10a6:200:42::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.13 via Frontend Transport; Tue, 25 Feb 2020 19:11:55 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b69dfaa3-a790-410d-e8f1-08d7ba2695bf
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1593:|DM5PR12MB1593:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1593ECA93D70861682F8B59D83ED0@DM5PR12MB1593.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-Forefront-PRVS: 0324C2C0E2
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(189003)(199004)(8676002)(110136005)(316002)(16526019)(6666004)(5660300002)(186003)(478600001)(86362001)(66476007)(8936002)(2906002)(31696002)(66946007)(36756003)(52116002)(66574012)(2616005)(66556008)(81156014)(6486002)(31686004)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1593;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9O7QAB7YHVvHcpHVrF2a6vknygV3eGMwFSn28taGfUGHV1v9xN6NpCahLIRO8EneE83n3sDBqaUSS0+UlyGY7p28UMpnHVuT8sODqE7IRVVYKJUdMZhLlKTB10hG+qoknMN7q0wZlYaVFpBFdQR2jj5KZl/xV3a+fHzxuQCph2C8OvOBgcza/oQ4KDNFPrflIf//6dPCcsXh1L4zwnK8Zn7684a5n4fPePgf/ChV+3xZ4og6LT2I68rBz2OHbHiKiZxlAzqpM2OyvJQctcvI24ckVb6ACnxd7F8wY+Ovfqv9M7XeCz2XwMB6z08BaiexQPNfzqAFxdKQgk84aElDAqxuy4WXev/W5ERlQII0/QP5mSqn/YPAb/K+GY9bzMFSwttofbrP1XSLy7RHNAZVkDWy+jM3xnO6Zc2fHA1juUh/3lUMmdCg5nZjUaE1La0K
-X-MS-Exchange-AntiSpam-MessageData: PFZpdjxEOePgsBso5/Cf7XYTOHqn8C2JT/lHpdXLwRTVWnLTs+r2AvLzKovtRXHwjGe3m2s9CXc4abfIhc3x/LbJXU9O1Una8n6/nyC14G8+9wxUDta7fY2b3wLu3TRg+61gltTrwjusvThfF5ls/7gz7PqQH2JgYcZD4jX9k1XZMOjUtu7YG6deo9cIZ103r9917Qh3ykQuQzgaQE8UxA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b69dfaa3-a790-410d-e8f1-08d7ba2695bf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2020 19:11:58.2519
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7j0x8XM9HYcPM6bgeimA8Q1kvFMSb7zzuaRiXLzk3Y8jDjXRL0hiWmbk2VdQLXRl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1593
+In-Reply-To: <877e0tx71r.fsf@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 25.02.20 um 18:23 schrieb Daniel Vetter:
-> On Sun, Feb 23, 2020 at 01:04:15PM +0100, Christian König wrote:
->> Am 23.02.20 um 12:56 schrieb Pan, Xinhui:
->>> If shared fence list is not empty, even we want to test all fences, excl fence is ignored.
->>> That is abviously wrong, so fix it.
->> Yeah that is a known issue and I completely agree with you, but other
->> disagree.
->>
->> See the shared fences are meant to depend on the exclusive fence. So all
->> shared fences must finish only after the exclusive one has finished as well.
->>
->> The problem now is that for error handling this isn't necessary true. In
->> other words when a shared fence completes with an error it is perfectly
->> possible that he does this before the exclusive fence is finished.
->>
->> I'm trying to convince Daniel that this is a problem for years :)
-> I thought the consensus is that reasonable gpu schedulers and gpu reset
-> code should try to make really, really sure it only completes stuff in
-> sequence? That's at least my take away from the syncobj timeline
-> discussion, where you convinced me we shouldn't just crash&burn.
->
-> I think as long as your scheduler is competent and your gpu reset tries to
-> limit damage (i.e. kill offending ctx terminally, mark everything else
-> that didn't complete for re-running) we should end up with everything
-> completing in sequence. I guess if you do kill a lot more stuff, then
-> you'd have to push these through your scheduler as dummy jobs, i.e. they
-> still wait for their dependencies, but then all they do is set the
-> dma_fence error and complete it. Maybe something the common scheduler
-> could do.
+Hi Vinicius,
 
-Yes, that's exactly how we currently implement it. But I still think 
-that this is not necessary the best approach :)
+On 02/11/2020 02:22 PM, Vinicius Costa Gomes wrote:
+> Murali Karicheri <m-karicheri2@ti.com> writes:
+> 
+>> We are still working to send a patch for taprio offload on our hardware
+>> and it may take a while to get to this. So if someone can help to add
+>> the required kernel/driver interface for this, that will be great!
+> 
+> Will add this to my todo list. But if anyone else has the spare cycles
+> feel free to have a go at it.
+> 
+Thanks! We have made some progress in sending the base driver to netdev
+list now https://lkml.org/lkml/2020/2/22/157
 
-Anyway Xinhui's problem turned out to be deeper. We somehow add an old 
-stale fence to the dma_resv object sometimes and that can result in 
-quite a bunch of problems.
+This device is taprio offload capable. Next step is to add taprio
+offload to this driver. Then other features will follow.
 
-I'm currently trying to hunt down what's going wrong here in more detail.
+>>
+>>>>>        - ConfigChangeError - Error in configuration (AdminBaseTime <
+>>>>>          CurrentTime)
+>>>>
+>>>> This can be exported similarly.
+>>>
+>>> In my view, having this as a "runtime" error is not useful, as we can
+>>> verify this at configuration time.
+>>
+>> Looks like this is not an error per 802.1Q standard if I understood it
+>> correctly.
+>>
+>> This is what I see.
+>> =======================================================================
+>>   From 802.1Q 2018, 8.6.9.1.1 SetCycleStartTime()
+>>
+>> If AdminBaseTime is set to the same time in the past in all bridges and
+>> end stations, OperBaseTime is always in the past, and all cycles start
+>> synchronized. Using AdminBaseTime in the past is appropriate when you
+>> can start schedules prior to starting the application that uses the
+>> schedules. Use of AdminBaseTime in the future is intended to change a
+>> currently running schedule in all bridges and end stations to a new
+>> schedule at a future time. Using AdminBaseTime in the future is
+>> appropriate when schedules must be changed without stopping the
+>> application
+>> ========================================================================
+>>
+> 
+> What I meant here is the case that I already have an "oper" schedule
+> running, so my "oper->base_time" is in the past, and I try to add an
+> "admin" schedule with a "base_time" also in the past. What's the
+> expected behavior in this case? The text about stopping/starting
+> applications doesn't seem to apply to the way the tc subsystem interacts
+> with the applications.
+> 
+ > I try to add an "admin" schedule with a "base_time" also in the past.
+ > What's the expected behavior in this case?
+
+Ok got it. I don't think this behavior is explained in the spec. I would
+assume a sane thing to do is to switch to admin schedule if 
+admin->base_time is newer than oper->base_time and flag
+the ConfigChangeError to be compliant to the spec, but frankly speaking
+I don't know how application is going to use this. It is a low priority
+item IMO and can be added as needed.
 
 Regards,
-Christian.
 
-> -Daniel
->
->> Regards,
->> Christian.
->>
->>> Signed-off-by: xinhui pan <xinhui.pan@amd.com>
->>> ---
->>>    drivers/dma-buf/dma-resv.c | 9 +++++----
->>>    1 file changed, 5 insertions(+), 4 deletions(-)
+Murali
 >>>
->>> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
->>> index 4264e64788c4..44dc64c547c6 100644
->>> --- a/drivers/dma-buf/dma-resv.c
->>> +++ b/drivers/dma-buf/dma-resv.c
->>> @@ -632,14 +632,14 @@ static inline int dma_resv_test_signaled_single(struct dma_fence *passed_fence)
->>>     */
->>>    bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
->>>    {
->>> -	unsigned seq, shared_count;
->>> +	unsigned int seq, shared_count, left;
->>>    	int ret;
->>>    	rcu_read_lock();
->>>    retry:
->>>    	ret = true;
->>>    	shared_count = 0;
->>> -	seq = read_seqcount_begin(&obj->seq);
->>> +	left = seq = read_seqcount_begin(&obj->seq);
->>>    	if (test_all) {
->>>    		unsigned i;
->>> @@ -647,7 +647,7 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
->>>    		struct dma_resv_list *fobj = rcu_dereference(obj->fence);
->>>    		if (fobj)
->>> -			shared_count = fobj->shared_count;
->>> +			left = shared_count = fobj->shared_count;
->>>    		for (i = 0; i < shared_count; ++i) {
->>>    			struct dma_fence *fence = rcu_dereference(fobj->shared[i]);
->>> @@ -657,13 +657,14 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
->>>    				goto retry;
->>>    			else if (!ret)
->>>    				break;
->>> +			left--;
->>>    		}
->>>    		if (read_seqcount_retry(&obj->seq, seq))
->>>    			goto retry;
->>>    	}
->>> -	if (!shared_count) {
->>> +	if (!left) {
->>>    		struct dma_fence *fence_excl = rcu_dereference(obj->fence_excl);
->>>    		if (fence_excl) {
+>>>>
+>>>>>        - SupportedListMax - Maximum supported Admin/Open shed list.
+>>>>>
+>>>>> Is there a plan to export these from driver through tc show or such
+>>>>> command? The reason being, there would be applications developed to
+>>>>> manage configuration/schedule of TSN nodes that would requires these
+>>>>> information from the node. So would need a support either in tc or
+>>>>> some other means to retrieve them from hardware or driver. That is my
+>>>>> understanding...
+>>>>>
+>>>
+>>> Hm, now I understamd what you meant here...
+>>>
+>>>>
+>>>> Not sure what answer you expect to receive for "is there any plan".
+>>>> You can go ahead and propose something, as long as it is reasonably
+>>>> useful to have.
+>>>
+>>> ... if this is indeed useful, perhaps one way to do is to add a subcommand
+>>> to TC_SETUP_QDISC_TAPRIO, so we can retrieve the stats/information we want
+>>> from the driver. Similar to what cls_flower does.
+>>>
+>>
+>> What I understand is that there will be some work done to allow auto
+>> configuration of TSN nodes from user space and that would need access to
+>> all or some of the above parameters along with tc command to configure
+>> the same. May be a open source project for this or some custom
+>> application? Any such projects existing??
+> 
+> Yeah, this is a big missing piece for TSN. I've heard 'netopeer2' and
+> 'sysrepo' mentioned when similar questions were asked, but I have still
+> to take a look at them and see what's missing. (Or if they are the right
+> tool for the job)
+> 
+> 
 
+-- 
+Murali Karicheri
+Texas Instruments
