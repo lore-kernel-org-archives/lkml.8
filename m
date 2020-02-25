@@ -2,144 +2,117 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FECC35E01
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0A3C35E01
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EA321927
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582649876;
-	bh=iGs0yCx6/yJN2klUo+eH1+d22OPSIaYSFVwynXiSbZo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rr29TH2Hk6V1RgOdjtYIiG8b++vupu/niuwaOUULqo9bJMuoVWCIFFrD/JtQr7Wqt
-	 dkee0wLnY8Xc6RkgIYrMIBdZez8sRl6FxD4bme2NkGwnh5KyaukDMyWdhJXvjllAlt
-	 WwuENiitdl4N4WIbU63RcjxeD9MSjx0aoqWFMZxc=
+	by mail.kernel.org (Postfix) with ESMTP id 2C81E20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 16:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbgBYQ5z (ORCPT
+        id S1731250AbgBYQ6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 11:57:55 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34966 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727983AbgBYQ5y (ORCPT
+        Tue, 25 Feb 2020 11:58:06 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42138 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727983AbgBYQ6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 11:57:54 -0500
-Received: by mail-oi1-f194.google.com with SMTP id b18so10662oie.2;
-        Tue, 25 Feb 2020 08:57:53 -0800 (PST)
+        Tue, 25 Feb 2020 11:58:05 -0500
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1j6dX0-0000Pe-PI
+        for linux-kernel@vger.kernel.org; Tue, 25 Feb 2020 16:58:02 +0000
+Received: by mail-pl1-f198.google.com with SMTP id 91so7778952plf.23
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 08:58:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6ACHzMKOSBk1FuBO6DMA0vB22pVYkOJchRbVTRFy7wc=;
-        b=ouSZ4V/DXQQ9ncFyDMiRSFn6QrlYM/9W0omfDOVeWpsbvVLaNdXLbLnVVVk9ZxVx0Z
-         DIPdNobyA/brtbE0/G4R8suJJt1vbW0keTz/1YlWEL017wvcvOEgA7UZlm8kAUBXcdGz
-         DY57AaGAjjMRJhQ/pDYuQGex6GBGnI4UvxhoVB1lkgtqQKovmFAP3k5D4q+aylBpRwN7
-         z/fdwWpw+Y2mvGJMT0cJgEKpqk/FVQUTSAv87X6S+IjISewANIM6UyYaZezBkkZn1siB
-         9Ybs+LeqW4zEuzO3So5k7ubMumpW22D8DIiwCEjknpoUfFCQ4QAmvgNOjh3cm8FURPOz
-         gPpg==
-X-Gm-Message-State: APjAAAX99Cpdf0USlHTR0JxyeqqrsgnqllqIcBQARWe5CJ73473m5x+7
-        NaPMkqbZ21PFWlJUibsQrQ==
-X-Google-Smtp-Source: APXvYqwCAroWxHCBDIW6Ez+l4uiPOauLqnHGApz7U1x4l+wo5KhnyaAyjioax5zei4S1Mi5WgdWp3g==
-X-Received: by 2002:aca:ebcb:: with SMTP id j194mr4456543oih.154.1582649873340;
-        Tue, 25 Feb 2020 08:57:53 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j140sm5452376oib.46.2020.02.25.08.57.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Tmq5/QscEAlIKXHg+Ug+knf6u6cqRVBxVv3NqJuFm50=;
+        b=boJLdgBANprUxgXis8kUw+nd4thrUvYk8anHyxVODTwYOVjvw4/pTnbqPNW6cZwPPk
+         ijU6hlUx8nLvvwQ7X+KJOFZ98fynwk/nIcnwhBinqI6eIqtKicl5UpdlN5Xp2IejQ+SQ
+         DptP340EAf9NWzNJSFBBj1kR7OcFSu28CCYP5BYTXvNkp2HmlT64MRyNumQwFjGFKYRr
+         BCWk+OpO0v2kH9HroUDQowvSH8YThJENduNr3IR3+mw8Yb5QhmxCVKmfV6g0LauCtUrl
+         d12umRTudm+511lmPGuXiX35FNnkArYGLJ52JBTFsuVxxEoD8jZUAjB9DRK3xjWoWa08
+         GnHg==
+X-Gm-Message-State: APjAAAWy1PX4DXZaRDbCQT+83UP2dlY5FXusv6e8xkJxFAHL0qmXlVZs
+        6Amaz/1/O55MTaq4XcnYPSYeYXYjiwcWJZgQlR7VCUE32DIX6+7MpdOOMZ9X3ZdSH3tq3F7ikUK
+        VC3GoSNtONx9qQZE9Vh++Bbp9kHvXnJ6VUp/PTxkg
+X-Received: by 2002:a63:7d46:: with SMTP id m6mr56273069pgn.38.1582649881488;
+        Tue, 25 Feb 2020 08:58:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzDCUsO23WLo7Kej+kPuOKSIr5NpcgPj7a/xYcGbZxHSW4SNQ4GSRF97BOQStSuVJhPvD3Zbg==
+X-Received: by 2002:a63:7d46:: with SMTP id m6mr56273040pgn.38.1582649881092;
+        Tue, 25 Feb 2020 08:58:01 -0800 (PST)
+Received: from localhost.localdomain (223-137-37-84.emome-ip.hinet.net. [223.137.37.84])
+        by smtp.gmail.com with ESMTPSA id i22sm3558212pgi.69.2020.02.25.08.57.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 08:57:52 -0800 (PST)
-Received: (nullmailer pid 16625 invoked by uid 1000);
-        Tue, 25 Feb 2020 16:57:50 -0000
-Date:   Tue, 25 Feb 2020 10:57:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tue, 25 Feb 2020 08:58:00 -0800 (PST)
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+To:     linux-kselftest@vger.kernel.org
+Cc:     shuah@kernel.org, sboyd@kernel.org, tglx@linutronix.de,
+        john.stultz@linaro.org, joe.lawrence@redhat.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] dt-bindings: soc: document LiteX SoC Controller
-  bindings
-Message-ID: <20200225165750.GA15779@bogus>
-References: <20200225094437.4170502-0-mholenko@antmicro.com>
- <20200225094437.4170502-2-mholenko@antmicro.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225094437.4170502-2-mholenko@antmicro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: [PATCHv2] selftests/timers: Turn off timeout setting
+Date:   Wed, 26 Feb 2020 00:57:49 +0800
+Message-Id: <20200225165749.6399-1-po-hsu.lin@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 09:46:45 +0100, Mateusz Holenko wrote:
-> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> 
-> Add documentation for LiteX SoC Controller bindings.
-> 
-> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> ---
-> 
-> Notes:
->     This commit has been introduced in v3 of the patchset.
-> 
->  .../soc/litex/litex,soc_controller.yaml       | 46 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> 
+The following 4 tests in timers can take longer than the default 45
+seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
+Add 45 second timeout per test) to run:
+  * nsleep-lat - 2m7.350s
+  * set-timer-lat - 2m0.66s
+  * inconsistency-check - 1m45.074s
+  * raw_skew - 2m0.013s
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thus they will be marked as failed with the current 45s setting:
+  not ok 3 selftests: timers: nsleep-lat # TIMEOUT
+  not ok 4 selftests: timers: set-timer-lat # TIMEOUT
+  not ok 6 selftests: timers: inconsistency-check # TIMEOUT
+  not ok 7 selftests: timers: raw_skew # TIMEOUT
 
-warning: no schema found in file: Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml: ignoring, error parsing file
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Traceback (most recent call last):
-  File "/usr/local/bin/dt-doc-validate", line 35, in check_doc
-    testtree = dtschema.load(filename, line_number=line_number, duplicate_keys=False)
-  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 513, in load
-    return yaml.load(f.read())
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
-    return constructor.get_single_data()
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 111, in get_single_data
-    node = self.composer.get_single_node()
-  File "_ruamel_yaml.pyx", line 718, in _ruamel_yaml.CParser.get_single_node
-ruamel.yaml.composer.ComposerError: expected a single document in the stream
-  in "<unicode string>", line 1, column 1
-but found another document
-  in "<unicode string>", line 2, column 1
+Disable the timeout setting for timers can make these tests finish
+properly:
+  ok 3 selftests: timers: nsleep-lat
+  ok 4 selftests: timers: set-timer-lat
+  ok 6 selftests: timers: inconsistency-check
+  ok 7 selftests: timers: raw_skew
 
-During handling of the above exception, another exception occurred:
+https://bugs.launchpad.net/bugs/1864626
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+---
+ tools/testing/selftests/timers/Makefile | 1 +
+ tools/testing/selftests/timers/settings | 1 +
+ 2 files changed, 2 insertions(+)
+ create mode 100644 tools/testing/selftests/timers/settings
 
-Traceback (most recent call last):
-  File "/usr/local/bin/dt-doc-validate", line 74, in <module>
-    ret = check_doc(args.yamldt)
-  File "/usr/local/bin/dt-doc-validate", line 40, in check_doc
-    print(filename + ":", exc.path[-1], exc.message)
-AttributeError: 'ComposerError' object has no attribute 'path'
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/soc/litex/litex,soc_controller.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/soc/litex/litex,soc_controller.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
+index 7656c7c..0e73a16 100644
+--- a/tools/testing/selftests/timers/Makefile
++++ b/tools/testing/selftests/timers/Makefile
+@@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
+ 
+ TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
+ 
++TEST_FILES := settings
+ 
+ include ../lib.mk
+ 
+diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
+new file mode 100644
+index 0000000..e7b9417
+--- /dev/null
++++ b/tools/testing/selftests/timers/settings
+@@ -0,0 +1 @@
++timeout=0
+-- 
+2.7.4
 
-See https://patchwork.ozlabs.org/patch/1243930
-Please check and re-submit.
