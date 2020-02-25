@@ -2,96 +2,81 @@ Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57C4C35DF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD071C35DF2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A452082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832B02082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 06:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgBYGdx (ORCPT
+        id S1729145AbgBYGfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 01:33:53 -0500
-Received: from mga01.intel.com ([192.55.52.88]:4552 "EHLO mga01.intel.com"
+        Tue, 25 Feb 2020 01:35:42 -0500
+Received: from relay.sw.ru ([185.231.240.75]:39432 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729058AbgBYGdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 01:33:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 22:33:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,483,1574150400"; 
-   d="scan'208";a="226244465"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 22:33:52 -0800
-Received: from [10.226.38.25] (unknown [10.226.38.25])
-        by linux.intel.com (Postfix) with ESMTP id E5E0858052E;
-        Mon, 24 Feb 2020 22:33:49 -0800 (PST)
-Subject: Re: [PATCH v10 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org
-Cc:     robh+dt@kernel.org, simon.k.r.goldschmidt@gmail.com,
-        dinguyen@kernel.org, tien.fong.chee@intel.com, marex@denx.de,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <99f7e23f-268d-f32b-086f-4a46fc232ce9@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <e5571c19-de2a-5c93-8bde-22b03d6a21a4@linux.intel.com>
-Date:   Tue, 25 Feb 2020 14:33:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726019AbgBYGfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 01:35:42 -0500
+Received: from vvs-ws.sw.ru ([172.16.24.21])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1j6Tod-0004kl-UK; Tue, 25 Feb 2020 09:35:36 +0300
+Subject: Re: [PATCH 7/7] sysvipc_find_ipc should increase position index
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Waiman Long <longman@redhat.com>
+References: <b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com>
+ <8ed2850e-7cec-ebeb-4e15-21da3715c42a@redhat.com>
+From:   Vasily Averin <vvs@virtuozzo.com>
+Message-ID: <8e097c72-5fd0-4a59-12e3-8298b9f5468e@virtuozzo.com>
+Date:   Tue, 25 Feb 2020 09:35:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <99f7e23f-268d-f32b-086f-4a46fc232ce9@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8ed2850e-7cec-ebeb-4e15-21da3715c42a@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Dear Andrew,
+Could you please pick up this patch?
 
-On 25/2/2020 12:23 PM, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 19/02/20 7:58 am, Ramuthevar,Vadivel MuruganX wrote:
-> [...]
->>      CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+On 1/24/20 7:26 PM, Waiman Long wrote:
+> On 1/24/20 2:03 AM, Vasily Averin wrote:
+>> if seq_file .next fuction does not change position index,
+>> read after some lseek can generate unexpected output.
 >>
->> Ramuthevar Vadivel Murugan (2):
->>    dt-bindings: spi: Add schema for Cadence QSPI Controller driver
->>    spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+>> https://bugzilla.kernel.org/show_bug.cgi?id=206283
+>> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+>> ---
+>>  ipc/util.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147 +++++
->>   drivers/mtd/spi-nor/Kconfig                        |  11 -
->>   drivers/mtd/spi-nor/Makefile                       |   1 -
->>   drivers/spi/Kconfig                                |   8 +
->>   drivers/spi/Makefile                               |   1 +
->>   .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
->>   6 files changed, 459 insertions(+), 350 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> You will have to remove old bindings as well. Also please CC linux-mtd
-> list as these patches touch drivers/mtd/*
-
-Sure, will remove old bindings.
-
-Agree!, cc of linux-mtd list.
-
->
-> Just run scripts/get_maintainer.pl on your patches to get list of
-> mailing list and people to CC
-
-Thanks for the commands.
-
-Regards
-Vadivel
->>   rename drivers/{mtd/spi-nor/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (73%)
->>
+>> diff --git a/ipc/util.c b/ipc/util.c
+>> index 915eacb..7a3ab2e 100644
+>> --- a/ipc/util.c
+>> +++ b/ipc/util.c
+>> @@ -764,13 +764,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+>>  			total++;
+>>  	}
+>>  
+>> +	*new_pos = pos + 1;
+>>  	if (total >= ids->in_use)
+>>  		return NULL;
+>>  
+>>  	for (; pos < ipc_mni; pos++) {
+>>  		ipc = idr_find(&ids->ipcs_idr, pos);
+>>  		if (ipc != NULL) {
+>> -			*new_pos = pos + 1;
+>>  			rcu_read_lock();
+>>  			ipc_lock_object(ipc);
+>>  			return ipc;
+> 
+> Acked-by: Waiman Long <longman@redhat.com>
+> 
