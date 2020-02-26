@@ -2,106 +2,117 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318B0C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE8CC4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0343421D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582704305;
-	bh=6mpYp3VSLsGhePsNl9NhezAX3lGlQZe76/ALlOLckQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SKWB5chtjURcaPoqS3Jjv1kMdCkbxyoeS2Op1OZLIdrGTl34OihAebl6XMu+hHWAW
-	 aFNjmpEd7pyluDGNC6B93J6vZiGgIjutbyEnDRLjNValEyQJROnLlaocIXD2u8PFom
-	 kHKFq29/hdEHFvwci4/SVXgy3UJ9hMFMeToEqWbs=
+	by mail.kernel.org (Postfix) with ESMTP id 12C4D21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:05:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PApiq7Wh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgBZIFD (ORCPT
+        id S1727463AbgBZIF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:05:03 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37603 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgBZIFD (ORCPT
+        Wed, 26 Feb 2020 03:05:56 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:38904 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgBZIFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:05:03 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q23so1968767ljm.4;
-        Wed, 26 Feb 2020 00:05:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yKvVSicnRjGL1KBR6OA7vuLTKFiFx2PtDbuSAdj12/E=;
-        b=ccAHqfwxytj3lNoBs6NBqWkrY7cQJN4MpDoDgQ1nI+sUi/ZJyGw1h1fGMsVgK3TTLr
-         P+u6sPsrecETJFW4hbw3lzJk1FBYjpeqi+Wrz7q9uf01kCPQygsZpIpVwC3jIRntLypv
-         d8UaCT4iBsgBxAgt7v6Ko7KPRzYjTuuNa1UbFMaYDZwUGbqxDWUbaLkUHpQP+zPRrVVq
-         NHdTRv9slJ/O1IDK+tOv17WkX4v9M0MemQBplpuFXQYeqig/JtcbqRiAUhR+/tACERDq
-         oYWiOoCsFO9jf5KCMIE/pYslEW7Fn0xa9hByVziyV9YsM6mot7gf41CmF7S5eWVl7smf
-         WA/w==
-X-Gm-Message-State: APjAAAVn4OrSLWGQ9N0MEBnL5CEgbo68v2X2XGrDyRdI6HY4Cf3nEozq
-        oowwbUFhutfSu5c0dDsV7Vf9Nv3x
-X-Google-Smtp-Source: APXvYqxtBp00ozcwsH0h6RkFNguOuXbrCq3p9SMa4uqnZ0wQB9w9DHyXdONrvcFY0NUSwaXfHsFfqw==
-X-Received: by 2002:a2e:8145:: with SMTP id t5mr2166288ljg.144.1582704300911;
-        Wed, 26 Feb 2020 00:05:00 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id a3sm570720lfo.70.2020.02.26.00.05.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 00:05:00 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j6rgh-0001U3-EC; Wed, 26 Feb 2020 09:04:59 +0100
-Date:   Wed, 26 Feb 2020 09:04:59 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 1/2] USB: core: Fix build warning in
- usb_get_configuration()
-Message-ID: <20200226080459.GU32540@localhost>
-References: <1582697723-7274-1-git-send-email-yangtiezhu@loongson.cn>
+        Wed, 26 Feb 2020 03:05:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ByKqs5RS8oVptfO5+UU1Er07nuxy8TMvTUVvNbxzm6A=; b=PApiq7WhmnjBBZAPe8x1FZW158
+        EdwNaWEjNKrxU4tG/fRUWVUcb5ibaNqzUDYU2Fk/o+99ZYaW4hB3vSw39py727qVQCmD/zOk6k/Db
+        n3rCsINt0mg8IieM1T9mSTQ4VsjaEndJSDLUKT+E4B5Umvl5/FAlUIS7qi1Gt7AoRXzgqPoDBYc5c
+        NzCOB/3QqdT024JJ6ZAXycL8JsWLHAUo35Z2e53EzfRLV9Y3dQriRJ1ahACVDXr4tkt4g19yLwYk/
+        T4zv5sOt+ksNijh9u+/8GR9nIr3bBD3Y7RPd4eXEZkWLS6DKs/uskogf1Uc/J+1G27zLgNS0CYgMi
+        3JAT3WsA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6rhN-0007Dg-T3; Wed, 26 Feb 2020 08:05:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9D519300478;
+        Wed, 26 Feb 2020 09:03:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EAB93203E18D3; Wed, 26 Feb 2020 09:05:38 +0100 (CET)
+Date:   Wed, 26 Feb 2020 09:05:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 13/16] x86/entry: Move irqflags and context tracking to C
+ for simple idtentries
+Message-ID: <20200226080538.GO18400@hirez.programming.kicks-ass.net>
+References: <20200225223321.231477305@linutronix.de>
+ <20200225224145.444611199@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582697723-7274-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200225224145.444611199@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 02:15:22PM +0800, Tiezhu Yang wrote:
-> There is no functional issue, just fix the following build warning:
-> 
->   CC      drivers/usb/core/config.o
-> drivers/usb/core/config.c: In function ‘usb_get_configuration’:
-> drivers/usb/core/config.c:868:6: warning: ‘result’ may be used uninitialized in this function [-Wmaybe-uninitialized]
->   int result;
->       ^
+On Tue, Feb 25, 2020 at 11:33:34PM +0100, Thomas Gleixner wrote:
 
-What compiler are you using? The warning is clearly bogus and it hasn't
-been seen with any recent gcc at least.
-
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  drivers/usb/core/config.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-> index b7918f6..bb63ee0 100644
-> --- a/drivers/usb/core/config.c
-> +++ b/drivers/usb/core/config.c
-> @@ -865,7 +865,7 @@ int usb_get_configuration(struct usb_device *dev)
->  	unsigned int cfgno, length;
->  	unsigned char *bigbuffer;
->  	struct usb_config_descriptor *desc;
-> -	int result;
-> +	int result = 0;
+> --- a/arch/x86/include/asm/idtentry.h
+> +++ b/arch/x86/include/asm/idtentry.h
+> @@ -7,14 +7,31 @@
 >  
->  	if (ncfg > USB_MAXCONFIG) {
->  		dev_warn(ddev, "too many configurations: %d, "
+>  #ifndef __ASSEMBLY__
+>  
+> +#ifdef CONFIG_CONTEXT_TRACKING
+> +static __always_inline void enter_from_user_context(void)
+> +{
+> +	CT_WARN_ON(ct_state() != CONTEXT_USER);
+> +	user_exit_irqoff();
+> +}
+> +#else
+> +static __always_inline void enter_from_user_context(void) { }
+> +#endif
+> +
+>  /**
+>   * idtentry_enter - Handle state tracking on idtentry
+>   * @regs:	Pointer to pt_regs of interrupted context
+>   *
+> - * Place holder for now.
+> + * Invokes:
+> + *  - The hardirq tracer to keep the state consistent as low level ASM
+> + *    entry disabled interrupts.
+> + *
+> + *  - Context tracking if the exception hit user mode
+>   */
+>  static __always_inline void idtentry_enter(struct pt_regs *regs)
+>  {
+> +	trace_hardirqs_off();
+> +	if (user_mode(regs))
+> +		enter_from_user_context();
+>  }
 
-Johan
+So:
+
+	asm_exc_int3
+	  exc_int3
+	    idtentry_enter()
+	      enter_from_user_context
+	        if (context_tracking_enabled())
+
+	    poke_int3_handler();
+
+Is, AFAICT, completely buggered.
+
+You can't have a static_branch before the poke_int3_handler that deals
+with text_poke.
