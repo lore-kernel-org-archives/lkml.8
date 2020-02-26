@@ -2,75 +2,140 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8368DC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BACFC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4F82468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA3E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:11:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="DsJlHCQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgBZPKh (ORCPT
+        id S1727998AbgBZPLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:10:37 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38089 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgBZPKg (ORCPT
+        Wed, 26 Feb 2020 10:11:16 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41286 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727064AbgBZPLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:10:36 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6yKY-0004aS-Th; Wed, 26 Feb 2020 16:10:34 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6yKY-0007AG-J5; Wed, 26 Feb 2020 16:10:34 +0100
-Date:   Wed, 26 Feb 2020 16:10:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle struct element
-Message-ID: <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+        Wed, 26 Feb 2020 10:11:15 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QEn8Tf014853;
+        Wed, 26 Feb 2020 10:11:08 -0500
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwg26t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Feb 2020 10:11:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X6l0F79CGPOI0refm4jIg+wiVwcxZzEB/688pAbepvqexvmMiIQDLw4m85yqngujTYLJXXGg4CHDMLNhFqczvI+Pz2+a1gOsfr6COfEnYW2nd9Y7DntvlFcG83v0flmDOxek1FqS6hIfFJ+rfZ7ab+nz63kZGLBoBZf2GhpAKGzllz/nQtw7fqJ1yu+TUHthuN3Ndj8LjFlbmOnfFCvYujVoxuQdUQJkK4tzThJQKUvQsF+bWlWArmhR5Kdvb9b4/S2ghXtCCKizmUblFFqwXu7dVm41zsFj2pckJjVfdSOSlxKgz2VWV9evxAdqw/2HEeFyCBMpu/nx1JCy2r8SAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g+4B5LtLt9yGsWQJRnHtvLPyn6YJkb2TrudMDKxUW9k=;
+ b=nbqWpFgJ01KqWAbylIhprTZ0s0lyZAMAECipjj3oF51BkK5bBefK2KBwqEnJzVPLqQuIbAH4yIUscZkQK3Ne/aeFh2qbN3K4h1BvyWt4F5bDoYo83nlP+I/hFcPt0vt4QtHVZUFlJdwQUKRgnLEjOl6j7+CI0fCxo9EXFUFa9LtkS4NrRAtTb8NYMh6atnFEEiX1swuUJYMbELHW9zScKGgC34shH66jrovEfESRMIT5ic2qudKtye46LnqwyRvHrVEtZSOznwTA0kVyywgel32Kmxroexpa662BW/OP/Mv/+7P8gX7/YCpcLjsALxM7N7F7TU+cj6Ai6p0sHhYjgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g+4B5LtLt9yGsWQJRnHtvLPyn6YJkb2TrudMDKxUW9k=;
+ b=DsJlHCQM01e3xp48FBHEL5lGbYzkVAN7N+V9kjPk7yYzQGvl7nZPs3c5BEVQ76ax8I1A5CnPPQbEbaW1hA6+YdFEOoz54qSy9uDofFB3pNYwN+G7O46uct00ubtGjvNB83VSDGeRPBEduTqj/ceGpUwapitwryxi1hX89tKtPNo=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (2603:10b6:610:90::24)
+ by CH2PR03MB5317.namprd03.prod.outlook.com (2603:10b6:610:9c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Wed, 26 Feb
+ 2020 15:11:05 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::edf0:3922:83f0:3056]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::edf0:3922:83f0:3056%4]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 15:11:03 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
+ transfer delays
+Thread-Topic: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
+ transfer delays
+Thread-Index: AQHVtLqu0YiY+9IGDUGLRFfgkettHKe+Os+AgG9PjoCAAHnVAIAAARcA
+Date:   Wed, 26 Feb 2020 15:11:03 +0000
+Message-ID: <193b5d111772fb16a7c6d0ea86a1405c6c4243b3.camel@analog.com>
+References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
+         <20191217091615.12764-1-alexandru.ardelean@analog.com>
+         <9991700815c02b3227a5902e4cae1afe5200b0ff.camel@linux.intel.com>
+         <b790461b49685082f843c59cd047836e13744285.camel@analog.com>
+         <20200226150944.GD3407@linux.intel.com>
+In-Reply-To: <20200226150944.GD3407@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: df5299b2-e5e0-4dde-0c1d-08d7bace18e2
+x-ms-traffictypediagnostic: CH2PR03MB5317:
+x-microsoft-antispam-prvs: <CH2PR03MB5317775FFBC6BC3AE2B8371DF9EA0@CH2PR03MB5317.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:497;
+x-forefront-prvs: 0325F6C77B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(346002)(376002)(396003)(39860400002)(199004)(189003)(81166006)(81156014)(8676002)(2616005)(6512007)(6486002)(186003)(6916009)(4001150100001)(4326008)(478600001)(86362001)(66476007)(26005)(66446008)(64756008)(36756003)(71200400001)(2906002)(54906003)(91956017)(6506007)(5660300002)(66556008)(66946007)(8936002)(316002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5317;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WVzXPDrYIDnJ4Os74GfdwUAgcyrpyiDAky8P59dONTObRYN510f5sMf/XUdT91MmCq7WRQH1LRWonP5ajP234/V0lqt6Kx/bTTGwKMzx7sID5EhRarWOjjdlHC8vHoqcLQ79/cjAO1P5savc1t7IxqNNGCnkCCkTcpeZQQgHOH964Q61G07RzqpBfCU30kymX9LngHBZ1QxmeieCDb9YD/+YIkv2SmffqKuMN4T3+luH4SUEFaj9HMnbHt0qVunKk0jyHk4bzaeREMUJYC85y7EOKsYEE1FMwvoMXUsNZtCRls7DXYxL4KB3WJN2IZdxcIZ3GeKUPKV9K4bA5NOs/N4U1igb0wslCVeOBCZhtIvpN3mfq9ySyVb9EohDcYloWnl3UtBpucfi2/VVrk3WKkpUUu8SM0O2Hbci9/u2vCiDZPoMX6YqkwXv5uHlqqCo
+x-ms-exchange-antispam-messagedata: 6qfcvUQAbTmVk1kV20aFvOfv9fAgox7gBqjI5xHUlSSSpPXiP23nOGmvRn1FpmCoFrBYksfbvkEogJx8pcAtvGkoGCFg0Rwu6jCV2xnK7RvQrEryilJc/O/+fF93DIVVtoO8IZ5Soa98OgrQEE6mlw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0D0834933A7C724E8A8779C44E4C441C@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df5299b2-e5e0-4dde-0c1d-08d7bace18e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 15:11:03.8317
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kn0pgWbLZqeu+irR2gpZK9QCu1HUqhxMGVOOlV4kUyqp1DxgDGU9F7bd72sQ7d2/Vrccl2oqSoYYeGw33fpNbRcrjKasYLmJcs+QH9Hwe4k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5317
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_05:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Matthias,
-
-as you seem to have this hardware on your desk, it would be great if you
-could answer the following questions:
-
- - Does the hardware complete the currently running period before
-   applying a new setting?
- - Is this racy somehow (i.e. can it happen that when going from
-   duty_cycle/period = 1000/5000 to duty_cycle/period = 4000/10000 the
-   output is 1000/10000 (or 4000/5000) for one cycle)?
- - Does the hardware complete the currently running period before
-   .enabled = false is configured?
- - How does the output pin behave on a disabled PWM. (Usual candidates
-   are: freeze where is just happens to be, constant inactive and
-   High-Z).
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+T24gV2VkLCAyMDIwLTAyLTI2IGF0IDE3OjEwICswMjAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIFdlZCwgRmViIDI2LCAyMDIwIGF0IDA3OjUxOjA2QU0g
+KzAwMDAsIEFyZGVsZWFuLCBBbGV4YW5kcnUgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDE5LTEyLTE3
+IGF0IDE0OjA0ICswMjAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6DQo+ID4gPiBbRXh0ZXJuYWxd
+DQo+ID4gPiANCj4gPiA+IE9uIFR1ZSwgMjAxOS0xMi0xNyBhdCAxMToxNiArMDIwMCwgQWxleGFu
+ZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+ID4gPiBJbiBhIHJlY2VudCBjaGFuZ2UgdG8gdGhlIFNQ
+SSBzdWJzeXN0ZW0gWzFdLCBhIG5ldyAnZGVsYXknIHN0cnVjdCB3YXMNCj4gPiA+ID4gYWRkZWQN
+Cj4gPiA+ID4gdG8gcmVwbGFjZSB0aGUgJ2RlbGF5X3VzZWNzJy4gVGhpcyBjaGFuZ2UgcmVwbGFj
+ZXMgdGhlIGN1cnJlbnQNCj4gPiA+ID4gJ2RlbGF5X3VzZWNzJyB3aXRoICdkZWxheScgZm9yIHRo
+aXMgZHJpdmVyLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlICdzcGlfdHJhbnNmZXJfZGVsYXlfZXhl
+YygpJyBmdW5jdGlvbiBbaW4gdGhlIFNQSSBmcmFtZXdvcmtdIG1ha2VzDQo+ID4gPiA+IHN1cmUN
+Cj4gPiA+ID4gdGhhdCBib3RoICdkZWxheV91c2VjcycgJiAnZGVsYXknIGFyZSB1c2VkIChpbiB0
+aGlzIG9yZGVyIHRvIHByZXNlcnZlDQo+ID4gPiA+IGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5KS4N
+Cj4gPiA+ID4gDQo+ID4gPiA+IFsxXSBjb21taXQgYmViY2ZkMjcyZGY2NDg1ICgic3BpOiBpbnRy
+b2R1Y2UgYGRlbGF5YCBmaWVsZCBmb3INCj4gPiA+ID4gYHNwaV90cmFuc2ZlcmAgKyBzcGlfdHJh
+bnNmZXJfZGVsYXlfZXhlYygpIikNCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEFs
+ZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gPiAN
+Cj4gPiA+IFJldmlld2VkLWJ5OiBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51
+eC5pbnRlbC5jb20+DQo+ID4gPiANCj4gPiANCj4gPiBwaW5nIG9uIHRoaXMgcGF0Y2gNCj4gDQo+
+IE15IGJhZC4gU29ycnkuIEl0IGlzIG5vdyBhcHBsaWVkLg0KDQpObyB3b3JyaWVzLg0KVGhhbmtz
+IDopDQoNCj4gDQo+IC9KYXJra28NCg==
