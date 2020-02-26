@@ -2,57 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802EFC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2B9C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C7120714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D52A2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgBZS32 (ORCPT
+        id S1727035AbgBZSb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:29:28 -0500
-Received: from muru.com ([72.249.23.125]:57826 "EHLO muru.com"
+        Wed, 26 Feb 2020 13:31:29 -0500
+Received: from gentwo.org ([3.19.106.255]:58966 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgBZS32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:29:28 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id EE4DE8022;
-        Wed, 26 Feb 2020 18:30:12 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 10:29:24 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
- interconnect node
-Message-ID: <20200226182924.GU37466@atomide.com>
-References: <20200225204649.28220-1-s-anna@ti.com>
- <20200225204649.28220-7-s-anna@ti.com>
+        id S1726789AbgBZSb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:31:29 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 885B43EC05; Wed, 26 Feb 2020 18:31:28 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 875FF3EC04;
+        Wed, 26 Feb 2020 18:31:28 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 18:31:28 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Roman Gushchin <guro@fb.com>
+cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Xunlei Pang <xlpang@linux.alibaba.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slub: improve count_partial() for
+ CONFIG_SLUB_CPU_PARTIAL
+In-Reply-To: <20200224165750.GA478187@carbon.dhcp.thefacebook.com>
+Message-ID: <alpine.DEB.2.21.2002261827440.8012@www.lameter.com>
+References: <20200222092428.99488-1-wenyang@linux.alibaba.com> <alpine.DEB.2.21.2002240126190.13486@www.lameter.com> <20200224165750.GA478187@carbon.dhcp.thefacebook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225204649.28220-7-s-anna@ti.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [200225 20:47]:
-> The PRU-ICSS target module node was left in disabled state in the base
-> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
-> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
-> the PRU-ICSS IP.
+On Mon, 24 Feb 2020, Roman Gushchin wrote:
 
-Just get rid of the top level status = "disabled". The default
-is enabled, and the device is there for sure inside the SoC.
-And then there's no need for pointless status = "okay" tinkering
-in the board specific dts files so no need for this patch.
+> > I suggest that you simply use the number of partial slabs and multiply
+> > them by the number of objects in a slab and use that as a value. Both
+> > values are readily available via /sys/kernel/slab/<...>/
+>
+> So maybe something like this?
+>
+> @@ -5907,7 +5907,9 @@ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo)
+>  	for_each_kmem_cache_node(s, node, n) {
+>  		nr_slabs += node_nr_slabs(n);
+>  		nr_objs += node_nr_objs(n);
+> +#ifndef CONFIG_SLUB_CPU_PARTIAL
+>  		nr_free += count_partial(n, count_free);
+> +#endif
+>  	}
 
-Regards,
+Why would not having cpu partials screws up the counting of objects in
+partial slabs?
 
-Tony
+
+You dont need kernel mods for this. The numbers are exposed already in
+/sys/kernel/slab/xxx.
+
+
