@@ -2,128 +2,142 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC7FC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10493C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A8B20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:30:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="v9g1y9D2"
+	by mail.kernel.org (Postfix) with ESMTP id D62C520637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgBZLaw (ORCPT
+        id S1728285AbgBZLbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:30:52 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:38915 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbgBZLav (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:30:51 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8168422EEB;
-        Wed, 26 Feb 2020 12:30:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582716648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=49vbSdUeTzuDFAZGKG9960moA+ZZ59VpBj1mcCy3Iks=;
-        b=v9g1y9D2DjSGnHgOFwe/gfIfxqbCUZnb9GGeHyk8oUoqdZ7Zd1Ya5xLA3YZuyaqscKbIEa
-        83mVa1jXsSJbWmK9rQzHcjEHHHveei0eiQU2241q6jM2xl6hiAQDnBAFU2Lr3zuww0dr2j
-        ZBPz2sx0mw5H6CAvQ/DfbVUfRWRCn9g=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Feb 2020 12:30:48 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Wed, 26 Feb 2020 06:31:34 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43854 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727954AbgBZLbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:31:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2F399AD5C;
+        Wed, 26 Feb 2020 11:31:31 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 52C641E0EA2; Wed, 26 Feb 2020 12:31:30 +0100 (CET)
+Date:   Wed, 26 Feb 2020 12:31:30 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Jonathan Halliday <jonathan.halliday@redhat.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>, ira.weiny@intel.com,
         linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH 0/2] AT8031 PHY timestamping support
-In-Reply-To: <20200226025441.GB10271@localhost>
-References: <20200225230819.7325-1-michael@walle.cc>
- <20200225235040.GF9749@lunn.ch>
- <9955C44A-8105-4087-8555-BAC5AE4AF25D@walle.cc>
- <20200226025441.GB10271@localhost>
-Message-ID: <fa823a08fa6d50c57ca03bdc58bf4921@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 8168422EEB
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.424];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[lunn.ch,vger.kernel.org,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+Message-ID: <20200226113130.GG10728@quack2.suse.cz>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-8-ira.weiny@intel.com>
+ <20200221174449.GB11378@lst.de>
+ <20200221224419.GW10776@dread.disaster.area>
+ <20200224175603.GE7771@lst.de>
+ <20200225000937.GA10776@dread.disaster.area>
+ <20200225173633.GA30843@lst.de>
+ <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+ <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-02-26 03:54, schrieb Richard Cochran:
-> On Wed, Feb 26, 2020 at 01:07:26AM +0100, Michael Walle wrote:
->> Am 26. Februar 2020 00:50:40 MEZ schrieb Andrew Lunn <andrew@lunn.ch>:
->> >That sounds fundamentally broken.
+Hello,
+
+On Wed 26-02-20 09:28:57, Jonathan Halliday wrote:
+> I'm a middleware developer, focused on how Java (JVM) workloads can benefit
+> from app-direct mode pmem. Initially the target is apps that need a fast
+> binary log for fault tolerance: the classic database WAL use case;
+> transaction coordination systems; enterprise message bus persistence and
+> suchlike. Critically, there are cases where we use log based storage, i.e.
+> it's not the strict 'read rarely, only on recovery' model that a classic db
+> may have, but more of a 'append only, read many times' event stream model.
 > 
-> Right.  It can't work unless the PHY latches the time stamp.
-
-To make things worse, it only has one slot for RX and one slot for TX
-timestamps.
-
->> This might be the case, but the datasheet (some older revision can
->> be found on the internet, maybe you find something) doesn't mention
->> it. Nor does the PTP "guide" (I don't know the exact name, I'd have
->> to check at work) of this PHY. Besides the timestamp there's also
->> the sequence number and the source port id which would need to be
->> read atomically together with the timestamp.
+> Think of the log oriented data storage as having logical segments (let's
+> implement them as files), of which the most recent is being appended to
+> (read_write) and the remaining N-1 older segments are full and sealed, so
+> effectively immutable (read_only) until discarded. The tail segment needs to
+> be in DAX mode for optimal write performance, as the size of the append may
+> be sub-block and we don't want the overhead of the kernel call anyhow. So
+> that's clearly a good fit for putting on a DAX fs mount and using mmap with
+> MAP_SYNC.
 > 
-> Maybe the part is not intended to be used at all in this way?
+> However, we want fast read access into the segments, to retrieve stored
+> records. The small access index can be built in volatile RAM (assuming we're
+> willing to take the startup overhead of a full file scan at recovery time)
+> but the data itself is big and we don't want to move it all off pmem. Which
+> means the requirements are now different: we want the O/S cache to pull hot
+> data into fast volatile RAM for us, which DAX explicitly won't do.
+> Effectively a poor man's 'memory mode' pmem, rather than app-direct mode,
+> except here we're using the O/S rather than the hardware memory controller
+> to do the cache management for us.
 > 
-> AFAICT, PHYs like this are meant to feed a "PTP frame detected" pulse
-> into the time stamping unit on the attached MAC.  The interrupt serves
-> to allow the SW to gather the matching fields from the frame.
-
-But then there would need to be such a hardware pin, correct? Unless
-you'd misuse the INT# for it. Also, why should the PHY then have a PHC
-which can be adjusted.
-
->> That sounds fundamentally broken. Which would be odd. Sometimes there
->> is a way to take a snapshot of the value. Reading the first word could
->> trigger this snapshot. Or the last word, or some status register. One
->> would hope the datasheet would talk about this.
+> Currently this requires closing the full (read_write) file, then copying it
+> to a non-DAX device and reopening it (read_only) there. Clearly that's
+> expensive and rather tedious. Instead, I'd like to close the MAP_SYNC mmap,
+> then, leaving the file where it is, reopen it in a mode that will instead go
+> via the O/S cache in the traditional manner. Bonus points if I can do it
+> over non-overlapping ranges in a file without closing the DAX mode mmap,
+> since then the segments are entirely logical instead of needing separate
+> physical files.
 > 
-> This might be the case, but the datasheet (some older revision can
-> be found on the internet, maybe you find something) doesn't mention
-> it. Nor does the PTP "guide" (I don't know the exact name, I'd have
-> to check at work).
+> I note a comment below regarding a per-directly setting, but don't have the
+> background to fully understand what's being suggested. However, I'll note
+> here that I can live with a per-directory granularity, as relinking a file
+> into a new dir is a constant time operation, whilst the move described above
+> isn't. So if a per-directory granularity is easier than a per-file one
+> that's fine, though as a person with only passing knowledge of filesystem
+> design I don't see how having multiple links to a file can work cleanly in
+> that case.
 
-BTW, the name of the document is "AR8031 1588v2 Precision Time Protocol,
-Application Note, 80-Y0618-15 Rev. A", which describes a use case
-where the RTC (ie PHC) is in the AR8031. I don't argue that the PHY is
-not broken, only that Atheros at least intended to have that use case.
+Well, with per-directory setting, relinking the file will not magically
+make it stop using DAX. So your situation would be very similar to the
+current one, except "copy to non-DAX device" can be replaced by "copy to
+non-DAX directory". Maybe the "copy" part could be actually reflink which
+would make it faster.
 
--michael
+> P.S. I'll cheekily take the opportunity of having your attention to tack on
+> one minor gripe about the current system: The only way to know if a mmap
+> with MAP_SYNC will work is to try it and catch the error. Which would be
+> reasonable if it were free of side effects.  However, the process requires
+> first expanding the file to at least the size of the desired map, which is
+> done non-atomically i.e. is user visible. There are thus nasty race
+> conditions in the cleanup, where after a failed mmap attempt (e.g the device
+> doesn't support DAX), we try to shrink the file back to its original size,
+> but something else has already opened it at its new, larger size. This is
+> not theoretical: I got caught by it whilst adapting some of our middleware
+> to use pmem.  Therefore, some way to probe the file path for its capability
+> would be nice, much the same as I can e.g. inspect file permissions to (more
+> or less) evaluate if I can write it without actually mutating it.  Thanks!
+
+Well, reporting error on mmap(2) is the only way how to avoid
+time-to-check-time-to-use races. And these are very important when we are
+speaking about data integrity guarantees. So that's not going to change.
+But with Ira's patches you could use statx(2) to check whether file at
+least supports DAX and so avoid doing mmap check with the side effects in
+the common case where it's hopeless... I'd also think that you could
+currently do mmap check with the current file size and if it succeeds,
+expand the file to the desired size and mmap again. It's not ideal but it
+should work.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
