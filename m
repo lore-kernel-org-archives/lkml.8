@@ -2,173 +2,98 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C63C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000BFC4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1984820732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C941824650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582740069;
+	bh=DwK3NdDvJkgxZUvDxF6wCc37ejzk8NIQj+M67ZYkj8s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BrIppTie1cW5QM/2fr0E5+3aA/pC1G5S5RWOrwcS2zGqTs711xgNMrRPx+ElieKBx
+	 DICmTkWX8PdWOsPll5swOmZV2DYW064e0N3a94uMhYELEoISnth465rJKuLMVoYm4W
+	 xVl9NXoSJUUBR83uKrHBTV9tVYtinXTXH0YUwzao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgBZSBF (ORCPT
+        id S1727163AbgBZSBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:01:05 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:51861 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726787AbgBZSBE (ORCPT
+        Wed, 26 Feb 2020 13:01:08 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44001 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgBZSBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:01:04 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tr-Vlmd_1582740057;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tr-Vlmd_1582740057)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 27 Feb 2020 02:01:01 +0800
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
- partially
-To:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
- <CAKgT0UdHhZznoS0kMdacCqgc=sFXj1Djmpd-DbPvAmyrhJq6CA@mail.gmail.com>
- <9b8ff9ca-75b0-c256-cf37-885ccd786de7@linux.alibaba.com>
- <CAKgT0UfPW+DKZhze-hCL6mThak+qJjx4wb-rXn+NKnp6-9RBDQ@mail.gmail.com>
- <9c30a891-011b-e041-2647-444d09fa7b8a@linux.alibaba.com>
- <84492260-726c-dda1-3ec8-b445fe269cad@redhat.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <00338ec9-76fc-bc0e-39af-495ff3b5c7e9@linux.alibaba.com>
-Date:   Wed, 26 Feb 2020 10:00:55 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 26 Feb 2020 13:01:08 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c13so3482583wrq.10;
+        Wed, 26 Feb 2020 10:01:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=28tdOJyUAfuczO8QOQDz0B5rms6hK1wMorMHeVB9gGo=;
+        b=hdh5YJWjtuLtlvKM1iRT6mLYLGKAExX2UNVgUx8vcPZUCmVhA2gw1qwfbAysI83dVm
+         5g5tsNhni+s9WRp+R153i0veM6FRQQA8rYryQCj/N6ThTDE0WRirqMzadxwAnzrOdWEU
+         u3l7Rft2+o9zOeEZ1Fbr/AVfqTGkxD+oKyVmrfT7WTvm4rmGQDOAQm0URW60ea2HoZLP
+         cgwFhC97fKNYtYSR2m4RoxkRCKZr+lJK3GBcC6L/Mp0+ucPDNz2fcBNePgvtaLbSroal
+         6HagN4H8Qvj1n71MWqh3z8hKfwdOK41ryDJqjAXXUywkLxL4fxrq2FNLuexB8F2B82ve
+         RV9Q==
+X-Gm-Message-State: APjAAAVIB2cm1smuREptYfACFXmoEpVmD6YDDD7KbzlyKrvZx0t1lA8i
+        kFyfusCeyUviiW3wYYzj91G05utT
+X-Google-Smtp-Source: APXvYqy29CQdUMxdxJY0XbJdkod6c4rVqRH9ImMWo7apsBtQdViP4ndSSI6puW74C5n1eidpxo1dnQ==
+X-Received: by 2002:adf:df0f:: with SMTP id y15mr6623076wrl.26.1582740065986;
+        Wed, 26 Feb 2020 10:01:05 -0800 (PST)
+Received: from localhost.localdomain (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id x6sm4197911wrr.6.2020.02.26.10.01.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 10:01:05 -0800 (PST)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-hyperv@vger.kernel.org
+Cc:     Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH] Hyper-V: add myself as a maintainer
+Date:   Wed, 26 Feb 2020 18:01:02 +0000
+Message-Id: <20200226180102.16976-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <84492260-726c-dda1-3ec8-b445fe269cad@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+Cc: linux-kernel@vger.kernel.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
 
+Sasha's entry hasn't been dropped from the Hyper-V tree yet, but that's
+easy to resolve.
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2/26/20 9:45 AM, David Hildenbrand wrote:
-> On 26.02.20 18:31, Yang Shi wrote:
->>
->> On 2/21/20 4:24 PM, Alexander Duyck wrote:
->>> On Fri, Feb 21, 2020 at 10:24 AM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>>>
->>>> On 2/20/20 10:16 AM, Alexander Duyck wrote:
->>>>> On Tue, Dec 3, 2019 at 4:43 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>>>>> Currently when truncating shmem file, if the range is partial of THP
->>>>>> (start or end is in the middle of THP), the pages actually will just get
->>>>>> cleared rather than being freed unless the range cover the whole THP.
->>>>>> Even though all the subpages are truncated (randomly or sequentially),
->>>>>> the THP may still be kept in page cache.  This might be fine for some
->>>>>> usecases which prefer preserving THP.
->>>>>>
->>>>>> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
->>>>>> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
->>>>>> So, when using shmem THP as memory backend QEMU inflation actually doesn't
->>>>>> work as expected since it doesn't free memory.  But, the inflation
->>>>>> usecase really needs get the memory freed.  Anonymous THP will not get
->>>>>> freed right away too but it will be freed eventually when all subpages are
->>>>>> unmapped, but shmem THP would still stay in page cache.
->>>>>>
->>>>>> Split THP right away when doing partial hole punch, and if split fails
->>>>>> just clear the page so that read to the hole punched area would return
->>>>>> zero.
->>>>>>
->>>>>> Cc: Hugh Dickins <hughd@google.com>
->>>>>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->>>>>> Cc: Andrea Arcangeli <aarcange@redhat.com>
->>>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->>>>> One question I would have is if this is really the desired behavior we
->>>>> are looking for?
->>>>>
->>>>> By proactively splitting the THP you are likely going to see a
->>>>> performance regression with the virtio-balloon driver enabled in QEMU.
->>>>> I would suspect the response to that would be to update the QEMU code
->>>>> to  identify the page size of the shared memory ramblock. At that
->>>>> point I suspect it would start behaving the same as how it currently
->>>>> handles anonymous memory, and the work done here would essentially
->>>>> have been wasted other than triggering the desire to resolve this in
->>>>> QEMU to avoid a performance regression.
->>>>>
->>>>> The code for inflating a the balloon in virtio-balloon in QEMU can be
->>>>> found here:
->>>>> https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-balloon.c#L66
->>>>>
->>>>> If there is a way for us to just populate the value obtained via
->>>>> qemu_ram_pagesize with the THP page size instead of leaving it at 4K,
->>>>> which is the size I am assuming it is at since you indicated that it
->>>>> is just freeing the base page size, then we could address the same
->>>>> issue and likely get the desired outcome of freeing the entire THP
->>>>> page when it is no longer used.
->>>> If qemu could punch hole (this is how qemu free file-backed memory) in
->>>> THP unit, either w/ or w/o the patch the THP won't get split since the
->>>> whole THP will get truncated. But, if qemu has to free memory in sub-THP
->>>> size due to whatever reason (for example, 1MB for every 2MB section),
->>>> then we have to split THP otherwise no memory will be freed actually
->>>> with the current code. It is not about performance, it is about really
->>>> giving memory back to host.
->>> I get that, but at the same time I am not sure if everyone will be
->>> happy with the trade-off. That is my concern.
->>>
->>> You may want to change the patch description above if that is the
->>> case. Based on the description above it makes it sound as if the issue
->>> is that QEMU is using hole punch or MADV_DONTNEED with the wrong
->>> granularity. Based on your comment here it sounds like you want to
->>> have the ability to break up the larger THP page as soon as you want
->>> to push out a single 4K page from it.
->> Yes, you are right. The commit log may be confusing. What I wanted to
->> convey is QEMU has no idea if THP is used or not so it treats memory
->> with base size unless hugetlbfs is used since QEMU is aware huge page is
->> used in this case.
->> This may sounds irrelevant to the problem, I would just remove that.
->>
->>> I am not sure the description for the behavior of anonymous THP with
->>> respect to QEMU makes sense either. Based on the description you made
->>> it sound like it was somehow using the same process used for huge
->>> pages. That isn't the case right? My understanding is that in the case
->>> of an anonymous THP it is getting broken into 4K subpages and then
->>> those are freed individually. That should leave you with the same
->>> performance regression that I had brought up earlier.
->> No, anonymous THP won't get split immediately and those memory also
->> won't get freed immediately if QEMU does MADV_DONTNEED on sub THP range
->> (for example, 1MB range in THP). The THP will get freed when:
->> 1. Host has memory pressure. The THP will get split and unmapped pages
->> will be freed.
->> 2. Other sub pages in the same THP are MADV_DONTNEED'ed (eventually the
->> whole THP get unmapped).
->>
->> The difference between shmem and anonymous page is shmem will not get
->> freed unless hole punch the whole THP, anonymous page will get freed
->> sooner or later.
->>
-> As far as I understood Hugh, the "page size" we'll see in QEMU via
-> fstatfs() is 4k, not 2MB. IMHO, that's the block size of the "device",
-> and breaking up THP is the right think to to obey the documentation of
-> "FALLOC_FL_PUNCH_HOLE".
-
-This is what the patch attempts to accomplish.
-
->
-> IMHO THP is called "transparent" because it shouldn't have any such
-> visible side effects.
-
-AFAICT, the lazy split is due to locking issue in partial unmap paths. 
-Please refer to "Partial unmap and deferred_split_huge_page()" section 
-in Documentation/vm/transhuge.rst.
-
->
-> As always, anybody correct me if I am wrong here.
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8f27f40d22bb..ed943f205215 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7739,6 +7739,7 @@ M:	"K. Y. Srinivasan" <kys@microsoft.com>
+ M:	Haiyang Zhang <haiyangz@microsoft.com>
+ M:	Stephen Hemminger <sthemmin@microsoft.com>
+ M:	Sasha Levin <sashal@kernel.org>
++M:	Wei Liu <wei.liu@kernel.org>
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+ L:	linux-hyperv@vger.kernel.org
+ S:	Supported
+-- 
+2.20.1
 
