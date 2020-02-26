@@ -2,108 +2,72 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B72BC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAEFC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE6920732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="mZNw0wYx"
+	by mail.kernel.org (Postfix) with ESMTP id D40C020732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgBZT1f (ORCPT
+        id S1727309AbgBZT2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:27:35 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:51790 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgBZT1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:27:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0GMgWUbqUzIsyE6UgLwb/MaJmJqh4t9npOvnI6kW9zM=; b=mZNw0wYxd0Cqx7/VZU5/nVtul
-        EDFoAbXlz8d0Lgyhahw4MO/o1l6itibTjxWk9T6kCGcI+gSDBDyCwXBhdC8ISWhC5IhOokeeY5Oz6
-        G/qJ0kcOL4IYqCYRwJCwgG4G4ohPYu58OrSZU5tmruwuxLP1OWpI7trKviEZ/e6aTthek=;
-Received: from p200300ccff0a4d00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j72LA-00081x-Ag; Wed, 26 Feb 2020 20:27:28 +0100
-Received: from localhost ([::1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j72L9-0001iu-Jj; Wed, 26 Feb 2020 20:27:27 +0100
-Date:   Wed, 26 Feb 2020 20:27:19 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, b.galvani@gmail.com,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, phh@phh.me, stefan@agner.ch,
-        letux-kernel@openphoenux.org, jic23@kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v5 2/2] iio: adc: rn5t618: Add ADC driver for
- RN5T618/RC5T619
-Message-ID: <20200226202719.46ce9600@kemnade.info>
-In-Reply-To: <20200223131638.12130-3-andreas@kemnade.info>
-References: <20200223131638.12130-1-andreas@kemnade.info>
-        <20200223131638.12130-3-andreas@kemnade.info>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/EmIe0/b1v4/JZB0O9CA8Hso"; protocol="application/pgp-signature"
+        Wed, 26 Feb 2020 14:28:40 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:60302 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgBZT2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:28:40 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6E73815AA762A;
+        Wed, 26 Feb 2020 11:28:39 -0800 (PST)
+Date:   Wed, 26 Feb 2020 11:28:38 -0800 (PST)
+Message-Id: <20200226.112838.716163849297775455.davem@davemloft.net>
+To:     mkubecek@suse.cz
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] ethtool: limit bitset size
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200224194212.426B4E1E06@unicorn.suse.cz>
+References: <20200224194212.426B4E1E06@unicorn.suse.cz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Feb 2020 11:28:39 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EmIe0/b1v4/JZB0O9CA8Hso
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Mon, 24 Feb 2020 20:42:12 +0100 (CET)
 
-Hi,
+> Syzbot reported that ethnl_compact_sanity_checks() can be tricked into
+> reading past the end of ETHTOOL_A_BITSET_VALUE and ETHTOOL_A_BITSET_MASK
+> attributes and even the message by passing a value between (u32)(-31)
+> and (u32)(-1) as ETHTOOL_A_BITSET_SIZE.
+> 
+> The problem is that DIV_ROUND_UP(attr_nbits, 32) is 0 for such values so
+> that zero length ETHTOOL_A_BITSET_VALUE will pass the length check but
+> ethnl_bitmap32_not_zero() check would try to access up to 512 MB of
+> attribute "payload".
+> 
+> Prevent this overflow byt limiting the bitset size. Technically, compact
+> bitset format would allow bitset sizes up to almost 2^18 (so that the
+> nest size does not exceed U16_MAX) but bitsets used by ethtool are much
+> shorter. S16_MAX, the largest value which can be directly used as an
+> upper limit in policy, should be a reasonable compromise.
+> 
+> Fixes: 10b518d4e6dd ("ethtool: netlink bitset handling")
+> Reported-by: syzbot+7fd4ed5b4234ab1fdccd@syzkaller.appspotmail.com
+> Reported-by: syzbot+709b7a64d57978247e44@syzkaller.appspotmail.com
+> Reported-by: syzbot+983cb8fb2d17a7af549d@syzkaller.appspotmail.com
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-On Sun, 23 Feb 2020 14:16:38 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
-
-
-> +	if (rn5t618->irq_data)
-> +		adc->irq =3D regmap_irq_get_virq(rn5t618->irq_data,
-> +					       RN5T618_IRQ_ADC);
-> +
-RN5T618_IRQ_ADC is defined in the RTC patchset mentioned as dependency,
-which adds IRQ support and I am asked to rebase it on top of plain mainline.
-Does that mean that the kernel git source does not need to be bisectable
-anymore?
-
-
-Regards,
-Andreas
-
---Sig_/EmIe0/b1v4/JZB0O9CA8Hso
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5WxpcACgkQl4jFM1s/
-ye+72BAAtngnAhkbZ3h2LxZObD2b5dEtNpqJf/t+DgVyTkAqIjPg0wl9gs8sErW7
-9tuqCkUsrGgp2CYh1bYIep2EPJR39LMu2eCin9+B4x2Kx2zB2uMV2CVKmqZlDo63
-8zu07unuMCv1f37MojobdmiEOmMexLKM7ol5NmA/oNkB9LfG80seNZpDRQv+oOQu
-ESvMWbNoWUvGuXiejpTRDGnmHZzKKUb87JV4+ki/dKCaVA4uMswLWQ0m9ipDLJxV
-uVrs+DvjOWbQYBDpqLoEyxre7c0Ln5R6lOYk0DoYqihIMamvgLqJJ71UMHIqKnl5
-CPmVcwoYm1YG6kCU47EwuRtAg9qwFKN9+Ch5ApEgvQnBjrjZWKkk9lTsdBmAOkWQ
-j3cDnA/4UbJ10X7J8U5JPaZXQkgR7/dXLlzXqojIatRza1LTIIGTCcOw/IL2ic12
-nunrbYMC9cIL+k/u+e/NSCMmUWGE8lGeoUioxUikNCzPUkW/y73UWFUVeWhn8SX8
-tuoXhEvUWI1gpn2OC9sRFWqEkOFDeWYGbVhtJxW9lOFrspyq3TQ+/bYlxmpClWcf
-82Zg4zKFAIVOiCNKmxlgPYt+cgTrpegdV/9ZJWdhLUo+AnYHs6F5ZUu83LqCq4td
-F3SvugDza3cOydyP7YSN8Czebmg1e5/hRCrpPMyfJBaG3u7kJ1c=
-=Erno
------END PGP SIGNATURE-----
-
---Sig_/EmIe0/b1v4/JZB0O9CA8Hso--
+Applied, thanks Michal.
