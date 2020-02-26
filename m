@@ -2,82 +2,185 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B3BC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05147C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBF72468D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB262468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="AWOuQPCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgBZPoR (ORCPT
+        id S1728454AbgBZPok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:44:17 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46855 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbgBZPoR (ORCPT
+        Wed, 26 Feb 2020 10:44:40 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39662 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbgBZPoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:44:17 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j6yr8-0008Ty-T1; Wed, 26 Feb 2020 16:44:14 +0100
-Message-ID: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
-Subject: Proper way to check for restricted DMA addressing from device driver
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Feb 2020 16:44:14 +0100
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 26 Feb 2020 10:44:39 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c84so3683035wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:44:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WkuuApb4ooD9Lvo0SBfgUdLJhUHw9W2INI90sT56+1g=;
+        b=AWOuQPCvIB4G8KyK5XFtllQXPmyHdiWK/acB2eEW6E/bSxZljeFMjk0M5p800sUHCv
+         8tFkEpBnT4687LZYC8B/ZmMXspDff9tlHEuwiTpkgctHi1arXvL4ROtICv74KbU4fTmr
+         TFI70LIyos94jE+W6JgIqNi9Vpe/zQUlMz7JXiLizL4YIa7w5jNvoXtA6mmxriTytzdy
+         zq8S22FRbxP5wKaSWheGO/cmTcQ/5ruZ5axJWevvnpr9i1gvm5sTVYMovoEay4vgf3nN
+         PT5IwjzsZQ6v2R9u9q6S8EZopcOf2GoVjgeddC2xDkDygnOSZb3y6Q6AaofK/Glt8A1N
+         1ebQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WkuuApb4ooD9Lvo0SBfgUdLJhUHw9W2INI90sT56+1g=;
+        b=pb3G1ikrCVe/KjGh81XFGpEo1FU9JTDdYF/Ht/12dji68XdyztPjXVsL7FGUtLkZvX
+         k72bBUY/mxqWBmazxQhy9chQMPbU1wuRTxYktSAdTWOIXwocNsVUA11JsHnMWvRuYbbj
+         eJ/udRxHRSC91b8WymjRZaLj2wj4COCBAkSJMsZ7D4+qpJdaLSr8mljhujAEes6MtQPk
+         lgiNk2WJ/aNfZnaxt8nG0DRpmlaSjbcdZiTpb/Dy+Bz2cOMSEG6KjH172oVAT+Eioofu
+         FuzoLgLO9vtxZCH7VxuxXgiKvTpcDDVyjr5Yo06ZaZFItMTQt/qL/Zo8pcMBWtWQ0Jmd
+         eP9g==
+X-Gm-Message-State: APjAAAVkzSuYuYvLoN7lyV6cqZF+x6L+oTVZxh/HYltK9a51hw6k7aE2
+        OszVWk6xyrc6Y+EDvHS+yZjl7JIHW8Y=
+X-Google-Smtp-Source: APXvYqyXuQa53EDL9x0a59GDmGb3ZTg7KHJHnHa92ubhBBCOC//HBukQGykTcbtVYG5VM9t1h7DVWA==
+X-Received: by 2002:a1c:720a:: with SMTP id n10mr6176346wmc.103.1582731877236;
+        Wed, 26 Feb 2020 07:44:37 -0800 (PST)
+Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
+        by smtp.gmail.com with ESMTPSA id w1sm3399610wmc.11.2020.02.26.07.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:44:36 -0800 (PST)
+Date:   Wed, 26 Feb 2020 16:44:35 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+Subject: Re: [RFC net-next 0/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX326x (AC3x)
+Message-ID: <20200226154435.GB26061@nanopsycho>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225163025.9430-1-vadym.kochan@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Tue, Feb 25, 2020 at 05:30:52PM CET, vadym.kochan@plvision.eu wrote:
+>Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+>ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+>wireless SMB deployment.
+>
+>Prestera Switchdev is a firmware based driver which operates via PCI
+>bus. The driver is split into 2 modules:
+>
+>    - prestera_sw.ko - main generic Switchdev Prestera ASIC related logic.
+>
+>    - prestera_pci.ko - bus specific code which also implements firmware
 
-I'm currently struggling with how to properly check for restricted DMA
-addressing from a device driver side. The basic issue I'm facing is
-that I have a embedded GPU, which isn't able to address all system
-memory due to interconnect being restricted to 32bit addressing. The
-limits are properly described in the system device-tree and thus
-SWIOTLB is working.
+It is unusual to see ".ko" in patchset cover letter...
 
-However graphics buffers are large and graphics drivers really like to
-keep the dma mapping alive for performance reasons, which means I'm
-running out of SWIOTLB space pretty easily, aside from the obvious
-performance implications of SWIOTLB.
 
-As 3 out of the maximum 4GB system memory are located in the DMA32 zone
-and thus located in the GPU addressable space, I just want to avoid
-allocating graphics buffers outside of the DMA32 zone.
+>                        loading and low-level messaging protocol between
+>                        firmware and the switchdev driver.
+>
+>This driver implementation includes only L1 & basic L2 support.
+>
+>The core Prestera switching logic is implemented in prestera.c, there is
+>an intermediate hw layer between core logic and firmware. It is
+>implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+>related logic, in future there is a plan to support more devices with
+>different HW related configurations.
+>
+>The firmware has to be loaded each time device is reset. The driver is
+>loading it from:
+>
+>    /lib/firmware/marvell/prestera_fw_img.bin
+>
+>The firmware image version is located within internal header and consists
+>of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has hard-coded
+>minimum supported firmware version which it can work with:
+>
+>    MAJOR - reflects the support on ABI level between driver and loaded
+>            firmware, this number should be the same for driver and
+>            loaded firmware.
+>
+>    MINOR - this is the minimal supported version between driver and the
+>            firmware.
+>
+>    PATCH - indicates only fixes, firmware ABI is not changed.
+>
 
-To add the DMA32 restriction to my drivers allocations, I need a
-reliable way from the device driver side to check if the GPU is in such
-a restricted system. What I'm currently doing in my WIP patch is this:
+It is usual that the file name contains a version. I think it is
+good to make sure you are loading the version your driver is compatible
+with. There could be multiple versions for multiple kernels.
 
- /*
-  * If the GPU is part of a system with only 32bit bus addressing
-  * capabilities, request pages for our SHM backend buffers from the
-  * DMA32 zone to avoid performance killing SWIOTLB bounce buffering.
-  */
- if (*gpu->dev->dma_mask < BIT_ULL(32) && !device_iommu_mapped(gpu->dev))
-         priv->shm_gfp_mask |= GFP_DMA32;
 
-However I'm not sure if there are edge cases where this check would
-fool me. Is there any better way to check for DMA addressing
-restrictions from the device driver side?
+>The firmware image will be submitted to the linux-firmware after the
+>driver is accepted.
 
-Regards,
-Lucas
+Hmm, not sure how this works, shouldn't it be submitted there first?
 
+
+
+>
+>The following Switchdev features are supported:
+
+You don't need to mention "Switchdev". It is just a offloading layer for
+bridge. Does not mean anything else now...
+
+
+>
+>    - VLAN-aware bridge offloading
+>    - VLAN-unaware bridge offloading
+>    - FDB offloading (learning, ageing)
+>    - Switchport configuration
+>
+>CPU RX/TX support will be provided in the next contribution.
+>
+>Vadym Kochan (3):
+>  net: marvell: prestera: Add Switchdev driver for Prestera family ASIC
+>    device 98DX325x (AC3x)
+>  net: marvell: prestera: Add PCI interface support
+>  dt-bindings: marvell,prestera: Add address mapping for Prestera
+>    Switchdev PCIe driver
+>
+> .../bindings/net/marvell,prestera.txt         |   13 +
+> drivers/net/ethernet/marvell/Kconfig          |    1 +
+> drivers/net/ethernet/marvell/Makefile         |    1 +
+> drivers/net/ethernet/marvell/prestera/Kconfig |   24 +
+> .../net/ethernet/marvell/prestera/Makefile    |    5 +
+> .../net/ethernet/marvell/prestera/prestera.c  | 1502 +++++++++++++++++
+> .../net/ethernet/marvell/prestera/prestera.h  |  244 +++
+> .../marvell/prestera/prestera_drv_ver.h       |   23 +
+> .../ethernet/marvell/prestera/prestera_hw.c   | 1094 ++++++++++++
+> .../ethernet/marvell/prestera/prestera_hw.h   |  159 ++
+> .../ethernet/marvell/prestera/prestera_pci.c  |  840 +++++++++
+> .../marvell/prestera/prestera_switchdev.c     | 1217 +++++++++++++
+> 12 files changed, 5123 insertions(+)
+> create mode 100644 drivers/net/ethernet/marvell/prestera/Kconfig
+> create mode 100644 drivers/net/ethernet/marvell/prestera/Makefile
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_drv_ver.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_pci.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_switchdev.c
+>
+>-- 
+>2.17.1
+>
