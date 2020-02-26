@@ -2,123 +2,83 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BE9C4BA20
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53084C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B68024672
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C5B2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBZSJV (ORCPT
+        id S1727559AbgBZSKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:09:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:40464 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727173AbgBZSJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:09:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA8C430E;
-        Wed, 26 Feb 2020 10:09:17 -0800 (PST)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63BA83F881;
-        Wed, 26 Feb 2020 10:09:16 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Robert Richter <rric@kernel.org>, soc@kernel.org,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 03/13] arm: dts: calxeda: Fix interrupt grouping
-Date:   Wed, 26 Feb 2020 18:08:51 +0000
-Message-Id: <20200226180901.89940-4-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226180901.89940-1-andre.przywara@arm.com>
-References: <20200226180901.89940-1-andre.przywara@arm.com>
+        Wed, 26 Feb 2020 13:10:23 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34780 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgBZSKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:10:22 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 3E1F33C009D;
+        Wed, 26 Feb 2020 19:10:20 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ox3u6X-MG0Pr; Wed, 26 Feb 2020 19:10:15 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 1A7E03C005E;
+        Wed, 26 Feb 2020 19:10:15 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 26 Feb
+ 2020 19:10:14 +0100
+Date:   Wed, 26 Feb 2020 19:10:11 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     <linux-usb@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        <scan-admin@coverity.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH] usb: hub: Fix unhandled return value of
+ usb_autopm_get_interface()
+Message-ID: <20200226181011.GA2868@lxhi-065.adit-jv.com>
+References: <20200225202223.GA9154@lxhi-065.adit-jv.com>
+ <Pine.LNX.4.44L0.2002251553030.1485-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2002251553030.1485-100000@iolanthe.rowland.org>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently multiple interrupts for some devices are written as one array
-instead of using the DT grouping notation (<0 42 4>, <0 23 4>).
-This ends up in the same binary representation in the .dtb, but is
-semantically not equivalent. The yaml schema checks will stumble over
-this, so lets fix that first.
+Hi Alan,
 
-I refrained from using the symbolic names for GIC_SPI/GIC_PPI and
-IRQ_TYPE_LEVEL_HIGH, mostly because it increases the delta between the
-original DTS files and the mainline versions, so it's just additional
-churn.
+On Tue, Feb 25, 2020 at 03:54:20PM -0500, Alan Stern wrote:
+> On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
+> > There are three commits fixed by the proposed changes in usb core:
+> >  - v5.6-rc3 commit 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+> >  - v3.9-rc1 commit 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
+> >  - v2.6.33-rc1 commit 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
+> > 
+> > I assume a single fix will create some pain when applying it to the
+> > stable branches. Do you have any preference/inputs about that?
+> 
+> If you prefer to split this up into multiple patches, that's fine with 
+> me.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm/boot/dts/ecx-2000.dts    | 2 +-
- arch/arm/boot/dts/ecx-common.dtsi | 4 ++--
- arch/arm/boot/dts/highbank.dts    | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Please, check https://lore.kernel.org/lkml/20200226175036.14946-1-erosca@de.adit-jv.com/
 
-diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
-index 81eb382b4c23..93cdd020637b 100644
---- a/arch/arm/boot/dts/ecx-2000.dts
-+++ b/arch/arm/boot/dts/ecx-2000.dts
-@@ -92,7 +92,7 @@
- 
- 		pmu {
- 			compatible = "arm,cortex-a9-pmu";
--			interrupts = <0 76 4  0 75 4  0 74 4  0 73 4>;
-+			interrupts = <0 76 4>, <0 75 4>, <0 74 4>, <0 73 4>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
-index f819e3328a9e..b7e74a357471 100644
---- a/arch/arm/boot/dts/ecx-common.dtsi
-+++ b/arch/arm/boot/dts/ecx-common.dtsi
-@@ -202,14 +202,14 @@
- 		ethernet@fff50000 {
- 			compatible = "calxeda,hb-xgmac";
- 			reg = <0xfff50000 0x1000>;
--			interrupts = <0 77 4  0 78 4  0 79 4>;
-+			interrupts = <0 77 4>, <0 78 4>, <0 79 4>;
- 			dma-coherent;
- 		};
- 
- 		ethernet@fff51000 {
- 			compatible = "calxeda,hb-xgmac";
- 			reg = <0xfff51000 0x1000>;
--			interrupts = <0 80 4  0 81 4  0 82 4>;
-+			interrupts = <0 80 4>, <0 81 4>, <0 82 4>;
- 			dma-coherent;
- 		};
- 
-diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
-index 9e34d1bd7994..b6b0225a769e 100644
---- a/arch/arm/boot/dts/highbank.dts
-+++ b/arch/arm/boot/dts/highbank.dts
-@@ -142,14 +142,14 @@
- 
- 		pmu {
- 			compatible = "arm,cortex-a9-pmu";
--			interrupts = <0 76 4  0 75 4  0 74 4  0 73 4>;
-+			interrupts = <0 76 4>, <0 75 4>, <0 74 4>, <0 73 4>;
- 		};
- 
- 
- 		sregs@fff3c200 {
- 			compatible = "calxeda,hb-sregs-l2-ecc";
- 			reg = <0xfff3c200 0x100>;
--			interrupts = <0 71 4  0 72 4>;
-+			interrupts = <0 71 4>, <0 72 4>;
- 		};
- 
- 	};
 -- 
-2.17.1
-
+Best Regards
+Eugeniu Rosca
