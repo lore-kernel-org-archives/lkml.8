@@ -3,137 +3,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6245DC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A6EC4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4481D20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1249420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgBZRW0 (ORCPT
+        id S1726787AbgBZRX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:22:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55228 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgBZRWZ (ORCPT
+        Wed, 26 Feb 2020 12:23:26 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38742 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZRXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:22:25 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id CB83A295797
-Message-ID: <8b63465c795bb0c8243eb377106138c83e0dfffe.camel@collabora.com>
-Subject: Re: [PATCH v6 6/6] arm64: dts: rockchip: rk3399: Define the
- rockchip Video Decoder node
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>
-Cc:     boris.brezillon@collabora.com, devicetree@vger.kernel.org,
-        hverkuil@xs4all.nl, jonas@kwiboo.se, kernel@collabora.com,
-        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        nicolas@ndufresne.ca, paul.kocialkowski@bootlin.com,
-        robh+dt@kernel.org, sakari.ailus@iki.fi, tfiga@chromium.org
-Date:   Wed, 26 Feb 2020 14:22:11 -0300
-In-Reply-To: <3584403.hvncmGE4DP@phil>
-References: <20200220163016.21708-7-ezequiel@collabora.com>
-         <817821e3-bc51-8037-b9b9-e429c5eeb280@gmail.com> <3584403.hvncmGE4DP@phil>
-Organization: Collabora
+        Wed, 26 Feb 2020 12:23:25 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e8so4098402wrm.5;
+        Wed, 26 Feb 2020 09:23:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=aLmTyqAd/P94kRIyBjL+cb/Y+cTLarFng2zpE1bkPwE=;
+        b=U9mCjIWtwLbZtWh/eWgnPNP7lrTs1AJEZUNGnIwreIeBB/1Xo1px4bvLuMHzWgu5Ro
+         +n+LTCC+FLWa7CX8wWw0XI/j5xBRkQTXzdbQxbZEq1fH+muqeA22bmxa/i6dyrUVFZPr
+         I7Jr/37vMSpEdqt4ova00n28gHvUaWWbNl7EFoyqLZU6a3WF7mQEEbRs987Dmln2u2TI
+         pIDMy7AjBobcCTrjcFYRf4ILOgrWDDsv6TbnJ08zD4fdNT4AYOWFn5srgkkMnN6rBFP0
+         l+TbExYwpP44QMtX7+Lv1m7DrrMv5M+dUef/g9quDkSYYEhR8dNgFLIrkhgxxUHqPESf
+         3x9Q==
+X-Gm-Message-State: APjAAAV6sF1NilPzM0HWylJep4ro2X+JS1WocAoOhGin0xwa5v59UqnJ
+        oaKYaP5Z1f+8Qz5pudDunlk=
+X-Google-Smtp-Source: APXvYqyUjShzivLFLN+R84aLDGeH3LJmk13HXBtoRVbokmE0gc0Nd/SoVz2Mm3vNZuChMhpzJT59sA==
+X-Received: by 2002:adf:f3d1:: with SMTP id g17mr6281250wrp.378.1582737803473;
+        Wed, 26 Feb 2020 09:23:23 -0800 (PST)
+Received: from tfsielt31850 ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id j12sm4121316wrt.35.2020.02.26.09.23.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 09:23:22 -0800 (PST)
+Message-ID: <f3c4f7791c86235683541a3d51ed02631b784bf6.camel@andred.net>
+Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our
+ own events
+From:   =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Feb 2020 17:23:21 +0000
+In-Reply-To: <VE1PR04MB66385DDED7C654AE2181E08E89EA0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200225161201.1975-1-git@andred.net>
+         <20200225161201.1975-6-git@andred.net>
+         <VE1PR04MB66385DDED7C654AE2181E08E89EA0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko, Johan,
-
-Thanks for pointing this out.
-
-On Wed, 2020-02-26 at 14:21 +0100, Heiko Stuebner wrote:
-> Am Mittwoch, 26. Februar 2020, 13:24:53 CET schrieb Johan Jonker:
-> > Hi Boris,
+On Wed, 2020-02-26 at 01:15 +0000, Robin Gong wrote:
+> On 2020/02/26 André Draszik <git@andred.net> wrote: 
+> > The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
 > > 
-> > Dtsi nodes are sort on address.
-> > The vdec node is now inserted between:
+> > This driver here should only return IRQ_HANDLED if the status register
+> > indicates that the event we're handling in the irq handler was genuinely
+> > intended for this driver. Otheriwse the interrupt subsystem will assume the
+> > interrupt was handled successfully even though it wasn't at all.
 > > 
-> > vdec_mmu: iommu       @ff660480
-> > vdec    : video-codec @ff660000
-> > iep_mmu : iommu       @ff670800
+> > Signed-off-by: André Draszik <git@andred.net>
+> > Cc: "Horia Geantă" <horia.geanta@nxp.com>
+> > Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <festevam@gmail.com>
+> > Cc: NXP Linux Team <linux-imx@nxp.com>
+> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Cc: Anson Huang <Anson.Huang@nxp.com>
+> > Cc: Robin Gong <yibin.gong@nxp.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-input@vger.kernel.org
 > > 
-> > This should be:
+> > ---
+> > v2:
+> > * no changes
+> > ---
+> >  drivers/input/keyboard/snvs_pwrkey.c | 12 +++++++-----
+> >  1 file changed, 7 insertions(+), 5 deletions(-)
 > > 
-> > vpu_mmu : iommu       @ff650800
-> > vdec    : video-codec @ff660000
-> > vdec_mmu: iommu       @ff660480
+> > diff --git a/drivers/input/keyboard/snvs_pwrkey.c
+> > b/drivers/input/keyboard/snvs_pwrkey.c
+> > index 382d2ae82c9b..980867886b34 100644
+> > --- a/drivers/input/keyboard/snvs_pwrkey.c
+> > +++ b/drivers/input/keyboard/snvs_pwrkey.c
+> > @@ -82,7 +82,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
+> > *dev_id)
+> >  	clk_enable(pdata->clk);
 > > 
-> 
-> Simple things like this I can (and do) fix when applying.
-> 
-> The interesting question would be, did patches 1-5 get applied yet?
-> As I only remember seing Hans' mail from v5, but didn't get any
-> applied mail for v6 so far.
-> 
-
-Hans sent a pull request to include rkvdec driver in v5.7:
-
-https://lore.kernel.org/linux-media/d4cc12b2-3d24-95db-102b-e5091c067e76@xs4all.nl/T/#t
-
-It doesn't include the devicetree changes though,
-which I just noticed.
-
-Would you be so kind to pick this patch and sort the node?
-
-Thanks!
-Ezequiel
-
-> 
-> Heiko
-> 
-> > > From: Boris Brezillon <boris.brezillon at collabora.com>
-> > > 
-> > > RK3399 has a Video decoder, define the node in the dtsi. We also add
-> > > the missing power-domain in mmu node and enable the block.
-> > > 
-> > > Signed-off-by: Boris Brezillon <boris.brezillon at collabora.com>
-> > > Signed-off-by: Ezequiel Garcia <ezequiel at collabora.com>
-> > > ---
-> > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
-> > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > index 33cc21fcf4c1..a07f857df12f 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > @@ -1285,8 +1285,20 @@ vdec_mmu: iommu at ff660480 {
-> > >  		interrupt-names = "vdec_mmu";
-> > >  		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>;
-> > >  		clock-names = "aclk", "iface";
-> > > +		power-domains = <&power RK3399_PD_VDU>;
-> > >  		#iommu-cells = <0>;
-> > > -		status = "disabled";
-> > > +	};
-> > > +
-> > > +	vdec: video-codec at ff660000 {
-> > > +		compatible = "rockchip,rk3399-vdec";
-> > > +		reg = <0x0 0xff660000 0x0 0x400>;
-> > > +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +		interrupt-names = "vdpu";
-> > > +		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
-> > > +			 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
-> > > +		clock-names = "axi", "ahb", "cabac", "core";
-> > > +		power-domains = <&power RK3399_PD_VDU>;
-> > > +		iommus = <&vdec_mmu>;
-> > >  	};
-> > >  
-> > >  	iep_mmu: iommu at ff670800 {
+> >  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+> > -	if (lp_status & SNVS_LPSR_SPO) {
+> > +	lp_status &= SNVS_LPSR_SPO;
+> > +
+> > +	if (lp_status) {
+> >  		if (pdata->minor_rev == 0) {
+> >  			/*
+> >  			 * The first generation i.MX[6|7] SoCs only send an @@ -98,14
+> > +100,14 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
+> > *dev_id)
+> >  			mod_timer(&pdata->check_timer,
+> >  			          jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
+> >  		}
+> > -	}
 > > 
-> > 
-> > 
-> 
-> 
-> 
+> > -	/* clear SPO status */
+> > -	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+> > +		/* clear SPO status */
+> > +		regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+> But irq storm will come in once there is other interrupt triggered as unexpected,
+> although I never met it before. Could we drop this patch now? Others are ok for me.
 
+I don't have strong feelings about this patch, but this bit merely changes behaviour to
+clear SP0 if SP0 was in fact != 0 in the first place, whereas before SP0 was always
+cleared, even if it was == 0 anyway. Seems more logical in my eyes.
+
+
+> Reviewed-by: Robin Gong <yibin.gong@nxp>
+> > +	}
+> > 
+> >  	clk_disable(pdata->clk);
+> > 
+> > -	return IRQ_HANDLED;
+> > +	return lp_status ? IRQ_HANDLED : IRQ_NONE;
+
+If you're talking about this part, the rtc-snvs driver does the same in its interrupt handler.
+In other words, this driver here could prevent the rtc-snvs driver from seeing its events.
+
+
+
+Cheers,
+Andre'
+
+ 
+> >  }
+> > 
+> >  static void imx_snvs_pwrkey_act(void *pdata)
+> > --
+> > 2.23.0.rc1
 
