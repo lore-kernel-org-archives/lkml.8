@@ -2,208 +2,142 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493E0C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0EBC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0CD24683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FEE20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FUHTLTnT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2rizDCNZ"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="msHn3fsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgBZRZH (ORCPT
+        id S1726974AbgBZRZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:25:07 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40915 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726476AbgBZRZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:25:06 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3805E220DB;
-        Wed, 26 Feb 2020 12:25:05 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 26 Feb 2020 12:25:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=c7ZiMoUzr8rewu+/7xDERme901m
-        6TtSElKTdKwIsAjw=; b=FUHTLTnTOnwvRhoc6VnGUQtikYE81UjyRyPFQExKAgH
-        6skZ1oaZde37HWBBsCn2CldrypDQdXFwj/sMvW2/XQ9WshlIhCzIOOk1N9tCqzul
-        ZcTzgqszLrQ1P58/saQkSYKgHoH5omXKWpfhNKPiZyc2Xg0lMcWDNZNeA7C+fU3e
-        k1WUXpSf+5ceG7e+dmqgokYG/cog86iQTpDRnaOYoLjlxP81Tu5GC4wOrP1G1HY1
-        uSTjmk7+H/v+1PvJol9Crq98z/+pZOOuvZJQc7Pw/EwREePH13Gd7byHbYo1I9JJ
-        ZcWViffce/IFj02vlzr/RWdnXR8uYULgzWoa9G6tcKA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=c7ZiMo
-        Uzr8rewu+/7xDERme901m6TtSElKTdKwIsAjw=; b=2rizDCNZSPIExD9g9HTki5
-        IKLVDGgxE8Iu+VTbm3VMdZgUwpp6OhszdoCfjCtiiZoxwrRi00YivLtyvNxWFcPv
-        e9/0ev63mGYUS+6+kkNvW+GdTH8G1YztP5R7W4k+eGdkZtIHTyXTZFQvPC/9WmQH
-        9b/om4L3EnIzun6eVl2mvf6c3AFFkCj9HAfoPZfIl1IGWjJNam+4n6pLvAimIAJW
-        U8/c3ua+tdHzqRI4QDoL5+f7O7N3u9M0wOFZffLIBniFsjaKLLNvfJIr6mkemDLM
-        VHLsuwhPw1UdcjsKSTm4VZeXn3PB1ZovpwThvWxRUvjFOtCbuFnIid1CHe2KtNkg
-        ==
-X-ME-Sender: <xms:8KlWXhynEvFaUVkxal6TOVaMmCZUHqBM2TZjJep8tSEWuJtLNO4dfA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeggddutdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:8KlWXhsWUdj_mW1sMsQyoe6KsXlU8TAB5hPbjgpO6eaEVA2KoGW-XQ>
-    <xmx:8KlWXgzvBJQtqoq4MwZVZGdfR6-GMvG3Ynie-tIff6trCvArZMrMqQ>
-    <xmx:8KlWXhfnJlKsntQC1wwfEF8qJONSgmYV10HtTdmrnJ_ZN96aUPjFDQ>
-    <xmx:8alWXrUCeqkbC146fyDrJIkBJq2XNPETwNnNgq5W4pKdbdsUIdMQqg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C8FDA3280059;
-        Wed, 26 Feb 2020 12:25:02 -0500 (EST)
-Date:   Wed, 26 Feb 2020 18:25:00 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] drm/sun4i: de2: Don't return de2_fmt_info struct
-Message-ID: <20200226172500.shtzzsc6u5p4la3i@gilmour.lan>
-References: <20200224173901.174016-1-jernej.skrabec@siol.net>
- <20200225083448.6upblnctjjrbarje@gilmour.lan>
- <CAGb2v64g7Q4e+ic08pA7tbamgToOjyYzuzqP0bpqBZjRuRUrPA@mail.gmail.com>
- <12462592.uLZWGnKmhe@jernej-laptop>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wcbclzj6eiyn4mwp"
+        Wed, 26 Feb 2020 12:25:34 -0500
+Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:3047
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726695AbgBZRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:25:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FXPu0SvHwlJIlD43A9U4ovACWPxripq3otY+ps9ZlAel2PZpq/IqLeD+e56cwUfQco7FJKES/OpvWiUVwZOpBm78qsiJQ0/O8jpn5r1+dezxHJlCfCoswslVl1zAKkGcFmWRuLwV9K4C6PV6JE6XH0QHKqWGowWPhiGG6YdaBWqMuF2phid3AqdDlGBCRb/o5h9eqXUdtsCTRWrjBAURV8HVm5BdTb4qtUxAfGJ33BHtGYi1eGpqXnY8JzPpGFAPqkr/2RoNLqHPSEgELQAGkJcgTBEAY/eY24DVtDmfu6aVkiWb5fiTaFxJ5gp7oR/tsIAQAKD+6QJeU3naWzDcoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nINrzYt5axeuYB4ToGYDVzkBeXj6USkow1njw6kT7ww=;
+ b=UWcRsjXXcvVmsSlam6iHouS/6q/NfAOOg/JHHtilFUdgcSi/qknnob3alfw5Z6NNBwfjQ9n2VZBWqiEv/F6Jjlhn9GsIYbvTZg2Q7qwq8MGQfqWzbimUlRokHNFZzGyfUM+OcyVLFNl1WI2iwjrmFgRndYJpYPmIPahXRtbn8q+/ODF2BBavvNLo2bqyfRrEdHfkaral45DFc/aFl5iExjOUYWrsc690kAWM6H6QLZE5mAuIO7XCPu40nhs3b5FUKd/kLZ17Qsn8dpfC+snnG7EA3xGFNQQR8+NqknTNjkNpJgSAdsNLwtlz6qIj+J4HHjsbNzuHbHirD/FiSzS8DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nINrzYt5axeuYB4ToGYDVzkBeXj6USkow1njw6kT7ww=;
+ b=msHn3fsnUOLzES9Qhsx0MZLuoIcmFv3bkidnRYi6ili/R1BMCOYIK9TF/lfoeX2VrCcUMCx58jmLetiOAkfevG4FXEcl12xJHCMQJM3zKE/AODnTVNEA3CpzzUE8Qw03mJAASC7SiljZMvFrtCS0BVH0QIiICODYBfAZaI2hTEk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.22; Wed, 26 Feb 2020 17:25:30 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 17:25:29 +0000
+Date:   Wed, 26 Feb 2020 13:25:25 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>
+Subject: Re: linux-next: build failure after merge of the rdma tree
+Message-ID: <20200226172525.GU26318@mellanox.com>
+References: <20200226135127.31667f48@canb.auug.org.au>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12462592.uLZWGnKmhe@jernej-laptop>
+In-Reply-To: <20200226135127.31667f48@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR08CA0016.namprd08.prod.outlook.com
+ (2603:10b6:208:239::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR08CA0016.namprd08.prod.outlook.com (2603:10b6:208:239::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 17:25:28 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j70R3-0004b5-7y; Wed, 26 Feb 2020 13:25:25 -0400
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 325bc450-bc72-4e0f-a3f3-08d7bae0df94
+X-MS-TrafficTypeDiagnostic: VI1PR05MB4141:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB41414E25B23EB46FCC565DA6CFEA0@VI1PR05MB4141.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:590;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(199004)(189003)(5660300002)(478600001)(54906003)(6916009)(4326008)(316002)(1076003)(86362001)(33656002)(8676002)(2616005)(81156014)(26005)(186003)(53546011)(36756003)(66946007)(2906002)(66476007)(66556008)(81166006)(9786002)(9746002)(8936002)(52116002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4141;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CHgGXXpSKIi96pL/cM2lNaV+AJlgP245oZur1o/YTq8xDlZeOCLBd73e+6F7uaDkGvgoBLk3tYxmhh5fAAq2RKnODL1qBCEzqcHSVaVKapziNzmW5o0BF4Yl9aV6mEsyspgV7xxf+m46E6LBFJ0FnIPIwR2ZfmwYdnf6iw4wbafg0a6yO/ERG4xiK4ZxFkWZrGr6HetfdD17NaNhAEyRZ6ybxWEbZmxSXzTat8md3g1o9zAO4KDd97Xbp512Kuo3wrKjbXytgBVKbiIFJHB3h2OpXq+q4T5UTeZPchn19/RtuZ9rnAZ57CKgeziMdb4NJYO49YFuqk5A1gtHnonFrEeQkipmyuEdsIpuemJvQlLM7tzJpoOGRBCkLrJTqhOokfTtGC0ZVjIKkbMVrfTh8+V2NlGJxdZ89xoPZL32TlayVJ6B/SQYgZSg7idtRBbiys2I7FfWtAi1iSCM7ycwd1C0GNiJC+jpnlOL0i6e6RCucL46EDJN8i6NEDYKcfQv
+X-MS-Exchange-AntiSpam-MessageData: OHDRzD0qR3dWHFafYvXxea76jGVT1iImgUlIuyihCjigcELtjZG75Ykia+ugu29pwDQ3R0vBKYYiZG3ja2zeZe3FL7Y/nhBaDWnwYRIvYkbFUrkNmBtDXP3YZoqcjaiyacxU1naWfqxkGCJEgpOETQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 325bc450-bc72-4e0f-a3f3-08d7bae0df94
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 17:25:29.6647
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zP6CKOrPwRfYn6tmRqDhEU2Gvj9AxTPm6L6G3ZoEDXf9/WvwsYmQnBYeY1K5PInKyXHZOAPl1lYbw+xH+Ca9Qw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 26, 2020 at 01:51:27PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the rdma tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+> 
+> drivers/infiniband/hw/bnxt_re/qplib_res.c: In function '__free_pbl':
+> drivers/infiniband/hw/bnxt_re/qplib_res.c:78:2: error: implicit declaration of function 'vfree'; did you mean 'kfree'? [-Werror=implicit-function-declaration]
+>    78 |  vfree(pbl->pg_arr);
+>       |  ^~~~~
+>       |  kfree
+> drivers/infiniband/hw/bnxt_re/qplib_res.c: In function '__alloc_pbl':
+> drivers/infiniband/hw/bnxt_re/qplib_res.c:117:16: error: implicit declaration of function 'vmalloc'; did you mean 'kmalloc'? [-Werror=implicit-function-declaration]
+>   117 |  pbl->pg_arr = vmalloc(pages * sizeof(void *));
+>       |                ^~~~~~~
+>       |                kmalloc
+> drivers/infiniband/hw/bnxt_re/qplib_res.c:117:14: warning: assignment to 'void **' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>   117 |  pbl->pg_arr = vmalloc(pages * sizeof(void *));
+>       |              ^
+> drivers/infiniband/hw/bnxt_re/qplib_res.c:121:18: warning: assignment to 'dma_addr_t *' {aka 'long long unsigned int *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>   121 |  pbl->pg_map_arr = vmalloc(pages * sizeof(dma_addr_t));
+>       |                  ^
+> 
+> Caused by commit
+> 
+>   0c4dcd602817 ("RDMA/bnxt_re: Refactor hardware queue memory allocation")
+> 
+> I added the following fix for today:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 26 Feb 2020 13:46:02 +1100
+> Subject: [PATCH] RDMA/bnxt_re: using vmalloc requires including vmalloc.h
+> 
+> Fixes: 0c4dcd602817 ("RDMA/bnxt_re: Refactor hardware queue memory allocation")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+>  drivers/infiniband/hw/bnxt_re/qplib_res.c | 1 +
+>  1 file changed, 1 insertion(+)
 
---wcbclzj6eiyn4mwp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay applied, thanks
 
-On Tue, Feb 25, 2020 at 07:50:03PM +0100, Jernej =C5=A0krabec wrote:
-> Hi!
->
-> Dne torek, 25. februar 2020 ob 09:52:18 CET je Chen-Yu Tsai napisal(a):
-> > On Tue, Feb 25, 2020 at 4:35 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > Hi,
-> > >
-> > > On Mon, Feb 24, 2020 at 06:39:00PM +0100, Jernej Skrabec wrote:
-> > > > Now that de2_fmt_info contains only DRM <-> HW format mapping, it
-> > > > doesn't make sense to return pointer to structure when searching by=
- DRM
-> > > > format. Rework that to return only HW format instead.
-> > > >
-> > > > This doesn't make any functional change.
-> > > >
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > >
-> > > >  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 15 +++++++++++----
-> > > >  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  7 +------
-> > > >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 10 +++++-----
-> > > >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 12 ++++++------
-> > > >  4 files changed, 23 insertions(+), 21 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > > > b/drivers/gpu/drm/sun4i/sun8i_mixer.c index e078ec96de2d..56cc037fd=
-312
-> > > > 100644
-> > > > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > > > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > > > @@ -27,6 +27,11 @@
-> > > >
-> > > >  #include "sun8i_vi_layer.h"
-> > > >  #include "sunxi_engine.h"
-> > > >
-> > > > +struct de2_fmt_info {
-> > > > +     u32     drm_fmt;
-> > > > +     u32     de2_fmt;
-> > > > +};
-> > > > +
-> > > >
-> > > >  static const struct de2_fmt_info de2_formats[] =3D {
-> > > >
-> > > >       {
-> > > >
-> > > >               .drm_fmt =3D DRM_FORMAT_ARGB8888,
-> > > >
-> > > > @@ -230,15 +235,17 @@ static const struct de2_fmt_info de2_formats[=
-] =3D {
-> > > >
-> > > >       },
-> > > >
-> > > >  };
-> > > >
-> > > > -const struct de2_fmt_info *sun8i_mixer_format_info(u32 format)
-> > > > +int sun8i_mixer_drm_format_to_hw(u32 format, u32 *hw_format)
-> > > >
-> > > >  {
-> > > >
-> > > >       unsigned int i;
-> > > >
-> > > >       for (i =3D 0; i < ARRAY_SIZE(de2_formats); ++i)
-> > > >
-> > > > -             if (de2_formats[i].drm_fmt =3D=3D format)
-> > > > -                     return &de2_formats[i];
-> > > > +             if (de2_formats[i].drm_fmt =3D=3D format) {
-> > > > +                     *hw_format =3D de2_formats[i].de2_fmt;
-> > > > +                     return 0;
-> > > > +             }
-> > > >
-> > > > -     return NULL;
-> > > > +     return -EINVAL;
-> > > >
-> > > >  }
-> > >
-> > > I'm not too sure about that one. It breaks the consistency with the
-> > > other functions, and I don't really see a particular benefit to it?
-> >
->
-> I don't have strong opinion about this patch. It can be dropped.
->
-> > I guess we could just define an "invalid" value, and have the function
-> > return that if can't find a match? I'm guessing 0x0 is valid, so maybe
-> > 0xffffffff or 0xdeadbeef ?
-> >
-> > That would keep consistency with everything else all the while
-> > removing the level of indirection you wanted to.
->
-> I modeled this after
-> static int sun4i_backend_drm_format_to_layer(u32 format, u32 *mode);
-> from sun4i_backend.c.
->
-> What consistency do you have in mind?
-
-Well I guess if we're doing that elsewhere it's not really fair to ask
-you to change this then :)
-
-Fine by me
-
-Maxime
-
---wcbclzj6eiyn4mwp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlap7AAKCRDj7w1vZxhR
-xWSuAQDSjM7vAamUrz1brXSiN1EmntlNKE3xq2CuTQ1FDUJlCAEAn2clWE2FWZ46
-YQm62RnkBfEvRJlvDq6RUBE5k3Z4aQs=
-=Qy9H
------END PGP SIGNATURE-----
-
---wcbclzj6eiyn4mwp--
+Jason
