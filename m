@@ -2,96 +2,126 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74944C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ACBC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A5724653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24FE24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvafYS8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgBZVxY (ORCPT
+        id S1727714AbgBZVyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:53:24 -0500
-Received: from mga06.intel.com ([134.134.136.31]:9517 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbgBZVxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:53:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:53:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="350491286"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.84]) ([134.134.177.84])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 13:53:21 -0800
-Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
- IA32_FEAT_CTL is configured
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
-        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
-        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
-        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
-        lenb@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
-        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
-        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-References: <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
- <20200225221234.GL9245@linux.intel.com>
- <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
- <20200225232900.GO9245@linux.intel.com>
- <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
- <20200226004258.GP9245@linux.intel.com>
- <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
- <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
- <20200226205745.GQ9940@linux.intel.com>
- <9a0a7373-f469-f2ae-c218-5821f805f0d8@intel.com>
- <20200226212537.GR9940@linux.intel.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <5f480e36-f6ed-e72d-2e18-96617b37958e@intel.com>
-Date:   Wed, 26 Feb 2020 13:53:21 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 16:54:45 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40364 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727503AbgBZVyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:54:45 -0500
+Received: by mail-il1-f193.google.com with SMTP id i7so522807ilr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:54:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4XwFC9zK7rdNFiU4fD2W53gqKQJ5N1hfb8kc+66F6nM=;
+        b=SvafYS8fran1hLSVtvbh3r5bGn9MzewnRSIACfZVF83EuMq+8JQ2qXCJGEy/RugvH7
+         xgC5MCs552la8bmpl3KUvf6vUB4Feze2tFO2bpsvCclTJ4Cd/2CycNNRYgEwuXR0AIgC
+         lxHNybkmt0URMPWz4GYWI7kjO9jUYGP/SkmQgUMZqrQ4GDuDIuRu480/ebLy16QPM35Z
+         Dc8rHwFPEHi0DeDyj7OYodMFWLHz8TcFWYtnhu6ogg9yV8iATTLG6iRp8C1ZAlHmWfhm
+         60DCHpJGKkRY+eSSutwV/dwEebDwafmfm/rQhi9h3uiilQ2tQJF5HLyh0YSyks1AIs9H
+         5+PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4XwFC9zK7rdNFiU4fD2W53gqKQJ5N1hfb8kc+66F6nM=;
+        b=DoJTtGe7gcO4+VFbPITe3Yr1OlNq+GYUUseSggMVmaVs/LHYvYchrN9Q9fXP0Er+tV
+         XHJDKv6cMCJBHDpUTyHWcKBz1QeyORMo0bx0EDwK2MrqeEAT2CmrDkMV3O7xOJaBm6q3
+         TaXJSZ20BFKZ33B9YHSfCT/0R5xNej60RhycHC3P9K+Rd/QDntsHt7iSLpwPFWm0P6gA
+         BA0vez54LhzRxpye8dpVy4zXFd1Av2bm6/m95SNa1UtjVs1dz3Pro/4TESTic0FmV44R
+         L2sS4dmr3C2mm9/qI00eaZoHLgeMSi6iFGgO2X29o1fihX423E2J56KyFvADCEy96bik
+         64FQ==
+X-Gm-Message-State: APjAAAU+VoNKb7b749tx0oOsw/LzJDrC+nWbTPTrVPUObl12nFdqlwdc
+        pKpwCpt3xJoHV46XXT0GwO1N02aFcvwt3BAH8w==
+X-Google-Smtp-Source: APXvYqyYQnPC7xjE0yUNtfxPz0QVi/FLAMLOrYwidqVBrh1Z+jdutAz4oRZvxLhuNg/XeDuDAKd53+GuSMh0DrE4wJM=
+X-Received: by 2002:a05:6e02:1014:: with SMTP id n20mr1047518ilj.172.1582754084409;
+ Wed, 26 Feb 2020 13:54:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200226212537.GR9940@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200225224719.950376311@linutronix.de> <20200225231609.000955823@linutronix.de>
+ <CAMzpN2ij8ReOXZH00puhzraCGRdKY8qt+TMipd_14_XWTu8xtg@mail.gmail.com> <87k149p0na.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87k149p0na.fsf@nanos.tec.linutronix.de>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Wed, 26 Feb 2020 16:54:33 -0500
+Message-ID: <CAMzpN2j7EHZ2bKg9SZ2Ri-qsmEoknAAJO6O5yoLn-fY8_h1B2A@mail.gmail.com>
+Subject: Re: [patch 01/15] x86/irq: Convey vector as argument and not in ptregs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/26/2020 1:25 PM, Sean Christopherson wrote:
-> Arguably, setup_pku() should be a little less heavy handed in updating
-> cpufeatures for X86_FEATURE_OSPKE, but init_ia32_feat_ctl() should also be
-> more robust.
-> 
-
-Right.
-
->> But it looks like rdmsr is global and not tied to a given CPU anyways?
-> 
-
-> For better or worse, the MSR is thread scoped.
-> 
-
-Ahh. Definitely not obvious at a glance.
-
-> I've reproduced the bug, should have a fix ready by EOD.
+On Wed, Feb 26, 2020 at 3:13 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
+> Brian Gerst <brgerst@gmail.com> writes:
+>
+> > On Tue, Feb 25, 2020 at 6:26 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>
+> >> Device interrupts which go through do_IRQ() or the spurious interrupt
+> >> handler have their separate entry code on 64 bit for no good reason.
+> >>
+> >> Both 32 and 64 bit transport the vector number through ORIG_[RE]AX in
+> >> pt_regs. Further the vector number is forced to fit into an u8 and is
+> >> complemented and offset by 0x80 for historical reasons.
+> >
+> > The reason for the 0x80 offset is so that the push instruction only
+> > takes two bytes.  This allows each entry stub to be packed into a
+> > fixed 8 bytes.  idt_setup_apic_and_irq_gates() assumes this 8-byte
+> > fixed length for the stubs, so now every odd vector after 0x80 is
+> > broken.
+> >
+> >      508:       6a 7f                   pushq  $0x7f
+> >      50a:       e9 f1 08 00 00          jmpq   e00 <common_interrupt>
+> >      50f:       90                      nop
+> >      510:       68 80 00 00 00          pushq  $0x80
+> >      515:       e9 e6 08 00 00          jmpq   e00 <common_interrupt>
+> >      51a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+> >      520:       68 81 00 00 00          pushq  $0x81
+> >      525:       e9 d6 08 00 00          jmpq   e00 <common_interrupt>
+> >      52a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+> >
+> > The 0x81 vector should start at 0x518, not 0x520.
+>
+> Bah, I somehow missed that big fat comment explaining it. :)
+>
+> Thanks for catching it. So my testing just has been lucky to not hit one
+> of those.
+>
+> Now the question is whether we care about the packed stubs or just make
+> them larger by using alignment to get rid of this silly +0x80 and
+> ~vector fixup later on. The straight forward thing clearly has its charm
+> and I doubt it matters in measurable ways.
 
-Nice, glad to hear it.
+I think we can get rid of the inversion.  That was done so orig_ax had
+a negative number (signifying it's not a syscall), but if you replace
+it with -1 that isn't necessary.  A simple -0x80 offset should be
+sufficient.
 
-Thanks,
-Jake
+I think it's a worthy optimization to keep.  There are 240 of these
+stubs, so increasing the allocation to 16 bytes would add 1920 bytes
+to the kernel text.
+
+--
+Brian Gerst
