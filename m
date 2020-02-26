@@ -2,45 +2,46 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6A1C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF65C4BA2A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66FB2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D970222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="W+KwYSL5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="JyNYIs8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgBZTNO (ORCPT
+        id S1727486AbgBZTNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:13:14 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:34487 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbgBZTNN (ORCPT
+        Wed, 26 Feb 2020 14:13:17 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:8033 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbgBZTNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:13:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744390;
+        Wed, 26 Feb 2020 14:13:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744392;
         s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=Vdb7nlCxfqY9kDUQ+U3Vms96RRuZQL4A0e+CPRkPLwo=;
-        b=W+KwYSL5yaeIIKCaL2Tp11ufJA0OsTYPWOQVGuuD0sXvCOQPiTHX/p7D8gSjD3RI+y
-        3zy+BRo2F4aW2q4WOr/1xxspcEmpbPztp142wDxcRa+lxXshzn3b4n5KKOYKdkRsxret
-        xmO6zMb7BoZ2yIkuNkFyywiaMbMmEmfQWuqr57PZ5kqNW1seWbX36oAQwIPKxUcwXt3J
-        OLhTo21fATVcKEWrn0aVeNNQWk2fCTGCAKgtuyWheLpF5cTAM+fI9jBeuBviHTgRKd/K
-        twgDsMveqRsBaYblHzv0OGvha4rJ59O9CcYM94NNfiy10Sv6xqfxtFJg9MxPcTv5yPNP
-        LlTQ==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=2EvwvmMzOKZtUZJLHlIF1SJL85vzPp9aE2EFoN3J+us=;
+        b=JyNYIs8eJF3enx4BQ0lLSgQ4ZtsIZ48STigs58bKZrZyRG99cGbOuRsqKLSDrwQ7e1
+        4nvLsna6naCL/FuMDOOsbU2whqLMT7U2Kbz6sdWFkl4cbtdGs20qIBSA1isVRmdi3P9Z
+        Bj807aTMXezrkAFI142tVBJan2KdcgDyiAIVcENldEP9mgLnJLpGvRgV0p030Z7NsReu
+        BtkWM4f8aHP7nZBk0/Zh8tjCW0Pgtyap+JCYOJ5S+g8yLkd8pQUXrb3sArubDbmVnLp4
+        ABV4pZLsG9ZlnCng7B1QqVFI/O9y+kv5+dEBL6bmEckST5EsBobfDOpWKCfQltXCugnk
+        mIsg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QJD06bJ
+        with ESMTPSA id U06217w1QJD56bP
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Wed, 26 Feb 2020 20:13:00 +0100 (CET)
+        Wed, 26 Feb 2020 20:13:05 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -59,11 +60,13 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC 0/8] MIPS: CI20: add HDMI out support 
-Date:   Wed, 26 Feb 2020 20:12:52 +0100
-Message-Id: <cover.1582744379.git.hns@goldelico.com>
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+Date:   Wed, 26 Feb 2020 20:12:58 +0100
+Message-Id: <fc8b92092f9e4ecdba86df973455ff06e836b349.1582744379.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1582744379.git.hns@goldelico.com>
+References: <cover.1582744379.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,57 +74,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds HDMI output to the jz4780/CI20 board.
+From: Paul Boddie <paul@boddie.org.uk>
 
-It is based on taking the old 3.18 vendor kernel and trying
-to achieve the same with modern DTS setup and new/modified
-drivers.
+A specialisation of the generic Synopsys HDMI driver is employed for JZ4780
+HDMI support. This requires a new driver, plus device tree and configuration
+modifications.
 
-Unfortunately, in this first RFC, only EDID and creation of
-/dev/fb0 are working. Also, HDMI hot plugging is detected.
+Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 32 ++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-But there is no HDMI output signal. So some tiny piece seems
-to be missing to enable/configure the Synposys HDMI controller.
-
-We need help from the community to fix this.
-
-Note: device tree bindings are from 2015 and still seem to
-fit - except they are not in yaml format.
-
-Original authors of most patches are
-* Paul Boddie <paul@boddie.org.uk>
-* Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-
-
-H. Nikolaus Schaller (2):
-  drm: ingenic-drm: add MODULE_DEVICE_TABLE
-  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
-
-Paul Boddie (4):
-  drm: ingenic: add jz4780 Synopsys HDMI driver.
-  pinctrl: ingenic: add hdmi-ddc pin control group
-  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
-  MIPS: DTS: CI20: add HDMI setup
-
-Zubair Lutfullah Kakakhel (2):
-  dt-bindings: video: Add jz4780-lcd binding
-  dt-bindings: video: Add jz4780-hdmi binding
-
- .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
- .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
- arch/mips/boot/dts/ingenic/ci20.dts           |  64 ++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi        |  32 +++++
- arch/mips/configs/ci20_defconfig              |   3 +
- drivers/gpu/drm/ingenic/Kconfig               |   8 ++
- drivers/gpu/drm/ingenic/Makefile              |   1 +
- drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c      | 120 ++++++++++++++++++
- drivers/gpu/drm/ingenic/ingenic-drm.c         |   2 +
- drivers/pinctrl/pinctrl-ingenic.c             |   7 +
- 10 files changed, 317 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
- create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
-
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index f928329b034b..391d4e1efd35 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -433,4 +433,36 @@
+ 
+ 		status = "disabled";
+ 	};
++
++	hdmi: hdmi@10180000 {
++		compatible = "ingenic,jz4780-dw-hdmi";
++		reg = <0x10180000 0x8000>;
++		reg-io-width = <4>;
++
++		clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
++		clock-names = "isfr" , "iahb";
++
++		assigned-clocks = <&cgu JZ4780_CLK_HDMI>;
++		assigned-clock-rates = <27000000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <3>;
++
++		/* ddc-i2c-bus = <&i2c4>; */
++
++		status = "disabled";
++	};
++
++	lcd: lcd@13050000 {
++		compatible = "ingenic,jz4740-lcd";
++		reg = <0x13050000 0x1800>;
++
++		clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
++		clock-names = "lcd", "lcd_pclk";
++
++		interrupt-parent = <&intc>;
++		interrupts = <31>;
++
++		status = "disabled";
++	};
+ };
 -- 
 2.23.0
 
