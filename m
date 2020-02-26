@@ -2,151 +2,241 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA486C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFBDC4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FDC21744
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B654821927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UoP/xWxb"
+	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="UiD7psft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgBZC4s (ORCPT
+        id S1729653AbgBZC6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:56:48 -0500
-Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:15331
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728989AbgBZC4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:56:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CT65n8YQfvtIUgrF567cYkMbFY0u6xuDzxpaA4d5OCOh/QprK2RMAI9ik49952dcRlIlYUK9e11QKP75H4fp8Nu0cLFSNG+8nsqiAk8UfMno82YslyQ0/OoXF0rYjS6PzEbSOaXy8AgYanmRm3kMCGUrweL13UAK+Ub147jkCkqhMA+D4yXiTYJn5zg7QIqdA1b1XbBo18egYK2vdqz4UD9C6JRpJlISaWV+fOX2pRGnG0Bim7ia4dbru1yX2GgiQidOkSYUr2W5ZJe0/mqLNdFIHAymaXpRHdntIybAMQm+ETVU6cF4MhvZqfUZXvPECXljJcDlqEPBC9hpYpE34w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rkC16IAxrfYoBhPcBghxfMT+/kQNhYDyPxaoUDSSJG0=;
- b=Sz8pUVvsMiXT2hU8cvXVsHSKwaRTT9j40scgE8EBH7zibm/tykurFVpYePj3r9v6np2fVff16ftdTFo2AL/3lppM8vHyZUkddyUzxq4XMMH+UOk3CbmVXv1XDL/nUWmA3UE/NPEt5YXn6PYdB7hOzf6OJ7VccnrpgmH2LjRGtB1o6Z6ydFC0iM3+TdwLsHGfQdmUp8kynrzNKxeJqTmcX/3V+1SlZ7y5fKm3p0A54s097G2SXuGz0GE5pL2YuBu2dHfNQZKHrCmBhteqYS60dkIyFPy9KmAdXpOhAoZ4ai94ChvYiCg+PKDrNDRO3KODWgkLybohnU2k77+Yqb+3rQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rkC16IAxrfYoBhPcBghxfMT+/kQNhYDyPxaoUDSSJG0=;
- b=UoP/xWxbdXursMpPKhjb8o8NK68Rzj9XwBC8x+pE4QWg2/0hh/OBVbPnVDowpBKfWy04P9cXFa+N1RyPJXjXVapdZWKCqsli9v9QzJ1eCKjJAcorMLmYK7vyzrIBARphSd0N2PTJ4a4GcV2cARf3iWKDbXt7YoxNWgZxJID4dLg=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
- DB7PR04MB5995.eurprd04.prod.outlook.com (20.178.107.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Wed, 26 Feb 2020 02:56:44 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::5cb4:81c8:1618:5ca]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::5cb4:81c8:1618:5ca%7]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 02:56:44 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/7] clk: imx8: Add SCU and LPCG clocks for I2C in CM40 SS
-Thread-Topic: [PATCH 2/7] clk: imx8: Add SCU and LPCG clocks for I2C in CM40
- SS
-Thread-Index: AQHV5UIQzDG739vOdEefzni3O2DFrqgsP5qAgACTgBA=
-Date:   Wed, 26 Feb 2020 02:56:44 +0000
-Message-ID: <DB7PR04MB46183E18F10C5B1B1F214DCCE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
- <1581909561-12058-3-git-send-email-qiangqing.zhang@nxp.com>
- <20200225175735.GA5232@bogus>
-In-Reply-To: <20200225175735.GA5232@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-originating-ip: [222.93.202.38]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 29ee1899-5184-4fb4-6e3b-08d7ba67839d
-x-ms-traffictypediagnostic: DB7PR04MB5995:|DB7PR04MB5995:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5995F5BAAB4A56B9EE6AF54EE6EA0@DB7PR04MB5995.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1417;
-x-forefront-prvs: 0325F6C77B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(199004)(189003)(26005)(66476007)(33656002)(52536014)(76116006)(86362001)(7416002)(6916009)(53546011)(478600001)(71200400001)(66946007)(5660300002)(81156014)(9686003)(7696005)(55016002)(64756008)(316002)(6506007)(54906003)(66556008)(8936002)(81166006)(186003)(2906002)(8676002)(4326008)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5995;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K0J7xK+g6GWIShZuHWPF52IL3qtYEFoU/BdxV6cx1i4626H8mlwmuQAkIRjXlpCZa5ZOxfENoc7MkbZOaxH9OqD7Jiy/9lLEzzB9FegIxo+p0pZ5Nyclu18OxFhlQ1gvkyfK1RxgWM23hDnbjNPFWwHwVYhfbW7VCRelj9Jmh0ipBDIEO6o/hPNCskacQObU6mkbFa/enJtOC7QBRchffZ9JoXHAlMWbTUvZHjXt2947qmb6QXyoZB4xGpe9cAiK+ORDaDdSu+IessaNt91GjL5R+M5SO1s9pk2dIFCv5jGaHgiQiOBldQZhUU5R3WXwbUDl3aBvig8WFH9g4U5lxJb9josHSHGlxAKYrM4L9gJ6yCWJm7nUobXawYXqZaIT5YvmZtYbTVrw+Z8TVvHif9nC88QV5ygR3CWFDOgEw14Jmnw6yi+OxyaZjL86vCDN
-x-ms-exchange-antispam-messagedata: TWVekSp/tsck1/e9nqhFANsilv6vDDN1eLI24uyqfeN7YWC6mKTfH2YG3vmjBQxCdW9FK2WO1myNwjJfrEf9KFUtlZBY8zzbYBIFKlFgHQ+nvvWi6BlPJFNH1NU1S5wb48lXs/02U3+5kIMNNHRUOQ==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 25 Feb 2020 21:58:18 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44900 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgBZC6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:58:18 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so1516507oia.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 18:58:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mvista-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CbuwFF5t8811xFGlJ3wPhcPXhUbAmzLmXFiXZfNxi14=;
+        b=UiD7psftlnvM7/CrnvMbY+oxjYjWV/3WgpDwKL6XiPJHLCPvx5w0cEuDYvMZQb2PAW
+         +YP1JqL2xhGy29nasNJXutKlApQwsGhQIhi9TTz4/XbxNrTyXZ+gmWbVyFsJ8tLiSE0Z
+         xGiz9mjk8C4a7duGynDKaKDeTNmKB+4vCwdZY61XBnAokIvDsrRWqhrovY6lVrBEeGeh
+         Mb5PxGgGu7WlV9p3h82Ou/eFbRi9q5AM7SYBSnDtO7ZKOg7kteZrIz0firoRP6QOtJR9
+         56QZiKAuKjWNEOr7iOGizfSgJQbr7vnqEOPwoMuNeOIeCpH3sJ2n36gFky/dQ2OqdN1K
+         s7/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CbuwFF5t8811xFGlJ3wPhcPXhUbAmzLmXFiXZfNxi14=;
+        b=U9zG5w0YSEOTB+F94eRZWhgGhrmgrmReexPWYhDwFGtG51jQe11i10d3EZTx7U8iUl
+         mfTs99Nv82wapoDgSujxw5b0/nTCTQpGw7QqIfpEu/HaOpZQ6lO15e/lmIr5TLdtycND
+         QEjE3NWOE4/D6AI6T7CTuF4y6J7Y42ez4nE1Tz0BZQhVx1iE7+RofirIaWKh7c1mRsJS
+         TSba6AHVtjabI6Wi1QfALRENVDez6ASoHCgd0ydUJRkFLYn79k6TNuxtYUMlwq+n/Pec
+         ULz+UxseuV73zaobPE9rz7OlGNOt6PJnMVYfC8mxb3LTlE3rsw17ondkaYBDaKx0l3h9
+         lkag==
+X-Gm-Message-State: APjAAAUK6BMNvmaQQSv+w2BRvCT3kqeM+q9MGTfh1WgZNqgsmS2Em+vi
+        RUeUSTS/Re26qgRd41Ia2xGLPYBpWVgZJg==
+X-Google-Smtp-Source: APXvYqz1VwVTGiTHcGf2/hEbBoahceAy1GPlwTUFhVfpk/z8pArs0PuyTvas7QL3iLmNhq2hw8QIGA==
+X-Received: by 2002:a05:6808:312:: with SMTP id i18mr1589326oie.44.1582685893149;
+        Tue, 25 Feb 2020 18:58:13 -0800 (PST)
+Received: from minyard.net ([2001:470:b8f6:1b:4db:878f:ca6f:b716])
+        by smtp.gmail.com with ESMTPSA id p83sm246701oia.51.2020.02.25.18.58.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Feb 2020 18:58:12 -0800 (PST)
+Date:   Tue, 25 Feb 2020 20:58:10 -0600
+From:   Corey Minyard <cminyard@mvista.com>
+To:     James Morse <james.morse@arm.com>
+Cc:     minyard@acm.org, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
+Message-ID: <20200226025810.GE3865@minyard.net>
+Reply-To: cminyard@mvista.com
+References: <20200219152403.3495-1-minyard@acm.org>
+ <20200220142214.GC14459@willie-the-truck>
+ <20200220163038.GJ3704@minyard.net>
+ <20200220213040.GA2919@minyard.net>
+ <9e2eac0b-ab60-6316-4976-686a8ab7ac8f@arm.com>
+ <20200225153801.GD3865@minyard.net>
+ <52fbb8a7-9dc9-508a-80f6-36ba42d5dacb@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29ee1899-5184-4fb4-6e3b-08d7ba67839d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 02:56:44.8165
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j8dJzI3HCGx1KxL9aUhXPKRgVbXeBZetIWOsjTwjt8WmS5fLLabk0wB/zTDQPfcJ31GAvI3Jl8PWGePStpoukQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5995
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52fbb8a7-9dc9-508a-80f6-36ba42d5dacb@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
-QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjDE6jLUwjI2yNUgMTo1OA0KPiBUbzogSm9ha2ltIFpo
-YW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IG10dXJxdWV0dGVAYmF5bGlicmUu
-Y29tOyBzYm95ZEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gc2hhd25ndW9A
-a2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRl
-Ow0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+
-OyBBbnNvbiBIdWFuZw0KPiA8YW5zb24uaHVhbmdAbnhwLmNvbT47IExlb25hcmQgQ3Jlc3RleiA8
-bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+Ow0KPiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRh
-QG54cC5jb20+OyBBaXNoZW5nIERvbmcNCj4gPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgUGVuZyBG
-YW4gPHBlbmcuZmFuQG54cC5jb20+OyBBbmR5IER1YW4NCj4gPGZ1Z2FuZy5kdWFuQG54cC5jb20+
-OyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi83XSBjbGs6IGlteDg6IEFk
-ZCBTQ1UgYW5kIExQQ0cgY2xvY2tzIGZvciBJMkMgaW4gQ000MCBTUw0KPiANCj4gT24gTW9uLCBG
-ZWIgMTcsIDIwMjAgYXQgMTE6MTk6MTZBTSArMDgwMCwgSm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+
-IEFkZCBTQ1UgYW5kIExQQ0cgY2xvY2tzIGZvciBJMkMgaW4gQ000MCBTUy4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQo+ID4g
-LS0tDQo+ID4gIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14OC1jbG9jay5oIHwgMTMgKysr
-KysrKysrKysrLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2sv
-aW14OC1jbG9jay5oDQo+IGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg4LWNsb2NrLmgN
-Cj4gPiBpbmRleCA2NzNhOGM2NjIzNDAuLjg0YTQ0MmJlNzAwZiAxMDA2NDQNCj4gPiAtLS0gYS9p
-bmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2lteDgtY2xvY2suaA0KPiA+ICsrKyBiL2luY2x1ZGUv
-ZHQtYmluZGluZ3MvY2xvY2svaW14OC1jbG9jay5oDQo+ID4gQEAgLTEzMSw3ICsxMzEsMTIgQEAN
-Cj4gPiAgI2RlZmluZSBJTVhfQURNQV9QV01fQ0xLCQkJCTE4OA0KPiA+ICAjZGVmaW5lIElNWF9B
-RE1BX0xDRF9DTEsJCQkJMTg5DQo+ID4NCj4gPiAtI2RlZmluZSBJTVhfU0NVX0NMS19FTkQJCQkJ
-CTE5MA0KPiA+ICsvKiBDTTQwIFNTICovDQo+ID4gKyNkZWZpbmUgSU1YX0NNNDBfSVBHX0NMSwkJ
-CQkyMDANCj4gPiArI2RlZmluZSBJTVhfQ000MF9JMkNfQ0xLCQkJCTIwNQ0KPiA+ICsNCj4gPiAr
-I2RlZmluZSBJTVhfU0NVX0NMS19FTkQJCQkJCTIyMA0KPiANCj4gV2h5IGFyZSB5b3Ugc2tpcHBp
-bmcgbnVtYmVycz8NCkhpIFJvYiwNCg0KSSBmb3VuZCB0aGF0IHRoZXJlIGlzIGEgZ2FwIGluIFND
-VSBjbG9jayBiZXR3ZWVuIHN1YnN5c3RlbSwgc29tZSBudW1iZXJzIGNvdWxkIGJlIHJlc2VydmVk
-IGZvciBkZXZpY2VzIHdoaWNoIG1heSBiZSBhZGRlZCBpbnRvIHRoaXMgc3Vic3lzdGVtIGluIHRo
-ZSBmdXR1cmUuIA0KDQpCZXN0IFJlZ2FyZHMsDQpKb2FraW0gWmhhbmcNCj4gPiArDQo+ID4NCj4g
-PiAgLyogTFBDRyBjbG9ja3MgKi8NCj4gPg0KPiA+IEBAIC0yOTAsNCArMjk1LDEwIEBADQo+ID4N
-Cj4gPiAgI2RlZmluZSBJTVhfQURNQV9MUENHX0NMS19FTkQJCQkJNDUNCj4gPg0KPiA+ICsvKiBD
-TTQwIFNTIExQQ0cgKi8NCj4gPiArI2RlZmluZSBJTVhfQ000MF9MUENHX0kyQ19JUEdfQ0xLCQkJ
-MA0KPiA+ICsjZGVmaW5lIElNWF9DTTQwX0xQQ0dfSTJDX0NMSwkJCQkxDQo+ID4gKw0KPiA+ICsj
-ZGVmaW5lIElNWF9DTTQwX0xQQ0dfQ0xLX0VORAkJCQkyDQo+ID4gKw0KPiA+ICAjZW5kaWYgLyog
-X19EVF9CSU5ESU5HU19DTE9DS19JTVhfSCAqLw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
+Hello James,
+
+On Tue, Feb 25, 2020 at 05:55:44PM +0000, James Morse wrote:
+> Hi Corey,
+> 
+> On 25/02/2020 15:38, Corey Minyard wrote:
+> > On Mon, Feb 24, 2020 at 06:07:17PM +0000, James Morse wrote:
+> >> On 20/02/2020 21:30, Corey Minyard wrote:
+> >>> Ok, this is the disconnect.  I was assuming that single step would stop
+> >>> at the next instruction after returning from an exception.  qemu works
+> >>> the same way the hardware I have does.  So I'm assuming arm64 doesn't
+> >>> clear PTRACE.SS on an exception, even though that seems to be what the
+> >>> manual says.
+> >>
+> >> PSTATE.SS isn't an enable bit for single step ... its part of a bigger state-machine.
+> >> (my made-up terminology for it is 'PSTATE.Suppress-Step'...)
+> >>
+> >> The diagram in the Arm-Arm's D2.12.3 "The software step state machine" may help.
+> >>
+> >> MDSCR_EL1.SS enables single-step, if PSTATE.D is clear the CPU will now take step
+> >> exceptions instead of pretty much anything else. (active pending state)
+> >> To execute one instruction you need to ERET with SPSR_ELx.SS set. (active, not pending)
+> >> The CPU will execute one instruction, then clear PSTATE.SS. (taking us back to active pending)
+> >>
+> >> Taking an exception clears PSTATE.SS so that you know you're in active-pending state, and
+> >> will take a step exception once you re-enable debug with PSTATE.D. This lets you step the
+> >> exception handlers.
+> >> (if it was set, you wouldn't see the first instruction in the step handler, if it was
+> >> inherited, you couldn't know if you would see the first instruction or not).
+> >> If you take something other than a step exception, PSTATE.SS will be preserved in SPSR_EL1.SS.
+> >>
+> >>
+> >> What I think you are seeing is the step exception once debug is re-enabled, after taking
+> >> an exception you didn't want. This happens because MDSCR_EL1.SS is still set.
+> 
+> 
+> > Ok, I was familiar with that diagram, but I was trying to fit it into
+> > how the other architectures where I have done this type of work.  This
+> > is a little bizarre to me, but I understand now.  Your explaination was
+> > very helpful, though the code I have is correct either way.
+> 
+> | +/*
+> | + * The task that is currently being single-stepped.  There can be only
+> | + * one.
+> | + */
+> | +struct task_struct *single_step_task;
+> 
+> ? I think this would break kprobes and perf's use of single-step on SMP systems.
+
+It shouldn't.  The task will never change in that case, interrupts are
+disabled as the instruction runs.
+
+> 
+> 
+> > The problem is that kgdb doesn't work right with the current
+> > implementation.  If you continue from a breakpoint, it does not
+> > continue.  It just stops at the same place.  What happens is:
+> > 
+> > * gdb remove the breakpoint and single steps.
+> > * An exception happens and the single step stops in the kernel entry.
+> >   Thus the state machine goes to inactive.
+> 
+> (e.g. the original instruction caused a page fault)
+> 
+> 
+> > * gdb re-inserts the breakpoint and continues.
+> 
+> > * When the exception returns, the breakpoint is there and is hit again.
+> 
+> Yes, because the original instruction hadn't run, it caused a page fault. This time its
+> more likely to succeed.
+> 
+> perf's use of arm64's breakpoints is quite happy with this. It means if you hit a
+> breakpoint in the fault handler, you see those too. If an instruction causes a page-fault,
+> you may see it twice, but that is because the CPU tried to execute it twice.
+
+That's true, but gdb runs at human speed.  There will always be a timer
+interrupt pending.
+
+> 
+> (I agree the irq case is probably just annoying for kgdb)
+> 
+> 
+> > You can never continue from a breakpoint without removing it, because
+> > there's alway a timer interrupt pending.
+> 
+> Are you driving the single-step hardware directly here, or using the behaviour from
+> breakpoint_handler() and reinstall_suspended_bps()?
+> 
+> These disable breakpoints and step the original instruction, then re-enable breakpoints.
+> This is because breakpoints fire before the instruction runs, and single-step doesn't
+> suppress breakpoints. This has to happen regardless of asynchronous exceptions.
+> 
+> 
+> > You can't single-step through
+> > instructions (stepi) because it always stops in the kernel entry.  If
+> > you do a normal gdb single step in code it just hangs because it keeps
+> > trying to single step through instructions and keeps stopping in kernel
+> > entry.  So gdb does not expect the behavior that is currently
+> > implemented.
+> 
+> Is it fair to say that the user driving kgdb is very-slow compared to IRQs firing?
+> This isn't true for the other consumers of single-step (kprobes, perf).
+
+Yes.  You hit a breakpoint, the user does whatever then does a continue
+or single-step.  Which is, of course, not true of the other single-step
+users, as you say.
+
+> 
+> 
+> > The patch as I have posted it is probably the simplest way to fix it.
+> > It basically makes single-step work like other architectures, and like
+> > the userspace single step works.  I could ifdef it so that the entry
+> > code is only there if kgdb is enabled.  You can single step through
+> > instructions that cause page faults, so it's a little more general.
+> 
+> > The other way is to run the single-stepped instruction with interrupts
+> > disabled and emulate any messing with the DAIF bits.  I assume
+> > that's only "MRS <Xt>, DAIF", "MSR DAIF, <Xt>", "MSR DAIFSet, #<imm>",
+> > and "MSR DAIFClr, #<imm>". 
+> 
+> > Well, I guess ERET also does that, but maybe
+> > that's ok, probably not a big deal.
+> 
+> (tangent: you can't step ERET!)
+> 
+> 
+> > In this case you can't single step over instructions that take page faults.
+> 
+> This works for perf. It doesn't for kprobes, which is why kprobes blacklists those sites.
+> 
+> 
+> > I'm not sure if that's a big
+> > deal or not, but I assume users would do that.  And it's more complex
+> > since you have to emulate those instructions messing with DAIF.
+> > 
+> > I would like to get this fixed, either way.
+> 
+> If the problem is IRQs preventing the very-slow user making forward-progress, it may be
+> possible for kgdb to ask the irqchip code to mute all IRQs on this CPU while it is
+> stepping. The PMR mechanism we use for pNMI could do this for the GIC. (Caveat: I don't
+> know anything about the GIC). For the pi ... no idea.
+> 
+> This doesn't stop you seeing instructions that fault from taking a fault, or taking the
+> breakpoint twice when the CPU tries to run the instruction twice. This is just the debug
+> hardware showing you what happened.
+
+I'm not sure messing around with the GIC is really the right solution.
+But, it's an interesting idea.
+
+I'm not sure how to proceed from here, though.
+
+-corey
+
+> 
+> 
+> Thanks,
+> 
+> James
