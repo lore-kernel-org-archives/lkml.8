@@ -2,243 +2,206 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26308C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B20C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15F620637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582716711;
-	bh=20Bex0iBwW+Hjc5R1LValk3lnpHnU+s836cd8dAggzM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D9OwY9AlJ8wnbLnqdPQ/vUfJWYW7t9rkn5ju+CoMITubAl9RTv2vnun9ojG9vyQYQ
-	 xaqnPQQY2QTIKk/iwKQ5IvLhk+DzULM5BgUvB+s/ixCAgH2V5tBln+HuCwgHLoW8X/
-	 ttP83KPf0TdKNAcaBzI/phvLboZIJ2lAS9P44jA4=
+	by mail.kernel.org (Postfix) with ESMTP id 6FA2720637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iyyhdUuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgBZLbt (ORCPT
+        id S1728194AbgBZLeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:31:49 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:29023 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbgBZLbt (ORCPT
+        Wed, 26 Feb 2020 06:34:10 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51186 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727974AbgBZLeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:31:49 -0500
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01QBVS9L020952;
-        Wed, 26 Feb 2020 20:31:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01QBVS9L020952
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582716689;
-        bh=GDjPsWzrsBjPpbXYwVdhVCcx22MBva9/iaabNI2DfMY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VFgWW43I3nLFtzk4rxWaX8UzpfeU/fgCUgrcJJQPRjywx8t0A6yMcLoADZC/WB9dC
-         DbMyNrdls3VcjjNKpNrc8YBcDnwpjAd8bxSytbCIEIwsTjJc5W4PGQz6UesIgedv1i
-         CNXXNJd4rsk+ScbIuXMEM/gVbNY75/DNJnir10lMhlz/nk4rMF9IRikPHM//aRq8BF
-         exHraW0bd1L8uaxVXdNwXZQNM1dfTe8Ayf6zpUnKSl4TKrpWsJLL1n8swF2FPWod48
-         kBe0JFanZHz/HxnuIkX91izzXTtO2KeinHogtM2Cze2HS/zyKw2Dt65VSzmbD0ZrXH
-         aBzUw3wOxiABg==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id w67so694684vkf.1;
-        Wed, 26 Feb 2020 03:31:28 -0800 (PST)
-X-Gm-Message-State: APjAAAWuUrhhRuyY9gbmQwE3TuPtI5mnA/xjN5IDtkM+u6d9DB2Hgm2n
-        dCOVxEB6AhNXkZV4P/15DOdfRycWNkwT+UdvS3Q=
-X-Google-Smtp-Source: APXvYqwTLN0fkQHFGI4QO8kowzwxB4Wi0DpAxoGD+97b78BtWFJ5UNRU1cvEoaHtK6ivUZ0XHGPj9XqC1TqApqmB1WU=
-X-Received: by 2002:a1f:6344:: with SMTP id x65mr3398079vkb.26.1582716687661;
- Wed, 26 Feb 2020 03:31:27 -0800 (PST)
+        Wed, 26 Feb 2020 06:34:09 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QBXrQT114313;
+        Wed, 26 Feb 2020 05:33:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582716833;
+        bh=ZnBGZvgIStYx2r98zqLhy9qVxfIcvkfqAJpjpNH1QdE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iyyhdUuA5qclJvcr2FJ2ANgZ2qvSBhorZV91iu6t2xS8EEIbBxkOt7yw1SkW1ze8R
+         jCV5aNZ95lATL0Enetav/ls6kiy99cbEph5UnqoUxLmJb4ekX3YaM++Q2Qd2zsPQ2c
+         9lmKM8vV5Wr53U07cxh6BPWcYsU7ftWF9GqqH7E8=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01QBXrgU033020
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 05:33:53 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 05:33:52 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 05:33:52 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01QBXnw3097745;
+        Wed, 26 Feb 2020 05:33:49 -0600
+Subject: Re: dma_mask limited to 32-bits with OF platform device
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
+ <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
+ <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
+ <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
+ <20200217132133.GA27134@lst.de> <b3c56884-128e-a7e1-2e09-0e8de3c3512d@ti.com>
+ <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
+ <15d0ac5f-4919-5852-cd95-93c24d8bdbb9@ti.com>
+ <827fa19d-1990-16bc-33f5-fc82ac0d4a8a@arm.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <3d8ea578-2ecb-1126-3bf0-2dc695687245@ti.com>
+Date:   Wed, 26 Feb 2020 13:33:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200224174129.2664-1-ndesaulniers@google.com> <20200225210250.64366-1-ndesaulniers@google.com>
-In-Reply-To: <20200225210250.64366-1-ndesaulniers@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 26 Feb 2020 20:30:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
-Message-ID: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <827fa19d-1990-16bc-33f5-fc82ac0d4a8a@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Hi,
 
+On 19/02/2020 17:25, Robin Murphy wrote:
+> On 19/02/2020 2:29 pm, Roger Quadros wrote:
+>> Rob,
+>>
+>> On 18/02/2020 19:22, Rob Herring wrote:
+>>> On Tue, Feb 18, 2020 at 2:28 AM Roger Quadros <rogerq@ti.com> wrote:
+>>>>
+>>>> Chrishtoph,
+>>>>
+>>>> The branch works fine for SATA on DRA7 with CONFIG_LPAE once I
+>>>> have the below DT fix.
+>>>>
+>>>> Do you intend to send these fixes to -stable?
+>>>>
+>>>> ------------------------- arch/arm/boot/dts/dra7.dtsi -------------------------
+>>>> index d78b684e7fca..853ecf3cfb37 100644
+>>>> @@ -645,6 +645,8 @@
+>>>>                  sata: sata@4a141100 {
+>>>>                          compatible = "snps,dwc-ahci";
+>>>>                          reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+>>>> +                       #size-cells = <2>;
+>>>> +                       dma-ranges = <0x00000000 0x00000000 0x1 0x00000000>;
+>>>
+>>> dma-ranges should be in the parent (bus) node, not the device node.
+>>
+>> I didn't understand why.
+>>
+>> There are many devices on the parent bus node and all devices might not have the 32-bit DMA limit
+>> the SATA controller has.
+>>
+>> SATA controller is the bus master and the ATA devices are children of the SATA controller.
+> 
+> But SATA is not a memory-mapped bus - in the context of MMIO, the AHCI is the bus-master device, not a bridge or level of interconnect. The DeviceTree spec[1] clearly defines dma-ranges as an address translation between a "parent bus" and a "child bus".
+> 
+> If in the worst case this address-limited interconnect really only exists between the AHCI's master interface and everything else in the system, then you'll have to describe it explicitly to meet DT's expectation of a "bus" (e.g. [2]). Yes, it's a bit clunky, but any scheme has its edge cases.
+> 
+>>  From Documentation/devicetree/booting-without-of.txt
+>>
+>> * DMA Bus master
+>> Optional property:
+>> - dma-ranges: <prop-encoded-array> encoded as arbitrary number of triplets of
+>>          (child-bus-address, parent-bus-address, length). Each triplet specified
+>>          describes a contiguous DMA address range.
+>>          The dma-ranges property is used to describe the direct memory access (DMA)
+>>          structure of a memory-mapped bus whose device tree parent can be accessed
+>>          from DMA operations originating from the bus. It provides a means of
+>>          defining a mapping or translation between the physical address space of
+>>          the bus and the physical address space of the parent of the bus.
+>>          (for more information see the Devicetree Specification)
+>>
+>> * DMA Bus child
+>> Optional property:
+>> - dma-ranges: <empty> value. if present - It means that DMA addresses
+>>          translation has to be enabled for this device.
+> 
+> Disregarding that this was apparently never in ePAPR, so not grandfathered in to DTSpec, and effectively nobody ever has actually followed it (oh, if only...), note "<empty>" - that still doesn't imply that a *non-empty* dma-ranges would be valid on device nodes.
+> 
+> Robin.
+> 
+> [1] https://www.devicetree.org/specifications/
+> [2] https://lore.kernel.org/lkml/20181010120737.30300-20-laurentiu.tudor@nxp.com/
 
-On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Added to kbuild documentation. Provides more official info on building
-> kernels with Clang and LLVM than our wiki.
->
-> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V1 -> V2:
-> * s/On going/ongoing/
-> * add Randy's Suggested-by
+With the patch (in the end). dev->bus_dma_limit is still set to 0 and so is not being used.
 
+from of_dma_configure()
+         ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+...
+         /* ...but only set bus limit if we found valid dma-ranges earlier */
+         if (!ret)
+                 dev->bus_dma_limit = end;
 
-I do not understand this tag update.
+There is no other place bus_dma_limit is set. Looks like every device should inherit that
+from it's parent right?
 
-As far as I saw the review process,
-I do not think Randy deserves to have Suggested-by
-because he just pointed out a typo (on going -> ongoing) :
-https://patchwork.kernel.org/patch/11401189/#23179575
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 64a0f90f5b52..5418c31d4da7 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -680,15 +680,22 @@
+  		};
+  
+  		/* OCP2SCP3 */
+-		sata: sata@4a141100 {
+-			compatible = "snps,dwc-ahci";
+-			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+-			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-			phys = <&sata_phy>;
+-			phy-names = "sata-phy";
+-			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+-			ti,hwmods = "sata";
+-			ports-implemented = <0x1>;
++		sata_aux_bus {
++			#address-cells = <2>;
++			#size-cells = <2>;
++			compatible = "simple-bus";
++			ranges = <0x0 0x0 0x4a140000 0x0 0x1200>;
++			dma-ranges = <0x0 0x0 0x0 0x0 0x1 0x00000000>;
++			sata: sata@4a141100 {
++				compatible = "snps,dwc-ahci";
++				reg = <0x0 0x0 0x0 0x1100>, <0x0 0x1100 0x0 0x7>;
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&sata_phy>;
++				phy-names = "sata-phy";
++				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
++				ti,hwmods = "sata";
++				ports-implemented = <0x1>;
++			};
+  		};
+  
+  		/* OCP2SCP1 */
 
-(or, was there off-line activity I had missed?)
-
-
-> * add Nathan and Sedat's Reviewed-by
-> * Upgrade Kees' Sugguested-by to Reviewed-by
-
-We can add both
-
-Suggested-by: Kees Cook <keescook@chromium.org>
-
-and
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-
-
-I think Suggested-by and Reviewed-by should be orthogonal.
-
-
-Thanks.
-
-
-
-
-
-
-> * s/suffix/prefix/
->
->
->  Documentation/kbuild/index.rst |  1 +
->  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/kbuild/llvm.rst
->
-> diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-> index 0f144fad99a6..3882bd5f7728 100644
-> --- a/Documentation/kbuild/index.rst
-> +++ b/Documentation/kbuild/index.rst
-> @@ -19,6 +19,7 @@ Kernel Build System
->
->      issues
->      reproducible-builds
-> +    llvm
->
->  .. only::  subproject and html
->
-> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> new file mode 100644
-> index 000000000000..d6c79eb4e23e
-> --- /dev/null
-> +++ b/Documentation/kbuild/llvm.rst
-> @@ -0,0 +1,80 @@
-> +==============================
-> +Building Linux with Clang/LLVM
-> +==============================
-> +
-> +This document covers how to build the Linux kernel with Clang and LLVM
-> +utilities.
-> +
-> +About
-> +-----
-> +
-> +The Linux kernel has always traditionally been compiled with GNU toolchains
-> +such as GCC and binutils. Ongoing work has allowed for `Clang
-> +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
-> +used as viable substitutes. Distributions such as `Android
-> +<https://www.android.com/>`_, `ChromeOS
-> +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
-> +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
-> +collection of toolchain components implemented in terms of C++ objects
-> +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
-> +supports C and the GNU C extensions required by the kernel, and is pronounced
-> +"klang," not "see-lang."
-> +
-> +Clang
-> +-----
-> +
-> +The compiler used can be swapped out via `CC=` command line argument to `make`.
-> +`CC=` should be set when selecting a config and during a build.
-> +
-> +       make CC=clang defconfig
-> +
-> +       make CC=clang
-> +
-> +Cross Compiling
-> +---------------
-> +
-> +A single Clang compiler binary will typically contain all supported backends,
-> +which can help simplify cross compiling.
-> +
-> +       ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
-> +
-> +`CROSS_COMPILE` is not used to prefix the Clang compiler binary, instead
-> +`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
-> +example:
-> +
-> +       clang --target aarch64-linux-gnu foo.c
-> +
-> +LLVM Utilities
-> +--------------
-> +
-> +LLVM has substitutes for GNU binutils utilities. These can be invoked as
-> +additional parameters to `make`.
-> +
-> +       make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
-> +         OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
-> +         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-> +         HOSTLD=ld.lld
-> +
-> +Getting Help
-> +------------
-> +
-> +- `Website <https://clangbuiltlinux.github.io/>`_
-> +- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
-> +- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
-> +- IRC: #clangbuiltlinux on chat.freenode.net
-> +- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
-> +- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
-> +- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
-> +
-> +Getting LLVM
-> +-------------
-> +
-> +- http://releases.llvm.org/download.html
-> +- https://github.com/llvm/llvm-project
-> +- https://llvm.org/docs/GettingStarted.html
-> +- https://llvm.org/docs/CMake.html
-> +- https://apt.llvm.org/
-> +- https://www.archlinux.org/packages/extra/x86_64/llvm/
-> +- https://github.com/ClangBuiltLinux/tc-build
-> +- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
-> +- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+cheers,
+-roger
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
