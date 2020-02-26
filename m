@@ -2,104 +2,175 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5349FC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90716C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24522222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="jH3pNYMV"
+	by mail.kernel.org (Postfix) with ESMTP id 6C2F1222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgBZTJG (ORCPT
+        id S1727226AbgBZTKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:09:06 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35066 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgBZTJG (ORCPT
+        Wed, 26 Feb 2020 14:10:22 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56434 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727035AbgBZTKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:09:06 -0500
-Received: by mail-pj1-f66.google.com with SMTP id q39so58627pjc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:09:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=RBcKv7eej+JLMOjCarAoqwQ6jzrRawlUlS6bH7yzUYI=;
-        b=jH3pNYMVwUv/72mC7w7CgqRcwOK8p2sf/c8G8Ep5YP+x8tPMTSk+cTtGI+nPpvgIcG
-         /kgMAfma4Ktlwd6Q5zFdDvJHthZu5ziXldYtLbdtsHCAvYZ4H5djsOgKGaP/7ik2gQyQ
-         7V7QpSl9SuOgsflZ5Bn3d/EGBL6X21CLanxita83+W9aIb01OZQrUciPurqd8JHqCu6l
-         0C/L9+wq/yUEUpltUgXGYMiuGvBkiKc1G39LEDu/BVnVyZ53PT6NkvH7tAUm++hBEumF
-         qD4gclWvTtidtz7y/4bjT66VUh/2tL0Hul9qglJavXuYjC/9IQ7QxT3rAfCW/A+Dl3oX
-         kV1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=RBcKv7eej+JLMOjCarAoqwQ6jzrRawlUlS6bH7yzUYI=;
-        b=gk+SXiS12yWzurF9CJjov9xy/KU9lMVwoJDeO6439fc0rHZDoL7hk7SBBrE7uZfzi5
-         SJVzprBuOs/QgG9G6SiJeEMlooF5kk0yBaqf2wZ2ifpGIt1/IFFEDYaDzHG8hB6tlk+a
-         obgkVn1dL1kTo7wUkB7sbaQpAnvMuCAZioVlayAQU/a6r/FVFyXMjIqt/jQO8iaiIPW8
-         QuHJ1u6BkXHODpDM6245pNZMH7BBfFxcy4FbA2DfnYOMBeYj7y7NL0ONCiA8mfKuYBS+
-         fj79vtyN04Na05lin5naN41XTRNlAMy/uGD5CkWps0k5gZiUce45Y+hDFP4pH4eKNrGN
-         /ifQ==
-X-Gm-Message-State: APjAAAWq4rz7Pc7UvxfpJSEAk+jymsij4kxaHfFv9C6iDuLBNpN3DrNW
-        gNfHiWKgwtd91E/kV21kmYFhv6ceqZA=
-X-Google-Smtp-Source: APXvYqyO4gk5if6zO230FzcuDCu0SkToZBRtOLraR9jSQJV5zkQva/cw16xGtCoVN/ullZboFbqYFQ==
-X-Received: by 2002:a17:90a:2486:: with SMTP id i6mr604312pje.9.1582744145181;
-        Wed, 26 Feb 2020 11:09:05 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:55da:f727:3bee:8a? ([2601:646:c200:1ef2:55da:f727:3bee:8a])
-        by smtp.gmail.com with ESMTPSA id y190sm4003447pfb.82.2020.02.26.11.09.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 11:09:04 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [patch 02/10] x86/mce: Disable tracing and kprobes on do_machine_check()
-Date:   Wed, 26 Feb 2020 11:09:03 -0800
-Message-Id: <F7C318D0-D9B8-4984-AE84-2E903837EED5@amacapital.net>
-References: <20200226185945.GC18400@hirez.programming.kicks-ass.net>
-Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-In-Reply-To: <20200226185945.GC18400@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17D50)
+        Wed, 26 Feb 2020 14:10:22 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QJ9cg5118155
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:10:21 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydq6whb8q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:10:20 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Wed, 26 Feb 2020 19:10:18 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Feb 2020 19:10:15 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QJAEhm53674226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 19:10:14 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0150C11C04C;
+        Wed, 26 Feb 2020 19:10:14 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71B3111C058;
+        Wed, 26 Feb 2020 19:10:11 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.92.140])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 19:10:11 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, zohar@linux.ibm.com,
+        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH] ima: add a new CONFIG for loading arch-specific policies
+Date:   Wed, 26 Feb 2020 14:10:07 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 20022619-0008-0000-0000-00000356B53E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022619-0009-0000-0000-00004A77D515
+Message-Id: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_07:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 adultscore=0 impostorscore=0
+ phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002260119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Every time a new architecture defines the IMA architecture specific
+functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+include file needs to be updated. To avoid this "noise", this patch
+defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+the different architectures to select it.
 
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Philipp Rudo <prudo@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/Kconfig           | 2 +-
+ arch/s390/Kconfig              | 1 +
+ arch/x86/Kconfig               | 1 +
+ include/linux/ima.h            | 3 +--
+ security/integrity/ima/Kconfig | 9 +++++++++
+ 5 files changed, 13 insertions(+), 3 deletions(-)
 
-> On Feb 26, 2020, at 10:59 AM, Peter Zijlstra <peterz@infradead.org> wrote:=
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 497b7d0b2d7e..b8ce1b995633 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -246,6 +246,7 @@ config PPC
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select THREAD_INFO_IN_TASK
+ 	select VIRT_TO_BUS			if !PPC64
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if PPC_SECURE_BOOT
+ 	#
+ 	# Please keep this list sorted alphabetically.
+ 	#
+@@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
+ 	prompt "Enable secure boot support"
+ 	bool
+ 	depends on PPC_POWERNV
+-	depends on IMA_ARCH_POLICY
+ 	help
+ 	  Systems with firmware secure boot enabled need to define security
+ 	  policies to extend secure boot to the OS. This config allows a user
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8abe77536d9d..90ff3633ade6 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -195,6 +195,7 @@ config S390
+ 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+ 	select SWIOTLB
+ 	select GENERIC_ALLOCATOR
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT
+ 
+ 
+ config SCHED_OMIT_FRAME_POINTER
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..cafa66313fe2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -230,6 +230,7 @@ config X86
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
+ 	select PROC_PID_ARCH_STATUS		if PROC_FS
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if EFI
+ 
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 1659217e9b60..aefe758f4466 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+ extern void ima_add_kexec_buffer(struct kimage *image);
+ #endif
+ 
+-#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+-	|| defined(CONFIG_PPC_SECURE_BOOT)
++#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+ extern bool arch_ima_get_secureboot(void);
+ extern const char * const *arch_get_ima_policy(void);
+ #else
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index 3f3ee4e2eb0d..d17972aa413a 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+ 	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+ 	depends on SYSTEM_TRUSTED_KEYRING
+ 	default y
++
++config IMA_SECURE_AND_OR_TRUSTED_BOOT
++	bool
++	depends on IMA
++	depends on IMA_ARCH_POLICY
++	default n
++	help
++	   This option is selected by architectures to enable secure and/or
++	   trusted boot based on IMA runtime policies.
+-- 
+2.18.1
 
->=20
-> =EF=BB=BFOn Wed, Feb 26, 2020 at 07:42:37PM +0100, Borislav Petkov wrote:
->> On Wed, Feb 26, 2020 at 09:28:51AM -0800, Andy Lutomirski wrote:
->>>> It entirely depends on what the goal is :-/ On the one hand I see why
->>>> people might want function tracing / kprobes enabled, OTOH it's all
->>>> mighty frigging scary. Any tracing/probing/whatever on an MCE has the
->>>> potential to make a bad situation worse -- not unlike the same on #DF.
->>=20
->> FWIW, I had this at the beginning of the #MC handler in a feeble attempt
->> to poke at this:
->>=20
->> +       hw_breakpoint_disable();
->> +       static_key_disable(&__tracepoint_read_msr.key);
->> +       tracing_off();
->=20
-> You can't do static_key_disable() from an IST
-
-Can we set a percpu variable saying =E2=80=9Cin some stupid context, don=E2=80=
-=99t trace=E2=80=9D?=
