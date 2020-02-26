@@ -2,120 +2,79 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBDAC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AED4C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA51E24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="F43a6Y7B"
+	by mail.kernel.org (Postfix) with ESMTP id 3E68E21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBZOoe (ORCPT
+        id S1727913AbgBZOpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:44:34 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:55705 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbgBZOoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:44:34 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48SJV63yfQz9tyg0;
-        Wed, 26 Feb 2020 15:44:30 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=F43a6Y7B; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YgDcVuTElqgx; Wed, 26 Feb 2020 15:44:30 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48SJV62fxZz9tyfy;
-        Wed, 26 Feb 2020 15:44:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582728270; bh=eO3lF+ZJhQsxeyroK19gjLYfnwGpenLTxOUpnfp6wIk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=F43a6Y7Bxj1cRpGgJ7No4+FNv3wTeZbfoxyElYJ0hEHpoYieZmf8wLqib3772js/j
-         V7r+2th2c39Iqgq6QxqRNoWCuCyEV5w4Ghrc4DhY5VHlRD+vD7FF2/hwfv7xQkX5JV
-         +qPa3ePbwcE1RNrdMbzmCHIISGg1CoUMAAXeaTgU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C9FD18B857;
-        Wed, 26 Feb 2020 15:44:31 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ES6wKYHYICe8; Wed, 26 Feb 2020 15:44:31 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D97098B776;
-        Wed, 26 Feb 2020 15:44:29 +0100 (CET)
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
- table helpers
-To:     Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
- <1582726182.7365.123.camel@lca.pw> <1582726340.7365.124.camel@lca.pw>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <eb154054-68ab-a659-065b-f4f7dcbb8671@c-s.fr>
-Date:   Wed, 26 Feb 2020 15:44:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 09:45:10 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:53595 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgBZOpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:45:09 -0500
+X-Originating-IP: 90.89.41.158
+Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 6D1186000A;
+        Wed, 26 Feb 2020 14:45:01 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk
+Subject: [PATCH net-next] net: phy: mscc: add missing shift for media operation mode selection
+Date:   Wed, 26 Feb 2020 15:40:34 +0100
+Message-Id: <20200226144034.1519658-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <1582726340.7365.124.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds a missing shift for the media operation mode selection.
+This does not fix the driver as the current operation mode (copper) has
+a value of 0, but this wouldn't work for other modes.
 
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/phy/mscc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Le 26/02/2020 à 15:12, Qian Cai a écrit :
-> On Wed, 2020-02-26 at 09:09 -0500, Qian Cai wrote:
->> On Mon, 2020-02-17 at 08:47 +0530, Anshuman Khandual wrote:
->>
->> How useful is this that straightly crash the powerpc?
-> 
-> And then generate warnings on arm64,
-> 
-> [  146.634626][    T1] debug_vm_pgtable: debug_vm_pgtable: Validating
-> architecture page table helpers
-> [  146.643995][    T1] ------------[ cut here ]------------
-> [  146.649350][    T1] virt_to_phys used for non-linear address:
-> (____ptrval____) (start_kernel+0x0/0x580)
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 937ac7da2789..880425466bc8 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -2813,8 +2813,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 
+ 	val = phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
+ 	val &= ~(MEDIA_OP_MODE_MASK | VSC8584_MAC_IF_SELECTION_MASK);
+-	val |= MEDIA_OP_MODE_COPPER | (VSC8584_MAC_IF_SELECTION_SGMII <<
+-				       VSC8584_MAC_IF_SELECTION_POS);
++	val |= (MEDIA_OP_MODE_COPPER << MEDIA_OP_MODE_POS) |
++	       (VSC8584_MAC_IF_SELECTION_SGMII << VSC8584_MAC_IF_SELECTION_POS);
+ 	ret = phy_write(phydev, MSCC_PHY_EXT_PHY_CNTL_1, val);
+ 
+ 	ret = genphy_soft_reset(phydev);
+@@ -3276,7 +3276,7 @@ static int vsc8514_config_init(struct phy_device *phydev)
+ 		return ret;
+ 
+ 	ret = phy_modify(phydev, MSCC_PHY_EXT_PHY_CNTL_1, MEDIA_OP_MODE_MASK,
+-			 MEDIA_OP_MODE_COPPER);
++			 MEDIA_OP_MODE_COPPER << MEDIA_OP_MODE_POS);
+ 
+ 	if (ret)
+ 		return ret;
+-- 
+2.24.1
 
-Must be something wrong with the following in debug_vm_pgtable()
-
-	paddr = __pa(&start_kernel);
-
-Is there any explaination why start_kernel() is not in linear memory on 
-ARM64 ?
-
-Christophe
