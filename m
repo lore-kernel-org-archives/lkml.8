@@ -2,186 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB11C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3252C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E0A2467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582729620;
-	bh=QT6GUyLzIUdRMVSaNAxDiNdKzTo0kQ+EQU+2BK797Sw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tVjsOVqA+5FZ5DvJr840MNcliKtuXtHTCAd3aS9XWk/9htBKdPGmkabDhGfRMTFis
-	 jNN4t+4WEmeJLhOyJlaO0TzqbDJ4X/srv2C0MC/26eA3ejmOs3XFCdja92VbJB1IGf
-	 dPF5ONU+6yEHzX9O/5FAgclX9zrBCdSZw6qjHnXs=
+	by mail.kernel.org (Postfix) with ESMTP id 92E352467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgBZPG7 (ORCPT
+        id S1727855AbgBZPH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgBZPG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:06:58 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41E122467D;
-        Wed, 26 Feb 2020 15:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582729617;
-        bh=QT6GUyLzIUdRMVSaNAxDiNdKzTo0kQ+EQU+2BK797Sw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=FFkA0N8gusvWYmfVUiPUaZKzj8nUanEMpm09zuCMQphmDbzFDySX7V8AW8zC4dMbj
-         L1pOu3+jZuFEldIfaMbsKANrPIeQxVLBfl9Ecsgqxre6DfLfwizpPveoN5KwIKCRWZ
-         Sxr/hu+ZExeF+XTdQnCSJ2tk2GbIKQ4RDLecOr1w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D1D253521EAF; Wed, 26 Feb 2020 07:06:56 -0800 (PST)
-Date:   Wed, 26 Feb 2020 07:06:56 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200226150656.GB2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com>
- <20200223011018.GB2935@paulmck-ThinkPad-P72>
- <20200224174030.GA22138@pc636>
- <20200225020705.GA253171@google.com>
- <20200225185400.GA27919@pc636>
- <20200225224745.GX2935@paulmck-ThinkPad-P72>
- <20200226130440.GA30008@pc636>
+        Wed, 26 Feb 2020 10:07:27 -0500
+Received: from outbound-smtp61.blacknight.com ([46.22.136.249]:52239 "EHLO
+        outbound-smtp61.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726990AbgBZPH1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:07:27 -0500
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp61.blacknight.com (Postfix) with ESMTPS id 28343FA7C4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:07:25 +0000 (GMT)
+Received: (qmail 21281 invoked from network); 26 Feb 2020 15:07:25 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 26 Feb 2020 15:07:25 -0000
+Date:   Wed, 26 Feb 2020 15:07:23 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH] sched/fair: Fix unused prototype warning
+Message-ID: <20200226150723.GD3818@techsingularity.net>
+References: <20200226121244.7524-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200226130440.GA30008@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200226121244.7524-1-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 02:04:40PM +0100, Uladzislau Rezki wrote:
-> On Tue, Feb 25, 2020 at 02:47:45PM -0800, Paul E. McKenney wrote:
-> > On Tue, Feb 25, 2020 at 07:54:00PM +0100, Uladzislau Rezki wrote:
-> > > > > > > I was thinking a 2 fold approach (just thinking out loud..):
-> > > > > > > 
-> > > > > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
-> > > > > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
-> > > > > > > queue that.
-> > > > > > > 
-> > > > > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
-> > > > > gets failed in atomic context? Or we can just consider it as out of
-> > > > > memory and another variant is to say that headless object can be called
-> > > > > from preemptible context only.
-> > > > 
-> > > > Yes that makes sense, and we can always put disclaimer in the API's comments
-> > > > saying if this object is expected to be freed a lot, then don't use the
-> > > > headless-API to be extra safe.
-> > > > 
-> > > Agree.
-> > > 
-> > > > BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
-> > > > the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
-> > > > there seems to be bigger problems in the system any way. I would say let us
-> > > > write a patch to allocate there and see what the -mm guys think.
-> > > > 
-> > > OK. It might be that they can offer something if they do not like our
-> > > approach. I will try to compose something and send the patch to see.
-> > > The tree.c implementation is almost done, whereas tiny one is on hold.
-> > > 
-> > > I think we should support batching as well as bulk interface there.
-> > > Another way is to workaround head-less object, just to attach the head
-> > > dynamically using kmalloc() and then call_rcu() but then it will not be
-> > > a fair headless support :)
-> > > 
-> > > What is your view?
-> > > 
-> > > > > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
-> > > > > > > synchronize_rcu() inline with it.
-> > > > > > > 
-> > > > > > >
-> > > > > What do you mean here, Joel? "grow an rcu_head on the stack"?
-> > > > 
-> > > > By "grow on the stack", use the compiler-allocated rcu_head on the
-> > > > kfree_rcu() caller's stack.
-> > > > 
-> > > > I meant here to say, if we are not in atomic context, then we use regular
-> > > > GFP_KERNEL allocation, and if that fails, then we just use the stack's
-> > > > rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
-> > > > the allocation failure would mean the need for RCU to free some memory is
-> > > > probably great.
-> > > > 
-> > > Ah, i got it. I thought you meant something like recursion and then
-> > > unwinding the stack back somehow :)
-> > > 
-> > > > > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
-> > > > > > > between the 2 cases.
-> > > > > > > 
-> > > > > If the current context is preemptable then we can inline synchronize_rcu()
-> > > > > together with freeing to handle such corner case, i mean when we are run
-> > > > > out of memory.
-> > > > 
-> > > > Ah yes, exactly what I mean.
-> > > > 
-> > > OK.
-> > > 
-> > > > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
-> > > > > have a look at preempt_count of current process? If we have for example
-> > > > > nested rcu_read_locks:
-> > > > > 
-> > > > > <snip>
-> > > > > rcu_read_lock()
-> > > > >     rcu_read_lock()
-> > > > >         rcu_read_lock()
-> > > > > <snip>
-> > > > > 
-> > > > > the counter would be 3.
-> > > > 
-> > > > No, because preempt_count is not incremented during rcu_read_lock(). RCU
-> > > > reader sections can be preempted, they just cannot goto sleep in a reader
-> > > > section (unless the kernel is RT).
-> > > > 
-> > > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
-> > > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
-> > > then we skip it and consider as atomic. Something like:
-> > > 
-> > > <snip>
-> > > static bool is_current_in_atomic()
-> > > {
-> > > #ifdef CONFIG_PREEMPT_RCU
-> > 
-> > If possible: if (IS_ENABLED(CONFIG_PREEMPT_RCU))
-> > 
-> > Much nicer than #ifdef, and I -think- it should work in this case.
-> > 
-> OK. Thank you, Paul!
+On Wed, Feb 26, 2020 at 12:12:44PM +0000, Valentin Schneider wrote:
+> Building against the latest tip/sched/core
 > 
-> There is one point i would like to highlight it is about making caller
-> instead to be responsible for atomic or not decision. Like how kmalloc()
-> works, it does not really know the context it runs on, so it is up to
-> caller to inform.
+>   a0f03b617c3b ("sched/numa: Stop an exhastive search if a reasonable swap candidate or idle CPU is found")
 > 
-> The same way:
+> with the arm64 defconfig (which doesn't have CONFIG_SCHED_SMT set) leads
+> to:
 > 
-> kvfree_rcu(p, atomic = true/false);
+>   kernel/sched/fair.c:1525:20: warning: ???test_idle_cores??? declared ???static??? but never defined [-Wunused-function]
+>    static inline bool test_idle_cores(int cpu, bool def);
+> 		      ^~~~~~~~~~~~~~~
 > 
-> in this case we could cover !CONFIG_PREEMPT case also.
+> Rather than define it in its own CONFIG_SCHED_SMT #define island, bunch it
+> up with test_idle_cores().
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 
-Understood, but couldn't we instead use IS_ENABLED() to work out the
-actual situation at runtime and relieve the caller of this burden?
-Or am I missing a corner case?
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
-							Thanx, Paul
+Ingo, what is your preferred method for dealing with this situation
+in tip? A resubmission of "sched/numa: Stop an exhastive search if a
+reasonable swap candidate or idle CPU is found" with these folded together
+or Valentin's patch on top?
+
+-- 
+Mel Gorman
+SUSE Labs
