@@ -2,69 +2,131 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86168C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B55C4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B86C24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582679473;
-	bh=rjupCGwxw7zOnxBHoDIJMEt8I2FYeBBqHK17L7uhGYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YOYjj/zRLpoQwHHCIToBnaH1IS6dTeug4FMYEz9YhZX3OR/fQkxRS4nv24GvFyx0e
-	 Pa8vdqcu//USpMZ5vtdwWt0QAX895gGp3Fd1jxKGwGkXNdm1AIvBkFFna4gaEQc0WA
-	 dolbmh+Bg8FFaMTB3a3VXBnKFAP8uCx1FErSP5Jk=
+	by mail.kernel.org (Postfix) with ESMTP id D3F5C20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o80oA2ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgBZBLL (ORCPT
+        id S1729998AbgBZBLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729828AbgBZBLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:11:10 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B243722464;
-        Wed, 26 Feb 2020 01:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582679470;
-        bh=rjupCGwxw7zOnxBHoDIJMEt8I2FYeBBqHK17L7uhGYQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FGhs0a6QLHHnPq/xFMnROfP4NZUiltFYXpYdlHpLcT5gw9hXQn3upwnX4A8HM5/9I
-         yLBbi2iHmGaSvy13xqoQulpPPCYmpGOahNM3irVeffUkW2kr3beCCaIDhBbg3gG1PB
-         lZouvkB+I2p91OgoDNimJgM3ExjpJtvTjMmco+9U=
-Date:   Wed, 26 Feb 2020 02:11:08 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 03/10] x86/entry/32: Force MCE through do_mce()
-Message-ID: <20200226011107.GG9599@lenoir>
-References: <20200225213636.689276920@linutronix.de>
- <20200225220216.428188397@linutronix.de>
+        Tue, 25 Feb 2020 20:11:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41434 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729346AbgBZBLj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:11:39 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j9so514181pfa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:11:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=p+ckrLz3LRCoSFrfiU30gmbNyc8j6wjK1s1RA2TWajk=;
+        b=o80oA2wwqENPftna7/zKRVKoL3DudW8CJuoNGJhKQurPflg4m7wY+s5rdqW1b+zdpW
+         LoZWVXYuj2kyYWbb2fGxrBwXJpDzoAR7jwOjWCAh/sMSzynLVtPA7Jitj9iy3uJZeokJ
+         BVZn+tnxjRxDXBaXScRBqhEb0zR8BnO6rSER1IyfwRTrfcHXbJ8p3T+zM9czSbbr4SMo
+         0F5uag648+xMEEUTw6hyV+t66j69cLVziSXZ+qdsWweHC2VOPCrXrEGbUo6GZYMxVzvY
+         aUIj/DiaWh8dZVW91xEsFwPIn1D4mAJUmGxxLjyYMHaRlpQYDeUO5fPrKkyqgjV55xXz
+         l9mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=p+ckrLz3LRCoSFrfiU30gmbNyc8j6wjK1s1RA2TWajk=;
+        b=OfRr5ccerwSkusm7TYof0chvhqPM+HC9qIIMKiEtM9YAEGBml54D/6G0C54NweXj8h
+         AqFbaJzGLOq9njA4kK1uPnpJmiaKtz3ayewUmGuHrigIEUtVJRWn+e+0Ida2JWdBfVLo
+         Gltca1Fo/hKeKgSJuQmoHbEESradXDocew8KI6BoW24+YXMQEtUk5XYq4joZ7sdH2nUX
+         gr9oh/KkTxDhawgVp3E4PG+R9TlitDMbGL/VpH1LrzxTDNmZOh0PDHburrn5tLDWWl/Q
+         CPhz2gvXp1C3jh5DKyAAQvmR8SZRx2SHmt0oR30NAX5T9nEZ6HpbdVcJEm+Glj68y8Ay
+         TAlA==
+X-Gm-Message-State: APjAAAXx7gh9yY38JtDP0iUpJ0ZC/2OaglFtpT5u+whDl3P124Sx/mjQ
+        QHsjI3duMTX8Cmeb4FRaepgYvg==
+X-Google-Smtp-Source: APXvYqwBrVhiEx4l0romklhpTH+y+CgXMko1VU+ZOxfZOJLkAj7ZLDO3KH4v0RJodC8aSrvfaOpG6g==
+X-Received: by 2002:a62:19d1:: with SMTP id 200mr1501438pfz.26.1582679497101;
+        Tue, 25 Feb 2020 17:11:37 -0800 (PST)
+Received: from ?IPv6:240e:362:4c3:8800:a057:bb7f:18d7:2e? ([240e:362:4c3:8800:a057:bb7f:18d7:2e])
+        by smtp.gmail.com with ESMTPSA id z10sm204892pgz.88.2020.02.25.17.11.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 17:11:36 -0800 (PST)
+Subject: Re: [PATCH] MAINTAINERS: add maintainers for uacce
+To:     Dave Jiang <dave.jiang@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
+ <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
+From:   zhangfei <zhangfei.gao@linaro.org>
+Message-ID: <0ed68faa-63f1-2bcb-6044-11629a610b9b@linaro.org>
+Date:   Wed, 26 Feb 2020 09:11:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225220216.428188397@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:36:39PM +0100, Thomas Gleixner wrote:
-> Remove the pointless difference between 32 and 64 bit to make further
-> unifications simpler.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+
+On 2020/2/26 上午12:02, Dave Jiang wrote:
+>
+>
+> On 2/24/20 11:17 PM, Zhangfei Gao wrote:
+>> Add Zhangfei Gao and Zhou Wang as maintainers for uacce
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+>> ---
+>>   MAINTAINERS | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 38fe2f3..22e647f 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -17039,6 +17039,16 @@ W:    http://linuxtv.org
+>>   S:    Maintained
+>>   F:    drivers/media/pci/tw686x/
+>>   +UACCE ACCELERATOR FRAMEWORK
+>> +M:    Zhangfei Gao <zhangfei.gao@linaro.org>
+>> +M:    Zhou Wang <wangzhou1@hisilicon.com>
+>> +S:    Maintained
+>> +F:    Documentation/ABI/testing/sysfs-driver-uacce
+>> +F:    Documentation/misc-devices/uacce.rst
+>> +F:    drivers/misc/uacce/
+>> +F:    include/linux/uacce.h
+>> +F:    include/uapi/misc/uacce/
+>
+> Mailing list for patch submission?
+> +L: linux-accelerators@lists.ozlabs.org ?
+
+Thanks Dave
+
+How about adding both
+linux-accelerators@lists.ozlabs.org
+linux-kernel@vger.kernel.org
+Since the patches will go to misc tree.
+
+Thanks
