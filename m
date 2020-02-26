@@ -2,113 +2,126 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD845C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDB3C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F9324656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582708138;
-	bh=H5YQMAe/crf9DHOdvFbziDKcP0GzpJDJSP5tTKD1foM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jNxCXDpYeSas3ai7v6dVbLjWivX+AVA0H2rLZuASJ0IHSkt7qbbKZSdkIQixck/0G
-	 gvK5/PCozl9Rm26YqvWqQOVjfb+HkxVeOrNOWbvCf6pD1rpZu9mK8iTYwTuXVw3H10
-	 YhlhGtdoyF39SgXrvavGzGaUfKnsxRBoTipST0Mo=
+	by mail.kernel.org (Postfix) with ESMTP id 32B1A2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CEG0EYD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbgBZJI5 (ORCPT
+        id S1727693AbgBZJJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:08:57 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36649 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgBZJI5 (ORCPT
+        Wed, 26 Feb 2020 04:09:17 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33844 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgBZJJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:08:57 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so2128295wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 01:08:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WFEIr9nnOW1UYtZBYSkNlGUPhLd1mBP0PtrFmzLzvzo=;
-        b=dsIIfw08mIWZX+E6l9Z0eiIhYUk4rF68jdQ8JAzSgfmOgP951BEUtMLWI6Awb/bbZg
-         8JylXjmlkN1Bw7oiU9rcaX4zbEJVzEa2yu4oFG8bkZ2QvGN7Tw6HUKpHcppcjQTpqt7t
-         llq+pKQb8x0BVxBx8mL2mQqFvrUMuF5OYguMhMx4iLysj7jaC7fgW5iESsJe4jl7cDC5
-         tGRc85s/NtyxrpZuIidJOmrJuRqPFbvQp7nq86VWx0/BKZzZxTQb65B8SaIOhrHVEgti
-         wLsWbnMcWT9biawhmKDmke5AVTiBym8MecRcsHM2jBT1GeF/6CqhpwIji7Zr/8NBz39y
-         CZjg==
-X-Gm-Message-State: APjAAAURUAOCRh83Sht1rS8QlcW/0d+V3M/v6asbBSvZ8g2qVdPzG3t4
-        yJ0uqn7IA2sg8JtKZAnMWUE=
-X-Google-Smtp-Source: APXvYqznaluSdyT5HEc2CI7VtV7sDRhSBWd3vC/0MUtPYUuvnUN9CWBfBs4yohy3o2BHDi7VByo5ug==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr4146905wma.159.1582708135122;
-        Wed, 26 Feb 2020 01:08:55 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a7sm2353805wrm.29.2020.02.26.01.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 01:08:54 -0800 (PST)
-Date:   Wed, 26 Feb 2020 10:08:53 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200226090853.GC3771@dhcp22.suse.cz>
-References: <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain>
- <20200219214513.GL3420@suse.de>
- <20200219224231.GA5190@sultan-book.localdomain>
- <20200220101945.GN3420@suse.de>
- <20200221042232.GA2197@sultan-book.localdomain>
- <20200221080737.GK20509@dhcp22.suse.cz>
- <20200221210824.GA3605@sultan-book.localdomain>
- <20200225090945.GJ22443@dhcp22.suse.cz>
- <CALvZod6MW62-+nEw-d0jKxFK9mspOY_tt2JRTDYOrOVyM9_QHw@mail.gmail.com>
+        Wed, 26 Feb 2020 04:09:16 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q98kPl100212;
+        Wed, 26 Feb 2020 03:08:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582708126;
+        bh=715M2fEsQcQ9pGCNA+WdZUDo8i9Ym6s9zxFMk/XbQHM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CEG0EYD07SZfu0ZemKPihOoI30dStRLAC+bcraQqR//LNHsqF4Akstjvlb/UI5lY4
+         54RSGgkjvojx/j0Cf2rAAZ2SD0nnTwpy+54VZG5VizfndJzvMQ2MKGcdIWrbBqX6Ll
+         KlzqFMqsNnWT1ohsOhwZI4DsDIr00JJUYoGGAPHU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q98kCs075706
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 03:08:46 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 03:08:46 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 03:08:45 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01Q98fuI103976;
+        Wed, 26 Feb 2020 03:08:41 -0600
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+ <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+ <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+Date:   Wed, 26 Feb 2020 14:40:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod6MW62-+nEw-d0jKxFK9mspOY_tt2JRTDYOrOVyM9_QHw@mail.gmail.com>
+In-Reply-To: <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-02-20 14:30:03, Shakeel Butt wrote:
-> On Tue, Feb 25, 2020 at 1:10 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> [snip]
-> >
-> > The proper fix should, however, check the amount of reclaimable pages
-> > and back off if they cannot meet the target IMO. We cannot rely on the
-> > general reclaimability here because that could really be thrashing.
-> >
+Hi Marc,
+
+On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
+> On 2/21/20 9:31 AM, Faiz Abbas wrote:
+>> Hi Rob,
+>>
+>> On 20/02/20 2:05 am, Rob Herring wrote:
+>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>>>> Some CAN transceivers have a standby line that needs to be asserted
+>>>> before they can be used. Model this GPIO lines as an optional
+>>>> fixed-regulator node. Document bindings for the same.
+>>>>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>>>  1 file changed, 3 insertions(+)
+>>>
+>>> This has moved to DT schema in my tree, so please adjust it and resend.
+>>
+>> Ok.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> index ed614383af9c..f17e2a5207dc 100644
+>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>>>  			  that can be used for CAN/CAN-FD modes. See
+>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>  			  for details.
+>>>> +
+>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+>>>
+>>> The supply for a transceiver should go in the transceiver node.
+>>>
+>>
+>> Marc, while I have you here, do you agree with this?
 > 
-> "check the amount of reclaimable pages" vs "cannot rely on the general
-> reclaimability"? Can you clarify?
+> I'll look into the details later today.
+> 
 
-kswapd targets the high watermark and if your reclaimable memory (aka
-zone_reclaimable_pages) is lower than the high wmark then it cannot
-simply satisfy that target, right? Keeping reclaim in that situations
-seems counter productive to me because you keep evicting pages that
-might be reused without any feedback mechanism on the actual usage.
-Please see my other reply.
+Sure. Be sure to take another look at my attempt to use the transceiver
+with a phy driver some time ago.
 
-> BTW we are seeing a similar situation in our production environment.
-> We have swappiness=0, no swap from kswapd (because we don't swapout on
-> pressure, only on cold age) and too few file pages, the kswapd goes
-> crazy on shrink_slab and spends 100% cpu on it.
+https://lore.kernel.org/patchwork/patch/1006238/
 
-I am not sure this is the same problem. It seems that the slab shrinkers
-are not really a bottle neck here. I would recommend you to identify
-which shrinkers are eating the cpu time in your case.
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+Faiz
