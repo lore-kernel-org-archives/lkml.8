@@ -2,136 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4B1C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D245BC4BA1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE20924680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90ED24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="X6G/6ilI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgBZRtc (ORCPT
+        id S1727141AbgBZRth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:49:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:39834 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbgBZRtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:49:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 475F130E;
-        Wed, 26 Feb 2020 09:49:31 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFC373F881;
-        Wed, 26 Feb 2020 09:49:29 -0800 (PST)
-Subject: Re: [PATCH 2/3] EDAC: synopsys: Reorganizing the output message for
- CE/UE
-To:     Sherry Sun <sherry.sun@nxp.com>
-Cc:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        rrichter@marvell.com, michal.simek@xilinx.com,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com, frank.li@nxp.com
-References: <1582537357-10339-1-git-send-email-sherry.sun@nxp.com>
- <1582537357-10339-3-git-send-email-sherry.sun@nxp.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <39c63f4c-2e39-4478-1de1-b0b564a7f4e1@arm.com>
-Date:   Wed, 26 Feb 2020 17:49:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 12:49:37 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:51634 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgBZRth (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:49:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x4Vj5piDPv46jmto0S7kmzvMB3oeWgg0MLt8q+7J4pg=; b=X6G/6ilIcCd1TgGGgK+EjpM9H
+        YeSpKBMXuBd0P6L1c1In2MmwfFSlk+y3/LR9g4MWSKAtjqupNwvexTcrfOa2i7G4KOZFg+LqFa7mL
+        Uyb7HqBUxvXggFxapouOssHYL+sac+84WVWKFEZNBCB3E7GTDP2FP5rZzkvrE2TvSQPHahtsZCOyz
+        /93Wf6cSUY/ScvGy4ad5pg5ZnqX12cPJy858sASWPVsPqWqVZDWWtVozIxc33kYefFs9QsSR896Hz
+        p/FGW7P/75xIZM5YMNFNDGNVxgich89QGMaLlXdZxt9PWMwhh9M3VIM2o2jvNnJC8DRj7uIz1Ts/m
+        4dfpdcGJA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:53116)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j70o4-0000ZM-Bz; Wed, 26 Feb 2020 17:49:12 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j70nx-0000A1-E1; Wed, 26 Feb 2020 17:49:05 +0000
+Date:   Wed, 26 Feb 2020 17:49:05 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Nicolas Pitre <nico@fluxnic.net>, Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: boot: Fix ATAGs with appended DTB
+Message-ID: <20200226174905.GE25745@shell.armlinux.org.uk>
+References: <CGME20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83@eucas1p1.samsung.com>
+ <20200225144749.19815-1-geert+renesas@glider.be>
+ <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <1582537357-10339-3-git-send-email-sherry.sun@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sherry,
-
-On 24/02/2020 09:42, Sherry Sun wrote:
-> The origin way which call sprintf() function two or three times to
-
-(original? 'The current way' may be better)
-
-
-> output message for CE/UE is incorrect, because it won't output all the
-> message needed, instead it will only output the last message in
-> sprintf().
-
-Nice!
-
-
-> So the simplest and most effective way to fix this problem
-> is reorganizing all the output message needed for CE/UE into one
-> sprintf() function.
-
-This is a bug, but its in the middle of a series doing some cleanup, meaning the
-maintainer can't easily pick it up in isolation. Could you post it separately?
-
-'Reorganize' in the subject makes this sound like cleanup. Would "EDAC: synopsys: Fix back
-to back snprintf() messages for CE/UE" be better?
-
-
-Please add:
-Fixes: b500b4a029d57 ("EDAC, synopsys: Add ECC support for ZynqMP DDR controller")
-
-in the signed-off-by area so that stable trees pick this up.
-
-and for what its worth:
-Reviewed-by: James Morse <james.morse@arm.com>
-
-
-Thanks!
-
-James
-
-
-
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index 7046b8929522..ef7e907c7956 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-> @@ -485,20 +485,14 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
->  		pinf = &p->ceinfo;
->  		if (!priv->p_data->quirks) {
->  			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "DDR ECC error type:%s Row %d Bank %d Col %d ",
-> -				  "CE", pinf->row, pinf->bank, pinf->col);
-> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "Bit Position: %d Data: 0x%08x\n",
-> +				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
-> +				 "CE", pinf->row, pinf->bank, pinf->col,
->  				 pinf->bitpos, pinf->data);
->  		} else {
->  			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "DDR ECC error type:%s Row %d Bank %d ",
-> -				  "CE", pinf->row, pinf->bank);
-> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "BankGroup Number %d Block Number %d ",
-> -				 pinf->bankgrpnr, pinf->blknr);
-> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "Bit Position: %d Data: 0x%08x\n",
-> +				 "DDR ECC error type:%s Row %d Bank %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
-> +				 "CE", pinf->row, pinf->bank,
-> +				 pinf->bankgrpnr, pinf->blknr,
->  				 pinf->bitpos, pinf->data);
->  		}
->  
-> @@ -515,10 +509,8 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
->  				"UE", pinf->row, pinf->bank, pinf->col);
->  		} else {
->  			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "DDR ECC error type :%s Row %d Bank %d ",
-> -				 "UE", pinf->row, pinf->bank);
-> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-> -				 "BankGroup Number %d Block Number %d",
-> +				 "DDR ECC error type :%s Row %d Bank %d BankGroup Number %d Block Number %d",
-> +				 "UE", pinf->row, pinf->bank,
->  				 pinf->bankgrpnr, pinf->blknr);
->  		}
->  
+On Wed, Feb 26, 2020 at 07:35:14AM +0100, Marek Szyprowski wrote:
+> Hi Geert,
 > 
+> On 25.02.2020 15:47, Geert Uytterhoeven wrote:
+> > At early boot, register r8 may contain an ATAGs or DTB pointer.
+> > When an appended DTB is found, its address is stored in r8, for
+> > extraction of the RAM base address later.
+> >
+> > However, if r8 contained an ATAGs pointer before, that pointer will be
+> > lost, and the provided ATAGs is no longer folded into the provided DTB.
+> >
+> > Fix this by leaving r8 untouched.
+> >
+> > Fixes: 137e522593918be2 ("ARM: 8960/1: boot: Obtain start of physical memory from DTB")
+> > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+The original commit hasn't been submitted, so it can be fixed before it
+hits mainline if you want.  Let me know what you want to do.  Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
