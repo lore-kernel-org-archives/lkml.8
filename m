@@ -2,118 +2,161 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051F2C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4BBC4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4418206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DDA206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRi3k6jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgBZX7d (ORCPT
+        id S1728075AbgBZX7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:59:33 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:35368 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726413AbgBZX7d (ORCPT
+        Wed, 26 Feb 2020 18:59:50 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34922 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbgBZX7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:59:33 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tr.Q08s_1582761566;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tr.Q08s_1582761566)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 27 Feb 2020 07:59:28 +0800
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-To:     Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <1bfd6ea4-f012-5778-64c6-36731e69b5ba@linux.alibaba.com>
-Date:   Wed, 26 Feb 2020 15:59:23 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 26 Feb 2020 18:59:50 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 145so1472422qkl.2;
+        Wed, 26 Feb 2020 15:59:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CS6s48/fad45V23lipX1Fu4yrThXZZxHb+g1PPIjhHA=;
+        b=IRi3k6jh6CuNv9Iro1mODuBhyGCOIg1/vXBw8jI0ViW2AXxKWxW8sK7Een8m08wiHc
+         3B5yTb7fi9uWt9azv8i9bgSCAT0Tiglgfl+IZT43wzBE/Pe64tLTUNA+Fr55ueUCyhR4
+         5NLFyV2r5wMTwrYrYvbJjgzRcNUBLF2fcDU71Vu/8xvOBNbFfIDbrFKusJaBK5EPEl47
+         nsSEsEMTot2hkGeWVysMjLio5a0dYAKfhaYFJEYyX5zlrCT0K/nMCDXA232K/SWWiZz+
+         PNDUrpIjA9YPQ/ZSFhYjrZFVlNKbLewNjzoRQKrviTXKbLf2UlrGp7MGzTudpX0vkHQm
+         ATXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CS6s48/fad45V23lipX1Fu4yrThXZZxHb+g1PPIjhHA=;
+        b=hYzC16KZD8GfO42Ziu+A1zDQ5eT+zK5Gb7RvTF9H7qnpYp0a+9EmctH9BurA+IWmNr
+         F2ipkU6+4gwwIJR9hJopXCbnWxIHr22m0E86T0ahBCPXsItnwrfb8ZroPUZvd1X4E10/
+         aBcJU8QXG82fL+jJY8Y2B3vKQeKPxGTTnWOjsy+3eeoAAzt/+qq1iJ1e28zFy5V/T//P
+         /SMlv+b9pdWAip3EkjidTqx9XrD1vWFxDS9iIZvvPy2E0ghswveQtwcAaV3g9M/YFhGq
+         N5vVAJom4lbV4Qj8LbJVrJec/1D20Xkjym4nRRMkuR3Ino8g0mEB29mxsUCZinuCIRAK
+         ryHg==
+X-Gm-Message-State: APjAAAV6lH71iOSYLOPfEVuoVmICHYLyqKrC8Wcojp6zIJWZX6kuq7XP
+        st5xC7vEYSMBHfo42dUSiiI=
+X-Google-Smtp-Source: APXvYqwP2u0Kb+4Dq8jv1W/FJcdrY0PYuMBX+e+UaZQvwyocsi3K5G4bg9viAStlyxSs4Q6+LcvX9Q==
+X-Received: by 2002:a37:de0d:: with SMTP id h13mr2220679qkj.332.1582761588987;
+        Wed, 26 Feb 2020 15:59:48 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id t187sm2048550qke.85.2020.02.26.15.59.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Feb 2020 15:59:48 -0800 (PST)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailauth.nyi.internal (Postfix) with ESMTP id A299221BA9;
+        Wed, 26 Feb 2020 18:59:46 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 26 Feb 2020 18:59:46 -0500
+X-ME-Sender: <xms:cAZXXhbjjJjIv7V0GQ9zs4TInE16GsnUN1ylPrvZElfWfDhZebbEWg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleehgddukecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
+    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:cAZXXrqb9SBYjA0sUQmdlA-1Ux1dndcfzLMAVeog4XU9JZ7tQIJRvQ>
+    <xmx:cAZXXoDWg5d4uZmDGU7zy3meZEfDfeWPDBwh9H3Rhc40dN2o8Q6jyQ>
+    <xmx:cAZXXpqPZHyNyRIt62uIgFv38kmSH4trGdqZNT16aTZamMm_0I74QA>
+    <xmx:cgZXXiaXZEufA1TgQY8MAwt2l1tutBAigwptFf_og_WDSQFnHNLoqc0L5ME>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 194BF328005D;
+        Wed, 26 Feb 2020 18:59:43 -0500 (EST)
+Date:   Thu, 27 Feb 2020 07:59:42 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] tools/memory-model: Remove lock-final checking in
+ lock.cat
+Message-ID: <20200226235942.GR69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200226032142.89424-1-boqun.feng@gmail.com>
+ <Pine.LNX.4.44L0.2002260953110.3674-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2002260953110.3674-100000@netrider.rowland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 26, 2020 at 09:58:12AM -0500, Alan Stern wrote:
+> On Wed, 26 Feb 2020, Boqun Feng wrote:
+> 
+> > In commit 30b795df11a1 ("tools/memory-model: Improve mixed-access
+> > checking in lock.cat"), we have added the checking to disallow any
+> > normal memory access to lock variables, and this checking is stronger
+> > than lock-final. So remove the lock-final checking as it's unnecessary
+> > now.
+> 
+> I don't understand this description.  Why do you say that the
+> normal-access checking is stronger than the lock-final check?
+> 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  tools/memory-model/lock.cat | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/tools/memory-model/lock.cat b/tools/memory-model/lock.cat
+> > index 6b52f365d73a..827a3646607c 100644
+> > --- a/tools/memory-model/lock.cat
+> > +++ b/tools/memory-model/lock.cat
+> > @@ -54,9 +54,6 @@ flag ~empty LKR \ domain(lk-rmw) as unpaired-LKR
+> >   *)
+> >  empty ([LKW] ; po-loc ; [LKR]) \ (po-loc ; [UL] ; po-loc) as lock-nest
+> >  
+> > -(* The final value of a spinlock should not be tested *)
+> > -flag ~empty [FW] ; loc ; [ALL-LOCKS] as lock-final
+> > -
+> >  (*
+> >   * Put lock operations in their appropriate classes, but leave UL out of W
+> >   * until after the co relation has been generated.
+> 
+> With this check removed, what will prevent people from writing litmus 
+> tests like this?
+> 
 
+You are right, one thing I was missing is although FW is a subset of M,
+however FW & IW is not empty. Thanks! I will drop this.
 
-On 2/26/20 12:25 PM, Shakeel Butt wrote:
-> On Wed, Feb 19, 2020 at 10:12 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->> We have received regression reports from users whose workloads moved
->> into containers and subsequently encountered new latencies. For some
->> users these were a nuisance, but for some it meant missing their SLA
->> response times. We tracked those delays down to cgroup limits, which
->> inject direct reclaim stalls into the workload where previously all
->> reclaim was handled my kswapd.
->>
->> This patch adds asynchronous reclaim to the memory.high cgroup limit
->> while keeping direct reclaim as a fallback. In our testing, this
->> eliminated all direct reclaim from the affected workload.
->>
->> memory.high has a grace buffer of about 4% between when it becomes
->> exceeded and when allocating threads get throttled. We can use the
->> same buffer for the async reclaimer to operate in. If the worker
->> cannot keep up and the grace buffer is exceeded, allocating threads
->> will fall back to direct reclaim before getting throttled.
->>
->> For irq-context, there's already async memory.high enforcement. Re-use
->> that work item for all allocating contexts, but switch it to the
->> unbound workqueue so reclaim work doesn't compete with the workload.
->> The work item is per cgroup, which means the workqueue infrastructure
->> will create at maximum one worker thread per reclaiming cgroup.
->>
->> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
->> ---
->>   mm/memcontrol.c | 60 +++++++++++++++++++++++++++++++++++++------------
->>   mm/vmscan.c     | 10 +++++++--
-> This reminds me of the per-memcg kswapd proposal from LSFMM 2018
-> (https://lwn.net/Articles/753162/).
+Regards,
+Boqun
 
-Thanks for bringing this up.
-
->
-> If I understand this correctly, the use-case is that the job instead
-> of direct reclaiming (potentially in latency sensitive tasks), prefers
-> a background non-latency sensitive task to do the reclaim. I am
-> wondering if we can use the memory.high notification along with a new
-> memcg interface (like memory.try_to_free_pages) to implement a user
-> space background reclaimer. That would resolve the cpu accounting
-> concerns as the user space background reclaimer can share the cpu cost
-> with the task.
-
-Actually I'm interested how you implement userspace reclaimer. Via a new 
-syscall or a variant of existing syscall?
-
->
-> One concern with this approach will be that the memory.high
-> notification is too late and the latency sensitive task has faced the
-> stall. We can either introduce a threshold notification or another
-> notification only limit like memory.near_high which can be set based
-> on the job's rate of allocations and when the usage hits this limit
-> just notify the user space.
-
-Yes, the solo purpose of background reclaimer is to avoid direct reclaim 
-for latency sensitive workloads. Our in-house implementation has high 
-watermark and low watermark, both of which is lower than limit or high. 
-The background reclaimer would be triggered once available memory is 
-reached low watermark, then keep reclaimed until available memory is 
-reached high watermark. It is pretty same with how global water mark works.
-
->
-> Shakeel
-
+> C test
+> 
+> {
+> 	spinlock_t s;
+> }
+> 
+> ...
+> 
+> exists (s=0)
+> 
+> Alan
+> 
