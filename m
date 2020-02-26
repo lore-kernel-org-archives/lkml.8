@@ -2,100 +2,139 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BCFC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0E0C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDF624670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582731751;
-	bh=U+oFNR/apVDLKRKZM8r4iZ55eN9WfHcKnxXc477dW0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0pJ4gIDHj1n2mhjNZhF0CLL8GDiWGJ1+8E4ZzlQtDGjrJhy9TNMN+nqFX/EpOy++1
-	 dwm2QnjYcuUr8OYdkdUV99NyKel+f+iJ3dcnqg1vqKsO/QtFq+9pX+MCizWz4p7BZq
-	 w0++9buJHGOAjmiUazXg316+9kLr5+ThZ/9LwDWw=
+	by mail.kernel.org (Postfix) with ESMTP id 0D320246D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="h0CZuuEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgBZPma (ORCPT
+        id S1728465AbgBZPn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:42:30 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35629 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbgBZPma (ORCPT
+        Wed, 26 Feb 2020 10:43:28 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54313 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbgBZPn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:42:30 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so3375877otd.2;
-        Wed, 26 Feb 2020 07:42:29 -0800 (PST)
+        Wed, 26 Feb 2020 10:43:28 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z12so3589950wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=I5/BA7YsbH1T9sgkRZT9CG8Y5s0Fng9eOPPb7ZuWHYE=;
+        b=h0CZuuEJRdVegqyi13c89qiGXx60eLvFkx/GwHshqfyg1vU877SDUzDDB7+QbtC1W4
+         IhZXFnKEfR6MW0VSVVOY+sD9tqlAd3SGcdRXz/PyPZ0jdPpGRsh2lcvncF42WgrK27QA
+         18DpuPtuP6ADT4RB6IyZtgqcVTX3AyvYrzENEk1ViR0tR3gsqakChr/D4VcH1LaAL9Gk
+         CRBXOTzhlF30dp3sFSmjBlEtQdmwO4QP+HtcY9ByqIueXHuhOxr+7aW2BmhWQ+tGZu+6
+         Ct7qXdZCDPqKlJlnDVNVP8qqZkPvyqzBNWIVMTbxgiySJl2kSbTgfMzHdVSAMMMibvHi
+         yYbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oALkAv67EVsYWYHdpUzQk0H8ppF1xN73RMetofcDpiA=;
-        b=MomOWL05UeFBWTj3So9JNuhq102eawyuiGRWBLfnZZr9v0GlR3/qcJdPnHH5oqNF+e
-         drBM5Gc0ZqxF3U4zzCbgvTDgz3eNr+uMgSyvTeIr+gOwKvA4oeNGev6mynjbKeOVATqq
-         TZuiFo2djOQw+pF+U7mCpI7RiN+ePa54YfeYn24uhRVsdTUsUA/lcsXJc89Ea//pQC+F
-         3npgepbSoimgCN2b8fjqhrA5BNSGL/gWUomkXaC6UbVVgwNJddq8kOeUaqv5TSyTHwl5
-         6s1yfb2yWnARtBwWT3xbrlOl3rOaAxPTjEYjXSEOfPrQucaHXy0uLeRkQL+H0y06SUFx
-         +uWw==
-X-Gm-Message-State: APjAAAVWNOY3jYSX01IYt5OVy6AbsM7Fir9HFyPxgybVqZ+i1Apb9UTQ
-        LdG7wsev2/RoGAwvaNjT04KXYUv4UQ==
-X-Google-Smtp-Source: APXvYqydqZ6UJB5h2BMo//IMEZdjers3OTc7g4pogmYI9e5t7XqZpBlJBXDQT5Pgj8r+gCgYGwebzg==
-X-Received: by 2002:a9d:7c9a:: with SMTP id q26mr1908862otn.206.1582731749194;
-        Wed, 26 Feb 2020 07:42:29 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w202sm931951oiw.0.2020.02.26.07.42.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:42:28 -0800 (PST)
-Received: (nullmailer pid 23994 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:42:27 -0000
-Date:   Wed, 26 Feb 2020 09:42:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Sricharan R <sricharan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilia Lin <ilia.lin@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: qcom: Add support for krait based socs
-Message-ID: <20200226154227.GA22249@bogus>
-References: <20200219205546.6800-1-ansuelsmth@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I5/BA7YsbH1T9sgkRZT9CG8Y5s0Fng9eOPPb7ZuWHYE=;
+        b=Hdw3Wwgs65uHzaWE8hkLnyOz5PKdAz7/OHRpmdf4HFeY1ZwukapiLjytgun/uPKwoo
+         C8pW0V7XVQkcpjV2CpmjY6pL7zmvljyAq9iZ82HbscBTVxpItqoG6d8OKYxfBeiJPW4w
+         i7J1Bq64Tr4qgfXjSb5s7+X1zBUD3ZHnHaqEp7f2RemUDTZM7PifWq+obJR2KFdE+043
+         2iKEKsHy6g6WCw/QfQKWA8Y7t9Fa9grwwW04lK8dTvE4qrLpDjHBv018Liti5WRHlgpt
+         fP8fRH3rm6XbdoQKOG9r7gzSs8skawrBDLdh6eRuIGEcy2FeaK79nwUiCNPy5mxuP1+Y
+         b27w==
+X-Gm-Message-State: APjAAAWnoJv4uvJUTmMhLekerTtF0Z1YYRAL0z2/qmjWvt8yxTzrcEao
+        FsxIfMHGRSJN24HzWeBU5QaTSA==
+X-Google-Smtp-Source: APXvYqyBpiXgO5JATr9oE7f1ctrb6q9k+9T8pBp8B9tz+Bz4xDU3/9j3M2yLGFRhzsynf86yERgMBQ==
+X-Received: by 2002:a05:600c:211:: with SMTP id 17mr6214941wmi.60.1582731806522;
+        Wed, 26 Feb 2020 07:43:26 -0800 (PST)
+Received: from [192.168.1.10] ([194.35.116.65])
+        by smtp.gmail.com with ESMTPSA id s139sm3528634wme.35.2020.02.26.07.43.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 07:43:25 -0800 (PST)
+Subject: Re: [PATCH bpf-next v3 5/5] selftests/bpf: Add test for "bpftool
+ feature" command
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-kselftest@vger.kernel.org
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
+ <20200225194446.20651-6-mrostecki@opensuse.org>
+ <d0c40cd0-f9db-c6cb-5b46-79145311050d@iogearbox.net>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <3e485c13-e478-c0b3-39e4-595dbd968ea2@isovalent.com>
+Date:   Wed, 26 Feb 2020 15:43:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219205546.6800-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d0c40cd0-f9db-c6cb-5b46-79145311050d@iogearbox.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:55:45PM +0100, Ansuel Smith wrote:
-> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
-> that has KRAIT processors the voltage/current value of each OPP
-> varies based on the silicon variant in use.
+2020-02-26 16:34 UTC+0100 ~ Daniel Borkmann <daniel@iogearbox.net>
+> On 2/25/20 8:44 PM, Michal Rostecki wrote:
+>> Add Python module with tests for "bpftool feature" command, which mainly
+>> wheck whether the "full" option is working properly.
 > 
-> The required OPP related data is determined based on
-> the efuse value. This is similar to the existing code for
-> kryo cores. So adding support for krait cores here.
+> nit, typo: wheck
 > 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/opp/qcom-nvmem-cpufreq.txt       |   3 +-
+>>
+>> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> 
+> Ptal, when running the test I'm getting the following error:
+> 
+> root@tank:~/bpf-next/tools/testing/selftests/bpf# ./test_bpftool.sh
+> test_feature_dev_json (test_bpftool.TestBpftool) ... ERROR
+> test_feature_kernel (test_bpftool.TestBpftool) ... ERROR
+> test_feature_kernel_full (test_bpftool.TestBpftool) ... ERROR
+> test_feature_kernel_full_vs_not_full (test_bpftool.TestBpftool) ... ERROR
+> test_feature_macros (test_bpftool.TestBpftool) ... ERROR
+> 
+> ======================================================================
+> ERROR: test_feature_dev_json (test_bpftool.TestBpftool)
+> ----------------------------------------------------------------------
+> Traceback (most recent call last):
+>    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
+> line 58, in wrapper
+>      return f(*args, iface, **kwargs)
+>    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
+> line 83, in test_feature_dev_json
+>      res = bpftool_json(["feature", "probe", "dev", iface])
+>    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
+> line 43, in bpftool_json
+>      res = _bpftool(args)
+>    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
+> line 34, in _bpftool
+>      res = subprocess.run(_args, capture_output=True)
+>    File "/usr/lib/python3.6/subprocess.py", line 423, in run
+>      with Popen(*popenargs, **kwargs) as process:
+> TypeError: __init__() got an unexpected keyword argument 'capture_output'
 
-If you respin, please split bindings to a separate patch.
 
->  drivers/cpufreq/Kconfig.arm                   |   2 +-
->  drivers/cpufreq/cpufreq-dt-platdev.c          |   5 +
->  drivers/cpufreq/qcom-cpufreq-nvmem.c          | 181 ++++++++++++++++--
->  4 files changed, 173 insertions(+), 18 deletions(-)
-> 
+Apparently the “capture_output” option for subprocess was added to 
+python 3.7 [0]. It worked on my system (python 3.7.5) but didn't pass on 
+yours with 3.6.
+
+Michal, can you change it to something less recent please, so that 
+people don't have to upgrade python to test?
+
+Quentin
+
+[0] https://docs.python.org/3/whatsnew/3.7.html#subprocess
