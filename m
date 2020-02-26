@@ -2,65 +2,172 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D07C4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834BBC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4A924653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4064224653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="EfstPGpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgBZSYk (ORCPT
+        id S1727125AbgBZSY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:24:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:40968 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgBZSYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:24:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A04A330E;
-        Wed, 26 Feb 2020 10:24:38 -0800 (PST)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47F283F881;
-        Wed, 26 Feb 2020 10:24:36 -0800 (PST)
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, dietmar.eggemann@arm.com, rjw@rjwysocki.net,
-        pkondeti@codeaurora.org, peterz@infradead.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] arm64: ARMv8.4 Activity Monitors support
-Message-ID: <jhjftex438f.fsf@arm.com>
-In-reply-to: <20200226132947.29738-1-ionela.voinescu@arm.com>
-Date:   Wed, 26 Feb 2020 18:24:26 +0000
+        Wed, 26 Feb 2020 13:24:58 -0500
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:36928 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgBZSY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:24:57 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 5038D3F99D;
+        Wed, 26 Feb 2020 19:24:55 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=EfstPGpZ;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id motlGi_xZ2hD; Wed, 26 Feb 2020 19:24:50 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 050CC3F971;
+        Wed, 26 Feb 2020 19:24:48 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 409C8360093;
+        Wed, 26 Feb 2020 19:24:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1582741488; bh=te/8IotpQEnl0o4n3vw2nGQFI/zVy4BNRconbR+LM4o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EfstPGpZpHtME6/a9f1AtAN+w3pJUClLCPuMW8qkPq/xbXVzrWpilFsvjN7HBNE9g
+         gGxQfQ6pJ0wTBXqODOLs+AENYvNgFWE/sVhbRkZXw+bmTtExcAvzX0IfO+dbWsZOFZ
+         Bgn5FG1CZvdQ53+LpDE9QA513jSr16J63LLReVqo=
+Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
+ flags.
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Guillaume.Gardet@arm.com, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, gurchetansingh@chromium.org,
+        tzimmermann@suse.de
+References: <20200226154752.24328-1-kraxel@redhat.com>
+ <20200226154752.24328-2-kraxel@redhat.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
+Date:   Wed, 26 Feb 2020 19:24:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200226154752.24328-2-kraxel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
+Hi, Gerd,
 
-On Wed, Feb 26 2020, Ionela Voinescu wrote:
-> v4 -> v5:
->  - v4 can be found at [6]
->  - [1/7] rebased on top of latest tip/sched/core and fixed conflicts;
->    applied Reviewed-by from Valentin;
->  - [5/7] applied Reviewed-by from Valentin
->  - [6/7] applied Valentin and Pavan's suggested fixes; reworked
->    arch_cpu_freq_counters (now arch_freq_counters_available) and
->    confined it to the arch topology driver as recommended by Valentin
->    and Lukasz;
+While looking at this patchset I came across some stuff that seems 
+strange but that was merged in a previous patchset.
+
+(please refer to 
+https://lists.freedesktop.org/archives/dri-devel/2018-September/190001.html. 
+Forgive me if I've missed any discussion leading up to this).
+
+
+On 2/26/20 4:47 PM, Gerd Hoffmann wrote:
+> Add map_cached bool to drm_gem_shmem_object, to request cached mappings
+> on a per-object base.  Check the flag before adding writecombine to
+> pgprot bits.
 >
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>   include/drm/drm_gem_shmem_helper.h     |  5 +++++
+>   drivers/gpu/drm/drm_gem_shmem_helper.c | 15 +++++++++++----
+>   2 files changed, 16 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+> index e34a7b7f848a..294b2931c4cc 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -96,6 +96,11 @@ struct drm_gem_shmem_object {
+>   	 * The address are un-mapped when the count reaches zero.
+>   	 */
+>   	unsigned int vmap_use_count;
+> +
+> +	/**
+> +	 * @map_cached: map object cached (instead of using writecombine).
+> +	 */
+> +	bool map_cached;
+>   };
+>   
+>   #define to_drm_gem_shmem_obj(obj) \
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index a421a2eed48a..aad9324dcf4f 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -254,11 +254,16 @@ static void *drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem)
+>   	if (ret)
+>   		goto err_zero_use;
+>   
+> -	if (obj->import_attach)
+> +	if (obj->import_attach) {
+>   		shmem->vaddr = dma_buf_vmap(obj->import_attach->dmabuf);
+> -	else
+> +	} else {
+> +		pgprot_t prot = PAGE_KERNEL;
+> +
+> +		if (!shmem->map_cached)
+> +			prot = pgprot_writecombine(prot);
+>   		shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+> -				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
+> +				    VM_MAP, prot)
 
-I don't really have any more comments for v5. AFAICT what we are missing
-now is Sudeep's ack for the arch_topology bits, and if Catalin / Will
-are okay with it I think this can all go through the arm64 tree.
+
+Wouldn't a vmap with pgprot_writecombine() create conflicting mappings 
+with the linear kernel map which is not write-combined? Or do you change 
+the linear kernel map of the shmem pages somewhere? vmap bypassess at 
+least the x86 PAT core mapping consistency check and this could 
+potentially cause spuriously overwritten memory.
+
+
+> +	}
+>   
+>   	if (!shmem->vaddr) {
+>   		DRM_DEBUG_KMS("Failed to vmap pages\n");
+> @@ -540,7 +545,9 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+>   	}
+>   
+>   	vma->vm_flags |= VM_MIXEDMAP | VM_DONTEXPAND;
+> -	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+> +	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+> +	if (!shmem->map_cached)
+> +		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+
+Same thing here. Note that vmf_insert_page() which is used by the fault 
+handler also bypasses the x86 PAT  consistency check, whereas 
+vmf_insert_mixed() doesn't.
+
+>   	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+
+At least with SME or SEV encryption, where shmem memory has its kernel 
+map set to encrypted, creating conflicting mappings is explicitly 
+disallowed.
+BTW, why is mmap mapping decrypted while vmap isn't?
+
+>   	vma->vm_ops = &drm_gem_shmem_vm_ops;
+>   
+
+Thanks,
+Thomas
+
+
+
