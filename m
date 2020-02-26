@@ -2,94 +2,94 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D2EC4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9C8C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405E121744
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A642121927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582680856;
+	bh=Kjuv90ZjEjmAGSmEae/Z2LP6m0gsb/GyA826skbWBVk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nXA5CCUv1RhWeOxr/ThElQXl2dHN+LEt22Nmt/D9hyuM8rpIRvszedh/ikd9TIxR9
+	 l0RU2n+Py0+HDrSuEB9fDOcd/mSWVpyXHDV7Y3QXgEUT3Vq0hA4UUcSlpqixrOOeyr
+	 E8ei0YVJloi7xqV1pKzRnqS4oFpBaZvyz1PuF900=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgBZBch (ORCPT
+        id S1729501AbgBZBeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:32:37 -0500
-Received: from mga05.intel.com ([192.55.52.43]:9676 "EHLO mga05.intel.com"
+        Tue, 25 Feb 2020 20:34:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbgBZBch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:32:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:32:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,486,1574150400"; 
-   d="scan'208";a="241509135"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 25 Feb 2020 17:32:36 -0800
-Received: from [10.226.38.18] (unknown [10.226.38.18])
-        by linux.intel.com (Postfix) with ESMTP id EE2A3580544;
-        Tue, 25 Feb 2020 17:32:33 -0800 (PST)
-Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        simon.k.r.goldschmidt@gmail.com, Dinh Nguyen <dinguyen@kernel.org>,
-        tien.fong.chee@intel.com,
-        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
- <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
- <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
- <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
- <8c329860-84fd-463b-782f-83a788998878@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <98c90f35-297b-a13c-61ad-ce7a7f1d650f@linux.intel.com>
-Date:   Wed, 26 Feb 2020 09:32:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <8c329860-84fd-463b-782f-83a788998878@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        id S1729170AbgBZBeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:34:15 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607C521744;
+        Wed, 26 Feb 2020 01:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582680854;
+        bh=Kjuv90ZjEjmAGSmEae/Z2LP6m0gsb/GyA826skbWBVk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qtFhlcLkuLnklw/zhFq2+nIRHrqcdOKiqeh49JeEuMwArKOtQac6s5U4OzVwmB/Qk
+         Dy7q+tZBilxcx1HhrEF84Ew4i9cBqjxgAGENDtQ4R5BNHc9RxqQNes9NzHCQ/lhz8o
+         M9aR/VTDW+GbONklVlWdohIqfw+LTR+HWAaj2s/A=
+Date:   Wed, 26 Feb 2020 10:34:09 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bootconfig: Fix CONFIG_BOOTTIME_TRACING dependency
+ issue
+Message-Id: <20200226103409.9036c0384866979025232c6c@kernel.org>
+In-Reply-To: <aa78add3-a6d9-e316-cfba-3432e347bec4@infradead.org>
+References: <20200225220551.d9a409bc04b77cdf48eae3ea@kernel.org>
+        <158264140162.23842.11237423518607465535.stgit@devnote2>
+        <c9604764-bd0f-67e9-56c8-fb6ffaf9b430@infradead.org>
+        <20200225125335.5bbc3ed4@gandalf.local.home>
+        <aa78add3-a6d9-e316-cfba-3432e347bec4@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 25 Feb 2020 09:59:25 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-On 25/2/2020 7:00 PM, Vignesh Raghavendra wrote:
->
-> On 25/02/20 1:08 pm, Ramuthevar, Vadivel MuruganX wrote:
->>>>>> +
->>>>>> +  cdns,fifo-depth:
->>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +    description:
->>>>>> +      Size of the data FIFO in words.
->>>>> A 4GB fifo is valid? Add some constraints.
->>>> 128 is valid, will update.
->>> Nope, the width of this field is 8bits -> 256 bytes
->> correct me if I am wrong, the width of this field is 4bits -> 128 bytes
->> (based on QUAD mode) .
-> This has nothing to do with quad-mode. Its about how much SRAM amount of
-> SRAM is present to buffer INDAC mode data. For TI platforms this is 256
-> bytes.
-> See CQSPI_REG_SRAMPARTITION definition in your datasheet.
-Agreed, Thanks!
-Yes , I have gone through it , Intel and Altera SoC's SRAM(act as 
-FIFO)size is 128 bytes and TI has 256 .
-BTW old legacy DT binding mentioned size is 128, as per your earlier 
-suggestion you have mention that
-keep the contents from old dt bindings as it is, so shall I keep 128/256?
+> On 2/25/20 9:53 AM, Steven Rostedt wrote:
+> > On Tue, 25 Feb 2020 09:49:25 -0800
+> > Randy Dunlap <rdunlap@infradead.org> wrote:
+> > 
+> >>> Fixes: d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by default")
+> >>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> >>> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>  
+> >>
+> >> Hi,
+> >> I'm no fan of "select", but this does fix the kconfig warnings and
+> >> build errors that I have reported.  Thanks.
+> > 
+> > I'm not big on select either, but this is fine (I'm running it through my
+> > tests now).
+> > 
+> >>
+> >> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> > 
+> > Is it OK if I change this to "Tested-by:"?
+> 
+> Yes, as long as someone doesn't read (interpret) that as runtime-tested-by. :)
 
-Regards
-Vadivel
+Thanks Randy and Steve!
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
