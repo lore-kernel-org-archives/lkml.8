@@ -2,123 +2,251 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E654AC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4838C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D3121927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835BE21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EZp2hEHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgBZEvW (ORCPT
+        id S1726719AbgBZFEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 23:51:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:58866 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 00:04:12 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:52277 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbgBZEvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 23:51:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEEEC1FB;
-        Tue, 25 Feb 2020 20:51:20 -0800 (PST)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.16.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 25B8D3FA00;
-        Tue, 25 Feb 2020 20:51:18 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm/vma: Make is_vma_temporary_stack() available for general use
-Date:   Wed, 26 Feb 2020 10:20:58 +0530
-Message-Id: <1582692658-3294-4-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582692658-3294-1-git-send-email-anshuman.khandual@arm.com>
-References: <1582692658-3294-1-git-send-email-anshuman.khandual@arm.com>
+        id S1725789AbgBZFEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 00:04:11 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48S3cT0cX2z9ty2Q;
+        Wed, 26 Feb 2020 06:04:09 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=EZp2hEHO; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id WvuH9LdbP1UZ; Wed, 26 Feb 2020 06:04:09 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48S3cS3kKTz9tyKl;
+        Wed, 26 Feb 2020 06:04:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582693448; bh=qvGyrJUB2UgET9i5VAoLlLv2pl3urJV01OstLvVnLRM=;
+        h=From:Subject:To:CC:In-Reply-To:Date:From;
+        b=EZp2hEHO0pdBb20cc3MdgS1Mo6rQSCJIXFnmROVUmobfowpfOaE01gJm77QHGUZm3
+         bgDroXooY+b+Hrp01223ZLuWVGSaVVG1x7H9eUsWFKICQ2MQbXE8g7AcdwqWjxZB15
+         mdHPuLUtLtll5V6SO314uk9dOcHX9PmAZMDoSMGk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A2748B784;
+        Wed, 26 Feb 2020 06:04:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VXbsOtQ5DCG4; Wed, 26 Feb 2020 06:04:09 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4BA1A8B776;
+        Wed, 26 Feb 2020 06:04:08 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 0A31D653EF; Wed, 26 Feb 2020 05:04:07 +0000 (UTC)
+Message-Id: <92d936b83e47f6a65866ca2d39a0d5bfefba6279.1582693094.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH] Use IS_ENABLED() instead of #ifdefs
+To:     Jason Yan <yanaijie@huawei.com>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
+In-Reply-To: <d3647cce-ece3-d302-f541-b02b1f2b5e9e@huawei.com>
+Date:   Wed, 26 Feb 2020 05:04:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the declaration and definition for is_vma_temporary_stack() are
-scattered. Lets make is_vma_temporary_stack() helper available for general
-use and also drop the declaration from (include/linux/huge_mm.h) which is
-no longer required. This should not cause any functional change.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- include/linux/huge_mm.h |  2 --
- include/linux/mm.h      | 14 ++++++++++++++
- mm/rmap.c               | 14 --------------
- 3 files changed, 14 insertions(+), 16 deletions(-)
+This works for me. Only had to leave the #ifdef around the map_mem_in_cams()
+Also had to set linear_sz and ram for the alternative case, otherwise I get
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 5aca3d1bdb32..87f46b11efe8 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -87,8 +87,6 @@ extern struct kobj_attribute shmem_enabled_attr;
- #define HPAGE_PUD_SIZE	((1UL) << HPAGE_PUD_SHIFT)
- #define HPAGE_PUD_MASK	(~(HPAGE_PUD_SIZE - 1))
+
+
+arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
+arch/powerpc/mm/nohash/kaslr_booke.c:355:33: error: 'linear_sz' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  regions.pa_end = memstart_addr + linear_sz;
+                   ~~~~~~~~~~~~~~^~~~~~~~~~~
+arch/powerpc/mm/nohash/kaslr_booke.c:315:21: note: 'linear_sz' was declared here
+  unsigned long ram, linear_sz;
+                     ^~~~~~~~~
+arch/powerpc/mm/nohash/kaslr_booke.c:187:8: error: 'ram' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  ret = parse_crashkernel(boot_command_line, size, &crash_size,
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     &crash_base);
+     ~~~~~~~~~~~~
+arch/powerpc/mm/nohash/kaslr_booke.c:315:16: note: 'ram' was declared here
+  unsigned long ram, linear_sz;
+
+---
+ arch/powerpc/mm/mmu_decl.h           |  2 +-
+ arch/powerpc/mm/nohash/kaslr_booke.c | 97 +++++++++++++++-------------
+ 2 files changed, 52 insertions(+), 47 deletions(-)
+
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index b869ea893301..3700e7c04e51 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -139,9 +139,9 @@ extern unsigned long calc_cam_sz(unsigned long ram, unsigned long virt,
+ extern void adjust_total_lowmem(void);
+ extern int switch_to_as1(void);
+ extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
++#endif
+ void create_kaslr_tlb_entry(int entry, unsigned long virt, phys_addr_t phys);
+ extern int is_second_reloc;
+-#endif
  
--extern bool is_vma_temporary_stack(struct vm_area_struct *vma);
+ void reloc_kernel_entry(void *fdt, long addr);
+ extern void loadcam_entry(unsigned int index);
+diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+index c6f5c1db1394..bf69cece9b8c 100644
+--- a/arch/powerpc/mm/nohash/kaslr_booke.c
++++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+@@ -267,35 +267,37 @@ static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long rando
+ 	unsigned long start;
+ 	unsigned long offset;
+ 
+-#ifdef CONFIG_PPC32
+-	/*
+-	 * Decide which 64M we want to start
+-	 * Only use the low 8 bits of the random seed
+-	 */
+-	unsigned long index = random & 0xFF;
+-	index %= regions.linear_sz / SZ_64M;
 -
- extern unsigned long transparent_hugepage_flags;
+-	/* Decide offset inside 64M */
+-	offset = random % (SZ_64M - regions.kernel_size);
+-	offset = round_down(offset, SZ_16K);
++	if (IS_ENABLED(CONFIG_PPC32)) {
++		unsigned long index;
++
++		/*
++		 * Decide which 64M we want to start
++		 * Only use the low 8 bits of the random seed
++		 */
++		index = random & 0xFF;
++		index %= regions.linear_sz / SZ_64M;
++
++		/* Decide offset inside 64M */
++		offset = random % (SZ_64M - regions.kernel_size);
++		offset = round_down(offset, SZ_16K);
++
++		while ((long)index >= 0) {
++			offset = memstart_addr + index * SZ_64M + offset;
++			start = memstart_addr + index * SZ_64M;
++			koffset = get_usable_address(dt_ptr, start, offset);
++			if (koffset)
++				break;
++			index--;
++		}
++	} else {
++		/* Decide kernel offset inside 1G */
++		offset = random % (SZ_1G - regions.kernel_size);
++		offset = round_down(offset, SZ_64K);
  
- /*
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 2fd4b9bec4be..3bbd9c06171b 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -543,6 +543,20 @@ static inline bool vma_is_anonymous(struct vm_area_struct *vma)
- 	return !vma->vm_ops;
- }
+-	while ((long)index >= 0) {
+-		offset = memstart_addr + index * SZ_64M + offset;
+-		start = memstart_addr + index * SZ_64M;
++		start = memstart_addr;
++		offset = memstart_addr + offset;
+ 		koffset = get_usable_address(dt_ptr, start, offset);
+-		if (koffset)
+-			break;
+-		index--;
+ 	}
+-#else
+-	/* Decide kernel offset inside 1G */
+-	offset = random % (SZ_1G - regions.kernel_size);
+-	offset = round_down(offset, SZ_64K);
+-
+-	start = memstart_addr;
+-	offset = memstart_addr + offset;
+-	koffset = get_usable_address(dt_ptr, start, offset);
+-#endif
  
-+static inline bool is_vma_temporary_stack(struct vm_area_struct *vma)
-+{
-+	int maybe_stack = vma->vm_flags & (VM_GROWSDOWN | VM_GROWSUP);
-+
-+	if (!maybe_stack)
-+		return false;
-+
-+	if ((vma->vm_flags & VM_STACK_INCOMPLETE_SETUP) ==
-+						VM_STACK_INCOMPLETE_SETUP)
-+		return true;
-+
-+	return false;
-+}
-+
- static inline bool vma_is_foreign(struct vm_area_struct *vma)
+ 	if (koffset != 0)
+ 		koffset -= memstart_addr;
+@@ -342,6 +344,8 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
+ 	/* If the linear size is smaller than 64M, do not randmize */
+ 	if (linear_sz < SZ_64M)
+ 		return 0;
++#else
++	linear_sz = ram = size;
+ #endif
+ 
+ 	/* check for a reserved-memory node and record its cell sizes */
+@@ -373,17 +377,19 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
  {
- 	if (!current->mm)
-diff --git a/mm/rmap.c b/mm/rmap.c
-index b3e381919835..3d9d5e372710 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1696,20 +1696,6 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 	return ret;
- }
+ 	unsigned long offset;
+ 	unsigned long kernel_sz;
++	unsigned int *__kaslr_offset;
++	unsigned int *__run_at_load;
  
--bool is_vma_temporary_stack(struct vm_area_struct *vma)
--{
--	int maybe_stack = vma->vm_flags & (VM_GROWSDOWN | VM_GROWSUP);
+-#ifdef CONFIG_PPC64
+-	unsigned int *__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
+-	unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
++	if (IS_ENABLED(CONFIG_PPC64)) {
++		__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
++		__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
+ 
+-	if (*__run_at_load == 1)
+-		return;
++		if (*__run_at_load == 1)
++			return;
+ 
+-	/* Setup flat device-tree pointer */
+-	initial_boot_params = dt_ptr;
+-#endif
++		/* Setup flat device-tree pointer */
++		initial_boot_params = dt_ptr;
++	}
+ 
+ 	kernel_sz = (unsigned long)_end - (unsigned long)_stext;
+ 
+@@ -394,20 +400,19 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+ 	kernstart_virt_addr += offset;
+ 	kernstart_addr += offset;
+ 
+-#ifdef CONFIG_PPC32
+-	is_second_reloc = 1;
 -
--	if (!maybe_stack)
--		return false;
--
--	if ((vma->vm_flags & VM_STACK_INCOMPLETE_SETUP) ==
--						VM_STACK_INCOMPLETE_SETUP)
--		return true;
--
--	return false;
--}
--
- static bool invalid_migration_vma(struct vm_area_struct *vma, void *arg)
- {
- 	return is_vma_temporary_stack(vma);
+-	if (offset >= SZ_64M) {
+-		unsigned long tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
+-		phys_addr_t tlb_phys = round_down(kernstart_addr, SZ_64M);
++	if (IS_ENABLED(CONFIG_PPC32)) {
++		is_second_reloc = 1;
++		if (offset >= SZ_64M) {
++			unsigned long tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
++			phys_addr_t tlb_phys = round_down(kernstart_addr, SZ_64M);
+ 
+-		/* Create kernel map to relocate in */
+-		create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
++			/* Create kernel map to relocate in */
++			create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
++		}
++	} else {
++		*__kaslr_offset = kernstart_virt_addr - KERNELBASE;
++		*__run_at_load = 1;
+ 	}
+-#else
+-	*__kaslr_offset = kernstart_virt_addr - KERNELBASE;
+-	*__run_at_load = 1;
+-#endif
+ 
+ 	/* Copy the kernel to it's new location and run */
+ 	memcpy((void *)kernstart_virt_addr, (void *)_stext, kernel_sz);
 -- 
-2.20.1
+2.25.0
 
