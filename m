@@ -2,126 +2,140 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F7FC4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD59C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BA024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4036024656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582676437;
+	bh=INgY5gIlHr53sxSgKS3G6uBLIe2jvapkukMmWoDkebM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=L0dWznrOi34muHlp23drX13XhQRaed/6a12JVLz2n8C5rf4amXbgbnLxlYerhVjvA
+	 LF+i4DYQfVGhy6oW4XPTRsqM8LuQxKXpxtLP1hdgUnCvvtbmx7RJB9Z37o4JiZFvzI
+	 40np0sXbEUdeaiwmE2uY6Tqrkq8vQKK73bnSOu1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbgBZATa (ORCPT
+        id S1729586AbgBZAUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:19:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 19:20:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgBZATa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:19:30 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1728989AbgBZAUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:20:35 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C554324656;
-        Wed, 26 Feb 2020 00:19:28 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 19:19:27 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [GIT PULL] tracing/bootconfig: Fixes and changes to bootconfig
- before it goes live in a release
-Message-ID: <20200225191927.3cbaa0db@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E3F24656;
+        Wed, 26 Feb 2020 00:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582676434;
+        bh=INgY5gIlHr53sxSgKS3G6uBLIe2jvapkukMmWoDkebM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=wUFeTDFzUC990SUndKt7nkejf0qsoHLJyv7ZTU2Rvfzz75sxVlIvy594esmrmyJP9
+         zpVwNsv0EMUbrfWw0Y3P0A6iion2GkjAOqfknsZrlhuke0f9slhAbVL5br0PxSUcyb
+         QDCUYyDy4hIvPUHP2lwnQh8uR1o0pOPY6KMXNRSY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
+References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org> <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v5 5/5] clk: qcom: Add modem clock controller driver for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 25 Feb 2020 16:20:33 -0800
+Message-ID: <158267643373.177367.14343331439641557635@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Taniya Das (2020-02-24 02:38:23)
+> diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
+> new file mode 100644
+> index 0000000..993749e
+> --- /dev/null
+> +++ b/drivers/clk/qcom/mss-sc7180.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
 
-Linus,
+Is this used?
 
-Tracing updates:
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,mss-sc7180.h>
+> +
+> +#include "clk-regmap.h"
+> +#include "clk-branch.h"
+> +#include "common.h"
+> +
+> +static struct clk_branch mss_axi_nav_clk =3D {
+> +       .halt_reg =3D 0x20bc,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x20bc,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "mss_axi_nav_clk",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "gcc_mss_nav_axi_clk",
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch mss_axi_crypto_clk =3D {
+> +       .halt_reg =3D 0x20cc,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x20cc,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "mss_axi_crypto_clk",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "gcc_mss_mfab_axis_clk",
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static const struct regmap_config mss_regmap_config =3D {
+> +       .reg_bits       =3D 32,
+> +       .reg_stride     =3D 4,
+> +       .val_bits       =3D 32,
+> +       .fast_io        =3D true,
 
- Change in API of bootconfig (before it comes live in a release)
-  - Have a magic value "BOOTCONFIG" in initrd to know a bootconfig exists
-  - Set CONFIG_BOOT_CONFIG to 'n' by default
-  - Show error if "bootconfig" on cmdline but not compiled in
-  - Prevent redefining the same value
-  - Have a way to append values
-  - Added a SELECT BLK_DEV_INITRD to fix a build failure
+What is the max register?
 
- Synthetic event fixes:
-  - Switch to raw_smp_processor_id() for recording CPU value in preempt
-    section. (No care for what the value actually is)
-  - Fix samples always recording u64 values
-  - Fix endianess
-  - Check number of values matches number of fields
-  - Fix a printing bug
-
- Fix of trace_printk() breaking postponed start up tests
-
- Make a function static that is only used in a single file.
-
-
-Please pull the latest trace-v5.6-rc2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.6-rc2
-
-Tag SHA1: b50d255b6c6f55384c40bbac65fd5d5d4529a8ba
-Head SHA1: 2910b5aa6f545c044173a5cab3dbb7f43e23916d
-
-
-Masami Hiramatsu (9):
-      tracing: Clear trace_state when starting trace
-      bootconfig: Set CONFIG_BOOT_CONFIG=n by default
-      bootconfig: Add bootconfig magic word for indicating bootconfig explicitly
-      tools/bootconfig: Remove unneeded error message silencer
-      bootconfig: Reject subkey and value on same parent key
-      bootconfig: Print array as multiple commands for legacy command line
-      bootconfig: Prohibit re-defining value on same key
-      bootconfig: Add append value operator support
-      bootconfig: Fix CONFIG_BOOTTIME_TRACING dependency issue
-
-Qiujun Huang (1):
-      bootconfig: Mark boot_config_checksum() static
-
-Steven Rostedt (VMware) (2):
-      tracing: Have synthetic event test use raw_smp_processor_id()
-      tracing: Disable trace_printk() on post poned tests
-
-Tom Zanussi (4):
-      tracing: Make sure synth_event_trace() example always uses u64
-      tracing: Make synth_event trace functions endian-correct
-      tracing: Check that number of vals matches number of synth event fields
-      tracing: Fix number printing bug in print_synth_event()
-
-----
- Documentation/admin-guide/bootconfig.rst     |  34 +++++++-
- include/linux/bootconfig.h                   |   3 +
- init/Kconfig                                 |   5 +-
- init/main.c                                  |  38 +++++----
- kernel/trace/Kconfig                         |   4 +-
- kernel/trace/synth_event_gen_test.c          |  44 +++++------
- kernel/trace/trace.c                         |   2 +
- kernel/trace/trace_events_hist.c             | 112 ++++++++++++++++++++++++---
- lib/bootconfig.c                             |  36 ++++++---
- tools/bootconfig/include/linux/printk.h      |   5 +-
- tools/bootconfig/main.c                      |  51 +++++++-----
- tools/bootconfig/samples/bad-mixed-kv1.bconf |   3 +
- tools/bootconfig/samples/bad-mixed-kv2.bconf |   3 +
- tools/bootconfig/samples/bad-samekey.bconf   |   6 ++
- tools/bootconfig/test-bootconfig.sh          |  18 ++++-
- 15 files changed, 272 insertions(+), 92 deletions(-)
- create mode 100644 tools/bootconfig/samples/bad-mixed-kv1.bconf
- create mode 100644 tools/bootconfig/samples/bad-mixed-kv2.bconf
- create mode 100644 tools/bootconfig/samples/bad-samekey.bconf
----------------------------
+> +};
+> +
+> +static struct clk_regmap *mss_sc7180_clocks[] =3D {
+> +       [MSS_AXI_CRYPTO_CLK] =3D &mss_axi_crypto_clk.clkr,
+> +       [MSS_AXI_NAV_CLK] =3D &mss_axi_nav_clk.clkr,
+> +};
