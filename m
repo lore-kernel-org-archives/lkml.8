@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF343C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA5EC4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9732620714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B93C24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582704981;
-	bh=k836dLyaOtWRpGnzB9ROuDuJKilq3xZ3+vzY6ycLRDw=;
+	s=default; t=1582705001;
+	bh=AQwB89v8ebH3YVd21IcGyMfmH8x1a5GN9DmaECnRUtY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZYqkU7Q9lhycMCioPF4P+Jey4dbhzYm4tRS/pPE5ESFFMCae+Vqcl1PsLoUFx87VW
-	 EPxFU58pv2f/z6/Ry07yIlzBKn7en7VeZTiyP4cXnFoNqz1bbI6NcTiNU1+127JKSq
-	 cYaziG6+EsFPD6Ac8OaHzANoLXutM1ID6uecOyL8=
+	b=v80+E+lq9R2CfKvjFvKrAlNt6aU0fImGAgFmp/o11hQqLtuSIEXkunE2BQqTxRvSo
+	 uYTWlv/7xCxqvRXfqho5uMMFpW9MlxeVlOKwjYZBt4q8Op2Ti2IRoOA7gZinbAtMMK
+	 mylO91swHAa93r7o0BldkKuEo5rOMga3r4GyBmLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgBZIQU (ORCPT
+        id S1727755AbgBZIQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:16:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 03:16:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgBZIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:16:20 -0500
+        id S1727267AbgBZIQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:16:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6800520714;
-        Wed, 26 Feb 2020 08:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20EC220714;
+        Wed, 26 Feb 2020 08:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582704977;
-        bh=k836dLyaOtWRpGnzB9ROuDuJKilq3xZ3+vzY6ycLRDw=;
+        s=default; t=1582704999;
+        bh=AQwB89v8ebH3YVd21IcGyMfmH8x1a5GN9DmaECnRUtY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2GJb9TEBHp46v/YJeN3UJbn8CwclKUpYIYaP/FaTzYCbHKpldoT0aG4fqCoFBKm9Z
-         PM/Slkt2dyBmiPjHvK2wt1HvBVjzDwwO56nVkpzq7dItgtlq+F+PMw7VigiSb7zTjE
-         SvmXwa/3+GeVbyZeBKqzIBS2CE+gzaLaUy4s/CF8=
-Date:   Wed, 26 Feb 2020 09:16:15 +0100
+        b=PRkjcHSAHnkmQwJOgjia5+LSNgc5zjeYq7D4GjztfneR5zOA8+AegH3+z6+Gvw8Qy
+         786HsZxrVEj7aQu6fJ0agvRqcfNvWR5n1PluH5fnb+uC5646ngnuMAAvjv5nNysBlz
+         T+en5jyS/PR1Dd1a/NDtBbVXk4I/KvvxPHA6LYq4=
+Date:   Wed, 26 Feb 2020 09:16:36 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Christian Brauner <christian.brauner@ubuntu.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -48,21 +48,21 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 5/9] device: add device_change_owner()
-Message-ID: <20200226081615.GD24447@kroah.com>
+Subject: Re: [PATCH v6 6/9] drivers/base/power: add dpm_sysfs_change_owner()
+Message-ID: <20200226081636.GE24447@kroah.com>
 References: <20200225131938.120447-1-christian.brauner@ubuntu.com>
- <20200225131938.120447-6-christian.brauner@ubuntu.com>
+ <20200225131938.120447-7-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225131938.120447-6-christian.brauner@ubuntu.com>
+In-Reply-To: <20200225131938.120447-7-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:19:34PM +0100, Christian Brauner wrote:
-> Add a helper to change the owner of a device's sysfs entries. This
+On Tue, Feb 25, 2020 at 02:19:35PM +0100, Christian Brauner wrote:
+> Add a helper to change the owner of a device's power entries. This
 > needs to happen when the ownership of a device is changed, e.g. when
 > moving network devices between network namespaces.
 > This function will be used to correctly account for ownership changes,
