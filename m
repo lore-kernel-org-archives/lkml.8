@@ -2,114 +2,140 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA499C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C92C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD9E20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29F5222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIonsxn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgBZTTO (ORCPT
+        id S1727260AbgBZTUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:19:14 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52274 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbgBZTTO (ORCPT
+        Wed, 26 Feb 2020 14:20:09 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44131 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727174AbgBZTUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:19:14 -0500
-Received: by mail-io1-f69.google.com with SMTP id l62so7737ioa.19
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:19:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=rXw747gjK6laOZLMusPdxln3RoHpkV1n+wna4emSCNo=;
-        b=CwTwexw7nas66ok2wfihsHag2qsBbNJa9kMx0dydIMjN+rT4nsG0R3wd3LNdE0svBz
-         EnNSl0X4VE+Z5fI1w8XgJm76HAJC7gKJQQzZOLDb13DuuL6OU+hI/SCI+BU8OHgrXoN4
-         BH8M2RzYpNjFCfpxEeQAKC9lpZrjhocGGheeJtQQi2UQPB6As1XCcRp9mxkYR3ukTzxk
-         egWL81w8MaF3GO5zptCYrOgDvW8seN5Mpa4VodTN+aRMbATiDrJPiE+bvo8TMTN5yGuk
-         xi50udqYQAVUjxHMU2jewynEcdJHciv9MUxXY4vKlYVJ2yP0hKYEhXePYWskjWbJMSxU
-         zy8w==
-X-Gm-Message-State: APjAAAXJdWjk5Tz8STqQ8Q8EyTTmuXBJRRwlwLj9GbSV92o9vwGd2pZI
-        Iy+kXAMfsP3tSE5NqPa/W7Fbjxh3CT18Rufz/Sw0pQRI+5Wx
-X-Google-Smtp-Source: APXvYqxYETg5hb0Vg3jTm5C/vjXuwUFlj0v4yYfUDJfkEsDsA/gmXIGXz22eQZ92kqEhvAm8KoLNrKzSzs/R2PAbSr7QGdBzASI6
+        Wed, 26 Feb 2020 14:20:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582744808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JC/2w/EASsF47NJsQnG/EnRFDXzT40bcN876RMkvyQU=;
+        b=VIonsxn5ETTCv/jF+U/9Eul8RWdx/wrzovKfOZtDFgszowTjqQp3vQpHu/JVsFvEKI8P8s
+        4HKN33RlcLPReAFD2//hPW76bcl7vVhKYgm8vVpVeovq3b2bAfTDO7mkWxLo1iVy53LPo9
+        BcZjifnPJLsyFCZsSEanL8gq7mLr648=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-274-NTKz4_vuPum3utiIDaAQtg-1; Wed, 26 Feb 2020 14:20:06 -0500
+X-MC-Unique: NTKz4_vuPum3utiIDaAQtg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 106481005512;
+        Wed, 26 Feb 2020 19:20:04 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E53890CD1;
+        Wed, 26 Feb 2020 19:19:59 +0000 (UTC)
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+References: <20200226161404.14136-1-longman@redhat.com>
+ <20200226162954.GC24185@bombadil.infradead.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <12e8d951-fc35-bce0-e96d-f93bccf2bd3a@redhat.com>
+Date:   Wed, 26 Feb 2020 14:19:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a6b:c304:: with SMTP id t4mr148362iof.100.1582744750355;
- Wed, 26 Feb 2020 11:19:10 -0800 (PST)
-Date:   Wed, 26 Feb 2020 11:19:10 -0800
-In-Reply-To: <0000000000007272b9059bffe6cc@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009d7b30059f7f7a0d@google.com>
-Subject: Re: WARNING: refcount bug in j1939_netdev_start (2)
-From:   syzbot <syzbot+85d9878b19c94f9019ad@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de, kuba@kernel.org,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200226162954.GC24185@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On 2/26/20 11:29 AM, Matthew Wilcox wrote:
+> On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
+>> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
+>> value of 0 (default) for no limit or a positive integer 256 and up. Small
+>> dentry-dir-max numbers are forbidden to avoid excessive dentry count
+>> checking which can impact system performance.
+> This is always the wrong approach.  A sysctl is just a way of blaming
+> the sysadmin for us not being very good at programming.
+>
+> I agree that we need a way to limit the number of negative dentries.
+> But that limit needs to be dynamic and depend on how the system is being
+> used, not on how some overworked sysadmin has configured it.
+>
+> So we need an initial estimate for the number of negative dentries that
+> we need for good performance.  Maybe it's 1000.  It doesn't really matter;
+> it's going to change dynamically.
+>
+> Then we need a metric to let us know whether it needs to be increased.
+> Perhaps that's "number of new negative dentries created in the last
+> second".  And we need to decide how much to increase it; maybe it's by
+> 50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
+> how high the recent rate of negative dentry creation has been.
+>
+> We also need a metric to let us know whether it needs to be decreased.
+> I'm reluctant to say that memory pressure should be that metric because
+> very large systems can let the number of dentries grow in an unbounded
+> way.  Perhaps that metric is "number of hits in the negative dentry
+> cache in the last ten seconds".  Again, we'll need to decide how much
+> to shrink the target number by.
+>
+> If the number of negative dentries is at or above the target, then
+> creating a new negative dentry means evicting an existing negative dentry.
+> If the number of negative dentries is lower than the target, then we
+> can just create a new one.
+>
+> Of course, memory pressure (and shrinking the target number) should
+> cause negative dentries to be evicted from the old end of the LRU list.
+> But memory pressure shouldn't cause us to change the target number;
+> the target number is what we think we need to keep the system running
+> smoothly.
+>
+Thanks for the quick response.
 
-HEAD commit:    f8788d86 Linux 5.6-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a93c2de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=85d9878b19c94f9019ad
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137fe929e00000
+I agree that auto-tuning so that the system administrator don't have to
+worry about it will be the best approach if it is implemented in the
+right way. However, it is hard to do it right.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+85d9878b19c94f9019ad@syzkaller.appspotmail.com
+How about letting users specify a cap on the amount of total system
+memory allowed for negative dentries like one of my previous patchs.
+Internally, there is a predefined minimum and maximum for
+dentry-dir-max. We sample the total negative dentry counts periodically
+and adjust the dentry-dir-max accordingly.
 
-------------[ cut here ]------------
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 0 PID: 8790 at lib/refcount.c:25 refcount_warn_saturate+0x147/0x1b0 lib/refcount.c:25
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8790 Comm: syz-executor.4 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_warn_saturate+0x147/0x1b0 lib/refcount.c:25
-Code: c7 ed e2 f0 88 31 c0 e8 d7 2d a8 fd 0f 0b eb a1 e8 0e 68 d6 fd c6 05 c7 31 c5 05 01 48 c7 c7 24 e3 f0 88 31 c0 e8 b9 2d a8 fd <0f> 0b eb 83 e8 f0 67 d6 fd c6 05 aa 31 c5 05 01 48 c7 c7 50 e3 f0
-RSP: 0018:ffffc900024e7d00 EFLAGS: 00010246
-RAX: 11ed52ed4a02e700 RBX: 0000000000000002 RCX: ffff888097334280
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: ffffc900024e7d10 R08: ffffffff81600324 R09: ffffed1015d44592
-R10: ffffed1015d44592 R11: 0000000000000000 R12: 1ffff11011de2046
-R13: ffff8880a6558000 R14: 0000000000000002 R15: 0000000000000005
- j1939_netdev_start+0x83a/0x920 include/linux/refcount.h:191
- j1939_sk_bind+0x2ae/0xa90 net/can/j1939/socket.c:469
- __sys_bind+0x2bd/0x3a0 net/socket.c:1662
- __do_sys_bind net/socket.c:1673 [inline]
- __se_sys_bind net/socket.c:1671 [inline]
- __x64_sys_bind+0x7a/0x90 net/socket.c:1671
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c449
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f439cc91c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00007f439cc926d4 RCX: 000000000045c449
-RDX: 0000000000000018 RSI: 0000000020000240 RDI: 0000000000000005
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000030 R14: 00000000004c28fe R15: 000000000076bf2c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Specifying a percentage of total system memory is more intuitive than
+just specifying a hard number for dentry-dir-max. Still some user input
+is required.
+
+What do you think?
+
+Cheers,
+Longman
 
