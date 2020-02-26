@@ -2,112 +2,96 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AEDC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A73C4BA26
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCA724653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UyP5fnk2"
+	by mail.kernel.org (Postfix) with ESMTP id 8782824653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582747540;
+	bh=ay2gtdzTIg0s3GvyL3AHawuz/h9BXOjZIl4ZqD1wLZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SF/URDoQO5hxNdD01gBbxVinxRYOfgydz+MwzLGCqXEFypjrVMQNUEOLZ3vTZPBz/
+	 GtZ0qE8hgqb90ueAXLHzyQg4n0NE98f5HatvsSyRTB0ePMvp92tk1lOB500av+twNd
+	 z+nmFW5fpReGTDOhH8D8h3i1g0niSYaGEzPTUwuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgBZUCo (ORCPT
+        id S1727425AbgBZUFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:02:44 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38536 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgBZUCo (ORCPT
+        Wed, 26 Feb 2020 15:05:39 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37197 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbgBZUFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:02:44 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z9so652005oth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:02:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oYPZLk9fblhfI7X9fM3xbDPsnJvljmxVNytskCU+vlA=;
-        b=UyP5fnk2tcq/pPIf8UiuwxkR5072gZy0q/BJ2uagssjQU8qPl2XlFZef/INcAqm/G/
-         AIzv7Fc+eTguGy7/felWPoIFpMQfSwUovQC59vXMK3nK9Vld9VdxSJVDicbvgWOoN9Hc
-         lp6Ttr3B2PC+IVX+BU48YAaEoSpQUtEPZEVOyu252uIIjzfQutowIm9kF5gwglA+Mga6
-         WWmBOfvwOmDJ4tDldTih3mXrVaeidJaV15tBRGEoVRZ4mnxtChsEM3sWHWTcRg38Tv9P
-         1liVai5ZMM8MDyDZbBiD/OsEkAEtf+9uLwxyaxcV1jCFl7V2wMCKotF0lyMmLkNbF9cb
-         35sQ==
+        Wed, 26 Feb 2020 15:05:39 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b3so667829otp.4;
+        Wed, 26 Feb 2020 12:05:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oYPZLk9fblhfI7X9fM3xbDPsnJvljmxVNytskCU+vlA=;
-        b=nPXjBftR4MV5rQAv3b/8zykD6HBS7JQ6FVlM1/XtwygS4t+iCCiRSLAKN+pZxzXNJ9
-         uUV+tfNyrQkDe+Zdz1l5P8ipq0u4y0n8tVhSzhChios+W6vcshbCcVlIpENbKl2HLVjY
-         oBBJu+gs7PK8ARflH5DOD8/wv/oFRrB2loj85y/BwE/uneZQp1xg6L6JwiqF1QWEMYUJ
-         oBHJ5MAJdFMX/tqwoQJewHz87lkrJznkF+e5N1E7DKaXOAe08FEk87OppluCuQf5KW6n
-         pj5MI1qekbkbPFw40i0bHtWV21P0+BoKcmOm4We0E7wcmQZxL2a5AqErrrPC5ot3QLwn
-         N5wQ==
-X-Gm-Message-State: APjAAAVQlW4OHBQfQCwRsIeyZcF0D/PahPyWC+ekeOmUfwWBw+gsNzkn
-        egjh5kAnpIgSwj6zPCe9XbOyUCNiZfrvqGj8YbcD9w==
-X-Google-Smtp-Source: APXvYqwWb32V/0K0pdQElKXeofe1I4diMq4dFnLk2SNlKDa4ZAncUqcmsHgASgI17lp4ZQoieYvDqTld7vL+VECLrE4=
-X-Received: by 2002:a9d:6ac2:: with SMTP id m2mr356628otq.191.1582747362553;
- Wed, 26 Feb 2020 12:02:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rfooh7DJ/puEMePfWhIF847RRO14nrehO8VpW6u2dqc=;
+        b=saiVxvDFo8hVZnGsp9NWUNR5ptFExf6k5XWMDC4wQwUaijB/pfKbejBnCF+/PzSC4j
+         k2PYmbjwpE2Qe4YRet1jM/CGt6vVLCBhAnL8CyLgoPm51eS8zot+ondip5Tfa99Go17T
+         8EA7Dm9JMq3BgUgGbC2qDqjfeN0FTv2XvlJhN6IOyp+FqoH8xT67uYhrc8cpHArMLKaZ
+         otkXPK4e4pxh2AGNIpB2qycvnKs51kQZPG8lM6Ml+Wd2la4PNoRsO87jJCKt3R05AWCm
+         onzuY6eeIWhGzyJrsg9UhvBpKRFNwWio9T9fM1D8us7rlHwsKx2itdLTl2LvYstTbIou
+         cwTw==
+X-Gm-Message-State: APjAAAUIovUJq9nW7dsOab25PUN8SMZLdD0Y7IGHBivT1h3Im2sJZnlv
+        xMwLFX2SUJ8symUhAuLwog==
+X-Google-Smtp-Source: APXvYqwoExQts8kyL6ACiX7nqlcfseb2jryno1PV9+/zcCxooXzFpJaL6Shdc1qByEDsFjYB/p3G5A==
+X-Received: by 2002:a05:6830:1e37:: with SMTP id t23mr439632otr.16.1582747538082;
+        Wed, 26 Feb 2020 12:05:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n2sm1133092oia.58.2020.02.26.12.05.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 12:05:37 -0800 (PST)
+Received: (nullmailer pid 31917 invoked by uid 1000);
+        Wed, 26 Feb 2020 20:05:35 -0000
+Date:   Wed, 26 Feb 2020 14:05:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Introduce soc sleep stats bindings
+ for Qualcomm SoCs
+Message-ID: <20200226200535.GA31824@bogus>
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+ <1582274986-17490-2-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-References: <20200221014604.126118-1-shakeelb@google.com> <20200226.110749.77396284962321904.davem@davemloft.net>
-In-Reply-To: <20200226.110749.77396284962321904.davem@davemloft.net>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 26 Feb 2020 12:02:31 -0800
-Message-ID: <CALvZod5TsauERhaCqa1OZp4FaX4nq_UBL84=siESEG=Uk4LYuQ@mail.gmail.com>
-Subject: Re: [PATCH v3] cgroup: memcg: net: do not associate sock with
- unrelated cgroup
-To:     David Miller <davem@davemloft.net>
-Cc:     Eric Dumazet <edumazet@google.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Greg Thelen <gthelen@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582274986-17490-2-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:07 AM David Miller <davem@davemloft.net> wrote:
->
-> From: Shakeel Butt <shakeelb@google.com>
-> Date: Thu, 20 Feb 2020 17:46:04 -0800
->
-> > We are testing network memory accounting in our setup and noticed
-> > inconsistent network memory usage and often unrelated cgroups network
-> > usage correlates with testing workload. On further inspection, it
-> > seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
-> > IRQ context specially for cgroup v1.
-> >
-> > mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in IRQ context
-> > and kind of assumes that this can only happen from sk_clone_lock()
-> > and the source sock object has already associated cgroup. However in
-> > cgroup v1, where network memory accounting is opt-in, the source sock
-> > can be unassociated with any cgroup and the new cloned sock can get
-> > associated with unrelated interrupted cgroup.
-> >
-> > Cgroup v2 can also suffer if the source sock object was created by
-> > process in the root cgroup or if sk_alloc() is called in IRQ context.
-> > The fix is to just do nothing in interrupt.
-> >
-> > WARNING: Please note that about half of the TCP sockets are allocated
-> > from the IRQ context, so, memory used by such sockets will not be
-> > accouted by the memcg.
->
-> Then if we do this then we have to have some kind of subsequent change
-> to attach these sockets to the correct cgroup, right?
+On Fri, 21 Feb 2020 14:19:43 +0530, Maulik Shah wrote:
+> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> 
+> Add device binding documentation for Qualcomm Technology Inc's (QTI)
+> SoC sleep stats driver. The driver is used for displaying SoC sleep
+> statistic maintained by Always On Processor or Resource Power Manager.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> 
 
-Currently we can potentially charge wrong cgroup. With this patch that
-will be fixed but potentially half of sockets remain unaccounted. I
-have a followup (incomplete) patch [1] to fix that. I will send the
-next version soon.
-
-[1] https://lore.kernel.org/linux-mm/20200222010456.40635-1-shakeelb@google.com/
+Reviewed-by: Rob Herring <robh@kernel.org>
