@@ -2,52 +2,51 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED124C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F6FC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27B624653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A80520732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eJwnt7bJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HhaDEMx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBZJhm (ORCPT
+        id S1727957AbgBZJhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:37:42 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40074 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgBZJhk (ORCPT
+        Wed, 26 Feb 2020 04:37:46 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45652 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgBZJho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:37:40 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b9FN087050;
-        Wed, 26 Feb 2020 03:37:09 -0600
+        Wed, 26 Feb 2020 04:37:44 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bMXC048392;
+        Wed, 26 Feb 2020 03:37:22 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582709829;
-        bh=fx7S2CDPaTW7xSXzGMie7/8qKHKT4vHfX8u8KvtoGKc=;
-        h=From:To:CC:Subject:Date;
-        b=eJwnt7bJM8WoM7V8AGiP7gRLIJXWrfsHi9HOrlifdKe1uqOiAW0KR6MtjzuYg4zpe
-         blmiFN27FJ0DDZ9Esq3P6519ssqGujT+OyjgRWtaa/2LjtaUt6uczAV4cbdXvHbtWE
-         NHqrNnGBs5VlgzSwfk2Dp92him1vrgyWsoK44BOY=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9b9aA122372
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 03:37:09 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1582709842;
+        bh=2l+gbPh3UsxLnnwcIelUMPvT/YEvl2c/dQvOKdwacuQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=HhaDEMx64ozp/WxJ5VYGDzXmcJVkmcGFqgdH/RVfu6gRmEj4N2MmLODZ2ka6AWONC
+         g4hfh09oT7jzPWmzSHKEN7fF4hM0eGNHGJkihHXIo7kFR8v7krMjmnBE6IFoXKi5G+
+         MrM3sZR4ePD9TaRCJKkygIl1Plk26u+PKlooGVdU=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bMFn086529;
+        Wed, 26 Feb 2020 03:37:22 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 03:37:08 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:37:21 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 03:37:08 -0600
+ Frontend Transport; Wed, 26 Feb 2020 03:37:21 -0600
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4A5110613;
-        Wed, 26 Feb 2020 03:37:05 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4A8110613;
+        Wed, 26 Feb 2020 03:37:17 -0600
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -59,10 +58,12 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v2 00/11] mtd: spi-nor: add xSPI Octal DTR support
-Date:   Wed, 26 Feb 2020 15:06:52 +0530
-Message-ID: <20200226093703.19765-1-p.yadav@ti.com>
+Subject: [PATCH v2 03/11] spi: spi-mem: allow specifying whether an op is DTR or not
+Date:   Wed, 26 Feb 2020 15:06:55 +0530
+Message-ID: <20200226093703.19765-4-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200226093703.19765-1-p.yadav@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -72,74 +73,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Each phase is given a separate 'is_dtr' field so mixed protocols like
+4S-4D-4D can be supported.
 
-This series adds support for octal DTR flashes in the spi-nor framework,
-and then adds hooks for the Cypress Semper flash which is an xSPI
-compliant Octal DTR flash.
+Also add the mode bits SPI_RX_DTR and SPI_TX_DTR so controllers can
+specify whether they support DTR modes or not.
 
-The Cadence QSPI controller driver is also updated to run in Octal DTR
-mode.
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/spi/spi-mem.c       | 23 +++++++++++++++++++++++
+ include/linux/spi/spi-mem.h |  8 ++++++++
+ 2 files changed, 31 insertions(+)
 
-Tested on TI J721e EVM with 1-bit ECC on the Cypress flash.
-
-This series depends on [0]. v1 can be found at [1].
-
-[0] https://patchwork.kernel.org/patch/11355593/
-[1] https://lore.kernel.org/linux-mtd/20200211133348.15558-1-p.yadav@ti.com/
-
-Changes in v2:
-- Add DT properties "spi-rx-dtr" and "spi-tx-dtr" to allow expressing
-  DTR capabilities.
-
-- Set the mode bits SPI_RX_DTR and SPI_TX_DTR when we discover the DT
-  properties "spi-rx-dtr" and spi-tx-dtr".
-
-- spi_nor_cypress_octal_enable() was updating nor->params.read[] with
-  the intention of setting the correct number of dummy cycles. But this
-  function is called _after_ selecting the read so setting
-  nor->params.read[] will have no effect. So, update nor->read_dummy
-  directly.
-
-- Fix spi_nor_spimem_check_readop() and spi_nor_spimem_check_pp()
-  passing nor->read_proto and nor->write_proto to
-  spi_nor_spimem_setup_op() instead of read->proto and pp->proto
-  respectively.
-
-- Move the call to cqspi_setup_opcode_ext() inside cqspi_enable_dtr().
-  This avoids repeating the 'if (f_pdata->is_dtr)
-  cqspi_setup_opcode_ext()...` snippet multiple times.
-
-- Call the default 'supports_op()' from cqspi_supports_mem_op(). This
-  makes sure the buswidth requirements are also enforced along with the
-  DTR requirements.
-
-- Drop the 'is_dtr' argument from spi_check_dtr_req(). We only call it
-  when a phase is DTR so it is redundant.
-
-Pratyush Yadav (11):
-  dt-bindings: spi: allow expressing DTR capability
-  spi: set mode bits for "spi-rx-dtr" and "spi-tx-dtr"
-  spi: spi-mem: allow specifying whether an op is DTR or not
-  spi: spi-mem: allow specifying a command's extension
-  spi: cadence-quadspi: Add support for octal DTR flashes
-  mtd: spi-nor: add support for DTR protocol
-  mtd: spi-nor: get command opcode extension type from BFPT
-  mtd: spi-nor: parse xSPI Profile 1.0 table
-  mtd: spi-nor: use dummy cycle and address width info from SFDP
-  mtd: spi-nor: enable octal DTR mode when possible
-  mtd: spi-nor: add support for Cypress Semper flash
-
- .../bindings/spi/spi-controller.yaml          |  10 +
- drivers/mtd/spi-nor/spi-nor.c                 | 594 ++++++++++++++++--
- drivers/spi/spi-cadence-quadspi.c             | 247 +++++++-
- drivers/spi/spi-mem.c                         |  46 ++
- drivers/spi/spi.c                             |  10 +-
- include/linux/mtd/spi-nor.h                   |  55 +-
- include/linux/spi/spi-mem.h                   |  32 +
- include/linux/spi/spi.h                       |   2 +
- 8 files changed, 891 insertions(+), 105 deletions(-)
-
---
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index e5a46f0eb93b..cb13e0878b95 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -99,6 +99,16 @@ void spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
+ }
+ EXPORT_SYMBOL_GPL(spi_controller_dma_unmap_mem_op_data);
+ 
++static int spi_check_dtr_req(struct spi_mem *mem, bool tx)
++{
++	u32 mode = mem->spi->mode;
++
++	if ((tx && (mode & SPI_TX_DTR)) || (!tx && (mode & SPI_RX_DTR)))
++		return 0;
++
++	return -ENOTSUPP;
++}
++
+ static int spi_check_buswidth_req(struct spi_mem *mem, u8 buswidth, bool tx)
+ {
+ 	u32 mode = mem->spi->mode;
+@@ -154,6 +164,19 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
+ 				   op->data.dir == SPI_MEM_DATA_OUT))
+ 		return false;
+ 
++	if (op->cmd.is_dtr && spi_check_dtr_req(mem, true))
++		return false;
++
++	if (op->addr.is_dtr && spi_check_dtr_req(mem, true))
++		return false;
++
++	if (op->dummy.is_dtr && spi_check_dtr_req(mem, true))
++		return false;
++
++	if (op->data.dir != SPI_MEM_NO_DATA && op->data.is_dtr &&
++	    spi_check_dtr_req(mem, op->data.dir == SPI_MEM_DATA_OUT))
++		return false;
++
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+index af9ff2f0f1b2..4669082b4e3b 100644
+--- a/include/linux/spi/spi-mem.h
++++ b/include/linux/spi/spi-mem.h
+@@ -71,6 +71,7 @@ enum spi_mem_data_dir {
+  * struct spi_mem_op - describes a SPI memory operation
+  * @cmd.buswidth: number of IO lines used to transmit the command
+  * @cmd.opcode: operation opcode
++ * @cmd.is_dtr: whether the command opcode should be sent in DTR mode or not
+  * @addr.nbytes: number of address bytes to send. Can be zero if the operation
+  *		 does not need to send an address
+  * @addr.buswidth: number of IO lines used to transmit the address cycles
+@@ -78,10 +79,13 @@ enum spi_mem_data_dir {
+  *	      Note that only @addr.nbytes are taken into account in this
+  *	      address value, so users should make sure the value fits in the
+  *	      assigned number of bytes.
++ * @addr.is_dtr: whether the address should be sent in DTR mode or not
+  * @dummy.nbytes: number of dummy bytes to send after an opcode or address. Can
+  *		  be zero if the operation does not require dummy bytes
+  * @dummy.buswidth: number of IO lanes used to transmit the dummy bytes
++ * @dummy.is_dtr: whether the dummy bytes should be sent in DTR mode or not
+  * @data.buswidth: number of IO lanes used to send/receive the data
++ * @data.is_dtr: whether the data should be sent in DTR mode or not
+  * @data.dir: direction of the transfer
+  * @data.nbytes: number of data bytes to send/receive. Can be zero if the
+  *		 operation does not involve transferring data
+@@ -92,21 +96,25 @@ struct spi_mem_op {
+ 	struct {
+ 		u8 buswidth;
+ 		u8 opcode;
++		bool is_dtr;
+ 	} cmd;
+ 
+ 	struct {
+ 		u8 nbytes;
+ 		u8 buswidth;
+ 		u64 val;
++		bool is_dtr;
+ 	} addr;
+ 
+ 	struct {
+ 		u8 nbytes;
+ 		u8 buswidth;
++		bool is_dtr;
+ 	} dummy;
+ 
+ 	struct {
+ 		u8 buswidth;
++		bool is_dtr;
+ 		enum spi_mem_data_dir dir;
+ 		unsigned int nbytes;
+ 		union {
+-- 
 2.25.0
 
