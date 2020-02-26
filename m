@@ -2,133 +2,77 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D965BC4BA1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE002C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E8120801
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB1520801
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgBZRhF (ORCPT
+        id S1726969AbgBZRhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:37:05 -0500
-Received: from www62.your-server.de ([213.133.104.62]:42022 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgBZRhF (ORCPT
+        Wed, 26 Feb 2020 12:37:36 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55394 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgBZRhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:37:05 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j70c8-0002db-0I; Wed, 26 Feb 2020 18:36:52 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j70c7-000Is6-Fc; Wed, 26 Feb 2020 18:36:51 +0100
-Subject: Re: [PATCH bpf-next v4 0/5] Make probes which emit dmesg warnings
- optional
-To:     Quentin Monnet <quentin@isovalent.com>,
-        Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org
-References: <20200226165941.6379-1-mrostecki@opensuse.org>
- <e4777396-dbf0-855d-beaf-ba7fd533a4fb@isovalent.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <03558a25-d07c-d4df-6840-4a171f18d893@iogearbox.net>
-Date:   Wed, 26 Feb 2020 18:36:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 26 Feb 2020 12:37:36 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BD4F0260C2B;
+        Wed, 26 Feb 2020 17:37:34 +0000 (GMT)
+Date:   Wed, 26 Feb 2020 18:37:28 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Boris Brezillon <bbrezillon@kernel.org>,
+        =?UTF-8?B?UHJ6ZW15c8WCYXc=?= Gaj <pgaj@cadence.com>,
+        Vitor Soares <Vitor.Soares@synopsys.com>,
+        linux-i3c@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] i3c: Address i3c_device_id related issues
+Message-ID: <20200226183728.74df26f5@collabora.com>
+In-Reply-To: <20200222102711.1352006-1-boris.brezillon@collabora.com>
+References: <20200222102711.1352006-1-boris.brezillon@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <e4777396-dbf0-855d-beaf-ba7fd533a4fb@isovalent.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25734/Tue Feb 25 15:06:17 2020)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 6:22 PM, Quentin Monnet wrote:
-> 2020-02-26 17:59 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
->> Feature probes in bpftool related to bpf_probe_write_user and
->> bpf_trace_printk helpers emit dmesg warnings which might be confusing
->> for people running bpftool on production environments. This patch series
->> addresses that by filtering them out by default and introducing the new
->> positional argument "full" which enables all available probes.
->>
->> The main motivation behind those changes is ability the fact that some
->> probes (for example those related to "trace" or "write_user" helpers)
->> emit dmesg messages which might be confusing for people who are running
->> on production environments. For details see the Cilium issue[0].
->>
->> v1 -> v2:
->> - Do not expose regex filters to users, keep filtering logic internal,
->> expose only the "full" option for including probes which emit dmesg
->> warnings.
->>
->> v2 -> v3:
->> - Do not use regex for filtering out probes, use function IDs directly.
->> - Fix bash completion - in v2 only "prefix" was proposed after "macros",
->>    "dev" and "kernel" were not.
->> - Rephrase the man page paragraph, highlight helper function names.
->> - Remove tests which parse the plain output of bpftool (except the
->>    header/macros test), focus on testing JSON output instead.
->> - Add test which compares the output with and without "full" option.
->>
->> v3 -> v4:
->> - Use enum to check for helper functions.
->> - Make selftests compatible with older versions of Python 3.x than 3.7.
->>
->> [0] https://github.com/cilium/cilium/issues/10048
->>
->> Michal Rostecki (5):
->>    bpftool: Move out sections to separate functions
->>    bpftool: Make probes which emit dmesg warnings optional
->>    bpftool: Update documentation of "bpftool feature" command
->>    bpftool: Update bash completion for "bpftool feature" command
->>    selftests/bpf: Add test for "bpftool feature" command
->>
->>   .../bpftool/Documentation/bpftool-feature.rst |  19 +-
->>   tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
->>   tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
->>   tools/testing/selftests/.gitignore            |   5 +-
->>   tools/testing/selftests/bpf/Makefile          |   3 +-
->>   tools/testing/selftests/bpf/test_bpftool.py   | 178 +++++++++++
->>   tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
->>   7 files changed, 373 insertions(+), 123 deletions(-)
->>   create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
->>   create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
->>
+On Sat, 22 Feb 2020 11:27:08 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
+
+> Hello,
 > 
-> Reviewed-by: Quentin Monnet <quentin@isovalent.com>
-> (Please keep tags between versions.)
+> When the I3C subsystem was introduced part of the modalias generation
+> logic was missing (modalias generation based on i3c_device_id tables).
+> This patch series addresses that limitation and simplifies our match
+> function along the way.
 > 
-> Your change looks good. The tests in patch 5 still pass with Python 3.7.5 (but I have not tried to run with an older version of Python).
+> Regards,
+> 
+> Boris
+> 
+> Boris Brezillon (3):
+>   i3c: Fix MODALIAS uevents
 
-Looks better now ...
+We also lack a modalias sysfs attribute.
 
-# ./test_bpftool.sh
-test_feature_dev_json (test_bpftool.TestBpftool) ... ok
-test_feature_kernel (test_bpftool.TestBpftool) ... ok
-test_feature_kernel_full (test_bpftool.TestBpftool) ... ok
-test_feature_kernel_full_vs_not_full (test_bpftool.TestBpftool) ... ok
-test_feature_macros (test_bpftool.TestBpftool) ... ok
+>   i3c: Generate aliases for i3c modules
+>   i3c: Simplify i3c_device_match_id()
+> 
+>  drivers/i3c/device.c              | 50 ++++++++++++++-----------------
+>  drivers/i3c/master.c              |  2 +-
+>  scripts/mod/devicetable-offsets.c |  7 +++++
+>  scripts/mod/file2alias.c          | 19 ++++++++++++
+>  4 files changed, 49 insertions(+), 29 deletions(-)
+> 
 
-----------------------------------------------------------------------
-Ran 5 tests in 0.253s
-
-OK
-
-... applied, thanks!
