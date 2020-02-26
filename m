@@ -2,140 +2,139 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BACFC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D47C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA3E20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8B024680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="DsJlHCQM"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="U0fYNBJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgBZPLQ (ORCPT
+        id S1728018AbgBZPLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:11:16 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41286 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727064AbgBZPLP (ORCPT
+        Wed, 26 Feb 2020 10:11:53 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40643 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgBZPLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:11:15 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QEn8Tf014853;
-        Wed, 26 Feb 2020 10:11:08 -0500
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwg26t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 10:11:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X6l0F79CGPOI0refm4jIg+wiVwcxZzEB/688pAbepvqexvmMiIQDLw4m85yqngujTYLJXXGg4CHDMLNhFqczvI+Pz2+a1gOsfr6COfEnYW2nd9Y7DntvlFcG83v0flmDOxek1FqS6hIfFJ+rfZ7ab+nz63kZGLBoBZf2GhpAKGzllz/nQtw7fqJ1yu+TUHthuN3Ndj8LjFlbmOnfFCvYujVoxuQdUQJkK4tzThJQKUvQsF+bWlWArmhR5Kdvb9b4/S2ghXtCCKizmUblFFqwXu7dVm41zsFj2pckJjVfdSOSlxKgz2VWV9evxAdqw/2HEeFyCBMpu/nx1JCy2r8SAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g+4B5LtLt9yGsWQJRnHtvLPyn6YJkb2TrudMDKxUW9k=;
- b=nbqWpFgJ01KqWAbylIhprTZ0s0lyZAMAECipjj3oF51BkK5bBefK2KBwqEnJzVPLqQuIbAH4yIUscZkQK3Ne/aeFh2qbN3K4h1BvyWt4F5bDoYo83nlP+I/hFcPt0vt4QtHVZUFlJdwQUKRgnLEjOl6j7+CI0fCxo9EXFUFa9LtkS4NrRAtTb8NYMh6atnFEEiX1swuUJYMbELHW9zScKGgC34shH66jrovEfESRMIT5ic2qudKtye46LnqwyRvHrVEtZSOznwTA0kVyywgel32Kmxroexpa662BW/OP/Mv/+7P8gX7/YCpcLjsALxM7N7F7TU+cj6Ai6p0sHhYjgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Wed, 26 Feb 2020 10:11:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so3513638wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g+4B5LtLt9yGsWQJRnHtvLPyn6YJkb2TrudMDKxUW9k=;
- b=DsJlHCQM01e3xp48FBHEL5lGbYzkVAN7N+V9kjPk7yYzQGvl7nZPs3c5BEVQ76ax8I1A5CnPPQbEbaW1hA6+YdFEOoz54qSy9uDofFB3pNYwN+G7O46uct00ubtGjvNB83VSDGeRPBEduTqj/ceGpUwapitwryxi1hX89tKtPNo=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (2603:10b6:610:90::24)
- by CH2PR03MB5317.namprd03.prod.outlook.com (2603:10b6:610:9c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.22; Wed, 26 Feb
- 2020 15:11:05 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::edf0:3922:83f0:3056]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::edf0:3922:83f0:3056%4]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 15:11:03 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
-Subject: Re: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
- transfer delays
-Thread-Topic: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
- transfer delays
-Thread-Index: AQHVtLqu0YiY+9IGDUGLRFfgkettHKe+Os+AgG9PjoCAAHnVAIAAARcA
-Date:   Wed, 26 Feb 2020 15:11:03 +0000
-Message-ID: <193b5d111772fb16a7c6d0ea86a1405c6c4243b3.camel@analog.com>
-References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
-         <20191217091615.12764-1-alexandru.ardelean@analog.com>
-         <9991700815c02b3227a5902e4cae1afe5200b0ff.camel@linux.intel.com>
-         <b790461b49685082f843c59cd047836e13744285.camel@analog.com>
-         <20200226150944.GD3407@linux.intel.com>
-In-Reply-To: <20200226150944.GD3407@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: df5299b2-e5e0-4dde-0c1d-08d7bace18e2
-x-ms-traffictypediagnostic: CH2PR03MB5317:
-x-microsoft-antispam-prvs: <CH2PR03MB5317775FFBC6BC3AE2B8371DF9EA0@CH2PR03MB5317.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:497;
-x-forefront-prvs: 0325F6C77B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(346002)(376002)(396003)(39860400002)(199004)(189003)(81166006)(81156014)(8676002)(2616005)(6512007)(6486002)(186003)(6916009)(4001150100001)(4326008)(478600001)(86362001)(66476007)(26005)(66446008)(64756008)(36756003)(71200400001)(2906002)(54906003)(91956017)(6506007)(5660300002)(66556008)(66946007)(8936002)(316002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5317;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WVzXPDrYIDnJ4Os74GfdwUAgcyrpyiDAky8P59dONTObRYN510f5sMf/XUdT91MmCq7WRQH1LRWonP5ajP234/V0lqt6Kx/bTTGwKMzx7sID5EhRarWOjjdlHC8vHoqcLQ79/cjAO1P5savc1t7IxqNNGCnkCCkTcpeZQQgHOH964Q61G07RzqpBfCU30kymX9LngHBZ1QxmeieCDb9YD/+YIkv2SmffqKuMN4T3+luH4SUEFaj9HMnbHt0qVunKk0jyHk4bzaeREMUJYC85y7EOKsYEE1FMwvoMXUsNZtCRls7DXYxL4KB3WJN2IZdxcIZ3GeKUPKV9K4bA5NOs/N4U1igb0wslCVeOBCZhtIvpN3mfq9ySyVb9EohDcYloWnl3UtBpucfi2/VVrk3WKkpUUu8SM0O2Hbci9/u2vCiDZPoMX6YqkwXv5uHlqqCo
-x-ms-exchange-antispam-messagedata: 6qfcvUQAbTmVk1kV20aFvOfv9fAgox7gBqjI5xHUlSSSpPXiP23nOGmvRn1FpmCoFrBYksfbvkEogJx8pcAtvGkoGCFg0Rwu6jCV2xnK7RvQrEryilJc/O/+fF93DIVVtoO8IZ5Soa98OgrQEE6mlw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0D0834933A7C724E8A8779C44E4C441C@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=igQz1W0l9NSpj6H/cHRjMubdVHwK+ov1fDsF+eJLpII=;
+        b=U0fYNBJmYSmTtT7P/ZIt8VY1Pwonp/0JTIuJTsVwyEs1dEBhDcmxSx/VVJAwdzm7Vh
+         apwgTsKXZNfGf5O8yNzSfFh48cXmvaa4a00dENUAWWtN78Gmbm2DhRk+Co4rZIp64Oy5
+         YunVks4LvgcRQNEGQGOASc81Tl/y0zhlR5T8cLnuW/CtdoMAOQUcfwPV5sQBBOxofUj4
+         CoVvuPxXo1rVAWE84O5S3d6zSNT3taIWIC7TKBCfzLdG7Nl5ywnu3WHa92vZxYcC99Y+
+         KBtCqiKirwYYfLSoMxcCl6yU+akkEjyIMSs66YzLgt5bftN0JU+DvwM/erV33PCU6Hlj
+         JIOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=igQz1W0l9NSpj6H/cHRjMubdVHwK+ov1fDsF+eJLpII=;
+        b=IQowurDiE7Hi0xLCFksXEbZ0JZpfqna87LLPvvY+wKHeUWK08iJZ8dfU7Ym46m+ePy
+         06wkSUwwPbm5PdTkctkUZ07qvDbHAAXQGZ20C00lMolDqUT/hQqV8xSJB9NjaNJNmOyg
+         6IVLIBKJgCmi4PeV5EVncFKJWWS3eOAxPdGuAPQ1OOfxzd4DVCUSE1yH6r8egMDjmXwH
+         85Mu6cVVJOASIMJCC6QE534tjagWY9KpDGHD2alBohlJwigBSsQQbO2tr/rovbYFGFVR
+         52Szl9azwGhjHpUOlGz2a5UVygv6+RsiyGPDUULbD9QJZq96n08bS0H1qTWyO8sU1aOD
+         dJjA==
+X-Gm-Message-State: APjAAAWhmL2W8pmcm6qcgeSDKJ2uaDejbmIE+AmvI9vf7Y38LOFDKzxI
+        y/UUuQmZahfgpphB+smxvCN5KMm7v4MvMtCt/nyB8Q==
+X-Google-Smtp-Source: APXvYqyOZ1dbM+swXLeschkvR37I8dvG+RhzGAm+l8/m8R0p72gfL7eFv1koVcd6SYWWIlo+CkfkxFl5bkw+9j349ig=
+X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr6141680wml.138.1582729910964;
+ Wed, 26 Feb 2020 07:11:50 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df5299b2-e5e0-4dde-0c1d-08d7bace18e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 15:11:03.8317
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kn0pgWbLZqeu+irR2gpZK9QCu1HUqhxMGVOOlV4kUyqp1DxgDGU9F7bd72sQ7d2/Vrccl2oqSoYYeGw33fpNbRcrjKasYLmJcs+QH9Hwe4k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5317
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_05:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002260108
+References: <20200225223321.231477305@linutronix.de> <20200225224145.444611199@linutronix.de>
+ <20200226080538.GO18400@hirez.programming.kicks-ass.net> <20200226092018.GR18400@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200226092018.GR18400@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Wed, 26 Feb 2020 07:11:39 -0800
+Message-ID: <CALCETrXYbmrVvYQzBDp8YP+-UyF3KPDgcK__HuNmpdsMBJYDVA@mail.gmail.com>
+Subject: Re: [patch 13/16] x86/entry: Move irqflags and context tracking to C
+ for simple idtentries
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTI2IGF0IDE3OjEwICswMjAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6
-DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIFdlZCwgRmViIDI2LCAyMDIwIGF0IDA3OjUxOjA2QU0g
-KzAwMDAsIEFyZGVsZWFuLCBBbGV4YW5kcnUgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDE5LTEyLTE3
-IGF0IDE0OjA0ICswMjAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6DQo+ID4gPiBbRXh0ZXJuYWxd
-DQo+ID4gPiANCj4gPiA+IE9uIFR1ZSwgMjAxOS0xMi0xNyBhdCAxMToxNiArMDIwMCwgQWxleGFu
-ZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+ID4gPiBJbiBhIHJlY2VudCBjaGFuZ2UgdG8gdGhlIFNQ
-SSBzdWJzeXN0ZW0gWzFdLCBhIG5ldyAnZGVsYXknIHN0cnVjdCB3YXMNCj4gPiA+ID4gYWRkZWQN
-Cj4gPiA+ID4gdG8gcmVwbGFjZSB0aGUgJ2RlbGF5X3VzZWNzJy4gVGhpcyBjaGFuZ2UgcmVwbGFj
-ZXMgdGhlIGN1cnJlbnQNCj4gPiA+ID4gJ2RlbGF5X3VzZWNzJyB3aXRoICdkZWxheScgZm9yIHRo
-aXMgZHJpdmVyLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlICdzcGlfdHJhbnNmZXJfZGVsYXlfZXhl
-YygpJyBmdW5jdGlvbiBbaW4gdGhlIFNQSSBmcmFtZXdvcmtdIG1ha2VzDQo+ID4gPiA+IHN1cmUN
-Cj4gPiA+ID4gdGhhdCBib3RoICdkZWxheV91c2VjcycgJiAnZGVsYXknIGFyZSB1c2VkIChpbiB0
-aGlzIG9yZGVyIHRvIHByZXNlcnZlDQo+ID4gPiA+IGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5KS4N
-Cj4gPiA+ID4gDQo+ID4gPiA+IFsxXSBjb21taXQgYmViY2ZkMjcyZGY2NDg1ICgic3BpOiBpbnRy
-b2R1Y2UgYGRlbGF5YCBmaWVsZCBmb3INCj4gPiA+ID4gYHNwaV90cmFuc2ZlcmAgKyBzcGlfdHJh
-bnNmZXJfZGVsYXlfZXhlYygpIikNCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEFs
-ZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gPiAN
-Cj4gPiA+IFJldmlld2VkLWJ5OiBKYXJra28gU2Fra2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51
-eC5pbnRlbC5jb20+DQo+ID4gPiANCj4gPiANCj4gPiBwaW5nIG9uIHRoaXMgcGF0Y2gNCj4gDQo+
-IE15IGJhZC4gU29ycnkuIEl0IGlzIG5vdyBhcHBsaWVkLg0KDQpObyB3b3JyaWVzLg0KVGhhbmtz
-IDopDQoNCj4gDQo+IC9KYXJra28NCg==
+On Wed, Feb 26, 2020 at 1:20 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Feb 26, 2020 at 09:05:38AM +0100, Peter Zijlstra wrote:
+> > On Tue, Feb 25, 2020 at 11:33:34PM +0100, Thomas Gleixner wrote:
+> >
+> > > --- a/arch/x86/include/asm/idtentry.h
+> > > +++ b/arch/x86/include/asm/idtentry.h
+> > > @@ -7,14 +7,31 @@
+> > >
+> > >  #ifndef __ASSEMBLY__
+> > >
+> > > +#ifdef CONFIG_CONTEXT_TRACKING
+> > > +static __always_inline void enter_from_user_context(void)
+> > > +{
+> > > +   CT_WARN_ON(ct_state() != CONTEXT_USER);
+> > > +   user_exit_irqoff();
+> > > +}
+> > > +#else
+> > > +static __always_inline void enter_from_user_context(void) { }
+> > > +#endif
+> > > +
+> > >  /**
+> > >   * idtentry_enter - Handle state tracking on idtentry
+> > >   * @regs:  Pointer to pt_regs of interrupted context
+> > >   *
+> > > - * Place holder for now.
+> > > + * Invokes:
+> > > + *  - The hardirq tracer to keep the state consistent as low level ASM
+> > > + *    entry disabled interrupts.
+> > > + *
+> > > + *  - Context tracking if the exception hit user mode
+> > >   */
+> > >  static __always_inline void idtentry_enter(struct pt_regs *regs)
+> > >  {
+> > > +   trace_hardirqs_off();
+> > > +   if (user_mode(regs))
+> > > +           enter_from_user_context();
+> > >  }
+> >
+> > So:
+> >
+> >       asm_exc_int3
+> >         exc_int3
+> >           idtentry_enter()
+> >             enter_from_user_context
+> >               if (context_tracking_enabled())
+> >
+> >           poke_int3_handler();
+> >
+> > Is, AFAICT, completely buggered.
+> >
+> > You can't have a static_branch before the poke_int3_handler that deals
+> > with text_poke.
+>
+> Forgot to say that this isn't new with this patch, just noticed it when
+> chasing after tracepoints.
+>
+> After my patch series we can actually fix this by moving the
+> poke_int3_handler() before idtentry_enter().
+
+In some sense, this is a weakness of the magic macro approach.  Some
+of the entries just want to have code that runs before all the entry
+fixups.  This is an example of it.  So are the cr2 reads.  It can all
+be made to work, but it's a bit gross.
