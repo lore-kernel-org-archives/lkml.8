@@ -2,56 +2,44 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5490AC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371C0C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFCE206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027BC24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582695832;
-	bh=ZOzBYKXgbfY5U945SxtYnf0QrB/e73YIMy/DlPN1nEg=;
+	s=default; t=1582695914;
+	bh=dywBPHcqQRK3tK3rmlQ+vgrYHMjMecnzaSIBGxs738g=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=oP5IVxhSeFWIddjGr28LOKQ/tCgq+eJjh0ctV4iw75KYqy0CrSf+rj2D/hkTSlBDj
-	 ChRMq1TUwrFXemSmakz5ISWuVRXog9qIuE1pfY4P1upBHjaMX/zyRBtVxseKcVcnZ6
-	 JTdfuKqL7jpK7D5pCeqgHy8uFBNOs+xQ1mzWrWeI=
+	b=eZ2yxyxqbcHg36hYgbLgL8TFQfXCOXNiXTkli2dq7SbGnFBN74xQnYJIQdYYVzTc1
+	 0qNpP+UVpDSxWCTL79aTkzFA6emp1zWfcsxcvtua7KmwB4lf53WRrw/oAKOZF2hKXA
+	 7mW+FVU53D+Iv8ptVFimJAcxMhl5fTwwXqo8sdpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgBZFnv (ORCPT
+        id S1726928AbgBZFpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:43:51 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39144 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgBZFnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:43:50 -0500
-Received: by mail-pg1-f196.google.com with SMTP id j15so741793pgm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:43:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1hgsM6gSNbXEr9X/HoPMyiDKMStkjECuYc49dVUE4lM=;
-        b=Wz1UXa0jC4ewUvSNjkGXJCzSSkENlxqzzznMGZATgUzEaxDdm49Sdx9QGXk2QaHRFe
-         MIxxjybdDB6tLKxVinr5IpOA2AqDQO2CCjyA/asQaX3LvJ60iane0Yi+xX09yGB3SfgN
-         phPYsd/sk5n5CmD/+PWt/6h/Vs1UWPPaFTOCw4SxzvlVVSV72TxPjQ5fhm4G/yAZYt9E
-         ka9y6jGBgBDU0tpzK63WOcGSXaluQPHt3Kq4fN5p3F+MFy3fGpqt7fvFYV4p/Pb+aU0Q
-         M+RRWSzZsB7NH/XEGytWcusUJDZP1/aunwpK0thJlvO5GyXH++KWMZf2C4fInDNgG64V
-         n+Ww==
-X-Gm-Message-State: APjAAAW8MLQnXhqowkQmJVTUTYyNvJBrCVFkqh86e3B1rGgCc+MBHJU8
-        o1XqVIPhDvR3ONn6La0L1cjksw==
-X-Google-Smtp-Source: APXvYqxnrjnDevi8orLcmXFYCJ74+Br1CVnMQ2RMcREwMk2FBaJ0tIagUzPEA3VhPTzBnIf3JLHzcA==
-X-Received: by 2002:a63:d344:: with SMTP id u4mr2119763pgi.153.1582695828342;
-        Tue, 25 Feb 2020 21:43:48 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:3602:86ff:fef6:e86b? ([2601:646:c200:1ef2:3602:86ff:fef6:e86b])
-        by smtp.googlemail.com with ESMTPSA id b27sm877029pgl.77.2020.02.25.21.43.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 21:43:47 -0800 (PST)
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
- C-code
+        Wed, 26 Feb 2020 00:45:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgBZFpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 00:45:12 -0500
+Received: from [192.168.0.217] (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94DA1206E2;
+        Wed, 26 Feb 2020 05:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582695911;
+        bh=dywBPHcqQRK3tK3rmlQ+vgrYHMjMecnzaSIBGxs738g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=spvtd7Po9KGEF83pv2kM4XTeS6PlnhfCOiMRWEH0G231pQjNb4HpRwHJwyQy75RFH
+         LZwAwDHCm68bWckYG2vh8wWTHRgSC4P9YiNdLL38sW2fixtFrHBCcf6IKv5P9BDbKY
+         TVT2Zu4tmh/ZwRZxgh9THHm6UL1snJWgebWIpR14=
+Subject: Re: [patch 5/8] x86/entry/common: Provide trace/kprobe safe exit to
+ user space functions
 To:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -60,14 +48,14 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
 References: <20200225220801.571835584@linutronix.de>
- <20200225221305.605144982@linutronix.de>
+ <20200225221305.719921962@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Message-ID: <6c4188c7-558e-b225-5a41-2ffaa5fa120e@kernel.org>
-Date:   Tue, 25 Feb 2020 21:43:46 -0800
+Message-ID: <f6f11204-4277-fad0-c1c2-a21e0a380e3b@kernel.org>
+Date:   Tue, 25 Feb 2020 21:45:11 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200225221305.605144982@linutronix.de>
+In-Reply-To: <20200225221305.719921962@linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -77,43 +65,11 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 2/25/20 2:08 PM, Thomas Gleixner wrote:
-> Now that the C entry points are safe, move the irq flags tracing code into
-> the entry helper.
+> Split prepare_enter_to_user_mode() and mark it notrace/noprobe so the irq
+> flags tracing on return can be put into it.
 
-I'm so confused.
+Is our tooling clever enough for thsi to do anything?  You have a static
+inline that is only called in one place, and the caller is notrace and
+NOKPROBE.  Does this actually allow tracing in the static inline callee?
 
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/entry/common.c          |    5 +++++
->  arch/x86/entry/entry_32.S        |   12 ------------
->  arch/x86/entry/entry_64.S        |    2 --
->  arch/x86/entry/entry_64_compat.S |   18 ------------------
->  4 files changed, 5 insertions(+), 32 deletions(-)
-> 
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -57,6 +57,11 @@ static inline void enter_from_user_mode(
->   */
->  static __always_inline void syscall_entry_fixups(void)
->  {
-> +	/*
-> +	 * Usermode is traced as interrupts enabled, but the syscall entry
-> +	 * mechanisms disable interrupts. Tell the tracer.
-> +	 */
-> +	trace_hardirqs_off();
-
-Your earlier patches suggest quite strongly that tracing isn't safe
-until enter_from_user_mode().  But trace_hardirqs_off() calls
-trace_irq_disable_rcuidle(), which looks [0] like a tracepoint.
-
-Did you perhaps mean to do this *after* enter_from_user_mode()?
-
-(My tracepoint-fu is pretty bad, and I can't actually find where it's
-defined as a tracepoint.  But then it does nothing at all, so it must be
-a tracepoint, right?)
-
->  	enter_from_user_mode();
->  	local_irq_enable();
->  }
-
+--Andy
