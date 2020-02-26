@@ -2,124 +2,89 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E066C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABB8C4BA26
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA6124653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gpONdCEP"
+	by mail.kernel.org (Postfix) with ESMTP id 091B4222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbgBZTz0 (ORCPT
+        id S1727312AbgBZT5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:55:26 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38590 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbgBZTz0 (ORCPT
+        Wed, 26 Feb 2020 14:57:14 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54622 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbgBZT5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:55:26 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QJrUCL006843;
-        Wed, 26 Feb 2020 19:55:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=obe41J39gr3+hCoSli7HOYpO1kiS2+KFKSLxGy0JLdk=;
- b=gpONdCEPR/ZndEU1/LFtbAKuFpUWUMRn+eLahfvWMfMCs0JiRZTEr0+539R69NARSKyw
- yo0B0jTvPEtmUuEGw/O0d7ImjZI9woH/pLK2F6Zh4XHmJfiMTgPFjFq1/+l7y5I57O7u
- s2Q8/eJ17MR7EM1p03n1etCw8x9k4ZosJOFTtGYZ9CQHtbAwyx0pXcAM38yyeIAHcfie
- 3tIltLetU1JrA4xUH6oZjiqZ9mYsl0fcUgJ5I7CCeIjQPrd3Rf7tK06AcBiFtVxZbH9b
- TdP0VGRMKkcGoO7SJBxxbIEAz4gP/p8TlEZfXJtAsQfpgE4kFwTnyIDm+qW5q9wH25ud Qw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2ydcsne0na-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 19:55:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QJiNqO116685;
-        Wed, 26 Feb 2020 19:55:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ydcs2yfc0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 19:55:18 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01QJtHtY028983;
-        Wed, 26 Feb 2020 19:55:17 GMT
-Received: from [10.209.227.41] (/10.209.227.41)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Feb 2020 11:55:17 -0800
-Subject: Re: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
-To:     Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-References: <20191213030755.16096-1-d-gerlach@ti.com>
- <20191213150344.GJ35479@atomide.com> <20200226184328.GY37466@atomide.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <5d775a75-3013-fac2-91e3-ac1967b0f698@oracle.com>
-Date:   Wed, 26 Feb 2020 11:55:16 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Wed, 26 Feb 2020 14:57:13 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C1A811C036E; Wed, 26 Feb 2020 20:57:10 +0100 (CET)
+Date:   Wed, 26 Feb 2020 20:57:10 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
+ user-mode Shadow Stack protection
+Message-ID: <20200226195710.6sma4whvs3o76oux@ucw.cz>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-6-yu-cheng.yu@intel.com>
+ <597fb45a-cb94-e8e7-8e80-45a26766d32a@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200226184328.GY37466@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=801 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=861 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <597fb45a-cb94-e8e7-8e80-45a26766d32a@intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 10:43 AM, Tony Lindgren wrote:
-> Santosh,
+> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> > Introduce Kconfig option: X86_INTEL_SHADOW_STACK_USER.
+> > 
+> > Shadow Stack (SHSTK) provides protection against function return address
+> > corruption.  It is active when the kernel has this feature enabled, and
+> > both the processor and the application support it.  When this feature is
+> > enabled, legacy non-SHSTK applications continue to work, but without SHSTK
+> > protection.
+> > 
+> > The user-mode SHSTK protection is only implemented for the 64-bit kernel.
+> > IA32 applications are supported under the compatibility mode.
 > 
-> * Tony Lindgren <tony@atomide.com> [191213 15:04]:
->> * Dave Gerlach <d-gerlach@ti.com> [191212 19:07]:
->>> Hi,
->>> This series adds support for cpuidle on am335x and am437x using the
->>> cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
->>> follow power consumption reductions are seen on v5.5-rc1 baseline:
->>>
->>>
->>> Idling at command line, CPUFreq userspace governor to 300MHz:
->>>    am335x-evm:
->>>      VDD_MPU: 48 mW -> 5 mW
->>>
->>>    am437x-gp-evm:
->>>      VDD_MPU: 32 mW -> 3 mW
->>>
->>>
->>> Idling at command line, CPUFreq userspace governor to 1GHz:
->>>    am335x-evm:
->>>      VDD_MPU: 313 mW -> 18 mW
->>>
->>>    am437x-gp-evm:
->>>      VDD_MPU: 208 mW -> 10 mW
->>
->> Hey this is great! A beverage on me when we get a chance :)
->>
->> For merging, looks like I should take the series after folks are happy
->> with it. Santosh, care to review and ack if it looks OK?
+> I think what you're trying to say here is that the hardware supports
+> shadow stacks with 32-bit kernels.  However, this series does not
+> include that support and we have no plans to add it.
 > 
-> Looks like this series of changes is still pending. Care
-> to ack?
+> Right?
 > 
-Was scanning this series today. It looks good to me Tony.
+> I'll let others weigh in, but I rather dislike the use of acronyms here.
+>  I'd much rather see the english "shadow stack" everywhere than SHSTK.
 
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+For the record, I like "shadow stack" better, too.
