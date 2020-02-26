@@ -2,76 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C20C4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B207AC4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E97820732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8293B20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hLOzD9y1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF3nhPaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgBZBHU (ORCPT
+        id S1729707AbgBZBI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:07:20 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44848 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729170AbgBZBHU (ORCPT
+        Tue, 25 Feb 2020 20:08:26 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34150 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729170AbgBZBI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:07:20 -0500
-Received: by mail-io1-f65.google.com with SMTP id z16so1407788iod.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:07:19 -0800 (PST)
+        Tue, 25 Feb 2020 20:08:26 -0500
+Received: by mail-pj1-f67.google.com with SMTP id f2so1578575pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:08:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7K8O5rj8zPhErBBHNfgvIpU8NYGxrCf/Q7+Z6081dwQ=;
-        b=hLOzD9y11YkL6FrFfln1tV10PwWGQgWlWWsO7SJwsUNsD1HUbXHdvFHUsyUJxAvFbb
-         yQKCwhuRPMKMIUwknYp6Bw8eKbpawLQ+LwJK+d9DSQVvBwYY0Rkk6VMYsuMN6MisrVIX
-         zQKTnZoed1hD7oPENCTC6nhVg4W4RqRKK0vwk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GSRxDRR3QPnD6JuQNlJ6sV9ISRyrmt4YboW0nA2j284=;
+        b=lF3nhPaUVWXf5kzNLk6jWyIu9faR63oYBkMn1CEZg5RkrrCkY7zQKFzQXCVYObbbfN
+         54LXPq0209n1zs7QAix/dwsjXZrPlzIRrDH6tZtrXPbae0rXwPzQrXJD/RjUxf5QvAdb
+         FyrA9zC1M/oCxnSStu/89EvYdtyyQL3aSWOiR3LYITgdXuK7aMWE93NRnHZfqIVoiopo
+         JWt1ViBUMpQyIUvFNzz7zr4YyemDhWQ4HKE8GCnpguWFlhW+ggilnxLLQP09nl+j70cg
+         8316ccpDQrOi5Bf1XnKBSWLAeDPDqyD5x+eqJ8XNU20QP3AkMjQ9l52QKUzSz+ctyyg7
+         2OHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7K8O5rj8zPhErBBHNfgvIpU8NYGxrCf/Q7+Z6081dwQ=;
-        b=kmLhmzDqqKCaSMHwKdjw8w/F1OyP8WOBd3E85TGADBLtHjKg+El/AVr94ceBYv4T7V
-         noRWj9ePIwXr24Yj2Msqp6STiZEuAgphpZ8INFe0OST/w227cTh3hfKHFkcNF7PV8nKD
-         4Dt+fUHE2ztFpQZXZ3wF3tud4fpCIlrnNldt/EksW/08U3txL/kRGG4zpi+Y14YTIEQi
-         tR20drp3vtrv1BfW7T7w1QpA0S9w81pXc8hYTinKtIkjSjqk833dVpXyq5QnEJ0XXAQ8
-         5W461Gd/f1hbOeQuEWGa31adZ1YVqg+Kj0fn3cxJLA7lWSGWWvCREgbPg5j2qFHQNk85
-         glKw==
-X-Gm-Message-State: APjAAAV9O5rnXldOMCbf4hnftAHAYB3Qa9KDpC5tswtVznOPYvueTZKv
-        YQT+2ztfk6dKb/RXBlpCzpX1M/kYg1g=
-X-Google-Smtp-Source: APXvYqwg/xz1x8atQnF5lbCNRzSfldR6rgz3PSBOe5+DH+uy/X+1Dbbsw0uzFkATW3Mo/oWUQ8fBcw==
-X-Received: by 2002:a6b:6108:: with SMTP id v8mr1567540iob.210.1582679238467;
-        Tue, 25 Feb 2020 17:07:18 -0800 (PST)
-Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id w15sm159385iow.61.2020.02.25.17.07.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 17:07:17 -0800 (PST)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mattias Nissler <mnissler@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Raul Rangel <rrangel@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
-        Ross Zwisler <zwisler@google.com>
-Subject: [PATCH] Add a "nosymfollow" mount option.
-Date:   Tue, 25 Feb 2020 18:07:06 -0700
-Message-Id: <20200226010706.9431-1-zwisler@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GSRxDRR3QPnD6JuQNlJ6sV9ISRyrmt4YboW0nA2j284=;
+        b=EtSA+TqrkUaEw2qjAuvbN/wX9jPHomi47b0t1PFQxqE7W7IGdChRhQeAoADvh2XzQq
+         7Uu038XBDqPInK85ZEuUtBFc/JahTkK+l6iYokpTXVFQS6NeucyxmKJ5DJtMWAWy8kUf
+         xrA2sfYaqihOfZEWd7Dy/fEjTARxVPFoRjS8oAsYq3A89o4qJMPuaE1z3cyvDMCqJIjz
+         sAgjMqaWcDyoipxzc1jOENRGnFrfOVaA8ofvQaFO+bz3Yb6I6qUiAH6Ma+PlDiz+oQ7h
+         064oIu7VM4GXK9zjylRrGrHq5aUaNbFUdSyF0c6uNvJ9fHTGd9HKweQhW1G6TD5ZaLJR
+         DRbA==
+X-Gm-Message-State: APjAAAXLzfinl/v3W83R/li+pYwoz3633lBsooo8ekinCiDV1yTXDpCm
+        wsC337WIdbMbXlUG784OzpM=
+X-Google-Smtp-Source: APXvYqyHJow8kKav0oGHIR31yE3aVuvG9BkoEd02oVkQ/clFawVQlD8gy4qC/7PX43MlFAOl5OoTMQ==
+X-Received: by 2002:a17:902:9342:: with SMTP id g2mr1240760plp.339.1582679304720;
+        Tue, 25 Feb 2020 17:08:24 -0800 (PST)
+Received: from D19-03074.biamp.com (tel3187236.lnk.telstra.net. [203.54.172.54])
+        by smtp.gmail.com with ESMTPSA id w18sm296386pfq.167.2020.02.25.17.08.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 17:08:24 -0800 (PST)
+From:   Shreyas Joshi <shreyasjoshi15@gmail.com>
+X-Google-Original-From: Shreyas Joshi <shreyas.joshi@biamp.com>
+To:     lee.jones@linaro.org, Support.Opensource@diasemi.com,
+        shreyasjoshi15@gmail.com, Adam.Thomson.Opensource@diasemi.com,
+        linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Shreyas Joshi <shreyas.joshi@biamp.com>
+Subject: [PATCH V6] mfd: da9062: Add support for interrupt polarity defined in device tree
+Date:   Wed, 26 Feb 2020 11:07:22 +1000
+Message-Id: <20200226010722.2042-1-shreyas.joshi@biamp.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+In-Reply-To: <AM6PR10MB22635CBCBF559AEB9A5C2BFF80120@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <AM6PR10MB22635CBCBF559AEB9A5C2BFF80120@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,151 +77,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattias Nissler <mnissler@chromium.org>
+The da9062 interrupt handler cannot necessarily be low active.
+Add a function to configure the interrupt type based on what is defined in the device tree.
+The allowable interrupt type is either low or high level trigger.
 
-For mounts that have the new "nosymfollow" option, don't follow symlinks
-when resolving paths. The new option is similar in spirit to the
-existing "nodev", "noexec", and "nosuid" options, as well as to the
-LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
-variants have been supporting the "nosymfollow" mount option for a long
-time with equivalent implementations.
-
-Note that symlinks may still be created on file systems mounted with
-the "nosymfollow" option present. readlink() remains functional, so
-user space code that is aware of symlinks can still choose to follow
-them explicitly.
-
-Setting the "nosymfollow" mount option helps prevent privileged
-writers from modifying files unintentionally in case there is an
-unexpected link along the accessed path. The "nosymfollow" option is
-thus useful as a defensive measure for systems that need to deal with
-untrusted file systems in privileged contexts.
-
-More information on the history and motivation for this patch can be
-found here:
-
-https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
-
-Signed-off-by: Mattias Nissler <mnissler@chromium.org>
-Signed-off-by: Ross Zwisler <zwisler@google.com>
+Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
 ---
-Changes since v5 [1]:
- * Redefined MS_NOSYMFOLLOW to use a lower unused bit value (256) so it
-   doesn't collide with MS_SUBMOUNT.
- * Updated the mount code in util-linux [2] to use the newly defined
-   flag value.
- * Updated man pages for mount(8) [2], as well as mount(2) and statfs(2) [3].
 
-[1]: https://patchwork.kernel.org/patch/11365291/
-[2]: https://github.com/rzwisler/util-linux/commit/7f8771acd85edb70d97921c026c55e1e724d4e15
-[3]: https://github.com/rzwisler/man-pages/commit/b8fe8079f64b5068940c0144586e580399a71668
----
- fs/namei.c                 | 3 ++-
- fs/namespace.c             | 2 ++
- fs/proc_namespace.c        | 1 +
- fs/statfs.c                | 2 ++
- include/linux/mount.h      | 3 ++-
- include/linux/statfs.h     | 1 +
- include/uapi/linux/mount.h | 1 +
- 7 files changed, 11 insertions(+), 2 deletions(-)
+V6:
+  Changed regmap_reg_range to exclude DA9062AA_CONFIG_B for writeable
+  Added regmap_reg_range DA9062AA_CONFIG_A for readable
 
-diff --git a/fs/namei.c b/fs/namei.c
-index db6565c998259..026a774d28c3d 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1122,7 +1122,8 @@ const char *get_link(struct nameidata *nd)
- 	int error;
- 	const char *res;
+V5:
+  Added #define for DA9062_IRQ_HIGH and DA9062_IRQ_LOW 
+
+V4:
+  Changed return code to EINVAL rather than EIO for incorrect irq type
+  Corrected regmap_update_bits usage
+  
+V3:
+  Changed regmap_write to regmap_update_bits
+
+V2:
+  Added function to update the polarity of CONFIG_A IRQ_TYPE
+  
+ drivers/mfd/da9062-core.c | 44 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+index 419c73533401..fc30726e2e27 100644
+--- a/drivers/mfd/da9062-core.c
++++ b/drivers/mfd/da9062-core.c
+@@ -21,6 +21,9 @@
+ #define	DA9062_REG_EVENT_B_OFFSET	1
+ #define	DA9062_REG_EVENT_C_OFFSET	2
  
--	if (unlikely(nd->flags & LOOKUP_NO_SYMLINKS))
-+	if (unlikely(nd->flags & LOOKUP_NO_SYMLINKS) ||
-+		unlikely(nd->path.mnt->mnt_flags & MNT_NOSYMFOLLOW))
- 		return ERR_PTR(-ELOOP);
- 
- 	if (!(nd->flags & LOOKUP_RCU)) {
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e7..9b843b66d39e4 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3074,6 +3074,8 @@ long do_mount(const char *dev_name, const char __user *dir_name,
- 		mnt_flags &= ~(MNT_RELATIME | MNT_NOATIME);
- 	if (flags & MS_RDONLY)
- 		mnt_flags |= MNT_READONLY;
-+	if (flags & MS_NOSYMFOLLOW)
-+		mnt_flags |= MNT_NOSYMFOLLOW;
- 
- 	/* The default atime for remount is preservation */
- 	if ((flags & MS_REMOUNT) &&
-diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
-index 273ee82d8aa97..91a552f617406 100644
---- a/fs/proc_namespace.c
-+++ b/fs/proc_namespace.c
-@@ -70,6 +70,7 @@ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
- 		{ MNT_NOATIME, ",noatime" },
- 		{ MNT_NODIRATIME, ",nodiratime" },
- 		{ MNT_RELATIME, ",relatime" },
-+		{ MNT_NOSYMFOLLOW, ",nosymfollow" },
- 		{ 0, NULL }
- 	};
- 	const struct proc_fs_info *fs_infop;
-diff --git a/fs/statfs.c b/fs/statfs.c
-index 2616424012ea7..59f33752c1311 100644
---- a/fs/statfs.c
-+++ b/fs/statfs.c
-@@ -29,6 +29,8 @@ static int flags_by_mnt(int mnt_flags)
- 		flags |= ST_NODIRATIME;
- 	if (mnt_flags & MNT_RELATIME)
- 		flags |= ST_RELATIME;
-+	if (mnt_flags & MNT_NOSYMFOLLOW)
-+		flags |= ST_NOSYMFOLLOW;
- 	return flags;
++#define	DA9062_IRQ_LOW	0
++#define	DA9062_IRQ_HIGH	1
++
+ static struct regmap_irq da9061_irqs[] = {
+ 	/* EVENT A */
+ 	[DA9061_IRQ_ONKEY] = {
+@@ -369,6 +372,33 @@ static int da9062_get_device_type(struct da9062 *chip)
+ 	return ret;
  }
  
-diff --git a/include/linux/mount.h b/include/linux/mount.h
-index bf8cc4108b8f9..ff2d132c21f5d 100644
---- a/include/linux/mount.h
-+++ b/include/linux/mount.h
-@@ -30,6 +30,7 @@ struct fs_context;
- #define MNT_NODIRATIME	0x10
- #define MNT_RELATIME	0x20
- #define MNT_READONLY	0x40	/* does the user want this to be r/o? */
-+#define MNT_NOSYMFOLLOW	0x80
++static u32 da9062_configure_irq_type(struct da9062 *chip, int irq, u32 *trigger)
++{
++	u32 irq_type = 0;
++	struct irq_data *irq_data = irq_get_irq_data(irq);
++
++	if (!irq_data) {
++		dev_err(chip->dev, "Invalid IRQ: %d\n", irq);
++		return -EINVAL;
++	}
++	*trigger = irqd_get_trigger_type(irq_data);
++
++	switch (*trigger) {
++	case IRQ_TYPE_LEVEL_HIGH:
++		irq_type = DA9062_IRQ_HIGH;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		irq_type = DA9062_IRQ_LOW;
++		break;
++	default:
++		dev_warn(chip->dev, "Unsupported IRQ type: %d\n", *trigger);
++		return -EINVAL;
++	}
++	return regmap_update_bits(chip->regmap, DA9062AA_CONFIG_A,
++			DA9062AA_IRQ_TYPE_MASK,
++			irq_type << DA9062AA_IRQ_TYPE_SHIFT);
++}
++
+ static const struct regmap_range da9061_aa_readable_ranges[] = {
+ 	regmap_reg_range(DA9062AA_PAGE_CON, DA9062AA_STATUS_B),
+ 	regmap_reg_range(DA9062AA_STATUS_D, DA9062AA_EVENT_C),
+@@ -388,6 +418,7 @@ static const struct regmap_range da9061_aa_readable_ranges[] = {
+ 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
+ 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
+ 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
++	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_A),
+ 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
+ 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
+ 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
+@@ -417,6 +448,7 @@ static const struct regmap_range da9061_aa_writeable_ranges[] = {
+ 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
+ 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
+ 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
++	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_A),
+ 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
+ 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
+ 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
+@@ -596,6 +628,7 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+ 	const struct regmap_irq_chip *irq_chip;
+ 	const struct regmap_config *config;
+ 	int cell_num;
++	u32 trigger_type = 0;
+ 	int ret;
  
- #define MNT_SHRINKABLE	0x100
- #define MNT_WRITE_HOLD	0x200
-@@ -46,7 +47,7 @@ struct fs_context;
- #define MNT_SHARED_MASK	(MNT_UNBINDABLE)
- #define MNT_USER_SETTABLE_MASK  (MNT_NOSUID | MNT_NODEV | MNT_NOEXEC \
- 				 | MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME \
--				 | MNT_READONLY)
-+				 | MNT_READONLY | MNT_NOSYMFOLLOW)
- #define MNT_ATIME_MASK (MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME )
+ 	chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
+@@ -654,10 +687,15 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+ 	if (ret)
+ 		return ret;
  
- #define MNT_INTERNAL_FLAGS (MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL | \
-diff --git a/include/linux/statfs.h b/include/linux/statfs.h
-index 9bc69edb8f188..fac4356ea1bfc 100644
---- a/include/linux/statfs.h
-+++ b/include/linux/statfs.h
-@@ -40,6 +40,7 @@ struct kstatfs {
- #define ST_NOATIME	0x0400	/* do not update access times */
- #define ST_NODIRATIME	0x0800	/* do not update directory access times */
- #define ST_RELATIME	0x1000	/* update atime relative to mtime/ctime */
-+#define ST_NOSYMFOLLOW	0x2000	/* do not follow symlinks */
- 
- struct dentry;
- extern int vfs_get_fsid(struct dentry *dentry, __kernel_fsid_t *fsid);
-diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
-index 96a0240f23fed..dd8306ea336c1 100644
---- a/include/uapi/linux/mount.h
-+++ b/include/uapi/linux/mount.h
-@@ -16,6 +16,7 @@
- #define MS_REMOUNT	32	/* Alter flags of a mounted FS */
- #define MS_MANDLOCK	64	/* Allow mandatory locks on an FS */
- #define MS_DIRSYNC	128	/* Directory modifications are synchronous */
-+#define MS_NOSYMFOLLOW	256	/* Do not follow symlinks */
- #define MS_NOATIME	1024	/* Do not update access times. */
- #define MS_NODIRATIME	2048	/* Do not update directory access times */
- #define MS_BIND		4096
++	ret = da9062_configure_irq_type(chip, i2c->irq, &trigger_type);
++	if (ret < 0) {
++		dev_err(chip->dev, "Failed to configure IRQ type\n");
++		return ret;
++	}
++
+ 	ret = regmap_add_irq_chip(chip->regmap, i2c->irq,
+-			IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED,
+-			-1, irq_chip,
+-			&chip->regmap_irq);
++			trigger_type | IRQF_SHARED | IRQF_ONESHOT,
++			-1, irq_chip, &chip->regmap_irq);
+ 	if (ret) {
+ 		dev_err(chip->dev, "Failed to request IRQ %d: %d\n",
+ 			i2c->irq, ret);
 -- 
-2.25.1.481.gfbce0eb801-goog
+2.20.1
 
