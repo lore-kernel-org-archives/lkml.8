@@ -2,151 +2,101 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BAAC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A24C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8060B206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ayzTVtVb"
+	by mail.kernel.org (Postfix) with ESMTP id 659C324656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbgBZRyY (ORCPT
+        id S1727009AbgBZR4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:54:24 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42866 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbgBZRyX (ORCPT
+        Wed, 26 Feb 2020 12:56:18 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35057 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbgBZR4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:54:23 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j132so358560oih.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:54:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=19soKHU3UI5r5wvmfAJVl4z0JskbjWMjhN/nbHz3sBk=;
-        b=ayzTVtVbCk7aoeymtSP3HR7X6PRnOqPojYSBqwLAfxVUuLITtIzhlDJlWMEm6A1+8T
-         C8YIeBWHOV3NPwqg64wQHrWhfj9kivCWkysAH1BSAOYvLFOOAi4+yH9QJP57/+5shlfD
-         s5cjVcyQxyo0HaM1s6nfsR8FwpF+8S3J2DvT6kSkUlGvXSM7QY5vN+6Qbv7oRV9HPJKs
-         igu6VIUXlgXR/XdKg9vl42HW0GEeFBI2npotOal7aLWB+rxrop4KsYtmfyNVvePc3Nfv
-         qVucCvVKwh0rb8yG4kZZuGcG6D+WRKCBt1Mq7RD7NLEqaY3HW1GRhBWlkhjBAbXqHMmj
-         YIAQ==
+        Wed, 26 Feb 2020 12:56:18 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so417743oie.2;
+        Wed, 26 Feb 2020 09:56:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=19soKHU3UI5r5wvmfAJVl4z0JskbjWMjhN/nbHz3sBk=;
-        b=MH9rGOtbJP0HjOjpISiRBK2g4thRXajpR4Wh5h3rFvcNsob73wS0XN6nlIupXEA9FQ
-         yAp6VqN3lQ8wkh3VKrBxjbUs4YcW/MfEGIMAXXejO2sdacw/8gdErkmCbObJox/BbYdP
-         pjT0B7brrHorZzJd4HydWnB8XFw3viqzo56WBmM6cdDy1VIosB+drlFsGkInDbJ32I9R
-         yK0obGL7DQgj3KBPi6sYsdjoudQ6LWgxPHOkgRckSpzKYT/4vY0OqkPo9p+rZ0t66BZY
-         EouYlWKyqd2OywQ6k1SI5ecnihw+vBfYt0RQC1Qdua9pU6zs5mgiSttBl1QAte+X/AUc
-         X0/g==
-X-Gm-Message-State: APjAAAX6lzNikp+DkdQhvH23+HUzNMsmEPV+36xhjIz04I18B60bw/ON
-        5t1TJ4/zMeaKpYCAiRrJlH3vERsXqFyjAhBrGVbA+A==
-X-Google-Smtp-Source: APXvYqy7wODpn4AfWhCX4NUeUzjCaKNftkw39AJC80F5CWULEFUJ5R2cUw55wi6jfqJVFzI36d6GqvgWUwEbM45lTyM=
-X-Received: by 2002:aca:4c9:: with SMTP id 192mr123494oie.105.1582739662914;
- Wed, 26 Feb 2020 09:54:22 -0800 (PST)
+        bh=o2vY9IYp03giWqGFoGJ0CHo6HYbOh4Eilf+MUDG2LtI=;
+        b=QUFk7Q/S/0rXSvba0Lxly20bNA8HamhGyY7fWE6GGZ5NiWkG0pk+ZDCNzr3JKUGizh
+         NU3lE1CoEXN3155NgLeqsK024VzNAD9QCR2PCzIH34i3qDHizO0ZD0ynQv1mdN1kzM/y
+         92hzvkKQ/Y6xdmhI1/6RZd91z0X7NAq5Bsg4uC+dZYB8NLefOjIJ9ZS+A0Q9s/x8o1dP
+         m1Glo5NlgNjXa3UWknXZs3LM2CPx9PWUnN9mJq3//ta8NVVLoasbgUnFQ6EjyimWW7sn
+         3Wxo8qzUtg0P8aoTmJB+SGukWqMNUhOAeX11KpwUu3BF3F4CWVcDmzq+FB1bqm6e3UNX
+         eGmA==
+X-Gm-Message-State: APjAAAXdDdRWOLRfRU1WjDsl200/lbUxpAzgJ+zYQHADplCR2DJudoMY
+        IdY0f21Wflf+30mxDM7UvK1jm16wROdYFb92mJrWyQ==
+X-Google-Smtp-Source: APXvYqxtyz/hmND7MN3FtCJyPuXLik9L68653TraA5yNPFKW2DOvYLDAW68OGWHaUnODifdT18/wvc/7WG69dRcEqYk=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr166058oia.102.1582739777300;
+ Wed, 26 Feb 2020 09:56:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221004134.30599-1-ira.weiny@intel.com> <20200221004134.30599-8-ira.weiny@intel.com>
- <20200221174449.GB11378@lst.de> <20200221224419.GW10776@dread.disaster.area>
- <20200224175603.GE7771@lst.de> <20200225000937.GA10776@dread.disaster.area>
- <20200225173633.GA30843@lst.de> <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
- <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com> <CAPcyv4iuWpHi-0SK_HS0zmfH87=G64U47VhthhpTjDCw_BMG8A@mail.gmail.com>
- <20200226172034.GV10728@quack2.suse.cz>
-In-Reply-To: <20200226172034.GV10728@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 26 Feb 2020 09:54:12 -0800
-Message-ID: <CAPcyv4hi08KCQHFV0aorVmZZ0YXo=wGzsXbrnTSAySXirNjzrA@mail.gmail.com>
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jonathan Halliday <jonathan.halliday@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <CGME20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83@eucas1p1.samsung.com>
+ <20200225144749.19815-1-geert+renesas@glider.be> <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
+ <20200226174905.GE25745@shell.armlinux.org.uk>
+In-Reply-To: <20200226174905.GE25745@shell.armlinux.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 26 Feb 2020 18:56:06 +0100
+Message-ID: <CAMuHMdW1ojYyWXZpzgiy8PrZnR2PQ9n3SEDrQ7hFFUg0j-jegg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: boot: Fix ATAGs with appended DTB
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 9:20 AM Jan Kara <jack@suse.cz> wrote:
->
-> On Wed 26-02-20 08:46:42, Dan Williams wrote:
-> > On Wed, Feb 26, 2020 at 1:29 AM Jonathan Halliday
-> > <jonathan.halliday@redhat.com> wrote:
-> > >
-> > >
-> > > Hi All
-> > >
-> > > I'm a middleware developer, focused on how Java (JVM) workloads can
-> > > benefit from app-direct mode pmem. Initially the target is apps that
-> > > need a fast binary log for fault tolerance: the classic database WAL use
-> > > case; transaction coordination systems; enterprise message bus
-> > > persistence and suchlike. Critically, there are cases where we use log
-> > > based storage, i.e. it's not the strict 'read rarely, only on recovery'
-> > > model that a classic db may have, but more of a 'append only, read many
-> > > times' event stream model.
-> > >
-> > > Think of the log oriented data storage as having logical segments (let's
-> > > implement them as files), of which the most recent is being appended to
-> > > (read_write) and the remaining N-1 older segments are full and sealed,
-> > > so effectively immutable (read_only) until discarded. The tail segment
-> > > needs to be in DAX mode for optimal write performance, as the size of
-> > > the append may be sub-block and we don't want the overhead of the kernel
-> > > call anyhow. So that's clearly a good fit for putting on a DAX fs mount
-> > > and using mmap with MAP_SYNC.
-> > >
-> > > However, we want fast read access into the segments, to retrieve stored
-> > > records. The small access index can be built in volatile RAM (assuming
-> > > we're willing to take the startup overhead of a full file scan at
-> > > recovery time) but the data itself is big and we don't want to move it
-> > > all off pmem. Which means the requirements are now different: we want
-> > > the O/S cache to pull hot data into fast volatile RAM for us, which DAX
-> > > explicitly won't do. Effectively a poor man's 'memory mode' pmem, rather
-> > > than app-direct mode, except here we're using the O/S rather than the
-> > > hardware memory controller to do the cache management for us.
-> > >
-> > > Currently this requires closing the full (read_write) file, then copying
-> > > it to a non-DAX device and reopening it (read_only) there. Clearly
-> > > that's expensive and rather tedious. Instead, I'd like to close the
-> > > MAP_SYNC mmap, then, leaving the file where it is, reopen it in a mode
-> > > that will instead go via the O/S cache in the traditional manner. Bonus
-> > > points if I can do it over non-overlapping ranges in a file without
-> > > closing the DAX mode mmap, since then the segments are entirely logical
-> > > instead of needing separate physical files.
-> >
-> > Hi John,
-> >
-> > IIRC we chatted about this at PIRL, right?
-> >
-> > At the time it sounded more like mixed mode dax, i.e. dax writes, but
-> > cached reads. To me that's an optimization to optionally use dax for
-> > direct-I/O writes, with its existing set of page-cache coherence
-> > warts, and not a capability to dynamically switch the dax-mode.
-> > mmap+MAP_SYNC seems the wrong interface for this. This writeup
-> > mentions bypassing kernel call overhead, but I don't see how a
-> > dax-write syscall is cheaper than an mmap syscall plus fault. If
-> > direct-I/O to a dax capable file bypasses the block layer, isn't that
-> > about the maximum of kernel overhead that can be cut out of this use
-> > case? Otherwise MAP_SYNC is a facility to achieve efficient sub-block
-> > update-in-place writes not append writes.
->
-> Well, even for appends you'll pay the cost only once per page (or maybe even
-> once per huge page) when using MAP_SYNC. With a syscall you'll pay once per
-> write. So although it would be good to check real numbers, the design isn't
-> non-sensical to me.
+Hi Russell,
 
-True, Jonathan, how many writes per page are we talking about in this case?
+On Wed, Feb 26, 2020 at 6:49 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Wed, Feb 26, 2020 at 07:35:14AM +0100, Marek Szyprowski wrote:
+> > On 25.02.2020 15:47, Geert Uytterhoeven wrote:
+> > > At early boot, register r8 may contain an ATAGs or DTB pointer.
+> > > When an appended DTB is found, its address is stored in r8, for
+> > > extraction of the RAM base address later.
+> > >
+> > > However, if r8 contained an ATAGs pointer before, that pointer will be
+> > > lost, and the provided ATAGs is no longer folded into the provided DTB.
+> > >
+> > > Fix this by leaving r8 untouched.
+> > >
+> > > Fixes: 137e522593918be2 ("ARM: 8960/1: boot: Obtain start of physical memory from DTB")
+> > > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> The original commit hasn't been submitted, so it can be fixed before it
+> hits mainline if you want.  Let me know what you want to do.  Thanks.
+
+Fixing the original is fine for me, of course.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
