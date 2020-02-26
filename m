@@ -2,99 +2,125 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660CCC4BA1C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2D6C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3539424670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582735724;
-	bh=7JYktPIyWf6YONapWD3xlC/B2o1cUD1UNvbX1uLibio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qI7cVhn8y20D86ozR7SKnjj18Juu1DlP1uK/FgUfH1x5FyR/SC3ipwea1kDZSvieh
-	 kMHR/aT8tCh0+Gybt6FbObQ32R0yxsV1k2lrWqSH/3P41FhjOBA25n1p50iyGaXtcY
-	 +nbd7pV9pECaVSg5YBxCU4Jz+pPRPSPLjz8znBjk=
+	by mail.kernel.org (Postfix) with ESMTP id 07E3C24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="nhwrU49d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgBZQsn (ORCPT
+        id S1727262AbgBZQtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:48:43 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37700 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBZQsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:48:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q84so165779oic.4;
-        Wed, 26 Feb 2020 08:48:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jHw4ngjVXB8T2PU45eGKR13llpnjZ9TB1h6gXwWneRQ=;
-        b=jhNLElVZc699qbYoDEW6WoRA9wVUpDndXwlG6JeOUp3zTvv0Z8iIdKwXskBhI+Yq24
-         dueZYAQeHg39YkGBgf0yWwdtoX0VWO+HVsll28BWZ9agU1strllnJ9W5ub3QW6Y24vNM
-         qK9uUUqECY2ZYV06/DHnxYNzZylb3ms22sAkKfeDwWSIVyaw9FRXD0O6aO36pADXQYqW
-         9KHtHC6sMSGBDAsvl/t9JIQ6Bw+62N0x5bBphoYSU9aasQIOYXl7B8H0QKJ+gQaiHOXo
-         gsfcTav7/UjcMVMblQpTu6Oot7UM56g5aOswm7UEO7t6m3k3rmdOcKG5q2KnmJ+d0J1S
-         NnJg==
-X-Gm-Message-State: APjAAAXk++NltWLUEq7rxaHIzuT9bXLptgPdxMOfByB5+TKMmIpJS9h+
-        rvkirAszrGfv2aTrz3E7JQ==
-X-Google-Smtp-Source: APXvYqx18Z/v/4iN8R6CZrp92Er0P2zNbyeqssC0LiTbHDTS1rfusrMZHEu4FappFe1fTYPGsU/aeg==
-X-Received: by 2002:aca:fc0c:: with SMTP id a12mr3791106oii.118.1582735722218;
-        Wed, 26 Feb 2020 08:48:42 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 15sm968900ois.20.2020.02.26.08.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:48:41 -0800 (PST)
-Received: (nullmailer pid 20572 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:48:41 -0000
-Date:   Wed, 26 Feb 2020 10:48:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        logan.shaw@alliedtelesis.co.nz,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v4 2/5] dt-bindings: hwmon: Document adt7475
- bypass-attenuator property
-Message-ID: <20200226164841.GA20519@bogus>
-References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz>
- <20200221041631.10960-3-chris.packham@alliedtelesis.co.nz>
+        Wed, 26 Feb 2020 11:49:35 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:51194 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbgBZQte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:49:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=P56BFZWamG7JVi5EgA3IO5By5L2fJQkXtDUqwdKc7H8=; b=nhwrU49dYAVK7MXWS2u8nYT/9
+        +bdVoX9QXCfQjOzVTqQuTGRXrzgHudnjPG6MGpBHPtZxI1bmFu9jSEtHHOyyoZIMJR6eSJc4v/Jcd
+        faMn/39D6dLBopiZfQAkiaqC0fgYRj7aCKmtCNbTiBSm9AjQUcG+QEMBDpBWUvlP8gM1g=;
+Received: from p200300ccff0a4d00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:e2ce:c3ff:fe93:fc31] helo=eeepc.fritz.box)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j6zsF-0005wQ-To; Wed, 26 Feb 2020 17:49:28 +0100
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j6zsF-0008HY-A5; Wed, 26 Feb 2020 17:49:27 +0100
+Date:   Wed, 26 Feb 2020 17:49:14 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        b.galvani@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org,
+        jic23@kernel.org
+Subject: Re: [PATCH v5 1/2] mfd: rn5t618: add ADC subdevice for RC5T619
+Message-ID: <20200226174914.047667d5@kemnade.info>
+In-Reply-To: <20200226154055.GQ3494@dell>
+References: <20200223131638.12130-1-andreas@kemnade.info>
+        <20200223131638.12130-2-andreas@kemnade.info>
+        <20200226154055.GQ3494@dell>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221041631.10960-3-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/L_RLDD1+TTq2HvsW_OIvA3r"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 17:16:28 +1300, Chris Packham wrote:
-> 
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> 
-> Add documentation for the bypass-attenuator-in[0-4] property.
-> 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> 
-> Notes:
->     Changes in v4:
->     - use $ref uint32 and enum
->     - add 'adi' vendor prefix
->     
->     Changes in v3:
->     - separated addition of new properties from conversion to yaml
-> 
->  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
+--Sig_/L_RLDD1+TTq2HvsW_OIvA3r
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, 26 Feb 2020 15:40:55 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> On Sun, 23 Feb 2020, Andreas Kemnade wrote:
+>=20
+> > This adds a subdevice for the ADC in the RC5T619
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > depends on:
+> > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.inf=
+o/
+> >=20
+> > Changes in v3:
+> > re-added it to the series because of
+> > "Oh, it looks like there was a conflict.  Could you collect any Acks
+> > (including mine) rebase and resend please?" =20
+>=20
+> Looks like there is still a conflict.  Sure, it's not a complicated
+> fix, but that's beside the point.  What tree is this set based on?
+>=20
+It must be applied on top of my rc5t619 rtc series here:
+https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
+
+I expected it to make it into 5.6 and when I first sent the RTC series
+ (in October) I had no idea when I will continue with other stuff.
+
+That is why I sent this ADC series separately, also to give the IIO
+maintainer plenty of time to review.=20
+
+Do you want me to resend all that pending stuff together in one series?
+I have little experience with this multi-subdevice process.
+
+Regards,
+Andreas
+
+--Sig_/L_RLDD1+TTq2HvsW_OIvA3r
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5WoYoACgkQl4jFM1s/
+ye+ZWBAAlmt7rg97sZQ3GPCFNa2uKfakvISbA8/O/UuPWm9/BLbEh0ZhKlrEX7l5
+FjLu4nB1RBMhUvBrjykGfnPt/rasdrJ9DrzhFpbtMu/lrV1SdrowUjmKJfKDvCyz
+CWt4RuITcNWF3FQNWTKaPhFa0lyAhOj7X4A8bseYRhMdkYmvQc3uoMuTgdLIuNMe
+9g/t9ll8ztoBbdl0u6RhD36uhBylB+4AS6Axt9lwzGrr8mSs4tNKQlMi31yCNrmg
+tQExAuXNgBtvDz8TwWF8lD2HRlivu/QDNv6bxbYZ92O5dDtK8l3LKiu5pB4iEWAQ
+2v0yjmleaJ8NmhigSqqTyqctFgyvYuwGdYDJN3OphhS/8o7BC9MqOSzBGiqmeqCf
+I0Z8tg+BaDMX5RFD8hGYKnmiUvKWZiokk2+yFsJb6Lh5PTS0WWVSdcA5/FNCy2Xw
+ykae4GWg/k7BZZPGu6hGN07Bvs3dKPli/NK6inv763aCuUgMLR8quQ5tsz6U6itG
+gx1YAvE22uWKXT2QVV414pxTQwxztdiAfRUvXpHH7Es/4y931WJ4C2enlOt2YQyi
+/UAHYnyOAemRIwN1jo396G6O+SkjU0rNrOfU8XiOSktg+7QC2sVW3sMSTHonx6af
+rBqbxj/+F374TXC384M2vhlihTq6lji9KuNtS3TPDTfF7eP5rBU=
+=oLpK
+-----END PGP SIGNATURE-----
+
+--Sig_/L_RLDD1+TTq2HvsW_OIvA3r--
