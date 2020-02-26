@@ -2,230 +2,164 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A333FC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C0AC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB2C24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582701100;
-	bh=58RqZxjUH9atKjkoMOHsbmFPMrlnvz6rwgHUDYlVGD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tbip45SohaZ0ay4tcfi3+NidQgo1cLZekOVJPjJ8xmhtdqsB8LSM8+STSP6hwkjgW
-	 HjuegUACGbrlLa+LuicpWy0juXiRH6HBhpI4ZWZ4D+Bns+KJoHckWsvLPaMCO0KGgD
-	 A2X2DbnD93VeX3pkMaDZepzhqBDrGfHzgmleqPlU=
+	by mail.kernel.org (Postfix) with ESMTP id B81BA21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHBsDuat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgBZHLj (ORCPT
+        id S1727221AbgBZHND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:11:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgBZHLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:11:39 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0CFC222C2;
-        Wed, 26 Feb 2020 07:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582701098;
-        bh=58RqZxjUH9atKjkoMOHsbmFPMrlnvz6rwgHUDYlVGD0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xyZDqNdDnaA5nD+cRo6i9yqYjrO5v79j3qCzq6tzWzpucG6ql5k2l14yovBL6nDau
-         szxUdunZ/AQVM2M3NfLq+8eJj95BSjqGfTzlo4FPAyIhA55AFUqHtddL7BppTgw/B5
-         G7Xu7d7P6mFpIo1N8p8Vg17jTwOZeBYoZaEJFplw=
-Date:   Wed, 26 Feb 2020 16:11:32 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <kstewart@linuxfoundation.org>, <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] perf: probe-file: Check return value of
- strlist__add
-Message-Id: <20200226161132.2aeea72b71d48e9988aa27d9@kernel.org>
-In-Reply-To: <b07f670b-6539-1590-88a8-20c58dec3a7e@windriver.com>
-References: <1582641703-233485-1-git-send-email-zhe.he@windriver.com>
-        <1582641703-233485-2-git-send-email-zhe.he@windriver.com>
-        <20200226074906.0acb08b31d01c96c475da0cb@kernel.org>
-        <b07f670b-6539-1590-88a8-20c58dec3a7e@windriver.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Feb 2020 02:13:03 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:32934 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgBZHND (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:13:03 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m7so1918352pjs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:13:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=wIycLtohJzZmgbz8Z9KTZsw/kqKcbNO/JXoVgPdvu5k=;
+        b=nHBsDuatJbQdosdW7LvCk7lFzVSx5qBST4bfiBlRhLz/YLONy7ALUeY1N8NsOM3ddi
+         ccg3145g8DOq5tDD4Kk6Y2IXGjRLgkoaGgpUPBxjfYQfp9PGONg/cwaKsxTbjTq8lkfJ
+         NRJFrxTRFogiqdjs41Drldwj1fTeruCaeArsV8sNr3GeGM4aRH7QFYF/iAaYEqBvDxGE
+         vWQWG1fdS5iHFQJECDt/ivKKRqMwmljNqXW5QUs0c/vpy7uJ/rll3Z7gnOy5HDfhcRP5
+         4lAYLHe5Xc63mefpieyn7o/5F3Kwo/Xe8B1uigehlVZlvp/67qNFZDphtRp5zpsFV7h4
+         bYDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wIycLtohJzZmgbz8Z9KTZsw/kqKcbNO/JXoVgPdvu5k=;
+        b=qWzV45sopThrhFK/cGvz579Qej4zQ3Ul2CeEz39B3IKNOhSrKdKr2d2vdrwT58msY6
+         DYKW86zGjLLHck+ksdOqhXUNilrnsNPtokkRDsA9UUzii9nysU6MnUs25SW0KZNDdA5U
+         oj4DN8v2VVaBt4cW+LpGbwqd8TBY/Gg76NqwWO+apnldN7hGiLfGIdwUozIf/wW8PoOJ
+         nIGSKbGXVjpYjLFDQ9z2hesbRm2fUvUc2UX5/2h18mPlUh53q6XSNET+QHXVgEvW6lye
+         /PZIUsjqDTMIXn7woyHU4OUWCJNQ+NauHOVs6pQ0HksxtjJ9DMGMfSdH+r5cJTiyNBnq
+         blUA==
+X-Gm-Message-State: APjAAAVYgJPOg8Sf/IEzQ5yK/XKvi1iALd915Is14bM6rsW5Ujnnpgs4
+        Jf7/ckFgNuBjLE3CJtWVzZmfzg==
+X-Google-Smtp-Source: APXvYqwB2yOYMGKYdF2cDBBA/GEj2xBPMsZ8piwV6gUkwS3YmQ2LmROMVi5lnWOaX8djXcAihN1Nxg==
+X-Received: by 2002:a17:902:8688:: with SMTP id g8mr2603545plo.277.1582701182230;
+        Tue, 25 Feb 2020 23:13:02 -0800 (PST)
+Received: from localhost.localdomain ([240e:362:4c3:8800:a057:bb7f:18d7:2e])
+        by smtp.gmail.com with ESMTPSA id b24sm1400707pfo.84.2020.02.25.23.12.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 25 Feb 2020 23:13:01 -0800 (PST)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v2] uacce: unmap remaining mmapping from user space
+Date:   Wed, 26 Feb 2020 15:12:06 +0800
+Message-Id: <1582701126-5312-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 10:49:19 +0800
-He Zhe <zhe.he@windriver.com> wrote:
+When uacce parent device module is removed, user app may
+still keep the mmaped area, which can be accessed unsafely.
+When rmmod, Parent device driver will call uacce_remove,
+which unmap all remaining mapping from user space for safety.
+VM_FAULT_SIGBUS is also reported to user space accordingly.
 
-> 
-> 
-> On 2/26/20 6:49 AM, Masami Hiramatsu wrote:
-> > On Tue, 25 Feb 2020 22:41:43 +0800
-> > <zhe.he@windriver.com> wrote:
-> >
-> >> From: He Zhe <zhe.he@windriver.com>
-> >>
-> >> strlist__add may fail with -ENOMEM or -EEXIST. Check it and give debugging
-> >> hint when necessary.
-> >>
-> >> Signed-off-by: He Zhe <zhe.he@windriver.com>
-> >> ---
-> >>  tools/perf/builtin-probe.c   | 30 ++++++++++++++++--------------
-> >>  tools/perf/util/probe-file.c | 26 +++++++++++++++++++++-----
-> >>  2 files changed, 37 insertions(+), 19 deletions(-)
-> >>
-> >> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-> >> index 26bc5923e6b5..8b4511c70fed 100644
-> >> --- a/tools/perf/builtin-probe.c
-> >> +++ b/tools/perf/builtin-probe.c
-> >> @@ -442,24 +442,26 @@ static int perf_del_probe_events(struct strfilter *filter)
-> >>  	}
-> >>  
-> >>  	ret = probe_file__get_events(kfd, filter, klist);
-> >> -	if (ret == 0) {
-> >> -		strlist__for_each_entry(ent, klist)
-> >> -			pr_info("Removed event: %s\n", ent->s);
-> >> +	if (ret < 0)
-> >> +		goto out;
-> > No, this is ignored by design.
-> > Since probe_file__get_events() returns -ENOENT when no event is matched,
-> > this should be just ignored, and goto uprobe event matching.
-> 
-> Thanks for pointing it out. However when strlist__add in probe_file__get_events
-> returns a -ENOMEM and we ignore that, though it happens not very likely, we
-> would miss some entries. So I add checks here and in probe_file__get_events to
-> give a heads-up in advance.
+Suggested-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+---
+ v2: Unmap before put_queue, where memory is freed, commented from Zaibo.
 
-If you are aware of -ENOMEM ( I guess in such case you'll see OOM killer
-sooner or later ), please just catch it. I mean 
+ drivers/misc/uacce/uacce.c | 16 ++++++++++++++++
+ include/linux/uacce.h      |  2 ++
+ 2 files changed, 18 insertions(+)
 
-if (ret == -ENOMEM)
-	goto out;
-
-will be good.
-
-Thank you,
-
-> 
-> And the same reason is for the checks below for probe_cache__load,
-> probe_cache__add_entry and probe_cache__scan_sdt.
-> 
-> 
-> Regards,
-> Zhe
-> 
-> >
-> >>  
-> >> -		ret = probe_file__del_strlist(kfd, klist);
-> >> -		if (ret < 0)
-> >> -			goto error;
-> >> -	}
-> >> +	strlist__for_each_entry(ent, klist)
-> >> +		pr_info("Removed event: %s\n", ent->s);
-> >> +
-> >> +	ret = probe_file__del_strlist(kfd, klist);
-> >> +	if (ret < 0)
-> >> +		goto error;
-> >>  
-> >>  	ret2 = probe_file__get_events(ufd, filter, ulist);
-> >> -	if (ret2 == 0) {
-> >> -		strlist__for_each_entry(ent, ulist)
-> >> -			pr_info("Removed event: %s\n", ent->s);
-> >> +	if (ret2 < 0)
-> >> +		goto out;
-> > Ditto.
-> >
-> > Thank you,
-> >
-> >>  
-> >> -		ret2 = probe_file__del_strlist(ufd, ulist);
-> >> -		if (ret2 < 0)
-> >> -			goto error;
-> >> -	}
-> >> +	strlist__for_each_entry(ent, ulist)
-> >> +		pr_info("Removed event: %s\n", ent->s);
-> >> +
-> >> +	ret2 = probe_file__del_strlist(ufd, ulist);
-> >> +	if (ret2 < 0)
-> >> +		goto error;
-> >>  
-> >>  	if (ret == -ENOENT && ret2 == -ENOENT)
-> >>  		pr_warning("\"%s\" does not hit any event.\n", str);
-> >> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> >> index cf44c05f89c1..00f086cba88f 100644
-> >> --- a/tools/perf/util/probe-file.c
-> >> +++ b/tools/perf/util/probe-file.c
-> >> @@ -307,10 +307,14 @@ int probe_file__get_events(int fd, struct strfilter *filter,
-> >>  		p = strchr(ent->s, ':');
-> >>  		if ((p && strfilter__compare(filter, p + 1)) ||
-> >>  		    strfilter__compare(filter, ent->s)) {
-> >> -			strlist__add(plist, ent->s);
-> >> -			ret = 0;
-> >> +			ret = strlist__add(plist, ent->s);
-> >> +			if (ret < 0) {
-> >> +				pr_debug("strlist__add failed (%d)\n", ret);
-> >> +				goto out;
-> >> +			}
-> >>  		}
-> >>  	}
-> >> +out:
-> >>  	strlist__delete(namelist);
-> >>  
-> >>  	return ret;
-> >> @@ -517,7 +521,11 @@ static int probe_cache__load(struct probe_cache *pcache)
-> >>  				ret = -EINVAL;
-> >>  				goto out;
-> >>  			}
-> >> -			strlist__add(entry->tevlist, buf);
-> >> +			ret = strlist__add(entry->tevlist, buf);
-> >> +			if (ret < 0) {
-> >> +				pr_debug("strlist__add failed (%d)\n", ret);
-> >> +				goto out;
-> >> +			}
-> >>  		}
-> >>  	}
-> >>  out:
-> >> @@ -678,7 +686,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
-> >>  		command = synthesize_probe_trace_command(&tevs[i]);
-> >>  		if (!command)
-> >>  			goto out_err;
-> >> -		strlist__add(entry->tevlist, command);
-> >> +		ret = strlist__add(entry->tevlist, command);
-> >> +		if (ret < 0) {
-> >> +			pr_debug("strlist__add failed (%d)\n", ret);
-> >> +			goto out_err;
-> >> +		}
-> >> +
-> >>  		free(command);
-> >>  	}
-> >>  	list_add_tail(&entry->node, &pcache->entries);
-> >> @@ -859,7 +872,10 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
-> >>  			break;
-> >>  		}
-> >>  
-> >> -		strlist__add(entry->tevlist, buf);
-> >> +		ret = strlist__add(entry->tevlist, buf);
-> >> +		if (ret < 0)
-> >> +			pr_debug("strlist__add failed (%d)\n", ret);
-> >> +
-> >>  		free(buf);
-> >>  		entry = NULL;
-> >>  	}
-> >> -- 
-> >> 2.24.1
-> >>
-> >
-> 
-
-
+diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
+index ffced4d..d39307f 100644
+--- a/drivers/misc/uacce/uacce.c
++++ b/drivers/misc/uacce/uacce.c
+@@ -224,6 +224,7 @@ static int uacce_fops_open(struct inode *inode, struct file *filep)
+ 
+ 	init_waitqueue_head(&q->wait);
+ 	filep->private_data = q;
++	uacce->inode = inode;
+ 	q->state = UACCE_Q_INIT;
+ 
+ 	return 0;
+@@ -253,6 +254,14 @@ static int uacce_fops_release(struct inode *inode, struct file *filep)
+ 	return 0;
+ }
+ 
++static vm_fault_t uacce_vma_fault(struct vm_fault *vmf)
++{
++	if (vmf->flags & (FAULT_FLAG_MKWRITE | FAULT_FLAG_WRITE))
++		return VM_FAULT_SIGBUS;
++
++	return 0;
++}
++
+ static void uacce_vma_close(struct vm_area_struct *vma)
+ {
+ 	struct uacce_queue *q = vma->vm_private_data;
+@@ -265,6 +274,7 @@ static void uacce_vma_close(struct vm_area_struct *vma)
+ }
+ 
+ static const struct vm_operations_struct uacce_vm_ops = {
++	.fault = uacce_vma_fault,
+ 	.close = uacce_vma_close,
+ };
+ 
+@@ -556,6 +566,12 @@ void uacce_remove(struct uacce_device *uacce)
+ 
+ 	if (!uacce)
+ 		return;
++	/*
++	 * unmap remaining mapping from user space, preventing user still
++	 * access the mmaped area while parent device is already removed
++	 */
++	if (uacce->inode)
++		unmap_mapping_range(uacce->inode->i_mapping, 0, 0, 1);
+ 
+ 	/* ensure no open queue remains */
+ 	mutex_lock(&uacce->mm_lock);
+diff --git a/include/linux/uacce.h b/include/linux/uacce.h
+index 904a461..0e215e6 100644
+--- a/include/linux/uacce.h
++++ b/include/linux/uacce.h
+@@ -98,6 +98,7 @@ struct uacce_queue {
+  * @priv: private pointer of the uacce
+  * @mm_list: list head of uacce_mm->list
+  * @mm_lock: lock for mm_list
++ * @inode: core vfs
+  */
+ struct uacce_device {
+ 	const char *algs;
+@@ -113,6 +114,7 @@ struct uacce_device {
+ 	void *priv;
+ 	struct list_head mm_list;
+ 	struct mutex mm_lock;
++	struct inode *inode;
+ };
+ 
+ /**
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
