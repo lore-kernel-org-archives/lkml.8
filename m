@@ -2,241 +2,276 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8498C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4DDC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F81020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD89820578
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Th3O1dzz"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JhMpeXX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBZS4e (ORCPT
+        id S1727359AbgBZS5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:56:34 -0500
-Received: from mail.efficios.com ([167.114.26.124]:34144 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbgBZS4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:56:34 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id ABF1F26E72A;
-        Wed, 26 Feb 2020 13:56:32 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id MgB_hmMXI-gH; Wed, 26 Feb 2020 13:56:32 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3271126E729;
-        Wed, 26 Feb 2020 13:56:32 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3271126E729
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1582743392;
-        bh=AaWHMsVxqEO40R+7Obvkl70ZB66jfl+RHfB+BDzGT7w=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Th3O1dzzmbSYfm6YVypEDu0zMdd+kIoLzQfR8ssQUwZ9JLXAuLmkcl1723yYqnMNU
-         QUxy7NpwEFrO5G4KfiuGnqofhayzKSaS4niWldrtNiM/lfmyba0/cZI8cUgY73uTD2
-         WzlupplqNmZJPwBJkYrrVQAE0rayGzkrCiz+ox3rxPWe9wjGpaU+RxDyJOWMhraRU3
-         HhDoZ7/e1A1dGWkNHOL5ybb6lpadXUXKyos+oNfKg3KERaKIm/Fdd/Kl6lcA5or4q8
-         LdMrG015IKfqpa4Krz6wGOEfn94Dv9hD+WL8ySdWapNpsLjI6WIF+9EqrU61MOEWc2
-         7YkQIudGvxWRg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id VX874F4E7k9S; Wed, 26 Feb 2020 13:56:32 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 2413026E98D;
-        Wed, 26 Feb 2020 13:56:32 -0500 (EST)
-Date:   Wed, 26 Feb 2020 13:56:32 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Chris Kennelly <ckennelly@google.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Paul Turner <pjt@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Carlos O'Donell <codonell@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-        Brian Geffon <bgeffon@google.com>
-Message-ID: <982202794.8791.1582743392060.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAEE+ybkTs4U7h-Js818k1QEqpVfHwAHSTXaEwHs3g37LwOsjLQ@mail.gmail.com>
-References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com> <20200221154923.GC194360@google.com> <1683022606.3452.1582301632640.JavaMail.zimbra@efficios.com> <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com> <CAEE+ybmQb02u-=c1sHozkJ+RXOi2Hno6qYJ0Vx9rOpKjSQ4fPQ@mail.gmail.com> <1089333712.8657.1582736509318.JavaMail.zimbra@efficios.com> <CAEE+ybkTs4U7h-Js818k1QEqpVfHwAHSTXaEwHs3g37LwOsjLQ@mail.gmail.com>
-Subject: Re: Rseq registration: Google tcmalloc vs glibc
+        Wed, 26 Feb 2020 13:57:30 -0500
+Received: from mail-bn8nam11on2101.outbound.protection.outlook.com ([40.107.236.101]:23904
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727276AbgBZS5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:57:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=egsJm4Ej2n0yQpISDy6xmj54/ngVMYp5lVyACpVBRkWv3FlYKZVrheHS0Y0Uj7pCblKRKN+Na/nJt1wAlXR5jxUlW7VFzIATrf8icR0PiXKNjQc6LqxP041ExQ2eANcsPJnh1FIxXM2w9gaZnr54G+PWGU+Gi5WuazGuzRp/itkHQn/ZtAJy+AepSy+fiqTgkPO8h1G7hT1XiB39TR3q8PPkgNxNyUP0J/c7J7LxrF2ooVgfM+eoC0ktp1dmGJGeI6KXiZDrL1XpUa2LL8sgBZmcYdHRlmW1rxYd7e+ysMub5cC4vvcW1NQN27zF2KQpK1FuiGxOpolBSfZjn0UAPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UWF5Mu9gFyPFNGiWokB/U7riIeypH+kSPeWmV7eib/E=;
+ b=jzMc5QTdNBM3NUJg2tWby3zWLIg7n72ZDSA8Ipe1TNwzTWFDC9ek1KkkTw0MdiB5QFZDbI5WX+mkJxb3ajTXN6TK2YrzW/ubaT17WoGUdMUQA9kUuNH3bmzfj54QHfMQVIOpNTn60VjhnGw/aVcXBNLDBeA+a1zNhWxg42/NPARt3wdkOK8Sz7yFw9C9W3R9gQBbkY8OzuCl2xnKg6BGIUTUAhMKm5JxGQC+sJz3rs5pXUpjs8RposroI6cBYD6IWKt5/aZ+SXEzhWHVAos4WMSlPxSQyqqENUIW+Ldn990pnS1PtzwSf96yS8mkSQ4a2oWbUQfiYliJ2KiXUjQvEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UWF5Mu9gFyPFNGiWokB/U7riIeypH+kSPeWmV7eib/E=;
+ b=JhMpeXX+cpj94wTaOiWpz262MqgORK74si5ncSPa2xYJXEStRMAp1KRCO45qr0KEcjwRj9C96t1VJncg/SKavd9WO5zu6PBGhzQG4xu7HLZBEAW/BPu6apiuK2VPIXCgFR2CLubEel31rbFodHdYdhZYQiFVGKUMBL6CSGMHHTs=
+Received: from MN2PR21MB1437.namprd21.prod.outlook.com (2603:10b6:208:208::10)
+ by MN2PR21MB1263.namprd21.prod.outlook.com (2603:10b6:208:3c::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.4; Wed, 26 Feb
+ 2020 18:57:24 +0000
+Received: from MN2PR21MB1437.namprd21.prod.outlook.com
+ ([fe80::88fc:b79:c64d:595f]) by MN2PR21MB1437.namprd21.prod.outlook.com
+ ([fe80::88fc:b79:c64d:595f%4]) with mapi id 15.20.2793.003; Wed, 26 Feb 2020
+ 18:57:24 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] Hyper-V: add myself as a maintainer
+Thread-Topic: [PATCH] Hyper-V: add myself as a maintainer
+Thread-Index: AQHV7M65Dqnpg8/u4k+/19dW8lAv0Kgt0a6A
+Date:   Wed, 26 Feb 2020 18:57:24 +0000
+Message-ID: <MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0@MN2PR21MB1437.namprd21.prod.outlook.com>
+References: <20200226180102.16976-1-wei.liu@kernel.org>
+In-Reply-To: <20200226180102.16976-1-wei.liu@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-26T18:57:23.1015810Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ca0a922a-df54-4510-95e2-0cd43ed91678;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cc21d4be-02cf-4733-b338-08d7baedb7b8
+x-ms-traffictypediagnostic: MN2PR21MB1263:|MN2PR21MB1263:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR21MB1263838B4AD2E697C5C621DFCAEA0@MN2PR21MB1263.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0325F6C77B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(9686003)(55016002)(10290500003)(54906003)(8990500004)(110136005)(107886003)(4326008)(71200400001)(8936002)(498600001)(81166006)(5660300002)(81156014)(66446008)(66556008)(66946007)(64756008)(66616009)(66476007)(2906002)(52536014)(76116006)(86362001)(33656002)(26005)(53546011)(7696005)(186003)(6506007)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1263;H:MN2PR21MB1437.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vIWCr4aQH9IL1WT4MoO9lxZCQdTAnRnLPvx7I/VsrOQse2ssdAiM/Lj/dYuhu6QkR9H3Fs4hUUOeTiWjoB9x7tAceStnOl1C4VMrorpLVec4s+mnWectFinKyIxQ9R+UBkZquxvJ9UjFqlBsMT7ym0SuJuAg3z8sBarBxlBFiWFDgK2s6rQXj8owWdjsieWbIbgxJsRmM1Ao7DjWuat4ccjA8FINFbw9k0oBflJOGMUVUEkOGkfO7BJuCxeMN6PTjVHYmEbLO84ThMVNJ5oLHRSU5D/AT1bDmaGmHIxcCl6UapOnloKqIff956JRjd5dg0JC0w0C5/OHKdWlVDAn8sh0FC6divD8z8YFcTddXOb5zCuodqCpCZUhnv7++R5pHs6mAYvhJI9R6OxT69zMZ4j6Fhg2GxTAFIjFIdZOH5yRXZm0HeLbSJ8U0l51mFUf
+x-ms-exchange-antispam-messagedata: sHwEDhVFqNWwVUilEa/Vq5sPfqy2NgFUNIHuaJmYHragK7NzOU2zhJrePicCAnT0go+bN3b6AW12qYKRl8r6MuzCiOQoLD2SZfYAL6DPbxIDggJ2zVYxsubhVg2+rzQGyNjC8GAAQtk2RoEAfMgUKg==
+Content-Type: multipart/mixed;
+        boundary="_002_MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0MN2PR21MB1437namp_"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: Rseq registration: Google tcmalloc vs glibc
-Thread-Index: GYBVveEgq8jJE8V5NPTEaBBY3L1pYA==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc21d4be-02cf-4733-b338-08d7baedb7b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 18:57:24.7011
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ATDHljUsaDygMpBm/MjEvXSDKBSeS703hLNCsaLtfqpa4PCCJL3DFQeYp/0SrwlnvEbOrWKo1HLam0oF/y7W2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1263
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 26, 2020, at 12:27 PM, Chris Kennelly ckennelly@google.com wrote:
+--_002_MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0MN2PR21MB1437namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Feb 26, 2020 at 12:01 PM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->>
->> ----- On Feb 25, 2020, at 10:38 PM, Chris Kennelly ckennelly@google.com wrote:
->>
->> > On Tue, Feb 25, 2020 at 10:25 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->> >>
->> >> On Fri, Feb 21, 2020 at 11:13 AM Mathieu Desnoyers
->> >> <mathieu.desnoyers@efficios.com> wrote:
->> >> >
->> >> > ----- On Feb 21, 2020, at 10:49 AM, Joel Fernandes, Google
->> >> > joel@joelfernandes.org wrote:
->> >> >
->> >> > [...]
->> >> > >>
->> >> > >> 3) Use the  __rseq_abi TLS cpu_id field to know whether Rseq has been
->> >> > >> registered.
->> >> > >>
->> >> > >> - Current protocol in the most recent glibc integration patch set.
->> >> > >> - Not supported yet by Linux kernel rseq selftests,
->> >> > >> - Not supported yet by tcmalloc,
->> >> > >>
->> >> > >> Use the per-thread state to figure out whether each thread need to register
->> >> > >> Rseq individually.
->> >> > >>
->> >> > >> Works for integration between a library which exists for the entire lifetime
->> >> > >> of the executable (e.g. glibc) and other libraries. However, it does not
->> >> > >> allow a set of libraries which are dlopen'd/dlclose'd to co-exist without
->> >> > >> having a library like glibc handling the registration present.
->> >> > >
->> >> > > Mathieu, could you share more details about why during dlopen/close
->> >> > > libraries we cannot use the same __rseq_abi TLS to detect that rseq was
->> >> > > registered?
->> >> >
->> >> > Sure,
->> >> >
->> >> > A library which is only loaded and never closed during the execution of the
->> >> > program can let the kernel implicitly unregister rseq at thread exit. For
->> >> > the dlopen/dlclose use-case, we need to be able to explicitly unregister
->> >> > each thread's __rseq_abi which sit in a library which is going to be
->> >> > dlclose'd.
->> >>
->> >> Mathieu, Thanks a lot for the explanation, it makes complete sense. It
->> >> sounds from Chris's reply that tcmalloc already checks
->> >> __rseq_abi.cpu_id and is not dlopened/closed. Considering these, it
->> >> seems to already handle things properly - CMIIW.
->> >
->> > I'll make a note about this, since we can probably benefit from some
->> > more comments about the assumptions/invariants the fastpath uses.
->>
->> I suspect the integration with glibc and with dlopen'd/dlclose'd libraries will
->> not
->> behave correctly with the current tcmalloc implementation.
->>
->> Based on the tcmalloc code-base, InitFastPerCpu is only called from IsFast. As
->> long
->> as this is the only expected caller, having IsFast comparing the RseqCpuId
->> detects
->> whether glibc (or some other library) has already registered rseq for the
->> current
->> thread.
->>
->> However, if the application chooses to invoke InitFastPerCpu() directly, things
->> become
->> expected, because it invokes:
->>
->>   absl::base_internal::LowLevelCallOnce(&init_per_cpu_once, InitPerCpu);
->>
->> which AFAIU invokes InitPerCpu once after execution of the current program.
->> Which
->> does:
->>
->> static bool InitThreadPerCpu() {
->>   if (__rseq_refcount++ > 0) {
->>     return true;
->>   }
->>
->>   auto ret = syscall(__NR_rseq, &__rseq_abi, sizeof(__rseq_abi), 0,
->>                      PERCPU_RSEQ_SIGNATURE);
->>   if (ret == 0) {
->>     return true;
->>   } else {
->>     __rseq_refcount--;
->>   }
->>
->>   return false;
->> }
->>
->> static void InitPerCpu() {
->>   // Based on the results of successfully initializing the first thread, mark
->>   // init_status to initialize all subsequent threads.
->>   if (InitThreadPerCpu()) {
->>     init_status = kFastMode;
->>   }
->> }
->>
->> In a scenario where glibc has already registered Rseq, the __rseq_refcount will
->> be incremented, the __NR_rseq syscall will fail with -1, errno=EBUSY, so the
->> refcount
->> will be immediately decremented and it will return false. Therefore,
->> "init_status" will
->> never be set fo kFastMode, leaving it in kSlowMode for the entire lifetime of
->> this
->> program. That being said, even though this state can come as a surprise, it
->> seems to
->> be entirely bypassed by the fast-paths IsFast() and IsFastNoInit(), so maybe it
->> won't
->> have any observable side-effects other than leaving init_status in a state that
->> does not
->> match reality.
-> 
-> I agree that this could potentially violate inviarants, but
-> InitFastPerCpu is not intended to be called by the application.
 
-OK, explicitly documenting this would be a good thing. In my own projects,
-I prefix those symbols with double-underscores (__) to indicate that those
-are not meant to be called by other means than the static inlines in the API.
 
-There may be use-cases which justify exposing InitFastPerCpu as a public API for
-applications though, especially for those which require some level of
-real-time guarantees from the malloc/free APIs. I've run into this situation
-with liburcu which I maintain.
+> -----Original Message-----
+> From: Wei Liu <wei.liu@kernel.org>
+> Sent: Wednesday, February 26, 2020 1:01 PM
+> To: linux-hyperv@vger.kernel.org
+> Cc: Wei Liu <wei.liu@kernel.org>; linux-kernel@vger.kernel.org; KY Sriniv=
+asan
+> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; Michael Kelley
+> <mikelley@microsoft.com>
+> Subject: [PATCH] Hyper-V: add myself as a maintainer
+>=20
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+> Cc: linux-kernel@vger.kernel.org
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+>=20
+> Sasha's entry hasn't been dropped from the Hyper-V tree yet, but that's e=
+asy to
+> resolve.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8f27f40d22bb..ed943f205215 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7739,6 +7739,7 @@ M:	"K. Y. Srinivasan" <kys@microsoft.com>
+>  M:	Haiyang Zhang <haiyangz@microsoft.com>
+>  M:	Stephen Hemminger <sthemmin@microsoft.com>
+>  M:	Sasha Levin <sashal@kernel.org>
+> +M:	Wei Liu <wei.liu@kernel.org>
 
-> 
->> In the other use-case where tcmalloc co-exist with a dlopened/dlclosed library,
->> but glibc
->> does not provide Rseq registration, we run into issues as well if the dlopened
->> library
->> registers rseq first for a given thread. The IsFastNoInit() expects that if Rseq
->> has been
->> observed as registered in the past for a thread, it stays registered. However,
->> if a
->> dlclosed library unregisters Rseq, we need to be prepared to re-register it. So
->> either
->> tcmalloc needs to express its use of Rseq by incrementing __rseq_refcount even
->> when Rseq
->> is registered (this would hurt the fast-path however, and I would hate to have
->> to do this),
->> or tcmalloc needs to be able to handle the fact that Rseq may be unregistered by
->> a dlclosed
->> library which was the actual owner of the Rseq registration.
-> 
-> We have a bit of an opportunity to figure out whether this is the
-> first time--from TCMalloc's perspective--a thread is doing per-CPU and
-> bump the __rseq_count accordingly.  I think this could be done off of
-> the fast path.
+Thanks for being a new maintainer for Hyper-V!
+Sasha submitted a patch (attached) on 2/05 to remove himself from the=20
+Hyper-V maintainer list. But his patch wasn't applied yet.
 
-Is there an explicit tcmalloc API call that each thread need to do before starting
-to use tcmalloc to allocate and free memory ? If not, you'll probably need to add
-at least a load of __rseq_refcount (or some other TLS variable), test and conditional
-branch on the fast-path, which is an additional cost I would ideally prefer to avoid.
-Or do you have something else in mind ?
+You may either re-submit his patch together with yours. Or just replace=20
+his name / email with yours in one patch.
 
 Thanks,
+- Haiyang
 
-Mathieu
+--_002_MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0MN2PR21MB1437namp_
+Content-Type: message/rfc822
+Content-Disposition: attachment;
+	creation-date="Wed, 26 Feb 2020 18:57:24 GMT";
+	modification-date="Wed, 26 Feb 2020 18:57:24 GMT"
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Received: from BN6PR21MB0849.namprd21.prod.outlook.com (2603:10b6:208:10c::27)
+ by MN2PR21MB1437.namprd21.prod.outlook.com with HTTPS via
+ MN2PR01CA0014.PROD.EXCHANGELABS.COM; Wed, 5 Feb 2020 21:32:56 +0000
+Received: from BL0PR03CA0002.namprd03.prod.outlook.com (2603:10b6:208:2d::15)
+ by BN6PR21MB0849.namprd21.prod.outlook.com (2603:10b6:404:9e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.4; Wed, 5 Feb
+ 2020 21:32:55 +0000
+Received: from BL2NAM06FT010.Eop-nam06.prod.protection.outlook.com
+ (2603:10b6:208:2d:cafe::97) by BL0PR03CA0002.outlook.office365.com
+ (2603:10b6:208:2d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend
+ Transport; Wed, 5 Feb 2020 21:32:55 +0000
+Received: from mail.kernel.org (198.145.29.99) by
+ BL2NAM06FT010.mail.protection.outlook.com (10.152.106.121) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2748.0 via Frontend Transport; Wed, 5 Feb 2020 21:32:54 +0000
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPSA id 1BFF82072B;
+	Wed,  5 Feb 2020 21:32:53 +0000 (UTC)
+From: Sasha Levin <sashal@kernel.org>
+To: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC: Stephen Hemminger <sthemmin@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>, Michael Kelley
+	<mikelley@microsoft.com>, James Morris <James.Morris@microsoft.com>, Sasha
+ Levin <sashal@kernel.org>
+Subject: [PATCH] Hyper-V: Drop Sasha Levin from the Hyper-V maintainers
+Thread-Topic: [PATCH] Hyper-V: Drop Sasha Levin from the Hyper-V maintainers
+Thread-Index: AQHV3GvU6ujUZzY+GkS/lGxXQt6mOw==
+Date: Wed, 5 Feb 2020 21:32:42 +0000
+Message-ID: <20200205213242.31343-1-sashal@kernel.org>
+Content-Language: en-US
+X-MS-Exchange-Organization-AuthSource:
+ BL2NAM06FT010.Eop-nam06.prod.protection.outlook.com
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-Network-Message-Id:
+ f1917b37-f4a3-4bbb-ec19-08d7aa82f656
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+x-forefront-antispam-report:
+ CIP:198.145.29.99;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(4636009)(189003)(199004)(1076003)(2160300002)(36756003)(4744005)(45080400002)(6666004)(86362001)(356004)(8676002)(1096003)(6966003)(246002)(450100002)(6266002)(7636002)(7596002)(26005)(956004)(426003)(336012)(5660300002)(34756004)(2616005)(34206002)(107886003)(4326008);DIR:INB;SFP:;SCL:1;SRVR:BN6PR21MB0849;H:mail.kernel.org;FPR:;SPF:Pass;LANG:en;PTR:mail.kernel.org;MX:1;A:1;
+received-spf: Pass (protection.outlook.com: domain of kernel.org designates
+ 198.145.29.99 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.145.29.99; helo=mail.kernel.org;
+dkim-signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;	s=default;
+ t=1580938373;	bh=5pX9Wz45X6jX7QtLlhhgzmhVrZWZIX3BDnNmDXbWHek=;
+	h=From:To:Cc:Subject:Date:From;
+	b=yCV/cVbXj3QOXFUrwJcZGmv2Ee5JhlnZW21u/58P6MfbGKGzojrC7Ip+3UHHJzpLj
+	 Ejr1UY48Zc8/5aiZ5fVGoE5gQMRsPCs2M0UEQxce0hweT3ogE9zPaMxcPIhpL0mfqf
+	 EjBur5RSDuY3WxgjRKp+Kd1iE+fLR/9Jyd9mX2Lo=
+x-ms-exchange-organization-originalserveripaddress: 10.152.106.121
+x-ms-exchange-organization-originalclientipaddress: 198.145.29.99
+x-ms-publictraffictype: Email
+X-Microsoft-Antispam-Mailbox-Delivery:
+ ucf:0;jmr:0;ex:0;auth:0;dest:I;ENG:(20160514016)(750127)(520002050)(944506383)(944626516);
+X-Microsoft-Antispam-Message-Info:
+ =?iso-8859-1?Q?rjWp9zVze0sgEPiSMQXcrobkVn1uvgUAREA3yj/qEJprHkshQXKfFG+LMM?=
+ =?iso-8859-1?Q?qAgaMrp/NJHXT6/Cu+W8gVv09lYBYFIHXC896xRs0Gww08V+vPIC3mUMAt?=
+ =?iso-8859-1?Q?7ldde/PDPH60Iv18BRi2F7BTg9PbYFLr97Vf7OK9XclkHKqbCm0cFlDAGL?=
+ =?iso-8859-1?Q?JreM3u8aFJSn5YzlLEuyfN8362zS99fVmnIp4rqW8GxpuTakLHXPlXLx5v?=
+ =?iso-8859-1?Q?/qNqRjIN8RpPm7iTMPbED8IO8bydOV/xKsa/L4LiiJPyhuo8RRyJso1VbL?=
+ =?iso-8859-1?Q?w7dc5H0vQVcN7D9N5JqeH6/UqdxvzlUJsnNPar2vJLAdB8I8lELSwDND4+?=
+ =?iso-8859-1?Q?RMkXqt4ZeKdIC8I4yBAJutd2+cXXGZdjO92xeR1py6lBsk8AdjPzq5Djls?=
+ =?iso-8859-1?Q?EAIYccp369uXfSXHHde2KmmkqNr2/4z6f+lDcGEwgWDWeqJH7BjL6OQA02?=
+ =?iso-8859-1?Q?ofE65WV4IiLdSeZJjvfiqilSjC2jNLyWunUINwn3S4V0OuZ9wh1GGREv9O?=
+ =?iso-8859-1?Q?w+ZGOyNvaWCSgzYVrvy8e098ML08am8/r2YviSLfr0DbAZV/hJrHJNCAsF?=
+ =?iso-8859-1?Q?dfphEzXbaGAKjj9zp1aWF4SrHIOWXUSmipDo9XZEMJiJFwlf22n1xh1gqO?=
+ =?iso-8859-1?Q?WE0vb0WNLHr/9J41xjF25QLwWDxkhTmm06qBdCYH7OAU2TNf7sAvEnsnZX?=
+ =?iso-8859-1?Q?ei8PvpBIOtL4BU5a5ORLVdztdnwOUyrmo8Z0cIIRTGRoQ0kPTuT6HpgkV7?=
+ =?iso-8859-1?Q?LM5hRmeaVjfBTSwqrKjvHvGW8iIbBX1r7eTMqCvxIpyUMmAWPANNQYmMNQ?=
+ =?iso-8859-1?Q?3iKzKfmSiko7z+nl38Vi3HnfVX7aA7cOzEv0A7m0Ai9VMJltmPvPYBt1Uj?=
+ =?iso-8859-1?Q?d7P/9QYuopuX/k4gN5eoA3WH9xRcFH5xQCo+/+3tOtr/hv8T5B2kh1bFQm?=
+ =?iso-8859-1?Q?K8ycDFmQWTeJRhFaekyq54HIwcOnaLu5EJVMnCt+vpxBsiiXNLO6zhFZNZ?=
+ =?iso-8859-1?Q?h1HzkmfdWy6uEvtsZeG14m1MGfKwU+LezvgYEq8/5XtovZxc1EfN7te+fH?=
+ =?iso-8859-1?Q?dtPCpj4WoVbfMotFZKPSO+08AVHOprNW0Umbo+fvvHZ5VkC1gpf6YpoTLw?=
+ =?iso-8859-1?Q?qwqsGcIQ4LDYmGwh/eF3j1gVd9lnKUJZ5REfN7V3YP6JyIHnaQOsRem8fB?=
+ =?iso-8859-1?Q?kAMq5wcOjHcOGtxH96iDqkEVtdAIIJiJRTsJyxlbQV0xNJq7WltmJaXQ1e?=
+ =?iso-8859-1?Q?61itoK3yWlo4pebMFfSb0LCw31Yy/2Qd00WJpVLiDnIoK78RVOqOpp4UgT?=
+ =?iso-8859-1?Q?Q8nHLaKaKy38FWOX0P4lSqCK2U5WKUIOPuU1vmqPP3Ko8BpN3UCYde8CsI?=
+ =?iso-8859-1?Q?iYGRJ2eFAOEekrrOqoe0S4PGTtzFRdEQiGKUL/qLQvqpUI9O8YEhk=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9ed8bb8a1f5f..92cd55dfabe5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7732,7 +7732,6 @@ Hyper-V CORE AND DRIVERS
+ M:     "K. Y. Srinivasan" <kys@microsoft.com>
+ M:     Haiyang Zhang <haiyangz@microsoft.com>
+ M:     Stephen Hemminger <sthemmin@microsoft.com>
+-M:     Sasha Levin <sashal@kernel.org>
+ T:     git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+ L:     linux-hyperv@vger.kernel.org
+ S:     Supported
+--
+2.20.1
+
+
+--_002_MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0MN2PR21MB1437namp_--
