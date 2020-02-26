@@ -2,97 +2,92 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521B5C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B10C4BA17
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EDE21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sx4t934S"
+	by mail.kernel.org (Postfix) with ESMTP id 2455A206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582734091;
+	bh=/t3Npmz0ziYRPUEw01AlkDHenvfuwVgllmRH8FcecUk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N/DSb85WuHT6+gT1qKPNqYNCyih8SEyA6yo6EKXvNoevoDquq4q+JV7uaMQUkpKpQ
+	 P0JfyhSa/nE8gWOykrt/BT94tWp4dbL16/m/8TsD6JeyriXBXfaA2a0DdBTU0JOaJQ
+	 BCNJPYTlDFLmwc493M1ER/01+jklAkRH/UU1MWVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgBZQUT (ORCPT
+        id S1727158AbgBZQVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:20:19 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:56544 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQUT (ORCPT
+        Wed, 26 Feb 2020 11:21:30 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37380 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:20:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pLcMLY+l8Jn014Qw6oW/1gcX4+lXMwKFovCkSJaWe78=; b=sx4t934StzYnAVVNNCrqTLwGEm
-        YBfgRrLQz3W8A1lHn+TV3zDVjWaw4chqU00r3OfTafA50YWMqhNCvN9tABO6ZKRR+2zIKGCz5IG4q
-        P8fnPl/WEIHSu88kboKd/UIgbtCFCSwH0lqTUlgpzVK7C8JAms7ctFteU79TuQQcapOTPqEqGdX1H
-        xn85Vd6KYb7mXNDQiEqJhmWx+sUjMoLXyZxDrHzoQor1PQDC16+OVMHHHJgwcFEvj+Zv0Np7UL5q1
-        xOs0Q+vYa4KOl9Byl+9uQWbYYaGP40cdlEx/68yA+Z96i9NJRopWEb0vLfnoW7JUzq4s1xlZc/su8
-        AgNh80AQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6zPU-00017f-TM; Wed, 26 Feb 2020 16:19:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3FCC4305EFE;
-        Wed, 26 Feb 2020 17:17:46 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8BBA12B7418A0; Wed, 26 Feb 2020 17:19:41 +0100 (CET)
-Date:   Wed, 26 Feb 2020 17:19:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Luigi Rizzo <lrizzo@google.com>
-Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        naveen.n.rao@linux.ibm.com, ardb@kernel.org, rizzo@iet.unipi.it,
-        pabeni@redhat.com, giuseppe.lettieri@unipi.it, toke@redhat.com,
-        hawk@kernel.org, mingo@redhat.com, acme@kernel.org,
-        rostedt@goodmis.org
-Subject: Re: [PATCH v2 1/2] kstats: kernel metric collector
-Message-ID: <20200226161941.GZ18400@hirez.programming.kicks-ass.net>
-References: <20200226134637.31670-1-lrizzo@google.com>
- <20200226134637.31670-2-lrizzo@google.com>
+        Wed, 26 Feb 2020 11:21:29 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q84so65582oic.4;
+        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R8CgB5ofq/CEo+Bbd71eYLol0DUjIXGKdAp6HQA/9d8=;
+        b=WXUtLvmQ3u/1TZxpMpTPUKrE/KEAeqbJczz5ZuaPKROK2TppNbJdB5WBS6dvKU3svD
+         f281IGiL8cWwhLtAiLtKn+BAGb7dKZzXuAgkAUhAfkZxBMj/y/pRtnTlTpsEbvIOJ7r7
+         I5d7LfzHL78FRqa9AbYMpbxFPIL4Y9HA+B/a1G50j2GcWwJkVX8xAWF9IKBg9XbALjZT
+         go52ZrackJPT1akPP7Y63RvqL8Lsc5k0wvUenX9y1Dkix3N6xlgzNa8H7YOimif9DBFQ
+         cPFKvdQYsVoDBYFN21W7kq4MbwJk+1ArEdBiZhHR+fSEx2K8/UKoY3PWtVmBwYu+uF4v
+         fIGQ==
+X-Gm-Message-State: APjAAAXB/apQltBC1HX0D8Dh4inbdcRinHjx+yQeBYsrlUWR78Ll41nG
+        LuvG/IizKgbxCBwr2D+9pw==
+X-Google-Smtp-Source: APXvYqx4y3t8f8l9YMHa0dnaCosRY7xiR2vi0DCieSBpahLqPG+tzB/Y2iH6dVgGLzxAw9q3lrEIRA==
+X-Received: by 2002:aca:ab53:: with SMTP id u80mr3693789oie.94.1582734089012;
+        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm939037oij.19.2020.02.26.08.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 08:21:26 -0800 (PST)
+Received: (nullmailer pid 13405 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:21:25 -0000
+Date:   Wed, 26 Feb 2020 10:21:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.co,
+        alexandre.torgue@st.com, linus.walleij@linaro.org,
+        amelie.delaunay@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Message-ID: <20200226162125.GA13349@bogus>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226134637.31670-2-lrizzo@google.com>
+In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 05:46:36AM -0800, Luigi Rizzo wrote:
-> kstats is a helper to accumulate in-kernel metrics (timestamps, sizes,
-> etc.) and show distributions through debugfs.
-> Set CONFIG_KSTATS=m or y to enable it.
+On Thu, 20 Feb 2020 17:22:46 +0100, Benjamin Gaignard wrote:
+> Convert stmfx bindings to json-schema
 > 
-> Creating a metric takes one line of code (and one to destroy it):
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
+>  3 files changed, 124 insertions(+), 144 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
 > 
->   struct kstats *key = kstats_new("foo", 3 /* frac_bits */);
->   ...
->   kstats_delete(key);
-> 
-> The following line records a u64 sample:
-> 
->   kstats_record(key, value);
-> 
-> kstats_record() is cheap (5ns hot cache, 250ns cold cache). Samples are
-> accumulated in a per-cpu array with 2^frac_bits slots for each power
-> of 2. Using frac_bits = 3 gives about 30 slots per decade.
 
-So I think everybody + dog has written code like this, although I never
-bothered with the log2 based buckets myself. Nor have I ever bothered
-with doing a debugfs interface.
-
-I find it very hard to convince myself something like this deserves to
-live upstream, vs. remaining in the local debug/hack toolbox.
-
-Tracing has an aggregator (histogram), you can dump the raw deltas, or
-you can hack up a custom aggregator in a few lines, or you do BPF if
-you're so inclined.
-
-Why do we need this specific one?
+Reviewed-by: Rob Herring <robh@kernel.org>
