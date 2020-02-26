@@ -6,188 +6,85 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F40C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D6FC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B7024653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDD02072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBZTqx (ORCPT
+        id S1727303AbgBZTvS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:46:53 -0500
-Received: from mail.willitsonline.com ([216.7.65.54]:36397 "EHLO
-        mail.willitsonline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbgBZTqx (ORCPT
+        Wed, 26 Feb 2020 14:51:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59365 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbgBZTvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:46:53 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.willitsonline.com (Postfix) with ESMTP id 50CE7111D86
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:46:52 -0800 (PST)
-X-Virus-Scanned: Debian amavisd-new at iredmail2.willitsonline.com
-Received: from mail.willitsonline.com ([127.0.0.1])
-        by localhost (iredmail2.willitsonline.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id efMVhbDz9gXO for <linux-kernel@vger.kernel.org>;
-        Wed, 26 Feb 2020 11:46:52 -0800 (PST)
-Received: from _ (localhost.localdomain [127.0.0.1])
-        (Authenticated sender: bluerocksaddles@willitsonline.com)
-        by mail.willitsonline.com (Postfix) with ESMTPSA id AF76A111D7A;
-        Wed, 26 Feb 2020 11:46:36 -0800 (PST)
+        Wed, 26 Feb 2020 14:51:18 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j72hx-0005Qo-QL; Wed, 26 Feb 2020 20:51:01 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3C141104099; Wed, 26 Feb 2020 20:51:01 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <JGross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
+In-Reply-To: <83D8A083-792A-4A82-985C-CAC33BC702DB@amacapital.net>
+References: <20200226081726.GQ18400@hirez.programming.kicks-ass.net> <83D8A083-792A-4A82-985C-CAC33BC702DB@amacapital.net>
+Date:   Wed, 26 Feb 2020 20:51:01 +0100
+Message-ID: <87sgixb00q.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Feb 2020 11:46:36 -0800
-From:   bluerocksaddles@willitsonline.com
-To:     "Michael ." <keltoiboy@gmail.com>
-Cc:     Philip Langdale <philipl@overt.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Trevor Jacobs <trevor_jacobs@aol.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        linux-mmc@vger.kernel.org
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
- on Panasonic Toughbook CF-29]
-In-Reply-To: <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
-References: <20191029170250.GA43972@google.com>
- <20200222165617.GA207731@google.com>
- <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
- <20200226011310.GA2116625@rani.riverdale.lan>
- <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
- <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
- <20200226045104.GA2191053@rani.riverdale.lan>
- <20200225212054.09865e0b@fido6>
- <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
-Message-ID: <edab20f582d4402baeca9bb80e612ee2@willitsonline.com>
-X-Sender: bluerocksaddles@willitsonline.com
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Somewhere in these messages is a clue....in that SD reader was involved.
-
-MK 4 and 5 have SD whilst MK 1, 2 and three do not.
-
-
-
-On 2020-02-25 22:10, Michael . wrote:
->> Someone with access to real hardware could
->> easily experiment with changing that magic value and seeing if it
->> changes which function is disabled.
-> 
-> One of our members has offered to supply a machine to a dev that can
-> use it to test any theory.
-> 
-> It is nearly beyond the scope of the majority of us to do much more
-> than just testing. We appreciate all the effort the devs put in and
-> are willing to help in anyway we can but we aren't kernel devs.
-> 
-> I, personally, use Debian. Others use Debian based distros such as MX
-> and Mint. We have been able to test many different distros such as
-> those listed in other comments but don't have the skills or expertise
-> to do much more. It is our hope that this discussion and subsequent
-> effort may enable others who prefer distros other than Debian based
-> distros can use a CF-29 (and possibly earlier) Toughbook with the
-> distro of their choice without having to rebuild a kernel so they can
-> use hardware that worked back in 2010. To do this the fix needs to be
-> at the kernel dev level not a local enthusiast level because while I
-> can rebuild a Debian kernel I can't rebuild a Fedora or Arch or
-> Slackware kernel.
-> 
-> I did a search about this issue before I made initial contact late
-> last year and the issue was discovered on more than Toughbooks and
-> posted about on various sites not long after distros moved from
-> 2.6.32. It seems back then people just got new machines that didn't
-> have a 2nd slot so the search for an answer stopped. Us Toughbook
-> users are a loyal group we use our machines because they are exactly
-> what we need and they take alot of "punishment" taht other machines
-> simply cannot handle. Our machines are used rather than recycled or
-> worse still just left to sit in waste management facilities in a
-> country that the western world dumps its rubbish in, we are Linux and
-> Toughbook enthusiasts and hope to be able to keep our machines running
-> for many years to come with all their native capabilities working as
-> they were designed to but using a modern Linux instead of Windows XP
-> or Windows 7. (that wasn't a pep talk, its just an explanation of why
-> we are passionate about this).
-> 
-> Let us know what you need us to do, we will let you know if we are
-> capable of it and give you any feedback you ask for. Over the weekend
-> I will try to rebuild a Debian kernel with the relevant option
-> disabled, provide it to my peers for testing and report back here what
-> the outcome is.
-> 
-> Thank you all for all your time and effort, it is truly appreciated.
-> Cheers.
-> Michael.
-> 
-> On 26/02/2020, Philip Langdale <philipl@overt.org> wrote:
->> On Tue, 25 Feb 2020 23:51:05 -0500
->> Arvind Sankar <nivedita@alum.mit.edu> wrote:
->> 
->>> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
->>> > That's correct, I tested a bunch of the old distros including
->>> > slackware, and 2.6.32 is where the problem began.
->>> >
->>> > Also, the Panasonic Toughbook CF-29s effected that we tested are
->>> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
->>> > fine because it has different hardware supporting the PCMCIA slots.
->>> > I have not tested a MK3 but suspect it would work ok as it also
->>> > uses the older hardware.
->>> >
->>> > Thanks for your help guys!
->>> > Trevor
->>> >
+Andy Lutomirski <luto@amacapital.net> writes:
+>> On Feb 26, 2020, at 12:17 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>> ﻿On Tue, Feb 25, 2020 at 09:43:46PM -0800, Andy Lutomirski wrote:
+>>> Your earlier patches suggest quite strongly that tracing isn't safe
+>>> until enter_from_user_mode().  But trace_hardirqs_off() calls
+>>> trace_irq_disable_rcuidle(), which looks [0] like a tracepoint.
 >>> 
->>> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
->>> upstream. Can you test a custom kernel based off your distro kernel
->>> but just disabling that config option? That's probably the easiest 
->>> fix
->>> currently, even though not ideal. Perhaps there should be a command
->>> line option to disable specific pci quirks to make this easier.
->>> 
->>> An ideal fix is I feel hard, given this quirk is based on 
->>> undocumented
->>> config registers -- it worked on Dell machines (that's where the
->>> original authors seem to have gotten their info from), perhaps they
->>> had only one Cardbus slot, but the code ends up disabling your second
->>> Cardbus slot instead of disabling the MMC controller.
+>>> Did you perhaps mean to do this *after* enter_from_user_mode()?
 >> 
->> Keeping in mind that this was 12+ years ago, you can at least still
->> read the original discussion in the archives. My original Dell laptop
->> (XPS m1330) had no cardbus slots at all, and used the r5c832
->> controller. There was a subsequent change that I was not involved with
->> which added support for the rl5c476, which is the problematic device 
->> in
->> this thread.
+>> aside from the fact that enter_from_user_mode() itself also has a
+>> tracepoint, the crucial detail is that we must not trace/kprobe the
+>> function calling this.
 >> 
->> As a hypothesis, based on the observed behaviour, the quirk (keeping 
->> in
->> mind that these are magic configuration register values that are not
->> documented) probably disabled function 1, regardless of what it is, 
->> and
->> the original example that motivated adding the rl5c476 quirk probably
->> had one cardbus slot and the card reader functions were all moved up
->> one, or something along those lines.
->> 
->> Truly making this smart would then involve having the code enumerate
->> the pci functions and identify the one that is the unwanted mmc
->> controller, based on function ID or class or whatever, and then
->> disabling that (assuming the magic can be reverse engineered: eg, the
->> current magic ORs the disable flag with 0x02 - chances are, that's the
->> index of the function: 0x01 would be the 0th function, 0x04 would be
->> the 2nd function, etc). Someone with access to real hardware could
->> easily experiment with changing that magic value and seeing if it
->> changes which function is disabled.
->> 
->> Good luck.
->> 
->> --phil
->> 
+>> Specifically for #PF, because we need read_cr2() before this. See later
+>> patches.
+>
+> Indeed. I’m fine with this patch, but I still don’t understand what
+> the changelog is about.
+
+Yeah, the changelog is not really helpful. Let me fix that.
+
+> And I’m still rather baffled by most of the notrace annotations in the
+> series.
+
+As discussed on IRC, this might be too broad, but then I rather have the
+actual C-entry points neither traceable nor probable in general and
+relax this by calling functions which can be traced and probed.
+
+My rationale for this decision was that enter_from_user_mode() is marked
+notrace/noprobe as well, so I kept the protection scope the same as we
+had in the ASM maze which is marked noprobe already.
+
+Thanks,
+
+        tglx
