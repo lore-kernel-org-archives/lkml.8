@@ -2,119 +2,81 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD28C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70554C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E1B24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582756237;
-	bh=gxcK7NC8mWWE3VCjrPfzyZOs52KChYzwYsl0P1qijkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q0DvUjmx8fBh2DCJgIcuIbKfjI8OxL9kyq4nBlJ3gJfWsM7BwYweGPgrBUicF5kpV
-	 v2rXvr/X4tbVwRdNVtL7kd7NC3nazOi19k1X9OzDKYCAy/YmsO62mdNF1tqNysgQ0l
-	 WjV71agf56UDdTbzTO05FPSiyA6vRHca1xpw62IQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5191424653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgBZWag (ORCPT
+        id S1727941AbgBZWbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:30:36 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36532 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbgBZWaf (ORCPT
+        Wed, 26 Feb 2020 17:31:45 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:45530 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgBZWbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:30:35 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so1265421oic.3;
-        Wed, 26 Feb 2020 14:30:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZIlPjifus7WfeBj0gGi82kKOzq1wYnOIRClo35MBZc0=;
-        b=qxSRF0lhqypbaR4C2wgyFsDfMNKzmpIzykKyVqJUSM8JtDX70FJa1nWggYgc+b3qyi
-         /6OyHKV8TVgctdEq1crg4l0I6rIHomV9CfmnC3QUlqn0nLaHFnNZF7M1RrzchBvWTP4F
-         M8c4RKoKJO9LNHe3ejdvas2KVgEIAxGFzzq2sJVlXTMoA/wrcU9wMOxYCuXPp0qnLkCC
-         m1RXKylkAwvXFgLUTFsStbiNoWxNfKIyOHeD/spmfM6aKd18DSpOpqYhvNu25tFRESfq
-         qkyamb5eLJ9WE5XyvO3tUOCgKQHABpPulEm28hg8zcgAC/Vx92GdhVyBfpKf5cyX4zE5
-         bZqg==
-X-Gm-Message-State: APjAAAVE/QRTMbUPieYRnVwO+elD8Zq3hOAascninidBjIlqGMdtEmqa
-        AgDNEQvK6qG0xWzp5Um3Fg==
-X-Google-Smtp-Source: APXvYqxN8VRIZzGbJK5F6l4YjpqWBlSf2rbUDYu4nFqKC0CNhTmORVGaCz6j9VvqOV0Qu90LztjjPg==
-X-Received: by 2002:aca:7591:: with SMTP id q139mr787618oic.54.1582756234681;
-        Wed, 26 Feb 2020 14:30:34 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h15sm1236359otq.67.2020.02.26.14.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:30:33 -0800 (PST)
-Received: (nullmailer pid 19907 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:30:32 -0000
-Date:   Wed, 26 Feb 2020 16:30:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: leds: Add a binding for AXP813 charger
- led
-Message-ID: <20200226223032.GA13404@bogus>
-References: <20200223131435.681620-1-megous@megous.com>
- <20200223131435.681620-2-megous@megous.com>
+        Wed, 26 Feb 2020 17:31:44 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 2482A2A0A1;
+        Wed, 26 Feb 2020 17:31:42 -0500 (EST)
+Date:   Thu, 27 Feb 2020 09:31:44 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
+In-Reply-To: <a682c89d-baf2-3d3c-647f-a07b2a146c9f@linux-m68k.org>
+Message-ID: <alpine.LNX.2.22.394.2002270908380.8@nippy.intranet>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org> <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
+ <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org> <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet> <a682c89d-baf2-3d3c-647f-a07b2a146c9f@linux-m68k.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223131435.681620-2-megous@megous.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 02:14:32PM +0100, Ondrej Jirman wrote:
-> The AXP813 PMIC can control one LED. Add binding to represent the LED.
+On Wed, 26 Feb 2020, Greg Ungerer wrote:
+
+> On 26/2/20 4:39 pm, Finn Thain wrote:
+> > 
+> > If -EBUSY means the end user has misconfigured something, printing
+> > "request_irq failed" would be helpful. But does that still happen?
 > 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../devicetree/bindings/leds/leds-axp20x.yaml | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
+> I have seen it many times. Its not at all difficult to get interrupt 
+> assignments wrong, duplicated, or otherwise mistaken when creating 
+> device trees. Not so much m68k/coldfire platforms where they are most 
+> commonly hard coded.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-axp20x.yaml b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
-> new file mode 100644
-> index 0000000000000..79282d55764bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-axp20x.yaml
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
+I was thinking of end users and production builds. You seem to be 
+concerned about developers. Catering to developers argues for pr_debug() 
+here, if anything.
 
-(GPL-2.0-only OR BSD-2-Clause)
+You say you've seen -16 errors "many times". Have you also seen -22? Did 
+the ability to distinguish these values help you to fix your device tree?
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-axp20x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for AXP813 PMIC from X-Powers.
-> +
-> +maintainers:
-> +  - Ondrej Jirman <megous@megous.com>
-> +
-> +description: |
-> +  This module is part of the AXP20x MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/axp20x.txt.
+> > ...
+> > 
+> > BTW, one of the benefits of "%s: request_irq failed" is that a 
+> > compilation unit with multiple request_irq calls permits the compiler 
+> > to coalesce all duplicated format strings. Whereas, that's not 
+> > possible with "foo: request_irq failed" and "bar: request_irq failed".
+> 
+> Given the wide variety of message text used with failed request_irq() 
+> calls it would be shear luck that this matched anything else. A quick 
+> grep shows that "%s: request_irq() failed\n" has no other exact matches 
+> in the current kernel source.
+> 
 
-Really, we should convert this first as this should either just be 
-referenced from the MFD schema or just directly put into it.
+You are overlooking the patches in this series that produce multiple 
+identical format strings.
 
-Rob
+And the present lack of consistency isn't a great argument for more 
+inconsistency IMO.
