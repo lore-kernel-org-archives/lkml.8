@@ -2,144 +2,130 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845A5C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F80C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527EB24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FF324684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pm5HWF73"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHFSmI4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgBZMY6 (ORCPT
+        id S1727237AbgBZM0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:24:58 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33477 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgBZMY6 (ORCPT
+        Wed, 26 Feb 2020 07:26:40 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37979 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgBZM0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:24:58 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m10so4460428wmc.0;
-        Wed, 26 Feb 2020 04:24:56 -0800 (PST)
+        Wed, 26 Feb 2020 07:26:40 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a9so2838492wmj.3;
+        Wed, 26 Feb 2020 04:26:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IvhXItdd4X1YXydMqRqD+tdcTcMEd0LYsl8PcoH++pk=;
-        b=Pm5HWF73aJ9VZcK/5Zlg1TkuMduL1Z0xp2H7Tf54k04xSGZJJXLHLvKQeMdHL+zJYr
-         pPiwRu+UndJu3ZSYNetFEJdoMpn2fyL8aufv0VPRtbL3/nvBusVWG+5yztsop2Dv+UU3
-         AoeyskahRt+cDZAxIsfHiT8TbsUPrhERZ0kK0iBKH0iWuILF0PbKXDlODXyBTmFYTH8F
-         zy/4nUoxWO0igZl95eYU2cbPiOZSSbL543ND5gG+xJo+CCZv1YY8iFW0gGJfpYzPCrnB
-         0T9KuaH6iqs9hgFnT3hqGoAy9nSzJi0M3gsFxzE3eLM2t1zv2yTU2VUgy2A2wNWWGehp
-         llGA==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=V8gMewY634WDFQZep0rl6hNrs2zu+VbqsCL1SpOtlb0=;
+        b=IHFSmI4juYhHMRYVx8UOXXzqtfXiwhzFC7fuLYcWeRdzpm1yfNt6Vj1prjQdPvMauM
+         4k9EKV+jiOb39j6DdIGSvb5pXlbn1bq8GqT3+LErN1gTmJs8y3yj7OxdMnvvAz571F+e
+         wJRAdxNkBN9viXqrDaxGkI412mWjm2FKo5DRI1FN+YjKIt4bYbCrHXQ9XqPIAyzvEXPg
+         25O6rdrR7WjAlEAnXZHOVZizS3pRFp8TKDBPWJI4dKKh2xQvpJtOYWAiqahqwUrED96U
+         LI15mWGVV6Or8+OUWgTXPnaiXE5JweGr4sygwTpyWhB4IJpzv5z3HtkgqMDIYcVH2U/F
+         Ezyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IvhXItdd4X1YXydMqRqD+tdcTcMEd0LYsl8PcoH++pk=;
-        b=kJjHxbc2xQhfs8n3fo+seIMK2oBJOY5kATJc/y+ALYztquS2EOOruVkKktrvpA4j1w
-         /OriLlTqgi3gH4n7TbrfKPChykewp2ecOblKFFW06HpDU8GvTfo1kCp1qFjWOCbhCQ22
-         QbJHcb3v2Eb7Uz+s/u0IBHLe07n03ILiuhLd+Fa05/E8yUvpuDlDFEIgUJvjXVamsl7P
-         O2bd6rpptsTn7mJtlxP15tNekhhNHRbCPOpOccJARqyB00CBSq1cmutBByZSRoHuY8JQ
-         BoFRKu3ogNYnxj0iLfmJK85vXEnr0W1+wFgOdmPIlNrNnrnbdvYwcK5Lxmp2fgAT/0Ji
-         MQJQ==
-X-Gm-Message-State: APjAAAXUP7Ykdq/CsKJ/J2ErADzxxK/+FVrzpbnPTZ3NYiBM+yfdcJEj
-        Ta26ChQsex/MKaXGF8F0Qcw=
-X-Google-Smtp-Source: APXvYqzyTzyUPRQdIy8Rfhx8ubVi+C6umoNFwiXeFqS0v+Ld0G8ObmhzMOrwd3BzwL6ZjxmlWPhcrg==
-X-Received: by 2002:a1c:7718:: with SMTP id t24mr5311847wmi.119.1582719896307;
-        Wed, 26 Feb 2020 04:24:56 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g14sm3226354wrv.58.2020.02.26.04.24.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 04:24:55 -0800 (PST)
-To:     ezequiel@collabora.com
-Cc:     boris.brezillon@collabora.com, devicetree@vger.kernel.org,
-        heiko@sntech.de, hverkuil@xs4all.nl, jonas@kwiboo.se,
-        kernel@collabora.com, laurent.pinchart@ideasonboard.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, nicolas@ndufresne.ca,
-        paul.kocialkowski@bootlin.com, robh+dt@kernel.org,
-        sakari.ailus@iki.fi, tfiga@chromium.org
-References: <20200220163016.21708-7-ezequiel@collabora.com>
-Subject: Re: [PATCH v6 6/6] arm64: dts: rockchip: rk3399: Define the rockchip
- Video Decoder node
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <817821e3-bc51-8037-b9b9-e429c5eeb280@gmail.com>
-Date:   Wed, 26 Feb 2020 13:24:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=V8gMewY634WDFQZep0rl6hNrs2zu+VbqsCL1SpOtlb0=;
+        b=Sdi5QLS6HhoJz/5akBkwhdjlX6GIDDxrAgplSjPXKdtxAmB+Xp52/dY7U8fKRDUZja
+         D6ktpM1oUlxHJuZnBXyG9QxNEnqXGOVlCrBOtLuSTRHfDwA6Hf0ix0JHCZaecLYDR3Y0
+         27vsJKQdV14Vr3JZdTa1vRHHe89ZEZzgZ3QWLbmvPuzojUh5DRQemblZufyRJ2LgvKOW
+         1UaMG0KKYL7SlHXVB9rzKQ5aYuDZjVNmtjDJyLMNKMFbRH3nNKz52P7tUwN/yoTxy6jM
+         z+wAq6oLb8e6CD7SPwbRb0fxmbx5hb1eiytVxRsxRhYEjQ9C9kcpUiaD5LAoz+ruIAej
+         RHcQ==
+X-Gm-Message-State: APjAAAXDO+R5XDSGCvyHpNxQYNKC/Bgcbd7sFUSOLXwXbjxmMu+a/FvD
+        UgWW18HHmdyXMC0Q2EJiw4VVQ7JpOW2YzbkDQdI=
+X-Google-Smtp-Source: APXvYqwJSp6y5t6j/YDSKsw2/NttcfYRM0gx0AAnvvsYnMrceEUhwETgdXNNCRvQxdUejjKm2ZwCaS32bGDuwAKf2os=
+X-Received: by 2002:a05:600c:2285:: with SMTP id 5mr5218941wmf.64.1582719997984;
+ Wed, 26 Feb 2020 04:26:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200220163016.21708-7-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200224174129.2664-1-ndesaulniers@google.com>
+ <20200225210250.64366-1-ndesaulniers@google.com> <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+In-Reply-To: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 26 Feb 2020 13:29:07 +0100
+Message-ID: <CA+icZUWcW3+9QdZcACCXP6Yun__Sm_s4+qM4rALdFf=hGBt3FQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Wed, Feb 26, 2020 at 12:31 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi.
+>
+>
+> On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > Added to kbuild documentation. Provides more official info on building
+> > kernels with Clang and LLVM than our wiki.
+> >
+> > Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> > Changes V1 -> V2:
+> > * s/On going/ongoing/
+> > * add Randy's Suggested-by
+>
+>
+> I do not understand this tag update.
+>
+> As far as I saw the review process,
+> I do not think Randy deserves to have Suggested-by
+> because he just pointed out a typo (on going -> ongoing) :
+> https://patchwork.kernel.org/patch/11401189/#23179575
+>
+> (or, was there off-line activity I had missed?)
+>
 
-Dtsi nodes are sort on address.
-The vdec node is now inserted between:
+Hi Masahiro,
 
-vdec_mmu: iommu       @ff660480
-vdec    : video-codec @ff660000
-iep_mmu : iommu       @ff670800
+I got some credits from Nick for a review by seeing a typo - not on a
+review of the code - and H. Peter Anvin asked why.
 
-This should be:
+I am not sure what is here the correct credit to give.
+Depends a "Reviewed-by" and/or "Suggested-by" on a technical review?
 
-vpu_mmu : iommu       @ff650800
-vdec    : video-codec @ff660000
-vdec_mmu: iommu       @ff660480
+My POV: When people take time to look over patches they should get
+credits - sort of esteem.
 
+Regards,
+- Sedat -
 
+P.S.: Tipp: Use codespell to find typos :-).
 
-> From: Boris Brezillon <boris.brezillon at collabora.com>
-> 
-> RK3399 has a Video decoder, define the node in the dtsi. We also add
-> the missing power-domain in mmu node and enable the block.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon at collabora.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel at collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 33cc21fcf4c1..a07f857df12f 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1285,8 +1285,20 @@ vdec_mmu: iommu at ff660480 {
->  		interrupt-names = "vdec_mmu";
->  		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>;
->  		clock-names = "aclk", "iface";
-> +		power-domains = <&power RK3399_PD_VDU>;
->  		#iommu-cells = <0>;
-> -		status = "disabled";
-> +	};
-> +
-> +	vdec: video-codec at ff660000 {
-> +		compatible = "rockchip,rk3399-vdec";
-> +		reg = <0x0 0xff660000 0x0 0x400>;
-> +		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		interrupt-names = "vdpu";
-> +		clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
-> +			 <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
-> +		clock-names = "axi", "ahb", "cabac", "core";
-> +		power-domains = <&power RK3399_PD_VDU>;
-> +		iommus = <&vdec_mmu>;
->  	};
->  
->  	iep_mmu: iommu at ff670800 {
-> -- 
-> 2.25.0
-
-
-
+[1] https://git.kernel.org/linus/0e2e160033283e20f688d8bad5b89460cc5bfcc4
+"x86/asm: Add _ASM_ARG* constants for argument registers to <asm/asm.h>"
