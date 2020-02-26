@@ -2,86 +2,75 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD15AC4BA2F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FD5C4BA2F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837A821D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QUzAuOkf"
+	by mail.kernel.org (Postfix) with ESMTP id 9B6AC21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgBZWh7 (ORCPT
+        id S1727910AbgBZWjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:37:59 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54169 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727763AbgBZWh7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:37:59 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so255373pjc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:37:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=MkiYANXNDKKBU04CoetleQBTgLDcDU4gpW2yHn2bIZk=;
-        b=QUzAuOkfTreAOpJoiQlWLoPiROWp7KYC1iJAW8U04PHb4HNcpVaobovd8+yYcVaCcm
-         3FITmEN9ShOMDXtu0lhwCKYnn+a8izFZZcZYbHjCtpqyVz8DR++HI8K0DZlcv5Vu7pPU
-         2nOO4Ibx25LheW8f/J33e/Z+YnEktMRgXj2bU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=MkiYANXNDKKBU04CoetleQBTgLDcDU4gpW2yHn2bIZk=;
-        b=FtWJhfYV4dbirrsWGfn2K7BNQJRZcC7wkwkCuRC+4/HdjrOhZ5RNjc1MAyOA4AzgJg
-         ruWKnAV7CoZvEOdVVbycQCrIcH0AGqRzBNEHu7Cn+n5B6bx4Kn01yjKqB2m2JdNYPb53
-         eNiBR+qaCr9dXpV0bxI3+mu8daiudlGqs7po455ZEQchzwwtWoeMZs9lz+c7IAhwUXCd
-         zVyg5338flWNHhQI3uj2vfj3+DSfbBoW8nqtr4hUTdex6kxld5gKMHC3w8/fn3IOlR0v
-         K4Sbc2zawywuwQcF1iDT5sR7kn13UoCCI0HPkyoyrArTddzI4m30Q/WwiHG1/STOgKLG
-         KTdA==
-X-Gm-Message-State: APjAAAUt/lpU/lm/2pkM55DNIcxEykw8NY+IpXOqtykBGMCt+uouTK8S
-        EJWA6R5Un9/IwZyrOXIL2CpM5arhcrc=
-X-Google-Smtp-Source: APXvYqx4pAuCqNuJKULTSNu1E8O8v8SPGjUJtCyCqLQLK6VBYPNxlnO8gYz+J569pQGTu1uqWz6KfA==
-X-Received: by 2002:a17:90b:1256:: with SMTP id gx22mr1435935pjb.94.1582756677657;
-        Wed, 26 Feb 2020 14:37:57 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y127sm4362635pfg.22.2020.02.26.14.37.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:37:57 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 26 Feb 2020 17:39:24 -0500
+Received: from muru.com ([72.249.23.125]:57922 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727761AbgBZWjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:39:24 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 1CD8A8022;
+        Wed, 26 Feb 2020 22:40:09 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 14:39:21 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
+ interconnect node
+Message-ID: <20200226223921.GB37466@atomide.com>
+References: <20200225204649.28220-1-s-anna@ti.com>
+ <20200225204649.28220-7-s-anna@ti.com>
+ <20200226182924.GU37466@atomide.com>
+ <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
+ <20200226223745.GA37466@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582694833-9407-2-git-send-email-mkshah@codeaurora.org>
-References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org> <1582694833-9407-2-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v7 1/3] arm64: dts: qcom: sc7180: Add cpuidle low power states
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        devicetree@vger.kernel.orgi
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Date:   Wed, 26 Feb 2020 14:37:56 -0800
-Message-ID: <158275667604.177367.11185757008232316036@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226223745.GA37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-02-25 21:27:11)
-> Add device bindings for cpuidle states for cpu devices.
->=20
-> Cc: devicetree@vger.kernel.orgi
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-> ---
+* Tony Lindgren <tony@atomide.com> [200226 22:38]:
+> * Suman Anna <s-anna@ti.com> [200226 20:35]:
+> > On 2/26/20 12:29 PM, Tony Lindgren wrote:
+> > > * Suman Anna <s-anna@ti.com> [200225 20:47]:
+> > >> The PRU-ICSS target module node was left in disabled state in the base
+> > >> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
+> > >> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
+> > >> the PRU-ICSS IP.
+> > > 
+> > > Just get rid of the top level status = "disabled". The default
+> > > is enabled, and the device is there for sure inside the SoC.
+> > > And then there's no need for pointless status = "okay" tinkering
+> > > in the board specific dts files so no need for this patch.
+> > 
+> > The IP is not available on all SoCs, and there are about 40 different
+> > board files atm across AM33xx and AM437x, and am not sure what SoCs they
+> > are actually using.
+> 
+> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
+> Detect display subsystem related devices" if you can add runtime
+> detection for the accelerators there similar to what I hadded for omap3.
+> acclerators.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
+revision handling".
+
+Regards,
+
+Tony
