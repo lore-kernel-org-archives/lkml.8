@@ -2,122 +2,260 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5752FC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6FEC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C1E24653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF0124653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PsTVQeVK"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KubLIMk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgBZUgs (ORCPT
+        id S1727445AbgBZUiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:36:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42274 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbgBZUgr (ORCPT
+        Wed, 26 Feb 2020 15:38:06 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37712 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbgBZUiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:36:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+p7EsunDyckvjnn7uoUOj7IyahAxbevV9+nP47iItWU=; b=PsTVQeVK5MMB5wwRjEYrExEWaA
-        1lEsqABgpcezNBGgPT1p7GOolDKy0OflU9a6BzxaKrNhGcfWVbAN6xuZ11bBOYm4Ne6KrWK2phYqy
-        tT4mHwvThQUKuRisFlycbecA8yKIxpJenV5wWUXfKFgN6mzHck8Pb1obpiYTfjigldNarKpYQ6Y/q
-        0Z4W9T7xOEW0hD8vIEH9Qc7ixTMkJ6lLXpXApqRCp/irhgXWyAxQmLO6De5lFOb6DHCgo/ueJqwNk
-        eG303bUmPxpNS/6ZxLaujBeY10d2wFSRHssTX7ISCsPVyrFYm6Bw0M3HFYKFZfASOcJrwGS62J9Zj
-        0cu+ombA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j73QB-00062V-Dw; Wed, 26 Feb 2020 20:36:43 +0000
-Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
- driver
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200226105419.632771-1-enric.balletbo@collabora.com>
- <20200226105419.632771-4-enric.balletbo@collabora.com>
- <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
- <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <470ab4e2-ab10-19bd-aea4-9b081c9978a8@infradead.org>
-Date:   Wed, 26 Feb 2020 12:36:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Feb 2020 15:38:06 -0500
+Received: by mail-qt1-f193.google.com with SMTP id j34so571994qtk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:38:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1+FF8laV1uW4uV4Gl7mC+45itLTemNWg5eIUO54Qcwc=;
+        b=KubLIMk7flKHMhRJs1aAP6ESSh3y8tdMgMGwRGgENJT0Bvp8QKI59thi49+Rd1wqy2
+         VOfEKMJZMuJYl9qHJOlBDvkNrr8l+rZaGaE/1T2F4Cqt2imi5HM0Ben1msJm50UYOECI
+         DtmauHl25cCws3NOeLsayH1HQMnItxblak1KzSo/4L+uv6irc4vgFwN4K4ufam6AYxLt
+         6V9bVA4ZZab6+znSX2MHrhxtRU9LD/SCyD0qKP0DHAEO2KgIjTVU3mNDBCclZoOzTFCG
+         S8ioGfQIhI5PfxnRnl1aSDTeyw3haIam0Q/pE9KBkEJe5MEIrqkn77PKZT22hVMCorBE
+         Dpaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1+FF8laV1uW4uV4Gl7mC+45itLTemNWg5eIUO54Qcwc=;
+        b=XBab+vdBzSS9gHYY9cvUaLft1J+o0Mf9AOI+r2Ufp7T/WsP4/qNX6oYvPtCp6LMCvU
+         NT/RsDR2wgsHvvksB03eg3gCkAhan0ZSP7fN3iuAqnw0a2MwIWiFpNjPws1zrvoI9GRc
+         xUuIqdHbLg4OuvPqpNd9c4rFowanxDbYO0h5K7ZamYMmfFaU2co53sU45PrAbbCc8lbC
+         oao8EwqgviBPa2gsd24Egs6ENoma9e5VLt/1soBegtdOI8Yoyet1akQ6o6rv7eK1iuyU
+         VCe3gRSIrbwTHsei039X3fZHnKFJGVGI4grgP6WFIZnbbT050NkmncIdo61yIoT/GB8S
+         ZWiQ==
+X-Gm-Message-State: APjAAAU5Nv9JKbn7y6ivrEoLbX8f1o7Vb/LNGGxAOh9+4YWfm3qZeO5O
+        uYBS66sHFNXQ2JGNScsJP7fZbA==
+X-Google-Smtp-Source: APXvYqz5cBzLht6gWlCeb5WqGQU8kNxijfOJJGhXXIZZEY/ICGKhh27FTpoJVAdyQHV3QyJ1D37eOw==
+X-Received: by 2002:ac8:540f:: with SMTP id b15mr754546qtq.237.1582749485389;
+        Wed, 26 Feb 2020 12:38:05 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id t30sm1747373qtd.67.2020.02.26.12.38.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Feb 2020 12:38:04 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     elver@google.com, willy@infradead.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v3] mm/vmscan: fix data races at kswapd_classzone_idx
+Date:   Wed, 26 Feb 2020 15:37:52 -0500
+Message-Id: <1582749472-5171-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 12:29 PM, Ezequiel Garcia wrote:
-> On Wed, 2020-02-26 at 07:40 -0800, Randy Dunlap wrote:
->> On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
->>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->>> index 2114b563478c..dcd6481a14d0 100644
->>> --- a/drivers/soc/mediatek/Kconfig
->>> +++ b/drivers/soc/mediatek/Kconfig
->>> @@ -44,4 +44,11 @@ config MTK_SCPSYS
->>>  	  Say yes here to add support for the MediaTek SCPSYS power domain
->>>  	  driver.
->>>  
->>> +config MT8173_MMSYS
->>> +	bool "MediaTek MT8173 MMSYS Support"
->>
->> Hi,
->> Can this be tristate instead of bool?
->>
-> 
-> Wouldn't that conflict with
-> the driver being a builtin_platform_driver,
-> or am I just confusing things badly?
+pgdat->kswapd_classzone_idx could be accessed concurrently in
+wakeup_kswapd(). Plain writes and reads without any lock protection
+result in data races. Fix them by adding a pair of READ|WRITE_ONCE() as
+well as saving a branch (compilers might well optimize the original code
+in an unintentional way anyway). While at it, also take care of
+pgdat->kswapd_order and non-kswapd threads in allow_direct_reclaim().
+The data races were reported by KCSAN,
 
-OK, it probably would conflict.
+ BUG: KCSAN: data-race in wakeup_kswapd / wakeup_kswapd
 
-Thanks.
+ write to 0xffff9f427ffff2dc of 4 bytes by task 7454 on cpu 13:
+  wakeup_kswapd+0xf1/0x400
+  wakeup_kswapd at mm/vmscan.c:3967
+  wake_all_kswapds+0x59/0xc0
+  wake_all_kswapds at mm/page_alloc.c:4241
+  __alloc_pages_slowpath+0xdcc/0x1290
+  __alloc_pages_slowpath at mm/page_alloc.c:4512
+  __alloc_pages_nodemask+0x3bb/0x450
+  alloc_pages_vma+0x8a/0x2c0
+  do_anonymous_page+0x16e/0x6f0
+  __handle_mm_fault+0xcd5/0xd40
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
->> +	depends on COMMON_CLK_MT8173
->>> +	help
->>> +	  Say yes here to add support for the MediaTek MT8173 Multimedia
->>> +	  Subsystem (MMSYS).
->>> +
->>>  endmenu
+ 1 lock held by mtest01/7454:
+  #0: ffff9f425afe8808 (&mm->mmap_sem#2){++++}, at:
+ do_page_fault+0x143/0x6f9
+ do_user_addr_fault at arch/x86/mm/fault.c:1405
+ (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
+ irq event stamp: 6944085
+ count_memcg_event_mm+0x1a6/0x270
+ count_memcg_event_mm+0x119/0x270
+ __do_softirq+0x34c/0x57c
+ irq_exit+0xa2/0xc0
 
+ read to 0xffff9f427ffff2dc of 4 bytes by task 7472 on cpu 38:
+  wakeup_kswapd+0xc8/0x400
+  wake_all_kswapds+0x59/0xc0
+  __alloc_pages_slowpath+0xdcc/0x1290
+  __alloc_pages_nodemask+0x3bb/0x450
+  alloc_pages_vma+0x8a/0x2c0
+  do_anonymous_page+0x16e/0x6f0
+  __handle_mm_fault+0xcd5/0xd40
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
+ 1 lock held by mtest01/7472:
+  #0: ffff9f425a9ac148 (&mm->mmap_sem#2){++++}, at:
+ do_page_fault+0x143/0x6f9
+ irq event stamp: 6793561
+ count_memcg_event_mm+0x1a6/0x270
+ count_memcg_event_mm+0x119/0x270
+ __do_softirq+0x34c/0x57c
+ irq_exit+0xa2/0xc0
+
+ BUG: KCSAN: data-race in kswapd / wakeup_kswapd
+
+ write to 0xffff90973ffff2dc of 4 bytes by task 820 on cpu 6:
+  kswapd+0x27c/0x8d0
+  kthread+0x1e0/0x200
+  ret_from_fork+0x27/0x50
+
+ read to 0xffff90973ffff2dc of 4 bytes by task 6299 on cpu 0:
+  wakeup_kswapd+0xf3/0x450
+  wake_all_kswapds+0x59/0xc0
+  __alloc_pages_slowpath+0xdcc/0x1290
+  __alloc_pages_nodemask+0x3bb/0x450
+  alloc_pages_vma+0x8a/0x2c0
+  do_anonymous_page+0x170/0x700
+  __handle_mm_fault+0xc9f/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v3: Take care of kswapd() and kswapd_try_to_sleep() too.
+v2: Use a temp variable and take care of kswapd_order per Matthew.
+    Take care of allow_direct_reclaim() as well.
+
+ mm/vmscan.c | 45 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 19 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f14c8c6069a6..4c8a1cdccbba 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3136,8 +3136,9 @@ static bool allow_direct_reclaim(pg_data_t *pgdat)
+ 
+ 	/* kswapd must be awake if processes are being throttled */
+ 	if (!wmark_ok && waitqueue_active(&pgdat->kswapd_wait)) {
+-		pgdat->kswapd_classzone_idx = min(pgdat->kswapd_classzone_idx,
+-						(enum zone_type)ZONE_NORMAL);
++		if (READ_ONCE(pgdat->kswapd_classzone_idx) > ZONE_NORMAL)
++			WRITE_ONCE(pgdat->kswapd_classzone_idx, ZONE_NORMAL);
++
+ 		wake_up_interruptible(&pgdat->kswapd_wait);
+ 	}
+ 
+@@ -3769,9 +3770,9 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int classzone_idx)
+ static enum zone_type kswapd_classzone_idx(pg_data_t *pgdat,
+ 					   enum zone_type prev_classzone_idx)
+ {
+-	if (pgdat->kswapd_classzone_idx == MAX_NR_ZONES)
+-		return prev_classzone_idx;
+-	return pgdat->kswapd_classzone_idx;
++	enum zone_type curr_idx = READ_ONCE(pgdat->kswapd_classzone_idx);
++
++	return curr_idx == MAX_NR_ZONES ? prev_classzone_idx : curr_idx;
+ }
+ 
+ static void kswapd_try_to_sleep(pg_data_t *pgdat, int alloc_order, int reclaim_order,
+@@ -3815,8 +3816,11 @@ static void kswapd_try_to_sleep(pg_data_t *pgdat, int alloc_order, int reclaim_o
+ 		 * the previous request that slept prematurely.
+ 		 */
+ 		if (remaining) {
+-			pgdat->kswapd_classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
+-			pgdat->kswapd_order = max(pgdat->kswapd_order, reclaim_order);
++			WRITE_ONCE(pgdat->kswapd_classzone_idx,
++				   kswapd_classzone_idx(pgdat, classzone_idx));
++
++			if (READ_ONCE(pgdat->kswapd_order) < reclaim_order)
++				WRITE_ONCE(pgdat->kswapd_order, reclaim_order);
+ 		}
+ 
+ 		finish_wait(&pgdat->kswapd_wait, &wait);
+@@ -3893,12 +3897,12 @@ static int kswapd(void *p)
+ 	tsk->flags |= PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD;
+ 	set_freezable();
+ 
+-	pgdat->kswapd_order = 0;
+-	pgdat->kswapd_classzone_idx = MAX_NR_ZONES;
++	WRITE_ONCE(pgdat->kswapd_order, 0);
++	WRITE_ONCE(pgdat->kswapd_classzone_idx, MAX_NR_ZONES);
+ 	for ( ; ; ) {
+ 		bool ret;
+ 
+-		alloc_order = reclaim_order = pgdat->kswapd_order;
++		alloc_order = reclaim_order = READ_ONCE(pgdat->kswapd_order);
+ 		classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
+ 
+ kswapd_try_sleep:
+@@ -3906,10 +3910,10 @@ static int kswapd(void *p)
+ 					classzone_idx);
+ 
+ 		/* Read the new order and classzone_idx */
+-		alloc_order = reclaim_order = pgdat->kswapd_order;
++		alloc_order = reclaim_order = READ_ONCE(pgdat->kswapd_order);
+ 		classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
+-		pgdat->kswapd_order = 0;
+-		pgdat->kswapd_classzone_idx = MAX_NR_ZONES;
++		WRITE_ONCE(pgdat->kswapd_order, 0);
++		WRITE_ONCE(pgdat->kswapd_classzone_idx, MAX_NR_ZONES);
+ 
+ 		ret = try_to_freeze();
+ 		if (kthread_should_stop())
+@@ -3953,20 +3957,23 @@ void wakeup_kswapd(struct zone *zone, gfp_t gfp_flags, int order,
+ 		   enum zone_type classzone_idx)
+ {
+ 	pg_data_t *pgdat;
++	enum zone_type curr_idx;
+ 
+ 	if (!managed_zone(zone))
+ 		return;
+ 
+ 	if (!cpuset_zone_allowed(zone, gfp_flags))
+ 		return;
++
+ 	pgdat = zone->zone_pgdat;
++	curr_idx = READ_ONCE(pgdat->kswapd_classzone_idx);
++
++	if (curr_idx == MAX_NR_ZONES || curr_idx < classzone_idx)
++		WRITE_ONCE(pgdat->kswapd_classzone_idx, classzone_idx);
++
++	if (READ_ONCE(pgdat->kswapd_order) < order)
++		WRITE_ONCE(pgdat->kswapd_order, order);
+ 
+-	if (pgdat->kswapd_classzone_idx == MAX_NR_ZONES)
+-		pgdat->kswapd_classzone_idx = classzone_idx;
+-	else
+-		pgdat->kswapd_classzone_idx = max(pgdat->kswapd_classzone_idx,
+-						  classzone_idx);
+-	pgdat->kswapd_order = max(pgdat->kswapd_order, order);
+ 	if (!waitqueue_active(&pgdat->kswapd_wait))
+ 		return;
+ 
 -- 
-~Randy
+1.8.3.1
 
