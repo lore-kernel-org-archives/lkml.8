@@ -2,101 +2,175 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49EAC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEEAC4BA15
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A010206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CBE206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="drlUX7Ct"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kEAZe1tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgBZQ36 (ORCPT
+        id S1727317AbgBZQaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:29:58 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59040 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQ36 (ORCPT
+        Wed, 26 Feb 2020 11:30:30 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33217 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:29:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=f1bv7k+aR95JLaRnibgjh33tWs/5T1jZciQ/wlmBMxs=; b=drlUX7Cthr4H9sggJz4h6/3Y5G
-        mo/5uBnR1hfM10WWin7v8ZrcDr7KIs1mpcF6JYjbDP8axE8K12+2yE1dRgEoe0JkNdBVR6konO36L
-        v3FvtY2daDQI3Gxc6w0U1zAJaYE5qtmKV9inPLcETf2TyHgRdeS9kfssNNk9mpuPmtIEmOX0yrQIQ
-        yG1PVIGbktpGvcMbun68CEcwUVIut75rKPT3wx1/X5WQiCz0SF/+G0iN43AS5VQqvGKzrN33qoWRY
-        uCiTaJkuWH3Ve0ffsRDJDWjzD68U4huwGUTkXyUiK713MvpoLADsSp5G/y3jyvL0y2l36IORoC94R
-        FUg4DiEA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6zZK-0008I8-Rs; Wed, 26 Feb 2020 16:29:54 +0000
-Date:   Wed, 26 Feb 2020 08:29:54 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
-Message-ID: <20200226162954.GC24185@bombadil.infradead.org>
-References: <20200226161404.14136-1-longman@redhat.com>
+        Wed, 26 Feb 2020 11:30:30 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y6so3848372lji.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 08:30:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xoGKRDRLjTha3fmwK9qaQxtRiyvigYgjt6KI1tkgp54=;
+        b=kEAZe1tpnb92IKWsvcp94kqsw2LLiNwR3oeZF8tRxMnGrM8lBDk5llI4+qmb8ISt4X
+         qOinA+BQa03i9wz3dzD7jSXPtJgXVRxvamaZUvBEjf0jALiyes4OvS8xSCmiij52b1TZ
+         Fd7O9gP7ZlL7hxUroU9SK0DDNfc3pxzd1AicD9whOQq0TZnxtwAOXpKHTy2IKysewe1+
+         qZbu1OC9PyiZV/QhRvum8B6J6p3VuE2DQ1kn0E4h5S8U45pFjPaJYGcWr+g8fyfuBAjC
+         o5dsGFOQq4UVtnK+SRpbBGCCwZJ+WbukDsEY7GwVJ2MRCHZPQK4WKdAMViqDsTZ54Loi
+         dWbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xoGKRDRLjTha3fmwK9qaQxtRiyvigYgjt6KI1tkgp54=;
+        b=eI9pSNrotzy9YiDvPXFQGWNtSRSoG6BdD60RjoiRflDZ9LH9lBlHrJJQ1Vruz2G3y3
+         5xnlriGaPyKMWJqJ6ysunqr0qzORpHqZru65QueCj0nB3W9QLr76uwpKn7mbYuaDiwZX
+         5CyPKHoKB8MfXu9Ve+/WvVF/VY/ZX9SpnaoXRdudB5C+Ai8U8OUfyQznrslELGL9dWg4
+         y6c06vBxTvwUzHWCmkDvh1OAAtZjHnVLlhEu9Ve+r/7a2wAqNhrETAGmfKZgWliOZ+Ra
+         bsCx/sOX0RX3NMIGFIlkjwyRk3UK7DPepxpDlN0SRTIhPQvaVIyccFk8+/3+FoKwniOl
+         /ydQ==
+X-Gm-Message-State: APjAAAXZchelK28HWQeUSpE1RkM6Y+tsDtAlt1RKlqnCOFRLRGWdDIgT
+        /qYPCUq4cw8KwMswKE1EiGzL6GWGbooXuQwEBmjTuQ==
+X-Google-Smtp-Source: APXvYqx+e164s8E6sLSr29OcfaSuu3PHmDXjYtYHjM8lbAVXmpX84MOnwOOwjuP4nmJWIBw8dMJMO5HUp3X21HnT3Mw=
+X-Received: by 2002:a2e:96c6:: with SMTP id d6mr3630892ljj.4.1582734626398;
+ Wed, 26 Feb 2020 08:30:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226161404.14136-1-longman@redhat.com>
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-2-vincent.guittot@linaro.org> <ee38d205-b356-9474-785e-e514d81b7d7f@arm.com>
+ <20200218132203.GB14914@hirez.programming.kicks-ass.net> <CAKfTPtB3qudK8aMq2cx==4RW8t1pz6ymz1Ti0r8oO4TefWzMRw@mail.gmail.com>
+ <c18ab89e-d635-e370-6cbb-6015b404d906@arm.com> <CAKfTPtCbHb2X30gNqNp5sukrg9U-hC6rvWC0dj8d1DawNL4D3Q@mail.gmail.com>
+ <274ebb9a-9328-e312-f554-34da8b183932@arm.com> <20200222152541.GA11669@geo.homenetwork>
+In-Reply-To: <20200222152541.GA11669@geo.homenetwork>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 26 Feb 2020 17:30:15 +0100
+Message-ID: <CAKfTPtAYc2JVDYPp9MDk-AnE+qgNTJoTmABFVYfv30JMvUudrw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] sched/fair: Reorder enqueue/dequeue_task_fair path
+To:     Tao Zhou <zhout@vivaldi.net>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>, "T. Zhou" <t1zhou@163.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
-> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
-> value of 0 (default) for no limit or a positive integer 256 and up. Small
-> dentry-dir-max numbers are forbidden to avoid excessive dentry count
-> checking which can impact system performance.
+Hi Tao,
 
-This is always the wrong approach.  A sysctl is just a way of blaming
-the sysadmin for us not being very good at programming.
+On Sat, 22 Feb 2020 at 16:23, Tao Zhou <zhout@vivaldi.net> wrote:
+>
+> Hi,
+>
+> On Thu, Feb 20, 2020 at 02:38:59PM +0100, Dietmar Eggemann wrote:
+> > On 19/02/2020 17:26, Vincent Guittot wrote:
+> > > On Wed, 19 Feb 2020 at 12:07, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> > >>
+> > >> On 18/02/2020 15:15, Vincent Guittot wrote:
+> > >>> On Tue, 18 Feb 2020 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >>>>
+> > >>>> On Tue, Feb 18, 2020 at 01:37:37PM +0100, Dietmar Eggemann wrote:
+> > >>>>> On 14/02/2020 16:27, Vincent Guittot wrote:
+> > >>>>>> The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+> > >>>>>> is split in 2 distinct parts for throttled cfs_rq without any added value
+> > >>>>>> but making code less readable.
+> > >>>>>>
+> > >>>>>> Change the code ordering such that everything related to a cfs_rq
+> > >>>>>> (throttled or not) will be done in the same loop.
+> > >>>>>>
+> > >>>>>> In addition, the same steps ordering is used when updating a cfs_rq:
+> > >>>>>> - update_load_avg
+> > >>>>>> - update_cfs_group
+> > >>>>>> - update *h_nr_running
+> > >>>>>
+> > >>>>> Is this code change really necessary? You pay with two extra goto's. We
+> > >>>>> still have the two for_each_sched_entity(se)'s because of 'if
+> > >>>>> (se->on_rq); break;'.
+> > >>>>
+> > >>>> IIRC he relies on the presented ordering in patch #5 -- adding the
+> > >>>> running_avg metric.
+> > >>>
+> > >>> Yes, that's the main reason, updating load_avg before h_nr_running
+> > >>
+> > >> My hunch is you refer to the new function:
+> > >>
+> > >> static inline void se_update_runnable(struct sched_entity *se)
+> > >> {
+> > >>         if (!entity_is_task(se))
+> > >>                 se->runnable_weight = se->my_q->h_nr_running;
+> > >> }
+> > >>
+> > >> I don't see the dependency to the 'update_load_avg -> h_nr_running'
+> > >> order since it operates on se->my_q, not cfs_rq = cfs_rq_of(se), i.e.
+> > >> se->cfs_rq.
+> > >>
+> > >> What do I miss here?
+> > >
+> > > update_load_avg() updates both se and cfs_rq so if you update
+> > > cfs_rq->h_nr_running before calling update_load_avg() like in the 2nd
+> > > for_each_sched_entity, you will update cfs_rq runnable_avg for the
+> > > past time slot with the new h_nr_running value instead of the previous
+> > > value.
+> >
+> > Ah, now I see:
+> >
+> > update_load_avg()
+> >   update_cfs_rq_load_avg()
+> >     __update_load_avg_cfs_rq()
+> >        ___update_load_sum(..., cfs_rq->h_nr_running, ...)
+> >
+> >                                ^^^^^^^^^^^^^^^^^^^^
+>
+> throttle/unthrottle_cfs_rq() update h_nr_running also. Maybe need
+> to consider call se_update_runnable there.
 
-I agree that we need a way to limit the number of negative dentries.
-But that limit needs to be dynamic and depend on how the system is being
-used, not on how some overworked sysadmin has configured it.
+yes you're right, group entity which are not enqueued/dequeued, which
+updates runnable_avg and se->runnable_weight, during the
+throttling/unthrottling are not updated. I'm going to send a fix on
+top of sched/core
 
-So we need an initial estimate for the number of negative dentries that
-we need for good performance.  Maybe it's 1000.  It doesn't really matter;
-it's going to change dynamically.
+> And the name update_se_runnable seems to be consistent with others.
 
-Then we need a metric to let us know whether it needs to be increased.
-Perhaps that's "number of new negative dentries created in the last
-second".  And we need to decide how much to increase it; maybe it's by
-50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
-how high the recent rate of negative dentry creation has been.
+In fact, I have reused the same name as with runnable_load_avg
 
-We also need a metric to let us know whether it needs to be decreased.
-I'm reluctant to say that memory pressure should be that metric because
-very large systems can let the number of dentries grow in an unbounded
-way.  Perhaps that metric is "number of hits in the negative dentry
-cache in the last ten seconds".  Again, we'll need to decide how much
-to shrink the target number by.
+Thanks and sorry for the late reply
 
-If the number of negative dentries is at or above the target, then
-creating a new negative dentry means evicting an existing negative dentry.
-If the number of negative dentries is lower than the target, then we
-can just create a new one.
-
-Of course, memory pressure (and shrinking the target number) should
-cause negative dentries to be evicted from the old end of the LRU list.
-But memory pressure shouldn't cause us to change the target number;
-the target number is what we think we need to keep the system running
-smoothly.
+>
+> Thanks,
+> Tao
+>
+> > Not really obvious IMHO, since the code is introduced only in 4/5.
+> >
+> > Could you add a comment to this patch header?
+> >
+> > I see you mentioned this dependency already in v1 discussion
+> >
+> > https://lore.kernel.org/r/CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com
+> >
+> > "... But the following patches make PELT using h_nr_running ...".
+> >
+> > IMHO it would be helpful to have this explanation in the 1/5 patch
+> > header so people stop wondering why this is necessary.
