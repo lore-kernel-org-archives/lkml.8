@@ -4,156 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95832C4BA04
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B6BC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BC02467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934FA24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgBZMOa (ORCPT
+        id S1727260AbgBZMQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:14:30 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11112 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726806AbgBZMO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:14:29 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DD6FD38F0FDB02B7E510;
-        Wed, 26 Feb 2020 20:14:16 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 26 Feb 2020 20:14:08 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH] blk-mq: Remove some unused function arguments
-Date:   Wed, 26 Feb 2020 20:10:15 +0800
-Message-ID: <1582719015-198980-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Wed, 26 Feb 2020 07:16:46 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:64434 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgBZMQp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 07:16:45 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: WLyfkTDgGneTpST693ZioNpeej+UlfBbge9U50URHNUKwyAERzwLnyW7rHR6LpQSz78F0vYgiQ
+ Djd36NLBtvVv9Tl+wxBfxq0GwSfeHHwtznV/bi51vF/3u1qLrGoRj21DkKRqO2neo9ueJT99Hb
+ nWlCbbmDHRphMJJ6VBOY5DhmiE7No6yDI2oCjbcLlATz1maJzu6xSeN21PZC8FD56yDnTtD7j2
+ HFkeYzESvJJiDdGBSc1Kex8wVAN//A7QEqft3NiVOseqBIy0HdBWcWJEo+zrEd8UwLqbef4Af8
+ es8=
+X-IronPort-AV: E=Sophos;i="5.70,488,1574146800"; 
+   d="scan'208";a="66801767"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Feb 2020 05:16:45 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Feb 2020 05:16:56 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 26 Feb 2020 05:16:42 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <linux-media@vger.kernel.org>, <hverkuil@xs4all.nl>,
+        <laurent.pinchart@ideasonboard.com>, <linux-kernel@vger.kernel.org>
+CC:     Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH] media: v4l2-core: fix entity initialization in device_register_subdev
+Date:   Wed, 26 Feb 2020 14:15:45 +0200
+Message-ID: <20200226121545.19880-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The struct blk_mq_hw_ctx pointer argument in blk_mq_put_tag(),
-blk_mq_poll_nsecs(), and blk_mq_poll_hybrid_sleep() is unused, so remove
-it.
+The check for parameters is done below in the function.
+Initialize the entity variable properly, after the parameters
+have been checked.
 
-Overall obj code size shows a minor reduction, before:
-   text	   data	    bss	    dec	    hex	filename
-  27306	   1312	      0	  28618	   6fca	block/blk-mq.o
-   4303	    272	      0	   4575	   11df	block/blk-mq-tag.o
+Fixes: 61f5db549dde ("[media] v4l: Make v4l2_subdev inherit from media_entity")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+ drivers/media/v4l2-core/v4l2-device.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-after:
-  27282	   1312	      0	  28594	   6fb2	block/blk-mq.o
-   4311	    272	      0	   4583	   11e7	block/blk-mq-tag.o
-
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: John Garry <john.garry@huawei.com>
---
-This minor patch had been carried as part of the blk-mq shared tags RFC,
-I'd rather not carry it anymore as it required rebasing, so now or never..
-
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index fbacde454718..586c9d6e904a 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -183,8 +183,8 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
- 	return tag + tag_offset;
- }
- 
--void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
--		    struct blk_mq_ctx *ctx, unsigned int tag)
-+void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx,
-+		    unsigned int tag)
+diff --git a/drivers/media/v4l2-core/v4l2-device.c b/drivers/media/v4l2-core/v4l2-device.c
+index 63d6b147b21e..6e33132ebb19 100644
+--- a/drivers/media/v4l2-core/v4l2-device.c
++++ b/drivers/media/v4l2-core/v4l2-device.c
+@@ -112,7 +112,7 @@ int v4l2_device_register_subdev(struct v4l2_device *v4l2_dev,
+ 				struct v4l2_subdev *sd)
  {
- 	if (!blk_mq_tag_is_reserved(tags, tag)) {
- 		const int real_tag = tag - tags->nr_reserved_tags;
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index 15bc74acb57e..2b8321efb682 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -26,8 +26,8 @@ extern struct blk_mq_tags *blk_mq_init_tags(unsigned int nr_tags, unsigned int r
- extern void blk_mq_free_tags(struct blk_mq_tags *tags);
+ #if defined(CONFIG_MEDIA_CONTROLLER)
+-	struct media_entity *entity = &sd->entity;
++	struct media_entity *entity;
+ #endif
+ 	int err;
  
- extern unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data);
--extern void blk_mq_put_tag(struct blk_mq_hw_ctx *hctx, struct blk_mq_tags *tags,
--			   struct blk_mq_ctx *ctx, unsigned int tag);
-+extern void blk_mq_put_tag(struct blk_mq_tags *tags, struct blk_mq_ctx *ctx,
-+			   unsigned int tag);
- extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
- 					struct blk_mq_tags **tags,
- 					unsigned int depth, bool can_grow);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index a12b1763508d..0836b5135fa6 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -477,9 +477,9 @@ static void __blk_mq_free_request(struct request *rq)
- 	blk_pm_mark_last_busy(rq);
- 	rq->mq_hctx = NULL;
- 	if (rq->tag != -1)
--		blk_mq_put_tag(hctx, hctx->tags, ctx, rq->tag);
-+		blk_mq_put_tag(hctx->tags, ctx, rq->tag);
- 	if (sched_tag != -1)
--		blk_mq_put_tag(hctx, hctx->sched_tags, ctx, sched_tag);
-+		blk_mq_put_tag(hctx->sched_tags, ctx, sched_tag);
- 	blk_mq_sched_restart(hctx);
- 	blk_queue_exit(q);
- }
-@@ -3398,7 +3398,6 @@ static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb)
- }
+@@ -141,6 +141,7 @@ int v4l2_device_register_subdev(struct v4l2_device *v4l2_dev,
+ 		goto error_module;
  
- static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
--				       struct blk_mq_hw_ctx *hctx,
- 				       struct request *rq)
- {
- 	unsigned long ret = 0;
-@@ -3431,7 +3430,6 @@ static unsigned long blk_mq_poll_nsecs(struct request_queue *q,
- }
- 
- static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
--				     struct blk_mq_hw_ctx *hctx,
- 				     struct request *rq)
- {
- 	struct hrtimer_sleeper hs;
-@@ -3451,7 +3449,7 @@ static bool blk_mq_poll_hybrid_sleep(struct request_queue *q,
- 	if (q->poll_nsec > 0)
- 		nsecs = q->poll_nsec;
- 	else
--		nsecs = blk_mq_poll_nsecs(q, hctx, rq);
-+		nsecs = blk_mq_poll_nsecs(q, rq);
- 
- 	if (!nsecs)
- 		return false;
-@@ -3506,7 +3504,7 @@ static bool blk_mq_poll_hybrid(struct request_queue *q,
- 			return false;
- 	}
- 
--	return blk_mq_poll_hybrid_sleep(q, hctx, rq);
-+	return blk_mq_poll_hybrid_sleep(q, rq);
- }
- 
- /**
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index eaaca8fc1c28..ba37cd64894c 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -199,7 +199,7 @@ static inline bool blk_mq_get_dispatch_budget(struct blk_mq_hw_ctx *hctx)
- static inline void __blk_mq_put_driver_tag(struct blk_mq_hw_ctx *hctx,
- 					   struct request *rq)
- {
--	blk_mq_put_tag(hctx, hctx->tags, rq->mq_ctx, rq->tag);
-+	blk_mq_put_tag(hctx->tags, rq->mq_ctx, rq->tag);
- 	rq->tag = -1;
- 
- 	if (rq->rq_flags & RQF_MQ_INFLIGHT) {
+ #if defined(CONFIG_MEDIA_CONTROLLER)
++	entity = &sd->entity;
+ 	/* Register the entity. */
+ 	if (v4l2_dev->mdev) {
+ 		err = media_device_register_entity(v4l2_dev->mdev, entity);
 -- 
-2.17.1
+2.20.1
 
