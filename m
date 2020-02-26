@@ -2,126 +2,189 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23122C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A2FC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CA52467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582727240;
-	bh=Dyj/PxWMaDha0/GsMuKmYDTGRDiucfdhHxHMcfgMygw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lKc75eji3HAujuoJI54/ZDPN7/YRxtO5PJ8krbv647X9tDXA6ULtmL/OuyBiqUDCV
-	 miQq0KIkLmNpaIlNflu8KWIVJUIKs9fJnfgqm5SYZjRfpsaPZ1/ab6P5j1yoTrOeOO
-	 jVtPuoNO//n9/ozXjw6c8MAK23sTzrU3qMjanS5w=
+	by mail.kernel.org (Postfix) with ESMTP id D34062467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgBZO1T (ORCPT
+        id S1727637AbgBZO3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:27:19 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40895 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgBZO1S (ORCPT
+        Wed, 26 Feb 2020 09:29:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42674 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727446AbgBZO3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:27:18 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r17so1142678wrj.7;
-        Wed, 26 Feb 2020 06:27:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qvwewPpyPisUxq2+kWUzRZ/RT7okvVOdDvyG3MamGi4=;
-        b=JGVesDeXW6AiFT+U/l0Kjfw660LX/1y2rlwGek4WQJZcYK5xgtyIeeKzm+j+RP2ETz
-         LynxD73vOUbYhJiLq3FH/Y5c5CnslDG//KThhRXtdsoJOTZB4AYBTdlt+hIhjuOqEvLS
-         bS37WXySesacExUxg5ZHRa+zpyIw2slC0Wpt2o12bujdERhz1sZq5es9+jkB4mhIwl38
-         9M54ag0ly4wMHEp6IGl6cJu9MoV5vAgf5yiN35TMmekmqXcMM4GhSCNlWEJXILE3uUhh
-         cNubN6C0BdtyWs289njzeHwuaIlUL89nEiX+Kmzv/7HgYMWV9GEa7jYqfLhOBeku1/CU
-         9x1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qvwewPpyPisUxq2+kWUzRZ/RT7okvVOdDvyG3MamGi4=;
-        b=iAz2sw+0ZrwZRO+97O+fKho52uExZikmk/nrCByFuLIXPuiHbqRTdliRHezftqitbr
-         rJXmHTRV8zbgtA9vhRVe91ueh1GttQMPK99d3/W+dZ1fiu1hvdogknrqp0iOvDtmiiyr
-         WSvWYWTHLE6GyvwLwgVABq2IVB0fEzDoZdPh9DQo/MEG8D7WwwvXAcNisSEiK29hxFnM
-         cqzCjpH8RzbGZFh5rwJ9ci110fARzr/uP2AHfJbKAKwWGeDoX1TQf3vZLY230naiR7sj
-         vqUGR0AE5fG2/e7LZHniAbEBdFJXc9cUD1tF27ryC9dHuo7c/jmqGEXRr6u5C9WBiCCC
-         G3FQ==
-X-Gm-Message-State: APjAAAVvVkpE+EnBxnpnmi15SUWTbc5uBt0WDO57m26nm/Di3zl+CvGj
-        J8ntB04/YGYaPON+5qQCsiA=
-X-Google-Smtp-Source: APXvYqzJ8CkXHOicI58J6fwxH6zLMYwspMaE5Soe+kVGDjxBkFNm6k6dbq4VBzt+A9/56qYCq4GuQw==
-X-Received: by 2002:adf:a3ca:: with SMTP id m10mr6055708wrb.148.1582727236659;
-        Wed, 26 Feb 2020 06:27:16 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id j20sm3469414wmj.46.2020.02.26.06.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 06:27:16 -0800 (PST)
-Date:   Wed, 26 Feb 2020 15:27:14 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [GIT PULL v2] EFI updates for v5.7
-Message-ID: <20200226142713.GB3100@gmail.com>
-References: <20200224133856.12832-1-ardb@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224133856.12832-1-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 26 Feb 2020 09:29:30 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QEOVUi096183
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:29:30 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydq6h02hk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:29:29 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bmt@zurich.ibm.com>;
+        Wed, 26 Feb 2020 14:29:26 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Feb 2020 14:29:24 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QETNCV47906952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 14:29:23 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 281A8A4055;
+        Wed, 26 Feb 2020 14:29:23 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4928A4053;
+        Wed, 26 Feb 2020 14:29:22 +0000 (GMT)
+Received: from spoke.zurich.ibm.com (unknown [9.4.69.152])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 14:29:22 +0000 (GMT)
+From:   Bernard Metzler <bmt@zurich.ibm.com>
+To:     dledford@redhat.com, jgg@ziepe.ca, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>
+Subject: [PATCH for-rc] RDMA/siw: Fix failure handling during device creation
+Date:   Wed, 26 Feb 2020 15:29:20 +0100
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 20022614-0016-0000-0000-000002EA7B26
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022614-0017-0000-0000-0000334DAAFD
+Message-Id: <20200226142920.11074-1-bmt@zurich.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_05:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ spamscore=0 impostorscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1011 priorityscore=1501 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A failing call to ib_device_set_netdev() during device creation
+caused system crash due to xa_destroy of uninitialized xarray
+hit by device deallocation. Fixed by moving xarray initialization
+before potential device deallocation.
+Fixes also correct propagation of ib_device_set_netdev() failure
+to caller.
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+Reported-by: syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+---
+ drivers/infiniband/sw/siw/siw_main.c | 39 ++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
-> Hello Ingo, Thomas,
-> 
-> I am sending this as an ordinary PR again, given the size. Please let me
-> know if instead, you prefer me to send it out piecemeal as usual. Either
-> works for me, I was just reluctant to spam people unsolicited.
-> 
-> Note that EFI for RISC-V may still arrive this cycle as well. 
-> 
-> Please take special note of the GDT changes by Arvind. They were posted to
-> the list without any feedback, and they look fine to me, but I know very
-> little about these x86 CPU low level details.
-> 
-> This was all build and boot tested on various different kinds of hardware,
-> and all minor issues that were reported by the robots were fixed along the way.
-> 
-> Please pull,
-> Ard.
-> 
-> 
-> The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-> 
->   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
-> 
-> for you to fetch changes up to dc235d62fc60a6549238eda7ff29769457fe5663:
-> 
->   efi: Bump the Linux EFI stub major version number to #1 (2020-02-23 21:59:42 +0100)
+diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
+index 96ed349c0939..839decfd9032 100644
+--- a/drivers/infiniband/sw/siw/siw_main.c
++++ b/drivers/infiniband/sw/siw/siw_main.c
+@@ -303,7 +303,7 @@ static const struct ib_device_ops siw_device_ops = {
+ 
+ static struct siw_device *siw_device_create(struct net_device *netdev)
+ {
+-	struct siw_device *sdev = NULL;
++	struct siw_device *sdev;
+ 	struct ib_device *base_dev;
+ 	struct device *parent = netdev->dev.parent;
+ 	int rv;
+@@ -319,13 +319,13 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 		if (netdev->type != ARPHRD_LOOPBACK) {
+ 			pr_warn("siw: device %s error: no parent device\n",
+ 				netdev->name);
+-			return NULL;
++			return ERR_PTR(-EINVAL);
+ 		}
+ 		parent = &netdev->dev;
+ 	}
+ 	sdev = ib_alloc_device(siw_device, base_dev);
+ 	if (!sdev)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	base_dev = &sdev->base_dev;
+ 
+@@ -388,6 +388,9 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 		{ .max_segment_size = SZ_2G };
+ 	base_dev->num_comp_vectors = num_possible_cpus();
+ 
++	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
++	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
++
+ 	ib_set_device_ops(base_dev, &siw_device_ops);
+ 	rv = ib_device_set_netdev(base_dev, netdev, 1);
+ 	if (rv)
+@@ -415,9 +418,6 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 	sdev->attrs.max_srq_wr = SIW_MAX_SRQ_WR;
+ 	sdev->attrs.max_srq_sge = SIW_MAX_SGE;
+ 
+-	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
+-	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
+-
+ 	INIT_LIST_HEAD(&sdev->cep_list);
+ 	INIT_LIST_HEAD(&sdev->qp_list);
+ 
+@@ -435,7 +435,7 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ error:
+ 	ib_dealloc_device(base_dev);
+ 
+-	return NULL;
++	return ERR_PTR(rv);
+ }
+ 
+ /*
+@@ -542,8 +542,8 @@ static struct notifier_block siw_netdev_nb = {
+ static int siw_newlink(const char *basedev_name, struct net_device *netdev)
+ {
+ 	struct ib_device *base_dev;
+-	struct siw_device *sdev = NULL;
+-	int rv = -ENOMEM;
++	struct siw_device *sdev;
++	int rv;
+ 
+ 	if (!siw_dev_qualified(netdev))
+ 		return -EINVAL;
+@@ -554,18 +554,19 @@ static int siw_newlink(const char *basedev_name, struct net_device *netdev)
+ 		return -EEXIST;
+ 	}
+ 	sdev = siw_device_create(netdev);
+-	if (sdev) {
+-		dev_dbg(&netdev->dev, "siw: new device\n");
++	if (IS_ERR(sdev))
++		return PTR_ERR(sdev);
+ 
+-		if (netif_running(netdev) && netif_carrier_ok(netdev))
+-			sdev->state = IB_PORT_ACTIVE;
+-		else
+-			sdev->state = IB_PORT_DOWN;
++	dev_dbg(&netdev->dev, "siw: new device\n");
+ 
+-		rv = siw_device_register(sdev, basedev_name);
+-		if (rv)
+-			ib_dealloc_device(&sdev->base_dev);
+-	}
++	if (netif_running(netdev) && netif_carrier_ok(netdev))
++		sdev->state = IB_PORT_ACTIVE;
++	else
++		sdev->state = IB_PORT_DOWN;
++
++	rv = siw_device_register(sdev, basedev_name);
++	if (rv)
++		ib_dealloc_device(&sdev->base_dev);
+ 	return rv;
+ }
+ 
+-- 
+2.17.2
 
->  66 files changed, 2718 insertions(+), 2638 deletions(-)
-
-Pulled this as a Git tree, thanks Ard!
-
-The boot-time GDT handling cleanups from Arvind look good to me too. 
-There's a couple of arguably scary commits in there, so these might be 
-'famous last words'. :-)
-
-Thanks,
-
-	Ingo
