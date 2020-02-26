@@ -2,108 +2,373 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE0BC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCF2C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439A9206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E680206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QVngWJph"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="G04LzJcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgBZFtk (ORCPT
+        id S1727080AbgBZFuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:49:40 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40998 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgBZFtj (ORCPT
+        Wed, 26 Feb 2020 00:50:21 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2220 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgBZFuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:49:39 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t14so831930plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:49:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+o0Cxx8HmQdXWrejhdC3RH6moiQGlThNZB33TEB2/R0=;
-        b=QVngWJphiEqTsggSbaGZG6KKVe/5xdUUs9fF1c8wpFIBC85uu6w0X4OjARiK7hiHsy
-         YirmKlA8+5ufTIQVNnhu+cRiDjjkVNg+kDVeOmLSZcaJcnc/+CklCyb23K9XK4TexOyP
-         w+JOHDZPBRFCgI7qgLAo6vpCvdZb8ga/AW3GI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+o0Cxx8HmQdXWrejhdC3RH6moiQGlThNZB33TEB2/R0=;
-        b=IAvmocFb645aZSFcPxnlehpHMZQIBkT4/k0L4k567t0SiPBzhIOCtZx51gDNXB/VLj
-         IbLe+DhP2E4+lold4ahTCX2IN8ddW8QLq3ZjaIFT6vvDBM+8ZzUA6/GYpjaXob6P9M/U
-         w9pnN2dcDd1v8p7mzA3xzY3ogfVEwMwvkW6i19BEondNzomhkA3HIUax5vWl2+iMaycv
-         9ZZAH0lnaubOXaS71u/JcruYAQBU/egButoXpArbUIQi77H2JfpdYD0ZZmtJkfbzK00O
-         mgSOczd+Q0Ekt/0n7S1aqZZnwqQUn+nYlrxWbIJTp0eYBW/wJyo2Y3DQoQNMayiIPEMB
-         QDpA==
-X-Gm-Message-State: APjAAAWtZAVTMEd6Ph27jw1N5VQ9od8rTwF8qHVFL5eBNkHf2NjdimpF
-        i1SGi5ggUlHbraCoGDqG+6uwVaYCscI=
-X-Google-Smtp-Source: APXvYqx8Hr/Cj5VybYqFNkztZ4OEH69rhUqXd7K5EOJh00EissLfKhJ2zFA3IUzdAa6QW4zPXy4nZg==
-X-Received: by 2002:a17:902:6ac7:: with SMTP id i7mr2245702plt.314.1582696177733;
-        Tue, 25 Feb 2020 21:49:37 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q6sm1057628pfh.127.2020.02.25.21.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 21:49:36 -0800 (PST)
-Date:   Tue, 25 Feb 2020 21:49:35 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v6 01/11] ELF: UAPI and Kconfig additions for ELF program
- properties
-Message-ID: <202002252147.7BFF9EE@keescook>
-References: <20200212192906.53366-1-broonie@kernel.org>
- <20200212192906.53366-2-broonie@kernel.org>
+        Wed, 26 Feb 2020 00:50:21 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5606f70000>; Tue, 25 Feb 2020 21:49:43 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 25 Feb 2020 21:50:19 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 25 Feb 2020 21:50:19 -0800
+Received: from [10.2.163.212] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
+ 2020 05:50:19 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <821f0878-56da-9b51-425a-9d6fb65d2e0c@nvidia.com>
+Message-ID: <33d21639-6a61-3870-a160-53482614bd66@nvidia.com>
+Date:   Tue, 25 Feb 2020 21:50:18 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212192906.53366-2-broonie@kernel.org>
+In-Reply-To: <821f0878-56da-9b51-425a-9d6fb65d2e0c@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582696183; bh=zmoYF/hHN9NwihR9yTWuBupEPLPHiAKAdLdYXxtU03w=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=G04LzJcF/JC688sfnGWvlf7iLRwYfdwWlpGoU/TpR5C2Egw7L7i6kM5ZRaeApvIh/
+         qBcmjME4d4d8VFjEcdVlcAU3VWyO9twl/AhqrbdGOGbm9U80UySkQnDLHD1KbxM+u6
+         tWY8k0AauPQHYGAdoQjSCpr+1D7aSSPNG8piJe68rES1SF6CnxSpz3GGLPwFmXAWWz
+         Lqde/4VtcOl9eAH9EqajjPgRT5bGgoCsUdwrqu/ICCPpNFrXK4sE1UqonhhLDtnGcp
+         loGgaR0qATfh9vD1WDOsFBwyylOP1cTqyqILzrpWYtCZJxuRIEz1+f8gHN8sRrv0Cj
+         fsiEhzrD61DyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 07:28:56PM +0000, Mark Brown wrote:
-> From: Dave Martin <Dave.Martin@arm.com>
-> 
-> Pull the basic ELF definitions relating to the
-> NT_GNU_PROPERTY_TYPE_0 note from Yu-Cheng Yu's earlier x86 shstk
-> series.
 
-Both BTI and SHSTK depend on this. If BTI doesn't land soon, can this
-and patch 2 land separately? I don't like seeing the older version in
-the SHSTK series -- I worry there will be confusion and the BTI version
-(which is more up to date) will get missed.
-
-What's left to land BTI support?
-
--- 
-Kees Cook
+On 2/25/20 8:49 PM, Sowjanya Komatineni wrote:
+>
+> On 2/20/20 4:44 AM, Hans Verkuil wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> Hi Sowjanya,
+>>
+>> Some code review comments below:
+>>
+>> On 2/14/20 7:23 PM, Sowjanya Komatineni wrote:
+>>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>>> which can support up to 6 MIPI CSI camera sensors.
+>>>
+>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>>> capture from an external camera sensor connected to CSI or from
+>>> built-in test pattern generator.
+>>>
+>>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>>
+>>> This patch adds a V4L2 media controller and capture driver support
+>>> for Tegra210 built-in CSI to VI test pattern generator.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>> =C2=A0 drivers/staging/media/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 2 +
+>>> =C2=A0 drivers/staging/media/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
+>>> =C2=A0 drivers/staging/media/tegra/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
+>>> =C2=A0 drivers/staging/media/tegra/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 8 +
+>>> =C2=A0 drivers/staging/media/tegra/TODO=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 10 +
+>>> =C2=A0 drivers/staging/media/tegra/tegra-common.h |=C2=A0 239 +++++++
+>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.c=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 374 ++++++++++
+>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.h=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 115 ++++
+>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.c=C2=A0=C2=A0=C2=A0=C2=A0 |=
+ 1019=20
+>>> ++++++++++++++++++++++++++++
+>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.h=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 79 +++
+>>> =C2=A0 drivers/staging/media/tegra/tegra-video.c=C2=A0 |=C2=A0 118 ++++
+>>> =C2=A0 drivers/staging/media/tegra/tegra-video.h=C2=A0 |=C2=A0=C2=A0 32=
+ +
+>>> =C2=A0 drivers/staging/media/tegra/tegra210.c=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 767=20
+>>> +++++++++++++++++++++
+>>> =C2=A0 drivers/staging/media/tegra/tegra210.h=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 190 ++++++
+>>> =C2=A0 14 files changed, 2964 insertions(+)
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Kconfig
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Makefile
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/TODO
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-common.h
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-video.c
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-video.h
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.c
+>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.h
+>>>
+>
+>>> +static int chan_capture_kthread_done(void *data)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 set_freezable();
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 while (1) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 try_to_freeze();
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 wait_event_interruptible(chan->done_wait,
+>>> + !list_empty(&chan->done) ||
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 kthread_should_stop());
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (kthread_should_stop())
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>> I think it makes more sense if this test is moved to the end...
+>>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 buf =3D dequeue_buf_done(chan);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (!buf)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
+>> ... and this becomes:
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 if (buf)
+>>> + tegra_channel_capture_done(chan, buf);
+>> This change simplifies stop_streaming (see below).
+>
+> With kthread_should_stop check at end, I see sometimes outstanding=20
+> buffer in done queue by the time threads are stopped during stream stop.
+>
+> When I run compliance stream io tests continuously in loop, depending=20
+> on time of stream stop request capture thread terminated after=20
+> initiating frame capture and moving buffer to done queue while done=20
+> thread was still in wait for previous MW_ACK and on seeing=20
+> kthread_should_stop done thread terminated with last buffer left in=20
+> done queue.
+>
+> So looks like we need to keep checking for outstanding buffer and=20
+> handle it during stop streaming like in v3.
+>
+Will change in v4 to handle all pending done queue buffers before=20
+terminating thread.
+>
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +int tegra210_vi_start_streaming(struct vb2_queue *vq, u32 count)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D vb2_get_drv=
+_priv(vq);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct media_pipeline *pipe =3D &chan->video.=
+pipe;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int ret =3D 0;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, VI=
+_CG_2ND_LEVEL_EN);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* clear errors */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_ERROR_STATUS,=
+ 0xFFFFFFFF);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Sync point FIFO full stalls the host =
+interface.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Setting NO_STALL will drop INCR_SYNCP=
+T methods when fifos are
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * full and the corresponding condition =
+bits in INCR_SYNCPT_ERROR
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * register will be set.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * This allows SW to process error recov=
+ery.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYN=
+CPT_CNTRL,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TEGRA_VI_CFG_VI_INCR_SYNCPT_N=
+O_STALL);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* start the pipeline */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D media_pipeline_start(&chan->video.ent=
+ity, pipe);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 goto error_pipeline_start;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* program VI registers after TPG, sensors an=
+d CSI streaming */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D tegra_channel_set_stream(chan, true);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 goto error_set_stream;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_channel_capture_setup(chan);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->sequence =3D 0;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* start kthreads to capture data to buffer a=
+nd return them */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->kthread_capture_done =3D=20
+>>> kthread_run(chan_capture_kthread_done,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chan, "%s:1",
+>>> + chan->video.name);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(chan->kthread_capture_done)) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ret =3D PTR_ERR(chan->kthread_capture_done);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 chan->kthread_capture_done =3D NULL;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dev_err(&chan->video.dev,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed capture done kt=
+hread: %d\n", ret);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 goto error_kthread_done;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->kthread_capture_start =3D=20
+>>> kthread_run(chan_capture_kthread_start,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chan, "%s:0",
+>>> + chan->video.name);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(chan->kthread_capture_start)) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ret =3D PTR_ERR(chan->kthread_capture_start);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 chan->kthread_capture_start =3D NULL;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dev_err(&chan->video.dev,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed capture start k=
+thread: %d\n", ret);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 goto error_kthread_start;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>> +
+>>> +error_kthread_start:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kthread_stop(chan->kthread_capture_done);
+>>> +error_kthread_done:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_channel_set_stream(chan, false);
+>>> +error_set_stream:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 media_pipeline_stop(&chan->video.entity);
+>>> +error_pipeline_start:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 vq->start_streaming_called =3D 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_channel_release_queued_buffers(chan, VB=
+2_BUF_STATE_QUEUED);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>> +}
+>>> +
+>>> +void tegra210_vi_stop_streaming(struct vb2_queue *vq)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D vb2_get_drv=
+_priv(vq);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (!chan->kthread_capture_start || !chan->kt=
+hread_capture_done)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kthread_stop(chan->kthread_capture_start);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->kthread_capture_start =3D NULL;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kthread_stop(chan->kthread_capture_done);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->kthread_capture_done =3D NULL;
+>>> +
+>> With the change in chan_capture_kthread_done() as described above you=20
+>> can
+>> drop the next 4 lines since that's guaranteed to be done by the thread.
+>>
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* wait for last frame MW_ACK_DONE */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 buf =3D dequeue_buf_done(chan);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (buf)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 tegra_channel_capture_done(chan, buf);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_channel_release_queued_buffers(chan, VB=
+2_BUF_STATE_ERROR);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_channel_set_stream(chan, false);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* disable clock gating to enable continuous =
+clock */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0)=
+;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* reset VI MCIF, PF, SENSORCTL, and SHADOW l=
+ogic */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xF=
+);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0=
+);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_IMAGE_DEF, 0)=
+;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* enable clock gating so VI can be clock gat=
+ed if necessary */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, VI=
+_CG_2ND_LEVEL_EN);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_ERROR_STATUS,=
+ 0xFFFFFFFF);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 media_pipeline_stop(&chan->video.entity);
+>>> +}
+>>> +
+>>> +void tegra210_csi_error_recover(struct tegra_csi_channel *csi_chan)
+>>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
