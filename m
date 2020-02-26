@@ -2,195 +2,247 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B78CC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB075C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6409421D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADFF222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582700662;
+	bh=2Mn2rh2UnmkLwubpFpFIFXU5YjtRyl4XRJrdW3Zv9eg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BDrNjq7vdHYT56MtSjGYmEBEb3uYgs2HljF3Z6TXCgdNMoIjAaNAMLKYgxYTdjVHM
+	 gs0SVqfG6YCyx1EhxL2Jak4l3mmIPgVLKA+/+yW2T1ZLE7/brvlwwWZS8kQKME2+k0
+	 x1i2W2+Ag7Ktrp5LMXdKh2Sq87frPnyYQTtpQJWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBZHAR (ORCPT
+        id S1727105AbgBZHEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:00:17 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:35643 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgBZHAP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:00:15 -0500
-Received: by mail-il1-f197.google.com with SMTP id h18so2499611ilc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:00:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ZM4zSFD0p9Gcy0AqqOMlHJsUTIk3c+UXG36FqEVlS20=;
-        b=S5gOZpU8HKIF+7eqT+4r/f685hAr93BSVyTyhnxMwpcR9zkf3tciPMJ+byYmC9AFZK
-         IuWy4Enq2Qcb38AErd0MxRnxJp1/6BTcPJ49i2CAjhd5y9a57DayWDB5p6cdDoiOH35K
-         184aV0IS1wKbdC9u7AIFwu4jFDmDq2gTrixtBcF/EIvuV7Cos/aPyZX6QDzf9znsPzdN
-         qwjfliKqdY5j++mEVna625mcQm4nBECMgvw7ep3GEnueMSg48NVZeplcCnXbs6aIduCn
-         tzMCawsYpfCvjUMtHI0tH2cusAB1Gf3YAaeY1biBQAwMzmwp6DE6RPzKuMeTlQD8jP3H
-         01bg==
-X-Gm-Message-State: APjAAAUGsgGjelS76s2Bt0fZxqgkghKNcdhC+1PCyxl7pMz/3M0X4ucP
-        T/YTMlVx4hlJsuzMCQfOJrB42knjFNVI76ivfWaOrwO8S1vV
-X-Google-Smtp-Source: APXvYqxHoH7MV3i7PnOB7/GHzEDVXOK0je2QH77Mv1rHBMF223xfndpSk4uDYq2/wKcS4BMm3s6tamQ4zszOyl2GQJPyNKWQgCqS
+        Wed, 26 Feb 2020 02:04:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgBZHEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:04:20 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C95932465D
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582700659;
+        bh=2Mn2rh2UnmkLwubpFpFIFXU5YjtRyl4XRJrdW3Zv9eg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tjIqbhWsUsTz4+iaFuaG3Q3kZPeya2RNPgdfY9noKlzPMqR70kquicHQLOlKKBWSh
+         eYRTl6fWrrUsdHkTvGZghxaIlHSgAmwwb0d/CUZ3po4ElqkuoNAYxicPT4hSPsXM3e
+         nYG0nVkZhDRwP3wJsVw62bE3cGetKKrWbXVlDqHg=
+Received: by mail-wr1-f52.google.com with SMTP id m16so1536817wrx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:04:18 -0800 (PST)
+X-Gm-Message-State: APjAAAU1ByJuXbQribj9sqBiGzuI/ZjPZpi3sbc6TnYdFVNX4HP8SCio
+        075VYeXT+BXYT/q0BNoXw2gCX5Hwa14zSbvKS6DLQw==
+X-Google-Smtp-Source: APXvYqxa555rzHIoZ0rL1iFd+0wW3hZMB+8tKwX5N+47RWMS2ZNV5aiZqsLpbDwxvKr3L1l/1SoAEfvpxFPPGEc0+z4=
+X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr3726058wrw.252.1582700657097;
+ Tue, 25 Feb 2020 23:04:17 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:3cd7:: with SMTP id j84mr3100660ilf.176.1582700413125;
- Tue, 25 Feb 2020 23:00:13 -0800 (PST)
-Date:   Tue, 25 Feb 2020 23:00:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e908c5059f752767@google.com>
-Subject: KASAN: use-after-free Read in iwcm_deref_id
-From:   syzbot <syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com>
-To:     bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca,
-        kamalheib1@gmail.com, krishna2@chelsio.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-2-atish.patra@wdc.com>
+In-Reply-To: <20200226011037.7179-2-atish.patra@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 Feb 2020 08:04:06 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu-Dk4hOobKhOEn1Wpbc4Ta2F5anZQ4rRmjpkPfT2g1L3w@mail.gmail.com>
+Message-ID: <CAKv+Gu-Dk4hOobKhOEn1Wpbc4Ta2F5anZQ4rRmjpkPfT2g1L3w@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/5] efi: Move arm-stub to a common file
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Alexander Graf <agraf@csgraf.de>,
+        "leif@nuviainc.com" <leif@nuviainc.com>,
+        "Chang, Abner (HPS SW/FW Technologist)" <abner.chang@hpe.com>,
+        "Schaefer, Daniel (DualStudy)" <daniel.schaefer@hpe.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Atish,
 
-syzbot found the following crash on:
+On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Most of the arm-stub code is written in an architecture independent manner.
+> As a result, RISC-V can reuse most of the arm-stub code.
+>
+> Rename the arm-stub.c to efi-stub.c so that ARM, ARM64 and RISC-V can use it.
+> This patch doesn't introduce any functional changes.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/arm/Kconfig                                     |  2 +-
+>  arch/arm64/Kconfig                                   |  2 +-
+>  drivers/firmware/efi/Kconfig                         |  6 +++---
+>  drivers/firmware/efi/libstub/Makefile                | 12 ++++++------
+>  .../firmware/efi/libstub/{arm-stub.c => efi-stub.c}  |  7 ++++++-
+>  5 files changed, 17 insertions(+), 12 deletions(-)
+>  rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (98%)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 97864aabc2a6..9931fea06076 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1955,7 +1955,7 @@ config EFI
+>         select UCS2_STRING
+>         select EFI_PARAMS_FROM_FDT
+>         select EFI_STUB
+> -       select EFI_ARMSTUB
+> +       select EFI_GENERIC_ARCH_STUB
+>         select EFI_RUNTIME_WRAPPERS
+>         ---help---
+>           This option provides support for runtime services provided
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 0b30e884e088..ae776d8ef2f9 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1720,7 +1720,7 @@ config EFI
+>         select EFI_PARAMS_FROM_FDT
+>         select EFI_RUNTIME_WRAPPERS
+>         select EFI_STUB
+> -       select EFI_ARMSTUB
+> +       select EFI_GENERIC_ARCH_STUB
+>         default y
+>         help
+>           This option provides support for runtime services provided
+> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+> index ecc83e2f032c..1bcedb7812da 100644
+> --- a/drivers/firmware/efi/Kconfig
+> +++ b/drivers/firmware/efi/Kconfig
+> @@ -106,12 +106,12 @@ config EFI_PARAMS_FROM_FDT
+>  config EFI_RUNTIME_WRAPPERS
+>         bool
+>
+> -config EFI_ARMSTUB
+> +config EFI_GENERIC_ARCH_STUB
 
-HEAD commit:    f8788d86 Linux 5.6-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=164503d9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=cb0c054eabfba4342146
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+Let's call it EFI_GENERIC_STUB
 
-Unfortunately, I don't have any reproducer for this crash yet.
+>         bool
+>
+> -config EFI_ARMSTUB_DTB_LOADER
+> +config EFI_STUB_DTB_LOADER
+>         bool "Enable the DTB loader"
+> -       depends on EFI_ARMSTUB
+> +       depends on EFI_GENERIC_ARCH_STUB
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
+Do you actually need the DTB loader? I feel adding this for ARM was a
+mistake, so you may want to make this depend on !RISCV while you're at
+it.
 
-==================================================================
-BUG: KASAN: use-after-free in dealloc_work_entries drivers/infiniband/core/iwcm.c:162 [inline]
-BUG: KASAN: use-after-free in free_cm_id drivers/infiniband/core/iwcm.c:202 [inline]
-BUG: KASAN: use-after-free in iwcm_deref_id+0xf6/0x170 drivers/infiniband/core/iwcm.c:215
-Read of size 8 at addr ffff8880a0d05978 by task syz-executor.2/15428
+>         default y
+>         help
+>           Select this config option to add support for the dtb= command
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 4d6246c6f651..2c5b76787126 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -22,7 +22,7 @@ cflags-$(CONFIG_ARM)          := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+>                                    -fno-builtin -fpic \
+>                                    $(call cc-option,-mno-single-pic-base)
+>
+> -cflags-$(CONFIG_EFI_ARMSTUB)   += -I$(srctree)/scripts/dtc/libfdt
+> +cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB) += -I$(srctree)/scripts/dtc/libfdt
+>
+>  KBUILD_CFLAGS                  := $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+>                                    -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
+> @@ -44,13 +44,13 @@ lib-y                               := efi-stub-helper.o gop.o secureboot.o tpm.o \
+>                                    skip_spaces.o lib-cmdline.o lib-ctype.o
+>
+>  # include the stub's generic dependencies from lib/ when building for ARM/arm64
+> -arm-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
+> +efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
+>
+>  $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
+>         $(call if_changed_rule,cc_o_c)
+>
+> -lib-$(CONFIG_EFI_ARMSTUB)      += arm-stub.o fdt.o string.o \
+> -                                  $(patsubst %.c,lib-%.o,$(arm-deps-y))
+> +lib-$(CONFIG_EFI_GENERIC_ARCH_STUB)            += efi-stub.o fdt.o string.o \
+> +                                  $(patsubst %.c,lib-%.o,$(efi-deps-y))
+>
+>  lib-$(CONFIG_ARM)              += arm32-stub.o
+>  lib-$(CONFIG_ARM64)            += arm64-stub.o
+> @@ -72,8 +72,8 @@ CFLAGS_arm64-stub.o           := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>  # a verification pass to see if any absolute relocations exist in any of the
+>  # object files.
+>  #
+> -extra-$(CONFIG_EFI_ARMSTUB)    := $(lib-y)
+> -lib-$(CONFIG_EFI_ARMSTUB)      := $(patsubst %.o,%.stub.o,$(lib-y))
+> +extra-$(CONFIG_EFI_GENERIC_ARCH_STUB)  := $(lib-y)
+> +lib-$(CONFIG_EFI_GENERIC_ARCH_STUB)    := $(patsubst %.o,%.stub.o,$(lib-y))
+>
+>  STUBCOPY_FLAGS-$(CONFIG_ARM64) += --prefix-alloc-sections=.init \
+>                                    --prefix-symbols=__efistub_
+> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> similarity index 98%
+> rename from drivers/firmware/efi/libstub/arm-stub.c
+> rename to drivers/firmware/efi/libstub/efi-stub.c
+> index 13559c7e6643..b87c3f70430c 100644
+> --- a/drivers/firmware/efi/libstub/arm-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -15,6 +15,7 @@
+>
+>  #include "efistub.h"
+>
+> +#if IS_ENABLED(CONFIG_ARM64) || IS_ENABLED(CONFIG_ARM)
+>  /*
+>   * This is the base address at which to start allocating virtual memory ranges
+>   * for UEFI Runtime Services. This is in the low TTBR0 range so that we can use
+> @@ -27,6 +28,10 @@
+>   * entire footprint of the UEFI runtime services memory regions)
+>   */
+>  #define EFI_RT_VIRTUAL_BASE    SZ_512M
+> +#else
+> +#define EFI_RT_VIRTUAL_BASE    SZ_2G
+> +#endif
+> +
 
-CPU: 1 PID: 15428 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- dealloc_work_entries drivers/infiniband/core/iwcm.c:162 [inline]
- free_cm_id drivers/infiniband/core/iwcm.c:202 [inline]
- iwcm_deref_id+0xf6/0x170 drivers/infiniband/core/iwcm.c:215
- destroy_cm_id+0x4b2/0x5b0 drivers/infiniband/core/iwcm.c:442
- iw_destroy_cm_id+0x15/0x20 drivers/infiniband/core/iwcm.c:453
- cma_iw_listen drivers/infiniband/core/cma.c:2453 [inline]
- rdma_listen+0x6dc/0x9a0 drivers/infiniband/core/cma.c:3614
- cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
- cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
- rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
- ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
- ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
- __vfs_write+0xb8/0x740 fs/read_write.c:494
- vfs_write+0x270/0x580 fs/read_write.c:558
- ksys_write+0x117/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x7b/0x90 fs/read_write.c:620
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c449
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe499194c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007fe4991956d4 RCX: 000000000045c449
-RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
-R13: 0000000000000cbe R14: 00000000004cea14 R15: 0000000000000007
+Can we drop this hunk for now? It should be part of your runtime
+services series.
 
-Allocated by task 15428:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- alloc_work_entries drivers/infiniband/core/iwcm.c:172 [inline]
- iw_cm_listen+0xdd/0x4a0 drivers/infiniband/core/iwcm.c:571
- cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
- rdma_listen+0x698/0x9a0 drivers/infiniband/core/cma.c:3614
- cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
- cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
- rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
- ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
- ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
- __vfs_write+0xb8/0x740 fs/read_write.c:494
- vfs_write+0x270/0x580 fs/read_write.c:558
- ksys_write+0x117/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x7b/0x90 fs/read_write.c:620
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 15428:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- dealloc_work_entries drivers/infiniband/core/iwcm.c:163 [inline]
- alloc_work_entries drivers/infiniband/core/iwcm.c:174 [inline]
- iw_cm_listen+0x288/0x4a0 drivers/infiniband/core/iwcm.c:571
- cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
- rdma_listen+0x698/0x9a0 drivers/infiniband/core/cma.c:3614
- cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
- cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
- rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
- ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
- ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
- __vfs_write+0xb8/0x740 fs/read_write.c:494
- vfs_write+0x270/0x580 fs/read_write.c:558
- ksys_write+0x117/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x7b/0x90 fs/read_write.c:620
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a0d05800
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 376 bytes inside of
- 512-byte region [ffff8880a0d05800, ffff8880a0d05a00)
-The buggy address belongs to the page:
-page:ffffea0002834140 refcount:1 mapcount:0 mapping:ffff8880aa400a80 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0001019988 ffffea000280e088 ffff8880aa400a80
-raw: 0000000000000000 ffff8880a0d05000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a0d05800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a0d05880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880a0d05900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff8880a0d05980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a0d05a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>  #define EFI_RT_VIRTUAL_SIZE    SZ_512M
+>
+>  #ifdef CONFIG_ARM64
+> @@ -243,7 +248,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+>          * 'dtb=' unless UEFI Secure Boot is disabled.  We assume that secure
+>          * boot is enabled if we can't determine its state.
+>          */
+> -       if (!IS_ENABLED(CONFIG_EFI_ARMSTUB_DTB_LOADER) ||
+> +       if (!IS_ENABLED(CONFIG_EFI_STUB_DTB_LOADER) ||
+>              secure_boot != efi_secureboot_mode_disabled) {
+>                 if (strstr(cmdline_ptr, "dtb="))
+>                         pr_efi("Ignoring DTB from command line.\n");
+> --
+> 2.24.0
+>
