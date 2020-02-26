@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E45EC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CEBC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E559724653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380AB24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GC3+4ikY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K2dTe32y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgBZJh5 (ORCPT
+        id S1728108AbgBZJiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:37:57 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37304 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgBZJhv (ORCPT
+        Wed, 26 Feb 2020 04:38:10 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40120 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbgBZJiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:37:51 -0500
+        Wed, 26 Feb 2020 04:38:08 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bQ06108032;
-        Wed, 26 Feb 2020 03:37:26 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bu9B087237;
+        Wed, 26 Feb 2020 03:37:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582709846;
-        bh=UK9ViJ8/KnZTmqsh0WaZJUAW35YfoP4ZW7jL8CyJPoQ=;
+        s=ti-com-17Q1; t=1582709876;
+        bh=lx7klmR18LxVuDBU/ZZOyd+LtXGNVESbcjfzd3wnbNA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=GC3+4ikYVuIib89/kVsUWrJZzTCfta5uFhsQ1rmOJebR3ekvGJGeZ/1/IltvlnZ3b
-         1B7gis80R3HV0fd0WoUUl8MBUIm9j83v2hKHf1gn3oxlGbVRwx6L0/EUnWrtTHLrud
-         uHENnCYDJ3D4byp3UnfSnxEEeMQh0Hbmkkz3SmfU=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bQqZ118902
+        b=K2dTe32y4kF8csHn6wb1hcbI0Z5frqIt9bEAjintcG/+wYvrOaf3bOwTQrQywvlO3
+         Gbmlj6Nxz6dljt9tOtgbN9rwLwxfJSp7Q5JvxcOo6pk6phoanGnVfmVhcFWaMdv2Fp
+         EvLtOua8qL2OaTJJFOLfDh4/oMGVbEU3SVttE1eo=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9buqo119249
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 03:37:26 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 26 Feb 2020 03:37:56 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 03:37:25 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:37:55 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 03:37:25 -0600
+ Frontend Transport; Wed, 26 Feb 2020 03:37:55 -0600
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4A9110613;
-        Wed, 26 Feb 2020 03:37:22 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4AG110613;
+        Wed, 26 Feb 2020 03:37:52 -0600
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -59,9 +59,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v2 04/11] spi: spi-mem: allow specifying a command's extension
-Date:   Wed, 26 Feb 2020 15:06:56 +0530
-Message-ID: <20200226093703.19765-5-p.yadav@ti.com>
+Subject: [PATCH v2 11/11] mtd: spi-nor: add support for Cypress Semper flash
+Date:   Wed, 26 Feb 2020 15:07:03 +0530
+Message-ID: <20200226093703.19765-12-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200226093703.19765-1-p.yadav@ti.com>
 References: <20200226093703.19765-1-p.yadav@ti.com>
@@ -74,107 +74,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
-the "command extension". There can be 3 types of extensions in xSPI:
-repeat, invert, and hex. When the extension type is "repeat", the same
-opcode is sent twice. When it is "invert", the second byte is the
-inverse of the opcode. When it is "hex" an additional opcode byte based
-is sent with the command whose value can be anything.
+The Cypress Semper flash is an xSPI compliant octal DTR flash. Add
+support for using it in octal DTR mode.
+
+The flash by default boots in a hybrid sector mode. Switch to uniform
+sector mode on boot. Use the default 20 dummy cycles for a read fast
+command.
+
+The SFDP programming on some older versions of the flash was incorrect.
+Fixes for that are included in the fixup hooks.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/spi/spi-mem.c       | 23 +++++++++++++++++++++++
- include/linux/spi/spi-mem.h | 24 ++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+ drivers/mtd/spi-nor/spi-nor.c | 191 ++++++++++++++++++++++++++++++++++
+ include/linux/mtd/spi-nor.h   |  14 +++
+ 2 files changed, 205 insertions(+)
 
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index cb13e0878b95..3838ddc9aeec 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -462,6 +462,29 @@ int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
- }
- EXPORT_SYMBOL_GPL(spi_mem_adjust_op_size);
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index fdcc1b4abc3f..a01acecaa568 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -260,6 +260,12 @@ struct flash_info {
  
-+int spi_mem_get_cmd_ext(const struct spi_mem_op *op, u8 *ext)
+ #define JEDEC_MFR(info)	((info)->id[0])
+ 
++/* Forward declarations that will be used by s28hs512t_setup(). */
++static int spi_nor_default_setup(struct spi_nor *nor,
++				 const struct spi_nor_hwcaps *hwcaps);
++static void spi_nor_set_pp_settings(struct spi_nor_pp_command *pp,
++				    u8 opcode, enum spi_nor_protocol proto);
++
+ /**
+  * spi_nor_spimem_setup_op() - Set up common properties of a spi-mem op.
+  * @nor:		pointer to a 'struct spi_nor'
+@@ -2241,6 +2247,64 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ 	return ret;
+ }
+ 
++/**
++ * spi_nor_cypress_octal_enable() - Enable octal DTR mode on Cypress flashes.
++ * @nor:		pointer to a 'struct spi_nor'
++ *
++ * This also sets the memory access latency cycles to 20, which is the default
++ * in the spi-nor framework.
++ *
++ * Return: 0 on success, -errno otherwise.
++ */
++static int spi_nor_cypress_octal_enable(struct spi_nor *nor)
 +{
-+	switch (op->cmd.ext_type) {
-+	case SPI_MEM_EXT_INVERT:
-+		*ext = ~op->cmd.opcode;
-+		break;
++	struct spi_mem_op op;
++	u8 *buf = nor->bouncebuf;
++	u8 addr_width = 3;
++	int ret;
 +
-+	case SPI_MEM_EXT_REPEAT:
-+		*ext = op->cmd.opcode;
-+		break;
++	/* Use 20 dummy cycles for memory array reads. */
++	ret = spi_nor_write_enable(nor);
++	if (ret)
++		return ret;
 +
-+	case SPI_MEM_EXT_HEX:
-+		*ext = op->cmd.ext;
-+		break;
++	*buf = SPINOR_REG_CYPRESS_CFR2V_MEMLAT_8_20;
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WR_ANY_REG, 1),
++			SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_CYPRESS_CFR2V, 1),
++			SPI_MEM_OP_NO_DUMMY,
++			SPI_MEM_OP_DATA_OUT(1, buf, 1));
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret) {
++		dev_warn(nor->dev,
++			 "failed to set default memory latency value: %d\n",
++			 ret);
++		return ret;
++	}
++	ret = spi_nor_wait_till_ready(nor);
++	if (ret)
++		return ret;
 +
-+	default:
-+		return -EINVAL;
++	nor->read_dummy = 20;
++
++	/* Set the octal and DTR enable bits. */
++	ret = spi_nor_write_enable(nor);
++	if (ret)
++		return ret;
++
++	*buf = SPINOR_REG_CYPRESS_CFR5V_OCT_DTR_EN;
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WR_ANY_REG, 1),
++			SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_CYPRESS_CFR5V, 1),
++			SPI_MEM_OP_NO_DUMMY,
++			SPI_MEM_OP_DATA_OUT(1, buf, 1));
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret) {
++		dev_warn(nor->dev, "Failed to enable octal DTR mode\n");
++		return ret;
 +	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(spi_mem_get_cmd_ext);
-+
- static ssize_t spi_mem_no_dirmap_read(struct spi_mem_dirmap_desc *desc,
- 				      u64 offs, size_t len, void *buf)
- {
-diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-index 4669082b4e3b..06ccab17e4d0 100644
---- a/include/linux/spi/spi-mem.h
-+++ b/include/linux/spi/spi-mem.h
-@@ -67,11 +67,31 @@ enum spi_mem_data_dir {
- 	SPI_MEM_DATA_OUT,
- };
- 
-+/**
-+ * enum spi_mem_cmd_ext - describes the command opcode extension in DTR mode
-+ * @SPI_MEM_EXT_NONE: no extension. This is the default, and is used in Legacy
-+ *		      SPI mode
-+ * @SPI_MEM_EXT_REPEAT: the extension is same as the opcode
-+ * @SPI_MEM_EXT_INVERT: the extension is the bitwise inverse of the opcode
-+ * @SPI_MEM_EXT_HEX: the extension is any hex value. The command and opcode
-+ *		     combine to form a 16-bit opcode.
-+ */
-+enum spi_mem_cmd_ext {
-+	SPI_MEM_EXT_NONE = 0,
-+	SPI_MEM_EXT_REPEAT,
-+	SPI_MEM_EXT_INVERT,
-+	SPI_MEM_EXT_HEX,
-+};
 +
  /**
-  * struct spi_mem_op - describes a SPI memory operation
-  * @cmd.buswidth: number of IO lines used to transmit the command
-  * @cmd.opcode: operation opcode
-  * @cmd.is_dtr: whether the command opcode should be sent in DTR mode or not
-+ * @cmd.ext_type: type of the command opcode extension in DTR mode
-+ * @cmd.ext: value of the command opcode extension in DTR mode. It is
-+ *	     only set when 'ext_type' is 'SPI_MEM_EXT_HEX'. In all other
-+ *	     cases, the extension can be directly derived from the opcode.
-  * @addr.nbytes: number of address bytes to send. Can be zero if the operation
-  *		 does not need to send an address
-  * @addr.buswidth: number of IO lines used to transmit the address cycles
-@@ -97,6 +117,8 @@ struct spi_mem_op {
- 		u8 buswidth;
- 		u8 opcode;
- 		bool is_dtr;
-+		enum spi_mem_cmd_ext ext_type;
-+		u8 ext;
- 	} cmd;
+  * spi_nor_sr1_bit6_quad_enable() - Set the Quad Enable BIT(6) in the Status
+  * Register 1.
+@@ -2453,6 +2517,130 @@ static struct spi_nor_fixups gd25q256_fixups = {
+ 	.default_init = gd25q256_default_init,
+ };
  
- 	struct {
-@@ -361,6 +383,8 @@ int spi_mem_driver_register_with_owner(struct spi_mem_driver *drv,
- 
- void spi_mem_driver_unregister(struct spi_mem_driver *drv);
- 
-+int spi_mem_get_cmd_ext(const struct spi_mem_op *op, u8 *ext);
++static int s28hs512t_setup(struct spi_nor *nor,
++			    const struct spi_nor_hwcaps *hwcaps)
++{
++	struct spi_mem_op op;
++	u8 *buf = nor->bouncebuf;
++	u8 addr_width = 3;
++	int ret;
 +
- #define spi_mem_driver_register(__drv)                                  \
- 	spi_mem_driver_register_with_owner(__drv, THIS_MODULE)
++	if (!nor->spimem) {
++		dev_err(nor->dev,
++			"operation not supported for non-spimem drivers\n");
++		return -ENOTSUPP;
++	}
++
++	/*
++	 * This Cypress flash also supports hybrid sector sizes. Make sure
++	 * uniform sector mode is selected. This is done by setting the bit
++	 * CFR3N[3].
++	 */
++	op = (struct spi_mem_op)
++		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RD_ANY_REG, 1),
++			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_CYPRESS_CFR3N, 1),
++			   SPI_MEM_OP_NO_DUMMY,
++			   SPI_MEM_OP_DATA_IN(1, buf, 1));
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret)
++		return ret;
++
++	ret = spi_nor_write_enable(nor);
++	if (ret)
++		return ret;
++
++	/* Set the uniform sector mode bit. */
++	*buf |= SPINOR_REG_CYPRESS_CFR3N_UNISECT;
++	op = (struct spi_mem_op)
++		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WR_ANY_REG, 1),
++			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_CYPRESS_CFR3N, 1),
++			   SPI_MEM_OP_NO_DUMMY,
++			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret) {
++		dev_err(nor->dev, "Failed to change to uniform sector mode\n");
++		return ret;
++	}
++
++	ret = spi_nor_wait_till_ready(nor);
++	if (ret)
++		return ret;
++
++	return spi_nor_default_setup(nor, hwcaps);
++}
++
++static void s28hs512t_default_init(struct spi_nor *nor)
++{
++	nor->params.octal_dtr_enable = spi_nor_cypress_octal_enable;
++	nor->params.setup = s28hs512t_setup;
++}
++
++static void s28hs512t_post_sfdp_fixup(struct spi_nor *nor)
++{
++	/*
++	 * On older versions of the flash the xSPI Profile 1.0 table has the
++	 * 8D-8D-8D Fast Read opcode as 0x00. But it actually should be 0xEE.
++	 */
++	if (nor->params.reads[SNOR_CMD_READ_8_8_8_DTR].opcode == 0)
++		nor->params.reads[SNOR_CMD_READ_8_8_8_DTR].opcode =
++			SPINOR_OP_CYPRESS_RD_FAST;
++
++	/* This flash is also missing the 4-byte Page Program opcode bit. */
++	spi_nor_set_pp_settings(&nor->params.page_programs[SNOR_CMD_PP],
++				SPINOR_OP_PP_4B, SNOR_PROTO_1_1_1);
++	/*
++	 * Since xSPI Page Program opcode is backward compatible with
++	 * Legacy SPI, use Legacy SPI opcode there as well.
++	 */
++	spi_nor_set_pp_settings(&nor->params.page_programs[SNOR_CMD_PP_8_8_8_DTR],
++				SPINOR_OP_PP_4B, SNOR_PROTO_8_8_8_DTR);
++
++	/*
++	 * The xSPI Profile 1.0 table advertises the number of additional
++	 * address bytes needed for Read Status Register command as 0 but the
++	 * actual value for that is 4.
++	 */
++	nor->params.rdsr_addr_nbytes = 4;
++}
++
++static int s28hs512t_post_bfpt_fixup(struct spi_nor *nor,
++				     const struct sfdp_parameter_header *bfpt_header,
++				     const struct sfdp_bfpt *bfpt,
++				     struct spi_nor_flash_parameter *params)
++{
++	struct spi_mem_op op;
++	u8 *buf = nor->bouncebuf;
++	u8 addr_width = 3;
++	int ret;
++
++	/*
++	 * The BFPT table advertises a 512B page size but the page size is
++	 * actually configurable (with the default being 256B). Read from
++	 * CFR3V[4] and set the correct size.
++	 */
++	op = (struct spi_mem_op)
++		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RD_ANY_REG, 1),
++			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_CYPRESS_CFR3V, 1),
++			   SPI_MEM_OP_NO_DUMMY,
++			   SPI_MEM_OP_DATA_IN(1, buf, 1));
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret)
++		return ret;
++
++	if (*buf & SPINOR_REG_CYPRESS_CFR3V_PGSZ)
++		params->page_size = 512;
++	else
++		params->page_size = 256;
++
++	return 0;
++}
++
++static struct spi_nor_fixups s28hs512t_fixups = {
++	.default_init = s28hs512t_default_init,
++	.post_sfdp = s28hs512t_post_sfdp_fixup,
++	.post_bfpt = s28hs512t_post_bfpt_fixup,
++};
++
+ /* NOTE: double check command sets and memory organization when you add
+  * more nor chips.  This current list focusses on newer chips, which
+  * have been converging on command sets which including JEDEC ID.
+@@ -2715,6 +2903,9 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "s25fl064l",  INFO(0x016017,      0,  64 * 1024, 128, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+ 	{ "s25fl128l",  INFO(0x016018,      0,  64 * 1024, 256, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+ 	{ "s25fl256l",  INFO(0x016019,      0,  64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
++	{ "s28hs512t",  INFO(0x345b1a,      0, 256 * 1024, 256, SECT_4K | SPI_NOR_OCTAL_DTR_READ)
++		.fixups = &s28hs512t_fixups,
++	},
  
+ 	/* SST -- large erase sizes are "overlays", "sectors" are 4K */
+ 	{ "sst25vf040b", INFO(0xbf258d, 0, 64 * 1024,  8, SECT_4K | SST_WRITE) },
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index c653f6713cfc..e765272fc0f4 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -150,6 +150,20 @@
+ #define SR2_QUAD_EN_BIT1	BIT(1)
+ #define SR2_QUAD_EN_BIT7	BIT(7)
+ 
++/* For Cypress flash. */
++#define SPINOR_OP_RD_ANY_REG			0x65	/* Read any register */
++#define SPINOR_OP_WR_ANY_REG			0x71	/* Write any register */
++#define SPINOR_REG_CYPRESS_CFR2V		0x00800003
++#define SPINOR_REG_CYPRESS_CFR2V_MEMLAT_8_20	0x8
++#define SPINOR_REG_CYPRESS_CFR3N		0x00000004
++#define SPINOR_REG_CYPRESS_CFR3V		0x00800004
++#define SPINOR_REG_CYPRESS_CFR3V_PGSZ		BIT(4) /* Page size. */
++#define SPINOR_REG_CYPRESS_CFR3N_UNISECT	BIT(3) /* Uniform sector mode */
++#define SPINOR_REG_CYPRESS_CFR4V		0x00800005
++#define SPINOR_REG_CYPRESS_CFR5V		0x00800006
++#define SPINOR_REG_CYPRESS_CFR5V_OCT_DTR_EN	0x3
++#define SPINOR_OP_CYPRESS_RD_FAST		0xee
++
+ /* Supported SPI protocols */
+ #define SNOR_PROTO_INST_MASK	GENMASK(23, 16)
+ #define SNOR_PROTO_INST_SHIFT	16
 -- 
 2.25.0
 
