@@ -3,97 +3,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E84C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43D7C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA39206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A15206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="KPTIuJ6h"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="f930Im1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgBZRRf (ORCPT
+        id S1726822AbgBZRTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:17:35 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39597 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBZRRf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:17:35 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so47509wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:17:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D5NgFvpvyGD2NAkidGgia/jVmr0ryRkNn23SZkfip3U=;
-        b=KPTIuJ6hOKN4eNm6446oV+ufMfdLlLPWUE/tcfYlDyTvUttjmb4fzCSa0EzUQQTqQd
-         4A6Lk8gDTE75gNGQNVL7pThfh+KOKigyKwqXaZmiVC0p6B4Tvs0pwoFlJ7elicCo8hrn
-         WchqZZ8SHT/si1iGF31t/ZKMIEwvTsxHMUqr43GAELsgjrORQeYSKwABRgw02f/xA3Zw
-         4vK0eYbFLJal+Ic4ZjMmDqgc9per9KH3xgnJeg3epqAhAdt8fRkPfoAZryfDW+Ev5n59
-         K+UKrDlgGf+BZdmaLwxciFqLtwmoDJVZAHZVRhIt2/WIglamTAcdGRk9VzdwR1vk003J
-         rk1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D5NgFvpvyGD2NAkidGgia/jVmr0ryRkNn23SZkfip3U=;
-        b=jsDueHASThP+jV9a6bPxtIC5WiPv8WPvh3efkkkFGq946HXc7O7RKdUJQSlci3g+lO
-         nGNqW0KwFfrpkz4l5V+Zd/ji1x7LVSTRXM0rIAELxEwAskovO6vFGiL6kdKjhTZZEMgQ
-         Nawv+4Zh+k+tNmY7mUA9nJbDSJn0wzLtDmE6UirClW4aLxkTCgBWx58aC+IsHfUFQo3E
-         sXE47WnOOqSkRCF/8YiWDqdCrliIbKTp7X0GzG5P6jRWVBMroIC6jMNuKOWwzwfXzyxB
-         Fsf0Fj6FccLfxA59Xt9uWZfwVvkCoM3By/K0I0gjBz6DzfWMmff3x/Quxup+TEaDHYKg
-         7Y3A==
-X-Gm-Message-State: APjAAAUDQeUAM9WluK6abkL6y7J8HFOpQx8lGWnwqZvTVUc06IrxHlIJ
-        nwneoRQiRIa+kYYqx/RUVhaUddolTe8Uog==
-X-Google-Smtp-Source: APXvYqxrttVIAUjGEZgZ4W32J3SfMG1F9ArDXDphkR2AMS3TDMpZqL7cqVnwvPG+nsAXG0VspMUfLw==
-X-Received: by 2002:a05:600c:299:: with SMTP id 25mr6704261wmk.68.1582737451052;
-        Wed, 26 Feb 2020 09:17:31 -0800 (PST)
-Received: from ?IPv6:2a00:1098:3142:14:a5b1:f6ea:e382:15d7? ([2a00:1098:3142:14:a5b1:f6ea:e382:15d7])
-        by smtp.gmail.com with ESMTPSA id z21sm3719210wml.5.2020.02.26.09.17.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 09:17:30 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm2711: Add pcie0 alias
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200226164601.20150-1-nsaenzjulienne@suse.de>
-From:   Phil Elwell <phil@raspberrypi.com>
-Message-ID: <51e9f945-b047-eb66-28c0-54d467ce51a7@raspberrypi.com>
-Date:   Wed, 26 Feb 2020 17:17:30 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 12:19:14 -0500
+Received: from mail-db8eur05on2075.outbound.protection.outlook.com ([40.107.20.75]:6242
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726277AbgBZRTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:19:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gFPb2zOESN7WXAg6t557Ixx27Sdiq8ONR6RGPTF4HJVjeBklV964meEEntgCL6mNRweU+llPZ+avDFY3Ruqww3TUzQnlmUVaMx+4Y8enNmf2JgjfHV/S7UhDo1d+a+xKb8wwa9d8NJ/sSf9ojk+DNOvNHFMvkM8FbEQbfVkjQcmj2DZ9UVIg0PZ0uAmxJax/aNHShCFyc5F80FGKhc1Nd7qOnJcZXFa4S1rTJUb/G4ArcKmskY7NHmgqecYwj0wVcMkIePS7nkOY+mYzm/ky5OMZzBm2lE0C8QdtJqpJyLjic3zRNQVw7LpK8xtqt5X8oSPhDTWUatTQzVxUSLc78A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rTa4Vioq81O3+93Nkq8/5gs+Zdq/m9mThAJ3d5+2BNI=;
+ b=mVDoTK/VrRcXAIyFkX7+f1ed7jwQJm0iGTtLkBORwt8ThnUP2zNGbNabbDmDJyrYBGXE4Fliwk6tPIf6HkO2QWvzrRmwe3XoMupigvW7ykze1EChSRwjwNt2U46/hcAC3/+3JszqkGivqnl51srebe3KX0FciBdVbaJDUVy76wI9XhrDMDGTgT0plrrBLB4rkD1oYKpDiB2BXTdSf4yLWVmLfmIbsuTXk/HGwvv0Mabwv7dbNiyF+c6srB6bKK2wTHI8oF/JTtdc4gmfIkIHkSAfmWf/llPhpve4NYBye74n7t8P/0JX/wTNPWoof7yrFiDj/padd8HKJbGXqaFP2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rTa4Vioq81O3+93Nkq8/5gs+Zdq/m9mThAJ3d5+2BNI=;
+ b=f930Im1Jt+r+uS6t139vVf4Lh0u/bpULiTrp0awc58WDJO83xf5KUVCFGl08QeWLOq3i3pPpfDwdw6niBhJshMPxcmTfJwLJaNkgSQAcHPfmwXneTVabMb5EwWWn4+bpk7ODaUquLXwAFsrM+0AJraGvpq7MMV17kjZ/1A7Z0xU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB6543.eurprd05.prod.outlook.com (20.179.26.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Wed, 26 Feb 2020 17:19:09 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 17:19:09 +0000
+Date:   Wed, 26 Feb 2020 13:19:05 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+Subject: Re: [PATCH V4 5/5] vdpasim: vDPA device simulator
+Message-ID: <20200226171905.GS26318@mellanox.com>
+References: <20200220061141.29390-1-jasowang@redhat.com>
+ <20200220061141.29390-6-jasowang@redhat.com>
+ <20200220151215.GU23930@mellanox.com>
+ <6c341a77-a297-b7c7-dea5-b3f7b920b1f3@redhat.com>
+ <793a1b81-4f78-c405-4aae-f32a2bf67d87@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <793a1b81-4f78-c405-4aae-f32a2bf67d87@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR02CA0070.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::47) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-In-Reply-To: <20200226164601.20150-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0070.namprd02.prod.outlook.com (2603:10b6:207:3d::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21 via Frontend Transport; Wed, 26 Feb 2020 17:19:09 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j70Kv-0004T2-Pj; Wed, 26 Feb 2020 13:19:05 -0400
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ed6a34cd-4d7c-49a6-aa20-08d7badffda5
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6543:|VI1PR05MB6543:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB6543903DFB3972E583125EE9CFEA0@VI1PR05MB6543.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(199004)(189003)(8676002)(316002)(81156014)(9786002)(52116002)(2616005)(26005)(478600001)(54906003)(81166006)(2906002)(9746002)(33656002)(4744005)(7416002)(4326008)(6916009)(66556008)(86362001)(36756003)(8936002)(186003)(5660300002)(66946007)(66476007)(1076003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6543;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: K+0wfyiIkq1srC5QKEGHCHxPLfnAMtQr9k0axoqfggasL7aESpaLHIjMbkdSNYKMXlijYsHkbarUKWARRsz9b/rpq0aq94CU9YVYSZPZCESvuIOjmOZSsq67EV1HrfaL7svW3zwLhQXg5oMsFJJQyWha6TZA1UR1HGSNpDlmrssb/k2sAh/mDuvo3eCVGACBGxUMzjAXEQOS2guIquqLB4Ldp9FEQ8AyWgCPCez8SSE+UBZndD1XZoyrXQHYiHZv05CWHdZG0gz56MhTNlOYK2EutHGkq1DlQbpIfAW6tAQfWd94ruOxr62HgjBFYabctgt7VSD3ZYGa+quyszik70wKoSfqJENuxFOZWo518mndscrpW4M35K8bbm7pGAujDsHj/AIFf+9ZtOL5RR96i4LG97TV8XMD2O0FRavLqlpHUNZ8QSmdtzFMXmq50OWbGZ/0imdB/TH2iP0Fr2GTNkQHyrDr5IgDVs6AVZ4P2wK0mrgSRLXzGEr2OHFy54R1
+X-MS-Exchange-AntiSpam-MessageData: i2VC+9mj04/g+se0zfNtQvQYSyQlh/qZz9Jh6c8VEk67KWY1VzC6DvB6aXi1sNizKvXuQgTbLVKqqXZ9i674ZPJd6qEYh3BNoWvU93fxWSdf/npI8dnqSb3QDrpoqRz7WYFBQWgu8qal0ZO2I/s1qg==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed6a34cd-4d7c-49a6-aa20-08d7badffda5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 17:19:09.6288
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bidSoB3arg9mIl2Doior3Qnku9G5o1W26r+ZvMzsv/W/rcmJh2ZlUrZkBnKoDyPImAehJdvdhY1huxkAJvOX6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6543
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
-
-On 26/02/2020 16:46, Nicolas Saenz Julienne wrote:
-> Some bcm2711 revisions have different DMA constraints on the their PCIE
-> bus. The lower common denominator, being able to access the lower 3GB of
-> memory, is the default setting for now. Newer SoC revisions are able to
-> access the whole memory space.
+On Wed, Feb 26, 2020 at 02:12:26PM +0800, Jason Wang wrote:
+> > > It is a bit weird to be creating this dummy parent, couldn't this be
+> > > done by just passing a NULL parent to vdpa_alloc_device, doing
+> > > set_dma_ops() on the vdpasim->vdpa->dev and setting dma_device to
+> > > vdpasim->vdpa->dev ?
+> > 
+> > 
+> > I think it works.
 > 
-> Raspberry Pi 4's firmware is aware of this limitation and will correct
-> the PCIE's dma-ranges property if a pcie0 alias is available. So add
-> it.
+> 
+> Rethink about this, since most hardware vDPA driver will have a parent and
+> will use it to find the parent structure e.g
+> 
+> dev_get_drvdata(vdpa->dev->parent)
 
-I can confirm that this is exactly what the firmware is looking for, so
+Oh that seems like a sketchy pattern
 
-Reviewed-by: Phil Elwell <phil@raspberrypi.com>
+> So I keep this dummy parent in V5.
 
-Phil
+The dummy parent is visible in sysfs, I think you should remove it so
+the syfs for this virtual device makes sense.
+
+Jason
