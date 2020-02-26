@@ -2,132 +2,143 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28A4C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33226C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849D3206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C7C20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:22:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="PbDPEOi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgBZRUi (ORCPT
+        id S1726806AbgBZRWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:20:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44932 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgBZRUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:20:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 214ECAD2B;
-        Wed, 26 Feb 2020 17:20:35 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 674331E0EA2; Wed, 26 Feb 2020 18:20:34 +0100 (CET)
-Date:   Wed, 26 Feb 2020 18:20:34 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Halliday <jonathan.halliday@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200226172034.GV10728@quack2.suse.cz>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-8-ira.weiny@intel.com>
- <20200221174449.GB11378@lst.de>
- <20200221224419.GW10776@dread.disaster.area>
- <20200224175603.GE7771@lst.de>
- <20200225000937.GA10776@dread.disaster.area>
- <20200225173633.GA30843@lst.de>
- <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
- <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
- <CAPcyv4iuWpHi-0SK_HS0zmfH87=G64U47VhthhpTjDCw_BMG8A@mail.gmail.com>
+        Wed, 26 Feb 2020 12:22:18 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54322 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgBZRWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:22:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z12so72583wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:22:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bTX6ADjL8vd+1qplRyyAzTsyyfpkgH9hYlmjz7+N2Q0=;
+        b=PbDPEOi+fj86MtC89e+Ab3x5aotS6IyLV5IACbabN9wT7k1i+NDmdFkVEiKkZEVWiq
+         svt1s7hrVlk7WnONe38fPZEyIX4+X/gmiN7BLWqoiRLdBJmtui1AaEeBvs/CyRe2PqI+
+         /dIE7j9fLxKG3TcHzGyrouk3FE2va6/P+wQF8wR8xq1SWuPn5Qvw7L/hAcPKNBncUIzv
+         Gm9H5gu15hPIF1fv0VeAoue3GsLkCCam2NCQlP82I44waIzXmCDY9x8CkN4HE52PG5oP
+         VfZxAJRjyfmW1YybszVGDjiwEo7zjU94JGvngRE6JfkFnAbiiNf8phyKIoH/IAMVdC6A
+         Qcsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bTX6ADjL8vd+1qplRyyAzTsyyfpkgH9hYlmjz7+N2Q0=;
+        b=dyR+81Y4wYHFO9+fGlRwaXAE+mmPkvJJa1pLAXoU1AU/AeLFl9lpmyl3QbTj/0sQgW
+         mo7XHsaDvt2wx2OK7oKax1BWiVXqvMe+aWKF7e4Qaap3+fRCMEj/6w0phNGntMkdGS+L
+         Jdv8sIC1pf4nuOjVX/g1qGdljGmiC9msWETTjtnsfBXzVWXr3NSxlTUPr6k/yOkNc4wL
+         QSIcXrdGebAPb7QAdNeZH5XIOGAcbBXJIBnXgr8wmB5Torh13OIFumAh7EBwvwP7wK2j
+         RdXpLycPTTNIgndkbLdi7KzK48WMES9SBAkVbIJtE6sMWtXr5SxpHULyKAlmkrbl0mJm
+         uLGA==
+X-Gm-Message-State: APjAAAVJZEcaiPqippRtLZFVNcwHiwPa6oFWLsOpaUQNrsbYPkVvkb71
+        bsjx4hPMgV0PzEwFNjLcDVsSJw==
+X-Google-Smtp-Source: APXvYqzbcqZ95aNNDTCdQeIB3SiyudumgAQ9BSTiz9xzK+KHIy5xt/tjC1JqpGisnkeW7Z3obD/lzQ==
+X-Received: by 2002:a7b:c935:: with SMTP id h21mr6401277wml.173.1582737733834;
+        Wed, 26 Feb 2020 09:22:13 -0800 (PST)
+Received: from [192.168.1.10] ([194.35.116.65])
+        by smtp.gmail.com with ESMTPSA id u62sm3830555wmu.17.2020.02.26.09.22.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 09:22:13 -0800 (PST)
+Subject: Re: [PATCH bpf-next v4 0/5] Make probes which emit dmesg warnings
+ optional
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org
+References: <20200226165941.6379-1-mrostecki@opensuse.org>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <e4777396-dbf0-855d-beaf-ba7fd533a4fb@isovalent.com>
+Date:   Wed, 26 Feb 2020 17:22:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iuWpHi-0SK_HS0zmfH87=G64U47VhthhpTjDCw_BMG8A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200226165941.6379-1-mrostecki@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-02-20 08:46:42, Dan Williams wrote:
-> On Wed, Feb 26, 2020 at 1:29 AM Jonathan Halliday
-> <jonathan.halliday@redhat.com> wrote:
-> >
-> >
-> > Hi All
-> >
-> > I'm a middleware developer, focused on how Java (JVM) workloads can
-> > benefit from app-direct mode pmem. Initially the target is apps that
-> > need a fast binary log for fault tolerance: the classic database WAL use
-> > case; transaction coordination systems; enterprise message bus
-> > persistence and suchlike. Critically, there are cases where we use log
-> > based storage, i.e. it's not the strict 'read rarely, only on recovery'
-> > model that a classic db may have, but more of a 'append only, read many
-> > times' event stream model.
-> >
-> > Think of the log oriented data storage as having logical segments (let's
-> > implement them as files), of which the most recent is being appended to
-> > (read_write) and the remaining N-1 older segments are full and sealed,
-> > so effectively immutable (read_only) until discarded. The tail segment
-> > needs to be in DAX mode for optimal write performance, as the size of
-> > the append may be sub-block and we don't want the overhead of the kernel
-> > call anyhow. So that's clearly a good fit for putting on a DAX fs mount
-> > and using mmap with MAP_SYNC.
-> >
-> > However, we want fast read access into the segments, to retrieve stored
-> > records. The small access index can be built in volatile RAM (assuming
-> > we're willing to take the startup overhead of a full file scan at
-> > recovery time) but the data itself is big and we don't want to move it
-> > all off pmem. Which means the requirements are now different: we want
-> > the O/S cache to pull hot data into fast volatile RAM for us, which DAX
-> > explicitly won't do. Effectively a poor man's 'memory mode' pmem, rather
-> > than app-direct mode, except here we're using the O/S rather than the
-> > hardware memory controller to do the cache management for us.
-> >
-> > Currently this requires closing the full (read_write) file, then copying
-> > it to a non-DAX device and reopening it (read_only) there. Clearly
-> > that's expensive and rather tedious. Instead, I'd like to close the
-> > MAP_SYNC mmap, then, leaving the file where it is, reopen it in a mode
-> > that will instead go via the O/S cache in the traditional manner. Bonus
-> > points if I can do it over non-overlapping ranges in a file without
-> > closing the DAX mode mmap, since then the segments are entirely logical
-> > instead of needing separate physical files.
+2020-02-26 17:59 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> Feature probes in bpftool related to bpf_probe_write_user and
+> bpf_trace_printk helpers emit dmesg warnings which might be confusing
+> for people running bpftool on production environments. This patch series
+> addresses that by filtering them out by default and introducing the new
+> positional argument "full" which enables all available probes.
 > 
-> Hi John,
+> The main motivation behind those changes is ability the fact that some
+> probes (for example those related to "trace" or "write_user" helpers)
+> emit dmesg messages which might be confusing for people who are running
+> on production environments. For details see the Cilium issue[0].
 > 
-> IIRC we chatted about this at PIRL, right?
+> v1 -> v2:
+> - Do not expose regex filters to users, keep filtering logic internal,
+> expose only the "full" option for including probes which emit dmesg
+> warnings.
 > 
-> At the time it sounded more like mixed mode dax, i.e. dax writes, but
-> cached reads. To me that's an optimization to optionally use dax for
-> direct-I/O writes, with its existing set of page-cache coherence
-> warts, and not a capability to dynamically switch the dax-mode.
-> mmap+MAP_SYNC seems the wrong interface for this. This writeup
-> mentions bypassing kernel call overhead, but I don't see how a
-> dax-write syscall is cheaper than an mmap syscall plus fault. If
-> direct-I/O to a dax capable file bypasses the block layer, isn't that
-> about the maximum of kernel overhead that can be cut out of this use
-> case? Otherwise MAP_SYNC is a facility to achieve efficient sub-block
-> update-in-place writes not append writes.
+> v2 -> v3:
+> - Do not use regex for filtering out probes, use function IDs directly.
+> - Fix bash completion - in v2 only "prefix" was proposed after "macros",
+>    "dev" and "kernel" were not.
+> - Rephrase the man page paragraph, highlight helper function names.
+> - Remove tests which parse the plain output of bpftool (except the
+>    header/macros test), focus on testing JSON output instead.
+> - Add test which compares the output with and without "full" option.
+> 
+> v3 -> v4:
+> - Use enum to check for helper functions.
+> - Make selftests compatible with older versions of Python 3.x than 3.7.
+> 
+> [0] https://github.com/cilium/cilium/issues/10048
+> 
+> Michal Rostecki (5):
+>    bpftool: Move out sections to separate functions
+>    bpftool: Make probes which emit dmesg warnings optional
+>    bpftool: Update documentation of "bpftool feature" command
+>    bpftool: Update bash completion for "bpftool feature" command
+>    selftests/bpf: Add test for "bpftool feature" command
+> 
+>   .../bpftool/Documentation/bpftool-feature.rst |  19 +-
+>   tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+>   tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
+>   tools/testing/selftests/.gitignore            |   5 +-
+>   tools/testing/selftests/bpf/Makefile          |   3 +-
+>   tools/testing/selftests/bpf/test_bpftool.py   | 178 +++++++++++
+>   tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
+>   7 files changed, 373 insertions(+), 123 deletions(-)
+>   create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
+>   create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
+> 
 
-Well, even for appends you'll pay the cost only once per page (or maybe even
-once per huge page) when using MAP_SYNC. With a syscall you'll pay once per
-write. So although it would be good to check real numbers, the design isn't
-non-sensical to me.
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+(Please keep tags between versions.)
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Your change looks good. The tests in patch 5 still pass with Python 
+3.7.5 (but I have not tried to run with an older version of Python).
+
+Quentin
