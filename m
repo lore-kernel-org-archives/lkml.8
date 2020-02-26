@@ -2,111 +2,122 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FBEC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5752FC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1F024653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C1E24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:36:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PsTVQeVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgBZUgb (ORCPT
+        id S1727524AbgBZUgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:36:31 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9182 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727310AbgBZUga (ORCPT
+        Wed, 26 Feb 2020 15:36:48 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42274 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbgBZUgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:36:30 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QKPbOG038666
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:36:29 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ydqf7tfen-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:36:29 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 26 Feb 2020 20:36:27 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Feb 2020 20:36:23 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QKaLJj47448484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 20:36:21 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F3B642042;
-        Wed, 26 Feb 2020 20:36:21 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62F7D42047;
-        Wed, 26 Feb 2020 20:36:20 +0000 (GMT)
-Received: from dhcp-9-31-102-24.watson.ibm.com (unknown [9.31.102.24])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Feb 2020 20:36:20 +0000 (GMT)
-Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 26 Feb 2020 15:36:19 -0500
-In-Reply-To: <94fe39a9-db9e-211d-d9b7-4cfe1a270e6f@linux.microsoft.com>
-References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
-         <94fe39a9-db9e-211d-d9b7-4cfe1a270e6f@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022620-4275-0000-0000-000003A5C3E1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022620-4276-0000-0000-000038B9E0AE
-Message-Id: <1582749379.10443.246.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_07:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=3
- mlxlogscore=885 bulkscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 malwarescore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002260122
+        Wed, 26 Feb 2020 15:36:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=+p7EsunDyckvjnn7uoUOj7IyahAxbevV9+nP47iItWU=; b=PsTVQeVK5MMB5wwRjEYrExEWaA
+        1lEsqABgpcezNBGgPT1p7GOolDKy0OflU9a6BzxaKrNhGcfWVbAN6xuZ11bBOYm4Ne6KrWK2phYqy
+        tT4mHwvThQUKuRisFlycbecA8yKIxpJenV5wWUXfKFgN6mzHck8Pb1obpiYTfjigldNarKpYQ6Y/q
+        0Z4W9T7xOEW0hD8vIEH9Qc7ixTMkJ6lLXpXApqRCp/irhgXWyAxQmLO6De5lFOb6DHCgo/ueJqwNk
+        eG303bUmPxpNS/6ZxLaujBeY10d2wFSRHssTX7ISCsPVyrFYm6Bw0M3HFYKFZfASOcJrwGS62J9Zj
+        0cu+ombA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j73QB-00062V-Dw; Wed, 26 Feb 2020 20:36:43 +0000
+Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
+ driver
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+ <20200226105419.632771-4-enric.balletbo@collabora.com>
+ <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
+ <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <470ab4e2-ab10-19bd-aea4-9b081c9978a8@infradead.org>
+Date:   Wed, 26 Feb 2020 12:36:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 11:21 -0800, Lakshmi Ramasubramanian wrote:
-> Hi Nayna,
+On 2/26/20 12:29 PM, Ezequiel Garcia wrote:
+> On Wed, 2020-02-26 at 07:40 -0800, Randy Dunlap wrote:
+>> On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
+>>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+>>> index 2114b563478c..dcd6481a14d0 100644
+>>> --- a/drivers/soc/mediatek/Kconfig
+>>> +++ b/drivers/soc/mediatek/Kconfig
+>>> @@ -44,4 +44,11 @@ config MTK_SCPSYS
+>>>  	  Say yes here to add support for the MediaTek SCPSYS power domain
+>>>  	  driver.
+>>>  
+>>> +config MT8173_MMSYS
+>>> +	bool "MediaTek MT8173 MMSYS Support"
+>>
+>> Hi,
+>> Can this be tristate instead of bool?
+>>
 > 
-> > +
-> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > +	bool
-> > +	depends on IMA
-> > +	depends on IMA_ARCH_POLICY
-> > +	default n
-> > +	help
-> > +	   This option is selected by architectures to enable secure and/or
-> > +	   trusted boot based on IMA runtime policies.
-> > 
-> 
-> Why is the default for this new config "n"?
-> Is there any reason to not turn on this config if both IMA and 
-> IMA_ARCH_POLICY are set to y?
+> Wouldn't that conflict with
+> the driver being a builtin_platform_driver,
+> or am I just confusing things badly?
 
-Good catch.  Having "IMA_SECURE_AND_OR_TRUSTED_BOOT" depend on
-"IMA_ARCH_POLICY" doesn't make sense.  "IMA_ARCH_POLICY" needs to be
-selected.
+OK, it probably would conflict.
 
-thanks,
+Thanks.
 
-Mimi
+>> +	depends on COMMON_CLK_MT8173
+>>> +	help
+>>> +	  Say yes here to add support for the MediaTek MT8173 Multimedia
+>>> +	  Subsystem (MMSYS).
+>>> +
+>>>  endmenu
+
+
+-- 
+~Randy
 
