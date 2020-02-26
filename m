@@ -2,132 +2,234 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3046CC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8EDC4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B1324685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582739824;
-	bh=Rtl7khPoaaVHzA+qWr6OBdHHYXpHGNpMf1nSUuzRX5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nByz+nsDw0+LgcGqKTGBjFXEZy32NIrdlvF1VJC0bN74DZ/gNmln2MWx0BfR5TmKh
-	 6Plc/fkNdOsLflXCUd/kLrofQRe21Px7FOV+yzmJBB+Bjm9M2EsV+iSe1EKgmyY4sC
-	 jS1IUQLuS8C6C1rzaBqgRJLX60495idwykEXyryo=
+	by mail.kernel.org (Postfix) with ESMTP id B5E9724656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="upLA+xiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbgBZR5C (ORCPT
+        id S1727146AbgBZR5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:57:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37129 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgBZR5C (ORCPT
+        Wed, 26 Feb 2020 12:57:20 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13339 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726810AbgBZR5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:57:02 -0500
-Received: by mail-wr1-f67.google.com with SMTP id l5so4248673wrx.4;
-        Wed, 26 Feb 2020 09:57:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XYuTT4oBJKWXgeE5+ImMK08MUo+U41eFHMUsFDzXC3g=;
-        b=oCBGomjXEa7q8nPGNu7vagNdWegtPdLdnxeYOwHu5TroqG2ftTPC6TRvZvwgPJG4zY
-         C+FRJ7VF5lL/Pe1kjf16LAH7X2EM9ZNmkVnEwyuXrEwc5l4SMalfykXW5aEkAc3d4mWX
-         VxKTTJQUTLxx34UUoFLFNNSw9eAaLWd5am1H5J8ZWKY20QlNixh2KXJdnEg1rVQzMJsE
-         lWmAoCEeaR0CahfVkUU0LgjpA4iQTiLjJ+E3woGNjvoPnTlFUtWlAuThwGY+bLU8IxCw
-         Df3H0BXD2Tabzi6VvfS3h13pw4rtrd3aMBVoeghmd0996ltY9Y9O+excqd+VtbkHN1OP
-         l9Tg==
-X-Gm-Message-State: APjAAAVCAXGuvPURGjQ5ngTZYy1OqaihAlK5p9L88QZ1f7HJQSQMGR/K
-        7Dq7eruq9kcqApkcPdsIxqPaY2V2
-X-Google-Smtp-Source: APXvYqxn+dTMcNHRegTc1CqQ9KKb5lg3/pc5LpPja6Ha7fAC/Me4YB7FHlZVtun3Ul4E652e35RqQw==
-X-Received: by 2002:adf:dd4d:: with SMTP id u13mr6714677wrm.70.1582739820112;
-        Wed, 26 Feb 2020 09:57:00 -0800 (PST)
-Received: from localhost (ip-37-188-190-100.eurotel.cz. [37.188.190.100])
-        by smtp.gmail.com with ESMTPSA id w7sm3622305wmi.9.2020.02.26.09.56.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:56:59 -0800 (PST)
-Date:   Wed, 26 Feb 2020 18:56:58 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200226175658.GP3771@dhcp22.suse.cz>
-References: <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
- <20200214165311.GA253674@cmpxchg.org>
- <20200217084100.GE31531@dhcp22.suse.cz>
- <20200218195253.GA13406@cmpxchg.org>
- <20200221101147.GO20509@dhcp22.suse.cz>
- <20200221154359.GA70967@cmpxchg.org>
- <20200225122028.GS22443@dhcp22.suse.cz>
- <20200225181755.GB10257@cmpxchg.org>
+        Wed, 26 Feb 2020 12:57:20 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582739839; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=1FRC7G5RLOKAqWukCp8w9mvcbOaiPX8gDDcHcTJBzI4=; b=upLA+xiQ+fu72+0poDxYMk3Eh23/GEvWx3VCF4g9vSGVcR6CPVECHl46TTre7lWndmpLJWBh
+ 5kJ9RaagUUktZZHajAFAziT7S24lAiDOhc7RLSmJ1XXJW0yZqlm0CWBaqrBKKYc9Y6yrUXcF
+ 05RS29v1hModNzC9tpW1lg8mxzg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e56b171.7ff8b67de5e0-smtp-out-n02;
+ Wed, 26 Feb 2020 17:57:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8774CC4479C; Wed, 26 Feb 2020 17:57:04 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4CBACC4479F;
+        Wed, 26 Feb 2020 17:57:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4CBACC4479F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [<RFC PATCH v1> 1/2] scsi: ufs: add write booster feature support
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "subhashj@codeaurora.org" <subhashj@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "vinholikatti@gmail.com" <vinholikatti@gmail.com>,
+        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Cc:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <cover.1582330473.git.asutoshd@codeaurora.org>
+ <0eb182e6731bc4ce0c1d6a97f102155d7186520f.1582330473.git.asutoshd@codeaurora.org>
+ <MN2PR04MB699133FA7E3B2B7A4F1450FAFCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <54fd84a6-0c20-ba96-c9a6-5c76bf2611c7@codeaurora.org>
+Date:   Wed, 26 Feb 2020 09:57:00 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225181755.GB10257@cmpxchg.org>
+In-Reply-To: <MN2PR04MB699133FA7E3B2B7A4F1450FAFCED0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-02-20 13:17:55, Johannes Weiner wrote:
-> On Tue, Feb 25, 2020 at 01:20:28PM +0100, Michal Hocko wrote:
-> > 
-> > On Fri 21-02-20 10:43:59, Johannes Weiner wrote:
-> > > On Fri, Feb 21, 2020 at 11:11:47AM +0100, Michal Hocko wrote:
-> > [...]
-> > > > I also have hard time to grasp what you actually mean by the above.
-> > > > Let's say you have hiearchy where you split out low limit unevenly
-> > > >               root (5G of memory)
-> > > >              /    \
-> > > >    (low 3G) A      D (low 1,5G)
-> > > >            / \
-> > > >  (low 1G) B   C (low 2G)
-> > > >
-> > > > B gets lower priority than C and D while C gets higher priority than
-> > > > D? Is there any problem with such a configuration from the semantic
-> > > > point of view?
-> > > 
-> > > No, that's completely fine.
-> > 
-> > How is B (low $EPS) C (low 3-$EPS) where $EPS->0 so much different
-> > from the above. You prioritize C over B, D over B in both cases under
-> > global memory pressure.
+On 2/25/2020 4:50 AM, Avri Altman wrote:
+>> +/*
+>> + * ufshcd_get_wb_alloc_units - returns
+>> "dLUNumWriteBoosterBufferAllocUnits"
+>> + * @hba: per-adapter instance
+>> + * @lun: UFS device lun id
+>> + * @d_lun_wbb_au: pointer to buffer to hold the LU's alloc units info
+>> + *
+>> + * Returns 0 in case of success and d_lun_wbb_au would be returned
+>> + * Returns -ENOTSUPP if reading d_lun_wbb_au is not supported.
+>> + * Returns -EINVAL in case of invalid parameters passed to this function.
+>> + */
+>> +static int ufshcd_get_wb_alloc_units(struct ufs_hba *hba,
+>> +                           u8 lun,
+>> +                           u8 *d_lun_wbb_au)
+>> +{
+>> +       int ret;
+>> +
+>> +       if (!d_lun_wbb_au)
+>> +               ret = -EINVAL;
+>> +
+>> +       /* WB can be supported only from LU0..LU7 */
+>> +       else if (lun >= UFS_UPIU_MAX_GENERAL_LUN)
+>> +               ret = -ENOTSUPP;
+>> +       else
+>> +               ret = ufshcd_read_unit_desc_param(hba,
+>> +                                         lun,
+>> +                                         UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS,
+>> +                                         d_lun_wbb_au,
+>> +                                         sizeof(*d_lun_wbb_au));
+> You are reading here a single byte, instead of 4
 > 
-> You snipped the explanation for the caveat / the priority inversion
-> that followed; it would be good to reply to that instead.
-
-OK, I have misread your response then. Because you were saying that the
-above example is perfectly fine while it actually matches your example
-of low, mid, high prio example so I was confused.
-
-[...]
-
-I am skipping the large part of your response mostly because I believe
-it would make it easier to move this forward.
-
-> > It would be also really appreciated if we have some more specific examples
-> > of priority inversion problems you have encountered previously and place
-> > them somewhere into our documentation. There is essentially nothing like
-> > that in the tree.
+>> +       return ret;
+>> +}
+>> +
+>>   /**
+>>    * ufshcd_get_lu_power_on_wp_status - get LU's power on write protect
+>>    * status
+>> @@ -5194,6 +5267,165 @@ static void
+>> ufshcd_bkops_exception_event_handler(struct ufs_hba *hba)
+>>                                  __func__, err);
+>>   }
+>>
+>> +static bool ufshcd_wb_sup(struct ufs_hba *hba)
+>> +{
+>> +       return ((hba->dev_info.d_ext_ufs_feature_sup &
+>> +                  UFS_DEV_WRITE_BOOSTER_SUP) &&
+> Don't you want to have a vendor cap as well,
+> to allow the platform vendor to control this feature?
 > 
-> Of course, I wouldn't mind doing that in a separate patch. How about a
-> section in cgroup-v2.rst, at "Issues with v1 and Rationales for v2"?
+>> +                 (hba->dev_info.b_wb_buffer_type
+>> +                  || hba->dev_info.wb_config_lun));
+>> +}
+>> +
+>> +
+> 
+> 
+> 
+>> +static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba)
+>> +{
+>> +       int ret;
+>> +       u32 cur_buf, status, avail_buf;
+>> +
+>> +       if (!ufshcd_wb_sup(hba))
+>> +               return false;
+>> +
+>> +       ret = ufshcd_query_attr_retry(hba,
+>> UPIU_QUERY_OPCODE_READ_ATTR,
+>> +                                     QUERY_ATTR_IDN_AVAIL_WB_BUFF_SIZE,
+>> +                                     0, 0, &avail_buf);
+>> +       if (ret) {
+>> +               dev_warn(hba->dev, "%s dAvailableWriteBoosterBufferSize read
+>> failed %d\n",
+>> +                        __func__, ret);
+>> +               return false;
+>> +       }
+>> +
+>> +       ret = ufshcd_vops_get_user_cap_mode(hba);
+>> +       if (ret <= 0) {
+>> +               dev_dbg(hba->dev, "Get user-cap reduction mode: failed: %d\n",
+>> +                       ret);
+>> +               /* Most commonly used */
+>> +               ret = UFS_WB_BUFF_PRESERVE_USER_SPACE;
+>> +       }
+>> +
+>> +       hba->dev_info.keep_vcc_on = false;
+>> +       if (ret == UFS_WB_BUFF_USER_SPACE_RED_EN) {
+>> +               if (avail_buf <= UFS_WB_10_PERCENT_BUF_REMAIN) {
+>> +                       hba->dev_info.keep_vcc_on = true;
+>> +                       return true;
+>> +               }
+>> +               return false;
+>> +       } else if (ret == UFS_WB_BUFF_PRESERVE_USER_SPACE) {
+>> +               ret = ufshcd_query_attr_retry(hba,
+>> UPIU_QUERY_OPCODE_READ_ATTR,
+>> +                                             QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE,
+>> +                                             0, 0, &cur_buf);
+>> +               if (ret) {
+>> +                       dev_err(hba->dev, "%s dCurWriteBoosterBufferSize read failed
+>> %d\n",
+>> +                                __func__, ret);
+>> +                       return false;
+>> +               }
+>> +
+>> +               if (!cur_buf) {
+>> +                       dev_info(hba->dev, "dCurWBBuf: %d WB disabled until free-
+>> space is available\n",
+>> +                                cur_buf);
+>> +                       return false;
+>> +               }
+>> +
+>> +               ret = ufshcd_get_ee_status(hba, &status);
+>> +               if (ret) {
+>> +                       dev_err(hba->dev, "%s: failed to get exception status %d\n",
+>> +                               __func__, ret);
+>> +                       if (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN) {
+>> +                               hba->dev_info.keep_vcc_on = true;
+>> +                               return true;
+>> +                       }
+>> +                       return false;
+>> +               }
+>> +
+>> +               status &= hba->ee_ctrl_mask;
+>> +
+>> +               if ((status & MASK_EE_URGENT_BKOPS) ||
+> So you are getting the status, but not the bkops level.
+> And what about WRITEBOOSTER_EVENT_EN? After all it was invented specifically for WB...
+> 
+>> +                   (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN)) {
+>> +                       hba->dev_info.keep_vcc_on = true;
+>> +                       return true;
+>> +               }
+>> +       }
+>> +       return false;
+>> +}
+> 
+> Thanks,
+> Avri
+> 
 
-Yes, makes sense. A subsection about examples/best practices/Lessons
-learned where we can add more sounds like a very good thing in general.
-Because regardless of what tends to work for some deployments it is
-always good to give examples of what hasn't worked for others and was
-non trivial to find out. This can save countless of hourse for other
-people.
+Thanks Avri/Bart for the comments.
+I'll wait for a couple of more days, if anyone else has any comments.
+
+I'd respond/address the comments thereafter.
+
+Thanks,
+asd
+
 -- 
-Michal Hocko
-SUSE Labs
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
