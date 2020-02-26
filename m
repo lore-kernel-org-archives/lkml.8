@@ -2,118 +2,197 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1611C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D3AC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A451D206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37DD206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="RoeEF8Ve"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ACBfps/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBZKAp (ORCPT
+        id S1727877AbgBZKB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:00:45 -0500
-Received: from mail.kmu-office.ch ([178.209.48.109]:47948 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbgBZKAp (ORCPT
+        Wed, 26 Feb 2020 05:01:29 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48458 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgBZKB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:00:45 -0500
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 7BC445C2BCF;
-        Wed, 26 Feb 2020 11:00:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1582711242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ePmS7XO1+c6T51otcQraIoZVvQV4pOzpfHZOivGH1Ow=;
-        b=RoeEF8Ve+22KNPqaEf9qu9/4e6wKLg0KLscyhkoSR4oRsFxTu40avKIErXJqAPDAw2rela
-        XM+se4G3O6pIJJUC9f9N9bScqxRfA8+z4rrj633JD4ah3BjgHnrMdeE1QP1J02BFXuwfTd
-        cNuJxD5nmnTujmFM8Q/pMsvIm35G9FI=
+        Wed, 26 Feb 2020 05:01:29 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01Q9s0Sc088844;
+        Wed, 26 Feb 2020 10:01:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ZD1D7OK36Baxe2flMIUpBNb6dJD27LTf4KKg278bZ8E=;
+ b=ACBfps/7o83K1BXZtBKJBTejc9ckPoNmFaH4aOJHfPWMwp+ijPDkrcCJcJ4P2JbmalQh
+ 7Bbyx5ny6j0ulfY4MyAjwzXBc33iyGyrnnNN1/47BSpJFn8bahczWQLRr8NJPdrGeN8h
+ 54B3AaL8A5krrHDatu9xJT2z64ag5VmhUuMbTTg9NluJuwFOCMC7fVNHPj/xcxwe6Six
+ vXmsxcCDSbF2WIW0AL3J+yzD2eAvcQmcGtQLLLPmFPGmCRRc6to1jUJZZvirTk1mRN3r
+ ERixcYgeyGlZ/m1ASrccfyYP5Ge5YTJEDIHCWMSQlrh/HiEoHNOcNB33jnNzAkA/hSJQ Dg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2ydcsrje9x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 10:01:25 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01Q9q4Ke184421;
+        Wed, 26 Feb 2020 10:01:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2ydj4h3yuf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 10:01:24 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01QA1MtD015851;
+        Wed, 26 Feb 2020 10:01:23 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Feb 2020 02:01:22 -0800
+Date:   Wed, 26 Feb 2020 13:01:12 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org, dave.jiang@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: Simplify error handling path in
+ '__dma_async_device_channel_register()'
+Message-ID: <20200226100112.GD3286@kadam>
+References: <20200226090707.12285-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Feb 2020 11:00:42 +0100
-From:   Stefan Agner <stefan@agner.ch>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] arm: dts: vf: toradex: re-license GPL-2.0+ to
- GPL-2.0
-In-Reply-To: <CAGgjyvHE+B-VCSfmR9MeO2-u6=dVCUCmCorEa1J+NG5vwQoRfA@mail.gmail.com>
-References: <1582565548-20627-1-git-send-email-igor.opaniuk@gmail.com>
- <1582565548-20627-5-git-send-email-igor.opaniuk@gmail.com>
- <CAGgjyvHE+B-VCSfmR9MeO2-u6=dVCUCmCorEa1J+NG5vwQoRfA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <8a33d75f0bdf10b0b15514ac790a248d@agner.ch>
-X-Sender: stefan@agner.ch
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226090707.12285-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=2
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260074
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9542 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 suspectscore=2
+ bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-26 10:29, Oleksandr Suvorov wrote:
-> On Mon, Feb 24, 2020 at 7:33 PM Igor Opaniuk <igor.opaniuk@gmail.com> wrote:
->>
->> From: Igor Opaniuk <igor.opaniuk@toradex.com>
->>
->> Specify explicitly that GPL-2.0 license can be used and not
->> GPL-2.0+ (which also includes next less permissive versions of GPL)
->> in Toradex Vybrid-based SoM device trees.
->>
->> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-> 
-> Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> 
-> And please ignore my note about copyright for the previous change of this file.
-> 
+On Wed, Feb 26, 2020 at 10:07:07AM +0100, Christophe JAILLET wrote:
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index c3b1283b6d31..6bb6e88c6019 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -978,11 +978,8 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>  	if (!chan->local)
+>  		goto err_out;
+>  	chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+> -	if (!chan->dev) {
+> -		free_percpu(chan->local);
+> -		chan->local = NULL;
+> +	if (!chan->dev)
+>  		goto err_out;
+> -	}
+>  
+>  	/*
+>  	 * When the chan_id is a negative value, we are dynamically adding
+> @@ -1008,6 +1005,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>  
+>   err_out:
 
-The Linux on Vybrids Cortex-M4 was an entirely private endeavour of me,
-so there is no Toradex Copyright here.
+Rule of thumb:  If the error label is "err" or "out" it's probably
+going to be buggy.  This code is free everything style error handling.
+We hit an error so something were allocated and some were not.  It's
+always complicated to undo things which we didn't do.
 
-I agree on the License change.
+>  	free_percpu(chan->local);
+> +	chan->local = NULL;
+>  	kfree(chan->dev);
+>  	if (atomic_dec_return(idr_ref) == 0)
+>  		kfree(idr_ref);
 
-Acked-by: Stefan Agner <stefan@agner.ch>
+The ref counting on "idr_ref" is also wrong.
 
---
-Stefan
+   967  
+   968          if (tchan->dev) {
+   969                  idr_ref = tchan->dev->idr_ref;
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This is 1+ references.  We don't increment it.
 
->> ---
->>
->>  arch/arm/boot/dts/vf610m4-colibri.dts | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
->> index 2c2db47..75c6d82 100644
->> --- a/arch/arm/boot/dts/vf610m4-colibri.dts
->> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
->> @@ -1,7 +1,8 @@
->> -// SPDX-License-Identifier: GPL-2.0+ OR MIT
->> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->>  /*
->>   * Device tree for Colibri VF61 Cortex-M4 support
->>   *
->> + * Copyright (C) 2020 Toradex AG
->>   * Copyright (C) 2015 Stefan Agner
->>   */
->>
->> --
->> 2.7.4
->>
+   970          } else {
+   971                  idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
+   972                  if (!idr_ref)
+   973                          return -ENOMEM;
+   974                  atomic_set(idr_ref, 0);
+                        ^^^^^^^^^^^^^^^^^^^^^^
+This is 0 references (Wrong.  Everything starts with 1 reference).
+
+   975          }
+   976  
+   977          chan->local = alloc_percpu(typeof(*chan->local));
+   978          if (!chan->local)
+   979                  goto err_out;
+   980          chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+   981          if (!chan->dev) {
+   982                  free_percpu(chan->local);
+   983                  chan->local = NULL;
+   984                  goto err_out;
+   985          }
+   986  
+   987          /*
+   988           * When the chan_id is a negative value, we are dynamically adding
+   989           * the channel. Otherwise we are static enumerating.
+   990           */
+   991          chan->chan_id = chan_id < 0 ? chancnt : chan_id;
+   992          chan->dev->device.class = &dma_devclass;
+   993          chan->dev->device.parent = device->dev;
+   994          chan->dev->chan = chan;
+   995          chan->dev->idr_ref = idr_ref;
+   996          chan->dev->dev_id = device->dev_id;
+   997          atomic_inc(idr_ref);
+                ^^^^^^^^^^^^^^^^^^^
+Probably if device_register() fails we don't want to free idr_ref, it
+should instead be handled by device_put().
+
+   998          dev_set_name(&chan->dev->device, "dma%dchan%d",
+   999                       device->dev_id, chan->chan_id);
+  1000  
+  1001          rc = device_register(&chan->dev->device);
+  1002          if (rc)
+  1003                  goto err_out;
+  1004          chan->client_count = 0;
+  1005          device->chancnt = chan->chan_id + 1;
+  1006  
+  1007          return 0;
+  1008  
+  1009   err_out:
+  1010          free_percpu(chan->local);
+  1011          kfree(chan->dev);
+  1012          if (atomic_dec_return(idr_ref) == 0)
+  1013                  kfree(idr_ref);
+
+If alloc_percpu() fails this is decrementing something which was never
+incremented.  That's the classic error of trying to undo things which we
+didnt do.
+
+Presumably here we only want to free if we allocated the "idr_ref"
+ourselves.  atomic_dec_return() returns the new reference count after
+the decrement so on most paths it's going to be -1 which is a leak and
+on the other paths there is a chance that it's going to lead to a use
+after free.  There is no situation where this will do the correct thing.
+
+Probably the cleanest fix it to just move the idr_ref allocation after
+the other allocations so that we always rely on device_register() to
+handle the clean ups.
+
+  1014          return rc;
+  1015  }
+
+regards,
+dan carpenter
+
