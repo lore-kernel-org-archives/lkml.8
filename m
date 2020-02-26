@@ -2,69 +2,172 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20651C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0735EC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0372920637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33AB20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:48:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UUP9TYHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgBZPqs (ORCPT
+        id S1728473AbgBZPsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:46:48 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31596 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgBZPqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:46:48 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01QFkesY002182;
-        Wed, 26 Feb 2020 16:46:40 +0100
-Date:   Wed, 26 Feb 2020 16:46:40 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/16] floppy: separate the FDC's base address from its
- registers
-Message-ID: <20200226154640.GB2054@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
- <20200226080732.1913-1-w@1wt.eu>
- <20200226080732.1913-5-w@1wt.eu>
- <ab69fbdc-7ccb-05ef-6c25-7fb6ed6fce59@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab69fbdc-7ccb-05ef-6c25-7fb6ed6fce59@linux.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+        Wed, 26 Feb 2020 10:48:05 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24661 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727936AbgBZPsF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:48:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582732084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=YntCWm8WO9RlhBf0ozWxpWJ0RSzHJAGrv2rgKW+kr3A=;
+        b=UUP9TYHZiXelq37bMEwxOBegGv9VG0SRRrhQLAbtkE7ZhY0ouavg9UPJMoWxTQVH117rQO
+        M9S5OxlJrJ/GpkTxKJM3JoJcdac8E2pjmERKwz/4AJ2AYqHjVCOVHiK1Ciovf3JxpmYTaR
+        BMc//hZne2Vuw88h3Dm2thb7tpqx9Ik=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-rh6OGUiZNnOQQHFS6N27sw-1; Wed, 26 Feb 2020 10:48:00 -0500
+X-MC-Unique: rh6OGUiZNnOQQHFS6N27sw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD6CB801A01;
+        Wed, 26 Feb 2020 15:47:57 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1ED435C54A;
+        Wed, 26 Feb 2020 15:47:54 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 47DA61FCEF; Wed, 26 Feb 2020 16:47:53 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     tzimmermann@suse.de, gurchetansingh@chromium.org,
+        olvaffe@gmail.com, Guillaume.Gardet@arm.com,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK),
+        linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING
+        FRAMEWORK)
+Subject: [PATCH v5 3/3] drm/udl: simplify gem object mapping.
+Date:   Wed, 26 Feb 2020 16:47:52 +0100
+Message-Id: <20200226154752.24328-4-kraxel@redhat.com>
+In-Reply-To: <20200226154752.24328-1-kraxel@redhat.com>
+References: <20200226154752.24328-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 06:36:52PM +0300, Denis Efremov wrote:
-> > One place in the ARM code used to check if the port was equal to FD_DOR,
-> > this was changed to testing the register by applying a mask to the port,
-> > as was already done in the sparc code.
-> > 
-> > The sparc, m68k and parisc code could now be slightly cleaned up to
-> > benefit from the macro definitions above instead of the equivalent
-> > hard-coded values.
-> 
-> Just to note for future ref: the mask (7) can be introduced as define
-> during future clean up of these magic constants.
+With shmem helpers allowing to update pgprot caching flags via
+drm_gem_shmem_object.map_cached we can just use that and ditch
+our own implementations of mmap() and vmap().
 
-I'd rather not add it because if we finish to clean up the internal API,
-then we can have fd_outb(value, base, reg) and fd_inb(base, reg) where
-reg is one of FD_* and base the base address. In this context we don't
-need the mask anymore since the register is placed there verbatim.
+We also don't need a special case for imported objects, any map
+requests are handled by the exporter not udl.
 
-I do have another earlier patch which did just that, its just that I
-attacked the problem from the wrong side, resulting in too many changes
-at once for my taste. But I definitely see how we can finish that job
-and make everything almost elegant.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/udl/udl_gem.c | 62 ++---------------------------------
+ 1 file changed, 3 insertions(+), 59 deletions(-)
 
-Willy
+diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
+index b6e26f98aa0a..7e3a88b25b6b 100644
+--- a/drivers/gpu/drm/udl/udl_gem.c
++++ b/drivers/gpu/drm/udl/udl_gem.c
+@@ -17,72 +17,15 @@
+  * GEM object funcs
+  */
+ 
+-static int udl_gem_object_mmap(struct drm_gem_object *obj,
+-			       struct vm_area_struct *vma)
+-{
+-	int ret;
+-
+-	ret = drm_gem_shmem_mmap(obj, vma);
+-	if (ret)
+-		return ret;
+-
+-	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+-	if (obj->import_attach)
+-		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+-	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+-
+-	return 0;
+-}
+-
+-static void *udl_gem_object_vmap(struct drm_gem_object *obj)
+-{
+-	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
+-	int ret;
+-
+-	ret = mutex_lock_interruptible(&shmem->vmap_lock);
+-	if (ret)
+-		return ERR_PTR(ret);
+-
+-	if (shmem->vmap_use_count++ > 0)
+-		goto out;
+-
+-	ret = drm_gem_shmem_get_pages(shmem);
+-	if (ret)
+-		goto err_zero_use;
+-
+-	if (obj->import_attach)
+-		shmem->vaddr = dma_buf_vmap(obj->import_attach->dmabuf);
+-	else
+-		shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+-				    VM_MAP, PAGE_KERNEL);
+-
+-	if (!shmem->vaddr) {
+-		DRM_DEBUG_KMS("Failed to vmap pages\n");
+-		ret = -ENOMEM;
+-		goto err_put_pages;
+-	}
+-
+-out:
+-	mutex_unlock(&shmem->vmap_lock);
+-	return shmem->vaddr;
+-
+-err_put_pages:
+-	drm_gem_shmem_put_pages(shmem);
+-err_zero_use:
+-	shmem->vmap_use_count = 0;
+-	mutex_unlock(&shmem->vmap_lock);
+-	return ERR_PTR(ret);
+-}
+-
+ static const struct drm_gem_object_funcs udl_gem_object_funcs = {
+ 	.free = drm_gem_shmem_free_object,
+ 	.print_info = drm_gem_shmem_print_info,
+ 	.pin = drm_gem_shmem_pin,
+ 	.unpin = drm_gem_shmem_unpin,
+ 	.get_sg_table = drm_gem_shmem_get_sg_table,
+-	.vmap = udl_gem_object_vmap,
++	.vmap = drm_gem_shmem_vmap,
+ 	.vunmap = drm_gem_shmem_vunmap,
+-	.mmap = udl_gem_object_mmap,
++	.mmap = drm_gem_shmem_mmap,
+ };
+ 
+ /*
+@@ -101,6 +44,7 @@ struct drm_gem_object *udl_driver_gem_create_object(struct drm_device *dev,
+ 
+ 	obj = &shmem->base;
+ 	obj->funcs = &udl_gem_object_funcs;
++	shmem->map_cached = true;
+ 
+ 	return obj;
+ }
+-- 
+2.18.2
+
