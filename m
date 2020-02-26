@@ -2,118 +2,165 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119FEC4BA2F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57D8C4BA2F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D847D24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582756894;
-	bh=pqBevC8oqZjyGa7o6s+vlciDsiHfkvXZhmYXugSWapY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ENUtPkPhl9yH+uALyDCD70vC9fWmDaM21JhVoJDcqfuN1wir+9pUGWA57w9J9GEjk
-	 T13ghGODXKYK4vhiHSWhsqN8mNZa4Bf/kXfVjbQdmplIoUdS/15Ve9ZQ5sz8v3cKOE
-	 LQmFE0nTTF93xspbdFD1GNDIrphl3P73XiJ4QV8A=
+	by mail.kernel.org (Postfix) with ESMTP id 80D8F20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G4kRN/gb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBZWld (ORCPT
+        id S1727910AbgBZWn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:41:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727802AbgBZWld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:41:33 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45FD920658;
-        Wed, 26 Feb 2020 22:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582756892;
-        bh=pqBevC8oqZjyGa7o6s+vlciDsiHfkvXZhmYXugSWapY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cESNznCh24xWLYynU3EJ8TrG0XW5mDj2G21MH3flMMzwnsZVmqaxHaJhTt1am/yGm
-         NaKksw/07G8HJFYA3/+Vihveu+JE1WxyOQo8kQy734smws+aihzb6v3KMwx49FFFAv
-         hoUWX5JD52xfyc3YCCyZvf28YZrDDPpZ4ohoSrYM=
-Date:   Wed, 26 Feb 2020 16:41:30 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v15 4/5] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200226224130.GA182745@google.com>
+        Wed, 26 Feb 2020 17:43:27 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37129 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbgBZWn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:43:26 -0500
+Received: by mail-pl1-f196.google.com with SMTP id q4so286938pls.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:43:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=tmmzbig6kKd2J1vSLS/3+Ly3DK1KMOkPEr7ocA5n8BU=;
+        b=G4kRN/gblOwhZ9Ydgqv7ZiG7wbtZIxzqLwbWe4wGx7O3kdMCtDPX8HYO7WSz9jaYG6
+         qRDSPJTqBduvJZ5hNUCW9fZ4YUI1AwZd/VN4tmk6kvh3t1vDDgi8WIXh1Na0DTBy+IoV
+         /gLLKqvaHocsv0u8y+Q+IwrIQb/27Gw2n6sy4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=tmmzbig6kKd2J1vSLS/3+Ly3DK1KMOkPEr7ocA5n8BU=;
+        b=Meocnhg2j35rQy+u8eFV9PiNzoTPQL/mDbyn1TckEniAJHr0Be5k2MAeSmFy0KPHfr
+         zXgLDyI/codz9+dCatqFl0MdbZDFr+disrYbwLqtJIhq2jddQJniYrBs4cj0yL4do2cC
+         LA43QwT5ww3ZjKrUrwBKQDtPJciV0MU3Eot63a031sPvgmKu1Kk71lwGtZLyzJ1uKCJq
+         z3G6iygA9SFs4+HOaKhGnOoHYN2mMxY5NpgZOsDEqx1kwPAykbI981MbzXXm44dE1x6b
+         KMF/5IFNMpRmmYNxr2h4xpgYBLhgmAbXh+nAouKYhsw7lz1LMDbX5DzjSAJWNcMIMSze
+         +Tgw==
+X-Gm-Message-State: APjAAAWXSnZr8pIPrlGx/NTkeNKBy3BZCABOqoHTQ4QX5YxXyWrS9aU9
+        W+9srSdejK4/LpBT7aKcJqdonQCm5Y0=
+X-Google-Smtp-Source: APXvYqyU28YSEFboz9xxQdDdc2W7O/rwUruv/UskcxB861z9ZN4/Qcv4sP2DfN01S+LwztHf98W1Hw==
+X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr1565171plo.259.1582757005506;
+        Wed, 26 Feb 2020 14:43:25 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v8sm3944025pgt.52.2020.02.26.14.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 14:43:24 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6cabd520-f974-2c33-4ecb-3cfd2dfb00a4@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582694833-9407-3-git-send-email-mkshah@codeaurora.org>
+References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org> <1582694833-9407-3-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v7 2/3] soc: qcom: rpmh: Update dirty flag only when data changes
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Date:   Wed, 26 Feb 2020 14:43:23 -0800
+Message-ID: <158275700389.177367.5843608826404724304@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 02:11:53PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 2/26/20 1:32 PM, Bjorn Helgaas wrote:
-> > On Wed, Feb 26, 2020 at 10:42:27AM -0800, Kuppuswamy Sathyanarayanan wrote:
-> > > On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
-> > > > On Thu, Feb 13, 2020 at 10:20:16AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > ...
-> > 
-> > > Yes, we could remove it. But it might need some more changes to
-> > > dpc driver functions. I can think of two ways,
-> > > 
-> > > 1. Re-factor the DPC driver not to use dpc_dev structure and just use
-> > > pci_dev in their functions implementation. But this might lead to
-> > > re-reading following dpc_dev structure members every time we
-> > > use it in dpc driver functions.
-> > > 
-> > > (Currently in dpc driver probe they cache the following device parameters )
-> > > 
-> > >    9         u16                     cap_pos;
-> > >   10         bool                    rp_extensions;
-> > >   11         u8                      rp_log_size;
-> > >   12         u16                     ctl;
-> > >   13         u16                     cap;
+Quoting Maulik Shah (2020-02-25 21:27:12)
+> Currently rpmh ctrlr dirty flag is set for all cases regardless
+> of data is really changed or not. Add changes to update it when
+> data is updated to newer values.
+>=20
+> Also move dirty flag updates to happen from within cache_lock.
+>=20
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
 
-> > I think this is basically what I proposed with the sample patch in my
-> > response to your 3/5 patch.  But I don't see the ctl/cap part, so
-> > maybe I missed something.
+Probably worth adding a Fixes tag here? Doesn't make sense to mark
+something dirty when it isn't changed.
 
-> if its costly to carry it in pci_dev, we can always re-read them.
-> if its ok to use pci_dev, If you want, I can extend your patch to
-> include the cap and ctl.
+> ---
+>  drivers/soc/qcom/rpmh.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> index eb0ded0..83ba4e0 100644
+> --- a/drivers/soc/qcom/rpmh.c
+> +++ b/drivers/soc/qcom/rpmh.c
+> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct r=
+pmh_ctrlr *ctrlr,
+>  existing:
+>         switch (state) {
+>         case RPMH_ACTIVE_ONLY_STATE:
+> -               if (req->sleep_val !=3D UINT_MAX)
+> +               if (req->sleep_val !=3D UINT_MAX) {
+>                         req->wake_val =3D cmd->data;
+> +                       ctrlr->dirty =3D true;
+> +               }
+>                 break;
+>         case RPMH_WAKE_ONLY_STATE:
+> -               req->wake_val =3D cmd->data;
+> +               if (req->wake_val !=3D cmd->data) {
+> +                       req->wake_val =3D cmd->data;
+> +                       ctrlr->dirty =3D true;
+> +               }
+>                 break;
+>         case RPMH_SLEEP_STATE:
+> -               req->sleep_val =3D cmd->data;
+> +               if (req->sleep_val !=3D cmd->data) {
+> +                       req->sleep_val =3D cmd->data;
+> +                       ctrlr->dirty =3D true;
+> +               }
+>                 break;
+>         default:
+>                 break;
 
-Ah, I see, you added cap & ctl as part of your series.  But I don't
-think they're ever used after dpc_probe(), are they?  So I don't think
-they need to be saved at all.
+Please remove the default case. There are only three states in the enum. The
+compiler will warn if a switch statement doesn't cover all cases and
+we'll know to add something here if another enum value is added in the
+future.
 
-> > > Yes, ownership should be based on _OSC negotiation. I will add necessary
-> > > comments here.
+>         }
+> =20
+> -       ctrlr->dirty =3D true;
+>  unlock:
+>         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> =20
+> @@ -323,6 +331,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+>         list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+>                 kfree(req);
+>         INIT_LIST_HEAD(&ctrlr->batch_cache);
+> +       ctrlr->dirty =3D true;
+>         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>  }
+> =20
+> @@ -456,6 +465,7 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum=
+ rpmh_state state,
+>  int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>  {
+>         struct cache_req *p;
+> +       unsigned long flags;
+>         int ret;
+> =20
+>         if (!ctrlr->dirty) {
+> @@ -488,7 +498,9 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>                         return ret;
+>         }
+> =20
+> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>         ctrlr->dirty =3D false;
+> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
 
-> > Why are we not doing this via _OSC negotiation in this series?  It
-> > would be much better if we could just do it instead of adding a
-> > comment that we *should* do it.  Nobody knows more about this than you
-> > do, so probably nobody else is going to come along and finish this
-> > up :)
-
-> Actually Alex G already proposed a patch to fix it.
-> 
-> https://lkml.org/lkml/2018/11/16/202
-> 
-> But that discussion never reached a conclusion. Since a proper fix
-> for it would affect some legacy hardwares which solely relies on
-> HEST tables, it did not make everyone happy. So it might take a
-> lot to convince all the stake holders to merge such patch. So its
-> better not to mix both of these patch sets together.
-> 
-> Once this patch set is done, If Alex G is no longer working on it,
-> I can work on it.
-
-OK, great, maybe we can make progress on that later.
+So we take the spinlock to update it here. But we don't hold the
+spinlock to test for !dirty up above. Seems like either rpmh_flush() can
+only be called sequentially, or the lock added here needs to be held
+during the whole flush. Which way is it?
