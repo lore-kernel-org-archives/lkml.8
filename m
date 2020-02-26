@@ -2,110 +2,100 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C14C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C457C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C9920732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA0120732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbgBZBQp (ORCPT
+        id S1729809AbgBZBRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:16:45 -0500
-Received: from mga03.intel.com ([134.134.136.65]:24629 "EHLO mga03.intel.com"
+        Tue, 25 Feb 2020 20:17:39 -0500
+Received: from mga14.intel.com ([192.55.52.115]:34983 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgBZBQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:16:44 -0500
+        id S1729170AbgBZBRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:17:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:16:44 -0800
-X-ExtLoop1: 1
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:17:38 -0800
 X-IronPort-AV: E=Sophos;i="5.70,486,1574150400"; 
-   d="scan'208";a="226547626"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga007.jf.intel.com with ESMTP; 25 Feb 2020 17:16:38 -0800
-Subject: Re: [PATCH] MAINTAINERS: add maintainers for uacce
-To:     zhangfei <zhangfei.gao@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
- <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
- <0ed68faa-63f1-2bcb-6044-11629a610b9b@linaro.org>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <1cd21ae1-f318-e15c-a155-c34483d9ff56@intel.com>
-Date:   Tue, 25 Feb 2020 18:16:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+   d="scan'208";a="384648699"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:17:37 -0800
+From:   Tony Luck <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tony Luck <tony.luck@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/mce: Fix logic and comments around MSR_PPIN_CTL
+Date:   Tue, 25 Feb 2020 17:17:37 -0800
+Message-Id: <20200226011737.9958-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <0ed68faa-63f1-2bcb-6044-11629a610b9b@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are two implemented bits in the PPIN_CTL MSR:
 
+Bit0: LockOut (R/WO)
+      Set 1 to prevent further writes to MSR_PPIN_CTL.
 
-On 2/25/20 6:11 PM, zhangfei wrote:
-> 
-> 
-> On 2020/2/26 上午12:02, Dave Jiang wrote:
->>
->>
->> On 2/24/20 11:17 PM, Zhangfei Gao wrote:
->>> Add Zhangfei Gao and Zhou Wang as maintainers for uacce
->>>
->>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->>> ---
->>>   MAINTAINERS | 10 ++++++++++
->>>   1 file changed, 10 insertions(+)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 38fe2f3..22e647f 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -17039,6 +17039,16 @@ W:    http://linuxtv.org
->>>   S:    Maintained
->>>   F:    drivers/media/pci/tw686x/
->>>   +UACCE ACCELERATOR FRAMEWORK
->>> +M:    Zhangfei Gao <zhangfei.gao@linaro.org>
->>> +M:    Zhou Wang <wangzhou1@hisilicon.com>
->>> +S:    Maintained
->>> +F:    Documentation/ABI/testing/sysfs-driver-uacce
->>> +F:    Documentation/misc-devices/uacce.rst
->>> +F:    drivers/misc/uacce/
->>> +F:    include/linux/uacce.h
->>> +F:    include/uapi/misc/uacce/
->>
->> Mailing list for patch submission?
->> +L: linux-accelerators@lists.ozlabs.org ?
-> 
-> Thanks Dave
-> 
-> How about adding both
-> linux-accelerators@lists.ozlabs.org
-> linux-kernel@vger.kernel.org
-> Since the patches will go to misc tree.
+Bit 1: Enable_PPIN (R/W)
+       If 1, enables MSR_PPIN to be accessible using RDMSR.
+       If 0, an attempt to read MSR_PPIN will cause #GP.
 
-That is entirely up to you. But having guidance on somewhere to submit 
-patches will be good.
+So there are four defined values:
+	0: PPIN is disabled, PPIN_CTL may be updated
+	1: PPIN is disabled. PPIN_CTL is locked against updates
+	2: PPIN is enabled. PPIN_CTL may be updated
+	3: PPIN is enabled. PPIN_CTL is locked against updates
 
-> 
-> Thanks
+Code would only enable the X86_FEATURE_INTEL_PPIN feature for case "2".
+When it should have done so for both case "2" and case "3".
+
+Fix the final test to just check for the enable bit.
+Also fix some of the other comments in this function.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/kernel/cpu/mce/intel.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index 5627b1091b85..f996ffb887bc 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -493,17 +493,18 @@ static void intel_ppin_init(struct cpuinfo_x86 *c)
+ 			return;
+ 
+ 		if ((val & 3UL) == 1UL) {
+-			/* PPIN available but disabled: */
++			/* PPIN locked in disabled mode */
+ 			return;
+ 		}
+ 
+-		/* If PPIN is disabled, but not locked, try to enable: */
+-		if (!(val & 3UL)) {
++		/* If PPIN is disabled, try to enable */
++		if (!(val & 2UL)) {
+ 			wrmsrl_safe(MSR_PPIN_CTL,  val | 2UL);
+ 			rdmsrl_safe(MSR_PPIN_CTL, &val);
+ 		}
+ 
+-		if ((val & 3UL) == 2UL)
++		/* Is the enable bit set? */
++		if (val & 2UL)
+ 			set_cpu_cap(c, X86_FEATURE_INTEL_PPIN);
+ 	}
+ }
+-- 
+2.21.1
+
