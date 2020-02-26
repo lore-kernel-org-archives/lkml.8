@@ -2,133 +2,114 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87339C4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBC0C4BA1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577FF20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:46:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BGEEl7rm"
+	by mail.kernel.org (Postfix) with ESMTP id 3F00920801
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582739287;
+	bh=fgXXmcy3p6J7HeRs7qw3qjSVUrD3Xh/4pPXjxkI9B/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QV04PPUBKjZPDf8rstnUWrhlcYU7xXyZCG7Oe7XtawqdwXjUWk2wnlnsjZ/EioLI7
+	 XRE0bL8eTWubOLc/3AbuWGVuMhyHv6MxL4Dm3p4fIxv58BIEfcspiODQaJ5Ea0wj0G
+	 X2BPTeGyXzD5YsqVHeo+LzgywcankwNOOohjz0F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgBZRqL (ORCPT
+        id S1726996AbgBZRsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:46:11 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34319 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBZRqK (ORCPT
+        Wed, 26 Feb 2020 12:48:05 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:59514 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgBZRsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:46:10 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z15so4214259wrl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:46:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UlkKnDdC74Y3bgeE6cEbPgpR1UfcBBF9OT0zkr0EUcg=;
-        b=BGEEl7rmEJYfaMnxUESPvUOgeSbE0vRSPk4AeQjFIwdfBqYXStXjR+rObFWAaQbqg1
-         bdOXNcZYOR+hFebyfy7thu2k30LD1Epy2eOgsjn2SuwHoRCJF0Kr0DjH22TAgWxY41Dc
-         C0PcGYnjSiPRM14Hw2u0Z+2cwUCdQyjwFvYmSiRwtnHdOIcJvaLybuk0VDxnmE+PZJnn
-         4QRNIzz04bdlHohCuatcxOucvZ/Blllhhelky/i5lwYCXd4SKOspi5gFSfrWYCblUndd
-         xEShQS4T63fHgE3ImaZRxkrl8P2+FnSF52tCc/zApvyPYTpmoo/A2s2FttSQYn0waYFI
-         xy6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UlkKnDdC74Y3bgeE6cEbPgpR1UfcBBF9OT0zkr0EUcg=;
-        b=JzH07hYoUZJTO1iaYglmDUqHmYZ+sF7Wxn3Hy5jjOXjCnKamqS5EsDRJTog7RAdXVi
-         K5qDaPRwlMU+w7q/4+s1QoT7V90XwMCeY3iJCO6sPGAXOwWjpZcW++0jlC1NoIW00Zti
-         nu15jfUvmvrWyEjlZrpp4gFQ85MtysD3/Y4/VYfzm0r2IYjNJC5pqamQq9t5ii1FkrzE
-         wKdfZFW0gAJHy2Ja+ewAMsFhkSh5CPdQKl6C2jPltEMF9ZB6UkJ69V5k29R/eBU+Mvym
-         HMuNrvvLHtBT+lOO0Yimr2yceHODTsBWiwVTqXd/FO/sLYIZam049I+0IWzuDu4cjCFz
-         TOfA==
-X-Gm-Message-State: APjAAAUPOsMcGG83zBXAmcG4SH4KQoaEnyPkVY8+2jhv06Bmgtm+nRrE
-        4cjl+MlsuRgcySixseA/qtKzhg==
-X-Google-Smtp-Source: APXvYqznWapegakHJtPU90RjlpTQd/0Tw1lU93h5a+hpgxjq61bdBeFBGzJDvg53TH5tsUPPbp4LDg==
-X-Received: by 2002:adf:fc12:: with SMTP id i18mr6690147wrr.354.1582739168790;
-        Wed, 26 Feb 2020 09:46:08 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id d76sm3849939wmd.39.2020.02.26.09.46.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:46:08 -0800 (PST)
-Date:   Wed, 26 Feb 2020 17:46:40 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        b.galvani@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org,
-        jic23@kernel.org
-Subject: Re: [PATCH v5 1/2] mfd: rn5t618: add ADC subdevice for RC5T619
-Message-ID: <20200226174640.GR3494@dell>
-References: <20200223131638.12130-1-andreas@kemnade.info>
- <20200223131638.12130-2-andreas@kemnade.info>
- <20200226154055.GQ3494@dell>
- <20200226174914.047667d5@kemnade.info>
+        Wed, 26 Feb 2020 12:48:05 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 01QHlrqU018829;
+        Thu, 27 Feb 2020 02:47:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 01QHlrqU018829
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582739274;
+        bh=SDaslj3im9eGGF3GWkYw29Ie5s/mrO4oXtYg61NAUmg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TSAmf5YiR59vvSP5hW7HsQsk+UuON9lPxv8ggMkzklgJ60ttDBLTs80cPREFkVoCo
+         aC1SepTe/mFTxqWwQLcwBJmWJq0OZBh0S4OfNZDiHAiQy9nJLm/LN8+IggTn0ZYTZn
+         fKeUAF/4aYs2AQyohWL1Nb/AwLTqqnz5oub1NMBC1omVGHBSFRc424t6vRqtfgdlKt
+         nEIsb0Ono4KNO6VBNmXA2k/CihTCFh6915uvoiak1KmfzgsYZFV4wkcVNfGjHIGrqe
+         sdumET83GL/sPurNTyUFRx+59OsexvWo8vnYUqRw9c3disajhKarkba2tEMjv2GgHq
+         bjGD44GtVm7LA==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id i4so1044069vkc.3;
+        Wed, 26 Feb 2020 09:47:54 -0800 (PST)
+X-Gm-Message-State: APjAAAVx71To1e0Pf6srG/mo5oE/3umRyVGvwn72FaEC1JpabV1lPHAK
+        RnRJzC7Dm8rP7qnSlBiwB1fZVoDWB2rUrgUylFE=
+X-Google-Smtp-Source: APXvYqzpehfk2yzFqtjIzlN57l6KrpJIDEr5QVAEBgcdOrwuouWmBqXYwTpOOjVHS2Vp3P09dydm2ACynKUaaC2vXyk=
+X-Received: by 2002:a1f:6344:: with SMTP id x65mr231703vkb.26.1582739273088;
+ Wed, 26 Feb 2020 09:47:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226174914.047667d5@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200222190435.11767-1-masahiroy@kernel.org> <20200224225253.GA27948@bogus>
+ <CAK7LNAS+iOAonhxN2BK4D8TSb8F-BqPxDGFU0AOv9fZ2So4iqA@mail.gmail.com>
+In-Reply-To: <CAK7LNAS+iOAonhxN2BK4D8TSb8F-BqPxDGFU0AOv9fZ2So4iqA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 27 Feb 2020 02:47:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS-Ozq8kwa4HixNQ=r8d3ToehFnsbh0F0TgAcnemXantA@mail.gmail.com>
+Message-ID: <CAK7LNAS-Ozq8kwa4HixNQ=r8d3ToehFnsbh0F0TgAcnemXantA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] kbuild: fix DT binding schema rule to detect command
+ line changes
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Andreas Kemnade wrote:
-
-> On Wed, 26 Feb 2020 15:40:55 +0000
-> Lee Jones <lee.jones@linaro.org> wrote:
-> 
-> > On Sun, 23 Feb 2020, Andreas Kemnade wrote:
-> > 
-> > > This adds a subdevice for the ADC in the RC5T619
-> > > 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+On Tue, Feb 25, 2020 at 1:32 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Feb 25, 2020 at 7:52 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sun, Feb 23, 2020 at 04:04:31AM +0900, Masahiro Yamada wrote:
+> > > This if_change_rule is not working; it cannot detect any command line
+> > > changes.
+> > >
+> > > The reason is because cmd-check in scripts/Kbuild.include compares
+> > > $(cmd_$@) and $(cmd_$1), but cmd_dtc_dt_yaml does not exist here.
+> > >
+> > > For if_change_rule to work properly, the stem part of cmd_* and rule_*
+> > > must match. Because this cmd_and_fixdep invokes cmd_dtc, this rule must
+> > > be named rule_dtc.
+> > >
+> > > Fixes: 4f0e3a57d6eb ("kbuild: Add support for DT binding schema checks")
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > > > ---
-> > > depends on:
-> > > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
-> > > 
-> > > Changes in v3:
-> > > re-added it to the series because of
-> > > "Oh, it looks like there was a conflict.  Could you collect any Acks
-> > > (including mine) rebase and resend please?"  
-> > 
-> > Looks like there is still a conflict.  Sure, it's not a complicated
-> > fix, but that's beside the point.  What tree is this set based on?
-> > 
-> It must be applied on top of my rc5t619 rtc series here:
-> https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
-> 
-> I expected it to make it into 5.6 and when I first sent the RTC series
->  (in October) I had no idea when I will continue with other stuff.
-> 
-> That is why I sent this ADC series separately, also to give the IIO
-> maintainer plenty of time to review. 
+> > >
+> > >  scripts/Makefile.lib | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > For the series,
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > I'm assuming you will take these? If not, I can in the DT tree.
+>
+> Yes, I will queue these to kbuild tree.
+>
+>
 
-If a patch-set can or should be applied on its own, you should send it
-based on an upstream commit, or else things like this happen.
 
-My advice would be to maintain topic branches, each based on an
-upstream release, which you can merge together into an integration
-branch for full coverage testing.
+Applied with Rob's Ack.
 
-> Do you want me to resend all that pending stuff together in one series?
-> I have little experience with this multi-subdevice process.
 
-It makes more sense to rebase this set onto the latest full release
-and resubmit this set on its own.
+
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best Regards
+Masahiro Yamada
