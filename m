@@ -2,99 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF73EC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093F0C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFFC20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29542467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YhcZ/SVn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cGWoguhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgBZNLC (ORCPT
+        id S1726997AbgBZNQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:11:02 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46775 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726592AbgBZNLC (ORCPT
+        Wed, 26 Feb 2020 08:16:53 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39704 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgBZNQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:11:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582722661;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m0TtEHDHCO42Q9GTo9Ybh1BaRZcDi57GOxuE4MyXihQ=;
-        b=YhcZ/SVniwnPR0FpE/39Z05byIhdWGlwZk9h49NPknYlavhltgpfsl5bFIlZeGDu4HGDBI
-        h9E86CRus83qQGjTx9aGLOWDqYu+1F4bZizvYLsV+feU1KuR4pNIX4WjTtp8VfOUg6IWxj
-        YuHXFL692m7F1xqZ8AEQ4gb21mfhos8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-OfW6MSgQNuu8Xc0Wmx6lMg-1; Wed, 26 Feb 2020 08:10:59 -0500
-X-MC-Unique: OfW6MSgQNuu8Xc0Wmx6lMg-1
-Received: by mail-wm1-f70.google.com with SMTP id m4so896550wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 05:10:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=m0TtEHDHCO42Q9GTo9Ybh1BaRZcDi57GOxuE4MyXihQ=;
-        b=BP4fQhLGWcA3Hl/HIG8w4pGv+2L9/FAH4DDOayIUUt4bbhm2+K+61K7u6B8Lurh2pt
-         YLbe2a2I65r/jwFqQrtg2ub9IfMIdYh/FUgIn0K69b865UisGJqEP2WwGoG3CltklVSE
-         GY6j0NweC4Iinjky6bhS26uiz/WFfFVX4fws4Jx9nHanZNqb+2ugGye4XzZxIl/HqLGo
-         asZM/LFWwKeEr7B86yA5cusZU5StDE8xT2RpfHEDmb03PN3woDaqW8a0+BnaqiKMoTPi
-         ou29hnzziygOnUk0d+3ad/ya6byhg5X0AMqNw/iibnZmgDI3rAiShBPmph+uThkBI0EG
-         MFoQ==
-X-Gm-Message-State: APjAAAUvLaxZtNBU01xK/CfKvJkmicycwQyXEID7OLL9JkDnStWrdZxE
-        uskYPtCXH1/lu6gcbuGhny+hMpIuWCH5twRoFUVNugcayr/bUHWKevAERpk9u0JhXpK/owy3YLM
-        H1TGm49eoWzFUNRdaYYTR76WN
-X-Received: by 2002:adf:ee4c:: with SMTP id w12mr5484070wro.310.1582722658321;
-        Wed, 26 Feb 2020 05:10:58 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxqfgaBcw9P54nxu0njwaxXrTFvBjiwsyYYA1AskRRYgdt+S83CzUmE04FqC5v5uQVR5VjdlA==
-X-Received: by 2002:adf:ee4c:: with SMTP id w12mr5484050wro.310.1582722658112;
-        Wed, 26 Feb 2020 05:10:58 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z1sm2777575wmf.42.2020.02.26.05.10.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 05:10:57 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wanpeng Li <kernellwp@gmail.com>
-Subject: Re: [PATCH RESEND v2 2/2] KVM: Pre-allocate 1 cpumask variable per cpu for both pv tlb and pv ipis
-In-Reply-To: <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
-References: <1581988104-16628-1-git-send-email-wanpengli@tencent.com> <1581988104-16628-2-git-send-email-wanpengli@tencent.com> <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com> <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
-Date:   Wed, 26 Feb 2020 14:10:56 +0100
-Message-ID: <87mu95jxy7.fsf@vitty.brq.redhat.com>
+        Wed, 26 Feb 2020 08:16:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dBTEGeYdwOYe1m9MR0swroLBpZXLyk3mtt8wrgV6Ovc=; b=cGWoguhwhW+FQQ8dKZd+JTjhwk
+        BRfx7XVWuUB3DRzatCE2HAGxCVK+FemfvM1wF1N+9NIC+q4PoQWoRPcoHgwNduhGIZ6xv6CTSVclb
+        mP7JT/nGL1GrjHsOc6cW+4wlxVp6/qkWJrW7kCOIbRmyRGol6ScP038NpnPreUqhzlRXsdT833EsH
+        phK31L0UPA5dN8aerwDKGwFEvJ2iu4xSAtdLMFiXgS+1I2dGE672cOmb+b1mjTgL8XiPTSVS/XQE1
+        iPiwD/y15qhQDPs+tbK45pOqqTnbXYJHKamMcMfe3p5rYAbSZ4F2bPZepE4nxOP4DczXqKdlPfJfg
+        R/SxhgAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6wXq-0005Pn-4i; Wed, 26 Feb 2020 13:16:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4AF5E300130;
+        Wed, 26 Feb 2020 14:14:11 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8FC282B264902; Wed, 26 Feb 2020 14:16:06 +0100 (CET)
+Date:   Wed, 26 Feb 2020 14:16:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
+        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
+Message-ID: <20200226131606.GL14946@hirez.programming.kicks-ass.net>
+References: <20200221134215.328642621@infradead.org>
+ <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
+ <20200221202246.GA14897@hirez.programming.kicks-ass.net>
+ <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
+ <20200224112708.4f307ba3@gandalf.local.home>
+ <20200224163409.GJ18400@hirez.programming.kicks-ass.net>
+ <20200224114754.0fb798c1@gandalf.local.home>
+ <20200224213139.GO11457@worktop.programming.kicks-ass.net>
+ <20200224170231.3807931d@gandalf.local.home>
+ <20200226102509.GU18400@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226102509.GU18400@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nick Desaulniers <ndesaulniers@google.com> writes:
+On Wed, Feb 26, 2020 at 11:25:09AM +0100, Peter Zijlstra wrote:
+> Subject: sh/ftrace: Move arch_ftrace_nmi_{enter,exit} into nmi exception
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Feb 24 22:26:21 CET 2020
+> 
+> SuperH is the last remaining user of arch_ftrace_nmi_{enter,exit}(),
+> remove it from the generic code and into the SuperH code.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
 
-> (putting Paolo in To: field, in case email filters are to blame.
-> Vitaly, maybe you could ping Paolo internally?)
->
+> --- a/arch/sh/kernel/traps.c
+> +++ b/arch/sh/kernel/traps.c
+> @@ -170,11 +170,21 @@ BUILD_TRAP_HANDLER(bug)
+>  	force_sig(SIGTRAP);
+>  }
+>  
+> +#ifdef CONFIG_HAVE_DYNAMIC_FTRACE
 
-I could, but the only difference from what I'm doing right now would
-proabbly be the absence of non-@redaht.com emails in To/Cc: fields of
-this email :-)
+build robot just informed me that this ought to s/HAVE_//
 
-Do we want this fix for one of the last 5.6 RCs or 5.7 would be fine?
-Personally, I'd say we're not in a great hurry and 5.7 is OK.
-
--- 
-Vitaly
-
+> +extern void arch_ftrace_nmi_enter(void);
+> +extern void arch_ftrace_nmi_exit(void);
+> +#else
+> +static inline void arch_ftrace_nmi_enter(void) { }
+> +static inline void arch_ftrace_nmi_exit(void) { }
+> +#endif
