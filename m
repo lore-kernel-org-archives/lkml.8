@@ -2,62 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94637C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7330C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B3D24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A192467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgBZODT (ORCPT
+        id S1727136AbgBZOI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:03:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33630 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgBZODT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:03:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 817D2AC54;
-        Wed, 26 Feb 2020 14:03:17 +0000 (UTC)
-Subject: Re: [PATCH 3/3] mm/vma: Make is_vma_temporary_stack() available for
- general use
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <1582692658-3294-1-git-send-email-anshuman.khandual@arm.com>
- <1582692658-3294-4-git-send-email-anshuman.khandual@arm.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <df8b59f9-ccf2-5a40-661e-2bf053b99dac@suse.cz>
-Date:   Wed, 26 Feb 2020 15:03:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 09:08:57 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42016 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgBZOI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:08:56 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A0F481C0411; Wed, 26 Feb 2020 15:08:54 +0100 (CET)
+Date:   Wed, 26 Feb 2020 15:08:54 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/4] leds: axp20x: Support charger LED on AXP20x like
+ PMICs
+Message-ID: <20200226140854.GJ4080@duo.ucw.cz>
+References: <20200223131435.681620-1-megous@megous.com>
+ <20200223131435.681620-3-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <1582692658-3294-4-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pMCBjikF2xGw87uL"
+Content-Disposition: inline
+In-Reply-To: <20200223131435.681620-3-megous@megous.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 5:50 AM, Anshuman Khandual wrote:
-> Currently the declaration and definition for is_vma_temporary_stack() are
-> scattered. Lets make is_vma_temporary_stack() helper available for general
-> use and also drop the declaration from (include/linux/huge_mm.h) which is
-> no longer required. This should not cause any functional change.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-The move made it plainly visible that the is_vma_* name differs from all the
-other vma_is_* names. So this is a good chance to unify it?
+--pMCBjikF2xGw87uL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Vlastimil
+Hi!
+
+> There is single LED that can be turned on and off by the user, or set to
+> be controlled by the charger in 2 different modes.
+>=20
+> The driver initializes the LED to be controlled by the charger, but
+> allows to switch it to user control, and change the mode of charging
+> indication via a sysfs.
+
+You'd need to document new "control" file.
+
+But hold on, it is not an only driver with this "user-or-hardware"
+feature, and we want to have a common solution. And that solution is
+probably to have "hw-charger" trigger _just for this_ LED.
+
+I can easily take a driver that always handles it as a "user" LED, if
+you can get ACKs from device tree people on the documentation patches.=20
+
+> +	led->regmap =3D axp20x->regmap;
+> +
+> +	led->cdev.name =3D "axp20x-chgarger-led";
+
+typo.
+
+> +static void axp20x_led_shutdown(struct platform_device *pdev)
+> +{
+> +	struct axp20x_led *led =3D platform_get_drvdata(pdev);
+> +
+> +	/* On shutdown, we want to give LED control back to the PMIC,
+> +	 * so that it doesn't stay on, while the system is off.
+> +	 */
+
+Comment style.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pMCBjikF2xGw87uL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXlZ79gAKCRAw5/Bqldv6
+8nOWAJ9NQxUKukUGwa5fNg6SxG8/V3ZUsACgmEnR1/qSwGL7JhaQyk2Eu8m93Ok=
+=jl8u
+-----END PGP SIGNATURE-----
+
+--pMCBjikF2xGw87uL--
