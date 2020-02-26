@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2974C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF82C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6A224680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA3121556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582732699;
+	s=default; t=1582732728;
 	bh=S72rfz4e7ofEv8qXcE2vMF6gMBDU4uQEXEeYcNVqqV4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dOjf+/Rf+7zjD8TGtvJoDOUUx3OA+rKhhPCe7JTZHONMZ4jBjxHsnJHtbaV/PnLmS
-	 jU6+3UwQG+nYM9c7da6ASkI4pwoq6Hp9v/8wDOK/6+Nlx+d3ub2spI0tXovBCcKmCK
-	 wzkhfu1NIlAScc5wZRMeYi5ZnWg36LAIrx8qaXQI=
+	b=G/esbHLYCvg9l72BcL+9sKJjF8JH1IilcXr2XJQxR+3hcnnPupJafaQuYGXkE0Ylt
+	 qg76RKltXGq1fa/VvTWplTiBFEpc4UWsruvxcPAl/ieKP/5EKcmfNTevFjEkHW4oXv
+	 fLt0tKtvezkWE7jCgvUweITODm3iEIJK3Ck1h9sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgBZP6S (ORCPT
+        id S1728914AbgBZP6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:58:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 10:58:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbgBZP6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:58:17 -0500
+        id S1728585AbgBZP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:58:47 -0500
 Received: from localhost (unknown [171.76.87.135])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7D30222C2;
-        Wed, 26 Feb 2020 15:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536E1222C2;
+        Wed, 26 Feb 2020 15:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582732696;
+        s=default; t=1582732726;
         bh=S72rfz4e7ofEv8qXcE2vMF6gMBDU4uQEXEeYcNVqqV4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kWq5EKgKjQr9M7KGd8TjaGP1qxy1nmbn8wwUsuIcWNPmUQ80mNhYluJz74ZUz98+M
-         2m0SdrGy86ZG/S1gI6wZc02UzMotgkBtTN8bUtEfTf9JDmxI8OlwWGX/kNxDGGnN3y
-         vLC9nysbnEcQDEr9iRHYDUs/acr0H0X11p60dexk=
-Date:   Wed, 26 Feb 2020 21:28:08 +0530
+        b=GXa85jUuTeXn8+wSgMznpwjKhsGAftbp22oNFfjrcmJFWwnYpMqkGKUtSlKlsKRNJ
+         Js5INxqPdKHdmVIw/eY+UBDrU8ynyaVLIiwkFiHoYP9qIjZSKCyp1DbWZ/DAJdJoDA
+         OGXXnBWCWUISrPvWvJ3M3w4NHQsDilUXZAGjv74k=
+Date:   Wed, 26 Feb 2020 21:28:42 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -47,7 +47,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
 Subject: Re: [PATCH v3 3/3] dt-bindings: thermal: tsens: Add qcom,tsens-v2 to
  msm8996.dtsi compatible
-Message-ID: <20200226155808.GY2618@vkoul-mobl>
+Message-ID: <20200226155842.GZ2618@vkoul-mobl>
 References: <cover.1582705101.git.amit.kucheria@linaro.org>
  <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
