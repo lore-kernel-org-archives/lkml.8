@@ -2,110 +2,112 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD55AC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCA6C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE05024680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CFkZivHS"
+	by mail.kernel.org (Postfix) with ESMTP id 52AAF24687
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgBZPA5 (ORCPT
+        id S1727289AbgBZPA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:00:57 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28496 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727078AbgBZPA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 10:00:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582729254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XEQXtA92WxEoyYVbPjA9RQHILAt7XDfCFPviC5NGtgE=;
-        b=CFkZivHSsHlsIcB7gII0Jbr0m8dLTjN0o8b5RcoPbamHf3yiC3NU4cANvcv0rz3GH1Hadv
-        qUVDAA0zcK7x8jQN6UOEtIGLhXnUTOGsMk3hc+ls0JZvahpgXOrSmAMOVSakoKb/MytmTj
-        PynM9AkAFyVAg6xgLVy/DRHhfCLOAKs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-YYj90b9yPDCd6RT60cmDAA-1; Wed, 26 Feb 2020 10:00:52 -0500
-X-MC-Unique: YYj90b9yPDCd6RT60cmDAA-1
-Received: by mail-wm1-f69.google.com with SMTP id n17so760660wmk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:00:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=XEQXtA92WxEoyYVbPjA9RQHILAt7XDfCFPviC5NGtgE=;
-        b=KvU6RAiym2NFQpI8fpG051SReBi/YW7kgq9XTP0FqjF+UQNM6hbp2m8At7m/po+bDi
-         7Q986i6qULOUk6jVoLUd0yoss5F0Ixg7wqjfGtSDW91vF8WApWWVQ48SmKpvIUmrAbgC
-         J7KW/sFYYDTzBkHI4WTCy2FGJQnI2RYDbfHGpuGrNuDjMOIoDa9NDjwUlaNbSjmD+v+p
-         fny1eIengDr5L0afb7mLmtYGh+yYGmAOswFmLsm1Ps5N6DXhW9bwf2eIxDg4ZCD69Jdv
-         d4ElAZUxH6U5fmdA0tsqfiIDjjCBcXNYotVsdBDGQTtAo5DIxrAQ76x/b0n5fHMr5GOQ
-         b3NQ==
-X-Gm-Message-State: APjAAAWZi3BDwjvOfPRGsp90DI0E/S3XxF7/g8D1YysDWeHpiST0wXCc
-        R8zgH1aG3AvUzJKF1kB2FePnL6qE3dPWgFYuDA/erp2rtFAjz2Yld8AjtaR9J0Yh9+kamBfKJ42
-        /F2gHEKxJMPQj+G4jzz6gfFRk
-X-Received: by 2002:a1c:dcd5:: with SMTP id t204mr6009904wmg.34.1582729251468;
-        Wed, 26 Feb 2020 07:00:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwZJyq+T6M+C5aDD/qf2sTbnPq9hAnwBKqfalQuDoDtsoS99uVrPXleCjhiwjWh3hyPEEv7Cg==
-X-Received: by 2002:a1c:dcd5:: with SMTP id t204mr6009871wmg.34.1582729251234;
-        Wed, 26 Feb 2020 07:00:51 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id x10sm3320837wrv.60.2020.02.26.07.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:00:50 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id BBFCD180362; Wed, 26 Feb 2020 16:00:49 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Luigi Rizzo <lrizzo@google.com>, linux-kernel@vger.kernel.org,
-        mhiramat@kernel.org, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, naveen.n.rao@linux.ibm.com,
-        ardb@kernel.org, rizzo@iet.unipi.it, pabeni@redhat.com,
-        giuseppe.lettieri@unipi.it, hawk@kernel.org, mingo@redhat.com,
-        acme@kernel.org, rostedt@goodmis.org, peterz@infradead.org
-Cc:     Luigi Rizzo <lrizzo@google.com>
-Subject: Re: [PATCH v3 0/2] kstats: kernel metric collector
-In-Reply-To: <20200226135027.34538-1-lrizzo@google.com>
-References: <20200226135027.34538-1-lrizzo@google.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Wed, 26 Feb 2020 16:00:49 +0100
-Message-ID: <87ftexz93y.fsf@toke.dk>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36363 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgBZPAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:00:55 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6yBA-0003Nd-C9; Wed, 26 Feb 2020 16:00:52 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6yB9-0006Vz-EO; Wed, 26 Feb 2020 16:00:51 +0100
+Date:   Wed, 26 Feb 2020 16:00:51 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] pwm: pca9685: initialize all LED registers during
+ probe
+Message-ID: <20200226150051.sbopz7uzbdhtccba@pengutronix.de>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226135229.24929-3-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226135229.24929-3-matthias.schiffer@ew.tq-group.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luigi Rizzo <lrizzo@google.com> writes:
+On Wed, Feb 26, 2020 at 02:52:28PM +0100, Matthias Schiffer wrote:
+> Initialize all ON delays to 0 during probe, rather than doing it in
+> pca9685_pwm_enable.
+> 
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+>  drivers/pwm/pwm-pca9685.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> index 393ab92aa945..370691b21107 100644
+> --- a/drivers/pwm/pwm-pca9685.c
+> +++ b/drivers/pwm/pwm-pca9685.c
+> @@ -289,13 +289,6 @@ static int pca9685_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+>  	struct pca9685 *pca = to_pca(chip);
+>  
+> -	/*
+> -	 * The PWM subsystem does not support a pre-delay.
+> -	 * So, set the ON-timeout to 0
+> -	 */
+> -	regmap_write(pca->regmap, LED_N_ON_L(pwm->hwpwm), 0);
+> -	regmap_write(pca->regmap, LED_N_ON_H(pwm->hwpwm), 0);
+> -
+>  	/*
+>  	 * Clear the full-off bit.
+>  	 * It has precedence over the others and must be off.
+> @@ -388,6 +381,13 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+>  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, 0);
+>  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, 0);
+>  
+> +	/*
+> +	 * The PWM subsystem does not support a pre-delay.
+> +	 * So, set the ON-timeout to 0
+> +	 */
+> +	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_H, 0);
+> +	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
+> +
 
-> This patchset introduces a small library to collect per-cpu samples and
-> accumulate distributions to be exported through debugfs.
->
-> This v3 series addresses some initial comments (mostly style fixes in the
-> code) and revises commit logs.
+What is a pre-delay: Something like:
+          _________                   ______
+    _____/         \_________________/
+    ^                           ^
 
-Could you please add a proper changelog spanning all versions of the
-patch as you iterate?
+Where ^ marks the period start and then the time between period start
+and the rising signal is the pre-delay?
 
-As for the idea itself; picking up this argument you made on v1:
+If so, the IMHO more right approach is to keep the pre-delay until a new
+setting is applied and in .get_state ignore the pre-delay. This way you
+don't modify the output in .probe() which sounds right.
 
-> The tracepoint/kprobe/kretprobe solution is much more expensive --
-> from my measurements, the hooks that invoke the various handlers take
-> ~250ns with hot cache, 1500+ns with cold cache, and tracing an empty
-> function this way reports 90ns with hot cache, 500ns with cold cache.
+Best regards
+Uwe
 
-I think it would be good if you could include an equivalent BPF-based
-implementation of your instrumentation example so people can (a) see the
-difference for themselves and get a better idea of how the approaches
-differ in a concrete case and (b) quantify the difference in performance
-between the two implementations.
-
--Toke
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
