@@ -2,126 +2,175 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C8FC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B293FC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944852084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XArRHwdM"
+	by mail.kernel.org (Postfix) with ESMTP id 8F7B62084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgBZQIh (ORCPT
+        id S1727709AbgBZQKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:08:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46184 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgBZQIh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:08:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eciKYtYKZyNp/Oyu78BdOELsMG3xAZc2QO1gPvE9SmY=; b=XArRHwdMrfKlWeQhtAuAv61IZD
-        XFla/1tlyVZOG05cJX3K49HqpYJrcvXohYtqBiSq4eLzch0TTc9+DmPT7+XuGcR1U7JdWdZPT99vt
-        BMjsJngfWplGRYOr+PSFOaNsLkNl7Yg3TOURC5DXD4SIzvQEg+GZLlYmDT5H7qm/d76se2l5vNHg8
-        owu0jPPLE4Xoh1723YYGkKkV+EZ5cm3XxFazdyKeB8hB3gWG9A5GoWm3wPc6vPmXBgtJGJfp7LDAm
-        pZOueqUGJmtDHw4NmwrIuPRPBLWJxicuAbbLs9YBTOK/NtPB0bzOlWki3ncQTEJRaJdPZBh7W2Ydi
-        Cf8BYCsQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6zET-0007v5-IK; Wed, 26 Feb 2020 16:08:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 21DAB300130;
-        Wed, 26 Feb 2020 17:06:23 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A3E802B7418A0; Wed, 26 Feb 2020 17:08:18 +0100 (CET)
-Date:   Wed, 26 Feb 2020 17:08:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 02/10] x86/mce: Disable tracing and kprobes on
- do_machine_check()
-Message-ID: <20200226160818.GY18400@hirez.programming.kicks-ass.net>
-References: <20200225213636.689276920@linutronix.de>
- <20200225220216.315548935@linutronix.de>
- <20200226011349.GH9599@lenoir>
- <d9bde3a6-1e19-1340-1fda-bc6de2eb4f7c@kernel.org>
- <20200226132850.GX18400@hirez.programming.kicks-ass.net>
- <CALCETrVXzwmwNOB6qUk7aM=LQRBySrMJPdRZ244T3y1bpRBzaQ@mail.gmail.com>
+        Wed, 26 Feb 2020 11:10:05 -0500
+Received: from mga01.intel.com ([192.55.52.88]:25114 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbgBZQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:10:05 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 08:10:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="350419564"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 08:10:04 -0800
+Date:   Wed, 26 Feb 2020 08:10:04 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Halliday <jonathan.halliday@redhat.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+Message-ID: <20200226161004.GB22036@iweiny-DESK2.sc.intel.com>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-8-ira.weiny@intel.com>
+ <20200221174449.GB11378@lst.de>
+ <20200221224419.GW10776@dread.disaster.area>
+ <20200224175603.GE7771@lst.de>
+ <20200225000937.GA10776@dread.disaster.area>
+ <20200225173633.GA30843@lst.de>
+ <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+ <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrVXzwmwNOB6qUk7aM=LQRBySrMJPdRZ244T3y1bpRBzaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 07:10:01AM -0800, Andy Lutomirski wrote:
-> On Wed, Feb 26, 2020 at 5:28 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > On Tue, Feb 25, 2020 at 09:29:00PM -0800, Andy Lutomirski wrote:
-> >
-> > > >> +void notrace do_machine_check(struct pt_regs *regs, long error_code)
-> > > >>  {
-> > > >>    DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
-> > > >>    DECLARE_BITMAP(toclear, MAX_NR_BANKS);
-> > > >> @@ -1360,6 +1366,7 @@ void do_machine_check(struct pt_regs *re
-> > > >>    ist_exit(regs);
-> > > >>  }
-> > > >>  EXPORT_SYMBOL_GPL(do_machine_check);
-> > > >> +NOKPROBE_SYMBOL(do_machine_check);
-> > > >
-> > > > That won't protect all the function called by do_machine_check(), right?
-> > > > There are lots of them.
-> > > >
-> > >
-> > > It at least means we can survive to run actual C code in
-> > > do_machine_check(), which lets us try to mitigate this issue further.
-> > > PeterZ has patches for that, and maybe this series fixes it later on.
-> > > (I'm reading in order!)
-> >
-> > Yeah, I don't cover that either. Making the kernel completely kprobe
-> > safe is _lots_ more work I think.
-> >
-> > We really need some form of automation for this :/ The current situation
-> > is completely nonsatisfactory.
+On Wed, Feb 26, 2020 at 09:28:57AM +0000, Jonathan Halliday wrote:
 > 
-> I've looked at too many patches lately and lost track a bit of which
-> is which.  Shouldn't a simple tracing_disable() or similar in
-> do_machine_check() be sufficient?
+> Hi All
+> 
+> I'm a middleware developer, focused on how Java (JVM) workloads can benefit
+> from app-direct mode pmem. Initially the target is apps that need a fast
+> binary log for fault tolerance: the classic database WAL use case;
+> transaction coordination systems; enterprise message bus persistence and
+> suchlike. Critically, there are cases where we use log based storage, i.e.
+> it's not the strict 'read rarely, only on recovery' model that a classic db
+> may have, but more of a 'append only, read many times' event stream model.
+> 
+> Think of the log oriented data storage as having logical segments (let's
+> implement them as files), of which the most recent is being appended to
+> (read_write) and the remaining N-1 older segments are full and sealed, so
+> effectively immutable (read_only) until discarded. The tail segment needs to
+> be in DAX mode for optimal write performance, as the size of the append may
+> be sub-block and we don't want the overhead of the kernel call anyhow. So
+> that's clearly a good fit for putting on a DAX fs mount and using mmap with
+> MAP_SYNC.
+> 
+> However, we want fast read access into the segments, to retrieve stored
+> records. The small access index can be built in volatile RAM (assuming we're
+> willing to take the startup overhead of a full file scan at recovery time)
+> but the data itself is big and we don't want to move it all off pmem. Which
+> means the requirements are now different: we want the O/S cache to pull hot
+> data into fast volatile RAM for us, which DAX explicitly won't do.
+> Effectively a poor man's 'memory mode' pmem, rather than app-direct mode,
+> except here we're using the O/S rather than the hardware memory controller
+> to do the cache management for us.
+> 
+> Currently this requires closing the full (read_write) file, then copying it
+> to a non-DAX device and reopening it (read_only) there. Clearly that's
+> expensive and rather tedious. Instead, I'd like to close the MAP_SYNC mmap,
+> then, leaving the file where it is, reopen it in a mode that will instead go
+> via the O/S cache in the traditional manner.
 
-It entirely depends on what the goal is :-/ On the one hand I see why
-people might want function tracing / kprobes enabled, OTOH it's all
-mighty frigging scary. Any tracing/probing/whatever on an MCE has the
-potential to make a bad situation worse -- not unlike the same on #DF.
+This patch set implements this capability.
 
-The same with that compiler instrumentation crap; allowing kprobes on
-*SAN code has the potential to inject probes in arbitrary random code.
-At the same time, if you're running a kernel with that on and injecting
-kprobes in it, you're welcome to own the remaining pieces.
+> Bonus points if I can do it
+> over non-overlapping ranges in a file without closing the DAX mode mmap,
+> since then the segments are entirely logical instead of needing separate
+> physical files.
 
-How far do we want to go? At some point I think we'll have to give
-people rope, show then the knot and leave them be.
+But it is too hard to do so while an mmap is in place so it can't do this.  So
+no bonus points...
 
-> We'd maybe want automation to check
-> everything before it.  We still need to survive hitting a kprobe int3,
-> but that shouldn't have recursion issues.
+> 
+> I note a comment below regarding a per-directly setting, but don't have the
+> background to fully understand what's being suggested. However, I'll note
+> here that I can live with a per-directory granularity, as relinking a file
+> into a new dir is a constant time operation, whilst the move described above
+> isn't. So if a per-directory granularity is easier than a per-file one
+> that's fine, though as a person with only passing knowledge of filesystem
+> design I don't see how having multiple links to a file can work cleanly in
+> that case.
 
-Right, so I think avoiding the obvious recursion issues is a more
-tractable problem and yes some 'safe' spot annotation should be enough
-to get automation working for that -- mostly.
+The more I think about it the more I'm not comfortable with a directory option.
+soft links and hard links complicate that IMO.  The current inheritance model
+is at file creation time and the file sticks with that state (mode).  That is
+easy enough and carry's with the file without having the complexity of possibly
+looking at the wrong parent directory.
+
+Ira
+
+
+> 
+> Hope that helps.
+> 
+> Jonathan
+> 
+> P.S. I'll cheekily take the opportunity of having your attention to tack on
+> one minor gripe about the current system: The only way to know if a mmap
+> with MAP_SYNC will work is to try it and catch the error. Which would be
+> reasonable if it were free of side effects.  However, the process requires
+> first expanding the file to at least the size of the desired map, which is
+> done non-atomically i.e. is user visible. There are thus nasty race
+> conditions in the cleanup, where after a failed mmap attempt (e.g the device
+> doesn't support DAX), we try to shrink the file back to its original size,
+> but something else has already opened it at its new, larger size. This is
+> not theoretical: I got caught by it whilst adapting some of our middleware
+> to use pmem.  Therefore, some way to probe the file path for its capability
+> would be nice, much the same as I can e.g. inspect file permissions to (more
+> or less) evaluate if I can write it without actually mutating it.  Thanks!
+> 
+> 
+> 
+> On 25/02/2020 19:37, Jeff Moyer wrote:
+> > Christoph Hellwig <hch@lst.de> writes:
+> > 
+> > > And my point is that if we ensure S_DAX can only be checked if there
+> > > are no blocks on the file, is is fairly easy to provide the same
+> > > guarantee.  And I've not heard any argument that we really need more
+> > > flexibility than that.  In fact I think just being able to change it
+> > > on the parent directory and inheriting the flag might be more than
+> > > plenty, which would lead to a very simple implementation without any
+> > > of the crazy overhead in this series.
+> > 
+> > I know of one user who had at least mentioned it to me, so I cc'd him.
+> > Jonathan, can you describe your use case for being able to change a
+> > file between dax and non-dax modes?  Or, if I'm misremembering, just
+> > correct me?
+> > 
+> > Thanks!
+> > Jeff
+> > 
+> 
+> -- 
+> Registered in England and Wales under Company Registration No. 03798903
+> Directors: Michael Cunningham, Michael ("Mike") O'Neill, Eric Shander
+> 
