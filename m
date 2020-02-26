@@ -2,197 +2,111 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF09C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152B5C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FECC21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66C020637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBZRAM (ORCPT
+        id S1728297AbgBZRAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:00:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36244 "EHLO mx2.suse.de"
+        Wed, 26 Feb 2020 12:00:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:39268 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgBZQ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:59:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 21E5DAEAC;
-        Wed, 26 Feb 2020 16:59:49 +0000 (UTC)
-From:   Michal Rostecki <mrostecki@opensuse.org>
-To:     bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v4 2/5] bpftool: Make probes which emit dmesg warnings optional
-Date:   Wed, 26 Feb 2020 17:59:36 +0100
-Message-Id: <20200226165941.6379-3-mrostecki@opensuse.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200226165941.6379-1-mrostecki@opensuse.org>
-References: <20200226165941.6379-1-mrostecki@opensuse.org>
+        id S1727946AbgBZRAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:00:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F7E131B;
+        Wed, 26 Feb 2020 09:00:45 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D35A73F881;
+        Wed, 26 Feb 2020 09:00:44 -0800 (PST)
+Subject: Re: Proper way to check for restricted DMA addressing from device
+ driver
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
+ <bfecf850-5bd7-3092-b9b3-c5721d7a44ee@arm.com>
+ <d56cec41874ee69d0f5767b549e9bd6b3003e75a.camel@pengutronix.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5571dfb5-0f07-dbeb-7f15-ce2708874d27@arm.com>
+Date:   Wed, 26 Feb 2020 17:00:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d56cec41874ee69d0f5767b549e9bd6b3003e75a.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Probes related to bpf_probe_write_user and bpf_trace_printk helpers emit
-dmesg warnings which might be confusing for people running bpftool on
-production environments. This change filters them out by default and
-introduces the new positional argument "full" which enables all
-available probes.
+On 26/02/2020 4:04 pm, Lucas Stach wrote:
+> On Mi, 2020-02-26 at 15:51 +0000, Robin Murphy wrote:
+>> On 26/02/2020 3:44 pm, Lucas Stach wrote:
+>>> Hi all,
+>>>
+>>> I'm currently struggling with how to properly check for restricted DMA
+>>> addressing from a device driver side. The basic issue I'm facing is
+>>> that I have a embedded GPU, which isn't able to address all system
+>>> memory due to interconnect being restricted to 32bit addressing. The
+>>> limits are properly described in the system device-tree and thus
+>>> SWIOTLB is working.
+>>>
+>>> However graphics buffers are large and graphics drivers really like to
+>>> keep the dma mapping alive for performance reasons, which means I'm
+>>> running out of SWIOTLB space pretty easily, aside from the obvious
+>>> performance implications of SWIOTLB.
+>>>
+>>> As 3 out of the maximum 4GB system memory are located in the DMA32 zone
+>>> and thus located in the GPU addressable space, I just want to avoid
+>>> allocating graphics buffers outside of the DMA32 zone.
+>>>
+>>> To add the DMA32 restriction to my drivers allocations, I need a
+>>> reliable way from the device driver side to check if the GPU is in such
+>>> a restricted system. What I'm currently doing in my WIP patch is this:
+>>>
+>>>    /*
+>>>     * If the GPU is part of a system with only 32bit bus addressing
+>>>     * capabilities, request pages for our SHM backend buffers from the
+>>>     * DMA32 zone to avoid performance killing SWIOTLB bounce buffering.
+>>>     */
+>>>    if (*gpu->dev->dma_mask < BIT_ULL(32) && !device_iommu_mapped(gpu->dev))
+>>>            priv->shm_gfp_mask |= GFP_DMA32;
+>>>
+>>> However I'm not sure if there are edge cases where this check would
+>>> fool me. Is there any better way to check for DMA addressing
+>>> restrictions from the device driver side?
+>>
+>> dma_addressing_limited()?
+> 
+> While amdgpu and radeon do seem to use this to trigger DMA32
+> allocations, the bool return value doesn't really tell if DMA32 is
+> helpful or not. All it tells is that the system has memory outside of
+> the device dma addressing capabilities.
 
-Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
----
- tools/bpf/bpftool/feature.c | 70 ++++++++++++++++++++++++++-----------
- 1 file changed, 49 insertions(+), 21 deletions(-)
+If the limit falls somewhere between 32 bits and "everything" then DMA32 
+is the best you can do anyway; if it's *less* than 32 bits then you'd be 
+into the realm of "serious problems" already. There is a point at which 
+it's reasonable to assume you don't have to support contrived 
+pathological cases :)
+> Is the return value of this function correct if the device is behind a
+> IOMMU? While the device might be on a bus that is address limited a
+> IOMMU further up the path to memory might allow to address all system
+> memory, no?
 
-diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
-index 345e4a2b4f53..88718ee6a438 100644
---- a/tools/bpf/bpftool/feature.c
-+++ b/tools/bpf/bpftool/feature.c
-@@ -513,14 +513,39 @@ probe_map_type(enum bpf_map_type map_type, const char *define_prefix,
- 			   define_prefix);
- }
- 
-+static void
-+probe_helper_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
-+			  const char *define_prefix, unsigned int id,
-+			  const char *ptype_name, __u32 ifindex)
-+{
-+	bool res;
-+
-+	if (!supported_type)
-+		res = false;
-+	else
-+		res = bpf_probe_helper(id, prog_type, ifindex);
-+
-+	if (json_output) {
-+		if (res)
-+			jsonw_string(json_wtr, helper_name[id]);
-+	} else if (define_prefix) {
-+		printf("#define %sBPF__PROG_TYPE_%s__HELPER_%s %s\n",
-+		       define_prefix, ptype_name, helper_name[id],
-+		       res ? "1" : "0");
-+	} else {
-+		if (res)
-+			printf("\n\t- %s", helper_name[id]);
-+	}
-+}
-+
- static void
- probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
--			   const char *define_prefix, __u32 ifindex)
-+			   const char *define_prefix, bool full_mode,
-+			   __u32 ifindex)
- {
- 	const char *ptype_name = prog_type_name[prog_type];
- 	char feat_name[128];
- 	unsigned int id;
--	bool res;
- 
- 	if (ifindex)
- 		/* Only test helpers for offload-able program types */
-@@ -542,21 +567,19 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
- 	}
- 
- 	for (id = 1; id < ARRAY_SIZE(helper_name); id++) {
--		if (!supported_type)
--			res = false;
--		else
--			res = bpf_probe_helper(id, prog_type, ifindex);
--
--		if (json_output) {
--			if (res)
--				jsonw_string(json_wtr, helper_name[id]);
--		} else if (define_prefix) {
--			printf("#define %sBPF__PROG_TYPE_%s__HELPER_%s %s\n",
--			       define_prefix, ptype_name, helper_name[id],
--			       res ? "1" : "0");
--		} else {
--			if (res)
--				printf("\n\t- %s", helper_name[id]);
-+		/* Skip helper functions which emit dmesg messages when not in
-+		 * the full mode.
-+		 */
-+		switch (id) {
-+		case BPF_FUNC_trace_printk:
-+		case BPF_FUNC_probe_write_user:
-+			if (!full_mode)
-+				continue;
-+			/* fallthrough */
-+		default:
-+			probe_helper_for_progtype(prog_type, supported_type,
-+						  define_prefix, id, ptype_name,
-+						  ifindex);
- 		}
- 	}
- 
-@@ -655,7 +678,8 @@ static void section_map_types(const char *define_prefix, __u32 ifindex)
- }
- 
- static void
--section_helpers(bool *supported_types, const char *define_prefix, __u32 ifindex)
-+section_helpers(bool *supported_types, const char *define_prefix,
-+		bool full_mode, __u32 ifindex)
- {
- 	unsigned int i;
- 
-@@ -681,7 +705,7 @@ section_helpers(bool *supported_types, const char *define_prefix, __u32 ifindex)
- 		       define_prefix);
- 	for (i = BPF_PROG_TYPE_UNSPEC + 1; i < ARRAY_SIZE(prog_type_name); i++)
- 		probe_helpers_for_progtype(i, supported_types[i],
--					   define_prefix, ifindex);
-+					   define_prefix, full_mode, ifindex);
- 
- 	print_end_section();
- }
-@@ -701,6 +725,7 @@ static int do_probe(int argc, char **argv)
- 	enum probe_component target = COMPONENT_UNSPEC;
- 	const char *define_prefix = NULL;
- 	bool supported_types[128] = {};
-+	bool full_mode = false;
- 	__u32 ifindex = 0;
- 	char *ifname;
- 
-@@ -740,6 +765,9 @@ static int do_probe(int argc, char **argv)
- 				      strerror(errno));
- 				return -1;
- 			}
-+		} else if (is_prefix(*argv, "full")) {
-+			full_mode = true;
-+			NEXT_ARG();
- 		} else if (is_prefix(*argv, "macros") && !define_prefix) {
- 			define_prefix = "";
- 			NEXT_ARG();
-@@ -775,7 +803,7 @@ static int do_probe(int argc, char **argv)
- 		goto exit_close_json;
- 	section_program_types(supported_types, define_prefix, ifindex);
- 	section_map_types(define_prefix, ifindex);
--	section_helpers(supported_types, define_prefix, ifindex);
-+	section_helpers(supported_types, define_prefix, full_mode, ifindex);
- 	section_misc(define_prefix, ifindex);
- 
- exit_close_json:
-@@ -794,7 +822,7 @@ static int do_help(int argc, char **argv)
- 	}
- 
- 	fprintf(stderr,
--		"Usage: %s %s probe [COMPONENT] [macros [prefix PREFIX]]\n"
-+		"Usage: %s %s probe [COMPONENT] [full] [macros [prefix PREFIX]]\n"
- 		"       %s %s help\n"
- 		"\n"
- 		"       COMPONENT := { kernel | dev NAME }\n"
--- 
-2.25.1
+It should be OK - see the comment in dma_get_required_mask(). Obviously 
+it's theoretically possible to integrate a device with 32+ bits of DMA 
+capability to an IOMMU input 32+ bits wide, via an interconnect less 
+than 32 bits wide, but any designer silly enough to actually do that is 
+welcome to have their SoC never supported by Linux.
 
+Robin.
