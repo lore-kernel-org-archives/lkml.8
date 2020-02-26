@@ -2,56 +2,98 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9924AC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B063C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71DE321D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UtUC9d7c"
+	by mail.kernel.org (Postfix) with ESMTP id 1591E20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgBZOuv (ORCPT
+        id S1727959AbgBZOwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:50:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43430 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBZOuv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:50:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=UtUC9d7cZWT4BRbWaLU+EiTUS1
-        6+6Kd9gfBrL0gRs1/835RTvbJj2cvx8UJOLuLW/Bb6ES/okhRXF7YGi2X5GNzBTLwP8ZZgemX3RlV
-        hjdulGXTgYSE5cZtMwV5mZGk9lkPbGfddFgpQUt6CcM4v7GZNPsBE/4eqTsA0ZpEhn+N4mX4Mb9Wm
-        K2tELBaH7+KeOg2Ty2eOTxV4SeRcKiTCIF6w347CKoTyz9O7F0gtxGaD0J77R4QuxXOWb1kr/GBAz
-        UZu/L868QpIA2J5dVIVH5+eJA3qYi6cxtd+Ov0n+JCj4SZYKXgnqLPJ64k2pzc5+aO7nf8Ee/kCkK
-        6WZ+MyGw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6y1Q-0004xx-CO; Wed, 26 Feb 2020 14:50:48 +0000
-Date:   Wed, 26 Feb 2020 06:50:48 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     darrick.wong@oracle.com, hch@infradead.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] xfs: fix an undefined behaviour in _da3_path_shift
-Message-ID: <20200226145048.GA19034@infradead.org>
-References: <20200226020637.1065-1-cai@lca.pw>
+        Wed, 26 Feb 2020 09:52:01 -0500
+Received: from mga17.intel.com ([192.55.52.151]:62228 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727426AbgBZOwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:52:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 06:52:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="438448828"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Feb 2020 06:51:59 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id ADF65252; Wed, 26 Feb 2020 16:51:58 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] mfd: dln2: Fix sanity checking for endpoints
+Date:   Wed, 26 Feb 2020 16:51:58 +0200
+Message-Id: <20200226145158.13396-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226020637.1065-1-cai@lca.pw>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+tries to harden the sanity checks it made at the same time a regression,
+i.e.  mixed in and out endpoints. Obviously it should have been not tested on
+real hardware at that time, but unluckily it didn't happen.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+So, fix above mentioned typo and make device being enumerated again.
+
+While here, introduce an enumerator for magic values to prevent similar issue
+to happen in the future.
+
+Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: Add enumerator (Lee)
+ drivers/mfd/dln2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 7841c11411d0..4faa8d2e5d04 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -90,6 +90,11 @@ struct dln2_mod_rx_slots {
+ 	spinlock_t lock;
+ };
+ 
++enum dln2_endpoint {
++	DLN2_EP_OUT	= 0,
++	DLN2_EP_IN	= 1,
++};
++
+ struct dln2_dev {
+ 	struct usb_device *usb_dev;
+ 	struct usb_interface *interface;
+@@ -733,10 +738,10 @@ static int dln2_probe(struct usb_interface *interface,
+ 	    hostif->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
+-	epin = &hostif->endpoint[0].desc;
+-	epout = &hostif->endpoint[1].desc;
++	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
+ 	if (!usb_endpoint_is_bulk_out(epout))
+ 		return -ENODEV;
++	epin = &hostif->endpoint[DLN2_EP_IN].desc;
+ 	if (!usb_endpoint_is_bulk_in(epin))
+ 		return -ENODEV;
+ 
+-- 
+2.25.0
+
