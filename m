@@ -2,165 +2,213 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57D8C4BA2F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C378C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D8F20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G4kRN/gb"
+	by mail.kernel.org (Postfix) with ESMTP id 628CE20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgBZWn1 (ORCPT
+        id S1727888AbgBZWrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:43:27 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37129 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgBZWn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:43:26 -0500
-Received: by mail-pl1-f196.google.com with SMTP id q4so286938pls.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:43:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=tmmzbig6kKd2J1vSLS/3+Ly3DK1KMOkPEr7ocA5n8BU=;
-        b=G4kRN/gblOwhZ9Ydgqv7ZiG7wbtZIxzqLwbWe4wGx7O3kdMCtDPX8HYO7WSz9jaYG6
-         qRDSPJTqBduvJZ5hNUCW9fZ4YUI1AwZd/VN4tmk6kvh3t1vDDgi8WIXh1Na0DTBy+IoV
-         /gLLKqvaHocsv0u8y+Q+IwrIQb/27Gw2n6sy4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=tmmzbig6kKd2J1vSLS/3+Ly3DK1KMOkPEr7ocA5n8BU=;
-        b=Meocnhg2j35rQy+u8eFV9PiNzoTPQL/mDbyn1TckEniAJHr0Be5k2MAeSmFy0KPHfr
-         zXgLDyI/codz9+dCatqFl0MdbZDFr+disrYbwLqtJIhq2jddQJniYrBs4cj0yL4do2cC
-         LA43QwT5ww3ZjKrUrwBKQDtPJciV0MU3Eot63a031sPvgmKu1Kk71lwGtZLyzJ1uKCJq
-         z3G6iygA9SFs4+HOaKhGnOoHYN2mMxY5NpgZOsDEqx1kwPAykbI981MbzXXm44dE1x6b
-         KMF/5IFNMpRmmYNxr2h4xpgYBLhgmAbXh+nAouKYhsw7lz1LMDbX5DzjSAJWNcMIMSze
-         +Tgw==
-X-Gm-Message-State: APjAAAWXSnZr8pIPrlGx/NTkeNKBy3BZCABOqoHTQ4QX5YxXyWrS9aU9
-        W+9srSdejK4/LpBT7aKcJqdonQCm5Y0=
-X-Google-Smtp-Source: APXvYqyU28YSEFboz9xxQdDdc2W7O/rwUruv/UskcxB861z9ZN4/Qcv4sP2DfN01S+LwztHf98W1Hw==
-X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr1565171plo.259.1582757005506;
-        Wed, 26 Feb 2020 14:43:25 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v8sm3944025pgt.52.2020.02.26.14.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:43:24 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 26 Feb 2020 17:47:19 -0500
+Received: from mga06.intel.com ([134.134.136.31]:13010 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727763AbgBZWrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:47:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 14:47:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
+   d="scan'208";a="241833449"
+Received: from pkabrax-mobl.amr.corp.intel.com (HELO [10.251.2.6]) ([10.251.2.6])
+  by orsmga006.jf.intel.com with ESMTP; 26 Feb 2020 14:47:16 -0800
+Subject: Re: [RFC PATCH v9 13/27] x86/mm: Shadow Stack page fault error
+ checking
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-14-yu-cheng.yu@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <1c8946d0-7934-3485-aa82-d37d41021dc7@intel.com>
+Date:   Wed, 26 Feb 2020 14:47:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582694833-9407-3-git-send-email-mkshah@codeaurora.org>
-References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org> <1582694833-9407-3-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v7 2/3] soc: qcom: rpmh: Update dirty flag only when data changes
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Date:   Wed, 26 Feb 2020 14:43:23 -0800
-Message-ID: <158275700389.177367.5843608826404724304@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200205181935.3712-14-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-02-25 21:27:12)
-> Currently rpmh ctrlr dirty flag is set for all cases regardless
-> of data is really changed or not. Add changes to update it when
-> data is updated to newer values.
->=20
-> Also move dirty flag updates to happen from within cache_lock.
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> If a page fault is triggered by a Shadow Stack (SHSTK) access
+> (e.g. CALL/RET) or SHSTK management instructions (e.g. WRUSSQ), then bit[6]
+> of the page fault error code is set.
 
-Probably worth adding a Fixes tag here? Doesn't make sense to mark
-something dirty when it isn't changed.
+How about starting with a definition:
 
-> ---
->  drivers/soc/qcom/rpmh.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index eb0ded0..83ba4e0 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct r=
-pmh_ctrlr *ctrlr,
->  existing:
->         switch (state) {
->         case RPMH_ACTIVE_ONLY_STATE:
-> -               if (req->sleep_val !=3D UINT_MAX)
-> +               if (req->sleep_val !=3D UINT_MAX) {
->                         req->wake_val =3D cmd->data;
-> +                       ctrlr->dirty =3D true;
-> +               }
->                 break;
->         case RPMH_WAKE_ONLY_STATE:
-> -               req->wake_val =3D cmd->data;
-> +               if (req->wake_val !=3D cmd->data) {
-> +                       req->wake_val =3D cmd->data;
-> +                       ctrlr->dirty =3D true;
-> +               }
->                 break;
->         case RPMH_SLEEP_STATE:
-> -               req->sleep_val =3D cmd->data;
-> +               if (req->sleep_val !=3D cmd->data) {
-> +                       req->sleep_val =3D cmd->data;
-> +                       ctrlr->dirty =3D true;
-> +               }
->                 break;
->         default:
->                 break;
+	Shadow stack accesses are those that are performed by the CPU
+	where it expects to encounter a shadow stack mapping.  These
+	accesses are performed implicitly by CALL/RET at the site of the
+	shadow stack pointer.  These accesses are made explicitly by
+	shadow stack management instructions like WRUSSQ.
 
-Please remove the default case. There are only three states in the enum. The
-compiler will warn if a switch statement doesn't cover all cases and
-we'll know to add something here if another enum value is added in the
-future.
+> In access_error(), verify a SHSTK page fault is within a SHSTK memory area.
+> It is always an error otherwise.
 
->         }
-> =20
-> -       ctrlr->dirty =3D true;
->  unlock:
->         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> =20
-> @@ -323,6 +331,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
->         list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
->                 kfree(req);
->         INIT_LIST_HEAD(&ctrlr->batch_cache);
-> +       ctrlr->dirty =3D true;
->         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->  }
-> =20
-> @@ -456,6 +465,7 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum=
- rpmh_state state,
->  int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->  {
->         struct cache_req *p;
-> +       unsigned long flags;
->         int ret;
-> =20
->         if (!ctrlr->dirty) {
-> @@ -488,7 +498,9 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->                         return ret;
->         }
-> =20
-> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->         ctrlr->dirty =3D false;
-> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+How about: Shadow stacks accesses to shadow-stack mapping can see faults
+in normal, valid operation just like regular accesses to regular
+mappings.  Shadow stacks need some of the same features like delayed
+allocation, swap and copy-on-write.
 
-So we take the spinlock to update it here. But we don't hold the
-spinlock to test for !dirty up above. Seems like either rpmh_flush() can
-only be called sequentially, or the lock added here needs to be held
-during the whole flush. Which way is it?
+Shadow stack accesses can also result in errors, such as when a shadow
+stack overflows, or if a shadow stack access occurs to a
+non-shadow-stack mapping.
+
+> For a valid SHSTK access, set FAULT_FLAG_WRITE to effect copy-on-write.
+
+It seems rather odd to want copy-on-write behavior for read faults.
+Could you elaborate on why, please?
+
+> diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+> index 7ac26bbd0bef..8023d177fcd8 100644
+> --- a/arch/x86/include/asm/traps.h
+> +++ b/arch/x86/include/asm/traps.h
+> @@ -169,6 +169,7 @@ enum {
+>   *   bit 3 ==				1: use of reserved bit detected
+>   *   bit 4 ==				1: fault was an instruction fetch
+>   *   bit 5 ==				1: protection keys block access
+> + *   bit 6 ==				1: shadow stack access fault
+>   */
+>  enum x86_pf_error_code {
+>  	X86_PF_PROT	=		1 << 0,
+> @@ -177,5 +178,6 @@ enum x86_pf_error_code {
+>  	X86_PF_RSVD	=		1 << 3,
+>  	X86_PF_INSTR	=		1 << 4,
+>  	X86_PF_PK	=		1 << 5,
+> +	X86_PF_SHSTK	=		1 << 6,
+>  };
+>  #endif /* _ASM_X86_TRAPS_H */
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 304d31d8cbbc..9c1243302663 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -1187,6 +1187,17 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
+>  				       (error_code & X86_PF_INSTR), foreign))
+>  		return 1;
+>  
+> +	/*
+> +	 * Verify X86_PF_SHSTK is within a Shadow Stack VMA.
+> +	 * It is always an error if there is a Shadow Stack
+> +	 * fault outside a Shadow Stack VMA.
+> +	 */
+
+Nit: there was an access that caused the fault.  We can be a bit more
+broad in the implications from the comment if we say "access" instead of
+"fault".
+
+> +	if (error_code & X86_PF_SHSTK) {
+> +		if (!(vma->vm_flags & VM_SHSTK))
+> +			return 1;
+> +		return 0;
+> +	}
+> +
+>  	if (error_code & X86_PF_WRITE) {
+>  		/* write, present and write, not present: */
+>  		if (unlikely(!(vma->vm_flags & VM_WRITE)))
+
+Is there an analogous check for !X86_PF_SHSTK faults to VM_SHSTK VMAs?
+
+> @@ -1344,6 +1355,13 @@ void do_user_addr_fault(struct pt_regs *regs,
+>  
+>  	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+>  
+> +	/*
+> +	 * If the fault is caused by a Shadow Stack access,
+> +	 * i.e. CALL/RET/SAVEPREVSSP/RSTORSSP, then set
+> +	 * FAULT_FLAG_WRITE to effect copy-on-write.
+> +	 */
+> +	if (hw_error_code & X86_PF_SHSTK)
+> +		flags |= FAULT_FLAG_WRITE;
+>  	if (hw_error_code & X86_PF_WRITE)
+>  		flags |= FAULT_FLAG_WRITE;
+>  	if (hw_error_code & X86_PF_INSTR)
+
+It would be great if you could also include the *why*.  *Why* do read
+faults need copy-on-write semantics?
