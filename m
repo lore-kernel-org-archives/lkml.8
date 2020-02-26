@@ -2,140 +2,215 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C36C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60289C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAEC24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290B324670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fk11+hP2"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="BbODRCYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgBZVvL (ORCPT
+        id S1727758AbgBZVv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:51:11 -0500
-Received: from mail.efficios.com ([167.114.26.124]:60174 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbgBZVvK (ORCPT
+        Wed, 26 Feb 2020 16:51:26 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39529 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbgBZVvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:51:10 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C7CEC26FE33;
-        Wed, 26 Feb 2020 16:51:09 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 2DUpseTh9KQD; Wed, 26 Feb 2020 16:51:09 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 4496626FE32;
-        Wed, 26 Feb 2020 16:51:09 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4496626FE32
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1582753869;
-        bh=6AP9OFhSnVvA6ZnNHSvbswS/0fzySU+X9J3de0/Oe4A=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=fk11+hP2FH+Ihqkt/VjoFS5qumyTe54AHCC2d505OAeW9K/nw6b0nHrJqOiSMRU1W
-         MD4kXG66P3C2nq+UR4XiL8m73VvFjPkgATEvvZx2MIrvQ18zl0es15gFLQ2KYtGmJW
-         A8n4Mzc6PUnN+uXtmNevoug3FTJ8uAilMotD+53dcz9V/pK2cgB8WY58v5Uni0udrs
-         Z/T/sHfH0c2yxpRMu1fS1BF/n+aeBPKYtnjxPW6hoCVXRx/3CFzdJyKH9SSRtCITvx
-         xy1CxYe1YB9hRvunlsZQlbK9EPS3/K7zVw8Xjb2NCBjB4yhrUEQ6vHMnZrruyDhrmc
-         Bn3sgAYju1UDw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id jZ2sG3XOck3Y; Wed, 26 Feb 2020 16:51:09 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 349C326FF94;
-        Wed, 26 Feb 2020 16:51:09 -0500 (EST)
-Date:   Wed, 26 Feb 2020 16:51:09 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Chris Kennelly <ckennelly@google.com>
-Cc:     Paul Turner <pjt@google.com>, Florian Weimer <fweimer@redhat.com>,
-        Carlos O'Donell <codonell@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-        Brian Geffon <bgeffon@google.com>
-Message-ID: <416869220.9190.1582753869096.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com>
-References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com> <20200221154923.GC194360@google.com> <1683022606.3452.1582301632640.JavaMail.zimbra@efficios.com> <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com>
-Subject: Re: Rseq registration: Google tcmalloc vs glibc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: Rseq registration: Google tcmalloc vs glibc
-Thread-Index: Qr0rErGoWa9ebOi0Qh/dm4u4h5997w==
+        Wed, 26 Feb 2020 16:51:25 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j15so311396pgm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:51:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=7ldHABlBD18zLPYrSu+cdH4KI93P+mg6f36otJlbi3M=;
+        b=BbODRCYf3qUCVc0FwRNhp0e9kHNKBcNi5nDzE6bM+LY9S5XKEQEW3DREWeM4ysZZ/t
+         8XbLYXnyYeVYbkp84Whzykfb6mD4JzwsjfxIRiEO5Dm8fKoY6z96HrGrWVDqIVuYDyHp
+         CJnuggS/T1OZrWHZpq7mPoFf8OYEaVX7TIhqcqt8fmJneCpBkLwWTgosUk3NP/ePs87T
+         6M6z3w/i6QqhqLLLV4BlVs6Z18GQKWhVRz+2yRnzkAb28fJYBZi+CvlxsSfBEJxYRz/y
+         i8RcaNC+QvbYo+KO0kPfNa1Uzmm7AAcsVsXM9x9VJZOp8aG/2KzENFU5DQWincHbnLnG
+         YHmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=7ldHABlBD18zLPYrSu+cdH4KI93P+mg6f36otJlbi3M=;
+        b=QKJkx0tKlpLTIWWoEHFuVPm+yrK7Qbk5zIaYrCDq4hpc+GfvWfrVPeyom7Ta7rS8f/
+         oO9jisj9fkZF+jj2Ht0SWhKFupDtLvvFK7mEVkkbI3JsPnT2VAiLMNBqm8/hHPsN9Fkk
+         R0UigGV61Z0bk9aCuCX7+9LCVie+2d/bai8P4+McgDxYe8FT2CXmJzpcchthK+UHeLEc
+         qIJQ/DSzI4sQLKE2YUoX2HsGkxRm7Le9SdvSh5BTEwQq+c+mOJGbCudMAvq4Ks/tbW5V
+         Cz1omCj1Vvj+vKyEPvvpb0abF+lgCKUYIHrrojj0I5p0AX1Qyd4UOJ2Ru3Z/V8QtqgXU
+         kXsQ==
+X-Gm-Message-State: APjAAAVj3sI5u4rVGKNSSkgUixmKB23eOYFY0ZDKSabIjnLVOZ36QzpP
+        NsEFD7tIG7PNqnLM5VhM+GOd5A==
+X-Google-Smtp-Source: APXvYqxT1yiTPqoDhXgDTKgD5sJZm7rxtcjb/lfNHBR6wzTwindN+HTCBjfYXZwQ/t5YHcxlhoabRQ==
+X-Received: by 2002:a62:e112:: with SMTP id q18mr762213pfh.88.1582753883078;
+        Wed, 26 Feb 2020 13:51:23 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id h7sm4371553pfq.36.2020.02.26.13.51.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Feb 2020 13:51:22 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+Date:   Wed, 26 Feb 2020 14:51:18 -0700
+In-Reply-To: <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
+        krisman@collabora.com, surajjs@amazon.com, dmonakhov@gmail.com,
+        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
+        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 25, 2020, at 10:24 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-[..]
-> 
-> Chris, Brian, is there any other concern to upgrading of tcmalloc
-> version in ChromeOS? I believe there was some concern about detection
-> of rseq kernel support. A quick look at tcmalloc shows it does not do
-> such detection, but I can stand corrected. One more thing, currently
-> tcmalloc does not use rseq on ARM. If I recall, ARM does have rseq
-> support as well. So we ought to enable it for that arch as well if
-> possible. Why not enable it on all arches and then dynamically detect
-> at runtime if needed support is available?
 
-Please allow me to raise a concern with respect to the implementation
-of the SlowFence() function in tcmalloc/internal/percpu.cc. It uses
-sched_setaffinity to move the thread around to each CPU part of the
-cpu mask.
+--Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-There are a couple of corner-cases where I think it can malfunction:
+On Feb 26, 2020, at 1:05 PM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>=20
+> On 26.02.2020 18:55, Christoph Hellwig wrote:
+>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
+>>> This adds a support of physical hint for fallocate2() syscall.
+>>> In case of @physical argument is set for ext4_fallocate(),
+>>> we try to allocate blocks only from [@phisical, @physical + len]
+>>> range, while other blocks are not used.
+>>=20
+>> Sorry, but this is a complete bullshit interface.  Userspace has
+>> absolutely no business even thinking of physical placement.  If you
+>> want to align allocations to physical block granularity boundaries
+>> that is the file systems job, not the applications job.
+>=20
+> Why? There are two contradictory actions that filesystem can't do at =
+the same time:
+>=20
+> 1)place files on a distance from each other to minimize number of =
+extents
+>  on possible future growth;
+> 2)place small files in the same big block of block device.
+>=20
+> At initial allocation time you never know, which file will stop grow =
+in some
+> future, i.e. which file is suitable for compaction. This knowledge =
+becomes
+> available some time later.  Say, if a file has not been changed for a =
+month,
+> it is suitable for compaction with another files like it.
+>=20
+> If at allocation time you can determine a file, which won't grow in =
+the future,
+> don't be afraid, and just share your algorithm here.
 
-- Interaction with concurrent sched_setaffinity invoked by an external
-  manager process: If an external manager process attempts to limit this
-  thread's ability to run onto specific CPUs, either before the thread
-  starts or concurrently while the thread executes, I suspect the
-  SlowFence() algorithm will simply handle errors while trying to set
-  affinity by skipping CPUs, which results in a skipped rseq fence,
-  which in turn can cause corruption.
+Very few files grow after they are initially written/closed.  Those that
+do are almost always opened with O_APPEND (e.g. log files).  It would be
+reasonable to have O_APPEND cause the filesystem to reserve blocks (in
+memory at least, maybe some small amount on disk like 1/4 of the current
+file size) for the file to grow after it is closed.  We might use the
+same heuristic for directories that grow long after initial creation.
 
-  The comments in this function state:
+The main exception there is VM images, because they are not really =
+"files"
+in the normal sense, but containers aggregating a lot of different =
+files,
+each created with patterns that are not visible to the VM host.  In that
+case, it would be better to have the VM host tell the filesystem that =
+the
+IO pattern is "random" and not try to optimize until the VM is cold.
 
-    // If we can't pin ourselves there, then no one else can run there, so
-    // that's fine.
+> In Virtuozzo we tried to compact ext4 with existing kernel interface:
+>=20
+> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
+>=20
+> But it does not work well in many situations, and the main problem is =
+blocks allocation in desired place is not possible. Block allocator =
+can't behave
+> excellent for everything.
+>=20
+> If this interface bad, can you suggest another interface to make block
+> allocator to know the behavior expected from him in this specific =
+case?
 
-  But AFAIU the thread's cpu affinity is a per-thread attribute, so saying
-  that no other thread from the same process can run there seems wrong. What
-  am I missing ? Maybe it is a difference between cpusets and sched_setaffinity ?
+In ext4 there is already the "group" allocator, which combines multiple
+small files together into a single preallocation group, so that the IO
+to disk is large/contiguous.  The theory is that files written at the
+same time will have similar lifespans, but that isn't always true.
 
-  The code below opens /proc/self/cpuset to deal with concurrent affinity
-  updates by cpuset seems to rely on CONFIG_CPUSETS=y, and does not seem to
-  take into account CPU affinity changes through sched_setaffinity.
+If the files are large and still being written, the allocator will =
+reserve
+additional blocks (default 8MB I think) on the expectation that it will
+continue to write until it is closed.
 
-  Moreover, reading through the comments there, depending on internal kernel
-  synchronization implementation details for dealing with concurrent cpuset
-  updates seems very fragile. Those details about internal locking of
-  cpuset.cpus within the kernel should not be expected to be ABI.
+I think (correct me if I'm wrong) that your issue is with defragmenting
+small files to free up contiguous space in the filesystem?  I think once
+the free space is freed of small files that defragmenting large files is
+easily done.  Anything with more than 8-16MB extents will max out most
+storage anyway (seek rate * IO size).
 
-- Interaction with CPU hotplug. If a target CPU is unplugged and plugged
-  again (offline, then online) concurrently, this algorithm may skip that
-  CPU and thus skip a rseq fence, which can also cause corruption.
+In that case, an interesting userspace interface would be an array of
+inode numbers (64-bit please) that should be packed together densely in
+the order they are provided (maybe a flag for that).  That allows the
+filesystem the freedom to find the physical blocks for the allocation,
+while userspace can tell which files are related to each other.
 
-Those limitations of sched_setaffinity() are the reasons why I have
-proposed a new "pin_on_cpu()" system call [1]. Feedback in that area
-is very welcome.
+Tools like "readahead" could also leverage this to "perfectly" allocate
+the files used during boot into a single stream of reads from the disk.
 
-Thanks,
+Cheers, Andreas
 
-Mathieu
 
-[1] https://lore.kernel.org/r/20200121160312.26545-1-mathieu.desnoyers@efficios.com
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+
+
+
+--Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5W6FYACgkQcqXauRfM
+H+ARrg/+M8YUY/LsY7U43iojx1GZazLqDMONgBDBXLFLlo9tfab/kekT78JLeRHt
+0gesFe8j9TIJ1aOv/Cqss+yyvzXvryXbAuk8rIcGNbixf83YQ4J0hN7Z07unb5PH
+6Og5VRhI/BuqXWVezvqY//FrKq+vZ1cZ6wIQPSJKFqa2W28DtqsRm2pY/Z9uhd1x
+CHTDPAFX7PHasI+76obGjbF2eNNMo9OTTODOseDWQer7lUkF2YO0IKi4diDCBoli
+FKVfzYt7lxi6Kz1qjsewPnFLAAp+paY1qIRTU9NCm1T2rUIjSg8j/XKc967NBNZY
+/ZFlWu6RCp3WcohZmMX6tZTPyhk5Ua/Y2cu5fuOhxxag+vvcokR8OzOe6ikVzyyq
+Jbs8mw8fdtUUJ9QLkUTtSnFpwKHN/uriGM1gzbtm8iN5sJI0mo5aDqHkwItMu7kp
+8+sHFqcSRlAQHzyAfz44bt6tyFyYSqMUwWOukOrnyDKNHIrNerZVKiM+4VPRdXkP
+zmboMuMpqFrsB4GdlRUWK8l4zSFXKSAlHYrpLdj3muCyzXqhtsG9fKbsFgEox7Yx
+AazQeV4PSTUuxQenRgNQidLRKNY+gGj09+jJsxk3u2T80gjX3Hd6FR9Scevu2nbe
+yvkZNBL2udbidu8lZYczpkcJ5RGoPMErC2ccwtx8dWKTMD84XAg=
+=L/2m
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398--
