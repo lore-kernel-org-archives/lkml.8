@@ -7,109 +7,89 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A31C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACA8C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AE42067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BE421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JgKIMjah"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aB6CJYWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgBZDop (ORCPT
+        id S1726688AbgBZDxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:44:45 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25794 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgBZDop (ORCPT
+        Tue, 25 Feb 2020 22:53:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47120 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726046AbgBZDxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 22:44:45 -0500
+        Tue, 25 Feb 2020 22:53:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582688684;
+        s=mimecast20190719; t=1582689228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=g4gojvp3vC3N2CngBOtMsPIUT4YDPupheuU+NRdhvhM=;
-        b=JgKIMjahHNKVmPvxwU+G8EZgwvxV119uu/8PskdipBPDOzxv0LIBE/ADLN4En1Ol+v9FdA
-        ETLsaufXa+d8CiTXLWCinMMMZr3cl044eV1FWXH9mqoYfR5All6cmrs9DrYQAnzKr8TdAA
-        CjAi0249SCtWYMq9Y/pCN7zSRWz6wiA=
+        bh=jPawdqnS4wqhOXPwRMpMZXtAzJ3OHZG8p6E7J26KlZ8=;
+        b=aB6CJYWvr+5zDahbGBXsuld47MifqtKcFymaX6I4He6rm9e53C/R8MyYEjIE+fVTAOMXuY
+        lLPF2PJnPpOHppfcijpMOGJk4WZBfVgGozYykbsRTWAKUkg4diQdU2DXwEjPAWQIgyAQRR
+        /Zu1IXtMlfbMYde9Q+mnRvwZMVid7H8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-WJgVg_aSNIeoVPp7BnFFgA-1; Tue, 25 Feb 2020 22:44:42 -0500
-X-MC-Unique: WJgVg_aSNIeoVPp7BnFFgA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-388-qbuKqQ2GNoKbWmazEt9ICw-1; Tue, 25 Feb 2020 22:53:44 -0500
+X-MC-Unique: qbuKqQ2GNoKbWmazEt9ICw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8117E107ACC5;
-        Wed, 26 Feb 2020 03:44:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E50C58017CC;
+        Wed, 26 Feb 2020 03:53:42 +0000 (UTC)
 Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DB16590519;
-        Wed, 26 Feb 2020 03:44:36 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 11:44:33 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9ECBF92966;
+        Wed, 26 Feb 2020 03:53:39 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 11:53:36 +0800
 From:   Baoquan He <bhe@redhat.com>
 To:     Michal Hocko <mhocko@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         akpm@linux-foundation.org, richardw.yang@linux.intel.com,
         david@redhat.com, osalvador@suse.de, dan.j.williams@intel.com,
         rppt@linux.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
+Subject: Re: [PATCH v2 4/7] mm/sparse.c: only use subsection map in VMEMMAP
  case
-Message-ID: <20200226034433.GE24216@MiWiFi-R3L-srv>
+Message-ID: <20200226035336.GF24216@MiWiFi-R3L-srv>
 References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220103849.GG20509@dhcp22.suse.cz>
- <20200221142847.GG4937@MiWiFi-R3L-srv>
- <20200225100352.GN22443@dhcp22.suse.cz>
+ <20200220043316.19668-5-bhe@redhat.com>
+ <20200225095713.GL22443@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225100352.GN22443@dhcp22.suse.cz>
+In-Reply-To: <20200225095713.GL22443@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/25/20 at 11:03am, Michal Hocko wrote:
-> On Fri 21-02-20 22:28:47, Baoquan He wrote:
-> > On 02/20/20 at 11:38am, Michal Hocko wrote:
-> > > On Thu 20-02-20 12:33:09, Baoquan He wrote:
-> > > > Memory sub-section hotplug was added to fix the issue that nvdimm could
-> > > > be mapped at non-section aligned starting address. A subsection map is
-> > > > added into struct mem_section_usage to implement it. However, sub-section
-> > > > is only supported in VMEMMAP case.
-> > > 
-> > > Why? Is there any fundamental reason or just a lack of implementation?
-> > > VMEMMAP should be really only an implementation detail unless I am
-> > > missing something subtle.
-> > 
-> > Thanks for checking.
-> > 
-> > VMEMMAP is one of two ways to convert a PFN to the corresponding
-> > 'struct page' in SPARSE model. I mentioned them as VMEMMAP case, or
-> > !VMEMMAP case because we called them like this previously when reviewed
-> > patches, hope it won't cause confusion.
-> > 
-> > Currently, config ZONE_DEVICE depends on SPARSEMEM_VMEMMAP. The
-> > subsection_map is added to struct mem_section_usage to track which sub
-> > section is present, VMEMMAP fills those bits which corresponding
-> > sub-sections are present, while !VMEMMAP, namely classic SPARSE, fills
-> > the whole map always.
-> > 
-> > As we know, VMEMMAP builds page table to map a cluster of 'struct page'
-> > into the corresponding area of 'vmemmap'. Subsection hotplug can be
-> > supported naturally, w/o any change, just map needed region related to
-> > sub-sections on demand. For !VMEMMAP, it allocates memmap with
-> > alloc_pages() or vmalloc, thing is a little complicated, e.g the mixed
-> > section, boot memory occupies the starting area, later pmem hot added to
-> > the rear part.
-> > 
-> > About !VMEMMAP which doesn't support sub-section hotplog, Dan said 
-> > it's more because the effort and maintenance burden outweighs the
-> > benefit. And the current 64 bit ARCHes all enable
-> > SPARSEMEM_VMEMMAP_ENABLE by default.
+On 02/25/20 at 10:57am, Michal Hocko wrote:
+> On Thu 20-02-20 12:33:13, Baoquan He wrote:
+> > Currently, subsection map is used when SPARSEMEM is enabled, including
+> > VMEMMAP case and !VMEMMAP case. However, subsection hotplug is not
+> > supported at all in SPARSEMEM|!VMEMMAP case, subsection map is unnecessary
+> > and misleading. Let's adjust code to only allow subsection map being
+> > used in VMEMMAP case.
 > 
-> OK, if this is the primary argument then make sure to document it in the
-> changelog (cover letter).
+> This really needs more explanation I believe. What exactly happens if
+> somebody tries to hotremove a part of the section with !VMEMMAP? I can
+> see that clear_subsection_map returns 0 but that is not an error code.
+> Besides that section_deactivate doesn't propagate the error upwards.
+> /me stares into the code
+> 
+> OK, I can see it now. It is relying on check_pfn_span to use the proper
+> subsection granularity. This really begs for a comment in the code
+> somewhere.
 
-Will add it when repost.
+Yes, check_pfn_span() guards it. People have no way to hot add/remove
+on non-section aligned block with !VMEMMAP.
+
+I have added extra comment to above section_activate() to note this,
+please check patch 5/7. Let me see how to add words to reflect the
+check_pfn_span() guard thing.
 
