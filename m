@@ -2,151 +2,124 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9567C4BA28
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40665C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE25824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582748930;
-	bh=X+heKnO6iZTZfGKI6KSWMm0otaVfMYMz/2QFDt5Deug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LZI0gPjZYJBp7pi8rBpxes0kpqHYQi8/NzADWeTmMuSux2R/HwH9TzyZr/rVgd2v0
-	 NTm708JDNa4ayi+6fbm5yp2ynHt011BTEeh/rJIBBiETslv6coSu8UhUZ/D7hFf90h
-	 FhUsSDvod2zLQiUQgRJGca1s16VSzcHKPil/iO04=
+	by mail.kernel.org (Postfix) with ESMTP id 145C82072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVGxei6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgBZU2t (ORCPT
+        id S1727466AbgBZU3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:28:49 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40817 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbgBZU2t (ORCPT
+        Wed, 26 Feb 2020 15:29:47 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34785 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbgBZU3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:28:49 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i6so716301otr.7;
-        Wed, 26 Feb 2020 12:28:47 -0800 (PST)
+        Wed, 26 Feb 2020 15:29:45 -0500
+Received: by mail-ot1-f67.google.com with SMTP id j16so756509otl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:29:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UBBYCrKEWuOTMe5EyAwkmAIoT9VVH7fpRYrxe98vHCY=;
+        b=uVGxei6e9yF0ykQTCRbpF1Xcix7hidQzKjxKmA1TAaLMeWBjYprbRURWAhfm37DnMO
+         ALgX0i/omp1eS4k0RzspH50ykrH6+tYuInb+/v3+dsQydB2Gf1JHLwkVAh7PVr7+/vRd
+         FEXucDxG2gKpfW36N9FsDf3SO19ksbFgC8vKl0aQmSTLblf+uGgXkO2fWfA4XxFM+8Js
+         jMnrrdCbNQqqzS+mSb6pWZJeJ7i2esnsfJ3vaxuZQhlQ6v6KWz6UIlXWOgBKqvTBvuUx
+         ppCNzmE84DNL1pPvauf2ZbbPd7pYXUAe4jXhVazh2kQtXxxw/ibvY1NOsCYPKL926wLL
+         APqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O/ZmfWy9/9XjBdv30P0G0kcHPh66hW3ql84KTaPPF/A=;
-        b=tejn9+7PuRfQB+7/Y8fniQ4VqaUBICLZRN/doe5HIMv9P8kDr3uiephZvF0PAYP97a
-         SmEhM5DiBrvJbV9S/rGBzWecQV/B+3uwfGR7mfYC2+fASqkpw/oCGE/8UJuZ07vYArxt
-         OV7oBOt6lZL3H8ZN86bcBLGYTFdpIeldA7G+kX7sSYhsLOUeu98seB6K6UcCPGVmBQSu
-         aq31XkoKdp2wUfzZkwnQ6c1SKOWpeGLXqD2Nqz7+j7x9edlLST4ie+ZHwjxcxWeFER2S
-         RDOwBpG1pwKAHUiNf6KIhnFc5IMrFHIgHafnd7pPizmsQSL0ueFprj0zPQIqqHuSBVnv
-         LghQ==
-X-Gm-Message-State: APjAAAVAAYvj5Lr0+rTxmaUNTkX4XOCqYvl1nYDXqv7W131dWz05kWhy
-        dKNbArzhDIb62c1TBxOFSw==
-X-Google-Smtp-Source: APXvYqx+ekwwPkyIdV8FoaGq7rSPdBmF6vtqNYcfh4IlzHYSrpmvQXBFhWXQgJrWcFqq1sadnCd3OA==
-X-Received: by 2002:a9d:74c4:: with SMTP id a4mr456108otl.119.1582748926618;
-        Wed, 26 Feb 2020 12:28:46 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e10sm507605otl.0.2020.02.26.12.28.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 12:28:45 -0800 (PST)
-Received: (nullmailer pid 4643 invoked by uid 1000);
-        Wed, 26 Feb 2020 20:28:44 -0000
-Date:   Wed, 26 Feb 2020 14:28:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ryder Lee <Ryder.Lee@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: Re: [PATCH 2/5] dt-bindings: clock: mediatek: document clk bindings
- mipi0a for Mediatek MT6765 SoC
-Message-ID: <20200226202844.GA18610@bogus>
-References: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com>
- <1582278742-1626-3-git-send-email-macpaul.lin@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UBBYCrKEWuOTMe5EyAwkmAIoT9VVH7fpRYrxe98vHCY=;
+        b=nuXeZQsG3xshMgOV3HPIxB0Zr+OgTJjlUhy/vyb1Sw7C4VLAAdWiLIkSuvH9PSAbJ5
+         qbXwvd69eMQqFHdHBqz9p4U4pOeDSmguqFCS90i8tYTJH95r4r+GJzXze86tnnOV/KAP
+         ukrElNgRw0EKXfwsyjiY4Q5Q4UNcBbWTiJMRQeMGDH4Fig5gtVx7v8L3SD70hLX3H1np
+         HUx33S8Hyw5NZgVvJ/s/k3iUj5MLrY+bu6xxNggCaRI6cZchueuriLqy8D3WnuaRi6ou
+         2oQSFUSnn/R3BmIrMeCBIWzqn2Xtd7J30RQwwCriHs4qEEYIfOOt5+9iCsydkb+avdZq
+         99vw==
+X-Gm-Message-State: APjAAAXzcNLLXBIiQN+wfVL0xnYI3v3GXEbu4oJA3/N/7dURwf1PDgSZ
+        N5De9qSds2euCPmsi71DAo0yLBMwll1fEtFLx7vVVA==
+X-Google-Smtp-Source: APXvYqy7E7A1017OqCy2OgReSsVvINF1u2X33Ne5TrenikJqc56r0qDxjZlM9E+pAKGCyqxj9LTAbiG86jPOqxjX13k=
+X-Received: by 2002:a05:6830:1219:: with SMTP id r25mr502917otp.180.1582748984487;
+ Wed, 26 Feb 2020 12:29:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582278742-1626-3-git-send-email-macpaul.lin@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200224160215.4136-1-mic@digikod.net> <20200224160215.4136-6-mic@digikod.net>
+In-Reply-To: <20200224160215.4136-6-mic@digikod.net>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 26 Feb 2020 21:29:18 +0100
+Message-ID: <CAG48ez36SMrPPgsj0omcVukRLwOzBzqWOQjuGCmmmrmsGiNukw@mail.gmail.com>
+Subject: Re: [RFC PATCH v14 05/10] fs,landlock: Support filesystem access-control
+To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:52:19PM +0800, Macpaul Lin wrote:
-> This patch adds the binding documentation for mipi0a.
-> 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> ---
->  .../bindings/arm/mediatek/mediatek,mipi0a.txt | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
+On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
+wrote:
+> +static inline u32 get_mem_access(unsigned long prot, bool private)
+> +{
+> +       u32 access =3D LANDLOCK_ACCESS_FS_MAP;
+> +
+> +       /* Private mapping do not write to files. */
+> +       if (!private && (prot & PROT_WRITE))
+> +               access |=3D LANDLOCK_ACCESS_FS_WRITE;
+> +       if (prot & PROT_READ)
+> +               access |=3D LANDLOCK_ACCESS_FS_READ;
+> +       if (prot & PROT_EXEC)
+> +               access |=3D LANDLOCK_ACCESS_FS_EXECUTE;
+> +       return access;
+> +}
 
-Please use DT schema for new bindings. See 
-Documentation/devicetree/writing-schema.rst.
+When I do the following, is landlock going to detect that the mmap()
+is a read access, or is it incorrectly going to think that it's
+neither read nor write?
 
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
-> new file mode 100644
-> index 000000000000..8be5978f388d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
-> @@ -0,0 +1,28 @@
-> +Mediatek mipi0a (mipi_rx_ana_csi0a) controller
-> +============================
-> +
-> +The Mediatek mipi0a controller provides various clocks
-> +to the system.
-> +
-> +Required Properties:
-> +
-> +- compatible: Should be one of:
-> +	- "mediatek,mt6765-mipi0a", "syscon"
-> +- #clock-cells: Must be 1
-> +
-> +The mipi0a controller uses the common clk binding from
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> +
-> +The mipi0a controller also uses the common power domain from
-> +Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> +The available power doamins are defined in dt-bindings/power/mt*-power.h.
-> +
-> +Example:
-> +
-> +mipi0a: clock-controller@11c10000 {
-> +	compatible = "mediatek,mt6765-mipi0a", "syscon";
-> +	reg = <0 0x11c10000 0 0x1000>;
-
-Not documented.
-
-> +	power-domains = <&scpsys MT6765_POWER_DOMAIN_CAM>;
-
-Not documented.
-
-> +	#clock-cells = <1>;
-> +};
-> -- 
-> 2.18.0
+$ cat write-only.c
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <stdio.h>
+int main(void) {
+  int fd =3D open("/etc/passwd", O_RDONLY);
+  char *ptr =3D mmap(NULL, 0x1000, PROT_WRITE, MAP_PRIVATE, fd, 0);
+  printf("'%.*s'\n", 4, ptr);
+}
+$ gcc -o write-only write-only.c -Wall
+$ ./write-only
+'root'
+$
