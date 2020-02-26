@@ -2,125 +2,190 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48678C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D51C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AB42084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8673F2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7m0jjUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgBZH0d (ORCPT
+        id S1727278AbgBZH2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:26:33 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:42310 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727035AbgBZH0d (ORCPT
+        Wed, 26 Feb 2020 02:28:09 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40162 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgBZH2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:26:33 -0500
-Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01Q7QV4s031800
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:26:31 -0500
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 01Q7QQVV025813
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:26:31 -0500
-Received: by mail-qt1-f199.google.com with SMTP id r9so3264066qtc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:26:31 -0800 (PST)
+        Wed, 26 Feb 2020 02:28:08 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t3so1624488wru.7;
+        Tue, 25 Feb 2020 23:28:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ddjl8EDbhMbAtnqngI6RiTBP48+D/nMFpIcQwuofslY=;
+        b=V7m0jjUViSFT0qDE4Frwn1P3Qb37gVs4z3K7BUqGQEHA6H+xw0L+6woSTtJ9uGzpko
+         FO8pmxSE/JJto9rUq7MJN/OSPav7IjjHLaOjJ3RDwEW+yzyNmvq+ppMvu7x5pUbP6BGY
+         umhOhi1LCSfslVYSHfiEbFVF2G2Kxb6MwzHWL1Idizv71jaXry2HGbmnYr+4+iRY1y+0
+         sU4ObzVhcr3qvFHt281ngR2eG6y6vMRywczJTR1ccrjYIH7tR2KPm+YpF5d2sFBDu1Nk
+         Iy1HAfwOaVHgYV28GPGDdKZC+OADnfSax9GDX9dNhAMWtItvzIVJnq5Sbn91ESP1TyV3
+         D+lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=/RrYGkGua2Nxdn/5XcsUsmert5oNHB1woL1bedy/GmI=;
-        b=Mi9fiv1BCr3hbBIfRDKERWQK+Z2Q2zPE1IR+429m+TmKgL4re59KgrA16rDK7LPJ1O
-         3qSZ50UiG/dmjQyl+8GrNFgOF8lnvFRkr7JZGvY4i/q9n4XUrZ9yqbK4AfEg4LYpmjjW
-         PlxMjL9qcqnEMiypHxcE1Zq/q3MQhjGxtFsrFCpvz4aEf1VBkJvoPkMxTqLxLuJ/+30O
-         sEqiN6OmDhSxyT8IHwla1C4BAKKyrqCFPjchayAj7tjqrgE2seGEMhEfDghY9PToDHkB
-         uCLS3JyUbibw3DJqEAHw+edexWmc5M/BoRsPSWZsC80qwZDAqRhIIqkStpf+PRtHNc34
-         H8VA==
-X-Gm-Message-State: APjAAAXneawsR4KWOsFg6I59LwS7PPDIDR1qtJl2OFCovvawC0URqMkc
-        papFShJgg1LpCKOSqaF/C07permrFtdYmy2vtnkKM6amBLEogXv6WtLhbJdhF0MSWSBnmOTBtvj
-        15c6UugWQ6U0TXUgk4WWNQANc6eTI3SOcrvg=
-X-Received: by 2002:a05:620a:818:: with SMTP id s24mr3993095qks.369.1582701986638;
-        Tue, 25 Feb 2020 23:26:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy9jp1KDxLFeQLv7QeR2TtKnSWWQ2++QWZI9Gbb8l6PC8kX3KCPOu2JNC/AcAu35IfNkSy/tg==
-X-Received: by 2002:a05:620a:818:: with SMTP id s24mr3993072qks.369.1582701986335;
-        Tue, 25 Feb 2020 23:26:26 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id x131sm689963qka.1.2020.02.25.23.26.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 23:26:24 -0800 (PST)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ddjl8EDbhMbAtnqngI6RiTBP48+D/nMFpIcQwuofslY=;
+        b=kM41+H6ayQTU7Z2Ilwo/xZn674IojTE2aiECQBquDitUZuyhhEcxsiNotrE1hQTfoD
+         4Pp6+8Y004IAnrknC8sw3+LIjU8jgImmJLfCRbY6wfyiJifrjJ2b3XQhy44j0+cQCEP7
+         dX8+YA7zsgvTkG866f4woKGT4vxOIztk8iAKOO4+w2bSEGIcUPeE12bN8ofsWZmeXNEk
+         6jqneVvVVEDQE5+JlUj8w3c/PQ6A6MSOHUjRx1jc2or554O6a+yVNaTvMCDSCpgqBFlN
+         JoR9ZPAzJjTmEtcspRDjlVKMhAp3GZyAf6YW6jCRoSZ5uVg5kJTdS7SIselx3/GOrutR
+         YI4g==
+X-Gm-Message-State: APjAAAWXSDsiQLUkkZkmC4myKMibwhXqMSpx5Q6Si5WD3ohUihrpPfsF
+        2SjptqYQjOlBsFyGYZtyPFvT+ACU
+X-Google-Smtp-Source: APXvYqzonWono6/3OpIDSPmky5FrOb1OYMy68R1OVnoovK6y8l++ZaGF1mc7daRPKH5TBWekP9yo4g==
+X-Received: by 2002:a5d:5506:: with SMTP id b6mr3586994wrv.94.1582702085880;
+        Tue, 25 Feb 2020 23:28:05 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:e467:10a7:6ccf:340e? (p200300EA8F296000E46710A76CCF340E.dip0.t-ipconnect.de. [2003:ea:8f29:6000:e467:10a7:6ccf:340e])
+        by smtp.googlemail.com with ESMTPSA id u23sm1756963wmu.14.2020.02.25.23.28.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 23:28:05 -0800 (PST)
+Subject: Re: [RFC PATCH 1/2] net: phy: let the driver register its own IRQ
+ handler
+To:     Michael Walle <michael@walle.cc>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: remove symlink feature : Additional patch
-In-Reply-To: <20200226063746.3128-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-References: <20200226063746.3128-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1582701983_403032P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>
+References: <20200225230819.7325-1-michael@walle.cc>
+ <20200225230819.7325-2-michael@walle.cc>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <3c7e1064-845e-d193-24ad-965211bf1e9a@gmail.com>
+Date:   Wed, 26 Feb 2020 08:27:58 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200225230819.7325-2-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Feb 2020 02:26:23 -0500
-Message-ID: <503049.1582701983@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1582701983_403032P
-Content-Type: text/plain; charset=us-ascii
+On 26.02.2020 00:08, Michael Walle wrote:
+> There are more and more PHY drivers which has more than just the PHY
+> link change interrupts. For example, temperature thresholds or PTP
+> interrupts.
+> 
+> At the moment it is not possible to correctly handle interrupts for PHYs
+> which has a clear-on-read interrupt status register. It is also likely
+> that the current approach of the phylib isn't working for all PHYs out
+> there.
+> 
+> Therefore, this patch let the PHY driver register its own interrupt
+> handler. To notify the phylib about a link change, the interrupt handler
+> has to call the new function phy_drv_interrupt().
+> 
 
-On Wed, 26 Feb 2020 15:37:46 +0900, Tetsuhiro Kohada said:
-> Completely remove symlink codes and definitions.
+We have phy_driver callback handle_interrupt for custom interrupt
+handlers. Any specific reason why you can't use it for your purposes?
 
-> In the previous patch, it was not completely removed.
-
-Then this should have been [PATCH v2], and the fixed version [PATCH v3]
-
-> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
->
+> Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
-And right in here there should be something like this:
+>  drivers/net/phy/phy.c        | 15 +++++++++++++++
+>  drivers/net/phy/phy_device.c |  6 ++++--
+>  include/linux/phy.h          |  2 ++
+>  3 files changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index d76e038cf2cb..f25aacbcf1d9 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -942,6 +942,21 @@ void phy_mac_interrupt(struct phy_device *phydev)
+>  }
+>  EXPORT_SYMBOL(phy_mac_interrupt);
+>  
+> +/**
+> + * phy_drv_interrupt - PHY drivers says the link has changed
+> + * @phydev: phy_device struct with changed link
+> + *
+> + * The PHY driver may implement his own interrupt handler. It will call this
+> + * function to notify us about a link change. Trigger the state machine and
+> + * work a work queue.
+> + */
 
-v3: fixed subject line
-v2: previous patch didn't completely remove it
+This function would duplicate phy_mac_interrupt().
 
->  drivers/staging/exfat/exfat.h       |  3 ---
->  drivers/staging/exfat/exfat_core.c  |  3 ---
->  drivers/staging/exfat/exfat_super.c | 27 ---------------------------
->  3 files changed, 33 deletions(-)
->
-> diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-> index 4a0a481fe010..cd3479fc78ba 100644
+> +void phy_drv_interrupt(struct phy_device *phydev)
+> +{
+> +	/* Trigger a state machine change */
+> +	phy_trigger_machine(phydev);
+> +}
+> +EXPORT_SYMBOL(phy_drv_interrupt);
+> +
+>  static void mmd_eee_adv_to_linkmode(unsigned long *advertising, u16 eee_adv)
+>  {
+>  	linkmode_zero(advertising);
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 6a5056e0ae77..6d8c94e61251 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -965,7 +965,8 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
+>  		return rc;
+>  
+>  	phy_prepare_link(phydev, handler);
+> -	if (phy_interrupt_is_valid(phydev))
+> +	if (phy_interrupt_is_valid(phydev) &&
+> +	    phydev->drv->flags & PHY_HAS_OWN_IRQ_HANDLER)
+>  		phy_request_interrupt(phydev);
 
+Here most likely a ! is missing. because as-is you would break
+current phylib interrupt mode. Where in the PHY driver (in which
+callback) do you want to register your own interrupt handler?
 
+>  
+>  	return 0;
+> @@ -2411,7 +2412,8 @@ EXPORT_SYMBOL(phy_validate_pause);
+>  
+>  static bool phy_drv_supports_irq(struct phy_driver *phydrv)
+>  {
+> -	return phydrv->config_intr && phydrv->ack_interrupt;
+> +	return ((phydrv->config_intr && phydrv->ack_interrupt) ||
+> +		phydrv->flags & PHY_HAS_OWN_IRQ_HANDLER);
+>  }
+>  
+>  /**
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index c570e162e05e..46f73b94fd60 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -75,6 +75,7 @@ extern const int phy_10gbit_features_array[1];
+>  
+>  #define PHY_IS_INTERNAL		0x00000001
+>  #define PHY_RST_AFTER_CLK_EN	0x00000002
+> +#define PHY_HAS_OWN_IRQ_HANDLER	0x00000004
+>  #define MDIO_DEVICE_IS_PHY	0x80000000
+>  
+>  /* Interface Mode definitions */
+> @@ -1235,6 +1236,7 @@ int phy_drivers_register(struct phy_driver *new_driver, int n,
+>  void phy_state_machine(struct work_struct *work);
+>  void phy_queue_state_machine(struct phy_device *phydev, unsigned long jiffies);
+>  void phy_mac_interrupt(struct phy_device *phydev);
+> +void phy_drv_interrupt(struct phy_device *phydev);
+>  void phy_start_machine(struct phy_device *phydev);
+>  void phy_stop_machine(struct phy_device *phydev);
+>  void phy_ethtool_ksettings_get(struct phy_device *phydev,
+> 
 
---==_Exmh_1582701983_403032P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXlYdnwdmEQWDXROgAQJaqQ/+LFm+5gnoObjHByvFiSe/WLwyDsLR5ck8
-NxQVtg5wFV9uNxsVdsTCyiwaPril0sXlQfIvt3+di7OqzwfwSmsmLkDNHnrxPoCi
-n874KFMcJ7QpBXNP+FwWKd6tFB6ORf0A4EAQG+oS1afzVvFXKN9Vc+FYiT3GfPlj
-KlUgi8WJpQriRYz2HQ6RcYZj7PrrCSr3AOHTzVpvCwJXSKJlKi62LxRw6yIq5rRZ
-18Sqe8t6v4eX5CNOPvlZPBLYnbyW9AxUslhF/qWTzRIy7Vd/urwRY68tbKsnvMvT
-7dmjmPPOxurq2kirYBGBYdATN6LhIN22OVctFghT10c2ddrwyhnxHtwJbQLGNXcO
-QrHzgkFyabWQlVkQOuG25CBE/d0M7+gtPJmIx+zun63GTvd8m53GZoKkGc8dIDqe
-pLug/kVCbkxtffVovWXSgriu6KQnGa6jTo95l85trYbXbGW9+DAGdmSR5N6HgLb6
-mBi3stwpDgOFq86r+paMyDhZVwfNLh6z0zLf+obEP1W9j3aL8KNx4txUzR7RoKFk
-PizGKPz9E2iQWc/VBsnKa65Of1EwylK0hefiYjM+jTt8zFthT8RG1JXX5CxjeVYF
-UJUUbH9tF+76AsSx4w06kRaiG1kS6bZ9aFhspyZcXYUTBbb2ua19gPsSdg5JAZ8K
-AZraphreKpc=
-=69Q7
------END PGP SIGNATURE-----
-
---==_Exmh_1582701983_403032P--
