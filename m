@@ -2,92 +2,129 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664ADC4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B28C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393E321927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB9B20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582676880;
-	bh=5nMgN58XKA7T07lw5HTmd0MdFsxDRYFpp3ZCFiAQb40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QqZQoR3ZSUu0yBWQCj11BA4T65zDbdJrmTRlQpAgXj4WCX7Hci9LgMf9+HKWnjFXD
-	 IOjKhRbM+80nXRf0zlfRBUJWPx3ZwFzA/pqQzxk1zao+XC/DJSfa01Sg7mENxC09Af
-	 /jvo/BF4tlCOqJoEzUwMG2MFqhv7dauDYkAb1X1I=
+	s=default; t=1582676939;
+	bh=2PMEOSSd91WtZ6aS0URgU5NbJ9Ejg3d9n7C6UiZLmBU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=CKzUac8kAaRZE528fWlo7UUXsC33E6ni/qsxJxIujmpt4uvrruZzsPUYwZ9J/RPY4
+	 lHLemNZXkfM6onp8E+mVqdDzRzIzsjndbOqxY8BbG//c2pOAwY8vzLzAIthyFA2OMS
+	 6Gpok0RZp/TYwvce+HIN7nEjVmPXcQWOgnz2e4Vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgBZA17 (ORCPT
+        id S1729529AbgBZA26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:27:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
+        Tue, 25 Feb 2020 19:28:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbgBZA16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:27:58 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        id S1728756AbgBZA26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:28:58 -0500
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C8420732;
-        Wed, 26 Feb 2020 00:27:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2019820732;
+        Wed, 26 Feb 2020 00:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582676878;
-        bh=5nMgN58XKA7T07lw5HTmd0MdFsxDRYFpp3ZCFiAQb40=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K91fWeJ2NST6G+AsIq4lKKSlTLT9GlAFs8YuYUCcULbQSOzxnQ57B+7ceUiHjM7wm
-         ql0ygqkXqxXkkbE3ZMSg5wi34lJhCmXXKoVKgL2QS3bkF5BVa6IIqeKycYMuSnokUj
-         BiiDErM/RB/VXSCsy+iz9J6hJre5oGamm5yTE9/w=
-Date:   Wed, 26 Feb 2020 01:27:55 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org
-Subject: Re: [PATCH v4 08/27] rcu/kprobes: Comment why rcu_nmi_enter() is
- marked NOKPROBE
-Message-ID: <20200226002755.GD9599@lenoir>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.501225981@infradead.org>
+        s=default; t=1582676937;
+        bh=2PMEOSSd91WtZ6aS0URgU5NbJ9Ejg3d9n7C6UiZLmBU=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=LtLktzcKehUJvc6+0v1YUFa4Se6RgBxz1Wp13t1JWE18AE67Fe/UKLi1Eg5JpBmR0
+         YEMO0rugrNApDEY3tlTWSXfE7cigFe/0xHajqBYZIqpY7nM3/BBR5nrokIGN99Z5Z4
+         uvjFmlG0OCGwjsNb9Z86fjXuSZYjuKp6hwSqibkk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221134215.501225981@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
+References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org> <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v5 5/5] clk: qcom: Add modem clock controller driver for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 25 Feb 2020 16:28:56 -0800
+Message-ID: <158267693624.177367.14912476991395295437@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 02:34:24PM +0100, Peter Zijlstra wrote:
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> It's confusing that rcu_nmi_enter() is marked NOKPROBE and
-> rcu_nmi_exit() is not. One may think that the exit needs to be marked
-> for the same reason the enter is, as rcu_nmi_exit() reverts the RCU
-> state back to what it was before rcu_nmi_enter(). But the reason has
-> nothing to do with the state of RCU.
-> 
-> The breakpoint handler (int3 on x86) must not have any kprobe on it
-> until the kprobe handler is called. Otherwise, it can cause an infinite
-> recursion and crash the machine. It just so happens that
-> rcu_nmi_enter() is called by the int3 handler before the kprobe handler
-> can run, and therefore needs to be marked as NOKPROBE.
-> 
-> Comment this to remove the confusion to why rcu_nmi_enter() is marked
-> NOKPROBE but rcu_nmi_exit() is not.
-> 
-> Reported-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Link: https://lore.kernel.org/r/20200213163800.5c51a5f1@gandalf.local.home
+Quoting Taniya Das (2020-02-24 02:38:23)
+> diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
+> new file mode 100644
+> index 0000000..993749e
+> --- /dev/null
+> +++ b/drivers/clk/qcom/mss-sc7180.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,mss-sc7180.h>
+> +
+> +#include "clk-regmap.h"
+> +#include "clk-branch.h"
+> +#include "common.h"
+> +
+> +static struct clk_branch mss_axi_nav_clk =3D {
+> +       .halt_reg =3D 0x20bc,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x20bc,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "mss_axi_nav_clk",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "gcc_mss_nav_axi_clk",
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Drop _clk from here.
+
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch mss_axi_crypto_clk =3D {
+> +       .halt_reg =3D 0x20cc,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x20cc,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "mss_axi_crypto_clk",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "gcc_mss_mfab_axis_clk",
+
+And here, so that it matches the binding.
+
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
