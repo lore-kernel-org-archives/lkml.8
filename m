@@ -2,174 +2,180 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A7BC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FC6C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09D02084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582699625;
-	bh=dDJbRXLqJpypI/z+Vf+XskAsJXHyrxLuka4Lu27xsRQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B+ujyJYUohbfQG251iOADKr8imuOlvK2nqUWBnrOv6zEK5PLMGu65c5zK67zEyOvu
-	 nC/Zzh9ByvNutFe2Ja3OCcS9GL/+8lgVU/yxe8kUFD4rd9U42/R+0Ya/XmPM5HN5xI
-	 d5ByFyH6ZnTJsew8jyyM2onxqLh8coPtDq+WmYTc=
+	by mail.kernel.org (Postfix) with ESMTP id 7DFB52084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgBZGrE (ORCPT
+        id S1727152AbgBZGvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:47:04 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:58785 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgBZGrD (ORCPT
+        Wed, 26 Feb 2020 01:51:02 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35989 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgBZGvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:47:03 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 01Q6kp4P019600;
-        Wed, 26 Feb 2020 15:46:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01Q6kp4P019600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582699612;
-        bh=2VfJIOCvZH0NY/dmW/3ZDhtzj0Q1UN635jNbPpjGUr4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jd5pA8iRcjCYKKrF3kgDrZanUYxXyWnIGkH8aWK1zVz+hOhh5UuIc28UrLYFjAflt
-         y62ne42vRqsltkLP5ktMoipKgdRhCwepMx8ru4XYHN52FfsmLDKrVn3Im1vBGbtnpw
-         7j380mcPGbIyOjTiDs8v3kZGpyacRgQv7uWaI1mhyS0nE818GDI9QPPAKAZiEIY124
-         KwNTPcfflqDai2cpBzdWOqaHFV55nQ0ZPLELDaN7iLVKDfT9/6kPKidaHbmrQUT+Jr
-         CGpohC7LXixtKupCEa3Wb70aPbN7TAmZrjGf71GYQ0gNtOv008kp+yXs4/6pntXOFz
-         tyAguIycaYenA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id x123so1134533vsc.2;
-        Tue, 25 Feb 2020 22:46:52 -0800 (PST)
-X-Gm-Message-State: APjAAAXtBYA0/g5dJV4g1J8YZ71mtXZPoz/7rBm3UG/xHMv/ftTggx5T
-        C7hPljBxc5wDmJsZx5aFW9fY8+A1w0mYsOs1/cU=
-X-Google-Smtp-Source: APXvYqwkW77CBgQ1pHwOq8iqy4JwoPCgSKHrG7tUDS7YsQUWfdeloJMDAwvhYvtwEDKhmGNtwpbc+CI4rGqKqE3AHTQ=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr2881251vsh.179.1582699611202;
- Tue, 25 Feb 2020 22:46:51 -0800 (PST)
+        Wed, 26 Feb 2020 01:51:01 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1j6qX5-0007ZJ-8p; Wed, 26 Feb 2020 07:50:59 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1j6qX3-0002Rs-Ko; Wed, 26 Feb 2020 07:50:57 +0100
+Date:   Wed, 26 Feb 2020 07:50:57 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Andreas Tobler <andreas.tobler@onway.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
+Message-ID: <20200226065057.GT3335@pengutronix.de>
+References: <20200221072349.335551332@linuxfoundation.org>
+ <20200221072403.369335694@linuxfoundation.org>
+ <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
+ <20200224145718.GD3335@pengutronix.de>
+ <20200224212319.GE26320@sasha-vm>
 MIME-Version: 1.0
-References: <20200222190435.11767-1-masahiroy@kernel.org> <20200222190435.11767-5-masahiroy@kernel.org>
-In-Reply-To: <20200222190435.11767-5-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 26 Feb 2020 15:46:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT14XvMLp+CFJk4QdgvYCTanXz8KPQ=5C90N+VCOYPu1g@mail.gmail.com>
-Message-ID: <CAK7LNAT14XvMLp+CFJk4QdgvYCTanXz8KPQ=5C90N+VCOYPu1g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] kbuild: allow to run dt_binding_check and dtbs_check
- in a single command
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224212319.GE26320@sasha-vm>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:00:32 up 5 days, 21:31, 48 users,  load average: 0.59, 0.20, 0.12
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 4:04 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Since commit 93512dad334d ("dt-bindings: Improve validation build error
-> handling"), 'make dtbs_check' does not validate the schema fully.
->
-> If you want to check everything, you need to run two commands.
->
->   $ make ARCH=arm dt_binding_check
->   $ make ARCH=arm dtbs_check
->
-> You cannot do:
->
->   $ make ARCH=arm dt_binding_check dtbs_check
->
-> Because CHECK_DTBS is set, dt-doc-validate and dt-extract-example
-> are skipped.
->
-> Making it work will be useful for schema writers.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+On Mon, Feb 24, 2020 at 04:23:19PM -0500, Sasha Levin wrote:
+> On Mon, Feb 24, 2020 at 03:57:18PM +0100, Sascha Hauer wrote:
+> > On Mon, Feb 24, 2020 at 01:24:04PM +0000, Andreas Tobler wrote:
+> > > Hi all,
+> > > 
+> > > On 21.02.20 08:39, Greg Kroah-Hartman wrote:
+> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > > >
+> > > > [ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
+> > > >
+> > > > The current descriptor is not on any list of the virtual DMA channel.
+> > > > Once sdma_terminate_all() is called when a descriptor is currently
+> > > > in flight then this one is forgotten to be freed. We have to call
+> > > > vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
+> > > > Now that we also free the currently running descriptor we can (and
+> > > > actually have to) remove the current descriptor from its list also
+> > > > for the cyclic case.
+> > > >
+> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+> > > > Tested-by: Robin Gong <yibin.gong@nxp.com>
+> > > > Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > > ---
+> > > >   drivers/dma/imx-sdma.c | 19 +++++++++++--------
+> > > >   1 file changed, 11 insertions(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> > > > index c27e206a764c3..66f1b2ac5cde4 100644
+> > > > --- a/drivers/dma/imx-sdma.c
+> > > > +++ b/drivers/dma/imx-sdma.c
+> > > > @@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+> > > >   		return;
+> > > >   	}
+> > > >   	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+> > > > -	/*
+> > > > -	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
+> > > > -	 * the desc allocated will never be freed in vchan_dma_desc_free_list
+> > > > -	 */
+> > > > -	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
+> > > > -		list_del(&vd->node);
+> > > > +
+> > > > +	list_del(&vd->node);
+> > > >
+> > > >   	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+> > > >   	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+> > > > @@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+> > > >
+> > > >   	spin_lock_irqsave(&sdmac->vc.lock, flags);
+> > > >   	vchan_get_all_descriptors(&sdmac->vc, &head);
+> > > > -	sdmac->desc = NULL;
+> > > >   	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+> > > >   	vchan_dma_desc_free_list(&sdmac->vc, &head);
+> > > >   	sdmac->context_loaded = false;
+> > > > @@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+> > > >   static int sdma_disable_channel_async(struct dma_chan *chan)
+> > > >   {
+> > > >   	struct sdma_channel *sdmac = to_sdma_chan(chan);
+> > > > +	unsigned long flags;
+> > > > +
+> > > > +	spin_lock_irqsave(&sdmac->vc.lock, flags);
+> > > >
+> > > >   	sdma_disable_channel(chan);
+> > > >
+> > > > -	if (sdmac->desc)
+> > > > +	if (sdmac->desc) {
+> > > > +		vchan_terminate_vdesc(&sdmac->desc->vd);
+> > > > +		sdmac->desc = NULL;
+> > > >   		schedule_work(&sdmac->terminate_worker);
+> > > > +	}
+> > > > +
+> > > > +	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+> > > >
+> > > >   	return 0;
+> > > >   }
+> > > >
+> > > 
+> > > This patch breaks our imx6 board with the attached trace.  Reverting the
+> > > patch makes it boot again.
+> > > I tried also 5.6-rc3 and it booted too. A closer look into imx-sdma.c
+> > > from 5.6-rc3 showed me some details which might have to be backported as
+> > > well to make this patch work.
+> > > I tried a1ff6a07f5a3951fcac84f064a76d1ad79c10e40 and was somehow
+> > > successful. I still have one trace but the board boots now.
+> > > 
+> > > Any insights from the experts?
+> > 
+> > This series should be applied as a whole or not, only 7/9 is optional.
+> > 
+> > It seems I have to avoid the trigger word "fix" in my commit messages or
+> > make sure these patches won't apply without their dependencies :-/
+> 
+> Or you could just tag the dependencies so that we could take all of them
+> as well? We have a nice "Depends-on:" tag that makes it easy.
+> 
+> As with everything in life, you want to communicate more effectively
+> rather than not communicate at all.
 
+Speaking of which, if you want people to use that "Depends-on:" tag you
+should spread the word about it. It was used for 30 commits in the whole
+Kernel history and Documentation/ doesn't mention it at all.
 
+Anyway, this helps only for patches from which I actually know the
+dependencies. I knew them this time, because the whole series only had
+the purpose of making ground for the patch. Often enough I don't know
+them putting a patch onto a kernel just because it applies cleanly
+doesn't seem like a good idea to me.
 
-Sorry, I take back this patch.
-
-'make dtbs_check dt_binding_chec' does not work.
-
-
-
->
->  Documentation/devicetree/bindings/Makefile  | 6 ++----
->  Documentation/devicetree/writing-schema.rst | 4 ++++
->  Makefile                                    | 8 +++++---
->  3 files changed, 11 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-> index 646cb3525373..6efa2094b95e 100644
-> --- a/Documentation/devicetree/bindings/Makefile
-> +++ b/Documentation/devicetree/bindings/Makefile
-> @@ -25,10 +25,8 @@ DT_DOCS = $(shell \
->
->  DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
->
-> -ifeq ($(CHECK_DTBS),)
-> -extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-> -extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-> -endif
-> +extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-> +extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
->
->  $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
->         $(call if_changed,mk_schema)
-> diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-> index 7635ab230456..220cf464ed77 100644
-> --- a/Documentation/devicetree/writing-schema.rst
-> +++ b/Documentation/devicetree/writing-schema.rst
-> @@ -147,6 +147,10 @@ Note that ``dtbs_check`` will skip any binding schema files with errors. It is
->  necessary to use ``dt_binding_check`` to get all the validation errors in the
->  binding schema files.
->
-> +It is possible to run both in a single command::
-> +
-> +    make dt_binding_check dtbs_check
-> +
->  It is also possible to run checks with a single schema file by setting the
->  ``DT_SCHEMA_FILES`` variable to a specific schema file.
->
-> diff --git a/Makefile b/Makefile
-> index 83f9b8f6fbaf..59dd768a1c1e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1243,7 +1243,7 @@ dtbs dtbs_check: include/config/kernel.release scripts_dtc
->         $(Q)$(MAKE) $(build)=$(dtstree)
->
->  dtbs_check: export CHECK_DTBS=1
-> -dtbs_check: dt_binding_check
-> +dtbs_check: __dt_binding_check
->
->  dtbs_install:
->         $(Q)$(MAKE) $(dtbinst)=$(dtstree)
-> @@ -1258,8 +1258,10 @@ PHONY += scripts_dtc
->  scripts_dtc: scripts_basic
->         $(Q)$(MAKE) $(build)=scripts/dtc
->
-> -PHONY += dt_binding_check
-> -dt_binding_check: scripts_dtc
-> +PHONY += dt_binding_check __dt_binding_check
-> +dt_binding_check: export CHECK_DT_BINDING=y
-> +dt_binding_check: __dt_binding_check
-> +__dt_binding_check: scripts_dtc
->         $(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
->
->  # ---------------------------------------------------------------------------
-> --
-> 2.17.1
->
-
+Sascha
 
 -- 
-Best Regards
-Masahiro Yamada
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
