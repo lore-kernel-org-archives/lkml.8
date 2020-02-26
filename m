@@ -2,106 +2,166 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B6BC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CC8C4BA04
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934FA24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3842467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBZMQq (ORCPT
+        id S1727308AbgBZMRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:16:46 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:64434 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgBZMQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:16:45 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: WLyfkTDgGneTpST693ZioNpeej+UlfBbge9U50URHNUKwyAERzwLnyW7rHR6LpQSz78F0vYgiQ
- Djd36NLBtvVv9Tl+wxBfxq0GwSfeHHwtznV/bi51vF/3u1qLrGoRj21DkKRqO2neo9ueJT99Hb
- nWlCbbmDHRphMJJ6VBOY5DhmiE7No6yDI2oCjbcLlATz1maJzu6xSeN21PZC8FD56yDnTtD7j2
- HFkeYzESvJJiDdGBSc1Kex8wVAN//A7QEqft3NiVOseqBIy0HdBWcWJEo+zrEd8UwLqbef4Af8
- es8=
-X-IronPort-AV: E=Sophos;i="5.70,488,1574146800"; 
-   d="scan'208";a="66801767"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Feb 2020 05:16:45 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Feb 2020 05:16:56 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 26 Feb 2020 05:16:42 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <linux-media@vger.kernel.org>, <hverkuil@xs4all.nl>,
-        <laurent.pinchart@ideasonboard.com>, <linux-kernel@vger.kernel.org>
-CC:     Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH] media: v4l2-core: fix entity initialization in device_register_subdev
-Date:   Wed, 26 Feb 2020 14:15:45 +0200
-Message-ID: <20200226121545.19880-1-eugen.hristev@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 26 Feb 2020 07:17:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35856 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbgBZMRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 07:17:14 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 66047ACE8;
+        Wed, 26 Feb 2020 12:17:11 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v3 0/5] bpftool: Make probes which emit dmesg
+ warnings optional
+To:     Quentin Monnet <quentin@isovalent.com>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
+ <e4929660-21ff-e394-37a0-d72b67a3770a@isovalent.com>
+From:   Michal Rostecki <mrostecki@opensuse.org>
+Autocrypt: addr=mrostecki@opensuse.org; keydata=
+ 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
+ ZURUUA==
+Message-ID: <0e46d001-a137-97bc-262c-e864cf3f90b8@opensuse.org>
+Date:   Wed, 26 Feb 2020 13:17:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+In-Reply-To: <e4929660-21ff-e394-37a0-d72b67a3770a@isovalent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check for parameters is done below in the function.
-Initialize the entity variable properly, after the parameters
-have been checked.
+On 2/26/20 12:17 PM, Quentin Monnet wrote:
+> 2020-02-25 20:44 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+>> Feature probes in bpftool related to bpf_probe_write_user and
+>> bpf_trace_printk helpers emit dmesg warnings which might be confusing
+>> for people running bpftool on production environments. This patch series
+>> addresses that by filtering them out by default and introducing the new
+>> positional argument "full" which enables all available probes.
+>>
+>> The main motivation behind those changes is ability the fact that some
+>> probes (for example those related to "trace" or "write_user" helpers)
+>> emit dmesg messages which might be confusing for people who are running
+>> on production environments. For details see the Cilium issue[0].
+>>
+>> v1 -> v2:
+>> - Do not expose regex filters to users, keep filtering logic internal,
+>> expose only the "full" option for including probes which emit dmesg
+>> warnings.
+>>
+>> v2 -> v3:
+>> - Do not use regex for filtering out probes, use function IDs directly.
+>> - Fix bash completion - in v2 only "prefix" was proposed after "macros",
+>>    "dev" and "kernel" were not.
+>> - Rephrase the man page paragraph, highlight helper function names.
+>> - Remove tests which parse the plain output of bpftool (except the
+>>    header/macros test), focus on testing JSON output instead.
+>> - Add test which compares the output with and without "full" option.
+>>
+>> [0] https://github.com/cilium/cilium/issues/10048
+>>
+>> Michal Rostecki (5):
+>>    bpftool: Move out sections to separate functions
+>>    bpftool: Make probes which emit dmesg warnings optional
+>>    bpftool: Update documentation of "bpftool feature" command
+>>    bpftool: Update bash completion for "bpftool feature" command
+>>    selftests/bpf: Add test for "bpftool feature" command
+>>
+>>   .../bpftool/Documentation/bpftool-feature.rst |  19 +-
+>>   tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+>>   tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
+>>   tools/testing/selftests/.gitignore            |   5 +-
+>>   tools/testing/selftests/bpf/Makefile          |   3 +-
+>>   tools/testing/selftests/bpf/test_bpftool.py   | 179 +++++++++++
+>>   tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
+>>   7 files changed, 374 insertions(+), 123 deletions(-)
+>>   create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
+>>   create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
+>>
+> 
+> This version looks good to me, thanks!
+> 
+> Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+> 
+> (Please keep Acked-by/Reviewed-by tags between versions if there are no
+> significant changes, here for patch 1.)
 
-Fixes: 61f5db549dde ("[media] v4l: Make v4l2_subdev inherit from media_entity")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- drivers/media/v4l2-core/v4l2-device.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Sorry, I will do that next time.
 
-diff --git a/drivers/media/v4l2-core/v4l2-device.c b/drivers/media/v4l2-core/v4l2-device.c
-index 63d6b147b21e..6e33132ebb19 100644
---- a/drivers/media/v4l2-core/v4l2-device.c
-+++ b/drivers/media/v4l2-core/v4l2-device.c
-@@ -112,7 +112,7 @@ int v4l2_device_register_subdev(struct v4l2_device *v4l2_dev,
- 				struct v4l2_subdev *sd)
- {
- #if defined(CONFIG_MEDIA_CONTROLLER)
--	struct media_entity *entity = &sd->entity;
-+	struct media_entity *entity;
- #endif
- 	int err;
- 
-@@ -141,6 +141,7 @@ int v4l2_device_register_subdev(struct v4l2_device *v4l2_dev,
- 		goto error_module;
- 
- #if defined(CONFIG_MEDIA_CONTROLLER)
-+	entity = &sd->entity;
- 	/* Register the entity. */
- 	if (v4l2_dev->mdev) {
- 		err = media_device_register_entity(v4l2_dev->mdev, entity);
--- 
-2.20.1
+> That's a lot of tests now that we don't have the regex and filtering is
+> very straightforward, but it does not hurt. I checked and they all pass
+> on my system.
 
+I know that those tests were necessary with the regex implementation and
+now they may seem to be an overkill. But on the other hand, I think that
+having selftests for bpftool in general is a good thing, so I didn't
+want throw them away despite the easier implementation of my patches. I
+might follow up with some more tests covering the other subcommands in
+future.
+
+Cheers,
+Michal
