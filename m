@@ -2,92 +2,136 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE2BC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4B1C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EE120801
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582739369;
-	bh=1oO4hiGRFZgzUlMCevOhtVyvmxoLpLPNDTMx64zeXco=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gPf8VKLEFGhF8tBLUZYi8qmMDVKJDG683hO26zjcVWfYtGg3dQPaG9dYsljyrfMYb
-	 MD9CWkMbN8w0h9KWdjwJEuhoUTYPfC+ysGpr7bApjchfnGLMSQPrUWZh9mm+m2XNWt
-	 QV0mYCZoSrofr2k/beidoIFgI52fbP8LJ6QKU1Oo=
+	by mail.kernel.org (Postfix) with ESMTP id AE20924680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgBZRt2 (ORCPT
+        id S1727115AbgBZRtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:49:28 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46299 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbgBZRt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:49:27 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v6so1703819lfo.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:49:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fRPyRG8072H5Sezzifc28IJW7If3nwtOvcWNfr1pDDA=;
-        b=gEFNGuVmVn91+YXMWkxUV4UPweNXXNVgT2p0ldNq/8U48hI3364GWZz73CaeFrYqc8
-         m9Me3shfjZOZ39oT0shjaLQkxPYGCUxRVGlIt76FN1l8alqzJdr0d6sYPaMUCOnky0jt
-         Fla7VGcoyd50aCqSPSUaAn/xh0wlIAFjVGW4Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fRPyRG8072H5Sezzifc28IJW7If3nwtOvcWNfr1pDDA=;
-        b=fZ8hZJRfjLFbnP3iNtpCVEIcffums2WtBBeVGCGlVYmXgLcNYfOXcu7P39/z6XE4TE
-         BXmsM3htMrheVudYc2HcOOEx2UlZBDdAHbvIIA+Gw7O3GP/yZRe4oCAKFNdhanCYZX8l
-         FolSg6L2nVY36ur6Xw/NcM+JQlXAfQjX2j/SWF8OfPXNsxWxmu7KWkicHd+OZh6y+kHw
-         A8ye7K9ErCAzC/Vtbdk900MqBMcXIhv+alR2U7omQB3PhFGHzk8qr+HwyoJ2zuqlm6i1
-         WgKYRZW9iv+FWdpeZ/2wOT3gPZm8cbLkeKO7hyWB71C63LoqHOEzAsNJvax3Y1cxA45l
-         Vc0w==
-X-Gm-Message-State: APjAAAX/RovlTc1MejH7cQM4lWN/AHTgSBoqpTjqLxpo0NA0968d5QnE
-        jxoNf6VIQu5tb4QyiVub0OO0M/ePkVg=
-X-Google-Smtp-Source: APXvYqyFIacF+8vbkCNpzllh9WpvpTrFVAjDNLQtD9icTlCbhc6LJq+nuSXY705nNpcHO9eMYxhkhg==
-X-Received: by 2002:ac2:4a78:: with SMTP id q24mr3136658lfp.64.1582739363434;
-        Wed, 26 Feb 2020 09:49:23 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id y12sm1371027lfe.85.2020.02.26.09.49.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 09:49:21 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id f24so2664905lfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:49:21 -0800 (PST)
-X-Received: by 2002:ac2:58ec:: with SMTP id v12mr3099702lfo.31.1582739361104;
- Wed, 26 Feb 2020 09:49:21 -0800 (PST)
+        Wed, 26 Feb 2020 12:49:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:39834 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbgBZRtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:49:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 475F130E;
+        Wed, 26 Feb 2020 09:49:31 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFC373F881;
+        Wed, 26 Feb 2020 09:49:29 -0800 (PST)
+Subject: Re: [PATCH 2/3] EDAC: synopsys: Reorganizing the output message for
+ CE/UE
+To:     Sherry Sun <sherry.sun@nxp.com>
+Cc:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
+        rrichter@marvell.com, michal.simek@xilinx.com,
+        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com, frank.li@nxp.com
+References: <1582537357-10339-1-git-send-email-sherry.sun@nxp.com>
+ <1582537357-10339-3-git-send-email-sherry.sun@nxp.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <39c63f4c-2e39-4478-1de1-b0b564a7f4e1@arm.com>
+Date:   Wed, 26 Feb 2020 17:49:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200224212352.8640-1-w@1wt.eu> <0f5effb1-b228-dd00-05bc-de5801ce4626@linux.com>
-In-Reply-To: <0f5effb1-b228-dd00-05bc-de5801ce4626@linux.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 26 Feb 2020 09:49:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whd_Wpi1-TGcooUTE+z-Z-f32n2vFQANszvAou_Fopvzw@mail.gmail.com>
-Message-ID: <CAHk-=whd_Wpi1-TGcooUTE+z-Z-f32n2vFQANszvAou_Fopvzw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] floppy driver cleanups (deobfuscation)
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Willy Tarreau <w@1wt.eu>, Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1582537357-10339-3-git-send-email-sherry.sun@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 6:57 AM Denis Efremov <efremov@linux.com> wrote:
->
-> If Linus has no objections (regarding his review) I would prefer to
-> accept 1-10 patches rather to resend them again. They seems complete
-> to me as the first step.
+Hi Sherry,
 
-I have no objections, and the patches 11-16 seem to have addressed all
-my "I wish.." concerns too (except for the "we should rewrite or
-sunset the driver entirely"). Looks fine to me.
+On 24/02/2020 09:42, Sherry Sun wrote:
+> The origin way which call sprintf() function two or three times to
 
-                Linus
+(original? 'The current way' may be better)
+
+
+> output message for CE/UE is incorrect, because it won't output all the
+> message needed, instead it will only output the last message in
+> sprintf().
+
+Nice!
+
+
+> So the simplest and most effective way to fix this problem
+> is reorganizing all the output message needed for CE/UE into one
+> sprintf() function.
+
+This is a bug, but its in the middle of a series doing some cleanup, meaning the
+maintainer can't easily pick it up in isolation. Could you post it separately?
+
+'Reorganize' in the subject makes this sound like cleanup. Would "EDAC: synopsys: Fix back
+to back snprintf() messages for CE/UE" be better?
+
+
+Please add:
+Fixes: b500b4a029d57 ("EDAC, synopsys: Add ECC support for ZynqMP DDR controller")
+
+in the signed-off-by area so that stable trees pick this up.
+
+and for what its worth:
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks!
+
+James
+
+
+
+> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+> index 7046b8929522..ef7e907c7956 100644
+> --- a/drivers/edac/synopsys_edac.c
+> +++ b/drivers/edac/synopsys_edac.c
+> @@ -485,20 +485,14 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+>  		pinf = &p->ceinfo;
+>  		if (!priv->p_data->quirks) {
+>  			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "DDR ECC error type:%s Row %d Bank %d Col %d ",
+> -				  "CE", pinf->row, pinf->bank, pinf->col);
+> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "Bit Position: %d Data: 0x%08x\n",
+> +				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
+> +				 "CE", pinf->row, pinf->bank, pinf->col,
+>  				 pinf->bitpos, pinf->data);
+>  		} else {
+>  			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "DDR ECC error type:%s Row %d Bank %d ",
+> -				  "CE", pinf->row, pinf->bank);
+> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "BankGroup Number %d Block Number %d ",
+> -				 pinf->bankgrpnr, pinf->blknr);
+> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "Bit Position: %d Data: 0x%08x\n",
+> +				 "DDR ECC error type:%s Row %d Bank %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
+> +				 "CE", pinf->row, pinf->bank,
+> +				 pinf->bankgrpnr, pinf->blknr,
+>  				 pinf->bitpos, pinf->data);
+>  		}
+>  
+> @@ -515,10 +509,8 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+>  				"UE", pinf->row, pinf->bank, pinf->col);
+>  		} else {
+>  			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "DDR ECC error type :%s Row %d Bank %d ",
+> -				 "UE", pinf->row, pinf->bank);
+> -			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+> -				 "BankGroup Number %d Block Number %d",
+> +				 "DDR ECC error type :%s Row %d Bank %d BankGroup Number %d Block Number %d",
+> +				 "UE", pinf->row, pinf->bank,
+>  				 pinf->bankgrpnr, pinf->blknr);
+>  		}
+>  
+> 
+
