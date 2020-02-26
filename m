@@ -2,125 +2,181 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2D6C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A76DC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E3C24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D5B2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="nhwrU49d"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="LPhdYAoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgBZQtf (ORCPT
+        id S1727783AbgBZQt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:49:35 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:51194 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgBZQte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:49:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P56BFZWamG7JVi5EgA3IO5By5L2fJQkXtDUqwdKc7H8=; b=nhwrU49dYAVK7MXWS2u8nYT/9
-        +bdVoX9QXCfQjOzVTqQuTGRXrzgHudnjPG6MGpBHPtZxI1bmFu9jSEtHHOyyoZIMJR6eSJc4v/Jcd
-        faMn/39D6dLBopiZfQAkiaqC0fgYRj7aCKmtCNbTiBSm9AjQUcG+QEMBDpBWUvlP8gM1g=;
-Received: from p200300ccff0a4d00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:e2ce:c3ff:fe93:fc31] helo=eeepc.fritz.box)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j6zsF-0005wQ-To; Wed, 26 Feb 2020 17:49:28 +0100
-Received: from localhost ([::1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j6zsF-0008HY-A5; Wed, 26 Feb 2020 17:49:27 +0100
-Date:   Wed, 26 Feb 2020 17:49:14 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        b.galvani@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org,
-        jic23@kernel.org
-Subject: Re: [PATCH v5 1/2] mfd: rn5t618: add ADC subdevice for RC5T619
-Message-ID: <20200226174914.047667d5@kemnade.info>
-In-Reply-To: <20200226154055.GQ3494@dell>
-References: <20200223131638.12130-1-andreas@kemnade.info>
-        <20200223131638.12130-2-andreas@kemnade.info>
-        <20200226154055.GQ3494@dell>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Wed, 26 Feb 2020 11:49:56 -0500
+Received: from mail-eopbgr70130.outbound.protection.outlook.com ([40.107.7.130]:57611
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726151AbgBZQt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:49:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UrWE+wzwGVE5Pz6zFmFTvn9cpEUoWtfw4rK70HS9kPRI0qK6PWyE1cX43piv6J/aMhB2RRZDPjwkWDPoDEJmNkJ+omHUSCnDo6jygsSoN4LtOtgDsaO3C6OauhSD77QaCJ3BcxDK9Y6TanRDfiFA+j23VC0fxpAzjS7AhEm9J4t5LroTxNt92JKV5FdEwh6Wjju5QbOFtZJIK0z22Co29Eqll/LrRiNPUIUSpEmOLFvqeMAPGZ3u1NTqPpNHcBB4UUSuw1X4qd4ZKeIGLwL9TjYZZDUfwu3XmvQioZ6Rwkm79JuO8yQkQqoKmPiAxTonhyRcdOeeKqELLyfoY4/KuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K5SNKEzE4sk0pYUuWVBX9EkUt+5NO5rqjz4l15olbpY=;
+ b=oZ1wL3OLq2Qecf5orM6tgjAT5Mw/odvPk4i+OpOdsdPc4wMpBuSlDYi99msHtsr59zuHa2thZW4WDlqkGipCDTsibhV0oA1p9CY069ZxL1hfTnZ36ePREUh+IWAnP5ak2DPwk5I+/tmR54xcs2PH825ddEPZz7AEm4HP3+AmaLc9En5QVHgK9qcyHqcCde9UTsHDSJc8d/R9QGf7FU3+YxunXpW2sSlJlr+/VQkuQI66/rS1r51pa/Tqmzdv0+KtcxAHqxHCznkaMAuMGDsuI2rKw7wVJOvw1/aCWWLwyELdT3HdDVKJmXF3+Oy23hN9Q//3ZHI1kMsLzeR8R10leA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K5SNKEzE4sk0pYUuWVBX9EkUt+5NO5rqjz4l15olbpY=;
+ b=LPhdYAozp5XBd9JEUsG4fkDbyiDG5NS7MmOM22QAfuscAcN2Jcyig6Y+ZhHjktUAzSiLsjvJLSiwnrpOI8Ic8p6kZdG538FT3xbmIv2ugWTuSFDXIf3KxopOdvPKZmiPZjkeQNUrB7Y82hR3oMxCwbcwnEhJ9aILapkPWKQsOpc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=aaro.koskinen@nokia.com; 
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com (20.178.9.83) by
+ VI1PR07MB6304.eurprd07.prod.outlook.com (10.141.128.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.7; Wed, 26 Feb 2020 16:49:52 +0000
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::7514:700c:669b:3c8f]) by VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::7514:700c:669b:3c8f%7]) with mapi id 15.20.2772.012; Wed, 26 Feb 2020
+ 16:49:52 +0000
+From:   aaro.koskinen@nokia.com
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>
+Subject: [PATCH v2] net: stmmac: fix notifier registration
+Date:   Wed, 26 Feb 2020 18:49:01 +0200
+Message-Id: <20200226164901.21883-1-aaro.koskinen@nokia.com>
+X-Mailer: git-send-email 2.11.0
+Content-Type: text/plain
+X-ClientProxiedBy: HE1PR08CA0048.eurprd08.prod.outlook.com
+ (2603:10a6:7:2a::19) To VI1PR07MB6174.eurprd07.prod.outlook.com
+ (2603:10a6:803:a5::19)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/L_RLDD1+TTq2HvsW_OIvA3r"; protocol="application/pgp-signature"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ak-desktop.emea.nsn-net.net (131.228.2.28) by HE1PR08CA0048.eurprd08.prod.outlook.com (2603:10a6:7:2a::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Wed, 26 Feb 2020 16:49:51 +0000
+X-Mailer: git-send-email 2.11.0
+X-Originating-IP: [131.228.2.28]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ed2d9185-6590-4160-1efd-08d7badbe61b
+X-MS-TrafficTypeDiagnostic: VI1PR07MB6304:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR07MB63046E1DD6060C4ABA3B0C1CF4EA0@VI1PR07MB6304.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:164;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(189003)(199004)(16526019)(6486002)(186003)(26005)(956004)(478600001)(52116002)(8936002)(9686003)(66946007)(36756003)(6512007)(966005)(110136005)(6506007)(6666004)(1076003)(316002)(2616005)(86362001)(81156014)(8676002)(5660300002)(2906002)(107886003)(66476007)(66556008)(81166006)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB6304;H:VI1PR07MB6174.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: V1g/ool0Vko3SDr1PSDAqSbHSiossD0us+sBBa97UXYwxgV1age0TlcNhK0NC8bhsUsKSskXSqVbaqIQpHFNvjCYsEHQYvShkiwLnGnXeIyaFPe5HwDN98JR3rMQrNMYysBj33Cih8lUSBrcndTpPAxKYbh2VW9ItxaBv7uCsgzZeSAoQ4WoPFfs0rVibvj7OK9QGJOCCNwfHTHWdKDsNhWGLVLT5JbmT1VnSkor4G4B2xdtmBwnlT0dKuXZrf+J/YfqxdGsJyd23uOTP8+DVYrpc0FDWNK4c/r5Jzf2CJywYYVpbLQ2VCJOlhPQ0h0ZQJprdhUI3psNcnN+KKttwTh0K3ZC3LM4luGDZdlyyEtq0XTMixIejLG4Bt88QAmJmQTNpMEhevUtHuO6tbDG+aq6kUfl5QP0Cg71IMzs6ykgqepmZMC/5sP4nY3sQSnn0qXR512W0l/Mp1yisKngg+FxVZ/Fg+dbVxuUC1DMGnSAiXxewjqs+tGwcDwEh07k+b/xmtAJGeKutw80Obk+/Q==
+X-MS-Exchange-AntiSpam-MessageData: kMAJt/3iJLIqXlif6hFysO20Mz8tKy0uW+Z1tOZ/EVdnzspTQYRXKNdSVETYirevHQcl4DAPUBzz0UtAyKlVZyCtbbEBL9G/HYQPXqdXPxbuS3KSpnuP0NzcUwQO2QQ0DfuI9iMfahW6OA0r3N9Bjw==
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed2d9185-6590-4160-1efd-08d7badbe61b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 16:49:52.0763
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pqk15SbCdtJM7dUtcOZ7mt5Q63z0hQaV5cxJkMKzHUqShWTH35cv+ZseoaVCYBEhOk01gwyvbqUOcs+xysPJYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB6304
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/L_RLDD1+TTq2HvsW_OIvA3r
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-On Wed, 26 Feb 2020 15:40:55 +0000
-Lee Jones <lee.jones@linaro.org> wrote:
+We cannot register the same netdev notifier multiple times when probing
+stmmac devices. Register the notifier only once in module init, and also
+make debugfs creation/deletion safe against simultaneous notifier call.
 
-> On Sun, 23 Feb 2020, Andreas Kemnade wrote:
->=20
-> > This adds a subdevice for the ADC in the RC5T619
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> > depends on:
-> > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.inf=
-o/
-> >=20
-> > Changes in v3:
-> > re-added it to the series because of
-> > "Oh, it looks like there was a conflict.  Could you collect any Acks
-> > (including mine) rebase and resend please?" =20
->=20
-> Looks like there is still a conflict.  Sure, it's not a complicated
-> fix, but that's beside the point.  What tree is this set based on?
->=20
-It must be applied on top of my rc5t619 rtc series here:
-https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
+Fixes: 481a7d154cbb ("stmmac: debugfs entry name is not be changed when udev rename device name.")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+---
 
-I expected it to make it into 5.6 and when I first sent the RTC series
- (in October) I had no idea when I will continue with other stuff.
+	v2: Register the notifier in module init.
 
-That is why I sent this ADC series separately, also to give the IIO
-maintainer plenty of time to review.=20
+	v1: https://patchwork.ozlabs.org/patch/1244006/
 
-Do you want me to resend all that pending stuff together in one series?
-I have little experience with this multi-subdevice process.
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Regards,
-Andreas
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 5836b21edd7e..7da18c9afa01 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4405,6 +4405,8 @@ static void stmmac_init_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 
++	rtnl_lock();
++
+ 	/* Create per netdev entries */
+ 	priv->dbgfs_dir = debugfs_create_dir(dev->name, stmmac_fs_dir);
+ 
+@@ -4416,14 +4418,13 @@ static void stmmac_init_fs(struct net_device *dev)
+ 	debugfs_create_file("dma_cap", 0444, priv->dbgfs_dir, dev,
+ 			    &stmmac_dma_cap_fops);
+ 
+-	register_netdevice_notifier(&stmmac_notifier);
++	rtnl_unlock();
+ }
+ 
+ static void stmmac_exit_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 
+-	unregister_netdevice_notifier(&stmmac_notifier);
+ 	debugfs_remove_recursive(priv->dbgfs_dir);
+ }
+ #endif /* CONFIG_DEBUG_FS */
+@@ -4940,14 +4941,14 @@ int stmmac_dvr_remove(struct device *dev)
+ 
+ 	netdev_info(priv->dev, "%s: removing driver", __func__);
+ 
+-#ifdef CONFIG_DEBUG_FS
+-	stmmac_exit_fs(ndev);
+-#endif
+ 	stmmac_stop_all_dma(priv);
+ 
+ 	stmmac_mac_set(priv, priv->ioaddr, false);
+ 	netif_carrier_off(ndev);
+ 	unregister_netdev(ndev);
++#ifdef CONFIG_DEBUG_FS
++	stmmac_exit_fs(ndev);
++#endif
+ 	phylink_destroy(priv->phylink);
+ 	if (priv->plat->stmmac_rst)
+ 		reset_control_assert(priv->plat->stmmac_rst);
+@@ -5166,6 +5167,7 @@ static int __init stmmac_init(void)
+ 	/* Create debugfs main directory if it doesn't exist yet */
+ 	if (!stmmac_fs_dir)
+ 		stmmac_fs_dir = debugfs_create_dir(STMMAC_RESOURCE_NAME, NULL);
++	register_netdevice_notifier(&stmmac_notifier);
+ #endif
+ 
+ 	return 0;
+@@ -5174,6 +5176,7 @@ static int __init stmmac_init(void)
+ static void __exit stmmac_exit(void)
+ {
+ #ifdef CONFIG_DEBUG_FS
++	unregister_netdevice_notifier(&stmmac_notifier);
+ 	debugfs_remove_recursive(stmmac_fs_dir);
+ #endif
+ }
+-- 
+2.11.0
 
---Sig_/L_RLDD1+TTq2HvsW_OIvA3r
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5WoYoACgkQl4jFM1s/
-ye+ZWBAAlmt7rg97sZQ3GPCFNa2uKfakvISbA8/O/UuPWm9/BLbEh0ZhKlrEX7l5
-FjLu4nB1RBMhUvBrjykGfnPt/rasdrJ9DrzhFpbtMu/lrV1SdrowUjmKJfKDvCyz
-CWt4RuITcNWF3FQNWTKaPhFa0lyAhOj7X4A8bseYRhMdkYmvQc3uoMuTgdLIuNMe
-9g/t9ll8ztoBbdl0u6RhD36uhBylB+4AS6Axt9lwzGrr8mSs4tNKQlMi31yCNrmg
-tQExAuXNgBtvDz8TwWF8lD2HRlivu/QDNv6bxbYZ92O5dDtK8l3LKiu5pB4iEWAQ
-2v0yjmleaJ8NmhigSqqTyqctFgyvYuwGdYDJN3OphhS/8o7BC9MqOSzBGiqmeqCf
-I0Z8tg+BaDMX5RFD8hGYKnmiUvKWZiokk2+yFsJb6Lh5PTS0WWVSdcA5/FNCy2Xw
-ykae4GWg/k7BZZPGu6hGN07Bvs3dKPli/NK6inv763aCuUgMLR8quQ5tsz6U6itG
-gx1YAvE22uWKXT2QVV414pxTQwxztdiAfRUvXpHH7Es/4y931WJ4C2enlOt2YQyi
-/UAHYnyOAemRIwN1jo396G6O+SkjU0rNrOfU8XiOSktg+7QC2sVW3sMSTHonx6af
-rBqbxj/+F374TXC384M2vhlihTq6lji9KuNtS3TPDTfF7eP5rBU=
-=oLpK
------END PGP SIGNATURE-----
-
---Sig_/L_RLDD1+TTq2HvsW_OIvA3r--
