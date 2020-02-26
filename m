@@ -2,71 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD72EC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24085C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E4624685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9012468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="P2XeAw31"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n6EsLSjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgBZLQP (ORCPT
+        id S1728310AbgBZLQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:16:15 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:12391 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbgBZLQN (ORCPT
+        Wed, 26 Feb 2020 06:16:18 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38274 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgBZLQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 06:16:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582715769;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=6en+8D+Os1k3MMDTIZGpH+G1werye7fUM88nASmsZpA=;
-        b=P2XeAw31XknJY13M4cjllM5Y7M3dwvLMmaZWlZr5SzW7XVlH6AGsrrYJRdMoarG2cX
-        wpGiVlq/ns1Y+hCGCmCdBPgvJ5Y//pChX/TY7ODidRbMCWYebCJjs+7fw3EA3hEumbgY
-        mp4YjjOqAY1uZGAzyjCWu3Yj0xos5LN47r2BMD31kcsphMs28McSUmPQUab+kleTeOyU
-        wXXqqK9Ot8LpOeEd/pfb6Q7/SoN9biIUv6RKrZVy9s2I0w8OYffxrZqd/8z5rSmTQxf2
-        2RnRm75A5B+2d831usycu9lyTG3Ls4uA7Yya3awsIGPwENr8pz3dhmQe7qAN14BZNACq
-        qH0g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QBG14Cb
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 26 Feb 2020 12:16:01 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v6 0/6] MIPS: CI20: Add efuse driver for Ingenic JZ4780 and attach to DM9000 for stable MAC addresses
-Date:   Wed, 26 Feb 2020 12:15:55 +0100
-Message-Id: <cover.1582715761.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
+Received: by mail-pg1-f193.google.com with SMTP id d6so1155198pgn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3A85FNkQVK15E41Jw/YnZSYCbOfj7OMPE9KsvpyVprI=;
+        b=n6EsLSjVofOAsY+qTD5ur3tvt3prP4xIE81hW3UMhCK6Hk6vLYUPfTjkViyHlLSx0e
+         PKq9SBkZBIKgkKw3b6iA0jU98G93dGz/e0kV3RB+SOZ9jHG0bHjc/CED2Z1L7O8Inq/Z
+         a6GKZuegrK/74Y/D7g2+3chSko2GVSugqRbc8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3A85FNkQVK15E41Jw/YnZSYCbOfj7OMPE9KsvpyVprI=;
+        b=Y84a+Rs5QWvq1GPrwNW/gTtNC8UrxNiVIF2dzJZWzgszIHz1Hs/SGuULLLOGHLfRry
+         0iQphwUEyIKVd7RmI9EhQCgK9vTaMJI/wAdVzCbx56anYkBE0GkrYryMEhUe6Cj7sjJX
+         FZUA0T9u48hpKxRzBAcK5ygInlJ/yWZQOuXlMYB2NIs6rUJRReAHGDb6GKApjgIn3ECU
+         r5RIkwPIjEei88iRg9uEsNEEHsRLSzfOBHHOk1dp4RhfzbOx0cfL0xRaNG0HLfAIczxY
+         lZM2PeRrzn0mWLP5QSDBmGC7yQu9QSmoRJ2T9Q2bUgiJ2K/yqPY2oWB3CZJsTO7ANCUg
+         hMNg==
+X-Gm-Message-State: APjAAAXHYaB0pSTWYmHOWgowWME7d+JhzTgNBJAfg1jRD2U8o5Y6jHu3
+        cUvMnUGLi4pphh2m2u5Oy1XJ+g==
+X-Google-Smtp-Source: APXvYqx53QRjLLJVxV+EPa6syDS3795FvGUqOREY3XhchQlBTgMZD1MOJX/1R5o9fROynap/WI3GVA==
+X-Received: by 2002:aa7:85d8:: with SMTP id z24mr4029724pfn.202.1582715771062;
+        Wed, 26 Feb 2020 03:16:11 -0800 (PST)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id o22sm2429993pgj.58.2020.02.26.03.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 03:16:10 -0800 (PST)
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCHv3 07/11] videobuf2: do not sync caches when we are allowed not to
+Date:   Wed, 26 Feb 2020 20:15:25 +0900
+Message-Id: <20200226111529.180197-8-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200226111529.180197-1-senozhatsky@chromium.org>
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,75 +77,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* add dependency on CONFIG_OF and select REGMAP_MMIO (suggested by Paul Cercueil <paul@crapouillou.net>)
-* add clk_prepare_enable() (suggested by Paul Cercueil <paul@crapouillou.net>)
-* inline jz4780_efuse_read_32bytes() since it is only used once
-* remove read optimization for full block (suggested by Paul Cercueil <paul@crapouillou.net>)
-* simplify calculations for rd_adj and rd_strobe (suggested by Paul Cercueil <paul@crapouillou.net>)
-* do calculations for rd_adj and rd_strobe in local variables
-* fix overflow check (did allow for 5 bit values although register is 4 bit wide)
-* fixes for yaml (sugested by Andreas Kemnade <andreas@kemnade.info>)
+Skip ->prepare() or/and ->finish() cache synchronisation if
+user-space requested us to do so (or when queue dma direction
+permits us to skip cache syncs).
 
-PATCH V5 2020-02-22 11:25:35:
-* no longer RFC but PATCH
-* add yaml bindings (by Andreas Kemnade <andreas@kemnade.info>)
-* fixes to yaml (suggested by Rob Herring <robh@kernel.org>)
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ drivers/media/common/videobuf2/videobuf2-core.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-RFC V4 2020-02-17 17:55:35:
-* removed read_only for nvmem config because there is no write method
-* Kconfig: replaced depends MACH_JZ4780 with MACH_INGENIC
-* run through checkpatch and fixed issues
-* made use of devm_nvram_register() and get rid of jz4780_efuse_remove()
-  (suggested by Srinivas Kandagatla <srinivas.kandagatla@linaro.org>)
-* squashed previous patch 1/9 and 2/9 into single (regmap based) driver
-
-RFC V3 2020-02-16 20:20:59:
-
-This series is based on and a follow up for
-
-https://lore.kernel.org/patchwork/cover/868157/
-
-("[v2,0/2] Add efuse driver for Ingenic JZ4780 SoC")
-
-Original authors were
-PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Mathieu Malaterre <malat@debian.org>
-
-and there are additions / code improvements by
-H. Nikolaus Schaller <hns@goldelico.com>
-Paul Cercueil <paul@crapouillou.net>
-
-This setup works, if the dm9000 driver is compiled
-as a module.
-
-Therefore it is all RFC level. It is also not completely
-checkpatched.
-
-
-H. Nikolaus Schaller (1):
-  MIPS: DTS: CI20: make DM9000 Ethernet controller use NVMEM to find the
-    default MAC address
-
-PrasannaKumar Muralidharan (5):
-  nvmem: add driver for JZ4780 efuse
-  Bindings: nvmem: add bindings for JZ4780 efuse
-  Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
-  nvmem: MAINTAINERS: add maintainer for JZ4780 efuse driver
-  MIPS: DTS: JZ4780: define node for JZ4780 efuse
-
- .../ABI/testing/sysfs-driver-jz4780-efuse     |  16 ++
- .../bindings/nvmem/ingenic,jz4780-efuse.yaml  |  50 ++++
- MAINTAINERS                                   |   5 +
- arch/mips/boot/dts/ingenic/ci20.dts           |   3 +
- arch/mips/boot/dts/ingenic/jz4780.dtsi        |  17 +-
- drivers/nvmem/Kconfig                         |  12 +
- drivers/nvmem/Makefile                        |   2 +
- drivers/nvmem/jz4780-efuse.c                  | 239 ++++++++++++++++++
- 8 files changed, 343 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
- create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
- create mode 100644 drivers/nvmem/jz4780-efuse.c
-
+diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+index c2a1eadb26cf..988e8796de4f 100644
+--- a/drivers/media/common/videobuf2/videobuf2-core.c
++++ b/drivers/media/common/videobuf2/videobuf2-core.c
+@@ -304,8 +304,11 @@ static void __vb2_buf_mem_prepare(struct vb2_buffer *vb)
+ {
+ 	unsigned int plane;
+ 
+-	for (plane = 0; plane < vb->num_planes; ++plane)
+-		call_void_memop(vb, prepare, vb->planes[plane].mem_priv);
++	if (vb->need_cache_sync_on_prepare) {
++		for (plane = 0; plane < vb->num_planes; ++plane)
++			call_void_memop(vb, prepare,
++					vb->planes[plane].mem_priv);
++	}
+ 	vb->synced = 1;
+ }
+ 
+@@ -317,8 +320,11 @@ static void __vb2_buf_mem_finish(struct vb2_buffer *vb)
+ {
+ 	unsigned int plane;
+ 
+-	for (plane = 0; plane < vb->num_planes; ++plane)
+-		call_void_memop(vb, finish, vb->planes[plane].mem_priv);
++	if (vb->need_cache_sync_on_finish) {
++		for (plane = 0; plane < vb->num_planes; ++plane)
++			call_void_memop(vb, finish,
++					vb->planes[plane].mem_priv);
++	}
+ 	vb->synced = 0;
+ }
+ 
 -- 
-2.23.0
+2.25.0.265.gbab2e86ba0-goog
 
