@@ -2,142 +2,108 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C26C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CDBC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15CFD24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0gUbLLU"
+	by mail.kernel.org (Postfix) with ESMTP id DC5B424685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:03:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgBZM7n (ORCPT
+        id S1726891AbgBZNDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:59:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55433 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbgBZM7m (ORCPT
+        Wed, 26 Feb 2020 08:03:03 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34596 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgBZNDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:59:42 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q9so2952799wmj.5;
-        Wed, 26 Feb 2020 04:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=TvwRMoMGJoOBW5U/G6Ov9OkglcVw7Zi5W3FAUCreUTE=;
-        b=G0gUbLLUQ+kjHCC8gG63gzA/B5sX1xWkJ1OeXKwycE8dbb3G5FNjapOnAbOUohNpuI
-         qwdE+5rBdulwvx8iIrraarXoT3rrKgcdPGsRJmhVdi52aZnwTkkc3ktLW4JVb4e+FKBZ
-         yJMhIIVo2fI4ytDMxXwTWWP1BXU3M84Jy6duOBcJtuOhCFLQe7g5gSTJyz/8AVg8Yz6h
-         dgYue9BOU5kruD1xV5vVaTXrFRRrbVZYPuHbvNvJmmzZ5EjHrT3tiv6jWuknR5BGmMU2
-         Iv62OdRPfBGlgcPhKVSqA8G5OrOWahXkcTZQO8dRW9AuC9dFVGiFV2vZgoeg2NO+a3S+
-         r5kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=TvwRMoMGJoOBW5U/G6Ov9OkglcVw7Zi5W3FAUCreUTE=;
-        b=J6dwsxEARdozYOsM8ym9AthziEvIUFbm/lMRZPCzpntue8A45YC37Fb5/lRkXQQnfc
-         CTjNgDomcNHiriGVTfoFPBLW2IQ8u1WVuhAQJcpCJjoURuonhbEWvOZOElf1+sJnyU9S
-         dqptyJuPag1jJ6KP4F1Ko7tRRrc+J1lNHzWQHePUdAjmK6OCcJDh1w/IGzrA0/DN+bBl
-         0bcrLkdUPM3BRNLxYhJeQXSs0IslL9LUcKOBHywsJf5LCNRXf0p4bR4yaJVrRaawS9Tt
-         zrYmZOTw9TBt0DAESI9Xbikumg4H+hRT4fXTqdtyd6xsnTn48ezbYQuIiNAbAiPGGM1G
-         5g7A==
-X-Gm-Message-State: APjAAAWXgZLuhNd0XNnwpqq+hj9sZDQwmyNcu9Iy9P9A8Fy0gJ++XU3D
-        WaVCw3lA4YP4SYN8Fk0jLGinGGdifCQyY9EEv1A=
-X-Google-Smtp-Source: APXvYqzOXKr7YjubT2c2bwbdts/K1ziby/AC4aTEgXdbIhBFxKfLviVhitgx5pe+YIc3glYsAR7MV2AG+P48GF8sHwU=
-X-Received: by 2002:a7b:cc69:: with SMTP id n9mr5055395wmj.163.1582721980031;
- Wed, 26 Feb 2020 04:59:40 -0800 (PST)
+        Wed, 26 Feb 2020 08:03:02 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id CAF6A1C0370; Wed, 26 Feb 2020 14:03:00 +0100 (CET)
+Date:   Wed, 26 Feb 2020 14:03:00 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Ezra Buehler <ezra@easyb.ch>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        csd@princeton.com.tw, devicetree@vger.kernel.org, sales@fdhisi.com,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        zypeng@titanmec.com, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
+ TM1628/FD628/AiP1618 LED controllers
+Message-ID: <20200226130300.GB2800@duo.ucw.cz>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
+ <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
+ <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
+ <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
 MIME-Version: 1.0
-References: <20200224174129.2664-1-ndesaulniers@google.com>
- <20200225210250.64366-1-ndesaulniers@google.com> <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
- <CA+icZUWcW3+9QdZcACCXP6Yun__Sm_s4+qM4rALdFf=hGBt3FQ@mail.gmail.com> <CAK7LNAQX0nFWruCgHDEkZsTKT895ahrAVQT12wuJQ_dUQtVrsg@mail.gmail.com>
-In-Reply-To: <CAK7LNAQX0nFWruCgHDEkZsTKT895ahrAVQT12wuJQ_dUQtVrsg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 26 Feb 2020 14:02:09 +0100
-Message-ID: <CA+icZUUHs98=OgF5LVd9svdzbWpaBCv6=4nUNs8zb3rUcaOD=A@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
+Content-Disposition: inline
+In-Reply-To: <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 1:39 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Wed, Feb 26, 2020 at 9:26 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Wed, Feb 26, 2020 at 12:31 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > Hi.
-> > >
-> > >
-> > > On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
-> > > <ndesaulniers@google.com> wrote:
-> > > >
-> > > > Added to kbuild documentation. Provides more official info on building
-> > > > kernels with Clang and LLVM than our wiki.
-> > > >
-> > > > Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-> > > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > > ---
-> > > > Changes V1 -> V2:
-> > > > * s/On going/ongoing/
-> > > > * add Randy's Suggested-by
-> > >
-> > >
-> > > I do not understand this tag update.
-> > >
-> > > As far as I saw the review process,
-> > > I do not think Randy deserves to have Suggested-by
-> > > because he just pointed out a typo (on going -> ongoing) :
-> > > https://patchwork.kernel.org/patch/11401189/#23179575
-> > >
-> > > (or, was there off-line activity I had missed?)
-> > >
-> >
-> > Hi Masahiro,
-> >
-> > I got some credits from Nick for a review by seeing a typo - not on a
-> > review of the code - and H. Peter Anvin asked why.
-> >
-> > I am not sure what is here the correct credit to give.
-> > Depends a "Reviewed-by" and/or "Suggested-by" on a technical review?
->
->
->
-> Documentation/process/submitting-patches.rst
->
->   13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
->
-> is a helpful guideline.
->
 
-Thanks for CCing Randy and the pointer to
-"Documentation/process/submitting-patches.rst" file.
+--zx4FCpZtqtKETZ7O
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This document [1] is mostly focusing on technical handling.
+Hi!
 
-- Sedat -
+> > On 13 Dec 2019, at 15:07, Robin Murphy <robin.murphy@arm.com> wrote:
+> >=20
+> > I also have one of the H96 Max boxes (which I picked up out of curiosity
+> > for the mysterious RK3318) with an FD6551, although I've not attacked
+> > that one with the logic analyser yet to see how similar it is.
+>=20
+> I have a T9 (RK3328) TV box with the same chip in it. The FD6551 uses an
+> I2C-like protocol. Every digit (and the symbols) have an I2C address,
+> but, the display does not signal ACK. AFAIK the FD650 and FD655 which
+> are used in other boxes (Amlogic) are very similar.
+>=20
+> So far, I have whipped up a proof-of-cocept driver that uses i2c-gpio.
+> The digits seem to be rotated by 180 degrees. So, in order to use
+> map_to_7segment.h I had to define the BIT_SEG7_* constants differently.
+> My display also has multiple symbols (WIFI, network, pause, play, USB,
+> alarm) that are controlled by writing to the same address as for the
+> colon.
+>=20
+> I=E2=80=99d love to work on a driver (similar to Andreas=E2=80=99 SPI bas=
+ed driver) for
+> these I2C connected chips.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n584
+Create a driver in drivers/auxdisplay for alphanumeric parts. You can
+then export any remaining symbols as LEDs if it will provide benefits.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--zx4FCpZtqtKETZ7O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXlZshAAKCRAw5/Bqldv6
+8kZqAJ0eHpZJIq9KvRkuA970vGoHRW+FxwCfUVhxIMi58/nyPvs2Fhxkk2zlRec=
+=UP4r
+-----END PGP SIGNATURE-----
+
+--zx4FCpZtqtKETZ7O--
