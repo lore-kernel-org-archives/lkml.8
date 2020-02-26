@@ -2,165 +2,230 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B01CC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A333FC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C112C222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:11:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="RdYMGyph"
+	by mail.kernel.org (Postfix) with ESMTP id 6DB2C24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582701100;
+	bh=58RqZxjUH9atKjkoMOHsbmFPMrlnvz6rwgHUDYlVGD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tbip45SohaZ0ay4tcfi3+NidQgo1cLZekOVJPjJ8xmhtdqsB8LSM8+STSP6hwkjgW
+	 HjuegUACGbrlLa+LuicpWy0juXiRH6HBhpI4ZWZ4D+Bns+KJoHckWsvLPaMCO0KGgD
+	 A2X2DbnD93VeX3pkMaDZepzhqBDrGfHzgmleqPlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgBZHL3 (ORCPT
+        id S1727261AbgBZHLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:11:29 -0500
-Received: from mail-bn8nam11on2083.outbound.protection.outlook.com ([40.107.236.83]:56800
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726903AbgBZHL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:11:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RsAep52swxy9u4cxoIUhKy2qq/jivDVJT9gc9dURSTHPDPpwT4HZ5CMQvWuy5g1/9g/l2jovc+h0Me3Eyh9kjfoGIHpQcwU0HLhRVcNApq66gZ5CKkM5WjwzurYVSCGMIoyIPQyn0QC+ckavESbh5qIW3kU3NZ50a8+CgwR/aqe5l0ZhixS7MFjOyLE9CCEQ6oKPCFC61dvStlHHjzd+ypvLF/17eyXO0vKin2O/pFYqGjehcIjTS+NyZ+TLBjBXNAW0BRxu1bhEFMM8EAHNqaMDzQRm18QJx7NjLhf/UinzzK6OFk+dX/H+5e0jBx0PaqoYVCBQx1JyIWkY+wxF8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zvzDEMfVq2WyhMExIcQtMMsESFH1bLcNkkk/9M5HqX0=;
- b=EwdkXizME3DjxZzVR2Vhe2vTjESpSmMt+//FVb4eFftfcEcIxnG5QrgEQYPRY8wB07Vy4Yd+yOqO6SlGXbb6izXLqbmnOz3CesfTUMzVBQ/mXA+AjpZrlCiiwSFfp7reCIIHAbyzC1/earPnfR9ELCTaip3OM2sUmRR4ELHBUIFokHsP2wmfyNVwGnO037l2yJEntvmzIIHOeR2qR4fgeHvzDpWMwbS6s5PcbMKatjj8QQkqIRl83v65U8MqEoCrlj7//gbLvdoaGX5iFORwQS+Tv50ii15R3Fvv4dkKIAFwbTJIvMYu+uXGVQsyZa9fMhllAsATwMwp/ZRMHZ5tYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zvzDEMfVq2WyhMExIcQtMMsESFH1bLcNkkk/9M5HqX0=;
- b=RdYMGyphQMfQiquIZMK9POI1TppItiqbUxqrs7jj+0VvPiOumNz4JHG6lu8qt2e7AP0aacoWY2Js7kpvK8ZNkECdDjQW+MPhtzLdFSTVL1nJxqKr8VdyaAFN2WVu9Xk9foNc1AHP/6GCXDWnPUqPN8e/Iq4Yev2pECxj8ggvlxM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sudheesh.Mavila@amd.com; 
-Received: from MN2PR12MB2974.namprd12.prod.outlook.com (2603:10b6:208:c1::11)
- by MN2PR12MB3727.namprd12.prod.outlook.com (2603:10b6:208:15a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17; Wed, 26 Feb
- 2020 07:11:26 +0000
-Received: from MN2PR12MB2974.namprd12.prod.outlook.com
- ([fe80::a142:9294:5865:65c]) by MN2PR12MB2974.namprd12.prod.outlook.com
- ([fe80::a142:9294:5865:65c%5]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 07:11:26 +0000
-From:   Sudheesh Mavila <sudheesh.mavila@amd.com>
-To:     sudheesh.mavila@amd.com, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?q?=5BPATCH=20v2=C2=A0=5D=20net=3A=20phy=3A=20corrected=20the=20return=20value=20for=20genphy=5Fcheck=5Fand=5Frestart=5Faneg=20=09and=20=20genphy=5Fc45=5Fcheck=5Fand=5Frestart=5Faneg?=
-Date:   Wed, 26 Feb 2020 12:40:45 +0530
-Message-Id: <20200226071045.79090-1-sudheesh.mavila@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA1PR01CA0124.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::18) To MN2PR12MB2974.namprd12.prod.outlook.com
- (2603:10b6:208:c1::11)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yocto-build.amd.com (165.204.156.251) by MA1PR01CA0124.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 07:11:22 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3b55511d-b6f2-45ea-1248-08d7ba8b1767
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3727:|MN2PR12MB3727:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3727775E14984B696361115AFCEA0@MN2PR12MB3727.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0325F6C77B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(189003)(199004)(36756003)(1076003)(66556008)(7696005)(66476007)(66946007)(956004)(26005)(2616005)(6666004)(5660300002)(44832011)(478600001)(6486002)(316002)(8936002)(2906002)(81156014)(81166006)(186003)(16526019)(86362001)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3727;H:MN2PR12MB2974.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VR2aLFHOa/YLPr34+QIz6ZvuJA9qiDihX3KJ+YSAYv191ao/YWY6xAQbcPHqkWeUIhA+sRf8T/aQ0StYHGmhzffl2aV+IHK0nXJO8MK33fcovSgm0u624FHvISlRV5P+lkNxyTyE+TMmmhj0yrNlIbKzy2wiZUZ0RtLbKYrZ/AkMZV5BPGXN3+5V6jtLbFGNMdOLBAt//rozcx7/t+zfZMWL2aeVmpXpOq/xwZc2gYfRfpty+XyPwzJb4Kis1Sz2MGBn6byviseRW0P8ukxBBG/XGtCAeS5Lf2XDs23o8kA6/EYRJrLVFsFfuawoc+GCQFcJsPz0AdkVEq2/mw7c6Ccp/tyd4lIHso8oYPEppr49aSmim6kWO8CjOvnlXWfn5QcWf1TVxIhb5CL5rr9eod4l+ujLJxPW6p3yK/+PH5Q8EP6ZhGqWSx57diUhcYNI
-X-MS-Exchange-AntiSpam-MessageData: 3GGc34Gssbfmmvsa3klW6wllq7Tb5AlJohZfErryuhMjc3kXGQoa//TihM/vEa5X7CNHoP6iVPbSqAP/6sH+k1MwNy3EOk5oEjJtC63Bx56+jnv2CHD8NcPk1iDByhlEi7Fcf9lOuUG2AK8geYXeWg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b55511d-b6f2-45ea-1248-08d7ba8b1767
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 07:11:26.5488
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k1rOVPYNFJoJnnuALooGVYeNBAKKy3848A9ng1z4E3C9SGFvroA4aB2qQ5Mpi2i5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3727
+        Wed, 26 Feb 2020 02:11:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbgBZHLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:11:39 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0CFC222C2;
+        Wed, 26 Feb 2020 07:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582701098;
+        bh=58RqZxjUH9atKjkoMOHsbmFPMrlnvz6rwgHUDYlVGD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xyZDqNdDnaA5nD+cRo6i9yqYjrO5v79j3qCzq6tzWzpucG6ql5k2l14yovBL6nDau
+         szxUdunZ/AQVM2M3NfLq+8eJj95BSjqGfTzlo4FPAyIhA55AFUqHtddL7BppTgw/B5
+         G7Xu7d7P6mFpIo1N8p8Vg17jTwOZeBYoZaEJFplw=
+Date:   Wed, 26 Feb 2020 16:11:32 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <kstewart@linuxfoundation.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] perf: probe-file: Check return value of
+ strlist__add
+Message-Id: <20200226161132.2aeea72b71d48e9988aa27d9@kernel.org>
+In-Reply-To: <b07f670b-6539-1590-88a8-20c58dec3a7e@windriver.com>
+References: <1582641703-233485-1-git-send-email-zhe.he@windriver.com>
+        <1582641703-233485-2-git-send-email-zhe.he@windriver.com>
+        <20200226074906.0acb08b31d01c96c475da0cb@kernel.org>
+        <b07f670b-6539-1590-88a8-20c58dec3a7e@windriver.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When auto-negotiation is not required, return value should be zero.
+On Wed, 26 Feb 2020 10:49:19 +0800
+He Zhe <zhe.he@windriver.com> wrote:
 
-Changes v1->v2:
-- improved comments and code as Andrew Lunn and Heiner Kallweit suggestion
-- fixed issue in genphy_c45_check_and_restart_aneg as Russell King
-  suggestion.
+> 
+> 
+> On 2/26/20 6:49 AM, Masami Hiramatsu wrote:
+> > On Tue, 25 Feb 2020 22:41:43 +0800
+> > <zhe.he@windriver.com> wrote:
+> >
+> >> From: He Zhe <zhe.he@windriver.com>
+> >>
+> >> strlist__add may fail with -ENOMEM or -EEXIST. Check it and give debugging
+> >> hint when necessary.
+> >>
+> >> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> >> ---
+> >>  tools/perf/builtin-probe.c   | 30 ++++++++++++++++--------------
+> >>  tools/perf/util/probe-file.c | 26 +++++++++++++++++++++-----
+> >>  2 files changed, 37 insertions(+), 19 deletions(-)
+> >>
+> >> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+> >> index 26bc5923e6b5..8b4511c70fed 100644
+> >> --- a/tools/perf/builtin-probe.c
+> >> +++ b/tools/perf/builtin-probe.c
+> >> @@ -442,24 +442,26 @@ static int perf_del_probe_events(struct strfilter *filter)
+> >>  	}
+> >>  
+> >>  	ret = probe_file__get_events(kfd, filter, klist);
+> >> -	if (ret == 0) {
+> >> -		strlist__for_each_entry(ent, klist)
+> >> -			pr_info("Removed event: %s\n", ent->s);
+> >> +	if (ret < 0)
+> >> +		goto out;
+> > No, this is ignored by design.
+> > Since probe_file__get_events() returns -ENOENT when no event is matched,
+> > this should be just ignored, and goto uprobe event matching.
+> 
+> Thanks for pointing it out. However when strlist__add in probe_file__get_events
+> returns a -ENOMEM and we ignore that, though it happens not very likely, we
+> would miss some entries. So I add checks here and in probe_file__get_events to
+> give a heads-up in advance.
 
-Fixes: 2a10ab043ac5 ("net: phy: add genphy_check_and_restart_aneg()")
-Fixes: 1af9f16840e9 ("net: phy: add genphy_c45_check_and_restart_aneg()")
-Signed-off-by: Sudheesh Mavila <sudheesh.mavila@amd.com>
----
- drivers/net/phy/phy-c45.c    | 6 +++---
- drivers/net/phy/phy_device.c | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+If you are aware of -ENOMEM ( I guess in such case you'll see OOM killer
+sooner or later ), please just catch it. I mean 
 
-diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
-index a1caeee12236..dd2e23fb67c0 100644
---- a/drivers/net/phy/phy-c45.c
-+++ b/drivers/net/phy/phy-c45.c
-@@ -167,7 +167,7 @@ EXPORT_SYMBOL_GPL(genphy_c45_restart_aneg);
-  */
- int genphy_c45_check_and_restart_aneg(struct phy_device *phydev, bool restart)
- {
--	int ret = 0;
-+	int ret;
- 
- 	if (!restart) {
- 		/* Configure and restart aneg if it wasn't set before */
-@@ -180,9 +180,9 @@ int genphy_c45_check_and_restart_aneg(struct phy_device *phydev, bool restart)
- 	}
- 
- 	if (restart)
--		ret = genphy_c45_restart_aneg(phydev);
-+		return genphy_c45_restart_aneg(phydev);
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(genphy_c45_check_and_restart_aneg);
- 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6a5056e0ae77..8b16775b9324 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1792,7 +1792,7 @@ EXPORT_SYMBOL(genphy_restart_aneg);
-  */
- int genphy_check_and_restart_aneg(struct phy_device *phydev, bool restart)
- {
--	int ret = 0;
-+	int ret;
- 
- 	if (!restart) {
- 		/* Advertisement hasn't changed, but maybe aneg was never on to
-@@ -1807,9 +1807,9 @@ int genphy_check_and_restart_aneg(struct phy_device *phydev, bool restart)
- 	}
- 
- 	if (restart)
--		ret = genphy_restart_aneg(phydev);
-+		return genphy_restart_aneg(phydev);
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL(genphy_check_and_restart_aneg);
- 
+if (ret == -ENOMEM)
+	goto out;
+
+will be good.
+
+Thank you,
+
+> 
+> And the same reason is for the checks below for probe_cache__load,
+> probe_cache__add_entry and probe_cache__scan_sdt.
+> 
+> 
+> Regards,
+> Zhe
+> 
+> >
+> >>  
+> >> -		ret = probe_file__del_strlist(kfd, klist);
+> >> -		if (ret < 0)
+> >> -			goto error;
+> >> -	}
+> >> +	strlist__for_each_entry(ent, klist)
+> >> +		pr_info("Removed event: %s\n", ent->s);
+> >> +
+> >> +	ret = probe_file__del_strlist(kfd, klist);
+> >> +	if (ret < 0)
+> >> +		goto error;
+> >>  
+> >>  	ret2 = probe_file__get_events(ufd, filter, ulist);
+> >> -	if (ret2 == 0) {
+> >> -		strlist__for_each_entry(ent, ulist)
+> >> -			pr_info("Removed event: %s\n", ent->s);
+> >> +	if (ret2 < 0)
+> >> +		goto out;
+> > Ditto.
+> >
+> > Thank you,
+> >
+> >>  
+> >> -		ret2 = probe_file__del_strlist(ufd, ulist);
+> >> -		if (ret2 < 0)
+> >> -			goto error;
+> >> -	}
+> >> +	strlist__for_each_entry(ent, ulist)
+> >> +		pr_info("Removed event: %s\n", ent->s);
+> >> +
+> >> +	ret2 = probe_file__del_strlist(ufd, ulist);
+> >> +	if (ret2 < 0)
+> >> +		goto error;
+> >>  
+> >>  	if (ret == -ENOENT && ret2 == -ENOENT)
+> >>  		pr_warning("\"%s\" does not hit any event.\n", str);
+> >> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+> >> index cf44c05f89c1..00f086cba88f 100644
+> >> --- a/tools/perf/util/probe-file.c
+> >> +++ b/tools/perf/util/probe-file.c
+> >> @@ -307,10 +307,14 @@ int probe_file__get_events(int fd, struct strfilter *filter,
+> >>  		p = strchr(ent->s, ':');
+> >>  		if ((p && strfilter__compare(filter, p + 1)) ||
+> >>  		    strfilter__compare(filter, ent->s)) {
+> >> -			strlist__add(plist, ent->s);
+> >> -			ret = 0;
+> >> +			ret = strlist__add(plist, ent->s);
+> >> +			if (ret < 0) {
+> >> +				pr_debug("strlist__add failed (%d)\n", ret);
+> >> +				goto out;
+> >> +			}
+> >>  		}
+> >>  	}
+> >> +out:
+> >>  	strlist__delete(namelist);
+> >>  
+> >>  	return ret;
+> >> @@ -517,7 +521,11 @@ static int probe_cache__load(struct probe_cache *pcache)
+> >>  				ret = -EINVAL;
+> >>  				goto out;
+> >>  			}
+> >> -			strlist__add(entry->tevlist, buf);
+> >> +			ret = strlist__add(entry->tevlist, buf);
+> >> +			if (ret < 0) {
+> >> +				pr_debug("strlist__add failed (%d)\n", ret);
+> >> +				goto out;
+> >> +			}
+> >>  		}
+> >>  	}
+> >>  out:
+> >> @@ -678,7 +686,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
+> >>  		command = synthesize_probe_trace_command(&tevs[i]);
+> >>  		if (!command)
+> >>  			goto out_err;
+> >> -		strlist__add(entry->tevlist, command);
+> >> +		ret = strlist__add(entry->tevlist, command);
+> >> +		if (ret < 0) {
+> >> +			pr_debug("strlist__add failed (%d)\n", ret);
+> >> +			goto out_err;
+> >> +		}
+> >> +
+> >>  		free(command);
+> >>  	}
+> >>  	list_add_tail(&entry->node, &pcache->entries);
+> >> @@ -859,7 +872,10 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
+> >>  			break;
+> >>  		}
+> >>  
+> >> -		strlist__add(entry->tevlist, buf);
+> >> +		ret = strlist__add(entry->tevlist, buf);
+> >> +		if (ret < 0)
+> >> +			pr_debug("strlist__add failed (%d)\n", ret);
+> >> +
+> >>  		free(buf);
+> >>  		entry = NULL;
+> >>  	}
+> >> -- 
+> >> 2.24.1
+> >>
+> >
+> 
+
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
