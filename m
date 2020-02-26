@@ -2,249 +2,154 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C39C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A501DC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D73206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="l500m4Ia"
+	by mail.kernel.org (Postfix) with ESMTP id 88172206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgBZPF4 (ORCPT
+        id S1728055AbgBZPF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:05:56 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33707 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727980AbgBZPFw (ORCPT
+        Wed, 26 Feb 2020 10:05:59 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:52116 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727993AbgBZPFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:05:52 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d5so2478650qto.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:05:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xLGXbcfU4g3S4aLzErptFSe/rB4zsTw8GDyEXXa4IsQ=;
-        b=l500m4Ia0VPmZO/B9pKznYu4o7SEwfOC1uaoGPv4NoceNO/0Wqgj4P9gxxqmfoxXXr
-         2kWTq/5FqbgQz2jgyDyys21kd9PhcFQ0CMswAF+XsUuqHGQag3nmjwk5EFvMdah/eeNM
-         Yu2fkEZ9R1WUX5qAnNaC4KmmhmOhlZZc3WzgzPqyvUnbpsNTvGA4/XSTAsc7vQwRhHoJ
-         blXSIq28K7tHP1/3MlKvHb5V1eja+wNHFXtgjN4xCvqwvVqPd/3Osm3k9WmVyExLTcJU
-         PbkJbzTsToxgU4U8jnz/CbiiMEPy8HFz7tuf698Nx3/WAsMfLQGPXmSA7naPYfYjI+NH
-         fpeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xLGXbcfU4g3S4aLzErptFSe/rB4zsTw8GDyEXXa4IsQ=;
-        b=fZRu46dD2+rSxv0BZmKvbx2ndHN38eF8ii4ORZTDsq810AsNB3FF4Y23eMsQ9K/ma0
-         WxhGUMwJgY5m0gcH9rc6txqsnR/rx3pSgePVwVGjjLPQrtBGPeIPcu0bxp3n5EPSl/dH
-         XMhjijObQgV0c32g69TiBH0seSS16PjzroUzLU+xvJjMPZw2AaWLjUtPOnC59zC4Oqpv
-         ePJOPdpi0qayRLTDI2O8UdqZo/MeCR0yQibHe+PwQBYG89hMMT3EiDD7PBE+l7EAlYmU
-         J+t4YAuWVcbFszQzsvpoGNZCRNF+h9BgbNUbZm/XcTxdtT9ICGeAYryge91kjgpi7/GA
-         pLWQ==
-X-Gm-Message-State: APjAAAXpfWHrdvdHPoOUkMdfx1ELQ3WjQ9FYjiLHcLySsVT6DCWUq87R
-        DhjE+p2vL8roL3ABWYz1XS+5Nw==
-X-Google-Smtp-Source: APXvYqz/OMScVgqZj2TTum3CKs7uT4KI3EattRDuhazannnjUJt+RvFbSOawip3x4muz/4GuVsB00A==
-X-Received: by 2002:ac8:5298:: with SMTP id s24mr5766771qtn.54.1582729550417;
-        Wed, 26 Feb 2020 07:05:50 -0800 (PST)
-Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
-        by smtp.gmail.com with ESMTPSA id v6sm169129qtc.76.2020.02.26.07.05.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:05:49 -0800 (PST)
-Date:   Wed, 26 Feb 2020 10:05:48 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200226150548.GD10257@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200221171256.GB23476@blackbody.suse.cz>
- <20200221185839.GB70967@cmpxchg.org>
- <20200225133720.GA6709@blackbody.suse.cz>
- <20200225150304.GA10257@cmpxchg.org>
- <20200226132237.GA16746@blackbody.suse.cz>
+        Wed, 26 Feb 2020 10:05:53 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QEnNAH024585;
+        Wed, 26 Feb 2020 10:05:51 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrx01k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Feb 2020 10:05:51 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01QF5oU7060259
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 26 Feb 2020 10:05:50 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 26 Feb 2020 10:05:49 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 26 Feb 2020 10:05:49 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 26 Feb 2020 10:05:49 -0500
+Received: from saturn.ad.analog.com ([10.48.65.109])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01QF5c9O003536;
+        Wed, 26 Feb 2020 10:05:47 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 7/7] dt-bindings: iio: adc: add bindings doc for AD9467 ADC
+Date:   Wed, 26 Feb 2020 17:08:35 +0200
+Message-ID: <20200226150835.19649-8-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200226150835.19649-1-alexandru.ardelean@analog.com>
+References: <20200226150835.19649-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226132237.GA16746@blackbody.suse.cz>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_05:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This change adds the binding doc for the AD9467 ADC.
 
-On Wed, Feb 26, 2020 at 02:22:37PM +0100, Michal Koutný wrote:
-> On Tue, Feb 25, 2020 at 10:03:04AM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > Can you explain why you think protection is different from a weight?
-> - weights are dimension-less, they represent no real resource
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
 
-They still ultimately translate to real resources. The concrete value
-depends on what the parent's weight translates to, and it depends on
-sibling configurations and their current consumption. (All of this is
-already true for memory protection as well, btw). But eventually, a
-weight specification translates to actual time on a CPU, bandwidth on
-an IO device etc.
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+new file mode 100644
+index 000000000000..c4f57fa6aad1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad9467.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD9467 High-Speed ADC
++
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
++
++description: |
++  The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital
++  converter (ADC).
++
++  https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad9467
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: adc-clk
++
++  powerdown-gpios:
++    description:
++      Pin that controls the powerdown mode of the device.
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      Reset pin for the device.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++          compatible = "adi,ad9467";
++          reg = <0>;
++          clocks = <&adc_clk>;
++          clock-names = "adc-clk";
++        };
++    };
++...
+-- 
+2.20.1
 
-> - sum of sibling weights is meaningless (and independent from parent
->   weight)
-
-Technically true for overcommitted memory.low values as well.
-
-> - to me this protection is closer to limits (actually I like your simile
->   that they're very lazily enforced limits)
-
-But weights are also lazily enforced limits. Without competition, you
-can get 100% regardless of your weight; under contention, you get
-throttled/limited back to an assigned share, however that's specified.
-
-Once you peel away the superficial layer of how resources, or shares
-of resources, are being referred to (time, bytes, relative shares)
-weights/guarantees/protections are all the same thing: they are lazily
-enforced* partitioning rules of a resource under contention.
-
-I don't see a fundamental difference between them. And that in turn
-makes it hard for me to accept that hierarchical inheritance rules
-should be different.
-
-* We also refer to this as work-conserving
-
-> > Now you apply memory pressure, what happens?. D isn't reclaimed, C is
-> > somewhat reclaimed, E is reclaimed hard. D will not page, C will page
-> > a little bit, E will page hard *with the higher IO priority of B*.
-> > 
-> > Now C is stuck behind E. This is a priority inversion.
-> This is how I understand the weights to work.
-> 
->     A				
->     `- B		io.weight=200
->        `- D		io.weight=100 (e.g.)
->        `- E		io.weight=100 (e.g.)
->     `- C		io.weight=50
-> 
-> Whatever weights I assign to D and E, when only E and C compete, E will
-> have higher weight (200 to 50, work-conservacy of weights).
-
-Yes, exactly. I'm saying the same should be true for memory.
-
-> I don't think this inversion is wrong because E's work is still on
-> behalf of B.
-
-"Wrong" isn't the right term. Is it what you wanted to express in your
-configuration?
-
-What's the point of designating E a memory donor group that needs to
-relinquish memory to C under pressure, but when it actually gives up
-that memory it beats C in competition over a different resource?
-
-You are talking about a mathematical truth on a per-controller
-basis. What I'm saying is that I don't see how this is useful for real
-workloads, their relative priorities, and the performance expectations
-users have from these priorities.
-
-With a priority inversion like this, there is no actual performance
-isolation or containerization going on here - which is the whole point
-of cgroups and resource control.
-
-> Or did you mean that if protections were transformed (via effective
-> calculation) to have ratios only in the same range as io.weights
-> (1e-4..1e4 instead of 0..inf), then it'd prevent the inversion? (By
-> setting D,E weights in same ratios as D,E protections.)
-
-No, the inversion would be prevented if E could consume all resources
-assigned to B that aren't consumed by D.
-
-This is true for IO and CPU, but before my patch not for memory.
-
-> > 1. Can you please make a practical use case for having scape goats or
-> >    donor groups to justify retaining what I consider to be an
-> >    unimportant artifact in the memory.low semantics?
->     A.low=10G
->     `- B.low=X   u=6G
->     `- C.low=X   u=4G
->     `- D.low=0G  u=5G
-> 
-> B,C   run the workload which should be protected
-> D     runs job that doesn't need any protection 
-> u     denotes usage
-> (I made the example with more than one important sibling to illustrate
-> usefulness of some implicit distribution X.)
-> 
-> When outer reclaim comes, reclaiming from B,C would be detrimental to
-> their performance, while impact on D is unimportant. (And induced IO
-> load on the rest (out of A) too.)
-
-Okay, but this is a different usecase than we were talking about.
-
-My objection is to opting out of protection against cousins (thus
-overriding parental resource assignment), not against siblings.
-
-Expressing priorities between siblings like this is fine. And I
-absolutely see practical value in your specific example.
-
-> It's not possible to move D to the A's level, since only A is all what a
-> given user can control.
-
-Correct, but you can change the tree to this:
-
-     A.low=10G
-     `- A1.low=10G
-        `- B.low=0G
-        `- C.low=0G
-     `- D.low=0G
-
-to express
-
-A1 > D
- B = C
-
-That priority order can be matched by CPU and IO controls as well:
-
-     A.weight=100
-     `- A1.weight=100
-        `- B.weight=100
-        `- C.weight=100
-     `- D.weight=1
-
-My objection is purely about opting out of resources relative to (and
-assuming a lower memory priority than) an outside cousin that may have
-a lower priority on other resources.
-
-That is, I would like to see an argument for this setup:
-
-     A				
-     `- B		io.weight=200          memory.low=10G
-        `- D		io.weight=100 (e.g.)   memory.low=10G
-        `- E		io.weight=100 (e.g.)   memory.low=0
-     `- C		io.weight=50           memory.low=5G
-
-Where E has no memory protection against C, but E has IO priority over
-C. That's the configuration that cannot be expressed with a recursive
-memory.low, but since it involves priority inversions it's not useful
-to actually isolate and containerize workloads.
-
-That's why I'm saying it's an artifact, not an actual feature.
-
-> > 2. If you think opting out of hierarchically assigned resources is a
-> >    fundamentally important usecase, can you please either make an
-> >    argument why it should also apply to CPU and IO, or alternatively
-> >    explain in detail why they are meaningfully different?
-> I'd say that protected memory is a disposable resource in contrast with
-> CPU/IO. If you don't have latter, you don't progress; if you lack the
-> former, you are refaulting but can make progress. Even more, you should
-> be able to give up memory.min.
-
-Eh, I'm not buying that. You cannot run without memory either. If
-somebody reclaims a page between you faulting it in and you resuming
-to userspace, there is no forward progress.
