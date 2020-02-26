@@ -2,314 +2,228 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E6CC4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36569C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359A020732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AD920732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="soZ1hb4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgBZA3a (ORCPT
+        id S1729631AbgBZAap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:29:30 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728756AbgBZA33 (ORCPT
+        Tue, 25 Feb 2020 19:30:45 -0500
+Received: from sonic315-27.consmr.mail.ne1.yahoo.com ([66.163.190.153]:44278
+        "EHLO sonic315-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729336AbgBZAao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:29:29 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q0Khxn121699
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:29:28 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yde1ug5sd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:29:27 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 26 Feb 2020 00:29:25 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Feb 2020 00:29:19 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01Q0TI8544302718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 00:29:18 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F6735204F;
-        Wed, 26 Feb 2020 00:29:18 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 73E275204E;
-        Wed, 26 Feb 2020 00:29:17 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C7E00A00F1;
-        Wed, 26 Feb 2020 11:29:12 +1100 (AEDT)
-Subject: Re: [PATCH v3 06/27] ocxl: Tally up the LPC memory on a link &
- allow it to be mapped
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 26 Feb 2020 11:29:16 +1100
-In-Reply-To: <4c8f704b-5607-5ca0-c00e-01e412117f6b@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-7-alastair@au1.ibm.com>
-         <4c8f704b-5607-5ca0-c00e-01e412117f6b@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 25 Feb 2020 19:30:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1582677043; bh=8RRtcuYum8ovdHNN06sxqW2J5odMVOW8xNFE4vMX4DA=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=soZ1hb4Br6OuS3IoJXPXQY76/nU8NjxFJoHjojsUeiM/1WOKxK4uR6/K07f3Q2smwitJ3B8YqhugKA4DVaYF4RGDF7bQRv3dLRmmW6IN/o882Hhn8EM11fioBLkuAvbW0PZh6ZaXElhE/QK9OpHawzOwwXRVGFATozb/0zAUBMJGWnSWeL5V5p4mYfP7vwUOdX15N8/MWYXqsm5UiV2iE599FcfhVMMTpnECg2GKRxMizYA0nERzfVi9MUGWJr/F+d53/btsafJNajOomZz+0Ez3dKwpdzSkvHAasKltLmOUO1xYyQoP/mjWkLAGuwWGKVWk7eHP1KGfMhv9yhGlvg==
+X-YMail-OSG: eZDYETgVM1kY8ZOHZprUzvTnIHDKLBO86FGQjgcrXb8KeSSxxhuCAyTMqrNmhtf
+ DxKxxC9wfxjClsyAxumzJaYYsBhooCwtNiibcg6oSlKknuizXRb.LGmyucLbG_bXndK2gl8JAVco
+ X8HO0_wNNtTrLs_ipvT8Q9TlZ0V59IalXsR353MwBiswIrdyM.oRuX2k5a20eA6MFtxIB3FCIIb7
+ 7YyKTql06AwsaQjx2M1OrfPP5XUlMpSXiW_NocIeyu.Qe89lbrCo6oJCF6fz4FttFmVFGlT5jbkt
+ 0Y_HpNqSopkzvGGMfcCTJA.ueEu_HaYbdMTWKqtxQqcmtPy2nFBj4k1t8gzarPMMkTvStEeF.z7.
+ fZskD9PT5FtUXOzcLLp7MBWe5O5tfKivhgNZPN6stzgsEZBVtWrf_r4h3.CcJZGIOq2ZrrI90xo5
+ 2plwjfYgTnhkilLd5vpMH6NVqD8Vaqpsd7Fa3nC3plm6PMcUA_q.XB8otnFdcoRsRFlWnPYSgfzq
+ tDLhw_ZJWU8iNDFIxE6Q8nkysCxc1sxflOGNbIbf.Nm7uVtLVn0roteDC4O__vBlTD_jD1CUS2zf
+ 7_M4lP3BwgH6riDMIrdMiN7ZmLGas4a.hAhcGbVH33kfmL6ZA7WlAIMbGI8HVB.CAdrmdgshuZRY
+ c4js066k1zkTMyH2_fIF2n_nTFCG4Y4su8n83Ir538f1oX32P4WJiq4rVoLFaKw5WBdgCwc1ygWD
+ PnEW1taX9akdGMZyQDetcXnkfxE9OEF4KbnBUl7U6ZD8albEukd7x7wj39fWMa8DRoUvbUoNU8e7
+ ujqaV4GrFHnrVGx9ZbufZITTt1KrBMyT7OMgeJhryPB8XxdIy0KNdwJIi65J9JRQfI.C6DcvQCRj
+ FLYNS1quSM8a.C4HEYUw0KhHqxQJnSULw5VRfjE3Q_DsGs5hVcr5kTz7WfuWGiMrI1KZtXXhVswS
+ EpUUr7wFJLnYoULWI0zsAo6OjzBzm5F0LC7pomCBv4Pv_vUvHevYUbBbuqJcuyyh28OT0yMaRC16
+ CvY_CX2QfetyFtwMKq26xADxGMLqnaWfnm0cU9njp1QbarB6Njjkm8zTwwVvZ.9KOmdPzjCt5bLH
+ zq3.rf9drLCAGt.Aiz52ZITyR30t.3bOt6O.PWs3ZOXQ4VjcrX7NQwM.eyUpPtvzYAV4TkyylFtb
+ CNyTdtXnSbVF9QfZpBL6vvPkrWCH2GxEn3CdkbyfHUTcGRIycimW.iEHZbw0zz9dfQJ0m.jAcExQ
+ MBgBgYUu_.Vq6G6iExqPAA1aUlnvg7Kzrfb.Ie4n9dFdlQm60uYViY6ZDjraFoiUVvGuM_475HGA
+ opF3iOododssDi4xi0aooaQUZvYWYEUwshz0EwaUHgnmm8o5suwN1ZX7elsHYo5_ZVOGVAemZdOa
+ ryvQrck62PxrO5cPpgsfIGwHzw5oauK5xINB0Et1nAWiJReV684Gkws_ObH7UnxvgfcbkRADnUK7
+ 1dJ73DpFre.6_lH5TAKyiY7GjXiMzaSdIll9lAk_sPVODaOU77blQRzPCDys-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Wed, 26 Feb 2020 00:30:43 +0000
+Received: by smtp404.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID bf027b62544540883a33b875121270dc;
+          Wed, 26 Feb 2020 00:30:42 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
+ <202002211946.A23A987@keescook> <20200223220833.wdhonzvven7payaw@ast-mbp>
+ <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
+ <20200224171305.GA21886@chromium.org>
+ <00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com>
+ <202002241136.C4F9F7DFF@keescook> <20200225054125.dttrc3fvllzu4mx5@ast-mbp>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <4b56177f-8148-177b-e1e5-c98da86b3b01@schaufler-ca.com>
+Date:   Tue, 25 Feb 2020 16:30:42 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022600-0028-0000-0000-000003DDFA10
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022600-0029-0000-0000-000024A31410
-Message-Id: <7833545b1c276ac62651c598af27728b8cacabed.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_09:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=2
- priorityscore=1501 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002260000
+In-Reply-To: <20200225054125.dttrc3fvllzu4mx5@ast-mbp>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Mailer: WebService/1.1.15302 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_241)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 17:30 +0100, Frederic Barrat wrote:
-> 
-> Le 21/02/2020 à 04:26, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   drivers/misc/ocxl/core.c          | 10 ++++++
-> >   drivers/misc/ocxl/link.c          | 53
-> > +++++++++++++++++++++++++++++++
-> >   drivers/misc/ocxl/ocxl_internal.h | 33 +++++++++++++++++++
-> >   3 files changed, 96 insertions(+)
-> > 
-> > diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> > index b7a09b21ab36..2531c6cf19a0 100644
-> > --- a/drivers/misc/ocxl/core.c
-> > +++ b/drivers/misc/ocxl/core.c
-> > @@ -230,8 +230,18 @@ static int configure_afu(struct ocxl_afu *afu,
-> > u8 afu_idx, struct pci_dev *dev)
-> >   	if (rc)
-> >   		goto err_free_pasid;
-> >   
-> > +	if (afu->config.lpc_mem_size || afu-
-> > >config.special_purpose_mem_size) {
-> > +		rc = ocxl_link_add_lpc_mem(afu->fn->link, afu-
-> > >config.lpc_mem_offset,
-> > +					   afu->config.lpc_mem_size +
-> > +					   afu-
-> > >config.special_purpose_mem_size);
-> > +		if (rc)
-> > +			goto err_free_mmio;
-> > +	}
-> > +
-> >   	return 0;
-> >   
-> > +err_free_mmio:
-> > +	unmap_mmio_areas(afu);
-> >   err_free_pasid:
-> >   	reclaim_afu_pasid(afu);
-> >   err_free_actag:
-> > diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> > index 58d111afd9f6..1e039cc5ebe5 100644
-> > --- a/drivers/misc/ocxl/link.c
-> > +++ b/drivers/misc/ocxl/link.c
-> > @@ -84,6 +84,11 @@ struct ocxl_link {
-> >   	int dev;
-> >   	atomic_t irq_available;
-> >   	struct spa *spa;
-> > +	struct mutex lpc_mem_lock; /* protects lpc_mem & lpc_mem_sz */
-> > +	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the
-> > link */
-> > +	u64 lpc_mem;
-> > +	int lpc_consumers;
-> > +
-> >   	void *platform_data;
-> >   };
-> >   static struct list_head links_list = LIST_HEAD_INIT(links_list);
-> > @@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int
-> > PE_mask, struct ocxl_link **out_l
-> >   	if (rc)
-> >   		goto err_spa;
-> >   
-> > +	mutex_init(&link->lpc_mem_lock);
-> > +
-> >   	/* platform specific hook */
-> >   	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
-> >   				&link->platform_data);
-> > @@ -711,3 +718,49 @@ void ocxl_link_free_irq(void *link_handle, int
-> > hw_irq)
-> >   	atomic_inc(&link->irq_available);
-> >   }
-> >   EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
-> > +
-> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size)
-> > +{
-> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-> > +
-> > +	// Check for overflow
-> > +	if (offset > (offset + size))
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&link->lpc_mem_lock);
-> > +	link->lpc_mem_sz = max(link->lpc_mem_sz, offset + size);
-> > +
-> > +	mutex_unlock(&link->lpc_mem_lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
-> > +{
-> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-> > +
-> > +	mutex_lock(&link->lpc_mem_lock);
-> > +
-> > +	if(!link->lpc_mem)
-> > +		link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link-
-> > >lpc_mem_sz);
-> > +
-> > +	if(link->lpc_mem)
-> > +		link->lpc_consumers++;
-> > +	mutex_unlock(&link->lpc_mem_lock);
-> > +
-> > +	return link->lpc_mem;
-> > +}
-> > +
-> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
-> > *pdev)
-> > +{
-> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-> > +
-> > +	mutex_lock(&link->lpc_mem_lock);
-> > +	WARN_ON(--link->lpc_consumers < 0);
-> 
-> Here, we always decrement the lpc_consumers count. However, it was
-> only 
-> incremented if the mapping was setup correctly in opal.
-> 
-> We could arguably claim that ocxl_link_lpc_release() should only be 
-> called if ocxl_link_lpc_map() succeeded, but it would make error
-> path 
-> handling easier if we only decrement the lpc_consumers count if 
-> link->lpc_mem is set. So that we can just call
-> ocxl_link_lpc_release() 
-> in error paths without having to worry about triggering the WARN_ON
-> message.
-> 
->    Fred
-> 
-> 
+On 2/24/2020 9:41 PM, Alexei Starovoitov wrote:
+> On Mon, Feb 24, 2020 at 01:41:19PM -0800, Kees Cook wrote:
+>> But the LSM subsystem doesn't want special cases (Casey has worked ver=
+y
+>> hard to generalize everything there for stacking). It is really hard t=
+o
+>> accept adding a new special case when there are still special cases ye=
+t
+>> to be worked out even in the LSM code itself[2].
+>> [2] Casey's work to generalize the LSM interfaces continues and it qui=
+te
+>> complex:
+>> https://lore.kernel.org/linux-security-module/20200214234203.7086-1-ca=
+sey@schaufler-ca.com/
+> I think the key mistake we made is that we classified KRSI as LSM.
+> LSM stacking, lsmblobs that the above set is trying to do are not neces=
+sary for KRSI.
+> I don't see anything in LSM infra that KRSI can reuse.
+> The only thing BPF needs is a function to attach to.
+> It can be a nop function or any other.
+> security_*() functions are interesting from that angle only.
+> Hence I propose to reconsider what I was suggesting earlier.
+> No changes to secruity/ directory.
+> Attach to security_*() funcs via bpf trampoline.
+> The key observation vs what I was saying earlier is KRSI and LSM are wr=
+ong names.
+> I think "security" is also loaded word that should be avoided.
 
-Ok, this makes sense.
+No argument there.
 
-> 
-> > +	if (link->lpc_consumers == 0) {
-> > +		pnv_ocxl_platform_lpc_release(pdev);
-> > +		link->lpc_mem = 0;
-> > +	}
-> > +
-> > +	mutex_unlock(&link->lpc_mem_lock);
-> > +}
-> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
-> > b/drivers/misc/ocxl/ocxl_internal.h
-> > index 198e4e4bc51d..d0c8c4838f42 100644
-> > --- a/drivers/misc/ocxl/ocxl_internal.h
-> > +++ b/drivers/misc/ocxl/ocxl_internal.h
-> > @@ -142,4 +142,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context
-> > *ctx, u64 offset);
-> >   u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
-> >   void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-> >   
-> > +/**
-> > + * ocxl_link_add_lpc_mem() - Increment the amount of memory
-> > required by an OpenCAPI link
-> > + *
-> > + * @link_handle: The OpenCAPI link handle
-> > + * @offset: The offset of the memory to add
-> > + * @size: The amount of memory to increment by
-> > + *
-> > + * Returns 0 on success, negative on overflow
-> > + */
-> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64
-> > size);
-> > +
-> > +/**
-> > + * ocxl_link_lpc_map() - Map the LPC memory for an OpenCAPI device
-> > + * Since LPC memory belongs to a link, the whole LPC memory
-> > available
-> > + * on the link must be mapped in order to make it accessible to a
-> > device.
-> > + * @link_handle: The OpenCAPI link handle
-> > + * @pdev: A device that is on the link
-> > + *
-> > + * Returns the address of the mapped LPC memory, or 0 on error
-> > + */
-> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
-> > +
-> > +/**
-> > + * ocxl_link_lpc_release() - Release the LPC memory device for an
-> > OpenCAPI device
-> > + *
-> > + * Offlines LPC memory on an OpenCAPI link for a device. If this
-> > is the
-> > + * last device on the link to release the memory, unmap it from
-> > the link.
-> > + *
-> > + * @link_handle: The OpenCAPI link handle
-> > + * @pdev: A device that is on the link
-> > + */
-> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
-> > *pdev);
-> > +
-> >   #endif /* _OCXL_INTERNAL_H_ */
-> > 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+> I'm proposing to rename BPF_PROG_TYPE_LSM into BPF_PROG_TYPE_OVERRIDE_R=
+ETURN.
+>
+>> So, unless James is going to take this over Casey's objections, the pa=
+th
+>> forward I see here is:
+>>
+>> - land a "slow" KRSI (i.e. one that hooks every hook with a stub).
+>> - optimize calling for all LSMs
+> I'm very much surprised how 'slow' KRSI is an option at all.
+> 'slow' KRSI means that CONFIG_SECURITY_KRSI=3Dy adds indirect calls to =
+nop
+> functions for every place in the kernel that calls security_*().
+> This is not an acceptable overhead. Even w/o retpoline
+> this is not something datacenter servers can use.
+
+In the universe I live in data centers will disable hyper-threading,
+reducing performance substantially, in the face of hypothetical security
+exploits. That's a massively greater performance impact than the handful
+of instructions required to do indirect calls. Not to mention the impact
+of the BPF programs that have been included. Have you ever looked at what=
+
+happens to system performance when polkitd is enabled?
+
+
+>
+> Another option is to do this:
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 64b19f050343..7887ce636fb1 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -240,7 +240,7 @@ static inline const char *kernel_load_data_id_str(e=
+num kernel_load_data_id id)
+>         return kernel_load_data_str[id];
+>  }
+>
+> -#ifdef CONFIG_SECURITY
+> +#if defined(CONFIG_SECURITY) || defined(CONFIG_BPF_OVERRIDE_RETURN)
+>
+> Single line change to security.h and new file kernel/bpf/override_secur=
+ity.c
+> that will look like:
+> int security_binder_set_context_mgr(struct task_struct *mgr)
+> {
+>         return 0;
+> }
+>
+> int security_binder_transaction(struct task_struct *from,
+>                                 struct task_struct *to)
+> {
+>         return 0;
+> }
+> Essentially it will provide BPF side with a set of nop functions.
+> CONFIG_SECURITY is off. It may seem as a downside that it will force a =
+choice
+> on kernel users. Either they build the kernel with CONFIG_SECURITY and =
+their
+> choice of LSMs or build the kernel with CONFIG_BPF_OVERRIDE_RETURN and =
+use
+> BPF_PROG_TYPE_OVERRIDE_RETURN programs to enforce any kind of policy. I=
+ think
+> it's a pro not a con.
+
+Err, no. All distros use an LSM or two. Unless you can re-implement SELin=
+ux
+in BPF (good luck with state transitions) you've built a warp drive witho=
+ut
+ever having mined dilithium crystals.
+
 
