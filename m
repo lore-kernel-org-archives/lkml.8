@@ -2,190 +2,107 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF6CC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1574C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0801920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B49624680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgBZPTb (ORCPT
+        id S1728074AbgBZPUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:19:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42769 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgBZPTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:19:31 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j6yTC-0005WE-8j; Wed, 26 Feb 2020 16:19:30 +0100
-Message-ID: <78e5e739269ee8f7467284ad88d2097e2ad991ba.camel@pengutronix.de>
-Subject: Re: [PATCH] drm/etnaviv: rework perfmon query infrastructure
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, etnaviv@lists.freedesktop.org,
-        stable@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Date:   Wed, 26 Feb 2020 16:19:29 +0100
-In-Reply-To: <20200106104339.215511-1-christian.gmeiner@gmail.com>
-References: <20200106104339.215511-1-christian.gmeiner@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 26 Feb 2020 10:20:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgBZPUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:20:34 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1747E20838;
+        Wed, 26 Feb 2020 15:20:33 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 10:20:31 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
+        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
+Message-ID: <20200226102031.15664d19@gandalf.local.home>
+In-Reply-To: <20200226102758.GV18400@hirez.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+        <20200221134215.328642621@infradead.org>
+        <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
+        <20200221202246.GA14897@hirez.programming.kicks-ass.net>
+        <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
+        <20200224112708.4f307ba3@gandalf.local.home>
+        <20200224163409.GJ18400@hirez.programming.kicks-ass.net>
+        <20200224114754.0fb798c1@gandalf.local.home>
+        <20200224213139.GO11457@worktop.programming.kicks-ass.net>
+        <20200224170231.3807931d@gandalf.local.home>
+        <20200226102758.GV18400@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+On Wed, 26 Feb 2020 11:27:58 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-sorry for taking so long to get around to this.
-
-On Mo, 2020-01-06 at 11:43 +0100, Christian Gmeiner wrote:
-> Report the correct perfmon domains and signals depending
-> on the supported feature flags.
+> On Mon, Feb 24, 2020 at 05:02:31PM -0500, Steven Rostedt wrote:
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> > The other is for the hwlat detector that measures the time it was in an
+> > NMI, as NMIs appear as a hardware latency too.  
+> 
+> Yeah,.. I hate that one. But I ended up with this patch.
+> 
+> And yes, I know some of those notrace annotations are strictly
+> unnessecary due to Makefile crap, but having them is _SO_ much easier.
+> 
 > ---
->  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 57 ++++++++++++++++++++---
->  1 file changed, 50 insertions(+), 7 deletions(-)
+> Subject: x86,tracing: Robustify ftrace_nmi_enter()
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Feb 24 23:40:29 CET 2020
 > 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> index 8adbf2861bff..7ae8f347ca06 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> @@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
->  };
->  
->  struct etnaviv_pm_domain_meta {
-> +	unsigned int feature;
->  	const struct etnaviv_pm_domain *domains;
->  	u32 nr_domains;
->  };
-> @@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain doms_vg[] = {
->  
->  static const struct etnaviv_pm_domain_meta doms_meta[] = {
->  	{
-> +		.feature = chipFeatures_PIPE_3D,
->  		.nr_domains = ARRAY_SIZE(doms_3d),
->  		.domains = &doms_3d[0]
->  	},
->  	{
-> +		.feature = chipFeatures_PIPE_2D,
->  		.nr_domains = ARRAY_SIZE(doms_2d),
->  		.domains = &doms_2d[0]
->  	},
->  	{
-> +		.feature = chipFeatures_PIPE_VG,
->  		.nr_domains = ARRAY_SIZE(doms_vg),
->  		.domains = &doms_vg[0]
->  	}
->  };
->  
-> +static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
-> +{
-> +	unsigned int num = 0, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-> +		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-> +
-> +		if (gpu->identity.features & meta->feature)
-> +			num += meta->nr_domains;
-> +	}
-> +
-> +	return num;
-> +}
-> +
-> +static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
-> +	unsigned int index)
-> +{
-> +	const struct etnaviv_pm_domain *domain = NULL;
-> +	unsigned int offset = 0, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-> +		const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-> +
-> +		if (!(gpu->identity.features & meta->feature))
-> +			continue;
-> +
-> +		if (meta->nr_domains < (index - offset)) {
-> +			offset += meta->nr_domains;
-> +			continue;
-> +		}
-> +
-> +		domain = meta->domains + (index - offset);
-> +	}
-> +
-> +	BUG_ON(!domain);
+>   ftrace_nmi_enter()
+>      trace_hwlat_callback()
+>        trace_clock_local()
+>          sched_clock()
+>            paravirt_sched_clock()
+>            native_sched_clock()
+> 
+> All must not be traced or kprobed, it will be called from do_debug()
+> before the kprobe handler.
+> 
 
-This is a no-go. BUG_ON is reserved for only the most severe kernel
-bugs where you can't possibly continue without risking a corruption of
-non-volatile state. This isn't the case here, please instead just make
-the callers handle a NULL return gracefully.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Regards,
-Lucas
+-- Steve
 
-> +
-> +	return domain;
-> +}
-> +
->  int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
->  	struct drm_etnaviv_pm_domain *domain)
->  {
-> -	const struct etnaviv_pm_domain_meta *meta = &doms_meta[domain->pipe];
-> +	const unsigned int nr_domains = num_pm_domains(gpu);
->  	const struct etnaviv_pm_domain *dom;
->  
-> -	if (domain->iter >= meta->nr_domains)
-> +	if (domain->iter >= nr_domains)
->  		return -EINVAL;
->  
-> -	dom = meta->domains + domain->iter;
-> +	dom = pm_domain(gpu, domain->iter);
->  
->  	domain->id = domain->iter;
->  	domain->nr_signals = dom->nr_signals;
->  	strncpy(domain->name, dom->name, sizeof(domain->name));
->  
->  	domain->iter++;
-> -	if (domain->iter == meta->nr_domains)
-> +	if (domain->iter == nr_domains)
->  		domain->iter = 0xff;
->  
->  	return 0;
-> @@ -448,14 +491,14 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
->  int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
->  	struct drm_etnaviv_pm_signal *signal)
->  {
-> -	const struct etnaviv_pm_domain_meta *meta = &doms_meta[signal->pipe];
-> +	const unsigned int nr_domains = num_pm_domains(gpu);
->  	const struct etnaviv_pm_domain *dom;
->  	const struct etnaviv_pm_signal *sig;
->  
-> -	if (signal->domain >= meta->nr_domains)
-> +	if (signal->domain >= nr_domains)
->  		return -EINVAL;
->  
-> -	dom = meta->domains + signal->domain;
-> +	dom = pm_domain(gpu, signal->domain);
->  
->  	if (signal->iter >= dom->nr_signals)
->  		return -EINVAL;
-
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/include/asm/paravirt.h |    2 +-
+>  arch/x86/kernel/tsc.c           |    7 +++++--
+>  include/linux/ftrace_irq.h      |    4 ++--
+>  kernel/trace/trace_clock.c      |    2 ++
+>  kernel/trace/trace_hwlat.c      |    4 +++-
+>  5 files changed, 13 insertions(+), 6 deletions(-)
+> 
