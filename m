@@ -2,125 +2,131 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F23DC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F1C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A732072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582743977;
-	bh=tuoFmxeEBv4di13R5huQDKgFzJGRdWd39uKDA3v7NC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FXvkK9REb7yD8cmlsI8jHHCdYwZxvWHsFKQx27Wp0d5pc7dUL/DnCY0UfIgc8vjLa
-	 1gKZ+L79TnYo9EUHaIfWKQlZiPwkGhN5cEfh9140wRZqeRKLgg3YbOQ/RvBhRXp+Qc
-	 30157aeDgwPpv0gqVTif6F28IqtSW2XP+j62yuKc=
+	by mail.kernel.org (Postfix) with ESMTP id D5B28222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1sFXJWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgBZTGQ (ORCPT
+        id S1727327AbgBZTGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:06:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42854 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgBZTGP (ORCPT
+        Wed, 26 Feb 2020 14:06:43 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:32878 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgBZTGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:06:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id p18so56248wre.9;
-        Wed, 26 Feb 2020 11:06:14 -0800 (PST)
+        Wed, 26 Feb 2020 14:06:43 -0500
+Received: by mail-qk1-f193.google.com with SMTP id h4so605406qkm.0;
+        Wed, 26 Feb 2020 11:06:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=M9niB/YnWE/mLPULIH87VulO14ku7TY288Cxvxcfeys=;
+        b=m1sFXJWAMrJMsYaGgcCtAGpf8EaIm5PCgIxV1iKtHvR5+dpc9QTf8u/9ABYitkG6pd
+         TwsZyKmjIRrTUsColw9pGQXQCoQNDIZd7WwGlTUjMliBWyK8lL2om+9ZK07C/wnLwmWN
+         lC71l0SyiMyslAqAQKKdiKOsCt31Xu2kIU0rS5fyLp9vR/4+zsVwGo+NwzMHdAIwg/xT
+         xeHZCSAseH+k80jLpc4q5H2bp3nD3XG9uZ1PjOxgzpdlAt2XFiyyZB0MAVn69B6+ryZN
+         SDAK2u3KTjT4U7Z6s+hqWOs8q7xdQggpcqJ92L85lVRcT4qJVy1pqf7BWZ5Bi6Q+nWr9
+         ly4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O58Y6eMhCTeYYKg0wLMHVfmrO/6IeMX67+E8DJ8At90=;
-        b=n0dlQOu/k/fhlPYP4EKnrLcIW5WLLy4f4boAXrnqUHAI87vrglf0rYOGSgyqUju8F/
-         hteJ6N6eOohH7yWrOvckMg+pPOAkGcluMOtjTXAkzUCvFfZMfRl6ny64pA6jzum0tpiq
-         gjPt+LzRmoTysUfXGI2iwiPBVA4KTq46ZDvKghmFnzqI/kMovO8WeKgLfA+a05mln17s
-         5GkztnjSmjkMpcnxlcPx75XTN1hhELl/XoX2tW9Ew5eoI3gR01xfkqnSlmkx3ZXx9myQ
-         EvZSa7u8ytzhMH4yWvoHihYCo+4cOyJ9IyJNTK7xnL1o3i1qyVzi1+iLRkLmeV2qrbx5
-         CcBA==
-X-Gm-Message-State: APjAAAXHOgS3m3Mwbl0P5UUKtVRwjSmqM1kIcEKhvf0/zie2+7YA0XYr
-        8JsrPaPAapU/5YCCNo3xiNs=
-X-Google-Smtp-Source: APXvYqyiEsA3W3DtRh+2yfgthnx0t8CkECLK98sS2uCO2vCXzkZ/HER8MMOOFsVcmhJR7+kFUAzpFA==
-X-Received: by 2002:a5d:4a8c:: with SMTP id o12mr90373wrq.43.1582743973445;
-        Wed, 26 Feb 2020 11:06:13 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id j16sm4492866wru.68.2020.02.26.11.06.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 11:06:12 -0800 (PST)
-Date:   Wed, 26 Feb 2020 19:06:11 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] Hyper-V: add myself as a maintainer
-Message-ID: <20200226190611.ef6p4mt2m4ltzqec@debian>
-References: <20200226180102.16976-1-wei.liu@kernel.org>
- <MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0@MN2PR21MB1437.namprd21.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=M9niB/YnWE/mLPULIH87VulO14ku7TY288Cxvxcfeys=;
+        b=FXtPPigFAH8Kjd9ZyvLON3uOaafpWnFkTaC7YQj6KhqDxwf3rfQv6WYauyGY0tmjEN
+         LcAibq8c9uOAYHslhCDRXR7RMOAdAtpujh72oLUp+91y/KTZXJidsate6GlNKfD/BBvK
+         UcN4emlz1Nyknm/5JQiXiMGwvdBnCi/VqrvTUTi+tzsBTzILAFhHIcHYPRIv0n5Q5zzz
+         3ykwdzjyEJKDX4QjOAYagU3gZBhVKtvZqFUruz2aQl1fdGM+AVWyZXJSdaOVIqexS+Jr
+         wCzpTM251MI3GDFZ35EOX5nciQVLPK2u3SLkqtwHckrZLVLMk/dyQIUYseawXB1X+t7S
+         GlqA==
+X-Gm-Message-State: APjAAAWVctJg/4Tw7xe1mRlumjk01HRmazshAJdzS0Wdk1af1Q9/GPxy
+        YwKIXeKnIbbO9FMmZepG6wFHONIQMHWIeltPnpE=
+X-Google-Smtp-Source: APXvYqyjurfsyKDoTMJ4WSbU70QdA9TtasCgybTEtfeAuvAhr0Qw4NI8q5lbdJVqkzh7xKqVEaAqdPQ+oRW7x7VyHlI=
+X-Received: by 2002:ae9:f012:: with SMTP id l18mr712442qkg.22.1582744002146;
+ Wed, 26 Feb 2020 11:06:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR21MB1437C4BAAA6E38200C92F5DDCAEA0@MN2PR21MB1437.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+References: <20200226081011.1347245-1-anarsoul@gmail.com> <20200226081011.1347245-2-anarsoul@gmail.com>
+In-Reply-To: <20200226081011.1347245-2-anarsoul@gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Wed, 26 Feb 2020 11:06:34 -0800
+Message-ID: <CA+E=qVdUV5wBcyFpwPZvi4=8bPgVBZiRB0XrEE=SPJT+cTgZ9g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] drm/bridge: anx6345: Fix getting anx6345 regulators
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Torsten Duwe <duwe@suse.de>, Icenowy Zheng <icenowy@aosc.io>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 06:57:24PM +0000, Haiyang Zhang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Wei Liu <wei.liu@kernel.org>
-> > Sent: Wednesday, February 26, 2020 1:01 PM
-> > To: linux-hyperv@vger.kernel.org
-> > Cc: Wei Liu <wei.liu@kernel.org>; linux-kernel@vger.kernel.org; KY Srinivasan
-> > <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
-> > Hemminger <sthemmin@microsoft.com>; Michael Kelley
-> > <mikelley@microsoft.com>
-> > Subject: [PATCH] Hyper-V: add myself as a maintainer
-> > 
-> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> > ---
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> > Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> > Cc: Michael Kelley <mikelley@microsoft.com>
-> > 
-> > Sasha's entry hasn't been dropped from the Hyper-V tree yet, but that's easy to
-> > resolve.
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 8f27f40d22bb..ed943f205215 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7739,6 +7739,7 @@ M:	"K. Y. Srinivasan" <kys@microsoft.com>
-> >  M:	Haiyang Zhang <haiyangz@microsoft.com>
-> >  M:	Stephen Hemminger <sthemmin@microsoft.com>
-> >  M:	Sasha Levin <sashal@kernel.org>
-> > +M:	Wei Liu <wei.liu@kernel.org>
-> 
-> Thanks for being a new maintainer for Hyper-V!
-> Sasha submitted a patch (attached) on 2/05 to remove himself from the 
-> Hyper-V maintainer list. But his patch wasn't applied yet.
+On Wed, Feb 26, 2020 at 12:10 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> From: Samuel Holland <samuel@sholland.org>
 
-Yes I'm aware of his patch.
+This patch can be dropped since equivalent was merged:
 
-> 
-> You may either re-submit his patch together with yours. Or just replace 
-> his name / email with yours in one patch.
+https://cgit.freedesktop.org/drm/drm-misc/commit/?id=6726ca1a2d531f5a6efc1f785b15606ce837c4dc
 
-My plan is to apply his patch first and then apply this one once I get access
-to hyperv tree. It is rather easy to resolve.
-
-Wei.
+> We don't need to pass '-supply' suffix to devm_regulator_get()
+>
+> Fixes: 6aa192698089 ("drm/bridge: Add Analogix anx6345 support")
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> index 56f55c53abfd..0d8d083b0207 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> @@ -712,14 +712,14 @@ static int anx6345_i2c_probe(struct i2c_client *client,
+>                 DRM_DEBUG("No panel found\n");
+>
+>         /* 1.2V digital core power regulator  */
+> -       anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12-supply");
+> +       anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
+>         if (IS_ERR(anx6345->dvdd12)) {
+>                 DRM_ERROR("dvdd12-supply not found\n");
+>                 return PTR_ERR(anx6345->dvdd12);
+>         }
+>
+>         /* 2.5V digital core power regulator  */
+> -       anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25-supply");
+> +       anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
+>         if (IS_ERR(anx6345->dvdd25)) {
+>                 DRM_ERROR("dvdd25-supply not found\n");
+>                 return PTR_ERR(anx6345->dvdd25);
+> --
+> 2.25.0
+>
