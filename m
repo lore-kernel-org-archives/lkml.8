@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E230EC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1907C4BA2C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD0824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7449624679
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TkndZSPh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="q7Xgcw58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgBZWCc (ORCPT
+        id S1727967AbgBZWCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:02:32 -0500
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:45045 "EHLO
+        Wed, 26 Feb 2020 17:02:34 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:45048 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgBZWC1 (ORCPT
+        with ESMTP id S1727849AbgBZWC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:02:27 -0500
+        Wed, 26 Feb 2020 17:02:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582754547; x=1614290547;
+  t=1582754548; x=1614290548;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=U35XF1CKYWzhgzuZboVKa7NT7J12Ff9SA644B0PoBj4=;
-  b=TkndZSPhzydBCt+7xmuLzcGJUSY+tagrkn4OmQ6ky4X/2AmOw5FsOOtg
-   oiETnCGt21CCMehpeCgB2bHt2D2G7cYKwjkpV6O/1h0wJqdYJF49XZ65Q
-   Ofu4xoS/Jv7rnNAqGxfDBs0zrOVjUgvtn68SQ7BS3xb0aSzPi07EiuoOX
-   b62vfivMLIspvRINiMj/rp5RovsYGSQTxMEXF2EPiAUm4mh88Z70HvDHU
-   98CMo9IBuvG1INbfhlrLu2OKcElQ9SVDdfJ2SDdZrSCkORhAfxD4S3mya
-   EdqNaLmUz2b/SrWuzZ3yniHG0wQQ4eF7wLto5PGG2H2roRCPTTHiSgy0M
-   g==;
-IronPort-SDR: M9N5qPCsC8rKQwYZMpmcm+97GZ565duaTv0saHtC9UaMWbT1rNZ074S7Q0Ci0kn8faqJHlimLw
- Ff0o72QytiNFBVanWRFAo8hBKx/5RK4Lwpr9r/+fN85Q+L+TOkuIi7PJzq7FBuxhqujJcOK2eZ
- Ptql+pldUrL4lCBilosoG/ipkLeXlNluxvJ8MuLGmRjoBufLaK7/IFTh0N+mSqgk4P0Xr/msBX
- b0C6Uyfhqpe7cnQbPbyUO/qioEnSrS7abjVhb9cc2zh0oGf5U4dZMSXSDxxja0GDgk5smZIOc5
- hKA=
+  bh=rQpWeai3GBbIb6BkBx8DbAEiU0Kg2MIkEVW4P65W++w=;
+  b=q7Xgcw58brgBgrrPCbTqw1rZlSur6AMrZsJg5IHfz7IwDd1BhCkz/s/w
+   YtMc22TOc16nG7XG6427w2bPu0PrO4HXU9g20o3Cut7T4U46lLNPe7CCG
+   eTTstOcR5IeIVwRStVgFYj+h2dMYcg4EoT06YyLItKS548YDPD44DNP/L
+   x/9+fqNZjyj0aAfv9gaWBzn2kPxEaKQ5p+TyHqdKkXc93+mt0xWebErxn
+   mqg42XRNJ2jVHAuk9BkQEwixa6X3DC7G1rkON0DgBIdTqKI6APxMJX7I1
+   /o/C8+8DOvLv3IF4jnoc+iFjp4XOouczAjdezo5uqSefsJIgdJTi4rHg1
+   Q==;
+IronPort-SDR: nQ1DSxlH3ZbDb0EQBxc2XChjgQbZTEpKuAGQVOInCbZQPojbCApmMM4B3FThiBCu8IFl0IXaq7
+ T//Ed/r0pI5bU5zID+ZT7LZToTg9RjAPy+xzK7hZEJADUP1MhWkiBlfx7lozUJ3XuEgtwhzyA6
+ y96W/wyFLU9CsFfc2aIS37Un6Q8BxlcTfqJMHalmUkF46n/4ipK1yUBHS5PD7w1BcH6EhkHFSC
+ yWSWNR/RFV3Uuwl2GGGw9nSPrc28ox4uKoheZSmI3NNLSJGN/ykedbysT7clF7TVfPyIxG4v+Q
+ GL8=
 X-IronPort-AV: E=Sophos;i="5.70,489,1574092800"; 
-   d="scan'208";a="132290751"
+   d="scan'208";a="132290758"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Feb 2020 06:02:26 +0800
-IronPort-SDR: Y1bDgGjRJysaGPgx3yaBdbSz1K6yla9MaSmKmMMj86Z4XiSn2J3WnNac1Gutxg/BY/9DxdntqH
- qY9BMFxOQme4hdmOX2w+pq1N8UayBDuAkuo/fd53jIpHiJOpyLOk+ozUMPs+NhaD+VafrfreD6
- gkNdJczExrj4D3F0D8KdZvmnfzoTBNCSY2STDgn6pIG4uBq/TDpDzNrzJkA9s4S6D8ryN+CaAJ
- jqK7PddEK8TM5kMsVDfFn4kYEYfCAf/U7GixJ4W+yCBAYvw0HhnJoYXSCez6UBkesFat1LYikX
- LQZLwvjfyUsBJSI31ZouqiMt
+  by ob1.hgst.iphmx.com with ESMTP; 27 Feb 2020 06:02:27 +0800
+IronPort-SDR: 27pk1iXbBxCSCXTk/rqvV6EtD/00S9L3eDlj6Ai3ASKApOo1D+XWmaE4j6w11ed6eeF/wq/1Xw
+ vaIj8lwezHM+3fyBqucH+yOJN5VHOzJuvmv5JGiabD06FILbj76AVz6LNmFFDY7qZga1dq6D8q
+ 3koAMbMIs8IUBRRip6PvRDR8bKHDRxknpYHSv1InWz8MqHgnvtolZo8478alj+15Q09NbcJPim
+ Fde8LTTkBUYlCQdzoheiOWgD2hegSMti5TZeb/0OsBrOVd+qQTf8GblcZYeRdYzGcJW5ACWqJP
+ 7moS1+S/oSc4D9AM8U10tAWs
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:54:50 -0800
-IronPort-SDR: MChZIQlV3kwaNbOdz59YG+WCoUltZSHgUoYSW1LtcIx9y9LNcojbjRpcXKJMRVdbQVeGoFwvI7
- gPipAKxPAkyJqAu++DTcXJuY90eJZgbyFuOkrsFiaLbrxR6CHPS72+CJV4sDhwt8J+41dlj8kI
- JuKpTS5nPm2CuX5tzHYuGxQt2YQlP2fDZxf6MN8CDVzic3qK3imZ2Um4bCiYup7N853Wxc2LT1
- +AV2G03cz9ZSLaOFgU/eZI8v1GP0MV3d+mt0KL25UDtswjlNlvudG/50/wwzyUjs+8KgIcTkDB
- oBo=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:54:52 -0800
+IronPort-SDR: SGkEvRNXKfIFdxe2v5grLyGhwf6sIXYzVfN+QHIvGkbE2LH5zW1s43qb9In+JL4NcrtlVUrP/n
+ 4MtgAqBiufdOJ9+Q1OPtPalllTq55OdRNNtMjbxrSSDfks0aCnx01frZNYtmM8CQDzI11GAHon
+ AeUFw/+ApDXvEMUJXv7XVuoenG7qvLnumo0ttt8hszR3Xx8W4UTdiGCBGjtMkRRREwPUuATaNs
+ nYYDQ2Fh1IdxjrIh1V3VsYR1etLdHwrBgV8FK+PT0ZpcKNF419nacFYlKVcDFW8kCFeAsu4zhE
+ MOI=
 WDCIronportException: Internal
 Received: from yoda.sdcorp.global.sandisk.com (HELO yoda.int.fusionio.com) ([10.196.158.80])
-  by uls-op-cesaip02.wdc.com with ESMTP; 26 Feb 2020 14:02:25 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 26 Feb 2020 14:02:27 -0800
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -91,9 +91,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincent Chen <vincent.chen@sifive.com>,
         Zong Li <zong.li@sifive.com>
-Subject: [PATCH v10 10/12] RISC-V: Add supported for ordered booting method using HSM
-Date:   Wed, 26 Feb 2020 14:02:11 -0800
-Message-Id: <20200226220213.27423-11-atish.patra@wdc.com>
+Subject: [PATCH v10 12/12] irqchip/sifive-plic: Initialize the plic handler when cpu comes online
+Date:   Wed, 26 Feb 2020 14:02:13 -0800
+Message-Id: <20200226220213.27423-13-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200226220213.27423-1-atish.patra@wdc.com>
 References: <20200226220213.27423-1-atish.patra@wdc.com>
@@ -104,226 +104,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all harts have to jump Linux in RISC-V. This complicates the
-multi-stage boot process as every transient stage also has to ensure all
-harts enter to that stage and jump to Linux afterwards. It also obstructs
-a clean Kexec implementation.
+Currently, plic threshold and priority are only initialized once in the
+beginning. However, threshold can be set to disabled if cpu is marked
+offline with cpu hotplug feature. This will not allow to change the
+irq affinity to a cpu that just came online.
 
-SBI HSM extension provides alternate solutions where only a single hart
-need to boot and enter Linux. The booting hart can bring up secondary
-harts one by one afterwards.
-
-Add SBI HSM based cpu_ops that implements an ordered booting method in
-RISC-V. This change is also backward compatible with older firmware not
-implementing HSM extension. If a latest kernel is used with older
-firmware, it will continue to use the default spinning booting method.
+Add plic specific cpu hotplug callback and initialize the per cpu handler
+when cpu comes online.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 Reviewed-by: Anup Patel <anup@brainfault.org>
 ---
- arch/riscv/kernel/Makefile      |  3 ++
- arch/riscv/kernel/cpu_ops.c     | 10 +++-
- arch/riscv/kernel/cpu_ops_sbi.c | 81 +++++++++++++++++++++++++++++++++
- arch/riscv/kernel/head.S        | 26 +++++++++++
- arch/riscv/kernel/smpboot.c     |  2 +-
- arch/riscv/kernel/traps.c       |  2 +-
- 6 files changed, 121 insertions(+), 3 deletions(-)
- create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
+ arch/riscv/kernel/traps.c         |  2 +-
+ drivers/irqchip/irq-sifive-plic.c | 38 +++++++++++++++++++++++++++----
+ include/linux/cpuhotplug.h        |  1 +
+ 3 files changed, 36 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index f81a6ff88005..a0be34b96846 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -44,5 +44,8 @@ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
- obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
- obj-$(CONFIG_RISCV_SBI)		+= sbi.o
-+ifeq ($(CONFIG_RISCV_SBI), y)
-+obj-$(CONFIG_SMP) += cpu_ops_sbi.o
-+endif
- 
- clean:
-diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
-index e950ae5bee9c..afa90f711a2b 100644
---- a/arch/riscv/kernel/cpu_ops.c
-+++ b/arch/riscv/kernel/cpu_ops.c
-@@ -18,6 +18,7 @@ const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
- void *__cpu_up_stack_pointer[NR_CPUS];
- void *__cpu_up_task_pointer[NR_CPUS];
- 
-+extern const struct cpu_operations cpu_ops_sbi;
- extern const struct cpu_operations cpu_ops_spinwait;
- 
- void cpu_update_secondary_bootdata(unsigned int cpuid,
-@@ -34,5 +35,12 @@ void cpu_update_secondary_bootdata(unsigned int cpuid,
- 
- void __init cpu_set_ops(int cpuid)
- {
--	cpu_ops[cpuid] = &cpu_ops_spinwait;
-+#if IS_ENABLED(CONFIG_RISCV_SBI)
-+	if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
-+		if (!cpuid)
-+			pr_info("SBI v0.2 HSM extension detected\n");
-+		cpu_ops[cpuid] = &cpu_ops_sbi;
-+	} else
-+#endif
-+		cpu_ops[cpuid] = &cpu_ops_spinwait;
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 8e13ad45ccaa..16c59807da6a 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -157,5 +157,5 @@ void trap_init(void)
+ 	/* Set the exception vector address */
+ 	csr_write(CSR_TVEC, &handle_exception);
+ 	/* Enable interrupts */
+-	csr_write(CSR_IE, IE_SIE | IE_EIE);
++	csr_write(CSR_IE, IE_SIE);
  }
-diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-new file mode 100644
-index 000000000000..70d02dfe0ab8
---- /dev/null
-+++ b/arch/riscv/kernel/cpu_ops_sbi.c
-@@ -0,0 +1,81 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * HSM extension and cpu_ops implementation.
-+ *
-+ * Copyright (c) 2020 Western Digital Corporation or its affiliates.
-+ */
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index aa4af886e43a..7c7f37393f99 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -4,6 +4,7 @@
+  * Copyright (C) 2018 Christoph Hellwig
+  */
+ #define pr_fmt(fmt) "plic: " fmt
++#include <linux/cpu.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+@@ -55,6 +56,9 @@
+ #define     CONTEXT_THRESHOLD		0x00
+ #define     CONTEXT_CLAIM		0x04
+ 
++#define	PLIC_DISABLE_THRESHOLD		0xf
++#define	PLIC_ENABLE_THRESHOLD		0
 +
-+#include <linux/init.h>
-+#include <linux/mm.h>
-+#include <asm/cpu_ops.h>
-+#include <asm/sbi.h>
-+#include <asm/smp.h>
-+
-+extern char secondary_start_sbi[];
-+const struct cpu_operations cpu_ops_sbi;
-+
-+static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-+		       unsigned long priv)
+ static void __iomem *plic_regs;
+ 
+ struct plic_handler {
+@@ -230,6 +234,32 @@ static int plic_find_hart_id(struct device_node *node)
+ 	return -1;
+ }
+ 
++static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
 +{
-+	struct sbiret ret;
-+
-+	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
-+			      hartid, saddr, priv, 0, 0, 0);
-+	if (ret.error)
-+		return sbi_err_map_linux_errno(ret.error);
-+	else
-+		return 0;
++	/* priority must be > threshold to trigger an interrupt */
++	writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
 +}
 +
-+#ifdef CONFIG_HOTPLUG_CPU
-+static int sbi_hsm_hart_stop(void)
++static int plic_dying_cpu(unsigned int cpu)
 +{
-+	struct sbiret ret;
++	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
 +
-+	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
++	csr_clear(CSR_IE, IE_EIE);
++	plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
 +
-+	if (ret.error)
-+		return sbi_err_map_linux_errno(ret.error);
-+	else
-+		return 0;
-+}
-+
-+static int sbi_hsm_hart_get_status(unsigned long hartid)
-+{
-+	struct sbiret ret;
-+
-+	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
-+			      hartid, 0, 0, 0, 0, 0);
-+	if (ret.error)
-+		return sbi_err_map_linux_errno(ret.error);
-+	else
-+		return ret.value;
-+}
-+#endif
-+
-+static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
-+{
-+	int rc;
-+	unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
-+	int hartid = cpuid_to_hartid_map(cpuid);
-+
-+	cpu_update_secondary_bootdata(cpuid, tidle);
-+	rc = sbi_hsm_hart_start(hartid, boot_addr, 0);
-+
-+	return rc;
-+}
-+
-+static int sbi_cpu_prepare(unsigned int cpuid)
-+{
-+	if (!cpu_ops_sbi.cpu_start) {
-+		pr_err("cpu start method not defined for CPU [%d]\n", cpuid);
-+		return -ENODEV;
-+	}
 +	return 0;
 +}
 +
-+const struct cpu_operations cpu_ops_sbi = {
-+	.name		= "sbi",
-+	.cpu_prepare	= sbi_cpu_prepare,
-+	.cpu_start	= sbi_cpu_start,
-+};
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index b85376d84098..ac5b0e0a02f6 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -99,11 +99,37 @@ relocate:
- 	ret
- #endif /* CONFIG_MMU */
- #ifdef CONFIG_SMP
-+	.global secondary_start_sbi
-+secondary_start_sbi:
-+	/* Mask all interrupts */
-+	csrw CSR_IE, zero
-+	csrw CSR_IP, zero
++static int plic_starting_cpu(unsigned int cpu)
++{
++	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
 +
-+	/* Load the global pointer */
-+	.option push
-+	.option norelax
-+		la gp, __global_pointer$
-+	.option pop
++	csr_set(CSR_IE, IE_EIE);
++	plic_set_threshold(handler, PLIC_ENABLE_THRESHOLD);
 +
-+	/*
-+	 * Disable FPU to detect illegal usage of
-+	 * floating point in kernel space
-+	 */
-+	li t0, SR_FS
-+	csrc CSR_STATUS, t0
++	return 0;
++}
 +
- 	/* Set trap vector to spin forever to help debug */
- 	la a3, .Lsecondary_park
- 	csrw CSR_TVEC, a3
- 
- 	slli a3, a0, LGREG
-+	la a4, __cpu_up_stack_pointer
-+	la a5, __cpu_up_task_pointer
-+	add a4, a3, a4
-+	add a5, a3, a5
-+	REG_L sp, (a4)
-+	REG_L tp, (a5)
-+
- 	.global secondary_start_common
- secondary_start_common:
- 
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index e89396a2a1af..4e9922790f6e 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -143,7 +143,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
- /*
-  * C entry point for a secondary processor.
-  */
--asmlinkage __visible void __init smp_callin(void)
-+asmlinkage __visible void smp_callin(void)
+ static int __init plic_init(struct device_node *node,
+ 		struct device_node *parent)
  {
- 	struct mm_struct *mm = &init_mm;
+@@ -267,7 +297,6 @@ static int __init plic_init(struct device_node *node,
+ 		struct plic_handler *handler;
+ 		irq_hw_number_t hwirq;
+ 		int cpu, hartid;
+-		u32 threshold = 0;
  
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index ffb3d94bf0cc..8e13ad45ccaa 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -147,7 +147,7 @@ int is_valid_bugaddr(unsigned long pc)
- }
- #endif /* CONFIG_GENERIC_BUG */
+ 		if (of_irq_parse_one(node, i, &parent)) {
+ 			pr_err("failed to parse parent for context %d.\n", i);
+@@ -301,7 +330,7 @@ static int __init plic_init(struct device_node *node,
+ 		handler = per_cpu_ptr(&plic_handlers, cpu);
+ 		if (handler->present) {
+ 			pr_warn("handler already present for context %d.\n", i);
+-			threshold = 0xffffffff;
++			plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
+ 			goto done;
+ 		}
  
--void __init trap_init(void)
-+void trap_init(void)
- {
- 	/*
- 	 * Set sup0 scratch register to 0, indicating to exception vector
+@@ -313,13 +342,14 @@ static int __init plic_init(struct device_node *node,
+ 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+ 
+ done:
+-		/* priority must be > threshold to trigger an interrupt */
+-		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+ 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+ 			plic_toggle(handler, hwirq, 0);
+ 		nr_handlers++;
+ 	}
+ 
++	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
++				  "irqchip/sifive/plic:starting",
++				  plic_starting_cpu, plic_dying_cpu);
+ 	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
+ 		nr_irqs, nr_handlers, nr_contexts);
+ 	set_handle_irq(plic_handle_irq);
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index d37c17e68268..77d70b633531 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -102,6 +102,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_IRQ_ARMADA_XP_STARTING,
+ 	CPUHP_AP_IRQ_BCM2836_STARTING,
+ 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
++	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
+ 	CPUHP_AP_ARM_MVEBU_COHERENCY,
+ 	CPUHP_AP_MICROCODE_LOADER,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
 -- 
 2.25.0
 
