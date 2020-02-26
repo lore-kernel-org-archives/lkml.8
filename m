@@ -2,109 +2,132 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2986BC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FD6C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACF820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F3F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBrGCD48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgBZO5X (ORCPT
+        id S1727108AbgBZO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:57:23 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51038 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgBZO5X (ORCPT
+        Wed, 26 Feb 2020 09:57:48 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35976 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgBZO5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:57:23 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a5so3431877wmb.0;
-        Wed, 26 Feb 2020 06:57:22 -0800 (PST)
+        Wed, 26 Feb 2020 09:57:47 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a6so1393703plm.3;
+        Wed, 26 Feb 2020 06:57:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MlX8TjCXEFXDS5ZumzpqtqrWFoT0F53pXcGUmNQPWF0=;
+        b=GBrGCD48TWyk8MvyLueABpAr/AzBScOb+iIPr7OwoYTGqq1jBHOxtOVkDf3TVqw5wY
+         Zt9Yct4+5ESB064Pj5WB7i+6UDu0ulrAljfGr/y0lHRaoHlPq7J6OWrO/NpDAs8VR2sg
+         NCkmhBnfdGQPRUuRzMdKLFpW5t+QqYzs8mdFjUjNeO0ECHLms2uMiLEY+Ex1D5uIQCL5
+         imaAELcWjjbPYcizudOh77PgoFHB2ngDcaMvDYff8VZaLkM3LAdRTHVVKXmOhJhwqZ1T
+         +LYivyo4PIMPsc/63PodbguIfheGwl7zE02BV2LQkMwtPfqIFp1SDILf80EcFyMhGG1s
+         dNTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=y5oMwPaakQ4byqYR1EE4YZx03bbdPGVSudGIZV+dLHM=;
-        b=AXdSfiie2R/zADL+0qvNISUUG3duokeIBD9ti/vnrXJ9irbc/MJPCYXHElNdrZJu5H
-         fPqznG6AmufCRREtVGDR97KQSE8v9srVAkc6m9KXPGJZvdl0DeHRMlkR02Io/f0pkNUh
-         YXKRfvzRCwg2f/XvuwOy9kyRPmc9G5tIrK5ifC0cy1AfiHjp2MdRbsowSnl3LIjVCEG9
-         yC8iWTfnTKTnH3zhnxzmfHoEVqGZQsXy6u6NJiFuFx+UCEZxol8sOuXddpv757cuHJt5
-         J20A9E0PbDrOJYIwz+Zts0vCdZ+ewAWMCCNdKcGm3fglKDQIm7JeiERlxOf279r0sUMj
-         tCXg==
-X-Gm-Message-State: APjAAAXb9WAZkM9rUjqUaJTCVBvBLan5aPOe5V9ZXYvi1AjeV8xprtw0
-        h1W5YuoZJvKeJ7RZk9Pv1h8J0ZFk
-X-Google-Smtp-Source: APXvYqxAWVOsfJSDJcv6jgKy3HH0ktDpSqXxVRDr6s2OCKwHiZCKf0AegpwxqMLGRTtMvv7qgnzRGg==
-X-Received: by 2002:a1c:720a:: with SMTP id n10mr5984028wmc.103.1582729041485;
-        Wed, 26 Feb 2020 06:57:21 -0800 (PST)
-Received: from [10.10.2.174] (winnie.ispras.ru. [83.149.199.91])
-        by smtp.gmail.com with ESMTPSA id w1sm3240417wmc.11.2020.02.26.06.57.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 06:57:20 -0800 (PST)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH 00/10] floppy driver cleanups (deobfuscation)
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200224212352.8640-1-w@1wt.eu>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <0f5effb1-b228-dd00-05bc-de5801ce4626@linux.com>
-Date:   Wed, 26 Feb 2020 17:57:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MlX8TjCXEFXDS5ZumzpqtqrWFoT0F53pXcGUmNQPWF0=;
+        b=Og92SsQwXqQ79Nc9Clc1C6ycg9QUMYvdNIpOzwtVN98TP2oebnnbpFzz/xSmqqfIuW
+         bZvkuG2k5vLc3ezhrC6EwUybu8DJ46piWdrVnurGEuylUPo6YeYxfdcC0eKeXBiH2Sp6
+         TSnEbD2do8CSyqkZtx8y8Iy8CMaVbZ7ACMg2PlZ5P5uQ5azt0IsLrqfbTEleCMR6bJMz
+         jNwuYkTCwgbkVcHy9xXZ4iUGoopbvMB00BiJNjC85X5kQd2gKmRcvNyPnGHDllj02OeB
+         Mx1SYQ9g3iewBulLZyF871MxEcQAblICcJebIqfAg9SUjxBfHfPu6/fUt12W1BDXdGae
+         D4pg==
+X-Gm-Message-State: APjAAAUulKHNqx2T7IcbaVOwv+yVPh4YRrKuqR9y9Q7hkFT0iPLy0lgS
+        vmMWXrMbEdLrHFlYetOYK3M=
+X-Google-Smtp-Source: APXvYqz1TcmF8iDqIlsNM4nzWjZ+cypwfkDvQKTXBMqyYJSNIsdEH0nkJ5Zox3aLWFZ5mEP0csEHJQ==
+X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr4709387plo.154.1582729065962;
+        Wed, 26 Feb 2020 06:57:45 -0800 (PST)
+Received: from firefly (220-235-100-192.dyn.iinet.net.au. [220.235.100.192])
+        by smtp.gmail.com with ESMTPSA id z10sm3019353pgj.73.2020.02.26.06.57.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 06:57:45 -0800 (PST)
+Date:   Wed, 26 Feb 2020 14:57:33 +0000
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event
+ watching
+Message-ID: <20200226145733.GA2078@firefly>
+References: <20200226135323.1840-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <20200224212352.8640-1-w@1wt.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226135323.1840-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 12:23 AM, Willy Tarreau wrote:
-> As indicated in commit 2e90ca6 ("floppy: check FDC index for errors
-> before assigning it") there are some surprising effects in the floppy
-> driver due to some macros referencing global or local variables while
-> at first glance being inoffensive.
+On Wed, Feb 26, 2020 at 02:53:23PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> This patchset aims at removing these macros and replacing all of their
-> occurrences by the equivalent code. Most of the work was done under
-> Coccinelle's assistance, and it was verified that the resulting binary
-> code is exactly the same as the original one.
+> When operating on the bits of watched_lines bitmap, we're using
+> desc_to_gpio() which returns the GPIO number from the global numberspace.
+> This leads to all sorts of memory corruptions and invalid behavior. We
+> should switch to using gpio_chip_hwgpio() instead.
 > 
-> The aim is not to make the driver prettier, as Linus mentioned it's
-> already not pretty. It only aims at making potential bugs more visible,
-> given almost all latest changes to this driver were fixes for out-of-
-> bounds and similar bugs.
-> 
-> As a side effect, some lines got longer, causing checkpatch to complain
-> a bit, but I preferred to let it complain as I didn't want to break them
-> apart as I'm already seeing the trap of going too far here.
-> 
-> The patches are broken by macro (or sets of macros when relevant) so
-> that each of them remains reviewable.
-> 
-> I can possibly go a bit further in the cleanup but I haven't used
-> floppies for a few years now and am not interested in doing too much
-> on this driver by lack of use cases.
+> Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
+> Reported-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-For patches 1-10.
-[x] eye checked the changes
-[x] bloat-o-meter and .s diff show no real changes
-[x] tested that kernel builds after every patch
-[x] floppy targeted fuzzing with kasan+ubsan reveals no *new* issues
-    (required mainly to test the previous patch)
+That fixes all the failures I was seeing.
 
-If Linus has no objections (regarding his review) I would prefer to
-accept 1-10 patches rather to resend them again. They seems complete
-to me as the first step.
+Tested-by: Kent Gibson <warthog618@gmail.com>
 
-I've placed the patches here:
-https://github.com/evdenis/linux-floppy/commits/floppy-next
-
-Thanks,
-Denis
+> ---
+>  drivers/gpio/gpiolib.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index a5cd1b4abe6f..5cc80f6f79e0 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1261,7 +1261,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  			return -EFAULT;
+>  
+>  		if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL)
+> -			set_bit(desc_to_gpio(desc), priv->watched_lines);
+> +			set_bit(gpio_chip_hwgpio(desc), priv->watched_lines);
+>  
+>  		return 0;
+>  	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
+> @@ -1276,7 +1276,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		if (IS_ERR(desc))
+>  			return PTR_ERR(desc);
+>  
+> -		clear_bit(desc_to_gpio(desc), priv->watched_lines);
+> +		clear_bit(gpio_chip_hwgpio(desc), priv->watched_lines);
+>  		return 0;
+>  	}
+>  	return -EINVAL;
+> @@ -1304,7 +1304,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+>  	struct gpio_desc *desc = data;
+>  	int ret;
+>  
+> -	if (!test_bit(desc_to_gpio(desc), priv->watched_lines))
+> +	if (!test_bit(gpio_chip_hwgpio(desc), priv->watched_lines))
+>  		return NOTIFY_DONE;
+>  
+>  	memset(&chg, 0, sizeof(chg));
+> -- 
+> 2.25.0
+> 
