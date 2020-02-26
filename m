@@ -2,109 +2,114 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E66AC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1531C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C18E2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7294E20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:30:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c+fqP6D6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgBZU3x (ORCPT
+        id S1727534AbgBZUao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:29:53 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56902 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgBZU3w (ORCPT
+        Wed, 26 Feb 2020 15:30:44 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:33600 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgBZUan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:29:52 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 0912129576D
-Message-ID: <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
-Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
- driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 26 Feb 2020 17:29:35 -0300
-In-Reply-To: <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
-References: <20200226105419.632771-1-enric.balletbo@collabora.com>
-         <20200226105419.632771-4-enric.balletbo@collabora.com>
-         <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
-Organization: Collabora
+        Wed, 26 Feb 2020 15:30:43 -0500
+Received: by mail-pg1-f201.google.com with SMTP id 37so332977pgq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9oP9ZiTU1p6lF1U2mfS1bBIXLROAWtwOnKtBSbb21XQ=;
+        b=c+fqP6D62YFfsQ+J6OBoM/aeGgTpFFp6n879QHcWNXJ9rZEA3joGLu5Khb/SAjaZwv
+         yuSXfO/WvDezMPhKpeVoFdIUBiyrw6CTx1pApaHbssDflsPf1+RC+6DY3+GGhGx1KWJi
+         68lBGhbGdFAoGu5K/nKOUhdyJFwYc1TMGRkYFAiIJdged0YFP76LlT38a9DbwBqXK/34
+         uqyyBLmJYNXz6tE9+Vxhch09eMpn2UNX2P8D5sVB1B5FfKn4HMfwfAeoDg9p45rz8FfS
+         oW+WQOJnUW8nbgJlwUcd7MT8SiMAl5sjpmCP8PUdcc+IJsja6qKXu13jzTYanXCb+8Fv
+         f9WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9oP9ZiTU1p6lF1U2mfS1bBIXLROAWtwOnKtBSbb21XQ=;
+        b=OBqpLi0mDP+DLAyhNFygfmn+/gxVcxdEw+7PH2abIvZpVBMoBloN8mnXeUHgRiJQrX
+         9FD7HAORFnYfeOoN1znqrAr4CgdFDa7Q4eKZL1BXBn4XVWMGhYLfIegNZSEDLqRF4Alw
+         TSMD0wyRHJewBgsjf/qBKwt09AyIjYBJ4fvKhMHU1InMnOcbxQyv+MinKMnKFGMXmHMw
+         4kBDZKCSNmBsZIl21qvTTEZs9I1zJeGF7oVX2J+3TQD1dQOSrFoicRckjLZr8Yse4JRu
+         h1qlXQ/Ez0LmCIHXVDw69ILKNIu5fsY4VGbHJksQQrI3uWuLYU8mncZcWPvafU5EuMIU
+         iH5g==
+X-Gm-Message-State: APjAAAUkIgPMnYnXkU2KhXvacS6xF72LlHjcaMwm0f6cSdzK+jyqv+uH
+        2N8KkKl9IHfw7/1bgLPeK/c9u/Uu8bkoVg==
+X-Google-Smtp-Source: APXvYqxc3+QtUOXjvCNDTiXAo4RmNzOVk/qFDGek88Tooc1vbUAVhLRDfbsX+YtSCJhE/899DR3rlT69jwQ5PA==
+X-Received: by 2002:a63:1e44:: with SMTP id p4mr568086pgm.367.1582749040887;
+ Wed, 26 Feb 2020 12:30:40 -0800 (PST)
+Date:   Wed, 26 Feb 2020 12:30:06 -0800
+Message-Id: <20200226203006.51567-1-yonghyun@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v3] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for
+ huge page
+From:   Yonghyun Hwang <yonghyun@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Deepa Dinamani <deepadinamani@google.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Yonghyun Hwang <yonghyun@google.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 07:40 -0800, Randy Dunlap wrote:
-> On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
-> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> > index 2114b563478c..dcd6481a14d0 100644
-> > --- a/drivers/soc/mediatek/Kconfig
-> > +++ b/drivers/soc/mediatek/Kconfig
-> > @@ -44,4 +44,11 @@ config MTK_SCPSYS
-> >  	  Say yes here to add support for the MediaTek SCPSYS power domain
-> >  	  driver.
-> >  
-> > +config MT8173_MMSYS
-> > +	bool "MediaTek MT8173 MMSYS Support"
-> 
-> Hi,
-> Can this be tristate instead of bool?
-> 
+intel_iommu_iova_to_phys() has a bug when it translates an IOVA for a huge
+page onto its corresponding physical address. This commit fixes the bug by
+accomodating the level of page entry for the IOVA and adds IOVA's lower
+address to the physical address.
 
-Wouldn't that conflict with
-the driver being a builtin_platform_driver,
-or am I just confusing things badly?
+Cc: <stable@vger.kernel.org>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Moritz Fischer <mdf@kernel.org>
+Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+---
 
-Thanks,
-Ezequiel
+Changes from v2:
+- a new condition is added to check whether the pte is present.
 
-> +	depends on COMMON_CLK_MT8173
-> > +	help
-> > +	  Say yes here to add support for the MediaTek MT8173 Multimedia
-> > +	  Subsystem (MMSYS).
-> > +
-> >  endmenu
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
-> 
+Changes from v1:
+- level cannot be 0. So, the condition, "if (level > 1)", is removed, which results in a simple code.
+- a macro, BIT_MASK, is used to have a bit mask
 
+---
+ drivers/iommu/intel-iommu.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 932267f49f9a..0837e0063973 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5553,8 +5553,10 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	u64 phys = 0;
+ 
+ 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+-	if (pte)
+-		phys = dma_pte_addr(pte);
++	if (pte && dma_pte_present(pte))
++		phys = dma_pte_addr(pte) +
++			(iova & (BIT_MASK(level_to_offset_bits(level) +
++						VTD_PAGE_SHIFT) - 1));
+ 
+ 	return phys;
+ }
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
