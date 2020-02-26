@@ -2,133 +2,133 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F6DC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98966C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12292465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685E4222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="biKRRS3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgBZTNX (ORCPT
+        id S1727238AbgBZTNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:13:23 -0500
-Received: from mga02.intel.com ([134.134.136.20]:43143 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727521AbgBZTNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:13:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:13:20 -0800
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="384904895"
-Received: from unknown (HELO kcaccard-mobl1.jf.intel.com) ([10.24.11.14])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:13:20 -0800
-Message-ID: <bac9b04cd8ed1ff2898a0093a09190699f9e5355.camel@linux.intel.com>
-Subject: Re: [RFC PATCH 05/11] x86: Makefile: Add build and config option
- for CONFIG_FG_KASLR
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, keescook@chromium.org,
-        rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Date:   Wed, 26 Feb 2020 11:13:20 -0800
-In-Reply-To: <20200225175544.GA1385238@rani.riverdale.lan>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
-         <20200205223950.1212394-6-kristen@linux.intel.com>
-         <20200225175544.GA1385238@rani.riverdale.lan>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 26 Feb 2020 14:13:22 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:35283 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbgBZTNU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:13:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744398;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=rmAyGFH2w0GQdDqcolLuvQb3bXwl+Mlnr1aULm9Zmtc=;
+        b=biKRRS3dxnZ2gWZXq4Wxhu/ZGWhZfJ4x/idUbOGxce+LpsqYgTgCSQHMgx8oooURKq
+        E7RyH/mhiK2JKm3D2IojrPC7sR9kUwTr9FsE/bhxVrt10/81+J6QllCpH+uUItWWIsUY
+        g2c9KJ22QfL85zEQOdkygmnTqBweniAA/2ZEOW6AvVWJduXkWt/4vkn3rhMzWLKv6e/y
+        ooX+zK4po6kkcBerVLJls6fTxjxh180xECz0IETkvpRL6f4adD3d49oqz3HuxeQj7lXx
+        reHNW5OZ057sRrHsU0ayK7eVbA25kVD7uEkWT+6fB8qxA70k5lbB8tzGjF7/IhoxJ+21
+        AZTA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1QJD16bK
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Feb 2020 20:13:01 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [RFC 1/8] dt-bindings: video: Add jz4780-lcd binding
+Date:   Wed, 26 Feb 2020 20:12:53 +0100
+Message-Id: <d7dd7c52a9f6cb4e31bce69bb6879e46bfba530c.1582744379.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1582744379.git.hns@goldelico.com>
+References: <cover.1582744379.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 12:55 -0500, Arvind Sankar wrote:
-> On Wed, Feb 05, 2020 at 02:39:44PM -0800, Kristen Carlson Accardi
-> wrote:
-> > Allow user to select CONFIG_FG_KASLR if dependencies are met.
-> > Change
-> > the make file to build with -ffunction-sections if CONFIG_FG_KASLR
-> > 
-> > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> > ---
-> >  Makefile         |  4 ++++
-> >  arch/x86/Kconfig | 13 +++++++++++++
-> >  2 files changed, 17 insertions(+)
-> > 
-> > diff --git a/Makefile b/Makefile
-> > index c50ef91f6136..41438a921666 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -846,6 +846,10 @@ ifdef CONFIG_LIVEPATCH
-> >  KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
-> >  endif
-> >  
-> > +ifdef CONFIG_FG_KASLR
-> > +KBUILD_CFLAGS += -ffunction-sections
-> > +endif
-> > +
-> 
-> With -ffunction-sections I get a few unreachable code warnings from
-> objtool.
-> 
-> arch/x86/kernel/dumpstack.o: warning: objtool: show_iret_regs()+0x10:
-> unreachable instruction
-> fs/sysfs/dir.o: warning: objtool: sysfs_create_mount_point()+0x4f:
-> unreachable instruction
-> kernel/time/clocksource.o: warning: objtool:
-> __clocksource_register_scale()+0x21: unreachable instruction
-> drivers/tty/sysrq.o: warning: objtool: sysrq_filter()+0x2ef:
-> unreachable instruction
-> arch/x86/mm/fault.o: warning: objtool: pgtable_bad()+0x3f:
-> unreachable instruction
-> drivers/acpi/pci_root.o: warning: objtool:
-> acpi_pci_osc_control_set()+0x123: unreachable instruction
-> drivers/rtc/class.o: warning: objtool:
-> devm_rtc_device_register()+0x40: unreachable instruction
-> kernel/power/process.o: warning: objtool:
-> freeze_processes.cold()+0x0: unreachable instruction
-> drivers/pnp/quirks.o: warning: objtool: quirk_awe32_resources()+0x42:
-> unreachable instruction
-> drivers/acpi/utils.o: warning: objtool: acpi_evaluate_dsm()+0xf1:
-> unreachable instruction
-> kernel/reboot.o: warning: objtool: __do_sys_reboot()+0x1b6:
-> unreachable instruction
-> kernel/power/swap.o: warning: objtool: swsusp_read()+0x185:
-> unreachable instruction
-> drivers/hid/hid-core.o: warning: objtool: hid_hw_start()+0x38:
-> unreachable instruction
-> drivers/acpi/battery.o: warning: objtool:
-> sysfs_add_battery.cold()+0x1a: unreachable instruction
-> arch/x86/kernel/cpu/mce/core.o: warning: objtool:
-> do_machine_check.cold()+0x33: unreachable instruction
-> drivers/pcmcia/cistpl.o: warning: objtool: pccard_store_cis()+0x4e:
-> unreachable instruction
-> drivers/gpu/vga/vgaarb.o: warning: objtool: pci_notify()+0x35:
-> unreachable instruction
-> arch/x86/kernel/tsc.o: warning: objtool:
-> determine_cpu_tsc_frequencies()+0x45: unreachable instruction
-> drivers/pcmcia/yenta_socket.o: warning: objtool:
-> ti1250_override()+0x50: unreachable instruction
-> fs/proc/proc_sysctl.o: warning: objtool:
-> sysctl_print_dir.isra.0()+0x19: unreachable instruction
-> drivers/iommu/intel-iommu.o: warning: objtool:
-> intel_iommu_init()+0x4f4: unreachable instruction
-> net/mac80211/ibss.o: warning: objtool:
-> ieee80211_ibss_work.cold()+0x157: unreachable instruction
-> drivers/net/ethernet/intel/e1000/e1000_main.o: warning: objtool:
-> e1000_clean.cold()+0x0: unreachable instruction
-> net/core/skbuff.o: warning: objtool: skb_dump.cold()+0x3fd:
-> unreachable instruction
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
 
-Thanks, I will look into this. I also get these warnings - I've been
-ignoring them successfully so far, but I'll root cause the issue.
+Add DT bindings for the LCD controller on the jz4780 SoC
 
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+---
+ .../bindings/display/ingenic-jz4780-lcd.txt   | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+
+diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+new file mode 100644
+index 000000000000..8512ce3f93df
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+@@ -0,0 +1,39 @@
++Bindings for Ingenic JZ4780 LCD Controller
++
++LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
++
++Required properties:
++- compatible: should be "ingenic,jz4780-lcd"
++- reg: Should contain the address & size of the LCD controller registers.
++- interrupts: Should specify the interrupt provided by parent.
++- clocks: Should contain two clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK.
++- clock-names : Must be "lcd_clk", "lcd_pixclk";
++- port: A port node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Optional properties:
++- interrupt-parent: phandle to parent interrupt controller
++
++Example:
++
++lcd: jz4780-lcdk@0x13050000 {
++	compatible = "ingenic,jz4780-lcd";
++	reg = <0x13050000 0x1800>;
++
++	clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
++	clock-names = "lcd_clk", "lcd_pixclk";
++
++	interrupt-parent = <&intc>;
++	interrupts = <31>;
++
++	jz4780_lcd_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			jz4780_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_lcd>;
++			};
++		};
++
++};
+-- 
+2.23.0
 
