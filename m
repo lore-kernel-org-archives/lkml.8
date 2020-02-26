@@ -2,74 +2,98 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2B9C4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866DFC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D52A2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D98324653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgBZSb3 (ORCPT
+        id S1727162AbgBZSbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:31:29 -0500
-Received: from gentwo.org ([3.19.106.255]:58966 "EHLO gentwo.org"
+        Wed, 26 Feb 2020 13:31:36 -0500
+Received: from muru.com ([72.249.23.125]:57836 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgBZSb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:31:29 -0500
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 885B43EC05; Wed, 26 Feb 2020 18:31:28 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 875FF3EC04;
-        Wed, 26 Feb 2020 18:31:28 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 18:31:28 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Roman Gushchin <guro@fb.com>
-cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Xunlei Pang <xlpang@linux.alibaba.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/slub: improve count_partial() for
- CONFIG_SLUB_CPU_PARTIAL
-In-Reply-To: <20200224165750.GA478187@carbon.dhcp.thefacebook.com>
-Message-ID: <alpine.DEB.2.21.2002261827440.8012@www.lameter.com>
-References: <20200222092428.99488-1-wenyang@linux.alibaba.com> <alpine.DEB.2.21.2002240126190.13486@www.lameter.com> <20200224165750.GA478187@carbon.dhcp.thefacebook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726789AbgBZSbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:31:36 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 10B788022;
+        Wed, 26 Feb 2020 18:32:19 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 10:31:32 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>, Rob Herring <robh@kernel.org>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 01/12] dt-bindings: bus: ti-sysc: Add support for PRUSS
+ SYSC type
+Message-ID: <20200226183132.GV37466@atomide.com>
+References: <20200225204649.28220-1-s-anna@ti.com>
+ <20200225204649.28220-2-s-anna@ti.com>
+ <96ec493b-3615-e84d-ba30-cabbf750c874@ti.com>
+ <b35e278d-c3dd-3356-93c3-0511d3164d7a@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b35e278d-c3dd-3356-93c3-0511d3164d7a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020, Roman Gushchin wrote:
+* Suman Anna <s-anna@ti.com> [200226 16:39]:
+> Hi Roger,
+> 
+> On 2/26/20 2:42 AM, Roger Quadros wrote:
+> > Hi Suman,
+> > 
+> > On 25/02/2020 22:46, Suman Anna wrote:
+> >> From: Roger Quadros <rogerq@ti.com>
+> >>
+> >> The PRUSS module has a SYSCFG which is unique. The SYSCFG
+> >> has two additional unique fields called STANDBY_INIT and
+> >> SUB_MWAIT in addition to regular IDLE_MODE and STANDBY_MODE
+> >> fields. Add the bindings for this new sysc type.
+> >>
+> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> Signed-off-by: Suman Anna <s-anna@ti.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/bus/ti-sysc.txt | 1 +
+> >>   include/dt-bindings/bus/ti-sysc.h                 | 4 ++++
+> >>   2 files changed, 5 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> >> b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> >> index 233eb8294204..c984143d08d2 100644
+> >> --- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> >> +++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+> >> @@ -38,6 +38,7 @@ Required standard properties:
+> >>           "ti,sysc-dra7-mcasp"
+> >>           "ti,sysc-usb-host-fs"
+> >>           "ti,sysc-dra7-mcan"
+> >> +        "ti,sysc-pruss"
+> >>     - reg        shall have register areas implemented for the
+> >> interconnect
+> >>           target module in question such as revision, sysc and syss
+> >> diff --git a/include/dt-bindings/bus/ti-sysc.h
+> >> b/include/dt-bindings/bus/ti-sysc.h
+> > 
+> > Did you intentionally leave this here? It should be part of 2nd patch?
+> 
+> No, not really, include/bindings are also considered part of bindings.
+> This patch alone should be enough for you to add the DT nodes.
 
-> > I suggest that you simply use the number of partial slabs and multiply
-> > them by the number of objects in a slab and use that as a value. Both
-> > values are readily available via /sys/kernel/slab/<...>/
->
-> So maybe something like this?
->
-> @@ -5907,7 +5907,9 @@ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo)
->  	for_each_kmem_cache_node(s, node, n) {
->  		nr_slabs += node_nr_slabs(n);
->  		nr_objs += node_nr_objs(n);
-> +#ifndef CONFIG_SLUB_CPU_PARTIAL
->  		nr_free += count_partial(n, count_free);
-> +#endif
->  	}
+Well I don't care either way, sort of would prefer to have this
+with the device patch in case somebody starts back porting
+driver changes.
 
-Why would not having cpu partials screws up the counting of objects in
-partial slabs?
+Anyways, let's wayt for Rob's ack on this, maybe he has also
+preference on the ti-sysc.h changes.
 
+Regards,
 
-You dont need kernel mods for this. The numbers are exposed already in
-/sys/kernel/slab/xxx.
-
-
+Tony
