@@ -2,131 +2,205 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F37DC4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE27FC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339F324683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:40:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wEwlWUXM"
+	by mail.kernel.org (Postfix) with ESMTP id A56802467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgBZNkk (ORCPT
+        id S1727429AbgBZNlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:40:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33008 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBZNkk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:40:40 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QDdrYq034511;
-        Wed, 26 Feb 2020 07:39:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582724393;
-        bh=HTRVPjh5DuXVRlDJkrZ6Z9RblyZsq7c/8F7wOehG3zw=;
-        h=From:To:CC:Subject:Date;
-        b=wEwlWUXMOpmqXzaj1p3Iafzy5ChoyhKl77B4qsHA8/3HwDSGESsVVjOYMu42ytA/v
-         tdgAZQT/Y6uOQcRRAAJXJ5DDzbAb+IBUS0q7brKAP9ACQ6Kt6dwby3xnH4Hn5EP3/M
-         VmG+9wAxq7dQbMzl4n/Os4OHDFCV8VMtNHZGMG04=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QDdrHb026706;
-        Wed, 26 Feb 2020 07:39:53 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 07:39:52 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 07:39:52 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QDdqRY023003;
-        Wed, 26 Feb 2020 07:39:52 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Ricard Wanderlof <ricardw@axis.com>
-Subject: [PATCH for-next] ASoC: tlv320adcx140: Fix MIC_BIAS defines for ADC full scale
-Date:   Wed, 26 Feb 2020 07:34:39 -0600
-Message-ID: <20200226133439.15837-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 26 Feb 2020 08:41:25 -0500
+Received: from relay.sw.ru ([185.231.240.75]:44732 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbgBZNlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 08:41:23 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j6wvs-0006rT-7k; Wed, 26 Feb 2020 16:41:00 +0300
+Subject: [PATCH RFC 2/5] fs: Add new argument to vfs_fallocate()
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     tytso@mit.edu, viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
+        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
+        ktkhai@virtuozzo.com, dmonakhov@gmail.com,
+        mbobrowski@mbobrowski.org, enwlinux@gmail.com, sblbir@amazon.com,
+        khazhy@google.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Wed, 26 Feb 2020 16:41:00 +0300
+Message-ID: <158272446003.281342.778131694693628667.stgit@localhost.localdomain>
+In-Reply-To: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the #defines for the ADC full scale bits from MIC_BIAS to
-ADC_FSCALE.  This also changes the error message to incidate ADC full
-scale value error as opposed to the Mic bias.
+This patch propagates @physical into vfs_fallocate().
+No functional changes.
 
-Reported-by: Ricard Wanderlof <ricardw@axis.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- sound/soc/codecs/tlv320adcx140.c | 12 ++++++------
- sound/soc/codecs/tlv320adcx140.h |  8 ++++----
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/nvme/target/io-cmd-file.c |    4 ++--
+ fs/io_uring.c                     |    2 +-
+ fs/ioctl.c                        |    5 +++--
+ fs/nfsd/vfs.c                     |    2 +-
+ fs/open.c                         |    7 ++++---
+ fs/overlayfs/file.c               |    2 +-
+ include/linux/fs.h                |    2 +-
+ mm/madvise.c                      |    2 +-
+ 8 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 93a0cb8e662c..825ace9b5fa7 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -758,12 +758,12 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 	ret = device_property_read_u8(adcx140->dev, "ti,vref-source",
- 				      &vref_source);
- 	if (ret)
--		vref_source = ADCX140_MIC_BIAS_VREF_275V;
-+		vref_source = ADCX140_ADC_FSCALE_VREF_275V;
+diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
+index cd5670b83118..f86ea0dc4638 100644
+--- a/drivers/nvme/target/io-cmd-file.c
++++ b/drivers/nvme/target/io-cmd-file.c
+@@ -306,7 +306,7 @@ static void nvmet_file_execute_discard(struct nvmet_req *req)
+ 			break;
+ 		}
  
--	if (vref_source != ADCX140_MIC_BIAS_VREF_275V &&
--	    vref_source != ADCX140_MIC_BIAS_VREF_25V &&
--	    vref_source != ADCX140_MIC_BIAS_VREF_1375V) {
--		dev_err(adcx140->dev, "Mic Bias source value is invalid\n");
-+	if (vref_source != ADCX140_ADC_FSCALE_VREF_275V &&
-+	    vref_source != ADCX140_ADC_FSCALE_VREF_25V &&
-+	    vref_source != ADCX140_ADC_FSCALE_VREF_1375V) {
-+		dev_err(adcx140->dev, "ADC full scale setting is invalid\n");
+-		ret = vfs_fallocate(req->ns->file, mode, offset, len);
++		ret = vfs_fallocate(req->ns->file, mode, offset, len, (u64)-1);
+ 		if (ret && ret != -EOPNOTSUPP) {
+ 			req->error_slba = le64_to_cpu(range.slba);
+ 			status = errno_to_nvme_status(req, ret);
+@@ -360,7 +360,7 @@ static void nvmet_file_write_zeroes_work(struct work_struct *w)
+ 		return;
+ 	}
+ 
+-	ret = vfs_fallocate(req->ns->file, mode, offset, len);
++	ret = vfs_fallocate(req->ns->file, mode, offset, len, (u64)-1);
+ 	nvmet_req_complete(req, ret < 0 ? errno_to_nvme_status(req, ret) : 0);
+ }
+ 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 8866bd60783f..03be497747da 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2512,7 +2512,7 @@ static void io_fallocate_finish(struct io_wq_work **workptr)
+ 		return;
+ 
+ 	ret = vfs_fallocate(req->file, req->sync.mode, req->sync.off,
+-				req->sync.len);
++				req->sync.len, (u64)-1);
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+ 	io_cqring_add_event(req, ret);
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 282d45be6f45..5f3222434e05 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -502,7 +502,7 @@ static int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
+ 	}
+ 
+ 	return vfs_fallocate(filp, mode | FALLOC_FL_KEEP_SIZE, sr.l_start,
+-			sr.l_len);
++			sr.l_len, (u64)-1);
+ }
+ 
+ /* on ia32 l_start is on a 32-bit boundary */
+@@ -530,7 +530,8 @@ static int compat_ioctl_preallocate(struct file *file, int mode,
  		return -EINVAL;
  	}
  
-@@ -787,7 +787,7 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
+-	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
++	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE,
++			     sr.l_start, sr.l_len, (u64)-1);
+ }
+ #endif
  
- 	ret = regmap_update_bits(adcx140->regmap, ADCX140_BIAS_CFG,
- 				ADCX140_MIC_BIAS_VAL_MSK |
--				ADCX140_MIC_BIAS_VREF_MSK, bias_source);
-+				ADCX140_ADC_FSCALE_VREF_MSK, bias_source);
- 	if (ret)
- 		dev_err(adcx140->dev, "setting MIC bias failed %d\n", ret);
- out:
-diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
-index 6d055e55909e..adb9513900b1 100644
---- a/sound/soc/codecs/tlv320adcx140.h
-+++ b/sound/soc/codecs/tlv320adcx140.h
-@@ -117,10 +117,10 @@
- #define ADCX140_MIC_BIAS_VAL_AVDD	6
- #define ADCX140_MIC_BIAS_VAL_MSK GENMASK(6, 4)
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 0aa02eb18bd3..a6b0acb795f5 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -590,7 +590,7 @@ __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (!S_ISREG(file_inode(file)->i_mode))
+ 		return nfserr_inval;
  
--#define ADCX140_MIC_BIAS_VREF_275V	0
--#define ADCX140_MIC_BIAS_VREF_25V	1
--#define ADCX140_MIC_BIAS_VREF_1375V	2
--#define ADCX140_MIC_BIAS_VREF_MSK GENMASK(1, 0)
-+#define ADCX140_ADC_FSCALE_VREF_275V	0
-+#define ADCX140_ADC_FSCALE_VREF_25V	1
-+#define ADCX140_ADC_FSCALE_VREF_1375V	2
-+#define ADCX140_ADC_FSCALE_VREF_MSK GENMASK(1, 0)
+-	error = vfs_fallocate(file, flags, offset, len);
++	error = vfs_fallocate(file, flags, offset, len, (u64)-1);
+ 	if (!error)
+ 		error = commit_metadata(fhp);
  
- #define ADCX140_PWR_CFG_BIAS_PDZ	BIT(7)
- #define ADCX140_PWR_CFG_ADC_PDZ		BIT(6)
--- 
-2.25.0
+diff --git a/fs/open.c b/fs/open.c
+index 73f27c9b518c..596fd3dc3988 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -226,7 +226,8 @@ SYSCALL_DEFINE2(ftruncate64, unsigned int, fd, loff_t, length)
+ #endif /* BITS_PER_LONG == 32 */
+ 
+ 
+-int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
++int vfs_fallocate(struct file *file, int mode,
++		  loff_t offset, loff_t len, u64 physical)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	long ret;
+@@ -306,7 +307,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+ 		return -EOPNOTSUPP;
+ 
+ 	file_start_write(file);
+-	ret = file->f_op->fallocate(file, mode, offset, len, (u64)-1);
++	ret = file->f_op->fallocate(file, mode, offset, len, physical);
+ 
+ 	/*
+ 	 * Create inotify and fanotify events.
+@@ -329,7 +330,7 @@ int ksys_fallocate(int fd, int mode, loff_t offset, loff_t len)
+ 	int error = -EBADF;
+ 
+ 	if (f.file) {
+-		error = vfs_fallocate(f.file, mode, offset, len);
++		error = vfs_fallocate(f.file, mode, offset, len, (u64)-1);
+ 		fdput(f);
+ 	}
+ 	return error;
+diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+index abe34162d9d4..e1857861c7ba 100644
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -476,7 +476,7 @@ static long ovl_fallocate(struct file *file, int mode,
+ 		return ret;
+ 
+ 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
+-	ret = vfs_fallocate(real.file, mode, offset, len);
++	ret = vfs_fallocate(real.file, mode, offset, len, (u64)-1);
+ 	revert_creds(old_cred);
+ 
+ 	/* Update size */
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 17c111e164d2..0222599a4b9b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2538,7 +2538,7 @@ extern long vfs_truncate(const struct path *, loff_t);
+ extern int do_truncate(struct dentry *, loff_t start, unsigned int time_attrs,
+ 		       struct file *filp);
+ extern int vfs_fallocate(struct file *file, int mode, loff_t offset,
+-			loff_t len);
++			loff_t len, u64 physical);
+ extern long do_sys_open(int dfd, const char __user *filename, int flags,
+ 			umode_t mode);
+ extern struct file *file_open_name(struct filename *, int, umode_t);
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 43b47d3fae02..89c2e8bab44a 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -849,7 +849,7 @@ static long madvise_remove(struct vm_area_struct *vma,
+ 	}
+ 	error = vfs_fallocate(f,
+ 				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+-				offset, end - start);
++				offset, end - start, (u64)-1);
+ 	fput(f);
+ 	down_read(&current->mm->mmap_sem);
+ 	return error;
+
 
