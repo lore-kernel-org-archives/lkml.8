@@ -2,203 +2,133 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C298C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35644C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBF5206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B10206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bmpwcnnr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYC/CpQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgBZPh5 (ORCPT
+        id S1728287AbgBZPiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:37:57 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45302 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728206AbgBZPh5 (ORCPT
+        Wed, 26 Feb 2020 10:38:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26114 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727855AbgBZPiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:37:57 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r77so1445980pgr.12;
-        Wed, 26 Feb 2020 07:37:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bVyxLUdFZ6k2/LWuzpd/gZEBBa95t0IpAukk6u0aGLU=;
-        b=BmpwcnnraZvpu2po0fbuvHX0FFdBeYXSwaFAtSXuwcctk2j7Bvlt0TSXXTwtOow//z
-         7nsyLLf2sl0dDYAd1W33LSWZoQ6H2aj9QjDev0UnBqx7Ct76RPn2Adt1V2jU7nr1TIN5
-         N5lW+fLjb4JQvs6Rrdu+Tzxmp+NU2HqKGLTNerWdXE6aM3JrmtlTeNlH+wdXzyGsI5eQ
-         NNsGetqthvYf/WTjNI0t4ghT71SiXZcw8yOu/E7DRcCoGVtoJvHj47+E3qs4ZexsgzIl
-         2mWucXhwmoYGmfmcSwp5cBHZ3bQWdRoJMbxk+Id2WQxMoCVbi/6SKyYiHTYImpLU6+aX
-         pn5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bVyxLUdFZ6k2/LWuzpd/gZEBBa95t0IpAukk6u0aGLU=;
-        b=GSujQr7Iz9ZY0FL8DYCrna5ByuqtDbW6XUBz78IZdxmStzI3+gvn1iVfxULemgkSlF
-         YPKZcz0nGhHkVUfGAY9kGhxcPpksXdfNt6OU341JuF1TY3BetGctniAxxejvSYaDv9mL
-         ETpZDLdyturFMBiKAYZNFwUStyhRO5OnI+XumvUgYgByPRPIz3Hedm3DjFYY13dFva7l
-         KudJNjIbF5xZg8DaVWDiagzqTMJMPIODzSGER75kVaOOK05HZur68uLkpu/fKeTICEFS
-         7MPosS6j19XN6++oNa2GwD0AVl9vfzzWoSWlxrScclryXZ+wVcErxd+Dmklqcz1SlR/q
-         4LXQ==
-X-Gm-Message-State: APjAAAVCMZSy27/O6OXMEWZu2xZNlO4/bThXCzCTcn82ZkTKzsHhoc0p
-        lnKVfjvef/sg2sfGVtEheMg=
-X-Google-Smtp-Source: APXvYqzXUOD2tiaHtoxdp2NNpqiW9o8kJJbfJcIh+ZUZ2dcaNFlqZ8NdnApwBtzOL6KhoTi11XmbaA==
-X-Received: by 2002:a63:cf4f:: with SMTP id b15mr4286585pgj.287.1582731473931;
-        Wed, 26 Feb 2020 07:37:53 -0800 (PST)
-Received: from localhost (114-136-150-109.emome-ip.hinet.net. [114.136.150.109])
-        by smtp.gmail.com with ESMTPSA id c15sm3499768pja.30.2020.02.26.07.37.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:37:52 -0800 (PST)
-From:   You-Sheng Yang <vicamo@gmail.com>
-To:     davem@davemloft.net
-Cc:     grundler@chromium.org, hayeswang@realtek.com,
-        kai.heng.feng@canonical.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, pmalani@chromium.org,
-        vicamo.yang@canonical.com, vicamo@gmail.com
-Subject: [PATCH v2] r8152: check disconnect status after long sleep
-Date:   Wed, 26 Feb 2020 23:37:10 +0800
-Message-Id: <20200226153710.239838-1-vicamo@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200224.144714.329725174070305071.davem@davemloft.net>
-References: <20200224.144714.329725174070305071.davem@davemloft.net>
+        Wed, 26 Feb 2020 10:38:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582731503;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IGr3SYhU/ark2B0WUE5hTGvmZDYDzVerzAZBntfGstU=;
+        b=FYC/CpQxbGmxC7ZBvipJmRI1F3/rKjaWWwxQjL0Lru28mKDoowMS3tsfD/ApTLrvWJBmqk
+        9/3FpZgk+xxx97ApCvy8Iy8QHDI5wf7yueFVCYwfnt5/U/xCGwUyYLw5Lwh7oBogTwQ8uP
+        3lTv0Cm0sgADq4R49hyJBtQOPkU7Ih8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-OkhiOzO0OK2mA3xqxBOZ-g-1; Wed, 26 Feb 2020 10:38:17 -0500
+X-MC-Unique: OkhiOzO0OK2mA3xqxBOZ-g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CEF797764;
+        Wed, 26 Feb 2020 15:38:14 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9409990F5B;
+        Wed, 26 Feb 2020 15:38:12 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 16:38:10 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 2/2] perf report: Support interactive annotation of
+ code without symbols
+Message-ID: <20200226153810.GE217283@krava>
+References: <20200225051438.16253-1-yao.jin@linux.intel.com>
+ <20200225051438.16253-3-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200225051438.16253-3-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: You-Sheng Yang <vicamo.yang@canonical.com>
+On Tue, Feb 25, 2020 at 01:14:38PM +0800, Jin Yao wrote:
+> For perf report on stripped binaries it is currently impossible to do
+> annotation. The annotation state is all tied to symbols, but there are
+> either no symbols, or symbols are not covering all the code.
+>=20
+> We should support the annotation functionality even without symbols.
+>=20
+> This patch fakes a dummy symbol and the symbol name is the string of
+> address. After that, we just follow current annotation working flow.
+>=20
+> For example,
+>=20
+> 1. perf report
+>=20
+> Overhead  Command  Shared Object     Symbol
+>   20.67%  div      libc-2.27.so      [.] __random_r
+>   17.29%  div      libc-2.27.so      [.] __random
+>   10.59%  div      div               [.] 0x0000000000000628
+>    9.25%  div      div               [.] 0x0000000000000612
+>    6.11%  div      div               [.] 0x0000000000000645
+>=20
+> 2. Select the line of "10.59%  div      div               [.] 0x0000000=
+000000628" and ENTER.
+>=20
+> Annotate 0x0000000000000628
+> Zoom into div thread
+> Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
+> Browse map details
+> Run scripts for samples of symbol [0x0000000000000628]
+> Run scripts for all samples
+> Switch to another data file in PWD
+> Exit
+>=20
+> 3. Select the "Annotate 0x0000000000000628" and ENTER.
+>=20
+> Percent=E2=94=82
+>        =E2=94=82
+>        =E2=94=82
+>        =E2=94=82     Disassembly of section .text:
+>        =E2=94=82
+>        =E2=94=82     0000000000000628 <.text+0x68>:
+>        =E2=94=82       divsd %xmm4,%xmm0
+>        =E2=94=82       divsd %xmm3,%xmm1
+>        =E2=94=82       movsd (%rsp),%xmm2
+>        =E2=94=82       addsd %xmm1,%xmm0
+>        =E2=94=82       addsd %xmm2,%xmm0
+>        =E2=94=82       movsd %xmm0,(%rsp)
+>=20
+> Now we can see the dump of object starting from 0x628.
+>=20
+> We can also press hotkey 'a' on address in report view.
+> For branch mode, we only support the annotation for
+> "branch to" address.
+>=20
+>  v4:
+>  ---
+>  1. Support the hotkey 'a'. When we press 'a' on address,
+>     now it supports the annotation.
 
-Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
+please move this to separate patch, AFAICS it's separate change
+and was broken before your change
 
-  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
-      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
-              Driver=r8152, 5000M
-
-where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
-
-When hotplugging such dock with additional usb devices already attached on
-it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
-device is also reset. However, during r8152 device init there are several
-for-loops that, when it's unable to retrieve hardware registers due to
-being disconnected from USB, may take up to 14 seconds each in practice,
-and that has to be completed before USB may re-enumerate devices on the
-bus. As a result, devices attached to the dock will only be available
-after nearly 1 minute after the dock was plugged in:
-
-  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
-  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
-  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
-  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
-  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
-
-This happens in, for example, r8153_init:
-
-  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
-			    void *data, u16 type)
-  {
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return -ENODEV;
-    ...
-  }
-
-  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
-  {
-    u32 data;
-    ...
-    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
-
-    data = __le32_to_cpu(tmp);
-    ...
-    return (u16)data;
-  }
-
-  static void r8153_init(struct r8152 *tp)
-  {
-    ...
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return;
-
-    for (i = 0; i < 500; i++) {
-      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
-          AUTOLOAD_DONE)
-        break;
-      msleep(20);
-    }
-    ...
-  }
-
-Since ocp_read_word() doesn't check the return status of
-generic_ocp_read(), and the only exit condition for the loop is to have
-a match in the returned value, such loops will only ends after exceeding
-its maximum runs when the device has been marked as disconnected, which
-takes 500 * 20ms = 10 seconds in theory, 14 in practice.
-
-To solve this long latency another test to RTL8152_UNPLUG flag should be
-added after those 20ms sleep to skip unnecessary loops, so that the device
-probe can complete early and proceed to parent port reset/reprobe process.
-
-This can be reproduced on all kernel versions up to latest v5.6-rc2, but
-after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
-while it was around 1/2.
-
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
-
----
-Changes since v1:
- - update patch title, commit messages.
-
----
- drivers/net/usb/r8152.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 78ddbaf6401b..95b19ce96513 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -3221,6 +3221,8 @@ static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
- 		}
- 
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	return data;
-@@ -5402,7 +5404,10 @@ static void r8153_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
-@@ -5539,7 +5544,10 @@ static void r8153b_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
--- 
-2.25.0
+thanks,
+jirka
 
