@@ -2,117 +2,157 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEBAC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F21C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE45206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03DE206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:52:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RkQwD2LO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgBZRvv (ORCPT
+        id S1727142AbgBZRwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:51:51 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34657 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgBZRvu (ORCPT
+        Wed, 26 Feb 2020 12:52:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60727 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726875AbgBZRwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:51:50 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id AE5BE3C009D;
-        Wed, 26 Feb 2020 18:51:48 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6vHIzGP5pHOv; Wed, 26 Feb 2020 18:51:43 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9A9F03C005E;
-        Wed, 26 Feb 2020 18:51:43 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 26 Feb
- 2020 18:51:43 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>, <stable@vger.kernel.org>
-Subject: [PATCH v3 3/3] usb: core: port: do error out if usb_autopm_get_interface() fails
-Date:   Wed, 26 Feb 2020 18:50:36 +0100
-Message-ID: <20200226175036.14946-3-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200226175036.14946-1-erosca@de.adit-jv.com>
-References: <20200226175036.14946-1-erosca@de.adit-jv.com>
+        Wed, 26 Feb 2020 12:52:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582739540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/RdTTd6K7JTQ5wyPAoL2rrTSkPB95hn/2+5eY5OdPYc=;
+        b=RkQwD2LOzU1y04hsk4VAcm6mirrRmGYwAjxHuVBQ9T+0Gq6ogJqIN9vI4j3ceCIxjJ7cUz
+        CWmq2TB98fWuEHpNIZQCic7RKTrj0rfJmoZQ7Dswwjag23RKwEK7WjDmRSJMKMIs7C4QdJ
+        L5yKW9CYeN3uEyse5jwVo5BBZpPaX3M=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-hD6jUvHVOxC7heMWwO5T4g-1; Wed, 26 Feb 2020 12:52:18 -0500
+X-MC-Unique: hD6jUvHVOxC7heMWwO5T4g-1
+Received: by mail-wr1-f71.google.com with SMTP id d9so73237wrv.21
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:52:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/RdTTd6K7JTQ5wyPAoL2rrTSkPB95hn/2+5eY5OdPYc=;
+        b=ASgU3cOyTW16iM07PdO72de9jgC2FpAs8GiWRcvM4AGiL6cuJkyklvT44gq1U9FNIM
+         ksLy1euxhgV8SysrUDVKxnGmKErubukfiUjuLvgR0JjAO8oRcuxyLilC2n6PffaOSPWz
+         BED3Y5x9mmvmtdCd71kPrnVygZh9Z/vEkZKyiOshZ6mnGHinSuDZUnCSf9YPMnq+rdjY
+         MeeuuYFjA9G7Du8K/MX5n85U2UOFOUkXjPkJLn9QjotLEG9EBnSZ1wmAGLU4RKY8I+NO
+         slQ8Xn2YjNHyG4PuR6GI8WbuHSek+NH+WRrJheG3/GShLHx7KfIpsgPgbalmPqsBwXIo
+         eUqg==
+X-Gm-Message-State: APjAAAV3KvHNRE7ghYJAYaD/54QYGPlsfI5pVLPTd5k46pzSyriGU5dK
+        Od48mTXqtswzyMemGVjAjPy3Jsd+ZFTYcusvDXZ8asVQj8vYFcdu3Zsepafu4WyVqbHjWv1sgRn
+        Q4GOKJRcXetWF17WFz6Kvkr+b
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr36877wmi.51.1582739537226;
+        Wed, 26 Feb 2020 09:52:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz8ppifS6KUqwVMO25OvROjuof04E1Nq3/ZOCz+8OkVlU7zGHWWPvWAptHeVlGwliFuK37uyQ==
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr36795wmi.51.1582739536070;
+        Wed, 26 Feb 2020 09:52:16 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h3sm4383322wrb.23.2020.02.26.09.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 09:52:15 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/13] KVM: x86: Add helper to "handle" internal emulation error
+In-Reply-To: <20200218232953.5724-12-sean.j.christopherson@intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-12-sean.j.christopherson@intel.com>
+Date:   Wed, 26 Feb 2020 18:52:14 +0100
+Message-ID: <87o8tli6cx.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.66]
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewing a fresh portion of coverity defects in USB core
-(specifically CID 1458999), Alan Stern noted below in [1]:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
- > A revised search finds line 997 in drivers/usb/core/hub.c and lines
- > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
- > other directories.)  AFAICT all three of these should check the
- > return value, although a error message in the kernel log probably
- > isn't needed.
+> Add a helper to set the appropriate error codes in vcpu->run when
+> emulation fails (future patches will add additional failure scenarios).
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 32 ++++++++++++++------------------
+>  1 file changed, 14 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index e1eaca65756b..7bffdc6f9e1b 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6491,6 +6491,14 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
+>  
+> +static int internal_emulation_error(struct kvm_vcpu *vcpu)
+> +{
+> +	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> +	vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> +	vcpu->run->internal.ndata = 0;
+> +	return 0;
+> +}
+> +
+>  static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
+>  				    int emulation_type)
+>  {
+> @@ -6504,21 +6512,13 @@ static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
+>  		return 1;
+>  	}
+>  
+> -	if (emulation_type & EMULTYPE_SKIP) {
+> -		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> -		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> -		vcpu->run->internal.ndata = 0;
+> -		return 0;
+> -	}
+> +	if (emulation_type & EMULTYPE_SKIP)
+> +		return internal_emulation_error(vcpu);
+>  
+>  	kvm_queue_exception(vcpu, UD_VECTOR);
+>  
+> -	if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0) {
+> -		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> -		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> -		vcpu->run->internal.ndata = 0;
+> -		return 0;
+> -	}
+> +	if (!is_guest_mode(vcpu) && kvm_x86_ops->get_cpl(vcpu) == 0)
+> +		return internal_emulation_error(vcpu);
+>  
+>  	return 1;
+>  }
+> @@ -8986,12 +8986,8 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
+>  
+>  	ret = emulator_task_switch(ctxt, tss_selector, idt_index, reason,
+>  				   has_error_code, error_code);
+> -	if (ret) {
+> -		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> -		vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> -		vcpu->run->internal.ndata = 0;
+> -		return 0;
+> -	}
+> +	if (ret)
+> +		return internal_emulation_error(vcpu);
+>  
+>  	kvm_rip_write(vcpu, ctxt->eip);
+>  	kvm_set_rflags(vcpu, ctxt->eflags);
 
-Factor out the usb_port_runtime_{resume,suspend}() changes into a
-standalone patch to allow conflict-free porting on top of stable v3.9+.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
-
-Fixes: 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
-Cc: stable@vger.kernel.org # v3.9+
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
-v3:
- - Newly submitted
----
- drivers/usb/core/port.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-index bbbb35fa639f..235a7c645503 100644
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -213,7 +213,10 @@ static int usb_port_runtime_resume(struct device *dev)
- 	if (!port_dev->is_superspeed && peer)
- 		pm_runtime_get_sync(&peer->dev);
- 
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, true);
- 	msleep(hub_power_on_good_delay(hub));
- 	if (udev && !retval) {
-@@ -266,7 +269,10 @@ static int usb_port_runtime_suspend(struct device *dev)
- 	if (usb_port_block_power_off)
- 		return -EBUSY;
- 
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, false);
- 	usb_clear_port_feature(hdev, port1, USB_PORT_FEAT_C_CONNECTION);
- 	if (!port_dev->is_superspeed)
 -- 
-2.25.1
+Vitaly
 
