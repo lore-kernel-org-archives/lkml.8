@@ -2,140 +2,80 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C92C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9757CC4BA26
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29F5222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD9224683
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIonsxn5"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sP90uYz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBZTUJ (ORCPT
+        id S1727301AbgBZTVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:20:09 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44131 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727174AbgBZTUJ (ORCPT
+        Wed, 26 Feb 2020 14:21:01 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:35750 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbgBZTVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:20:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582744808;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JC/2w/EASsF47NJsQnG/EnRFDXzT40bcN876RMkvyQU=;
-        b=VIonsxn5ETTCv/jF+U/9Eul8RWdx/wrzovKfOZtDFgszowTjqQp3vQpHu/JVsFvEKI8P8s
-        4HKN33RlcLPReAFD2//hPW76bcl7vVhKYgm8vVpVeovq3b2bAfTDO7mkWxLo1iVy53LPo9
-        BcZjifnPJLsyFCZsSEanL8gq7mLr648=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-NTKz4_vuPum3utiIDaAQtg-1; Wed, 26 Feb 2020 14:20:06 -0500
-X-MC-Unique: NTKz4_vuPum3utiIDaAQtg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 106481005512;
-        Wed, 26 Feb 2020 19:20:04 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E53890CD1;
-        Wed, 26 Feb 2020 19:19:59 +0000 (UTC)
-Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-References: <20200226161404.14136-1-longman@redhat.com>
- <20200226162954.GC24185@bombadil.infradead.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <12e8d951-fc35-bce0-e96d-f93bccf2bd3a@redhat.com>
-Date:   Wed, 26 Feb 2020 14:19:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 26 Feb 2020 14:21:01 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 01E7E20B9C02;
+        Wed, 26 Feb 2020 11:21:00 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 01E7E20B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1582744860;
+        bh=W5JGlWfBcPkXP7GPkcMwkkT4Bh9pLTkThoAlCVPwyRQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sP90uYz+6s+BSypzgsp9eYDewZcb3nzcjwkoUZPDiJcQlBfut+kdr1zeFmQHWh1/Z
+         +9CCAIkM1znTN/EcRfAb2OLHvdncSDza5XnDZ3KvVN53OHh+iPP6ONDSj9fX0B2V4E
+         ZdtGrhFm20v1aAMh41WfyHskx9YNOblByQHjRXtQ=
+Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
+To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-efi@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, zohar@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <94fe39a9-db9e-211d-d9b7-4cfe1a270e6f@linux.microsoft.com>
+Date:   Wed, 26 Feb 2020 11:21:28 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200226162954.GC24185@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 11:29 AM, Matthew Wilcox wrote:
-> On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
->> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
->> value of 0 (default) for no limit or a positive integer 256 and up. Small
->> dentry-dir-max numbers are forbidden to avoid excessive dentry count
->> checking which can impact system performance.
-> This is always the wrong approach.  A sysctl is just a way of blaming
-> the sysadmin for us not being very good at programming.
->
-> I agree that we need a way to limit the number of negative dentries.
-> But that limit needs to be dynamic and depend on how the system is being
-> used, not on how some overworked sysadmin has configured it.
->
-> So we need an initial estimate for the number of negative dentries that
-> we need for good performance.  Maybe it's 1000.  It doesn't really matter;
-> it's going to change dynamically.
->
-> Then we need a metric to let us know whether it needs to be increased.
-> Perhaps that's "number of new negative dentries created in the last
-> second".  And we need to decide how much to increase it; maybe it's by
-> 50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
-> how high the recent rate of negative dentry creation has been.
->
-> We also need a metric to let us know whether it needs to be decreased.
-> I'm reluctant to say that memory pressure should be that metric because
-> very large systems can let the number of dentries grow in an unbounded
-> way.  Perhaps that metric is "number of hits in the negative dentry
-> cache in the last ten seconds".  Again, we'll need to decide how much
-> to shrink the target number by.
->
-> If the number of negative dentries is at or above the target, then
-> creating a new negative dentry means evicting an existing negative dentry.
-> If the number of negative dentries is lower than the target, then we
-> can just create a new one.
->
-> Of course, memory pressure (and shrinking the target number) should
-> cause negative dentries to be evicted from the old end of the LRU list.
-> But memory pressure shouldn't cause us to change the target number;
-> the target number is what we think we need to keep the system running
-> smoothly.
->
-Thanks for the quick response.
+Hi Nayna,
 
-I agree that auto-tuning so that the system administrator don't have to
-worry about it will be the best approach if it is implemented in the
-right way. However, it is hard to do it right.
+> +
+> +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> +	bool
+> +	depends on IMA
+> +	depends on IMA_ARCH_POLICY
+> +	default n
+> +	help
+> +	   This option is selected by architectures to enable secure and/or
+> +	   trusted boot based on IMA runtime policies.
+> 
 
-How about letting users specify a cap on the amount of total system
-memory allowed for negative dentries like one of my previous patchs.
-Internally, there is a predefined minimum and maximum for
-dentry-dir-max. We sample the total negative dentry counts periodically
-and adjust the dentry-dir-max accordingly.
+Why is the default for this new config "n"?
+Is there any reason to not turn on this config if both IMA and 
+IMA_ARCH_POLICY are set to y?
 
-Specifying a percentage of total system memory is more intuitive than
-just specifying a hard number for dentry-dir-max. Still some user input
-is required.
-
-What do you think?
-
-Cheers,
-Longman
+thanks,
+  -lakshmi
 
