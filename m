@@ -2,72 +2,130 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB704C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F3FC4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBE024683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE87924656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:58:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582739937;
+	bh=gbiYIrb9qVJDfgN91Du8k34UKtZT8nALXnHYvkQ4qVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AkX50Sus8M0eVCk37UxsoIACeYTCvIRdFtChQ10VE5MIGaEV7lsULiPRjvuoqI2Cv
+	 V/neUhBJxhMFFm8petu4Q+p2JoK9k00zeJFpD45mARwnecXOxfr8HqX5rSWuVoKexz
+	 wfvk789sKG19T8DLgcU2YD2SuJ5aZj4bbO7Il15E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgBZR5u (ORCPT
+        id S1727030AbgBZR65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:57:50 -0500
-Received: from muru.com ([72.249.23.125]:57804 "EHLO muru.com"
+        Wed, 26 Feb 2020 12:58:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbgBZR5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:57:50 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 737AB8022;
-        Wed, 26 Feb 2020 17:58:34 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 09:57:46 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 0/4] pwm: omap-dmtimer: Allow for dynamic pwm period
- updates
-Message-ID: <20200226175746.GS37466@atomide.com>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
+        id S1726688AbgBZR64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:58:56 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BDE424656;
+        Wed, 26 Feb 2020 17:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582739935;
+        bh=gbiYIrb9qVJDfgN91Du8k34UKtZT8nALXnHYvkQ4qVg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0+USs4nsndDOEuS3FrNtmAiAf2QOIxp7rGqG+oY2bFJf7s66F3pWPMTDlAVEIVXsj
+         3PFrgFaCqncjZBZ86ohNePitPVwoctQ9BSRsV+s8M7I0FjYwg3VYmLpCjIyMWjcJS5
+         zDWPYjRaxaA0reJpysRQrth6JOSCbNyRCanyxNcU=
+Date:   Wed, 26 Feb 2020 18:58:50 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Martin Haass <vvvrrooomm@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Subject: Re: [PATCH] module support: during lockdown, log name of unsigned
+ module
+Message-ID: <20200226175849.GB20449@linux-8ccs>
+References: <CAH3oDPzeu_bzYa3fOUpcjQk4HJ5K2Rx+Qf+qbqxSrmTdrWHm5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200224052135.17278-1-lokeshvutla@ti.com>
+In-Reply-To: <CAH3oDPzeu_bzYa3fOUpcjQk4HJ5K2Rx+Qf+qbqxSrmTdrWHm5g@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [200224 05:23]:
-> This series fixes minor issues in config callback and allows for on the
-> fly updates for pwm period and duty cycle. This is mainly intended to
-> allow pwm omap dmtimer to be used to generate a 1PPS signal that can be
-> syncronized to PTP clock in CPTS module in AM335x and AM57xx SoCs.
-> 
-> Series tested after applying the following series:
-> - https://patchwork.kernel.org/patch/11379875/
-> - https://patchwork.kernel.org/project/linux-omap/list/?series=246183 
-> 
-> Full dependencies can be seen here:
-> https://github.com/lokeshvutla/linux/tree/devel/pwm-1pps-generation
-> 
-> Lokesh Vutla (4):
->   pwm: omap-dmtimer: Drop unused header file
->   pwm: omap-dmtimer: Fix pwm enabling sequence
->   pwm: omap-dmtimer: Do not disable pwm before changing
->     period/duty_cycle
->   pwm: omap-dmtimer: Implement .apply callback
++++ Martin Haass [19/02/20 10:02 +0100]:
+>during lockdown loading of unsigned modules is restricted to signed
+>modules only. The old error message does not show which module misses
+>the signature, making it very difficult for a user to determine which
+>module is at fault.
+>This patch adds a line to the logs which additionally contains the
+>module name that caused the error message. The old message cannot
+>be replaced as it is generated by lockdown_is_locked_down
+>---
+> kernel/module.c | 10 ++++++++--
+> 1 file changed, 8 insertions(+), 2 deletions(-)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 33569a01d6e..6dcb28139a0 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -2807,7 +2807,8 @@ static int module_sig_check(struct load_info *info,
+>int flags)
+>  const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
+>  const char *reason;
+>  const void *mod = info->hdr;
+>-
+>+ int is_locked = -EPERM;
+>+
+>  /*
+>  * Require flags == 0, as a module with version information
+>  * removed is no longer the module that was signed
+>@@ -2843,7 +2844,12 @@ static int module_sig_check(struct load_info *info,
+>int flags)
+>  return -EKEYREJECTED;
+>  }
+>
+>- return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
+>+ is_locked = security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
+>+ if (is_locked == -EPERM) {
+>+ pr_notice("Lockdown: %s: rejected module '%s' cause: %s",
+>+ current->comm, info->name, reason);
+>+ }
+>+ return is_locked;
 
-FYI, things seem to work for me after this set, but as it looks like
-there will be v2 set of patches I want to test again with v2 out
-before any Tested-by.
+Hi!
 
-Thanks,
+Actually, I think we can just reuse the pr_notice() from the previous if
+(is_module_sig_enforced()) block. It already logs the module name as well as
+the reason. And we'd better leave the lockdown-specific messages to the LSM.
+Something like this perhaps?
 
-Tony
+diff --git a/kernel/module.c b/kernel/module.c
+index b88ec9cd2a7f..2c881e3b9d92 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2838,12 +2838,13 @@ static int module_sig_check(struct load_info *info, int flags)
+        case -ENOKEY:
+                reason = "Loading of module with unavailable key";
+        decide:
+-               if (is_module_sig_enforced()) {
++               err = is_module_sig_enforced() ? \
++                     -EKEYREJECTED : security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++
++               if (err)
+                        pr_notice("%s: %s is rejected\n", info->name, reason);
+-                       return -EKEYREJECTED;
+-               }
+ 
+-               return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++               return err;
+ 
+                /* All other errors are fatal, including nomem, unparseable
+                 * signatures and signature check failures - even if signatures
