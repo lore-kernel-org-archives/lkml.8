@@ -2,83 +2,84 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB17FC4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B54C4BA15
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCD72084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="slqioptl"
+	by mail.kernel.org (Postfix) with ESMTP id E89932084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgBZQQv (ORCPT
+        id S1727213AbgBZQSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:16:51 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55580 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQQv (ORCPT
+        Wed, 26 Feb 2020 11:18:03 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33575 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:16:51 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QGG64N119983;
-        Wed, 26 Feb 2020 10:16:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582733766;
-        bh=0FcgBZD0FcGrWhEPucId1UBN/EwNU1wafv0wW/abf7g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=slqioptlPCKXxQMJ4eKOpsW4TDjTw29mNub/CYcPvjVCJBA2W14fTEEsngMqu4hjE
-         g2nM+VK2fpirqfJNdGpCwBvI/tUp1CIApBlQHNKmppiKIUGlB4tFYwU51UfZUJblak
-         HoJ3BxWCgTMKQvDjW0325vj44EVeEBhvL90QE44s=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QGG6XW000712;
-        Wed, 26 Feb 2020 10:16:06 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 10:16:05 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 10:16:05 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01QGG5B7079209;
-        Wed, 26 Feb 2020 10:16:05 -0600
-Subject: Re: [PATCH for-next 3/3] ASoC: tas2562: Fix sample rate error message
+        Wed, 26 Feb 2020 11:18:03 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6zNm-0004jT-CN; Wed, 26 Feb 2020 17:17:58 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6zNl-0001DH-Qq; Wed, 26 Feb 2020 17:17:57 +0100
+Date:   Wed, 26 Feb 2020 17:17:57 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20200226130305.12043-1-dmurphy@ti.com>
- <20200226130305.12043-3-dmurphy@ti.com> <20200226161204.GG4136@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <531e40a0-7433-66d9-7b77-fc4ccc3dabdb@ti.com>
-Date:   Wed, 26 Feb 2020 10:10:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
+Message-ID: <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
+References: <20200224144048.6587-1-jonathanh@nvidia.com>
+ <20200224165859.GJ6215@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200226161204.GG4136@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200224165859.GJ6215@sirena.org.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On Mon, Feb 24, 2020 at 04:58:59PM +0000, Mark Brown wrote:
+> On Mon, Feb 24, 2020 at 02:40:48PM +0000, Jon Hunter wrote:
+> > Deferred probe is an expected return value for devm_pwm_get(). Given
+> > that the driver deals with it properly, there's no need to output a
+> > warning that may potentially confuse users.
+> 
+> >  		ret = PTR_ERR(drvdata->pwm);
+> > -		dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(&pdev->dev, "Failed to get PWM: %d\n", ret);
+> 
+> This then means that there's no way for users to determine why the
+> driver has failed to instantiate which can be frustrating.  It'd be
+> better to at least have some dev_dbg() output when deferring so that
+> there's something for people to go on without having to instrument the
+> code.
 
-On 2/26/20 10:12 AM, Mark Brown wrote:
-> On Wed, Feb 26, 2020 at 07:03:05AM -0600, Dan Murphy wrote:
->> Fix error message for setting the sample rate.  It says bitwidth but
->> should say sample rate.
-> Fixes should always go at the start of a series so they can be applied
-> as such without any dependency on any new features or cleanups.
-OK I will rebase and put the fixes first.
+Not printing an error message is quite usual however. I think a generic
+approach that for example makes the list of devices that should be
+retried to probe on the next opportunity inspectable would be nice.
 
+Best regards
+Uwe
 
-Dan
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
