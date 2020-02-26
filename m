@@ -2,86 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8154C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BCCC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885A424656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582747661;
-	bh=2tf+v+V/MEP5NY0l77q6mS4Qi+if4Z6bmYcsxvTFlAc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z9NnnuEIMSe376nNgultAvvMW22L0ZKuH6eotiiydP9j/fyMBpCXVx+KH25JhoIjE
-	 5Uha+ki1x48T6eQPBpPNLvg+gyd4c9ujwT+AiG0iW5Sjy/S/jeBW4pufiXwlj4UAeb
-	 Ugzl8+6mAq+i8zDNuVWl2qTM9VPqQMvwKRlYHP5o=
+	by mail.kernel.org (Postfix) with ESMTP id BD42921556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgBZUHk (ORCPT
+        id S1727491AbgBZUN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:07:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727277AbgBZUHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:07:40 -0500
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E562467B
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 20:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582747659;
-        bh=2tf+v+V/MEP5NY0l77q6mS4Qi+if4Z6bmYcsxvTFlAc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mZTOKyU+WQgw3ipa87OcIONruGF8lXSPHNfK6vxs1YiMXkFU4RSEhmo4DX3jeKSd2
-         s6Z784fQqqqdSejTvFQ5wccgKxcAzRxn95no3RRCiUKnMmKpCx2ygr5RKyu23mWBQF
-         1F9fXskzs7DqmtY26t7NV+vuVaJiac3Na8JPqJO4=
-Received: by mail-wm1-f50.google.com with SMTP id m10so5351118wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:07:39 -0800 (PST)
-X-Gm-Message-State: APjAAAWMJiEu6cihZIyoslair5Dc0wGX5qIrA8/Fmsh0O/E7arAlJc5Q
-        CUKmtO7V1uV/IRgE7/I12X7gZ28CYwHRjx7vJ1/UMQ==
-X-Google-Smtp-Source: APXvYqydt/Oh8QkTZnRNoZdpsRzIaN0b+vNS6r2LtaU+Apd2hTWAsK9m6W8ElX/YxITonykdhHJhL4iTuWZZv/5PRuQ=
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr580415wml.138.1582747657704;
- Wed, 26 Feb 2020 12:07:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20200225220801.571835584@linutronix.de> <20200225221305.919875257@linutronix.de>
- <db063edd-f1de-bbb4-3c8b-465904308aad@kernel.org> <87pne1azvt.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87pne1azvt.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 26 Feb 2020 12:07:26 -0800
-X-Gmail-Original-Message-ID: <CALCETrV4=1X3MO+HsgxSvJo_Rjw4tr1E7XCY4xHNGA=bhvq7NA@mail.gmail.com>
-Message-ID: <CALCETrV4=1X3MO+HsgxSvJo_Rjw4tr1E7XCY4xHNGA=bhvq7NA@mail.gmail.com>
-Subject: Re: [patch 7/8] x86/entry: Move irq tracing to prepare_exit_to_user_mode()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Wed, 26 Feb 2020 15:13:59 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59417 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgBZUN7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 15:13:59 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j733y-0005cV-SR; Wed, 26 Feb 2020 21:13:47 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id EE577104099; Wed, 26 Feb 2020 21:13:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [patch 01/15] x86/irq: Convey vector as argument and not in ptregs
+In-Reply-To: <CAMzpN2ij8ReOXZH00puhzraCGRdKY8qt+TMipd_14_XWTu8xtg@mail.gmail.com>
+References: <20200225224719.950376311@linutronix.de> <20200225231609.000955823@linutronix.de> <CAMzpN2ij8ReOXZH00puhzraCGRdKY8qt+TMipd_14_XWTu8xtg@mail.gmail.com>
+Date:   Wed, 26 Feb 2020 21:13:45 +0100
+Message-ID: <87k149p0na.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Andy Lutomirski <luto@kernel.org> writes:
->
-> > On 2/25/20 2:08 PM, Thomas Gleixner wrote:
-> >> which again gets it out of the ASM code.
-> >
-> > Why is this better than just sticking the tracing in
-> > __prepare_exit_from_usermode() or just not splitting it in the first
-> > place?
->
-> The split is there because prepare_exit_from_usermode() is used from the
-> idtentry maze as well. Once that stuff is converted in the later series
-> the split goes away again.
->
+Brian Gerst <brgerst@gmail.com> writes:
 
-Okay.
+> On Tue, Feb 25, 2020 at 6:26 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Device interrupts which go through do_IRQ() or the spurious interrupt
+>> handler have their separate entry code on 64 bit for no good reason.
+>>
+>> Both 32 and 64 bit transport the vector number through ORIG_[RE]AX in
+>> pt_regs. Further the vector number is forced to fit into an u8 and is
+>> complemented and offset by 0x80 for historical reasons.
+>
+> The reason for the 0x80 offset is so that the push instruction only
+> takes two bytes.  This allows each entry stub to be packed into a
+> fixed 8 bytes.  idt_setup_apic_and_irq_gates() assumes this 8-byte
+> fixed length for the stubs, so now every odd vector after 0x80 is
+> broken.
+>
+>      508:       6a 7f                   pushq  $0x7f
+>      50a:       e9 f1 08 00 00          jmpq   e00 <common_interrupt>
+>      50f:       90                      nop
+>      510:       68 80 00 00 00          pushq  $0x80
+>      515:       e9 e6 08 00 00          jmpq   e00 <common_interrupt>
+>      51a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+>      520:       68 81 00 00 00          pushq  $0x81
+>      525:       e9 d6 08 00 00          jmpq   e00 <common_interrupt>
+>      52a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+>
+> The 0x81 vector should start at 0x518, not 0x520.
+
+Bah, I somehow missed that big fat comment explaining it. :)
+
+Thanks for catching it. So my testing just has been lucky to not hit one
+of those.
+
+Now the question is whether we care about the packed stubs or just make
+them larger by using alignment to get rid of this silly +0x80 and
+~vector fixup later on. The straight forward thing clearly has its charm
+and I doubt it matters in measurable ways.
+
+Thanks,
+
+        tglx
+
+
