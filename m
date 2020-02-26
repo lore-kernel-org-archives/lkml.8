@@ -2,139 +2,189 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CDEC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A26C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE1021556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745C124680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582732643;
+	bh=LJXR3dlBDlsofcwKbXlza7uFWbxHLvEEwSD50JaCvCo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CjUlQc6OWqL62nFA4T2bCcTha1m01AZuRAcAAaSoVqTn10lcW9NgwaCDHEKJKQpFM
+	 UWx8JzeS4ztHLn4FqLu/uPXTm9LXSlXdNHQdCTOt4hfia1OhplfWczCBpnza2i2iAh
+	 IXDVTeZ8/VFEOWnpVKioop64wJA7LsYdh0/6Qzbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgBZP4m (ORCPT
+        id S1728680AbgBZP5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:56:42 -0500
-Received: from mga07.intel.com ([134.134.136.100]:36551 "EHLO mga07.intel.com"
+        Wed, 26 Feb 2020 10:57:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:37908 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgBZP4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:56:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 07:56:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
-   d="scan'208";a="317457075"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 26 Feb 2020 07:56:41 -0800
-Date:   Wed, 26 Feb 2020 07:56:41 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 58/61] KVM: x86/mmu: Configure max page level during
- hardware setup
-Message-ID: <20200226155641.GC9940@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-59-sean.j.christopherson@intel.com>
- <87blpmlobr.fsf@vitty.brq.redhat.com>
- <20200225210149.GH9245@linux.intel.com>
- <87k149jt38.fsf@vitty.brq.redhat.com>
+        id S1728073AbgBZP5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:57:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CC5330E;
+        Wed, 26 Feb 2020 07:57:21 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BCF33F819;
+        Wed, 26 Feb 2020 07:57:20 -0800 (PST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH v7 00/11] arm64: Branch Target Identification support
+Date:   Wed, 26 Feb 2020 15:57:03 +0000
+Message-Id: <20200226155714.43937-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k149jt38.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 03:55:55PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > On Tue, Feb 25, 2020 at 03:43:36PM +0100, Vitaly Kuznetsov wrote:
-> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> >> 
-> >> > Configure the max page level during hardware setup to avoid a retpoline
-> >> > in the page fault handler.  Drop ->get_lpage_level() as the page fault
-> >> > handler was the last user.
-> >> > @@ -6064,11 +6064,6 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
-> >> >  	}
-> >> >  }
-> >> >  
-> >> > -static int svm_get_lpage_level(void)
-> >> > -{
-> >> > -	return PT_PDPE_LEVEL;
-> >> > -}
-> >> 
-> >> I've probably missed something but before the change, get_lpage_level()
-> >> on AMD was always returning PT_PDPE_LEVEL, but after the change and when
-> >> NPT is disabled, we set max_page_level to either PT_PDPE_LEVEL (when
-> >> boot_cpu_has(X86_FEATURE_GBPAGES)) or PT_DIRECTORY_LEVEL
-> >> (otherwise). This sounds like a change) unless we think that
-> >> boot_cpu_has(X86_FEATURE_GBPAGES) is always true on AMD.
-> >
-> > It looks like a functional change, but isn't.  kvm_mmu_hugepage_adjust()
-> > caps the page size used by KVM's MMU at the minimum of ->get_lpage_level()
-> > and the host's mapping level.  Barring an egregious bug in the kernel MMU,
-> > the host page tables will max out at PT_DIRECTORY_LEVEL (2mb) unless
-> > boot_cpu_has(X86_FEATURE_GBPAGES) is true.
-> >
-> > In other words, this is effectively a "documentation" change.  I'll figure
-> > out a way to explain this in the changelog...
-> >
-> >         max_level = min(max_level, kvm_x86_ops->get_lpage_level());
-> >         for ( ; max_level > PT_PAGE_TABLE_LEVEL; max_level--) {
-> >                 linfo = lpage_info_slot(gfn, slot, max_level);
-> >                 if (!linfo->disallow_lpage)
-> >                         break;
-> >         }
-> >
-> >         if (max_level == PT_PAGE_TABLE_LEVEL)
-> >                 return PT_PAGE_TABLE_LEVEL;
-> >
-> >         level = host_pfn_mapping_level(vcpu, gfn, pfn, slot);
-> >         if (level == PT_PAGE_TABLE_LEVEL)
-> >                 return level;
-> >
-> >         level = min(level, max_level); <---------
-> 
-> Ok, I see (I believe):
-> 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> It would've helped me a bit if kvm_configure_mmu() was written the
-> following way:
-> 
-> void kvm_configure_mmu(bool enable_tdp, int tdp_page_level)
-> {
->         tdp_enabled = enable_tdp;
-> 
-> 	if (boot_cpu_has(X86_FEATURE_GBPAGES))
->                 max_page_level = PT_PDPE_LEVEL;
->         else
->                 max_page_level = PT_DIRECTORY_LEVEL;
-> 
->         if (tdp_enabled)
-> 		max_page_level = min(tdp_page_level, max_page_level);
-> }
-> 
-> (we can't have cpu_has_vmx_ept_1g_page() and not
-> boot_cpu_has(X86_FEATURE_GBPAGES), right?)
+This patch series implements support for ARMv8.5-A Branch Target
+Identification (BTI), which is a control flow integrity protection
+feature introduced as part of the ARMv8.5-A extensions.
 
-Wrong, because VMX.  It could even occur on a real system if the user
-disables the feature via kernel param, e.g. "clearcpuid=58".  In the end it
-won't actually change anything because KVM caps its page size at the kernel
-page size (as above).  Well, unless someone is running a custom kernel that
-does funky things.
+Changes:
 
-> But this is certainly just a personal preference, feel free to ignore)
+v7:
+ - Rebase onto v5.6-rc3.
+ - Move comment about keeping NT_GNU_PROPERTY_TYPE_0 internal into first
+   patch.
+ - Add an explicit check for system_supports_bti() when parsing BTI ELF
+   property for improved robustness.
+v6:
+ - Rebase onto v5.6-rc1.
+ - Fix typos s/BYTPE/BTYPE/ in commit log for "arm64: BTI: Decode BYTPE
+   bits when printing PSTATE".
+v5:
+ - Changed a bunch of -EIO to -ENOEXEC in the ELF parsing code.
+ - Move PSR_BTYPE defines to UAPI.
+ - Use compat_user_mode() rather than open coding.
+ - Fix a typo s/BYTPE/BTYPE/ in syscall.c
+v4:
+ - Dropped patch fixing existing documentation as it has already been merged.
+ - Convert WARN_ON() to WARN_ON_ONCE() in "ELF: Add ELF program property
+   parsing support".
+ - Added display of guarded pages to ptdump.
+ - Updated for conversion of exception handling from assembler to C.
 
-I'm on the fence.  Part of me likes having max_page_level reflect what KVM
-is capable of, irrespective of the kernel.
+Notes:
+
+ * GCC 9 can compile backwards-compatible BTI-enabled code with
+   -mbranch-protection=bti or -mbranch-protection=standard.
+
+ * Binutils trunk supports the new ELF note, but this wasn't in a release
+   the last time I posted this series.  (The situation _might_ have changed
+   in the meantime...)
+
+   Creation of a BTI-enabled binary requires _everything_ linked in to
+   be BTI-enabled.  For now ld --force-bti can be used to override this,
+   but some things may break until the required C library support is in
+   place.
+
+   There is no straightforward way to mark a .s file as BTI-enabled:
+   scraping the output from gcc -S works as a quick hack for now.
+
+   readelf -n can be used to examing the program properties in an ELF
+   file.
+
+ * Runtime mmap() and mprotect() can be used to enable BTI on a
+   page-by-page basis using the new PROT_BTI, but the code in the
+   affected pages still needs to be written or compiled to contain the
+   appopriate BTI landing pads.
+
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
+
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/misc.git arm64-bti
+
+for you to fetch changes up to d6897bb309fc4ef374e1de8242eb94d1fb97c13b:
+
+  arm64: mm: Display guarded pages in ptdump (2020-02-26 12:12:31 +0000)
+
+Dave Martin (10):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+  arm64: Basic Branch Target Identification support
+  elf: Allow arch to tweak initial mmap prot flags
+  arm64: elf: Enable BTI at exec based on ELF program properties
+  arm64: BTI: Decode BYTPE bits when printing PSTATE
+  arm64: unify native/compat instruction skipping
+  arm64: traps: Shuffle code to eliminate forward declarations
+  arm64: BTI: Reset BTYPE when skipping emulated instructions
+  KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+
+Mark Brown (1):
+  arm64: mm: Display guarded pages in ptdump
+
+ Documentation/arm64/cpu-feature-registers.rst |   2 +
+ Documentation/arm64/elf_hwcaps.rst            |   5 +
+ arch/arm64/Kconfig                            |  25 +++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/cpufeature.h           |   6 +
+ arch/arm64/include/asm/elf.h                  |  51 ++++++
+ arch/arm64/include/asm/esr.h                  |   2 +-
+ arch/arm64/include/asm/exception.h            |   1 +
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/kvm_emulate.h          |   6 +-
+ arch/arm64/include/asm/mman.h                 |  37 +++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   1 +
+ arch/arm64/include/asm/pgtable.h              |   2 +-
+ arch/arm64/include/asm/ptrace.h               |   1 +
+ arch/arm64/include/asm/sysreg.h               |   4 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/include/uapi/asm/mman.h            |   9 ++
+ arch/arm64/include/uapi/asm/ptrace.h          |   9 ++
+ arch/arm64/kernel/cpufeature.c                |  33 ++++
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/entry-common.c              |  11 ++
+ arch/arm64/kernel/process.c                   |  36 ++++-
+ arch/arm64/kernel/ptrace.c                    |   2 +-
+ arch/arm64/kernel/signal.c                    |  16 ++
+ arch/arm64/kernel/syscall.c                   |  18 +++
+ arch/arm64/kernel/traps.c                     | 127 +++++++--------
+ arch/arm64/mm/dump.c                          |   5 +
+ fs/Kconfig.binfmt                             |   6 +
+ fs/binfmt_elf.c                               | 145 +++++++++++++++++-
+ fs/compat_binfmt_elf.c                        |   4 +
+ include/linux/elf.h                           |  43 ++++++
+ include/linux/mm.h                            |   3 +
+ include/uapi/linux/elf.h                      |  11 ++
+ 33 files changed, 552 insertions(+), 75 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mman.h
+ create mode 100644 arch/arm64/include/uapi/asm/mman.h
+
+-- 
+2.20.1
+
