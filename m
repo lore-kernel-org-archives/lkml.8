@@ -2,226 +2,133 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8C7C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EA1C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB762468F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4C420656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N40sUK5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgBZQiK (ORCPT
+        id S1727860AbgBZQik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:38:10 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42771 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgBZQiJ (ORCPT
+        Wed, 26 Feb 2020 11:38:40 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54332 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgBZQik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:38:09 -0500
-X-Originating-IP: 93.34.114.233
-Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 4E35B60012;
-        Wed, 26 Feb 2020 16:37:52 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 17:40:40 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>
-Cc:     "niklas.soderlund@ragnatech.se" <niklas.soderlund@ragnatech.se>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Friedrich, Eugen (ADITG/ESM1)" <efriedrich@de.adit-jv.com>,
-        "Rosca, Eugeniu (ADITG/ESM1)" <erosca@de.adit-jv.com>,
-        "Udipi, Suresh (Wipro; LEADER ; ADITJ/SWG)" 
-        <external.sudipi@jp.adit-jv.com>,
-        "akiyama@nds-osk.co.jp" <akiyama@nds-osk.co.jp>
-Subject: Re: [PATCH] [RFC] media: rcar-vin: don't wait for stop state on
- clock lane during start of CSI2
-Message-ID: <20200226164040.rzd3hqqzosqe2sar@uno.localdomain>
-References: <1582026251-21047-1-git-send-email-mrodin@de.adit-jv.com>
- <20200219172456.hyo2aksvubxpoqrn@uno.localdomain>
- <AC35D0CFBC66A84AAA9DF4334B52828D136F94C7@HI2EXCH01.adit-jv.com>
+        Wed, 26 Feb 2020 11:38:40 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QGcaO5059521;
+        Wed, 26 Feb 2020 10:38:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582735116;
+        bh=Y3tqYQtA2KOT83i8aBDzwvA1MW/G9kqRvwSgdkDo8WY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=N40sUK5gOMDaFCdRlsHax/ZXVSpxmArREXCpUh0YIACYZSd7tY0OqSmOGtZhEerTw
+         5iax1SyAvTFQhn3hRksb7ktHFrqUsuCRQ0mc2isuI1oeduxzxbdsTGmncDCi3XJsL9
+         rMNZ5dtBtYOcd/PH15fTtPl5bFVvDvd9g49oekPU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01QGcaAh093694
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 10:38:36 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 10:38:36 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 10:38:36 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QGcaUt102323;
+        Wed, 26 Feb 2020 10:38:36 -0600
+Subject: Re: [PATCH 01/12] dt-bindings: bus: ti-sysc: Add support for PRUSS
+ SYSC type
+To:     Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200225204649.28220-1-s-anna@ti.com>
+ <20200225204649.28220-2-s-anna@ti.com>
+ <96ec493b-3615-e84d-ba30-cabbf750c874@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <b35e278d-c3dd-3356-93c3-0511d3164d7a@ti.com>
+Date:   Wed, 26 Feb 2020 10:38:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3z5pbb5obrrlekpa"
-Content-Disposition: inline
-In-Reply-To: <AC35D0CFBC66A84AAA9DF4334B52828D136F94C7@HI2EXCH01.adit-jv.com>
+In-Reply-To: <96ec493b-3615-e84d-ba30-cabbf750c874@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Roger,
 
---3z5pbb5obrrlekpa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On 2/26/20 2:42 AM, Roger Quadros wrote:
+> Hi Suman,
+> 
+> On 25/02/2020 22:46, Suman Anna wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>>
+>> The PRUSS module has a SYSCFG which is unique. The SYSCFG
+>> has two additional unique fields called STANDBY_INIT and
+>> SUB_MWAIT in addition to regular IDLE_MODE and STANDBY_MODE
+>> fields. Add the bindings for this new sysc type.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>>   Documentation/devicetree/bindings/bus/ti-sysc.txt | 1 +
+>>   include/dt-bindings/bus/ti-sysc.h                 | 4 ++++
+>>   2 files changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt
+>> b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+>> index 233eb8294204..c984143d08d2 100644
+>> --- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
+>> +++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+>> @@ -38,6 +38,7 @@ Required standard properties:
+>>           "ti,sysc-dra7-mcasp"
+>>           "ti,sysc-usb-host-fs"
+>>           "ti,sysc-dra7-mcan"
+>> +        "ti,sysc-pruss"
+>>     - reg        shall have register areas implemented for the
+>> interconnect
+>>           target module in question such as revision, sysc and syss
+>> diff --git a/include/dt-bindings/bus/ti-sysc.h
+>> b/include/dt-bindings/bus/ti-sysc.h
+> 
+> Did you intentionally leave this here? It should be part of 2nd patch?
 
-Hello Michael,
+No, not really, include/bindings are also considered part of bindings.
+This patch alone should be enough for you to add the DT nodes.
 
-On Mon, Feb 24, 2020 at 02:13:08PM +0000, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
-> > On Tue, Feb 18, 2020 at 12:44:11PM +0100, Michael Rodin wrote:
-> > > The chapter 7.1 "D-PHY Physical Layer Option" of the CSI2
-> > > specification states that non-continuous clock behavior is optional,
-> > > i.e. the Clock Lane can remain in high-speed mode between the transmission
-> > of data packets.
-> > > Therefore waiting for the stop state (LP-11) on the Clock Lane is
-> > > wrong and will cause timeouts when a CSI2 transmitter with continuous
-> > > clock behavior is attached to R-Car CSI2 receiver. So wait only for
-> > > the stop state on the Data Lanes.
-> >
-> > Am I wrong or the desired behaviour should depend on the presence of the
-> > clock-noncontinuous property in the CSI-2 input endpoint ?
-> > If clock-noncontinuous is set, then wait for the clock lane to enter stop state
-> > too, if not just wait for the data lanes to stop.
-> >
-> > If this is correct, it will also require a change to the bindings and that's the
-> > tricky part. So far the CSI-2 receiver behaved as the clock-noncontinuous
-> > property was set (wait for both data and clock
-> > lanes) and older dtb should continue to work under this assumption. If you
-> > want to support devices with continuous clock then you have to require the
-> > clock-noncontinuous property to be explicitly set to false, and assume it's true
-> > if not specified. BUT clock-noncontinuous is a boolean property, whose value
-> > depends on it's presence only. So I fear we need to add a 'clock-continuous'
-> > flag to video-interfaces.txt, parse it in the CSI-2 receiver driver, and then ignore
-> > the clock lane stop state if and only if said property is specified.
-> >
-> > Does this make sense ?
-> >
->
-> Hello Jacopo,
->
->  - First of all I am not so sure whether I am interpreting the CSI2 spec correctly,
->    this is also the reason why I marked my patch as [RFC]. So MAYBE waiting for LP-11
->    on the clock lane IS correct at this point in rcar-csi2 and the issue is somewhere else
->    and your suggestion was based on my wrong assumption. Is it possible?
+regards
+Suman
 
-What I read there confirms what you said
+> 
+>> index babd08a1d226..76b07826ed05 100644
+>> --- a/include/dt-bindings/bus/ti-sysc.h
+>> +++ b/include/dt-bindings/bus/ti-sysc.h
+>> @@ -18,6 +18,10 @@
+>>     #define SYSC_DRA7_MCAN_ENAWAKEUP    (1 << 4)
+>>   +/* PRUSS sysc found on AM33xx/AM43xx/AM57xx */
+>> +#define SYSC_PRUSS_SUB_MWAIT        (1 << 5)
+>> +#define SYSC_PRUSS_STANDBY_INIT        (1 << 4)
+>> +
+>>   /* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
+>>   #define SYSC_IDLE_FORCE            0
+>>   #define SYSC_IDLE_NO            1
+>>
+> 
 
-For continuous clock behavior the Clock Lane remains in high-speed mode generating active clock signals
-between the transmission of data packets.
-For non-continuous clock behavior the Clock Lane enters the LP-11 state between the transmission of data
-packets.
-
-and indeed non-continuous is optional.
-
-However, the documented rcar-csi2 PHY start procedure prescribes to
-check for the clock stop state as well, so it is totally plausible the
-receiver requires the clock lane to be in stop state to properly
-intialize. IMX6 does the same, according to imx6-mipi-csi2.c and the
-documentation of the csi2_enable() function there.
-
-Some sensors force clock lane in stop state at power-up to help
-receivers detect LP-11 state, just as an example...
-
-But I think we're a bit mixing two issues here though. non-continous clock
-mode allows clock lane to enter low-power state during frame blanking
-(the LPS state in the CSI-2 specs). This feature as said, is optional,
-as during LPS only data lanes are required to transition to LP-11, as
-it is the initial and final phase of the SoT/EoT procedure as defined
-by the DPHY specs, which delimits an high-speed transmission burst.
-
-What your patch is doing is modifying the condition for the CSI-2 RX
-to properly detect a phy start condition, which I think depends mostly
-on the receiver requirements...
-
-I have missed one thing: do you have a faulty sensor that with this
-patch applied works as intended ?
-
->  - The presence of the "clock-noncontinuous" property is parsed by the V4L2 fwnode library,
->    which sets either V4L2_MBUS_CSI2_CONTINUOUS_CLOCK or V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK.
->    I could not find any upstream CSI2 receiver driver, which reads these flags. Would be rcar-csi2
->    the first driver which reads this property (of a transmitter) at the receiver side?
-
-non-continous is optional, so it's totally plausible.
-
->  - Sorry, but I don't understand your concerns about compatibility to old device trees.
->    If "clock-noncontinuous" exists at the CSI2 transmitter side, it is assumed to be
->    true (since as you mentioned, all boolean properties are true if present) and we
->    would wait for LP-11 on clock lane in rcar-csi2 and older dtbs would continue to
->    work correctly. If this property is not present in a CSI2 transmitter node of an older
->    dtb although this transmitter has this property, then this is a wrong device tree
->    configuration. So the suggested new "clock-continuous" property would be a workaround
->    for supporting incorrect device trees. Should we maintain backwards compatibility in this case?
-
-I'm not concerned on the CSI-2 transmitter node, but older DTB
-describing the rcar csi-2 receiver. If one loads a dtb that had no
-noncontinous clock property  as it was'implied' and suddenly the
-driver acts as you have to specify the property to enable that feature
-otherwise it assumes 'continuous', we then have troubles, as dt
-bindings are an ABI and older DTBs should continue to work as they
-used to. That's why, as you cannot set noncontiuous=false, I suggested
-a counterpart with continous, to make that feature enabled optionally.
-
-Anyway, scratch that, I think we really should decouple the 'phy start
-up procedure' issue from the 'clock continuos/noncontinuos' one.
-
-Are you having issue detecting a clock stop state on your sensor ?
-Does the sensor have a way to set the clock lane to stop state (eg.
-forcing non-continous mode) at power up ?
-
-Thanks
-   j
-
->  - Even if we should maintain backwards compatibility to incorrectly configured device trees
->    (i.e. "clock-noncontinuous" is not specified for CSI2 transmitters with non-continuous clock behavior),
->    it is possibly not an issue in this particular case because we don't have to wait for
->    LP-11 on clock lanes at all since the non-continuous clock behavior is optional according
->    to the chapter 7.1 of the CSI2 specification. So from my understanding a CSI2 receiver
->    which supports only continuous clock behavior would work with both kinds of clock
->    behavior at the transmitter side. On the other side a CSI2 receiver which supports only
->    non-continuous clock behavior (which is currently the behavior implemented in rcar-csi2.c)
->    can not receive anything from a transmitter with continuous clock behavior and would violate CSI2 spec.
->
-> >
-> > >
-> > > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-> > > ---
-> > >  drivers/media/platform/rcar-vin/rcar-csi2.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > index faa9fb2..6d1992a 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > @@ -416,8 +416,7 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
-> > >  	for (timeout = 0; timeout <= 20; timeout++) {
-> > >  		const u32 lane_mask = (1 << priv->lanes) - 1;
-> > >
-> > > -		if ((rcsi2_read(priv, PHCLM_REG) & PHCLM_STOPSTATECKL)
-> > &&
-> > > -		    (rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
-> > > +		if ((rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
-> > >  			return 0;
-> > >
-> > >  		usleep_range(1000, 2000);
-> > > --
-> > > 2.7.4
-> > >
-
---3z5pbb5obrrlekpa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl5Wn4gACgkQcjQGjxah
-VjznhA/+MZCDyZKbhukVGXBSPBox/hOlPcPx3GeKRoEsSM76l0DLGbnYSbs0fWFx
-J/AJL64crdawawB8PNQvSZ0VVkBkMzmhhPKNLNledCV9Mvz/YiI3jitfC5RuHRMK
-HB6mh5i2NETceshUlCSGNpnR+ryoqfwVF/uWFoL4gI4s9oHlxSGlAiPUfGObFwqI
-iDIlohbKLLxdlufCDMVDt1VK3hgtuWWvxGBd8dMoDx3VANsw+uSrWzFanjkjXWva
-pXuuaC/gznK3gdfvrHfB2470mVg8n/JUMfGCud5Qy6pJFU//9THnWuqE0XvNcjy0
-MfoG9BNcSDcld8zT3pHryC1Pl0psIgKDf4MviFL2tIIE/jce0DLx+7o3GUbWeOAo
-926u9fGeXLKy+oHmv4jqYZKAHFRUUHCjmOnXslOu4EFXCy1XKyDNcxOd4Zh66Q/W
-rEpoPVjV0me/0CnbdnSmQKZWcfQViOG8vHsynuzd4oWUoWPrQXVlxicMrduKwN2m
-zUE0ocxuza9R1t/mJBMbYbHAy1kEPwrsnIRNyqtf/2iohQNxrvkz/zX08MiAsXqR
-e3UTHtYlaDCJGN7lP/XQ55IRRVgIQvHeJb8MF27vw5yFLWydxUSlNABOYLKMf5Po
-VYM5apyz7x6tDamP54+wfCwP+0JQPz5993twUan09q62PwGDRZ4=
-=OJd7
------END PGP SIGNATURE-----
-
---3z5pbb5obrrlekpa--
