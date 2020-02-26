@@ -2,136 +2,99 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB5CC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4264C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1646821927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582720779;
-	bh=yLmb625dnwqzKsVcikhQupZPiCcDrP5qDwyZJQNg8fU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RxzdSqHnvpTVXeiALeinQ4t1Bd2OL7eS7Z4303UxeC0iKzvTOvx//54rapcLWfRUF
-	 ePE189TY6RcSrM5FsvdHqMtvyfRYpY4tjo7Qb9ra99DMPis6mi6AhTP8xYZgx8xxpT
-	 fIlIyGBjfbLVSitw9hA22djIL7TBflcZHOrkbisA=
+	by mail.kernel.org (Postfix) with ESMTP id 8A30821927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:43:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQ1YXDo6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgBZMjh (ORCPT
+        id S1726974AbgBZMnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:39:37 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:48067 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBZMjh (ORCPT
+        Wed, 26 Feb 2020 07:43:02 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41770 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgBZMnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:39:37 -0500
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 01QCdFhx001003;
-        Wed, 26 Feb 2020 21:39:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01QCdFhx001003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582720756;
-        bh=z6qp7SEaSbOA0Cr/WUj8Kq3ma/bqB52FhxOA8N293hg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UTNmXnIoVw0zKlH35ac1AIuhM9nDCyqAadFsqaBJaSvtxQ+MhXRHLppb0g8gmVE0W
-         OsJok6c7h0dd8lyuj24KrPnPITlPerl8vGIGBed7ilmJfbp1mBd+gVO2b3pxBwn61c
-         VSqLzq9SC/2QU0ib87HT/sXEnDVqpKucTNPyv4jnWnj8GDTN8Mr3G258r8t/ZhbCLs
-         DPeWshMZaEzWdEVhOneC5jE0D1BwJk9paQrN1W4pUoJgtykLmpECHol6yMkrtbQZD5
-         V8G8U3ivRTxBePqyoSCBQzqPawo22dm9/LeB5/Nwc5a4jo6m/9TGpBArL9MP8l4kGE
-         NpVmLsQeSTjCw==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id y3so911735uae.3;
-        Wed, 26 Feb 2020 04:39:16 -0800 (PST)
-X-Gm-Message-State: APjAAAWSbFp50xKIqlJav4m8KZH5DdeO9YG3uGXpkvvBAuzzuRIkm9ik
-        gc1Be6126Jr8T2jFt3xqn9jhq5iBopK7XeahtZQ=
-X-Google-Smtp-Source: APXvYqyf9xqtC1rv/ZiPRIgGKk1y4cOS41DEgTedKfb27rQDtc9qYO2Orrdk943ow2DQykNU60ao4BFPsyEk9B7aS1g=
-X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr3785026uay.25.1582720755290;
- Wed, 26 Feb 2020 04:39:15 -0800 (PST)
+        Wed, 26 Feb 2020 07:43:01 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so2923646ljc.8;
+        Wed, 26 Feb 2020 04:43:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=naHmwMkEZlsq2F2BdV78t7a2n6KXkH4cArO0DzqKw9s=;
+        b=oQ1YXDo6+jB9aH9a05GU0xwO2NeTx0pZ2jpQW5sC7FObezAamb9GLR1j9y80Vd7PW4
+         5XEffKqjS2T8VLrsMUL0B2r14bi6hf7ak0FjH/qafJEHkGVUiPpOwEC2K/SotBZqNBdT
+         I+xDbdHSXNJZgX2OTKDz5Vc3iMPuXVCPpvMLeAy3NPWzFm1nmue6F3HMibuTpfGnayE+
+         SyzzsNrJ6YpQLC0V2Bkc85eHEJ8Yu/7h9Bj3XtOnkGKqumkYA9Zv2fUGZW4rRP7XZJG1
+         HxEaYpF9FFJMrft2C6sK5HsayCuwHzrqHHWgJ8KAOXTKT0rjr9T+KJL5lwtaAOtbpBc5
+         7TkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=naHmwMkEZlsq2F2BdV78t7a2n6KXkH4cArO0DzqKw9s=;
+        b=EtxSzbmchcmJjktcb4SoSENIZxGQPTQyT8gfAQt+AaA84jxHSfb4421fachBs/J2rx
+         DvKDPyKAuUb2O+tQ8t/YPm97r2A/EWsrKjX/NERI85V1omFPpzwnyatxtA0IT7dP4OEA
+         3GF2FWSFfMPJSC/cPV1ca6KwKaI6EPuTbAZAxfxJ2MWLlgVX+OuBF5o57EBKtdCgxrdt
+         xP3LDGZCgX0jnlDjnoaRvvfKehf2J5uIzW3FLjzjkKcedLdJn/rKNUdcdxU6cOLr2dAm
+         Y5IBCoe6Icq/s75vllkhDOXKrmd0Gy4pfmTRA+Ap7kd85ASVEaI1+sDNGFAyKqz32EUi
+         QgJg==
+X-Gm-Message-State: APjAAAUu7ntuq4HjmiF5nJnG5eToRTDBiGTwdDzfwsBAdL/G8IRD5Nur
+        VViM816/jg3rDqPN2LsG3BdnQVb/NSaeX5YSvwA=
+X-Google-Smtp-Source: ADFU+vtwr9qHZQRp7nOQn9p0PoE3msDjcGJRvRyC8H+RwcRzDCO3GQIm5dNAC1Bue/fML340D2kMrue/X63xSXz+WfQ=
+X-Received: by 2002:a05:651c:d4:: with SMTP id 20mr2838816ljr.269.1582720979846;
+ Wed, 26 Feb 2020 04:42:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20200224174129.2664-1-ndesaulniers@google.com>
- <20200225210250.64366-1-ndesaulniers@google.com> <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
- <CA+icZUWcW3+9QdZcACCXP6Yun__Sm_s4+qM4rALdFf=hGBt3FQ@mail.gmail.com>
-In-Reply-To: <CA+icZUWcW3+9QdZcACCXP6Yun__Sm_s4+qM4rALdFf=hGBt3FQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 26 Feb 2020 21:38:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQX0nFWruCgHDEkZsTKT895ahrAVQT12wuJQ_dUQtVrsg@mail.gmail.com>
-Message-ID: <CAK7LNAQX0nFWruCgHDEkZsTKT895ahrAVQT12wuJQ_dUQtVrsg@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200224062917.4895-1-martin.kepplinger@puri.sm> <20200224062917.4895-2-martin.kepplinger@puri.sm>
+In-Reply-To: <20200224062917.4895-2-martin.kepplinger@puri.sm>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 26 Feb 2020 09:42:49 -0300
+Message-ID: <CAOMZO5BxS-+1=NVgZ4nJcneVGMr7B8sLL+gYidXfgrvPSRB0JQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] arm64: dts: librem5-devkit: enable sai2 and sai6
+ audio interface
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, kernel@puri.sm,
+        Yongcai Huang <Anson.Huang@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 9:26 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+Hi Martin,
+
+On Mon, Feb 24, 2020 at 3:31 AM Martin Kepplinger
+<martin.kepplinger@puri.sm> wrote:
 >
-> On Wed, Feb 26, 2020 at 12:31 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Hi.
-> >
-> >
-> > On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > Added to kbuild documentation. Provides more official info on building
-> > > kernels with Clang and LLVM than our wiki.
-> > >
-> > > Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > ---
-> > > Changes V1 -> V2:
-> > > * s/On going/ongoing/
-> > > * add Randy's Suggested-by
-> >
-> >
-> > I do not understand this tag update.
-> >
-> > As far as I saw the review process,
-> > I do not think Randy deserves to have Suggested-by
-> > because he just pointed out a typo (on going -> ongoing) :
-> > https://patchwork.kernel.org/patch/11401189/#23179575
-> >
-> > (or, was there off-line activity I had missed?)
-> >
+> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 >
-> Hi Masahiro,
+> Add missing sai2 and sai6 audio interface and pinctrl definitions for the
+> Librem 5 devkit.
 >
-> I got some credits from Nick for a review by seeing a typo - not on a
-> review of the code - and H. Peter Anvin asked why.
->
-> I am not sure what is here the correct credit to give.
-> Depends a "Reviewed-by" and/or "Suggested-by" on a technical review?
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 
+Maybe you could rearrange patches 1 and 2 like this:
 
+Add simcom 7100 modem support
+Add sgtl5000 support
 
-Documentation/process/submitting-patches.rst
-
-  13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
-
-is a helpful guideline.
-
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+This way it is clearer where SAI2 and SAI6 ports are actually used.
