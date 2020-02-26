@@ -2,130 +2,114 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FA6C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC0BC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73F624685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:20:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="h2WHtBI0"
+	by mail.kernel.org (Postfix) with ESMTP id 24ECD24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582716035;
+	bh=E2jfh8kdyM/lKmsriyfmmZ8Y+V4tzuvUFmh+a3QBHYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rg5dAtb3h8f/YdquOkkJT5qor6UWD1t5wzlIbCORvZQrGyQvJJfkgh7FqyRWZcF42
+	 8tcP8RRSBvFsQXd28dfKjV0FN+XzZdcBK9R33sj1r8eSfDEH5Q1cu4k8bwOVJRq10t
+	 WuPiHC+Iir7jBmhrc8zxuybJHW7DELzHMllXxMu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgBZLU3 (ORCPT
+        id S1728234AbgBZLUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 26 Feb 2020 06:20:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:34128 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728073AbgBZLU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 06:20:29 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42739 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727860AbgBZLU3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:20:29 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so1297874pfz.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:20:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=cNtk5E6yBg6B3/z5M+SkvidmF9inEE+2d6uICsSh8LM=;
-        b=h2WHtBI07xgxSUSkOp2ZStJaBUlbMbinoEAoe8rZvsKwosN/034yfIaYTuV/R/miue
-         ItQp+1jcSZIOE7SImU0IYxQxmoP9HUatZzweHXMat62gS11374o0ZdCRV4wxdBH37sDO
-         2S8Qchnz4UzanC9KJnFySulPN0I6EBvzhOw/SBrd0SYiXrmzmtkFNgIiF43Gz9rKPchh
-         S17IMmCwoH1hqK7I26vBPylFyMROZujoiv+B9hxje49SLNch/02+A5MbqBFRndth/iC/
-         Eyqji9euLlNOhh+vIadIuL0yW77v3i5CMpq6HrFus+9cnnwWPEeo2uYUHKAYPEGXPBxx
-         ZMKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=cNtk5E6yBg6B3/z5M+SkvidmF9inEE+2d6uICsSh8LM=;
-        b=i/lYdsMTtiVG8cZxtc37z+/wrLhwIZQYHt80lXXQRcOTaANI7taBvQwemPZJDoqQTd
-         4lmNdnzX4u/VNLf8LcbCue0P1e34/UMhRvgsOc9Zt97tBW2fvdfy3/TNCpmeo0bLPmv1
-         IyuplLge+CMR3dNkYLYI7Y2hypOvrKyhUamn2vJy89OeRTT1WFvm/09eAOBbrlp2m0xK
-         3rUwFlTaU1ygF+ZKyJJ5rl/gwotFNho0fd4YPubGWTfYNG1TLtt+Hb7GYTAqt/9JqQhi
-         xrKUK1aSTF/Xvm6/zRUQZCSsyNSEaUuuyqYJPYmds5TjTdtvAwTfN2apiAPEARqk2scA
-         I6Og==
-X-Gm-Message-State: APjAAAUj6YfgxshWWzkThJ5bMt9oI148EqRzGaQ/XEImPCEb2g0cbGmp
-        YEobApONoaSUnLuytETKMwmNQw==
-X-Google-Smtp-Source: APXvYqzDZDT2U2PYi5RGWZ0bGww/ZtcfCXQKFSB0VAa9eJtI8amWjSkDkL8lIQjbEX5yO1pvm5Y57Q==
-X-Received: by 2002:a63:ba05:: with SMTP id k5mr3335463pgf.174.1582716027000;
-        Wed, 26 Feb 2020 03:20:27 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:b477:69e0:6292:cf08? ([2601:646:c200:1ef2:b477:69e0:6292:cf08])
-        by smtp.gmail.com with ESMTPSA id q11sm2708049pff.111.2020.02.26.03.20.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 03:20:26 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to C-code
-Date:   Wed, 26 Feb 2020 03:20:25 -0800
-Message-Id: <83D8A083-792A-4A82-985C-CAC33BC702DB@amacapital.net>
-References: <20200226081726.GQ18400@hirez.programming.kicks-ass.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D624C1FB;
+        Wed, 26 Feb 2020 03:20:28 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A7393FA00;
+        Wed, 26 Feb 2020 03:20:28 -0800 (PST)
+Date:   Wed, 26 Feb 2020 11:20:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-In-Reply-To: <20200226081726.GQ18400@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17D50)
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v6 01/11] ELF: UAPI and Kconfig additions for ELF program
+ properties
+Message-ID: <20200226112027.GA4136@sirena.org.uk>
+References: <20200212192906.53366-1-broonie@kernel.org>
+ <20200212192906.53366-2-broonie@kernel.org>
+ <202002252147.7BFF9EE@keescook>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Content-Disposition: inline
+In-Reply-To: <202002252147.7BFF9EE@keescook>
+X-Cookie: May all your PUSHes be POPped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Feb 26, 2020, at 12:17 AM, Peter Zijlstra <peterz@infradead.org> wrote:=
+On Tue, Feb 25, 2020 at 09:49:35PM -0800, Kees Cook wrote:
 
->=20
-> =EF=BB=BFOn Tue, Feb 25, 2020 at 09:43:46PM -0800, Andy Lutomirski wrote:
->>> On 2/25/20 2:08 PM, Thomas Gleixner wrote:
->>> Now that the C entry points are safe, move the irq flags tracing code in=
-to
->>> the entry helper.
->>=20
->> I'm so confused.
->>=20
->>>=20
->>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->>> ---
->>> arch/x86/entry/common.c          |    5 +++++
->>> arch/x86/entry/entry_32.S        |   12 ------------
->>> arch/x86/entry/entry_64.S        |    2 --
->>> arch/x86/entry/entry_64_compat.S |   18 ------------------
->>> 4 files changed, 5 insertions(+), 32 deletions(-)
->>>=20
->>> --- a/arch/x86/entry/common.c
->>> +++ b/arch/x86/entry/common.c
->>> @@ -57,6 +57,11 @@ static inline void enter_from_user_mode(
->>>  */
->>> static __always_inline void syscall_entry_fixups(void)
->>> {
->>> +    /*
->>> +     * Usermode is traced as interrupts enabled, but the syscall entry
->>> +     * mechanisms disable interrupts. Tell the tracer.
->>> +     */
->>> +    trace_hardirqs_off();
->>=20
->> Your earlier patches suggest quite strongly that tracing isn't safe
->> until enter_from_user_mode().  But trace_hardirqs_off() calls
->> trace_irq_disable_rcuidle(), which looks [0] like a tracepoint.
->>=20
->> Did you perhaps mean to do this *after* enter_from_user_mode()?
->=20
-> aside from the fact that enter_from_user_mode() itself also has a
-> tracepoint, the crucial detail is that we must not trace/kprobe the
-> function calling this.
->=20
-> Specifically for #PF, because we need read_cr2() before this. See later
-> patches.
+> Both BTI and SHSTK depend on this. If BTI doesn't land soon, can this
+> and patch 2 land separately? I don't like seeing the older version in
+> the SHSTK series -- I worry there will be confusion and the BTI version
+> (which is more up to date) will get missed.
 
-Indeed. I=E2=80=99m fine with this patch, but I still don=E2=80=99t understa=
-nd what the changelog is about. And I=E2=80=99m still rather baffled by most=
- of the notrace annotations in the series.=
+Please.
+
+> What's left to land BTI support?
+
+As far as I'm aware it's basically good to go, there's been no really
+substantial feedback in the months I've been pushing it, just fairly
+trivial stuff and rebases - it's going to need another resend for your
+comment just now about moving a hunk forward to a different patch for
+example.
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5WVHcACgkQJNaLcl1U
+h9AcDwf9GZxAN5rdZOpKz4dNmbfGRCoB9nc9O6lSiDkP2JOEtG8pbkeX6TMI39Hm
++x/8gudWU6oq2Yg4KpIdz4QyZ8guZTRdoEsg9e7NJJaYC/JppbOBEsk8tR8qGRDQ
+2ryYp2atIxhfcBQ+KuDEPP9/qMOhCNrDZHwfNe1jI+LtTc3aZ94XgbloqFvno9+B
+2fpH28bHWi8iL+Kk5K7wN78O1dyb+8EkWz/2WXjo2hz5mfEJsAnIR2QnaY2HoJSO
+9t6fLU/TJ21XcOExtnjTB19nWEScEcIltEWCGjWlAGJRxSQyWnlXZaPc4cDjyN+x
+iGx9ujR4FphdpqhQNmWrZOccbdTqwQ==
+=QAgA
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
