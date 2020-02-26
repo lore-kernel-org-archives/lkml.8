@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41646C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E11FC4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140E024653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E9A2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582706217;
-	bh=mSMMXe4CcAPwrz9afb6AoMD/VJD8uxcrEcPdecrZtlw=;
+	s=default; t=1582706373;
+	bh=ytnd76MiJNXHaByv3oTOm1FC8A8dH3TLYQBSH6N48gw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sCd3jQrrhazL+RJbQC90zYVMb/qnJKoPNZ5shnlkggmRDiDL0np5nC5yG2EoG3WV4
-	 bCz4snVG3NP4NyMNpx8P6UqF2eSSLblMPuwya8Q/B+NeggpmD3GG6cYN/xHUCK9TiH
-	 +8gKsla13/klHd0EVTzejqqdEbnkkzPI+UVl1FBM=
+	b=xdgNTVVgET2YK2zyQtAqkc626E5Jn9hepLlIuQVsGRSMOzHG5CsOiyVqx8zFidboN
+	 CKf5saCn3TmVsxXK1X65JOkd++vXiMG4JvNEXQHaOiPFUNILRsyvO5MA43B0kIB3Bn
+	 sjFLQNn7SxD6WwuwwAPDjOQvM+cXBn2a6ywuEMwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgBZIg4 (ORCPT
+        id S1727627AbgBZIjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 03:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbgBZIgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:36:55 -0500
+        id S1727311AbgBZIja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:39:30 -0500
 Received: from localhost (unknown [171.76.87.135])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29CE02084E;
-        Wed, 26 Feb 2020 08:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 543DF2084E;
+        Wed, 26 Feb 2020 08:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582706215;
-        bh=mSMMXe4CcAPwrz9afb6AoMD/VJD8uxcrEcPdecrZtlw=;
+        s=default; t=1582706370;
+        bh=ytnd76MiJNXHaByv3oTOm1FC8A8dH3TLYQBSH6N48gw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=guyZnlti7qGjLVFOsV2v1H4274OP9X9PrO517UFvHX/YLtsJldG8e9m2KALAh647p
-         /h24IJgyBnds7z5baiXtBg5/4aUn4XCAkFN9lt1QTONUuJiHh1KqkWPUk7a3MVX3sp
-         hNijMKb44RT9WYQ7ePo+zA9g1pqUw0p8EesVOn18=
-Date:   Wed, 26 Feb 2020 14:06:44 +0530
+        b=FobR3kDeMc1b6SJ5ntF1e9FyWd/X3c7IvZrwuxwC/70H3/1rHSIuOosbIGG/lAsE7
+         VKNIIjqgD1ObRpAcNKqEOai3Jn1N+ldb9md4zeD9+pItvanmPMDN8iiaft+uucIGby
+         /k05jk3I/ePWBdlL4K8W/IdNQwz42NrPMH6P2p18=
+Date:   Wed, 26 Feb 2020 14:09:26 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
@@ -48,63 +48,25 @@ Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Bard liao <yung-chuan.liao@linux.intel.com>,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>
-Subject: Re: [PATCH 0/3] SoundWire: ASoC interfaces for multi-cpu dais and
- DisCo helpers
-Message-ID: <20200226083644.GV2618@vkoul-mobl>
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 1/3] soundwire: cadence: remove useless prototypes
+Message-ID: <20200226083926.GW2618@vkoul-mobl>
 References: <20200225170041.23644-1-pierre-louis.bossart@linux.intel.com>
+ <20200225170041.23644-2-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225170041.23644-1-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20200225170041.23644-2-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 25-02-20, 11:00, Pierre-Louis Bossart wrote:
-> The first two patches prepare the support of multi-cpu dais for
-> synchronized playback and capture. We remove an unused set of
+> These prototypes are no longer used, remove.
 
-Can you explain how this set does that..?
-
-> prototypes and add a get_sdw_stream() callback prototype currently
-
-Right, how does something which is unused and getting removed help in
-supporting multi-cpu dais?
-
-> missing (the implementation will come later as part of the
-> synchronized playback)
-
-I guess Mark can comment on this but we really want to see users of APIs
-as well.
-
-> The last exposes macros used internally, so that they can be reused to
-> extract information from the _ADR 64-bit values in SOF platform
-> drivers and related machine drivers.
-
-On it is own, i think 1st and last patch look fine to me, so I guess I
-will go ahead and apply them. I can understand that last one can be used
-by SOF driver so can be pulled by Mark, will put on topic branch..
-
-> I think it's simpler if all these simple patches are merged through
-> the SoundWire tree. With the additional changes to remove the platform
-> drivers and the merge of interrupt handling, that will result in a
-> single immutable tag provided to Mark Brown.
-> 
-> Pierre-Louis Bossart (3):
->   soundwire: cadence: remove useless prototypes
->   ASoC: soc-dai: add get_sdw_stream() callback
->   soundwire: add helper macros for devID fields
-> 
->  drivers/soundwire/bus.c            | 21 +++++----------------
->  drivers/soundwire/cadence_master.h |  8 --------
->  include/linux/soundwire/sdw.h      | 23 +++++++++++++++++++++++
->  include/sound/soc-dai.h            | 21 +++++++++++++++++++++
->  4 files changed, 49 insertions(+), 24 deletions(-)
-> 
-> -- 
-> 2.20.1
+Applied, thanks
 
 -- 
 ~Vinod
