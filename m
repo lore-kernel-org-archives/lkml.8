@@ -2,251 +2,113 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4838C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BF1C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835BE21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0D421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EZp2hEHO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WAIm8ZxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBZFEM (ORCPT
+        id S1726859AbgBZFEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:04:12 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:52277 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgBZFEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:04:11 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48S3cT0cX2z9ty2Q;
-        Wed, 26 Feb 2020 06:04:09 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=EZp2hEHO; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WvuH9LdbP1UZ; Wed, 26 Feb 2020 06:04:09 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48S3cS3kKTz9tyKl;
-        Wed, 26 Feb 2020 06:04:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582693448; bh=qvGyrJUB2UgET9i5VAoLlLv2pl3urJV01OstLvVnLRM=;
-        h=From:Subject:To:CC:In-Reply-To:Date:From;
-        b=EZp2hEHO0pdBb20cc3MdgS1Mo6rQSCJIXFnmROVUmobfowpfOaE01gJm77QHGUZm3
-         bgDroXooY+b+Hrp01223ZLuWVGSaVVG1x7H9eUsWFKICQ2MQbXE8g7AcdwqWjxZB15
-         mdHPuLUtLtll5V6SO314uk9dOcHX9PmAZMDoSMGk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A2748B784;
-        Wed, 26 Feb 2020 06:04:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VXbsOtQ5DCG4; Wed, 26 Feb 2020 06:04:09 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4BA1A8B776;
-        Wed, 26 Feb 2020 06:04:08 +0100 (CET)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0A31D653EF; Wed, 26 Feb 2020 05:04:07 +0000 (UTC)
-Message-Id: <92d936b83e47f6a65866ca2d39a0d5bfefba6279.1582693094.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH] Use IS_ENABLED() instead of #ifdefs
-To:     Jason Yan <yanaijie@huawei.com>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-In-Reply-To: <d3647cce-ece3-d302-f541-b02b1f2b5e9e@huawei.com>
-Date:   Wed, 26 Feb 2020 05:04:07 +0000 (UTC)
+        Wed, 26 Feb 2020 00:04:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42976 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgBZFEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 00:04:54 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q54jdP108863;
+        Tue, 25 Feb 2020 23:04:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582693485;
+        bh=lqo6WX/964Fl5gY3pdCYG1dMDaUlkKD2Xu8LIxhgs0s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WAIm8ZxSz+Ibq4sKWxexlByz1bt0/I3srvNikSmCtzyskb5k83CDW+wt+z1WsZ3TG
+         U48FG6kcMGrLPncbRgTqYzWlGgAuFbeCKDNW70VNBvPmJW7MuiMeyZKeKlsfael7gh
+         SQxkoLjsj2hADTMCzJjrPqlW9G7+hQvXg3dZD86w=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q54jP5071349;
+        Tue, 25 Feb 2020 23:04:45 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 25
+ Feb 2020 23:04:45 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 25 Feb 2020 23:04:45 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q54gcf045552;
+        Tue, 25 Feb 2020 23:04:43 -0600
+Subject: Re: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA
+ support to transfer data
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+CC:     <amurray@thegoodpenguin.co.uk>, <arnd@arndb.de>,
+        <bhelgaas@google.com>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <lorenzo.pieralisi@arm.com>
+References: <20200225091130.29467-1-kishon@ti.com>
+ <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <7e1202a3-037b-d1f3-f2bf-1b8964787ebd@ti.com>
+Date:   Wed, 26 Feb 2020 10:39:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
-This works for me. Only had to leave the #ifdef around the map_mem_in_cams()
-Also had to set linear_sz and ram for the alternative case, otherwise I get
+Hi Alan,
 
+On 26/02/20 2:41 am, Alan Mikhak wrote:
+> @@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>         int bar;
+> 
+>         cancel_delayed_work(&epf_test->cmd_handler);
+> +       pci_epf_clean_dma_chan(epf_test);
+>         pci_epc_stop(epc);
+>         for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+>                 epf_bar = &epf->bar[bar];
+> @@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>                 }
+>         }
+> 
+> +       epf_test->dma_supported = true;
+> +
+> +       ret = pci_epf_init_dma_chan(epf_test);
+> +       if (ret)
+> +               epf_test->dma_supported = false;
+> +
+>         if (linkup_notifier) {
+>                 epf->nb.notifier_call = pci_epf_test_notifier;
+>                 pci_epc_register_notifier(epc, &epf->nb);
+> 
+> Hi Kishon,
+> 
+> Looking forward to building and trying this patch series on
+> a platform I work on.
+> 
+> Would you please point me to where I can find the patches
+> which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
+> to Linux PCI Endpoint Framework?
 
+I've added these functions in pci-epf-test itself instead of adding in
+the core files. I realized adding it in core files may not be helpful if
+the endpoint function decides to use more number of DMA channels etc.,
 
-arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
-arch/powerpc/mm/nohash/kaslr_booke.c:355:33: error: 'linear_sz' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  regions.pa_end = memstart_addr + linear_sz;
-                   ~~~~~~~~~~~~~~^~~~~~~~~~~
-arch/powerpc/mm/nohash/kaslr_booke.c:315:21: note: 'linear_sz' was declared here
-  unsigned long ram, linear_sz;
-                     ^~~~~~~~~
-arch/powerpc/mm/nohash/kaslr_booke.c:187:8: error: 'ram' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  ret = parse_crashkernel(boot_command_line, size, &crash_size,
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     &crash_base);
-     ~~~~~~~~~~~~
-arch/powerpc/mm/nohash/kaslr_booke.c:315:16: note: 'ram' was declared here
-  unsigned long ram, linear_sz;
-
----
- arch/powerpc/mm/mmu_decl.h           |  2 +-
- arch/powerpc/mm/nohash/kaslr_booke.c | 97 +++++++++++++++-------------
- 2 files changed, 52 insertions(+), 47 deletions(-)
-
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index b869ea893301..3700e7c04e51 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -139,9 +139,9 @@ extern unsigned long calc_cam_sz(unsigned long ram, unsigned long virt,
- extern void adjust_total_lowmem(void);
- extern int switch_to_as1(void);
- extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
-+#endif
- void create_kaslr_tlb_entry(int entry, unsigned long virt, phys_addr_t phys);
- extern int is_second_reloc;
--#endif
- 
- void reloc_kernel_entry(void *fdt, long addr);
- extern void loadcam_entry(unsigned int index);
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index c6f5c1db1394..bf69cece9b8c 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -267,35 +267,37 @@ static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long rando
- 	unsigned long start;
- 	unsigned long offset;
- 
--#ifdef CONFIG_PPC32
--	/*
--	 * Decide which 64M we want to start
--	 * Only use the low 8 bits of the random seed
--	 */
--	unsigned long index = random & 0xFF;
--	index %= regions.linear_sz / SZ_64M;
--
--	/* Decide offset inside 64M */
--	offset = random % (SZ_64M - regions.kernel_size);
--	offset = round_down(offset, SZ_16K);
-+	if (IS_ENABLED(CONFIG_PPC32)) {
-+		unsigned long index;
-+
-+		/*
-+		 * Decide which 64M we want to start
-+		 * Only use the low 8 bits of the random seed
-+		 */
-+		index = random & 0xFF;
-+		index %= regions.linear_sz / SZ_64M;
-+
-+		/* Decide offset inside 64M */
-+		offset = random % (SZ_64M - regions.kernel_size);
-+		offset = round_down(offset, SZ_16K);
-+
-+		while ((long)index >= 0) {
-+			offset = memstart_addr + index * SZ_64M + offset;
-+			start = memstart_addr + index * SZ_64M;
-+			koffset = get_usable_address(dt_ptr, start, offset);
-+			if (koffset)
-+				break;
-+			index--;
-+		}
-+	} else {
-+		/* Decide kernel offset inside 1G */
-+		offset = random % (SZ_1G - regions.kernel_size);
-+		offset = round_down(offset, SZ_64K);
- 
--	while ((long)index >= 0) {
--		offset = memstart_addr + index * SZ_64M + offset;
--		start = memstart_addr + index * SZ_64M;
-+		start = memstart_addr;
-+		offset = memstart_addr + offset;
- 		koffset = get_usable_address(dt_ptr, start, offset);
--		if (koffset)
--			break;
--		index--;
- 	}
--#else
--	/* Decide kernel offset inside 1G */
--	offset = random % (SZ_1G - regions.kernel_size);
--	offset = round_down(offset, SZ_64K);
--
--	start = memstart_addr;
--	offset = memstart_addr + offset;
--	koffset = get_usable_address(dt_ptr, start, offset);
--#endif
- 
- 	if (koffset != 0)
- 		koffset -= memstart_addr;
-@@ -342,6 +344,8 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
- 	/* If the linear size is smaller than 64M, do not randmize */
- 	if (linear_sz < SZ_64M)
- 		return 0;
-+#else
-+	linear_sz = ram = size;
- #endif
- 
- 	/* check for a reserved-memory node and record its cell sizes */
-@@ -373,17 +377,19 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- {
- 	unsigned long offset;
- 	unsigned long kernel_sz;
-+	unsigned int *__kaslr_offset;
-+	unsigned int *__run_at_load;
- 
--#ifdef CONFIG_PPC64
--	unsigned int *__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
--	unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
-+	if (IS_ENABLED(CONFIG_PPC64)) {
-+		__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
-+		__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
- 
--	if (*__run_at_load == 1)
--		return;
-+		if (*__run_at_load == 1)
-+			return;
- 
--	/* Setup flat device-tree pointer */
--	initial_boot_params = dt_ptr;
--#endif
-+		/* Setup flat device-tree pointer */
-+		initial_boot_params = dt_ptr;
-+	}
- 
- 	kernel_sz = (unsigned long)_end - (unsigned long)_stext;
- 
-@@ -394,20 +400,19 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
- 	kernstart_virt_addr += offset;
- 	kernstart_addr += offset;
- 
--#ifdef CONFIG_PPC32
--	is_second_reloc = 1;
--
--	if (offset >= SZ_64M) {
--		unsigned long tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
--		phys_addr_t tlb_phys = round_down(kernstart_addr, SZ_64M);
-+	if (IS_ENABLED(CONFIG_PPC32)) {
-+		is_second_reloc = 1;
-+		if (offset >= SZ_64M) {
-+			unsigned long tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
-+			phys_addr_t tlb_phys = round_down(kernstart_addr, SZ_64M);
- 
--		/* Create kernel map to relocate in */
--		create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
-+			/* Create kernel map to relocate in */
-+			create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
-+		}
-+	} else {
-+		*__kaslr_offset = kernstart_virt_addr - KERNELBASE;
-+		*__run_at_load = 1;
- 	}
--#else
--	*__kaslr_offset = kernstart_virt_addr - KERNELBASE;
--	*__run_at_load = 1;
--#endif
- 
- 	/* Copy the kernel to it's new location and run */
- 	memcpy((void *)kernstart_virt_addr, (void *)_stext, kernel_sz);
--- 
-2.25.0
-
+Thanks
+Kishon
