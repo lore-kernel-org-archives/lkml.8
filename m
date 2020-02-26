@@ -2,108 +2,165 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C823C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A98C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF5624685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED7B24687
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="tksybeQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgBZLob (ORCPT
+        id S1728377AbgBZLpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:44:31 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:60318 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726440AbgBZLoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:44:30 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QBhANQ010112;
-        Wed, 26 Feb 2020 06:44:22 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydcjt9uk8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 06:44:22 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01QBiKUe022009
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 26 Feb 2020 06:44:20 -0500
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 26 Feb 2020 03:44:19 -0800
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 26 Feb 2020 03:43:54 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 26 Feb 2020 03:44:19 -0800
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01QBiEll030621;
-        Wed, 26 Feb 2020 06:44:15 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <gregkh@linuxfoundation.org>, <linux-integrity@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <peterhuewe@gmx.de>, <jarkko.sakkinen@linux.intel.com>,
-        <jgg@ziepe.ca>, <arnd@arndb.de>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH] Char: tpm_tis_spi_cr50: use new structure for SPI transfer delays
-Date:   Wed, 26 Feb 2020 13:43:47 +0200
-Message-ID: <20200226114347.27126-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 26 Feb 2020 06:45:40 -0500
+Received: from mail-bn8nam11on2044.outbound.protection.outlook.com ([40.107.236.44]:63712
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726408AbgBZLpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:45:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NRCSDnkUHnCTMNLNcLYQ1s32T1t5+o2sZruj84bhuq7Q5bg3M5clHcJ/s7TrqobYqUZSvn7aME2azN1xWfmSmnT7p2pc8hdPewQk3EfSIbFMbIumNwbm3QTw7TcZROzYuXRbw4vFMivuG9XsYvjEndnaHQHw4sbDxJIU9C7gWJRrOxZpTgV7R1eQwyZEfkEVorUUoUvIrOpU8a2O8SQ8oSwgqzp6f74Eyl/H6uAtCJbSj9W4Fyt4LjOfHvMr3ChzgSaRSn/tzpNsm1ysTF6iQ6dXDT0khV9pRSXMWADdJL1X/rkwi+AWcvtgUguG1NAwc6hDye0p75TbV3DqcD4qzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V0Tx7cla70Wkr8H22Zw/p/rcnoWUa/OGSukspUoawkY=;
+ b=Tx2nLzDhOYt7SJvZPcSfkFp95jicVpJmq8Bnb4kq0/ZwVWqiqdUWnKtx8WbsXFk1cYp5zqVzxRIFYTAm2N1TH9ve9QsjtCnjqlwnavYGV+jgOxhK5GUPJY9NJf6/XvFUp0M9dGdq0ymFuNmLKLZPmuf+xepkeKbMIJYHLsJqRI6sispOJpbernUluiJfjBhVpaBqt6d076PL9ZlWYvqn9q8UlYu1iEka7NHVptQg/3Cunr69ZAcmiQZiFcwarKosbpM+FrFDx0bKxR7bJVi/LgRDoR+P7LZ0PbqTqOu8QT3FwDBymFTNWdBMkgL5y0oZkTMdiVS5n8KyUNQMAFPs/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V0Tx7cla70Wkr8H22Zw/p/rcnoWUa/OGSukspUoawkY=;
+ b=tksybeQ7L4Ycfe6w3FFgEldEUoVbVwumHWzLJi9hqpR8jgyblOJUc7iGWOALEg9rEfbr8LmWk0Mw5zcrU8fp+xkFGIBREqAp2vmbYNm7YEuLZce6rj15SyQOVL3lRsuNgutFhOZZl18kB+ETE5XXZ3vMSaCGQJZ7NBDVxyNZ1Xw=
+Received: from SN6PR05MB4237.namprd05.prod.outlook.com (2603:10b6:805:27::32)
+ by SN6PR05MB4878.namprd05.prod.outlook.com (2603:10b6:805:9c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Wed, 26 Feb
+ 2020 11:45:35 +0000
+Received: from SN6PR05MB4237.namprd05.prod.outlook.com
+ ([fe80::4da8:aefe:5436:af32]) by SN6PR05MB4237.namprd05.prod.outlook.com
+ ([fe80::4da8:aefe:5436:af32%4]) with mapi id 15.20.2772.012; Wed, 26 Feb 2020
+ 11:45:35 +0000
+From:   Rajender M <manir@vmware.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: Performance impact in networking data path tests in Linux 5.5
+ Kernel
+Thread-Topic: Performance impact in networking data path tests in Linux 5.5
+ Kernel
+Thread-Index: AQHV6wVoaIB7e06hTEGauTCQiUGTXKgtPbEAgAB8+QA=
+Date:   Wed, 26 Feb 2020 11:45:34 +0000
+Message-ID: <A6BD9BBB-B087-4A3C-BF3D-557626AC233A@vmware.com>
+References: <C7D5F99D-B8DB-462B-B665-AE268CDE90D2@vmware.com>
+ <CAKfTPtA9275amW4wAnCZpW3bVRv0HssgMJ_YgPzZDRZ3A1rbVg@mail.gmail.com>
+In-Reply-To: <CAKfTPtA9275amW4wAnCZpW3bVRv0HssgMJ_YgPzZDRZ3A1rbVg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=manir@vmware.com; 
+x-originating-ip: [122.182.233.20]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1fe9a142-b952-42a6-047e-08d7bab1644c
+x-ms-traffictypediagnostic: SN6PR05MB4878:
+x-microsoft-antispam-prvs: <SN6PR05MB4878D47A82EED633C68E1DCDD6EA0@SN6PR05MB4878.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0325F6C77B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(189003)(199004)(6506007)(6486002)(6916009)(6512007)(2616005)(33656002)(186003)(26005)(2906002)(4326008)(8936002)(478600001)(66946007)(8676002)(66476007)(71200400001)(91956017)(76116006)(64756008)(316002)(66446008)(5660300002)(54906003)(36756003)(81166006)(66556008)(81156014)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR05MB4878;H:SN6PR05MB4237.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s0pGQ5392cuPsBQyxZ+WmOmJK1yMHDaUs6eyNV7FcrNXrYX6zCcjWffO8rd3FayrivZaN0S+zvrO29vK7BdGvbT7LEDFPzfJTizuE97/Z4G146hjUKs5IAoOqwusn5n6HNlgsjqtv8CoVadVSo5GdQQVLp8ntdBzBKRks28Fgrg+ePftLtXTLt2lknio/EtA7gX9x1ks+TA6v8s5oftARGRlihfjuUh+5tfQ/kraxajfw89TJmT4IL69+cN9RqFJZG1YVMENtJYpFMxjQKijiiW9m8Q0HXrESMbcQTpx9+xow1uU2bBC7TQVIP5JeaME21Ec4LADEHf8P+f/qMT5kF0ZUZgCPVB9L4+C6tf87CXiAqLVefIAnqvOAvPIkm/B9iL4wOm16fj9OyMXfadFTFS1UsV5z9cl5igyfHJaOUw2iL5FNiW681VLjNS9TmPI
+x-ms-exchange-antispam-messagedata: QZreUTo8l+xvCMP6pYT0Ohnhy4hd74YHuQhLoxBiYmS6Kyamlbp4lz12rfMDGFHo90bx2wfAKBRFxEt4P7fmjvmaj7PbN23ySkPPlB4BsiKfIyfqzubW8zTdwFf9Q85dlY6WhL69MhwF2eiB3Fpgtg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D1E3DD18AA4284418EB6F514A941E721@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_03:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- spamscore=0 clxscore=1011 priorityscore=1501 impostorscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002260087
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fe9a142-b952-42a6-047e-08d7bab1644c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 11:45:34.8616
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: J0lWoyYjan5flIiWPqOXi2zkx4N0xNAFF8A+6mHuKXVkD1OZPlh6A2+9hfwVjbR7/bZzZ2qa90cazWdECPqy6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR05MB4878
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
-
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
-
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
-
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/char/tpm/tpm_tis_spi_cr50.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/tpm/tpm_tis_spi_cr50.c b/drivers/char/tpm/tpm_tis_spi_cr50.c
-index 37d72e818335..ea759af25634 100644
---- a/drivers/char/tpm/tpm_tis_spi_cr50.c
-+++ b/drivers/char/tpm/tpm_tis_spi_cr50.c
-@@ -132,7 +132,12 @@ static void cr50_wake_if_needed(struct cr50_spi_phy *cr50_phy)
- 
- 	if (cr50_needs_waking(cr50_phy)) {
- 		/* Assert CS, wait 1 msec, deassert CS */
--		struct spi_transfer spi_cs_wake = { .delay_usecs = 1000 };
-+		struct spi_transfer spi_cs_wake = {
-+			.delay = {
-+				.value = 1000,
-+				.unit = SPI_DELAY_UNIT_USECS
-+			}
-+		};
- 
- 		spi_sync_transfer(phy->spi_device, &spi_cs_wake, 1);
- 		/* Wait for it to fully wake */
--- 
-2.17.1
-
+VGhhbmtzIGZvciB5b3VyIHJlc3BvbnNlLCBWaW5jZW50LiANCkp1c3QgY3VyaW91cyB0byBrbm93
+LCBpZiB0aGVyZSBhcmUgYW55IHJvb20gZm9yIG9wdGltaXppbmcgDQp0aGUgYWRkaXRpb25hbCBD
+UFUgY29zdC4gDQoNCg0K77u/T24gMjYvMDIvMjAsIDM6MTggUE0sICJWaW5jZW50IEd1aXR0b3Qi
+IDx2aW5jZW50Lmd1aXR0b3RAbGluYXJvLm9yZz4gd3JvdGU6DQoNCiAgICBIaSBSYWplbmRlciwN
+CiAgICANCiAgICBPbiBUdWUsIDI1IEZlYiAyMDIwIGF0IDA2OjQ2LCBSYWplbmRlciBNIDxtYW5p
+ckB2bXdhcmUuY29tPiB3cm90ZToNCiAgICA+DQogICAgPiBBcyBwYXJ0IG9mIFZNd2FyZSdzIHBl
+cmZvcm1hbmNlIHJlZ3Jlc3Npb24gdGVzdGluZyBmb3IgTGludXggS2VybmVsIHVwc3RyZWFtDQog
+ICAgPiAgcmVsZWFzZXMsIHdoZW4gY29tcGFyaW5nIExpbnV4IDUuNSBrZXJuZWwgYWdhaW5zdCBM
+aW51eCA1LjQga2VybmVsLCB3ZSBub3RpY2VkDQogICAgPiAyMCUgaW1wcm92ZW1lbnQgaW4gbmV0
+d29ya2luZyB0aHJvdWdocHV0IHBlcmZvcm1hbmNlIGF0IHRoZSBjb3N0IG9mIGEgMzAlDQogICAg
+PiBpbmNyZWFzZSBpbiB0aGUgQ1BVIHV0aWxpemF0aW9uLg0KICAgIA0KICAgIFRoYW5rcyBmb3Ig
+dGVzdGluZyBhbmQgc2hhcmluZyByZXN1bHRzIHdpdGggdXMuIEl0J3MgYWx3YXlzDQogICAgaW50
+ZXJlc3RpbmcgdG8gZ2V0IGZlZWRiYWNrcyBmcm9tIHZhcmlvdXMgdGVzdHMgY2FzZXMNCiAgICAN
+CiAgICA+DQogICAgPiBBZnRlciBwZXJmb3JtaW5nIHRoZSBiaXNlY3QgYmV0d2VlbiA1LjQgYW5k
+IDUuNSwgd2UgaWRlbnRpZmllZCB0aGUgcm9vdCBjYXVzZQ0KICAgID4gb2YgdGhpcyBiZWhhdmlv
+dXIgdG8gYmUgYSBzY2hlZHVsaW5nIGNoYW5nZSBmcm9tIFZpbmNlbnQgR3VpdHRvdCdzDQogICAg
+PiAyYWI0MDkyZmM4MmQgKCJzY2hlZC9mYWlyOiBTcHJlYWQgb3V0IHRhc2tzIGV2ZW5seSB3aGVu
+IG5vdCBvdmVybG9hZGVkIikuDQogICAgPg0KICAgID4gVGhlIGltcGFjdGVkIHRlc3RjYXNlcyBh
+cmUgVENQX1NUUkVBTSBTRU5EICYgUkVDViDigJMgb24gYm90aCBzbWFsbA0KICAgID4gKDhLIHNv
+Y2tldCAmIDI1NkIgbWVzc2FnZSkgJiBsYXJnZSAoNjRLIHNvY2tldCAmIDE2SyBtZXNzYWdlKSBw
+YWNrZXQgc2l6ZXMuDQogICAgPg0KICAgID4gV2UgYmFja2VkIG91dCBWaW5jZW50J3MgY29tbWl0
+ICYgcmVyYW4gb3VyIG5ldHdvcmtpbmcgdGVzdHMgYW5kIGZvdW5kIHRoYXQNCiAgICA+IHRoZSBw
+ZXJmb3JtYW5jZSB3ZXJlIHNpbWlsYXIgdG8gNS40IGtlcm5lbCAtIGltcHJvdmVtZW50cyBpbiBu
+ZXR3b3JraW5nIHRlc3RzDQogICAgPiB3ZXJlIG5vIG1vcmUuDQogICAgPg0KICAgID4gSW4gb3Vy
+IGN1cnJlbnQgbmV0d29yayBwZXJmb3JtYW5jZSB0ZXN0aW5nLCB3ZSB1c2UgSW50ZWwgMTBHIE5J
+QyB0byBldmFsdWF0ZQ0KICAgID4gYWxsIExpbnV4IEtlcm5lbCByZWxlYXNlcy4gSW4gb3JkZXIg
+dG8gY29uZmlybSB0aGF0IHRoZSBpbXBhY3QgaXMgYWxzbyBzZWVuIGluDQogICAgPiBoaWdoZXIg
+YmFuZHdpZHRoIE5JQywgd2UgcmVwZWF0ZWQgdGhlIHNhbWUgdGVzdCBjYXNlcyB3aXRoIEludGVs
+IDQwRyBhbmQNCiAgICA+IHdlIHdlcmUgYWJsZSB0byByZXByb2R1Y2UgdGhlIHNhbWUgYmVoYXZp
+b3VyIC0gMjUlIGltcHJvdmVtZW50cyBpbg0KICAgID4gdGhyb3VnaHB1dCB3aXRoIDEwJSBtb3Jl
+IENQVSBjb25zdW1wdGlvbi4NCiAgICA+DQogICAgPiBUaGUgb3ZlcmFsbCByZXN1bHRzIGluZGlj
+YXRlIHRoYXQgdGhlIG5ldyBzY2hlZHVsZXIgY2hhbmdlIGhhcyBpbnRyb2R1Y2VkDQogICAgPiBt
+dWNoIGJldHRlciBuZXR3b3JrIHRocm91Z2hwdXQgcGVyZm9ybWFuY2UgYXQgdGhlIGNvc3Qgb2Yg
+aW5jcmVtZW50YWwNCiAgICA+IENQVSB1c2FnZS4gVGhpcyBjYW4gYmUgc2VlbiBhcyBleHBlY3Rl
+ZCBiZWhhdmlvciBiZWNhdXNlIG5vdyB0aGUNCiAgICA+IFRDUCBzdHJlYW1zIGFyZSBldmVubHkg
+c3ByZWFkIGFjcm9zcyBhbGwgdGhlIENQVXMgYW5kIGV2ZW50dWFsbHkgZHJpdmVzDQogICAgPiBt
+b3JlIG5ldHdvcmsgcGFja2V0cywgd2l0aCBhZGRpdGlvbmFsIENQVSBjb25zdW1wdGlvbi4NCiAg
+ICA+DQogICAgPg0KICAgID4gV2UgaGF2ZSBhbHNvIGNvbmZpcm1lZCB0aGlzIHRoZW9yeSBieSBw
+YXJzaW5nIHRoZSBFU1ggc3RhdHMgZm9yIDUuNCBhbmQgNS41DQogICAgPiBrZXJuZWxzIGluIGEg
+NHZDUFUgVk0gcnVubmluZyA4IFRDUCBzdHJlYW1zIC0gYXMgc2hvd24gYmVsb3c7DQogICAgPg0K
+ICAgID4gNS40IGtlcm5lbDoNCiAgICA+ICAgIjIxMzIxNDkiOiB7ImlkIjogMjEzMjE0OSwgInVz
+ZWQiOiA5NC4zNywgInJlYWR5IjogMC4wMSwgImNzdHAiOiAwLjAwLCAibmFtZSI6ICJ2bXgtdmNw
+dS0wOnJoZWw3eDY0LTAiLA0KICAgID4gICAiMjEzMjE1MSI6IHsiaWQiOiAyMTMyMTUxLCAidXNl
+ZCI6IDAuMTMsICJyZWFkeSI6IDAuMDAsICJjc3RwIjogMC4wMCwgIm5hbWUiOiAidm14LXZjcHUt
+MTpyaGVsN3g2NC0wIiwNCiAgICA+ICAgIjIxMzIxNTIiOiB7ImlkIjogMjEzMjE1MiwgInVzZWQi
+OiA5LjA3LCAicmVhZHkiOiAwLjAzLCAiY3N0cCI6IDAuMDAsICJuYW1lIjogInZteC12Y3B1LTI6
+cmhlbDd4NjQtMCIsDQogICAgPiAgICIyMTMyMTUzIjogeyJpZCI6IDIxMzIxNTMsICJ1c2VkIjog
+MzQuNzcsICJyZWFkeSI6IDAuMDEsICJjc3RwIjogMC4wMCwgIm5hbWUiOiAidm14LXZjcHUtMzpy
+aGVsN3g2NC0wIiwNCiAgICA+DQogICAgPiA1LjUga2VybmVsOg0KICAgID4gICAiMjEzMjA0MSI6
+IHsiaWQiOiAyMTMyMDQxLCAidXNlZCI6IDU1LjcwLCAicmVhZHkiOiAwLjAxLCAiY3N0cCI6IDAu
+MDAsICJuYW1lIjogInZteC12Y3B1LTA6cmhlbDd4NjQtMCIsDQogICAgPiAgICIyMTMyMDQzIjog
+eyJpZCI6IDIxMzIwNDMsICJ1c2VkIjogNDcuNTMsICJyZWFkeSI6IDAuMDEsICJjc3RwIjogMC4w
+MCwgIm5hbWUiOiAidm14LXZjcHUtMTpyaGVsN3g2NC0wIiwNCiAgICA+ICAgIjIxMzIwNDQiOiB7
+ImlkIjogMjEzMjA0NCwgInVzZWQiOiA3Ny44MSwgInJlYWR5IjogMC4wMCwgImNzdHAiOiAwLjAw
+LCAibmFtZSI6ICJ2bXgtdmNwdS0yOnJoZWw3eDY0LTAiLA0KICAgID4gICAiMjEzMjA0NSI6IHsi
+aWQiOiAyMTMyMDQ1LCAidXNlZCI6IDU3LjExLCAicmVhZHkiOiAwLjAyLCAiY3N0cCI6IDAuMDAs
+ICJuYW1lIjogInZteC12Y3B1LTM6cmhlbDd4NjQtMCIsDQogICAgPg0KICAgID4gTm90ZSwgInVz
+ZWQgJSIgaW4gYWJvdmUgc3RhdHMgZm9yIDUuNSBrZXJuZWwgaXMgZXZlbmx5IGRpc3RyaWJ1dGVk
+IGFjcm9zcyBhbGwgdkNQVXMuDQogICAgPg0KICAgID4gT24gdGhlIHdob2xlLCB0aGlzIGNoYW5n
+ZSBzaG91bGQgYmUgc2VlbiBhcyBhIHNpZ25pZmljYW50IGltcHJvdmVtZW50IGZvcg0KICAgID4g
+bW9zdCBjdXN0b21lcnMuDQogICAgPg0KICAgID4gUmFqZW5kZXIgTQ0KICAgID4gUGVyZm9ybWFu
+Y2UgRW5naW5lZXJpbmcNCiAgICA+IFZNd2FyZSwgSW5jLg0KICAgID4NCiAgICANCg0K
