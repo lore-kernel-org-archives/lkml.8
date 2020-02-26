@@ -2,197 +2,86 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MIME_BASE64_TEXT,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A76CC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E667C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4859021556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F8D21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GFtc1Xje"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VgGBkqS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgBZFPk (ORCPT
+        id S1726555AbgBZF0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:15:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32948 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgBZFPk (ORCPT
+        Wed, 26 Feb 2020 00:26:18 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56195 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725890AbgBZF0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:15:40 -0500
-Received: by mail-wr1-f67.google.com with SMTP id u6so1380656wrt.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:15:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2mmwcPt7FYwEo0xY8XBsaqPBRihA0DEsv6KzigsLQ58=;
-        b=GFtc1XjesUgCXUHiWoX/bNXIOX68YtbiUIv3KeypQbKO5nzN9EtNHzPQKWx0AS5kQJ
-         QisbhnZZnyRyZjREV911pnrbH5+8FGTnjfq8Q5XVQa2GK8NZ2DcgdwFhmh+qZM3Cwlwl
-         Q7kmyK8YZbxd1bbdUd4Kx+IkQ7qvTY57UKgSo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2mmwcPt7FYwEo0xY8XBsaqPBRihA0DEsv6KzigsLQ58=;
-        b=bhdhW91NZMWmIdWL3Ewv67d/NKPgOW/pz+nAvwm6CO3Or+k0v/mnu9GrY9V4PWbq45
-         dj0PCU3NAztBRWBhj+KBJZsfceR8I251SPgY5KQjg/NSh2vjX2A6mKRj3xcX+H97igaf
-         WZeeQ1S0k5KgZuAoXKlPF96eCj39oUjGYZ1PfXWlbDoFLZpmzTNHxxF6BBVp7spBBjSs
-         thLPTZUUlM0v3OHndlpnN8xxcOWD6SzkUhYGWr8mgfFFWN3Dz0waRx0zf4FV+aXn3lDv
-         FXGl0uEq5A8TuiEaqJ53vUR7EpizOZzDSwagM3tnB2KOPl/cbsxs2syyosKZ0+97ULkZ
-         ZQ7w==
-X-Gm-Message-State: APjAAAUGcJuTW+eXBgNF0xcJ/G4sezmsSpMeZ5bkH2isZ9USPEa6+Faw
-        gcWZAyGzRvGXe6w6xitaoF9ocZKVdxM=
-X-Google-Smtp-Source: APXvYqz2IaEWwjMKpkbhNY7SJ8fg1XpAhmBgB4RAX5kpwm8067vORT93Ydflic8x7eX4NRlr6w4xtQ==
-X-Received: by 2002:adf:fc85:: with SMTP id g5mr3094802wrr.52.1582694138040;
-        Tue, 25 Feb 2020 21:15:38 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id m22sm389298wmc.41.2020.02.25.21.15.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 21:15:37 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 26 Feb 2020 06:15:35 +0100
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200226051535.GA17117@chromium.org>
-References: <20200220175250.10795-4-kpsingh@chromium.org>
- <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
- <202002211946.A23A987@keescook>
- <20200223220833.wdhonzvven7payaw@ast-mbp>
- <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
- <20200224171305.GA21886@chromium.org>
- <00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com>
- <202002241136.C4F9F7DFF@keescook>
- <20200225054125.dttrc3fvllzu4mx5@ast-mbp>
- <4b56177f-8148-177b-e1e5-c98da86b3b01@schaufler-ca.com>
+        Wed, 26 Feb 2020 00:26:18 -0500
+X-UUID: 0b727d7bc378477da6077d4dd771285e-20200226
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=49qv1PxTKA63h58GMIBjrRHNQLNwM95yAfup8dmCDng=;
+        b=VgGBkqS/lhx8aHza6srnTlOWVCXAAb7gqgzRHJMqS5XGY73XeIxi/bCMdr5TIYF660EOvYMF+OB+BLUXGndf5lm7cvKx3ReY7GK/fkziBEs5prVwCB5Cr+4JwVsXdXVEWmphC7e2LQq+ZRibouGG8a4onXEHYBixO5uBlLIn+fo=;
+X-UUID: 0b727d7bc378477da6077d4dd771285e-20200226
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 641813501; Wed, 26 Feb 2020 13:26:12 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 26 Feb 2020 13:25:18 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 26 Feb 2020 13:23:53 +0800
+From:   <gtk_ruiwang@mediatek.com>
+List-Id: <linux-firmware.lore.kernel.org>
+To:     <linux-firmware@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>, <PoChun.Lin@mediatek.com>,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <gtk_ruiwang@mediatek.com>
+Subject: pull request: linux-firmware: move MT8173 VPU FW to subfolder 
+Date:   Wed, 26 Feb 2020 13:26:02 +0800
+Message-ID: <20200226052603.22768-1-gtk_ruiwang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b56177f-8148-177b-e1e5-c98da86b3b01@schaufler-ca.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-Feb 16:30, Casey Schaufler wrote:
-> On 2/24/2020 9:41 PM, Alexei Starovoitov wrote:
-> > On Mon, Feb 24, 2020 at 01:41:19PM -0800, Kees Cook wrote:
-> >> But the LSM subsystem doesn't want special cases (Casey has worked very
-> >> hard to generalize everything there for stacking). It is really hard to
-> >> accept adding a new special case when there are still special cases yet
-> >> to be worked out even in the LSM code itself[2].
-> >> [2] Casey's work to generalize the LSM interfaces continues and it quite
-> >> complex:
-> >> https://lore.kernel.org/linux-security-module/20200214234203.7086-1-casey@schaufler-ca.com/
-> > I think the key mistake we made is that we classified KRSI as LSM.
-> > LSM stacking, lsmblobs that the above set is trying to do are not necessary for KRSI.
-> > I don't see anything in LSM infra that KRSI can reuse.
-> > The only thing BPF needs is a function to attach to.
-> > It can be a nop function or any other.
-> > security_*() functions are interesting from that angle only.
-> > Hence I propose to reconsider what I was suggesting earlier.
-> > No changes to secruity/ directory.
-> > Attach to security_*() funcs via bpf trampoline.
-> > The key observation vs what I was saying earlier is KRSI and LSM are wrong names.
-> > I think "security" is also loaded word that should be avoided.
-> 
-> No argument there.
-> 
-> > I'm proposing to rename BPF_PROG_TYPE_LSM into BPF_PROG_TYPE_OVERRIDE_RETURN.
-> >
-> >> So, unless James is going to take this over Casey's objections, the path
-> >> forward I see here is:
-> >>
-> >> - land a "slow" KRSI (i.e. one that hooks every hook with a stub).
-> >> - optimize calling for all LSMs
-> > I'm very much surprised how 'slow' KRSI is an option at all.
-> > 'slow' KRSI means that CONFIG_SECURITY_KRSI=y adds indirect calls to nop
-> > functions for every place in the kernel that calls security_*().
-> > This is not an acceptable overhead. Even w/o retpoline
-> > this is not something datacenter servers can use.
-> 
-> In the universe I live in data centers will disable hyper-threading,
-> reducing performance substantially, in the face of hypothetical security
-> exploits. That's a massively greater performance impact than the handful
-> of instructions required to do indirect calls. Not to mention the impact
+SGkgbGludXgtZmlybXdhcmUgbWFpbnRhaW5lcnMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBz
+aW5jZSBjb21taXQgZWZjZmEwM2FlNjEwMGRmZTUyM2ViZjYxMmUwM2MzYTkwZmM0Yzc5NDoNCg0K
+ICBsaW51eC1maXJtd2FyZTogVXBkYXRlIGZpcm13YXJlIGZpbGUgZm9yIEludGVsIEJsdWV0b290
+aCBBWDIwMSAoMjAyMC0wMi0yNCAwNzo0Mzo0MiAtMDUwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0
+aGUgR2l0IHJlcG9zaXRvcnkgYXQ6DQoNCiAgaHR0cHM6Ly9naXRodWIuY29tL3J1aXdhbmctbXRr
+L2xpbnV4X2Z3X3ZwdS5naXQNCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvIGE4YTE4
+ZDFjZTU5MjBiYzBjZmNmMzIwNzQ3MTYzY2YxMzgwNmI1Njg6DQoNCiAgbWVkaWF0ZWs6IG1vdmUg
+TVQ4MTczIFZQVSBGVyB0byBzdWJmb2xkZXIgKDIwMjAtMDItMjYgMTM6MDg6MTUgKzA4MDApDQoN
+Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0NCmd0a19ydWl3YW5nICgxKToNCiAgICAgIG1lZGlhdGVrOiBtb3ZlIE1UODE3MyBW
+UFUgRlcgdG8gc3ViZm9sZGVyDQoNCiBXSEVOQ0UgICAgICAgICAgICAgICAgICAgIHwgICA2ICsr
+KystLQ0KIG1lZGlhdGVrL210ODE3My92cHVfZC5iaW4gfCBCaW4gMCAtPiAyOTc3MTg0IGJ5dGVz
+DQogbWVkaWF0ZWsvbXQ4MTczL3ZwdV9wLmJpbiB8IEJpbiAwIC0+IDEzMTE4MCBieXRlcw0KIHZw
+dV9kLmJpbiAgICAgICAgICAgICAgICAgfCBCaW4gMjk3NzE4NCAtPiAyNSBieXRlcw0KIHZwdV9w
+LmJpbiAgICAgICAgICAgICAgICAgfCBCaW4gMTMxMTgwIC0+IDI1IGJ5dGVzDQogNSBmaWxlcyBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IG1lZGlhdGVrL210ODE3My92cHVfZC5iaW4NCiBjcmVhdGUgbW9kZSAxMDA2NDQgbWVkaWF0
+ZWsvbXQ4MTczL3ZwdV9wLmJpbg0KIG1vZGUgY2hhbmdlIDEwMDY0NCA9PiAxMjAwMDAgdnB1X2Qu
+YmluDQogbW9kZSBjaGFuZ2UgMTAwNjQ0ID0+IDEyMDAwMCB2cHVfcC5iaW4NCg0K
 
-Indirect calls have worse performance implications than just a few
-instructions and are especially not suitable for hotpaths.
-
-There have been multiple efforts to reduce their usage e.g.:
-
-  - https://lwn.net/Articles/774743/
-  - https://lwn.net/Articles/773985/
-
-> of the BPF programs that have been included. Have you ever looked at what
-
-  BPF programs are JIT'ed and optimized to native code.
-
-> happens to system performance when polkitd is enabled?
-
-However, let's discuss all this separately when we follow-up with
-performance improvements after submitting the initial patch-set.
-
-> 
-> 
-> >
-> > Another option is to do this:
-> > diff --git a/include/linux/security.h b/include/linux/security.h
-> > index 64b19f050343..7887ce636fb1 100644
-> > --- a/include/linux/security.h
-> > +++ b/include/linux/security.h
-> > @@ -240,7 +240,7 @@ static inline const char *kernel_load_data_id_str(enum kernel_load_data_id id)
-> >         return kernel_load_data_str[id];
-> >  }
-> >
-> > -#ifdef CONFIG_SECURITY
-> > +#if defined(CONFIG_SECURITY) || defined(CONFIG_BPF_OVERRIDE_RETURN)
-> >
-> > Single line change to security.h and new file kernel/bpf/override_security.c
-> > that will look like:
-> > int security_binder_set_context_mgr(struct task_struct *mgr)
-> > {
-> >         return 0;
-> > }
-> >
-> > int security_binder_transaction(struct task_struct *from,
-> >                                 struct task_struct *to)
-> > {
-> >         return 0;
-> > }
-> > Essentially it will provide BPF side with a set of nop functions.
-> > CONFIG_SECURITY is off. It may seem as a downside that it will force a choice
-> > on kernel users. Either they build the kernel with CONFIG_SECURITY and their
-> > choice of LSMs or build the kernel with CONFIG_BPF_OVERRIDE_RETURN and use
-> > BPF_PROG_TYPE_OVERRIDE_RETURN programs to enforce any kind of policy. I think
-> > it's a pro not a con.
-> 
-> Err, no. All distros use an LSM or two. Unless you can re-implement SELinux
-
-The users mentioned here in this context are (I would assume) the more
-performance sensitive users who would, potentially, disable
-CONFIG_SECURITY because of the current performance characteristics.
-
-We can also discuss this separately and only if we find that we need
-it for the BPF_OVERRIDE_RET type attachment.
-
-- KP
-
-> in BPF (good luck with state transitions) you've built a warp drive without
-> ever having mined dilithium crystals.
-> 
-> 
