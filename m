@@ -2,153 +2,172 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CFEC4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2144C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6863C2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B5621556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:29:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZEPIuxlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBZJYM (ORCPT
+        id S1727362AbgBZJ3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:24:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49712 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgBZJYM (ORCPT
+        Wed, 26 Feb 2020 04:29:07 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56021 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726082AbgBZJ3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:24:12 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 0209328DB54
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     mark.rutland@arm.com, Kate Stewart <kstewart@linuxfoundation.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>, airlied@linux.ie,
-        mturquette@baylibre.com, dri-devel@lists.freedesktop.org,
-        Richard Fontana <rfontana@redhat.com>,
-        laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, wens@csie.org,
-        Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, frank-w@public-files.de,
-        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
-        Houlong Wei <houlong.wei@mediatek.com>, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <"matthias. bgg"@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Fabien Parent <fparent@baylibre.com>, sboyd@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
- <1582259996.1846.7.camel@mtksdaap41>
- <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
- <1582277229.25992.9.camel@mtksdaap41>
- <1393a8c5-065f-cccb-2563-8b159c951d4b@suse.com>
- <1582283518.5889.10.camel@mtksdaap41>
- <6deab0a4-44a6-a15f-ac01-374f818b267c@collabora.com>
- <6eb9da70-9a0c-27fc-6c31-3ac62ede5a35@suse.com>
- <d9ad35c0-57df-ebb2-67e8-4aae55dd2fcb@collabora.com>
- <1582523544.25316.2.camel@mtksdaap41>
- <688f6c85-0063-9458-858c-de7bbfb8a530@collabora.com>
- <1582695176.8324.4.camel@mtksdaap41>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <6355f1fd-b929-730e-e0f6-96dd5100e3f9@collabora.com>
-Date:   Wed, 26 Feb 2020 10:24:04 +0100
+        Wed, 26 Feb 2020 04:29:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582709345;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RNaeJf+Y7W3nqj/Iutjp5fRx0FEV1X+IuW8sp//EwUw=;
+        b=ZEPIuxljJngXzMx5FUsZ8Qq0eH1QmTrZ5GRNLlRlM5+DDo4XCWOzFvli+7MPkqcXJmr2LL
+        Tu3JkLO5AF3vQPaRIuwv+UdOR6pdQGhMdU1GMp32W1pnmWmz0xT1DIcwCvivy17aShvtly
+        WQfuCJpmrQbPpgFangt/TIkenqeK3aM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-rW6VEPUJOpKfz0IxePnoJw-1; Wed, 26 Feb 2020 04:29:03 -0500
+X-MC-Unique: rW6VEPUJOpKfz0IxePnoJw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DAB6190D340;
+        Wed, 26 Feb 2020 09:29:01 +0000 (UTC)
+Received: from mohegan.the-transcend.com (unknown [10.36.118.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 764D310027BF;
+        Wed, 26 Feb 2020 09:28:58 +0000 (UTC)
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+To:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>
+Cc:     Dave Chinner <david@fromorbit.com>, ira.weiny@intel.com,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-8-ira.weiny@intel.com> <20200221174449.GB11378@lst.de>
+ <20200221224419.GW10776@dread.disaster.area> <20200224175603.GE7771@lst.de>
+ <20200225000937.GA10776@dread.disaster.area> <20200225173633.GA30843@lst.de>
+ <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+From:   Jonathan Halliday <jonathan.halliday@redhat.com>
+Message-ID: <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+Date:   Wed, 26 Feb 2020 09:28:57 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1582695176.8324.4.camel@mtksdaap41>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi CK,
 
-On 26/2/20 6:32, CK Hu wrote:
+Hi All
 
-[snip]
+I'm a middleware developer, focused on how Java (JVM) workloads can 
+benefit from app-direct mode pmem. Initially the target is apps that 
+need a fast binary log for fault tolerance: the classic database WAL use 
+case; transaction coordination systems; enterprise message bus 
+persistence and suchlike. Critically, there are cases where we use log 
+based storage, i.e. it's not the strict 'read rarely, only on recovery' 
+model that a classic db may have, but more of a 'append only, read many 
+times' event stream model.
 
->>
->> How do you see move mmsys to drivers/soc/mediatek and instantiate the clk and
->> mediatek-drm driver
->>
->>  mmsys: syscon@14000000 {
->>  	compatible = "mediatek,mt8173-mmsys", "syscon", "simple-mfd";
->>  	reg = <0 0x14000000 0 0x1000>;
->>  	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->>
->> 	clock-controller {
->> 		compatible = "mediatek,clk-mt8173-mm"
->> 		assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
->> 	 	assigned-clock-rates = <400000000>;
->>  		#clock-cells = <1>;
->> 	};
->>
->> 	display-subsystem {
->> 		compatible = "mediatek,display-subsystem";
->> 	};
->>  };
->>
+Think of the log oriented data storage as having logical segments (let's 
+implement them as files), of which the most recent is being appended to 
+(read_write) and the remaining N-1 older segments are full and sealed, 
+so effectively immutable (read_only) until discarded. The tail segment 
+needs to be in DAX mode for optimal write performance, as the size of 
+the append may be sub-block and we don't want the overhead of the kernel 
+call anyhow. So that's clearly a good fit for putting on a DAX fs mount 
+and using mmap with MAP_SYNC.
+
+However, we want fast read access into the segments, to retrieve stored 
+records. The small access index can be built in volatile RAM (assuming 
+we're willing to take the startup overhead of a full file scan at 
+recovery time) but the data itself is big and we don't want to move it 
+all off pmem. Which means the requirements are now different: we want 
+the O/S cache to pull hot data into fast volatile RAM for us, which DAX 
+explicitly won't do. Effectively a poor man's 'memory mode' pmem, rather 
+than app-direct mode, except here we're using the O/S rather than the 
+hardware memory controller to do the cache management for us.
+
+Currently this requires closing the full (read_write) file, then copying 
+it to a non-DAX device and reopening it (read_only) there. Clearly 
+that's expensive and rather tedious. Instead, I'd like to close the 
+MAP_SYNC mmap, then, leaving the file where it is, reopen it in a mode 
+that will instead go via the O/S cache in the traditional manner. Bonus 
+points if I can do it over non-overlapping ranges in a file without 
+closing the DAX mode mmap, since then the segments are entirely logical 
+instead of needing separate physical files.
+
+I note a comment below regarding a per-directly setting, but don't have 
+the background to fully understand what's being suggested. However, I'll 
+note here that I can live with a per-directory granularity, as relinking 
+a file into a new dir is a constant time operation, whilst the move 
+described above isn't. So if a per-directory granularity is easier than 
+a per-file one that's fine, though as a person with only passing 
+knowledge of filesystem design I don't see how having multiple links to 
+a file can work cleanly in that case.
+
+Hope that helps.
+
+Jonathan
+
+P.S. I'll cheekily take the opportunity of having your attention to tack 
+on one minor gripe about the current system: The only way to know if a 
+mmap with MAP_SYNC will work is to try it and catch the error. Which 
+would be reasonable if it were free of side effects.  However, the 
+process requires first expanding the file to at least the size of the 
+desired map, which is done non-atomically i.e. is user visible. There 
+are thus nasty race conditions in the cleanup, where after a failed mmap 
+attempt (e.g the device doesn't support DAX), we try to shrink the file 
+back to its original size, but something else has already opened it at 
+its new, larger size. This is not theoretical: I got caught by it whilst 
+adapting some of our middleware to use pmem.  Therefore, some way to 
+probe the file path for its capability would be nice, much the same as I 
+can e.g. inspect file permissions to (more or less) evaluate if I can 
+write it without actually mutating it.  Thanks!
+
+
+
+On 25/02/2020 19:37, Jeff Moyer wrote:
+> Christoph Hellwig <hch@lst.de> writes:
 > 
-> Let's start with the simple definition.
+>> And my point is that if we ensure S_DAX can only be checked if there
+>> are no blocks on the file, is is fairly easy to provide the same
+>> guarantee.  And I've not heard any argument that we really need more
+>> flexibility than that.  In fact I think just being able to change it
+>> on the parent directory and inheriting the flag might be more than
+>> plenty, which would lead to a very simple implementation without any
+>> of the crazy overhead in this series.
 > 
-> mmsys: syscon at 14000000 {
-> 	compatible = "mediatek,mt8173-mmsys", "syscon";
-> 	reg = <0 0x14000000 0 0x1000>;
-> 	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> 	assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
-> 	assigned-clock-rates = <400000000>;
-> 	#clock-cells = <1>;
-> };
+> I know of one user who had at least mentioned it to me, so I cc'd him.
+> Jonathan, can you describe your use case for being able to change a
+> file between dax and non-dax modes?  Or, if I'm misremembering, just
+> correct me?
 > 
-> When we break clock control to a sub device of mmsys, the reason is that
-> 'Linux' generally categorize clock controller to a device. When we break
-> display control to a sub device of mmsys, the reason is that 'Linux'
-> generally categorize display controller to a device. All these seems
-> software-oriented reason, so I think we do not break any sub device and
-> keep mmsys simple.
-> 
-> When I search of_clk_add_provider(), I find that not all clock provider
-> code is in drivers/clk. Maybe when a clock controller is not an
-> independent device, the driver code of clock controller could be placed
-> within the device driver it belonged to. We could place mmsys driver in
-> drivers/soc/mediatek/, and it control the clock, routing, fake engine,
-> memory delay,.... I would like drm driver to be placed in
-> drivers/gpu/drm/ because display function block, such as OVL, does not
-> belong to mmsys device. And finally let mmsys driver to probe
-> mediatek-drm driver.
+> Thanks!
+> Jeff
 > 
 
-You can apply the same reasoning in the clk subsystem, not all the drivers in
-drivers/clk are pure clock controllers, some of them are already
-system-controller or "simple-mfd" and some of them even instantiate other
-subdrivers via the platform register API.
+-- 
+Registered in England and Wales under Company Registration No. 03798903 
+Directors: Michael Cunningham, Michael ("Mike") O'Neill, Eric Shander
 
-Note that moving clk-<chip>-mm drivers to drivers/soc/mediatek will imply move a
-lot of code, I'll focus only on mt8173 for now because is the only platform I
-can really test. Let me prepare a v9 and lets see how looks like.
-
-Thanks,
- Enric
-
-> Regards,
-> CK
-
-[snip]
