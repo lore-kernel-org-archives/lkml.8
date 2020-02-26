@@ -2,62 +2,178 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BFCC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C2C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F63421556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501D321556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:35:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eMEM1Jlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgBZG1F (ORCPT
+        id S1726947AbgBZGfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:27:05 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33484 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726089AbgBZG1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:27:05 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B0D083520EA08317C573;
-        Wed, 26 Feb 2020 14:27:01 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
- 14:26:51 +0800
-Subject: Re: [RFC PATCH] Use IS_ENABLED() instead of #ifdefs
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-References: <92d936b83e47f6a65866ca2d39a0d5bfefba6279.1582693094.git.christophe.leroy@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <071e97e0-2772-76bf-2434-03769fc71c5a@huawei.com>
-Date:   Wed, 26 Feb 2020 14:26:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 26 Feb 2020 01:35:19 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47692 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgBZGfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 01:35:19 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200226063517euoutp026ec79d50d10c87162f3faae1a1177185~24EegxQTA0249202492euoutp02T
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:35:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200226063517euoutp026ec79d50d10c87162f3faae1a1177185~24EegxQTA0249202492euoutp02T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582698917;
+        bh=OtcoVD8Zx4NFDq70a/JfASKrkR5KULhGg8xM0tzNrRw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=eMEM1JlmHWrOCqfctdRoIWe7j54re5ueuU0SpqPHCvI3KAkKZVGcXK7Ao9LFP3h2F
+         k5XcF95jZYnQ/YHV3riXY7ouuQM9Zg9+BdEpClGY31tDZRv81Sb5OgUVU0nEbVyBDz
+         ciXmBcsbOv2nwusOgvGS6fRFMqXyE7DGgLMkmWhk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200226063517eucas1p2b4fa69c81a9d86f7f0e7197c1925d4e7~24EeUQ6Un2628026280eucas1p2z;
+        Wed, 26 Feb 2020 06:35:17 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 83.A5.61286.4A1165E5; Wed, 26
+        Feb 2020 06:35:17 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200226063516eucas1p2509cdd4111e31ce7aefab9ad4ff83efa~24EdnSCeU2629926299eucas1p2s;
+        Wed, 26 Feb 2020 06:35:16 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200226063516eusmtrp1fb446a1b0ceb98bb432fb739359aadb2~24EdmlUra0137101371eusmtrp1j;
+        Wed, 26 Feb 2020 06:35:16 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-6e-5e5611a4ef41
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 29.4D.07950.4A1165E5; Wed, 26
+        Feb 2020 06:35:16 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200226063515eusmtip2435c57303ef0a3f6e80cdb1103bef75f~24EdC8des1504415044eusmtip2H;
+        Wed, 26 Feb 2020 06:35:15 +0000 (GMT)
+Subject: Re: [PATCH] ARM: boot: Fix ATAGs with appended DTB
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Miao <eric.miao@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Chris Brandt <chris.brandt@renesas.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <e249c123-8d00-4aa3-34b8-f82d52428966@samsung.com>
+Date:   Wed, 26 Feb 2020 07:35:14 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <92d936b83e47f6a65866ca2d39a0d5bfefba6279.1582693094.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200225144749.19815-1-geert+renesas@glider.be>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfyyUcRj39b53997l7HXYPXOm7UYt5seV6W3KsjRvf7T1T1qKOrxDfu4O
+        pX+6pR92kQ4NR7mJlFS6K4poSXeZEEqNykiN1ukHmuTI3avy3+d5ns/n+3k+z74EJuriuBGJ
+        qRmMIlWeLOUK8Ebjr17fGqeI6ADNO0RZCo08qrIkH6fqmlox6lJ5IaL0HwY51EBzBZe6Nzll
+        T7VfbEXU5YkJLjWsKULbBfTAYB9G/54vRPSnZ2e5tKbblzZUn6Dzc6a4dIElgP75XIPT03qP
+        PfxIwdY4Jjkxi1H4hxwWJHSNOaaXOh6rMRTgKjQrUCOCADIQrhilasQnROQ1BLqiADUSLOMZ
+        BMV5N3C2mEbQ8aCNa2VZBS87dYgd1CKofT3EYwszgu5eE2ZlOZPBYBptsbcOXMgce2iZ67NJ
+        MFKPYFq1ZGNxSRmozWrbu0IyBMpK+jhWjJNe8G3abOO4klFQfv0JznKcoLNs3Ib55DawfD+F
+        rBgj10KTuQJjsRiGxittzkCO8cAwUo3YxcPg0cjgSghn+Gy6y2OxO3QV5eGsIAfBaM9NHlvk
+        IRg4WbqiDoa3PfNc680wcgPcbvZn26HQ+KUJsad0hDdmJ3YJRyhsLMHYthByz4hY9jrQmm79
+        s338oh+7gKTaVdG0q+JoV8XR/vfVIbwOiZlMZUo8o5SlMkf9lPIUZWZqvF9sWooeLX+xrkXT
+        j/totj+mHZEEkjoIJ/h7o0UceZYyO6UdAYFJXYR3Zpdbwjh59nFGkXZIkZnMKNuRhMClYuGm
+        qskoERkvz2CSGCadUfyd2hN8NxU6z5/p8a7St0WEOPDAuMU8ardLG3ogkvB4f8Q51jMrcX2D
+        pF62Y+m0U0RYxWZJg0YjPqhaCF7QDO93D6RyfeYmimUfxXYF7p7qjZLyCoNaJnAQG9xfDc2E
+        7+vYafHh4F9jjArXxXO7HeKfStYQurYghf5hkS7oamdgUv2AV7gUVybIZd6YQin/A/TKjf1e
+        AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7pLBMPiDD61C1v8nXSM3WL+9F4W
+        i1Xb9zJbzJ09idFi0+NrrBaXd81hs9j68h2TxaGpexkt5r14wWZxe+JkRgcuj8vXLjJ7/P41
+        idHj2Yl2No+JZ3U9Ni+p9+htfsfm0f/XwOPbmYksHp83yQVwRunZFOWXlqQqZOQXl9gqRRta
+        GOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlnH7EVzCDr2Lp5n6WBsavXF2MnBwS
+        AiYSV04uYOxi5OIQEljKKLH1xyE2iISMxMlpDawQtrDEn2tdbBBFrxkl9h7axQySEBawljj+
+        cDcTSEJEoJlJ4n/LOTCHWWALo0TXscfsEC0TGCW2HG9mAWlhEzCU6HrbBbaDV8BOYub0i2A7
+        WARUJT58fgs2VlQgVuLGzA4miBpBiZMzn4D1cgrYSvz92MIIYjMLmEnM2/yQGcKWl9j+dg6U
+        LS5x68l8pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBEbu
+        tmM/t+xg7HoXfIhRgINRiYf3BWdonBBrYllxZe4hRgkOZiUR3o1fgUK8KYmVValF+fFFpTmp
+        xYcYTYGem8gsJZqcD0wqeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4
+        OKUaGD22eDzY8+i6vUjp1c+/TYqqFytcsDlfeaGHM3LZ9Z3S/NO2XmB8y7Tcvs/5I0+kiuUj
+        F6am9PTvdzxStXlfyipeUQn+rLB+TvlOBoOnHwrUHVMvClcoPxGeHfgu9bbCSu8/j48utf+U
+        yaTyYb3uoYyygz8//7RpjqzY73vjVsfMhT6vbd2u1yqxFGckGmoxFxUnAgDH7d5u8gIAAA==
+X-CMS-MailID: 20200226063516eucas1p2509cdd4111e31ce7aefab9ad4ff83efa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83
+References: <CGME20200225144815eucas1p1229ceb0d017b46cbbe2409639a7c1f83@eucas1p1.samsung.com>
+        <20200225144749.19815-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Geert,
 
-
-ÔÚ 2020/2/26 13:04, Christophe Leroy Ð´µÀ:
+On 25.02.2020 15:47, Geert Uytterhoeven wrote:
+> At early boot, register r8 may contain an ATAGs or DTB pointer.
+> When an appended DTB is found, its address is stored in r8, for
+> extraction of the RAM base address later.
+>
+> However, if r8 contained an ATAGs pointer before, that pointer will be
+> lost, and the provided ATAGs is no longer folded into the provided DTB.
+>
+> Fix this by leaving r8 untouched.
+>
+> Fixes: 137e522593918be2 ("ARM: 8960/1: boot: Obtain start of physical memory from DTB")
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> This works for me. Only had to leave the #ifdef around the map_mem_in_cams()
-> Also had to set linear_sz and ram for the alternative case, otherwise I get
+> Not tested with ATAGs, only with [uz]Image + DTB, and zImage with
+> appended DTB.
 
+Works fine with zImage + appended DTB + cmdline/memory info passed via ATAGs
 
-Great. Thank you for the illustration.
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Jason
+> ---
+>   arch/arm/boot/compressed/head.S | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+> index 339d4b4cfbbeed15..a351ed2bc195ed8d 100644
+> --- a/arch/arm/boot/compressed/head.S
+> +++ b/arch/arm/boot/compressed/head.S
+> @@ -267,16 +267,18 @@ not_angel:
+>   		cmp	r0, r1		@ do we have a DTB there?
+>   		bne	1f
+>   
+> -		mov	r8, r6		@ use it if so
+>   		/* preserve 64-bit alignment */
+>   		add	r5, r5, #7
+>   		bic	r5, r5, #7
+> -		add	sp, sp, r5	@ and move stack above it
+> +		add	sp, sp, r5	@ if so, move stack above DTB
+> +		mov	r0, r6		@ and extract memory start from DTB
+> +		b	2f
+>   
+>   1:
+>   #endif /* CONFIG_ARM_APPENDED_DTB */
+>   
+>   		mov	r0, r8
+> +2:
+>   		bl	fdt_get_mem_start
+>   		mov	r4, r0
+>   		cmp	r0, #-1
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
