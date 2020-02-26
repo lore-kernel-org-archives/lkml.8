@@ -2,107 +2,97 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C888C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C09C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C3E222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AB424670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:19:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xa3HZa1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgBZXQT (ORCPT
+        id S1727935AbgBZXTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:16:19 -0500
-Received: from mga04.intel.com ([192.55.52.120]:3614 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbgBZXQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:16:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 15:16:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="410797453"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 26 Feb 2020 15:16:18 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH] x86/pkeys: Manually set X86_FEATURE_OSPKE to preserve existing changes
-Date:   Wed, 26 Feb 2020 15:16:15 -0800
-Message-Id: <20200226231615.13664-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 26 Feb 2020 18:19:03 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52552 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727896AbgBZXTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 18:19:03 -0500
+Received: by mail-pj1-f66.google.com with SMTP id ep11so294394pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:19:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zvqE6MvCPvJOL8QerB8lZLb+ktmIbQ2XOCq0TtICEMA=;
+        b=Xa3HZa1EpXO1Kjzwiy274G3SpOxwxpWtXQ1vTHcSjfYcGO52mJyQEX33Y5Vti2WKHF
+         sAlFBZzlnoSVacu+awRFirdHWDipZoGXW3YY918INaUXDPJ0jdp5klLmO57HXRQh5eYy
+         7EmQ/vkz+W6LpEaOQyn1x+VJhE2F6PYeFwOc0Aakhxx48VLJQL2SvCF22nDIvif+g7/K
+         68ImH4tBeCvXuMBWWmNXNO8+GBQk7+yYQDCNUw0ks1poL999C1qL1FJOumDPhOzwfCkJ
+         JEhPVOB8xvF1x+HTuO56iO3emmw+laMwBPu0Hy2H8i5o9qQbLEFW4RRqe3kxUdl6gnam
+         w28A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zvqE6MvCPvJOL8QerB8lZLb+ktmIbQ2XOCq0TtICEMA=;
+        b=TK2PK5iPZI2bEnWUxuSayIb7aDOP7iQr3WLuWpK+1HBEWvmMYm9anIBk3Gs/YC2hPj
+         wWfaRQ786302axcuSj9hNiIynkOwp/LG1IxbjGkU9sSI+0el11zycib0yWFKXWj7ELIP
+         tPLL+p8bPby/r9Q8IJmz05QKeieTT9eEOzA9fmsXOQwdxu3rYSRUJ4SC1xPUUat8aO4r
+         fmfS/OOqcAaKniJlu57votGOLhgYhAUXj8gR/0BexynwYsHVtLC/2YbpvwJ2ePfhLBLi
+         IerQ+Bz8ur9mPECdfyt0OyRfkaKM6OQrhucu6ovuNPdHIO/YOfrTupa5z5dlOaw17AZj
+         GvUA==
+X-Gm-Message-State: APjAAAW25nCg9Ou1XuJw8fwMv/VmY+wKj6h1eFSzpitm/cifFryAiN2w
+        /jNpTvoMk/4MMOneUTGn1ionGGpheAi5PUp6T/FzOw==
+X-Google-Smtp-Source: APXvYqwAKmrsXVht51i2+AM65Vb4Wv0xKBJEdypHT8o2uZceWJyGrkmrIqrJoyV2IhJ4izvhHwRRuKGIsYCt9H3pItE=
+X-Received: by 2002:a17:902:6948:: with SMTP id k8mr1607216plt.223.1582759141823;
+ Wed, 26 Feb 2020 15:19:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200224174129.2664-1-ndesaulniers@google.com>
+ <202002242003.870E5F80@keescook> <20200225041643.GA17425@ubuntu-m2-xlarge-x86>
+ <CAKwvOdn0_EETGtBVhbRKMPqv2K04Z1N4PuOZDZ6++Ejbi9-B-w@mail.gmail.com>
+ <202002251353.25A016CD@keescook> <3b7b2b366220c9ba39ebc241ba22c0304f0d61b0.camel@perches.com>
+In-Reply-To: <3b7b2b366220c9ba39ebc241ba22c0304f0d61b0.camel@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 26 Feb 2020 15:18:50 -0800
+Message-ID: <CAKwvOdmSix2hgDGsvcAzVD9L5XmM8tPDMyrdXmZjcvGXu_TMSQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Joe Perches <joe@perches.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly set X86_FEATURE_OSPKE via set_cpu_cap() instead of calling
-get_cpu_cap() to pull the feature bit from CPUID after enabling CR4.PKE.
-Invoking get_cpu_cap() effectively wipes out any {set,clear}_cpu_cap()
-changes that were made between this_cpu->c_init() and setup_pku(), as
-all non-synthetic feature words are reinitialized from the CPU's CPUID
-values.
+On Tue, Feb 25, 2020 at 2:21 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Tue, 2020-02-25 at 13:56 -0800, Kees Cook wrote:
+> > I think we should take a specific version stand as the
+> > "minimum" version. Being able to build x86 defconfig is a good minimum
+> > IMO.
+>
+> Agree.
+>
+> It's odd to say that clang 4 is fine for arm when it's
+> not fine for x86.  It's also reasonable to expect arm
+> users to upgrade their compiler to a more recent version
+> when the only cost is a very small bit of time.
 
-Blasting away capability updates manifests most visibility when running
-on a VMX capable CPU, but with VMX disabled by BIOS.  To indicate that
-VMX is disabled, init_ia32_feat_ctl() clears X86_FEATURE_VMX, using
-clear_cpu_cap() instead of setup_clear_cpu_cap() so that KVM can report
-which CPU is misconfigured (KVM needs to probe every CPU anyways).
-Restoring X86_FEATURE_VMX from CPUID causes KVM to think VMX is enabled,
-ultimately leading to an unexpected #GP when KVM attempts to do VMXON.
-
-Arguably, init_ia32_feat_ctl() should use setup_clear_cpu_cap() and let
-KVM figure out a different way to report the misconfigured CPU, but VMX
-is not the only feature bit that is affected, i.e. there is precedent
-that tweaking feature bits via {set,clear}_cpu_cap() after ->c_init()
-is expected to work.  Most notably, x86_init_rdrand()'s clearing of
-X86_FEATURE_RDRAND when RDRAND malfunctions is also overwritten.
-
-Fixes: 0697694564c8 ("x86/mm/pkeys: Actually enable Memory Protection Keys in the CPU")
-Cc: stable@vger.kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Reported-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-
-I considered adding a WARN_ON check of cpuid_ecx(7) to ensure OSPKE is set
-and bail if it's not, but that seemed like useless paranoia.
-
-I don't love that using clear_cpu_cap() is a bit fragile, especially where
-init_ia32_feat_ctl() is concerned, but the existing RDRAND usage, which
-predates setup_pku(), makes a pretty strong argument that setup_pku() is
-in the wrong.
-
-The other potential issue is late microcode updates, which refreshes the
-feature bits from CPUID, but at least in that case the kernel will print a
-warning if something changed.
-
- arch/x86/kernel/cpu/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 52c9bfbbdb2a..4cdb123ff66a 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -445,7 +445,7 @@ static __always_inline void setup_pku(struct cpuinfo_x86 *c)
- 	 * cpuid bit to be set.  We need to ensure that we
- 	 * update that bit in this CPU's "cpu_info".
- 	 */
--	get_cpu_cap(c);
-+	set_cpu_cap(c, X86_FEATURE_OSPKE);
- }
- 
- #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+That's a very x86 centric point of view.
 -- 
-2.24.1
-
+Thanks,
+~Nick Desaulniers
