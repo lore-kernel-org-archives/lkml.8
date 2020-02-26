@@ -2,119 +2,82 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17E0C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D8C4BA29
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B934024679
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D32924672
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgBZVCL (ORCPT
+        id S1727627AbgBZVDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:02:11 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:46177 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbgBZVCL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:02:11 -0500
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MlNcr-1jqJjw0fjZ-00lmUf; Wed, 26 Feb 2020 22:02:09 +0100
-Received: by mail-qv1-f49.google.com with SMTP id ek2so510396qvb.0;
-        Wed, 26 Feb 2020 13:02:08 -0800 (PST)
-X-Gm-Message-State: APjAAAX0hEivxzwSz6t9taQ1csuTcF/zcaB0EJ6X0uDf1sl13W8oIjLL
-        U2TiM2I4J3oNoCpbLdvHF01vZvwexH54w5qt5H4=
-X-Google-Smtp-Source: APXvYqxhHS9U3+N/7qg1V3h6/lWCEHWUtHJQtbK71iP6fx7l2VUQMHsb2aYbd6SCMc7GfTj4m50SkWIR7eOfBWBERJg=
-X-Received: by 2002:a05:6214:524:: with SMTP id x4mr1146649qvw.4.1582750927983;
- Wed, 26 Feb 2020 13:02:07 -0800 (PST)
+        Wed, 26 Feb 2020 16:03:03 -0500
+Received: from mga11.intel.com ([192.55.52.93]:27640 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727387AbgBZVDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:03:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:03:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
+   d="scan'208";a="350479873"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.84]) ([134.134.177.84])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 13:03:01 -0800
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+ <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+ <20200225221234.GL9245@linux.intel.com>
+ <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
+ <20200225232900.GO9245@linux.intel.com>
+ <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
+ <20200226004258.GP9245@linux.intel.com>
+ <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
+ <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
+ <20200226205745.GQ9940@linux.intel.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <9a0a7373-f469-f2ae-c218-5821f805f0d8@intel.com>
+Date:   Wed, 26 Feb 2020 13:03:01 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200211175507.178100-1-hannes@cmpxchg.org> <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
- <20200211193101.GA178975@cmpxchg.org> <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
-In-Reply-To: <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 26 Feb 2020 22:01:48 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
-Message-ID: <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:B0z8MNizJ7kia9aTxiE6iXCBlswXi3zwEcqfTJHoVMKZ6ErYXbE
- gp9J9teZYve2caR/jKAzBeFbWXOokwclyrbishs2Iowivr/BaRrXg0S1jTYEs0UMII1ZQ+Z
- uvap5jNCyXnghvWmjal06Ip9spD1yKLFco46EMboXYOFM88ItGGFkvohGR11QxVAUb0ACwR
- YWTOsWFaAPPbgdMGauv/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K2vDLtCaXnw=:PNYIHzWGGEEBd0aqVSb3CV
- zOkvHEntYYIhHdS/oR5ZUVIUw8DEtHTE6HvnGR/7lxSWwEv7mEdD3serbMqm/exblu0v+Dxpm
- UbZg/MYcm2bKh+EpWRDicVrz8UuL8/qvI03EHJdkwvNe2TCsO7whgglwvwUjLbYfQ8rJHfw/+
- nt1l6uxEQG5F1qfxQpmJ2Tec3ICc5jLJKj3oKRiqd1y98DJoUqy8Jp+aX6P2Gr3b4pCwWiLqF
- YSvlHvXfcXYRWAln5Ue9NqubcHEJsi0kKUf41Ww/4i0audXtoN3h8PqbxD/OECmmfWhmBjctg
- SZFgaU1Eiyv8Q1/zD4Pq2j12vjFOUry6PdweK0g34Ypa2DmKXRw94Hfa4gk87uCNcCiY07QZR
- q4TM3Mg8RYIL8oeOt2nGCF22okBN9WwjdTiynzSdE3fUtjXTIRibRXFiSmYgngGGM/7U3o0sG
- ZdwPALqYomcrcbqoRHDX8H7Sj8iW+nV9jvsw9ArdeBlTqwgo+waI41JcgVpejafPbCTcndMo0
- Z+Zasl9MdpaNPhuc+DiMCMOuVCOgfR4XersXgqj68zEoFtApJFYYEds8qtxrSJk5ZE+9NR9h2
- r2pb4/NiUt53pefOd1E5/vWHj+oMUT10tO6Deodcff6hqzUo4dDltXDFfFdlcruH6BJgOfISY
- QOgMMxfvYwF2fvLpQzxx6SouFrsnJlK+2em/Mfs7JW3NMrGCRXvyWPQ6izuQu7DZKtpWYheU6
- KR1Whpy9BbahJ54LuwWfzWasGDIA68udw1Pw3Jt+ZAd2OG2JHhxJPyrUj8/rfBiiXbe+hILY5
- tzzqHQqyovwxKjvRQ1gyzP4H+vtTtPnr48ON81SMHaJVj4TX7Q=
+In-Reply-To: <20200226205745.GQ9940@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 7:04 PM <santosh.shilimkar@oracle.com> wrote:
->
-> On 2/13/20 8:52 AM, Arnd Bergmann wrote:
-> > On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
->
-> The Keystone generations of SOCs have been used in different areas and
-> they will be used for long unless says otherwise.
->
-> Apart from just split of lowmem and highmem, one of the peculiar thing
-> with Keystome family of SOCs is the DDR is addressable from two
-> addressing ranges. The lowmem address range is actually non-cached
-> range and the higher range is the cacheable.
+On 2/26/2020 12:57 PM, Sean Christopherson wrote:
+> Bummer.  Using clear_cpu_cap() instead of setup_clear_cpu_cap() was me
+> being fancy and trying to allow KVM to identify the case where VMX is
+> available and configured on some CPUs but not all.  I'll work on a fix.
+> 
+Hmm. Right. For that to work, you'd need to make this disabling happen
+significantly later, and/or fix setup_pku to somehow honor this properly.
 
-I'm aware of Keystone's special physical memory layout, but for the
-discussion here, this is actually irrelevant for the discussion about
-highmem here, which is only about the way we map all or part of the
-available physical memory into the 4GB of virtual address space.
+But it looks like rdmsr is global and not tied to a given CPU anyways?
 
-The far more important question is how much memory any users
-(in particular the subset that are going to update their kernels
-several years from now) actually have installed. Keystone-II is
-one of the rare 32-bit chips with fairly wide memory interfaces,
-having two 72-bit (with ECC) channels rather than the usual one
- or two channels of 32-bit DDR3. This means a relatively cheap
-4GB configuration using eight 256Mx16 chips is possible, or
-even a 8GB using sixteen or eighteen 512Mx8.
-
-Do you have an estimate on how common these 4GB and 8GB
-configurations are in practice outside of the TI evaluation
-board?
-
-       Arnd
+Thanks,
+Jake
