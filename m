@@ -2,83 +2,154 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53084C4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370E3C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C5B2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B37A24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="NukH5haL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgBZSKX (ORCPT
+        id S1727146AbgBZSLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:10:23 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34780 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgBZSKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:10:22 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 3E1F33C009D;
-        Wed, 26 Feb 2020 19:10:20 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ox3u6X-MG0Pr; Wed, 26 Feb 2020 19:10:15 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 1A7E03C005E;
-        Wed, 26 Feb 2020 19:10:15 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 26 Feb
- 2020 19:10:14 +0100
-Date:   Wed, 26 Feb 2020 19:10:11 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-CC:     <linux-usb@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        <scan-admin@coverity.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH] usb: hub: Fix unhandled return value of
- usb_autopm_get_interface()
-Message-ID: <20200226181011.GA2868@lxhi-065.adit-jv.com>
-References: <20200225202223.GA9154@lxhi-065.adit-jv.com>
- <Pine.LNX.4.44L0.2002251553030.1485-100000@iolanthe.rowland.org>
+        Wed, 26 Feb 2020 13:11:47 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:59970 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbgBZSLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:11:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=j8piK5Vy3nVOxJh0bNhZvksvv7dK9C/nnrKn6Rew/Ps=; b=NukH5haLwzCKCNzMUVsEEueaH
+        Tw5oXEvjWH7A4fivz/adRC4xaCbAstLyF+hU6p+rekaEEhGajvWdKRfKtHo/5EEhyrWs1pkA/e0WR
+        oPDGwsshJfk1TUNNS4hc66k1eZCeJgTM2LY/Hqo+j+j16elEl2611+sDdpNo8sWklTVlI=;
+Received: from p200300ccff0a4d00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j719o-00070m-OQ; Wed, 26 Feb 2020 19:11:41 +0100
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j719o-00019P-54; Wed, 26 Feb 2020 19:11:40 +0100
+Date:   Wed, 26 Feb 2020 19:11:38 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        b.galvani@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org,
+        jic23@kernel.org
+Subject: Re: [PATCH v5 1/2] mfd: rn5t618: add ADC subdevice for RC5T619
+Message-ID: <20200226190028.0de5c095@kemnade.info>
+In-Reply-To: <20200226174640.GR3494@dell>
+References: <20200223131638.12130-1-andreas@kemnade.info>
+        <20200223131638.12130-2-andreas@kemnade.info>
+        <20200226154055.GQ3494@dell>
+        <20200226174914.047667d5@kemnade.info>
+        <20200226174640.GR3494@dell>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2002251553030.1485-100000@iolanthe.rowland.org>
-X-Originating-IP: [10.72.93.66]
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/SIFE=+ScTG+hvbM2i8v3=0v"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+--Sig_/SIFE=+ScTG+hvbM2i8v3=0v
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2020 at 03:54:20PM -0500, Alan Stern wrote:
-> On Tue, 25 Feb 2020, Eugeniu Rosca wrote:
-> > There are three commits fixed by the proposed changes in usb core:
-> >  - v5.6-rc3 commit 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
-> >  - v3.9-rc1 commit 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
-> >  - v2.6.33-rc1 commit 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
-> > 
-> > I assume a single fix will create some pain when applying it to the
-> > stable branches. Do you have any preference/inputs about that?
-> 
-> If you prefer to split this up into multiple patches, that's fine with 
-> me.
+On Wed, 26 Feb 2020 17:46:40 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Please, check https://lore.kernel.org/lkml/20200226175036.14946-1-erosca@de.adit-jv.com/
+> On Wed, 26 Feb 2020, Andreas Kemnade wrote:
+>=20
+> > On Wed, 26 Feb 2020 15:40:55 +0000
+> > Lee Jones <lee.jones@linaro.org> wrote:
+> >  =20
+> > > On Sun, 23 Feb 2020, Andreas Kemnade wrote:
+> > >  =20
+> > > > This adds a subdevice for the ADC in the RC5T619
+> > > >=20
+> > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > > ---
+> > > > depends on:
+> > > > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade=
+.info/
+> > > >=20
+> > > > Changes in v3:
+> > > > re-added it to the series because of
+> > > > "Oh, it looks like there was a conflict.  Could you collect any Acks
+> > > > (including mine) rebase and resend please?"   =20
+> > >=20
+> > > Looks like there is still a conflict.  Sure, it's not a complicated
+> > > fix, but that's beside the point.  What tree is this set based on?
+> > >  =20
+> > It must be applied on top of my rc5t619 rtc series here:
+> > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.inf=
+o/
+> >=20
+> > I expected it to make it into 5.6 and when I first sent the RTC series
+> >  (in October) I had no idea when I will continue with other stuff.
+> >=20
+> > That is why I sent this ADC series separately, also to give the IIO
+> > maintainer plenty of time to review.  =20
+>=20
+> If a patch-set can or should be applied on its own, you should send it
+> based on an upstream commit, or else things like this happen.
+>=20
+It cannot without breaking bisectability. The RTC series adds IRQ support in
+the PMIC which is used here.
 
--- 
-Best Regards
-Eugeniu Rosca
+> My advice would be to maintain topic branches, each based on an
+> upstream release, which you can merge together into an integration
+> branch for full coverage testing.
+>=20
+> > Do you want me to resend all that pending stuff together in one series?
+> > I have little experience with this multi-subdevice process. =20
+>=20
+> It makes more sense to rebase this set onto the latest full release
+> and resubmit this set on its own.
+>=20
+So, I resend the RC5T619 RTC series mentioned above as you answered
+upont Nikolaus question and wait with this series until review is
+through.
+Ok, so wait and rebase it onto 5.7-rc1 or 5.8-rc1 or whatever release
+the RTC stuff will appear.
+So you are not going to create an ib-mfd-rtc-iio branch.
+
+Regards,
+Andreas
+
+--Sig_/SIFE=+ScTG+hvbM2i8v3=0v
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5WtNoACgkQl4jFM1s/
+ye/sIQ/8DP1K657W58Pek8cfq+s+pkuon36N55M9vsKG0uld08HlfuO69L0ZPm3G
+5BOG1Rpv7Hm4Gjn4MSQCmTe87/W3CtmWL+eWsv+tlj7HzR+qXACaeHO7SG+l2z8n
+jkZDMVBj4131zXsa8feKn9Riwi7FLFu5uWKMFZPTZG4BzfLbAkSxZsRxN3Zm9IKQ
+nwGpHKC0X1/GE0aL/WDS2PT7C5GlunxP/KiyBUEvBM9Th1R7Bgy+dexymWFevDtC
+Icki+Aq/iQkU6zIC1gIbiAnTx/Etu5b1AgnK788du0RvvRS1WxMYRWALDidOyFkX
+e2gCAeeBPJVOZGCc203hhbyS637SY05FYreBRX9N3V+LFE0OrxS0REeFC1ZYlbv8
+xu7v269xFhwwnsZzRwKOxEgh3hJJUVOkh6W97iyHdE4yZf1kHXNZ0csn8U1VtQKB
+a+HQvnCpZsQ2LinmLMwOj1pSl7mpHVuIkTlL0LRqzA0jU/G4fxihxLU8MNEJ6jsQ
+AWMum+FQcOyxY8NodjMATr83tC3mZnodUkTgL+djQEhv1q2sKqbOj7Xr0FvESJLa
+hZ38x5FqBPHcJZ7H08pFGIBHwTJSMrx7ynIiwKJDcrWGnKSDcZLKqbRe4/GjbS43
+cRy1lHQBbp+ucCH8/eVWQ5tjgj7RtI/ONnwID+xj5SRUxvVK97s=
+=i3Qi
+-----END PGP SIGNATURE-----
+
+--Sig_/SIFE=+ScTG+hvbM2i8v3=0v--
