@@ -2,82 +2,97 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D8C4BA29
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06299C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D32924672
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB24924687
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="acrcB6MR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbgBZVDD (ORCPT
+        id S1727510AbgBZVEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:03:03 -0500
-Received: from mga11.intel.com ([192.55.52.93]:27640 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbgBZVDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:03:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:03:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="350479873"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.84]) ([134.134.177.84])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 13:03:01 -0800
-Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
- IA32_FEAT_CTL is configured
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
-        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
-        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
-        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
-        lenb@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
-        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
-        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
- <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
- <20200225221234.GL9245@linux.intel.com>
- <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
- <20200225232900.GO9245@linux.intel.com>
- <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
- <20200226004258.GP9245@linux.intel.com>
- <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
- <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
- <20200226205745.GQ9940@linux.intel.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <9a0a7373-f469-f2ae-c218-5821f805f0d8@intel.com>
-Date:   Wed, 26 Feb 2020 13:03:01 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200226205745.GQ9940@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Feb 2020 16:04:24 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45592 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbgBZVEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:04:23 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so379350pfg.12;
+        Wed, 26 Feb 2020 13:04:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=gDsflhmxZUet6FKoOUpr1JgLOWOX8WhZiLBsohFkxw4=;
+        b=acrcB6MRU4Vb+1UvCWhvmsKBEWp9AzYFdxsrjAxGAXMricxbBVcvVRjtB8sb+XAv/g
+         /EcMeUSBRFB7mZKbAERFfbdTtob+4kZddu5LEW+wU2RBokveGqtRF5UxgEImkxRQHIch
+         4dSz8t2TuPrGRBx+s0+d++UMIwWzp4pqmFzt9KnWq1kC6O0RKuSuHuObgMk2X3rm2Att
+         NfHTw6KemCIUaIn5ulaiJq2cjRvAkkehV7whg4fPD9ZKM9gXUyC3+V97s636cGPyFSHv
+         RncKBmoS0L2Zl6Fwsir+/8qpx2uPNtQnQ+1beKvOqloclFnvhFuBz309dwfCjWpWEQQn
+         DKRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=gDsflhmxZUet6FKoOUpr1JgLOWOX8WhZiLBsohFkxw4=;
+        b=IXrTWGr3kVi+cFBqWk2Q07H5UUDvJiIg6u4ILLUd1U0OOMuVbztFWQedYQmBP8vjZX
+         EZR1ShPpcCUzXCOWmk9+3V206I2OHCwHaXNJJhstXmleTwhbw0A3KphIDWPqeNeHMKmi
+         wUYoB+OhhI906xPomTBn/cdqlt1D4RWooZ48CQHYVsj1Jb54+2fAm+rcFuQmpdg4dB6E
+         e5Bl5oe64yODtHNAj7j1doYiXle/vzneZXqhj67CadYFKF3hAC0KJ4+a9x8ZAZxUUQmN
+         Zfuk2LMsT2bc3yCniocLBbdwBk03OQC7Sxmptyt8ZyS1ESQeEZVgLeTEiDSUBYAMwVcf
+         qtfg==
+X-Gm-Message-State: APjAAAUZysuwlV1kITkxc+R1QedmxKbTa23I7tO66n38rF1XJE+G+EE5
+        HeXKLVrEoxbGBtcPt2ynEhj2VEit
+X-Google-Smtp-Source: APXvYqywZQrSHz3IYuE8wT2/U6jhtr4OyqcE66q1EJEIl5in9BFBqRKlhV8bRuJ5+aZ16YmZ77Qmeg==
+X-Received: by 2002:a63:f450:: with SMTP id p16mr692547pgk.211.1582751062824;
+        Wed, 26 Feb 2020 13:04:22 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t189sm3977606pfd.168.2020.02.26.13.04.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Feb 2020 13:04:21 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Minas Harutyunyan <hminas@synopsys.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Antti=20Sepp=C3=A4l=C3=A4?= <a.seppala@gmail.com>,
+        Boris ARZUR <boris@konbu.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [RFT PATCH 0/4] usb: dwc2: Fixes and improvements
+Date:   Wed, 26 Feb 2020 13:04:10 -0800
+Message-Id: <20200226210414.28133-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/2020 12:57 PM, Sean Christopherson wrote:
-> Bummer.  Using clear_cpu_cap() instead of setup_clear_cpu_cap() was me
-> being fancy and trying to allow KVM to identify the case where VMX is
-> available and configured on some CPUs but not all.  I'll work on a fix.
-> 
-Hmm. Right. For that to work, you'd need to make this disabling happen
-significantly later, and/or fix setup_pku to somehow honor this properly.
+This series addresses the following problems:
 
-But it looks like rdmsr is global and not tied to a given CPU anyways?
+- Fix receive buffer corruptions
+- Fix receive transfers with 0 byte transfer length
+- Abort transactions after unknown receive errors
+  if the receive buffer is full
+- Reduce "trimming xfer length" logging noise
 
-Thanks,
-Jake
+The problems fixed with this series were observed when connecting
+a DM9600 Ethernet adapter to Veyron Chromebooks such as the ASUS
+Chromebook C201PA. The series was tested extensively with this and
+other adapters.
+
+The observed problems are also reported when tethering various
+phones, so test coverage with such phones would be very appreciated.
+
+----------------------------------------------------------------
+Guenter Roeck (4):
+      usb: dwc2: Simplify and fix DMA alignment code
+      usb: dwc2: Do not update data length if it is 0 on inbound transfers
+      usb: dwc2: Abort transaction after errors with unknown reason
+      usb: dwc2: Make "trimming xfer length" a debug message
+
+ drivers/usb/dwc2/hcd.c      | 82 ++++++++++++++++++++++++---------------------
+ drivers/usb/dwc2/hcd_intr.c | 14 +++++++-
+ 2 files changed, 56 insertions(+), 40 deletions(-)
