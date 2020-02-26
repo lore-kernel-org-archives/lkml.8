@@ -4,65 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC421C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6FBC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DA524680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8817121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgBZOez (ORCPT
+        id S1727718AbgBZOil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:34:55 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53588 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBZOez (ORCPT
+        Wed, 26 Feb 2020 09:38:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33293 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgBZOil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:34:55 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: padovan)
-        with ESMTPSA id 1DCC728F756
-From:   Gustavo Padovan <gustavo.padovan@collabora.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Dan Lazewatsky <dlaz@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
-Subject: [PATCH] usb: quirks: add NO_LPM quirk for Logitech Screen Share
-Date:   Wed, 26 Feb 2020 14:34:38 +0000
-Message-Id: <20200226143438.1445-1-gustavo.padovan@collabora.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 26 Feb 2020 09:38:41 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1j6xpb-0000a8-Ci; Wed, 26 Feb 2020 15:38:35 +0100
+Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1j6xpa-0001GH-HZ; Wed, 26 Feb 2020 15:38:34 +0100
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] dt-bindings: arm: stm32: document lxa,stm32mp157c-mc1 compatible
+Date:   Wed, 26 Feb 2020 15:38:25 +0100
+Message-Id: <20200226143826.1146-3-a.fatoum@pengutronix.de>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200226143826.1146-1-a.fatoum@pengutronix.de>
+References: <20200226143826.1146-1-a.fatoum@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: afa@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Lazewatsky <dlaz@chromium.org>
+Document the STM32MP157 based Linux Automation MC-1 device tree
+compatible.
 
-LPM on the device appears to cause xHCI host controllers to claim
-that there isn't enough bandwidth to support additional devices.
-
-Signed-off-by: Dan Lazewatsky <dlaz@chromium.org>
-Signed-off-by: Gustavo Padovan <gustavo.padovan@collabora.com>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 ---
- drivers/usb/core/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index 2b24336a72e5..2dac3e7cdd97 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -231,6 +231,9 @@ static const struct usb_device_id usb_quirk_list[] = {
- 	/* Logitech PTZ Pro Camera */
- 	{ USB_DEVICE(0x046d, 0x0853), .driver_info = USB_QUIRK_DELAY_INIT },
- 
-+	/* Logitech Screen Share */
-+	{ USB_DEVICE(0x046d, 0x086c), .driver_info = USB_QUIRK_NO_LPM },
-+
- 	/* Logitech Quickcam Fusion */
- 	{ USB_DEVICE(0x046d, 0x08c1), .driver_info = USB_QUIRK_RESET_RESUME },
- 
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 1fcf306bd2d1..71ea3f04ab9c 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -38,6 +38,7 @@ properties:
+       - items:
+           - enum:
+               - arrow,stm32mp157a-avenger96 # Avenger96
++              - lxa,stm32mp157c-mc1
+               - st,stm32mp157c-ed1
+               - st,stm32mp157a-dk1
+               - st,stm32mp157c-dk2
 -- 
-2.11.0
+2.25.0
 
