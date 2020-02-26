@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F6BC4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93919C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580B224653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2DF24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582700779;
-	bh=uZjWbm4CHv7CzRvbIQoptYI7eFmVZqT/jpXr1XMve3I=;
+	s=default; t=1582700945;
+	bh=BdvukjoB3WBnGxQuMkXsAyznS/yxxSlgLx6C/Lh+O5s=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qwgKcbqAOY3yj6Sne8CK/6CyUQgR1fD/88HgZWfuGaxY+Do2QvYBdg2Uc5JPzE33E
-	 wnqAD85JUrbqZbSokmHsZolRw3lmzaoBmvHRNDJv1mvRxc/kSLFPSUncpScYec4cEv
-	 yHQbeGKkZ+W5f2IHm0kw9d0JHpvkGoka8FFmq9GQ=
+	b=Hz6hO3k9g9gTzXFhKvCO3XaPphwFnRCUgv8VrJGhG2M7D0Fr+2tSO1kYXUrwpMwH9
+	 9K5///10WJP7E/Z5Y2f6w/XdyqXeM0LS7Zr7jWjAQI8lm+7bzwO4lf9xq8j5VAQUYf
+	 JaOtQZlSGHuKn3wq99pDOtof3NAd+9API6r5rJ0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgBZHGS (ORCPT
+        id S1727202AbgBZHJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41554 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 02:09:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbgBZHGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:06:17 -0500
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        id S1726823AbgBZHJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:09:03 -0500
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A386724680
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC32222C2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582700776;
-        bh=uZjWbm4CHv7CzRvbIQoptYI7eFmVZqT/jpXr1XMve3I=;
+        s=default; t=1582700943;
+        bh=BdvukjoB3WBnGxQuMkXsAyznS/yxxSlgLx6C/Lh+O5s=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZUggyWOdb8O1B4aYP7ECTmUI12PniQXaw4GAhKMCAzyTOVDikA+4CQ7m8IvF/eHYC
-         DHylRK4TugMmAsQVorPWYkdc+zKWRBzr/03f52i0+4LXaGj7ngPVi+y4bPx5Q6wvvQ
-         gN3avXJRVRrrMK37zeOLogvYyjySaq+75Zjp9HKs=
-Received: by mail-wm1-f52.google.com with SMTP id a9so1769023wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:06:16 -0800 (PST)
-X-Gm-Message-State: APjAAAVTZ1yf8nKLGMQduJ5sj1gu9Ad06CH5dPhL0kWC+aa7+NXZS8Rd
-        4bT7WiIWBkBzFHjOm+8cZyLyK4ajnb5oMnMwl/PdZA==
-X-Google-Smtp-Source: APXvYqxVo4pBQodPuVmpIAWoLWlNGgk9OZk/TYLmLgPc/3nUtao5D+GJ3tSM7OyQhzsoCgw/xpZfGvWiOFsuBzM9GRg=
-X-Received: by 2002:a05:600c:24b:: with SMTP id 11mr216141wmj.1.1582700774936;
- Tue, 25 Feb 2020 23:06:14 -0800 (PST)
+        b=aLXV00WGNbPLHXgt1q6/H3/GVzQFXdwh6tHYzbPOgypdiAlt3vP/fGyZQrHx8mSxE
+         /Xrq/zq1RkklN4cocFA1Hae36qAzR3g6ChMWulwQWOy2JQcTCIidyU6lZztqBrS3os
+         1MvQ7Rex4Tm3nmfMV9H1IR8j8w0hYofJf/Tvxxpg=
+Received: by mail-wm1-f41.google.com with SMTP id a9so1775669wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:09:02 -0800 (PST)
+X-Gm-Message-State: APjAAAVO+7VxIbthB5BWBCWMFfRZXCCl5IWkY8vdJAUW3Z/PClIQ//xI
+        Pqrykx4jOpMj72bvJ/+mlTauvY+B+bQC325W9JkPCw==
+X-Google-Smtp-Source: APXvYqygd/ulFA+LBYcE+02wpHVNjovd2gznC4M9/EIQzEGIl8/sG8qvkHkL/jt8pXKkT3+TfT6z5RSmn21ULS3+N40=
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr72538wmi.133.1582700941221;
+ Tue, 25 Feb 2020 23:09:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-3-atish.patra@wdc.com>
-In-Reply-To: <20200226011037.7179-3-atish.patra@wdc.com>
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-4-atish.patra@wdc.com>
+In-Reply-To: <20200226011037.7179-4-atish.patra@wdc.com>
 From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 26 Feb 2020 08:06:04 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu-LAfcH5mLZNLk7=A3E43a93FK+8DPYNrx1FANnbo3J7g@mail.gmail.com>
-Message-ID: <CAKv+Gu-LAfcH5mLZNLk7=A3E43a93FK+8DPYNrx1FANnbo3J7g@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/5] include: pe.h: Add RISC-V related PE definition
+Date:   Wed, 26 Feb 2020 08:08:50 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8HdRa5k=h1XF2fm80VEgvuxa_tX_P0qFSdkk=CVc6ffA@mail.gmail.com>
+Message-ID: <CAKv+Gu8HdRa5k=h1XF2fm80VEgvuxa_tX_P0qFSdkk=CVc6ffA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/5] RISC-V: Define fixmap bindings for generic early
+ ioremap support
 To:     Atish Patra <atish.patra@wdc.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
@@ -91,33 +92,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com> wrote:
 >
-> Define RISC-V related machine types.
+> UEFI uses early IO or memory mappings for runtime services before
+> normal ioremap() is usable. This patch only adds minimum necessary
+> fixmap bindings and headers for generic ioremap support to work.
 >
 > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-If you put them in alphabetical order wrt SH3:
+Looks reasonable to me,
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
+although I wonder why it is part of this series?
 
 > ---
->  include/linux/pe.h | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/riscv/Kconfig              |  1 +
+>  arch/riscv/include/asm/Kbuild   |  1 +
+>  arch/riscv/include/asm/fixmap.h | 21 ++++++++++++++++++++-
+>  arch/riscv/include/asm/io.h     |  1 +
+>  4 files changed, 23 insertions(+), 1 deletion(-)
 >
-> diff --git a/include/linux/pe.h b/include/linux/pe.h
-> index 8ad71d763a77..6a7c497e4b1f 100644
-> --- a/include/linux/pe.h
-> +++ b/include/linux/pe.h
-> @@ -56,6 +56,9 @@
->  #define        IMAGE_FILE_MACHINE_POWERPCFP    0x01f1
->  #define        IMAGE_FILE_MACHINE_R4000        0x0166
->  #define        IMAGE_FILE_MACHINE_SH3          0x01a2
-> +#define        IMAGE_FILE_MACHINE_RISCV32      0x5032
-> +#define        IMAGE_FILE_MACHINE_RISCV64      0x5064
-> +#define        IMAGE_FILE_MACHINE_RISCV128     0x5128
->  #define        IMAGE_FILE_MACHINE_SH3DSP       0x01a3
->  #define        IMAGE_FILE_MACHINE_SH3E         0x01a4
->  #define        IMAGE_FILE_MACHINE_SH4          0x01a6
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 27bfc7947e44..42c122170cfd 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -65,6 +65,7 @@ config RISCV
+>         select ARCH_HAS_GCOV_PROFILE_ALL
+>         select HAVE_COPY_THREAD_TLS
+>         select HAVE_ARCH_KASAN if MMU && 64BIT
+> +       select GENERIC_EARLY_IOREMAP
+>
+>  config ARCH_MMAP_RND_BITS_MIN
+>         default 18 if 64BIT
+> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
+> index ec0ca8c6ab64..517394390106 100644
+> --- a/arch/riscv/include/asm/Kbuild
+> +++ b/arch/riscv/include/asm/Kbuild
+> @@ -4,6 +4,7 @@ generic-y += checksum.h
+>  generic-y += compat.h
+>  generic-y += device.h
+>  generic-y += div64.h
+> +generic-y += early_ioremap.h
+>  generic-y += extable.h
+>  generic-y += flat.h
+>  generic-y += dma.h
+> diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
+> index 42d2c42f3cc9..7a4beb7e29a3 100644
+> --- a/arch/riscv/include/asm/fixmap.h
+> +++ b/arch/riscv/include/asm/fixmap.h
+> @@ -25,9 +25,28 @@ enum fixed_addresses {
+>  #define FIX_FDT_SIZE   SZ_1M
+>         FIX_FDT_END,
+>         FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
+> +       FIX_EARLYCON_MEM_BASE,
+> +
+>         FIX_PTE,
+>         FIX_PMD,
+> -       FIX_EARLYCON_MEM_BASE,
+> +       /*
+> +        * Make sure that it is 2MB aligned.
+> +        */
+> +#define NR_FIX_SZ_2M   (SZ_2M / PAGE_SIZE)
+> +       FIX_THOLE = NR_FIX_SZ_2M - FIX_PMD - 1,
+> +
+> +       __end_of_permanent_fixed_addresses,
+> +       /*
+> +        * Temporary boot-time mappings, used by early_ioremap(),
+> +        * before ioremap() is functional.
+> +        */
+> +#define NR_FIX_BTMAPS          (SZ_256K / PAGE_SIZE)
+> +#define FIX_BTMAPS_SLOTS       7
+> +#define TOTAL_FIX_BTMAPS       (NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
+> +
+> +       FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
+> +       FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
+> +
+>         __end_of_fixed_addresses
+>  };
+>
+> diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+> index 0f477206a4ed..047f414b6948 100644
+> --- a/arch/riscv/include/asm/io.h
+> +++ b/arch/riscv/include/asm/io.h
+> @@ -14,6 +14,7 @@
+>  #include <linux/types.h>
+>  #include <asm/mmiowb.h>
+>  #include <asm/pgtable.h>
+> +#include <asm/early_ioremap.h>
+>
+>  /*
+>   * MMIO access functions are separated out to break dependency cycles
 > --
 > 2.24.0
 >
