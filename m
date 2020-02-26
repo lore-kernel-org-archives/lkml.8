@@ -2,63 +2,86 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06208C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DAFC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D852124684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5CF24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VAxOAnW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgBZPjC (ORCPT
+        id S1728379AbgBZPjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:39:02 -0500
-Received: from www62.your-server.de ([213.133.104.62]:40838 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbgBZPjC (ORCPT
+        Wed, 26 Feb 2020 10:39:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41394 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZPja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:39:02 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j6ym1-00012b-GY; Wed, 26 Feb 2020 16:38:57 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j6ym1-000JAe-4A; Wed, 26 Feb 2020 16:38:57 +0100
-Subject: Re: [PATCH] scripts/bpf: switch to more portable python3 shebang
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20200225205426.6975-1-scott.branden@broadcom.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <e46b5fc2-dc2c-ddcd-8483-2c03f8f09a23@iogearbox.net>
-Date:   Wed, 26 Feb 2020 16:38:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 26 Feb 2020 10:39:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=WkRU+rCfqZmSiK2T/WyxuA5RO2CVcs+N/iUY+k8Bf6w=; b=VAxOAnW9pzTfuKbV+ZL+X4PvH1
+        W9K6olNaZozucBl5tM0rP97/7AIiCC2wehQYtiI/3pg0Y9j5nWbKoAjIRAAlcsKP5Al3Zx0Flmkjp
+        EPwKob8UwqDLMtoHWC1zXmmrnyoc1eWUeKk8mAvPerkADPxf2TZJOSPKuJfZZBcsra3bd3mFwTEYE
+        7x6vQBzPwzNU9Z3zR9S5lvR2X0hxQgGfSFoTgqCnBtT3gZre3ddfhBgMcKUAmih2aLnT3mQrC+3WO
+        /YC3vQ3BpKZkNLgbBr8ax0E1NRV+2nWLe87NfJqAm0qskdqxU4W93CDwBAPYtXpwC2J49SS/55Kon
+        b+JOhB2w==;
+Received: from [4.28.11.157] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6ymY-0000Y3-7U; Wed, 26 Feb 2020 15:39:30 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     torvalds@linux-foundation.org
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "KVM: x86: enable -Werror"
+Date:   Wed, 26 Feb 2020 07:39:29 -0800
+Message-Id: <20200226153929.786743-1-hch@lst.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200225205426.6975-1-scott.branden@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25734/Tue Feb 25 15:06:17 2020)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 9:54 PM, Scott Branden wrote:
-> Change "/usr/bin/python3" to "/usr/bin/env python3" for
-> more portable solution in bpf_helpers_doc.py.
-> 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+This reverts commit ead68df94d248c80fdbae220ae5425eb5af2e753.
 
-Applied, thanks!
+Using the brain dead Werror flag fixes the build for me due to mostly
+harmless KASAN or similar warnings:
+
+arch/x86/kvm/x86.c: In function ‘kvm_timer_init’:
+arch/x86/kvm/x86.c:7209:1: error: the frame size of 1112 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+ 7209 | }
+
+Feel free to add a CONFIG_WERROR if you care strong enough, but don't break
+peoples builds for absolutely no good reason.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/kvm/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+index 4654e97a05cc..b19ef421084d 100644
+--- a/arch/x86/kvm/Makefile
++++ b/arch/x86/kvm/Makefile
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ ccflags-y += -Iarch/x86/kvm
+-ccflags-y += -Werror
+ 
+ KVM := ../../../virt/kvm
+ 
+-- 
+2.24.1
+
