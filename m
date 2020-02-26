@@ -2,115 +2,96 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCABC4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAADC4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF07C21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916E221927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="p1b6DIB/"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KLZEbI3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgBZB6Z (ORCPT
+        id S1730109AbgBZB6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:58:25 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38763 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbgBZB6Z (ORCPT
+        Tue, 25 Feb 2020 20:58:51 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:26066 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727809AbgBZB6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:58:25 -0500
-Received: by mail-qt1-f194.google.com with SMTP id i23so1164591qtr.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:58:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3W6dUjneFw3Iq5j0LRHddz/04ra8gT9SV1GqromcUcA=;
-        b=p1b6DIB/zaPCoKDbRHx56Ttn3E//aAfWWDn5ysoYfvW9M17pCbsmV09+Z/c1eYrgYT
-         RLTBR6fyj9srVTEglPmT6kRF5IjSO/9MH40LH7aL2K5L0ywykQNdGuGmcBoh7+g20L/S
-         4Hz0X55LGUiN8wlKC5ak0ibUvEkrv71+M1Ue6SrYDgJEVxuPB10/Dvy3waU+0NZTGszW
-         afkV03q05woG9KXAuYUXZPHO9kcMr2Wf0wussfbM34enqv7vS26F6o//x03jcLx9zOXc
-         QpBHg9A0nAt62FEphlR4ouYHAs0nsgfx0P/SuHe5AWaKE/CuSIpB55fBGtOCmOfS7LCj
-         ha0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3W6dUjneFw3Iq5j0LRHddz/04ra8gT9SV1GqromcUcA=;
-        b=X3DJ4pJT0fuxT7d/vF6tQta75cHHRY6hfxKeUSBBO6XZs91qt2Qw4pKsf5VtfyNsqV
-         V97rIddOB8UzqSzRx66L3LAheS8H6aEP5QdYNYHhwu5DW+B4FwRO27e7kHRjWa4IsVWe
-         lFZkE3TLwWiuNQcmvFEIu0hXu37xVMCKOrApqsZJfr9BrF5PEGLbKT4Xs49m2TUT0bKg
-         zCg3e1ZJfRcVQF7Mch+W+5qLCGx28dzNNLKOVoz5UH81Y/0IuB/W+lq8EX5SKS9PUKfL
-         FIZMxPt1w4KfL8W5XkAP8Lh/POcrX52KhEjvM16aWZgp0xKDc4Ubw0DhvETpbFnQ5NVB
-         g8Fg==
-X-Gm-Message-State: APjAAAV6SS0X1KWH7pmHjWyUULlnAaPMU5ESlS+XGdgYEEfOOKgVOPL4
-        LZpj4VMp4SLC0pytGxE5JTn03A==
-X-Google-Smtp-Source: APXvYqzceBcyktKssUogh3JQAjPXAwym222xlUpuJoB/bKA9+80nAwe3RJB1ejMlWvXgtr7v8/21HA==
-X-Received: by 2002:ac8:1b18:: with SMTP id y24mr2071113qtj.158.1582682304323;
-        Tue, 25 Feb 2020 17:58:24 -0800 (PST)
-Received: from ovpn-121-122.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v80sm283450qka.15.2020.02.25.17.58.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 17:58:23 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     rafael@kernel.org
-Cc:     elver@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next v2] power/qos: annotate data races in pm_qos_*_value
-Date:   Tue, 25 Feb 2020 20:58:13 -0500
-Message-Id: <20200226015813.987-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Tue, 25 Feb 2020 20:58:51 -0500
+X-UUID: 8220794a7cc843d1b721db1695d043d8-20200226
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ju7q+m3fC5tzr5BkYbHgGDb6f000b3+zmY3EzNVVdc4=;
+        b=KLZEbI3htPZmO2LXUp0P9nUMInozvbAKjVyDRUOkMT3feU6gNXCwLlZMaQy8+p2G26GFxcNzCCBvdDAY+dzf75oRfLWs8Sn+LQ5gjXaTebhlCixKxpOMg8sLp/O8+yRaa91Qi6pE3FJSRiTMgpIC7GVEydfmNzT9aodFL2UmoG8=;
+X-UUID: 8220794a7cc843d1b721db1695d043d8-20200226
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 487766622; Wed, 26 Feb 2020 09:58:43 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 26 Feb 2020 09:57:45 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 26 Feb 2020 09:58:51 +0800
+Message-ID: <1582682322.16944.7.camel@mtksdaap41>
+Subject: Re: [PATCH v8 4/7] dt-bindings: display: mediatek: dpi sample data
+ in dual edge support
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <stonea168@163.com>,
+        <huijuan.xie@mediatek.com>
+Date:   Wed, 26 Feb 2020 09:58:42 +0800
+In-Reply-To: <20200225094057.120144-5-jitao.shi@mediatek.com>
+References: <20200225094057.120144-1-jitao.shi@mediatek.com>
+         <20200225094057.120144-5-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The target_value field in struct pm_qos_constraints is used for lockless
-access to the effective constraint value of a given QoS list, so the
-readers of it cannot expect it to always reflect the most recent
-effective constraint value.  However, they can and do expect it to be
-equal to a valid effective constraint value computed at a certain time
-in the past (event though it may not be the most recent one), so add
-READ|WRITE_ONCE() annotations around the target_value accesses to
-prevent the compiler from possibly causing that expectation to be unmet
-by generating code in an exceptionally convoluted way.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: borrow the commit log from Rafael.
-
- kernel/power/qos.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/power/qos.c b/kernel/power/qos.c
-index 32927682bcc4..db0bed2cae26 100644
---- a/kernel/power/qos.c
-+++ b/kernel/power/qos.c
-@@ -52,7 +52,7 @@ static DEFINE_SPINLOCK(pm_qos_lock);
-  */
- s32 pm_qos_read_value(struct pm_qos_constraints *c)
- {
--	return c->target_value;
-+	return READ_ONCE(c->target_value);
- }
- 
- static int pm_qos_get_value(struct pm_qos_constraints *c)
-@@ -75,7 +75,7 @@ static int pm_qos_get_value(struct pm_qos_constraints *c)
- 
- static void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
- {
--	c->target_value = value;
-+	WRITE_ONCE(c->target_value, value);
- }
- 
- /**
--- 
-2.21.0 (Apple Git-122.2)
+SGksIEppdGFvOg0KDQpPbiBUdWUsIDIwMjAtMDItMjUgYXQgMTc6NDAgKzA4MDAsIEppdGFvIFNo
+aSB3cm90ZToNCj4gQWRkIHByb3BlcnR5ICJwY2xrLXNhbXBsZSIgdG8gY29uZmlnIHRoZSBkcGkg
+c2FtcGxlIG9uIGZhbGxpbmcgKDApLA0KPiByaXNpbmcgKDEpLCBib3RoIGZhbGxpbmcgYW5kIHJp
+c2luZyAoMikuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRp
+YXRlay5jb20+DQo+IC0tLQ0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRp
+YXRlay9tZWRpYXRlayxkcGkudHh0ICAgICB8IDQgKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDQg
+aW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0
+DQo+IGluZGV4IGE3YjFiOGJmYjY1ZS4uZjM2MmZmZjUxNDM3IDEwMDY0NA0KPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxk
+cGkudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCj4gQEAgLTIwLDYgKzIwLDkgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoNCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICAtIHBpbmN0cmwtbmFtZXM6
+IENvbnRhaW4gImdwaW9tb2RlIiBhbmQgImRwaW1vZGUiLg0KPiAgICBwaW5jdHJsLW5hbWVzIHNl
+ZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybHBpbmN0cmwtYmluZGlu
+Z3MudHh0DQo+ICstIHBjbGstc2FtcGxlOiAwOiBzYW1wbGUgaW4gZmFsbGluZyBlZGdlLCAxOiBz
+YW1wbGUgaW4gcmlzaW5nIGVkZ2UsIDI6IHNhbXBsZQ0KPiArICBpbiBib3RoIGZhbGxpbmcgYW5k
+IHJpc2luZyBlZGdlLg0KDQpUaGUgdmFsdWUgaGFzIGJlZW4gZGVmaW5lZCBpbiB2aWRlby1pbnRl
+cmZhY2VzLnR4dCwgeW91IG5lZWQgbm90IHRvDQpkZWZpbmUgaXQgYWdhaW4uDQoNClJlZ2FyZHMs
+DQpDSw0KDQo+ICsgIHBjbGstc2FtcGxlIHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuDQo+ICANCj4gIEV4YW1wbGU6DQo+ICAN
+Cj4gQEAgLTM3LDYgKzQwLDcgQEAgZHBpMDogZHBpQDE0MDFkMDAwIHsNCj4gIA0KPiAgCXBvcnQg
+ew0KPiAgCQlkcGkwX291dDogZW5kcG9pbnQgew0KPiArCQkJcGNsay1zYW1wbGUgPSAwOw0KPiAg
+CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pMF9pbj47DQo+ICAJCX07DQo+ICAJfTsNCg0K
 
