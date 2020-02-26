@@ -2,110 +2,113 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B43C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2169EC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1A124680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WB0T68gN"
+	by mail.kernel.org (Postfix) with ESMTP id EDAE621D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582728622;
+	bh=gq1Mm1RYPBjDxN/0IhfPFWShhaidnAl/LIloGKcu7l0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hDQJcvYonBV7cG20lTVVrIxpgajcGviDaH989T6v1Az3Qym4aDqETyzwWUqclMCY1
+	 Etis6IhLGVgJsVu5lhVDTexDCoeqLAgAuo24do7UtEx33xseh9P8kojRvqBte9jSL+
+	 Vfqx968iV7mCqhVj1ayShSOxEHc0jR6J91gn1csg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBZOtC (ORCPT
+        id S1727938AbgBZOuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:49:02 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58073 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727584AbgBZOtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:49:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582728541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C/fit9buLQoyBITMniA3SZzT0SvwKSgZb4ufJ9DR0s0=;
-        b=WB0T68gNA5C6tPHTc8ni7IqWLAh8C6nkEuuRUTcg4ADMkoJg1KtlCCzq0CeFtIHCptEvWT
-        GigPOvqMBvru2NwVyCJrgDjg6PkzGWJvcTuwReAY0P7GviZTG05peGpC/8tLK9sK2Xmuqv
-        4DsGmvYxO78EZ58hGAnfHi35ZqlpjpY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-125-clHqMRhWO7uWL9xrfeXjXw-1; Wed, 26 Feb 2020 09:48:59 -0500
-X-MC-Unique: clHqMRhWO7uWL9xrfeXjXw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 26 Feb 2020 09:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727716AbgBZOuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:50:20 -0500
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A00B13E2;
-        Wed, 26 Feb 2020 14:48:57 +0000 (UTC)
-Received: from ovpn-117-20.ams2.redhat.com (ovpn-117-20.ams2.redhat.com [10.36.117.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FA978B759;
-        Wed, 26 Feb 2020 14:48:50 +0000 (UTC)
-Message-ID: <6bda45c24afb5bbd069af6f57b07880cd2f5af52.camel@redhat.com>
-Subject: Re: [PATCH v3 1/2] kstats: kernel metric collector
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Luigi Rizzo <lrizzo@google.com>, linux-kernel@vger.kernel.org,
-        mhiramat@kernel.org, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, naveen.n.rao@linux.ibm.com,
-        ardb@kernel.org, rizzo@iet.unipi.it, giuseppe.lettieri@unipi.it,
-        toke@redhat.com, hawk@kernel.org, mingo@redhat.com,
-        acme@kernel.org, rostedt@goodmis.org, peterz@infradead.org
-Date:   Wed, 26 Feb 2020 15:48:49 +0100
-In-Reply-To: <20200226135027.34538-2-lrizzo@google.com>
-References: <20200226135027.34538-1-lrizzo@google.com>
-         <20200226135027.34538-2-lrizzo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B4AA24688
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582728619;
+        bh=gq1Mm1RYPBjDxN/0IhfPFWShhaidnAl/LIloGKcu7l0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1CJ7CjavlI+rhp0TARUE+0LlSsFswifiWpEQCuV8K6mY5t7a6cI4lxAUGe5VXSIAR
+         nRcKcZxrwVViCcXBrilB8wZCpjSq07xz3snMkBdhUSS1dbjO0vZHyBcgsO5Sx8j8A1
+         48zPiQYUpMfU8KhRgvD6tm/YC4rhSzI+geCV7nfA=
+Received: by mail-wm1-f47.google.com with SMTP id t23so3405395wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:50:19 -0800 (PST)
+X-Gm-Message-State: APjAAAWxPLiQGq1sQR2TNqGykfaDqLE+gmNwhodJVaXfyDJh0o+a3gTw
+        3AXo5xkZtDj4lov+KMnKQxwx2G7g6IKCsc6IdJGQYA==
+X-Google-Smtp-Source: APXvYqyhZmdeHmVsK20o2/b1vO9bIxFOOv3EJjBmSfExbTytVn5FCW1J3TgcDORoYH2uM+W4bGDm4RDU5KdFx0MPqyM=
+X-Received: by 2002:a1c:bc46:: with SMTP id m67mr5822649wmf.40.1582728617842;
+ Wed, 26 Feb 2020 06:50:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200224133856.12832-1-ardb@kernel.org> <20200226142713.GB3100@gmail.com>
+In-Reply-To: <20200226142713.GB3100@gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 Feb 2020 15:50:07 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8eeRB7PiKNK_f7G5mpwsiVP0XWmi=KiyDjju9fk=QuZw@mail.gmail.com>
+Message-ID: <CAKv+Gu8eeRB7PiKNK_f7G5mpwsiVP0XWmi=KiyDjju9fk=QuZw@mail.gmail.com>
+Subject: Re: [GIT PULL v2] EFI updates for v5.7
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 26 Feb 2020 at 15:27, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> > Hello Ingo, Thomas,
+> >
+> > I am sending this as an ordinary PR again, given the size. Please let me
+> > know if instead, you prefer me to send it out piecemeal as usual. Either
+> > works for me, I was just reluctant to spam people unsolicited.
+> >
+> > Note that EFI for RISC-V may still arrive this cycle as well.
+> >
+> > Please take special note of the GDT changes by Arvind. They were posted to
+> > the list without any feedback, and they look fine to me, but I know very
+> > little about these x86 CPU low level details.
+> >
+> > This was all build and boot tested on various different kinds of hardware,
+> > and all minor issues that were reported by the robots were fixed along the way.
+> >
+> > Please pull,
+> > Ard.
+> >
+> >
+> > The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+> >
+> >   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
+> >
+> > for you to fetch changes up to dc235d62fc60a6549238eda7ff29769457fe5663:
+> >
+> >   efi: Bump the Linux EFI stub major version number to #1 (2020-02-23 21:59:42 +0100)
+>
+> >  66 files changed, 2718 insertions(+), 2638 deletions(-)
+>
+> Pulled this as a Git tree, thanks Ard!
+>
+> The boot-time GDT handling cleanups from Arvind look good to me too.
+> There's a couple of arguably scary commits in there, so these might be
+> 'famous last words'. :-)
+>
 
-I'm sorry for the lack of feedback on earlier iteration, I've simply
-been too slow.
-
-On Wed, 2020-02-26 at 05:50 -0800, Luigi Rizzo wrote:
-[...]
-> +static void ks_print(struct seq_file *p, int slot, int cpu, u64 sum,
-> +		     u64 tot, unsigned long samples, unsigned long avg)
-> +{
-> +	unsigned long frac = (tot == 0) ? 0 : ((sum % tot) * 1000000) / tot;
-
-I think/fear kbuildbot will still trigger some build issues on 32bit
-arches on the above line.
-
-I think div64_u64_rem() should be used in place of '%' for and 
-div64_u64() in place of '/' when operating on 64bits integers. 
-
-There are a few more occurences below.
-
-[...]
-> ++	/* preempt_disable makes sure samples and sum modify the same slot.
-> +	 * this_cpu_add() uses a non-interruptible add to protect against
-> +	 * hardware interrupts which may call kstats_record.
-> +	 */
-> +	preempt_disable();
-> +	this_cpu_add(ks->slots[slot].samples, 1);
-
-I think 'this_cpu_inc()' could be used here.
-
-> +	this_cpu_add(ks->slots[slot].sum,
-> +		     bucket < SUM_SCALE ? val : (val >> (bucket - SUM_SCALE)));
-> +	preempt_enable();
-> +}
-> +EXPORT_SYMBOL(kstats_record);
-
-Thanks for sharing, this infra will be likely quite useful to me :)
-
-Cheers,
-
-Paolo
-
+Thanks!
