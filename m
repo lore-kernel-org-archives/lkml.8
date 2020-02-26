@@ -2,173 +2,92 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C64C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ECBC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBC8246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:43:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="YK4tHmE6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TUQCUY3A"
+	by mail.kernel.org (Postfix) with ESMTP id 2A27E246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgB1Ane (ORCPT
+        id S1730394AbgB1An5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:43:34 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:57317 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730120AbgB1And (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:43:33 -0500
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2A8B15AE0;
-        Thu, 27 Feb 2020 19:43:32 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 27 Feb 2020 19:43:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        WDBemPNCysVXmovtXdZ+Fmhvn30nAoiqvFdtKbQjVNU=; b=YK4tHmE6ayv7oVIJ
-        PIKzxzvORN8fBQxtRJ1oevZttnXo50N7fwQRQFL3ZVn/VND4zaIpJ02ycg1nytE6
-        qiCmAyoM+pxXKzYhhFfyMaAMpPg4ibHLWK/+VAhpf7in9Gp6MGc95uErdNwqwP3p
-        uOWlDCMMsdsxRgTPyfUePPUSVa5uYGTG7alWp7JXXfenrXNmrH6G9lihciQU7/iv
-        41pQjPI5aTHoRQUlxGHhPSrz9hKAt54E1VKcaY55bMFvz38ejKhETXw61UQgNgl0
-        3G6l4C09hE6EY9BqYxqMhQA+r2pp4b7jROI9eMCWQ82kYU53qpb9VmFt4xVhmwNu
-        DaTFHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=WDBemPNCysVXmovtXdZ+Fmhvn30nAoiqvFdtKbQjV
-        NU=; b=TUQCUY3A02IMlJEITczf1DoElLTggjrGA5tP3XvyovFL7fyyjnnletPnu
-        wE6jCGSF28AnFpuMaCCMkoYD58Hs2ItxicY1EEPnCUTAQMCBhKk/UPS28U4QtmKg
-        emiScc6ba+IQ3tzwDaPSXyCdHWlwgoX6fWNNkvnnZA0YnUxw6ExB/n7xCL4S1Jwm
-        hVyJjLbQisIS9dtEy5/t700+ELFYdw7vSIvHoUN2SioaKU/JqV6h4F971plU8AcZ
-        XymozN7IYpDJyYocKtqGpqQY5loR/xZ0Fi2zA9F9nKspjysw8pAqglLG1ZrqIAYg
-        FpPiDipujWJRroY7Ee18M+ASv4hgg==
-X-ME-Sender: <xms:M2JYXqNFDuvBJMAe_DStK9UVzi9TiRVX_FBlazoBxMGnLXdZyndQeg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgddviecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
-    dukedvrdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:M2JYXjrxjZaSk4WTajunwLrhF1mRY8-rJScrFmJahndKuQ1BcCM_nA>
-    <xmx:M2JYXn6EYVt_6PJnjhtu2bMCOl6tv8cZ3ULM-XiisjfY-yvctgbYDw>
-    <xmx:M2JYXlo534q2lXX69GCRUhjaO2U1j-LAsmFs0S6a55-rYFWTIUmouQ>
-    <xmx:NGJYXp2beQemkZQgYlxxK0iAGrf1SCPK_0x0LSQGEEXZZykcI2pSjQ>
-Received: from mickey.themaw.net (unknown [118.209.182.91])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A6DD53060FDD;
-        Thu, 27 Feb 2020 19:43:25 -0500 (EST)
-Message-ID: <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
- [ver #17]
-From:   Ian Kent <raven@themaw.net>
-To:     Karel Zak <kzak@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?UTF-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Date:   Fri, 28 Feb 2020 08:43:21 +0800
-In-Reply-To: <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
-References: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
-         <1582556135.3384.4.camel@HansenPartnership.com>
-         <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
-         <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
-         <1582644535.3361.8.camel@HansenPartnership.com>
-         <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
-         <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
-         <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
-         <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
-         <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
-         <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Feb 2020 19:43:57 -0500
+Received: from mga04.intel.com ([192.55.52.120]:43768 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730120AbgB1An4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:43:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 16:43:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="232379541"
+Received: from unknown (HELO lftan) ([10.226.248.77])
+  by fmsmga008.fm.intel.com with SMTP; 27 Feb 2020 16:43:53 -0800
+Received: by lftan (sSMTP sendmail emulation); Thu, 27 Feb 2020 04:20:15 +0800
+From:   Ley Foon Tan <ley.foon.tan@intel.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Chin Liang See <chin.liang.see@intel.com>,
+        lftan.linux@gmail.com, Ley Foon Tan <ley.foon.tan@intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH RESEND] arm64: dts: socfpga: agilex: Fix gmac compatible
+Date:   Thu, 27 Feb 2020 04:20:14 +0800
+Message-Id: <20200226202014.66253-1-ley.foon.tan@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-27 at 16:14 +0100, Karel Zak wrote:
-> On Thu, Feb 27, 2020 at 02:45:27PM +0100, Miklos Szeredi wrote:
-> > > So the problem I want to see fixed is the effect of very large
-> > > mount tables on other user space applications, particularly the
-> > > effect when a large number of mounts or umounts are performed.
-> 
-> Yes, now you have to generate (in kernel) and parse (in
-> userspace) all mount table to get information about just 
-> one mount table entry. This is typical for umount or systemd.
-> 
-> > > >  - add a notification mechanism   - lookup a mount based on
-> > > > path
-> > > >  - and a way to selectively query mount/superblock information
-> > > based on path ...
-> 
-> For umount-like use-cases we need mountpoint/ to mount entry
-> conversion; I guess something like open(mountpoint/) + fsinfo() 
-> should be good enough.
-> 
-> For systemd we need the same, but triggered by notification. The
-> ideal
-> solution is to get mount entry ID or FD from notification and later
-> use this
-> ID or FD to ask for details about the mount entry (probably again
-> fsinfo()).
-> The notification has to be usable with in epoll() set.
-> 
-> This solves 99% of our performance issues I guess.
-> 
-> > > So that means mount table info. needs to be maintained, whether
-> > > that
-> > > can be achieved using sysfs I don't know. Creating and
-> > > maintaining
-> > > the sysfs tree would be a big challenge I think.
-> 
-> It will be still necessary to get complete mount table sometimes,
-> but 
-> not in performance sensitive scenarios.
+Fix gmac compatible string to "altr,socfpga-stmmac-a10-s10". Gmac for
+Agilex should use same compatible as Stratix 10.
 
-That was my understanding too.
+Fixes: 4b36daf9ada3 ("arm64: dts: agilex: Add initial support for Intel's
+Agilex SoCFPGA")
 
-Mount table enumeration is possible with fsinfo() but you still
-have to handle each and every mount so improvement there is not
-going to be as much as cases where the proc mount table needs to
-be scanned independently for an individual mount. It will be
-somewhat more straight forward without the need to dissect text
-records though.
+Cc: stable@vger.kernel.org
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+---
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> I'm not sure about sysfs/, you need somehow resolve namespaces, order
-> of the mount entries (which one is the last one), etc. IMHO translate
-> mountpoint path to sysfs/ path will be complicated.
-
-I wonder about that too, after all sysfs contains a tree of nodes
-from which the view is created unlike proc which translates kernel
-information directly based on what the process should see.
-
-We'll need to wait a bit and see what Miklos has in mind for mount
-table enumeration and nothing has been said about name spaces yet.
-
-While fsinfo() is not similar to proc it does handle name spaces
-in a sensible way via. file handles, a bit similar to the proc fs,
-and ordering is catered for in the fsinfo() enumeration in a natural
-way. Not sure how that would be handled using sysfs ...
-
-Ian
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+index e1d357eaad7c..d8c44d3ca15a 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -102,7 +102,7 @@
+ 		};
+ 
+ 		gmac0: ethernet@ff800000 {
+-			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff800000 0x2000>;
+ 			interrupts = <0 90 4>;
+ 			interrupt-names = "macirq";
+@@ -118,7 +118,7 @@
+ 		};
+ 
+ 		gmac1: ethernet@ff802000 {
+-			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff802000 0x2000>;
+ 			interrupts = <0 91 4>;
+ 			interrupt-names = "macirq";
+@@ -134,7 +134,7 @@
+ 		};
+ 
+ 		gmac2: ethernet@ff804000 {
+-			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff804000 0x2000>;
+ 			interrupts = <0 92 4>;
+ 			interrupt-names = "macirq";
+-- 
+2.19.0
 
