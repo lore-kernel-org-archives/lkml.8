@@ -2,156 +2,114 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770BBC4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACEBC4BA15
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59227206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34AA24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:22:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tik595Gh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgBZQV6 (ORCPT
+        id S1727434AbgBZQWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:21:58 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55791 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQV5 (ORCPT
+        Wed, 26 Feb 2020 11:22:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51372 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:21:57 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6zRa-0005Au-A1; Wed, 26 Feb 2020 17:21:54 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6zRZ-0001L4-HM; Wed, 26 Feb 2020 17:21:53 +0100
-Date:   Wed, 26 Feb 2020 17:21:53 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 4/4] pwm: omap-dmtimer: Implement .apply callback
-Message-ID: <20200226162153.4vlx2z6wurpdy4az@pengutronix.de>
-References: <20200224052135.17278-1-lokeshvutla@ti.com>
- <20200224052135.17278-5-lokeshvutla@ti.com>
- <20200224090706.xsujpc3yiqlmmrmm@pengutronix.de>
- <cee31e10-17b4-1cfb-5c77-a58a142c338d@ti.com>
+        Wed, 26 Feb 2020 11:22:25 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QGLhUY077662;
+        Wed, 26 Feb 2020 10:21:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582734103;
+        bh=7PBDsbXxj4AX8n3D3XLYg0rJuiB68wdam0M5qbWaRh8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Tik595GhNchxiBpHFQRMneZll48OMlkT78PYfme5fF+OJUZsTlAQeu/JiYz2HQHSF
+         Arpaqo9e+mrjSZxLt6rA1GgzcxLy22CMo7RrVBb1RE5AobYeF15ARXhNMcxGsvC0Tv
+         umVAfPuQn04p4CIo/bgyZzGQ3v8KZrwF16SjCTuo=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01QGLhGa060397
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 10:21:43 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 10:21:42 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 10:21:42 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QGLgpq068594;
+        Wed, 26 Feb 2020 10:21:42 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [RESEND PATCH for-next 3/3] ASoC: tas2562: Add entries for the TAS2563 audio amplifier
+Date:   Wed, 26 Feb 2020 10:16:28 -0600
+Message-ID: <20200226161628.29960-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200226161628.29960-1-dmurphy@ti.com>
+References: <20200226161628.29960-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cee31e10-17b4-1cfb-5c77-a58a142c338d@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Lokesh,
+The TAS2563 is register compatible with the TAS2562.  The main
+difference is the TAS2563 has a programmable DSP to manage different
+audio profiles.
 
-On Tue, Feb 25, 2020 at 10:31:45AM +0530, Lokesh Vutla wrote:
-> Hi Uwe,
-> 
-> On 24/02/20 2:37 PM, Uwe Kleine-König wrote:
-> > On Mon, Feb 24, 2020 at 10:51:35AM +0530, Lokesh Vutla wrote:
-> >> Implement .apply callback and drop the legacy callbacks(enable, disable,
-> >> config, set_polarity).
-> >>
-> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> >> ---
-> >>  drivers/pwm/pwm-omap-dmtimer.c | 141 +++++++++++++++++++--------------
-> >>  1 file changed, 80 insertions(+), 61 deletions(-)
-> >>
-> 
-> [..snip..]
-> 
-> >> -static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
-> >> -					 struct pwm_device *pwm,
-> >> -					 enum pwm_polarity polarity)
-> >> +/**
-> >> + * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
-> >> + * @chip:	Pointer to PWM controller
-> >> + * @pwm:	Pointer to PWM channel
-> >> + * @state:	New sate to apply
-> >> + *
-> >> + * Return 0 if successfully changed the state else appropriate error.
-> >> + */
-> >> +static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
-> >> +				  struct pwm_device *pwm,
-> >> +				  const struct pwm_state *state)
-> >>  {
-> >>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
-> >> +	int ret = 0;
-> >>  
-> >> -	/*
-> >> -	 * PWM core will not call set_polarity while PWM is enabled so it's
-> >> -	 * safe to reconfigure the timer here without stopping it first.
-> >> -	 */
-> >>  	mutex_lock(&omap->mutex);
-> >> -	omap->pdata->set_pwm(omap->dm_timer,
-> >> -			     polarity == PWM_POLARITY_INVERSED,
-> >> -			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-> >> +
-> >> +	if (pwm_is_enabled(pwm) && !state->enabled) {
-> > 
-> > In my book calling PWM API functions (designed for PWM consumers) is not
-> > so nice. I would prefer you checking the hardware registers or cache the
-> > state locally instead of relying on the core here.
-> 
-> .start and .stop apis does read the hardware registers and check the state
-> before making any changes. Do you want to drop off the pwm_is_enabled(pwm) check
-> here?
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tas2562.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-The IMHO more natural approach would be to look into the hardware
-registers instead of asking the framework.
-
-> > It would be great to have a general description at the top of the driver
-> > (like for example drivers/pwm/pwm-sifive.c) that answers things like:
-> > 
-> >  - Does calling .stop completes the currently running period (it
-> >    should)?
-> 
-> Existing driver implementation abruptly stops the cycle. I can make changes such
-> that it completes the currently running period.
-
-That would be good for correctness.
-
-> >  - Does changing polarity, duty_cycle and period complete the running
-> >    period?
-> 
-> - Polarity can be changed only when the pwm is not running. Ill add extra guards
-> to reflect this behavior.
-> - Changing duty_cycle and period does complete the running period and new values
-> gets reflected in next cycle.
-
-Is there are race with the hardware? I.e. can it happen that when a new
-cycle starts just when you configured the new period but not the
-duty_cycle yet a mixed cycle is output?
-
-> >  - How does the hardware behave on disable? (i.e. does it output the
-> >    state the pin is at in that moment? Does it go High-Z?)
-> 
-> Now that I am making changes to complete the current period on disable, the pin
-> goes to Low after disabling(completing the cycle).
-> 
-> Ill add all these points as you mentioned in v2.
-
-Great
-
-Best regards
-Uwe
-
+diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+index c7a4b3b74654..6b7f7a18da36 100644
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -55,6 +55,11 @@ struct tas2562_data {
+ 	int volume_lvl;
+ };
+ 
++enum tas256x_model {
++	TAS2562,
++	TAS2563,
++};
++
+ static int tas2562_set_bias_level(struct snd_soc_component *component,
+ 				 enum snd_soc_bias_level level)
+ {
+@@ -664,13 +669,15 @@ static int tas2562_probe(struct i2c_client *client,
+ }
+ 
+ static const struct i2c_device_id tas2562_id[] = {
+-	{ "tas2562", 0 },
++	{ "tas2562", TAS2562 },
++	{ "tas2563", TAS2563 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, tas2562_id);
+ 
+ static const struct of_device_id tas2562_of_match[] = {
+ 	{ .compatible = "ti,tas2562", },
++	{ .compatible = "ti,tas2563", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, tas2562_of_match);
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.25.0
+
