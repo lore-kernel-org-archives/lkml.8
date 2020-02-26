@@ -2,237 +2,170 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B4CC4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E7CC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C707624688
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582729340;
-	bh=YdavwjKW764gaMMCY/6DItdn27P+LhGI44b50YrPEik=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=D1IrsK01bMZ8qfklUD0/ltgqPNOfWFaJBcbqMzssYyfCifHBMqqR2ZJlD8rB/GLJ0
-	 ++BM6bV+qLYHqLXyu4XcLHNs/MjXuUBbDIXCPnu8BLWr58THDIgiuaB2ONyTTIfdtf
-	 35Vr35tzoXZ2WBZoXRZl4At2qnAMQ8MQA3wNsqxk=
+	by mail.kernel.org (Postfix) with ESMTP id 42E2724685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Qt1jB5bR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgBZPCT (ORCPT
+        id S1727736AbgBZPCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:02:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgBZPCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:02:19 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85CEF24685;
-        Wed, 26 Feb 2020 15:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582729338;
-        bh=YdavwjKW764gaMMCY/6DItdn27P+LhGI44b50YrPEik=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=2sbgL7e94ntYhGUYANr6/gsCMc4+cpMtj2zUZzW86ef6QQ/sINUHOGKCC+zaZtY22
-         9tF1d/YcOZy8tHHY3SWS+aE5sOqTjoWXdcu3Sou4jrMnhLZSCl4YQ5Tg5MKs47Vgvs
-         fLmHXpRZ5ZEtdywYOBJJv+82msglW71Xvhdb8PUY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 14E833521EAF; Wed, 26 Feb 2020 07:02:18 -0800 (PST)
-Date:   Wed, 26 Feb 2020 07:02:18 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        "# 5 . 5 . x" <stable@vger.kernel.org>
-Subject: Re: [PATCH tip/core/rcu 30/30] rcu: Make rcu_barrier() account for
- offline no-CBs CPUs
-Message-ID: <20200226150218.GA2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
- <20200214235607.13749-30-paulmck@kernel.org>
- <20200225102436.GF110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200226031455.GZ2935@paulmck-ThinkPad-P72>
- <20200226061430.GG110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Wed, 26 Feb 2020 10:02:54 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:18329 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZPCx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:02:53 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: X5NzTrnxfpSoUyHbtcccHxZc2TrPkwDymi/NAjL662tejkgKcr+PZ5YtDmKNYuE0FTXWqztK1S
+ 9oJDwBAI91VLo0VQWxAwymObsLIDWMgJ6qDMdsja32kGHoYmVmRDBu8aITI38belGxxf6amMde
+ X/hsGQyZ3X8EHPpiQqzwxBRbCkXb/S44V4XHaoWbpPBcRCePPnrS5RNZKqDKYhXePTXCYbcoD5
+ smEUr+Dpq4ilDI3pGTH/0qkS/0jRnvfWNToT/liSpocDIJb6+9mwKdOkz3E28CtZ5T0aT4zWnI
+ WW0=
+X-IronPort-AV: E=Sophos;i="5.70,488,1574146800"; 
+   d="scan'208";a="66820842"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Feb 2020 08:02:48 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Feb 2020 08:02:48 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 26 Feb 2020 08:02:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ko2XfWQCvNTSr++K33SKQc4nDkhPXg2oG1QwY8pB6i9eL2PHDJ+QihsMTKC8CGHfCJGzdpSOdAwYuEjKD7z/F8byienjeFqE/6XHEJQuiHngll6MaDEVADkJnGPSDMgxJupQ+sHA18uIwTQPZ50Z5WnFLimG1ca0oH+pjUkNs1qV5+qVQQgNRbqlMPm1jM+vg+4aeKgVyG1tgrs+spkDn9gT36QWF7tsPwVic2FX9FkULjkXjCUe2tjGk+8FKrah6Sv/mM5OB7l2qHldngjXgvTWDbgAE2raj/MpUN46HYTxuYtUw41DZhLH9yH6RTcy8ZqTwyDwsM1Wc2j390RJqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6akuVSWXkeXIVgaGR2Ky30P9QHQDNs6SN/iN7ClT/rE=;
+ b=c6bFTFu1QZrqw1Qws7XYKmVasiUTc1tj8sHF4w9Q1USalwlw15zDIJZDwoncpCZGskMSVw0Y25nAJjoTULqe9PrV+MfhijrpZru2aVcIb1QlbYLjcgrXABFcq2/PyWmU9b6auZz4UWKkQCWRE5BBepZFpi6tjhrNgVAVDAIMw/BcwPQFmchgwZBKOg20ubCL7j5LSj6XP1VCuAcoQ+P3JbmLcFCkI/mDdRt/quWLb/ft99474gDaxFPllHWUERe+ljAS6ooljt/BTIPMXL8lmk7ZpLQVSpCRa3DiwScYxxRoMj8gQGK0CSTlc0OhRaUEkbaVqVAT2xCRq6oYjZu5ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6akuVSWXkeXIVgaGR2Ky30P9QHQDNs6SN/iN7ClT/rE=;
+ b=Qt1jB5bRHBGQiYhSLPGuSTui7Lp0swNsafNfQXylFiZTiL8aLUG/NTFFaaK/Enw2mvbLvGP/VRn74nd9+CxCNA3hnvWO2wlKzALmmoRQ2bycIhH78MXFW4jQL92CW0nr/DtCEfrUHYQ7XythyQfr2FZ2VKnqBKxYmm5M5dgQE/g=
+Received: from DM6PR11MB4123.namprd11.prod.outlook.com (2603:10b6:5:196::12)
+ by DM6PR11MB4691.namprd11.prod.outlook.com (2603:10b6:5:2a6::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18; Wed, 26 Feb
+ 2020 15:02:46 +0000
+Received: from DM6PR11MB4123.namprd11.prod.outlook.com
+ ([fe80::f42c:82b3:ecda:5ff4]) by DM6PR11MB4123.namprd11.prod.outlook.com
+ ([fe80::f42c:82b3:ecda:5ff4%6]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 15:02:46 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <sakari.ailus@iki.fi>
+CC:     <linux-media@vger.kernel.org>, <hverkuil@xs4all.nl>,
+        <laurent.pinchart@ideasonboard.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: v4l2-core: fix entity initialization in
+ device_register_subdev
+Thread-Topic: [PATCH] media: v4l2-core: fix entity initialization in
+ device_register_subdev
+Thread-Index: AQHV7J6nOcs4VVxha02L+sjL59cMs6gtkVAAgAAAywA=
+Date:   Wed, 26 Feb 2020 15:02:46 +0000
+Message-ID: <0121a282-1509-42b9-e9c3-8c0bc6a1d25d@microchip.com>
+References: <20200226121545.19880-1-eugen.hristev@microchip.com>
+ <20200226145900.GL5023@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20200226145900.GL5023@valkosipuli.retiisi.org.uk>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a047fdce-95ff-4e39-6e23-08d7baccf05e
+x-ms-traffictypediagnostic: DM6PR11MB4691:
+x-microsoft-antispam-prvs: <DM6PR11MB4691F480A0DEE50F9A8155B3E8EA0@DM6PR11MB4691.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0325F6C77B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(199004)(189003)(186003)(6486002)(66946007)(66556008)(76116006)(64756008)(91956017)(2906002)(66476007)(6512007)(6506007)(66446008)(26005)(36756003)(53546011)(5660300002)(71200400001)(8676002)(81156014)(2616005)(8936002)(498600001)(4326008)(86362001)(81166006)(54906003)(31696002)(6916009)(31686004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB4691;H:DM6PR11MB4123.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: huhiJuWCsD7ipFHnddpVsiCF1eSu3mxRrO+eXFThGep7DTcA622dNV1Sc8QSyumHG4VH2aQCIMVw3JTHiD9UvDZFz6QvFCFImE7rthFw81kJJSVXkIl2mC1ZMN3VgevvZlbFjNCDriWMbe+g7xJr7riI8kg25cgjTyMoQaIAnVCRJJl8iO7Zas2gSRJcHoNTe7DxKzAqNhEn36w09q/Rt3REz3ypoaapH0vcc/0dvnYVcT/7lC4SyolC51PBXgSTQPlZhHiNxe5CnkNpFI3k8iLLe3xOwa6wELEdZezy95jmtu+uvPzBdlgqKqALVchlFtNUZDLYSjjLJOHoCExK7miPuqRKCl51BB/WwrUN88YNeVcQTX9Fzbbhl3GpO/BHacrnN7wBzT1kStplqTFxW+lCaZDLmMJImy8K/ylqbbvDZNl23otXJ4VrH3g3BYA2
+x-ms-exchange-antispam-messagedata: KC3pAihgDSJpunlHhyEnroZAMNdfoYTLeqeIvSBQ3NCsYLe0ClG5UPQPWiYK5LANqoaG/zVmPrTM0vaHD1fh7Z0jef8hWH6CQQQXCmT16eziRXl7M5uOQygOJPb9yA/fhmqYhc9URT5biElgBBXw2Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A1C7CFE3E7DC694A908DACF363AEDED0@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226061430.GG110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a047fdce-95ff-4e39-6e23-08d7baccf05e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 15:02:46.3680
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qE0K5zUnhe5TVEh+KYdSWlY8n93doEH6+KN36dXXDwWngJNEo5ALdiiSzSPoTLWm1NFWcC0h009kP+0ehrqfe2q153BleZ2ORZOCLo1I9PY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4691
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 02:14:30PM +0800, Boqun Feng wrote:
-> On Tue, Feb 25, 2020 at 07:14:55PM -0800, Paul E. McKenney wrote:
-> > On Tue, Feb 25, 2020 at 06:24:36PM +0800, Boqun Feng wrote:
-> > > Hi Paul,
-> > > 
-> > > On Fri, Feb 14, 2020 at 03:56:07PM -0800, paulmck@kernel.org wrote:
-> > > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > > 
-> > > > Currently, rcu_barrier() ignores offline CPUs,  However, it is possible
-> > > > for an offline no-CBs CPU to have callbacks queued, and rcu_barrier()
-> > > > must wait for those callbacks.  This commit therefore makes rcu_barrier()
-> > > > directly invoke the rcu_barrier_func() with interrupts disabled for such
-> > > > CPUs.  This requires passing the CPU number into this function so that
-> > > > it can entrain the rcu_barrier() callback onto the correct CPU's callback
-> > > > list, given that the code must instead execute on the current CPU.
-> > > > 
-> > > > While in the area, this commit fixes a bug where the first CPU's callback
-> > > > might have been invoked before rcu_segcblist_entrain() returned, which
-> > > > would also result in an early wakeup.
-> > > > 
-> > > > Fixes: 5d6742b37727 ("rcu/nocb: Use rcu_segcblist for no-CBs CPUs")
-> > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > Cc: <stable@vger.kernel.org> # 5.5.x
-> > > > ---
-> > > >  include/trace/events/rcu.h |  1 +
-> > > >  kernel/rcu/tree.c          | 32 ++++++++++++++++++++------------
-> > > >  2 files changed, 21 insertions(+), 12 deletions(-)
-> > > > 
-> > > > diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-> > > > index 5e49b06..d56d54c 100644
-> > > > --- a/include/trace/events/rcu.h
-> > > > +++ b/include/trace/events/rcu.h
-> > > > @@ -712,6 +712,7 @@ TRACE_EVENT_RCU(rcu_torture_read,
-> > > >   *	"Begin": rcu_barrier() started.
-> > > >   *	"EarlyExit": rcu_barrier() piggybacked, thus early exit.
-> > > >   *	"Inc1": rcu_barrier() piggyback check counter incremented.
-> > > > + *	"OfflineNoCBQ": rcu_barrier() found offline no-CBs CPU with callbacks.
-> > > >   *	"OnlineQ": rcu_barrier() found online CPU with callbacks.
-> > > >   *	"OnlineNQ": rcu_barrier() found online CPU, no callbacks.
-> > > >   *	"IRQ": An rcu_barrier_callback() callback posted on remote CPU.
-> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > index d15041f..160643e 100644
-> > > > --- a/kernel/rcu/tree.c
-> > > > +++ b/kernel/rcu/tree.c
-> > > > @@ -3098,9 +3098,10 @@ static void rcu_barrier_callback(struct rcu_head *rhp)
-> > > >  /*
-> > > >   * Called with preemption disabled, and from cross-cpu IRQ context.
-> > > >   */
-> > > > -static void rcu_barrier_func(void *unused)
-> > > > +static void rcu_barrier_func(void *cpu_in)
-> > > >  {
-> > > > -	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-> > > > +	uintptr_t cpu = (uintptr_t)cpu_in;
-> > > > +	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> > > >  
-> > > >  	rcu_barrier_trace(TPS("IRQ"), -1, rcu_state.barrier_sequence);
-> > > >  	rdp->barrier_head.func = rcu_barrier_callback;
-> > > > @@ -3127,7 +3128,7 @@ static void rcu_barrier_func(void *unused)
-> > > >   */
-> > > >  void rcu_barrier(void)
-> > > >  {
-> > > > -	int cpu;
-> > > > +	uintptr_t cpu;
-> > > >  	struct rcu_data *rdp;
-> > > >  	unsigned long s = rcu_seq_snap(&rcu_state.barrier_sequence);
-> > > >  
-> > > > @@ -3150,13 +3151,14 @@ void rcu_barrier(void)
-> > > >  	rcu_barrier_trace(TPS("Inc1"), -1, rcu_state.barrier_sequence);
-> > > >  
-> > > >  	/*
-> > > > -	 * Initialize the count to one rather than to zero in order to
-> > > > -	 * avoid a too-soon return to zero in case of a short grace period
-> > > > -	 * (or preemption of this task).  Exclude CPU-hotplug operations
-> > > > -	 * to ensure that no offline CPU has callbacks queued.
-> > > > +	 * Initialize the count to two rather than to zero in order
-> > > > +	 * to avoid a too-soon return to zero in case of an immediate
-> > > > +	 * invocation of the just-enqueued callback (or preemption of
-> > > > +	 * this task).  Exclude CPU-hotplug operations to ensure that no
-> > > > +	 * offline non-offloaded CPU has callbacks queued.
-> > > >  	 */
-> > > >  	init_completion(&rcu_state.barrier_completion);
-> > > > -	atomic_set(&rcu_state.barrier_cpu_count, 1);
-> > > > +	atomic_set(&rcu_state.barrier_cpu_count, 2);
-> > > >  	get_online_cpus();
-> > > >  
-> > > >  	/*
-> > > > @@ -3166,13 +3168,19 @@ void rcu_barrier(void)
-> > > >  	 */
-> > > >  	for_each_possible_cpu(cpu) {
-> > > >  		rdp = per_cpu_ptr(&rcu_data, cpu);
-> > > > -		if (!cpu_online(cpu) &&
-> > > > +		if (cpu_is_offline(cpu) &&
-> > > >  		    !rcu_segcblist_is_offloaded(&rdp->cblist))
-> > > >  			continue;
-> > > > -		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
-> > > > +		if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_online(cpu)) {
-> > > >  			rcu_barrier_trace(TPS("OnlineQ"), cpu,
-> > > >  					  rcu_state.barrier_sequence);
-> > > > -			smp_call_function_single(cpu, rcu_barrier_func, NULL, 1);
-> > > > +			smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
-> > > > +		} else if (cpu_is_offline(cpu)) {
-> > > 
-> > > I wonder whether this should be:
-> > > 
-> > > 		  else if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_is_offline(cpu))
-> > > 
-> > > ? Because I think we only want to queue the barrier call back if there
-> > > are callbacks for a particular CPU. Am I missing something subtle?
-> > 
-> > I don't believe that you are missing anything at all!
-> > 
-> > Thank you very much -- this bug would not have shown up in any validation
-> > setup that I am aware of.  ;-)
-> > 
-> > 							Thanx, Paul
-> > 
-> > > Regards,
-> > > Boqun
-> > > 
-> > > > +			rcu_barrier_trace(TPS("OfflineNoCBQ"), cpu,
-> > > > +					  rcu_state.barrier_sequence);
-> > > > +			local_irq_disable();
-> > > > +			rcu_barrier_func((void *)cpu);
-> > > > +			local_irq_enable();
-> 
-> Another (interesting) thing I found here is that we actually don't need
-> the irq-off section to call rcu_barrier_func() in this branch. Because
-> the target CPU is offlined, so only the cblist is only accessed at two
-> places, IIUC, one is the rcuo kthread and one is here (in
-> rcu_barrier()), and both places are in the process context rather than
-> irq context, so irq-off is not required to prevent the deadlock.
-> 
-> But yes, I know, if we drop the local_irq_disable/enable() pair here,
-> it will make lockdep very unhappy ;-)
-
-And acquiring ->nocb_lock with interrupts enabled would be rather scary.
-And probably would be an accident waiting to happen.  So I am happy to
-disable interrupts on this path, given that it should be infrequent,
-only being executed for a short time after a no-CBs CPU goes offline.
-
-Much nicer to let lockdep do its thing than to have to second-guess it
-on every change that involves acquiring ->nocb_lock in an interrupt
-handler!  ;-)
-
-							Thanx, Paul
-
-> Regards,
-> Boqun
-> 
-> > > >  		} else {
-> > > >  			rcu_barrier_trace(TPS("OnlineNQ"), cpu,
-> > > >  					  rcu_state.barrier_sequence);
-> > > > @@ -3184,7 +3192,7 @@ void rcu_barrier(void)
-> > > >  	 * Now that we have an rcu_barrier_callback() callback on each
-> > > >  	 * CPU, and thus each counted, remove the initial count.
-> > > >  	 */
-> > > > -	if (atomic_dec_and_test(&rcu_state.barrier_cpu_count))
-> > > > +	if (atomic_sub_and_test(2, &rcu_state.barrier_cpu_count))
-> > > >  		complete(&rcu_state.barrier_completion);
-> > > >  
-> > > >  	/* Wait for all rcu_barrier_callback() callbacks to be invoked. */
-> > > > -- 
-> > > > 2.9.5
-> > > > 
+T24gMjYuMDIuMjAyMCAxNjo1OSwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KDQo+IEhpIEV1Z2VuLA0K
+PiANCj4gT24gV2VkLCBGZWIgMjYsIDIwMjAgYXQgMDI6MTU6NDVQTSArMDIwMCwgRXVnZW4gSHJp
+c3RldiB3cm90ZToNCj4+IFRoZSBjaGVjayBmb3IgcGFyYW1ldGVycyBpcyBkb25lIGJlbG93IGlu
+IHRoZSBmdW5jdGlvbi4NCj4+IEluaXRpYWxpemUgdGhlIGVudGl0eSB2YXJpYWJsZSBwcm9wZXJs
+eSwgYWZ0ZXIgdGhlIHBhcmFtZXRlcnMNCj4+IGhhdmUgYmVlbiBjaGVja2VkLg0KPj4NCj4+IEZp
+eGVzOiA2MWY1ZGI1NDlkZGUgKCJbbWVkaWFdIHY0bDogTWFrZSB2NGwyX3N1YmRldiBpbmhlcml0
+IGZyb20gbWVkaWFfZW50aXR5IikNCj4+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuIEhyaXN0ZXYgPGV1
+Z2VuLmhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL21lZGlhL3Y0
+bDItY29yZS92NGwyLWRldmljZS5jIHwgMyArKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21l
+ZGlhL3Y0bDItY29yZS92NGwyLWRldmljZS5jIGIvZHJpdmVycy9tZWRpYS92NGwyLWNvcmUvdjRs
+Mi1kZXZpY2UuYw0KPj4gaW5kZXggNjNkNmIxNDdiMjFlLi42ZTMzMTMyZWJiMTkgMTAwNjQ0DQo+
+PiAtLS0gYS9kcml2ZXJzL21lZGlhL3Y0bDItY29yZS92NGwyLWRldmljZS5jDQo+PiArKysgYi9k
+cml2ZXJzL21lZGlhL3Y0bDItY29yZS92NGwyLWRldmljZS5jDQo+PiBAQCAtMTEyLDcgKzExMiw3
+IEBAIGludCB2NGwyX2RldmljZV9yZWdpc3Rlcl9zdWJkZXYoc3RydWN0IHY0bDJfZGV2aWNlICp2
+NGwyX2RldiwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgdjRsMl9z
+dWJkZXYgKnNkKQ0KPj4gICB7DQo+PiAgICNpZiBkZWZpbmVkKENPTkZJR19NRURJQV9DT05UUk9M
+TEVSKQ0KPj4gLSAgICAgc3RydWN0IG1lZGlhX2VudGl0eSAqZW50aXR5ID0gJnNkLT5lbnRpdHk7
+DQo+PiArICAgICBzdHJ1Y3QgbWVkaWFfZW50aXR5ICplbnRpdHk7DQo+PiAgICNlbmRpZg0KPj4g
+ICAgICAgIGludCBlcnI7DQo+Pg0KPj4gQEAgLTE0MSw2ICsxNDEsNyBAQCBpbnQgdjRsMl9kZXZp
+Y2VfcmVnaXN0ZXJfc3ViZGV2KHN0cnVjdCB2NGwyX2RldmljZSAqdjRsMl9kZXYsDQo+PiAgICAg
+ICAgICAgICAgICBnb3RvIGVycm9yX21vZHVsZTsNCj4+DQo+PiAgICNpZiBkZWZpbmVkKENPTkZJ
+R19NRURJQV9DT05UUk9MTEVSKQ0KPj4gKyAgICAgZW50aXR5ID0gJnNkLT5lbnRpdHk7DQo+PiAg
+ICAgICAgLyogUmVnaXN0ZXIgdGhlIGVudGl0eS4gKi8NCj4+ICAgICAgICBpZiAodjRsMl9kZXYt
+Pm1kZXYpIHsNCj4+ICAgICAgICAgICAgICAgIGVyciA9IG1lZGlhX2RldmljZV9yZWdpc3Rlcl9l
+bnRpdHkodjRsMl9kZXYtPm1kZXYsIGVudGl0eSk7DQo+IA0KPiBUaGFua3MgZm9yIHRoZSBwYXRj
+aC4NCj4gDQo+IEluc3RlYWQgb2Yga2VlcGluZyBhIHNob3J0aGFuZCBmb3IgZW50aXR5IGxvY2Fs
+bHksIEknZCBqdXN0IHJlZmVyIHRvDQo+ICZzZC0+ZW50aXR5LiBJdCdzIG1vcmUgc2ltcGxlLCBh
+bmQgZ2V0cyBhd2F5IHdpdGggb25lIHBhaXIgb2YgI2lmIC8gI2VuZGlmDQo+IGFzIHdlbGwuDQoN
+CkhpLA0KDQpJIHRob3VnaHQgYWJvdXQgdGhhdCBhcyB3ZWxsLCBidXQgY29uc2lkZXJlZCB0byBt
+b2RpZnkgYXMgbGl0dGxlIGFzIA0KcG9zc2libGUgdGhlIG9yaWdpbmFsIGNvZGUuDQoNCldpbGwg
+c2VuZCBhIHYyLg0KDQpFdWdlbg0KDQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiANCj4gU2FrYXJp
+IEFpbHVzDQo+IA0KDQo=
