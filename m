@@ -2,123 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD96FC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB1BC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA8F24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7754124687
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLK6sFkL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QZiWhKFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgBZPkZ (ORCPT
+        id S1728406AbgBZPkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:40:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40843 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgBZPkZ (ORCPT
+        Wed, 26 Feb 2020 10:40:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41560 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgBZPkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:40:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so3653892wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:40:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=B52/TzLFaZ8ELTIpZ/2PQuvnXdlCL7Qyj/3+GDpbM98=;
-        b=aLK6sFkLCKZDv+4r78ATZHhLeXxZmMm4tfcUeHBksjhvUxB4GDL09kT6PvaIc5m3vB
-         +V8MqGfsdyk2Ggc+D0toIGzmxLfBMYQzFdrIoTZBjj8KCqJqTTSEdo/8i+J/DYJSIaEJ
-         x5dzLhZe8GfdDvYeOiHugLFp4g1rVA4A7W90tW+DqyLSHtgKfmgDdUTj7KCDuFuWM1Qn
-         h8gCtcE3l372dJ+Io2d9uEPhb89+f8r98iRCxmfE6Dn0h7E2r3f+HZ7rkpngAZG0GF+8
-         iV7t9Ndgc5uu3+bxNGjpnQtfVFEzwWRlT/7S7qzHOtOh4jCHhy4rokSTf7PgXK/sCAbf
-         g12g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=B52/TzLFaZ8ELTIpZ/2PQuvnXdlCL7Qyj/3+GDpbM98=;
-        b=F4Pv0WTLplbNf0jvq5TOFIBOdZtADxdArtQp+i6vVAGZYQJ97pYNIqYy6AgiwrBHjx
-         ypoPwb/WRsPSuAzdmEglKKTjFuRtxCI6Os4vZEoPQ3cS0Knagr1oAXZbYHTQ8umYMbz3
-         Z0fwrxBgz+IG7XtQIb0s2SiarZkyFJruHhSBY27hKgL/uEQsYa5hPJIn6iQK1Mrc7Ijf
-         4PkH5LPH9Vv6F4Do7xmoayjXkd9zoAg8PydinD38KK0M9IUsqG9funW/lMdmUrr9ilSn
-         M42XVD4wSYecdx4ulXdkh8DhzXx/+ZQFaJVrCeIOlCOngh1JLoD4IiB8FKFcwU5FyXfW
-         5mog==
-X-Gm-Message-State: APjAAAUiSDkFCi7Ctdhe3pjQaZGvkmMx7TSy3i6BjQRjhWdkMQumZYfJ
-        /aziBOe2r+atuWdhqQDh7PPMSw==
-X-Google-Smtp-Source: APXvYqzQb4v6YIq/tH4gM9y8z9QC4YTU4AuGr+vaNK4P35wsrvLN41M9n96t5xpMi8l9wtu8Y1AvPg==
-X-Received: by 2002:a05:600c:54e:: with SMTP id k14mr5919562wmc.115.1582731622867;
-        Wed, 26 Feb 2020 07:40:22 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id i2sm3259433wmb.28.2020.02.26.07.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:40:22 -0800 (PST)
-Date:   Wed, 26 Feb 2020 15:40:55 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        b.galvani@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org,
-        jic23@kernel.org
-Subject: Re: [PATCH v5 1/2] mfd: rn5t618: add ADC subdevice for RC5T619
-Message-ID: <20200226154055.GQ3494@dell>
-References: <20200223131638.12130-1-andreas@kemnade.info>
- <20200223131638.12130-2-andreas@kemnade.info>
+        Wed, 26 Feb 2020 10:40:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=RdfI8zcYUbYtVeFuEktgZYpmdsO2bxZo0zxF/fSi1ho=; b=QZiWhKFyhqE4wOJ4Fc2qb1NIjh
+        +aCjkUnk6fdzX+rGLHwqwjOJ+6bxSaXFwf9Kl5W13iavOwYJu15WkjT+FRP9+8j1dlpP6+w1TjFkb
+        l0KX7scOeP1gS6U0jzc4RTX9aMchaKjhHg00bVZv0j2+t9865z+c/u4otvCYk25mD576+3nVoAD53
+        8reA1R6AD5lLyP+dykIdyV9K4AcNU6zV0ID4tLfSyVLPcXzZDCcP6lj+/O18BdoN69QwxFGcxefhi
+        JsRx6aDf5Jc9A1XlpCtpHNdfuvIuJa1BXqtgkmmPgmJhscCnvmWd3X+Zm1f7o8h7o9sEd1Fut96kG
+        a5cuJNdw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6ynR-0001q6-Qg; Wed, 26 Feb 2020 15:40:25 +0000
+Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
+ driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+ <20200226105419.632771-4-enric.balletbo@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
+Date:   Wed, 26 Feb 2020 07:40:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200226105419.632771-4-enric.balletbo@collabora.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200223131638.12130-2-andreas@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Feb 2020, Andreas Kemnade wrote:
-
-> This adds a subdevice for the ADC in the RC5T619
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> depends on:
-> https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
-> 
-> Changes in v3:
-> re-added it to the series because of
-> "Oh, it looks like there was a conflict.  Could you collect any Acks
-> (including mine) rebase and resend please?"
-
-Looks like there is still a conflict.  Sure, it's not a complicated
-fix, but that's beside the point.  What tree is this set based on?
-
->  drivers/mfd/rn5t618.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> index 073de8e0e78b..321836f78120 100644
-> --- a/drivers/mfd/rn5t618.c
-> +++ b/drivers/mfd/rn5t618.c
-> @@ -24,6 +24,7 @@ static const struct mfd_cell rn5t618_cells[] = {
->  };
+On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index 2114b563478c..dcd6481a14d0 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -44,4 +44,11 @@ config MTK_SCPSYS
+>  	  Say yes here to add support for the MediaTek SCPSYS power domain
+>  	  driver.
 >  
->  static const struct mfd_cell rc5t619_cells[] = {
-> +	{ .name = "rn5t618-adc" },
->  	{ .name = "rn5t618-regulator" },
->  	{ .name = "rc5t619-rtc" },
+> +config MT8173_MMSYS
+> +	bool "MediaTek MT8173 MMSYS Support"
 
-In what upstream tree is this line present?
+Hi,
+Can this be tristate instead of bool?
 
->  	{ .name = "rn5t618-wdt" },
+> +	depends on COMMON_CLK_MT8173
+> +	help
+> +	  Say yes here to add support for the MediaTek MT8173 Multimedia
+> +	  Subsystem (MMSYS).
+> +
+>  endmenu
 
+thanks.
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+~Randy
+
