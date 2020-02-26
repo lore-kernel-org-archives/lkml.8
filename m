@@ -2,120 +2,121 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D0DC4BA2A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A14C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D572024653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1BF24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MEr0ISDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbgBZUlN (ORCPT
+        id S1727545AbgBZUmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:41:13 -0500
-Received: from mga06.intel.com ([134.134.136.31]:5071 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbgBZUlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:41:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 12:41:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="350475837"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.84]) ([134.134.177.84])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 12:41:10 -0800
-Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
- IA32_FEAT_CTL is configured
-From:   Jacob Keller <jacob.e.keller@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
-        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
-        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
-        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
-        lenb@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
-        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
-        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
- <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
- <20200225221234.GL9245@linux.intel.com>
- <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
- <20200225232900.GO9245@linux.intel.com>
- <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
- <20200226004258.GP9245@linux.intel.com>
- <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
-Organization: Intel Corporation
-Message-ID: <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
-Date:   Wed, 26 Feb 2020 12:41:09 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 15:42:40 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33205 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBZUmk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 15:42:40 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d5so608899qto.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:42:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i88oqqwGwa149ArRLuVW7H77TVeoVzHvwQKN4q66IIM=;
+        b=MEr0ISDHqnCdVLRtSfviOXm6RbiP7/A1qgWyYq0gIb/y4VyyvBE5gVdLxHAHoo0wca
+         HH+WDRnHo7qnzjeTQDBW9rUyUmlwd/5UsPmOjzCYeBGg21bXmnWMCg+1D+enEY74ZnB0
+         5tssh0vpdDn/hhryTYlqVHUtoGnGvKAy9I42SNw0Y/cJChLwdIsxFXLU5TTec7NUcHg4
+         vZVmiF+SIWdAUBntw4jskQj49pP72/EumL5+hQuyBIev/ESdfXaTYCSlRmekzjuAJIrj
+         hyI3D79b7CAqZtO0RjjYL638NAXYE1qvUQMv9JZzXeCvGb1/Wm625j6+VLFYkESI+vRn
+         elsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i88oqqwGwa149ArRLuVW7H77TVeoVzHvwQKN4q66IIM=;
+        b=OwaTAWeYCtLkMXvRh6uDVoa07tLw/1uLV6GW1UM2eMFpVusAnzCyyCrPf5nnbfuXBp
+         UcyWg1D2fwqQGZP5VI9nsjOFaZ08mCwp3Cp/B0gaLpoZa9/QoH0b8UFyPZAniqyZ2Gbu
+         n27/ku7k0Mx+4lx93nU+YvGuJmmWWlDKa8Q/ylr0hG/Q3Kn5aCTl3W1vR0UI9ClJG1mv
+         MVVlbX8+/9zEUOYFYfYgxW0dsL60B0jL5vL3VJleKFQ+wo6cnPmpDmzMZt4NrHniuhYl
+         h6G6Z299ut9OUQ2Y2ct+c0yXJHYptfsg5zssyljMfq0G8bMgAjn35XLzJHz3zEd82CP7
+         BPpA==
+X-Gm-Message-State: APjAAAWCHC1ML0iu90XbWZzhYHmaDnHuMkM436+1YiQAVZSGAoStXgwP
+        rzASZRZjbHgEb+qg3J/HKUNym/0u24VrCg==
+X-Google-Smtp-Source: APXvYqx53Kv6dlkpnWhxarlrn/AR/8PRwFcE3tS1Fxn5FfuavCYSzPwTtNfx7Ycj+DTtHjqHDi/dcQ==
+X-Received: by 2002:ac8:377a:: with SMTP id p55mr785701qtb.87.1582749759314;
+        Wed, 26 Feb 2020 12:42:39 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id t13sm1726812qkm.60.2020.02.26.12.42.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Feb 2020 12:42:38 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j73Vu-0007FH-8G; Wed, 26 Feb 2020 16:42:38 -0400
+Date:   Wed, 26 Feb 2020 16:42:38 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     syzbot <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>
+Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org,
+        Bernard Metzler <bmt@zurich.ibm.com>
+Subject: Re: possible deadlock in cma_netdev_callback
+Message-ID: <20200226204238.GC31668@ziepe.ca>
+References: <000000000000153fac059f740693@google.com>
 MIME-Version: 1.0
-In-Reply-To: <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000153fac059f740693@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/2020 4:58 PM, Jacob Keller wrote:
-> On 2/25/2020 4:42 PM, Sean Christopherson wrote>> So there's something
-> weird going on. Maybe "boot_cpu_has" in the
->>> vmx_disabled_by_bios is wrong? Hmm.
->>
->> Hmm, perhaps a bug somewhere else is overwriting the cpufeatures bit for
->> X86_FEATURE_VMX.  Let me see if I can reproduce from net-next.
->>
+On Tue, Feb 25, 2020 at 09:39:10PM -0800, syzbot wrote:
+> Hello,
 > 
-> If you have any further suggestions for debugging, I'm happy to help try
-> to figure this out. To my eyes, it looks like somehow bits get reset...
-> It's definitely not clear to me how this happens.
+> syzbot found the following crash on:
 > 
-> There is the get_cpu_caps call.. but that seems to correctly call
-> apply_forced_caps at the end.
+> HEAD commit:    6132c1d9 net: core: devlink.c: Hold devlink->lock from the..
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16978909e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
+> dashboard link: https://syzkaller.appspot.com/bug?extid=55de90ab5f44172b0c90
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12808281e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134ca6fde00000
 > 
-> That's all I have time for today.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
 > 
-> Thanks,
-> Jake
+> iwpm_register_pid: Unable to send a nlmsg (client = 2)
+> infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
+> netlink: 'syz-executor639': attribute type 1 has an invalid length.
+> 8021q: adding VLAN 0 to HW filter on device bond1
+> bond1: (slave gretap1): making interface the new active one
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.6.0-rc2-syzkaller #0 Not tainted
+> syz-executor639/9689 is trying to acquire lock:
+> ffffffff8a5d2a60 (lock#3){+.+.}, at: cma_netdev_callback+0xc6/0x380 drivers/infiniband/core/cma.c:4605
 > 
+> but task is already holding lock:
+> ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+> ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5433
+>
 
-Hi,
+Bernard, this is a siw bug too, it is not allowed to get RTNL in
+siw_create_listen() (though this is probably for silly reasons and
+could be fixed)
 
-I kept digging into this, and I added a further print to the get_cpu_cap
-function.
+It is not easy to get this into the lockdep, I'll send a different
+patch too
 
-It looks like get_cpu_cap is being called again *after*
-init_ia32_feat_ctl...
-
-Digging further, I discovered this appears to be the call in setup_pku,
-which would only be enabled for systems which have X86_FEATURE_PKU
-enabled and supported. It's quite likely that test systems may not have
-had this feature, hence why it went undetected till now.
-
-Because of the extra get_cpu_cap call, the capabilities are reset. Since
-we never use setup_clear_cpu_cap or pass NULL to clear_cpu_cap, the code
-that sets the global cpu_caps_cleared bits is not run.
-
-It's not clear to me what the best fix for this is.
-
-Perhaps init_ia32_feat_ctl should be something run during
-early_identify_cpu, since it's really checking global status (rdmsr),
-and not per-CPU status. And then it could directly operate to call
-setup_clear_cpu_cap, which would properly clear the bit globally,
-ensuring that apply_forced_caps kicks in?
-
-Or this needs to somehow be run *after* setup_pku? But that doesn't feel
-very robust.
-
-Thanks,
-Jake
+Jason
