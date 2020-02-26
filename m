@@ -2,86 +2,69 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E29C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCD1C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2E420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A516420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="erkkPR07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgBZPve (ORCPT
+        id S1728578AbgBZPv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:51:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:37808 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 10:51:58 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:35340 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbgBZPve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:51:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BACE630E;
-        Wed, 26 Feb 2020 07:51:33 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 283FA3F819;
-        Wed, 26 Feb 2020 07:51:33 -0800 (PST)
-Subject: Re: Proper way to check for restricted DMA addressing from device
- driver
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <bfecf850-5bd7-3092-b9b3-c5721d7a44ee@arm.com>
-Date:   Wed, 26 Feb 2020 15:51:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728205AbgBZPv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:51:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=L8Q+XFSMVN4lxVVcXk74V3MM82FvN2d6yw5BFbk+5U0=; b=erkkPR07RtQwpP+VPCUn694ITw
+        D+263YHog6pASJWlyCjCbpNW9FAfKcB3irDOPmtFqyFVIvuZkfFucM7zUcyZ6tQ3WfCLA5kTqerqv
+        eXGf1sSCTNX8wLY1E6K6DJXS+PzUYIcM6AcwCX8a1s/XfoXPnxYBmXo7jLFLbVg1NG7U=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j6yyW-0006kB-U8; Wed, 26 Feb 2020 16:51:52 +0100
+Date:   Wed, 26 Feb 2020 16:51:52 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sudheesh Mavila <sudheesh.mavila@amd.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH =?iso-8859-1?B?djKgXSBuZXQ6IHBo?=
+ =?iso-8859-1?Q?y=3A_corrected_the_return_value_for_genphy=5Fcheck=5Fand?=
+ =?iso-8859-1?Q?=5Frestart=5Faneg?= ?and  genphy_c45_check_and_restart_aneg
+Message-ID: <20200226155152.GL7663@lunn.ch>
+References: <20200226071045.79090-1-sudheesh.mavila@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226071045.79090-1-sudheesh.mavila@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/02/2020 3:44 pm, Lucas Stach wrote:
-> Hi all,
+On Wed, Feb 26, 2020 at 12:40:45PM +0530, Sudheesh Mavila wrote:
+> When auto-negotiation is not required, return value should be zero.
 > 
-> I'm currently struggling with how to properly check for restricted DMA
-> addressing from a device driver side. The basic issue I'm facing is
-> that I have a embedded GPU, which isn't able to address all system
-> memory due to interconnect being restricted to 32bit addressing. The
-> limits are properly described in the system device-tree and thus
-> SWIOTLB is working.
+> Changes v1->v2:
+> - improved comments and code as Andrew Lunn and Heiner Kallweit suggestion
+> - fixed issue in genphy_c45_check_and_restart_aneg as Russell King
+>   suggestion.
 > 
-> However graphics buffers are large and graphics drivers really like to
-> keep the dma mapping alive for performance reasons, which means I'm
-> running out of SWIOTLB space pretty easily, aside from the obvious
-> performance implications of SWIOTLB.
-> 
-> As 3 out of the maximum 4GB system memory are located in the DMA32 zone
-> and thus located in the GPU addressable space, I just want to avoid
-> allocating graphics buffers outside of the DMA32 zone.
-> 
-> To add the DMA32 restriction to my drivers allocations, I need a
-> reliable way from the device driver side to check if the GPU is in such
-> a restricted system. What I'm currently doing in my WIP patch is this:
-> 
->   /*
->    * If the GPU is part of a system with only 32bit bus addressing
->    * capabilities, request pages for our SHM backend buffers from the
->    * DMA32 zone to avoid performance killing SWIOTLB bounce buffering.
->    */
->   if (*gpu->dev->dma_mask < BIT_ULL(32) && !device_iommu_mapped(gpu->dev))
->           priv->shm_gfp_mask |= GFP_DMA32;
-> 
-> However I'm not sure if there are edge cases where this check would
-> fool me. Is there any better way to check for DMA addressing
-> restrictions from the device driver side?
+> Fixes: 2a10ab043ac5 ("net: phy: add genphy_check_and_restart_aneg()")
+> Fixes: 1af9f16840e9 ("net: phy: add genphy_c45_check_and_restart_aneg()")
+> Signed-off-by: Sudheesh Mavila <sudheesh.mavila@amd.com>
 
-dma_addressing_limited()?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Robin.
+    Andrew
