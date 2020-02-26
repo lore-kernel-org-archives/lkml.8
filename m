@@ -2,95 +2,97 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DA3C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE83C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7187524683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hegrlG36"
+	by mail.kernel.org (Postfix) with ESMTP id DC64024687
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582727647;
+	bh=cSeb/7OP0qIGCqurmVCFUiuRZAbhfJ7k+1e0bkEwtGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eKMRCzht/ouZjTUHq9/K2AZzPS0QJWMhuU+HCIRpMr0+D2Onw7PIghRbJ9FRwhEli
+	 7oqnKxxCLf5sCzzK3U7547hHB+tyBeNTF5+SWnvcKZzHekisHsKQnKr7B4weXbwLyD
+	 at6KtuWDfc419jLGypPM/LSQIyo0gq9NC0zH0TsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBZOdu (ORCPT
+        id S1727854AbgBZOeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:33:50 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35882 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbgBZOdi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:33:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so3367345wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:33:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=E/6gF09OIYAAYDcV57fzVa8XqTwVQognyAPormZwLXA=;
-        b=hegrlG36+pNJ7eQm7ecF25m/6jmdt9xJtyaZkyKYXTTcIhQSHUrlFOGC7QM1ZkSs1f
-         z8Cii0H2nyG4YFC3gRgyZqEe2HVDgPGAMFF8Oi0EKGpftdOEUEHVDSusQ1+Mx4/446C1
-         mQ0rmvHluc25ztTOpLq60P35Fc/x7qwrIxndv01K9RtTNXPG2vhs8y90wuanfqXD2BkE
-         fiDkHDNcWL2e7tHjtHwPqJaSfCIBOB5Ep+IcSpKSngLEO8P66LZOkF04iJq2Q7vPKClx
-         /mIzKnEUHgviGqFsQYG6Imig61ZMZ8fejNc3vleGlSvmQUwt+gqVDwG0LoxZykRNAY0Q
-         Oo1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=E/6gF09OIYAAYDcV57fzVa8XqTwVQognyAPormZwLXA=;
-        b=oYjiX72hpuPidN3fb5VKSYLzMQmsUn38omgsSNtwSdWGJiE/E2GGS/x1qSb5ixI8pB
-         mqFinLs9gkV36OswyMWLaSyT9LLNuPEqy4dzvSLcvR4OBYvxXBlEytTMoCJVsOthFZ5D
-         DK+yyq87O9AACSIeQy0Ty1IQ747p5Vq2pNHuXWMx/DA6mmGyG7JOHQhWgrsn8cE8at6h
-         spXOONUlgFDFe1tRv/FOQ+ur8zsAx2bp/5y8Z/unlqoRpzzw6lID39SlLFK6K8SgT01g
-         y6+PpYh0o2wFu6sGtKm+L7klxNGB9+Kv0BY6w58m9Rq3jSf+uNC6QRkrfSKLq7lX5aWe
-         k1GQ==
-X-Gm-Message-State: APjAAAX5mqXFqZCSMi7q43RqaUMi2tQMmXcMTTjPFfnVrspyQnHy5DfP
-        2OyJOgsMkOw4dFSYwSPZ+rY4WCp4dEM=
-X-Google-Smtp-Source: APXvYqwBKYor34z0MGWsBLW+ZiaHQNfsqktLq4aiSFvylON7V2FQMsPdkd+ygzITY5yRXB619OYQwQ==
-X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr6015351wmk.160.1582727615570;
-        Wed, 26 Feb 2020 06:33:35 -0800 (PST)
-Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h10sm3204198wml.18.2020.02.26.06.33.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 26 Feb 2020 06:33:35 -0800 (PST)
-From:   Nicolas Belin <nbelin@baylibre.com>
-To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        devicetree@vger.kernel.org
-Cc:     baylibre-upstreaming@groups.io, Nicolas Belin <nbelin@baylibre.com>
-Subject: [PATCH RFC v2 1/3] dt-bindings: Document shiji vendor-prefix
-Date:   Wed, 26 Feb 2020 15:33:10 +0100
-Message-Id: <1582727592-4510-2-git-send-email-nbelin@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
-References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
+        Wed, 26 Feb 2020 09:34:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727459AbgBZOeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:34:06 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F6C2467D;
+        Wed, 26 Feb 2020 14:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582727645;
+        bh=cSeb/7OP0qIGCqurmVCFUiuRZAbhfJ7k+1e0bkEwtGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zJuOqIMIDAfRRIhLJkghYWtXK0gr2o3uClFKZ7g5RU4dv2idQTdXaBjJkBLLLV8Ah
+         P/FU3qUG67jF/VGsL6nI0ARTmCtdhFOTZ67Y19gOyMRdf8dz4n4ncbbj1Eq42wwA2V
+         k7aalkOtNybRZX6/n2x9CnQ1+9zotjPpSaXHeCEk=
+Received: by mail-qk1-f170.google.com with SMTP id m2so1137164qka.7;
+        Wed, 26 Feb 2020 06:34:05 -0800 (PST)
+X-Gm-Message-State: APjAAAW+et0VAvGY1vUpu12Mx3tYfk+otC74NQdJYLV0N0PFHMqadq7+
+        mFpXcZ4dPDZ7hsNaZffJ0CYUnDCTSpSq0DVRCQ==
+X-Google-Smtp-Source: APXvYqxF1n1ezucAucxSMjTGsOoyu906lkDp/t3rDwiUT3lf64Vd7QDwncmsJhlHvgESuk6pwqSFVCNKXABjurrn7mU=
+X-Received: by 2002:a37:a750:: with SMTP id q77mr5797388qke.119.1582727644756;
+ Wed, 26 Feb 2020 06:34:04 -0800 (PST)
+MIME-Version: 1.0
+References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
+ <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+ <20200220203509.GA14697@bogus> <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
+In-Reply-To: <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 26 Feb 2020 08:33:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
+Message-ID: <CAL_JsqKVNENPZKbCy4FrGRO=D79hBL3keuE-U2tTwDVViCrdPQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>, dri-devel@freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shenzhen Shiji Lighting Co.,Ltd is a LED manufacturer.
+On Wed, Feb 26, 2020 at 5:17 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+>
+> On 2/21/2020 2:05 AM, Rob Herring wrote:
+> > On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
+> >> This patch adds a clock definition needed for powering on the GPU TBUs
+> >> and the GPU TCU.
+> >>
+> >> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> >> ---
+> >>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
+> >
+> > See https://patchwork.ozlabs.org/patch/1241297
+> > Please check and re-submit.
+> Hi Rob, These issues seem to be from the original code and not related
+> to my patch. Are these going to be blocking errors?
 
-Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+There are no errors in this binding in mainline. You've added a 3rd
+clock when all the existing users have exactly 2 clocks.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9e67944bec9c..a463286c3960 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -863,6 +863,8 @@ patternProperties:
-     description: SGX Sensortech
-   "^sharp,.*":
-     description: Sharp Corporation
-+  "^shiji,.*":
-+    description: Shenzhen Shiji Lighting Co.,Ltd
-   "^shimafuji,.*":
-     description: Shimafuji Electric, Inc.
-   "^si-en,.*":
--- 
-2.7.4
-
+Rob
