@@ -2,163 +2,151 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F90FC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E20C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E52C21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511C221D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXNFScEP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIFk3q/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBZPWU (ORCPT
+        id S1728143AbgBZPXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:22:20 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:46342 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728037AbgBZPWT (ORCPT
+        Wed, 26 Feb 2020 10:23:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31745 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727023AbgBZPXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:22:19 -0500
-Received: by mail-vk1-f194.google.com with SMTP id u6so881596vkn.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:22:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V8nWkCMD00cXwz4vSIcrFn9i/BES9/eV0AoGbar9kSU=;
-        b=mXNFScEPEXTZ4Y03CyiK+/TjkHLqnAjQPcxs+JNs+IyUVBpbdLw2mdhfel0dmuKPLk
-         W6OvSj/o0zdvXzCB9K+9m7F8SiVe1l183/R1TUoJcArgKBRRhoXq5crK7CUujf6EiXTA
-         PsnQ/ubtPHHwkYOhMOt3/D+OFo4vIsqkU3GrZh1Flo4rA1OijEUNJkjPl9z2qKTlgJIY
-         IE2tSomRkCv2tDlzf/anAOXlsMg+7A1wtK1hh+B9hCIcDrfBTNAYKxrpI8TS0hwqSio9
-         IQm2G/+ObyhefUuHtvD2xH8EEmoVoXNzjYR+CAhxeyhSzbk4rOgw2gQu8bs0ueut8kML
-         IoaQ==
+        Wed, 26 Feb 2020 10:23:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582730610;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=k4ucQrDY+iQOfed8DTaG5mdXUDW/n4hSrzqLX+ul7io=;
+        b=jIFk3q/2Ur7jU4zv1jX3PHq5qPtAwjxJ+ChsXXe/wmKiBbLKMcO/UZPY+tpZutmj0v1mcc
+        yy5g4JkvVWW6HuU++bucWgPokCxxYzcoD+qMaJxuF/cNBV4yAl1JKu5i0Rsj/lUMWPjSb/
+        bcuae3yLHG2SrzI3FBG2FGOg+lzxvr0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-olc9cvn0O362vQYypbsjgA-1; Wed, 26 Feb 2020 10:23:28 -0500
+X-MC-Unique: olc9cvn0O362vQYypbsjgA-1
+Received: by mail-wr1-f70.google.com with SMTP id f10so245037wrv.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:23:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V8nWkCMD00cXwz4vSIcrFn9i/BES9/eV0AoGbar9kSU=;
-        b=GnJ/zVlAZRJwhrtfMjsg61rNpV72SqWXRnbc+/5vr+lKkmZBnU5hEnhPbYvlbdeGlf
-         77kQc9Q+/05Ey71JhSXtH84Ph41JO6gMeXzUDCCMvgb5G7cQwXFhcY789BufoURowsdn
-         rdX0zWKk5HUBw1O6+7mXO8PLJp2ngkc2dvqKsJzny1EJ3Os7llaf5vHTsxtmNhgEvOEn
-         vaS9KAN41gqOrm5yACH9MbHEyvlr73DR+DrgKcV925TUmEQESuKkXII2vju561zOuJnl
-         CXhIvAx8U5iDmHtj3oHhFQUZMgpBjZucsJRfXUw1iI2LjbhtWYVylmxF75mesdFb/ahv
-         jF5g==
-X-Gm-Message-State: APjAAAVK4r51N1FadhiqlgsCDj8TLjAXaJB15io8Bavp3LsvRra0fMw/
-        EweECjAKv0l6jOuZfPffgFljANxZervjkCk48y29eg==
-X-Google-Smtp-Source: APXvYqzF0V4RB8Y6fLHFPX/60gGn0XuOow45OeMPm8jjcH+gHUPO3SKB/DseAxYeF3stegFkmAxKJF8fZ82SZIMQzZc=
-X-Received: by 2002:a1f:914b:: with SMTP id t72mr4120155vkd.101.1582730538102;
- Wed, 26 Feb 2020 07:22:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=k4ucQrDY+iQOfed8DTaG5mdXUDW/n4hSrzqLX+ul7io=;
+        b=t2JgXQP4s5rsH2KhoUDZxwPxjPZqrcmh6cz38XUYv672kC8paeq4KlGCW4sYD4V+hq
+         FOs47Eo/QjyWEyZ/pMpu8Ugyo2j8nr0w5vt0P8+91yn/rgsrVktjGhDd26gDGE5cZ6wO
+         99nBT8O0qnrEtelTxwyRAgffU2Dko19o36ABjdEWMk1w4CrKlwaDJmUF6m4H3zEsuQ38
+         O96f5qVMRLMnbg0rGaj2Dagac5huqNmP3RYwMoVEYh5Px6dYEsZiWgs3O6i10TosV8de
+         gbJe7VRlDTlimYol/j0CTXDvbzYRBboUSHXbJFc2XyBnH3mLfqpAoe/GQOV3oCPv5Hol
+         D17g==
+X-Gm-Message-State: APjAAAWv2jFuY7aRQDaNiKCS00884B+06pP0G31KxGVdEPx0VLOO/Zmt
+        oDOhtry5g6vrNsrQVJWsLOYzk51KUPWx4uzv5Dt/4+AnLf1tM1olqlPgP53o2X2B56pIptAU5M6
+        exoV6ylgYce3zTp1nMMwBFYwm
+X-Received: by 2002:adf:a285:: with SMTP id s5mr6439607wra.118.1582730605676;
+        Wed, 26 Feb 2020 07:23:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyy/7n4R6zrNnUx6owfpYEWU1qQMIdGRDXzWekMmbc65pA/gD75QqCNxkxzeVMLZ081R7pK+A==
+X-Received: by 2002:adf:a285:: with SMTP id s5mr6439577wra.118.1582730605395;
+        Wed, 26 Feb 2020 07:23:25 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id g7sm3560478wrq.21.2020.02.26.07.23.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:23:24 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/13] KVM: x86: Move emulation-only helpers to emulate.c
+In-Reply-To: <20200218232953.5724-4-sean.j.christopherson@intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-4-sean.j.christopherson@intel.com>
+Date:   Wed, 26 Feb 2020 16:23:23 +0100
+Message-ID: <87blpljrtg.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
- <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
- <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com> <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
-In-Reply-To: <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 26 Feb 2020 16:21:42 +0100
-Message-ID: <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Jon Hunter <jonathanh@nvidia.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Anders, Kishon
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-On Tue, 25 Feb 2020 at 17:24, Jon Hunter <jonathanh@nvidia.com> wrote:
+> Move ctxt_virt_addr_bits() and emul_is_noncanonical_address() from x86.h
+> to emulate.c.  This eliminates all references to struct x86_emulate_ctxt
+> from x86.h, and sets the stage for a future patch to stop including
+> kvm_emulate.h in asm/kvm_host.h.
 >
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/emulate.c | 11 +++++++++++
+>  arch/x86/kvm/x86.h     | 11 -----------
+>  2 files changed, 11 insertions(+), 11 deletions(-)
 >
-> On 25/02/2020 14:26, Ulf Hansson wrote:
->
-> ...
->
-> > However, from the core point of view, the response is still requested,
-> > only that we don't want the driver to wait for the card to stop
-> > signaling busy. Instead we want to deal with that via "polling" from
-> > the core.
-> >
-> > This is a rather worrying behaviour, as it seems like the host driver
-> > doesn't really follow this expectations from the core point of view.
-> > And mmc_flush_cache() is not the only case, as we have erase, bkops,
-> > sanitize, etc. Are all these working or not really well tested?
->
-> I don't believe that they are well tested. We have a simple test to
-> mount an eMMC partition, create a file, check the contents, remove the
-> file and unmount. The timeouts always occur during unmounting.
->
-> > Earlier, before my three patches, if the provided timeout_ms parameter
-> > to __mmc_switch() was zero, which was the case for
-> > mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
-> > ignored validating host->max_busy_timeout, which was wrong. In any
-> > case, this also meant that an R1B response was always used for
-> > mmc_flush_cache(), as you also indicated above. Perhaps this is the
-> > critical part where things can go wrong.
-> >
-> > BTW, have you tried erase commands for sdhci tegra driver? If those
-> > are working fine, do you have any special treatments for these?
->
-> That I am not sure, but I will check.
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index ddbc61984227..1e394cb190ce 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -673,6 +673,17 @@ static void set_segment_selector(struct x86_emulate_ctxt *ctxt, u16 selector,
+>  	ctxt->ops->set_segment(ctxt, selector, &desc, base3, seg);
+>  }
+>  
+> +static inline u8 ctxt_virt_addr_bits(struct x86_emulate_ctxt *ctxt)
+> +{
+> +	return (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_LA57) ? 57 : 48;
+> +}
+> +
+> +static inline bool emul_is_noncanonical_address(u64 la,
+> +						struct x86_emulate_ctxt *ctxt)
+> +{
+> +	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
+> +}
+> +
+>  /*
+>   * x86 defines three classes of vector instructions: explicitly
+>   * aligned, explicitly unaligned, and the rest, which change behaviour
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 3624665acee4..8409842a25d9 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -149,11 +149,6 @@ static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
+>  	return kvm_read_cr4_bits(vcpu, X86_CR4_LA57) ? 57 : 48;
+>  }
+>  
+> -static inline u8 ctxt_virt_addr_bits(struct x86_emulate_ctxt *ctxt)
+> -{
+> -	return (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_LA57) ? 57 : 48;
+> -}
+> -
+>  static inline u64 get_canonical(u64 la, u8 vaddr_bits)
+>  {
+>  	return ((int64_t)la << (64 - vaddr_bits)) >> (64 - vaddr_bits);
+> @@ -164,12 +159,6 @@ static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
+>  	return get_canonical(la, vcpu_virt_addr_bits(vcpu)) != la;
+>  }
+>  
+> -static inline bool emul_is_noncanonical_address(u64 la,
+> -						struct x86_emulate_ctxt *ctxt)
+> -{
+> -	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
+> -}
+> -
+>  static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
+>  					gva_t gva, gfn_t gfn, unsigned access)
+>  {
 
-Great, thanks. Looking forward to your report.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-So, from my side, me and Anders Roxell, have been collaborating on
-testing the behaviour on a TI Beagleboard x15 (remotely with limited
-debug options), which is using the sdhci-omap variant. I am trying to
-get hold of an Nvidia jetson-TX2, but not found one yet. These are the
-conclusions from the observed behaviour on the Beagleboard for the
-CMD6 cache flush command.
+-- 
+Vitaly
 
-First, the reported host->max_busy_timeout is 2581 (ms) for the
-sdhci-omap driver in this configuration.
-
-1. As we all know by now, the cache flush command (CMD6) fails with
--110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to 30 *
-1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
-from the command.
-
-2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
-the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
-timeout_ms parameter is less than max_busy_timeout (2000 <  2581).
-Then everything works fine.
-
-3. Updating the code to again use 30s as the
-MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY to be
-set, even when the timeout_ms becomes greater than max_busy_timeout.
-This also works fine.
-
-Clearly this indicates a problem that I think needs to be addressed in
-the sdhci driver. However, of course I can revert the three discussed
-patches to fix the problem, but that would only hide the issues and I
-am sure we would then get back to this issue, sooner or later.
-
-To fix the problem in the sdhci driver, I would appreciate if someone
-from TI and Nvidia can step in to help, as I don't have the HW on my
-desk.
-
-Comments or other ideas of how to move forward?
-
-Kind regards
-Uffe
