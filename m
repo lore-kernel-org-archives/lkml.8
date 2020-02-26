@@ -2,129 +2,105 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABB8C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10A5C4BA15
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE5521556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CEB21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582732824;
+	bh=EqVxdl4cALqg8w0BRf5DWyljaf0SUvy/U0GO5XGzNPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=raTHs53oXZEXZOD6a3/LS4MGb14P6x05AFmO4frRd9dg+YLmwSiIUP52MaWShQKZx
+	 KdwdyHMu79QdD3y28gymPrhbTRxGNOXnYUZpoCX5mIeI1dLn2rY4oSbuW2ZXGee4cf
+	 PpSE/QQxfqv6NAFiJqbouV7zwpC86fkb0CvSjfQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgBZP7P (ORCPT
+        id S1728686AbgBZQAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:59:15 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:35062 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgBZP7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:59:14 -0500
-Received: by mail-il1-f200.google.com with SMTP id h18so6744ilc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:59:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Y1ebUHzTdnuJBounAIPYWFXHiCdLik50ghAjZZcergI=;
-        b=MEibDCaDb52WdhbKFT72GxVY+arFyq9MMKCddrI8d1/SZd0aHBxtUIfJflyxq386Vz
-         zacnFuzrPNBzyZtQRxqFS9g/eMfZC870vSN8otVkORbIQeSEzmjUoBu8Z3V5Y0HJxLNv
-         N2W60BiSwI3YZDspqW6HlgYWDTkyTyCpgyvvhndkWwvpsEZbDH6BOR3i7UB6F+DPN+0V
-         tY5dhyvsuWMzxkd2zp5UnznBJhF6FdnWJwoV7y0yWk2bV7UuTrCyIuvTvw/3FfdxOkKP
-         770W6POVtdjCB1ZaM1Ywh+VJEJIyTawS37Ny85H/DDEQJH1GfJ3ySXEa1djrc8mC9N9p
-         07iA==
-X-Gm-Message-State: APjAAAWQvXJb1TQ5ldHGo0qrqg6EmDrka+126P5eh81rSNyBGODBIby6
-        qeFgPIB45gDqRad0fKpPozoXy/r+Q+6Db2RrOkJvVDfCRzHn
-X-Google-Smtp-Source: APXvYqw6iqnJkkGXD5uez2BWl4BIo6Jlqc4yunnpKTvjaytEUJ4dAyrrbSfc68KNzaryHWw0Fq31Go8BGqHnwH3y392uN1e53A/g
+        Wed, 26 Feb 2020 11:00:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728406AbgBZQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:00:23 -0500
+Received: from localhost (unknown [171.76.87.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B37221556;
+        Wed, 26 Feb 2020 16:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582732822;
+        bh=EqVxdl4cALqg8w0BRf5DWyljaf0SUvy/U0GO5XGzNPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aAhRK20/XmxR215d1nehbFy1c9uFykiY17ILbyz8vhnWE1pm/qE/7WLfEqAD7xDC0
+         OLXGliyTTu5IODUDYwmcXLhaEmFlUtnJ5amIoIurvEyOBhVihW5S2RZ8fs/awt1t1H
+         y6HrtRUD4oB6Z2SLxl0yf0vXfqsi+z34bSbytRK0=
+Date:   Wed, 26 Feb 2020 21:30:18 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: thermal: tsens: Add qcom,tsens-v0_1
+ to msm8916.dtsi compatible
+Message-ID: <20200226160018.GA2618@vkoul-mobl>
+References: <cover.1582705101.git.amit.kucheria@linaro.org>
+ <ab6a982bd9bcbc76262cd9ca5dd6ea10cf45b8a1.1582705101.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:880c:: with SMTP id r12mr5265816jai.131.1582732753994;
- Wed, 26 Feb 2020 07:59:13 -0800 (PST)
-Date:   Wed, 26 Feb 2020 07:59:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000938a57059f7cafe4@google.com>
-Subject: KMSAN: uninit-value in snapshot_compat_ioctl
-From:   syzbot <syzbot+af962bf9e7e27bccd025@syzkaller.appspotmail.com>
-To:     glider@google.com, len.brown@intel.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        pavel@ucw.cz, rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab6a982bd9bcbc76262cd9ca5dd6ea10cf45b8a1.1582705101.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 26-02-20, 15:01, Amit Kucheria wrote:
+> The qcom-tsens binding requires a SoC-specific and a TSENS
+> family-specific binding to be specified in the compatible string.
+> 
+> Since them family-specific binding is not listed in the .dtsi file, we
+> see the following warnings in 'make dtbs_check'. Fix them.
+> 
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible: ['qcom,msm8916-tsens'] is not valid
+> under any of the given schemas (Possible causes of the failure):
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible: ['qcom,msm8916-tsens'] is too short
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible:0: 'qcom,msm8916-tsens' is not one of
+> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
+> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml:
+> thermal-sensor@4a9000: compatible:0: 'qcom,msm8916-tsens' is not one of
+> ['qcom,msm8996-tsens', 'qcom,msm8998-tsens', 'qcom,sdm845-tsens']
 
-syzbot found the following crash on:
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-HEAD commit:    8bbbc5cf kmsan: don't compile memmove
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=11514265e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
-dashboard link: https://syzkaller.appspot.com/bug?extid=af962bf9e7e27bccd025
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a89109e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176f774ee00000
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 9f31064f2374..1748ea3f4b4f 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -860,7 +860,7 @@
+>  		};
+>  
+>  		tsens: thermal-sensor@4a9000 {
+> -			compatible = "qcom,msm8916-tsens";
+> +			compatible = "qcom,msm8916-tsens", "qcom,tsens-v0_1";
+>  			reg = <0x4a9000 0x1000>, /* TM */
+>  			      <0x4a8000 0x1000>; /* SROT */
+>  			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+> -- 
+> 2.20.1
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+af962bf9e7e27bccd025@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:413
-CPU: 1 PID: 11659 Comm: syz-executor923 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- kmsan_internal_check_memory+0x358/0x3d0 mm/kmsan/kmsan.c:457
- kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:413
- snapshot_compat_ioctl+0x559/0x650 kernel/power/user.c:422
- __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
- __se_compat_sys_ioctl+0x57c/0xed0 fs/ioctl.c:808
- __ia32_compat_sys_ioctl+0xd9/0x110 fs/ioctl.c:808
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f70d99
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffec145c EFLAGS: 00000213 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000080083313
-RDX: 0000000000000000 RSI: 00000000080ea078 RDI: 00000000ffec14b0
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- snapshot_compat_ioctl+0x5e0/0x650 kernel/power/user.c:422
- __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
- __se_compat_sys_ioctl+0x57c/0xed0 fs/ioctl.c:808
- __ia32_compat_sys_ioctl+0xd9/0x110 fs/ioctl.c:808
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-
-Local variable ----offset@snapshot_compat_ioctl created at:
- get_current arch/x86/include/asm/current.h:15 [inline]
- snapshot_compat_ioctl+0x324/0x650 kernel/power/user.c:418
- get_current arch/x86/include/asm/current.h:15 [inline]
- snapshot_compat_ioctl+0x324/0x650 kernel/power/user.c:418
-
-Bytes 0-7 of 8 are uninitialized
-Memory access of size 8 starts at ffff9946c156bd30
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+~Vinod
