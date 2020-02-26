@@ -2,196 +2,110 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235FBC4BA11
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18DEC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E6D20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C83CGgBB"
+	by mail.kernel.org (Postfix) with ESMTP id 90DD320838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582711937;
+	bh=7BzpNwQ1a5JrXGbiNy55HvIpNqq+r0KUKA8v0I80ooU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=akYhg0VcHaZeRxNsSub38CKZdTkXYldnCq3j2LkjiK87oooyzbFBuTS2R9dd2CPCt
+	 KgBeChrgUMxgvdl84kCguAulxXx/Lqk1iWyMps78hBbLWPPiuZ8VgVo7XcivJSa/SK
+	 P/ITxy+FiB0o+SeE67e5el88YnlQoM43xfhT+wWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgBZKLR (ORCPT
+        id S1727803AbgBZKMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:11:17 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:54325 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbgBZKLR (ORCPT
+        Wed, 26 Feb 2020 05:12:16 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42634 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgBZKMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:11:17 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200226101115euoutp0118e31ff7b2db605b33ec92f36e69329d~27BC1-fhD1605616056euoutp01t
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:11:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200226101115euoutp0118e31ff7b2db605b33ec92f36e69329d~27BC1-fhD1605616056euoutp01t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582711875;
-        bh=gJhnzsw0e9znN518tPHvOvIr8D8V2pYAjMrH4fvkSss=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=C83CGgBBbBslijXht8QmjAr2ieCOP7r4OcEvZLfVBxuePgdDtLqcCUdRkCw/TaTpP
-         EUcZ1KGUS+0OWo9/IQI/ByFzWyAconmGs+w0ORDLXy2zt2BX5qtUXA0vY/nY+7Dai2
-         xg26Q5TPe2zud99/3U9Uc318iMMPf9wbUuR1fphU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200226101115eucas1p14a15708f7142aa1208dcd9f1695b6d59~27BCgYM6b2612826128eucas1p1V;
-        Wed, 26 Feb 2020 10:11:15 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 6E.54.60679.344465E5; Wed, 26
-        Feb 2020 10:11:15 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200226101114eucas1p1bd227050f8f004d4e5ce7831745f8beb~27BCPtpT42618026180eucas1p1G;
-        Wed, 26 Feb 2020 10:11:14 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200226101114eusmtrp27bef11dfca2a03f74c8cd9bc2013b7f2~27BCO9hYY0431004310eusmtrp21;
-        Wed, 26 Feb 2020 10:11:14 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-f4-5e56444339b0
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 1D.4C.08375.244465E5; Wed, 26
-        Feb 2020 10:11:14 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200226101114eusmtip2dab8a6be1167c9591e699b4302436f04~27BBrYRqp2968429684eusmtip2y;
-        Wed, 26 Feb 2020 10:11:14 +0000 (GMT)
-Subject: Re: [PATCH 1/2] tty: serial: samsung_tty: build it for any platform
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Donghoon Yu <hoony.yu@samsung.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Hyunki Koo <kkoos00@naver.com>, Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <27d4ec69-1744-4421-0d34-924d14b3c1e6@samsung.com>
-Date:   Wed, 26 Feb 2020 11:11:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 26 Feb 2020 05:12:16 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d10so2386289ljl.9;
+        Wed, 26 Feb 2020 02:12:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lgtf/Yh5fw23zpaM+oJehFHDgy9iRIzBJZORq8BS8yI=;
+        b=PLRgKZUV/08PUhQyG4rmFZIssdWccwYnZ668dHkt1UQesKfWojVohKUN7vlMeyGHDF
+         VB4jx27JvV6fvheOUOXgq4fq1B9jA8dGj4sfpqciAVe6+0Ikx5ZrS8kFT5wb2Opq1cbD
+         6Bh/Wge5k6Rb2EIQEXBg5wrw/Nmx8cXW1Jojkt91iCu8Y8nsS0nTp/Hp8HBLMfO24cb/
+         68Pf/VRYu7iy4k7fcrhnNm429obDygBR/xrJAMYgNafQVetPEp+bVBpG2L2g5AYEKsNA
+         y/psiR4L6t4pPyRdUhF0zGlTKsr83PWEP8TQn2hqXmqUkXhA1H0Ry2xg0zBs6Gc4RWxw
+         8KXQ==
+X-Gm-Message-State: APjAAAXIhuTHc0PQXgsbXSj4w/LGB+pd9tmOKkOBZjc8x3AOVSCt3Bb7
+        EtbaZWemcK28RvLhzXNNjLOVRauL
+X-Google-Smtp-Source: APXvYqwI2EXm7w460uhNh1RP7Gen+GVUesLpFxmO5pbpK3KyTAxQW9Xcok2OwdQ9D4n0ksEEL2GhRg==
+X-Received: by 2002:a2e:6c06:: with SMTP id h6mr2568866ljc.246.1582711934119;
+        Wed, 26 Feb 2020 02:12:14 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id k1sm797019lfg.20.2020.02.26.02.12.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 02:12:13 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1j6tfo-00050N-Tv; Wed, 26 Feb 2020 11:12:12 +0100
+Date:   Wed, 26 Feb 2020 11:12:12 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 2/2] USB: core: Fix potential memory leak in
+ usb_get_configuration()
+Message-ID: <20200226101212.GX32540@localhost>
+References: <1582697723-7274-1-git-send-email-yangtiezhu@loongson.cn>
+ <1582697723-7274-2-git-send-email-yangtiezhu@loongson.cn>
+ <20200226080906.GV32540@localhost>
+ <c7dfaa07-dd34-600d-2a69-95a65f966dfc@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVrVe37JyUNFSf9KRZTcndrvDaZvrVoBxzm_7J2nhg1kg@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXe2szNp9joVH8wSVkkWaReJQze6fTgf+lCYpVLmytPmbcrm
-        NaIMo7zg3TTNu6Y5LNc0zYFWW2qltLAsb5ClDMtGlopYdnE7Sn77vf/n/+f/PPBShOS9wJUK
-        VcawKqUsQkra8Vu65k1bDx85GbRtViuizUPtPDq5upGku+9NCmjNnQGCztdO8eissUmCTm3r
-        F9Amk1ZI68beCeg3+hKSvmXq4NG91RlC+nrWKDogZnSaVJIxGFMQ87i0Qcg01VxhMguSEJPZ
-        rEFMY3M/n5nWrTtGBdrtDWEjQuNYlff+YDuFcapMGD3slGCuzBAkoS6chkQUYB/4nNSJrCzB
-        dxEY5w+mIbtFnkFgSalB3GMawcPSKt5yor/7Np8b1CHoSO4luIcFgen2R5vLER+FAvMQaWUn
-        HAy18zd5VhOBzQS8bntOWAck3g05NzS2cjHeD4Xf62w6H2+EnM5ZoZWdsT/8GDUKOI8DvCga
-        X6ymKBE+Dr/qbV0EdoGh8fIldodWS4ltIcCzQkjPThNwax+Bt5W/SY4d4Ut3s5BjN/jbVs7j
-        AvcR/E6ZWEq3IqjL+7OU2AMjr36S1mYCe0Kj3puTD0JLR49NBmwPAxYHbgl7yG0pJDhZDCnX
-        JZzbA7S1WnK5Nq2tnshG0uIVlxWvOKd4xTnF/3srEF+DXNhYdaScVe9QsvFealmkOlYp9zof
-        FalDi9+t50/3zCOkXzhnQJhC0lXiCZFfkEQgi1MnRhoQUITUSfxgdlESh8gSL7KqqLOq2AhW
-        bUBrKL7URbyz6vMZCZbLYthwlo1mVctTHiVyTUKK2LWGqhPPKvwsiY1dTwNK2C2himstfemX
-        PhyWSnyY/Ln20azsSg0xdsj324z3qdULvqVfn7nNKTe4N3jkMZeHJ1+fKMr3DO8K6ktY3xDm
-        /Ov0SMKups1b+D7B8WGKDfLgEXrOHKhv0M2NyfeFP970cuHC4BNT5uCnXIer8gB/VCblqxWy
-        7ZsJlVr2D/R4oq9qAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsVy+t/xe7pOLmFxBn/OGls8u7WXyaJ58Xo2
-        i+NrX7NarFp6g9liyoYPTBb9j18zW3TuvMpqcf78BnaLTY+vsVpc3jWHzWLG+X1MFmcW97Jb
-        tPU/YHTg9di0qpPN49DhDkaP/XPXsHtsXlLv0TetgdGjb8sqRo/1W66yeHzeJBfAEaVnU5Rf
-        WpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXcfjDPPaC2yIV
-        zxb2sjYwHhPoYuTkkBAwkbh6fDZLFyMXh5DAUkaJk3NusHcxcgAlZCSOry+DqBGW+HOtiw2i
-        5jWjxJfevUwgCWEBH4lpz26xgdSLCCRI7L/qD1LDLPCCWWLDq1usEA1/mSRebb7KCNLAJmAl
-        MbF9FZjNK2AnMf3jcmYQm0VAVWLi0a/sILaoQITE4R2zoGoEJU7OfMICsoBTIFDi90qwvcwC
-        6hJ/5l1ihrDFJW49mQ8Vl5fY/nYO8wRGoVlIumchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWK
-        E3OLS/PS9ZLzczcxAmN527Gfm3cwXtoYfIhRgINRiYf3BWdonBBrYllxZe4hRgkOZiUR3o1f
-        gUK8KYmVValF+fFFpTmpxYcYTYF+m8gsJZqcD0wzeSXxhqaG5haWhubG5sZmFkrivB0CB2OE
-        BNITS1KzU1MLUotg+pg4OKUaGIXvdiy4fibsbobzM65PFSZXnFz1s+bH7CjxUdu4SP7mYalH
-        zImvOmoLm8z+cbw20H04PXiNyfv0Z6KtnB/LrdoXONg6aArs4c08MYMv3LbneKHMxzylE6fe
-        V/ruc+vZvDF4O+f9LVdV/qyN+N/PXjBFMmNFat3VekPunPVTenft3OrQ+zdPWImlOCPRUIu5
-        qDgRAFmaYNT7AgAA
-X-CMS-MailID: 20200226101114eucas1p1bd227050f8f004d4e5ce7831745f8beb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200220121333eucas1p26befa95831b44a793822b4f07b37d2cc
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200220121333eucas1p26befa95831b44a793822b4f07b37d2cc
-References: <CGME20200220121333eucas1p26befa95831b44a793822b4f07b37d2cc@eucas1p2.samsung.com>
-        <20200220102628.3371996-1-gregkh@linuxfoundation.org>
-        <b04ad319-9986-c357-ad37-937bbb06bc02@samsung.com>
-        <CAMuHMdXzPPNqQom82frY1B6LMre+VD9fPAf98BZ3eo2DhgwoYg@mail.gmail.com>
-        <20200225204151.GA13254@kroah.com>
-        <CAMuHMdVrVe37JyUNFSf9KRZTcndrvDaZvrVoBxzm_7J2nhg1kg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7dfaa07-dd34-600d-2a69-95a65f966dfc@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 26, 2020 at 04:42:55PM +0800, Tiezhu Yang wrote:
+> On 02/26/2020 04:09 PM, Johan Hovold wrote:
+> > On Wed, Feb 26, 2020 at 02:15:23PM +0800, Tiezhu Yang wrote:
+> >> Make sure to free all the allocated memory before exiting from the function
+> >> usb_get_configuration() when an error is encountered.
+> > There's no leak in this function as far as I can tell. Any allocated
+> > memory is released in usb_destroy_configuration() when the last
+> > reference to the struct usb_device is dropped.
+> 
+> Yes, you are right, the allocated memory in usb_get_configuration()
+> will be released in usb_destroy_configuration().
+> 
+> By the way, is it better to release the allocated memory as early as 
+> possible
+> in usb_get_configuration()? Just like this:
+> 
+> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+> index bb63ee0..dd4ebeb 100644
+> --- a/drivers/usb/core/config.c
+> +++ b/drivers/usb/core/config.c
+> @@ -885,12 +885,17 @@ int usb_get_configuration(struct usb_device *dev)
+> 
+>          length = ncfg * sizeof(char *);
+>          dev->rawdescriptors = kzalloc(length, GFP_KERNEL);
+> -       if (!dev->rawdescriptors)
+> +       if (!dev->rawdescriptors) {
+> +               kfree(dev->config);
+>                  return -ENOMEM;
+> +       }
 
-On 2/25/20 10:22 PM, Geert Uytterhoeven wrote:
-> Hi Greg,
-> 
-> On Tue, Feb 25, 2020 at 9:41 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->> On Tue, Feb 25, 2020 at 09:52:38AM +0100, Geert Uytterhoeven wrote:
->>> On Thu, Feb 20, 2020 at 1:13 PM Bartlomiej Zolnierkiewicz
->>> <b.zolnierkie@samsung.com> wrote:
->>>> On 2/20/20 11:26 AM, Greg Kroah-Hartman wrote:
->>>>> There is no need to tie this driver to only a specific SoC, or compile
->>>>> test, so remove that dependancy from the Kconfig rules.
->>>>
->>>> samsung_tty driver is hardware specific driver so why should we
->>>> build it for any platform?
->>
->> Why not?
-> 
-> Because this driver won't bind to a device anyway, when the kernel is
-> configured without Samsung SoC support.  It will just bloat the kernel,
-> and asking this question is a silly waste of time for anyone building a
-> (non-generic) kernel for a non-Samsung SoC.
-> 
->> Seriously, this "only this one specific SoC is allowed to build this
->> driver" is crazy.  It prevents anyone from building a generic kernel
->> with drivers as a module which are loaded as needed.
-> 
-> A generic kernel will include Samsung SoC support, hence PLAT_SAMSUNG
-> or ARCH_EXYNOS will be enabled.
-> 
->> That needs to be fixed, and removing this unneeded dependancy on this
->> driver allows it to be build for any system and then only loaded when
->> needed.
-> 
-> It can only be loaded on a Samsung system, which requires PLAT_SAMSUNG
-> or ARCH_EXYNOS anyway.
-> It's not like a Samsung serial device can be plugged into your PC's PCI
-> bus or so, it only exists on Samsung SoCs.
-> 
->>>> This change seems to defeat the whole purpose behind COMPILE_TEST
->>>> config option (which allows us to build hardware-specific drivers
->>>> without needlessly presenting the user with tons of non-relevant
->>>> config options).
->>>>
->>>> Please explain this change some more, are you planing to remove
->>>> COMPILE_TEST config option?
->>
->> I want to get rid of this:
-> 
-> IMHO we need _more_ of these dependencies, to avoid all these silly questions
-> when they don't make sense.
-> 
->>>>> -     depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
->>
->> We should not need PLAT_SAMSUNG or ARCH_EXYNOS at all, we should be able
->> to build an arm64 kernel for all platforms.
-> 
-> An arm64 kernel for all platforms will have ARCH_EXYNOS enabled.
+No, there's no point in that. And just like your original proposal, this
+would also introduce a double free.
 
-+1 on all comments from Geert
-
-IMHO this change should be reverted (it doesn't fix anything and
-only makes kernel configuration harder).
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Johan
