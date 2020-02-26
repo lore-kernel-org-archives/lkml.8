@@ -2,101 +2,191 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3C2C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C43C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F31222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F9C21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgBZAMl (ORCPT
+        id S1729423AbgBZAOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:12:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgBZAMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:12:40 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 25 Feb 2020 19:14:11 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33624 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729277AbgBZAOL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:14:11 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q08pPp134842
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:14:10 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydcnt1yg3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:14:10 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 26 Feb 2020 00:14:07 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Feb 2020 00:14:00 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01Q0DxbS60096534
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 00:13:59 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5FD611C052;
+        Wed, 26 Feb 2020 00:13:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0FC3111C04C;
+        Wed, 26 Feb 2020 00:13:59 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 00:13:59 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA0120732;
-        Wed, 26 Feb 2020 00:12:39 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 19:12:37 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 588FAA00F1;
+        Wed, 26 Feb 2020 11:13:54 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [for-linus][PATCH] bootconfig: Fix CONFIG_BOOTTIME_TRACING
- dependency issue
-Message-ID: <20200225191237.03643f96@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Date:   Wed, 26 Feb 2020 11:13:57 +1100
+In-Reply-To: <CAOSf1CHYEJf02EV0kYMk+D9s=4PiTXSM1eFcRGYe7XJrHvtAtA@mail.gmail.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <CAPcyv4j2hut1YDrotC=QkcM+S0SZwpd9_4hD2aChn+cKD+62oA@mail.gmail.com>
+         <240fbefc6275ac0a6f2aa68715b3b73b0e7a8310.camel@au1.ibm.com>
+         <20200224043750.GM24185@bombadil.infradead.org>
+         <83034494d5c3da1fa63b172e844f85d0fec7910a.camel@au1.ibm.com>
+         <CAOSf1CHYEJf02EV0kYMk+D9s=4PiTXSM1eFcRGYe7XJrHvtAtA@mail.gmail.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022600-0012-0000-0000-0000038A4428
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022600-0013-0000-0000-000021C6E82A
+Message-Id: <b981f4e6cc308a617e7944e3ce23009e804cfdbf.camel@au1.ibm.com>
+Subject: RE: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory devices
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_09:2020-02-25,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=943 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 phishscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002250170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Mon, 2020-02-24 at 17:51 +1100, Oliver O'Halloran wrote:
+> On Mon, Feb 24, 2020 at 3:43 PM Alastair D'Silva <
+> alastair@au1.ibm.com> wrote:
+> > On Sun, 2020-02-23 at 20:37 -0800, Matthew Wilcox wrote:
+> > > On Mon, Feb 24, 2020 at 03:34:07PM +1100, Alastair D'Silva wrote:
+> > > > V3:
+> > > >   - Rebase against next/next-20200220
+> > > >   - Move driver to arch/powerpc/platforms/powernv, we now
+> > > > expect
+> > > > this
+> > > >     driver to go upstream via the powerpc tree
+> > > 
+> > > That's rather the opposite direction of normal; mostly drivers
+> > > live
+> > > under
+> > > drivers/ and not in arch/.  It's easier for drivers to get
+> > > overlooked
+> > > when doing tree-wide changes if they're hiding.
+> > 
+> > This is true, however, given that it was not all that desirable to
+> > have
+> > it under drivers/nvdimm, it's sister driver (for the same hardware)
+> > is
+> > also under arch, and that we don't expect this driver to be used on
+> > any
+> > platform other than powernv, we think this was the most reasonable
+> > place to put it.
+> 
+> Historically powernv specific platform drivers go in their respective
+> subsystem trees rather than in arch/ and I'd prefer we kept it that
+> way. When I added the papr_scm driver I put it in the pseries
+> platform
+> directory because most of the pseries paravirt code lives there for
+> some reason; I don't know why. Luckily for me that followed the same
+> model that Dan used when he put the NFIT driver in drivers/acpi/ and
+> the libnvdimm core in drivers/nvdimm/ so we didn't have anything to
+> argue about. However, as Matthew pointed out, it is at odds with how
+> most subsystems operate. Is there any particular reason we're doing
+> things this way or should we think about moving libnvdimm users to
+> drivers/nvdimm/?
+> 
+> Oliver
 
-Since commit d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by
-default") also changed the CONFIG_BOOTTIME_TRACING to select
-CONFIG_BOOT_CONFIG to show the boot-time tracing on the menu,
-it introduced wrong dependencies with BLK_DEV_INITRD as below.
 
-WARNING: unmet direct dependencies detected for BOOT_CONFIG
-  Depends on [n]: BLK_DEV_INITRD [=n]
-  Selected by [y]:
-  - BOOTTIME_TRACING [=y] && TRACING_SUPPORT [=y] && FTRACE [=y] && TRACING [=y]
+I'm not too fussed where it ends up, as long as it ends up somewhere :)
 
-This makes the CONFIG_BOOT_CONFIG selects CONFIG_BLK_DEV_INITRD to
-fix this error and make CONFIG_BOOTTIME_TRACING=n by default, so
-that both boot-time tracing and boot configuration off but those
-appear on the menu list.
+From what I can tell, the issue is that we have both "infrastructure"
+drivers, and end-device drivers. To me, it feels like drivers/nvdimm
+should contain both, and I think this feels like the right approach.
 
-Link: http://lkml.kernel.org/r/158264140162.23842.11237423518607465535.stgit@devnote2
+I could move it back to drivers/nvdimm/ocxl, but I felt that it was
+only tolerated there, not desired. This could be cleared up with a
+response from Dan Williams, and if it is indeed dersired, this is my
+preferred location.
 
-Fixes: d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by default")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Compiled-tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- init/Kconfig         | 2 +-
- kernel/trace/Kconfig | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+I think a case could also be made for drivers/ocxl, simply because we
+don't expect more than a handful of drivers to ever live there (I
+expect most users will drive their devices from userspace via libocxl).
 
-diff --git a/init/Kconfig b/init/Kconfig
-index a84e7aa89a29..8b4c3e8c05ea 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1217,7 +1217,7 @@ endif
- 
- config BOOT_CONFIG
- 	bool "Boot config support"
--	depends on BLK_DEV_INITRD
-+	select BLK_DEV_INITRD
- 	help
- 	  Extra boot config allows system admin to pass a config file as
- 	  complemental extension of kernel cmdline when booting.
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 795c3e02d3f1..402eef84c859 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -145,7 +145,6 @@ config BOOTTIME_TRACING
- 	bool "Boot-time Tracing support"
- 	depends on TRACING
- 	select BOOT_CONFIG
--	default y
- 	help
- 	  Enable developer to setup ftrace subsystem via supplemental
- 	  kernel cmdline at boot time for debugging (tracing) driver
+In defence of keeping it in arch/powerpc/powernv, I highly doubt this
+driver will end up being used on any platform other than this. Even
+though OpenCAPI was engineered as an open standard, there is some
+competition from industry giants with a competing standard on a much
+more popular platform.
+
 -- 
-2.20.1
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
