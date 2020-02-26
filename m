@@ -2,132 +2,105 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FD6C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A544CC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F3F20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBrGCD48"
+	by mail.kernel.org (Postfix) with ESMTP id 8357B20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgBZO5s (ORCPT
+        id S1727234AbgBZO57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:57:48 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35976 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgBZO5r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:57:47 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a6so1393703plm.3;
-        Wed, 26 Feb 2020 06:57:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MlX8TjCXEFXDS5ZumzpqtqrWFoT0F53pXcGUmNQPWF0=;
-        b=GBrGCD48TWyk8MvyLueABpAr/AzBScOb+iIPr7OwoYTGqq1jBHOxtOVkDf3TVqw5wY
-         Zt9Yct4+5ESB064Pj5WB7i+6UDu0ulrAljfGr/y0lHRaoHlPq7J6OWrO/NpDAs8VR2sg
-         NCkmhBnfdGQPRUuRzMdKLFpW5t+QqYzs8mdFjUjNeO0ECHLms2uMiLEY+Ex1D5uIQCL5
-         imaAELcWjjbPYcizudOh77PgoFHB2ngDcaMvDYff8VZaLkM3LAdRTHVVKXmOhJhwqZ1T
-         +LYivyo4PIMPsc/63PodbguIfheGwl7zE02BV2LQkMwtPfqIFp1SDILf80EcFyMhGG1s
-         dNTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MlX8TjCXEFXDS5ZumzpqtqrWFoT0F53pXcGUmNQPWF0=;
-        b=Og92SsQwXqQ79Nc9Clc1C6ycg9QUMYvdNIpOzwtVN98TP2oebnnbpFzz/xSmqqfIuW
-         bZvkuG2k5vLc3ezhrC6EwUybu8DJ46piWdrVnurGEuylUPo6YeYxfdcC0eKeXBiH2Sp6
-         TSnEbD2do8CSyqkZtx8y8Iy8CMaVbZ7ACMg2PlZ5P5uQ5azt0IsLrqfbTEleCMR6bJMz
-         jNwuYkTCwgbkVcHy9xXZ4iUGoopbvMB00BiJNjC85X5kQd2gKmRcvNyPnGHDllj02OeB
-         Mx1SYQ9g3iewBulLZyF871MxEcQAblICcJebIqfAg9SUjxBfHfPu6/fUt12W1BDXdGae
-         D4pg==
-X-Gm-Message-State: APjAAAUulKHNqx2T7IcbaVOwv+yVPh4YRrKuqR9y9Q7hkFT0iPLy0lgS
-        vmMWXrMbEdLrHFlYetOYK3M=
-X-Google-Smtp-Source: APXvYqz1TcmF8iDqIlsNM4nzWjZ+cypwfkDvQKTXBMqyYJSNIsdEH0nkJ5Zox3aLWFZ5mEP0csEHJQ==
-X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr4709387plo.154.1582729065962;
-        Wed, 26 Feb 2020 06:57:45 -0800 (PST)
-Received: from firefly (220-235-100-192.dyn.iinet.net.au. [220.235.100.192])
-        by smtp.gmail.com with ESMTPSA id z10sm3019353pgj.73.2020.02.26.06.57.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 06:57:45 -0800 (PST)
-Date:   Wed, 26 Feb 2020 14:57:33 +0000
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event
- watching
-Message-ID: <20200226145733.GA2078@firefly>
-References: <20200226135323.1840-1-brgl@bgdev.pl>
+        Wed, 26 Feb 2020 09:57:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46724 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgBZO56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:57:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E490AAC5C;
+        Wed, 26 Feb 2020 14:57:56 +0000 (UTC)
+Message-ID: <f34f037ebb9219c34480814433a277054c345690.camel@suse.de>
+Subject: Re: [PATCH 10/89] clk: bcm: rpi: Remove global pllb_arm clock
+ pointer
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Eric Anholt <eric@anholt.net>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Wed, 26 Feb 2020 15:57:53 +0100
+In-Reply-To: <20200226142617.mvis6olfzakiwqcc@gilmour.lan>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <3876f732b3fec2059270678d464d27b7d3a0414b.1582533919.git-series.maxime@cerno.tech>
+         <52aebb76952df530f93e9de539124ddf1b825876.camel@suse.de>
+         <20200226142617.mvis6olfzakiwqcc@gilmour.lan>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-H7D2q/McolpIoggtEKhp"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226135323.1840-1-brgl@bgdev.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 02:53:23PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> When operating on the bits of watched_lines bitmap, we're using
-> desc_to_gpio() which returns the GPIO number from the global numberspace.
-> This leads to all sorts of memory corruptions and invalid behavior. We
-> should switch to using gpio_chip_hwgpio() instead.
-> 
-> Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-That fixes all the failures I was seeing.
+--=-H7D2q/McolpIoggtEKhp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Kent Gibson <warthog618@gmail.com>
+On Wed, 2020-02-26 at 15:26 +0100, Maxime Ripard wrote:
+> Hi Nicolas,
+>=20
+> On Tue, Feb 25, 2020 at 05:13:33PM +0100, Nicolas Saenz Julienne wrote:
+> > On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> > > The pllb_arm clk_hw pointer in the raspberry_clk structure isn't used
+> > > anywhere but in the raspberrypi_register_pllb_arm.
+> > >=20
+> > > Let's remove it, this will make our lives easier in future patches.
+> > >=20
+> > > Cc: Michael Turquette <mturquette@baylibre.com>
+> > > Cc: Stephen Boyd <sboyd@kernel.org>
+> > > Cc: linux-clk@vger.kernel.org
+> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> I guess you meant Acked or Reviewed-by?
 
-> ---
->  drivers/gpio/gpiolib.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index a5cd1b4abe6f..5cc80f6f79e0 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1261,7 +1261,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  			return -EFAULT;
->  
->  		if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL)
-> -			set_bit(desc_to_gpio(desc), priv->watched_lines);
-> +			set_bit(gpio_chip_hwgpio(desc), priv->watched_lines);
->  
->  		return 0;
->  	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
-> @@ -1276,7 +1276,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  		if (IS_ERR(desc))
->  			return PTR_ERR(desc);
->  
-> -		clear_bit(desc_to_gpio(desc), priv->watched_lines);
-> +		clear_bit(gpio_chip_hwgpio(desc), priv->watched_lines);
->  		return 0;
->  	}
->  	return -EINVAL;
-> @@ -1304,7 +1304,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
->  	struct gpio_desc *desc = data;
->  	int ret;
->  
-> -	if (!test_bit(desc_to_gpio(desc), priv->watched_lines))
-> +	if (!test_bit(gpio_chip_hwgpio(desc), priv->watched_lines))
->  		return NOTIFY_DONE;
->  
->  	memset(&chg, 0, sizeof(chg));
-> -- 
-> 2.25.0
-> 
+Yes sorry, I ran the wrong macro in vim.
+
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Thanks!
+Nicolas
+
+
+--=-H7D2q/McolpIoggtEKhp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5Wh3EACgkQlfZmHno8
+x/5dXwf/bKHxAxeQ4QoZjBlowsDSKby25i/UiGoQRjMihV8lAF5kvgszeIQN06d3
+QFyxNv6+5IGxrr59IVdsYrnNV2dEVmKjg+6LZuVRPNCVRvEFdfRiTpukk3uxgFlX
+sLaq8Lka4a64P4aoKJmqlge6JgXxhURwb/sUC9BBv+InbDws6+XxkDCXG0UmH8rG
+sTsmoW8/gUiUJ+koBCxtipKbgzjzLim2LdWX2kUrdMZCBAP/Rxxp1bHCiHaGYRh8
+pUvVxJ/IpJ0KC0Ef7QYlyk3/hnnPHPtcwo1z5NfXOsgTBLFXSv9rq6Jrqk0OJkga
+LB3ZGFODiroFr+Q15H+sdaU4BV+KLw==
+=93WR
+-----END PGP SIGNATURE-----
+
+--=-H7D2q/McolpIoggtEKhp--
+
