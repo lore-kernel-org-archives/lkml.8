@@ -2,139 +2,124 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A941C4BA11
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D563C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0278624683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73C524683
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="giOc/T0T"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="D9BpdAme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgBZK4N (ORCPT
+        id S1728071AbgBZK43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:56:13 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38863 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgBZK4N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:56:13 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i23so1909649qtr.5;
-        Wed, 26 Feb 2020 02:56:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z3j9UKE4CU10RkojeSW3IlQzPeeFXpX/sxvomC4elck=;
-        b=giOc/T0TXl+iIxlOUYfUQ+tWKJrb3RxKjhDveWCkvkLIVtnsOdxkcnt0ESXCKSc1TS
-         FiRS/OcFWkNbN6ZZbnISyj+Gcaq5JHAlfQbkSUkEMT/fl1OcnIu7vgqbMCuNMug80vmL
-         2PWczE+el7IRqrtvshhUbc5PCoiYZhO9GfaNw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z3j9UKE4CU10RkojeSW3IlQzPeeFXpX/sxvomC4elck=;
-        b=QWMe8gzpbX46W/bxvfxqStb91a0x6en+6L2NfsiULecyz0/gVj8x0rRo3K+ED9pxAJ
-         CtpBnxhyN8TRrQ6U6pCO21zKTYZqM5m6iyvKnF+7DSq6EXWF1oAH0vngkVNf5TJe0ej8
-         0iCS2wiIsXsl0q5uQK9+TQmdcXrhlmEI2piH+7XLl6aIPzRTuQE8koG4IGDcj502YQV2
-         35cX7O5ysotcWYaJj0hAPwAMzCQhVJai860MoHAx+4oBVBNB0347O3ooLa9Zp+y8oeri
-         ficTy342EKLQ0zDtJEkqOZgMGPrH16u1g4eSs2CwMbDMFv1ybvncMngcuwW+70M9CX0v
-         s/sw==
-X-Gm-Message-State: APjAAAXZ94T/MUcLiAG5oPTFspBRGAx/+PHPFyNfxBX2Ixb78el+51OQ
-        CcTBAGBwx1+Qm14zqMp1xWtMMfKib2K6EVkC47E=
-X-Google-Smtp-Source: APXvYqzIPt5oXV3k/5jmxtXuEfikPuiPbXvjlG9fRqNJ2BaeGuQJX0lMhbp46aXUXmxRSrxBf1S4ddt08lc8oggcF+8=
-X-Received: by 2002:ac8:1ac1:: with SMTP id h1mr4525735qtk.255.1582714570954;
- Wed, 26 Feb 2020 02:56:10 -0800 (PST)
+        Wed, 26 Feb 2020 05:56:29 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:39845 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727463AbgBZK43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:56:29 -0500
+Received: from [192.168.27.209] (unknown [37.157.136.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id E54EACF87;
+        Wed, 26 Feb 2020 12:56:25 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1582714585; bh=0fhTqZuAuScb+3wjVpZ3mzL33tpGlwZ/fo6HSg9kaIM=;
+        h=Subject:To:Cc:From:Date:From;
+        b=D9BpdAmeswVlbyJr/5FoHLhHLjdTNyEzmlRJj6TAZ7+7CU8zgN1hGEP1332YDhZad
+         Tj1nw9rOL/Z//oM5+ctvSkIzMyGOuu0bV5qpliyN8RnN6cEvSLgk8887dwgMRoh6o/
+         sZmTqZE0f6kwVf4gEcSZwUsqdgM8dd7snCBSP5G8vdrwiyL/g8UVv00scMt32U+mOw
+         z1GfueVf8LZ1YcMcmDouZIXHe6kvTqMRSKH6qw8oEbFEAROjjC7LxNb8FCa9LnY84z
+         6PX6Ui1CotV9CzMQhPJ5rXakN/dHnuPpDLecWexWWXCPWNe+dgtLsO5VZeNsPl37qS
+         DD1+IPXhZ32qA==
+Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>, stable@vger.kernel.org
+References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
+ <20200226102255.GA13830@e121166-lin.cambridge.arm.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <4e1587e9-352c-a2de-d136-18506500641d@mm-sol.com>
+Date:   Wed, 26 Feb 2020 12:56:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200220055255.22809-1-Ben_Pai@wistron.com>
-In-Reply-To: <20200220055255.22809-1-Ben_Pai@wistron.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 26 Feb 2020 10:55:59 +0000
-Message-ID: <CACPK8Xf=t+PY42qxF9jProYGGZZJONb=H1D4xZJc7teFWJ2FrA@mail.gmail.com>
-Subject: Re: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
-To:     Ben Pai <Ben_Pai@wistron.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wangat@tw.ibm.com, Claire_Ku@wistron.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200226102255.GA13830@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 at 05:53, Ben Pai <Ben_Pai@wistron.com> wrote:
->
-> 1.Change the name of power, fault and rear-id.
-> 2.Remove the two leds.
+Hi Lorenzo,
 
-The patch looks okay. Why do you remove the other two leds?
+On 2/26/20 12:22 PM, Lorenzo Pieralisi wrote:
+> On Thu, Dec 26, 2019 at 05:27:17PM -0800, Bjorn Andersson wrote:
+>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>> the fixup to only affect the relevant PCIe bridges.
+>>
+>> Cc: stable@vger.kernel.org
+> 
+> Hi Bjorn,
+> 
+> to simplify stable's merging, would you mind helping me with
+> the stable releases you want this patch to apply to please ?
+> 
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+We've to have this in the patch:
 
->
-> Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
-> ---
->  arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-> index e55cc454b17f..6c11854b9006 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-> @@ -120,35 +120,24 @@
->         leds {
->                 compatible = "gpio-leds";
->
-> -               fault {
-> +               front-fault {
->                         retain-state-shutdown;
->                         default-state = "keep";
->                         gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_LOW>;
->                 };
->
-> -               power {
-> +               power-button {
->                         retain-state-shutdown;
->                         default-state = "keep";
->                         gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_LOW>;
->                 };
->
-> -               rear-id {
-> +               front-id {
->                         retain-state-shutdown;
->                         default-state = "keep";
->                         gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_LOW>;
->                 };
->
-> -               rear-g {
-> -                       retain-state-shutdown;
-> -                       default-state = "keep";
-> -                       gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_LOW>;
-> -               };
-> -
-> -               rear-ok {
-> -                       retain-state-shutdown;
-> -                       default-state = "keep";
-> -                       gpios = <&gpio ASPEED_GPIO(Y, 0) GPIO_ACTIVE_LOW>;
-> -               };
->
->                 fan0 {
->                         retain-state-shutdown;
-> --
-> 2.17.1
->
->
-> ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-> This email contains confidential or legally privileged information and is for the sole use of its intended recipient.
-> Any unauthorized review, use, copying or distribution of this email or the content of this email is strictly prohibited.
-> If you are not the intended recipient, you may reply to the sender and should delete this e-mail immediately.
-> ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Cc: stable@vger.kernel.org # v5.2+
+Fixes: 322f03436692 ("PCI: qcom: Use default config space read function")
+
+> I will apply it then.
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>
+>> Stan, I picked up all the suggested device id's from the previous thread and
+>> added 0x1000 for QCS404. I looked at creating platform specific defines in
+>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
+>> prefer that I do this anyway.
+>>
+>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 5ea527a6bd9f..138e1a2d21cc 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>  {
+>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>  }
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+>>  
+>>  static struct platform_driver qcom_pcie_driver = {
+>>  	.probe = qcom_pcie_probe,
+>> -- 
+>> 2.24.0
+>>
+
+-- 
+regards,
+Stan
