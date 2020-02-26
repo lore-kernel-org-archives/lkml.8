@@ -2,153 +2,145 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4A9C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F24AC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF30724689
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761FD24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="WYq47klY"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="D5KgMuEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgBZLQx (ORCPT
+        id S1728431AbgBZLRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:16:53 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.174]:29860 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728279AbgBZLQR (ORCPT
+        Wed, 26 Feb 2020 06:17:25 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34076 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbgBZLRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:16:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582715771;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=OorRicA6O0BqMUCCjYWxKu7Ba8UJ22PVgP64SgMW0Uk=;
-        b=WYq47klYpL7Tt/e0bSuhwnCSZko7n2qq16CJUAPLm2hLNFt+nqFvumI1vCWiDmNtOm
-        ZfYbMRgM3jjvISFMa3wlD9SLXOqAez7lHaPN/IeUcVxsZ2srHzyRRmcDRCCKJFZuhPdq
-        w34ds3OG/jB4PIRcAupCajFyA7cnSh6pC2s0qnYkYv0JsvEfzz2kwM+HkVFPK8hPC6VG
-        n3axyTgQ+ztPoi1e/JiwCB6YIDKu2AJJAFEtfvBL+lsJFwwS6mNIobpx9uwVyWLDD73s
-        oLCLi+Lo/+eacQtSV10rVV+e8qcVB5Buk+VLubecAepGOj+NVLSnqWGVeDmwgzYL62nS
-        ducg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QBG34Cf
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 26 Feb 2020 12:16:03 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v6 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Date:   Wed, 26 Feb 2020 12:15:57 +0100
-Message-Id: <4b243cc120ca6f9a23e217d070e7f6a42f11f8b4.1582715761.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582715761.git.hns@goldelico.com>
-References: <cover.1582715761.git.hns@goldelico.com>
+        Wed, 26 Feb 2020 06:17:25 -0500
+Received: by mail-wm1-f65.google.com with SMTP id i10so3216177wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:17:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+aewCnTNGy8KuaeqGtx90I+oSQVy+5V29tI+27/JzTo=;
+        b=D5KgMuEPCN514AD3a5eUqIdkkIe9aHOLwMX6eisi+8vWMQ0Q9l1ABDAfIarIU4NYB6
+         eXITWDgzdZfGC3ZR0IQEPGVoxAnxUz1vT/7GOL15j+LoJ35Q2LEN71Ur1L7YFU27N7j6
+         EJPAYGERRcDA5KwHBW6XyhINrXF065mGb1Cr/AQ5TyqasNZ2cn/QcWAVikJ376p31Ics
+         k38acqY8gYslHMQQGC8Wi76z0cPYrTllrdyNy+yYlHweSdTSZm/MOOh67ABJxyqn94M3
+         YHZh+GwcuETQL9VvFi877MPKW77tiCglJqe7F9BP0oo4F/Nq+6AKpBaHxmWiCHXArTjU
+         0K4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+aewCnTNGy8KuaeqGtx90I+oSQVy+5V29tI+27/JzTo=;
+        b=l2QgtshBMCmDrhWpBurKRlfJrc6TRb/Esm1Zr3duQNfHRpLkcFmGYErVU6qEV0hC8v
+         qnXerUCF59RmEOjk/l+59o1rZD6FQ5wlRA9Kxk7pQ9Mgn+C7aAtnP+ZqTREYDck83SoT
+         2m8Ri42hLEPXQVzexaA/w70nIfRFNh0CX5cilyZj6McoeMer2vIv7zcAkADHM5miBB1Z
+         H3+P40cnbUX+5PGbCyhFbZxPDKcuQKK2KxxA9baIzOK5d6ePiPh8N12l4cX90JBA2rX1
+         7VbUf4Xg4wv3t6FtYo6qD/+fCUsu8vBCW47XjM2bKGzMFWQ+NzNG2LHKgJvmngozuBz7
+         Y1vQ==
+X-Gm-Message-State: APjAAAXMJClRCdUfdRFZrtB3LUh9iJXEPoJVfRkPXgyrvc9H+tl0bGGN
+        B8Q7QaVsOA65vooZ8pwR3CC0+g==
+X-Google-Smtp-Source: APXvYqwW7X83G2uoPsVuS+xc1lYqGj2pts2NmdFwwGGKVZzwiMOH6f6iH/O7vNJglR+Cr+Y7yAqBPw==
+X-Received: by 2002:a1c:6308:: with SMTP id x8mr5118270wmb.80.1582715843459;
+        Wed, 26 Feb 2020 03:17:23 -0800 (PST)
+Received: from [192.168.1.10] ([194.35.116.65])
+        by smtp.gmail.com with ESMTPSA id o27sm2828658wro.27.2020.02.26.03.17.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 03:17:22 -0800 (PST)
+Subject: Re: [PATCH bpf-next v3 0/5] bpftool: Make probes which emit dmesg
+ warnings optional
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <e4929660-21ff-e394-37a0-d72b67a3770a@isovalent.com>
+Date:   Wed, 26 Feb 2020 11:17:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225194446.20651-1-mrostecki@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+2020-02-25 20:44 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> Feature probes in bpftool related to bpf_probe_write_user and
+> bpf_trace_printk helpers emit dmesg warnings which might be confusing
+> for people running bpftool on production environments. This patch series
+> addresses that by filtering them out by default and introducing the new
+> positional argument "full" which enables all available probes.
+> 
+> The main motivation behind those changes is ability the fact that some
+> probes (for example those related to "trace" or "write_user" helpers)
+> emit dmesg messages which might be confusing for people who are running
+> on production environments. For details see the Cilium issue[0].
+> 
+> v1 -> v2:
+> - Do not expose regex filters to users, keep filtering logic internal,
+> expose only the "full" option for including probes which emit dmesg
+> warnings.
+> 
+> v2 -> v3:
+> - Do not use regex for filtering out probes, use function IDs directly.
+> - Fix bash completion - in v2 only "prefix" was proposed after "macros",
+>    "dev" and "kernel" were not.
+> - Rephrase the man page paragraph, highlight helper function names.
+> - Remove tests which parse the plain output of bpftool (except the
+>    header/macros test), focus on testing JSON output instead.
+> - Add test which compares the output with and without "full" option.
+> 
+> [0] https://github.com/cilium/cilium/issues/10048
+> 
+> Michal Rostecki (5):
+>    bpftool: Move out sections to separate functions
+>    bpftool: Make probes which emit dmesg warnings optional
+>    bpftool: Update documentation of "bpftool feature" command
+>    bpftool: Update bash completion for "bpftool feature" command
+>    selftests/bpf: Add test for "bpftool feature" command
+> 
+>   .../bpftool/Documentation/bpftool-feature.rst |  19 +-
+>   tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+>   tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
+>   tools/testing/selftests/.gitignore            |   5 +-
+>   tools/testing/selftests/bpf/Makefile          |   3 +-
+>   tools/testing/selftests/bpf/test_bpftool.py   | 179 +++++++++++
+>   tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
+>   7 files changed, 374 insertions(+), 123 deletions(-)
+>   create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
+>   create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
+> 
 
-This patch brings support for the JZ4780 efuse. Currently it only exposes
-a read only access to the entire 8K bits efuse memory.
+This version looks good to me, thanks!
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-[converted to yaml]
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
 
-diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-new file mode 100644
-index 000000000000..b9c0ea09b335
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic JZ EFUSE driver bindings
-+
-+maintainers:
-+  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ingenic,jz4780-efuse
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    # Handle for the ahb for the efuse.
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: ahb2
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4780-cgu.h>
-+
-+    efuse@134100d0 {
-+        compatible = "ingenic,jz4780-efuse";
-+        reg = <0x134100d0 0x2c>;
-+
-+        clocks = <&cgu JZ4780_CLK_AHB2>;
-+        clock-names = "ahb2";
-+    };
-+
-+...
--- 
-2.23.0
+(Please keep Acked-by/Reviewed-by tags between versions if there are no 
+significant changes, here for patch 1.)
 
+That's a lot of tests now that we don't have the regex and filtering is 
+very straightforward, but it does not hurt. I checked and they all pass 
+on my system.
+
+Thanks,
+Quentin
