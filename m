@@ -2,139 +2,82 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0E0C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B3BC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D320246D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="h0CZuuEJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8EBF72468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:44:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgBZPn2 (ORCPT
+        id S1728379AbgBZPoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:43:28 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54313 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbgBZPn2 (ORCPT
+        Wed, 26 Feb 2020 10:44:17 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46855 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727936AbgBZPoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:43:28 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z12so3589950wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I5/BA7YsbH1T9sgkRZT9CG8Y5s0Fng9eOPPb7ZuWHYE=;
-        b=h0CZuuEJRdVegqyi13c89qiGXx60eLvFkx/GwHshqfyg1vU877SDUzDDB7+QbtC1W4
-         IhZXFnKEfR6MW0VSVVOY+sD9tqlAd3SGcdRXz/PyPZ0jdPpGRsh2lcvncF42WgrK27QA
-         18DpuPtuP6ADT4RB6IyZtgqcVTX3AyvYrzENEk1ViR0tR3gsqakChr/D4VcH1LaAL9Gk
-         CRBXOTzhlF30dp3sFSmjBlEtQdmwO4QP+HtcY9ByqIueXHuhOxr+7aW2BmhWQ+tGZu+6
-         Ct7qXdZCDPqKlJlnDVNVP8qqZkPvyqzBNWIVMTbxgiySJl2kSbTgfMzHdVSAMMMibvHi
-         yYbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I5/BA7YsbH1T9sgkRZT9CG8Y5s0Fng9eOPPb7ZuWHYE=;
-        b=Hdw3Wwgs65uHzaWE8hkLnyOz5PKdAz7/OHRpmdf4HFeY1ZwukapiLjytgun/uPKwoo
-         C8pW0V7XVQkcpjV2CpmjY6pL7zmvljyAq9iZ82HbscBTVxpItqoG6d8OKYxfBeiJPW4w
-         i7J1Bq64Tr4qgfXjSb5s7+X1zBUD3ZHnHaqEp7f2RemUDTZM7PifWq+obJR2KFdE+043
-         2iKEKsHy6g6WCw/QfQKWA8Y7t9Fa9grwwW04lK8dTvE4qrLpDjHBv018Liti5WRHlgpt
-         fP8fRH3rm6XbdoQKOG9r7gzSs8skawrBDLdh6eRuIGEcy2FeaK79nwUiCNPy5mxuP1+Y
-         b27w==
-X-Gm-Message-State: APjAAAWnoJv4uvJUTmMhLekerTtF0Z1YYRAL0z2/qmjWvt8yxTzrcEao
-        FsxIfMHGRSJN24HzWeBU5QaTSA==
-X-Google-Smtp-Source: APXvYqyBpiXgO5JATr9oE7f1ctrb6q9k+9T8pBp8B9tz+Bz4xDU3/9j3M2yLGFRhzsynf86yERgMBQ==
-X-Received: by 2002:a05:600c:211:: with SMTP id 17mr6214941wmi.60.1582731806522;
-        Wed, 26 Feb 2020 07:43:26 -0800 (PST)
-Received: from [192.168.1.10] ([194.35.116.65])
-        by smtp.gmail.com with ESMTPSA id s139sm3528634wme.35.2020.02.26.07.43.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 07:43:25 -0800 (PST)
-Subject: Re: [PATCH bpf-next v3 5/5] selftests/bpf: Add test for "bpftool
- feature" command
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-kselftest@vger.kernel.org
-References: <20200225194446.20651-1-mrostecki@opensuse.org>
- <20200225194446.20651-6-mrostecki@opensuse.org>
- <d0c40cd0-f9db-c6cb-5b46-79145311050d@iogearbox.net>
-From:   Quentin Monnet <quentin@isovalent.com>
-Message-ID: <3e485c13-e478-c0b3-39e4-595dbd968ea2@isovalent.com>
-Date:   Wed, 26 Feb 2020 15:43:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 10:44:17 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1j6yr8-0008Ty-T1; Wed, 26 Feb 2020 16:44:14 +0100
+Message-ID: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
+Subject: Proper way to check for restricted DMA addressing from device driver
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Feb 2020 16:44:14 +0100
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <d0c40cd0-f9db-c6cb-5b46-79145311050d@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-02-26 16:34 UTC+0100 ~ Daniel Borkmann <daniel@iogearbox.net>
-> On 2/25/20 8:44 PM, Michal Rostecki wrote:
->> Add Python module with tests for "bpftool feature" command, which mainly
->> wheck whether the "full" option is working properly.
-> 
-> nit, typo: wheck
-> 
->>
->> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
-> 
-> Ptal, when running the test I'm getting the following error:
-> 
-> root@tank:~/bpf-next/tools/testing/selftests/bpf# ./test_bpftool.sh
-> test_feature_dev_json (test_bpftool.TestBpftool) ... ERROR
-> test_feature_kernel (test_bpftool.TestBpftool) ... ERROR
-> test_feature_kernel_full (test_bpftool.TestBpftool) ... ERROR
-> test_feature_kernel_full_vs_not_full (test_bpftool.TestBpftool) ... ERROR
-> test_feature_macros (test_bpftool.TestBpftool) ... ERROR
-> 
-> ======================================================================
-> ERROR: test_feature_dev_json (test_bpftool.TestBpftool)
-> ----------------------------------------------------------------------
-> Traceback (most recent call last):
->    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
-> line 58, in wrapper
->      return f(*args, iface, **kwargs)
->    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
-> line 83, in test_feature_dev_json
->      res = bpftool_json(["feature", "probe", "dev", iface])
->    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
-> line 43, in bpftool_json
->      res = _bpftool(args)
->    File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py", 
-> line 34, in _bpftool
->      res = subprocess.run(_args, capture_output=True)
->    File "/usr/lib/python3.6/subprocess.py", line 423, in run
->      with Popen(*popenargs, **kwargs) as process:
-> TypeError: __init__() got an unexpected keyword argument 'capture_output'
+Hi all,
 
+I'm currently struggling with how to properly check for restricted DMA
+addressing from a device driver side. The basic issue I'm facing is
+that I have a embedded GPU, which isn't able to address all system
+memory due to interconnect being restricted to 32bit addressing. The
+limits are properly described in the system device-tree and thus
+SWIOTLB is working.
 
-Apparently the “capture_output” option for subprocess was added to 
-python 3.7 [0]. It worked on my system (python 3.7.5) but didn't pass on 
-yours with 3.6.
+However graphics buffers are large and graphics drivers really like to
+keep the dma mapping alive for performance reasons, which means I'm
+running out of SWIOTLB space pretty easily, aside from the obvious
+performance implications of SWIOTLB.
 
-Michal, can you change it to something less recent please, so that 
-people don't have to upgrade python to test?
+As 3 out of the maximum 4GB system memory are located in the DMA32 zone
+and thus located in the GPU addressable space, I just want to avoid
+allocating graphics buffers outside of the DMA32 zone.
 
-Quentin
+To add the DMA32 restriction to my drivers allocations, I need a
+reliable way from the device driver side to check if the GPU is in such
+a restricted system. What I'm currently doing in my WIP patch is this:
 
-[0] https://docs.python.org/3/whatsnew/3.7.html#subprocess
+ /*
+  * If the GPU is part of a system with only 32bit bus addressing
+  * capabilities, request pages for our SHM backend buffers from the
+  * DMA32 zone to avoid performance killing SWIOTLB bounce buffering.
+  */
+ if (*gpu->dev->dma_mask < BIT_ULL(32) && !device_iommu_mapped(gpu->dev))
+         priv->shm_gfp_mask |= GFP_DMA32;
+
+However I'm not sure if there are edge cases where this check would
+fool me. Is there any better way to check for DMA addressing
+restrictions from the device driver side?
+
+Regards,
+Lucas
+
