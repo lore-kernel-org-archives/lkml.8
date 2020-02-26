@@ -2,59 +2,226 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57488C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBACC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3437E2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416112467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:22:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="m51xONnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgBZLVo (ORCPT
+        id S1728266AbgBZLWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:21:44 -0500
-Received: from ms.lwn.net ([45.79.88.28]:34376 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbgBZLVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:21:44 -0500
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 803B26D9;
-        Wed, 26 Feb 2020 11:21:42 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 04:21:37 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: fix filesystems/porting.rst whitespace
-Message-ID: <20200226042137.05e9ead3@lwn.net>
-In-Reply-To: <20200225165954.GA11763@cisco>
-References: <20200220214009.11645-1-tycho@tycho.ws>
-        <20200225032028.2bda9de8@lwn.net>
-        <20200225165954.GA11763@cisco>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 26 Feb 2020 06:22:07 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33775 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgBZLWH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:22:07 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n25so1711346lfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:22:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=E0us8VJrNXSY9eXzAIQwp1TcQwVEWEKmFj+MIUCCWAA=;
+        b=m51xONnvs2AQWLzIHcggigN9ok322op47/IX0qH0dvg/AZW8vnWixGq2mz2j0Yl7fr
+         O4Nr/5exfqxG43rCSZSrIlnIMsQ6K12FB2rv+3le9EoIRJ1hyHL3Z3WrXuRYmhg6gcvk
+         ITqGd8cQnSyulaEUqleP1VAoMmuDAeDdXCawI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=E0us8VJrNXSY9eXzAIQwp1TcQwVEWEKmFj+MIUCCWAA=;
+        b=AAgqztjB6kqFUjgKA1l4SBd5mb/a+oURqpaz8RrchbHmYne56hpqB+2xLOKfKogu7w
+         p3yaXzUE6PNvraPtZkQvQ22q0fYXFahkDnvs/McAUnnIYdXqo0eFJXwX5OdeCHMJC68Q
+         i/nLB3YaIYZrtmqH9P9pcmp/9ce+D4dvPvyVc8ja66TqstB+kML+uqyzo/n5CdsM44iN
+         /AMCDIBZGL+ZNdvF9uZfMky5RjhdNNuPkH2dD79/Tk6Ma100iOA7P3+C2WqFwxdcoIyN
+         7qpruizAUiggLlTL+R8Bx+2av8TN/tM+//s4B3SSBRTCZ7ON6VtFaUcMqb4Ke3LgbJmx
+         qLuw==
+X-Gm-Message-State: APjAAAXNcq9lhciQ/LPYQpoP2qFpKojsdHfCrDGOUSQIwERE/WiC06I+
+        VXl9Hd8/ngRF0e7sxAvWeNCQjA==
+X-Google-Smtp-Source: APXvYqxBl/nNgswDbREy9kr8rpHjTbAPXUmdviWKswPItyJ7aSrEvsiz9AFu3A9wLAv+j8LevLA+7Q==
+X-Received: by 2002:a19:6742:: with SMTP id e2mr2275073lfj.1.1582716123805;
+        Wed, 26 Feb 2020 03:22:03 -0800 (PST)
+Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
+        by smtp.gmail.com with ESMTPSA id u5sm675690ljl.97.2020.02.26.03.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 03:22:03 -0800 (PST)
+References: <00000000000050bd7c059f61fd8c@google.com> <3f2984d7-f854-2457-8bbe-7e8b1a377d66@gmail.com> <b33cfd8a-4813-4a7e-49ef-ed838e2e2344@gmail.com>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     syzbot <syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com>,
+        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, kafai@fb.com,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in inet_release
+In-reply-to: <b33cfd8a-4813-4a7e-49ef-ed838e2e2344@gmail.com>
+Date:   Wed, 26 Feb 2020 12:22:02 +0100
+Message-ID: <87eeuhd25h.fsf@cloudflare.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 09:59:54 -0700
-Tycho Andersen <tycho@tycho.ws> wrote:
+On Tue, Feb 25, 2020 at 07:23 PM CET, Eric Dumazet wrote:
+> On 2/25/20 12:15 AM, Eric Dumazet wrote:
+>>
+>>
+>> On 2/25/20 12:08 AM, syzbot wrote:
+>>> Hello,
+>>>
+>>> syzbot found the following crash on:
+>>>
+>>> HEAD commit:    54dedb5b Merge tag 'for-linus-5.6-rc3-tag' of git://git.ke..
+>>> git tree:       upstream
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=168f7de9e00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=1938db17e275e85dc328
+>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1681fe09e00000
+>>>
+>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>> Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
+>>>
+>>> BUG: kernel NULL pointer dereference, address: 0000000000000000
+>>> #PF: supervisor instruction fetch in kernel mode
+>>> #PF: error_code(0x0010) - not-present page
+>>> PGD a0113067 P4D a0113067 PUD a8771067 PMD 0
+>>> Oops: 0010 [#1] PREEMPT SMP KASAN
+>>> CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
+>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>>> RIP: 0010:0x0
+>>> Code: Bad RIP value.
+>>> RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+>>> RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+>>> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+>>> RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+>>> R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+>>> R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+>>> FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>> Call Trace:
+>>>  inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
+>>>  __sock_release net/socket.c:605 [inline]
+>>>  sock_close+0xe1/0x260 net/socket.c:1283
+>>>  __fput+0x2e4/0x740 fs/file_table.c:280
+>>>  ____fput+0x15/0x20 fs/file_table.c:313
+>>>  task_work_run+0x176/0x1b0 kernel/task_work.c:113
+>>>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>>>  exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+>>>  prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
+>>>  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
+>>>  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
+>>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>> RIP: 0033:0x45c429
+>>> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+>>> RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+>>> RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
+>>> RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
+>>> RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
+>>> R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
+>>> R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
+>>> Modules linked in:
+>>> CR2: 0000000000000000
+>>> ---[ end trace 82567b5207e87bae ]---
+>>> RIP: 0010:0x0
+>>> Code: Bad RIP value.
+>>> RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+>>> RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+>>> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+>>> RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+>>> R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+>>> R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+>>> FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>>
+>>>
+>>> ---
+>>> This bug is generated by a bot. It may contain errors.
+>>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>>
+>>> syzbot will keep track of this bug report. See:
+>>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>>> syzbot can test patches for this bug, for details see:
+>>> https://goo.gl/tpsmEJ#testing-patches
+>>>
+>>
+>> Note to ULP maintainers
+>>
+>> Probably the code for IPV6_ADDRFORM  needs some care if a TCP socket got ULP enabled ?
+>>
+>
+> Maybe simply make sure sk->sk_prot is pristine as in :
+>
+> diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+> index 79fc012dd2cae44b69057c168037b018775d1f49..a72c5c30bc3a55ca65974c537cd089fa4260a8d0 100644
+> --- a/net/ipv6/ipv6_sockglue.c
+> +++ b/net/ipv6/ipv6_sockglue.c
+> @@ -183,9 +183,14 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+>                                         retv = -EBUSY;
+>                                         break;
+>                                 }
+> -                       } else if (sk->sk_protocol != IPPROTO_TCP)
+> +                       } else if (sk->sk_protocol == IPPROTO_TCP) {
+> +                               if (sk->sk_prot != &tcpv6_prot) {
+> +                                       retv = -EBUSY;
+> +                                       break;
+> +                               }
+> +                       } else {
+>                                 break;
+> -
+> +                       }
+>                         if (sk->sk_state != TCP_ESTABLISHED) {
+>                                 retv = -ENOTCONN;
+>                                 break;
 
-> > So I don't see that problem in my builds, and it doesn't show in the
-> > version on kernel.org either.  What version of sphinx are you running?  
-> 
-> It's actually the default vim syntax highlighter that gets confused in
-> my case,
+This is a weird one.
 
-So this is actually a vim bug, then, right?
+Only way I can see that syzbot could have triggered a NULL deref on
+sk->sk_prot->close() at net/ipv4/af_inet.c:427 is if we set sk->sk_prot
+to a set of kTLS callbacks that were not initialized.
 
-Thanks,
+That is:
 
-jon
+1) setsockopt(fd, SOL_TCP, TCP_ULP, "tls") builds a set kTLS callbacks
+   for AF_INET6 by initializing tls_prots[TLSV6],
+
+2) setsockopt(fd, SOL_IPV6, IPV6_ADDRFORM) changes sk->sk_family to
+   AF_INET,
+
+3) setsockopt(fd, SOL_TLS, TLS_TX, ...) sets sk->sk_prot to
+   uninitialized &tls_prots[TLSV4] based on sk->sk_family.
+
+But this could not have happened because setsockopt(IPV6_ADDRFORM)
+resets sk->sk_prot to &tcp_prot, so tls_setsockopt no longer gets called
+and attempt to setsockopt(fd, SOL_TLS, TLS_TX) will fail with
+-ENOPROTOOPT.
+
+Also, we hold the sk_lock while setting both IPV6_ADDRFORM and TLX_TX
+options.
+
+Nevertheless, failing IPV6_ADDRFORM with -EBUSY when sk_prot is
+overwritten sounds like the right thing to do.
+
+It looks like a bug that we are not doing it ATM, the crash report
+aside, because after setsockopt(IPV6_ADDRFORM) icsk_ulp_data remains
+pointing to a kTLS context, while proto and socket ops get reset to
+TCPv4 defaults.
