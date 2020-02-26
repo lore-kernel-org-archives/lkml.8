@@ -2,142 +2,243 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10493C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26308C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62C520637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15F620637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582716711;
+	bh=20Bex0iBwW+Hjc5R1LValk3lnpHnU+s836cd8dAggzM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D9OwY9AlJ8wnbLnqdPQ/vUfJWYW7t9rkn5ju+CoMITubAl9RTv2vnun9ojG9vyQYQ
+	 xaqnPQQY2QTIKk/iwKQ5IvLhk+DzULM5BgUvB+s/ixCAgH2V5tBln+HuCwgHLoW8X/
+	 ttP83KPf0TdKNAcaBzI/phvLboZIJ2lAS9P44jA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgBZLbe (ORCPT
+        id S1728305AbgBZLbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:31:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43854 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbgBZLbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:31:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2F399AD5C;
-        Wed, 26 Feb 2020 11:31:31 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 52C641E0EA2; Wed, 26 Feb 2020 12:31:30 +0100 (CET)
-Date:   Wed, 26 Feb 2020 12:31:30 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Jonathan Halliday <jonathan.halliday@redhat.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>, ira.weiny@intel.com,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200226113130.GG10728@quack2.suse.cz>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-8-ira.weiny@intel.com>
- <20200221174449.GB11378@lst.de>
- <20200221224419.GW10776@dread.disaster.area>
- <20200224175603.GE7771@lst.de>
- <20200225000937.GA10776@dread.disaster.area>
- <20200225173633.GA30843@lst.de>
- <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
- <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+        Wed, 26 Feb 2020 06:31:49 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:29023 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbgBZLbt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:31:49 -0500
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01QBVS9L020952;
+        Wed, 26 Feb 2020 20:31:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01QBVS9L020952
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582716689;
+        bh=GDjPsWzrsBjPpbXYwVdhVCcx22MBva9/iaabNI2DfMY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VFgWW43I3nLFtzk4rxWaX8UzpfeU/fgCUgrcJJQPRjywx8t0A6yMcLoADZC/WB9dC
+         DbMyNrdls3VcjjNKpNrc8YBcDnwpjAd8bxSytbCIEIwsTjJc5W4PGQz6UesIgedv1i
+         CNXXNJd4rsk+ScbIuXMEM/gVbNY75/DNJnir10lMhlz/nk4rMF9IRikPHM//aRq8BF
+         exHraW0bd1L8uaxVXdNwXZQNM1dfTe8Ayf6zpUnKSl4TKrpWsJLL1n8swF2FPWod48
+         kBe0JFanZHz/HxnuIkX91izzXTtO2KeinHogtM2Cze2HS/zyKw2Dt65VSzmbD0ZrXH
+         aBzUw3wOxiABg==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id w67so694684vkf.1;
+        Wed, 26 Feb 2020 03:31:28 -0800 (PST)
+X-Gm-Message-State: APjAAAWuUrhhRuyY9gbmQwE3TuPtI5mnA/xjN5IDtkM+u6d9DB2Hgm2n
+        dCOVxEB6AhNXkZV4P/15DOdfRycWNkwT+UdvS3Q=
+X-Google-Smtp-Source: APXvYqwTLN0fkQHFGI4QO8kowzwxB4Wi0DpAxoGD+97b78BtWFJ5UNRU1cvEoaHtK6ivUZ0XHGPj9XqC1TqApqmB1WU=
+X-Received: by 2002:a1f:6344:: with SMTP id x65mr3398079vkb.26.1582716687661;
+ Wed, 26 Feb 2020 03:31:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200224174129.2664-1-ndesaulniers@google.com> <20200225210250.64366-1-ndesaulniers@google.com>
+In-Reply-To: <20200225210250.64366-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 26 Feb 2020 20:30:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+Message-ID: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi.
 
-On Wed 26-02-20 09:28:57, Jonathan Halliday wrote:
-> I'm a middleware developer, focused on how Java (JVM) workloads can benefit
-> from app-direct mode pmem. Initially the target is apps that need a fast
-> binary log for fault tolerance: the classic database WAL use case;
-> transaction coordination systems; enterprise message bus persistence and
-> suchlike. Critically, there are cases where we use log based storage, i.e.
-> it's not the strict 'read rarely, only on recovery' model that a classic db
-> may have, but more of a 'append only, read many times' event stream model.
-> 
-> Think of the log oriented data storage as having logical segments (let's
-> implement them as files), of which the most recent is being appended to
-> (read_write) and the remaining N-1 older segments are full and sealed, so
-> effectively immutable (read_only) until discarded. The tail segment needs to
-> be in DAX mode for optimal write performance, as the size of the append may
-> be sub-block and we don't want the overhead of the kernel call anyhow. So
-> that's clearly a good fit for putting on a DAX fs mount and using mmap with
-> MAP_SYNC.
-> 
-> However, we want fast read access into the segments, to retrieve stored
-> records. The small access index can be built in volatile RAM (assuming we're
-> willing to take the startup overhead of a full file scan at recovery time)
-> but the data itself is big and we don't want to move it all off pmem. Which
-> means the requirements are now different: we want the O/S cache to pull hot
-> data into fast volatile RAM for us, which DAX explicitly won't do.
-> Effectively a poor man's 'memory mode' pmem, rather than app-direct mode,
-> except here we're using the O/S rather than the hardware memory controller
-> to do the cache management for us.
-> 
-> Currently this requires closing the full (read_write) file, then copying it
-> to a non-DAX device and reopening it (read_only) there. Clearly that's
-> expensive and rather tedious. Instead, I'd like to close the MAP_SYNC mmap,
-> then, leaving the file where it is, reopen it in a mode that will instead go
-> via the O/S cache in the traditional manner. Bonus points if I can do it
-> over non-overlapping ranges in a file without closing the DAX mode mmap,
-> since then the segments are entirely logical instead of needing separate
-> physical files.
-> 
-> I note a comment below regarding a per-directly setting, but don't have the
-> background to fully understand what's being suggested. However, I'll note
-> here that I can live with a per-directory granularity, as relinking a file
-> into a new dir is a constant time operation, whilst the move described above
-> isn't. So if a per-directory granularity is easier than a per-file one
-> that's fine, though as a person with only passing knowledge of filesystem
-> design I don't see how having multiple links to a file can work cleanly in
-> that case.
 
-Well, with per-directory setting, relinking the file will not magically
-make it stop using DAX. So your situation would be very similar to the
-current one, except "copy to non-DAX device" can be replaced by "copy to
-non-DAX directory". Maybe the "copy" part could be actually reflink which
-would make it faster.
+On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Added to kbuild documentation. Provides more official info on building
+> kernels with Clang and LLVM than our wiki.
+>
+> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Changes V1 -> V2:
+> * s/On going/ongoing/
+> * add Randy's Suggested-by
 
-> P.S. I'll cheekily take the opportunity of having your attention to tack on
-> one minor gripe about the current system: The only way to know if a mmap
-> with MAP_SYNC will work is to try it and catch the error. Which would be
-> reasonable if it were free of side effects.  However, the process requires
-> first expanding the file to at least the size of the desired map, which is
-> done non-atomically i.e. is user visible. There are thus nasty race
-> conditions in the cleanup, where after a failed mmap attempt (e.g the device
-> doesn't support DAX), we try to shrink the file back to its original size,
-> but something else has already opened it at its new, larger size. This is
-> not theoretical: I got caught by it whilst adapting some of our middleware
-> to use pmem.  Therefore, some way to probe the file path for its capability
-> would be nice, much the same as I can e.g. inspect file permissions to (more
-> or less) evaluate if I can write it without actually mutating it.  Thanks!
 
-Well, reporting error on mmap(2) is the only way how to avoid
-time-to-check-time-to-use races. And these are very important when we are
-speaking about data integrity guarantees. So that's not going to change.
-But with Ira's patches you could use statx(2) to check whether file at
-least supports DAX and so avoid doing mmap check with the side effects in
-the common case where it's hopeless... I'd also think that you could
-currently do mmap check with the current file size and if it succeeds,
-expand the file to the desired size and mmap again. It's not ideal but it
-should work.
+I do not understand this tag update.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+As far as I saw the review process,
+I do not think Randy deserves to have Suggested-by
+because he just pointed out a typo (on going -> ongoing) :
+https://patchwork.kernel.org/patch/11401189/#23179575
+
+(or, was there off-line activity I had missed?)
+
+
+> * add Nathan and Sedat's Reviewed-by
+> * Upgrade Kees' Sugguested-by to Reviewed-by
+
+We can add both
+
+Suggested-by: Kees Cook <keescook@chromium.org>
+
+and
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+
+
+I think Suggested-by and Reviewed-by should be orthogonal.
+
+
+Thanks.
+
+
+
+
+
+
+> * s/suffix/prefix/
+>
+>
+>  Documentation/kbuild/index.rst |  1 +
+>  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 81 insertions(+)
+>  create mode 100644 Documentation/kbuild/llvm.rst
+>
+> diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
+> index 0f144fad99a6..3882bd5f7728 100644
+> --- a/Documentation/kbuild/index.rst
+> +++ b/Documentation/kbuild/index.rst
+> @@ -19,6 +19,7 @@ Kernel Build System
+>
+>      issues
+>      reproducible-builds
+> +    llvm
+>
+>  .. only::  subproject and html
+>
+> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> new file mode 100644
+> index 000000000000..d6c79eb4e23e
+> --- /dev/null
+> +++ b/Documentation/kbuild/llvm.rst
+> @@ -0,0 +1,80 @@
+> +==============================
+> +Building Linux with Clang/LLVM
+> +==============================
+> +
+> +This document covers how to build the Linux kernel with Clang and LLVM
+> +utilities.
+> +
+> +About
+> +-----
+> +
+> +The Linux kernel has always traditionally been compiled with GNU toolchains
+> +such as GCC and binutils. Ongoing work has allowed for `Clang
+> +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
+> +used as viable substitutes. Distributions such as `Android
+> +<https://www.android.com/>`_, `ChromeOS
+> +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
+> +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
+> +collection of toolchain components implemented in terms of C++ objects
+> +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
+> +supports C and the GNU C extensions required by the kernel, and is pronounced
+> +"klang," not "see-lang."
+> +
+> +Clang
+> +-----
+> +
+> +The compiler used can be swapped out via `CC=` command line argument to `make`.
+> +`CC=` should be set when selecting a config and during a build.
+> +
+> +       make CC=clang defconfig
+> +
+> +       make CC=clang
+> +
+> +Cross Compiling
+> +---------------
+> +
+> +A single Clang compiler binary will typically contain all supported backends,
+> +which can help simplify cross compiling.
+> +
+> +       ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
+> +
+> +`CROSS_COMPILE` is not used to prefix the Clang compiler binary, instead
+> +`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
+> +example:
+> +
+> +       clang --target aarch64-linux-gnu foo.c
+> +
+> +LLVM Utilities
+> +--------------
+> +
+> +LLVM has substitutes for GNU binutils utilities. These can be invoked as
+> +additional parameters to `make`.
+> +
+> +       make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+> +         OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
+> +         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+> +         HOSTLD=ld.lld
+> +
+> +Getting Help
+> +------------
+> +
+> +- `Website <https://clangbuiltlinux.github.io/>`_
+> +- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
+> +- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
+> +- IRC: #clangbuiltlinux on chat.freenode.net
+> +- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
+> +- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
+> +- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
+> +
+> +Getting LLVM
+> +-------------
+> +
+> +- http://releases.llvm.org/download.html
+> +- https://github.com/llvm/llvm-project
+> +- https://llvm.org/docs/GettingStarted.html
+> +- https://llvm.org/docs/CMake.html
+> +- https://apt.llvm.org/
+> +- https://www.archlinux.org/packages/extra/x86_64/llvm/
+> +- https://github.com/ClangBuiltLinux/tc-build
+> +- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
+> +- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
+
+
+--
+Best Regards
+Masahiro Yamada
