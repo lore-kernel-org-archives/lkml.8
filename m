@@ -2,93 +2,186 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EA3C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16EBC4BA15
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD4A24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A0420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fJ50qk9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBZPOf (ORCPT
+        id S1727916AbgBZPQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:14:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:37256 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgBZPOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:14:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 260B430E;
-        Wed, 26 Feb 2020 07:14:34 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 530F33F819;
-        Wed, 26 Feb 2020 07:14:33 -0800 (PST)
-Subject: Re: [PATCH] trace: ras: print the raw data of arm processor error
- info
-To:     Xie XiuQi <xiexiuqi@huawei.com>
-Cc:     Borislav Petkov <bp@alien8.de>, tony.luck@intel.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191214121109.8349-1-xiexiuqi@huawei.com>
- <20200109114603.GC5603@zn.tnic>
- <3086a22d-6d66-df74-5878-60a8fc0f1499@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <e391ed52-d861-0149-33eb-f55122b6bd6c@arm.com>
-Date:   Wed, 26 Feb 2020 15:14:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 10:16:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39705 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727228AbgBZPQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:16:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582730201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ij8sMR6FAadSXu2miL+uunfhTRcFyYbFV2u9LA8Eu3g=;
+        b=fJ50qk9PsheWd2sS0bITe9Ux11PP7DgbZLhgljJHju2rFwJiQBdEmgGJv6YxqBIQLFpAC9
+        YGNs2KtHiTmtsxbQJZzTiSsnlSSnclLz2S/oEYEo3EWepbd5JeI3i/k6Q174fAQ9UzKV9c
+        buYwSZp0ZMLO+KNmGbTjHXAHvH7jXCI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-sN7Mhq37NriU9h8WmQeSPw-1; Wed, 26 Feb 2020 10:16:39 -0500
+X-MC-Unique: sN7Mhq37NriU9h8WmQeSPw-1
+Received: by mail-wm1-f70.google.com with SMTP id w12so770831wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:16:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ij8sMR6FAadSXu2miL+uunfhTRcFyYbFV2u9LA8Eu3g=;
+        b=aObPY1hlqSbU/TEwtgYYbzpjejkSd7BSwR1JouyzNef+AU2u0Wr24AH4KQcHRqhnT9
+         j2bsHuyURpqmsOKGS8MgDYlBqEjZyobhrJ3YNCCcs5EhVwKhf73v6+H9zmYt953Idz7P
+         w9TYWtw0Uhd0cWjxzl90/FCtaYs7BVQmFT9vv2OH7d/sm48rI0YbE+Veq05mO6xSY08y
+         wze8FR1TSTc5wOjsfXdq8kX8pRE0LCv6H4aZfMZKXG22AXhy+6D5P/Mcocm8cumQRlKp
+         MK05h5UM9m2NqXwYTFFBD3CcYuU4J+ci9AZnERZIR2T5BQEmpWha86ZxHTxA89tIYTpD
+         2rPA==
+X-Gm-Message-State: APjAAAXtdNnwqyAplVqbWUtIldXyQhA7KUHd5GUh3eLFQXEX+Noh6eS7
+        fl3vj/Dlq4+m5uz2eZehvsXfeSQIeHmhbDF36oTZycREsSRsHFGm09C2aKtMKGxkcwBRyIN/nhQ
+        xFejLSctir9FDcsRgYdY2zPx2
+X-Received: by 2002:a05:600c:21c4:: with SMTP id x4mr6207295wmj.147.1582730197854;
+        Wed, 26 Feb 2020 07:16:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwODxhYVXmNh74qrCy1jD35rM1qXEd6GkGv23SBY63Ed6PzBCL7nHXi11CvzZsUvet3gciVwg==
+X-Received: by 2002:a05:600c:21c4:: with SMTP id x4mr6207270wmj.147.1582730197604;
+        Wed, 26 Feb 2020 07:16:37 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id q12sm3827586wrg.71.2020.02.26.07.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:16:36 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/13] KVM: x86: Refactor I/O emulation helpers to provide vcpu-only variant
+In-Reply-To: <20200218232953.5724-2-sean.j.christopherson@intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-2-sean.j.christopherson@intel.com>
+Date:   Wed, 26 Feb 2020 16:16:35 +0100
+Message-ID: <87h7zdjs4s.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <3086a22d-6d66-df74-5878-60a8fc0f1499@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xie,
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-On 13/01/2020 14:10, Xie XiuQi wrote:
-> What do you think of this patch?
-> 
-> On 2020/1/9 19:46, Borislav Petkov wrote:
->>>  );
->>>  
->>>  /*
+> Add variants of the I/O helpers that take a vCPU instead of an emulation
+> context.  This will eventually allow KVM to limit use of the emulation
+> context to the full emulation path.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 39 ++++++++++++++++++++++++---------------
+>  1 file changed, 24 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..6554abef631f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5959,11 +5959,9 @@ static int emulator_pio_in_out(struct kvm_vcpu *vcpu, int size,
+>  	return 0;
+>  }
+>  
+> -static int emulator_pio_in_emulated(struct x86_emulate_ctxt *ctxt,
+> -				    int size, unsigned short port, void *val,
+> -				    unsigned int count)
+> +static int emulator_pio_in(struct kvm_vcpu *vcpu, int size,
+> +			   unsigned short port, void *val, unsigned int count)
+>  {
+> -	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
+>  	int ret;
+>  
+>  	if (vcpu->arch.pio.count)
+> @@ -5983,17 +5981,30 @@ static int emulator_pio_in_emulated(struct x86_emulate_ctxt *ctxt,
+>  	return 0;
+>  }
+>  
+> -static int emulator_pio_out_emulated(struct x86_emulate_ctxt *ctxt,
+> -				     int size, unsigned short port,
+> -				     const void *val, unsigned int count)
+> +static int emulator_pio_in_emulated(struct x86_emulate_ctxt *ctxt,
+> +				    int size, unsigned short port, void *val,
+> +				    unsigned int count)
+>  {
+> -	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
+> +	return emulator_pio_in(emul_to_vcpu(ctxt), size, port, val, count);
+>  
+> +}
+> +
+> +static int emulator_pio_out(struct kvm_vcpu *vcpu, int size,
+> +			    unsigned short port, const void *val,
+> +			    unsigned int count)
+> +{
+>  	memcpy(vcpu->arch.pio_data, val, size * count);
+>  	trace_kvm_pio(KVM_PIO_OUT, port, size, count, vcpu->arch.pio_data);
+>  	return emulator_pio_in_out(vcpu, size, port, (void *)val, count, false);
+>  }
+>  
+> +static int emulator_pio_out_emulated(struct x86_emulate_ctxt *ctxt,
+> +				     int size, unsigned short port,
+> +				     const void *val, unsigned int count)
+> +{
+> +	return emulator_pio_out(emul_to_vcpu(ctxt), size, port, val, count);
+> +}
+> +
+>  static unsigned long get_segment_base(struct kvm_vcpu *vcpu, int seg)
+>  {
+>  	return kvm_x86_ops->get_segment_base(vcpu, seg);
+> @@ -6930,8 +6941,8 @@ static int kvm_fast_pio_out(struct kvm_vcpu *vcpu, int size,
+>  			    unsigned short port)
+>  {
+>  	unsigned long val = kvm_rax_read(vcpu);
+> -	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
+> -					    size, port, &val, 1);
+> +	int ret = emulator_pio_out(vcpu, size, port, &val, 1);
+> +
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -6967,11 +6978,10 @@ static int complete_fast_pio_in(struct kvm_vcpu *vcpu)
+>  	val = (vcpu->arch.pio.size < 4) ? kvm_rax_read(vcpu) : 0;
+>  
+>  	/*
+> -	 * Since vcpu->arch.pio.count == 1 let emulator_pio_in_emulated perform
+> +	 * Since vcpu->arch.pio.count == 1 let emulator_pio_in perform
+>  	 * the copy and tracing
+>  	 */
+> -	emulator_pio_in_emulated(&vcpu->arch.emulate_ctxt, vcpu->arch.pio.size,
+> -				 vcpu->arch.pio.port, &val, 1);
+> +	emulator_pio_in(vcpu, vcpu->arch.pio.size, vcpu->arch.pio.port, &val, 1);
+>  	kvm_rax_write(vcpu, val);
+>  
+>  	return kvm_skip_emulated_instruction(vcpu);
+> @@ -6986,8 +6996,7 @@ static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, int size,
+>  	/* For size less than 4 we merge, else we zero extend */
+>  	val = (size < 4) ? kvm_rax_read(vcpu) : 0;
+>  
+> -	ret = emulator_pio_in_emulated(&vcpu->arch.emulate_ctxt, size, port,
+> -				       &val, 1);
+> +	ret = emulator_pio_in(vcpu, size, port, &val, 1);
+>  	if (ret) {
+>  		kvm_rax_write(vcpu, val);
+>  		return ret;
 
-What patch?!
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-(digs in the headers)
-https://lore.kernel.org/linux-edac/20191214121109.8349-1-xiexiuqi@huawei.com/
+-- 
+Vitaly
 
->>> -- 
->> That's for ARM folks to decide whether they wanna shuffle raw error
->> records into userspace like that. CCed.
-
-Hmm, this dumps more of 'CPER_SEC_PROC_ARM' to user-space. But not all of it ... (ugh,
-this is the thing with three variable length fields in it!) I would like to be able to
-parse these in the kernel eventually, but that doesn't matter right now.
-
-I agree privileged user-space should be able to collect all the CPER for some tool to
-analyse it. (what else would we do with 'vendor specific error info'?). I'm not totally
-convinced tracepoints are the right thing for big blobs of data like this, but its what
-we're using today.
-
-
-I'll show my ignorance about trace points:
-
-How does rasdaemon react to you expanding the trace point like this? I recall they are
-self-describing, if user-space doesn't hard code the layout...
-
-You export what may be kernel pointers with the virtual fault address. Is there any way an
-unprivileged user can get hold of these?
-(its somewhat pointless as user-space can't know what that pointer means)
-
-
-
-Thanks,
-
-James
