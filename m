@@ -2,53 +2,114 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F22C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D71EC4BA11
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0564E222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5591620732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:37:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fxvgziQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgBZJgX (ORCPT
+        id S1727905AbgBZJhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:36:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34586 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbgBZJgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:36:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 337A1AC66;
-        Wed, 26 Feb 2020 09:36:21 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 09:36:26 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ceph: re-org copy_file_range and fix some error paths
-Message-ID: <20200226093626.GA15815@suse.com>
-References: <20200224134432.25888-1-lhenriques@suse.com>
- <c406ee08db90c1452c4ba9740b046ca9204c7239.camel@kernel.org>
+        Wed, 26 Feb 2020 04:37:37 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40602 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgBZJhh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 04:37:37 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bDZo019716;
+        Wed, 26 Feb 2020 03:37:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582709833;
+        bh=3zg6IMnhpry1kMZ9ELvtMgi825rhOhQg+hNu5ti2jCo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=fxvgziQt5AQ+OrlY8ksVSMEIK6zpwuObRmhSuXV28jm7l7covCAlhgFasHjcxm9Ls
+         1TtY91/TGYojl0dYZ3RmHX/zjE7FD0q2A02HSbmpP24FskJV1HdsN1hR9yx11mZNue
+         LR6CSg0lSb9YsOeEAtRnhA8nIZCNMxaSW89WF1UU=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bDoE118597
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 03:37:13 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 03:37:13 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 03:37:13 -0600
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4A6110613;
+        Wed, 26 Feb 2020 03:37:09 -0600
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR capability
+Date:   Wed, 26 Feb 2020 15:06:53 +0530
+Message-ID: <20200226093703.19765-2-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200226093703.19765-1-p.yadav@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c406ee08db90c1452c4ba9740b046ca9204c7239.camel@kernel.org>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:15:12PM -0800, Jeff Layton wrote:
-... 
-> This looks good to me, Luis -- merged into ceph-client/testing.
+Allow spi devices to express DTR receive and transmit capabilities via
+the properties "spi-rx-dtr" and "spi-tx-dtr".
 
-Awesome, thanks!  Please let me know of any issues you may find.
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ .../devicetree/bindings/spi/spi-controller.yaml        | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Cheers,
---
-Luís
+diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+index 1e0ca6ccf64b..7a84debed213 100644
+--- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+@@ -120,6 +120,11 @@ patternProperties:
+         description:
+           Delay, in microseconds, after a read transfer.
+ 
++      spi-rx-dtr:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          Device supports receiving in DTR mode.
++
+       spi-tx-bus-width:
+         allOf:
+           - $ref: /schemas/types.yaml#/definitions/uint32
+@@ -132,6 +137,11 @@ patternProperties:
+         description:
+           Delay, in microseconds, after a write transfer.
+ 
++      spi-tx-dtr:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          Device supports transmitting in DTR mode.
++
+     required:
+       - compatible
+       - reg
+-- 
+2.25.0
+
