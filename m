@@ -2,106 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D07FC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51CCC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9F4206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F1920637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qj/tpUst"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgBZGkB (ORCPT
+        id S1727193AbgBZGol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:40:01 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:35272 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgBZGkB (ORCPT
+        Wed, 26 Feb 2020 01:44:41 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44541 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgBZGol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:40:01 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id E158C29E93;
-        Wed, 26 Feb 2020 01:39:55 -0500 (EST)
-Date:   Wed, 26 Feb 2020 17:39:57 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Wed, 26 Feb 2020 01:44:41 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so1487250wrx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 22:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+KPHLK60Od8Tz3at5CtY8IsfsFpWA/aEWA5NAOhb0WU=;
+        b=Qj/tpUstLELK5vv6XqennEvqhI9Dn1aambXr8LWCAJ6RuIMxB4e0WMnhKK5YG/SBdd
+         hByGxHZcQhTwcMBvErtFpZIRGnXN5cjYHubnkEswYSUXOcwaGjaKJyolTBbvUlUbxybe
+         2/mjGV4Oc+ubFZ9mAfVT7rDyiWVJr3Db4gbr64XQc6JXYc9WBJK7L+FiGWITA6ZPIfaz
+         KXCLkXdbt2luMqQsf7MjdoZqzFyrxj0RJ60O+aCRx5ACbZ997AYNKLJYFtSWoMyL8hzn
+         yP6fjO2FqSLFJVwfqlO22iGfHrdfyfvq6IWt1Z7IVFMwUwStXWHe8flFmc80KUMBWT0C
+         cDBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+KPHLK60Od8Tz3at5CtY8IsfsFpWA/aEWA5NAOhb0WU=;
+        b=UoupXOPzWVSOF8bZozEjRxgGqgwzoeMzdNjKoOfj2AR0fj2EPuvsN+GasOvOSTlp06
+         awQFRFtM4IZTMCBfBbBGvKgiDU5BTc5Iv2XXvpwIUHX92cbGS1dn4YF5L6O+ET3LsKbE
+         RAeUX2HU4FvaVdz0hlXTiCOF4TbeHUXExEmI7cULY08H1d7tSJQjbBsekF7oHgnT/Ncb
+         G04M/aMA6+6H/tuhiErHzO3OqrL0SSHrEqUAENxTeAj8P9lLDPHwWSKpIcu/CFBgQnyy
+         ryyHKKLLBwSpw6PZLm88Oho+e0giEuy7FM/C9P3amXlDmSfSY26el6zQNmYFCSrLUa8R
+         ESyA==
+X-Gm-Message-State: APjAAAXAoOScAyOgwPFAY9wOsv85YjqaWcVOUdCsI923JMWYrpvaj/ao
+        GiCJymIekw+0/3pC1ZD7J30Y8Q==
+X-Google-Smtp-Source: APXvYqzzKWMArtaFbi5nyEZ/y+P8oPK5jIkuzcSZocgxqUWUIHT0bV17ls7m2M7xepaDkZ5R4ou4BQ==
+X-Received: by 2002:a5d:56ca:: with SMTP id m10mr3653907wrw.313.1582699479274;
+        Tue, 25 Feb 2020 22:44:39 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id g25sm8002307wmh.3.2020.02.25.22.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 22:44:38 -0800 (PST)
+Date:   Wed, 26 Feb 2020 06:45:10 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-In-Reply-To: <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org>
-Message-ID: <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org> <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
- <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 12/19] mfd: intel_soc_pmic_mrfld: Convert to use new
+ SCU IPC API
+Message-ID: <20200226064510.GZ3494@dell>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+ <20200217131446.32818-13-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200217131446.32818-13-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Greg Ungerer wrote:
+On Mon, 17 Feb 2020, Mika Westerberg wrote:
 
-> > That error would almost always be -EBUSY, right?
+> This converts the Intel Merrifield PMIC driver over the new SCU IPC API
+> where the SCU IPC instance is passed to the functions.
 > 
-> I expect it will never fail this early in boot. 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 
-If so, it suggests to me that tweaking the error message string is just 
-bikeshedding and that adding these error messages across the tree is just 
-bloat.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-> But how will you know if it really is EBUSY if you don't print it out?
-> 
-> > Moreover, compare this change,
-> > 
-> > -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> > +	request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-> > 
-> > with this change,
-> > 
-> > +	int err;
-> > 
-> > -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> > +	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-> > +	if (err)
-> > +		return err;
-> > 
-> > Isn't the latter change the more common pattern? It prints nothing.
-> 
-> Hmm, in my experience the much more common pattern is:
-> 
-> > +	int err;
-> > 
-> > -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> > +	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-> > +	if (err) {
-> > +             pr_err("timer: request_irq() failed with err=%d\n", err);
-> > +		return err;
-> > +     }
-> 
-> Where the pr_err() could be one of pr_err, printk, dev_err, ...
-> 
-
-A rough poll using 'git grep' seems to agree with your assessment.
-
-If -EBUSY means the end user has misconfigured something, printing 
-"request_irq failed" would be helpful. But does that still happen?
-
-Printing any error message for -ENOMEM is frowned upon, and printing -12 
-is really unhelpful. So the most popular pattern isn't that great, though 
-it is usually less verbose than the example you've given.
-
-Besides, introducing local variables and altering control flow seems well 
-out-of-scope for this kind of refactoring, right?
-
-Anyway, if you're going to add an error message,
-pr_err("%s: request_irq failed", foo) is unavoidable whenever foo isn't a 
-string constant, so one can't expect to grep the source code for the 
-literal error message from the log.
-
-BTW, one of the benefits of "%s: request_irq failed" is that a compilation 
-unit with multiple request_irq calls permits the compiler to coalesce all 
-duplicated format strings. Whereas, that's not possible with
-"foo: request_irq failed" and "bar: request_irq failed".
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
