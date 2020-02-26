@@ -2,75 +2,175 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63825C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5469CC4BA33
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E48520801
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AD621556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="o0bfRls3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgBZXoF (ORCPT
+        id S1727995AbgBZXqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:44:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:32786 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgBZXoF (ORCPT
+        Wed, 26 Feb 2020 18:46:45 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33135 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgBZXqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:44:05 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j76LK-0000RN-A5; Thu, 27 Feb 2020 00:43:54 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C9F5F100EA1; Thu, 27 Feb 2020 00:43:53 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 01/15] x86/irq: Convey vector as argument and not in ptregs
-In-Reply-To: <CAMzpN2j7EHZ2bKg9SZ2Ri-qsmEoknAAJO6O5yoLn-fY8_h1B2A@mail.gmail.com>
-References: <20200225224719.950376311@linutronix.de> <20200225231609.000955823@linutronix.de> <CAMzpN2ij8ReOXZH00puhzraCGRdKY8qt+TMipd_14_XWTu8xtg@mail.gmail.com> <87k149p0na.fsf@nanos.tec.linutronix.de> <CAMzpN2j7EHZ2bKg9SZ2Ri-qsmEoknAAJO6O5yoLn-fY8_h1B2A@mail.gmail.com>
-Date:   Thu, 27 Feb 2020 00:43:53 +0100
-Message-ID: <87eeugoqx2.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Feb 2020 18:46:44 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h4so1462036qkm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:46:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4NZOEaquYjC6dLK5p/kcEVRTiSpVwVONixAqYQdq2V8=;
+        b=o0bfRls3pX52Io0xBFTCrxRs7aD96Tv+hUcsMUi0b11VSqN8UHrdFNlYefsd2we1Z4
+         va/Mcipe+NIo9N0ljNcW1bpqEcygvQRY19dpp4s1eIfExUxjkk64RfD69S/dQTq5LtXP
+         yUENsPzrL0Bhv3t8/4ZddB+Xp0XG5f3984yZ9ZFBuRlFnx2k4FFW3c3N1eQsvOC9bk1z
+         7v9rIY4OzK/sbJFGWrPVEPV8RnxeZiAxsvxb/swkLwtTmjvkzq+1r3Aqtf6OMyukKDmR
+         cbat/+wmSSX8Gv/EEemx8hYkhCfrzXUWokZKmtFBWlci/DnSh7x5QN8WrM0lFGwAF63d
+         seYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4NZOEaquYjC6dLK5p/kcEVRTiSpVwVONixAqYQdq2V8=;
+        b=SresqaxiDAsq3tmZfe5z/9deCfiyPc5ss+fFZ877opoSKuuZHoNqKxAYixOWCKzhbE
+         HlnD+3R+xSW4x55ftUwI+RePhN/HS+R+/hAGuW0BrMXKDDZQTBghM3kVilBVeTeQWmKX
+         gYZ6JGkG7OkF9bQMrnAb/+P6S1CbTwlBM+FYnKwvltEoy3qibkOBjvVzZoKYQsiRbWSm
+         pu+EzWYGRTO1uIrniUk8BEn1Q32/Tg5AIXfP8gRhzq8FO2SLZS3QzY2fxMZGWDtwo076
+         9+42UyJi6a4vWUH/3GKjY2GKe26h8SZ01d3Qcx6aR4UITd27OjcI8xa0dqoGs5h2e4uS
+         65QA==
+X-Gm-Message-State: APjAAAWpnUNhF12KVucTG9V02NGVbgPpf/wta84JZQSL3rpIxjfusdl4
+        X9y5AH3PkuN8A+dM2l96CsUJAw==
+X-Google-Smtp-Source: APXvYqzpO5hVq7W4W5EweBQsp7C246vurWQVYiFVnTERRI71m4NwRbPP9NgX7AoHLr9aZoKo4eGpeA==
+X-Received: by 2002:a37:61c3:: with SMTP id v186mr638962qkb.96.1582760801070;
+        Wed, 26 Feb 2020 15:46:41 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:6048])
+        by smtp.gmail.com with ESMTPSA id m95sm1984550qte.41.2020.02.26.15.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 15:46:40 -0800 (PST)
+Date:   Wed, 26 Feb 2020 18:46:39 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200226234639.GA39625@cmpxchg.org>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
+ <20200226222642.GB30206@cmpxchg.org>
+ <CALvZod68yLy_qkmMp_yrLg8Up_mSSwiGGCx0J6pkjbuWzSUjZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod68yLy_qkmMp_yrLg8Up_mSSwiGGCx0J6pkjbuWzSUjZQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Gerst <brgerst@gmail.com> writes:
-> On Wed, Feb 26, 2020 at 3:13 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> Brian Gerst <brgerst@gmail.com> writes:
->> Now the question is whether we care about the packed stubs or just make
->> them larger by using alignment to get rid of this silly +0x80 and
->> ~vector fixup later on. The straight forward thing clearly has its charm
->> and I doubt it matters in measurable ways.
->
-> I think we can get rid of the inversion.  That was done so orig_ax had
-> a negative number (signifying it's not a syscall), but if you replace
-> it with -1 that isn't necessary.  A simple -0x80 offset should be
-> sufficient.
->
-> I think it's a worthy optimization to keep.  There are 240 of these
-> stubs, so increasing the allocation to 16 bytes would add 1920 bytes
-> to the kernel text.
+On Wed, Feb 26, 2020 at 03:36:50PM -0800, Shakeel Butt wrote:
+> On Wed, Feb 26, 2020 at 2:26 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Wed, Feb 26, 2020 at 12:25:33PM -0800, Shakeel Butt wrote:
+> > > On Wed, Feb 19, 2020 at 10:12 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > > >
+> > > > We have received regression reports from users whose workloads moved
+> > > > into containers and subsequently encountered new latencies. For some
+> > > > users these were a nuisance, but for some it meant missing their SLA
+> > > > response times. We tracked those delays down to cgroup limits, which
+> > > > inject direct reclaim stalls into the workload where previously all
+> > > > reclaim was handled my kswapd.
+> > > >
+> > > > This patch adds asynchronous reclaim to the memory.high cgroup limit
+> > > > while keeping direct reclaim as a fallback. In our testing, this
+> > > > eliminated all direct reclaim from the affected workload.
+> > > >
+> > > > memory.high has a grace buffer of about 4% between when it becomes
+> > > > exceeded and when allocating threads get throttled. We can use the
+> > > > same buffer for the async reclaimer to operate in. If the worker
+> > > > cannot keep up and the grace buffer is exceeded, allocating threads
+> > > > will fall back to direct reclaim before getting throttled.
+> > > >
+> > > > For irq-context, there's already async memory.high enforcement. Re-use
+> > > > that work item for all allocating contexts, but switch it to the
+> > > > unbound workqueue so reclaim work doesn't compete with the workload.
+> > > > The work item is per cgroup, which means the workqueue infrastructure
+> > > > will create at maximum one worker thread per reclaiming cgroup.
+> > > >
+> > > > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > > ---
+> > > >  mm/memcontrol.c | 60 +++++++++++++++++++++++++++++++++++++------------
+> > > >  mm/vmscan.c     | 10 +++++++--
+> > >
+> > > This reminds me of the per-memcg kswapd proposal from LSFMM 2018
+> > > (https://lwn.net/Articles/753162/).
+> >
+> > Ah yes, I remember those discussions. :)
+> >
+> > One thing that has changed since we tried to implement this last was
+> > the workqueue concurrency code. We don't have to worry about a single
+> > thread or fixed threads per cgroup, because the workqueue code has
+> > improved significantly to handle concurrency demands, and having one
+> > work item per cgroup makes sure we have anywhere between 0 threads and
+> > one thread per cgroup doing this reclaim work, completely on-demand.
+> >
+> > Also, with cgroup2, memory and cpu always have overlapping control
+> > domains, so the question who to account the work to becomes a much
+> > easier one to answer.
+> >
+> > > If I understand this correctly, the use-case is that the job instead
+> > > of direct reclaiming (potentially in latency sensitive tasks), prefers
+> > > a background non-latency sensitive task to do the reclaim. I am
+> > > wondering if we can use the memory.high notification along with a new
+> > > memcg interface (like memory.try_to_free_pages) to implement a user
+> > > space background reclaimer. That would resolve the cpu accounting
+> > > concerns as the user space background reclaimer can share the cpu cost
+> > > with the task.
+> >
+> > The idea is not necessarily that the background reclaimer is lower
+> > priority work, but that it can execute in parallel on a separate CPU
+> > instead of being forced into the execution stream of the main work.
+> >
+> > So we should be able to fully resolve this problem inside the kernel,
+> > without going through userspace, by accounting CPU cycles used by the
+> > background reclaim worker to the cgroup that is being reclaimed.
+> >
+> > > One concern with this approach will be that the memory.high
+> > > notification is too late and the latency sensitive task has faced the
+> > > stall. We can either introduce a threshold notification or another
+> > > notification only limit like memory.near_high which can be set based
+> > > on the job's rate of allocations and when the usage hits this limit
+> > > just notify the user space.
+> >
+> > Yeah, I think it would be a pretty drastic expansion of the memory
+> > controller's interface.
+> 
+> I understand the concern of expanding the interface and resolving the
+> problem within kernel but there are genuine use-cases which can be
+> fulfilled by these interfaces. We have a distributed caching service
+> which manages the caches in anon pages and their hotness. It is
+> preferable to drop a cold cache known to the application in the user
+> space on near stall/oom/memory_pressure then let the kernel swap it
+> out and face a stall on fault as the caches are replicated and other
+> nodes can serve it. For such workloads kernel reclaim does not help.
+> What would be your recommendation for such a workload. I can envision
+> memory.high + PSI notification but note that these are based on stalls
+> which the application wants to avoid.
 
-I rather pay the 2k text size for readable and straight forward
-code. Can you remind me why we are actually worrying at that level about
-32bit x86 instead of making it depend on CONFIG_OBSCURE?
+Oh sure, for such a usecase it would make sense to explore some sort
+of usage notification system.
 
-Thanks,
-
-        tglx
+My observation was in the context of getting kernel background reclaim
+cycles accounted properly, not for userspace reclaim algorithms :)
