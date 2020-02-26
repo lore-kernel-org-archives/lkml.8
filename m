@@ -2,110 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427FEC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A21C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A91821556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:54:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ksFQBlVY"
+	by mail.kernel.org (Postfix) with ESMTP id 6A35A21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgBZQyg (ORCPT
+        id S1727700AbgBZQzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:54:36 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:60070 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgBZQyf (ORCPT
+        Wed, 26 Feb 2020 11:55:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:58288 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgBZQzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:54:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=guM4OpdFkzMxFs+PgFy8AJyhxiplRkgPA//Rl2LhLTY=; b=ksFQBlVYLER9KPti8/cCDfbJY0
-        HpPbiGwPavhqc1Lszn93ZzT5WznkCmFdxT/abi5oz9nf+5XAtNjy/UJRppcPJsGodZdutQq+SUeB5
-        AB8gW8gvJl9nKxXtGzCQgaDBriCIROrQDVMd8jFeVZ6+6Xxk7BX7dsRlyQnRnz4RumXcgkUBipbXF
-        PmG+YbU/zT9DkPxPUNNNMs8wvCcNEcQv3XcSm5tvG4SuWgV7jZsjL3FvwwEBJA16ZMzDQsWZYRg6u
-        Ky2mzPqYf//wE0fbAKAc0DoU5TWqg0DJwejK1hqy/yKFAozI5LWmAhuUyepj9Ag3YXSqdF2d3zBcL
-        AQQqCQHg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6zwn-0001sE-Ui; Wed, 26 Feb 2020 16:54:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 23647300130;
-        Wed, 26 Feb 2020 17:52:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5DC962B756CD9; Wed, 26 Feb 2020 17:54:07 +0100 (CET)
-Date:   Wed, 26 Feb 2020 17:54:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Patrick Geary <patrickg@supermicro.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH] x86/tsc: Add kernel options to disable CPUID and MSR
- calibrations
-Message-ID: <20200226165407.GB18400@hirez.programming.kicks-ass.net>
-References: <20200226164308.14468-1-prarit@redhat.com>
+        Wed, 26 Feb 2020 11:55:16 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j6zxp-0002Dj-BO; Wed, 26 Feb 2020 17:55:13 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EB54E1C215C;
+        Wed, 26 Feb 2020 17:55:12 +0100 (CET)
+Date:   Wed, 26 Feb 2020 16:55:12 -0000
+From:   "tip-bot2 for Jason A. Donenfeld" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: efi/urgent] efi: READ_ONCE rng seed size before munmap
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200217123354.21140-1-Jason@zx2c4.com>
+References: <20200217123354.21140-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226164308.14468-1-prarit@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158273611261.28353.8523357540114932134.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:43:08AM -0500, Prarit Bhargava wrote:
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index dbc22d684627..0316aadfff08 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4942,7 +4942,7 @@
->  			See Documentation/admin-guide/mm/transhuge.rst
->  			for more details.
->  
-> -	tsc=		Disable clocksource stability checks for TSC.
-> +	tsc=option[,option...]	Various TSC options.
->  			Format: <string>
->  			[x86] reliable: mark tsc clocksource as reliable, this
->  			disables clocksource verification at runtime, as well
-> @@ -4960,6 +4960,12 @@
->  			in situations with strict latency requirements (where
->  			interruptions from clocksource watchdog are not
->  			acceptable).
-> +			[x86] no_cpuid_calibration: Disable the CPUID TSC
-> +			calibration.  Used in situations where the CPUID
-> +			TSC khz does not match the actual CPU TSC khz
-> +			[x86] no_msr_calibration: Disable the MSR TSC
-> +			calibration.  Used in situations where the MSR
-> +			TSC khz does not match the actual CPU TSC khz.
+The following commit has been merged into the efi/urgent branch of tip:
 
-Do we want to mention that these situations are mostly broken firmware?
-Also do mention that if you disable these you might not boot due to not
-having a PIT/HPET at all?
+Commit-ID:     be36f9e7517e17810ec369626a128d7948942259
+Gitweb:        https://git.kernel.org/tip/be36f9e7517e17810ec369626a128d7948942259
+Author:        Jason A. Donenfeld <Jason@zx2c4.com>
+AuthorDate:    Fri, 21 Feb 2020 09:48:49 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 26 Feb 2020 15:31:43 +01:00
 
-As it stands, I find this text a little too encouraging.
+efi: READ_ONCE rng seed size before munmap
 
->  	tsx=		[X86] Control Transactional Synchronization
->  			Extensions (TSX) feature in Intel processors that
+This function is consistent with using size instead of seed->size
+(except for one place that this patch fixes), but it reads seed->size
+without using READ_ONCE, which means the compiler might still do
+something unwanted. So, this commit simply adds the READ_ONCE
+wrapper.
+
+Fixes: 636259880a7e ("efi: Add support for seeding the RNG from a UEFI ...")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: linux-efi@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200217123354.21140-1-Jason@zx2c4.com
+Link: https://lore.kernel.org/r/20200221084849.26878-5-ardb@kernel.org
+---
+ drivers/firmware/efi/efi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 621220a..21ea99f 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -552,7 +552,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 
+ 		seed = early_memremap(efi.rng_seed, sizeof(*seed));
+ 		if (seed != NULL) {
+-			size = seed->size;
++			size = READ_ONCE(seed->size);
+ 			early_memunmap(seed, sizeof(*seed));
+ 		} else {
+ 			pr_err("Could not map UEFI random seed!\n");
+@@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+ 					      sizeof(*seed) + size);
+ 			if (seed != NULL) {
+ 				pr_notice("seeding entropy pool\n");
+-				add_bootloader_randomness(seed->bits, seed->size);
++				add_bootloader_randomness(seed->bits, size);
+ 				early_memunmap(seed, sizeof(*seed) + size);
+ 			} else {
+ 				pr_err("Could not map UEFI random seed!\n");
