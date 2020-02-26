@@ -2,80 +2,200 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F9C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A88BC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A1424688
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E6924685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgBZPDC (ORCPT
+        id S1727311AbgBZPFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:03:02 -0500
-Received: from mga02.intel.com ([134.134.136.20]:23955 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgBZPDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:03:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 07:03:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
-   d="scan'208";a="238058625"
-Received: from avgorshk-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.15.208])
-  by orsmga003.jf.intel.com with ESMTP; 26 Feb 2020 07:02:57 -0800
-Date:   Wed, 26 Feb 2020 17:02:55 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
-Subject: Re: [PATCH v2 3/4] tpm: Implement tpm2_init to call when
- TPM_OPS_AUTO_STARTUP is not set
-Message-ID: <20200226150255.GB3407@linux.intel.com>
-References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
- <20200213202329.898607-4-stefanb@linux.vnet.ibm.com>
- <20200225170015.GE15662@linux.intel.com>
- <3813980a-6c5e-c99f-7b37-b20b72eb6a8a@linux.ibm.com>
+        Wed, 26 Feb 2020 10:05:35 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56417 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZPFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:05:35 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6yFg-0003zb-DY; Wed, 26 Feb 2020 16:05:32 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6yFg-00072S-4V; Wed, 26 Feb 2020 16:05:32 +0100
+Date:   Wed, 26 Feb 2020 16:05:32 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] pwm: pca9685: migrate config/enable/disable to apply
+Message-ID: <20200226150532.n45yl6hx6vjolde2@pengutronix.de>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226135229.24929-4-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <3813980a-6c5e-c99f-7b37-b20b72eb6a8a@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226135229.24929-4-matthias.schiffer@ew.tq-group.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 01:20:39PM -0500, Stefan Berger wrote:
-> On 2/25/20 12:00 PM, Jarkko Sakkinen wrote:
-> > On Thu, Feb 13, 2020 at 03:23:28PM -0500, Stefan Berger wrote:
-> > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > 
-> > > Implement tpm2_init() that gets the TPM 2 timeouts and command durations
-> > > and command code attributes. This function is to be called in case the
-> > > TPM_OPS_AUTO_STARTUP flag is not set and therefore tpm2_auto_startup()
-> > > is not called.
-> > > 
-> > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > The commit makes zero effort trying to explain what the heck tpm_init()
-> > is and when it should be used and why the function name tpm2_init().
+Hello,
+
+On Wed, Feb 26, 2020 at 02:52:29PM +0100, Matthias Schiffer wrote:
+> For consistency with disabled state, initialize all LEDs in FULL_OFF
+> state during probe.
 > 
-> Are you saying the explanation of when to use tpm2_init above is not enough?
-> 'bviously we are trying to cover the case of using the TPM 2 by a driver
-> that doesn't use the TPM_OPS_AUTO_STARTUP flag and therefore the TPM 2
-> timeouts and command durations and command code attributes are not set as
-> they would be if tpm2_auto_startup() was to be called and tpm2_init() is the
-> alternative to call. I didn't like tpm2_init() either... any suggestions for
-> a better name?
+> This also fixes a broken interaction between config with 100% duty cycle
+> (which would set the LED to FULL_ON) and enable (which would unset
+> FULL_ON), effectively disabling the LED again when enable was called
+> after config. This behaviour was observed with the leds-pwm driver when
+> directly switching from 0 to maximum brightness.
+> 
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+>  drivers/pwm/pwm-pca9685.c | 53 +++++++++++----------------------------
+>  1 file changed, 14 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> index 370691b21107..e266cbbd39bf 100644
+> --- a/drivers/pwm/pwm-pca9685.c
+> +++ b/drivers/pwm/pwm-pca9685.c
+> @@ -219,15 +219,16 @@ static void pca9685_set_sleep_mode(struct pca9685 *pca, bool enable)
+>  	}
+>  }
+>  
+> -static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> -			      int duty_ns, int period_ns)
+> +static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			     const struct pwm_state *state)
+>  {
+>  	struct pca9685 *pca = to_pca(chip);
+>  	unsigned long long duty;
+>  	int prescale;
+>  
+> -	if (period_ns != pca->period_ns) {
+> -		prescale = DIV_ROUND_CLOSEST(PCA9685_OSC_CLOCK_MHZ * period_ns,
+> +	if (state->period != pca->period_ns) {
+> +		prescale = DIV_ROUND_CLOSEST(PCA9685_OSC_CLOCK_MHZ *
+> +					     state->period,
+>  					     PCA9685_COUNTER_RANGE * 1000) - 1;
+>  
+>  		if (prescale >= PCA9685_PRESCALE_MIN &&
+> @@ -247,7 +248,7 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			/* Wake the chip up */
+>  			pca9685_set_sleep_mode(pca, false);
+>  
+> -			pca->period_ns = period_ns;
+> +			pca->period_ns = state->period;
+>  		} else {
+>  			dev_err(chip->dev,
+>  				"prescaler not set: period out of bounds!\n");
+> @@ -255,13 +256,13 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		}
+>  	}
+>  
+> -	if (duty_ns < 1) {
+> +	if (!state->enabled || state->duty_cycle < 1) {
+> +		/* Set the full OFF bit */
+>  		regmap_write(pca->regmap, LED_N_OFF_H(pwm->hwpwm), LED_FULL);
+> -
+>  		return 0;
+>  	}
+>  
+> -	if (duty_ns == period_ns) {
+> +	if (state->duty_cycle == state->period) {
+>  		/* Clear both OFF registers */
+>  		regmap_write(pca->regmap, LED_N_OFF_L(pwm->hwpwm), 0x0);
+>  		regmap_write(pca->regmap, LED_N_OFF_H(pwm->hwpwm), 0x0);
+> @@ -272,8 +273,8 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		return 0;
+>  	}
+>  
+> -	duty = PCA9685_COUNTER_RANGE * (unsigned long long)duty_ns;
+> -	duty = DIV_ROUND_UP_ULL(duty, period_ns);
+> +	duty = PCA9685_COUNTER_RANGE * (unsigned long long)state->duty_cycle;
+> +	duty = DIV_ROUND_UP_ULL(duty, state->period);
+>  
+>  	regmap_write(pca->regmap, LED_N_OFF_L(pwm->hwpwm), (int)duty & 0xff);
+>  	regmap_write(pca->regmap, LED_N_OFF_H(pwm->hwpwm),
+> @@ -285,29 +286,6 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	return 0;
 
-I'm not getting what this commit is trying to do in the first place.
+You seem to ignore state->polarity which is wrong.
 
-/Jarkko
+>  }
+>  
+> -static int pca9685_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct pca9685 *pca = to_pca(chip);
+> -
+> -	/*
+> -	 * Clear the full-off bit.
+> -	 * It has precedence over the others and must be off.
+> -	 */
+> -	regmap_update_bits(pca->regmap, LED_N_OFF_H(pwm->hwpwm), LED_FULL, 0x0);
+> -
+> -	return 0;
+> -}
+> -
+> -static void pca9685_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct pca9685 *pca = to_pca(chip);
+> -
+> -	regmap_write(pca->regmap, LED_N_OFF_H(pwm->hwpwm), LED_FULL);
+> -
+> -	/* Clear the LED_OFF counter. */
+> -	regmap_write(pca->regmap, LED_N_OFF_L(pwm->hwpwm), 0x0);
+> -}
+> -
+>  static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+>  	struct pca9685 *pca = to_pca(chip);
+> @@ -321,14 +299,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  
+>  static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>  {
+> -	pca9685_pwm_disable(chip, pwm);
+>  	pm_runtime_put(chip->dev);
+>  }
+>  
+>  static const struct pwm_ops pca9685_pwm_ops = {
+> -	.enable = pca9685_pwm_enable,
+> -	.disable = pca9685_pwm_disable,
+> -	.config = pca9685_pwm_config,
+> +	.apply = pca9685_pwm_apply,
+>  	.request = pca9685_pwm_request,
+>  	.free = pca9685_pwm_free,
+>  	.owner = THIS_MODULE,
+> @@ -377,9 +352,9 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+>  
+>  	regmap_write(pca->regmap, PCA9685_MODE2, mode2);
+>  
+> -	/* clear all "full off" bits */
+> +	/* Set all LEDs full off */
+>  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, 0);
+> -	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, 0);
+> +	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, LED_FULL);
+
+This looks wrong or at least unrelated?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
