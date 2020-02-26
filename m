@@ -2,86 +2,110 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44423C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B43C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1993D21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1A124680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WB0T68gN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgBZOsH (ORCPT
+        id S1727918AbgBZOtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:48:07 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:36607 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727584AbgBZOsG (ORCPT
+        Wed, 26 Feb 2020 09:49:02 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58073 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727584AbgBZOtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:48:06 -0500
-Received: (qmail 4914 invoked by uid 500); 26 Feb 2020 09:48:05 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 26 Feb 2020 09:48:05 -0500
-Date:   Wed, 26 Feb 2020 09:48:05 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        mausb-host-devel <mausb-host-devel@displaylink.com>
-Subject: Re: [PATCH v2 1/8] usb: Add MA-USB Host kernel module
-In-Reply-To: <0dbf7da8-a0af-8750-6e91-c6d29f7e1a72@displaylink.com>
-Message-ID: <Pine.LNX.4.44L0.2002260946020.3674-100000@netrider.rowland.org>
+        Wed, 26 Feb 2020 09:49:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582728541;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C/fit9buLQoyBITMniA3SZzT0SvwKSgZb4ufJ9DR0s0=;
+        b=WB0T68gNA5C6tPHTc8ni7IqWLAh8C6nkEuuRUTcg4ADMkoJg1KtlCCzq0CeFtIHCptEvWT
+        GigPOvqMBvru2NwVyCJrgDjg6PkzGWJvcTuwReAY0P7GviZTG05peGpC/8tLK9sK2Xmuqv
+        4DsGmvYxO78EZ58hGAnfHi35ZqlpjpY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-clHqMRhWO7uWL9xrfeXjXw-1; Wed, 26 Feb 2020 09:48:59 -0500
+X-MC-Unique: clHqMRhWO7uWL9xrfeXjXw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A00B13E2;
+        Wed, 26 Feb 2020 14:48:57 +0000 (UTC)
+Received: from ovpn-117-20.ams2.redhat.com (ovpn-117-20.ams2.redhat.com [10.36.117.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FA978B759;
+        Wed, 26 Feb 2020 14:48:50 +0000 (UTC)
+Message-ID: <6bda45c24afb5bbd069af6f57b07880cd2f5af52.camel@redhat.com>
+Subject: Re: [PATCH v3 1/2] kstats: kernel metric collector
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Luigi Rizzo <lrizzo@google.com>, linux-kernel@vger.kernel.org,
+        mhiramat@kernel.org, akpm@linux-foundation.org,
+        gregkh@linuxfoundation.org, naveen.n.rao@linux.ibm.com,
+        ardb@kernel.org, rizzo@iet.unipi.it, giuseppe.lettieri@unipi.it,
+        toke@redhat.com, hawk@kernel.org, mingo@redhat.com,
+        acme@kernel.org, rostedt@goodmis.org, peterz@infradead.org
+Date:   Wed, 26 Feb 2020 15:48:49 +0100
+In-Reply-To: <20200226135027.34538-2-lrizzo@google.com>
+References: <20200226135027.34538-1-lrizzo@google.com>
+         <20200226135027.34538-2-lrizzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Vladimir Stankovic wrote:
+Hi,
 
-> Added utility macros, kernel device creation and cleanup, functions for
-> handling log formatting and a placeholder module for MA-USB Host device
-> driver.
-> 
-> Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-> ---
->   MAINTAINERS                         |  7 +++
->   drivers/usb/Kconfig                 |  2 +
->   drivers/usb/Makefile                |  2 +
->   drivers/usb/mausb_host/Kconfig      | 14 +++++
->   drivers/usb/mausb_host/Makefile     | 13 +++++
->   drivers/usb/mausb_host/mausb_host.c | 90 +++++++++++++++++++++++++++++
->   drivers/usb/mausb_host/utils.c      | 85 +++++++++++++++++++++++++++
->   drivers/usb/mausb_host/utils.h      | 40 +++++++++++++
->   8 files changed, 253 insertions(+)
->   create mode 100644 drivers/usb/mausb_host/Kconfig
->   create mode 100644 drivers/usb/mausb_host/Makefile
->   create mode 100644 drivers/usb/mausb_host/mausb_host.c
->   create mode 100644 drivers/usb/mausb_host/utils.c
->   create mode 100644 drivers/usb/mausb_host/utils.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8f27f40d22bb..6088f9aa640a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10226,6 +10226,13 @@ W:	https://linuxtv.org
->   S:	Maintained
->   F:	drivers/media/radio/radio-maxiradio*
->   +MA USB HOST DRIVER
-> +M:	Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-> +L:	mausb-host-devel@displaylink.com
-> +W:	https://www.displaylink.com
-> +S:	Maintained
-> +F:	drivers/usb/mausb_host/*
-> +
+I'm sorry for the lack of feedback on earlier iteration, I've simply
+been too slow.
 
-You should mention somewhere (certainly in the patch description and in 
-MAINTAINERS, maybe other places as well) that MA is an abbreviation for 
-Media-Agnostic.  Otherwise people will wonder what on earth it is.
+On Wed, 2020-02-26 at 05:50 -0800, Luigi Rizzo wrote:
+[...]
+> +static void ks_print(struct seq_file *p, int slot, int cpu, u64 sum,
+> +		     u64 tot, unsigned long samples, unsigned long avg)
+> +{
+> +	unsigned long frac = (tot == 0) ? 0 : ((sum % tot) * 1000000) / tot;
 
-Alan Stern
+I think/fear kbuildbot will still trigger some build issues on 32bit
+arches on the above line.
+
+I think div64_u64_rem() should be used in place of '%' for and 
+div64_u64() in place of '/' when operating on 64bits integers. 
+
+There are a few more occurences below.
+
+[...]
+> ++	/* preempt_disable makes sure samples and sum modify the same slot.
+> +	 * this_cpu_add() uses a non-interruptible add to protect against
+> +	 * hardware interrupts which may call kstats_record.
+> +	 */
+> +	preempt_disable();
+> +	this_cpu_add(ks->slots[slot].samples, 1);
+
+I think 'this_cpu_inc()' could be used here.
+
+> +	this_cpu_add(ks->slots[slot].sum,
+> +		     bucket < SUM_SCALE ? val : (val >> (bucket - SUM_SCALE)));
+> +	preempt_enable();
+> +}
+> +EXPORT_SYMBOL(kstats_record);
+
+Thanks for sharing, this infra will be likely quite useful to me :)
+
+Cheers,
+
+Paolo
 
