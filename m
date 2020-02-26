@@ -2,132 +2,119 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C002C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17E0C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C6321D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:01:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nD60SHOS"
+	by mail.kernel.org (Postfix) with ESMTP id B934024679
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgBZVBu (ORCPT
+        id S1727576AbgBZVCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:01:50 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44946 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbgBZVBu (ORCPT
+        Wed, 26 Feb 2020 16:02:11 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:46177 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbgBZVCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:01:50 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so674066ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:01:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cxtTUuGGBnBqk8GWMEJkzjvxvt2ATxKqyf/9k5yzLHE=;
-        b=nD60SHOSpqxspfYMC9aWPBFxLAJXqr6Yy1qW6p1B8fZoz2oUyPFSw7I/VIP3k86D8h
-         Trh/TLD2ys5h4iUROAlqoE4asrTwTXm/tMBGuRF9mTD2VT46M3knvGbvIG/HAehc9lji
-         7B/1KRk9RPs7ppfaj8kd3fyPLVz0qAcuhX7rVfOpyDOVNLuryvmCv+QscjYRcIxtksUb
-         qaKZlf84rkHfpu8fDxzkf+0f2QecafcC7faKW546HcRnLyRVEuOSDGPnOrihbKsVKOW6
-         hiXem2JoUJ8+VcwYfs2aL0y+78WRIHR3LzkxWsF4cQoAXvYgX6AMUof0iQzZPA6Wzzad
-         iACQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cxtTUuGGBnBqk8GWMEJkzjvxvt2ATxKqyf/9k5yzLHE=;
-        b=ejwwpI7zzDnLTAxiMvOMaoOmG2crXtxU1JHO6oVFVWjpticdspmGl3p6Y5145yXTiC
-         R0SDkqjySqhrdxTE4Nn9hNJMMY3VPH3+RogXApmwWtLNHOvXbavMDjk1/hEA1p4k9i4G
-         sR/KnvXOcp/VCPfecQRgYiLlqKY/5coUd/ba4KRUQLykzZ2X0LKHbSSe4sLjHkucstJA
-         l95f6wWdt9nccytMEhR0fXk2nuv4aAsGBmA0gK1oMfrT/nw4oNkEubsXsEqn/gGvw+wY
-         GRVyZt4ioeIBuC6XzTP+FOOvzIUySwI1g8QhiAjvokAGsHrCBJyXu/jysQKX7s4lc5aK
-         WiQQ==
-X-Gm-Message-State: ANhLgQ11Cj4BNFAPSOT1K/jEvTRw9KaQIQGFoewTsq45ZH/I4MIWudWm
-        x1Qg+gaygXQnA0MNU6py1RC2I6sweCxUN92zV+VsiQ==
-X-Google-Smtp-Source: ADFU+vvZ5GtCq0BwN5WueaDpR1syXQQpKP/hdIBLv5PEu+z0D1OgjehbwvoK4Rhi1oWLq16HlPlWeTFvjrFFVfeJMFg=
-X-Received: by 2002:a2e:8699:: with SMTP id l25mr508265lji.137.1582750908551;
- Wed, 26 Feb 2020 13:01:48 -0800 (PST)
+        Wed, 26 Feb 2020 16:02:11 -0500
+Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MlNcr-1jqJjw0fjZ-00lmUf; Wed, 26 Feb 2020 22:02:09 +0100
+Received: by mail-qv1-f49.google.com with SMTP id ek2so510396qvb.0;
+        Wed, 26 Feb 2020 13:02:08 -0800 (PST)
+X-Gm-Message-State: APjAAAX0hEivxzwSz6t9taQ1csuTcF/zcaB0EJ6X0uDf1sl13W8oIjLL
+        U2TiM2I4J3oNoCpbLdvHF01vZvwexH54w5qt5H4=
+X-Google-Smtp-Source: APXvYqxhHS9U3+N/7qg1V3h6/lWCEHWUtHJQtbK71iP6fx7l2VUQMHsb2aYbd6SCMc7GfTj4m50SkWIR7eOfBWBERJg=
+X-Received: by 2002:a05:6214:524:: with SMTP id x4mr1146649qvw.4.1582750927983;
+ Wed, 26 Feb 2020 13:02:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226181640.21664-1-vincent.guittot@linaro.org> <xm26r1yhtbjr.fsf@bsegall-linux.svl.corp.google.com>
-In-Reply-To: <xm26r1yhtbjr.fsf@bsegall-linux.svl.corp.google.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 26 Feb 2020 22:01:36 +0100
-Message-ID: <CAKfTPtBm9Gt16gqQgxoErOOmpbUHit6bNf4CVLvDzf04SjWtEg@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: fix runnable_avg for throttled cfs
-To:     Ben Segall <bsegall@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>, zhout@vivaldi.net
+References: <20200211175507.178100-1-hannes@cmpxchg.org> <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org> <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+In-Reply-To: <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 26 Feb 2020 22:01:48 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+Message-ID: <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:B0z8MNizJ7kia9aTxiE6iXCBlswXi3zwEcqfTJHoVMKZ6ErYXbE
+ gp9J9teZYve2caR/jKAzBeFbWXOokwclyrbishs2Iowivr/BaRrXg0S1jTYEs0UMII1ZQ+Z
+ uvap5jNCyXnghvWmjal06Ip9spD1yKLFco46EMboXYOFM88ItGGFkvohGR11QxVAUb0ACwR
+ YWTOsWFaAPPbgdMGauv/g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K2vDLtCaXnw=:PNYIHzWGGEEBd0aqVSb3CV
+ zOkvHEntYYIhHdS/oR5ZUVIUw8DEtHTE6HvnGR/7lxSWwEv7mEdD3serbMqm/exblu0v+Dxpm
+ UbZg/MYcm2bKh+EpWRDicVrz8UuL8/qvI03EHJdkwvNe2TCsO7whgglwvwUjLbYfQ8rJHfw/+
+ nt1l6uxEQG5F1qfxQpmJ2Tec3ICc5jLJKj3oKRiqd1y98DJoUqy8Jp+aX6P2Gr3b4pCwWiLqF
+ YSvlHvXfcXYRWAln5Ue9NqubcHEJsi0kKUf41Ww/4i0audXtoN3h8PqbxD/OECmmfWhmBjctg
+ SZFgaU1Eiyv8Q1/zD4Pq2j12vjFOUry6PdweK0g34Ypa2DmKXRw94Hfa4gk87uCNcCiY07QZR
+ q4TM3Mg8RYIL8oeOt2nGCF22okBN9WwjdTiynzSdE3fUtjXTIRibRXFiSmYgngGGM/7U3o0sG
+ ZdwPALqYomcrcbqoRHDX8H7Sj8iW+nV9jvsw9ArdeBlTqwgo+waI41JcgVpejafPbCTcndMo0
+ Z+Zasl9MdpaNPhuc+DiMCMOuVCOgfR4XersXgqj68zEoFtApJFYYEds8qtxrSJk5ZE+9NR9h2
+ r2pb4/NiUt53pefOd1E5/vWHj+oMUT10tO6Deodcff6hqzUo4dDltXDFfFdlcruH6BJgOfISY
+ QOgMMxfvYwF2fvLpQzxx6SouFrsnJlK+2em/Mfs7JW3NMrGCRXvyWPQ6izuQu7DZKtpWYheU6
+ KR1Whpy9BbahJ54LuwWfzWasGDIA68udw1Pw3Jt+ZAd2OG2JHhxJPyrUj8/rfBiiXbe+hILY5
+ tzzqHQqyovwxKjvRQ1gyzP4H+vtTtPnr48ON81SMHaJVj4TX7Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 at 20:04, <bsegall@google.com> wrote:
+On Wed, Feb 26, 2020 at 7:04 PM <santosh.shilimkar@oracle.com> wrote:
 >
-> Vincent Guittot <vincent.guittot@linaro.org> writes:
+> On 2/13/20 8:52 AM, Arnd Bergmann wrote:
+> > On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
 >
-> > When a cfs_rq is throttled, its group entity is dequeued and its running
-> > tasks are removed. We must update runnable_avg with current h_nr_running
-> > and update group_se->runnable_weight with new h_nr_running at each level
-> > of the hierarchy.
+> The Keystone generations of SOCs have been used in different areas and
+> they will be used for long unless says otherwise.
 >
-> You'll also need to do this for task enqueue/dequeue inside of a
-> throttled hierarchy, I'm pretty sure.
+> Apart from just split of lowmem and highmem, one of the peculiar thing
+> with Keystome family of SOCs is the DDR is addressable from two
+> addressing ranges. The lowmem address range is actually non-cached
+> range and the higher range is the cacheable.
 
-AFAICT, this is already done with patch "sched/pelt: Add a new
-runnable average signal" when task is enqueued/dequeued inside a
-throttled hierarchy
+I'm aware of Keystone's special physical memory layout, but for the
+discussion here, this is actually irrelevant for the discussion about
+highmem here, which is only about the way we map all or part of the
+available physical memory into the 4GB of virtual address space.
 
->
-> >
-> > Fixes: 9f68395333ad ("sched/pelt: Add a new runnable average signal")
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> > This patch applies on top of tip/sched/core
-> >
-> >  kernel/sched/fair.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index fcc968669aea..6d46974e9be7 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4703,6 +4703,11 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
-> >
-> >               if (dequeue)
-> >                       dequeue_entity(qcfs_rq, se, DEQUEUE_SLEEP);
-> > +             else {
-> > +                     update_load_avg(qcfs_rq, se, 0);
-> > +                     se_update_runnable(se);
-> > +             }
-> > +
-> >               qcfs_rq->h_nr_running -= task_delta;
-> >               qcfs_rq->idle_h_nr_running -= idle_task_delta;
-> >
-> > @@ -4772,6 +4777,11 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
-> >               cfs_rq = cfs_rq_of(se);
-> >               if (enqueue)
-> >                       enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
-> > +             else {
-> > +                     update_load_avg(cfs_rq, se, 0);
->
->
-> > +                     se_update_runnable(se);
-> > +             }
-> > +
-> >               cfs_rq->h_nr_running += task_delta;
-> >               cfs_rq->idle_h_nr_running += idle_task_delta;
+The far more important question is how much memory any users
+(in particular the subset that are going to update their kernels
+several years from now) actually have installed. Keystone-II is
+one of the rare 32-bit chips with fairly wide memory interfaces,
+having two 72-bit (with ECC) channels rather than the usual one
+ or two channels of 32-bit DDR3. This means a relatively cheap
+4GB configuration using eight 256Mx16 chips is possible, or
+even a 8GB using sixteen or eighteen 512Mx8.
+
+Do you have an estimate on how common these 4GB and 8GB
+configurations are in practice outside of the TI evaluation
+board?
+
+       Arnd
