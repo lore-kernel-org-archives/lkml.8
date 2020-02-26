@@ -2,73 +2,110 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7E6C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0380FC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB0024683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582738535;
-	bh=iIA7gnb4jhPzFqCYBQxKjl4iO0jNVn1njrEGIED4l1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=itoSsWzKwtiEzHjbd61kBzT+bX6LStNog6cSuaqWgsOQYc3vtJQQUw3+MG2idbl9O
-	 Bs40/qs1scB89AJsriKY9+5UmN4zzsp1wMkxbuzFeF/kMHL+0ls+uBFj6ZyuMVliI6
-	 dVaadzOOXEa5gS2IsZBamwce9OqHkQQ+AMiD8uhw=
+	by mail.kernel.org (Postfix) with ESMTP id D5441222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgBZRfe (ORCPT
+        id S1726917AbgBZRg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgBZRfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:35:34 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 255B82467D;
-        Wed, 26 Feb 2020 17:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582738533;
-        bh=iIA7gnb4jhPzFqCYBQxKjl4iO0jNVn1njrEGIED4l1I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=014tAPG6E3MZXvg7Cgw96bvKrLoXL2EjI+Vq1rOU6sXY9T/09Na+W+C1OtRl8NB5Q
-         wHnqWw/E+SfJGTqYD7g4mkp36TOE6Vsfd22fw86LAz3JNQ4YO5FE8HE81DHfh5+F63
-         TEg3mn2Qbarw4w3bynQnyhoaGJtFsVOFbwfmh5Q0=
-Date:   Wed, 26 Feb 2020 18:35:31 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 09/10] x86/entry/entry_32: Route int3 through
- common_exception
-Message-ID: <20200226173530.GD6075@lenoir>
-References: <20200225213636.689276920@linutronix.de>
- <20200225220217.042369808@linutronix.de>
+        Wed, 26 Feb 2020 12:36:26 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55320 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726366AbgBZRg0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:36:26 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QHU3fE115469;
+        Wed, 26 Feb 2020 12:35:19 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydqfuwb4a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Feb 2020 12:35:18 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01QHYpxm003952;
+        Wed, 26 Feb 2020 17:35:18 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 2ydcmkrpgm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Feb 2020 17:35:18 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QHZHF835127648
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 17:35:17 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 56E4FAE064;
+        Wed, 26 Feb 2020 17:35:17 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F4DBAE063;
+        Wed, 26 Feb 2020 17:35:17 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 17:35:17 +0000 (GMT)
+Subject: Re: [PATCH v2 3/4] tpm: Implement tpm2_init to call when
+ TPM_OPS_AUTO_STARTUP is not set
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
+References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
+ <20200213202329.898607-4-stefanb@linux.vnet.ibm.com>
+ <20200225170015.GE15662@linux.intel.com>
+ <3813980a-6c5e-c99f-7b37-b20b72eb6a8a@linux.ibm.com>
+ <20200226150255.GB3407@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <c31ef080-1172-e10b-e7b1-ab8e1682c860@linux.ibm.com>
+Date:   Wed, 26 Feb 2020 12:35:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225220217.042369808@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200226150255.GB3407@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_06:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ malwarescore=0 suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0
+ bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:36:45PM +0100, Thomas Gleixner wrote:
-> int3 is not using the common_exception path for purely historical reasons,
-> but there is no reason to keep it the only exception which is different.
-> 
-> Make it use common_exception so the upcoming changes to autogenerate the
-> entry stubs do not have to special case int3.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On 2/26/20 10:02 AM, Jarkko Sakkinen wrote:
+> On Tue, Feb 25, 2020 at 01:20:39PM -0500, Stefan Berger wrote:
+>> On 2/25/20 12:00 PM, Jarkko Sakkinen wrote:
+>>> On Thu, Feb 13, 2020 at 03:23:28PM -0500, Stefan Berger wrote:
+>>>> From: Stefan Berger <stefanb@linux.ibm.com>
+>>>>
+>>>> Implement tpm2_init() that gets the TPM 2 timeouts and command durations
+>>>> and command code attributes. This function is to be called in case the
+>>>> TPM_OPS_AUTO_STARTUP flag is not set and therefore tpm2_auto_startup()
+>>>> is not called.
+>>>>
+>>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>>> The commit makes zero effort trying to explain what the heck tpm_init()
+>>> is and when it should be used and why the function name tpm2_init().
+>> Are you saying the explanation of when to use tpm2_init above is not enough?
+>> 'bviously we are trying to cover the case of using the TPM 2 by a driver
+>> that doesn't use the TPM_OPS_AUTO_STARTUP flag and therefore the TPM 2
+>> timeouts and command durations and command code attributes are not set as
+>> they would be if tpm2_auto_startup() was to be called and tpm2_init() is the
+>> alternative to call. I didn't like tpm2_init() either... any suggestions for
+>> a better name?
+> I'm not getting what this commit is trying to do in the first place.
+I sent out v3, maybe the text there is better.
+>
+> /Jarkko
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+
