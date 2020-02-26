@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4545C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA2CC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B682624693
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE16921927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBZMqB (ORCPT
+        id S1727190AbgBZMqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:46:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:35324 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 07:46:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:35340 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgBZMqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:46:00 -0500
+        id S1727067AbgBZMqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 07:46:01 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90284328;
-        Wed, 26 Feb 2020 04:45:59 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03E67FEC;
+        Wed, 26 Feb 2020 04:46:01 -0800 (PST)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5CC953FA00;
-        Wed, 26 Feb 2020 04:45:58 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C449D3FA00;
+        Wed, 26 Feb 2020 04:45:59 -0800 (PST)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
         Dietmar.Eggemann@arm.com, patrick.bellasi@matbug.net,
         qais.yousef@arm.com, t1zhou@aliyun.com
-Subject: [PATCH v2 1/3] sched/debug: Remove redundant macro define
-Date:   Wed, 26 Feb 2020 12:45:41 +0000
-Message-Id: <20200226124543.31986-2-valentin.schneider@arm.com>
+Subject: [PATCH v2 2/3] sched/debug: Bunch up printing formats in common macros
+Date:   Wed, 26 Feb 2020 12:45:42 +0000
+Message-Id: <20200226124543.31986-3-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200226124543.31986-1-valentin.schneider@arm.com>
 References: <20200226124543.31986-1-valentin.schneider@arm.com>
@@ -43,49 +43,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most printing macros for procfs are defined globally in debug.c, and they
-are re-defined (to the exact same thing) within proc_sched_show_task().
-
-Get rid of the duplicate defines.
+The printing macros in debug.c keep redefining the same output
+format. Collect each output format in a single definition, and reuse that
+definition in the other macros. While at it, add a layer of parentheses and
+replace printf's  with the newly introduced macros.
 
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- kernel/sched/debug.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ kernel/sched/debug.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 8331bc04aea2..4670151eb131 100644
+index 4670151eb131..315ef6de3cc4 100644
 --- a/kernel/sched/debug.c
 +++ b/kernel/sched/debug.c
-@@ -868,16 +868,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+@@ -816,10 +816,12 @@ static int __init init_sched_debug_procfs(void)
+ 
+ __initcall(init_sched_debug_procfs);
+ 
+-#define __P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)F)
+-#define   P(F)	SEQ_printf(m, "%-45s:%21Ld\n",	     #F, (long long)p->F)
+-#define __PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
+-#define   PN(F)	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
++#define __PS(S, F) SEQ_printf(m, "%-45s:%21Ld\n", S, (long long)(F))
++#define __P(F) __PS(#F, F)
++#define   P(F) __PS(#F, p->F)
++#define __PSN(S, F) SEQ_printf(m, "%-45s:%14Ld.%06ld\n", S, SPLIT_NS((long long)(F)))
++#define __PN(F) __PSN(#F, F)
++#define   PN(F) __PSN(#F, p->F)
+ 
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+@@ -868,10 +870,9 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
  	SEQ_printf(m,
  		"---------------------------------------------------------"
  		"----------\n");
--#define __P(F) \
--	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)F)
--#define P(F) \
--	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)p->F)
- #define P_SCHEDSTAT(F) \
- 	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)schedstat_val(p->F))
--#define __PN(F) \
--	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)F))
--#define PN(F) \
--	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)p->F))
- #define PN_SCHEDSTAT(F) \
- 	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)schedstat_val(p->F)))
+-#define P_SCHEDSTAT(F) \
+-	SEQ_printf(m, "%-45s:%21Ld\n", #F, (long long)schedstat_val(p->F))
+-#define PN_SCHEDSTAT(F) \
+-	SEQ_printf(m, "%-45s:%14Ld.%06ld\n", #F, SPLIT_NS((long long)schedstat_val(p->F)))
++
++#define P_SCHEDSTAT(F)  __PS(#F, schedstat_val(p->F))
++#define PN_SCHEDSTAT(F) __PSN(#F, schedstat_val(p->F))
  
-@@ -963,11 +955,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 		P(dl.deadline);
+ 	PN(se.exec_start);
+ 	PN(se.vruntime);
+@@ -931,10 +932,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
  	}
- #undef PN_SCHEDSTAT
--#undef PN
--#undef __PN
- #undef P_SCHEDSTAT
--#undef P
--#undef __P
  
- 	{
- 		unsigned int this_cpu = raw_smp_processor_id();
+ 	__P(nr_switches);
+-	SEQ_printf(m, "%-45s:%21Ld\n",
+-		   "nr_voluntary_switches", (long long)p->nvcsw);
+-	SEQ_printf(m, "%-45s:%21Ld\n",
+-		   "nr_involuntary_switches", (long long)p->nivcsw);
++	__PS("nr_voluntary_switches", p->nvcsw);
++	__PS("nr_involuntary_switches", p->nivcsw);
+ 
+ 	P(se.load.weight);
+ #ifdef CONFIG_SMP
+@@ -963,8 +962,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 
+ 		t0 = cpu_clock(this_cpu);
+ 		t1 = cpu_clock(this_cpu);
+-		SEQ_printf(m, "%-45s:%21Ld\n",
+-			   "clock-delta", (long long)(t1-t0));
++		__PS("clock-delta", t1-t0);
+ 	}
+ 
+ 	sched_show_numa(p, m);
 -- 
 2.24.0
 
