@@ -2,434 +2,369 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0CCC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF9C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111A52465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QBAHFn38"
+	by mail.kernel.org (Postfix) with ESMTP id B680A20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgBZCiv (ORCPT
+        id S1729834AbgBZCko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:38:51 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39392 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728989AbgBZCiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:38:51 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so525420pgm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 18:38:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OArdO/WptNiexUMYFfHNXf0tgpr5h7m2P4BtRC4zuOs=;
-        b=QBAHFn38iW43JPAMNye7ge1AVscqNe2f5enfeQdZ7l7DtTRkyPVxXgnhJgqpeY3IlC
-         Ue7f1BBDcxhZXB03o3M4/EFD7WCYFrb2y0ByGZ4S846Yb9LmxeIz3uJGWej14iULsJNx
-         0S2egyXzRBeqV1DEFBkUXtN1idHbV842u4/gK3RAWCTJpzHMp5U94wuGTWtHj6Q4UDyK
-         G9lIP7hhV37vIhJLNAYScALMVASvxYyn3gicwWncSL6CMUYIpTU83niTPlCkcnfRYlHh
-         z4/CjjyQ4Gn20tOOxTkGkaSbyTavNkHg3fkMVFQP/tDU9DDNwWG1DrJGwT/+iz2YBWc4
-         1cuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OArdO/WptNiexUMYFfHNXf0tgpr5h7m2P4BtRC4zuOs=;
-        b=PBVOCdv5stofmL/D0/GYiQVWoeWaOsMfew4zVIiTNQ4SLJ0k02aYKnpxvzVs0eBag7
-         X8UXRIx7G831K2hctjSZkQ9OZiMV9OtaMmRfrJQeRcXpkL3nmHdQfkUrlC47SzMhxHKU
-         f40bNyS3/TiWFppO3J+E07h2kdwdLEZpKIZmifSTU2SrWZhC2dhSRPzhhsPl5sFoVxPS
-         PPwz4J9bUCrYUZ58/9as5neJJBnZ/VnuoyfytFhLCryq5wQIiSiNIecteAL+aZSrpzxW
-         HUbSn3qflKdQ4PV+xn1YPCHwTkypjVAptc6qWMY5rmbH39mBBuFPDCA9KA5vIQeJf8rb
-         XCDw==
-X-Gm-Message-State: APjAAAVmzfD5a8q9mzW9+QhBftnXZJOn4MihFvyLVSRbpfiwtcceHXnD
-        1OGpsPTvSCH1h16jBV1VQJAc7gC6ZZCISHj9A6rTyG825wQ=
-X-Google-Smtp-Source: APXvYqxDkV07PqvUQy8FvXvV9RK5+GWBCou4A9gDA3Y/WftlQNGqK4XhuQnjtdcXmuVs0p7YpCBP/5nNWoe6II7HurY=
-X-Received: by 2002:aa7:961b:: with SMTP id q27mr1885128pfg.23.1582684729613;
- Tue, 25 Feb 2020 18:38:49 -0800 (PST)
+        Tue, 25 Feb 2020 21:40:44 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60188 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729045AbgBZCko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:40:44 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 78F83B422DB2468B544E;
+        Wed, 26 Feb 2020 10:40:40 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
+ 10:40:31 +0800
+Subject: Re: [PATCH v3 3/6] powerpc/fsl_booke/64: implement KASLR for
+ fsl_booke64
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+ <20200206025825.22934-4-yanaijie@huawei.com>
+ <41b9f1ca-c6fd-291a-2c96-2a0e8a754ec4@c-s.fr>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <dbe0b316-40a2-7da4-c26b-e59efa555400@huawei.com>
+Date:   Wed, 26 Feb 2020 10:40:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200225201130.211124-1-heidifahim@google.com> <20200225201130.211124-2-heidifahim@google.com>
-In-Reply-To: <20200225201130.211124-2-heidifahim@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 25 Feb 2020 18:38:38 -0800
-Message-ID: <CAFd5g46R2bkF-z8Zu_L7wR9T4pV5fZ_QpjDTDG6eFVU+kdrfVw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kunit: Run all KUnit tests through allyesconfig
-To:     Heidi Fahim <heidifahim@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <41b9f1ca-c6fd-291a-2c96-2a0e8a754ec4@c-s.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:12 PM Heidi Fahim <heidifahim@google.com> wrote:
->
-> Implemented the functionality to run all KUnit tests through kunit_tool
-> by specifying an --alltests flag, which builds UML with allyesconfig
-> enabled, and consequently runs every KUnit test. Two new methods have
-> been added to kunit_kernel: make_allyesconfig and run_allconfig.
-> Firstly, if --alltests is specified, kunit.py triggers build_um_kernel
-> which sets jobs to the max number of cpus on the user's computer. This
-> is done to shorten the long running time it takes to build and start a
-> kernel with all configs enabled. It then calls the make command,
-> disables the broken configs that would otherwise prevent UML from
-> building, then starts the kernel with all possible configurations
-> enabled. All stdout and stderr is sent to test.log and read from there
-> then fed through kunit_parser to parse the tests to the user. Also added
-> a signal_handler to clean the config in case kunit is interrupted while
-> running.
-> Tested: Run under different conditions such as testing with
-> --raw_output, testing program interrupt then immediately running kunit
-> again without --alltests and making sure to clean the configs. Formal
-> unit tests will be submitted in a future patchset.
->
-> Signed-off-by: Heidi Fahim <heidifahim@google.com>
-> ---
->  .../kunit/configs/broken_on_uml.config        | 38 ++++++++++
->  tools/testing/kunit/kunit.py                  | 37 ++++++----
->  tools/testing/kunit/kunit_kernel.py           | 71 +++++++++++++------
->  tools/testing/kunit/kunit_parser.py           |  1 +
->  tools/testing/kunit/kunit_tool_test.py        | 17 +++--
->  5 files changed, 122 insertions(+), 42 deletions(-)
->  create mode 100644 tools/testing/kunit/configs/broken_on_uml.config
->
-> diff --git a/tools/testing/kunit/configs/broken_on_uml.config b/tools/testing/kunit/configs/broken_on_uml.config
-> new file mode 100644
-> index 000000000000..6d746588d46e
-> --- /dev/null
-> +++ b/tools/testing/kunit/configs/broken_on_uml.config
-> @@ -0,0 +1,38 @@
-> +# CONFIG_STATIC_LINK is not set
-> +# CONFIG_UML_NET_VECTOR is not set
-> +# CONFIG_UML_NET_VDE is not set
-> +# CONFIG_UML_NET_PCAP is not set
-> +# CONFIG_NET_PTP_CLASSIFY is not set
-> +# CONFIG_IP_VS is not set
-> +# CONFIG_BRIDGE_EBT_BROUTE is not set
-> +# CONFIG_BRIDGE_EBT_T_FILTER is not set
-> +# CONFIG_BRIDGE_EBT_T_NAT is not set
-> +# CONFIG_MTD_NAND_CADENCE is not set
-> +# CONFIG_MTD_NAND_NANDSIM is not set
-> +# CONFIG_BLK_DEV_NULL_BLK is not set
-> +# CONFIG_BLK_DEV_RAM is not set
-> +# CONFIG_SCSI_DEBUG is not set
-> +# CONFIG_NET_VENDOR_XILINX is not set
-> +# CONFIG_NULL_TTY is not set
-> +# CONFIG_PTP_1588_CLOCK is not set
-> +# CONFIG_PINCTRL_EQUILIBRIUM is not set
-> +# CONFIG_DMABUF_SELFTESTS is not set
-> +# CONFIG_COMEDI is not set
-> +# CONFIG_XIL_AXIS_FIFO is not set
-> +# CONFIG_EXFAT_FS is not set
-> +# CONFIG_STM_DUMMY is not set
-> +# CONFIG_FSI_MASTER_ASPEED is not set
-> +# CONFIG_JFS_FS is not set
-> +# CONFIG_UBIFS_FS is not set
-> +# CONFIG_CRAMFS is not set
-> +# CONFIG_CRYPTO_DEV_SAFEXCEL is not set
-> +# CONFIG_CRYPTO_DEV_AMLOGIC_GXL is not set
-> +# CONFIG_KCOV is not set
-> +# CONFIG_LKDTM is not set
-> +# CONFIG_REED_SOLOMON_TEST is not set
-> +# CONFIG_TEST_RHASHTABLE is not set
-> +# CONFIG_TEST_MEMINIT is not set
-> +# CONFIG_NETWORK_PHY_TIMESTAMPING is not set
-> +# CONFIG_DEBUG_INFO_BTF is not set
-> +# CONFIG_PTP_1588_CLOCK_INES is not set
-> +# CONFIG_QCOM_CPR is not set
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index e59eb9e7f923..37bd20a2a1c5 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
-> @@ -22,7 +22,9 @@ import kunit_parser
->
->  KunitResult = namedtuple('KunitResult', ['status','result'])
->
-> -KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
-> +KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
-> +                                          'build_dir', 'defconfig',
-> +                                          'alltests'])
->
->  class KunitStatus(Enum):
->         SUCCESS = auto()
-> @@ -33,7 +35,7 @@ class KunitStatus(Enum):
->  def create_default_kunitconfig():
->         if not os.path.exists(kunit_kernel.kunitconfig_path):
->                 shutil.copyfile('arch/um/configs/kunit_defconfig',
-> -                               kunit_kernel.kunitconfig_path)
-> +                               kunit_kernel.KUNITCONFIG_PATH)
->
->  def run_tests(linux: kunit_kernel.LinuxSourceTree,
->               request: KunitRequest) -> KunitResult:
-> @@ -46,24 +48,24 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
->         kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
->
->         build_start = time.time()
-> -       success = linux.build_um_kernel(request.jobs, request.build_dir)
-> +       success = linux.build_um_kernel(request.alltests,
-> +                                       request.jobs,
-> +                                       request.build_dir)
->         build_end = time.time()
->         if not success:
->                 return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
->
->         kunit_parser.print_with_timestamp('Starting KUnit Kernel ...')
->         test_start = time.time()
-> -
-> -       test_result = kunit_parser.TestResult(kunit_parser.TestStatus.SUCCESS,
-> -                                             [],
-> -                                             'Tests not Parsed.')
-> +       kunit_output = linux.run_kernel(
-> +               timeout=None if request.alltests else request.timeout,
-> +               alltests=request.alltests,
-> +               build_dir=request.build_dir)
->         if request.raw_output:
-> -               kunit_parser.raw_output(
-> -                       linux.run_kernel(timeout=request.timeout,
-> -                                        build_dir=request.build_dir))
-> +               raw_output = kunit_parser.raw_output(kunit_output)
-> +               isolated = list(kunit_parser.isolate_kunit_output(raw_output))
-> +               test_result = kunit_parser.parse_test_result(isolated)
->         else:
-> -               kunit_output = linux.run_kernel(timeout=request.timeout,
-> -                                               build_dir=request.build_dir)
->                 test_result = kunit_parser.parse_run_tests(kunit_output)
->         test_end = time.time()
->
-> @@ -111,15 +113,19 @@ def main(argv, linux=None):
->                                 help='Uses a default .kunitconfig.',
->                                 action='store_true')
->
-> +       run_parser.add_argument('--alltests',
-> +                               help='Run all KUnit tests through allyesconfig',
-> +                               action='store_true')
-> +
->         cli_args = parser.parse_args(argv)
->
->         if cli_args.subcommand == 'run':
->                 if cli_args.build_dir:
->                         if not os.path.exists(cli_args.build_dir):
->                                 os.mkdir(cli_args.build_dir)
-> -                       kunit_kernel.kunitconfig_path = os.path.join(
-> +                       kunit_kernel.KUNITCONFIG_PATH = os.path.join(
->                                 cli_args.build_dir,
-> -                               kunit_kernel.kunitconfig_path)
-> +                               kunit_kernel.KUNITCONFIG_PATH)
->
->                 if cli_args.defconfig:
->                         create_default_kunitconfig()
-> @@ -131,7 +137,8 @@ def main(argv, linux=None):
->                                        cli_args.timeout,
->                                        cli_args.jobs,
->                                        cli_args.build_dir,
-> -                                      cli_args.defconfig)
-> +                                      cli_args.defconfig,
-> +                                      cli_args.alltests)
->                 result = run_tests(linux, request)
->                 if result.status != KunitStatus.SUCCESS:
->                         sys.exit(1)
-> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-> index cc5d844ecca1..2b0de7d52110 100644
-> --- a/tools/testing/kunit/kunit_kernel.py
-> +++ b/tools/testing/kunit/kunit_kernel.py
-> @@ -10,11 +10,16 @@
->  import logging
->  import subprocess
->  import os
-> +import signal
-> +
-> +from contextlib import ExitStack
->
->  import kunit_config
-> +import kunit_parser
->
->  KCONFIG_PATH = '.config'
-> -kunitconfig_path = '.kunitconfig'
-> +KUNITCONFIG_PATH = '.kunitconfig'
-> +BROKEN_ALLCONFIG_PATH = 'tools/testing/kunit/configs/broken_on_uml.config'
->
->  class ConfigError(Exception):
->         """Represents an error trying to configure the Linux kernel."""
-> @@ -40,12 +45,29 @@ class LinuxSourceTreeOperations(object):
->                 if build_dir:
->                         command += ['O=' + build_dir]
->                 try:
-> -                       subprocess.check_output(command)
-> +                       subprocess.check_output(command, stderr=subprocess.PIPE)
->                 except OSError as e:
->                         raise ConfigError('Could not call make command: ' + e)
->                 except subprocess.CalledProcessError as e:
->                         raise ConfigError(e.output)
->
-> +       def make_allyesconfig(self):
-> +               kunit_parser.print_with_timestamp(
-> +                       'Enabling all CONFIGs for UML...')
-> +               process = subprocess.Popen(
-> +                       ['make', 'ARCH=um', 'allyesconfig'],
-> +                       stdout=subprocess.DEVNULL,
-> +                       stderr=subprocess.STDOUT)
-> +               process.wait()
-> +               kunit_parser.print_with_timestamp(
-> +                       'Disabling broken configs to run KUnit tests...')
-> +               with ExitStack() as es:
-> +                       config = open(KCONFIG_PATH, 'a')
-> +                       disable = open(BROKEN_ALLCONFIG_PATH, 'r').read()
-> +                       config.write(disable)
-> +               kunit_parser.print_with_timestamp(
-> +                       'Starting Kernel with all configs takes a few minutes...')
-> +
->         def make(self, jobs, build_dir):
->                 command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
->                 if build_dir:
-> @@ -57,19 +79,16 @@ class LinuxSourceTreeOperations(object):
->                 except subprocess.CalledProcessError as e:
->                         raise BuildError(e.output)
->
-> -       def linux_bin(self, params, timeout, build_dir):
-> +       def linux_bin(self, params, timeout, build_dir, outfile):
->                 """Runs the Linux UML binary. Must be named 'linux'."""
->                 linux_bin = './linux'
->                 if build_dir:
->                         linux_bin = os.path.join(build_dir, 'linux')
-> -               process = subprocess.Popen(
-> -                       [linux_bin] + params,
-> -                       stdin=subprocess.PIPE,
-> -                       stdout=subprocess.PIPE,
-> -                       stderr=subprocess.PIPE)
-> -               process.wait(timeout=timeout)
-> -               return process
-> -
-> +               with open(outfile, 'w') as output:
-> +                       process = subprocess.Popen([linux_bin] + params,
-> +                                                  stdout=output,
-> +                                                  stderr=subprocess.STDOUT)
-> +                       process.wait(timeout)
->
->  def get_kconfig_path(build_dir):
->         kconfig_path = KCONFIG_PATH
-> @@ -82,8 +101,9 @@ class LinuxSourceTree(object):
->
->         def __init__(self):
->                 self._kconfig = kunit_config.Kconfig()
-> -               self._kconfig.read_from_file(kunitconfig_path)
-> +               self._kconfig.read_from_file(KUNITCONFIG_PATH)
->                 self._ops = LinuxSourceTreeOperations()
-> +               signal.signal(signal.SIGINT, self.signal_handler)
->
->         def clean(self):
->                 try:
-> @@ -126,7 +146,10 @@ class LinuxSourceTree(object):
->                         print('Generating .config ...')
->                         return self.build_config(build_dir)
->
-> -       def build_um_kernel(self, jobs, build_dir):
-> +       def build_um_kernel(self, alltests, jobs, build_dir):
-> +               if alltests:
-> +                       jobs = os.cpu_count()
-> +                       self._ops.make_allyesconfig()
->                 try:
->                         self._ops.make_olddefconfig(build_dir)
->                         self._ops.make(jobs, build_dir)
-> @@ -140,10 +163,18 @@ class LinuxSourceTree(object):
->                         return False
->                 return True
->
-> -       def run_kernel(self, args=[], timeout=None, build_dir=''):
-> -               args.extend(['mem=256M'])
-> -               process = self._ops.linux_bin(args, timeout, build_dir)
-> -               with open(os.path.join(build_dir, 'test.log'), 'w') as f:
-> -                       for line in process.stdout:
-> -                               f.write(line.rstrip().decode('ascii') + '\n')
-> -                               yield line.rstrip().decode('ascii')
-> +       def run_kernel(self, args=[], alltests=False, build_dir='', timeout=None):
-> +               args.extend(['mem=1G']) if alltests else args.extend(['mem=256M'])
-> +               outfile = 'test.log'
-> +               self._ops.linux_bin(args, timeout, build_dir, outfile)
-> +               subprocess.call(['stty', 'sane'])
-> +               if alltests:
-> +                       self.clean()
 
-Sorry, I just noticed this. Please don't clean after every invocation
-of --alltests. It means that the user has to rebuild the entire kernel
-after every invocation.
 
-> +               with open(outfile, 'r') as file:
-> +                       for line in file:
-> +                               yield line
-> +
-> +       def signal_handler(self, sig, frame):
-> +               logging.error('Build interruption occurred. Cleaning .config.')
-> +               subprocess.call(['stty', 'sane'])
-> +               self.clean()
-> \ No newline at end of file
-> diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-> index 077b21d42258..5b2051848e2f 100644
-> --- a/tools/testing/kunit/kunit_parser.py
-> +++ b/tools/testing/kunit/kunit_parser.py
-> @@ -65,6 +65,7 @@ def isolate_kunit_output(kernel_output):
->  def raw_output(kernel_output):
->         for line in kernel_output:
->                 print(line)
-> +               yield line
->
->  DIVIDER = '=' * 60
->
-> diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-> index 0efae697f396..9ce4c5cdbdaf 100755
-> --- a/tools/testing/kunit/kunit_tool_test.py
-> +++ b/tools/testing/kunit/kunit_tool_test.py
-> @@ -243,7 +243,8 @@ class KUnitMainTest(unittest.TestCase):
->                 kunit.main(['run'], self.linux_source_mock)
->                 assert self.linux_source_mock.build_reconfig.call_count == 1
->                 assert self.linux_source_mock.run_kernel.call_count == 1
-> -               self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
-> +               self.linux_source_mock.run_kernel.assert_called_once_with(
-> +                       alltests=False, build_dir='', timeout=300)
->                 self.print_mock.assert_any_call(StrContains('Testing complete.'))
->
->         def test_run_passes_args_fail(self):
-> @@ -258,25 +259,27 @@ class KUnitMainTest(unittest.TestCase):
->
->         def test_run_raw_output(self):
->                 self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
-> -               kunit.main(['run', '--raw_output'], self.linux_source_mock)
-> +               with self.assertRaises(SystemExit) as e:
-> +                       kunit.main(['run', '--raw_output'], self.linux_source_mock)
-> +               assert type(e.exception) == SystemExit
-> +               assert e.exception.code == 1
->                 assert self.linux_source_mock.build_reconfig.call_count == 1
->                 assert self.linux_source_mock.run_kernel.call_count == 1
-> -               for kall in self.print_mock.call_args_list:
-> -                       assert kall != mock.call(StrContains('Testing complete.'))
-> -                       assert kall != mock.call(StrContains(' 0 tests run'))
->
->         def test_run_timeout(self):
->                 timeout = 3453
->                 kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
->                 assert self.linux_source_mock.build_reconfig.call_count == 1
-> -               self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
-> +               self.linux_source_mock.run_kernel.assert_called_once_with(
-> +                       alltests=False, build_dir='', timeout=timeout)
->                 self.print_mock.assert_any_call(StrContains('Testing complete.'))
->
->         def test_run_builddir(self):
->                 build_dir = '.kunit'
->                 kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
->                 assert self.linux_source_mock.build_reconfig.call_count == 1
-> -               self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
-> +               self.linux_source_mock.run_kernel.assert_called_once_with(
-> +                       alltests=False, build_dir=build_dir, timeout=300)
->                 self.print_mock.assert_any_call(StrContains('Testing complete.'))
->
->  if __name__ == '__main__':
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+在 2020/2/20 21:48, Christophe Leroy 写道:
+> 
+> 
+> Le 06/02/2020 à 03:58, Jason Yan a écrit :
+>> The implementation for Freescale BookE64 is similar as BookE32. One
+>> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+>> booting. Another difference is that ppc64 needs the kernel to be
+>> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+>> it 64K-aligned. This can save some code to creat another TLB map at
+>> early boot. The disadvantage is that we only have about 1G/64K = 16384
+>> slots to put the kernel in.
+>>
+>> To support secondary cpu boot up, a variable __kaslr_offset was added in
+>> first_256B section. This can help secondary cpu get the kaslr offset
+>> before the 1:1 mapping has been setup.
+>>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> Cc: Scott Wood <oss@buserror.net>
+>> Cc: Diana Craciun <diana.craciun@nxp.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> ---
+>>   arch/powerpc/Kconfig                 |  2 +-
+>>   arch/powerpc/kernel/exceptions-64e.S | 10 +++++++++
+>>   arch/powerpc/kernel/head_64.S        |  7 ++++++
+>>   arch/powerpc/kernel/setup_64.c       |  4 +++-
+>>   arch/powerpc/mm/mmu_decl.h           | 16 +++++++-------
+>>   arch/powerpc/mm/nohash/kaslr_booke.c | 33 +++++++++++++++++++++++++---
+>>   6 files changed, 59 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index c150a9d49343..754aeb96bb1c 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -568,7 +568,7 @@ config RELOCATABLE
+>>   config RANDOMIZE_BASE
+>>       bool "Randomize the address of the kernel image"
+>> -    depends on (FSL_BOOKE && FLATMEM && PPC32)
+>> +    depends on (PPC_FSL_BOOK3E && FLATMEM)
+>>       depends on RELOCATABLE
+>>       help
+>>         Randomizes the virtual address at which the kernel image is
+>> diff --git a/arch/powerpc/kernel/exceptions-64e.S 
+>> b/arch/powerpc/kernel/exceptions-64e.S
+>> index 1b9b174bee86..c1c05b8684ca 100644
+>> --- a/arch/powerpc/kernel/exceptions-64e.S
+>> +++ b/arch/powerpc/kernel/exceptions-64e.S
+>> @@ -1378,6 +1378,7 @@ skpinv:    addi    r6,r6,1                /* 
+>> Increment */
+>>   1:    mflr    r6
+>>       addi    r6,r6,(2f - 1b)
+>>       tovirt(r6,r6)
+>> +    add    r6,r6,r19
+>>       lis    r7,MSR_KERNEL@h
+>>       ori    r7,r7,MSR_KERNEL@l
+>>       mtspr    SPRN_SRR0,r6
+>> @@ -1400,6 +1401,7 @@ skpinv:    addi    r6,r6,1                /* 
+>> Increment */
+>>       /* We translate LR and return */
+>>       tovirt(r8,r8)
+>> +    add    r8,r8,r19
+>>       mtlr    r8
+>>       blr
+>> @@ -1528,6 +1530,7 @@ a2_tlbinit_code_end:
+>>    */
+>>   _GLOBAL(start_initialization_book3e)
+>>       mflr    r28
+>> +    li    r19, 0
+>>       /* First, we need to setup some initial TLBs to map the kernel
+>>        * text, data and bss at PAGE_OFFSET. We don't have a real mode
+>> @@ -1570,6 +1573,12 @@ _GLOBAL(book3e_secondary_core_init)
+>>       cmplwi    r4,0
+>>       bne    2f
+>> +    li    r19, 0
+>> +#ifdef CONFIG_RANDOMIZE_BASE
+>> +    LOAD_REG_ADDR_PIC(r19, __kaslr_offset)
+>> +    lwz    r19,0(r19)
+>> +    rlwinm  r19,r19,0,0,5
+>> +#endif
+>>       /* Setup TLB for this core */
+>>       bl    initial_tlb_book3e
+>> @@ -1602,6 +1611,7 @@ _GLOBAL(book3e_secondary_core_init)
+>>       lis    r3,PAGE_OFFSET@highest
+>>       sldi    r3,r3,32
+>>       or    r28,r28,r3
+>> +    add    r28,r28,r19
+>>   1:    mtlr    r28
+>>       blr
+>> diff --git a/arch/powerpc/kernel/head_64.S 
+>> b/arch/powerpc/kernel/head_64.S
+>> index ad79fddb974d..744624140fb8 100644
+>> --- a/arch/powerpc/kernel/head_64.S
+>> +++ b/arch/powerpc/kernel/head_64.S
+>> @@ -104,6 +104,13 @@ __secondary_hold_acknowledge:
+>>       .8byte    0x0
+>>   #ifdef CONFIG_RELOCATABLE
+>> +#ifdef CONFIG_RANDOMIZE_BASE
+>> +    . = 0x58
+>> +    .globl    __kaslr_offset
+>> +__kaslr_offset:
+>> +DEFINE_FIXED_SYMBOL(__kaslr_offset)
+>> +    .long    0
+>> +#endif
+>>       /* This flag is set to 1 by a loader if the kernel should run
+>>        * at the loaded address instead of the linked address.  This
+>>        * is used by kexec-tools to keep the the kdump kernel in the
+>> diff --git a/arch/powerpc/kernel/setup_64.c 
+>> b/arch/powerpc/kernel/setup_64.c
+>> index 6104917a282d..a16b970a8d1a 100644
+>> --- a/arch/powerpc/kernel/setup_64.c
+>> +++ b/arch/powerpc/kernel/setup_64.c
+>> @@ -66,7 +66,7 @@
+>>   #include <asm/feature-fixups.h>
+>>   #include <asm/kup.h>
+>>   #include <asm/early_ioremap.h>
+>> -
+> 
+> Why remove this new line which clearly separates things in asm/ and 
+> things in local dir ?
+
+Sorry to break this. I will add the new line back.
+
+> 
+>> +#include <mm/mmu_decl.h>
+>>   #include "setup.h"
+>>   int spinning_secondaries;
+>> @@ -300,6 +300,8 @@ void __init early_setup(unsigned long dt_ptr)
+>>       /* Enable early debugging if any specified (see udbg.h) */
+>>       udbg_early_init();
+>> +    kaslr_early_init(__va(dt_ptr), 0);
+>> +
+>>       udbg_printf(" -> %s(), dt_ptr: 0x%lx\n", __func__, dt_ptr);
+>>       /*
+>> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+>> index 3e1c85c7d10b..bbd721d1e3d7 100644
+>> --- a/arch/powerpc/mm/mmu_decl.h
+>> +++ b/arch/powerpc/mm/mmu_decl.h
+>> @@ -147,14 +147,6 @@ void reloc_kernel_entry(void *fdt, long addr);
+>>   extern void loadcam_entry(unsigned int index);
+>>   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+>> -#ifdef CONFIG_RANDOMIZE_BASE
+>> -void kaslr_early_init(void *dt_ptr, phys_addr_t size);
+>> -void kaslr_late_init(void);
+>> -#else
+>> -static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
+>> -static inline void kaslr_late_init(void) {}
+>> -#endif
+>> -
+>>   struct tlbcam {
+>>       u32    MAS0;
+>>       u32    MAS1;
+>> @@ -164,6 +156,14 @@ struct tlbcam {
+>>   };
+>>   #endif
+>> +#ifdef CONFIG_RANDOMIZE_BASE
+>> +void kaslr_early_init(void *dt_ptr, phys_addr_t size);
+>> +void kaslr_late_init(void);
+>> +#else
+>> +static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
+>> +static inline void kaslr_late_init(void) {}
+>> +#endif
+>> +
+>>   #if defined(CONFIG_PPC_BOOK3S_32) || defined(CONFIG_FSL_BOOKE) || 
+>> defined(CONFIG_PPC_8xx)
+>>   /* 6xx have BATS */
+>>   /* FSL_BOOKE have TLBCAM */
+>> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c 
+>> b/arch/powerpc/mm/nohash/kaslr_booke.c
+>> index 07b036e98353..c6f5c1db1394 100644
+>> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
+>> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+>> @@ -231,7 +231,7 @@ static __init unsigned long 
+>> get_usable_address(const void *fdt,
+>>       unsigned long pa;
+>>       unsigned long pa_end;
+>> -    for (pa = offset; (long)pa > (long)start; pa -= SZ_16K) {
+>> +    for (pa = offset; (long)pa > (long)start; pa -= SZ_64K) {
+> 
+> Doesn't this modify the behaviour for PPC32 too ?
+
+Oh, yes. I will fix this.
+
+> 
+>>           pa_end = pa + regions.kernel_size;
+>>           if (overlaps_region(fdt, pa, pa_end))
+>>               continue;
+>> @@ -265,14 +265,14 @@ static unsigned long __init 
+>> kaslr_legal_offset(void *dt_ptr, unsigned long rando
+>>   {
+>>       unsigned long koffset = 0;
+>>       unsigned long start;
+>> -    unsigned long index;
+>>       unsigned long offset;
+>> +#ifdef CONFIG_PPC32
+> 
+> Can we use
+> 
+> if (IS_ENABLED(CONFIG_PPC32)) {
+>      /* 32 bits stuff */
+> } else {
+>      /* 64 bits stuff */
+> }
+
+Thansk for the suggestion. I will consider to use IS_ENABLED() instead.
+
+> 
+>>       /*
+>>        * Decide which 64M we want to start
+>>        * Only use the low 8 bits of the random seed
+>>        */
+>> -    index = random & 0xFF;
+>> +    unsigned long index = random & 0xFF;
+> 
+> That's not good in terms of readability, index declaration should remain 
+> at the top of the function, should be possible if using IS_ENABLED() 
+> instead
+
+I'm wondering how to declare a variable inside a code block such as if 
+(IS_ENABLED(CONFIG_PPC32)) at the top of the function and use the 
+variable in another if (IS_ENABLED(CONFIG_PPC32)). Is there any good idea?
+
+> 
+>>       index %= regions.linear_sz / SZ_64M;
+>>       /* Decide offset inside 64M */
+>> @@ -287,6 +287,15 @@ static unsigned long __init 
+>> kaslr_legal_offset(void *dt_ptr, unsigned long rando
+>>               break;
+>>           index--;
+>>       }
+>> +#else
+>> +    /* Decide kernel offset inside 1G */
+>> +    offset = random % (SZ_1G - regions.kernel_size);
+>> +    offset = round_down(offset, SZ_64K);
+>> +
+>> +    start = memstart_addr;
+>> +    offset = memstart_addr + offset;
+>> +    koffset = get_usable_address(dt_ptr, start, offset);
+>> +#endif
+>>       if (koffset != 0)
+>>           koffset -= memstart_addr;
+>> @@ -325,6 +334,7 @@ static unsigned long __init 
+>> kaslr_choose_location(void *dt_ptr, phys_addr_t size
+>>       else
+>>           pr_warn("KASLR: No safe seed for randomizing the kernel 
+>> base.\n");
+>> +#ifdef CONFIG_PPC32
+>>       ram = min_t(phys_addr_t, __max_low_memory, size);
+>>       ram = map_mem_in_cams(ram, CONFIG_LOWMEM_CAM_NUM, true);
+>>       linear_sz = min_t(unsigned long, ram, SZ_512M);
+>> @@ -332,6 +342,7 @@ static unsigned long __init 
+>> kaslr_choose_location(void *dt_ptr, phys_addr_t size
+>>       /* If the linear size is smaller than 64M, do not randmize */
+>>       if (linear_sz < SZ_64M)
+>>           return 0;
+>> +#endif
+>>       /* check for a reserved-memory node and record its cell sizes */
+>>       regions.reserved_mem = fdt_path_offset(dt_ptr, "/reserved-memory");
+>> @@ -363,6 +374,17 @@ notrace void __init kaslr_early_init(void 
+>> *dt_ptr, phys_addr_t size)
+>>       unsigned long offset;
+>>       unsigned long kernel_sz;
+>> +#ifdef CONFIG_PPC64
+> 
+> Same, can we use a standard C if/else sequence with 
+> IS_ENABLED(CONFIG_PPC64) ?
+
+OK, I will try to do this if I can deal with the declaration of 
+variables in different if/else sequence.
+
+Thanks,
+Jason
+
+
+> 
+>> +    unsigned int *__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
+>> +    unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
+>> +
+>> +    if (*__run_at_load == 1)
+>> +        return;
+>> +
+>> +    /* Setup flat device-tree pointer */
+>> +    initial_boot_params = dt_ptr;
+>> +#endif
+>> +
+>>       kernel_sz = (unsigned long)_end - (unsigned long)_stext;
+>>       offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
+>> @@ -372,6 +394,7 @@ notrace void __init kaslr_early_init(void *dt_ptr, 
+>> phys_addr_t size)
+>>       kernstart_virt_addr += offset;
+>>       kernstart_addr += offset;
+>> +#ifdef CONFIG_PPC32
+>>       is_second_reloc = 1;
+>>       if (offset >= SZ_64M) {
+>> @@ -381,6 +404,10 @@ notrace void __init kaslr_early_init(void 
+>> *dt_ptr, phys_addr_t size)
+>>           /* Create kernel map to relocate in */
+>>           create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
+>>       }
+>> +#else
+>> +    *__kaslr_offset = kernstart_virt_addr - KERNELBASE;
+>> +    *__run_at_load = 1;
+>> +#endif
+>>       /* Copy the kernel to it's new location and run */
+>>       memcpy((void *)kernstart_virt_addr, (void *)_stext, kernel_sz);
+>>
+> 
+> Christophe
+> 
+> .
+
