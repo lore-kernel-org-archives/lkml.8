@@ -2,99 +2,78 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8135CC4BA25
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB5DC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E95222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3AE20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="a3j6DMoH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d5Ivp/Me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgBZTNq (ORCPT
+        id S1727229AbgBZTO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:13:46 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.101]:28202 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgBZTNN (ORCPT
+        Wed, 26 Feb 2020 14:14:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46056 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbgBZTOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:13:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744391;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0KwFWogrkYd3WbP4B9tFSDqdj5/ZkSqbBbEVxlZwGEA=;
-        b=a3j6DMoHnyFV5JohDO304EjH+kmJqX6FaYH5XNaYMFXdMvHq6JuEDM8JRr6G49R54U
-        ETepDUDRMHGKp5+Hib2Fn1N91+jZ4OM5ye8e2BCsBO7IA3+/vVU3+3cg9EIyJ/JKQEZO
-        p/fb/aW+6yfMqz5cmTkJZGJ0wXgbjVS8sD/ni8pXJgxZoAd/xmwOfXjZZnPFItubV90B
-        5Rii1ZUgbdlXZyZyxEpSkqJMmEA2caYj8prxnko814fn9fq5UlP4LFN3Kz3603i93lNq
-        5fcr6c2hc2hlAI1IiqTypiMY9JALpOqOBTSqeNPry39V5MHMXO5TBkkm3wyMncSv4V6K
-        54JA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QJD26bM
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 26 Feb 2020 20:13:02 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC 3/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-Date:   Wed, 26 Feb 2020 20:12:55 +0100
-Message-Id: <d59ba39a17f052b6d3ca1947bd62467224fac2d0.1582744379.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582744379.git.hns@goldelico.com>
-References: <cover.1582744379.git.hns@goldelico.com>
+        Wed, 26 Feb 2020 14:14:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tKhMa5Sd27YXJPXDMYEL6vfvj6URvuGiqyYEnIj8ZSQ=; b=d5Ivp/MeR6FmmmzcmnsEZlJtvo
+        Of99Za5ppM/mNfTTUgq+2JPcmxo9ZRLCoXJ9CMrotPzqhJZbK3RPEK1Fpzthc6HMweW0clIZKgok7
+        3GE+FztDwZqH0WZPK4FBDu4KEyqont3D87Esr/LKefZox06SIyHat3uJ4CSC4KRgcSUIMLwH5t8nd
+        NQRKX1YHryjnldNC9+WahQzkMN6+aJT/6HOyk0BzQDjfKhk+xohB9L2xXIhYZxlsJWBpTTl/MSeui
+        9DHWLfDRsfWXdvTo0PmfDt6tX6AoDHm3fJ2axHoe/lqUoruwCfesCCyWEBIjhIZosAko+QL+CdJ0U
+        +fy+VHpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j728F-0007qG-FI; Wed, 26 Feb 2020 19:14:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C9E0306056;
+        Wed, 26 Feb 2020 20:12:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C17412B740B97; Wed, 26 Feb 2020 20:14:04 +0100 (CET)
+Date:   Wed, 26 Feb 2020 20:14:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Luigi Rizzo <lrizzo@google.com>
+Cc:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        naveen.n.rao@linux.ibm.com, ardb@kernel.org,
+        Luigi Rizzo <rizzo@iet.unipi.it>,
+        Paolo Abeni <pabeni@redhat.com>, giuseppe.lettieri@unipi.it,
+        Jesper Dangaard Brouer <hawk@kernel.org>, mingo@redhat.com,
+        acme@kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 0/2] kstats: kernel metric collector
+Message-ID: <20200226191404.GD18400@hirez.programming.kicks-ass.net>
+References: <20200226135027.34538-1-lrizzo@google.com>
+ <87ftexz93y.fsf@toke.dk>
+ <CAMOZA0Lzf2r7rFvgBEWpf-B=wXvyED2CxfzuO7qUA_qVsNtL7g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMOZA0Lzf2r7rFvgBEWpf-B=wXvyED2CxfzuO7qUA_qVsNtL7g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-so that the driver can load by matching the device tree
-if compiled as module.
+On Wed, Feb 26, 2020 at 09:26:22AM -0800, Luigi Rizzo wrote:
+> [this reply also addresses comments from Alexei and Peter]
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpu/drm/ingenic/ingenic-drm.c | 2 ++
- 1 file changed, 2 insertions(+)
+I don't see where you address my comment; all you talk about is bpf.
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 6d47ef7b148c..d8617096dd8e 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -844,6 +844,8 @@ static const struct of_device_id ingenic_drm_of_match[] = {
- 	{ /* sentinel */ },
- };
- 
-+MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
-+
- static struct platform_driver ingenic_drm_driver = {
- 	.driver = {
- 		.name = "ingenic-drm",
--- 
-2.23.0
-
+I've never used bpf. Still I also don't see any actual value in you few
+lines of code.
