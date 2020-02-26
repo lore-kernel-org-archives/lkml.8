@@ -2,91 +2,129 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1EEC4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B81BC4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39A921D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322D6222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582684375;
+	bh=02ouW81DUsPHAJzxSAPTvGoxzGwv4BggF6TdJk2BivY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j/O5fJ2WOa23/8yAywx9b4uOJTjWznOL90cJabo/gbTGOBFdbmrzPs9kEf2UkUH5W
+	 sklhSUl/fvdGjrQLt0Ls30cogJvNn94ttexEAA5rQCe80ir1X6Di2z/5PpVM089clm
+	 VzffwlMaa90Jdkfaq1IAUNBZqd7o/R4jTiBuaEb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgBZCby (ORCPT
+        id S1730127AbgBZCcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:31:54 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11107 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729795AbgBZCbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:31:52 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 48639CE6B3828CDC0B36;
-        Wed, 26 Feb 2020 10:31:50 +0800 (CST)
-Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Feb
- 2020 10:31:40 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        "Gao Xiang" <gaoxiang25@huawei.com>,
-        Lasse Collin <lasse.collin@tukaani.org>
-Subject: [PATCH 3/3] erofs: handle corrupted images whose decompressed size less than it'd be
-Date:   Wed, 26 Feb 2020 10:30:11 +0800
-Message-ID: <20200226023011.103798-3-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226023011.103798-1-gaoxiang25@huawei.com>
-References: <20200226023011.103798-1-gaoxiang25@huawei.com>
+        Tue, 25 Feb 2020 21:32:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729045AbgBZCcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:32:53 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1830721D7E;
+        Wed, 26 Feb 2020 02:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582684372;
+        bh=02ouW81DUsPHAJzxSAPTvGoxzGwv4BggF6TdJk2BivY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZLKokWUTzTs0OqW+20nt+1D3cwx7Q4MkCz3mWJn/pl5n9lI1dHWx15PSutwErtEg/
+         gF/1rcGRKMcbixPFtR+T+DS8KCGAad/4MTP1YByuB0HD6F/f4X6DMe2srFf9pejKnl
+         HOIkEaKtNr+FgUDBVQGxmV3Q5MqK/odSzAC+I0UM=
+Date:   Tue, 25 Feb 2020 18:32:50 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] crypto: testmgr - use generic algs making test vecs
+Message-ID: <20200226023250.GA1053@sol.localdomain>
+References: <20200225154834.25108-1-gilad@benyossef.com>
+ <20200225154834.25108-2-gilad@benyossef.com>
+ <20200225194551.GA114977@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.160.196.180]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225194551.GA114977@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Lasse pointed out, "Looking at fs/erofs/decompress.c,
-the return value from LZ4_decompress_safe_partial is only
-checked for negative value to catch errors. ... So if
-I understood it correctly, if there is bad data whose
-uncompressed size is much less than it should be, it can
-leave part of the output buffer untouched and expose the
-previous data as the file content. "
+On Tue, Feb 25, 2020 at 11:45:51AM -0800, Eric Biggers wrote:
+> On Tue, Feb 25, 2020 at 05:48:33PM +0200, Gilad Ben-Yossef wrote:
+> > Use generic algs to produce inauthentic AEAD messages,
+> > otherwise we are running the risk of using an untested
+> > code to produce the test messages.
+> > 
+> > As this code is only used in developer only extended tests
+> > any cycles/runtime costs are negligible.
+> > 
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > Cc: Eric Biggers <ebiggers@kernel.org>
+> 
+> It's intentional to use the same implementation to generate the inauthentic AEAD
+> messages, because it allows the inauthentic AEAD input tests to run even if the
+> generic implementation is unavailable.
+> 
+> > @@ -2337,8 +2338,42 @@ static int test_aead_inauthentic_inputs(struct aead_extra_tests_ctx *ctx)
+> >  {
+> >  	unsigned int i;
+> >  	int err;
+> > +	struct crypto_aead *tfm = ctx->tfm;
+> > +	const char *algname = crypto_aead_alg(tfm)->base.cra_name;
+> > +	const char *driver = ctx->driver;
+> > +	const char *generic_driver = ctx->test_desc->generic_driver;
+> > +	char _generic_driver[CRYPTO_MAX_ALG_NAME];
+> > +	struct crypto_aead *generic_tfm = NULL;
+> > +	struct aead_request *generic_req = NULL;
+> > +
+> > +	if (!generic_driver) {
+> > +		err = build_generic_driver_name(algname, _generic_driver);
+> > +		if (err)
+> > +			return err;
+> > +		generic_driver = _generic_driver;
+> > +	}
+> > +
+> > +	if (!strcmp(generic_driver, driver) == 0) {
+> > +		/* Already the generic impl? */
+> > +
+> > +		generic_tfm = crypto_alloc_aead(generic_driver, 0, 0);
+> 
+> I think you meant the condition to be 'if (strcmp(generic_driver, driver) != 0)'
+> and for the comment to be "Not already the generic impl?".
+> 
+> > +		if (IS_ERR(generic_tfm)) {
+> > +			err = PTR_ERR(generic_tfm);
+> > +			pr_err("alg: aead: error allocating %s (generic impl of %s): %d\n",
+> > +			generic_driver, algname, err);
+> > +			return err;
+> > +		}
+> 
+> This means the test won't run if the generic implementation is unavailable.
+> Is there any particular reason to impose that requirement?
+> 
+> You mentioned a concern about the implementation being "untested", but it
+> actually already passed test_aead() before getting to test_aead_extra().
+> 
+> We could also just move test_aead_inauthentic_inputs() to below
+> test_aead_vs_generic_impl() so that it runs last.
+> 
 
-Let's fix it now.
+Also: if we did make the inauthentic input tests use the generic implementation,
+then it would be better to move them into test_aead_vs_generic_impl() so that we
+don't duplicate the code that allocates a tfm and request for the generic
+implementation.
 
-Cc: Lasse Collin <lasse.collin@tukaani.org>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- fs/erofs/decompressor.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+But to me it makes more sense to keep them separate, since a generic
+implementation is not needed to run the inauthentic input tests.
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index c77cec4327fa..be8d9adef236 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -165,14 +165,18 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 		ret = LZ4_decompress_safe(src + inputmargin, out,
- 					  inlen, rq->outputsize);
- 
--	if (ret < 0) {
--		erofs_err(rq->sb, "failed to decompress, in[%u, %u] out[%u]",
--			  inlen, inputmargin, rq->outputsize);
-+	if (ret != rq->outputsize) {
-+		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
-+			  ret, inlen, inputmargin, rq->outputsize);
-+
- 		WARN_ON(1);
- 		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
- 			       16, 1, src + inputmargin, inlen, true);
- 		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
- 			       16, 1, out, rq->outputsize, true);
-+
-+		if (ret >= 0)
-+			memset(out + ret, 0, rq->outputsize - ret);
- 		ret = -EIO;
- 	}
- 
--- 
-2.17.1
-
+- Eric
