@@ -2,117 +2,177 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D6C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4272C4BA1C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E4620637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A316420637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRSRh7ZO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p/bZ0fff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbgBZREs (ORCPT
+        id S1728221AbgBZRFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:04:48 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37682 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgBZREs (ORCPT
+        Wed, 26 Feb 2020 12:05:02 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17429 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727470AbgBZRFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:04:48 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b3so102563otp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:04:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uWGLFPb2JDmIkjCUPJN84txliHWIiSJvGLA5caQAIDY=;
-        b=pRSRh7ZOElvt8MZ/XbjZd2EjwBs38ZohNIN09f86phdUa0OSrWstsvCpmIYkIhAyjE
-         vGSLpfV8w33qWriFyNQjb+wdCrNN1nBfLj3OMK04kdIWa8EmPnvWxPQ8wfV4EfkHdFCR
-         irTFAQFPGvgt1+iYzPRy4bGwoZKQ2IVxsrmV/EJmz4bq3aHIR8cm4EQxolr1/lE8XKtO
-         ayKD+XugXPZxJT0SJj5oX4AeSWwMgIo/JkN3xGiNiDxe25sIo7XsxvGvXhWW8+nswFyn
-         NmdE3PV2TBfU7wMqz3QAJ8Nq0fwrja/FPGPKSXo6ltR/1JgMB4qcYCCP60KaUwQWCJqN
-         Zcog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uWGLFPb2JDmIkjCUPJN84txliHWIiSJvGLA5caQAIDY=;
-        b=hslpcj1jIIoni/28BUxY/lmUS2JNyCbhh1LaFvYk3Co7OUjFNIPyQHzK6DjmuBjglJ
-         9IgnoXhRZB09gfUbjo+ytrqt3MtWQXbH1rEmT2xLO/Pv370qbZLsAdIseDOS+DJrIwOF
-         lMJ79rR61jFraOVY3OV7GvIhos3GaZvmh4SRMXddZICLv7JCw3zjiPiw+2um7B5mcHqe
-         sNjwzQk0QCo/tnZIwoxqRPYx3up30jv1PZkxeBtfaC25/DzzkSyTZ/EhUHcqqKDh4Yh5
-         YRXaVbKmbLq0ME0No4ZGeHHaYaVlMhmyoFyOHct9ugNeKQw4Dbwl2gzrUhKGB/nc9xHC
-         A6yg==
-X-Gm-Message-State: APjAAAVuvMljGeXcJ2flbW5QkOchr4ZwKyHNw9XwzOw7D3ThSzp7eHHy
-        VTIIuSWzGaVx+MdOLb6PQE5ByH/1MnWBEOgf1CJpiA==
-X-Google-Smtp-Source: APXvYqxkotkHZJmj2vI4NdG74QtkRm4F+5ukci8HBKZyVQ5ld8N+4pLKqR2xKJbHGuJAhgVIWG1xHgI9V6Xvqsp3QDU=
-X-Received: by 2002:a9d:6ac2:: with SMTP id m2mr3927552otq.191.1582736685661;
- Wed, 26 Feb 2020 09:04:45 -0800 (PST)
+        Wed, 26 Feb 2020 12:05:02 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e56a4ee0000>; Wed, 26 Feb 2020 09:03:42 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Feb 2020 09:05:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Feb 2020 09:05:00 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
+ 2020 17:04:56 +0000
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Bitan Biswas <bbiswas@nvidia.com>
+CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Jens Axboe" <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
+ <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
+ <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+ <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <f1711223-91ba-c567-2983-b4783aa7601b@nvidia.com>
+Date:   Wed, 26 Feb 2020 17:04:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
- <20200219194006.GA3075@sultan-book.localdomain> <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain> <20200219214513.GL3420@suse.de>
- <20200219224231.GA5190@sultan-book.localdomain> <20200220101945.GN3420@suse.de>
- <20200221042232.GA2197@sultan-book.localdomain> <20200221080737.GK20509@dhcp22.suse.cz>
- <20200221210824.GA3605@sultan-book.localdomain> <20200225090945.GJ22443@dhcp22.suse.cz>
- <20200226105137.9088-1-hdanton@sina.com>
-In-Reply-To: <20200226105137.9088-1-hdanton@sina.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 26 Feb 2020 09:04:34 -0800
-Message-ID: <CALvZod6aFgsT+z3f_dj7691p=-J3pB+BXMV1x-uHXJWRFVr0gQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582736623; bh=6D+i0xe21mqqX6n5OUovAjoW11aRjUA9+tewaNzxrek=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=p/bZ0fff0n82hLSAwmcx0IFIA2eqFqLqQpyfZXDEcFPIUummqVfxXcQTIuqyWF1/i
+         SK/uMll2Si5bisQfKYh75ukgPugxg8f5/KJxFg5Tvyqxit8Zt0NkpaME9B18VW1yuW
+         JS0E1SOHEMh+5MYI7tHYpzV4sOHKWFn5VCNdIRLYbxNidMpYk2T5S5Ys9L511i8e9C
+         /p/NOzHkP9Ju5PZj83rIjEHNOtbqWncEHAArlMGWO6iKfvDzpmcDdRWl7Guy+uXUQT
+         /ShWW4i3pz16zR9rs4UhROn0VeKrSGkYunKEGxUh6mwVYDBCjAseQt3DxiwjneA60T
+         GUOFOGxsNEouA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 4:15 AM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Tue, 25 Feb 2020 14:30:03 -0800 Shakeel Butt wrote:
-> >
-> > BTW we are seeing a similar situation in our production environment.
-> > We have swappiness=0, no swap from kswapd (because we don't swapout on
-> > pressure, only on cold age) and too few file pages, the kswapd goes
-> > crazy on shrink_slab and spends 100% cpu on it.
->
-> Dunno if swappiness is able to put peace on your kswapd.
->
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2631,8 +2631,14 @@ static inline bool should_continue_recla
->          */
->         pages_for_compaction = compact_gap(sc->order);
->         inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-> -       if (get_nr_swap_pages() > 0)
-> -               inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> +       do {
-> +               struct lruvec *lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup, pgdat);
-> +               struct mem_cgroup *memcg = lruvec_memcg(lruvec);
-> +               int swappiness = mem_cgroup_swappiness(memcg);
-> +
-> +               if (swappiness && get_nr_swap_pages() > 0)
 
-Thanks for finding this. I think we also need to check sc->may_swap as
-well. Can you please send a signed-off patch? It may or maynot help
-kswapd but I think this is needed.
+On 26/02/2020 15:21, Ulf Hansson wrote:
+> + Anders, Kishon
+> 
+> On Tue, 25 Feb 2020 at 17:24, Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>>
+>> On 25/02/2020 14:26, Ulf Hansson wrote:
+>>
+>> ...
+>>
+>>> However, from the core point of view, the response is still requested,
+>>> only that we don't want the driver to wait for the card to stop
+>>> signaling busy. Instead we want to deal with that via "polling" from
+>>> the core.
+>>>
+>>> This is a rather worrying behaviour, as it seems like the host driver
+>>> doesn't really follow this expectations from the core point of view.
+>>> And mmc_flush_cache() is not the only case, as we have erase, bkops,
+>>> sanitize, etc. Are all these working or not really well tested?
+>>
+>> I don't believe that they are well tested. We have a simple test to
+>> mount an eMMC partition, create a file, check the contents, remove the
+>> file and unmount. The timeouts always occur during unmounting.
+>>
+>>> Earlier, before my three patches, if the provided timeout_ms parameter
+>>> to __mmc_switch() was zero, which was the case for
+>>> mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
+>>> ignored validating host->max_busy_timeout, which was wrong. In any
+>>> case, this also meant that an R1B response was always used for
+>>> mmc_flush_cache(), as you also indicated above. Perhaps this is the
+>>> critical part where things can go wrong.
+>>>
+>>> BTW, have you tried erase commands for sdhci tegra driver? If those
+>>> are working fine, do you have any special treatments for these?
+>>
+>> That I am not sure, but I will check.
+> 
+> Great, thanks. Looking forward to your report.
 
-> +                       inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-> +       } while (0);
->
->         return inactive_lru_pages > pages_for_compaction;
->  }
->
+So no I don't believe that we have explicitly tried erase commands and
+no there is nothing special that we are doing for erase.
+
+> So, from my side, me and Anders Roxell, have been collaborating on
+> testing the behaviour on a TI Beagleboard x15 (remotely with limited
+> debug options), which is using the sdhci-omap variant. I am trying to
+> get hold of an Nvidia jetson-TX2, but not found one yet. These are the
+> conclusions from the observed behaviour on the Beagleboard for the
+> CMD6 cache flush command.
+> 
+> First, the reported host->max_busy_timeout is 2581 (ms) for the
+> sdhci-omap driver in this configuration.
+> 
+> 1. As we all know by now, the cache flush command (CMD6) fails with
+> -110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to 30 *
+> 1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
+> from the command.
+> 
+> 2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
+> the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
+> timeout_ms parameter is less than max_busy_timeout (2000 <  2581).
+> Then everything works fine.
+> 
+> 3. Updating the code to again use 30s as the
+> MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY to be
+> set, even when the timeout_ms becomes greater than max_busy_timeout.
+> This also works fine.
+> 
+> Clearly this indicates a problem that I think needs to be addressed in
+> the sdhci driver. However, of course I can revert the three discussed
+> patches to fix the problem, but that would only hide the issues and I
+> am sure we would then get back to this issue, sooner or later.
+> 
+> To fix the problem in the sdhci driver, I would appreciate if someone
+> from TI and Nvidia can step in to help, as I don't have the HW on my
+> desk.
+
+OK, let me check to see who can help from our side.
+
+Cheers
+Jon
+
+-- 
+nvpublic
