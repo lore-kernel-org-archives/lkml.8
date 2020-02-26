@@ -2,187 +2,141 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BD6C4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A79C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CA9222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9B721927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:00:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rT6F5zYE"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="u3e8N9Wi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBZD6g (ORCPT
+        id S1726740AbgBZEAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:58:36 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34568 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBZD6g (ORCPT
+        Tue, 25 Feb 2020 23:00:17 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:18549 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgBZEAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 22:58:36 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 11so1434581qkd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:58:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rqQmLpDggmkX79HmGpvNiduhmKU3MFQ/yb6zXVa9mHE=;
-        b=rT6F5zYEOmpDgUzrFDBCMZAaOJhoSxf4o8I4SGInJOOYeGvF761sKRyRCkPu2qxIYM
-         eGIPJMS32c/dSXBGgxX/JnwJSkz59s0zlk3v4G5UjTN2IrOm9RKYv2tCS8fx7ShZ2PFe
-         L6Dzyxqv4esV8AzjCiLSysQ0SM0vtS5CubXECAaSwcoQzrGKMtfgKNqG0t0YTHPFYJDe
-         fjm0lKvXiZNnXN4svOOvoO/IBMc3adHjPaIoraXeIvsTIUVGM5nH8/Bxm2TOENPOzgpX
-         7it3V/PlJ1yfTBJstjO3O0JbV8DD6Q7FoU20D0v2Lm4yGuk//WeX3mV5kVvNU6k9ozoZ
-         ar7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rqQmLpDggmkX79HmGpvNiduhmKU3MFQ/yb6zXVa9mHE=;
-        b=lZ5LUmtQFfpuB0lWS1/joel22LijJP3AdjEs8D33LqnoYtddxva5iIeG3elTqtaIdS
-         /+MoKRpS0GnuzClJN+fYPHrrBbr/ebIqu5b+Q89nyvvsjoUsMVbfs8J9+/dGpsw5Ts7W
-         ncxPTopGpUBpJMJZpIwWe8fDK1liJz9ySQRp+b/62Nd/QM+/E+AwMfWXmrQsn1DapCL9
-         oM1EiIyd+0vG4c1POI3sYNvX3sbLhA56ZxdjU/PTHertkETsnVXItloOHvjrDSOx9HOp
-         yQ/FDFQ/w4GbDyX+TEmiDeu4MIM6Jaj82CovYk9ddZgIYcGa8dss5OlqfyGn56EuJ+E3
-         ZQ4Q==
-X-Gm-Message-State: APjAAAW6NJmsqaqLolH3Vas5Zn41+sOusnod5jPER4q1dj+AMlM0rGkA
-        mS6M4/8HNw/Ay4jhJySIL86fCA==
-X-Google-Smtp-Source: APXvYqz4lfngE1yhsz7pY6I/dmXhFqLwXsrOP2yR9CbfyvStim1JwfYW4Msvzmz+gRthOGA1jx1nCA==
-X-Received: by 2002:a37:9b91:: with SMTP id d139mr2993478qke.366.1582689515562;
-        Tue, 25 Feb 2020 19:58:35 -0800 (PST)
-Received: from ovpn-121-122.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id m17sm401595qki.128.2020.02.25.19.58.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 19:58:35 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, willy@infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] mm/vmscan: fix data races at kswapd_classzone_idx
-Date:   Tue, 25 Feb 2020 22:58:27 -0500
-Message-Id: <20200226035827.1285-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Feb 2020 23:00:17 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 01Q3xIwx016581;
+        Wed, 26 Feb 2020 12:59:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01Q3xIwx016581
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582689558;
+        bh=XDrBIXByfZ2yAmtZPGX/C8p4s5ZOw7AEPyyzLDKdN2A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=u3e8N9Wii46h8XMIwcPQOR1pfajS6bTdVu5PoDLvzg84URiIenjUiy+I7fGvBb2FJ
+         bi/Mg+Ry9pNIRD7AwVWYqpkFhHt7wRer8RayCdZL2c4Xwkbc1+b4LAOzikYvh5YPQc
+         uJ+/WBeZsq1bdEK97F92wYEVkfZ57y0pxPFomSqRdnJeSlgq3+DZpWMcdQlB9m9B8/
+         fNcwZHdhAYccn4yA4cK2nb1CF1C96nmr8yzQeXIWSgQfmKjseZGIoDFLLMlmhgOdeh
+         Js3L2JXwWhPIeS/zJdO01aRzzFwo3/aO6wimrP6X02dF5rHnU5VhRzcg/UnXDeXAyh
+         uTagRccc8RuAQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: uniphier: rename NAND node names to follow json-schema
+Date:   Wed, 26 Feb 2020 12:59:13 +0900
+Message-Id: <20200226035914.23582-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pgdat->kswapd_classzone_idx could be accessed concurrently in
-wakeup_kswapd(). Plain writes and reads without any lock protection
-result in data races. Fix them by adding a pair of READ|WRITE_ONCE() as
-well as saving a branch (compilers might well optimize the original code
-in an unintentional way anyway). While at it, also take care of
-pgdat->kswapd_order and non-kswapd threads in allow_direct_reclaim().
-The data races were reported by KCSAN,
+Follow the standard nodename pattern "^nand-controller(@.*)?" defined
+in Documentation/devicetree/bindings/mtd/nand-controller.yaml
 
- BUG: KCSAN: data-race in wakeup_kswapd / wakeup_kswapd
+Otherwise, after the dt-binding is converted to json-schema,
+'make ARCH=arm dtbs_check' will show a warning like this:
 
- write to 0xffff9f427ffff2dc of 4 bytes by task 7454 on cpu 13:
-  wakeup_kswapd+0xf1/0x400
-  wakeup_kswapd at mm/vmscan.c:3967
-  wake_all_kswapds+0x59/0xc0
-  wake_all_kswapds at mm/page_alloc.c:4241
-  __alloc_pages_slowpath+0xdcc/0x1290
-  __alloc_pages_slowpath at mm/page_alloc.c:4512
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_vma+0x8a/0x2c0
-  do_anonymous_page+0x16e/0x6f0
-  __handle_mm_fault+0xcd5/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+  nand@68000000: $nodename:0: 'nand@68000000' does not match '^nand-controller(@.*)?'
 
- 1 lock held by mtest01/7454:
-  #0: ffff9f425afe8808 (&mm->mmap_sem#2){++++}, at:
- do_page_fault+0x143/0x6f9
- do_user_addr_fault at arch/x86/mm/fault.c:1405
- (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
- irq event stamp: 6944085
- count_memcg_event_mm+0x1a6/0x270
- count_memcg_event_mm+0x119/0x270
- __do_softirq+0x34c/0x57c
- irq_exit+0xa2/0xc0
-
- read to 0xffff9f427ffff2dc of 4 bytes by task 7472 on cpu 38:
-  wakeup_kswapd+0xc8/0x400
-  wake_all_kswapds+0x59/0xc0
-  __alloc_pages_slowpath+0xdcc/0x1290
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_vma+0x8a/0x2c0
-  do_anonymous_page+0x16e/0x6f0
-  __handle_mm_fault+0xcd5/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
-
- 1 lock held by mtest01/7472:
-  #0: ffff9f425a9ac148 (&mm->mmap_sem#2){++++}, at:
- do_page_fault+0x143/0x6f9
- irq event stamp: 6793561
- count_memcg_event_mm+0x1a6/0x270
- count_memcg_event_mm+0x119/0x270
- __do_softirq+0x34c/0x57c
- irq_exit+0xa2/0xc0
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-v2: use a temp variable and take care of kswapd_order per Matthew.
-     take care of allow_direct_reclaim() as well.
+ arch/arm/boot/dts/uniphier-ld4.dtsi  | 2 +-
+ arch/arm/boot/dts/uniphier-pro4.dtsi | 2 +-
+ arch/arm/boot/dts/uniphier-pro5.dtsi | 2 +-
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 2 +-
+ arch/arm/boot/dts/uniphier-sld8.dtsi | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
- mm/vmscan.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 876370565455..e61cc71b8915 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3136,8 +3136,9 @@ static bool allow_direct_reclaim(pg_data_t *pgdat)
+diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+index 23b8fd627c00..197bee7d8b7f 100644
+--- a/arch/arm/boot/dts/uniphier-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+@@ -398,7 +398,7 @@
+ 			};
+ 		};
  
- 	/* kswapd must be awake if processes are being throttled */
- 	if (!wmark_ok && waitqueue_active(&pgdat->kswapd_wait)) {
--		pgdat->kswapd_classzone_idx = min(pgdat->kswapd_classzone_idx,
--						(enum zone_type)ZONE_NORMAL);
-+		if (READ_ONCE(pgdat->kswapd_classzone_idx) > ZONE_NORMAL)
-+			WRITE_ONCE(pgdat->kswapd_classzone_idx, ZONE_NORMAL);
-+
- 		wake_up_interruptible(&pgdat->kswapd_wait);
- 	}
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5a";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+index eb06c353970f..b02bc8a6346b 100644
+--- a/arch/arm/boot/dts/uniphier-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+@@ -588,7 +588,7 @@
+ 			};
+ 		};
  
-@@ -3953,20 +3954,23 @@ void wakeup_kswapd(struct zone *zone, gfp_t gfp_flags, int order,
- 		   enum zone_type classzone_idx)
- {
- 	pg_data_t *pgdat;
-+	enum zone_type curr_idx;
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5a";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+index c95eb44c816d..f84a43a10f38 100644
+--- a/arch/arm/boot/dts/uniphier-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+@@ -453,7 +453,7 @@
+ 			};
+ 		};
  
- 	if (!managed_zone(zone))
- 		return;
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5b";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index c054d0175df9..989b2a241822 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -761,7 +761,7 @@
+ 			};
+ 		};
  
- 	if (!cpuset_zone_allowed(zone, gfp_flags))
- 		return;
-+
- 	pgdat = zone->zone_pgdat;
-+	curr_idx = READ_ONCE(pgdat->kswapd_classzone_idx);
-+
-+	if (curr_idx == MAX_NR_ZONES || curr_idx < classzone_idx)
-+		WRITE_ONCE(pgdat->kswapd_classzone_idx, classzone_idx);
-+
-+	if (READ_ONCE(pgdat->kswapd_order) < order)
-+		WRITE_ONCE(pgdat->kswapd_order, order);
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5b";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
+diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+index a05061038e78..fbfd25050a04 100644
+--- a/arch/arm/boot/dts/uniphier-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+@@ -402,7 +402,7 @@
+ 			};
+ 		};
  
--	if (pgdat->kswapd_classzone_idx == MAX_NR_ZONES)
--		pgdat->kswapd_classzone_idx = classzone_idx;
--	else
--		pgdat->kswapd_classzone_idx = max(pgdat->kswapd_classzone_idx,
--						  classzone_idx);
--	pgdat->kswapd_order = max(pgdat->kswapd_order, order);
- 	if (!waitqueue_active(&pgdat->kswapd_wait))
- 		return;
- 
+-		nand: nand@68000000 {
++		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5a";
+ 			status = "disabled";
+ 			reg-names = "nand_data", "denali_reg";
 -- 
-2.21.0 (Apple Git-122.2)
+2.17.1
 
