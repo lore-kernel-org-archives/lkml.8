@@ -2,131 +2,141 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B55C4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74225C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F5C20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o80oA2ww"
+	by mail.kernel.org (Postfix) with ESMTP id 52ED6222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgBZBLj (ORCPT
+        id S1730024AbgBZBL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:11:39 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41434 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729346AbgBZBLj (ORCPT
+        Tue, 25 Feb 2020 20:11:57 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:50308 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbgBZBL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:11:39 -0500
-Received: by mail-pf1-f193.google.com with SMTP id j9so514181pfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:11:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=p+ckrLz3LRCoSFrfiU30gmbNyc8j6wjK1s1RA2TWajk=;
-        b=o80oA2wwqENPftna7/zKRVKoL3DudW8CJuoNGJhKQurPflg4m7wY+s5rdqW1b+zdpW
-         LoZWVXYuj2kyYWbb2fGxrBwXJpDzoAR7jwOjWCAh/sMSzynLVtPA7Jitj9iy3uJZeokJ
-         BVZn+tnxjRxDXBaXScRBqhEb0zR8BnO6rSER1IyfwRTrfcHXbJ8p3T+zM9czSbbr4SMo
-         0F5uag648+xMEEUTw6hyV+t66j69cLVziSXZ+qdsWweHC2VOPCrXrEGbUo6GZYMxVzvY
-         aUIj/DiaWh8dZVW91xEsFwPIn1D4mAJUmGxxLjyYMHaRlpQYDeUO5fPrKkyqgjV55xXz
-         l9mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=p+ckrLz3LRCoSFrfiU30gmbNyc8j6wjK1s1RA2TWajk=;
-        b=OfRr5ccerwSkusm7TYof0chvhqPM+HC9qIIMKiEtM9YAEGBml54D/6G0C54NweXj8h
-         AqFbaJzGLOq9njA4kK1uPnpJmiaKtz3ayewUmGuHrigIEUtVJRWn+e+0Ida2JWdBfVLo
-         Gltca1Fo/hKeKgSJuQmoHbEESradXDocew8KI6BoW24+YXMQEtUk5XYq4joZ7sdH2nUX
-         gr9oh/KkTxDhawgVp3E4PG+R9TlitDMbGL/VpH1LrzxTDNmZOh0PDHburrn5tLDWWl/Q
-         CPhz2gvXp1C3jh5DKyAAQvmR8SZRx2SHmt0oR30NAX5T9nEZ6HpbdVcJEm+Glj68y8Ay
-         TAlA==
-X-Gm-Message-State: APjAAAXx7gh9yY38JtDP0iUpJ0ZC/2OaglFtpT5u+whDl3P124Sx/mjQ
-        QHsjI3duMTX8Cmeb4FRaepgYvg==
-X-Google-Smtp-Source: APXvYqwBrVhiEx4l0romklhpTH+y+CgXMko1VU+ZOxfZOJLkAj7ZLDO3KH4v0RJodC8aSrvfaOpG6g==
-X-Received: by 2002:a62:19d1:: with SMTP id 200mr1501438pfz.26.1582679497101;
-        Tue, 25 Feb 2020 17:11:37 -0800 (PST)
-Received: from ?IPv6:240e:362:4c3:8800:a057:bb7f:18d7:2e? ([240e:362:4c3:8800:a057:bb7f:18d7:2e])
-        by smtp.gmail.com with ESMTPSA id z10sm204892pgz.88.2020.02.25.17.11.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 17:11:36 -0800 (PST)
-Subject: Re: [PATCH] MAINTAINERS: add maintainers for uacce
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <1582611475-32691-1-git-send-email-zhangfei.gao@linaro.org>
- <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <0ed68faa-63f1-2bcb-6044-11629a610b9b@linaro.org>
-Date:   Wed, 26 Feb 2020 09:11:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 25 Feb 2020 20:11:57 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id B1ED329F75;
+        Tue, 25 Feb 2020 20:11:53 -0500 (EST)
+Date:   Wed, 26 Feb 2020 12:11:55 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
+In-Reply-To: <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org>
+Message-ID: <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org>
 MIME-Version: 1.0
-In-Reply-To: <b424d911-7293-0048-3270-0f7c1502c928@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 26 Feb 2020, Greg Ungerer wrote:
 
+> Hi Afzal,
+> 
+> On 24/2/20 10:50 am, afzal mohammed wrote:
+> > request_irq() is preferred over setup_irq(). The early boot setup_irq()
+> > invocations happen either via 'init_IRQ()' or 'time_init()', while
+> > memory allocators are ready by 'mm_init()'.
+> > 
+> > Per tglx[1], setup_irq() existed in olden days when allocators were not
+> > ready by the time early interrupts were initialized.
+> > 
+> > Hence replace setup_irq() by request_irq().
+> > 
+> > Seldom remove_irq() usage has been observed coupled with setup_irq(),
+> > wherever that has been found, it too has been replaced by free_irq().
+> > 
+> > [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> > 
+> > Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+> > Tested-by: Greg Ungerer <gerg@linux-m68k.org> # ColdFire
+> > ---
+> > 
+> > v2:
+> >   * Replace pr_err("request_irq() on %s failed" by
+> >             pr_err("%s: request_irq() failed"
+> >   * Commit message massage
+> >   * remove now irrelevant comment lines at 3 places
+> > 
+> >   arch/m68k/68000/timers.c      | 11 ++---------
+> >   arch/m68k/coldfire/pit.c      | 11 ++---------
+> >   arch/m68k/coldfire/sltimers.c | 19 +++++--------------
+> >   arch/m68k/coldfire/timers.c   | 21 +++++----------------
+> >   4 files changed, 14 insertions(+), 48 deletions(-)
+> > 
+> > diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
+> > index 71ddb4c98726..55a76a2d3d58 100644
+> > --- a/arch/m68k/68000/timers.c
+> > +++ b/arch/m68k/68000/timers.c
+> > @@ -68,14 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
+> >     /***************************************************************************/
+> >   -static struct irqaction m68328_timer_irq = {
+> > -	.name	 = "timer",
+> > -	.flags	 = IRQF_TIMER,
+> > -	.handler = hw_tick,
+> > -};
+> > -
+> > 
+> > -/***************************************************************************/
+> > -
+> >   static u64 m68328_read_clk(struct clocksource *cs)
+> >   {
+> >   	unsigned long flags;
+> > @@ -106,7 +98,8 @@ void hw_timer_init(irq_handler_t handler)
+> >   	TCTL = 0;
+> >     	/* set ISR */
+> > -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
+> > +	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
+> > +		pr_err("%s: request_irq() failed\n", "timer");
+> 
+> Why not just:
+> 
+>                 pr_err("timer: request_irq() failed\n");
+> 
 
-On 2020/2/26 上午12:02, Dave Jiang wrote:
->
->
-> On 2/24/20 11:17 PM, Zhangfei Gao wrote:
->> Add Zhangfei Gao and Zhou Wang as maintainers for uacce
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->> ---
->>   MAINTAINERS | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 38fe2f3..22e647f 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -17039,6 +17039,16 @@ W:    http://linuxtv.org
->>   S:    Maintained
->>   F:    drivers/media/pci/tw686x/
->>   +UACCE ACCELERATOR FRAMEWORK
->> +M:    Zhangfei Gao <zhangfei.gao@linaro.org>
->> +M:    Zhou Wang <wangzhou1@hisilicon.com>
->> +S:    Maintained
->> +F:    Documentation/ABI/testing/sysfs-driver-uacce
->> +F:    Documentation/misc-devices/uacce.rst
->> +F:    drivers/misc/uacce/
->> +F:    include/linux/uacce.h
->> +F:    include/uapi/misc/uacce/
->
-> Mailing list for patch submission?
-> +L: linux-accelerators@lists.ozlabs.org ?
+I believe that the compiler would coalesce the two "timer" string 
+constants in the patch from Afzal (as per my suggestion).
 
-Thanks Dave
+I suspect that your version costs a few extra bytes everywhere it appears 
+(but I didn't check).
 
-How about adding both
-linux-accelerators@lists.ozlabs.org
-linux-kernel@vger.kernel.org
-Since the patches will go to misc tree.
+> And maybe would it be useful to print out the error return code from a 
+> failed request_irq()?  What about displaying the requested IRQ number as 
+> well? Just a thought.
+> 
 
-Thanks
+That error would almost always be -EBUSY, right?
+
+Moreover, compare this change,
+
+-	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
++	request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
+
+with this change,
+
++	int err;
+
+-	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
++	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
++	if (err)
++		return err;
+
+Isn't the latter change the more common pattern? It prints nothing.
+
+And arguably, the former example is actually the change that's described 
+in the commit description.
+
+This patch seems to be making two orthogonal changes but I'll leave that 
+question to the maintainer. (I'm not really trying to NAK this patch.)
