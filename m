@@ -2,97 +2,136 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3E8C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB5CC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07C121927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1646821927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582720779;
+	bh=yLmb625dnwqzKsVcikhQupZPiCcDrP5qDwyZJQNg8fU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RxzdSqHnvpTVXeiALeinQ4t1Bd2OL7eS7Z4303UxeC0iKzvTOvx//54rapcLWfRUF
+	 ePE189TY6RcSrM5FsvdHqMtvyfRYpY4tjo7Qb9ra99DMPis6mi6AhTP8xYZgx8xxpT
+	 fIlIyGBjfbLVSitw9hA22djIL7TBflcZHOrkbisA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgBZMhn (ORCPT
+        id S1726969AbgBZMjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:37:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:57738 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBZMhn (ORCPT
+        Wed, 26 Feb 2020 07:39:37 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:48067 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgBZMjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:37:43 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6vwY-0006sw-TO; Wed, 26 Feb 2020 13:37:39 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5674E1C201B;
-        Wed, 26 Feb 2020 13:37:38 +0100 (CET)
-Date:   Wed, 26 Feb 2020 12:37:38 -0000
-From:   "tip-bot2 for Anders Roxell" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] x86/Kconfig: Make CMDLINE_OVERRIDE depend on
- non-empty CMDLINE
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200124114615.11577-1-anders.roxell@linaro.org>
-References: <20200124114615.11577-1-anders.roxell@linaro.org>
+        Wed, 26 Feb 2020 07:39:37 -0500
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 01QCdFhx001003;
+        Wed, 26 Feb 2020 21:39:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01QCdFhx001003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582720756;
+        bh=z6qp7SEaSbOA0Cr/WUj8Kq3ma/bqB52FhxOA8N293hg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UTNmXnIoVw0zKlH35ac1AIuhM9nDCyqAadFsqaBJaSvtxQ+MhXRHLppb0g8gmVE0W
+         OsJok6c7h0dd8lyuj24KrPnPITlPerl8vGIGBed7ilmJfbp1mBd+gVO2b3pxBwn61c
+         VSqLzq9SC/2QU0ib87HT/sXEnDVqpKucTNPyv4jnWnj8GDTN8Mr3G258r8t/ZhbCLs
+         DPeWshMZaEzWdEVhOneC5jE0D1BwJk9paQrN1W4pUoJgtykLmpECHol6yMkrtbQZD5
+         V8G8U3ivRTxBePqyoSCBQzqPawo22dm9/LeB5/Nwc5a4jo6m/9TGpBArL9MP8l4kGE
+         NpVmLsQeSTjCw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id y3so911735uae.3;
+        Wed, 26 Feb 2020 04:39:16 -0800 (PST)
+X-Gm-Message-State: APjAAAWSbFp50xKIqlJav4m8KZH5DdeO9YG3uGXpkvvBAuzzuRIkm9ik
+        gc1Be6126Jr8T2jFt3xqn9jhq5iBopK7XeahtZQ=
+X-Google-Smtp-Source: APXvYqyf9xqtC1rv/ZiPRIgGKk1y4cOS41DEgTedKfb27rQDtc9qYO2Orrdk943ow2DQykNU60ao4BFPsyEk9B7aS1g=
+X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr3785026uay.25.1582720755290;
+ Wed, 26 Feb 2020 04:39:15 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158272065802.28353.14643125310636078839.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200224174129.2664-1-ndesaulniers@google.com>
+ <20200225210250.64366-1-ndesaulniers@google.com> <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+ <CA+icZUWcW3+9QdZcACCXP6Yun__Sm_s4+qM4rALdFf=hGBt3FQ@mail.gmail.com>
+In-Reply-To: <CA+icZUWcW3+9QdZcACCXP6Yun__Sm_s4+qM4rALdFf=hGBt3FQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 26 Feb 2020 21:38:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQX0nFWruCgHDEkZsTKT895ahrAVQT12wuJQ_dUQtVrsg@mail.gmail.com>
+Message-ID: <CAK7LNAQX0nFWruCgHDEkZsTKT895ahrAVQT12wuJQ_dUQtVrsg@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/build branch of tip:
+On Wed, Feb 26, 2020 at 9:26 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Wed, Feb 26, 2020 at 12:31 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi.
+> >
+> >
+> > On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > Added to kbuild documentation. Provides more official info on building
+> > > kernels with Clang and LLVM than our wiki.
+> > >
+> > > Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > ---
+> > > Changes V1 -> V2:
+> > > * s/On going/ongoing/
+> > > * add Randy's Suggested-by
+> >
+> >
+> > I do not understand this tag update.
+> >
+> > As far as I saw the review process,
+> > I do not think Randy deserves to have Suggested-by
+> > because he just pointed out a typo (on going -> ongoing) :
+> > https://patchwork.kernel.org/patch/11401189/#23179575
+> >
+> > (or, was there off-line activity I had missed?)
+> >
+>
+> Hi Masahiro,
+>
+> I got some credits from Nick for a review by seeing a typo - not on a
+> review of the code - and H. Peter Anvin asked why.
+>
+> I am not sure what is here the correct credit to give.
+> Depends a "Reviewed-by" and/or "Suggested-by" on a technical review?
 
-Commit-ID:     645e64662af4dba9eb4a80bbab2663dd22018312
-Gitweb:        https://git.kernel.org/tip/645e64662af4dba9eb4a80bbab2663dd22018312
-Author:        Anders Roxell <anders.roxell@linaro.org>
-AuthorDate:    Fri, 24 Jan 2020 12:46:15 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 26 Feb 2020 13:31:46 +01:00
 
-x86/Kconfig: Make CMDLINE_OVERRIDE depend on non-empty CMDLINE
 
-When trying to boot an allmodconfig kernel that is built with
-KCONFIG_ALLCONFIG=$(pwd)/arch/x86/configs/x86_64_defconfig, it doesn't
-boot since CONFIG_CMDLINE_OVERRIDE gets enabled and that requires the
-user to pass the full cmdline to CONFIG_CMDLINE.
+Documentation/process/submitting-patches.rst
 
-Change so that CONFIG_CMDLINE_OVERRIDE gets set only if CONFIG_CMDLINE
-is set to something except an empty string.
+  13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
 
- [ bp: touchup. ]
+is a helpful guideline.
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200124114615.11577-1-anders.roxell@linaro.org
----
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea770..b414192 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2418,7 +2418,7 @@ config CMDLINE
- 
- config CMDLINE_OVERRIDE
- 	bool "Built-in command line overrides boot loader arguments"
--	depends on CMDLINE_BOOL
-+	depends on CMDLINE_BOOL && CMDLINE != ""
- 	---help---
- 	  Set this option to 'Y' to have the kernel ignore the boot loader
- 	  command line, and use ONLY the built-in command line.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
