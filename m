@@ -2,188 +2,96 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69F5C4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F304AC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F34D222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582690806;
-	bh=wa0ljoR4VKK7AhtcPWEwY9ai7AZZg6kuy4bimaFCvDw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UmtMVszcUvBj9M81GzxZhvGU/e+MKaymuZAWRKrPmV0bE3UbTM4PzkKw6iqkz9fHf
-	 PwHXI8mE8xLpishyPBfjADv68ygVLSZLEJKmQ3Um1HB1QrkKJGix//bUke4jqXXw9G
-	 COoIjlnRDDpaFVL7hNc7fZkJOhWSX5GAqolYTFo4=
+	by mail.kernel.org (Postfix) with ESMTP id C6B1221D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="W4ZcjTIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgBZESl (ORCPT
+        id S1726661AbgBZEUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 23:18:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgBZESl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 23:18:41 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 452A821D7E;
-        Wed, 26 Feb 2020 04:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582690720;
-        bh=wa0ljoR4VKK7AhtcPWEwY9ai7AZZg6kuy4bimaFCvDw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=XFhFqlnat9Kma6j8YRzZQIF0YpG7+omQM53gZLnZfyg78icJvpZ5C+WNFlVBzMT6F
-         9rAsvD2Kg9A8fFNOxP961HwP/PVlAAMMt24Wq9nFeLo6eqqEQNV1p76pwG1DhndQf2
-         554I/BZFHVYB0HG7LWVvORTkZF08qm9zs/+9hex0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8586635226CF; Tue, 25 Feb 2020 20:18:39 -0800 (PST)
-Date:   Tue, 25 Feb 2020 20:18:39 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        "# 5 . 5 . x" <stable@vger.kernel.org>
-Subject: Re: [PATCH tip/core/rcu 30/30] rcu: Make rcu_barrier() account for
- offline no-CBs CPUs
-Message-ID: <20200226041839.GA13200@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
- <20200214235607.13749-30-paulmck@kernel.org>
- <20200225102436.GF110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200226031455.GZ2935@paulmck-ThinkPad-P72>
+        Tue, 25 Feb 2020 23:20:18 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:18831 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgBZEUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 23:20:17 -0500
+X-UUID: ccb90562774a4957965dd6b0554db47b-20200226
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=u2ArnXEG5GlsbquUkMe3Hv7WnxknMQJct50ufoK4Bzk=;
+        b=W4ZcjTIpIOuv27uaZDxf7RgFFDqU5JjZfVXZCnuaL6E1UkDca92Ob2ImU/5rVd5H+nyL9ceTSItGlu9yhdxDNeoq/QempOEi6ZULBSKwvSb44ac28m2Ghvhy4ngaskCg6M4EdH1QedBOtIvfyYBFRG/iV+GiIaZsx/HZwPzxB2Q=;
+X-UUID: ccb90562774a4957965dd6b0554db47b-20200226
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 358245205; Wed, 26 Feb 2020 12:19:56 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 26 Feb
+ 2020 12:18:38 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 26 Feb 2020 12:18:31 +0800
+Message-ID: <1582690790.6276.19.camel@mhfsdcap03>
+Subject: Re: [PATCH] mediatek: move MT8173 VPU FW to subfolder
+From:   gtk_ruiwang <gtk_ruiwang@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+List-Id: <linux-firmware.lore.kernel.org>
+CC:     <linux-firmware@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, Tomasz Figa <tfiga@chromium.org>,
+        <PoChun.Lin@mediatek.com>,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>
+Date:   Wed, 26 Feb 2020 12:19:50 +0800
+In-Reply-To: <CAPBb6MWN6bXfYvpBJ6XyPCuvJSpdxNOf4Z9RbY0jbnB5=JX_sQ@mail.gmail.com>
+References: <20200226033646.20949-1-gtk_ruiwang@mediatek.com>
+         <20200226033646.20949-2-gtk_ruiwang@mediatek.com>
+         <CAPBb6MWN6bXfYvpBJ6XyPCuvJSpdxNOf4Z9RbY0jbnB5=JX_sQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226031455.GZ2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-SNTS-SMTP: D348BF505CE6650B3B5516AF264460E956BF2F030360665364A932DB0EF629EA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 07:14:55PM -0800, Paul E. McKenney wrote:
-> On Tue, Feb 25, 2020 at 06:24:36PM +0800, Boqun Feng wrote:
-> > Hi Paul,
-> > 
-> > On Fri, Feb 14, 2020 at 03:56:07PM -0800, paulmck@kernel.org wrote:
-> > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > 
-> > > Currently, rcu_barrier() ignores offline CPUs,  However, it is possible
-> > > for an offline no-CBs CPU to have callbacks queued, and rcu_barrier()
-> > > must wait for those callbacks.  This commit therefore makes rcu_barrier()
-> > > directly invoke the rcu_barrier_func() with interrupts disabled for such
-> > > CPUs.  This requires passing the CPU number into this function so that
-> > > it can entrain the rcu_barrier() callback onto the correct CPU's callback
-> > > list, given that the code must instead execute on the current CPU.
-> > > 
-> > > While in the area, this commit fixes a bug where the first CPU's callback
-> > > might have been invoked before rcu_segcblist_entrain() returned, which
-> > > would also result in an early wakeup.
-> > > 
-> > > Fixes: 5d6742b37727 ("rcu/nocb: Use rcu_segcblist for no-CBs CPUs")
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > Cc: <stable@vger.kernel.org> # 5.5.x
-> > > ---
-> > >  include/trace/events/rcu.h |  1 +
-> > >  kernel/rcu/tree.c          | 32 ++++++++++++++++++++------------
-> > >  2 files changed, 21 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-> > > index 5e49b06..d56d54c 100644
-> > > --- a/include/trace/events/rcu.h
-> > > +++ b/include/trace/events/rcu.h
-> > > @@ -712,6 +712,7 @@ TRACE_EVENT_RCU(rcu_torture_read,
-> > >   *	"Begin": rcu_barrier() started.
-> > >   *	"EarlyExit": rcu_barrier() piggybacked, thus early exit.
-> > >   *	"Inc1": rcu_barrier() piggyback check counter incremented.
-> > > + *	"OfflineNoCBQ": rcu_barrier() found offline no-CBs CPU with callbacks.
-> > >   *	"OnlineQ": rcu_barrier() found online CPU with callbacks.
-> > >   *	"OnlineNQ": rcu_barrier() found online CPU, no callbacks.
-> > >   *	"IRQ": An rcu_barrier_callback() callback posted on remote CPU.
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index d15041f..160643e 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -3098,9 +3098,10 @@ static void rcu_barrier_callback(struct rcu_head *rhp)
-> > >  /*
-> > >   * Called with preemption disabled, and from cross-cpu IRQ context.
-> > >   */
-> > > -static void rcu_barrier_func(void *unused)
-> > > +static void rcu_barrier_func(void *cpu_in)
-> > >  {
-> > > -	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-> > > +	uintptr_t cpu = (uintptr_t)cpu_in;
-> > > +	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> > >  
-> > >  	rcu_barrier_trace(TPS("IRQ"), -1, rcu_state.barrier_sequence);
-> > >  	rdp->barrier_head.func = rcu_barrier_callback;
-> > > @@ -3127,7 +3128,7 @@ static void rcu_barrier_func(void *unused)
-> > >   */
-> > >  void rcu_barrier(void)
-> > >  {
-> > > -	int cpu;
-> > > +	uintptr_t cpu;
-> > >  	struct rcu_data *rdp;
-> > >  	unsigned long s = rcu_seq_snap(&rcu_state.barrier_sequence);
-> > >  
-> > > @@ -3150,13 +3151,14 @@ void rcu_barrier(void)
-> > >  	rcu_barrier_trace(TPS("Inc1"), -1, rcu_state.barrier_sequence);
-> > >  
-> > >  	/*
-> > > -	 * Initialize the count to one rather than to zero in order to
-> > > -	 * avoid a too-soon return to zero in case of a short grace period
-> > > -	 * (or preemption of this task).  Exclude CPU-hotplug operations
-> > > -	 * to ensure that no offline CPU has callbacks queued.
-> > > +	 * Initialize the count to two rather than to zero in order
-> > > +	 * to avoid a too-soon return to zero in case of an immediate
-> > > +	 * invocation of the just-enqueued callback (or preemption of
-> > > +	 * this task).  Exclude CPU-hotplug operations to ensure that no
-> > > +	 * offline non-offloaded CPU has callbacks queued.
-> > >  	 */
-> > >  	init_completion(&rcu_state.barrier_completion);
-> > > -	atomic_set(&rcu_state.barrier_cpu_count, 1);
-> > > +	atomic_set(&rcu_state.barrier_cpu_count, 2);
-> > >  	get_online_cpus();
-> > >  
-> > >  	/*
-> > > @@ -3166,13 +3168,19 @@ void rcu_barrier(void)
-> > >  	 */
-> > >  	for_each_possible_cpu(cpu) {
-> > >  		rdp = per_cpu_ptr(&rcu_data, cpu);
-> > > -		if (!cpu_online(cpu) &&
-> > > +		if (cpu_is_offline(cpu) &&
-> > >  		    !rcu_segcblist_is_offloaded(&rdp->cblist))
-> > >  			continue;
-> > > -		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
-> > > +		if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_online(cpu)) {
-> > >  			rcu_barrier_trace(TPS("OnlineQ"), cpu,
-> > >  					  rcu_state.barrier_sequence);
-> > > -			smp_call_function_single(cpu, rcu_barrier_func, NULL, 1);
-> > > +			smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
-> > > +		} else if (cpu_is_offline(cpu)) {
-> > 
-> > I wonder whether this should be:
-> > 
-> > 		  else if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_is_offline(cpu))
-> > 
-> > ? Because I think we only want to queue the barrier call back if there
-> > are callbacks for a particular CPU. Am I missing something subtle?
-> 
-> I don't believe that you are missing anything at all!
-> 
-> Thank you very much -- this bug would not have shown up in any validation
-> setup that I am aware of.  ;-)
+RGVhciBBbGV4LA0KDQpEbyB5b3UgbWVhbiB0byBjcmVhdGUgdHdvIHN5bWJvbGljIGxpbms/DQoN
+Cmxyd3hyd3hyd3ggIDEgZ3RrX3J1aXdhbmcgZ3RrX3J1aXdhbmcgICAgICAyNSBGZWIgMjYgMTE6
+NTIgdnB1X2QuYmluIC0+DQptZWRpYXRlay9tdDgxNzMvdnB1X2QuYmluDQpscnd4cnd4cnd4ICAx
+IGd0a19ydWl3YW5nIGd0a19ydWl3YW5nICAgICAgMjUgRmViIDI2IDExOjUyIHZwdV9wLmJpbiAt
+Pg0KbWVkaWF0ZWsvbXQ4MTczL3ZwdV9wLmJpbg0KDQp3ZSBjcmVhdGUgdGhlbSBhdCB0aGUgbGlu
+dXgtZmlybXdhcmUgcm9vdCBmb2xkZXIuDQoNClRoYW5rcw0KQmVzdCBSZWdhcmRzDQoNCk9uIFdl
+ZCwgMjAyMC0wMi0yNiBhdCAxMjo0MSArMDkwMCwgQWxleGFuZHJlIENvdXJib3Qgd3JvdGU6DQo+
+IE9uIFdlZCwgRmViIDI2LCAyMDIwIGF0IDEyOjM4IFBNIDxndGtfcnVpd2FuZ0BtZWRpYXRlay5j
+b20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlh
+dGVrLmNvbT4NCj4gPg0KPiA+IEN1cnJlbnRseSB2cHVfZC5iaW4gYW5kIHZwdV9wLmJpbiBhcmUg
+YXQgdGhlIHJvb3Qgb2YNCj4gPiBsaW51eC1maXJtd2FyZSBnaXQgdHJlZSwgaXQncyBub3QgYXBw
+cm9wcmlhdGUgc28gd2UgbW92ZQ0KPiA+IHRoZW0gdG8gc3ViZm9sZGVyIG1lZGlhdGVrL210ODE3
+Mw0KPiA+DQo+ID4gUmVsZWFzZSBWZXJzaW9uOiAxLjEuNA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogUnVpIFdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgdnB1
+X2QuYmluID0+IG1lZGlhdGVrL210ODE3My92cHVfZC5iaW4gfCBCaW4NCj4gPiAgdnB1X3AuYmlu
+ID0+IG1lZGlhdGVrL210ODE3My92cHVfcC5iaW4gfCBCaW4NCj4gPiAgMiBmaWxlcyBjaGFuZ2Vk
+LCAwIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4gIHJlbmFtZSB2cHVfZC5iaW4g
+PT4gbWVkaWF0ZWsvbXQ4MTczL3ZwdV9kLmJpbiAoMTAwJSkNCj4gPiAgcmVuYW1lIHZwdV9wLmJp
+biA9PiBtZWRpYXRlay9tdDgxNzMvdnB1X3AuYmluICgxMDAlKQ0KPiANCj4gVGhpcyBpcyBuaWNl
+IGFzIGl0IHJlbW92ZXMgc29tZSBzdHVmZiBmcm9tIHRoZSByb290LCBidXQgZm9yDQo+IGNvbXBh
+dGliaWxpdHkgd2l0aCBvbGRlciBrZXJuZWxzIHRoYXQgZG9uJ3Qga25vdyBhYm91dCB0aGUgbmV3
+IHBhdGgNCj4gc2hvdWxkbid0IHdlIGF0IGxlYXN0IHRlbXBvcmFyaWx5IGNyZWF0ZSBhIHN5bWJv
+bGljIGxpbmsgYmV0d2VlbiB0aGUNCj4gb2xkIGxvY2F0aW9uIGFuZCB0aGUgbmV3IG9uZT8NCg0K
 
-And with additional adjustment to make tracing accurate.
-
-							Thanx, Paul
