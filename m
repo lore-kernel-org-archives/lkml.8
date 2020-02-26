@@ -2,137 +2,351 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20528C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6825EC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AA920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:22:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dsitri.de header.i=@dsitri.de header.b="KiR0lpv5"
+	by mail.kernel.org (Postfix) with ESMTP id 34EC720838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgBZMWD (ORCPT
+        id S1727341AbgBZMXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:22:03 -0500
-Received: from mo4-p05-ob.smtp.rzone.de ([85.215.255.132]:22321 "EHLO
-        mo4-p05-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgBZMWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:22:03 -0500
-X-Greylist: delayed 709 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Feb 2020 07:22:02 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582719721;
-        s=strato-dkim-0002; d=dsitri.de;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=vDoUQW8f00C/Wg/EJeX1UisXIv2pOpI4xutNj0UlVGo=;
-        b=KiR0lpv5XSp8+8lDVJXatTvrPlNAtFcM3yQ/BfimH6gnR+EdmTBK6v+kxF3/VdN4bw
-        LKibEP3+PHUk5kWoN89/SVqq+tKfgz6u5QynpD5TnK7+8wOKq0TqdK9zFOjvtHW33GXT
-        sjt0WeIjJ+HbQ1ahHIC/DBaW+ZwQWSpJRykwgT06jdhWXkjkWIeIz0JO+8m5kOEUD4M3
-        jXGrYWgvxWNUPJcATCXrLaKsiPSMUIoX7NXYiBD4kgy4xfrN2kVD3NgphiBFY8hABYFB
-        aGPIBYi9m9easfPOzCBPYccKvygrlXcXIIUxMjSqJwM4nkDhSuj8zOshGTB+h6Ww5P1n
-        IoYw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAjw43pUzk="
-X-RZG-CLASS-ID: mo05
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QC9x4Ut
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 26 Feb 2020 13:09:59 +0100 (CET)
-Subject: Re: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Wed, 26 Feb 2020 07:23:00 -0500
+Received: from mga01.intel.com ([192.55.52.88]:8655 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727175AbgBZMXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 07:23:00 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 04:22:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="350378972"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 26 Feb 2020 04:22:53 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 26 Feb 2020 14:22:53 +0200
+Date:   Wed, 26 Feb 2020 14:22:53 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 18/19] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200226122253.GP2667@lahna.fi.intel.com>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+ <20200217131446.32818-19-mika.westerberg@linux.intel.com>
+ <20200226084749.GA3494@dell>
+ <20200226103355.GO2667@lahna.fi.intel.com>
+ <20200226112324.GL3494@dell>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@computer.org>
-In-Reply-To: <20191220122416.31881-1-andreas@kemnade.info>
-Date:   Wed, 26 Feb 2020 13:09:58 +0100
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6FE7F4B7-7D81-4005-A765-2B447B757B53@computer.org>
-References: <20191220122416.31881-1-andreas@kemnade.info>
-To:     lee.jones@linaro.org
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20200226112324.GL3494@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Feb 26, 2020 at 11:23:24AM +0000, Lee Jones wrote:
+> On Wed, 26 Feb 2020, Mika Westerberg wrote:
+> 
+> > On Wed, Feb 26, 2020 at 08:47:49AM +0000, Lee Jones wrote:
+> > > On Mon, 17 Feb 2020, Mika Westerberg wrote:
+> > > 
+> > > > This driver only creates a bunch of platform devices sharing resources
+> > > > belonging to the PMC device. This is pretty much what MFD subsystem is
+> > > > for so move the driver there, renaming it to intel_pmc_bxt.c which
+> > > > should be more clear what it is.
+> > > > 
+> > > > MFD subsystem provides nice helper APIs for subdevice creation so
+> > > > convert the driver to use those. Unfortunately the ACPI device includes
+> > > > separate resources for most of the subdevices so we cannot simply call
+> > > > mfd_add_devices() to create all of them but instead we need to call it
+> > > > separately for each device.
+> > > > 
+> > > > The new MFD driver continues to expose two sysfs attributes that allow
+> > > > userspace to send IPC commands to the PMC/SCU to avoid breaking any
+> > > > existing applications that may use these. Generally this is bad idea so
+> > > > document this in the ABI documentation.
+> > > > 
+> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > ---
+> > > >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
+> > > >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
+> > > >  arch/x86/include/asm/intel_telemetry.h        |   1 +
+> > > >  drivers/mfd/Kconfig                           |  16 +-
+> > > >  drivers/mfd/Makefile                          |   1 +
+> > > >  drivers/mfd/intel_pmc_bxt.c                   | 489 +++++++++++++
+> > > >  drivers/platform/x86/Kconfig                  |  16 +-
+> > > >  drivers/platform/x86/Makefile                 |   1 -
+> > > >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
+> > > >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
+> > > >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
+> > > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+> > > >  include/linux/mfd/intel_pmc_bxt.h             |  21 +
+> > > >  13 files changed, 565 insertions(+), 710 deletions(-)
+> > > >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
+> > > >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+> > > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+> > > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+> > > >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
+> > > 
+> > > [...]
+> 
+> [...]
+> 
+> > > > +struct intel_pmc_dev {
+> > > > +	struct device *dev;
+> > > > +	struct intel_scu_ipc_dev *scu;
+> > > > +
+> > > > +	struct mfd_cell cells[PMC_TELEM + 1];
+> > > 
+> > > Nicer to add a "PMC_DEVICE_MAX" enum and use that.
+> > > 
+> > > Why do these even need to be in here?
+> > 
+> > They need to be here because we need to fill them in dynamically based
+> > on the resources we get from the ACPI device.
+> 
+> Why can't you do that with statically defined structs?
+> 
+> HINT: You can.
 
-> Am 20.12.2019 um 13:24 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> In the variant RC5T619 the mfd has an RTC. This patchset adds
-> support for it. To do so it adds the missing register defines in=20
-> rn5t618.h and general irq handling for that.
-> It seems that the irq definitions are the same except missing RTC
-> but due to missing ability to test that I do not add them here.
->=20
-> The rtc driver itself is based on=20
-> =
-https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kerne=
-l.tar.bz2
-> but heavily reworked.
->=20
-> It was tested on the Kobo Clara HD.
->=20
-> For cleaning up there is a separate off-topic patch:
-> mfd: rn5t618: cleanup i2c_device_id
->=20
-> Changes in v5:
-> - static rn5t618_irq_init
-> - PLATFORM_DEVID_NONE
-> - added some Acked-Bys
->=20
-> Changes in v4:
-> - use macros for IRQ definitions
-> - merge rn5t618-core.c and rn5t618-irq.c
->=20
-> Changes in v3:
-> - alignment cleanup
-> - output cleanup, remove useless toggling of alarm flag in rtc probe
-> - updated bindings description, so patch 1/5 becomes 2/6 and so on
->=20
-> Changes in v2:
-> - no dead code in irq code
-> - various improvements and cleanups in rtc driver itself
->=20
-> Andreas Kemnade (5):
->  dt-bindings: mfd: rn5t618: Document optional property interrupts
->  mfd: rn5t618: add IRQ support
->  mfd: rn5t618: add RTC related registers
->  mfd: rn5t618: add more subdevices
->  rtc: rc5t619: add ricoh rc5t619 RTC driver
+Well if I did that then there are two issues I see. First is that if
+there will be another PMC device in the future, we could not cope with
+that because the first device that is probed will fill those cells with
+its information.
 
-what has happened to this series?
-It looks like something got lost so that it has not yet arrived in =
-linux-next.
+Second is that if we ignore the possibility of multiple devices then we
+still end up filling the module wide cells with the resources which does
+not seem right to me because we have a intel_pmc_dev instance
+separately.
 
-BR and thanks,
-Nikolaus Schaller
+So we can't really use the "standard" MFD way here where we have static
+const cells (module wide) that we pass to the MFD core with base address
+because the resources in the ACPI device (that the driver binds to) are
+not organized like that. The resources are pretty much arbitrary.
 
->=20
-> Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
-> drivers/mfd/Kconfig                               |   1 +
-> drivers/mfd/rn5t618.c                             | 109 +++++-
-> drivers/rtc/Kconfig                               |  10 +
-> drivers/rtc/Makefile                              |   1 +
-> drivers/rtc/rtc-rc5t619.c                         | 444 =
-++++++++++++++++++++++
-> include/linux/mfd/rn5t618.h                       |  26 ++
-> 7 files changed, 593 insertions(+), 2 deletions(-)
-> create mode 100644 drivers/rtc/rtc-rc5t619.c
->=20
-> --=20
-> 2.11.0
+> > > I would normally suggest creating a cell per device.
+> > 
+> > You mean 
+> > 
+> > struct intel_pmc_dev {
+> > 	...
+> > 	struct mfd_cell tco_cell;
+> > 	struct mfd_cell punit_cell;
+> > 	...
+> > 
+> > right? Sure no problem.
+> 
+> No.  We don't usually put them in device data at all.
+> 
+> I mean:
+> 
+> static struct mfd_cell tco_cell[] = {
+>         {      }
+> };
+> 
+> static struct mfd_cell tco_cell[] = {
+>         {      }
+> };
 
+OK, then my above comment hopefully explains why I can't do that.
+
+> [...]
+> 
+> > > > +static const struct mfd_cell tco = {
+> > > > +	.name = TCO_DEVICE_NAME,
+> > > 
+> > > Use proper string please.
+> > > 
+> > > > +	.ignore_resource_conflicts = true,
+> > > 
+> > > Why not add tco_pdata here?
+> > 
+> > Because we need to pass it the private PMC pointer that is filled later
+> > on. It is being used by the iTCO_wdt .update_no_reboot_bit() callback as
+> > its private data.
+> 
+> Just drop the const.
+
+But again we have the same issue here. So what we have is:
+
+  - module wide resources (the cell templates)
+  - per PMC instance resources created when the driver is probed against
+    the ACPI device.
+
+I don't think it is good idea to put the latter to the former because of
+the reasons I exlain above.
+
+If this would have something like single MMIO register that is split for
+the child-devices this would work fine but in this case it unfortunately
+does not. Well unless I'm missing something ;-)
+
+> > > > +};
+> > > > +
+> > > > +static const struct resource telem_res[] = {
+> > > > +	DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> > > > +	DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> > > > +};
+> > > > +
+> > > > +static const struct mfd_cell telem = {
+> > > > +	.name = TELEMETRY_DEVICE_NAME,
+> > > 
+> > > Use proper string please.
+> > 
+> > Okay.
+> > 
+> > > > +	.resources = telem_res,
+> > > > +	.num_resources = ARRAY_SIZE(telem_res),
+> > > > +};
+> > > > +
+> > > > +static int intel_pmc_get_tco_resources(struct platform_device *pdev,
+> > > > +				       struct intel_pmc_dev *pmc)
+> > > > +{
+> > > > +	struct itco_wdt_platform_data *pdata;
+> > > > +	struct resource *res, *tco_res;
+> > > > +
+> > > > +	if (acpi_has_watchdog())
+> > > > +		return 0;
+> > > > +
+> > > > +	res = platform_get_resource(pdev, IORESOURCE_IO,
+> > > > +				    PLAT_RESOURCE_ACPI_IO_INDEX);
+> > > > +	if (!res) {
+> > > > +		dev_err(&pdev->dev, "Failed to get IO resource\n");
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	tco_res = devm_kcalloc(&pdev->dev, 2, sizeof(*tco_res), GFP_KERNEL);
+> > > > +	if (!tco_res)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	tco_res[0].flags = IORESOURCE_IO;
+> > > > +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
+> > > > +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
+> > > > +	tco_res[1].flags = IORESOURCE_IO;
+> > > > +	tco_res[1].start = res->start + SMI_EN_OFFSET;
+> > > > +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
+> > > > +
+> > > > +	pmc->cells[PMC_TCO].resources = tco_res;
+> > > > +	pmc->cells[PMC_TCO].num_resources = 2;
+> > > > +
+> > > > +	pdata = devm_kmemdup(&pdev->dev, &tco_pdata, sizeof(*pdata), GFP_KERNEL);
+> > > > +	if (!pdata)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	pdata->no_reboot_priv = pmc;
+> > > 
+> > > This looks hacky.  What are you doing here?
+> > 
+> > So the pmc instance is created per device as you requested. This one
+> > passes it to the iTCO_wdt .update_no_reboot_bit() callback which we
+> > implemented in this driver (sane name update_no_reboot_bit()).
+> > 
+> > The iTCO_wdt platform data can be found in this header if you want to
+> > take a look: include/linux/platform_data/itco_wdt.h.
+> 
+> We usually pass these kinds of pointers via device data, rather than
+> platform data.
+
+I know but this is already existing iTCO_wdt interface that I'm using.
+Not created by this patch series.
+
+> > > > +	pmc->cells[PMC_TCO].platform_data = pdata;
+> > > > +	pmc->cells[PMC_TCO].pdata_size = sizeof(*pdata);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int intel_pmc_get_resources(struct platform_device *pdev,
+> > > > +				   struct intel_pmc_dev *pmc,
+> > > > +				   struct intel_scu_ipc_pdata *pdata)
+> > > > +{
+> > > > +	struct resource *res, *punit_res;
+> > > > +	struct resource gcr_res;
+> > > > +	size_t npunit_res = 0;
+> > > > +	int ret;
+> > > > +
+> > > > +	pdata->irq = platform_get_irq_optional(pdev, 0);
+> > > > +
+> > > > +	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> > > > +				    PLAT_RESOURCE_IPC_INDEX);
+> > > > +	if (!res) {
+> > > > +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	/* IPC registers */
+> > > > +	pdata->mem.flags = res->flags;
+> > > > +	pdata->mem.start = res->start;
+> > > > +	pdata->mem.end = res->start + PLAT_RESOURCE_IPC_SIZE - 1;
+> > > 
+> > > Passing register addresses through pdata also looks like a hack.
+> > > 
+> > > Why not pass via resources?
+> > 
+> > It is not actual "platform data" but just a structure that we pass for
+> > the IPC registration function that then creates the underlying device
+> > for the SCU IPC using these. Since it is plain device (not struct
+> > platform device) it does not have the concept of "resources" such as
+> > platform devices have.
+> 
+> Calling something platform data that isn't platform data is confusing.
+> 
+> Why aren't you using the standard device driver model to register this
+> device?
+
+Well I think I am. It is now registered the same way as you would
+register say, an input device (you don't really have drivers binding for
+anything you register with input_register_device()). It even registers a
+new class of devices as discussed previously.
+
+> [...]
+> 
+> > > > diff --git a/include/linux/mfd/intel_pmc_bxt.h b/include/linux/mfd/intel_pmc_bxt.h
+> > > > new file mode 100644
+> > > > index 000000000000..a5fb41910d78
+> > > > --- /dev/null
+> > > > +++ b/include/linux/mfd/intel_pmc_bxt.h
+> > > > @@ -0,0 +1,21 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +#ifndef MFD_INTEL_PMC_BXT_H
+> > > > +#define MFD_INTEL_PMC_BXT_H
+> > > > +
+> > > > +#include <linux/types.h>
+> > > > +
+> > > > +/* GCR reg offsets from GCR base */
+> > > > +#define PMC_GCR_PMC_CFG_REG		0x08
+> > > > +#define PMC_GCR_TELEM_DEEP_S0IX_REG	0x78
+> > > > +#define PMC_GCR_TELEM_SHLW_S0IX_REG	0x80
+> > > > +
+> > > > +/*
+> > > > + * Pointer to the PMC device can be obtained by calling
+> > > > + * dev_get_drvdata() to the parent MFD device.
+> > > > + */
+> > > > +struct intel_pmc_dev;
+> > > 
+> > > Don't you have a shared header file you can put the definition in
+> > > instead?
+> > 
+> > Unfortunately no. This one is the shared header.
+> 
+> Please consider moving the definition into here then.
+
+Okay.
