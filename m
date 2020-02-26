@@ -2,149 +2,135 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01FBC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A38C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF55821D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8A421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:24:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T2aefcdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgBZPXf (ORCPT
+        id S1728079AbgBZPYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:23:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59945 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728147AbgBZPXd (ORCPT
+        Wed, 26 Feb 2020 10:24:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22656 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727670AbgBZPYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:23:33 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j6yX6-0005yp-Nr; Wed, 26 Feb 2020 16:23:32 +0100
-Message-ID: <00f1dd2c9cbf4b8b0569a19c37b092d2a83668c1.camel@pengutronix.de>
-Subject: Re: [PATCH v2 1/6] drm/etnaviv: update hardware headers from rnndb
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Wed, 26 Feb 2020 10:24:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582730690;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=h+QkqnbU1iFIPyAtAgMG3gn/Nhb4l1LvHJ8Yic656iE=;
+        b=T2aefcdGrIbgqajzUU+hdIDsRg6PaT8mF5KvDpJeyf9sc4uPpyO26eUgEvl95F9vqFLaFN
+        TDJBblqV9Vv2ZY+qpvq7lH9csr9nX65IvnnJK12acOQpTTCsLBJTAAvIwD2Nfc6xzb/r3m
+        RydPZssMSr5fUvIuxHPq7zpuITQbJpg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-sF_HdhmVObSFjvAY8-J_GA-1; Wed, 26 Feb 2020 10:24:49 -0500
+X-MC-Unique: sF_HdhmVObSFjvAY8-J_GA-1
+Received: by mail-wr1-f69.google.com with SMTP id r1so1608304wrc.15
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:24:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=h+QkqnbU1iFIPyAtAgMG3gn/Nhb4l1LvHJ8Yic656iE=;
+        b=Ksjm/2HkNqW1CdWPentR7/EuDktU7hSNliX0U+bIUsLTIzjSHsrrSJ360gkpRJB7Zm
+         9NxaUv14evo+hrpwBQedA8CXeUMdos+I0ym0CNWXMnLYzb9gApL3nLqIoTQD/H/mjuAv
+         RppFnmV3SegUmGEsuh3MgebTriq8tF1Fn/v9HzmLResgNOy4/guHTwK1V/ziVyq0yxOV
+         QTTxbaEJPTRTzw1ptwViihIU4xzVwmLrCHteTANsf89Eiw6l423G9Ee7E83pRBMX2yCn
+         h0J0prjsdg0keirnshPd9yQkOhuvGT0Ocf+2DRUHlg9LjIV3Ge2IlTDtr0SxAJZDLtTd
+         pEyQ==
+X-Gm-Message-State: APjAAAUkB0F9L2ZvZIP+HLBeMgdk43/l3ftR4uPZnLyz9QTMgGlt4khR
+        /qSM2XaF7FdUPVffK2Z9qFB/rGVHzm75/CxDtzKpB3k9RrLkwFRukk+Vc+b3ogKBX+r+EgRBIb6
+        usyJWlnHgCaMh9SafbxGjjq9B
+X-Received: by 2002:a7b:cae2:: with SMTP id t2mr4989654wml.38.1582730687308;
+        Wed, 26 Feb 2020 07:24:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxA5F5DBc1k8YNkcYxe4gys14bSQKTA5C8H2lX9KfdEEbB4z/l9LGZIZpRT7KjVaS0UTGpHfw==
+X-Received: by 2002:a7b:cae2:: with SMTP id t2mr4989634wml.38.1582730687105;
+        Wed, 26 Feb 2020 07:24:47 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id d18sm3794976wrw.49.2020.02.26.07.24.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:24:46 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Date:   Wed, 26 Feb 2020 16:23:32 +0100
-In-Reply-To: <20200106151655.311413-2-christian.gmeiner@gmail.com>
-References: <20200106151655.311413-1-christian.gmeiner@gmail.com>
-         <20200106151655.311413-2-christian.gmeiner@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+Subject: Re: [PATCH v2 04/13] KVM: x86: Refactor R/W page helper to take the emulation context
+In-Reply-To: <20200218232953.5724-5-sean.j.christopherson@intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-5-sean.j.christopherson@intel.com>
+Date:   Wed, 26 Feb 2020 16:24:45 +0100
+Message-ID: <878skpjrr6.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-series applied to etnaviv/next.
-
-Regards,
-Lucas
-
-On Mo, 2020-01-06 at 16:16 +0100, Christian Gmeiner wrote:
-> Update the state HI header from rnndb commit
-> 7f1ce75 ("rnndb: document some GPU identity register")
-> 
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> Invert the vcpu->context derivation in emulator_read_write_onepage() in
+> preparation for dynamically allocating the emulation context.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  drivers/gpu/drm/etnaviv/state_hi.xml.h | 29 ++++++++++++++++------
-> ----
->  1 file changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/state_hi.xml.h
-> b/drivers/gpu/drm/etnaviv/state_hi.xml.h
-> index 41d8da2b6f4f..004d8ddacf6a 100644
-> --- a/drivers/gpu/drm/etnaviv/state_hi.xml.h
-> +++ b/drivers/gpu/drm/etnaviv/state_hi.xml.h
-> @@ -8,17 +8,17 @@ This file was generated by the rules-ng-ng
-> headergen tool in this git repository
->  git clone git://0x04.net/rules-ng-ng
+>  arch/x86/kvm/x86.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 409bf35f26fd..772e704e8083 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5720,14 +5720,14 @@ static const struct read_write_emulator_ops write_emultor = {
+>  static int emulator_read_write_onepage(unsigned long addr, void *val,
+>  				       unsigned int bytes,
+>  				       struct x86_exception *exception,
+> -				       struct kvm_vcpu *vcpu,
+> +				       struct x86_emulate_ctxt *ctxt,
+>  				       const struct read_write_emulator_ops *ops)
+>  {
+>  	gpa_t gpa;
+>  	int handled, ret;
+>  	bool write = ops->write;
+>  	struct kvm_mmio_fragment *frag;
+> -	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
 >  
->  The rules-ng-ng source files this header was generated from are:
-> -- state.xml     (  26087 bytes, from 2017-12-18 16:51:59)
-> -- common.xml    (  35468 bytes, from 2018-01-22 13:48:54)
-> -- common_3d.xml (  14615 bytes, from 2017-12-18 16:51:59)
-> -- state_hi.xml  (  30232 bytes, from 2018-02-15 15:48:01)
-> -- copyright.xml (   1597 bytes, from 2016-12-08 16:37:56)
-> -- state_2d.xml  (  51552 bytes, from 2016-12-08 16:37:56)
-> -- state_3d.xml  (  79992 bytes, from 2017-12-18 16:51:59)
-> -- state_blt.xml (  13405 bytes, from 2017-12-18 16:51:59)
-> -- state_vg.xml  (   5975 bytes, from 2016-12-08 16:37:56)
-> -
-> -Copyright (C) 2012-2018 by the following authors:
-> +- state.xml     (  26666 bytes, from 2019-12-20 21:20:35)
-> +- common.xml    (  35468 bytes, from 2018-02-10 13:09:26)
-> +- common_3d.xml (  15058 bytes, from 2019-12-28 20:02:03)
-> +- state_hi.xml  (  30552 bytes, from 2019-12-28 20:02:48)
-> +- copyright.xml (   1597 bytes, from 2018-02-10 13:09:26)
-> +- state_2d.xml  (  51552 bytes, from 2018-02-10 13:09:26)
-> +- state_3d.xml  (  83098 bytes, from 2019-12-28 20:02:03)
-> +- state_blt.xml (  14252 bytes, from 2019-10-20 19:59:15)
-> +- state_vg.xml  (   5975 bytes, from 2018-02-10 13:09:26)
-> +
-> +Copyright (C) 2012-2019 by the following authors:
->  - Wladimir J. van der Laan <laanwj@gmail.com>
->  - Christian Gmeiner <christian.gmeiner@gmail.com>
->  - Lucas Stach <l.stach@pengutronix.de>
-> @@ -48,6 +48,9 @@ DEALINGS IN THE SOFTWARE.
->  #define MMU_EXCEPTION_SLAVE_NOT_PRESENT				
-> 0x00000001
->  #define MMU_EXCEPTION_PAGE_NOT_PRESENT				
-> 0x00000002
->  #define MMU_EXCEPTION_WRITE_VIOLATION				
-> 0x00000003
-> +#define MMU_EXCEPTION_OUT_OF_BOUND				0x00000
-> 004
-> +#define MMU_EXCEPTION_READ_SECURITY_VIOLATION			
-> 0x00000005
-> +#define MMU_EXCEPTION_WRITE_SECURITY_VIOLATION			
-> 0x00000006
->  #define VIVS_HI							
-> 0x00000000
+>  	/*
+>  	 * If the exit was due to a NPF we may already have a GPA.
+> @@ -5791,7 +5791,7 @@ static int emulator_read_write(struct x86_emulate_ctxt *ctxt,
 >  
->  #define VIVS_HI_CLOCK_CONTROL					
-> 0x00000000
-> @@ -140,6 +143,8 @@ DEALINGS IN THE SOFTWARE.
+>  		now = -addr & ~PAGE_MASK;
+>  		rc = emulator_read_write_onepage(addr, val, now, exception,
+> -						 vcpu, ops);
+> +						 ctxt, ops);
 >  
->  #define VIVS_HI_CHIP_TIME					0x00000
-> 02c
+>  		if (rc != X86EMUL_CONTINUE)
+>  			return rc;
+> @@ -5803,7 +5803,7 @@ static int emulator_read_write(struct x86_emulate_ctxt *ctxt,
+>  	}
 >  
-> +#define VIVS_HI_CHIP_CUSTOMER_ID				0x00000
-> 030
-> +
->  #define VIVS_HI_CHIP_MINOR_FEATURE_0				0x00000
-> 034
->  
->  #define VIVS_HI_CACHE_CONTROL					
-> 0x00000038
-> @@ -237,6 +242,8 @@ DEALINGS IN THE SOFTWARE.
->  
->  #define VIVS_HI_BLT_INTR					0x00000
-> 0d4
->  
-> +#define VIVS_HI_CHIP_ECO_ID					0x00000
-> 0e8
-> +
->  #define VIVS_HI_AUXBIT						
-> 0x000000ec
->  
->  #define VIVS_PM							
-> 0x00000000
+>  	rc = emulator_read_write_onepage(addr, val, bytes, exception,
+> -					 vcpu, ops);
+> +					 ctxt, ops);
+>  	if (rc != X86EMUL_CONTINUE)
+>  		return rc;
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
 
