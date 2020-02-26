@@ -2,215 +2,96 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60289C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74944C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290B324670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="BbODRCYf"
+	by mail.kernel.org (Postfix) with ESMTP id 50A5724653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgBZVv0 (ORCPT
+        id S1727715AbgBZVxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:51:26 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39529 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbgBZVvZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:51:25 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j15so311396pgm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:51:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=7ldHABlBD18zLPYrSu+cdH4KI93P+mg6f36otJlbi3M=;
-        b=BbODRCYf3qUCVc0FwRNhp0e9kHNKBcNi5nDzE6bM+LY9S5XKEQEW3DREWeM4ysZZ/t
-         8XbLYXnyYeVYbkp84Whzykfb6mD4JzwsjfxIRiEO5Dm8fKoY6z96HrGrWVDqIVuYDyHp
-         CJnuggS/T1OZrWHZpq7mPoFf8OYEaVX7TIhqcqt8fmJneCpBkLwWTgosUk3NP/ePs87T
-         6M6z3w/i6QqhqLLLV4BlVs6Z18GQKWhVRz+2yRnzkAb28fJYBZi+CvlxsSfBEJxYRz/y
-         i8RcaNC+QvbYo+KO0kPfNa1Uzmm7AAcsVsXM9x9VJZOp8aG/2KzENFU5DQWincHbnLnG
-         YHmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=7ldHABlBD18zLPYrSu+cdH4KI93P+mg6f36otJlbi3M=;
-        b=QKJkx0tKlpLTIWWoEHFuVPm+yrK7Qbk5zIaYrCDq4hpc+GfvWfrVPeyom7Ta7rS8f/
-         oO9jisj9fkZF+jj2Ht0SWhKFupDtLvvFK7mEVkkbI3JsPnT2VAiLMNBqm8/hHPsN9Fkk
-         R0UigGV61Z0bk9aCuCX7+9LCVie+2d/bai8P4+McgDxYe8FT2CXmJzpcchthK+UHeLEc
-         qIJQ/DSzI4sQLKE2YUoX2HsGkxRm7Le9SdvSh5BTEwQq+c+mOJGbCudMAvq4Ks/tbW5V
-         Cz1omCj1Vvj+vKyEPvvpb0abF+lgCKUYIHrrojj0I5p0AX1Qyd4UOJ2Ru3Z/V8QtqgXU
-         kXsQ==
-X-Gm-Message-State: APjAAAVj3sI5u4rVGKNSSkgUixmKB23eOYFY0ZDKSabIjnLVOZ36QzpP
-        NsEFD7tIG7PNqnLM5VhM+GOd5A==
-X-Google-Smtp-Source: APXvYqxT1yiTPqoDhXgDTKgD5sJZm7rxtcjb/lfNHBR6wzTwindN+HTCBjfYXZwQ/t5YHcxlhoabRQ==
-X-Received: by 2002:a62:e112:: with SMTP id q18mr762213pfh.88.1582753883078;
-        Wed, 26 Feb 2020 13:51:23 -0800 (PST)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id h7sm4371553pfq.36.2020.02.26.13.51.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 13:51:22 -0800 (PST)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
-Date:   Wed, 26 Feb 2020 14:51:18 -0700
-In-Reply-To: <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
-        krisman@collabora.com, surajjs@amazon.com, dmonakhov@gmail.com,
-        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
-        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
- <20200226155521.GA24724@infradead.org>
- <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
-X-Mailer: Apple Mail (2.3273)
+        Wed, 26 Feb 2020 16:53:24 -0500
+Received: from mga06.intel.com ([134.134.136.31]:9517 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727576AbgBZVxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:53:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:53:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
+   d="scan'208";a="350491286"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.84]) ([134.134.177.84])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 13:53:21 -0800
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+References: <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+ <20200225221234.GL9245@linux.intel.com>
+ <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
+ <20200225232900.GO9245@linux.intel.com>
+ <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
+ <20200226004258.GP9245@linux.intel.com>
+ <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
+ <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
+ <20200226205745.GQ9940@linux.intel.com>
+ <9a0a7373-f469-f2ae-c218-5821f805f0d8@intel.com>
+ <20200226212537.GR9940@linux.intel.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <5f480e36-f6ed-e72d-2e18-96617b37958e@intel.com>
+Date:   Wed, 26 Feb 2020 13:53:21 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200226212537.GR9940@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
 
-On Feb 26, 2020, at 1:05 PM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->=20
-> On 26.02.2020 18:55, Christoph Hellwig wrote:
->> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
->>> This adds a support of physical hint for fallocate2() syscall.
->>> In case of @physical argument is set for ext4_fallocate(),
->>> we try to allocate blocks only from [@phisical, @physical + len]
->>> range, while other blocks are not used.
->>=20
->> Sorry, but this is a complete bullshit interface.  Userspace has
->> absolutely no business even thinking of physical placement.  If you
->> want to align allocations to physical block granularity boundaries
->> that is the file systems job, not the applications job.
->=20
-> Why? There are two contradictory actions that filesystem can't do at =
-the same time:
->=20
-> 1)place files on a distance from each other to minimize number of =
-extents
->  on possible future growth;
-> 2)place small files in the same big block of block device.
->=20
-> At initial allocation time you never know, which file will stop grow =
-in some
-> future, i.e. which file is suitable for compaction. This knowledge =
-becomes
-> available some time later.  Say, if a file has not been changed for a =
-month,
-> it is suitable for compaction with another files like it.
->=20
-> If at allocation time you can determine a file, which won't grow in =
-the future,
-> don't be afraid, and just share your algorithm here.
+On 2/26/2020 1:25 PM, Sean Christopherson wrote:
+> Arguably, setup_pku() should be a little less heavy handed in updating
+> cpufeatures for X86_FEATURE_OSPKE, but init_ia32_feat_ctl() should also be
+> more robust.
+> 
 
-Very few files grow after they are initially written/closed.  Those that
-do are almost always opened with O_APPEND (e.g. log files).  It would be
-reasonable to have O_APPEND cause the filesystem to reserve blocks (in
-memory at least, maybe some small amount on disk like 1/4 of the current
-file size) for the file to grow after it is closed.  We might use the
-same heuristic for directories that grow long after initial creation.
+Right.
 
-The main exception there is VM images, because they are not really =
-"files"
-in the normal sense, but containers aggregating a lot of different =
-files,
-each created with patterns that are not visible to the VM host.  In that
-case, it would be better to have the VM host tell the filesystem that =
-the
-IO pattern is "random" and not try to optimize until the VM is cold.
+>> But it looks like rdmsr is global and not tied to a given CPU anyways?
+> 
 
-> In Virtuozzo we tried to compact ext4 with existing kernel interface:
->=20
-> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
->=20
-> But it does not work well in many situations, and the main problem is =
-blocks allocation in desired place is not possible. Block allocator =
-can't behave
-> excellent for everything.
->=20
-> If this interface bad, can you suggest another interface to make block
-> allocator to know the behavior expected from him in this specific =
-case?
+> For better or worse, the MSR is thread scoped.
+> 
 
-In ext4 there is already the "group" allocator, which combines multiple
-small files together into a single preallocation group, so that the IO
-to disk is large/contiguous.  The theory is that files written at the
-same time will have similar lifespans, but that isn't always true.
+Ahh. Definitely not obvious at a glance.
 
-If the files are large and still being written, the allocator will =
-reserve
-additional blocks (default 8MB I think) on the expectation that it will
-continue to write until it is closed.
+> I've reproduced the bug, should have a fix ready by EOD.
+>
 
-I think (correct me if I'm wrong) that your issue is with defragmenting
-small files to free up contiguous space in the filesystem?  I think once
-the free space is freed of small files that defragmenting large files is
-easily done.  Anything with more than 8-16MB extents will max out most
-storage anyway (seek rate * IO size).
+Nice, glad to hear it.
 
-In that case, an interesting userspace interface would be an array of
-inode numbers (64-bit please) that should be packed together densely in
-the order they are provided (maybe a flag for that).  That allows the
-filesystem the freedom to find the physical blocks for the allocation,
-while userspace can tell which files are related to each other.
-
-Tools like "readahead" could also leverage this to "perfectly" allocate
-the files used during boot into a single stream of reads from the disk.
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl5W6FYACgkQcqXauRfM
-H+ARrg/+M8YUY/LsY7U43iojx1GZazLqDMONgBDBXLFLlo9tfab/kekT78JLeRHt
-0gesFe8j9TIJ1aOv/Cqss+yyvzXvryXbAuk8rIcGNbixf83YQ4J0hN7Z07unb5PH
-6Og5VRhI/BuqXWVezvqY//FrKq+vZ1cZ6wIQPSJKFqa2W28DtqsRm2pY/Z9uhd1x
-CHTDPAFX7PHasI+76obGjbF2eNNMo9OTTODOseDWQer7lUkF2YO0IKi4diDCBoli
-FKVfzYt7lxi6Kz1qjsewPnFLAAp+paY1qIRTU9NCm1T2rUIjSg8j/XKc967NBNZY
-/ZFlWu6RCp3WcohZmMX6tZTPyhk5Ua/Y2cu5fuOhxxag+vvcokR8OzOe6ikVzyyq
-Jbs8mw8fdtUUJ9QLkUTtSnFpwKHN/uriGM1gzbtm8iN5sJI0mo5aDqHkwItMu7kp
-8+sHFqcSRlAQHzyAfz44bt6tyFyYSqMUwWOukOrnyDKNHIrNerZVKiM+4VPRdXkP
-zmboMuMpqFrsB4GdlRUWK8l4zSFXKSAlHYrpLdj3muCyzXqhtsG9fKbsFgEox7Yx
-AazQeV4PSTUuxQenRgNQidLRKNY+gGj09+jJsxk3u2T80gjX3Hd6FR9Scevu2nbe
-yvkZNBL2udbidu8lZYczpkcJ5RGoPMErC2ccwtx8dWKTMD84XAg=
-=L/2m
------END PGP SIGNATURE-----
-
---Apple-Mail=_D480D5B9-1B56-445A-98C9-E11CD8F90398--
+Thanks,
+Jake
