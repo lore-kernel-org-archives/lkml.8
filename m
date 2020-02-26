@@ -2,68 +2,93 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA30BC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EA3C4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC1920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD4A24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgBZPM5 (ORCPT
+        id S1727936AbgBZPOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:12:57 -0500
-Received: from mga02.intel.com ([134.134.136.20]:24642 "EHLO mga02.intel.com"
+        Wed, 26 Feb 2020 10:14:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:37256 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgBZPM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:12:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 07:12:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
-   d="scan'208";a="350409964"
-Received: from avgorshk-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.15.208])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 07:12:53 -0800
-Date:   Wed, 26 Feb 2020 17:12:43 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Cc:     gregkh@linuxfoundation.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de
-Subject: Re: [PATCH] Char: tpm_tis_spi_cr50: use new structure for SPI
- transfer delays
-Message-ID: <20200226151221.GE3407@linux.intel.com>
-References: <20200226114347.27126-1-sergiu.cuciurean@analog.com>
+        id S1726148AbgBZPOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:14:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 260B430E;
+        Wed, 26 Feb 2020 07:14:34 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 530F33F819;
+        Wed, 26 Feb 2020 07:14:33 -0800 (PST)
+Subject: Re: [PATCH] trace: ras: print the raw data of arm processor error
+ info
+To:     Xie XiuQi <xiexiuqi@huawei.com>
+Cc:     Borislav Petkov <bp@alien8.de>, tony.luck@intel.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191214121109.8349-1-xiexiuqi@huawei.com>
+ <20200109114603.GC5603@zn.tnic>
+ <3086a22d-6d66-df74-5878-60a8fc0f1499@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <e391ed52-d861-0149-33eb-f55122b6bd6c@arm.com>
+Date:   Wed, 26 Feb 2020 15:14:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226114347.27126-1-sergiu.cuciurean@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3086a22d-6d66-df74-5878-60a8fc0f1499@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:43:47PM +0200, Sergiu Cuciurean wrote:
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current
-> `delay_usecs` with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Hi Xie,
 
-In the short summary used "tpm:" instead of "Char:".
+On 13/01/2020 14:10, Xie XiuQi wrote:
+> What do you think of this patch?
+> 
+> On 2020/1/9 19:46, Borislav Petkov wrote:
+>>>  );
+>>>  
+>>>  /*
 
-/Jarkko
+What patch?!
+
+(digs in the headers)
+https://lore.kernel.org/linux-edac/20191214121109.8349-1-xiexiuqi@huawei.com/
+
+>>> -- 
+>> That's for ARM folks to decide whether they wanna shuffle raw error
+>> records into userspace like that. CCed.
+
+Hmm, this dumps more of 'CPER_SEC_PROC_ARM' to user-space. But not all of it ... (ugh,
+this is the thing with three variable length fields in it!) I would like to be able to
+parse these in the kernel eventually, but that doesn't matter right now.
+
+I agree privileged user-space should be able to collect all the CPER for some tool to
+analyse it. (what else would we do with 'vendor specific error info'?). I'm not totally
+convinced tracepoints are the right thing for big blobs of data like this, but its what
+we're using today.
+
+
+I'll show my ignorance about trace points:
+
+How does rasdaemon react to you expanding the trace point like this? I recall they are
+self-describing, if user-space doesn't hard code the layout...
+
+You export what may be kernel pointers with the virtual fault address. Is there any way an
+unprivileged user can get hold of these?
+(its somewhat pointless as user-space can't know what that pointer means)
+
+
+
+Thanks,
+
+James
