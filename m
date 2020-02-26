@@ -2,142 +2,133 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79206C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF0AC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E0F24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Rw6O4cXA"
+	by mail.kernel.org (Postfix) with ESMTP id 97F9B24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgBZPmL (ORCPT
+        id S1728446AbgBZPmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:42:11 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:37419 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727763AbgBZPmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:42:10 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 00FA222F99;
-        Wed, 26 Feb 2020 16:42:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582731726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OybAC1ie3ULLOgfyed6GVmBGKTLvuJmNw8c9juOBYDc=;
-        b=Rw6O4cXAi1oD1WapLdBFR3Pi64r6hDmgb5fE678jG7yk2FS49u3p/ME/MERVE4hgqqVKZ7
-        Q4PyevRoNtLJJiP8SamwzQVw7nK1cOo20vWjkL/ixZqrIFSzKDDlPgtJz9+FSoT9ljxfZJ
-        dPcneue9tDlgdJl43mgt/vnhStzQ6s0=
+        Wed, 26 Feb 2020 10:42:17 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49052 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727311AbgBZPmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:42:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 313E4AE1E;
+        Wed, 26 Feb 2020 15:42:14 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v3 5/5] selftests/bpf: Add test for "bpftool
+ feature" command
+To:     Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-kselftest@vger.kernel.org
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
+ <20200225194446.20651-6-mrostecki@opensuse.org>
+ <d0c40cd0-f9db-c6cb-5b46-79145311050d@iogearbox.net>
+From:   Michal Rostecki <mrostecki@opensuse.org>
+Autocrypt: addr=mrostecki@opensuse.org; keydata=
+ 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
+ ZURUUA==
+Message-ID: <04df2984-808b-4c69-9bdc-e65815d9e64e@opensuse.org>
+Date:   Wed, 26 Feb 2020 16:42:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <d0c40cd0-f9db-c6cb-5b46-79145311050d@iogearbox.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Date:   Wed, 26 Feb 2020 16:42:05 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Xiaowei Bao <xiaowei.bao@nxp.com>,
-        bhelgaas@google.com, devicetree@vger.kernel.org,
-        Leo Li <leoyang.li@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, robh+dt@kernel.org,
-        Roy Zang <roy.zang@nxp.com>
-Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-In-Reply-To: <DB8PR04MB67474FF5451A647C4495526F84EC0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
- <20200224081105.13878-1-michael@walle.cc> <20200224084307.GD27688@dragon>
- <a3aeabddc82ca86e3dca9c26081a0077@walle.cc>
- <DB8PR04MB67474FF5451A647C4495526F84EC0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-Message-ID: <e4a8b5e17d9778080f836ad8523f70ff@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 00FA222F99
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[16];
-         NEURAL_HAM(-0.00)[-0.401];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-02-24 10:22, schrieb Z.q. Hou:
-> Hi Michael and Shawn,
+On 2/26/20 4:34 PM, Daniel Borkmann wrote:
+> Ptal, when running the test I'm getting the following error:
 > 
-> I'll update the patch with iommu-map property.
-
-friendly ping :)
-
--michael
-
+> root@tank:~/bpf-next/tools/testing/selftests/bpf# ./test_bpftool.sh
+> test_feature_dev_json (test_bpftool.TestBpftool) ... ERROR
+> test_feature_kernel (test_bpftool.TestBpftool) ... ERROR
+> test_feature_kernel_full (test_bpftool.TestBpftool) ... ERROR
+> test_feature_kernel_full_vs_not_full (test_bpftool.TestBpftool) ... ERROR
+> test_feature_macros (test_bpftool.TestBpftool) ... ERROR
 > 
-> Thanks,
-> Zhiqiang
-> 
->> -----Original Message-----
->> From: Michael Walle <michael@walle.cc>
->> Sent: 2020年2月24日 16:54
->> To: Shawn Guo <shawnguo@kernel.org>
->> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>; Z.q. Hou
->> <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
->> devicetree@vger.kernel.org; Leo Li <leoyang.li@nxp.com>;
->> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
->> linux-pci@vger.kernel.org; linuxppc-dev@lists.ozlabs.org;
->> lorenzo.pieralisi@arm.com; mark.rutland@arm.com; M.h. Lian
->> <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
->> robh+dt@kernel.org; Roy Zang <roy.zang@nxp.com>
->> Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller 
->> DT
->> nodes
->> 
->> Hi Shawn, all,
->> 
->> Am 2020-02-24 09:43, schrieb Shawn Guo:
->> > On Mon, Feb 24, 2020 at 09:11:05AM +0100, Michael Walle wrote:
->> >> Hi Xiaowei, Hi Shawn,
->> >>
->> >> > LS1028a implements 2 PCIe 3.0 controllers.
->> >>
->> >> Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about
->> >> this patch anymore :(
->> >>
->> >> This doesn't work well with the IOMMU, because the iommu-map property
->> >> is missing. The bootloader needs the &smmu phandle to fixup the
->> >> entry.
->> >> See
->> >> below.
->> >>
->> >> Shawn, will you add this patch to your tree once its fixed,
->> >> considering it just adds the device tree node for the LS1028A?
->> >
->> > The patch/thread is a bit aged.  You may want to send an updated patch
->> > for discussion.
->> 
->> So should I just pick up the patch add my two fixes and send it again?
->> What about
->> the Signed-off-by tags? Leave them? Replace them? Add mine?
->> 
->> -michael
+> ======================================================================
+> ERROR: test_feature_dev_json (test_bpftool.TestBpftool)
+> ----------------------------------------------------------------------
+> Traceback (most recent call last):
+>   File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py",
+> line 58, in wrapper
+>     return f(*args, iface, **kwargs)
+>   File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py",
+> line 83, in test_feature_dev_json
+>     res = bpftool_json(["feature", "probe", "dev", iface])
+>   File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py",
+> line 43, in bpftool_json
+>     res = _bpftool(args)
+>   File "/root/bpf-next/tools/testing/selftests/bpf/test_bpftool.py",
+> line 34, in _bpftool
+>     res = subprocess.run(_args, capture_output=True)
+>   File "/usr/lib/python3.6/subprocess.py", line 423, in run
+>     with Popen(*popenargs, **kwargs) as process:
+> TypeError: __init__() got an unexpected keyword argument 'capture_output'
+
+Seems like that kwarg in Popen was added in Python 3.7. I will drop it
+and use the older way of getting combined output. Thanks for pointing
+that out!
