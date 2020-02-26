@@ -2,99 +2,97 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A1AC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BDDC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2792467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582736280;
-	bh=RgNtVFk4nBO7kFebX+/FhhfnOXJq8OE999CqQl781Ao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DLCyJa9j+aw0THrm0D2vX659n1gv7JX6EfdLkiz8SjOUsVDhXicS7SSnoD40cRF8Q
-	 4QJ3x0kYqCy2pqy1GCEdLaXpeVD/r4qqLx4uENXM5/fyNNbK2Owelgw6DZiHwP8rnT
-	 BsgxKw9Rh2nWCDcOjejeW2fkSXKdgugykMmo5rnY=
+	by mail.kernel.org (Postfix) with ESMTP id 896682467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgBZQ57 (ORCPT
+        id S1727913AbgBZQ7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:57:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36188 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 11:59:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36162 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbgBZQ56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:57:58 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4592121556;
-        Wed, 26 Feb 2020 16:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582736277;
-        bh=RgNtVFk4nBO7kFebX+/FhhfnOXJq8OE999CqQl781Ao=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VJJ+gOOZqXTdYl/Euf++WHSlBa7yvrHoURpyOny4vvvNxaMnMaB+l32GIEMc9ezZC
-         JxzkSOroRr3xv5rZ2UJV9bKj8b/IFdT+JQfz3lQA8B4Sa1/7jVVWpwy211NllWO27g
-         5+UlQFmnLoBOPpSdNjVN4oUobb2Zxma6Kjim/cW8=
-Date:   Wed, 26 Feb 2020 17:57:54 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luigi Rizzo <lrizzo@google.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        akpm@linux-foundation.org, naveen.n.rao@linux.ibm.com,
-        ardb@kernel.org, Luigi Rizzo <rizzo@iet.unipi.it>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>
-Subject: Re: [PATCH 0/2] quickstats, kernel sample collector
-Message-ID: <20200226165754.GC261747@kroah.com>
-References: <20200226023027.218365-1-lrizzo@google.com>
- <20200226081048.GC22801@kroah.com>
- <CAMOZA0+4Qg+bDQ1xGQ0jL=dvXK80LuxOa7tEd-=iBwat2M9pfg@mail.gmail.com>
- <20200226101449.GF127655@kroah.com>
- <CAMOZA0LOYhnHM3_dB0ZxWMMtLT6Lya1NGOWFN_ihD_kq7bhsng@mail.gmail.com>
+        id S1727141AbgBZQ7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:59:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9B872AE87;
+        Wed, 26 Feb 2020 16:59:45 +0000 (UTC)
+From:   Michal Rostecki <mrostecki@opensuse.org>
+To:     bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v4 0/5] Make probes which emit dmesg warnings optional
+Date:   Wed, 26 Feb 2020 17:59:34 +0100
+Message-Id: <20200226165941.6379-1-mrostecki@opensuse.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMOZA0LOYhnHM3_dB0ZxWMMtLT6Lya1NGOWFN_ihD_kq7bhsng@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 03:40:27AM -0800, Luigi Rizzo wrote:
-> On Wed, Feb 26, 2020 at 2:15 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Feb 26, 2020 at 01:52:25AM -0800, Luigi Rizzo wrote:
-> > > On Wed, Feb 26, 2020 at 12:10 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Feb 25, 2020 at 06:30:25PM -0800, Luigi Rizzo wrote:
-> > > > > This patchset introduces a small library to collect per-cpu samples and
-> > > > > accumulate distributions to be exported through debugfs.
-> > > >
-> > > > Shouldn't this be part of the tracing infrastructure instead of being
-> > > > "stand-alone"?
-> > >
-> > > That's an option. My reasoning for making it standalone was that
-> > > there are no dependencies in the (trivial) collection/aggregation part,
-> > > so that code might conveniently replace/extend existing snippets of
-> > > code that collect distributions in ad-hoc and perhaps suboptimal ways.
-> >
-> > But that's what perf and tracing already does today, right?
-> 
-> Maybe I am mistaken but I believe there are substantial performance and use case
-> differences between kstats and existing perf/tracing code, as described below.
+Feature probes in bpftool related to bpf_probe_write_user and
+bpf_trace_printk helpers emit dmesg warnings which might be confusing
+for people running bpftool on production environments. This patch series
+addresses that by filtering them out by default and introducing the new
+positional argument "full" which enables all available probes.
 
-<snip>
+The main motivation behind those changes is ability the fact that some
+probes (for example those related to "trace" or "write_user" helpers)
+emit dmesg messages which might be confusing for people who are running
+on production environments. For details see the Cilium issue[0].
 
-Then put that in the changelog text and get the perf and tracing
-developers to agree with you on it and sign off on the patches.
+v1 -> v2:
+- Do not expose regex filters to users, keep filtering logic internal,
+expose only the "full" option for including probes which emit dmesg
+warnings.
 
-Don't try to create yet-another-tracing interface without getting their
-approval please.  That's not how to do things.
+v2 -> v3:
+- Do not use regex for filtering out probes, use function IDs directly.
+- Fix bash completion - in v2 only "prefix" was proposed after "macros",
+  "dev" and "kernel" were not.
+- Rephrase the man page paragraph, highlight helper function names.
+- Remove tests which parse the plain output of bpftool (except the
+  header/macros test), focus on testing JSON output instead.
+- Add test which compares the output with and without "full" option.
 
-thanks,
+v3 -> v4:
+- Use enum to check for helper functions.
+- Make selftests compatible with older versions of Python 3.x than 3.7.
 
-greg k-h
+[0] https://github.com/cilium/cilium/issues/10048
+
+Michal Rostecki (5):
+  bpftool: Move out sections to separate functions
+  bpftool: Make probes which emit dmesg warnings optional
+  bpftool: Update documentation of "bpftool feature" command
+  bpftool: Update bash completion for "bpftool feature" command
+  selftests/bpf: Add test for "bpftool feature" command
+
+ .../bpftool/Documentation/bpftool-feature.rst |  19 +-
+ tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+ tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
+ tools/testing/selftests/.gitignore            |   5 +-
+ tools/testing/selftests/bpf/Makefile          |   3 +-
+ tools/testing/selftests/bpf/test_bpftool.py   | 178 +++++++++++
+ tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
+ 7 files changed, 373 insertions(+), 123 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
+ create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
+
+-- 
+2.25.1
+
