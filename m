@@ -2,216 +2,78 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C74DC4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D9EC4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3B320732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7163121927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582677355;
+	bh=lUYW/JieFo+3U8SOTs/roekhtD0axcNdtmfgtPSYbuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KwZFAEGJSy8mGXlH0j+8A8nwCpVUUurkwuc/VFakyZTh1AYsjzwbjJ2V4B0yscGD1
+	 kqu4DihT/UwLZEeWDx+S8rA3tnp8z9upvYg0m5gNXjquO4xmt+daz+OFonFtKZrZiP
+	 Ed44OMEBC7R7qDy0rMI+33Ak0O7NPrhBK9/SIzC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgBZAfj (ORCPT
+        id S1729659AbgBZAfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:35:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48090 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728989AbgBZAfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:35:39 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q0KNiv161112
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:35:37 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydcq62c2c-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:35:37 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 26 Feb 2020 00:35:34 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Feb 2020 00:35:28 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01Q0ZRs843254056
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 00:35:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6BA844C04E;
-        Wed, 26 Feb 2020 00:35:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE81D4C044;
-        Wed, 26 Feb 2020 00:35:26 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Feb 2020 00:35:26 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        Tue, 25 Feb 2020 19:35:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728865AbgBZAfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:35:54 -0500
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 138A1A00F1;
-        Wed, 26 Feb 2020 11:35:22 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Date:   Wed, 26 Feb 2020 11:35:25 +1100
-In-Reply-To: <CAPcyv4g_762vho=L21BuO=97zr9Cq14np88bnFieiYN25BvJtA@mail.gmail.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <CAPcyv4j2hut1YDrotC=QkcM+S0SZwpd9_4hD2aChn+cKD+62oA@mail.gmail.com>
-         <240fbefc6275ac0a6f2aa68715b3b73b0e7a8310.camel@au1.ibm.com>
-         <20200224043750.GM24185@bombadil.infradead.org>
-         <83034494d5c3da1fa63b172e844f85d0fec7910a.camel@au1.ibm.com>
-         <CAOSf1CHYEJf02EV0kYMk+D9s=4PiTXSM1eFcRGYe7XJrHvtAtA@mail.gmail.com>
-         <b981f4e6cc308a617e7944e3ce23009e804cfdbf.camel@au1.ibm.com>
-         <CAPcyv4g_762vho=L21BuO=97zr9Cq14np88bnFieiYN25BvJtA@mail.gmail.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A4F20732;
+        Wed, 26 Feb 2020 00:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582677353;
+        bh=lUYW/JieFo+3U8SOTs/roekhtD0axcNdtmfgtPSYbuc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xneGdx4DAkXmtf4Ea+0hj91lq35cL7k6SkYoJ29ygmIQvE1kyfXePH+Bdupp2RQWZ
+         exQ+mz7qeyCN18YhsFjKq2TmB7BAkJ9lH22aavaqVyDk45mXYhLKGQ7pFaTJfqlJ3z
+         cXOQ5aUdqa7ZQnMQxUxOuiuG1bLV+zU59LP8GzG4=
+Date:   Wed, 26 Feb 2020 01:35:51 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
+        mhiramat@kernel.org
+Subject: Re: [PATCH v4 09/27] rcu: Rename rcu_irq_{enter,exit}_irqson()
+Message-ID: <20200226003550.GE9599@lenoir>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134215.559644596@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022600-0012-0000-0000-0000038A44FB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022600-0013-0000-0000-000021C6E901
-Message-Id: <0e605b595cd03ef34c41a0b3d2304d7fb3ed7690.camel@au1.ibm.com>
-Subject: RE: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory devices
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_09:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221134215.559644596@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 16:32 -0800, Dan Williams wrote:
-> On Tue, Feb 25, 2020 at 4:14 PM Alastair D'Silva <
-> alastair@au1.ibm.com> wrote:
-> > On Mon, 2020-02-24 at 17:51 +1100, Oliver O'Halloran wrote:
-> > > On Mon, Feb 24, 2020 at 3:43 PM Alastair D'Silva <
-> > > alastair@au1.ibm.com> wrote:
-> > > > On Sun, 2020-02-23 at 20:37 -0800, Matthew Wilcox wrote:
-> > > > > On Mon, Feb 24, 2020 at 03:34:07PM +1100, Alastair D'Silva
-> > > > > wrote:
-> > > > > > V3:
-> > > > > >   - Rebase against next/next-20200220
-> > > > > >   - Move driver to arch/powerpc/platforms/powernv, we now
-> > > > > > expect
-> > > > > > this
-> > > > > >     driver to go upstream via the powerpc tree
-> > > > > 
-> > > > > That's rather the opposite direction of normal; mostly
-> > > > > drivers
-> > > > > live
-> > > > > under
-> > > > > drivers/ and not in arch/.  It's easier for drivers to get
-> > > > > overlooked
-> > > > > when doing tree-wide changes if they're hiding.
-> > > > 
-> > > > This is true, however, given that it was not all that desirable
-> > > > to
-> > > > have
-> > > > it under drivers/nvdimm, it's sister driver (for the same
-> > > > hardware)
-> > > > is
-> > > > also under arch, and that we don't expect this driver to be
-> > > > used on
-> > > > any
-> > > > platform other than powernv, we think this was the most
-> > > > reasonable
-> > > > place to put it.
-> > > 
-> > > Historically powernv specific platform drivers go in their
-> > > respective
-> > > subsystem trees rather than in arch/ and I'd prefer we kept it
-> > > that
-> > > way. When I added the papr_scm driver I put it in the pseries
-> > > platform
-> > > directory because most of the pseries paravirt code lives there
-> > > for
-> > > some reason; I don't know why. Luckily for me that followed the
-> > > same
-> > > model that Dan used when he put the NFIT driver in drivers/acpi/
-> > > and
-> > > the libnvdimm core in drivers/nvdimm/ so we didn't have anything
-> > > to
-> > > argue about. However, as Matthew pointed out, it is at odds with
-> > > how
-> > > most subsystems operate. Is there any particular reason we're
-> > > doing
-> > > things this way or should we think about moving libnvdimm users
-> > > to
-> > > drivers/nvdimm/?
-> > > 
-> > > Oliver
-> > 
-> > I'm not too fussed where it ends up, as long as it ends up
-> > somewhere :)
-> > 
-> > From what I can tell, the issue is that we have both
-> > "infrastructure"
-> > drivers, and end-device drivers. To me, it feels like
-> > drivers/nvdimm
-> > should contain both, and I think this feels like the right
-> > approach.
-> > 
-> > I could move it back to drivers/nvdimm/ocxl, but I felt that it was
-> > only tolerated there, not desired. This could be cleared up with a
-> > response from Dan Williams, and if it is indeed dersired, this is
-> > my
-> > preferred location.
+On Fri, Feb 21, 2020 at 02:34:25PM +0100, Peter Zijlstra wrote:
+> The functions do in fact use local_irq_{save,restore}() and can
+> therefore be used when IRQs are in fact disabled. Worse, they are
+> already used in places where IRQs are disabled, leading to great
+> confusion when reading the code.
 > 
-> Apologies if I gave the impression it was only tolerated. I'm ok with
-> drivers/nvdimm/ocxl/, and to the larger point I'd also be ok with a
-> drivers/{acpi => nvdimm}/nfit and {arch/powerpc/platforms/pseries =>
-> drivers/nvdimm}/papr_scm.c move as well to keep all the consumers of
-> the nvdimm related code together with the core.
+> Rename them to fix this confusion.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-Great, thanks for clarifying, text is so imprecise when it comes to
-nuance :)
+FWIW I'd have called that _irqsafe() as irqsave() suggests some return
+value to later restore.
 
-I'll move ti back to drivers/nvdimm/ocxl then.
-
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
