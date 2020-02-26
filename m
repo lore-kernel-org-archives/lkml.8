@@ -2,71 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D685C4BA1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58E1C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7AC2467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7404E222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ijc5l2c1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgBZReS (ORCPT
+        id S1726824AbgBZRfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:34:18 -0500
-Received: from mga05.intel.com ([192.55.52.43]:9854 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgBZReS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:34:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 09:34:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
-   d="scan'208";a="436710796"
-Received: from yoyochua-mobl2.gar.corp.intel.com (HELO M5530.gar.corp.intel.com) ([10.249.74.169])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Feb 2020 09:34:15 -0800
-From:   Harry Pan <harry.pan@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH] intel_idle: Add Comet Lake support
-Date:   Thu, 27 Feb 2020 01:34:13 +0800
-Message-Id: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
-X-Mailer: git-send-email 2.24.1
+        Wed, 26 Feb 2020 12:35:05 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33258 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgBZRfE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:35:04 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay11so1566859plb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:35:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W0ORnmhkVOepGQNpJnxgqzW17jpKHirCqyJGUQC2QyA=;
+        b=ijc5l2c1gKpMUhbpxqwqUqym5Ucu4whlkI/5Scz+IFKbThiygFjK4ZOT6c6VMMRbil
+         4RjhIaNqqwL8SjTJ7XjtPgLewiTYh5zJqHq1B8Ovpp39iFNi7D6SFJETJ4DFgWtRZVzM
+         aS2l6jL/6kN94aDrzdyGevV1WeJ0BuMk3S6vFoDPgCDgBHR49GnZEnF0ZClMoneIEqbX
+         nxjkSomQ1kE7FTVuZPn4L8HqhcUjY3+WSXoo5K+0wu4HwfrXq+RzgHM64b0dHEjPxv02
+         NFz/xK4gOISZDJK3wqPPgpOREA6fwc/WAoP4zwpu1YLzmJqoSP4e//C2HTzQuxVvVsDs
+         EA4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W0ORnmhkVOepGQNpJnxgqzW17jpKHirCqyJGUQC2QyA=;
+        b=baMsy/JliCIX6x7c7DNGl+x22QEo4pj0AJp5C9wwqBJto8ROz279d0ZK4y0zT1NJ7B
+         3Ows/J+0c7VlTCp57NhJQPuxEfxcioYnJ2Hfdu2FJmr7mI6XiA1sosgLkUhXS4NGX37/
+         fSUk1PW6/1fcVu4Gb4sYboxgjHNOnVbYqCEB4GXp/rht2sPbS2vWOskNEquf3+okxmTK
+         A4Abit+xOXWy28wwos2Uj1Hc5vHxrLNazY1CpfGxfmIxTnRsIVmPOFPQ67d5OdPVsj68
+         EaKv+L6Yftvow0MS81rwoaFjPbT8vkg2Cvqu2HoQY6obr7/relLSB1TF3iskwyfFY9Ne
+         bgWA==
+X-Gm-Message-State: APjAAAUORa4/QkifCaajKd+j6BoREl/if1u2s85+0KVgoADr2+RXWBU8
+        HErrB/kmKRRr3I0yAa7JhLF2iyW6eB+/0A==
+X-Google-Smtp-Source: APXvYqxaSNdzyPXXWw7+ywNDTuXjozwt22BS/Ee83Ah9XJ5Js3PHigmunVGkZZaKRuMQ1YCX18GiDg==
+X-Received: by 2002:a17:902:d705:: with SMTP id w5mr410020ply.68.1582738503463;
+        Wed, 26 Feb 2020 09:35:03 -0800 (PST)
+Received: from ?IPv6:2620:10d:c085:21d6::137a? ([2620:10d:c090:400::5:890])
+        by smtp.gmail.com with ESMTPSA id 3sm3534168pjg.27.2020.02.26.09.35.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 09:35:02 -0800 (PST)
+Subject: Re: [PATCH] blk-mq: Remove some unused function arguments
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1582719015-198980-1-git-send-email-john.garry@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c245ec10-7c30-b0ce-6d1e-d23164b175a7@kernel.dk>
+Date:   Wed, 26 Feb 2020 10:35:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582719015-198980-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Comet Lake ID to enable intel_idle driver support.
-This is required for PC10 and S0ix.
+On 2/26/20 5:10 AM, John Garry wrote:
+> The struct blk_mq_hw_ctx pointer argument in blk_mq_put_tag(),
+> blk_mq_poll_nsecs(), and blk_mq_poll_hybrid_sleep() is unused, so remove
+> it.
+> 
+> Overall obj code size shows a minor reduction, before:
+>    text	   data	    bss	    dec	    hex	filename
+>   27306	   1312	      0	  28618	   6fca	block/blk-mq.o
+>    4303	    272	      0	   4575	   11df	block/blk-mq-tag.o
+> 
+> after:
+>   27282	   1312	      0	  28594	   6fb2	block/blk-mq.o
+>    4311	    272	      0	   4583	   11e7	block/blk-mq-tag.o
 
-Signed-off-by: Harry Pan <harry.pan@intel.com>
+Applied, thanks.
 
----
-
- drivers/idle/intel_idle.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 347b08b56042..3cf292b2b7f1 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -1086,6 +1086,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	INTEL_CPU_FAM6(KABYLAKE_L,		idle_cpu_skl),
- 	INTEL_CPU_FAM6(KABYLAKE,		idle_cpu_skl),
- 	INTEL_CPU_FAM6(SKYLAKE_X,		idle_cpu_skx),
-+	INTEL_CPU_FAM6(COMETLAKE_L,		idle_cpu_skl),
-+	INTEL_CPU_FAM6(COMETLAKE,		idle_cpu_skl),
- 	INTEL_CPU_FAM6(XEON_PHI_KNL,		idle_cpu_knl),
- 	INTEL_CPU_FAM6(XEON_PHI_KNM,		idle_cpu_knl),
- 	INTEL_CPU_FAM6(ATOM_GOLDMONT,		idle_cpu_bxt),
 -- 
-2.24.1
+Jens Axboe
 
