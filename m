@@ -2,197 +2,120 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E965DC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4C8C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E20206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF604206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ceEmj1sh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AB69FvJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgBZRND (ORCPT
+        id S1726906AbgBZRNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:13:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24024 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726671AbgBZRNC (ORCPT
+        Wed, 26 Feb 2020 12:13:07 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45070 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgBZRNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:13:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582737181;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tnpfXdQjYrBFaS792nY8i0wuvTcJOpHnYH5FAirUsUY=;
-        b=ceEmj1shrEC6AdZNtMLmii/otGOKTKvKbLpCZgLaaE3CNVGykFnhrFBknjViXyBtTY9Kqw
-        uLJQbtO0KmY9OrFo/5/g4nSIRgZHxRYDiDz6R7qm2JlnQ/vtS49MNAGnXddY4fJ9/WYwZB
-        YJ5qetv6eteVv/AB4QYY0qjIOIU3uv0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-nnA6nOlHPVegzN55-GauaQ-1; Wed, 26 Feb 2020 12:11:28 -0500
-X-MC-Unique: nnA6nOlHPVegzN55-GauaQ-1
-Received: by mail-wr1-f71.google.com with SMTP id z1so39174wrs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:11:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=tnpfXdQjYrBFaS792nY8i0wuvTcJOpHnYH5FAirUsUY=;
-        b=gpy0ugVZS897Dj8myndLOLwO3RHxd2zzjQke5MH/R6fF7TW0PjW2ZGCxKTuKMLBTAT
-         opTEPWWQLxa14jo+elH3qtOnXuQwC2TnDnROKDB+lpojavy7YmqqEvm2xCkbjXQqNL8e
-         Jg28zwXT92QIqm1V1guDRHpA3gmZh/mShTrjL5L3dO6o6X7iKbDsrU14I7K62FBDghNl
-         38V7ED8e9mdwCFT6rJ1h7aicW83ZrM1PlQKuNv1sE5r2OJSYKWEpfk7MqdT2lPYyapur
-         6JLFL9C6JtJjCQoeXeH/BdfTMUD9c0I8Tp77N4Rpvi2hlllNcqtqtulfO8MAPzZ4pemu
-         LEhw==
-X-Gm-Message-State: APjAAAU91C+l2lXQ/K7L4MiUegXynTzfa40rPeULaXSiRUv7wijCQQj+
-        N+xcIxrN7vxFa8oQ1//r74DA+To7tx+nmji/FXTYeoZ6Gl38vy/2VmmPlscekNCrs8jrxbqbLGz
-        XvBXgUWO26k4bdxfGRUMbWF8C
-X-Received: by 2002:adf:fc85:: with SMTP id g5mr6506225wrr.52.1582737087346;
-        Wed, 26 Feb 2020 09:11:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw+99mQIMnTdmvz4jq3L9yXHiV5BgK+YifebeHL+ho8XsMql1sUyO5bD1gtgRpfoxojajGT4Q==
-X-Received: by 2002:adf:fc85:: with SMTP id g5mr6506204wrr.52.1582737087099;
-        Wed, 26 Feb 2020 09:11:27 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id j16sm4089259wru.68.2020.02.26.09.11.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:11:26 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/13] KVM: x86: Refactor emulate tracepoint to explicitly take context
-In-Reply-To: <20200218232953.5724-7-sean.j.christopherson@intel.com>
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-7-sean.j.christopherson@intel.com>
-Date:   Wed, 26 Feb 2020 18:11:25 +0100
-Message-ID: <8736axjmte.fsf@vitty.brq.redhat.com>
+        Wed, 26 Feb 2020 12:13:05 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QHCatj193451;
+        Wed, 26 Feb 2020 17:12:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=iw1oHBmXUdp5IIisAtDC6XniuQU/lJXPuIIsSzlu6CA=;
+ b=AB69FvJ690epl2q3iEF9OAd01yCyTXgZ/0nRUe4hTTW1dVmeZsSnnrLlfl8WVjuet02R
+ UvAohP4OexZPftYUUJFg0zP/4Ky/r1sIFhKYF18D6BOTL+4Fb8rbm0i+y3AK6usAQr7u
+ 9h0s6M1CJXYX7Gp8hZQVpVN5M+me+IhAGpuaVGJuseVKH2jSSWUxSZ2Pd9C3Wv8pPDWp
+ NRLpae6sc2A1ll0fpZ2zQUeA43UmK9FEQWt1khRLfEV2Yeh3TOU5jJbkhIp/RGeQ7E3M
+ ZxKg/iMXZIht/FzuXlYpXD41afPl/KsVkFMoj5MtROezpGcDt6M2eN19sEiew9VczPQI 4w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2ydct353mw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 17:12:40 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QGmHuR157882;
+        Wed, 26 Feb 2020 17:10:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2ydcs5j8nu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 17:10:39 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01QHAdYU126581;
+        Wed, 26 Feb 2020 17:10:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2ydcs5j8me-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 17:10:39 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01QHAcnt030079;
+        Wed, 26 Feb 2020 17:10:38 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Feb 2020 09:10:38 -0800
+Date:   Wed, 26 Feb 2020 09:10:36 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v8 25/25] iomap: Convert from readpages to readahead
+Message-ID: <20200226171036.GE8045@magnolia>
+References: <20200225214838.30017-1-willy@infradead.org>
+ <20200225214838.30017-26-willy@infradead.org>
+ <20200226170425.GD8045@magnolia>
+ <20200226170728.GD22837@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226170728.GD22837@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Wed, Feb 26, 2020 at 09:07:28AM -0800, Christoph Hellwig wrote:
+> On Wed, Feb 26, 2020 at 09:04:25AM -0800, Darrick J. Wong wrote:
+> > > @@ -456,15 +435,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> > >  			unlock_page(ctx.cur_page);
+> > >  		put_page(ctx.cur_page);
+> > >  	}
+> > > -
+> > > -	/*
+> > > -	 * Check that we didn't lose a page due to the arcance calling
+> > > -	 * conventions..
+> > > -	 */
+> > > -	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
+> > > -	return ret;
+> > 
+> > After all the discussion about "if we still have ctx.cur_page we should
+> > just stop" in v7, I'm surprised that this patch now doesn't say much of
+> > anything, not even a WARN_ON()?
+> 
+> The code quoted above puts the cur_page reference.  By dropping the
+> odd refactoring patch there is no need to check for cur_page being
+> left as a special condition as that still is the normal loop exit
+> state and properly handled, just as in the original iomap code.
 
-> Explicitly pass the emulation context to the emulate tracepoint in
-> preparation of dynamically allocation the emulation context.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/trace.h | 22 +++++++++++-----------
->  arch/x86/kvm/x86.c   | 13 ++++++++-----
->  2 files changed, 19 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-> index f194dd058470..5605000ca5f6 100644
-> --- a/arch/x86/kvm/trace.h
-> +++ b/arch/x86/kvm/trace.h
-> @@ -731,8 +731,9 @@ TRACE_EVENT(kvm_skinit,
->  	})
->  
->  TRACE_EVENT(kvm_emulate_insn,
-> -	TP_PROTO(struct kvm_vcpu *vcpu, __u8 failed),
-> -	TP_ARGS(vcpu, failed),
-> +	TP_PROTO(struct kvm_vcpu *vcpu, struct x86_emulate_ctxt *ctxt,
-> +		 __u8 failed),
-> +	TP_ARGS(vcpu, ctxt, failed),
->  
->  	TP_STRUCT__entry(
->  		__field(    __u64, rip                       )
-> @@ -745,13 +746,10 @@ TRACE_EVENT(kvm_emulate_insn,
->  
->  	TP_fast_assign(
->  		__entry->csbase = kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS);
+DOH.  Yes, yes it does.  Thanks for pointing that out. :)
 
-This seems the only usage of 'vcpu' parameter now; I checked and even
-after switching to dynamic emulation context allocation we still set
-ctxt->vcpu in alloc_emulate_ctxt(), can we get rid of 'vcpu' parameter
-here then (and use ctxt->vcpu instead)?
+/me hands himself another cup of coffee,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-> -		__entry->len = vcpu->arch.emulate_ctxt.fetch.ptr
-> -			       - vcpu->arch.emulate_ctxt.fetch.data;
-> -		__entry->rip = vcpu->arch.emulate_ctxt._eip - __entry->len;
-> -		memcpy(__entry->insn,
-> -		       vcpu->arch.emulate_ctxt.fetch.data,
-> -		       15);
-> -		__entry->flags = kei_decode_mode(vcpu->arch.emulate_ctxt.mode);
-> +		__entry->len = ctxt->fetch.ptr - ctxt->fetch.data;
-> +		__entry->rip = ctxt->_eip - __entry->len;
-> +		memcpy(__entry->insn, ctxt->fetch.data, 15);
-> +		__entry->flags = kei_decode_mode(ctxt->mode);
->  		__entry->failed = failed;
->  		),
->  
-> @@ -764,8 +762,10 @@ TRACE_EVENT(kvm_emulate_insn,
->  		)
->  	);
->  
-> -#define trace_kvm_emulate_insn_start(vcpu) trace_kvm_emulate_insn(vcpu, 0)
-> -#define trace_kvm_emulate_insn_failed(vcpu) trace_kvm_emulate_insn(vcpu, 1)
-> +#define trace_kvm_emulate_insn_start(vcpu, ctxt)	\
-> +	trace_kvm_emulate_insn(vcpu, ctxt, 0)
-> +#define trace_kvm_emulate_insn_failed(vcpu, ctxt)	\
-> +	trace_kvm_emulate_insn(vcpu, ctxt, 1)
->  
->  TRACE_EVENT(
->  	vcpu_match_mmio,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 79d1113ad6e7..69d3dd64d90c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6460,10 +6460,13 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
->  }
->  EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
->  
-> -static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
-> +static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
-> +				    int emulation_type)
->  {
-> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
-> +
->  	++vcpu->stat.insn_emulation_fail;
-> -	trace_kvm_emulate_insn_failed(vcpu);
-> +	trace_kvm_emulate_insn_failed(vcpu, ctxt);
->  
->  	if (emulation_type & EMULTYPE_VMWARE_GP) {
->  		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
-> @@ -6788,7 +6791,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  
->  		r = x86_decode_insn(ctxt, insn, insn_len);
->  
-> -		trace_kvm_emulate_insn_start(vcpu);
-> +		trace_kvm_emulate_insn_start(vcpu, ctxt);
->  		++vcpu->stat.insn_emulation;
->  		if (r != EMULATION_OK)  {
->  			if ((emulation_type & EMULTYPE_TRAP_UD) ||
-> @@ -6810,7 +6813,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  				inject_emulated_exception(ctxt);
->  				return 1;
->  			}
-> -			return handle_emulation_failure(vcpu, emulation_type);
-> +			return handle_emulation_failure(ctxt, emulation_type);
->  		}
->  	}
->  
-> @@ -6856,7 +6859,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  					emulation_type))
->  			return 1;
->  
-> -		return handle_emulation_failure(vcpu, emulation_type);
-> +		return handle_emulation_failure(ctxt, emulation_type);
->  	}
->  
->  	if (ctxt->have_exception) {
-
--- 
-Vitaly
-
+--D
