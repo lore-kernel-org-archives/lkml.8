@@ -2,226 +2,344 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBACC4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27543C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416112467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96782467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="m51xONnv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNLQgq8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgBZLWH (ORCPT
+        id S1728269AbgBZLW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:22:07 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33775 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgBZLWH (ORCPT
+        Wed, 26 Feb 2020 06:22:56 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38034 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgBZLW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:22:07 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so1711346lfl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:22:04 -0800 (PST)
+        Wed, 26 Feb 2020 06:22:56 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so2614042wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:22:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=E0us8VJrNXSY9eXzAIQwp1TcQwVEWEKmFj+MIUCCWAA=;
-        b=m51xONnvs2AQWLzIHcggigN9ok322op47/IX0qH0dvg/AZW8vnWixGq2mz2j0Yl7fr
-         O4Nr/5exfqxG43rCSZSrIlnIMsQ6K12FB2rv+3le9EoIRJ1hyHL3Z3WrXuRYmhg6gcvk
-         ITqGd8cQnSyulaEUqleP1VAoMmuDAeDdXCawI=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VdZXscF8mmVkd7a4XdFR12QYO168LfqZik0aVIxZfbE=;
+        b=JNLQgq8Y9kSh/U+Z5VYZF+gNBpZoC5iKwlRkHfR8OFm3TUJYqbkrYPGasF3VXkOVhb
+         iqOHtx22930J4pvPBE4cLAV0tUrAbDNIcVdBoBOmF0WVJ8PmZYW4xfftUq3ej5sf66gV
+         6EzjYHE8xCD5ci/A/+F6oC/kBjAvzRXr6wv+RS9D89Yme9rQOnV/D5US6CHyyCWloZU8
+         5i7K/ylAzKNTA0I8pex9DWR6Y66gZuK9589Hq2Rj6cU/gmzGVvdKYjgsElpUg7W9W12B
+         M06oAA9zU7OQwtg0sRx2SMGT37C89sHN9h/8+NsS2c+hBx/qu+iMO7i3bShpABxi9Y26
+         um0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=E0us8VJrNXSY9eXzAIQwp1TcQwVEWEKmFj+MIUCCWAA=;
-        b=AAgqztjB6kqFUjgKA1l4SBd5mb/a+oURqpaz8RrchbHmYne56hpqB+2xLOKfKogu7w
-         p3yaXzUE6PNvraPtZkQvQ22q0fYXFahkDnvs/McAUnnIYdXqo0eFJXwX5OdeCHMJC68Q
-         i/nLB3YaIYZrtmqH9P9pcmp/9ce+D4dvPvyVc8ja66TqstB+kML+uqyzo/n5CdsM44iN
-         /AMCDIBZGL+ZNdvF9uZfMky5RjhdNNuPkH2dD79/Tk6Ma100iOA7P3+C2WqFwxdcoIyN
-         7qpruizAUiggLlTL+R8Bx+2av8TN/tM+//s4B3SSBRTCZ7ON6VtFaUcMqb4Ke3LgbJmx
-         qLuw==
-X-Gm-Message-State: APjAAAXNcq9lhciQ/LPYQpoP2qFpKojsdHfCrDGOUSQIwERE/WiC06I+
-        VXl9Hd8/ngRF0e7sxAvWeNCQjA==
-X-Google-Smtp-Source: APXvYqxBl/nNgswDbREy9kr8rpHjTbAPXUmdviWKswPItyJ7aSrEvsiz9AFu3A9wLAv+j8LevLA+7Q==
-X-Received: by 2002:a19:6742:: with SMTP id e2mr2275073lfj.1.1582716123805;
-        Wed, 26 Feb 2020 03:22:03 -0800 (PST)
-Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
-        by smtp.gmail.com with ESMTPSA id u5sm675690ljl.97.2020.02.26.03.22.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VdZXscF8mmVkd7a4XdFR12QYO168LfqZik0aVIxZfbE=;
+        b=GgwwxmC1NdFVkxGBqsJ8KO/3RkQow7VrfC0wugBQvoI0OejxFe5cZIwSvmjgHZQl/V
+         nkThmuQv95nR+Lyu5TTYl65XoCbCaVhjs6Fwcgv9bmduuVLOfcXzSmhHAJjkZqKqcFkq
+         1OfJni9Oxw37e2hXXbnc0/C+ItrYszCxAqSeOhLzEgTSoDFydpDHIaclnWgvrc5AeIgX
+         +/dqWVgf9YtBKh1EsVrJYEFcldzMDR1KK1lqsMI4asAVC4ov7MwIXf/BT9n4NXibUVO5
+         0GvD0/6kfKVT1X0kao0Q1p50h9t/k67cZ8o8sDdTSl2lUOsHX8KTtRBicktRPw2EJav9
+         YkRg==
+X-Gm-Message-State: APjAAAUaofL5ecbv4mNvcywH2sckaz11nw3Fbf5fJC7CGNf++mcQiR+W
+        1RNrbdAv7NaBelZ+Rh12Ice42Q==
+X-Google-Smtp-Source: APXvYqwlWb/3L1JIy8r9x1NpDPX+tuAVbnZrmUtfCMQFSBQJyzI+alDUG8zwBbsQxqt//UDHNhcArA==
+X-Received: by 2002:a7b:cf08:: with SMTP id l8mr4894722wmg.169.1582716172825;
+        Wed, 26 Feb 2020 03:22:52 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id b67sm2601725wmc.38.2020.02.26.03.22.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 03:22:03 -0800 (PST)
-References: <00000000000050bd7c059f61fd8c@google.com> <3f2984d7-f854-2457-8bbe-7e8b1a377d66@gmail.com> <b33cfd8a-4813-4a7e-49ef-ed838e2e2344@gmail.com>
-User-agent: mu4e 1.1.0; emacs 26.3
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com>,
-        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, kafai@fb.com,
-        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in inet_release
-In-reply-to: <b33cfd8a-4813-4a7e-49ef-ed838e2e2344@gmail.com>
-Date:   Wed, 26 Feb 2020 12:22:02 +0100
-Message-ID: <87eeuhd25h.fsf@cloudflare.com>
+        Wed, 26 Feb 2020 03:22:52 -0800 (PST)
+Date:   Wed, 26 Feb 2020 11:23:24 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 18/19] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200226112324.GL3494@dell>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+ <20200217131446.32818-19-mika.westerberg@linux.intel.com>
+ <20200226084749.GA3494@dell>
+ <20200226103355.GO2667@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226103355.GO2667@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 07:23 PM CET, Eric Dumazet wrote:
-> On 2/25/20 12:15 AM, Eric Dumazet wrote:
->>
->>
->> On 2/25/20 12:08 AM, syzbot wrote:
->>> Hello,
->>>
->>> syzbot found the following crash on:
->>>
->>> HEAD commit:    54dedb5b Merge tag 'for-linus-5.6-rc3-tag' of git://git.ke..
->>> git tree:       upstream
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=168f7de9e00000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=1938db17e275e85dc328
->>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1681fe09e00000
->>>
->>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>> Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
->>>
->>> BUG: kernel NULL pointer dereference, address: 0000000000000000
->>> #PF: supervisor instruction fetch in kernel mode
->>> #PF: error_code(0x0010) - not-present page
->>> PGD a0113067 P4D a0113067 PUD a8771067 PMD 0
->>> Oops: 0010 [#1] PREEMPT SMP KASAN
->>> CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
->>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->>> RIP: 0010:0x0
->>> Code: Bad RIP value.
->>> RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
->>> RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
->>> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
->>> RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
->>> R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
->>> R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
->>> FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
->>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
->>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>> Call Trace:
->>>  inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
->>>  __sock_release net/socket.c:605 [inline]
->>>  sock_close+0xe1/0x260 net/socket.c:1283
->>>  __fput+0x2e4/0x740 fs/file_table.c:280
->>>  ____fput+0x15/0x20 fs/file_table.c:313
->>>  task_work_run+0x176/0x1b0 kernel/task_work.c:113
->>>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->>>  exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
->>>  prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
->>>  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
->>>  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>> RIP: 0033:0x45c429
->>> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->>> RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
->>> RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
->>> RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
->>> RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
->>> R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
->>> R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
->>> Modules linked in:
->>> CR2: 0000000000000000
->>> ---[ end trace 82567b5207e87bae ]---
->>> RIP: 0010:0x0
->>> Code: Bad RIP value.
->>> RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
->>> RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
->>> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
->>> RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
->>> R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
->>> R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
->>> FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
->>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
->>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>>
->>>
->>> ---
->>> This bug is generated by a bot. It may contain errors.
->>> See https://goo.gl/tpsmEJ for more information about syzbot.
->>> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>>
->>> syzbot will keep track of this bug report. See:
->>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->>> syzbot can test patches for this bug, for details see:
->>> https://goo.gl/tpsmEJ#testing-patches
->>>
->>
->> Note to ULP maintainers
->>
->> Probably the code for IPV6_ADDRFORM  needs some care if a TCP socket got ULP enabled ?
->>
->
-> Maybe simply make sure sk->sk_prot is pristine as in :
->
-> diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-> index 79fc012dd2cae44b69057c168037b018775d1f49..a72c5c30bc3a55ca65974c537cd089fa4260a8d0 100644
-> --- a/net/ipv6/ipv6_sockglue.c
-> +++ b/net/ipv6/ipv6_sockglue.c
-> @@ -183,9 +183,14 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
->                                         retv = -EBUSY;
->                                         break;
->                                 }
-> -                       } else if (sk->sk_protocol != IPPROTO_TCP)
-> +                       } else if (sk->sk_protocol == IPPROTO_TCP) {
-> +                               if (sk->sk_prot != &tcpv6_prot) {
-> +                                       retv = -EBUSY;
-> +                                       break;
-> +                               }
-> +                       } else {
->                                 break;
-> -
-> +                       }
->                         if (sk->sk_state != TCP_ESTABLISHED) {
->                                 retv = -ENOTCONN;
->                                 break;
+On Wed, 26 Feb 2020, Mika Westerberg wrote:
 
-This is a weird one.
+> On Wed, Feb 26, 2020 at 08:47:49AM +0000, Lee Jones wrote:
+> > On Mon, 17 Feb 2020, Mika Westerberg wrote:
+> > 
+> > > This driver only creates a bunch of platform devices sharing resources
+> > > belonging to the PMC device. This is pretty much what MFD subsystem is
+> > > for so move the driver there, renaming it to intel_pmc_bxt.c which
+> > > should be more clear what it is.
+> > > 
+> > > MFD subsystem provides nice helper APIs for subdevice creation so
+> > > convert the driver to use those. Unfortunately the ACPI device includes
+> > > separate resources for most of the subdevices so we cannot simply call
+> > > mfd_add_devices() to create all of them but instead we need to call it
+> > > separately for each device.
+> > > 
+> > > The new MFD driver continues to expose two sysfs attributes that allow
+> > > userspace to send IPC commands to the PMC/SCU to avoid breaking any
+> > > existing applications that may use these. Generally this is bad idea so
+> > > document this in the ABI documentation.
+> > > 
+> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
+> > >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
+> > >  arch/x86/include/asm/intel_telemetry.h        |   1 +
+> > >  drivers/mfd/Kconfig                           |  16 +-
+> > >  drivers/mfd/Makefile                          |   1 +
+> > >  drivers/mfd/intel_pmc_bxt.c                   | 489 +++++++++++++
+> > >  drivers/platform/x86/Kconfig                  |  16 +-
+> > >  drivers/platform/x86/Makefile                 |   1 -
+> > >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
+> > >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
+> > >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
+> > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+> > >  include/linux/mfd/intel_pmc_bxt.h             |  21 +
+> > >  13 files changed, 565 insertions(+), 710 deletions(-)
+> > >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
+> > >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+> > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+> > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+> > >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
+> > 
+> > [...]
 
-Only way I can see that syzbot could have triggered a NULL deref on
-sk->sk_prot->close() at net/ipv4/af_inet.c:427 is if we set sk->sk_prot
-to a set of kTLS callbacks that were not initialized.
+[...]
 
-That is:
+> > > +struct intel_pmc_dev {
+> > > +	struct device *dev;
+> > > +	struct intel_scu_ipc_dev *scu;
+> > > +
+> > > +	struct mfd_cell cells[PMC_TELEM + 1];
+> > 
+> > Nicer to add a "PMC_DEVICE_MAX" enum and use that.
+> > 
+> > Why do these even need to be in here?
+> 
+> They need to be here because we need to fill them in dynamically based
+> on the resources we get from the ACPI device.
 
-1) setsockopt(fd, SOL_TCP, TCP_ULP, "tls") builds a set kTLS callbacks
-   for AF_INET6 by initializing tls_prots[TLSV6],
+Why can't you do that with statically defined structs?
 
-2) setsockopt(fd, SOL_IPV6, IPV6_ADDRFORM) changes sk->sk_family to
-   AF_INET,
+HINT: You can.
 
-3) setsockopt(fd, SOL_TLS, TLS_TX, ...) sets sk->sk_prot to
-   uninitialized &tls_prots[TLSV4] based on sk->sk_family.
+> > I would normally suggest creating a cell per device.
+> 
+> You mean 
+> 
+> struct intel_pmc_dev {
+> 	...
+> 	struct mfd_cell tco_cell;
+> 	struct mfd_cell punit_cell;
+> 	...
+> 
+> right? Sure no problem.
 
-But this could not have happened because setsockopt(IPV6_ADDRFORM)
-resets sk->sk_prot to &tcp_prot, so tls_setsockopt no longer gets called
-and attempt to setsockopt(fd, SOL_TLS, TLS_TX) will fail with
--ENOPROTOOPT.
+No.  We don't usually put them in device data at all.
 
-Also, we hold the sk_lock while setting both IPV6_ADDRFORM and TLX_TX
-options.
+I mean:
 
-Nevertheless, failing IPV6_ADDRFORM with -EBUSY when sk_prot is
-overwritten sounds like the right thing to do.
+static struct mfd_cell tco_cell[] = {
+        {      }
+};
 
-It looks like a bug that we are not doing it ATM, the crash report
-aside, because after setsockopt(IPV6_ADDRFORM) icsk_ulp_data remains
-pointing to a kTLS context, while proto and socket ops get reset to
-TCPv4 defaults.
+static struct mfd_cell tco_cell[] = {
+        {      }
+};
+
+[...]
+
+> > > +static const struct mfd_cell tco = {
+> > > +	.name = TCO_DEVICE_NAME,
+> > 
+> > Use proper string please.
+> > 
+> > > +	.ignore_resource_conflicts = true,
+> > 
+> > Why not add tco_pdata here?
+> 
+> Because we need to pass it the private PMC pointer that is filled later
+> on. It is being used by the iTCO_wdt .update_no_reboot_bit() callback as
+> its private data.
+
+Just drop the const.
+
+> > > +};
+> > > +
+> > > +static const struct resource telem_res[] = {
+> > > +	DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> > > +	DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> > > +};
+> > > +
+> > > +static const struct mfd_cell telem = {
+> > > +	.name = TELEMETRY_DEVICE_NAME,
+> > 
+> > Use proper string please.
+> 
+> Okay.
+> 
+> > > +	.resources = telem_res,
+> > > +	.num_resources = ARRAY_SIZE(telem_res),
+> > > +};
+> > > +
+> > > +static int intel_pmc_get_tco_resources(struct platform_device *pdev,
+> > > +				       struct intel_pmc_dev *pmc)
+> > > +{
+> > > +	struct itco_wdt_platform_data *pdata;
+> > > +	struct resource *res, *tco_res;
+> > > +
+> > > +	if (acpi_has_watchdog())
+> > > +		return 0;
+> > > +
+> > > +	res = platform_get_resource(pdev, IORESOURCE_IO,
+> > > +				    PLAT_RESOURCE_ACPI_IO_INDEX);
+> > > +	if (!res) {
+> > > +		dev_err(&pdev->dev, "Failed to get IO resource\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	tco_res = devm_kcalloc(&pdev->dev, 2, sizeof(*tco_res), GFP_KERNEL);
+> > > +	if (!tco_res)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	tco_res[0].flags = IORESOURCE_IO;
+> > > +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
+> > > +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
+> > > +	tco_res[1].flags = IORESOURCE_IO;
+> > > +	tco_res[1].start = res->start + SMI_EN_OFFSET;
+> > > +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
+> > > +
+> > > +	pmc->cells[PMC_TCO].resources = tco_res;
+> > > +	pmc->cells[PMC_TCO].num_resources = 2;
+> > > +
+> > > +	pdata = devm_kmemdup(&pdev->dev, &tco_pdata, sizeof(*pdata), GFP_KERNEL);
+> > > +	if (!pdata)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	pdata->no_reboot_priv = pmc;
+> > 
+> > This looks hacky.  What are you doing here?
+> 
+> So the pmc instance is created per device as you requested. This one
+> passes it to the iTCO_wdt .update_no_reboot_bit() callback which we
+> implemented in this driver (sane name update_no_reboot_bit()).
+> 
+> The iTCO_wdt platform data can be found in this header if you want to
+> take a look: include/linux/platform_data/itco_wdt.h.
+
+We usually pass these kinds of pointers via device data, rather than
+platform data.
+
+> > > +	pmc->cells[PMC_TCO].platform_data = pdata;
+> > > +	pmc->cells[PMC_TCO].pdata_size = sizeof(*pdata);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int intel_pmc_get_resources(struct platform_device *pdev,
+> > > +				   struct intel_pmc_dev *pmc,
+> > > +				   struct intel_scu_ipc_pdata *pdata)
+> > > +{
+> > > +	struct resource *res, *punit_res;
+> > > +	struct resource gcr_res;
+> > > +	size_t npunit_res = 0;
+> > > +	int ret;
+> > > +
+> > > +	pdata->irq = platform_get_irq_optional(pdev, 0);
+> > > +
+> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> > > +				    PLAT_RESOURCE_IPC_INDEX);
+> > > +	if (!res) {
+> > > +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	/* IPC registers */
+> > > +	pdata->mem.flags = res->flags;
+> > > +	pdata->mem.start = res->start;
+> > > +	pdata->mem.end = res->start + PLAT_RESOURCE_IPC_SIZE - 1;
+> > 
+> > Passing register addresses through pdata also looks like a hack.
+> > 
+> > Why not pass via resources?
+> 
+> It is not actual "platform data" but just a structure that we pass for
+> the IPC registration function that then creates the underlying device
+> for the SCU IPC using these. Since it is plain device (not struct
+> platform device) it does not have the concept of "resources" such as
+> platform devices have.
+
+Calling something platform data that isn't platform data is confusing.
+
+Why aren't you using the standard device driver model to register this
+device?
+
+[...]
+
+> > > diff --git a/include/linux/mfd/intel_pmc_bxt.h b/include/linux/mfd/intel_pmc_bxt.h
+> > > new file mode 100644
+> > > index 000000000000..a5fb41910d78
+> > > --- /dev/null
+> > > +++ b/include/linux/mfd/intel_pmc_bxt.h
+> > > @@ -0,0 +1,21 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#ifndef MFD_INTEL_PMC_BXT_H
+> > > +#define MFD_INTEL_PMC_BXT_H
+> > > +
+> > > +#include <linux/types.h>
+> > > +
+> > > +/* GCR reg offsets from GCR base */
+> > > +#define PMC_GCR_PMC_CFG_REG		0x08
+> > > +#define PMC_GCR_TELEM_DEEP_S0IX_REG	0x78
+> > > +#define PMC_GCR_TELEM_SHLW_S0IX_REG	0x80
+> > > +
+> > > +/*
+> > > + * Pointer to the PMC device can be obtained by calling
+> > > + * dev_get_drvdata() to the parent MFD device.
+> > > + */
+> > > +struct intel_pmc_dev;
+> > 
+> > Don't you have a shared header file you can put the definition in
+> > instead?
+> 
+> Unfortunately no. This one is the shared header.
+
+Please consider moving the definition into here then.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
