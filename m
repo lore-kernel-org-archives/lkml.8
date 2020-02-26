@@ -2,124 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40665C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E66AC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145C82072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVGxei6e"
+	by mail.kernel.org (Postfix) with ESMTP id 3C18E2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgBZU3r (ORCPT
+        id S1727503AbgBZU3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:29:47 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34785 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbgBZU3p (ORCPT
+        Wed, 26 Feb 2020 15:29:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56902 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbgBZU3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:29:45 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so756509otl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:29:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UBBYCrKEWuOTMe5EyAwkmAIoT9VVH7fpRYrxe98vHCY=;
-        b=uVGxei6e9yF0ykQTCRbpF1Xcix7hidQzKjxKmA1TAaLMeWBjYprbRURWAhfm37DnMO
-         ALgX0i/omp1eS4k0RzspH50ykrH6+tYuInb+/v3+dsQydB2Gf1JHLwkVAh7PVr7+/vRd
-         FEXucDxG2gKpfW36N9FsDf3SO19ksbFgC8vKl0aQmSTLblf+uGgXkO2fWfA4XxFM+8Js
-         jMnrrdCbNQqqzS+mSb6pWZJeJ7i2esnsfJ3vaxuZQhlQ6v6KWz6UIlXWOgBKqvTBvuUx
-         ppCNzmE84DNL1pPvauf2ZbbPd7pYXUAe4jXhVazh2kQtXxxw/ibvY1NOsCYPKL926wLL
-         APqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UBBYCrKEWuOTMe5EyAwkmAIoT9VVH7fpRYrxe98vHCY=;
-        b=nuXeZQsG3xshMgOV3HPIxB0Zr+OgTJjlUhy/vyb1Sw7C4VLAAdWiLIkSuvH9PSAbJ5
-         qbXwvd69eMQqFHdHBqz9p4U4pOeDSmguqFCS90i8tYTJH95r4r+GJzXze86tnnOV/KAP
-         ukrElNgRw0EKXfwsyjiY4Q5Q4UNcBbWTiJMRQeMGDH4Fig5gtVx7v8L3SD70hLX3H1np
-         HUx33S8Hyw5NZgVvJ/s/k3iUj5MLrY+bu6xxNggCaRI6cZchueuriLqy8D3WnuaRi6ou
-         2oQSFUSnn/R3BmIrMeCBIWzqn2Xtd7J30RQwwCriHs4qEEYIfOOt5+9iCsydkb+avdZq
-         99vw==
-X-Gm-Message-State: APjAAAXzcNLLXBIiQN+wfVL0xnYI3v3GXEbu4oJA3/N/7dURwf1PDgSZ
-        N5De9qSds2euCPmsi71DAo0yLBMwll1fEtFLx7vVVA==
-X-Google-Smtp-Source: APXvYqy7E7A1017OqCy2OgReSsVvINF1u2X33Ne5TrenikJqc56r0qDxjZlM9E+pAKGCyqxj9LTAbiG86jPOqxjX13k=
-X-Received: by 2002:a05:6830:1219:: with SMTP id r25mr502917otp.180.1582748984487;
- Wed, 26 Feb 2020 12:29:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20200224160215.4136-1-mic@digikod.net> <20200224160215.4136-6-mic@digikod.net>
-In-Reply-To: <20200224160215.4136-6-mic@digikod.net>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 26 Feb 2020 21:29:18 +0100
-Message-ID: <CAG48ez36SMrPPgsj0omcVukRLwOzBzqWOQjuGCmmmrmsGiNukw@mail.gmail.com>
-Subject: Re: [RFC PATCH v14 05/10] fs,landlock: Support filesystem access-control
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+        Wed, 26 Feb 2020 15:29:52 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 0912129576D
+Message-ID: <da1b0908ddac65d370609f35c78d4a618ac70268.camel@collabora.com>
+Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
+ driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 26 Feb 2020 17:29:35 -0300
+In-Reply-To: <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
+References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+         <20200226105419.632771-4-enric.balletbo@collabora.com>
+         <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
-wrote:
-> +static inline u32 get_mem_access(unsigned long prot, bool private)
-> +{
-> +       u32 access =3D LANDLOCK_ACCESS_FS_MAP;
-> +
-> +       /* Private mapping do not write to files. */
-> +       if (!private && (prot & PROT_WRITE))
-> +               access |=3D LANDLOCK_ACCESS_FS_WRITE;
-> +       if (prot & PROT_READ)
-> +               access |=3D LANDLOCK_ACCESS_FS_READ;
-> +       if (prot & PROT_EXEC)
-> +               access |=3D LANDLOCK_ACCESS_FS_EXECUTE;
-> +       return access;
-> +}
+On Wed, 2020-02-26 at 07:40 -0800, Randy Dunlap wrote:
+> On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
+> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> > index 2114b563478c..dcd6481a14d0 100644
+> > --- a/drivers/soc/mediatek/Kconfig
+> > +++ b/drivers/soc/mediatek/Kconfig
+> > @@ -44,4 +44,11 @@ config MTK_SCPSYS
+> >  	  Say yes here to add support for the MediaTek SCPSYS power domain
+> >  	  driver.
+> >  
+> > +config MT8173_MMSYS
+> > +	bool "MediaTek MT8173 MMSYS Support"
+> 
+> Hi,
+> Can this be tristate instead of bool?
+> 
 
-When I do the following, is landlock going to detect that the mmap()
-is a read access, or is it incorrectly going to think that it's
-neither read nor write?
+Wouldn't that conflict with
+the driver being a builtin_platform_driver,
+or am I just confusing things badly?
 
-$ cat write-only.c
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <stdio.h>
-int main(void) {
-  int fd =3D open("/etc/passwd", O_RDONLY);
-  char *ptr =3D mmap(NULL, 0x1000, PROT_WRITE, MAP_PRIVATE, fd, 0);
-  printf("'%.*s'\n", 4, ptr);
-}
-$ gcc -o write-only write-only.c -Wall
-$ ./write-only
-'root'
-$
+Thanks,
+Ezequiel
+
+> +	depends on COMMON_CLK_MT8173
+> > +	help
+> > +	  Say yes here to add support for the MediaTek MT8173 Multimedia
+> > +	  Subsystem (MMSYS).
+> > +
+> >  endmenu
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
+> 
+
+
