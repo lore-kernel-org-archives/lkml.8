@@ -2,151 +2,171 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1022C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFF6C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B8C21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04CE21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lDqntfk2"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="CiKOdXgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbgBZDJr (ORCPT
+        id S1730254AbgBZDM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:09:47 -0500
-Received: from ozlabs.org ([203.11.71.1]:42819 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbgBZDJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 22:09:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48S14R1GJtz9sRG;
-        Wed, 26 Feb 2020 14:09:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582686583;
-        bh=cqRHvWL2a9pRClRPp6kTFZI1jMlC1F0FT0QjK1SMZc0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lDqntfk29FCQ1aZQ2KUI/tVCan2qo2FDXTVf5W746RDIbrCXKmybT+kGMoCiPzDuo
-         iT9uSbPFjwTehyNES5kaVYVxsKtqrFap7uggAjwArPFrU2z+dapxWB6dGUdaUZ4rKt
-         zRbeo4H0KeBxe2rtLJwsmT0lW/M2ahefPkW/e0D0xaJ1N+RqqLtjJAOBXWPuNJ2Ypi
-         CaOD5rN4g5ywsj7Aq0z1G9fYuJ5H4igo8Rfh0/GOPRsgo7THx+9tAGli+e+bBERu65
-         XI190F0MKED9ngjkU6gL3+CydjpT3jY3lcL2MLIYkzRVZgbm9FtsvkiX9Xlj2EVtqP
-         E4SLLLb+X1pBA==
-Date:   Wed, 26 Feb 2020 14:09:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Simek <monstr@monstr.eu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Tue, 25 Feb 2020 22:12:59 -0500
+Received: from sonic315-22.consmr.mail.ne1.yahoo.com ([66.163.190.148]:32987
+        "EHLO sonic315-22.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729434AbgBZDM7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 22:12:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1582686777; bh=EDeg07rZxl/sUH7fwsk+TOwTF2ljHnuXXPZhKhAcOt4=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=CiKOdXgipcEiGA/rKjrWm2Q1/4vyYPKjFNlqBJppzmlUcvgpyvBcHTiNC5s5vqzVBNwhSzhy1KhG5hOe5pBYEA3GHI/ycpZgHgFtsItDOv0UGlWCKhyc7vqPE5k6ZuTQh/TWQxeC6+vuTNuV5c6XZFe//JPCQXt7INXRM1br/GOn/2ZN+jYeFCxt0z+ZdOpbm3Q8gToaVLIkN603Pzyc0R+hUJ6xRcVGzVYcfXXwUcV9O4euNoO9+9cfUnBihzKexq9VgPHxiadagJmItkTgGRMRWkH82fdBHV6ML1Iq0FRSrZXz9aDdaaKkmScuUr+o6uGPMzXUiqGO1x4kFDlHgQ==
+X-YMail-OSG: AsjNqDQVM1nMtfq1AQFtcNBgDhbGgVDDZbwCRD9IS92VT2GbRH0Z0SK.JVH.I3V
+ SLoYGnkpmYsk1IchnDdkiPKKA.Dff6cBFbyF5bXLYj9WstAN2CTCoRo6e54Tewsk39LWmpYRJOWA
+ ees17l3X5i1IX9PS9R8ol9n2DfL6WrzHC1MgE11KY6hgei92IYZQK_VNZwOn70awY8hARlhy5fom
+ W2fWMVSk0WWvN_tYIoZh6BmA0wHt7z.de6a3HeCShF12WjfpvKDAVDyxuyYda0RchOtYAY6KIrTZ
+ inhZ40BE2wZkYf7BK8AhxI_2KrTdH4Ap.zMa.FzZ0nU.81w8LZRmzwgWw6dPispkPzk0lNkT9XSY
+ 0B0g7C1rXIC8thPT7tfG1KMGAbEsf2vpzbGT5p8B5U6R8ImGdowf8R7DbfEn9hGbi9O6xo5ujCTz
+ 61ZjsDOc0LwmnbCmwtHEBLoVTCqTpRL7mnm2ce5h0ZC36kydQRqsCGlEsTLOPOHj2FSFETgh1EJ2
+ ikdPmrojmhnjl_9ZGhJF.vg9eiXqnm69c.8PxdHPiq4VNOdfkbFZQ5kQ_2owX7Y2lbp7fw2eEJLr
+ Inz4JyfF7qvt00ENsojnOOamO4H_mTPUnJChNgVlbLduMd0meG.2w_c9XoLAJKT5jBoEZG1jY.5U
+ o.bxXVwOsZOo0VMvNe.8TZKR5lDECm0SjxY_3BMVZtZgwQiwq0MuIJsNUI.ACyjwfycggO3nR3j2
+ RG9tdf7UZCxQVcxBganuPt_dwZx3jwiC4lwwY3FeaT_Ep6ij0gW3Jtm5NyMJo85NpOPwHdge0hLg
+ f1vQ7HCoQomZUCk1tE4wnme9HgOj3UVviZiqMUwZa7Zo7MJdunCn.GGS5keefokGo1CysBRuCEc5
+ uWuuSZWHnkxh6wSKKqj2_jw2YAXSAAwgFQ429HzbDevoC17aClVhzE_deslukW5hXbZlAA_Xcpa_
+ r7zFWw9Hzo2nSu6ZAEdfjN6qQcLNY8Yf_w2QrPbtx9JDKQbRB0m1MAbsylCO3MqZdEw.nmhIKlus
+ TCiIz1CgHWn5EP3W796iFfTqTqpFHD3inw2hVGxX6KLethHH4Za4BUjk5q5InHkq4s.F_HVgZ8lz
+ d2yztrBnKbQtZL1d2pnt8kKNiZOC.qKzhDinLALBztJT.od0IW6sOFUea.aKD3SJVTK3EZVy_5Tp
+ 7vslgsjdjffDynm3MG7RKJ9jnYHsq64lZYGzyvWCrzJsPfxsfQQoTZMboq8sLIBuHLYrNXLzkySM
+ 1ZQyRVMm6XNXSaGzOvAUH4Mm272ezXDjfMWD07tKsH86Pe8BwXIzyUhFwdk7kp0wQH7Yo60Iz2eq
+ Mrl7dm86PaWkQ4xalRAkLdBINULSY0LeDpXt8tg2x3IxTxJMeDG97s3mhctZrZuZP2Yzbn1Y7snt
+ pT5cMFvJeFfKfUo4medxghqrvNhfNtGQcmqMQ
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Wed, 26 Feb 2020 03:12:57 +0000
+Received: by smtp422.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 25570d402fada7184cb76a0285a4068d;
+          Wed, 26 Feb 2020 03:12:53 +0000 (UTC)
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+To:     "Michael ." <keltoiboy@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: linux-next: manual merge of the akpm-current tree with the
- microblaze tree
-Message-ID: <20200226140942.1a944ba9@canb.auug.org.au>
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Philip Langdale <philipl@overt.org>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <20191029170250.GA43972@google.com>
+ <20200222165617.GA207731@google.com>
+ <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+ <20200226011310.GA2116625@rani.riverdale.lan>
+ <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
+From:   Trevor Jacobs <trevor_jacobs@aol.com>
+Message-ID: <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
+Date:   Tue, 25 Feb 2020 21:12:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TN6l1z6FOdpBmtF/m7NvSag";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.15302 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_241)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TN6l1z6FOdpBmtF/m7NvSag
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+That's correct, I tested a bunch of the old distros including slackware, 
+and 2.6.32 is where the problem began.
 
-Hi all,
+Also, the Panasonic Toughbook CF-29s effected that we tested are the 
+later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just fine 
+because it has different hardware supporting the PCMCIA slots. I have 
+not tested a MK3 but suspect it would work ok as it also uses the older 
+hardware.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+Thanks for your help guys!
+Trevor
 
-  arch/microblaze/include/asm/Kbuild
+On 2/25/20 7:50 PM, Michael . wrote:
+> Through our own testing it hasn't worked on any of the regular Linux
+> releases (both Deb and RPM varieties, and I think someone tested Arch
+> or Slackware as well) after 2.6.32 .
+>
+> On 26/02/2020, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>> On Tue, Feb 25, 2020 at 04:03:32PM +0100, Ulf Hansson wrote:
+>>> On Sat, 22 Feb 2020 at 17:56, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>> On Tue, Oct 29, 2019 at 12:02:50PM -0500, Bjorn Helgaas wrote:
+>>>>> [+cc Ulf, Philip, Pierre, Maxim, linux-mmc; see [1] for beginning of
+>>>>> thread, [2] for problem report and the patch Michael tested]
+>>>>>
+>>>>> On Tue, Oct 29, 2019 at 07:58:27PM +1100, Michael . wrote:
+>>>>>> Bjorn and Dominik.
+>>>>>> I am happy to let you know the patch did the trick, it compiled
+>>>>>> well
+>>>>>> on 5.4-rc4 and my friends in the CC list have tested the modified
+>>>>>> kernel and confirmed that both slots are now working as they
+>>>>>> should.
+>>>>>> As a group of dedicated Toughbook users and Linux users please
+>>>>>> accept
+>>>>>> our thanks your efforts and assistance is greatly appreciated.
+>>>>>>
+>>>>>> Now that we know this patch works what kernel do you think it will
+>>>>>> be
+>>>>>> released in? Will it make 5.4 or will it be put into 5.5
+>>>>>> development
+>>>>>> for further testing?
+>>>>> That patch was not intended to be a fix; it was just to test my guess
+>>>>> that the quirk might be related.
+>>>>>
+>>>>> Removing the quirk solved the problem *you're* seeing, but the quirk
+>>>>> was added in the first place to solve some other problem, and if we
+>>>>> simply remove the quirk, we may reintroduce the original problem.
+>>>>>
+>>>>> So we have to look at the history and figure out some way to solve
+>>>>> both problems.  I cc'd some people who might have insight.  Here are
+>>>>> some commits that look relevant:
+>>>>>
+>>>>>    5ae70296c85f ("mmc: Disabler for Ricoh MMC controller")
+>>>>>    03cd8f7ebe0c ("ricoh_mmc: port from driver to pci quirk")
+>>>>>
+>>>>>
+>>>>> [1]
+>>>>> https://lore.kernel.org/r/CAFjuqNi+knSb9WVQOahCVFyxsiqoGgwoM7Z1aqDBebNzp_-jYw@mail.gmail.com/
+>>>>> [2] https://lore.kernel.org/r/20191021160952.GA229204@google.com/
+>>>> I guess this problem is still unfixed?  I hate the fact that we broke
+>>>> something that used to work.
+>>>>
+>>>> Maybe we need some sort of DMI check in ricoh_mmc_fixup_rl5c476() so
+>>>> we skip it for Toughbooks?  Or maybe we limit the quirk to the
+>>>> machines where it was originally needed?
+>>> Both options seems reasonable to me. Do you have time to put together a
+>>> patch?
+>>>
+>>> Kind regards
+>>> Uffe
+>> The quirk is controlled by MMC_RICOH_MMC configuration option. At least
+>> as a short-term fix a bit better than patching the kernel, building one
+>> with that config option disabled should have the same effect.
+>>
+>>  From the commit messages, the quirk was required to support MMC (as
+>> opposed to SD) cards in the SD slot. I would assume this will be an
+>> issue with the chip in any machine as the commit indicates that the
+>> hardware in the chip detects MMC cards and doesn't expose them through
+>> the SDHCI function.
+>>
+>> It looks like the quirk was only enabled by default in 2015, at least
+>> upstream [1], though in Debian it was enabled in May 2010 going by their
+>> git repo, maybe in 2.6.32-16.
+>>
+>> [1] commit ba2f73250e4a ("mmc: Enable Ricoh MMC quirk by default")
+>>
 
-between commits:
-
-  59d85c0a3696 ("microblaze: Remove architecture tlb.h and use generic one")
-  7e8f54cd4e26 ("microblaze: Remove empty headers")
-
-from the microblaze tree and commit:
-
-  3ece10f6aa9e ("asm-generic: make more kernel-space headers mandatory")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/microblaze/include/asm/Kbuild
-index abb33619299b,f38696d2b462..000000000000
---- a/arch/microblaze/include/asm/Kbuild
-+++ b/arch/microblaze/include/asm/Kbuild
-@@@ -1,40 -1,8 +1,11 @@@
-  # SPDX-License-Identifier: GPL-2.0
-  generated-y +=3D syscall_table.h
-- generic-y +=3D bitops.h
-- generic-y +=3D bug.h
-- generic-y +=3D bugs.h
-- generic-y +=3D compat.h
-- generic-y +=3D device.h
-- generic-y +=3D div64.h
-- generic-y +=3D dma-mapping.h
-- generic-y +=3D emergency-restart.h
-- generic-y +=3D exec.h
-  generic-y +=3D extable.h
-- generic-y +=3D fb.h
-- generic-y +=3D hardirq.h
- +generic-y +=3D hw_irq.h
-- generic-y +=3D irq_regs.h
-- generic-y +=3D irq_work.h
-- generic-y +=3D kdebug.h
-- generic-y +=3D kmap_types.h
-- generic-y +=3D kprobes.h
-  generic-y +=3D kvm_para.h
-- generic-y +=3D linkage.h
-- generic-y +=3D local.h
-  generic-y +=3D local64.h
-  generic-y +=3D mcs_spinlock.h
-- generic-y +=3D mm-arch-hooks.h
-- generic-y +=3D mmiowb.h
-  generic-y +=3D parport.h
-- generic-y +=3D percpu.h
-- generic-y +=3D preempt.h
-- generic-y +=3D serial.h
-- generic-y +=3D shmparam.h
-  generic-y +=3D syscalls.h
- +generic-y +=3D tlb.h
-- generic-y +=3D topology.h
-- generic-y +=3D trace_clock.h
- +generic-y +=3D user.h
-- generic-y +=3D vga.h
-- generic-y +=3D word-at-a-time.h
-- generic-y +=3D xor.h
-
---Sig_/TN6l1z6FOdpBmtF/m7NvSag
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5V4XYACgkQAVBC80lX
-0GysUQf/VZIbMwy+46wMYpOWZqWyXQrIuaPllQdoVo91oXV46ymn+cowEcTLGiUy
-YmM6K+RQ2DVPcc3M3PKTdfHVxYxpflGMe45YClJLLPmsMjjnXvEIA59U4BmZ+qg9
-c11yW0O+0cVxLPUbq8DTt2bhxGhEedghR3W8mJQgIvskSl9F785+yuEE6Tdgc3dp
-KZ2N2m8N/dmZNdyfdez32LF7xjvWWor37Bn6DVRoLq4ywNhpp60comsnqAUCsg1g
-MkQ1fuRGHy2+s+ostIZqfKnFWopJ76UUeWeSE8iqGngPED8Cv69MKycX/k/MiroG
-XOZioiU8KPquUmLTvcdgC7D9BC8SRw==
-=m77t
------END PGP SIGNATURE-----
-
---Sig_/TN6l1z6FOdpBmtF/m7NvSag--
