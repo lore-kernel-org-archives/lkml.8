@@ -2,86 +2,134 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECC1C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34267C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7941D24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34162072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u6Qf/0Ka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbgBZVZj (ORCPT
+        id S1727591AbgBZV2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:25:39 -0500
-Received: from mga02.intel.com ([134.134.136.20]:51811 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbgBZVZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:25:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:25:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="256472357"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 26 Feb 2020 13:25:37 -0800
-Date:   Wed, 26 Feb 2020 13:25:37 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jacob Keller <jacob.e.keller@intel.com>
-Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
-        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
-        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
-        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
-        lenb@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
-        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
-        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
- IA32_FEAT_CTL is configured
-Message-ID: <20200226212537.GR9940@linux.intel.com>
-References: <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
- <20200225221234.GL9245@linux.intel.com>
- <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
- <20200225232900.GO9245@linux.intel.com>
- <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
- <20200226004258.GP9245@linux.intel.com>
- <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
- <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
- <20200226205745.GQ9940@linux.intel.com>
- <9a0a7373-f469-f2ae-c218-5821f805f0d8@intel.com>
+        Wed, 26 Feb 2020 16:28:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59502 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727486AbgBZV2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:28:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=22L8bPAzmVdqd1/KzktzA8ztx8DTFzR2iF/v1VHlqz0=; b=u6Qf/0KanA1Wckx/r3ajANog91
+        t5mZB2hlR9hC2xHkmV++USC/1wp3rDkQYzFUFm2S3AS2EJX6dfnlOZUsfIw+1oRq3cNPIjuPXOLux
+        7b2bZbJzarW5uB37Hi4mqqbHwyFYRsVKnRX18yd3J0/NHuQyy+n4qkS4r4QsC5oxLy0hdqqq+12Yy
+        ZJdtVw9lBdWCJYgZzef+VkdDaLswl7mFZvX0aI/+lS85GS6VUgpfUwkaRxSWn1BvJaCYxywjlCCaJ
+        NAn1li//Sw89TsCek1PIeAymwqppl7jRajU8kgUZ5AIDFFrrtZdnh6ZEQ2Jm42vgULqfCUXzUob6Z
+        6if60eOg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j74EW-0006tG-S4; Wed, 26 Feb 2020 21:28:44 +0000
+Date:   Wed, 26 Feb 2020 13:28:44 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+Message-ID: <20200226212844.GD24185@bombadil.infradead.org>
+References: <20200226161404.14136-1-longman@redhat.com>
+ <20200226162954.GC24185@bombadil.infradead.org>
+ <12e8d951-fc35-bce0-e96d-f93bccf2bd3a@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9a0a7373-f469-f2ae-c218-5821f805f0d8@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <12e8d951-fc35-bce0-e96d-f93bccf2bd3a@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:03:01PM -0800, Jacob Keller wrote:
-> On 2/26/2020 12:57 PM, Sean Christopherson wrote:
-> > Bummer.  Using clear_cpu_cap() instead of setup_clear_cpu_cap() was me
-> > being fancy and trying to allow KVM to identify the case where VMX is
-> > available and configured on some CPUs but not all.  I'll work on a fix.
-> > 
-> Hmm. Right. For that to work, you'd need to make this disabling happen
-> significantly later, and/or fix setup_pku to somehow honor this properly.
+On Wed, Feb 26, 2020 at 02:19:59PM -0500, Waiman Long wrote:
+> On 2/26/20 11:29 AM, Matthew Wilcox wrote:
+> > On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
+> >> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
+> >> value of 0 (default) for no limit or a positive integer 256 and up. Small
+> >> dentry-dir-max numbers are forbidden to avoid excessive dentry count
+> >> checking which can impact system performance.
+> > This is always the wrong approach.  A sysctl is just a way of blaming
+> > the sysadmin for us not being very good at programming.
+> >
+> > I agree that we need a way to limit the number of negative dentries.
+> > But that limit needs to be dynamic and depend on how the system is being
+> > used, not on how some overworked sysadmin has configured it.
+> >
+> > So we need an initial estimate for the number of negative dentries that
+> > we need for good performance.  Maybe it's 1000.  It doesn't really matter;
+> > it's going to change dynamically.
+> >
+> > Then we need a metric to let us know whether it needs to be increased.
+> > Perhaps that's "number of new negative dentries created in the last
+> > second".  And we need to decide how much to increase it; maybe it's by
+> > 50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
+> > how high the recent rate of negative dentry creation has been.
+> >
+> > We also need a metric to let us know whether it needs to be decreased.
+> > I'm reluctant to say that memory pressure should be that metric because
+> > very large systems can let the number of dentries grow in an unbounded
+> > way.  Perhaps that metric is "number of hits in the negative dentry
+> > cache in the last ten seconds".  Again, we'll need to decide how much
+> > to shrink the target number by.
+> >
+> > If the number of negative dentries is at or above the target, then
+> > creating a new negative dentry means evicting an existing negative dentry.
+> > If the number of negative dentries is lower than the target, then we
+> > can just create a new one.
+> >
+> > Of course, memory pressure (and shrinking the target number) should
+> > cause negative dentries to be evicted from the old end of the LRU list.
+> > But memory pressure shouldn't cause us to change the target number;
+> > the target number is what we think we need to keep the system running
+> > smoothly.
+> >
+> Thanks for the quick response.
+> 
+> I agree that auto-tuning so that the system administrator don't have to
+> worry about it will be the best approach if it is implemented in the
+> right way. However, it is hard to do it right.
+> 
+> How about letting users specify a cap on the amount of total system
+> memory allowed for negative dentries like one of my previous patchs.
+> Internally, there is a predefined minimum and maximum for
+> dentry-dir-max. We sample the total negative dentry counts periodically
+> and adjust the dentry-dir-max accordingly.
+> 
+> Specifying a percentage of total system memory is more intuitive than
+> just specifying a hard number for dentry-dir-max. Still some user input
+> is required.
 
-Arguably, setup_pku() should be a little less heavy handed in updating
-cpufeatures for X86_FEATURE_OSPKE, but init_ia32_feat_ctl() should also be
-more robust.
+If you want to base the whole thing on a per-directory target number,
+or a percentage of the system memory target (rather than my suggestion
+of a total # of negative dentries), that seems reasonable.  What's not
+reasonable is expecting the sysadmin to be able to either predict the
+workload, or react to a changing workload in sufficient time.  The system
+has to be self-tuning.
 
-I've reproduced the bug, should have a fix ready by EOD.
-
-> But it looks like rdmsr is global and not tied to a given CPU anyways?
-
-For better or worse, the MSR is thread scoped.
+Just look how long stale information stays around about how to tune your
+Linux system.  Here's an article from 2018 suggesting using the 'intr'
+option for NFS mounts:
+https://kb.netapp.com/app/answers/answer_view/a_id/1004893/~/hard-mount-vs-soft-mount-
+I made that a no-op in 2007.  Any tunable you add to Linux immediately
+becomes a cargo-cult solution to any problem people are having.
