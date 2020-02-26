@@ -2,90 +2,115 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B72C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C915DC4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6250920732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R+I4pjf2"
+	by mail.kernel.org (Postfix) with ESMTP id 9F1D8222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582679637;
+	bh=sEMmi+uzoT7y/MrYSZEZWw7svvLIaxFFKL1gWKPsqB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ptmoX+salYoFlBPCWIb55AiI09P1/bQKlcuCC0/p5Mu+SilpeboTPI2Bn79GWjJl+
+	 F5iXuTpOQvYQaObwxhUUsrI+561ybkuYdvHUzXY/5j2idWI8a0r/L8o+EVvDqN8vLk
+	 3a2rz52Wi9ldAc+unQdK2k4zKLpNDrg5hrrSY+zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgBZBNm (ORCPT
+        id S1730266AbgBZBN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:13:42 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39419 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730135AbgBZBNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:13:40 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so1468520ioh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:13:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Md+dR3QAjkgbDHCOD0u7elrQ4FkH1YpiL26CdEGfHpk=;
-        b=R+I4pjf2mqXjj+8BCUTibnuDnoALhtisnlvmkpZOTuALmHc7sxQkJkSmlDj9G1kp4F
-         5BN4PN1Mkph70DyXdrt6H34L57uHBEbuqveIFJOEdumqQGaX7t7ictKgocS237fQvqEo
-         mS1i1JZbRPKsrVo/wv152qvDzlvEDv5Elwub8wVfQX/18NUFIDXkNounJ4Bkwum/W3XS
-         bs2l15mYhvWlgK6GvQGKHdJtRx1GIM7bCfqL4z+J8xDLpUr1ejtu/o+fVT5+VcHx4z2c
-         /+hr2qxBNVjW3inC/MKwqcMmwv6Tgce3DMfVvk6I/17eliRdypZ+IPVA4fIYctm4/bBO
-         +dbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Md+dR3QAjkgbDHCOD0u7elrQ4FkH1YpiL26CdEGfHpk=;
-        b=XoC2gYDRw7O1vNn9Sja3IF1xtn0s76HWlCtbeYzxaDOrdE13LJM5DtxSnkb1V0tQKk
-         hDBUsFRPGmztThb579EHiixKHVrsAr/VZfyHyU/hgQoTyGvBQ9wU433rrUEPw3xaK1yt
-         hbpCxrq6jXWnwvX33Y4Hw61nE/rOKqjCh+YSeIItDmtkEPnRRHfAZUoSOm2hJRqTHgv0
-         yItS0JwsDRxYZb2CNpYagPKzX8xNMMmBPO9ptsZcWbTaEtcOMUnU1rMlLYveHhdzxTa6
-         sxvsTvI6e6l8vyyvONcNuT7uB2D9ZUORjGD0bqAyxyWzTpfgthIyz1m2KPrHdorauWoE
-         NnXw==
-X-Gm-Message-State: APjAAAXGCVtO/AHdME9xWEpxeQHB4JqMMK687pEtumd+aDxyqTjFsNms
-        WmmGaz0hhaIoEgXi7/eSPdrlYfhuruo=
-X-Google-Smtp-Source: APXvYqyziRLA63DqgeyRhiV9j8Pxm2Iva9SkiX6jHMkmIhWdxef0d17W2ImORx3FKCTw289xP0FCYw==
-X-Received: by 2002:a05:6638:1a8:: with SMTP id b8mr1405336jaq.34.1582679618849;
-        Tue, 25 Feb 2020 17:13:38 -0800 (PST)
-Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id q1sm108128ile.71.2020.02.25.17.13.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 17:13:38 -0800 (PST)
-Date:   Tue, 25 Feb 2020 18:13:35 -0700
-From:   Ross Zwisler <zwisler@google.com>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Raul Rangel <rrangel@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] Add a "nosymfollow" mount option.
-Message-ID: <20200226011335.GA12632@google.com>
-References: <20200226010706.9431-1-zwisler@google.com>
+        Tue, 25 Feb 2020 20:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730244AbgBZBNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:13:53 -0500
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F027920732;
+        Wed, 26 Feb 2020 01:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582679632;
+        bh=sEMmi+uzoT7y/MrYSZEZWw7svvLIaxFFKL1gWKPsqB0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JiEmf8Y8PytiydffpHTRP7LL2NAxtShYIBws4Wbr7rWQ6cB7eSHWoAVgwHhXdfyWt
+         HcBv2B/KlpHXODCp3De9bztKkzk/YEF9BIW1itAAW8KlNqtj78yDWmyk8drzrdsoVh
+         Rig2uBU1GRiIHMVPsV2CsE4pak2JclPo6wE2079g=
+Date:   Wed, 26 Feb 2020 02:13:50 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [patch 02/10] x86/mce: Disable tracing and kprobes on
+ do_machine_check()
+Message-ID: <20200226011349.GH9599@lenoir>
+References: <20200225213636.689276920@linutronix.de>
+ <20200225220216.315548935@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226010706.9431-1-zwisler@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200225220216.315548935@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 06:07:06PM -0700, Ross Zwisler wrote:
-<>
-> Changes since v5 [1]:
+On Tue, Feb 25, 2020 at 10:36:38PM +0100, Thomas Gleixner wrote:
+> From: Andy Lutomirski <luto@kernel.org>
+> 
+> do_machine_check() can be raised in almost any context including the most
+> fragile ones. Prevent kprobes and tracing.
+> 
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/include/asm/traps.h   |    3 ---
+>  arch/x86/kernel/cpu/mce/core.c |   12 ++++++++++--
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> --- a/arch/x86/include/asm/traps.h
+> +++ b/arch/x86/include/asm/traps.h
+> @@ -88,9 +88,6 @@ dotraplinkage void do_page_fault(struct
+>  dotraplinkage void do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
+>  dotraplinkage void do_coprocessor_error(struct pt_regs *regs, long error_code);
+>  dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code);
+> -#ifdef CONFIG_X86_MCE
+> -dotraplinkage void do_machine_check(struct pt_regs *regs, long error_code);
+> -#endif
+>  dotraplinkage void do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
+>  #ifdef CONFIG_X86_32
+>  dotraplinkage void do_iret_error(struct pt_regs *regs, long error_code);
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1213,8 +1213,14 @@ static void __mc_scan_banks(struct mce *
+>   * On Intel systems this is entered on all CPUs in parallel through
+>   * MCE broadcast. However some CPUs might be broken beyond repair,
+>   * so be always careful when synchronizing with others.
+> + *
+> + * Tracing and kprobes are disabled: if we interrupted a kernel context
+> + * with IF=1, we need to minimize stack usage.  There are also recursion
+> + * issues: if the machine check was due to a failure of the memory
+> + * backing the user stack, tracing that reads the user stack will cause
+> + * potentially infinite recursion.
+>   */
+> -void do_machine_check(struct pt_regs *regs, long error_code)
+> +void notrace do_machine_check(struct pt_regs *regs, long error_code)
+>  {
+>  	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
+>  	DECLARE_BITMAP(toclear, MAX_NR_BANKS);
+> @@ -1360,6 +1366,7 @@ void do_machine_check(struct pt_regs *re
+>  	ist_exit(regs);
+>  }
+>  EXPORT_SYMBOL_GPL(do_machine_check);
+> +NOKPROBE_SYMBOL(do_machine_check);
 
-And of course this version is v6.  Sorry for the omission.
+That won't protect all the function called by do_machine_check(), right?
+There are lots of them.
