@@ -2,241 +2,171 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0F4C4BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B628C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3552D24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582734826;
-	bh=K/0b0iuJYo4oZt1f734dFYPpXmagB5MKcKdJqNjGBUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wuizmI4f/y4oy/Ll4AcO1Q7vgkZrC0pDcdFgg9k4grIANKW44O99nLNpuA7op/mVy
-	 ToqokWlthl5xYRBrMdTITOouaS8G1OpeJ43bCgNo4r8VEgIjoxSob95THSzYjq0r8q
-	 ytDqqOjjkDEv3FhnezsmIZn7PS5I4Tl2oxJvV8hE=
+	by mail.kernel.org (Postfix) with ESMTP id F3370206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgBZQdp (ORCPT
+        id S1727560AbgBZQfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:33:45 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44961 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgBZQdp (ORCPT
+        Wed, 26 Feb 2020 11:35:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54549 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgBZQfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:33:45 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so3484525otj.11;
-        Wed, 26 Feb 2020 08:33:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lbFvo5HuT3obVT0xk8fNIbu0p3dI4t+br6icB8M92zo=;
-        b=lq1hcc27//EHILMiQihpJH943Ti1+3StL/a9MLJbF71YcpcYzbqXCNxO7Zazorl3h7
-         9I9KVkMWujkf1lgAMhisB6iI5JBUFdIMXZyfW4gTgcyZ7bQ84EABln3ETze6v4R9oyWb
-         Q7fCUapMgvX0dc9M6S1sDRc4OxagDE6xMF0OzI88p7/gOfh9RPZsWyOHKAeEFeUc3x0Y
-         65m5/TtD7yVviw2G0VBhzL7PFaoVcuimBuepY7cOCuN/Lh5HjAmw9tmApLbpnxbKvbAI
-         rsXqRaW1w9YVBM/PSTncFTSCCStWOd+OJKnzgBTFjOjQ84cePy/P/MhZvsk9m315bHQK
-         MmNw==
-X-Gm-Message-State: APjAAAWjWXUp7t0GThvesLRHi1o2HbXVjPoLYNUajVUkkUytthj5Odvq
-        Ok+eY7xP7CJUtUHevFRUuQ==
-X-Google-Smtp-Source: APXvYqxAh2WjxmOlqFeKqAx/quOrMLgdoA8tQvbTL8tmC9NEpFZlnmrg8hnVq+U0peeFAT+su5Ug4A==
-X-Received: by 2002:a9d:7c95:: with SMTP id q21mr1668568otn.278.1582734823559;
-        Wed, 26 Feb 2020 08:33:43 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i7sm970117oib.42.2020.02.26.08.33.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:33:42 -0800 (PST)
-Received: (nullmailer pid 30554 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:33:42 -0000
-Date:   Wed, 26 Feb 2020 10:33:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
-        John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 1/4] dt-bindings: display: msm: Convert GMU bindings
- to YAML
-Message-ID: <20200226163342.GA26694@bogus>
-References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
- <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
+        Wed, 26 Feb 2020 11:35:42 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6zes-0006KP-Qq; Wed, 26 Feb 2020 17:35:38 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6zer-0001iD-NE; Wed, 26 Feb 2020 17:35:37 +0100
+Date:   Wed, 26 Feb 2020 17:35:37 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, kernel@pengutronix.de
+Subject: Re: [PATCH 3/4] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200226163537.5shrqno6zy56t2l4@pengutronix.de>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-4-lokeshvutla@ti.com>
+ <20200224085531.zab5ewr2nfi2shem@pengutronix.de>
+ <4aedb6d4-1823-ab46-b7e6-cc0b30f7747d@ti.com>
+ <20200225064833.kmvaplfqqf53s3iy@pengutronix.de>
+ <8e22912c-a65f-9efe-27e7-555cd144776f@ti.com>
+ <20200225083846.4l4tnbjcpm6uggtl@pengutronix.de>
+ <4d830367-403a-5cf5-abf0-7daccbece1ae@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4d830367-403a-5cf5-abf0-7daccbece1ae@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:26:53AM -0700, Jordan Crouse wrote:
-> Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-> text bindings.
+On Tue, Feb 25, 2020 at 04:56:02PM +0530, Lokesh Vutla wrote:
+> Hi Uwe,
 > 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
+> On 25/02/20 2:08 PM, Uwe Kleine-König wrote:
+> > Hello Lokesh,
+> > 
+> > On Tue, Feb 25, 2020 at 01:29:57PM +0530, Lokesh Vutla wrote:
+> >> On 25/02/20 12:18 PM, Uwe Kleine-König wrote:
+> >>> On Tue, Feb 25, 2020 at 10:32:42AM +0530, Lokesh Vutla wrote:
+> >>>> On 24/02/20 2:25 PM, Uwe Kleine-König wrote:
+> >>>>> On Mon, Feb 24, 2020 at 10:51:34AM +0530, Lokesh Vutla wrote:
+> >>>>>>  	omap->pdata->set_load(omap->dm_timer, true, load_value);
+> >>>>>>  	omap->pdata->set_match(omap->dm_timer, true, match_value);
+> >>>>>
+> >>>>> (Without having looked into the depths of the driver I assume
+> >>>>> .set_load() sets the period of the PWM and .set_match() the duty cycle.)
+> >>>>
+> >>>> Right.
+> >>>>
+> >>>>>
+> >>>>> What happens on a running PWM if you change the period? Consider you
+> >>>>> change from duty_cycle = 1000, period = 5000 to duty_cycle = 4000,
+> >>>>> period = 10000. As you set the period first, can it happen the hardware
+> >>>>> produces a cycle with duty_cycle = 1000, period = 10000?
+> >>>>
+> >>>> No. So, the current cycle is un affected with duty_cycle = 1000 and period =
+> >>>> 5000. Starting from next cycle new settings gets reflected with duty_cycle =
+> >>>> 4000 and period = 10000.
+> >>>
+> >>> Is the reference manual for this hardware publically available?
+> >>
+> >> AM335x TRM [0] Section 20.1.3.5 Pulse-Width Modulation (Page 4445).
+> >>
+> >> [0] http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+> > 
+> > Great. This is BTW an opportunity to increase your patch count: Create a
+> > patch that adds a reference to this document at the top of the driver.
+> > 
+> >>> So the .set_load callback just writes a shadow register and .set_match
+> >>> latches it into hardware atomically with its own register changes? A
+> >>> comment in the source code about this would be good. Also if .set_load
+> >>> doesn't work without .set_match I wonder if it is sane to put their
+> >>> logic in two different functions.
+> >>
+> >> Just to give a little bit of background:
+> > 
+> > Thanks, very appreciated.
+> > 
+> >> - The omap timer is an upward counter that can be started and stopped at any time.
+> >> - Once the timer counter overflows, it gets loaded with a predefined load
+> >> value.(Or can be configured to not re load at all).
+> >> - Timer has a configurable output pin which can be toggled in the following two
+> >> cases:
+> >> 	- When the counter overflows
+> >> 	- When the counter matches with a predefined register(match register).
+> >>
+> >> Using this o/p pin the driver tries to generate a PWM with period = (OVERFLOW -
+> >> LOAD_VALUE) and duty_cycle = (MATCH_VALUE - LOAD_VALUE).
+> >>
+> >> .set_load will configure the load value .set_match will configure the match
+> >> value. The configured values gets effected only in the next cycle of PWM.
+> > 
+> > Ah, so back to my original question: If you change from
+> > duty_cycle/period = 1000/5000 to duty_cycle/period = 4000/10000 and
+> > after you set the period but before you set the duty_cycle a period
+> > happens to end, you get indeed a cycle with mixed settings, right?
 > 
->  .../devicetree/bindings/display/msm/gmu.txt        | 116 ------------------
->  .../devicetree/bindings/display/msm/gmu.yaml       | 130 +++++++++++++++++++++
->  2 files changed, 130 insertions(+), 116 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
->  create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-> new file mode 100644
-> index 0000000..776ff92
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
-> +%YAML 1.2
-> +---
-> +
-> +$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Devicetree bindings for the GMU attached to certain Adreno GPUs
-> +
-> +maintainers:
-> +  - Rob Clark <robdclark@gmail.com>
-> +
-> +description: |
-> +  These bindings describe the Graphics Management Unit (GMU) that is attached
-> +  to members of the Adreno A6xx GPU family. The GMU provides on-device power
-> +  management and support to improve power efficiency and reduce the load on
-> +  the CPU.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - qcom,adreno-gmu-630.2
-> +      - const: qcom,adreno-gmu
-> +
-> +  reg:
-> +    items:
-> +      - description: Core GMU registers
-> +      - description: GMU PDC registers
-> +      - description: GMU PDC sequence registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: gmu
-> +      - const: gmu_pdc
-> +      - const: gmu_pdc_seq
-> +
-> +  clocks:
-> +    items:
-> +     - description: GMU clock
-> +     - description: GPU CX clock
-> +     - description: GPU AXI clock
-> +     - description: GPU MEMNOC clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: gmu
-> +      - const: cxo
-> +      - const: axi
-> +      - const: memnoc
-> +
-> +  interrupts:
-> +    items:
-> +     - description: GMU HFI interrupt
-> +     - description: GMU interrupt
-> +
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: hfi
-> +      - const: gmu
-> +
-> +  power-domains:
-> +     items:
-> +       - description: CX power domain
-> +       - description: GX power domain
-> +
-> +  power-domain-names:
-> +     items:
-> +       - const: cx
-> +       - const: gx
-> +
-> +  iommus:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-
-Already has a type. Just need to define how many entries (maxItems).
-
-> +    description:
-> +       Phandle to a IOMMU device and stream ID. Refer to ../../iommu/iommu.txt
-> +       for more information.
-
-Drop. That's all iommus entries.
-
-> +
-> +  operating-points-v2:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the OPP table for the available GMU frequencies. Refer to
-> +      ../../opp/opp.txt for more information.
-
-Just 'true' is enough here.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - interrupt-names
-> +  - power-domains
-> +  - power-domain-names
-> +  - iommus
-> +  - operating-points-v2
-> +
-> +examples:
-> + - |
-> +   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-> +   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +   #include <dt-bindings/interrupt-controller/irq.h>
-> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +   gmu: gmu@506a000 {
-> +        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
-> +
-> +        reg = <0x506a000 0x30000>,
-> +              <0xb280000 0x10000>,
-> +              <0xb480000 0x10000>;
-> +        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> +
-> +        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-> +                 <&gpucc GPU_CC_CXO_CLK>,
-> +                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-> +                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-> +        clock-names = "gmu", "cxo", "axi", "memnoc";
-> +
-> +        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "hfi", "gmu";
-> +
-> +        power-domains = <&gpucc GPU_CX_GDSC>,
-> +                        <&gpucc GPU_GX_GDSC>;
-> +        power-domain-names = "cx", "gx";
-> +
-> +        iommus = <&adreno_smmu 5>;
-> +        operating-points-v2 = <&gmu_opp_table>;
-> +   };
-> -- 
-> 2.7.4
+> hmm..you are right but the mixed period happens in a bit different case. Let me
+> explain in bit more detail.
 > 
+> For omap dm timer, the load_value that gets set in the current period, will be
+> reflected only in next cycle, as timer counter has to overflow to load this
+> value. But in case of match register(which determines the duty cycle), the timer
+> counter is continuously matched to it. So below are the cases where a mixed
+> period can happen:
+> 1) When signal is high and new match value is > current timer counter. Then the
+> duty cycle gets reflected in the current cycle.(Duty_cycle for current period=
+> new match value -  previous load  value).
+> 2) When signal is high and new match value is < current timer counter. Then the
+> period and duty cycle for the current cycle gets effected as well. Because the
+> signal is pulled down only when counter matches with match register, and this
+> happens only in the next cycle(after timer counter overflows). Then:
+> 	- new Period for current cycle = (current period + new period)
+> 	- new duty cycle for current cycle =  (current period + new duty_cycle).
+> 
+> I am able to observe the above mentioned 2 behaviors on the scope using beagle
+> bone black. So the problem is with updating duty cycle when the signal is high.
+> but when signal is low, nothing gets effected to the current cycle.
+> 
+> How do you want to go about this? Should we describe this as limitation in the
+> driver as you asked?
+
+OK, to sumarize: You have a counter that goes up. When it overflows it
+gets reloaded with the load value and the output goes up. When
+$counter = $match, the output goes down.
+
+Having this is a comment at the top of the driver would be very welcome.
+
+(I just noticed I duplicated this question about a racy update in
+another end of this thread. This pops in my head too automatically :-)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
