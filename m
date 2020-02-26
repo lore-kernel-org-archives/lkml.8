@@ -2,98 +2,199 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B94C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A976EC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B84F3206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763A524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E83XasBZ"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="j0M98yja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBZKDL (ORCPT
+        id S1727815AbgBZKFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:03:11 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:49760 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgBZKDL (ORCPT
+        Wed, 26 Feb 2020 05:05:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35145 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgBZKFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:03:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=U73IQx8iL6dKaqfPhIfcrYOA572OMWwK+0B2ii6t3TQ=; b=E83XasBZYeIKKAw+b8QdAE7BU4
-        sWEJS8SKH0nn/w6hd+5q3PRiVEWYoBVnWm421wCIEuLuUWxbw7XmfvEAXcF9pSM+SGT42fQLfOCKF
-        yMsZ9HHqjQSfBHFpJKJXs8iDhkad8KSAAoB90ObjWr8PnZwBG9MuKqdf8i+VR0jmi4uZ+vzVCC94D
-        uNgmA5iWiourAfGqVvU4qD/2M79rNE8rnx6M3QRWo9LY9LYZKI0vp+Y+Z960qPr3xLz8yjTL6r9bv
-        ls6FNKhDQmMWewCEfbbkcllQb+D6UHk4ZwuFncYcsIT0/0gVogsN6+SEs/TEam+Fa/G55CFeyrpi+
-        fOraGaHw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6tWr-00014e-W7; Wed, 26 Feb 2020 10:02:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7273300130;
-        Wed, 26 Feb 2020 11:01:00 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3A0C420160BF2; Wed, 26 Feb 2020 11:02:56 +0100 (CET)
-Date:   Wed, 26 Feb 2020 11:02:56 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 00/15] x86/entry: Consolidation - Part V
-Message-ID: <20200226100256.GK14946@hirez.programming.kicks-ass.net>
-References: <20200225224719.950376311@linutronix.de>
- <20200226095319.GT18400@hirez.programming.kicks-ass.net>
+        Wed, 26 Feb 2020 05:05:30 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w12so2217064wrt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:05:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Al3H6KZgkGIqfcdoyxiez7m9SAUTRWEuD27a6Q2autQ=;
+        b=j0M98yjaogcYjsgzW0y5ZqhH0fbl9VDStEvkaeoC/Q8KpdrZBUdsjqGDvtlGHy73Yv
+         MbhkBqhePnuoVrcclW+uiVBJNmeFp5GrtpeC47jAkJa/XoMRzzcdwu/+jc3KPbbb7QYN
+         s7YEp+3QBxlkwANz8hrslsSbxbtlszU3kIxWU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=Al3H6KZgkGIqfcdoyxiez7m9SAUTRWEuD27a6Q2autQ=;
+        b=NASjyhRosHow1Q4sOdZp7JRQb3pVgRwnHIfuDFXG13XYcxPSu/lcJYCPLakYiAU8l1
+         lJk0Awz6hnh01NIAi17AZNSXy9p6JhtI4gSSk84W3oSWs+rigbDOTkSl+WPYzhs/2tbq
+         7tENWI+wmoqvzr4rbx68mZQiSyOMWWhIih9oU/a2GgdfWHWN20CsLLD9xHv9p76+ihUs
+         Pj4zP7Bo7qw9WvvZ+Q9FngeYFM56QfNL5fe+i8xggX7jbvX53+4YLdGhAWa6Nnu8hoCZ
+         5zU8UoSq8B+jJZZIvRKmAf2CsctF7KgEP84I6ZEPw+Imy2fpo5JQ93KoNUAbFR86zmWr
+         OVow==
+X-Gm-Message-State: APjAAAXAzyHreZTjNkSycDxBGqtcoV/Z0CGSZvPEYUq8YT5kywF6ZLbo
+        HCXGls8FoVWTILn73D+KjctxnSU0dnY=
+X-Google-Smtp-Source: APXvYqx4YFv94SVwpTw1EAbdnPvzNbZqxL94kJt3jNH24FAyl1JpVrm+58bVHWDTC6hYHA1gQNGYMQ==
+X-Received: by 2002:adf:a114:: with SMTP id o20mr3560754wro.7.1582711526516;
+        Wed, 26 Feb 2020 02:05:26 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id w1sm2607819wro.72.2020.02.26.02.05.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 02:05:25 -0800 (PST)
+Date:   Wed, 26 Feb 2020 11:05:23 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     Jason Ekstrand <jason@jlekstrand.net>, airlied@redhat.com,
+        daniel.vetter@ffwll.ch, jessehall@google.com, jajones@nvidia.com,
+        bas@basnieuwenhuizen.nl, daniels@collabora.com,
+        hoegsberg@google.com, Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting
+ sync files
+Message-ID: <20200226100523.GQ2363188@phenom.ffwll.local>
+Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jason Ekstrand <jason@jlekstrand.net>, airlied@redhat.com,
+        jessehall@google.com, jajones@nvidia.com, bas@basnieuwenhuizen.nl,
+        daniels@collabora.com, hoegsberg@google.com,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20200225235856.975366-1-jason@jlekstrand.net>
+ <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200226095319.GT18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 10:53:19AM +0100, Peter Zijlstra wrote:
-> +SYM_CODE_START_LOCAL_NOALIGN(common_idtentry)
-> +	/* the return address is in the %gs stack slot */
->  	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
->  	ENCODE_FRAME_POINTER
->  
->  	/* fixup %gs */
->  	GS_TO_REG %ecx
-> -	movl	PT_GS(%esp), %edi		# get the function address
-> -	REG_TO_PTGS %ecx
-> +	pushl	PT_GS(%esp)			# push return address
-> +	REG_TO_OTGS %ecx
+On Wed, Feb 26, 2020 at 10:16:05AM +0100, Christian König wrote:
+> Hi Jason,
+> 
+> Am 26.02.20 um 00:58 schrieb Jason Ekstrand:
+> > Explicit synchronization is the future.  At least, that seems to be what
+> > most userspace APIs are agreeing on at this point.  However, most of our
+> > Linux APIs (both userspace and kernel UAPI) are currently built around
+> > implicit synchronization with dma-buf.  While work is ongoing to change
+> > many of the userspace APIs and protocols to an explicit synchronization
+> > model, switching over piecemeal is difficult due to the number of
+> > potential components involved.  On the kernel side, many drivers use
+> > dma-buf including GPU (3D/compute), display, v4l, and others.  In
+> > userspace, we have X11, several Wayland compositors, 3D drivers, compute
+> > drivers (OpenCL etc.), media encode/decode, and the list goes on.
+> > 
+> > This patch provides a path forward by allowing userspace to manually
+> > manage the fences attached to a dma-buf.  Alternatively, one can think
+> > of this as making dma-buf's implicit synchronization simply a carrier
+> > for an explicit fence.  This is accomplished by adding two IOCTLs to
+> > dma-buf for importing and exporting a sync file to/from the dma-buf.
+> > This way a userspace component which is uses explicit synchronization,
+> > such as a Vulkan driver, can manually set the write fence on a buffer
+> > before handing it off to an implicitly synchronized component such as a
+> > Wayland compositor or video encoder.  In this way, each of the different
+> > components can be upgraded to an explicit synchronization model one at a
+> > time as long as the userspace pieces connecting them are aware of it and
+> > import/export fences at the right times.
+> > 
+> > There is a potential race condition with this API if userspace is not
+> > careful.  A typical use case for implicit synchronization is to wait for
+> > the dma-buf to be ready, use it, and then signal it for some other
+> > component.  Because a sync_file cannot be created until it is guaranteed
+> > to complete in finite time, userspace can only signal the dma-buf after
+> > it has already submitted the work which uses it to the kernel and has
+> > received a sync_file back.  There is no way to atomically submit a
+> > wait-use-signal operation.  This is not, however, really a problem with
+> > this API so much as it is a problem with explicit synchronization
+> > itself.  The way this is typically handled is to have very explicit
+> > ownership transfer points in the API or protocol which ensure that only
+> > one component is using it at any given time.  Both X11 (via the PRESENT
+> > extension) and Wayland provide such ownership transfer points via
+> > explicit present and idle messages.
+> > 
+> > The decision was intentionally made in this patch to make the import and
+> > export operations IOCTLs on the dma-buf itself rather than as a DRM
+> > IOCTL.  This makes it the import/export operation universal across all
+> > components which use dma-buf including GPU, display, v4l, and others.
+> > It also means that a userspace component can do the import/export
+> > without access to the DRM fd which may be tricky to get in cases where
+> > the client communicates with DRM via a userspace API such as OpenGL or
+> > Vulkan.  At a future date we may choose to add direct import/export APIs
+> > to components such as drm_syncobj to avoid allocating a file descriptor
+> > and going through two ioctls.  However, that seems to be something of a
+> > micro-optimization as import/export operations are likely to happen at a
+> > rate of a few per frame of rendered or decoded video.
+> > 
+> > Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+> > ---
+> > 
+> > This is marked as an RFC because I intend it to start a discussion about
+> > how to solve a problem.  The current patch compiles but that's it for now.
+> > I'll be writing IGT tests and Vulkan driver patches which exercise it over
+> > the next couple of days.  In the mean time, feel free to tell me why you
+> > think this is a great and/or terrible idea. :-)
+> 
+> For the exporting part I think it is an absolutely great idea because it
+> simplifies compatibility with explicit sync quite a bit.
+> 
+> But for the importing part it is a clear NAK at the moment. See we can't
+> allow userspace to mess with DMA-buf fences in that way because it rips open
+> a security hole you can push an elephant through.
+> 
+> Just imagine that you access some DMA-buf with a shader and that operation
+> is presented as a fence on the DMA-bufs reservation object. And now you can
+> go ahead and replace that fence and free up the memory.
+> 
+> Tricking the Linux kernel into allocating page tables in that freed memory
+> is trivial and that's basically it you can overwrite page tables with your
+> shader and gain access to all of system memory :)
+> 
+> What we could do is to always make sure that the added fences will complete
+> later than the already existing ones, but that is also rather tricky to get
+> right. I wouldn't do that if we don't have a rather big use case for this.
 
-Aside from the obvious typo, it is also completely broken because
-REG_TO_PGTS relies on the stack layout, which we just wrecked.
+I think the main use-case for adding a fence is adding a write fence for
+vk winsys buffers, which run without any sync at all. So essentially what
+we'd do is promote one of the read fences which are already attached to be
+the write fence.
 
-	movl	PT_GS(%esp), %edi		# get the return address
-	REG_TO_PTGS %ecx
+But yeah making sure we don't break any of the dma_resv guarantees about
+how these fences works is going to be somewhat tricky. Probably can reuse
+a big chunk of the fence container work we've done for syncobj timelines,
+since they have some of the same issues of having to chain fences to not
+break the world.
+-Daniel
 
->  	SET_KERNEL_GS %ecx
->  
->  	/* fixup orig %eax */
-> @@ -1348,9 +1348,8 @@ SYM_CODE_START_LOCAL_NOALIGN(common_exception)
->  	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
->  
->  	movl	%esp, %eax			# pt_regs pointer
+> 
+> Regards,
+> Christian.
+> 
+> > 
+> > --Jason
+> [SNIP]
 
-	pushl	%edi
-> +	ret
-> +SYM_CODE_END(common_idtentry)
-
-Should work, although that push+ret combo is a bit awkward.
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
