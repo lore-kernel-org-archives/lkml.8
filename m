@@ -2,129 +2,141 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84206C4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC796C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5641E20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:07:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="LzFHury6"
+	by mail.kernel.org (Postfix) with ESMTP id A269520732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582675852;
+	bh=3PhrRRlPdNzBe92RsmjkY3n+z/+WLfwkBTMQdtsmZVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pj5tqkT/4K70PPlo3TSrJm9JfSxTqO67urIFVTaLxZOgQ+lEtOX9vNu/uWlzareOP
+	 uRIZaTNJ+Y+R1J9fFFn4Duk+PPzhyKPTPmJBh9XDF3nX65RTaarWq5JIXoUJOD63rK
+	 KNvLwTVr3wmOiRA6ddK5+SjGWHdvfLbSgWpZCX+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgBZAHb (ORCPT
+        id S1729481AbgBZAKv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:07:31 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:33905 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbgBZAHb (ORCPT
+        Tue, 25 Feb 2020 19:10:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35579 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbgBZAKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:07:31 -0500
-Received: from [IPv6:2a02:810c:c200:2e91:7951:d18b:d929:3d06] (unknown [IPv6:2a02:810c:c200:2e91:7951:d18b:d929:3d06])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E87B322FE5;
-        Wed, 26 Feb 2020 01:07:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582675648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I1Ufd+2Ua1U1WJuN/kF2qgL25Y9aNipnoSIbHw5lIjo=;
-        b=LzFHury67GW4beCNPb/DHJ5q90nsoeqaphdoMVHKmVIgMSeEJ+MSpfwMT0664Am48PH/4Q
-        wKC6fMXQ8JJKD4GT8byLJOPygjfvaMTWAXQmeaDCFtwBQXx4s+ytnwrFO9lRPoZEiknArJ
-        KnqtJmaNjImHhr3Wq58P3MiYtI17GUo=
-Date:   Wed, 26 Feb 2020 01:07:26 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200225235040.GF9749@lunn.ch>
-References: <20200225230819.7325-1-michael@walle.cc> <20200225235040.GF9749@lunn.ch>
+        Tue, 25 Feb 2020 19:10:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so1336130otd.2;
+        Tue, 25 Feb 2020 16:10:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CNziFfrmWhbjTTcbCNHSKad5NAJHz5/qi6i9152J5Fw=;
+        b=E5o1GriPPWq1oxiOzsk3gxRNiv7P9iUZIeeTIp88ZT3ojghJYLhPef1WJiKJDAbbC5
+         e4g+WogCi2MDQo/8Qp1sYDrtBi/vU3I5Rki338XhWJTAgbsche5Y/pcwuHP1phjAlb0r
+         VobBGYIBb0khUPFUc43aZs/m6dwJWEgTC57C0WjZWK8C5Ypx4IM0xxq2A0sFZytSB45I
+         2JhRsEFSdsdsRcFze/ApGD44C39Aa+tRw25bhKEzAjKy1BBh7dyfAXcyUyNUhQaGjDRm
+         TxoAwTR9W+jbh5JImeV1ry6BJ+exg+ctGEOZy2r/rsgQSfYMuU+f4KXnvt6S1QLws0Eq
+         d59w==
+X-Gm-Message-State: APjAAAUkQU+YUrGbjXWAKDJS3fSAYunsxpb26/epNATmDdgeOkQvtnbS
+        CZSTq+BMpmS3vsX6EMNDY2yRFeRUJu6RarpaCyU=
+X-Google-Smtp-Source: APXvYqzE8QeT1pVs1t+cjoDwnhRfObMOEixeQC7HrEUB+jxrwhoSmRaOPqThinOpS5dpvEVROBthaigAvIN6rf/uYNQ=
+X-Received: by 2002:a9d:67d7:: with SMTP id c23mr917931otn.262.1582675849939;
+ Tue, 25 Feb 2020 16:10:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC PATCH 0/2] AT8031 PHY timestamping support
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>
-From:   Michael Walle <michael@walle.cc>
-Message-ID: <9955C44A-8105-4087-8555-BAC5AE4AF25D@walle.cc>
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: E87B322FE5
-X-Spamd-Result: default: False [1.40 / 15.00];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.432];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,armlinux.org.uk,davemloft.net];
-         SUSPICIOUS_RECIPS(1.50)[]
+References: <CAJZ5v0iSEV9S=zTa9++vUCO6GTfBE2sxNY+b4mMMt4Y6RCRvjA@mail.gmail.com>
+ <62491094-D13B-4EED-8190-4AA4EB77036B@lca.pw> <CAJZ5v0jXZOd0yfnwcP1NrfrXnALx=5E1nmK8DHk8bJ0SLUYzAQ@mail.gmail.com>
+ <1582570959.7365.116.camel@lca.pw>
+In-Reply-To: <1582570959.7365.116.camel@lca.pw>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Feb 2020 01:10:39 +0100
+Message-ID: <CAJZ5v0jDjK63R4kbBb_aU7ZBXbCG_vfOW33aVBRbYV7hEOWYqA@mail.gmail.com>
+Subject: Re: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Marco Elver <elver@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 26=2E Februar 2020 00:50:40 MEZ schrieb Andrew Lunn <andrew@lunn=2Ech>:
->On Wed, Feb 26, 2020 at 12:08:17AM +0100, Michael Walle wrote:
->> This patchset is the current state of my work for adding PHY
->timestamping
->> support=2E I just wanted to post this to the mailinglist before I never
->do
->> it=2E Maybe its a starting point for other people=2E That being said, I
->> wouldn't mind comments ;) The code basically works but there are
->three
->> major caveats:
->>=20
->>  (1) The reading of timestamps via MDIO sometimes return wrong
->values=2E What
->>      I see is that a part of the timestamp corresponds to the new
->timestamp
->> 	 while another part still contains old values=2E Thus at the moment,
->I'm
->> 	 reading the registers twice=2E I don't know if the reading actually
->> 	 affects the update of the timestamp or the different timing (my
->MDIO
->> 	 bus is rather slow, so reading the timestamp a second time take
->some
->> 	 amount of time; but I've also tested with some delays and it didn't
->> 	 had any effects)=2E There is also no possibility to read the
->timestamp
->> 	 atomically :(
+On Mon, Feb 24, 2020 at 8:02 PM Qian Cai <cai@lca.pw> wrote:
 >
->Hi Michael
+> On Mon, 2020-02-24 at 10:54 +0100, Rafael J. Wysocki wrote:
+> > On Mon, Feb 24, 2020 at 2:01 AM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > >
+> > >
+> > > > On Feb 23, 2020, at 7:12 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > It may be a bug under certain conditions, but you don't mention what
+> > > > conditions they are.  Reporting it as a general bug is not accurate at
+> > > > the very least.
+> > >
+> > > Could we rule out load tearing, store tearing and reload of global_req in cpuidle_governor_latency() for all compilers and architectures which could introduce logic bugs?
+> > >
+> > >         int global_req = cpu_latency_qos_limit();
+> > >
+> > >         if (device_req > global_req)
+> > >                 device_req = global_req;
+> > >
+> > > If under register pressure, the compiler might get ride of the tmp variable, i.e.,
+> > >
+> > > If (device_req > cpu_latency_qos_limit())
+> > > —-> race with the writer.
+> > >          device_req = cpu_latency_qos_limit();
+> >
+> > Yes, there is a race here with or without the WRITE_ONCE()/READ_ONCE()
+> > annotations (note that these annotations don't prevent CPUs from
+> > reordering things, so device_req may be set before global_req
+> > regardless).
+> >
+> > However, worst-case it may cause an old value to be used and that can
+> > happen anyway if the entire cpuidle_governor_latency_req() runs
+> > between the curr_value update and pm_qos_set_value() in
+> > pm_qos_update_target(), for example.
+> >
+> > IOW, there is no guarantee that the new value will be used immediately
+> > after updating a QoS request anyway.
+> >
+> > I agree with adding the annotations (I was considering posting a patch
+> > doing that myself), but just as a matter of making the intention
+> > clear.
 >
->That sounds fundamentally broken=2E Which would be odd=2E Sometimes there
->is a way to take a snapshot of the value=2E Reading the first word could
->trigger this snapshot=2E Or the last word, or some status register=2E One
->would hope the datasheet would talk about this=2E
+> OK, how about this updated texts?
+>
+> [PATCH -next] power/qos: annotate a data race in pm_qos_*_value
+>
+> cpu_latency_constraints.target_value could be accessed concurrently via,
+>
+> cpu_latency_qos_apply
+>   pm_qos_update_target
+>     pm_qos_set_value
+>
+> cpuidle_governor_latency_req
+>   cpu_latency_qos_limit
+>     pm_qos_read_value
+>
+> The read is outside pm_qos_lock critical section which results in a data race.
+> However, the worst case is that an old value to be used and that can happen
+> anyway, so annotate this data race using a pair of READ|WRITE_ONCE().
 
-Hi Andrew
+I would rather say something like this:
 
-This might be the case, but the datasheet (some older revision can be foun=
-d on the internet, maybe you find something) doesn't mention it=2E Nor does=
- the PTP "guide" (I don't know the exact name, I'd have to check at work) o=
-f this PHY=2E Besides the timestamp there's also the sequence number and th=
-e source port id which would need to be read atomically together with the t=
-imestamp=2E=20
-
-I might give it a try reading the whole tx or rx block (sequenceId, source=
-PortId, timestamp) sequentially=2E=20
-
--michael
-
+The target_value field in struct pm_qos_constraints is used for
+lockless access to the effective constraint value of a given QoS list,
+so the readers of it cannot expect it to always reflect the most
+recent effective constraint value.  However, they can and do expect it
+to be equal to a valid effective constraint value computed at a
+certain time in the past (event though it may not be the most recent
+one), so add READ|WRITE_ONCE() annotations around the target_value
+accesses to prevent the compiler from possibly causing that
+expectation to be unmet by generating code in an exceptionally
+convoluted way.
