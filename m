@@ -2,82 +2,135 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FD8C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B095C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D884B24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E733D24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="iUmc3+8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgBZKrr (ORCPT
+        id S1728028AbgBZKsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:47:47 -0500
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:6600 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgBZKrq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:47:46 -0500
-X-Greylist: delayed 543 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Feb 2020 05:47:44 EST
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85e564a9b2e7-50c0b; Wed, 26 Feb 2020 18:38:20 +0800 (CST)
-X-RM-TRANSID: 2ee85e564a9b2e7-50c0b
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.3.208.163])
-        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75e564a99c06-d63c9;
-        Wed, 26 Feb 2020 18:38:19 +0800 (CST)
-X-RM-TRANSID: 2ee75e564a99c06-d63c9
-From:   tangbin <tangbin@cmss.chinamobile.com>
-To:     wsa@the-dreams.de
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tangbin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] i2c:i2c-core-of:remove redundant dev_err message
-Date:   Wed, 26 Feb 2020 18:39:01 +0800
-Message-Id: <20200226103901.21520-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 26 Feb 2020 05:48:12 -0500
+Received: from mail-mw2nam10on2043.outbound.protection.outlook.com ([40.107.94.43]:6173
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727860AbgBZKsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:48:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jlm4NdWdxKoCoLRfR4c50s88mvBEVGMebcU9SkahPTAzHNkHBxQ7DHC+lOeZtkG1kO8iQQOD0ZxecPpdbth+h6DaaaLiN87fi4kS2s1GjGWZ6Yul+7KFFKSiu4Br+0ILqQnpFq6jW5ajM9FWwMBk6gZ5fK31dHhMxq1Su60GsgxzMTJR3GzWF9C6K29CSc70ZGj0iTEedGPTbhKw07FNvZqlLokFScapaGrRu47F4Q8W+J8LDEo5cmbny/BghnvOQ2WIevlLs8VxcBejjNE9Z4myZzSeK7wsYZFe+fErtKeehR9YqbEUD03z8uBj/DFIlHe7Q2vdl2sBPxIme3kfmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e05O7S0fVACmLEUf4sQLdymJPZrazZng7CpD9B9TZqc=;
+ b=DyEGUlxlSkluRnCTaAJxTaey3Kt5XxSQbRQ5ZMoRA2Yud0BQzgrhIIv6/JXI2x2saP1/meR/GxXIpnTMAK8kSrJSyzchXP4hLyoVbfYsHLqVfyEMfI47EOeZFwNzZutkzDhsp213u6vb2SDALdL1XjqeVBptSZ6/ZQyfD9c04Ymw+G9j2xDRUGHzxXxR7t/qtggzmp91gWYZQLCiqBE1p0KiUupGHP3hqtXDcyCLYARtxoS3MotAf5jHmoochP8fMCV9oJlBoSWOgl60BRH1g3g+NosKG5CAcAL9QtrWlMKCmFNQwCzRhrKho3OLt3W5OrVhzhguwg4/ot7Rdh7vlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e05O7S0fVACmLEUf4sQLdymJPZrazZng7CpD9B9TZqc=;
+ b=iUmc3+8lEBxNmrrmvGoiwLhpii89biNTF+/92YInBEoPeJZ9IE8H4p/mxX3h9NGee1CO/NMJTBh21xUTJ4uTLvAIScb10I0MQFp0ngJwKlDqsx0o242kXLzfXrcD1PHb2OoZO0SSrEu+HaSM3WTHrJJBaFwdoiSDU6XtEDbHRVU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Akshu.Agrawal@amd.com; 
+Received: from MN2PR12MB2878.namprd12.prod.outlook.com (2603:10b6:208:aa::15)
+ by MN2PR12MB3933.namprd12.prod.outlook.com (2603:10b6:208:162::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Wed, 26 Feb
+ 2020 10:48:09 +0000
+Received: from MN2PR12MB2878.namprd12.prod.outlook.com
+ ([fe80::c895:8c76:61ae:980f]) by MN2PR12MB2878.namprd12.prod.outlook.com
+ ([fe80::c895:8c76:61ae:980f%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 10:48:09 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     akshu.agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ASoC: amd: Allow I2S wake event after ACP is powerd On
+Date:   Wed, 26 Feb 2020 16:17:44 +0530
+Message-Id: <20200226104746.208656-1-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR0101CA0011.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:c::21) To MN2PR12MB2878.namprd12.prod.outlook.com
+ (2603:10b6:208:aa::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ETHANOL2.amd.com (165.204.156.251) by MAXPR0101CA0011.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:c::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 10:48:06 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 05ecfdab-50cc-4128-2458-08d7baa95e35
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3933:|MN2PR12MB3933:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3933B7DE54A25F2EFFE6850CF8EA0@MN2PR12MB3933.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(189003)(199004)(7696005)(52116002)(4326008)(86362001)(109986005)(26005)(186003)(4744005)(6666004)(6486002)(66476007)(66556008)(66946007)(16526019)(478600001)(81166006)(316002)(36756003)(8936002)(1076003)(8676002)(81156014)(44832011)(2906002)(2616005)(956004)(5660300002)(54906003)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3933;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: C5J+773CcQoj6IuBubWZfetl0KizZytqnnJWyVQlHXrGOFdob+VotnsGQlLWKYj8CZ2U2l6A3EjNwr6AhhbO9Rm3Jj2JAORqSANuUhnfGbVpGn+TnJ1NO+SCLdtJBV8BR6yt5LuQ8iNLJlbRyaiqYUfeCR11VDot/jX1B/BFgJLo9u2AFUu3qHAffOLDNhPzN144kTwmEpTYu0DXphol4kGhK8cE33pbnYCIk76ozfv1bupQBWEfISeswbZDWlsyCqeXmSuEWkOy7NDyjD2kp0kCUX7dSQqsUM7LMl4X36kWCB8Hi5oP+R73wX0+NTGJgVKIol+2W6V6RjPwr0tjIB49I9mqVKIcjo37jecH1Daw+AQqapCBrINN32jsSwuqWfojTNkpPgy5sWE9b/qbKk8HyjEJ9WWRH4u7NaCkLfQWkL249j70PpRhT9IzMVSPQ+QG3+5VLmCa6Lg+6e7ilRYkp3vytl8Lgcj83UocewA=
+X-MS-Exchange-AntiSpam-MessageData: Z7DxFJib44MiGgv53aQjZjx9fioIo37G2p/9E+33yZfiYAwDbrPSyM7p33XjFd5IcKjyxhZiGMoCsA58geqLIYCD2cB0fmwKC1MEzd3hOgb8YDfCRkhrzNUxFthkSpcfuFAmzbDM01aE3r+g56uoMw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05ecfdab-50cc-4128-2458-08d7baa95e35
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 10:48:09.3652
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7zhSEfmkIPS3deL0oQEhhFZUa6J2sLzH+8wRXS85CogxsJgiRp1TKYQHk3bbtpBaHYTJBwUajiIqsmGgK/PwVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3933
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_i2c_register_device already contains error message, so remove
-the redundant dev_err message
+ACP_PME_EN allows wake interrupt to be generated when I2S wake
+feature is enabled. On turning ACP On, ACP_PME_EN gets cleared.
+Setting the bit back ensures that wake event can be received
+when ACP is On.
 
-Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
 ---
- drivers/i2c/i2c-core-of.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ sound/soc/amd/raven/pci-acp3x.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index 6787c1f71..7b0a786d3 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -103,9 +103,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
- 
- 		client = of_i2c_register_device(adap, node);
- 		if (IS_ERR(client)) {
--			dev_err(&adap->dev,
--				 "Failed to create I2C device for %pOF\n",
--				 node);
-+			return PTR_ERR(client);
- 			of_node_clear_flag(node, OF_POPULATED);
- 		}
+diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
+index da60e2ec5535..f25ce50f1a90 100644
+--- a/sound/soc/amd/raven/pci-acp3x.c
++++ b/sound/soc/amd/raven/pci-acp3x.c
+@@ -38,8 +38,13 @@ static int acp3x_power_on(void __iomem *acp3x_base)
+ 	timeout = 0;
+ 	while (++timeout < 500) {
+ 		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+-		if (!val)
++		if (!val) {
++			/* Set PME_EN as after ACP power On,
++			 * PME_EN gets cleared
++			 */
++			rv_writel(0x1, acp3x_base + mmACP_PME_EN);
+ 			return 0;
++		}
+ 		udelay(1);
  	}
-@@ -246,8 +244,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
- 
- 		client = of_i2c_register_device(adap, rd->dn);
- 		if (IS_ERR(client)) {
--			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
--				 rd->dn);
- 			put_device(&adap->dev);
- 			of_node_clear_flag(rd->dn, OF_POPULATED);
- 			return notifier_from_errno(PTR_ERR(client));
+ 	return -ETIMEDOUT;
 -- 
-2.20.1.windows.1
-
-
+2.17.1
 
