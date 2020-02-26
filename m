@@ -2,330 +2,173 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB3C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA7CC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BBE20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89BE20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACh0SRAb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nVHa1z7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgBZSDB (ORCPT
+        id S1727134AbgBZSFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:03:01 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37998 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbgBZSDB (ORCPT
+        Wed, 26 Feb 2020 13:05:18 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57414 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgBZSFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:03:01 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so86694ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:02:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pWXKGdBdSX89CKR49e5HffMWoYSUP5rUcqDtF+HPtwU=;
-        b=ACh0SRAboVy9RI/D8WrK7VHkxi4+ta5eLMnNWoJU0tAoPcYq0HEVIC0YNpBboxDBBp
-         DpR1O8hBxPP0kZqekZjQfwjMvKF0/rceGQYMiduSe9uU33KJEqOl0XfIVgVG4Uue1oAb
-         eVgTwOVA6OYfqaxp2t5hYREjGDebc8qEbVXx/3Hr//pVlBp/Kz4ugcx8oJqathS4eVa8
-         nCNSrWLI4SKd3GV6hrw4LMIlcvCRvHjCoMFbd3fVu9zbVD8WR4i0fl4hgcTYWSXHG65x
-         P3s905idwsUc6DxrPHyDsUTFz2KjVkN9fJkwK1xGlaa0vicxuiGumwphYAMOTQyK8FGa
-         e38A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pWXKGdBdSX89CKR49e5HffMWoYSUP5rUcqDtF+HPtwU=;
-        b=oTek1CKJcEwjE9XiCvVXNeugXPQpT9vw2An8Jiev9olZLsNRjhjyKQqybDzVHcS4H+
-         c5cdWdqbU6R2kTsuxJZl7/BIRjgGE2udwGsyJqFy+gP76sxY5soUIFYGLePuGuIK1Ru1
-         GWqsivimbi9ve4i9rvcGKJOEHbZT8RFvpw9ylv6sCHrKPpQ2+FWLL+jNWD+znjUwz4IY
-         VdJpqxky3KDnizqCR6M6PIcIOzzjdx8WOWI1v0Q8pP7/mtsrUy7zKqj2aLctWcPK6QUF
-         /Vdx4/6Nbf9cZUUEXMEUQbLQ8weoDNDE96eufBI1bOARx8xSO6dPdjASMfbjCxKvRUMI
-         G8Lw==
-X-Gm-Message-State: ANhLgQ3cZhYL9gH4mYbqwvBWWMb5gabXx0f8b3ov0rGX95XLQBF5AkLP
-        pK/rwaLjq4MFx0PMqTKzVDiBMxguSU9f5UWi3uesXg==
-X-Google-Smtp-Source: ADFU+vuwE3qhVRbQZtrSftxYOVH0ZnrrfJe221jM9W/BJxb8Y8TG/bQuSlMQjAc3UvmpphwH1ksiK5jB59fzcMH5MEw=
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr83919lja.165.1582740178341;
- Wed, 26 Feb 2020 10:02:58 -0800 (PST)
+        Wed, 26 Feb 2020 13:05:18 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QI3gV4083141;
+        Wed, 26 Feb 2020 18:04:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=qXKO8J92zXC1Yk6VbsBzAn5OB4Z+y9gt1UWWLl4AUq8=;
+ b=nVHa1z7heHVs9l2OfaOgeGMQj1U6NLYyy+miHyAyt0jqm1PjfYY7O3btec1/u1UA103m
+ D5mDtuZ//HE63Pl3M2QOBfZX6w4dKnzNDqaQ6tgKYtAAmG5jEPZkxcj/rX9r/aPo3d82
+ 6N3BUG2VHy1GvP7Yh4A3XFsC5RfmNLvHDFb3aGSrQlDjN7tl5SMiCKe+sjqsV3/Np/0a
+ fFc97oBc3GwBa8o34VFykPslvTGm1gnqlF99qLzS3OOEQeQIWJsnHANJyS5sM19WqSqO
+ dwldxTx63bq3aRsQKKrGV+MVL8iw/UI994G5iRIXQktxnKDaqdLzFSpjpg7roNfLvPD4 Xw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2ydcsrne8y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 18:04:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QI25wB183864;
+        Wed, 26 Feb 2020 18:04:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2ydj4j4587-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 18:04:35 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01QI4JYX029321;
+        Wed, 26 Feb 2020 18:04:19 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Feb 2020 10:04:18 -0800
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org>
+ <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+Date:   Wed, 26 Feb 2020 10:04:17 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <CA+G9fYu3682XJ2Kw2ZvQdUT80epKc9DWWXgDT1-D_65ajSXNTw@mail.gmail.com>
- <fcb799d4-f316-60d6-9fd0-0bc1c174e63c@arm.com> <202002251131.3216B3B50C@keescook>
- <b485a8a9-5312-ca77-d091-3dbfac33ec5b@arm.com>
-In-Reply-To: <b485a8a9-5312-ca77-d091-3dbfac33ec5b@arm.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 26 Feb 2020 23:32:46 +0530
-Message-ID: <CA+G9fYuQJjf3v53HNj4TOAL2NcgDCYCrsUkfL6h93ntXO3WWwg@mail.gmail.com>
-Subject: Re: selftests: Linux Kernel Dump Test Module output
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>, ankita@in.ibm.com,
-        Will Deacon <will@kernel.org>, ardb@kernel.org,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 at 17:23, Cristian Marussi <cristian.marussi@arm.com> wrote:
->
-> Hi Kees
->
-> ./run_kselftest.sh 2>/dev/null | grep "SKIP"
-> not ok 1 selftests: lkdtm: PANIC.sh # SKIP
-> not ok 6 selftests: lkdtm: LOOP.sh # SKIP
-> not ok 7 selftests: lkdtm: EXHAUST_STACK.sh # SKIP
-> not ok 8 selftests: lkdtm: CORRUPT_STACK.sh # SKIP
-> not ok 9 selftests: lkdtm: CORRUPT_STACK_STRONG.sh # SKIP
-> not ok 15 selftests: lkdtm: UNSET_SMEP.sh # SKIP
-> not ok 16 selftests: lkdtm: DOUBLE_FAULT.sh # SKIP
-> not ok 18 selftests: lkdtm: OVERWRITE_ALLOCATION.sh # SKIP
-> not ok 19 selftests: lkdtm: WRITE_AFTER_FREE.sh # SKIP
-> not ok 21 selftests: lkdtm: WRITE_BUDDY_AFTER_FREE.sh # SKIP
-> not ok 26 selftests: lkdtm: SOFTLOCKUP.sh # SKIP
-> not ok 27 selftests: lkdtm: HARDLOCKUP.sh # SKIP
-> not ok 28 selftests: lkdtm: SPINLOCKUP.sh # SKIP
-> not ok 29 selftests: lkdtm: HUNG_TASK.sh # SKIP
-> not ok 59 selftests: lkdtm: REFCOUNT_TIMING.sh # SKIP
-> not ok 60 selftests: lkdtm: ATOMIC_TIMING.sh # SKIP
->
-> BUT, if I look at one LKDTM test script
-> (lkdtm/USERCOPY_STACK_FRAME_TO.sh):
->
-> ...
-> # If the test is commented out, report a skip
+On 2/13/20 8:52 AM, Arnd Bergmann wrote:
+> On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+>>
+>> On Tue, Feb 11, 2020 at 05:03:02PM -0800, Linus Torvalds wrote:
+>>> On Tue, Feb 11, 2020 at 4:47 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>>>>
+>>>> What's the situation with highmem on ARM?
+>>>
+>>> Afaik it's exactly the same as highmem on x86 - only 32-bit ARM ever
+>>> needed it, and I was ranting at some people for repeating all the
+>>> mistakes Intel did.
+>>>
+>>> But arm64 doesn't need it, and while 32-bit arm is obviosuly still
+>>> selling, I think that in many ways the switch-over to 64-bit has been
+>>> quicker on ARM than it was on x86. Partly because it happened later
+>>> (so all the 64-bit teething pains were dealt with), but largely
+>>> because everybody ended up actively discouraging 32-bit on the Android
+>>> side.
+>>>
+>>> There were a couple of unfortunate early 32-bit arm server attempts,
+>>> but they were - predictably - complete garbage and nobody bought them.
+>>> They don't exist any more.
+> 
+> I'd generally agree with that, the systems with more than 4GB tended to
+> be high-end systems predating the Cortex-A53/A57 that quickly got
+> replaced once there were actual 64-bit parts, this would include axm5516
+> (replaced with x86-64 cores after sale to Intel), hip04 (replaced
+> with arm64), or ecx-2000 (Calxeda bankruptcy).
+> 
+> The one 32-bit SoC that I can think of that can actually drive lots of
+> RAM and is still actively marketed is TI Keystone-2/AM5K2.
+> The embedded AM5K2 is listed supporting up to 8GB of RAM, but
+> the verison in the HPE ProLiant m800 server could take up to 32GB (!).
+> 
+> I added Santosh and Kishon to Cc, they can probably comment on how
+> long they think users will upgrade kernels on these. I suspect these
+> devices can live for a very long time in things like wireless base stations,
+> but it's possible that they all run on old kernels anyway by now (and are
+> not worried about y2038).
+> 
+>>> So at least my gut feel is that the arm people don't have any big
+>>> reason to push for maintaining HIGHMEM support either.
+>>>
+>>> But I'm adding a couple of arm people and the arm list just in case
+>>> they have some input.
+The Keystone generations of SOCs have been used in different areas and
+they will be used for long unless says otherwise.
 
-Yeah i see this case at my end also.
+Apart from just split of lowmem and highmem, one of the peculiar thing
+with Keystome family of SOCs is the DDR is addressable from two
+addressing ranges. The lowmem address range is actually non-cached
+range and the higher range is the cacheable.
 
-my two cents,
-I have two comments,
-1) shell check
+So apart from LPAE, another change I needed to do back then is to boot
+the linux from lowmem with bootstrap MMU tables and then re-create
+MMU tables early (mmu init) and use higher range for entire memory so
+that L3 cache can be used.
 
-2) I see the debugfs mounted and test required details are available
-in a given path.
+AFAIK, all the derived SOCs from Keystone architecture inherently
+use this feature.
 
-1) Shell check show these warnings
-* SHELLCHECK: [FAILED]: run.sh
-* SHELLCHECK: [OUTPUT]:
-
- In run.sh line 26:
- test=$(basename $0 .sh)
-                 ^-- SC2086: Double quote to prevent globbing and word
-splitting.
-
-
- In run.sh line 28:
- line=$(egrep '^#?'"$test"'\b' tests.txt)
-        ^---^ SC2196: egrep is non-standard and deprecated. Use grep -E instead.
-
-
- In run.sh line 34:
- if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
-      ^---^ SC2196: egrep is non-standard and deprecated. Use grep -E instead.
-
-
- In run.sh line 81:
- if egrep -qi "$expect" "$LOG" ; then
-    ^---^ SC2196: egrep is non-standard and deprecated. Use grep -E instead.
-
-
- In run.sh line 85:
-  if egrep -qi XFAIL: "$LOG" ; then
-            ^---^ SC2196: egrep is non-standard and deprecated. Use
-grep -E instead.
-
-Test output with set -x for debugging shell scripts.
-
-+ ls /sys/kernel/debug/provoke-crash/DIRECT
-/sys/kernel/debug/provoke-crash/DIRECT
-+ ls /sys/kernel/debug/provoke-crash/DIRECT
-/sys/kernel/debug/provoke-crash/FS_DEVRW
-/sys/kernel/debug/provoke-crash/IDE_CORE_CP
-/sys/kernel/debug/provoke-crash/INT_HARDWARE_ENTRY
-/sys/kernel/debug/provoke-crash/INT_HW_IRQ_EN
-/sys/kernel/debug/provoke-crash/INT_TASKLET_ENTRY
-/sys/kernel/debug/provoke-crash/MEM_SWAPOUT
-/sys/kernel/debug/provoke-crash/SCSI_DISPATCH_CMD
-/sys/kernel/debug/provoke-crash/TIMERADD
-/sys/kernel/debug/provoke-crash/DIRECT
-/sys/kernel/debug/provoke-crash/FS_DEVRW
-/sys/kernel/debug/provoke-crash/IDE_CORE_CP
-/sys/kernel/debug/provoke-crash/INT_HARDWARE_ENTRY
-/sys/kernel/debug/provoke-crash/INT_HW_IRQ_EN
-/sys/kernel/debug/provoke-crash/INT_TASKLET_ENTRY
-/sys/kernel/debug/provoke-crash/MEM_SWAPOUT
-/sys/kernel/debug/provoke-crash/SCSI_DISPATCH_CMD
-/sys/kernel/debug/provoke-crash/TIMERADD
-+ cat /sys/kernel/debug/provoke-crash/DIRECT
-Available crash types:
-PANIC
-BUG
-WARNING
-WARNING_MESSAGE
-EXCEPTION
-LOOP
-EXHAUST_STACK
-CORRUPT_STACK
-CORRUPT_STACK_STRONG
-CORRUPT_LIST_ADD
-CORRUPT_LIST_DEL
-CORRUPT_USER_DS
-STACK_GUARD_PAGE_LEADING
-STACK_GUARD_PAGE_TRAILING
-UNSET_SMEP
-UNALIGNED_LOAD_STORE_WRITE
-OVERWRITE_ALLOCATION
-WRITE_AFTER_FREE
-READ_AFTER_FREE
-WRITE_BUDDY_AFTER_FREE
-READ_BUDDY_AFTER_FREE
-SLAB_FREE_DOUBLE
-SLAB_FREE_CROSS
-SLAB_FREE_PAGE
-SOFTLOCKUP
-HARDLOCKUP
-SPINLOCKUP
-HUNG_TASK
-EXEC_DATA
-EXEC_STACK
-EXEC_KMALLOC
-EXEC_VMALLOC
-EXEC_RODATA
-EXEC_USERSPACE
-EXEC_NULL
-ACCESS_USERSPACE
-ACCESS_NULL
-WRITE_RO
-WRITE_RO_AFTER_INIT
-WRITE_KERN
-REFCOUNT_INC_OVERFLOW
-REFCOUNT_ADD_OVERFLOW
-REFCOUNT_INC_NOT_ZERO_OVERFLOW
-REFCOUNT_ADD_NOT_ZERO_OVERFLOW
-REFCOUNT_DEC_ZERO
-REFCOUNT_DEC_NEGATIVE
-REFCOUNT_DEC_AND_TEST_NEGATIVE
-REFCOUNT_SUB_AND_TEST_NEGATIVE
-REFCOUNT_INC_ZERO
-REFCOUNT_ADD_ZERO
-REFCOUNT_INC_SATURATED
-REFCOUNT_DEC_SATURATED
-REFCOUNT_ADD_SATURATED
-REFCOUNT_INC_NOT_ZERO_SATURATED
-REFCOUNT_ADD_NOT_ZERO_SATURATED
-REFCOUNT_DEC_AND_TEST_SATURATED
-REFCOUNT_SUB_AND_TEST_SATURATED
-REFCOUNT_TIMING
-ATOMIC_TIMING
-USERCOPY_HEAP_SIZE_TO
-USERCOPY_HEAP_SIZE_FROM
-USERCOPY_HEAP_WHITELIST_TO
-USERCOPY_HEAP_WHITELIST_FROM
-USERCOPY_STACK_FRAME_TO
-USERCOPY_STACK_FRAME_FROM
-USERCOPY_STACK_BEYOND
-USERCOPY_KERNEL
-USERCOPY_KERNEL_DS
-STACKLEAK_ERASING
-CFI_FORWARD_PROTO
-+ cd /opt/kselftests/default-in-kernel/lkdtm
-+ sed -i '1i set -x' ACCESS_NULL.sh ACCESS_USERSPACE.sh
-ATOMIC_TIMING.sh BUG.sh CFI_FORWARD_PROTO.sh CORRUPT_LIST_ADD.sh
-CORRUPT_LIST_DEL.sh CORRUPT_STACK.sh CORRUPT_STACK_STRONG.sh
-CORRUPT_USER_DS.sh DOUBLE_FAULT.sh EXCEPTION.sh EXEC_DATA.sh
-EXEC_KMALLOC.sh EXEC_NULL.sh EXEC_RODATA.sh EXEC_STACK.sh
-EXEC_USERSPACE.sh EXEC_VMALLOC.sh EXHAUST_STACK.sh HARDLOCKUP.sh
-HUNG_TASK.sh LOOP.sh OVERWRITE_ALLOCATION.sh PANIC.sh
-READ_AFTER_FREE.sh READ_BUDDY_AFTER_FREE.sh
-REFCOUNT_ADD_NOT_ZERO_OVERFLOW.sh REFCOUNT_ADD_NOT_ZERO_SATURATED.sh
-REFCOUNT_ADD_OVERFLOW.sh REFCOUNT_ADD_SATURATED.sh
-REFCOUNT_ADD_ZERO.sh REFCOUNT_DEC_AND_TEST_NEGATIVE.sh
-REFCOUNT_DEC_AND_TEST_SATURATED.sh REFCOUNT_DEC_NEGATIVE.sh
-REFCOUNT_DEC_SATURATED.sh REFCOUNT_DEC_ZERO.sh
-REFCOUNT_INC_NOT_ZERO_OVERFLOW.sh REFCOUNT_INC_NOT_ZERO_SATURATED.sh
-REFCOUNT_INC_OVERFLOW.sh REFCOUNT_INC_SATURATED.sh
-REFCOUNT_INC_ZERO.sh REFCOUNT_SUB_AND_TEST_NEGATIVE.sh
-REFCOUNT_SUB_AND_TEST_SATURATED.sh REFCOUNT_TIMING.sh
-SLAB_FREE_CROSS.sh SLAB_FREE_DOUBLE.sh SLAB_FREE_PAGE.sh SOFTLOCKUP.sh
-SPINLOCKUP.sh STACKLEAK_ERASING.sh STACK_GUARD_PAGE_LEADING.sh
-STACK_GUARD_PAGE_TRAILING.sh UNALIGNED_LOAD_STORE_WRITE.sh
-UNSET_SMEP.sh USERCOPY_HEAP_SIZE_FROM.sh USERCOPY_HEAP_SIZE_TO.sh
-USERCOPY_HEAP_WHITELIST_FROM.sh USERCOPY_HEAP_WHITELIST_TO.sh
-USERCOPY_KERNEL.sh USERCOPY_KERNEL_DS.sh USERCOPY_STACK_BEYOND.sh
-USERCOPY_STACK_FRAME_FROM.sh USERCOPY_STACK_FRAME_TO.sh WARNING.sh
-WARNING_MESSAGE.sh WRITE_AFTER_FREE.sh WRITE_BUDDY_AFTER_FREE.sh
-WRITE_KERN.sh WRITE_RO.sh WRITE_RO_AFTER_INIT.sh
-+ ./PANIC.sh
-++ set -e
-++ TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
-++ KSELFTEST_SKIP_TEST=4
-++ '[' '!' -r /sys/kernel/debug/provoke-crash/DIRECT ']'
-+++ basename ./PANIC.sh .sh
-++ test=PANIC
-+++ egrep '^#?PANIC\b' tests.txt
-++ line='#PANIC'
-++ '[' -z '#PANIC' ']'
-++ egrep -q '^PANIC$' /sys/kernel/debug/provoke-crash/DIRECT
-+++ echo '#PANIC'
-+++ cut '-d ' -f1
-++ test='#PANIC'
-++ echo '#PANIC'
-++ grep -q ' '
-++ expect=
-++ echo '#PANIC'
-++ grep -q '^#'
-+++ echo '#PANIC'
-+++ cut -c2-
-++ test=PANIC
-++ '[' -z '' ']'
-++ expect='crashes entire system'
-++ echo 'Skipping PANIC: crashes entire system'
-Skipping PANIC: crashes entire system
-++ exit 4
-+ true
-+ ./BUG.sh
-++ set -e
-++ TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
-++ KSELFTEST_SKIP_TEST=4
-++ '[' '!' -r /sys/kernel/debug/provoke-crash/DIRECT ']'
-+++ basename ./BUG.sh .sh
-++ test=BUG
-+++ egrep '^#?BUG\b' tests.txt
-++ line='BUG kernel BUG at'
-++ '[' -z 'BUG kernel BUG at' ']'
-++ egrep -q '^BUG$' /sys/kernel/debug/provoke-crash/DIRECT
-+++ echo 'BUG kernel BUG at'
-+++ cut '-d ' -f1
-++ test=BUG
-++ echo 'BUG kernel BUG at'
-++ grep -q ' '
-+++ echo 'BUG kernel BUG at'
-+++ cut '-d ' -f2-
-++ expect='kernel BUG at'
-++ echo BUG
-++ grep -q '^#'
-++ '[' -z 'kernel BUG at' ']'
-++ dmesg -c
-+++ mktemp --tmpdir -t lkdtm-XXXXXX
-++ LOG=/tmp/lkdtm-r5yZ7K
-++ trap cleanup EXIT
-++ /bin/sh -c 'cat <(echo BUG) >/sys/kernel/debug/provoke-crash/DIRECT'
-++ true
-++ dmesg -c
-++ cat /tmp/lkdtm-r5yZ7K
-++ egrep -qi 'kernel BUG at' /tmp/lkdtm-r5yZ7K
-++ egrep -qi XFAIL: /tmp/lkdtm-r5yZ7K
-++ echo 'BUG: missing '\''kernel BUG at'\'': [FAIL]'
-BUG: missing 'kernel BUG at': [FAIL]
-...
-
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1251181#L1311
+Regards,
+Santosh
