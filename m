@@ -2,229 +2,173 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808DFC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C63C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEFB24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="HUdoisoB"
+	by mail.kernel.org (Postfix) with ESMTP id 1984820732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgBZR7D (ORCPT
+        id S1727078AbgBZSBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:59:03 -0500
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:51454 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726688AbgBZR7C (ORCPT
+        Wed, 26 Feb 2020 13:01:05 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:51861 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726787AbgBZSBE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:59:02 -0500
-Received: from pps.filterd (m0050102.ppops.net [127.0.0.1])
-        by m0050102.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 01QHkQHB025018;
-        Wed, 26 Feb 2020 17:58:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : in-reply-to; s=jan2016.eng;
- bh=CqTeI+N/FsAZZ/HaOy0JtKxisJ8ZY2/x66qmnKEmcCI=;
- b=HUdoisoB/LgG6ACLBulQ8RwCO9Q3SLoBpaAiv8PdWw3lKH8J5JBYitvkyNx1SYkmfLIu
- umcuphPMNjp5WnH/o5jDS6D8gBBg5Hgt0Sv/CErB+QQAsAWCUo7lX8tYb+yO2WvFYIBr
- Ni0zu7Zu1bxGWNywW9xKXJX1qTtWZkTylsqvPn2bsovyoDMKWIWk3WF8jlE5ZcW9m2rH
- wOmRq+S1JOq0gyUMGiy1hMjqp0DkhYokc/MsnOIiRzZWBxt1IH/ElbSx76hFh/hbEdvc
- QJAf+QEO10nyVkid429Ni4mzI2KcsEFZw+yOSYgO/KVTHb8YqmvajKlFUhxWEKtorqbl 0g== 
-Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
-        by m0050102.ppops.net-00190b01. with ESMTP id 2ydcp9bwjv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 17:58:57 +0000
-Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
-        by prod-mail-ppoint6.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 01QHX8Ad008553;
-        Wed, 26 Feb 2020 12:58:56 -0500
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-        by prod-mail-ppoint6.akamai.com with ESMTP id 2ydhutgeew-1;
-        Wed, 26 Feb 2020 12:58:56 -0500
-Received: from bos-lpjec.145bw.corp.akamai.com (bos-lpjec.145bw.corp.akamai.com [172.28.3.71])
-        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id 1501E32904;
-        Wed, 26 Feb 2020 17:58:56 +0000 (GMT)
-From:   Jason Baron <jbaron@akamai.com>
-To:     akpm@linux-foundation.org
-Cc:     dave@stgolabs.net, rpenyaev@suse.de, linux-kernel@vger.kernel.org,
-        normalperson@yhbt.net, viro@zeniv.linux.org.uk
-Subject: [PATCH v2] fs/epoll: make nesting accounting safe for -rt kernel
-Date:   Wed, 26 Feb 2020 12:56:56 -0500
-Message-Id: <1582739816-13167-1-git-send-email-jbaron@akamai.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200224163835.08ab964483519052d7c2e39b@linux-foundation.org>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-02-26_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=855
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2002050000 definitions=main-2002260115
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_06:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0 mlxlogscore=857
- spamscore=0 priorityscore=1501 impostorscore=0 suspectscore=4 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260115
+        Wed, 26 Feb 2020 13:01:04 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tr-Vlmd_1582740057;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tr-Vlmd_1582740057)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 27 Feb 2020 02:01:01 +0800
+Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
+ <CAKgT0UdHhZznoS0kMdacCqgc=sFXj1Djmpd-DbPvAmyrhJq6CA@mail.gmail.com>
+ <9b8ff9ca-75b0-c256-cf37-885ccd786de7@linux.alibaba.com>
+ <CAKgT0UfPW+DKZhze-hCL6mThak+qJjx4wb-rXn+NKnp6-9RBDQ@mail.gmail.com>
+ <9c30a891-011b-e041-2647-444d09fa7b8a@linux.alibaba.com>
+ <84492260-726c-dda1-3ec8-b445fe269cad@redhat.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <00338ec9-76fc-bc0e-39af-495ff3b5c7e9@linux.alibaba.com>
+Date:   Wed, 26 Feb 2020 10:00:55 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <84492260-726c-dda1-3ec8-b445fe269cad@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Davidlohr Bueso pointed out that when CONFIG_DEBUG_LOCK_ALLOC is set
-ep_poll_safewake() can take several non-raw spinlocks after disabling
-interrupts. Since a spinlock can block in the -rt kernel, we can't take a
-spinlock after disabling interrupts. So let's re-work how we determine
-the nesting level such that it plays nicely with the -rt kernel.
-
-Let's introduce a 'nests' field in struct eventpoll that records the
-current nesting level during ep_poll_callback(). Then, if we nest again we
-can find the previous struct eventpoll that we were called from and
-increase our count by 1. The 'nests' field is protected by
-ep->poll_wait.lock.
-
-I've also moved the visited field to reduce the size of struct eventpoll
-from 184 bytes to 176 bytes on x86_64 for !CONFIG_DEBUG_LOCK_ALLOC,
-which is typical for a production config.
-
-Reported-by: Davidlohr Bueso <dbueso@suse.de>
-Signed-off-by: Jason Baron <jbaron@akamai.com>
----
-v2:
--improve (hopefully:)) comments and explanations around -rt requirements
- (Andrew Morton)
 
 
- fs/eventpoll.c | 64 +++++++++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 43 insertions(+), 21 deletions(-)
+On 2/26/20 9:45 AM, David Hildenbrand wrote:
+> On 26.02.20 18:31, Yang Shi wrote:
+>>
+>> On 2/21/20 4:24 PM, Alexander Duyck wrote:
+>>> On Fri, Feb 21, 2020 at 10:24 AM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>>>>
+>>>> On 2/20/20 10:16 AM, Alexander Duyck wrote:
+>>>>> On Tue, Dec 3, 2019 at 4:43 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>>>>>> Currently when truncating shmem file, if the range is partial of THP
+>>>>>> (start or end is in the middle of THP), the pages actually will just get
+>>>>>> cleared rather than being freed unless the range cover the whole THP.
+>>>>>> Even though all the subpages are truncated (randomly or sequentially),
+>>>>>> the THP may still be kept in page cache.  This might be fine for some
+>>>>>> usecases which prefer preserving THP.
+>>>>>>
+>>>>>> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
+>>>>>> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
+>>>>>> So, when using shmem THP as memory backend QEMU inflation actually doesn't
+>>>>>> work as expected since it doesn't free memory.  But, the inflation
+>>>>>> usecase really needs get the memory freed.  Anonymous THP will not get
+>>>>>> freed right away too but it will be freed eventually when all subpages are
+>>>>>> unmapped, but shmem THP would still stay in page cache.
+>>>>>>
+>>>>>> Split THP right away when doing partial hole punch, and if split fails
+>>>>>> just clear the page so that read to the hole punched area would return
+>>>>>> zero.
+>>>>>>
+>>>>>> Cc: Hugh Dickins <hughd@google.com>
+>>>>>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>>>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>>>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>>>> One question I would have is if this is really the desired behavior we
+>>>>> are looking for?
+>>>>>
+>>>>> By proactively splitting the THP you are likely going to see a
+>>>>> performance regression with the virtio-balloon driver enabled in QEMU.
+>>>>> I would suspect the response to that would be to update the QEMU code
+>>>>> to  identify the page size of the shared memory ramblock. At that
+>>>>> point I suspect it would start behaving the same as how it currently
+>>>>> handles anonymous memory, and the work done here would essentially
+>>>>> have been wasted other than triggering the desire to resolve this in
+>>>>> QEMU to avoid a performance regression.
+>>>>>
+>>>>> The code for inflating a the balloon in virtio-balloon in QEMU can be
+>>>>> found here:
+>>>>> https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-balloon.c#L66
+>>>>>
+>>>>> If there is a way for us to just populate the value obtained via
+>>>>> qemu_ram_pagesize with the THP page size instead of leaving it at 4K,
+>>>>> which is the size I am assuming it is at since you indicated that it
+>>>>> is just freeing the base page size, then we could address the same
+>>>>> issue and likely get the desired outcome of freeing the entire THP
+>>>>> page when it is no longer used.
+>>>> If qemu could punch hole (this is how qemu free file-backed memory) in
+>>>> THP unit, either w/ or w/o the patch the THP won't get split since the
+>>>> whole THP will get truncated. But, if qemu has to free memory in sub-THP
+>>>> size due to whatever reason (for example, 1MB for every 2MB section),
+>>>> then we have to split THP otherwise no memory will be freed actually
+>>>> with the current code. It is not about performance, it is about really
+>>>> giving memory back to host.
+>>> I get that, but at the same time I am not sure if everyone will be
+>>> happy with the trade-off. That is my concern.
+>>>
+>>> You may want to change the patch description above if that is the
+>>> case. Based on the description above it makes it sound as if the issue
+>>> is that QEMU is using hole punch or MADV_DONTNEED with the wrong
+>>> granularity. Based on your comment here it sounds like you want to
+>>> have the ability to break up the larger THP page as soon as you want
+>>> to push out a single 4K page from it.
+>> Yes, you are right. The commit log may be confusing. What I wanted to
+>> convey is QEMU has no idea if THP is used or not so it treats memory
+>> with base size unless hugetlbfs is used since QEMU is aware huge page is
+>> used in this case.
+>> This may sounds irrelevant to the problem, I would just remove that.
+>>
+>>> I am not sure the description for the behavior of anonymous THP with
+>>> respect to QEMU makes sense either. Based on the description you made
+>>> it sound like it was somehow using the same process used for huge
+>>> pages. That isn't the case right? My understanding is that in the case
+>>> of an anonymous THP it is getting broken into 4K subpages and then
+>>> those are freed individually. That should leave you with the same
+>>> performance regression that I had brought up earlier.
+>> No, anonymous THP won't get split immediately and those memory also
+>> won't get freed immediately if QEMU does MADV_DONTNEED on sub THP range
+>> (for example, 1MB range in THP). The THP will get freed when:
+>> 1. Host has memory pressure. The THP will get split and unmapped pages
+>> will be freed.
+>> 2. Other sub pages in the same THP are MADV_DONTNEED'ed (eventually the
+>> whole THP get unmapped).
+>>
+>> The difference between shmem and anonymous page is shmem will not get
+>> freed unless hole punch the whole THP, anonymous page will get freed
+>> sooner or later.
+>>
+> As far as I understood Hugh, the "page size" we'll see in QEMU via
+> fstatfs() is 4k, not 2MB. IMHO, that's the block size of the "device",
+> and breaking up THP is the right think to to obey the documentation of
+> "FALLOC_FL_PUNCH_HOLE".
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 67a39503..81ef47c 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -218,13 +218,18 @@ struct eventpoll {
- 	struct file *file;
- 
- 	/* used to optimize loop detection check */
--	int visited;
- 	struct list_head visited_list_link;
-+	int visited;
- 
- #ifdef CONFIG_NET_RX_BUSY_POLL
- 	/* used to track busy poll napi_id */
- 	unsigned int napi_id;
- #endif
-+
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+	/* tracks wakeup nests for lockdep validation */
-+	u8 nests;
-+#endif
- };
- 
- /* Wait structure used by the poll hooks */
-@@ -551,30 +556,47 @@ static int ep_call_nested(struct nested_calls *ncalls,
-  */
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 
--static DEFINE_PER_CPU(int, wakeup_nest);
--
--static void ep_poll_safewake(wait_queue_head_t *wq)
-+static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi)
- {
-+	struct eventpoll *ep_src;
- 	unsigned long flags;
--	int subclass;
-+	u8 nests = 0;
- 
--	local_irq_save(flags);
--	preempt_disable();
--	subclass = __this_cpu_read(wakeup_nest);
--	spin_lock_nested(&wq->lock, subclass + 1);
--	__this_cpu_inc(wakeup_nest);
--	wake_up_locked_poll(wq, POLLIN);
--	__this_cpu_dec(wakeup_nest);
--	spin_unlock(&wq->lock);
--	local_irq_restore(flags);
--	preempt_enable();
-+	/*
-+	 * To set the subclass or nesting level for spin_lock_irqsave_nested()
-+	 * it might be natural to create a per-cpu nest count. However, since
-+	 * we can recurse on ep->poll_wait.lock, and a non-raw spinlock can
-+	 * schedule() in the -rt kernel, the per-cpu variable are no longer
-+	 * protected. Thus, we are introducing a per eventpoll nest field.
-+	 * If we are not being call from ep_poll_callback(), epi is NULL and
-+	 * we are at the first level of nesting, 0. Otherwise, we are being
-+	 * called from ep_poll_callback() and if a previous wakeup source is
-+	 * not an epoll file itself, we are at depth 1 since the wakeup source
-+	 * is depth 0. If the wakeup source is a previous epoll file in the
-+	 * wakeup chain then we use its nests value and record ours as
-+	 * nests + 1. The previous epoll file nests value is stable since its
-+	 * already holding its own poll_wait.lock.
-+	 */
-+	if (epi) {
-+		if ((is_file_epoll(epi->ffd.file))) {
-+			ep_src = epi->ffd.file->private_data;
-+			nests = ep_src->nests;
-+		} else {
-+			nests = 1;
-+		}
-+	}
-+	spin_lock_irqsave_nested(&ep->poll_wait.lock, flags, nests);
-+	ep->nests = nests + 1;
-+	wake_up_locked_poll(&ep->poll_wait, EPOLLIN);
-+	ep->nests = 0;
-+	spin_unlock_irqrestore(&ep->poll_wait.lock, flags);
- }
- 
- #else
- 
--static void ep_poll_safewake(wait_queue_head_t *wq)
-+static void ep_poll_safewake(struct eventpoll *ep, struct epitem *epi)
- {
--	wake_up_poll(wq, EPOLLIN);
-+	wake_up_poll(&ep->poll_wait, EPOLLIN);
- }
- 
- #endif
-@@ -795,7 +817,7 @@ static void ep_free(struct eventpoll *ep)
- 
- 	/* We need to release all tasks waiting for these file */
- 	if (waitqueue_active(&ep->poll_wait))
--		ep_poll_safewake(&ep->poll_wait);
-+		ep_poll_safewake(ep, NULL);
- 
- 	/*
- 	 * We need to lock this because we could be hit by
-@@ -1264,7 +1286,7 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
- 
- 	/* We have to call this outside the lock */
- 	if (pwake)
--		ep_poll_safewake(&ep->poll_wait);
-+		ep_poll_safewake(ep, epi);
- 
- 	if (!(epi->event.events & EPOLLEXCLUSIVE))
- 		ewake = 1;
-@@ -1568,7 +1590,7 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
- 
- 	/* We have to call this outside the lock */
- 	if (pwake)
--		ep_poll_safewake(&ep->poll_wait);
-+		ep_poll_safewake(ep, NULL);
- 
- 	return 0;
- 
-@@ -1672,7 +1694,7 @@ static int ep_modify(struct eventpoll *ep, struct epitem *epi,
- 
- 	/* We have to call this outside the lock */
- 	if (pwake)
--		ep_poll_safewake(&ep->poll_wait);
-+		ep_poll_safewake(ep, NULL);
- 
- 	return 0;
- }
--- 
-2.7.4
+This is what the patch attempts to accomplish.
+
+>
+> IMHO THP is called "transparent" because it shouldn't have any such
+> visible side effects.
+
+AFAICT, the lazy split is due to locking issue in partial unmap paths. 
+Please refer to "Partial unmap and deferred_split_huge_page()" section 
+in Documentation/vm/transhuge.rst.
+
+>
+> As always, anybody correct me if I am wrong here.
+>
 
