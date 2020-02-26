@@ -2,100 +2,79 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C457C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA5CC4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA0120732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC67224650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582679951;
+	bh=m5Ec52LnUpmn0dvstISfjGZ103hI4TaopqMNXFzHMV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hcx1xErTokl7JWU51vM5ZudEkIQGEswmGcNrpkeJ1wR5XtMEDS6AEZVgl95obGdX5
+	 NTExnpYRV0crQmPT2hZH4uBtprkfnhkuG0L+fZImKPEK0HKYI1ugc7sGQnFWquCFuL
+	 C2I5LerN76WTV6MhdprZO2KOK2G6znfBfO1poZBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgBZBRj (ORCPT
+        id S1729754AbgBZBTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:17:39 -0500
-Received: from mga14.intel.com ([192.55.52.115]:34983 "EHLO mga14.intel.com"
+        Tue, 25 Feb 2020 20:19:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgBZBRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:17:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:17:38 -0800
-X-IronPort-AV: E=Sophos;i="5.70,486,1574150400"; 
-   d="scan'208";a="384648699"
-Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:17:37 -0800
-From:   Tony Luck <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/mce: Fix logic and comments around MSR_PPIN_CTL
-Date:   Tue, 25 Feb 2020 17:17:37 -0800
-Message-Id: <20200226011737.9958-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.21.1
+        id S1729403AbgBZBTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:19:10 -0500
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2865420732;
+        Wed, 26 Feb 2020 01:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582679949;
+        bh=m5Ec52LnUpmn0dvstISfjGZ103hI4TaopqMNXFzHMV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NZPiaJ1JJ9IL4yKcE1BZa6PxohxzMmnHQFz3WCIR+8mWY1Mq1Nu9GTh0V4S6C9Jfe
+         cEThpCxCEGv+ie9bZ5nSN/UVRX8pyerqfyezkZWkCGpdoyQGj5j2qJdU4LnxsNuxZk
+         Eqg3ssAC2Sraj9Tg7Fx5yMzEDS+QL3GFgp2+r6o4=
+Date:   Wed, 26 Feb 2020 02:19:07 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch 04/10] x86/traps: Remove pointless irq enable from
+ do_spurious_interrupt_bug()
+Message-ID: <20200226011906.GI9599@lenoir>
+References: <20200225213636.689276920@linutronix.de>
+ <20200225220216.518575042@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225220216.518575042@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two implemented bits in the PPIN_CTL MSR:
+On Tue, Feb 25, 2020 at 10:36:40PM +0100, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> That function returns immediately after conditionally reenabling interrupts which
+> is more than pointless and requires the ASM code to disable interrupts again.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/20191023123117.871608831@linutronix.de
 
-Bit0: LockOut (R/WO)
-      Set 1 to prevent further writes to MSR_PPIN_CTL.
-
-Bit 1: Enable_PPIN (R/W)
-       If 1, enables MSR_PPIN to be accessible using RDMSR.
-       If 0, an attempt to read MSR_PPIN will cause #GP.
-
-So there are four defined values:
-	0: PPIN is disabled, PPIN_CTL may be updated
-	1: PPIN is disabled. PPIN_CTL is locked against updates
-	2: PPIN is enabled. PPIN_CTL may be updated
-	3: PPIN is enabled. PPIN_CTL is locked against updates
-
-Code would only enable the X86_FEATURE_INTEL_PPIN feature for case "2".
-When it should have done so for both case "2" and case "3".
-
-Fix the final test to just check for the enable bit.
-Also fix some of the other comments in this function.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/kernel/cpu/mce/intel.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index 5627b1091b85..f996ffb887bc 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -493,17 +493,18 @@ static void intel_ppin_init(struct cpuinfo_x86 *c)
- 			return;
- 
- 		if ((val & 3UL) == 1UL) {
--			/* PPIN available but disabled: */
-+			/* PPIN locked in disabled mode */
- 			return;
- 		}
- 
--		/* If PPIN is disabled, but not locked, try to enable: */
--		if (!(val & 3UL)) {
-+		/* If PPIN is disabled, try to enable */
-+		if (!(val & 2UL)) {
- 			wrmsrl_safe(MSR_PPIN_CTL,  val | 2UL);
- 			rdmsrl_safe(MSR_PPIN_CTL, &val);
- 		}
- 
--		if ((val & 3UL) == 2UL)
-+		/* Is the enable bit set? */
-+		if (val & 2UL)
- 			set_cpu_cap(c, X86_FEATURE_INTEL_PPIN);
- 	}
- }
--- 
-2.21.1
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
