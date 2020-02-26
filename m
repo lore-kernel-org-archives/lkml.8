@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D89C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DA3C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7196424685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7187524683
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UZfmU6nj"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hegrlG36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgBZOdo (ORCPT
+        id S1727815AbgBZOdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:33:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51877 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbgBZOdl (ORCPT
+        Wed, 26 Feb 2020 09:33:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35882 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbgBZOdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:33:41 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t23so3329624wmi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:33:38 -0800 (PST)
+        Wed, 26 Feb 2020 09:33:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so3367345wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:33:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fP9zTwJIlxkrgRxfuE6Lj7cR6vrhl8QMH/2xQfCpNZQ=;
-        b=UZfmU6njX76yq6eJ+M/HisXIdbDeaKA/3EyJ67N2nDBFtv3NCF6tymC5aVc16C/B3P
-         5J8sv00ldtRPAVG2XKFmfC5MPQJQCYlB+Ka3vcV7yqH1nDMaWjg9kBJprpQIn6aBGhWe
-         Kn1jxx3Qy1Evdl6nyF5iLP7Oh/aCkUihJNxX04qy7ujcmg/nzTO4higBdwRe7IwauIk7
-         e578cL0sxcg9Y9of3JYZjfZfI8GrBrHVNIY5yZnxqQfMFIGt3ZECWvErT7mL9jOrJAXW
-         Vf8USPHIeiv4bGhb9+5UTWPHUGGfg2CdFedtOKOaftNA7x6Uo8R2QZu8rqsiVgEjips5
-         Ke8Q==
+        bh=E/6gF09OIYAAYDcV57fzVa8XqTwVQognyAPormZwLXA=;
+        b=hegrlG36+pNJ7eQm7ecF25m/6jmdt9xJtyaZkyKYXTTcIhQSHUrlFOGC7QM1ZkSs1f
+         z8Cii0H2nyG4YFC3gRgyZqEe2HVDgPGAMFF8Oi0EKGpftdOEUEHVDSusQ1+Mx4/446C1
+         mQ0rmvHluc25ztTOpLq60P35Fc/x7qwrIxndv01K9RtTNXPG2vhs8y90wuanfqXD2BkE
+         fiDkHDNcWL2e7tHjtHwPqJaSfCIBOB5Ep+IcSpKSngLEO8P66LZOkF04iJq2Q7vPKClx
+         /mIzKnEUHgviGqFsQYG6Imig61ZMZ8fejNc3vleGlSvmQUwt+gqVDwG0LoxZykRNAY0Q
+         Oo1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fP9zTwJIlxkrgRxfuE6Lj7cR6vrhl8QMH/2xQfCpNZQ=;
-        b=PB8FpW/zquMmKf/e8zywvDe9T4LF8Ly+FGJS/QJntBAK/mzspB7MpTs3W5ZdT/+++x
-         qvh7wKsDqP5sKA27vcIM7NYsPlNRNUimLoNhW1jcwkxknluEkozzBUdli7lOTDyYu3Ln
-         FOmTqIBJB5DqAdMHiIR7XvAfD3pQldY/381OYLLB01pBgyx2W7WKm71/VZQmfpqB9mCT
-         fiPaVqP/jmsEE5RZvIzjLq7XfxU5ambRDAwe1asVjEr6pXusVYFPSlKO+DDbq/IIXemo
-         2AIRcJM5UMpNISLD/KYElRB0ypP+LWxhrZWOxaQqF3UwQqF++PxrIlko4BFl1NLioUtX
-         Q13A==
-X-Gm-Message-State: APjAAAXntdhw70CIQNP3NxZ9/hAapoqhv624GJ7/xGF+BLO5amC3gqUY
-        02e90iUQcp2+/cAxV2bmYiMNlYgGsyI=
-X-Google-Smtp-Source: APXvYqzi4kajIMJtNBRJVwsBu6oQCXtwB+WvsoWPZAn7FB+S+laRGi+homkRgU9l+XJHSH8C1MRXMQ==
-X-Received: by 2002:a05:600c:414f:: with SMTP id h15mr2295644wmm.130.1582727617732;
-        Wed, 26 Feb 2020 06:33:37 -0800 (PST)
+        bh=E/6gF09OIYAAYDcV57fzVa8XqTwVQognyAPormZwLXA=;
+        b=oYjiX72hpuPidN3fb5VKSYLzMQmsUn38omgsSNtwSdWGJiE/E2GGS/x1qSb5ixI8pB
+         mqFinLs9gkV36OswyMWLaSyT9LLNuPEqy4dzvSLcvR4OBYvxXBlEytTMoCJVsOthFZ5D
+         DK+yyq87O9AACSIeQy0Ty1IQ747p5Vq2pNHuXWMx/DA6mmGyG7JOHQhWgrsn8cE8at6h
+         spXOONUlgFDFe1tRv/FOQ+ur8zsAx2bp/5y8Z/unlqoRpzzw6lID39SlLFK6K8SgT01g
+         y6+PpYh0o2wFu6sGtKm+L7klxNGB9+Kv0BY6w58m9Rq3jSf+uNC6QRkrfSKLq7lX5aWe
+         k1GQ==
+X-Gm-Message-State: APjAAAX5mqXFqZCSMi7q43RqaUMi2tQMmXcMTTjPFfnVrspyQnHy5DfP
+        2OyJOgsMkOw4dFSYwSPZ+rY4WCp4dEM=
+X-Google-Smtp-Source: APXvYqwBKYor34z0MGWsBLW+ZiaHQNfsqktLq4aiSFvylON7V2FQMsPdkd+ygzITY5yRXB619OYQwQ==
+X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr6015351wmk.160.1582727615570;
+        Wed, 26 Feb 2020 06:33:35 -0800 (PST)
 Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h10sm3204198wml.18.2020.02.26.06.33.36
+        by smtp.gmail.com with ESMTPSA id h10sm3204198wml.18.2020.02.26.06.33.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 26 Feb 2020 06:33:37 -0800 (PST)
+        Wed, 26 Feb 2020 06:33:35 -0800 (PST)
 From:   Nicolas Belin <nbelin@baylibre.com>
 To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
         devicetree@vger.kernel.org
 Cc:     baylibre-upstreaming@groups.io, Nicolas Belin <nbelin@baylibre.com>
-Subject: [PATCH RFC v2 3/3] drivers: leds: add support for apa102c leds
-Date:   Wed, 26 Feb 2020 15:33:12 +0100
-Message-Id: <1582727592-4510-4-git-send-email-nbelin@baylibre.com>
+Subject: [PATCH RFC v2 1/3] dt-bindings: Document shiji vendor-prefix
+Date:   Wed, 26 Feb 2020 15:33:10 +0100
+Message-Id: <1582727592-4510-2-git-send-email-nbelin@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
 References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
@@ -71,345 +71,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initilial commit in order to support the apa102c RGB leds. This
-is based on the Multicolor Framework.
+Shenzhen Shiji Lighting Co.,Ltd is a LED manufacturer.
 
-Reviewed-by: Corentin Labbe <clabbe@baylibre.com>
 Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
 ---
- drivers/leds/Kconfig        |   7 ++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-apa102c.c | 291 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 299 insertions(+)
- create mode 100644 drivers/leds/leds-apa102c.c
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 5dc6535a88ef..71e29727c6ec 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -79,6 +79,13 @@ config LEDS_AN30259A
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-an30259a.
- 
-+config LEDS_APA102C
-+	tristate "LED Support for Shiji APA102C"
-+	depends on SPI
-+	depends on LEDS_CLASS_MULTI_COLOR
-+	help
-+	  This option enables support for APA102C LEDs.
-+
- config LEDS_APU
- 	tristate "Front panel LED support for PC Engines APU/APU2/APU3 boards"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index b5305b7d43fb..8334cb6dc7e8 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -90,6 +90,7 @@ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
- 
- # LED SPI Drivers
-+obj-$(CONFIG_LEDS_APA102C)		+= leds-apa102c.o
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
- obj-$(CONFIG_LEDS_EL15203000)		+= leds-el15203000.o
-diff --git a/drivers/leds/leds-apa102c.c b/drivers/leds/leds-apa102c.c
-new file mode 100644
-index 000000000000..b46db0db7501
---- /dev/null
-+++ b/drivers/leds/leds-apa102c.c
-@@ -0,0 +1,291 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/led-class-multicolor.h>
-+
-+/*
-+ * Copyright (C) 2020 BayLibre, SAS
-+ * Author: Nicolas Belin <nbelin@baylibre.com>
-+ */
-+
-+/*
-+ *  APA102C SPI protocol description:
-+ *  +------+----------------------------------------+------+
-+ *  |START |               DATA FIELD:              | END  |
-+ *  |FRAME |               N LED FRAMES             |FRAME |
-+ *  +------+------+------+------+------+-----+------+------+
-+ *  | 0*32 | LED1 | LED2 | LED3 | LED4 | --- | LEDN | 1*32 |
-+ *  +------+------+------+------+------+-----+------+------+
-+ *
-+ *  +-----------------------------------+
-+ *  |START FRAME 32bits                 |
-+ *  +--------+--------+--------+--------+
-+ *  |00000000|00000000|00000000|00000000|
-+ *  +--------+--------+--------+--------+
-+ *
-+ *  +------------------------------------+
-+ *  |LED  FRAME 32bits                   |
-+ *  +---+-----+--------+--------+--------+
-+ *  |111|LUMA |  BLUE  | GREEN  |  RED   |
-+ *  +---+-----+--------+--------+--------+
-+ *  |3b |5bits| 8bits  | 8bits  | 8bits  |
-+ *  +---+-----+--------+--------+--------+
-+ *  |MSB   LSB|MSB  LSB|MSB  LSB|MSB  LSB|
-+ *  +---+-----+--------+--------+--------+
-+ *
-+ *  +-----------------------------------+
-+ *  |END FRAME 32bits                   |
-+ *  +--------+--------+--------+--------+
-+ *  |11111111|11111111|11111111|11111111|
-+ *  +--------+--------+--------+--------+
-+ */
-+
-+/* apa102c default settings */
-+#define MAX_BRIGHTNESS		GENMASK(4, 0)
-+#define CH_NUM			4
-+#define START_BYTE		0
-+#define END_BYTE		GENMASK(7, 0)
-+#define LED_FRAME_HEADER	GENMASK(7, 5)
-+
-+#define IS_RGB	(1<<LED_COLOR_ID_RED \
-+		| 1<<LED_COLOR_ID_GREEN \
-+		| 1<<LED_COLOR_ID_BLUE)
-+
-+#define APA_DEV_NAME		"apa102c"
-+
-+struct apa102c_led {
-+	struct apa102c		*priv;
-+	struct led_classdev	ldev;
-+	struct led_classdev_mc	mc_cdev;
-+};
-+
-+struct apa102c {
-+	size_t			led_count;
-+	struct device		*dev;
-+	struct mutex		lock;
-+	struct spi_device	*spi;
-+	u8			*buf;
-+	struct apa102c_led	leds[];
-+};
-+
-+static void apa102c_set_rgb_bytes(u8 *bgr_buf, struct list_head *color_list)
-+{
-+	struct led_mc_color_entry *color_data;
-+
-+	/* Looking for the RGB values and putting them in the buffer in
-+	 * BGR order
-+	 */
-+	list_for_each_entry(color_data, color_list, list) {
-+		switch (color_data->led_color_id) {
-+		case LED_COLOR_ID_RED:
-+			bgr_buf[2] = color_data->intensity;
-+			break;
-+		case LED_COLOR_ID_GREEN:
-+			bgr_buf[1] = color_data->intensity;
-+			break;
-+		case LED_COLOR_ID_BLUE:
-+			bgr_buf[0] = color_data->intensity;
-+			break;
-+		}
-+	}
-+}
-+
-+static int apa102c_sync(struct apa102c *priv)
-+{
-+	int	ret;
-+	size_t	i;
-+	struct apa102c_led *leds = priv->leds;
-+	u8	*buf = priv->buf;
-+
-+	/* creating the data that will be sent to all the leds at once */
-+	for (i = 0; i < 4; i++)
-+		*buf++ = START_BYTE;
-+
-+	/* looping on each multicolor led getting the luma and the RGB values */
-+	for (i = 0; i < priv->led_count; i++) {
-+		*buf++ = LED_FRAME_HEADER | leds[i].ldev.brightness;
-+		apa102c_set_rgb_bytes(buf, &leds[i].mc_cdev.color_list);
-+		buf += 3;
-+	}
-+
-+	for (i = 0; i < 4; i++)
-+		*buf++ = END_BYTE;
-+
-+	ret = spi_write(priv->spi, priv->buf, priv->led_count*4 + 8);
-+
-+	return ret;
-+}
-+
-+static int apa102c_brightness_set(struct led_classdev *ldev,
-+			   enum led_brightness brightness)
-+{
-+	int			ret;
-+	struct apa102c_led	*led = container_of(ldev,
-+						    struct apa102c_led,
-+						    ldev);
-+
-+	mutex_lock(&led->priv->lock);
-+	/* updating the brightness then synching all the leds */
-+	ldev->brightness = brightness;
-+	ret = apa102c_sync(led->priv);
-+	mutex_unlock(&led->priv->lock);
-+
-+	return ret;
-+}
-+
-+static int apa102c_probe_dt(struct apa102c *priv)
-+{
-+	int			ret = 0;
-+	int			num_colors;
-+	u32			color_id, i;
-+	struct apa102c_led	*led;
-+	struct fwnode_handle	*child, *grandchild;
-+	struct led_init_data	init_data;
-+
-+	device_for_each_child_node(priv->dev, child) {
-+
-+		ret = fwnode_property_read_u32(child, "reg", &i);
-+		if (ret) {
-+			dev_err(priv->dev, "coudld not read reg %d\n", ret);
-+			goto child_out;
-+		}
-+
-+		if (i >= priv->led_count) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "reg value too big\n");
-+			goto child_out;
-+		}
-+
-+		led = &priv->leds[i];
-+		/* checking if this led config is already used */
-+		if (led->mc_cdev.led_cdev) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "using the same reg value twice\n");
-+			goto child_out;
-+		}
-+
-+		led->priv			= priv;
-+		led->ldev.max_brightness	= MAX_BRIGHTNESS;
-+		fwnode_property_read_string(child, "linux,default-trigger",
-+					    &led->ldev.default_trigger);
-+
-+		init_data.fwnode = child;
-+		init_data.devicename = APA_DEV_NAME;
-+		init_data.default_label = ":";
-+
-+		num_colors = 0;
-+		fwnode_for_each_child_node(child, grandchild) {
-+			ret = fwnode_property_read_u32(grandchild, "color",
-+						       &color_id);
-+			if (ret) {
-+				dev_err(priv->dev, "Cannot read color\n");
-+				goto child_out;
-+			}
-+
-+			set_bit(color_id, &led->mc_cdev.available_colors);
-+			num_colors++;
-+		}
-+
-+		if (num_colors != 3) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "There should be 3 colors\n");
-+			goto child_out;
-+		}
-+
-+		if (led->mc_cdev.available_colors != IS_RGB) {
-+			ret = -EINVAL;
-+			dev_err(priv->dev, "The led is expected to be RGB\n");
-+			goto child_out;
-+		}
-+
-+		led->mc_cdev.num_leds = num_colors;
-+		led->mc_cdev.led_cdev = &led->ldev;
-+		led->ldev.brightness_set_blocking = apa102c_brightness_set;
-+		ret = devm_led_classdev_multicolor_register_ext(priv->dev,
-+								&led->mc_cdev,
-+								&init_data);
-+		if (ret) {
-+			dev_err(priv->dev, "led register err: %d\n", ret);
-+			fwnode_handle_put(child);
-+			goto child_out;
-+		}
-+	}
-+
-+child_out:
-+	return ret;
-+}
-+
-+static int apa102c_probe(struct spi_device *spi)
-+{
-+	struct apa102c	*priv;
-+	size_t		led_count;
-+	int		ret;
-+
-+	led_count = device_get_child_node_count(&spi->dev);
-+	if (!led_count) {
-+		dev_err(&spi->dev, "No LEDs defined in device tree!");
-+		return -ENODEV;
-+	}
-+
-+	priv = devm_kzalloc(&spi->dev,
-+			    struct_size(priv, leds, led_count),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->buf = devm_kzalloc(&spi->dev, (led_count + 2) * 4, GFP_KERNEL);
-+	if (!priv->buf)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->lock);
-+	priv->led_count	= led_count;
-+	priv->dev	= &spi->dev;
-+	priv->spi	= spi;
-+
-+	ret = apa102c_probe_dt(priv);
-+	if (ret)
-+		return ret;
-+
-+	/* Set the LEDs with default values at start */
-+	apa102c_sync(priv);
-+	if (ret)
-+		return ret;
-+
-+	spi_set_drvdata(spi, priv);
-+
-+	return 0;
-+}
-+
-+static int apa102c_remove(struct spi_device *spi)
-+{
-+	struct apa102c *priv = spi_get_drvdata(spi);
-+
-+	mutex_destroy(&priv->lock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id apa102c_dt_ids[] = {
-+	{ .compatible = "shiji,apa102c", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, apa102c_dt_ids);
-+
-+static struct spi_driver apa102c_driver = {
-+	.probe		= apa102c_probe,
-+	.remove		= apa102c_remove,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= apa102c_dt_ids,
-+	},
-+};
-+
-+module_spi_driver(apa102c_driver);
-+
-+MODULE_AUTHOR("Nicolas Belin <nbelin@baylibre.com>");
-+MODULE_DESCRIPTION("apa102c LED driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("spi:apa102c");
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9e67944bec9c..a463286c3960 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -863,6 +863,8 @@ patternProperties:
+     description: SGX Sensortech
+   "^sharp,.*":
+     description: Sharp Corporation
++  "^shiji,.*":
++    description: Shenzhen Shiji Lighting Co.,Ltd
+   "^shimafuji,.*":
+     description: Shimafuji Electric, Inc.
+   "^si-en,.*":
 -- 
 2.7.4
 
