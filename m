@@ -2,82 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11D1C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D88C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CE22468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9372468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:10:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582729818;
+	bh=g5VTwMGaK0OJyOYHoeCbwp4ZrmRijn3kpXqLNP75A7I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=skqdC1lR2XR6anxju1W/frnw0ZiGYj2L6mIs56M/et6sitkTSsFZMG2jl9O/Gwqjq
+	 AqhH06xJZksmtB0yzTmd2B6cH/vhvLsUirKboJljJTGRcPDukoK0/KICnpVNgct/C1
+	 6iXxv47ZC52VaAh16dwQUev/vsyq1WiT50uut008=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBZPKO (ORCPT
+        id S1727964AbgBZPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:10:14 -0500
-Received: from mga02.intel.com ([134.134.136.20]:24464 "EHLO mga02.intel.com"
+        Wed, 26 Feb 2020 10:10:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgBZPKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:10:13 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 07:10:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
-   d="scan'208";a="410644291"
-Received: from avgorshk-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.15.208])
-  by orsmga005.jf.intel.com with ESMTP; 26 Feb 2020 07:10:08 -0800
-Date:   Wed, 26 Feb 2020 17:10:06 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
-Subject: Re: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
- transfer delays
-Message-ID: <20200226150944.GD3407@linux.intel.com>
-References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
- <20191217091615.12764-1-alexandru.ardelean@analog.com>
- <9991700815c02b3227a5902e4cae1afe5200b0ff.camel@linux.intel.com>
- <b790461b49685082f843c59cd047836e13744285.camel@analog.com>
+        id S1727941AbgBZPKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:10:14 -0500
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50FA724699
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582729814;
+        bh=g5VTwMGaK0OJyOYHoeCbwp4ZrmRijn3kpXqLNP75A7I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=shsGvBGnxoWCENXkmKFIyQ9eTaVpnrbA9TdPaNcOvz5/Zr9zmCHMM8kfgwGonlQZf
+         bFrmsma8GaXj9dWzvK/6igcMGt67yeox4Yzw+5JLSZf7nICuZP2MFlW7LD2gzyH+mO
+         yqIWcqQHlbJaAAsmYphHCDugAXOzbcuBVe/a9lew=
+Received: by mail-wm1-f48.google.com with SMTP id c84so3513722wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:10:14 -0800 (PST)
+X-Gm-Message-State: APjAAAXO8LmUNR1UENCELStqldouoRQVfppMkILh+Yn++w7kV7Cy8jcw
+        P46CokrOEIj9GTvXg3C2T4NCvpdN2Yi41Wp1qT5muA==
+X-Google-Smtp-Source: APXvYqxHqvMuokp6gjjz27NtY+2v//tiyKm2qp9CXz2Xk4Ota1Qpg+IP35TnCgdUut7h1RAeEfPFsV58oM33C3bfwZs=
+X-Received: by 2002:a1c:3906:: with SMTP id g6mr6314490wma.49.1582729812585;
+ Wed, 26 Feb 2020 07:10:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b790461b49685082f843c59cd047836e13744285.camel@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200225213636.689276920@linutronix.de> <20200225220216.315548935@linutronix.de>
+ <20200226011349.GH9599@lenoir> <d9bde3a6-1e19-1340-1fda-bc6de2eb4f7c@kernel.org>
+ <20200226132850.GX18400@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200226132850.GX18400@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 26 Feb 2020 07:10:01 -0800
+X-Gmail-Original-Message-ID: <CALCETrVXzwmwNOB6qUk7aM=LQRBySrMJPdRZ244T3y1bpRBzaQ@mail.gmail.com>
+Message-ID: <CALCETrVXzwmwNOB6qUk7aM=LQRBySrMJPdRZ244T3y1bpRBzaQ@mail.gmail.com>
+Subject: Re: [patch 02/10] x86/mce: Disable tracing and kprobes on do_machine_check()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 07:51:06AM +0000, Ardelean, Alexandru wrote:
-> On Tue, 2019-12-17 at 14:04 +0200, Jarkko Sakkinen wrote:
-> > [External]
-> > 
-> > On Tue, 2019-12-17 at 11:16 +0200, Alexandru Ardelean wrote:
-> > > In a recent change to the SPI subsystem [1], a new 'delay' struct was added
-> > > to replace the 'delay_usecs'. This change replaces the current
-> > > 'delay_usecs' with 'delay' for this driver.
-> > > 
-> > > The 'spi_transfer_delay_exec()' function [in the SPI framework] makes sure
-> > > that both 'delay_usecs' & 'delay' are used (in this order to preserve
-> > > backwards compatibility).
-> > > 
-> > > [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-> > > `spi_transfer` + spi_transfer_delay_exec()")
-> > > 
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > 
-> 
-> ping on this patch
+On Wed, Feb 26, 2020 at 5:28 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Feb 25, 2020 at 09:29:00PM -0800, Andy Lutomirski wrote:
+>
+> > >> +void notrace do_machine_check(struct pt_regs *regs, long error_code)
+> > >>  {
+> > >>    DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
+> > >>    DECLARE_BITMAP(toclear, MAX_NR_BANKS);
+> > >> @@ -1360,6 +1366,7 @@ void do_machine_check(struct pt_regs *re
+> > >>    ist_exit(regs);
+> > >>  }
+> > >>  EXPORT_SYMBOL_GPL(do_machine_check);
+> > >> +NOKPROBE_SYMBOL(do_machine_check);
+> > >
+> > > That won't protect all the function called by do_machine_check(), right?
+> > > There are lots of them.
+> > >
+> >
+> > It at least means we can survive to run actual C code in
+> > do_machine_check(), which lets us try to mitigate this issue further.
+> > PeterZ has patches for that, and maybe this series fixes it later on.
+> > (I'm reading in order!)
+>
+> Yeah, I don't cover that either. Making the kernel completely kprobe
+> safe is _lots_ more work I think.
+>
+> We really need some form of automation for this :/ The current situation
+> is completely nonsatisfactory.
 
-My bad. Sorry. It is now applied.
+I've looked at too many patches lately and lost track a bit of which
+is which.  Shouldn't a simple tracing_disable() or similar in
+do_machine_check() be sufficient?  We'd maybe want automation to check
+everything before it.  We still need to survive hitting a kprobe int3,
+but that shouldn't have recursion issues.
 
-/Jarkko
+(Yes, that function doesn't exist in current kernels.  And we'd need
+to make sure that BPF respects it.)
