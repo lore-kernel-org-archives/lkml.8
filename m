@@ -2,92 +2,104 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A6C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85AFC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2619420732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B3D20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JvaV8Kgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgBZT0J (ORCPT
+        id S1727276AbgBZT0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:26:09 -0500
-Received: from mga14.intel.com ([192.55.52.115]:46134 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgBZT0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:26:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:26:09 -0800
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="256437340"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.24.11.14])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 11:26:08 -0800
-Message-ID: <fc82a40dbc269bf1b4f9c9ca1b56e8115783edbb.camel@linux.intel.com>
-Subject: Re: [RFC PATCH 08/11] x86: Add support for finer grained KASLR
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, keescook@chromium.org,
-        rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Date:   Wed, 26 Feb 2020 11:26:08 -0800
-In-Reply-To: <20200225174951.GA1373392@rani.riverdale.lan>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
-         <20200205223950.1212394-9-kristen@linux.intel.com>
-         <20200225174951.GA1373392@rani.riverdale.lan>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 26 Feb 2020 14:26:16 -0500
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:43480 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgBZT0Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:26:16 -0500
+Received: by mail-pf1-f169.google.com with SMTP id s1so258077pfh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:26:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5DzNmsGKabIiqxsuQFEwzfHh7R7C4KklYepK1ybNRcI=;
+        b=JvaV8KgiqzoZBj6ydSQ9wuuSPmKsMcZlCBzIlL19/gYR0rinDPmvgQGXcIqtx1mDHc
+         vFuipNjmbQwwkwM7sTSAyvGWM+yoKuDdXDhC8yd7Aj+gtgkk17kno5FXqnhPg+UUAUxE
+         YbX/zPf26fsBftBmqKkM8PPSvOOCQ6ddOIvcLMPCHd5arVBaO/tFElf6CiY4LJ+cnWMw
+         xrd1hh8jCWfIFRgiGphyi3upMeyTQfi3R7ZI4EWrWm0sDRAeWvkN7BD8jNMs1xNchCMO
+         x0e0Y4TJYgMBYN6HA1qU1rDALtp0tPX+HlIQUUXZCFxzVEUJiyDhz2mVNfPsIWkhMNtU
+         gK5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5DzNmsGKabIiqxsuQFEwzfHh7R7C4KklYepK1ybNRcI=;
+        b=kIwdT9AAeph9soO0pYbrtsoLCmeUhZ+x+a81VymQGbT96XZq3UiWBIOFTJCm88vfcz
+         16RqnKsSRobfuZWrqI1JcJrwn47j3Toz9wOk2AlB9F7W5eHK7eDaQS23CFqeFu5zB8DC
+         DcnF3ZTjsl4KdOiLNyr8ASlwrFgPNMEQX+4F9o3N2k0YCOF7LoAnJkEXR9BbB3ygn2Ev
+         otHk3gswbeHpt/KYVXMMOL6RqHzHk90ECNwsE2AsjTC7bZtbggQDagEoWxaKYfu4kEdr
+         vDPzWAXRNll5ePxkUxZ56ZV1j7cPtHABENUhGA8Xh3LEd/pv3HhmvG7VxKXriSIKWzpz
+         kLPQ==
+X-Gm-Message-State: APjAAAUY5ChvxJcnA0e3A/DkO3crSdkpRyM5e7eRUXhmFRfDg5SSld76
+        8V5l3zEYYCtXn/ciwiWOqnBx5ulIiSvjaVWGra6RLw==
+X-Google-Smtp-Source: APXvYqzCv4FxJcU96d7Vawq5DT3fARMj+obiX5wNUed9wf7xv+ae1CrV4f6IlV+FQmKVwCj9r2U464S4CiH/TgtxTyE=
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr356104pgb.263.1582745173398;
+ Wed, 26 Feb 2020 11:26:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200222072144.asqaxlv364s6ezbv@google.com> <20200222074254.GB11284@zn.tnic>
+ <20200222162225.GA3326744@rani.riverdale.lan> <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
+ <202002242122.AA4D1B8@keescook> <20200225182951.GA1179890@rani.riverdale.lan>
+ <202002251140.4F28F0A4F@keescook> <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
+ <202002251358.EDA50C11F@keescook> <20200226015606.ij7wn7emuj4bfkvn@google.com>
+ <202002252103.B4BBF01091@keescook> <16822a0460e37e7a388217c63da8882d2904d8fc.camel@linux.intel.com>
+In-Reply-To: <16822a0460e37e7a388217c63da8882d2904d8fc.camel@linux.intel.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 26 Feb 2020 11:26:02 -0800
+Message-ID: <CAKwvOdm1qoKdq=Cp3nrYPR6oXkGZ32Hmh2TPVgatKAvDHk7q4g@mail.gmail.com>
+Subject: Re: --orphan-handling=warn
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 12:49 -0500, Arvind Sankar wrote:
-> On Wed, Feb 05, 2020 at 02:39:47PM -0800, Kristen Carlson Accardi
-> wrote:
-> > At boot time, find all the function sections that have separate
-> > .text
-> > sections, shuffle them, and then copy them to new locations. Adjust
-> > any relocations accordingly.
-> > 
-> > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> > ---
-> >  arch/x86/boot/compressed/Makefile        |   1 +
-> >  arch/x86/boot/compressed/fgkaslr.c       | 751
-> > +++++++++++++++++++++++
-> >  arch/x86/boot/compressed/misc.c          | 106 +++-
-> >  arch/x86/boot/compressed/misc.h          |  26 +
-> >  arch/x86/boot/compressed/vmlinux.symbols |  15 +
-> >  arch/x86/include/asm/boot.h              |  15 +-
-> >  arch/x86/include/asm/kaslr.h             |   1 +
-> >  arch/x86/lib/kaslr.c                     |  15 +
-> >  scripts/kallsyms.c                       |  14 +-
-> >  scripts/link-vmlinux.sh                  |   4 +
-> >  10 files changed, 939 insertions(+), 9 deletions(-)
-> >  create mode 100644 arch/x86/boot/compressed/fgkaslr.c
-> >  create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
-> > 
-> > diff --git a/arch/x86/boot/compressed/Makefile
-> > b/arch/x86/boot/compressed/Makefile
-> > index b7e5ea757ef4..60d4c4e59c05 100644
-> > --- a/arch/x86/boot/compressed/Makefile
-> > +++ b/arch/x86/boot/compressed/Makefile
-> > @@ -122,6 +122,7 @@ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
-> >  
-> >  ifdef CONFIG_FG_KASLR
-> >  	RELOCS_ARGS += --fg-kaslr
-> > +	OBJCOPYFLAGS += --keep-symbols=$(obj)/vmlinux.symbols
-> 
-> I think this should be $(srctree)/$(src) rather than $(obj)? Using a
-> separate build directory fails currently.
+On Wed, Feb 26, 2020 at 11:11 AM Kristen Carlson Accardi
+<kristen@linux.intel.com> wrote:
+>
+> On Tue, 2020-02-25 at 21:35 -0800, Kees Cook wrote:
+> >
+> > Thanks for looking into this! It'll be really nice to have the orphan
+> > section warnings working in the kernel. And getting the ground work
+> > for
+> > FGKASLR ready will be nice!
+> >
+> > Kristen, can I convince you that FG stands for function-granular
+> > instead of fine-grain? :)
+> >
+>
+> Yes, sounds good to me - that way if we ever do basic block reordering
+> or some crazy thing like that we don't have to say even-finer-fine-
+> grained KASLR :).
 
-Thanks, I'll add this to my test plan for v1.
-
-
+LOL (I laugh now, but "never say never.")
+-- 
+Thanks,
+~Nick Desaulniers
