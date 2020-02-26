@@ -2,139 +2,123 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BE4C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13B5C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFE82465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vBCvH/QR"
+	by mail.kernel.org (Postfix) with ESMTP id 9D584206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBZIkx (ORCPT
+        id S1727314AbgBZIm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:40:53 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30674 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727746AbgBZIkp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:40:45 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q8cp32027962;
-        Wed, 26 Feb 2020 09:40:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=R+w4zkKgQkx86Ev1R83gmrUmiciU5hv3hcn3A64Z3Ao=;
- b=vBCvH/QRcUNFIgl6x7lPgq5mIXiYEgWmmaRpDTANZKFrlJNf/HkZ2iO1eo73YlyUC0fD
- GWCVYjWQaytAuoDDVDl5qWhLEgAfPk3JfgttXCHWvMZT+ihzS+VGZPirzptKjjTWqdVd
- YhNK+654tpuCT/gDYKBbT7dSjdnZQa9Exkd7QnbhIt+Owg1BRo3NZlXSZfiIv9W1uUPD
- kLgrP/90nhlxzbeb0uRKe9/jhBdPj6+MGJc1lWUlO2VhH1Drz7diU+Anu1HBNMxLSjqp
- 5v3WH+4sfMAwiEwYv/EY8VyUPFAmYq36RWF0vQcsBo9GqPsJBiC5U5Gg7+jveuvlM0eY 4g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ydcpgagss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 09:40:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3284010003D;
-        Wed, 26 Feb 2020 09:40:18 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 20B212AC907;
-        Wed, 26 Feb 2020 09:40:18 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb 2020 09:40:17
- +0100
-From:   Ludovic Barre <ludovic.barre@st.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH 1/4] mmc: mmci_sdmmc: fix DMA API warning max segment size
-Date:   Wed, 26 Feb 2020 09:40:11 +0100
-Message-ID: <20200226084014.5242-2-ludovic.barre@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200226084014.5242-1-ludovic.barre@st.com>
-References: <20200226084014.5242-1-ludovic.barre@st.com>
+        Wed, 26 Feb 2020 03:42:59 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:33182 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725872AbgBZIm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:42:59 -0500
+Received: from [10.130.0.70] (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axb+iPL1ZenOQTAA--.1S3;
+        Wed, 26 Feb 2020 16:42:55 +0800 (CST)
+Subject: Re: [PATCH 2/2] USB: core: Fix potential memory leak in
+ usb_get_configuration()
+To:     Johan Hovold <johan@kernel.org>
+References: <1582697723-7274-1-git-send-email-yangtiezhu@loongson.cn>
+ <1582697723-7274-2-git-send-email-yangtiezhu@loongson.cn>
+ <20200226080906.GV32540@localhost>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <c7dfaa07-dd34-600d-2a69-95a65f966dfc@loongson.cn>
+Date:   Wed, 26 Feb 2020 16:42:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_02:2020-02-25,2020-02-26 signatures=0
+In-Reply-To: <20200226080906.GV32540@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Axb+iPL1ZenOQTAA--.1S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr43uFykWrWDXFWUZFy3XFb_yoW8Zrykpa
+        18XayYyFW5JFWfJa1kGas5WayFgan7Aa45Crya9w4Dur43Aa1YkFnakr1FvF97Gr97AF40
+        qayFg3W7KrWDC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VUjMKZJUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
-WARNING: CPU: 1 PID: 85 at kernel/dma/debug.c:1302 debug_dma_map_sg+0x2a0/0x3cc
-mmci-pl18x 58005000.sdmmc: DMA-API: mapping sg segment longer than device claims to support [len=126976] [max=65536]
+On 02/26/2020 04:09 PM, Johan Hovold wrote:
+> On Wed, Feb 26, 2020 at 02:15:23PM +0800, Tiezhu Yang wrote:
+>> Make sure to free all the allocated memory before exiting from the function
+>> usb_get_configuration() when an error is encountered.
+> There's no leak in this function as far as I can tell. Any allocated
+> memory is released in usb_destroy_configuration() when the last
+> reference to the struct usb_device is dropped.
 
-dma api debug checks and compares the segment size to
-dma_get_max_seg_size (dev->dma_parms->max_segment_size),
-the sdmmc variant has an internal DMA and should define
-its max_segment_size constraint to avoid this warning.
+Yes, you are right, the allocated memory in usb_get_configuration()
+will be released in usb_destroy_configuration().
 
-This Patch defines the dev->dma_parms->max_segment_size
-with the constraint already set for mmc core
-(host->mmc->max_seg_size).
+By the way, is it better to release the allocated memory as early as 
+possible
+in usb_get_configuration()? Just like this:
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci_stm32_sdmmc.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+index bb63ee0..dd4ebeb 100644
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -885,12 +885,17 @@ int usb_get_configuration(struct usb_device *dev)
 
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index f76e82f8f12f..56d9ad7f523e 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -119,20 +119,20 @@ static void sdmmc_idma_unprep_data(struct mmci_host *host,
- static int sdmmc_idma_setup(struct mmci_host *host)
- {
- 	struct sdmmc_idma *idma;
-+	struct device *dev = mmc_dev(host->mmc);
- 
--	idma = devm_kzalloc(mmc_dev(host->mmc), sizeof(*idma), GFP_KERNEL);
--	if (!idma)
-+	idma = devm_kzalloc(dev, sizeof(*idma), GFP_KERNEL);
-+	dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms), GFP_KERNEL);
-+	if (!idma || !dev->dma_parms)
- 		return -ENOMEM;
- 
- 	host->dma_priv = idma;
- 
- 	if (host->variant->dma_lli) {
--		idma->sg_cpu = dmam_alloc_coherent(mmc_dev(host->mmc),
--						   SDMMC_LLI_BUF_LEN,
-+		idma->sg_cpu = dmam_alloc_coherent(dev, SDMMC_LLI_BUF_LEN,
- 						   &idma->sg_dma, GFP_KERNEL);
- 		if (!idma->sg_cpu) {
--			dev_err(mmc_dev(host->mmc),
--				"Failed to alloc IDMA descriptor\n");
-+			dev_err(dev, "Failed to alloc IDMA descriptor\n");
- 			return -ENOMEM;
- 		}
- 		host->mmc->max_segs = SDMMC_LLI_BUF_LEN /
-@@ -143,6 +143,8 @@ static int sdmmc_idma_setup(struct mmci_host *host)
- 		host->mmc->max_seg_size = host->mmc->max_req_size;
- 	}
- 
-+	dma_set_max_seg_size(dev, host->mmc->max_seg_size);
-+
- 	return 0;
- }
- 
--- 
-2.17.1
+         length = ncfg * sizeof(char *);
+         dev->rawdescriptors = kzalloc(length, GFP_KERNEL);
+-       if (!dev->rawdescriptors)
++       if (!dev->rawdescriptors) {
++               kfree(dev->config);
+                 return -ENOMEM;
++       }
+
+         desc = kmalloc(USB_DT_CONFIG_SIZE, GFP_KERNEL);
+-       if (!desc)
++       if (!desc) {
++               kfree(dev->config);
++               kfree(dev->rawdescriptors);
+                 return -ENOMEM;
++       }
+
+         for (cfgno = 0; cfgno < ncfg; cfgno++) {
+                 /* We grab just the first descriptor so we know how long
+
+Thanks,
+
+Tiezhu Yang
+
+>
+>> Additionally, just initialize the variable "bigbuffer" with NULL to avoid
+>> the following build warning:
+>>
+>>    CC      drivers/usb/core/config.o
+>> drivers/usb/core/config.c: In function ‘usb_get_configuration’:
+>> drivers/usb/core/config.c:956:2: warning: ‘bigbuffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>>    kfree(bigbuffer);
+>>    ^
+> No need to mention warnings that you introduce yourself while creating
+> your patch. It can give the false impression that your addressing an
+> existing issue.
+>
+> Johan
 
