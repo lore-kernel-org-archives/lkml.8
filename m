@@ -2,162 +2,179 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB9AC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA059C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA61524687
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:36:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N5qPntD2"
+	by mail.kernel.org (Postfix) with ESMTP id B6F4C206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgBZPgE (ORCPT
+        id S1728312AbgBZPg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:36:04 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42005 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728174AbgBZPgD (ORCPT
+        Wed, 26 Feb 2020 10:36:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42396 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbgBZPg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:36:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582731362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vX7Ec2sHhMrhT4BnHbuMJeMNQ59KqT36BEsL1Y44tMI=;
-        b=N5qPntD2KrB4L4eGJXFvVk5GLx9+4w5hSYWLhflfgZFc8YKRG5kaG7Rdrxa69kF4fAyQTK
-        ZnDSf074zNG37WpxeJp7zFNSKQL2BdB2i5SXIO3Ve2JAVpAqiQ9qCxNyzRED4YCCTOu8NC
-        zt5+e3VpU+pbQefw5x5gr5gfLzmypSo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-Fzg95hI4PKqK32W_dgD4mw-1; Wed, 26 Feb 2020 10:35:55 -0500
-X-MC-Unique: Fzg95hI4PKqK32W_dgD4mw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82EA71005513;
-        Wed, 26 Feb 2020 15:35:53 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F1905C54A;
-        Wed, 26 Feb 2020 15:35:51 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 16:35:49 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        namhyung@kernel.org, ravi.bangoria@linux.ibm.com,
-        yao.jin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH V2 0/5] Support metric group constraint
-Message-ID: <20200226153549.GD217283@krava>
-References: <1582581564-184429-1-git-send-email-kan.liang@linux.intel.com>
+        Wed, 26 Feb 2020 10:36:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id p18so3572891wre.9;
+        Wed, 26 Feb 2020 07:36:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tLYmvTo+IUiYZSw2mbf7ipuU9Qwuuvs8XHZ4xNHHFbA=;
+        b=lPBbrh1eufzYZCHFdm3Pi+txT+IMMtQMEeq+OoYo3+S6Zz/MkFGT/vl6qj8yDhK88o
+         UifU83mxURCJ8cLmfgfY0bMbiiiGWfHqHif2w8OESaK8LOe7ce4GQfg21/LC5zVJNMIW
+         IoGleLz3ajqD7vIZG/5WDta/lhnxVwg+p3VYlb27NEMIspiPMqsI9rNkwix72vCrwWC/
+         b9pA5DjeW7Y0Wh50jU9dRlO6iDJR6gHQKawPIQDM3ZLp8aWkN0AvJ+7HCauebYVvvehO
+         vGpai9X9kUlTI8wbHZ8W2S0yz43u/bJmlPDhDDMkrsIFQQAGh05YUmZ/RC4Ptuc/gvc5
+         YOBw==
+X-Gm-Message-State: APjAAAWmf0bZfZW5/IXJBrCR1UWYBOrVm2YF9jv9UHmqgwmcD5PLSvf/
+        hdJe6fp7/oZdeZotKVZrXZlocFsP
+X-Google-Smtp-Source: APXvYqz2z0j7xPVqtvGvdftuajp1Pa6DO/s4HXcHlN/f5JYww38hIMjAzWmZ6xfCp61SpGZaeIFzZw==
+X-Received: by 2002:adf:ea85:: with SMTP id s5mr6015479wrm.75.1582731414675;
+        Wed, 26 Feb 2020 07:36:54 -0800 (PST)
+Received: from [10.10.2.174] (winnie.ispras.ru. [83.149.199.91])
+        by smtp.gmail.com with ESMTPSA id z16sm3556272wrp.33.2020.02.26.07.36.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 07:36:54 -0800 (PST)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH 15/16] floppy: separate the FDC's base address from its
+ registers
+To:     Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200224212352.8640-1-w@1wt.eu> <20200226080732.1913-1-w@1wt.eu>
+ <20200226080732.1913-5-w@1wt.eu>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <ab69fbdc-7ccb-05ef-6c25-7fb6ed6fce59@linux.com>
+Date:   Wed, 26 Feb 2020 18:36:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582581564-184429-1-git-send-email-kan.liang@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200226080732.1913-5-w@1wt.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:59:19PM -0800, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+> One place in the ARM code used to check if the port was equal to FD_DOR,
+> this was changed to testing the register by applying a mask to the port,
+> as was already done in the sparc code.
 > 
-> Changes since V1:
-> - Remove global static flag violate_nmi_constraint, and add a new
->   function metricgroup___watchdog_constraint_hint() for all
->   watchdog constraint hints in patch 4.
->   The rest of the patches are not changed.
+> The sparc, m68k and parisc code could now be slightly cleaned up to
+> benefit from the macro definitions above instead of the equivalent
+> hard-coded values.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
+Just to note for future ref: the mask (7) can be introduced as define
+during future clean up of these magic constants.
 
 > 
-> Some metric groups, e.g. Page_Walks_Utilization, will never count when
-> NMI watchdog is enabled.
+> Signed-off-by: Willy Tarreau <w@1wt.eu>
+> ---
+>  arch/arm/include/asm/floppy.h |  2 +-
+>  drivers/block/floppy.c        |  9 ++++-----
+>  include/uapi/linux/fdreg.h    | 18 +++++-------------
+>  3 files changed, 10 insertions(+), 19 deletions(-)
 > 
->  $echo 1 > /proc/sys/kernel/nmi_watchdog
->  $perf stat -M Page_Walks_Utilization
-> 
->  Performance counter stats for 'system wide':
-> 
->  <not counted>      itlb_misses.walk_pending       (0.00%)
->  <not counted>      dtlb_load_misses.walk_pending  (0.00%)
->  <not counted>      dtlb_store_misses.walk_pending (0.00%)
->  <not counted>      ept.walk_pending               (0.00%)
->  <not counted>      cycles                         (0.00%)
-> 
->        2.343460588 seconds time elapsed
-> 
->  Some events weren't counted. Try disabling the NMI watchdog:
->         echo 0 > /proc/sys/kernel/nmi_watchdog
->         perf stat ...
->         echo 1 > /proc/sys/kernel/nmi_watchdog
->  The events in group usually have to be from the same PMU. Try
->  reorganizing the group.
-> 
-> A metric group is a weak group, which relies on group validation
-> code in the kernel to determine whether to be opened as a group or
-> a non-group. However, group validation code may return false-positives,
-> especially when NMI watchdog is enabled. (The metric group is allowed
-> as a group but will never be scheduled.)
-> 
-> The attempt to fix the group validation code has been rejected.
-> https://lore.kernel.org/lkml/20200117091341.GX2827@hirez.programming.kicks-ass.net/
-> Because we cannot accurately predict whether the group can be scheduled
-> as a group, only by checking current status.
-> 
-> This patch set provides another solution to mitigate the issue.
-> Add "MetricConstraint" in event list, which provides a hint for perf tool,
-> e.g. "MetricConstraint": "NO_NMI_WATCHDOG". Perf tool can change the
-> metric group to non-group (standalone metrics) if NMI watchdog is enabled.
-> 
-> After applying the patch,
-> 
->  $echo 1 > /proc/sys/kernel/nmi_watchdog
->  $perf stat -M Page_Walks_Utilization
->   Splitting metric group Page_Walks_Utilization into standalone metrics.
->   Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
->         echo 0 > /proc/sys/kernel/nmi_watchdog
->         perf stat ...
->         echo 1 > /proc/sys/kernel/nmi_watchdog
-> 
->  Performance counter stats for 'system wide':
-> 
->         18,253,454      itlb_misses.walk_pending  #      0.0
->                               Page_Walks_Utilization   (50.55%)
->         78,051,525      dtlb_load_misses.walk_pending  (50.55%)
->         29,213,063      dtlb_store_misses.walk_pending (50.55%)
->                  0      ept.walk_pending               (50.55%)
->      2,542,132,364      cycles                         (49.92%)
-> 
->        1.037095993 seconds time elapsed
-> 
-> Kan Liang (5):
->   perf jevents: Support metric constraint
->   perf metricgroup: Factor out metricgroup__add_metric_weak_group()
->   perf util: Factor out sysctl__nmi_watchdog_enabled()
->   perf metricgroup: Support metric constraint
->   perf vendor events: Add NO_NMI_WATCHDOG metric constraint
-> 
->  .../arch/x86/cascadelakex/clx-metrics.json         |   3 +-
->  .../pmu-events/arch/x86/skylake/skl-metrics.json   |   3 +-
->  .../pmu-events/arch/x86/skylakex/skx-metrics.json  |   3 +-
->  tools/perf/pmu-events/jevents.c                    |  19 ++--
->  tools/perf/pmu-events/jevents.h                    |   2 +-
->  tools/perf/pmu-events/pmu-events.h                 |   1 +
->  tools/perf/util/metricgroup.c                      | 109 ++++++++++++++++-----
->  tools/perf/util/stat-display.c                     |   6 +-
->  tools/perf/util/util.c                             |  18 ++++
->  tools/perf/util/util.h                             |   2 +
->  10 files changed, 128 insertions(+), 38 deletions(-)
-> 
-> -- 
-> 2.7.4
+> diff --git a/arch/arm/include/asm/floppy.h b/arch/arm/include/asm/floppy.h
+> index c665136..4e3fb71 100644
+> --- a/arch/arm/include/asm/floppy.h
+> +++ b/arch/arm/include/asm/floppy.h
+> @@ -12,7 +12,7 @@
+>  #define fd_outb(val,port)						\
+>  	do {								\
+>  		int new_val = (val);					\
+> -		if ((port) == (u32)FD_DOR) {				\
+> +		if ((port) & 7 == FD_DOR) {				\
+>  			if (new_val & 0xf0)				\
+>  				new_val = (new_val & 0x0c) |		\
+>  					  floppy_selects[new_val & 3];	\
+> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+> index 250a451..4e43a7e 100644
+> --- a/drivers/block/floppy.c
+> +++ b/drivers/block/floppy.c
+> @@ -171,7 +171,6 @@ static int print_unex = 1;
+>  #include <linux/kernel.h>
+>  #include <linux/timer.h>
+>  #include <linux/workqueue.h>
+> -#define FDPATCHES
+>  #include <linux/fdreg.h>
+>  #include <linux/fd.h>
+>  #include <linux/hdreg.h>
+> @@ -594,14 +593,14 @@ static unsigned char fsector_t;	/* sector in track */
+>  static unsigned char in_sector_offset;	/* offset within physical sector,
+>  					 * expressed in units of 512 bytes */
+>  
+> -static inline unsigned char fdc_inb(int fdc, unsigned long addr)
+> +static inline unsigned char fdc_inb(int fdc, int reg)
+>  {
+> -	return fd_inb(addr);
+> +	return fd_inb(fdc_state[fdc].address + reg);
+>  }
+>  
+> -static inline void fdc_outb(unsigned char value, int fdc, unsigned long addr)
+> +static inline void fdc_outb(unsigned char value, int fdc, int reg)
+>  {
+> -	fd_outb(value, addr);
+> +	fd_outb(value, fdc_state[fdc].address + reg);
+>  }
+>  
+>  static inline bool drive_no_geom(int drive)
+> diff --git a/include/uapi/linux/fdreg.h b/include/uapi/linux/fdreg.h
+> index 5e2981d..1318881 100644
+> --- a/include/uapi/linux/fdreg.h
+> +++ b/include/uapi/linux/fdreg.h
+> @@ -7,26 +7,18 @@
+>   * Handbook", Sanches and Canton.
+>   */
+>  
+> -#ifdef FDPATCHES
+> -#define FD_IOPORT fdc_state[fdc].address
+> -#else
+> -/* It would be a lot saner just to force fdc_state[fdc].address to always
+> -   be set ! FIXME */
+> -#define FD_IOPORT 0x3f0
+
+Again, just to note: FD_IOPORT (now removed), FDC1, FDC_BASE are pointing to
+the same port 0x3f0 in many cases.
+And at least in some cases used directly:
+$ fgrep --include='*floppy*' -nrie '0x3f0' .
+./arch/mips/include/asm/mach-generic/floppy.h:113:      return 0x3f0;
+./arch/m68k/include/asm/floppy.h:124:     return 0x3f0;
+./drivers/block/floppy.c:234:static unsigned short virtual_dma_port = 0x3f0;
+
+> -#endif
+> -
+>  /* Fd controller regs. S&C, about page 340 */
+> -#define FD_STATUS	(4 + FD_IOPORT )
+> -#define FD_DATA		(5 + FD_IOPORT )
+> +#define FD_STATUS	4
+> +#define FD_DATA		5
+>  
+>  /* Digital Output Register */
+> -#define FD_DOR		(2 + FD_IOPORT )
+> +#define FD_DOR		2
+>  
+>  /* Digital Input Register (read) */
+> -#define FD_DIR		(7 + FD_IOPORT )
+> +#define FD_DIR		7
+>  
+>  /* Diskette Control Register (write)*/
+> -#define FD_DCR		(7 + FD_IOPORT )
+> +#define FD_DCR		7
+>  
+>  /* Bits of main status register */
+>  #define STATUS_BUSYMASK	0x0F		/* drive busy mask */
 > 
 
+Denis
