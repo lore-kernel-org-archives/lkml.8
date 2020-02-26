@@ -2,89 +2,132 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0043DC4BA1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28A4C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CE4206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849D3206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgBZRTW (ORCPT
+        id S1726838AbgBZRUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:19:22 -0500
-Received: from verein.lst.de ([213.95.11.211]:49925 "EHLO verein.lst.de"
+        Wed, 26 Feb 2020 12:20:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44932 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgBZRTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:19:21 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5BE5068CEE; Wed, 26 Feb 2020 18:19:18 +0100 (CET)
-Date:   Wed, 26 Feb 2020 18:19:18 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Proper way to check for restricted DMA addressing from device
- driver
-Message-ID: <20200226171918.GA22703@lst.de>
-References: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
+        id S1726151AbgBZRUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:20:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 214ECAD2B;
+        Wed, 26 Feb 2020 17:20:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 674331E0EA2; Wed, 26 Feb 2020 18:20:34 +0100 (CET)
+Date:   Wed, 26 Feb 2020 18:20:34 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Halliday <jonathan.halliday@redhat.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+Message-ID: <20200226172034.GV10728@quack2.suse.cz>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-8-ira.weiny@intel.com>
+ <20200221174449.GB11378@lst.de>
+ <20200221224419.GW10776@dread.disaster.area>
+ <20200224175603.GE7771@lst.de>
+ <20200225000937.GA10776@dread.disaster.area>
+ <20200225173633.GA30843@lst.de>
+ <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+ <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+ <CAPcyv4iuWpHi-0SK_HS0zmfH87=G64U47VhthhpTjDCw_BMG8A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAPcyv4iuWpHi-0SK_HS0zmfH87=G64U47VhthhpTjDCw_BMG8A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-What you really needs is something like the dma_alloc_pages interface
-here:
+On Wed 26-02-20 08:46:42, Dan Williams wrote:
+> On Wed, Feb 26, 2020 at 1:29 AM Jonathan Halliday
+> <jonathan.halliday@redhat.com> wrote:
+> >
+> >
+> > Hi All
+> >
+> > I'm a middleware developer, focused on how Java (JVM) workloads can
+> > benefit from app-direct mode pmem. Initially the target is apps that
+> > need a fast binary log for fault tolerance: the classic database WAL use
+> > case; transaction coordination systems; enterprise message bus
+> > persistence and suchlike. Critically, there are cases where we use log
+> > based storage, i.e. it's not the strict 'read rarely, only on recovery'
+> > model that a classic db may have, but more of a 'append only, read many
+> > times' event stream model.
+> >
+> > Think of the log oriented data storage as having logical segments (let's
+> > implement them as files), of which the most recent is being appended to
+> > (read_write) and the remaining N-1 older segments are full and sealed,
+> > so effectively immutable (read_only) until discarded. The tail segment
+> > needs to be in DAX mode for optimal write performance, as the size of
+> > the append may be sub-block and we don't want the overhead of the kernel
+> > call anyhow. So that's clearly a good fit for putting on a DAX fs mount
+> > and using mmap with MAP_SYNC.
+> >
+> > However, we want fast read access into the segments, to retrieve stored
+> > records. The small access index can be built in volatile RAM (assuming
+> > we're willing to take the startup overhead of a full file scan at
+> > recovery time) but the data itself is big and we don't want to move it
+> > all off pmem. Which means the requirements are now different: we want
+> > the O/S cache to pull hot data into fast volatile RAM for us, which DAX
+> > explicitly won't do. Effectively a poor man's 'memory mode' pmem, rather
+> > than app-direct mode, except here we're using the O/S rather than the
+> > hardware memory controller to do the cache management for us.
+> >
+> > Currently this requires closing the full (read_write) file, then copying
+> > it to a non-DAX device and reopening it (read_only) there. Clearly
+> > that's expensive and rather tedious. Instead, I'd like to close the
+> > MAP_SYNC mmap, then, leaving the file where it is, reopen it in a mode
+> > that will instead go via the O/S cache in the traditional manner. Bonus
+> > points if I can do it over non-overlapping ranges in a file without
+> > closing the DAX mode mmap, since then the segments are entirely logical
+> > instead of needing separate physical files.
+> 
+> Hi John,
+> 
+> IIRC we chatted about this at PIRL, right?
+> 
+> At the time it sounded more like mixed mode dax, i.e. dax writes, but
+> cached reads. To me that's an optimization to optionally use dax for
+> direct-I/O writes, with its existing set of page-cache coherence
+> warts, and not a capability to dynamically switch the dax-mode.
+> mmap+MAP_SYNC seems the wrong interface for this. This writeup
+> mentions bypassing kernel call overhead, but I don't see how a
+> dax-write syscall is cheaper than an mmap syscall plus fault. If
+> direct-I/O to a dax capable file bypasses the block layer, isn't that
+> about the maximum of kernel overhead that can be cut out of this use
+> case? Otherwise MAP_SYNC is a facility to achieve efficient sub-block
+> update-in-place writes not append writes.
 
-   http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma_alloc_pages
+Well, even for appends you'll pay the cost only once per page (or maybe even
+once per huge page) when using MAP_SYNC. With a syscall you'll pay once per
+write. So although it would be good to check real numbers, the design isn't
+non-sensical to me.
 
-which has been preempted by a few other things, and the fact that
-the AMD SEV encryption bit breaks various assumptions made in this
-interface..
-
-On Wed, Feb 26, 2020 at 04:44:14PM +0100, Lucas Stach wrote:
-> Hi all,
-> 
-> I'm currently struggling with how to properly check for restricted DMA
-> addressing from a device driver side. The basic issue I'm facing is
-> that I have a embedded GPU, which isn't able to address all system
-> memory due to interconnect being restricted to 32bit addressing. The
-> limits are properly described in the system device-tree and thus
-> SWIOTLB is working.
-> 
-> However graphics buffers are large and graphics drivers really like to
-> keep the dma mapping alive for performance reasons, which means I'm
-> running out of SWIOTLB space pretty easily, aside from the obvious
-> performance implications of SWIOTLB.
-> 
-> As 3 out of the maximum 4GB system memory are located in the DMA32 zone
-> and thus located in the GPU addressable space, I just want to avoid
-> allocating graphics buffers outside of the DMA32 zone.
-> 
-> To add the DMA32 restriction to my drivers allocations, I need a
-> reliable way from the device driver side to check if the GPU is in such
-> a restricted system. What I'm currently doing in my WIP patch is this:
-> 
->  /*
->   * If the GPU is part of a system with only 32bit bus addressing
->   * capabilities, request pages for our SHM backend buffers from the
->   * DMA32 zone to avoid performance killing SWIOTLB bounce buffering.
->   */
->  if (*gpu->dev->dma_mask < BIT_ULL(32) && !device_iommu_mapped(gpu->dev))
->          priv->shm_gfp_mask |= GFP_DMA32;
-> 
-> However I'm not sure if there are edge cases where this check would
-> fool me. Is there any better way to check for DMA addressing
-> restrictions from the device driver side?
-> 
-> Regards,
-> Lucas
----end quoted text---
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
