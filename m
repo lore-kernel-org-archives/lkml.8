@@ -2,121 +2,80 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B04C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060C2C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D423924688
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582736739;
-	bh=gp7rt0swzmkwBxsp/s8luVlqOPQiL0kUz3kCiX51OH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lqeXeUEEOlaSyVuJpTAw4TTPqf1HWqmJtoRpdk0Olhn5KXgpSZsN/ste+uATxYfar
-	 ViUQlbHl6LNoTYbULj7u/LAf1iK0nHRl7VaR4GbZ+5ulZctHduyI/wKv11YIWZ2v08
-	 46Hm3kLA6Q7SVI1VNCXX1qIS7g6hB3bdPsk93BcQ=
+	by mail.kernel.org (Postfix) with ESMTP id D10CF206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EiR9E4pR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgBZRFi (ORCPT
+        id S1727910AbgBZRH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:05:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727470AbgBZRFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:05:37 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A9F2467F;
-        Wed, 26 Feb 2020 17:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582736737;
-        bh=gp7rt0swzmkwBxsp/s8luVlqOPQiL0kUz3kCiX51OH0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UVDa7A3zUwKqkzrlmofusxPaCbBRxpcMUgH8PLkkkaksvdDhMXmNMc3PMjCiXbmXj
-         aiskMinuhgWX38059o3YO4Nj4rfVhdmB9mrkPemUVWKCcEuINAtVs/E258gh+HaU6Z
-         sqhWsMD5uIvtTczTVkPC9UfL2u5gyfEPovQu/wQ0=
-Date:   Wed, 26 Feb 2020 18:05:34 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 13/16] x86/entry: Move irqflags and context tracking to C
- for simple idtentries
-Message-ID: <20200226170534.GA6075@lenoir>
-References: <20200225223321.231477305@linutronix.de>
- <20200225224145.444611199@linutronix.de>
- <20200226080538.GO18400@hirez.programming.kicks-ass.net>
+        Wed, 26 Feb 2020 12:07:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57782 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgBZRH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:07:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZJi9hC4ehvqCcf6BlT7xvIkRN9seHzpJl6dLbb5ZRoM=; b=EiR9E4pRiVBrxOAfbZhMffZ3+i
+        Ol5Ip+ZZrYlhL+mB+pu99N95gdjW/F3y2Z7IeerpE6EtJ/VNYQv1iUIDYr8VvaaTT4WkF8sR/2nun
+        0ZPWOfMsbneBeAeCiTcC3tCwOzHeSTU7/DdSdBD9VKqHiUOBtS2uIfDf1EEdnlG9b7LBySCXHHftT
+        +j5GVuJjDmc8eW8b59vJiYX/4jB/OVr6jjD2TFu5q9GUn+qXyZ5V1hyexGPIjhtsfiJbZ5SD+mfwO
+        mRMegtoRIZ6mD01bXz8gces8xrJ2v4xWcOwg0hb2antvlx/u9r+GdNEECP/xbVSRsWYq6k0zUWzqu
+        GwB/MpMA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j709g-0008JU-1v; Wed, 26 Feb 2020 17:07:28 +0000
+Date:   Wed, 26 Feb 2020 09:07:28 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v8 25/25] iomap: Convert from readpages to readahead
+Message-ID: <20200226170728.GD22837@infradead.org>
+References: <20200225214838.30017-1-willy@infradead.org>
+ <20200225214838.30017-26-willy@infradead.org>
+ <20200226170425.GD8045@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226080538.GO18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200226170425.GD8045@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 09:05:38AM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 25, 2020 at 11:33:34PM +0100, Thomas Gleixner wrote:
+On Wed, Feb 26, 2020 at 09:04:25AM -0800, Darrick J. Wong wrote:
+> > @@ -456,15 +435,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> >  			unlock_page(ctx.cur_page);
+> >  		put_page(ctx.cur_page);
+> >  	}
+> > -
+> > -	/*
+> > -	 * Check that we didn't lose a page due to the arcance calling
+> > -	 * conventions..
+> > -	 */
+> > -	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
+> > -	return ret;
 > 
-> > --- a/arch/x86/include/asm/idtentry.h
-> > +++ b/arch/x86/include/asm/idtentry.h
-> > @@ -7,14 +7,31 @@
-> >  
-> >  #ifndef __ASSEMBLY__
-> >  
-> > +#ifdef CONFIG_CONTEXT_TRACKING
-> > +static __always_inline void enter_from_user_context(void)
-> > +{
-> > +	CT_WARN_ON(ct_state() != CONTEXT_USER);
-> > +	user_exit_irqoff();
-> > +}
-> > +#else
-> > +static __always_inline void enter_from_user_context(void) { }
-> > +#endif
-> > +
-> >  /**
-> >   * idtentry_enter - Handle state tracking on idtentry
-> >   * @regs:	Pointer to pt_regs of interrupted context
-> >   *
-> > - * Place holder for now.
-> > + * Invokes:
-> > + *  - The hardirq tracer to keep the state consistent as low level ASM
-> > + *    entry disabled interrupts.
-> > + *
-> > + *  - Context tracking if the exception hit user mode
-> >   */
-> >  static __always_inline void idtentry_enter(struct pt_regs *regs)
-> >  {
-> > +	trace_hardirqs_off();
-> > +	if (user_mode(regs))
-> > +		enter_from_user_context();
-> >  }
-> 
-> So:
-> 
-> 	asm_exc_int3
-> 	  exc_int3
-> 	    idtentry_enter()
-> 	      enter_from_user_context
-> 	        if (context_tracking_enabled())
-> 
-> 	    poke_int3_handler();
-> 
-> Is, AFAICT, completely buggered.
-> 
-> You can't have a static_branch before the poke_int3_handler that deals
-> with text_poke.
+> After all the discussion about "if we still have ctx.cur_page we should
+> just stop" in v7, I'm surprised that this patch now doesn't say much of
+> anything, not even a WARN_ON()?
 
-#BP is treated like an NMI in your patchset IIRC?
-In that case and since that implies we can't schedule, we can remove
-the call to context tracking there once we have nmi_enter()/nmi_exit()
-called unconditionally.
+The code quoted above puts the cur_page reference.  By dropping the
+odd refactoring patch there is no need to check for cur_page being
+left as a special condition as that still is the normal loop exit
+state and properly handled, just as in the original iomap code.
