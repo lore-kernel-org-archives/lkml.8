@@ -2,116 +2,127 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712EDC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEABAC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A162467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C211624683
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:14:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XiDQ6WtS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXvpxSzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgBZONj (ORCPT
+        id S1727124AbgBZOOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:13:39 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45005 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgBZONj (ORCPT
+        Wed, 26 Feb 2020 09:14:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23248 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726579AbgBZOOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:13:39 -0500
-Received: by mail-il1-f195.google.com with SMTP id x7so365228ilq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:13:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FGHkOk7etA0w/lU3iCaXWIwB55mt0PB/liPLxSbfLGg=;
-        b=XiDQ6WtSuyRFVXn8DgaqZId+oCLQRtfxO4fozeDNu5fjAQjvk8xgmcNZgahcTJelTf
-         /ua4eHVBe0sSmjeTJ7nAj1Uqxi2up8pmT+GO7iOCKwWnOWimmBmCuYU6fII6bE8eEt7o
-         Y6du4YnRxbe4vRZlwaUfAWNCi5wXXIwRNZoQ4XV5Tno4b4d6c5m80IhgVVMguLMT0uYy
-         Y51xuck/PChsUWj6WbSsadsgpgnE27VvqDFsB88czvXeRRIaJ/0Nor5XslswdY+jyLb1
-         H2zbyaIDq2PI1N2CNGk1VE2O4c0kaUi0gDx86irK4Uj/TnCJziwqBa3AU1dIdgXMOiWY
-         ks1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FGHkOk7etA0w/lU3iCaXWIwB55mt0PB/liPLxSbfLGg=;
-        b=kCuPtgZDaIg5xx/oBSdkt6iLbzJbQCTAFq9KK2q7bn294KfhnjPmL15JV7ZSXbaKhV
-         Al7UuzjkrQHhytOtpZSse00qGdt1vX/xOd65cQ/Fb626zf3B0HagUs90JU/eBeECmKCc
-         dDiJndnZUx5QM9MBFYgmxQdLWlfuTlTWRY1xleg1+J5lQiS2x6PHgwls2xhdqh+9Qi8e
-         /NAaOCHFV/dwGmtDBGPgmOjhVVHExiS0P4RyRZQ5Tsh9RUM9s2j9TeDWFAXZiZubAgFJ
-         szTTzkl63X6OIST2IKhRAUebS1Spb7kdpQBjmgVOJ92TTDBwNLynvQSWFc1hxFXlvNLe
-         MBBw==
-X-Gm-Message-State: APjAAAWUw6Jk5c7qfnVLXkptQbiBSR2zrsHBSgHH4LGVnb5BiHR0LuNg
-        96SR4awUCFfwQHBkUYNs11kFCw==
-X-Google-Smtp-Source: APXvYqw18LfScNex77RW0imSGzI/wZ7CKupXx9MV2F5iuRHxLafIxyS3twyJwCiTKlMv3UHsrMuYFg==
-X-Received: by 2002:a92:3c51:: with SMTP id j78mr3583156ila.210.1582726418925;
-        Wed, 26 Feb 2020 06:13:38 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id i16sm660223ils.41.2020.02.26.06.13.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 06:13:38 -0800 (PST)
-Subject: Re: [PATCH v2] mm: Fix use_mm() vs TLB invalidate
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net,
-        keescook@chromium.org, torvalds@linux-foundation.org,
-        jannh@google.com, will@kernel.org
-References: <20200226132133.GM14946@hirez.programming.kicks-ass.net>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4c6dc38d-1ab1-a48a-f987-f616afd8910b@kernel.dk>
-Date:   Wed, 26 Feb 2020 07:13:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 26 Feb 2020 09:14:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582726481;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZqF/3U/In6tsjc0/5/XzbqWfAQzpkXhXZK9elqtvXHY=;
+        b=aXvpxSzEY4KsvWHgGq8Q8/B62unDaOVz7N1iJvNeGyjYjKd3kCYzkoLZr7icMjEhZNELBk
+        AnO3PbwBahJv5l+6PLNaxP1uK6a8BGw4rZy0Sn0MGjYSzM4XzGWG0oPqnvTWNpU1Djw53n
+        wUddhzbU6jnD+FlZrja0HhI4Z1zfyfE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-jEqJbF1kNyKhkeICBUStJA-1; Wed, 26 Feb 2020 09:14:38 -0500
+X-MC-Unique: jEqJbF1kNyKhkeICBUStJA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3387D8C78AA;
+        Wed, 26 Feb 2020 14:14:37 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C360390CD1;
+        Wed, 26 Feb 2020 14:14:31 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 01QEEVDP016665;
+        Wed, 26 Feb 2020 09:14:31 -0500
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 01QEEVfP016661;
+        Wed, 26 Feb 2020 09:14:31 -0500
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 26 Feb 2020 09:14:31 -0500 (EST)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Lukas Straub <lukasstraub2@web.de>
+cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        dm-devel <dm-devel@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>
+Subject: Re: [dm-devel] [PATCH] dm-integrity: Prevent RMW for full tag area
+ writes
+In-Reply-To: <20200226092705.61b7dcf4@luklap>
+Message-ID: <alpine.LRH.2.02.2002260906280.17883@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20200220190445.2222af54@luklap> <alpine.LRH.2.02.2002251127070.1014@file01.intranet.prod.int.rdu2.redhat.com> <20200226092705.61b7dcf4@luklap>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-In-Reply-To: <20200226132133.GM14946@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 6:21 AM, Peter Zijlstra wrote:
-> 
-> For SMP systems using IPI based TLB invalidation, looking at
-> current->active_mm is entirely reasonable. This then presents the
-> following race condition:
-> 
-> 
->   CPU0			CPU1
-> 
->   flush_tlb_mm(mm)	use_mm(mm)
->     <send-IPI>
-> 			  tsk->active_mm = mm;
-> 			  <IPI>
-> 			    if (tsk->active_mm == mm)
-> 			      // flush TLBs
-> 			  </IPI>
-> 			  switch_mm(old_mm,mm,tsk);
-> 
-> 
-> Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-> because the IPI lands before we actually switched.
-> 
-> Avoid this by disabling IRQs across changing ->active_mm and
-> switch_mm().
-> 
-> [ There are all sorts of reasons this might be harmless for various
-> architecture specific reasons, but best not leave the door open at
-> all. ]
 
-Not that I'm worried about it breaking anything, but ran it through
-the usual testing and might as well report:
 
-Tested-by: Jens Axboe <axboe@kernel.dk>
+On Wed, 26 Feb 2020, Lukas Straub wrote:
 
--- 
-Jens Axboe
+> > > -		data = dm_bufio_read(ic->bufio, *metadata_block, &b);
+> > > -		if (IS_ERR(data))
+> > > -			return PTR_ERR(data);
+> > > +		/* Don't read tag area from disk if we're going to overwrite it completely */
+> > > +		if (op == TAG_WRITE && *metadata_offset == 0 && total_size >= ic->metadata_run) {
+> >
+> > Hi
+> >
+> > This is incorrect logic because ic->metadata_run is in the units of
+> > 512-byte sectors and total_size is in bytes.
+> >
+> > If I correct the bug and change it to "if (op == TAG_WRITE &&
+> > *metadata_offset == 0 && total_size >= ic->metadata_run << SECTOR_SHIFT)",
+> > then the benchmark doesn't show any performance advantage at all.
+> 
+> Uh oh, looking at it again i have mixed up sectors/bytes elsewhere too.
+> Actually, could we rewrite this check like
+>  total_size >= (1U << SECTOR_SHIFT << ic->log2_buffer_sectors)?
+> this should work, right?
+> So we only have to overwrite part of the tag area, as long as it's whole sectors.
+> 
+> > You would need much bigger bios to take advantage for this - for example,
+> > if we have 4k block size and 64k metadata buffer size and 4-byte crc32,
+> > there are 65536/4=16384 tags in one metadata buffer and we would need
+> > 16384*4096=64MiB bio to completely overwrite the metadata buffer. Such big
+> > bios are not realistic.
+> 
+> What prevents us from using a single sector as the tag area? (Which was 
+
+Single sector writes perform badly on SSDs (and on disks with 4k physical 
+sector size). We would need at least 4k.
+
+There's another problem - using smaller metadata blocks will degrade read 
+performance, because we would need to issue more requests to read the 
+metadata.
+
+> my assumption with this patch) Then we would have (with 512b sectors) 
+> 512/4 = 128 tags = 64k bio, which is still below the optimal write size 
+
+4096/4*4096 = 4MiB - it may be possible, but it's still large.
+
+> of raid5/6. I just tried to accomplish this, but there seems to be 
+> minimum limit of interleave_sectors.
+> 
+> Regards,
+> Lukas Straub
+
+Mikulas
 
