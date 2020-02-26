@@ -2,143 +2,120 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169DBC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D0DC4BA2A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6B424653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:40:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UOGFjBTh"
+	by mail.kernel.org (Postfix) with ESMTP id D572024653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgBZUkj (ORCPT
+        id S1727542AbgBZUlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:40:39 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:32865 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727338AbgBZUkj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:40:39 -0500
-Received: by mail-ua1-f68.google.com with SMTP id w15so128725uap.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:40:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X38dp+xI/8/bQebYRzfnOr8kxspwiuDhfXc+NQs++Fs=;
-        b=UOGFjBTh5wpqU9crrLKX2C788sZCcOcl87LvIZspmck+EOvU07D2ISbpfvUCNzdHWi
-         1stD0H0A8F7rx8IqDWd+/8UAVCJ5yAGOWoyk2smT6wGRiGUo/2SAnB+XTvn3sEcSsMZd
-         oPs2f1h5a3+7nQxbgt7ZjU0L/ziLobpX/4WvI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X38dp+xI/8/bQebYRzfnOr8kxspwiuDhfXc+NQs++Fs=;
-        b=Qn2zoVIAEmU1tlkzvCxXR5U1LZEw7pIRWC0/tLCVKoACKhYbQyvjcBNLeka4F0N/on
-         Buy6L2qj8zBOPX2vnKpncTMner7rWQhoLzKl9aHB9TC6dE2iEKpSTg460UCVhOzrOOte
-         f4moh5zwFl+GJBdoeWuLKvz7sLrGvwq/Ao7rsKdPW4IRIulE3I5I9NVKu6lTFFIeOZv4
-         6djpw6NcWWK42N+oAODJ9lcE3w8IiRE2dJJKFK7IpmuwNq8zg6GSOUCDwSwEtCoGdZth
-         V4eHl+3JGvMclc8nmIFn4Jl5ZS0mLKYZZeodC7MxzlLPo//q3MUiOVhiowK7/M3qhHld
-         0KVw==
-X-Gm-Message-State: APjAAAX4GN2Vu41lCwxcOdKRBeA4/U0lSsygrenaAOIZIur9kS1oUjWU
-        zAKdFTpcSYQ8MzFbcn3itvjnyCnmGp4=
-X-Google-Smtp-Source: APXvYqz9h/wx5qdh/JzwBXeN4Ntt+f6AnJClHMpmMSHM2bEQ7gf5YWeqtxtGoR2BZR1VqXPAQjl1Og==
-X-Received: by 2002:a9f:23ca:: with SMTP id 68mr584193uao.128.1582749637013;
-        Wed, 26 Feb 2020 12:40:37 -0800 (PST)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id 126sm1169346vsz.19.2020.02.26.12.40.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 12:40:36 -0800 (PST)
-Received: by mail-vk1-f179.google.com with SMTP id w67so92718vkf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:40:36 -0800 (PST)
-X-Received: by 2002:ac5:c807:: with SMTP id y7mr667987vkl.92.1582749635551;
- Wed, 26 Feb 2020 12:40:35 -0800 (PST)
+        Wed, 26 Feb 2020 15:41:13 -0500
+Received: from mga06.intel.com ([134.134.136.31]:5071 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727350AbgBZUlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 15:41:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 12:41:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
+   d="scan'208";a="350475837"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.84]) ([134.134.177.84])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 12:41:10 -0800
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+From:   Jacob Keller <jacob.e.keller@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+ <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+ <20200225221234.GL9245@linux.intel.com>
+ <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
+ <20200225232900.GO9245@linux.intel.com>
+ <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
+ <20200226004258.GP9245@linux.intel.com>
+ <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
+Organization: Intel Corporation
+Message-ID: <df215c4c-82f0-5b15-57c3-d304fd94ff3b@intel.com>
+Date:   Wed, 26 Feb 2020 12:41:09 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200226114017.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
-In-Reply-To: <20200226114017.1.I15e0f7eff0c67a2b49d4992f9d80fc1d2fdadf63@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 26 Feb 2020 12:40:23 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UMptkb9ni0KFWp96BycU32kchYs9+uS-7H+Q9ounHy2g@mail.gmail.com>
-Message-ID: <CAD=FV=UMptkb9ni0KFWp96BycU32kchYs9+uS-7H+Q9ounHy2g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sc7180: Move venus node to the correct position
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dikshita Agarwal <dikshita@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/25/2020 4:58 PM, Jacob Keller wrote:
+> On 2/25/2020 4:42 PM, Sean Christopherson wrote>> So there's something
+> weird going on. Maybe "boot_cpu_has" in the
+>>> vmx_disabled_by_bios is wrong? Hmm.
+>>
+>> Hmm, perhaps a bug somewhere else is overwriting the cpufeatures bit for
+>> X86_FEATURE_VMX.  Let me see if I can reproduce from net-next.
+>>
+> 
+> If you have any further suggestions for debugging, I'm happy to help try
+> to figure this out. To my eyes, it looks like somehow bits get reset...
+> It's definitely not clear to me how this happens.
+> 
+> There is the get_cpu_caps call.. but that seems to correctly call
+> apply_forced_caps at the end.
+> 
+> That's all I have time for today.
+> 
+> Thanks,
+> Jake
+> 
+
 Hi,
 
-On Wed, Feb 26, 2020 at 11:40 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> Per convention device nodes for SC7180 should be ordered by address.
-> This is currently not the case for the venus node, move it to the
-> correct position.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 52 ++++++++++++++--------------
->  1 file changed, 26 insertions(+), 26 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 253274d5f04c..5f97945e16a4 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1332,6 +1332,32 @@ system-cache-controller@9200000 {
->                         interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> +               venus: video-codec@aa00000 {
-> +                       compatible = "qcom,sc7180-venus";
-> +                       reg = <0 0x0aa00000 0 0xff000>;
-> +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +                       power-domains = <&videocc VENUS_GDSC>,
-> +                                       <&videocc VCODEC0_GDSC>;
-> +                       power-domain-names = "venus", "vcodec0";
-> +                       clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> +                                <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> +                                <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-> +                                <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> +                                <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> +                       clock-names = "core", "iface", "bus",
-> +                                     "vcodec0_core", "vcodec0_bus";
-> +                       iommus = <&apps_smmu 0x0c00 0x60>;
-> +                       memory-region = <&venus_mem>;
-> +
-> +                       video-decoder {
-> +                               compatible = "venus-decoder";
-> +                       };
-> +
-> +                       video-encoder {
-> +                               compatible = "venus-encoder";
-> +                       };
-> +               };
-> +
->                 usb_1: usb@a6f8800 {
->                         compatible = "qcom,sc7180-dwc3", "qcom,dwc3";
->                         reg = <0 0x0a6f8800 0 0x400>;
+I kept digging into this, and I added a further print to the get_cpu_cap
+function.
 
-Maybe try one more time?
+It looks like get_cpu_cap is being called again *after*
+init_ia32_feat_ctl...
 
->>> print [hex(x) for x in sorted([0x0aa00000, 0x0a6f8800])]
-['0xa6f8800', '0xaa00000']
+Digging further, I discovered this appears to be the call in setup_pku,
+which would only be enabled for systems which have X86_FEATURE_PKU
+enabled and supported. It's quite likely that test systems may not have
+had this feature, hence why it went undetected till now.
 
-...makes me convinced that the codec should come _after_ the USB node, no?
+Because of the extra get_cpu_cap call, the capabilities are reset. Since
+we never use setup_clear_cpu_cap or pass NULL to clear_cpu_cap, the code
+that sets the global cpu_caps_cleared bits is not run.
 
--Doug
+It's not clear to me what the best fix for this is.
+
+Perhaps init_ia32_feat_ctl should be something run during
+early_identify_cpu, since it's really checking global status (rdmsr),
+and not per-CPU status. And then it could directly operate to call
+setup_clear_cpu_cap, which would properly clear the bit globally,
+ensuring that apply_forced_caps kicks in?
+
+Or this needs to somehow be run *after* setup_pku? But that doesn't feel
+very robust.
+
+Thanks,
+Jake
