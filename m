@@ -2,270 +2,137 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB1FC4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C5AC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B079920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C13B20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AM2dgbkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgBZKH5 (ORCPT
+        id S1727872AbgBZKIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:07:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:33148 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgBZKH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:07:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1E5A1FB;
-        Wed, 26 Feb 2020 02:07:55 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21B043F9E6;
-        Wed, 26 Feb 2020 02:07:54 -0800 (PST)
-Date:   Wed, 26 Feb 2020 10:07:49 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
- initialization
-Message-ID: <20200226100749.GA13197@e121166-lin.cambridge.arm.com>
-References: <20200217121036.3057-1-vidyas@nvidia.com>
- <20200217121036.3057-6-vidyas@nvidia.com>
- <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
- <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 26 Feb 2020 05:08:17 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43651 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgBZKIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:08:17 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200226100815euoutp0248038eff814144d31884443b2cd6bc1a~26_axecUa1399913999euoutp02Y
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:08:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200226100815euoutp0248038eff814144d31884443b2cd6bc1a~26_axecUa1399913999euoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582711695;
+        bh=cmpnpBfW2ql8aa9zpAhTcZpr5gmx50tzEyXVFAw4y1k=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=AM2dgbkXNxKixVk+B6xEXAlWwyLz5SwMsOcdgP5O2YtXXNduzWZYDchjEOM/M4BiZ
+         ManImm4p53kpvDxHLvuOkAt5TvhGUani+hpuPSOtaqpxinlDu6XqRCqBl4u83dNF+c
+         UQfdz6WGjIo6g2dcRB4POioP/0SstTx/wXMoiXrs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200226100814eucas1p234346167da6caec045e632ca38defc1f~26_akvobp1149011490eucas1p23;
+        Wed, 26 Feb 2020 10:08:14 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 32.E3.60679.E83465E5; Wed, 26
+        Feb 2020 10:08:14 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d~26_aWLOXY0946309463eucas1p1F;
+        Wed, 26 Feb 2020 10:08:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200226100814eusmtrp1cce939d30a2ec3adf4954d714b9857da~26_aVigXh1384413844eusmtrp1Y;
+        Wed, 26 Feb 2020 10:08:14 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-88-5e56438e8f64
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 42.8B.07950.E83465E5; Wed, 26
+        Feb 2020 10:08:14 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200226100814eusmtip12634683c04f9765a6f4fa15635c57896~26_Z13_Qv0611906119eusmtip1E;
+        Wed, 26 Feb 2020 10:08:14 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2 1/2] mfd: wm8994: Fix driver operation if loaded as
+ modules
+Date:   Wed, 26 Feb 2020 11:08:01 +0100
+Message-Id: <20200226100802.16384-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAIsWRmVeSWpSXmKPExsWy7djP87p9zmFxBnd+m1pcuXiIyWLjjPWs
+        FlMfPmGzuP/1KKPF5V1z2CzWHrnLbnH4TTurA7vHhs9NbB6bVnWyedy5tofNo2/LKkaPz5vk
+        AlijuGxSUnMyy1KL9O0SuDK+XWlnLdjPWXH4fS97A+M0ji5GTg4JAROJnsWPWLoYuTiEBFYw
+        SkzYOY0ZwvnCKHFr40GozGdGibN/DzDCtGxq+M0IkVjOKDHtcw8bSAKsZW2TBIjNJmAo0fW2
+        CywuImAr8XpHA9gkZoGbjBI77vSxgCSEBQIkni54zgRiswioSjz995gdxOYFatg/ZxkrxDZ5
+        idUbDoDdJCFwmU3idfsdqISLRPuKD1AnCUu8Or6FHcKWkTg9uYcFoqGZUeLhubXsEE4Po8Tl
+        phlQHdYSd879ArqPA+gmTYn1u/Qhwo4Sp7Y9YwYJSwjwSdx4KwgSZgYyJ22bDhXmlehoE4Ko
+        VpOYdXwd3NqDFy4xQ9geEndOLmKHBEqsxP0fB5gnMMrNQti1gJFxFaN4amlxbnpqsVFearle
+        cWJucWleul5yfu4mRmA6OP3v+JcdjLv+JB1iFOBgVOLhfcEZGifEmlhWXJl7iFGCg1lJhHfj
+        V6AQb0piZVVqUX58UWlOavEhRmkOFiVxXuNFL2OFBNITS1KzU1MLUotgskwcnFINjKvnRl9T
+        5Tc3sEn6EbQrYftWxTNRr/7W/lhyVrev+q/IxWyhWzuUpiVNETparrhps2GjgaVwVqVe5f0y
+        0RtuvI3LA465NvoKHH/ueH/Te26bIy9vSHM2LJ25Ubns0vXNa0Ue159ZW7wv4pPE1adeB21u
+        XjO74ZosfmPPS8GvC5+uPCaRed1KWUmJpTgj0VCLuag4EQDJpboYAwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsVy+t/xu7p9zmFxBv+uKllcuXiIyWLjjPWs
+        FlMfPmGzuP/1KKPF5V1z2CzWHrnLbnH4TTurA7vHhs9NbB6bVnWyedy5tofNo2/LKkaPz5vk
+        Alij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DK+
+        XWlnLdjPWXH4fS97A+M0ji5GTg4JAROJTQ2/GbsYuTiEBJYySvw9M5URIiEjcXJaAyuELSzx
+        51oXG0TRJ0aJy9+uMoEk2AQMJbregiQ4OUQE7CUe/PoHZjML3GWUuPLaD8QWFvCT2NbxGqye
+        RUBV4um/x+wgNq+ArcT+OcugFshLrN5wgHkCI88CRoZVjCKppcW56bnFRnrFibnFpXnpesn5
+        uZsYgUG47djPLTsYu94FH2IU4GBU4uF9wRkaJ8SaWFZcmXuIUYKDWUmEd+NXoBBvSmJlVWpR
+        fnxRaU5q8SFGU6DlE5mlRJPzgRGSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUg
+        tQimj4mDU6qBUWrlD5+Ar38Z+W/HaebmHY8+dZzVdarmvooDoiGLfpnn8/7tsq6Qdy3uZu1O
+        5XRhCRY/eH3nErPtHAv0xLL87r93Yt0R8Fbq6DqmN/tOyq27xuchfPHxw++86y1jLD/WXiu8
+        r7t6Ue/pI1/bdy8W3hPyYHVzQ1+zfBk/i4xZ+wrlwBky4bODlViKMxINtZiLihMBbdPq61gC
+        AAA=
+X-CMS-MailID: 20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d
+References: <CGME20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:43:07PM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 2/25/2020 5:38 PM, Lorenzo Pieralisi wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
-> > > Add support to defer core initialization and to receive a notifier
-> > > when core is ready to accommodate platforms where core is not for
-> > > initialization untile reference clock from host is available.
-> > 
-> > I don't understand this commit log, please reword it and fix
-> > the typos, I would merge it then, thanks.
-> Would the following be ok?
-> 
-> Add support to defer DWC core initialization for the endpoint mode of
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
 
-I removed "DWC" since this is not what this patch is actually doing.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v2:
+- replaced request_module() call with MODULE_SOFTDEP() annotation
+---
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> operation. Initialization would resume based on the notifier
-> mechanism. This would enable support for implementations like Tegra194
-> for endpoint mode operation, where the core initialization needs to be
-> deferred until the PCIe reference clock is available from the host
-> system.
-> 
-> If it is ok, I'll send new patch series with this commit log.
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 1e9fe7d92597..737dede4a95c 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
+-- 
+2.17.1
 
-No need, merged in pci/endpoint for v5.7, thanks.
-
-Lorenzo
-
-> Thanks,
-> Vidya Sagar
-> > 
-> > Lorenzo
-> > 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > > ---
-> > > V3:
-> > > * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > > 
-> > > V2:
-> > > * Addressed review comments from Kishon
-> > > 
-> > >   drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
-> > >   1 file changed, 77 insertions(+), 41 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > index bddff15052cc..be04c6220265 100644
-> > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
-> > >                           msecs_to_jiffies(1));
-> > >   }
-> > > 
-> > > -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> > > -                              void *data)
-> > > -{
-> > > -     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> > > -     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> > > -
-> > > -     queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> > > -                        msecs_to_jiffies(1));
-> > > -
-> > > -     return NOTIFY_OK;
-> > > -}
-> > > -
-> > >   static void pci_epf_test_unbind(struct pci_epf *epf)
-> > >   {
-> > >        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> > > @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
-> > >        return 0;
-> > >   }
-> > > 
-> > > +static int pci_epf_test_core_init(struct pci_epf *epf)
-> > > +{
-> > > +     struct pci_epf_header *header = epf->header;
-> > > +     const struct pci_epc_features *epc_features;
-> > > +     struct pci_epc *epc = epf->epc;
-> > > +     struct device *dev = &epf->dev;
-> > > +     bool msix_capable = false;
-> > > +     bool msi_capable = true;
-> > > +     int ret;
-> > > +
-> > > +     epc_features = pci_epc_get_features(epc, epf->func_no);
-> > > +     if (epc_features) {
-> > > +             msix_capable = epc_features->msix_capable;
-> > > +             msi_capable = epc_features->msi_capable;
-> > > +     }
-> > > +
-> > > +     ret = pci_epc_write_header(epc, epf->func_no, header);
-> > > +     if (ret) {
-> > > +             dev_err(dev, "Configuration header write failed\n");
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     ret = pci_epf_test_set_bar(epf);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     if (msi_capable) {
-> > > +             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> > > +             if (ret) {
-> > > +                     dev_err(dev, "MSI configuration failed\n");
-> > > +                     return ret;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     if (msix_capable) {
-> > > +             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> > > +             if (ret) {
-> > > +                     dev_err(dev, "MSI-X configuration failed\n");
-> > > +                     return ret;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
-> > > +                              void *data)
-> > > +{
-> > > +     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-> > > +     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> > > +     int ret;
-> > > +
-> > > +     switch (val) {
-> > > +     case CORE_INIT:
-> > > +             ret = pci_epf_test_core_init(epf);
-> > > +             if (ret)
-> > > +                     return NOTIFY_BAD;
-> > > +             break;
-> > > +
-> > > +     case LINK_UP:
-> > > +             queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
-> > > +                                msecs_to_jiffies(1));
-> > > +             break;
-> > > +
-> > > +     default:
-> > > +             dev_err(&epf->dev, "Invalid EPF test notifier event\n");
-> > > +             return NOTIFY_BAD;
-> > > +     }
-> > > +
-> > > +     return NOTIFY_OK;
-> > > +}
-> > > +
-> > >   static int pci_epf_test_alloc_space(struct pci_epf *epf)
-> > >   {
-> > >        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> > > @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-> > >   {
-> > >        int ret;
-> > >        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> > > -     struct pci_epf_header *header = epf->header;
-> > >        const struct pci_epc_features *epc_features;
-> > >        enum pci_barno test_reg_bar = BAR_0;
-> > >        struct pci_epc *epc = epf->epc;
-> > > -     struct device *dev = &epf->dev;
-> > >        bool linkup_notifier = false;
-> > > -     bool msix_capable = false;
-> > > -     bool msi_capable = true;
-> > > +     bool core_init_notifier = false;
-> > > 
-> > >        if (WARN_ON_ONCE(!epc))
-> > >                return -EINVAL;
-> > > @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-> > >        epc_features = pci_epc_get_features(epc, epf->func_no);
-> > >        if (epc_features) {
-> > >                linkup_notifier = epc_features->linkup_notifier;
-> > > -             msix_capable = epc_features->msix_capable;
-> > > -             msi_capable = epc_features->msi_capable;
-> > > +             core_init_notifier = epc_features->core_init_notifier;
-> > >                test_reg_bar = pci_epc_get_first_free_bar(epc_features);
-> > >                pci_epf_configure_bar(epf, epc_features);
-> > >        }
-> > > @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
-> > >        epf_test->test_reg_bar = test_reg_bar;
-> > >        epf_test->epc_features = epc_features;
-> > > 
-> > > -     ret = pci_epc_write_header(epc, epf->func_no, header);
-> > > -     if (ret) {
-> > > -             dev_err(dev, "Configuration header write failed\n");
-> > > -             return ret;
-> > > -     }
-> > > -
-> > >        ret = pci_epf_test_alloc_space(epf);
-> > >        if (ret)
-> > >                return ret;
-> > > 
-> > > -     ret = pci_epf_test_set_bar(epf);
-> > > -     if (ret)
-> > > -             return ret;
-> > > -
-> > > -     if (msi_capable) {
-> > > -             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
-> > > -             if (ret) {
-> > > -                     dev_err(dev, "MSI configuration failed\n");
-> > > -                     return ret;
-> > > -             }
-> > > -     }
-> > > -
-> > > -     if (msix_capable) {
-> > > -             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-> > > -             if (ret) {
-> > > -                     dev_err(dev, "MSI-X configuration failed\n");
-> > > +     if (!core_init_notifier) {
-> > > +             ret = pci_epf_test_core_init(epf);
-> > > +             if (ret)
-> > >                        return ret;
-> > > -             }
-> > >        }
-> > > 
-> > >        if (linkup_notifier) {
-> > > --
-> > > 2.17.1
-> > > 
