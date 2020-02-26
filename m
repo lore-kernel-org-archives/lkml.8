@@ -2,195 +2,197 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AECC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E965DC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D562206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E20206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ceEmj1sh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgBZRMn (ORCPT
+        id S1726810AbgBZRND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:12:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:39404 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgBZRMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:12:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6014630E;
-        Wed, 26 Feb 2020 09:12:42 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53B833F881;
-        Wed, 26 Feb 2020 09:12:39 -0800 (PST)
-Subject: Re: [PATCH 3/3] EDAC: synopsys: Add edac driver support for i.MX8MP
-To:     sherry sun <sherry.sun@nxp.com>
-Cc:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        rrichter@marvell.com, michal.simek@xilinx.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, frank.li@nxp.com
-References: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
- <1582267156-20189-4-git-send-email-sherry.sun@nxp.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <23a40435-8b18-2924-a1b1-635c2a4b446b@arm.com>
-Date:   Wed, 26 Feb 2020 17:12:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 12:13:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24024 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726671AbgBZRNC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:13:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582737181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tnpfXdQjYrBFaS792nY8i0wuvTcJOpHnYH5FAirUsUY=;
+        b=ceEmj1shrEC6AdZNtMLmii/otGOKTKvKbLpCZgLaaE3CNVGykFnhrFBknjViXyBtTY9Kqw
+        uLJQbtO0KmY9OrFo/5/g4nSIRgZHxRYDiDz6R7qm2JlnQ/vtS49MNAGnXddY4fJ9/WYwZB
+        YJ5qetv6eteVv/AB4QYY0qjIOIU3uv0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-nnA6nOlHPVegzN55-GauaQ-1; Wed, 26 Feb 2020 12:11:28 -0500
+X-MC-Unique: nnA6nOlHPVegzN55-GauaQ-1
+Received: by mail-wr1-f71.google.com with SMTP id z1so39174wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:11:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=tnpfXdQjYrBFaS792nY8i0wuvTcJOpHnYH5FAirUsUY=;
+        b=gpy0ugVZS897Dj8myndLOLwO3RHxd2zzjQke5MH/R6fF7TW0PjW2ZGCxKTuKMLBTAT
+         opTEPWWQLxa14jo+elH3qtOnXuQwC2TnDnROKDB+lpojavy7YmqqEvm2xCkbjXQqNL8e
+         Jg28zwXT92QIqm1V1guDRHpA3gmZh/mShTrjL5L3dO6o6X7iKbDsrU14I7K62FBDghNl
+         38V7ED8e9mdwCFT6rJ1h7aicW83ZrM1PlQKuNv1sE5r2OJSYKWEpfk7MqdT2lPYyapur
+         6JLFL9C6JtJjCQoeXeH/BdfTMUD9c0I8Tp77N4Rpvi2hlllNcqtqtulfO8MAPzZ4pemu
+         LEhw==
+X-Gm-Message-State: APjAAAU91C+l2lXQ/K7L4MiUegXynTzfa40rPeULaXSiRUv7wijCQQj+
+        N+xcIxrN7vxFa8oQ1//r74DA+To7tx+nmji/FXTYeoZ6Gl38vy/2VmmPlscekNCrs8jrxbqbLGz
+        XvBXgUWO26k4bdxfGRUMbWF8C
+X-Received: by 2002:adf:fc85:: with SMTP id g5mr6506225wrr.52.1582737087346;
+        Wed, 26 Feb 2020 09:11:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw+99mQIMnTdmvz4jq3L9yXHiV5BgK+YifebeHL+ho8XsMql1sUyO5bD1gtgRpfoxojajGT4Q==
+X-Received: by 2002:adf:fc85:: with SMTP id g5mr6506204wrr.52.1582737087099;
+        Wed, 26 Feb 2020 09:11:27 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id j16sm4089259wru.68.2020.02.26.09.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 09:11:26 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/13] KVM: x86: Refactor emulate tracepoint to explicitly take context
+In-Reply-To: <20200218232953.5724-7-sean.j.christopherson@intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-7-sean.j.christopherson@intel.com>
+Date:   Wed, 26 Feb 2020 18:11:25 +0100
+Message-ID: <8736axjmte.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1582267156-20189-4-git-send-email-sherry.sun@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sherry,
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-On 21/02/2020 06:39, sherry sun wrote:
-> From: Sherry Sun <sherry.sun@nxp.com>
-> 
-> Since i.MX8MP use synopsys ddr controller IP, so add edac support
-> for i.MX8MP based on synopsys edac driver. i.MX8MP use LPDDR4 and
-> support interrupts for corrected and uncorrected errors.
-
-> The main
-> difference between ZynqMP and i.MX8MP ddr controller is the interrupt
-> registers. So add another interrupt handler function, enable/disable
-> interrupt function to distinguish with ZynqMP.
-
-Same, but different! Is there any more information on how this difference comes about?
-
-It looks like the existing users of this driver all used DDR_QOS_IRQ, but yours uses
-DDR_CE_INTR and DDR_UE_INTR. I note you didn't add a new register offset, so this must be
-a feature of the IP that i.MX8MP uses, but others don't.
-
-Is it possible to describe the feature in the DT instead of quirking based on the compatible?
-
-Ideally someone else with the same configuration in a different SoC should be able to use
-the new parts of this driver without changing the code to quirk their platform too.
-
-
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index 2d263382d797..66c801502212 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-
-> @@ -524,6 +530,54 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
-
-> +static void enable_intr_imx8mp(struct synps_edac_priv *priv)
-> +{
-> +	int regval;
-> +
-> +	regval = readl(priv->baseaddr + ECC_CLR_OFST);
-> +	regval |= (DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
-> +	writel(regval, priv->baseaddr + ECC_CLR_OFST);
-> +}
-
-I assume these two interrupts are combined as one line. i.e. this driver can't race with
-itself.
-
-Was this an integration choice? Could someone else use wire the DDR_CE_INTR and
-DDR_UE_INTR interrupts separately so that two CPUs take them in parallel?
-
-
-ECC_CLR_OFST looks mighty like one of these write-only 'clear pending irqs' register. I'm
-surprised you read it, then write to it to enable interrupts... but I don't have the
-documentation!
-
-
-> +/* Interrupt Handler for ECC interrupts on imx8mp platform. */
-> +static irqreturn_t intr_handler_imx8mp(int irq, void *dev_id)
-> +{
-> +	const struct synps_platform_data *p_data;
-> +	struct mem_ctl_info *mci = dev_id;
-> +	struct synps_edac_priv *priv;
-> +	int status, regval;
-> +
-> +	priv = mci->pvt_info;
-> +	p_data = priv->p_data;
-
-
-> +	regval = readl(priv->baseaddr + ECC_STAT_OFST);
-> +	if (!(regval & ECC_INTR_MASK))
-> +		return IRQ_NONE;
-
-zynqmp_get_error_info(), which you call via p_data->get_error_info() does this too, so
-this is redundant.
-
-
-> +	status = p_data->get_error_info(priv);
-> +	if (status)
-> +		return IRQ_NONE;
-> +
-> +	priv->ce_cnt += priv->stat.ce_cnt;
-> +	priv->ue_cnt += priv->stat.ue_cnt;
-> +	handle_error(mci, &priv->stat);
-> +
-> +	edac_dbg(3, "Total error count CE %d UE %d\n",
-> +		 priv->ce_cnt, priv->ue_cnt);
-
-This is the same as the existing intr_handler()...
-
-
-> +	enable_intr_imx8mp(priv);
-
-Is this because zynqmp_get_error_info() wrote 0 to ECC_CLR_OFST, so now you have to
-re-enable the interrrupts?
-
-It looks like you are hacking round the problem!
-
-
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-> @@ -541,6 +595,9 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
->  	priv = mci->pvt_info;
->  	p_data = priv->p_data;
+> Explicitly pass the emulation context to the emulate tracepoint in
+> preparation of dynamically allocation the emulation context.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/trace.h | 22 +++++++++++-----------
+>  arch/x86/kvm/x86.c   | 13 ++++++++-----
+>  2 files changed, 19 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+> index f194dd058470..5605000ca5f6 100644
+> --- a/arch/x86/kvm/trace.h
+> +++ b/arch/x86/kvm/trace.h
+> @@ -731,8 +731,9 @@ TRACE_EVENT(kvm_skinit,
+>  	})
 >  
-> +	if (p_data->quirks & DDR_ECC_IMX8MP)
-> +		return intr_handler_imx8mp(irq, dev_id);
-> +
->  	regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
->  	regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
->  	if (!(regval & ECC_CE_UE_INTR_MASK))
-
-As this driver has struct synps_platform_data for some function calls (that are all the
-same today), you could add this as one that differs. This would let you pass the right one
-to devm_request_irq() at setup_irq() time. If there is a third type of intr_handler, it
-avoids chaining these quirk/features in the intr_handler().
-
-
-> @@ -817,7 +874,7 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
->  	platform_set_drvdata(pdev, mci);
+>  TRACE_EVENT(kvm_emulate_insn,
+> -	TP_PROTO(struct kvm_vcpu *vcpu, __u8 failed),
+> -	TP_ARGS(vcpu, failed),
+> +	TP_PROTO(struct kvm_vcpu *vcpu, struct x86_emulate_ctxt *ctxt,
+> +		 __u8 failed),
+> +	TP_ARGS(vcpu, ctxt, failed),
 >  
->  	/* Initialize controller capabilities and configuration */
-> -	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
-> +	mci->mtype_cap = MEM_FLAG_LRDDR4 | MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
->  	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
->  	mci->scrub_cap = SCRUB_HW_SRC;
->  	mci->scrub_mode = SCRUB_NONE;
+>  	TP_STRUCT__entry(
+>  		__field(    __u64, rip                       )
+> @@ -745,13 +746,10 @@ TRACE_EVENT(kvm_emulate_insn,
+>  
+>  	TP_fast_assign(
+>  		__entry->csbase = kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS);
 
-You haven't updated zynq_get_mtype(), is it possible to use the new memory type?
+This seems the only usage of 'vcpu' parameter now; I checked and even
+after switching to dynamic emulation context allocation we still set
+ctxt->vcpu in alloc_emulate_ctxt(), can we get rid of 'vcpu' parameter
+here then (and use ctxt->vcpu instead)?
 
+> -		__entry->len = vcpu->arch.emulate_ctxt.fetch.ptr
+> -			       - vcpu->arch.emulate_ctxt.fetch.data;
+> -		__entry->rip = vcpu->arch.emulate_ctxt._eip - __entry->len;
+> -		memcpy(__entry->insn,
+> -		       vcpu->arch.emulate_ctxt.fetch.data,
+> -		       15);
+> -		__entry->flags = kei_decode_mode(vcpu->arch.emulate_ctxt.mode);
+> +		__entry->len = ctxt->fetch.ptr - ctxt->fetch.data;
+> +		__entry->rip = ctxt->_eip - __entry->len;
+> +		memcpy(__entry->insn, ctxt->fetch.data, 15);
+> +		__entry->flags = kei_decode_mode(ctxt->mode);
+>  		__entry->failed = failed;
+>  		),
+>  
+> @@ -764,8 +762,10 @@ TRACE_EVENT(kvm_emulate_insn,
+>  		)
+>  	);
+>  
+> -#define trace_kvm_emulate_insn_start(vcpu) trace_kvm_emulate_insn(vcpu, 0)
+> -#define trace_kvm_emulate_insn_failed(vcpu) trace_kvm_emulate_insn(vcpu, 1)
+> +#define trace_kvm_emulate_insn_start(vcpu, ctxt)	\
+> +	trace_kvm_emulate_insn(vcpu, ctxt, 0)
+> +#define trace_kvm_emulate_insn_failed(vcpu, ctxt)	\
+> +	trace_kvm_emulate_insn(vcpu, ctxt, 1)
+>  
+>  TRACE_EVENT(
+>  	vcpu_match_mmio,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 79d1113ad6e7..69d3dd64d90c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6460,10 +6460,13 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_inject_realmode_interrupt);
+>  
+> -static int handle_emulation_failure(struct kvm_vcpu *vcpu, int emulation_type)
+> +static int handle_emulation_failure(struct x86_emulate_ctxt *ctxt,
+> +				    int emulation_type)
+>  {
+> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
+> +
+>  	++vcpu->stat.insn_emulation_fail;
+> -	trace_kvm_emulate_insn_failed(vcpu);
+> +	trace_kvm_emulate_insn_failed(vcpu, ctxt);
+>  
+>  	if (emulation_type & EMULTYPE_VMWARE_GP) {
+>  		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
+> @@ -6788,7 +6791,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  
+>  		r = x86_decode_insn(ctxt, insn, insn_len);
+>  
+> -		trace_kvm_emulate_insn_start(vcpu);
+> +		trace_kvm_emulate_insn_start(vcpu, ctxt);
+>  		++vcpu->stat.insn_emulation;
+>  		if (r != EMULATION_OK)  {
+>  			if ((emulation_type & EMULTYPE_TRAP_UD) ||
+> @@ -6810,7 +6813,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  				inject_emulated_exception(ctxt);
+>  				return 1;
+>  			}
+> -			return handle_emulation_failure(vcpu, emulation_type);
+> +			return handle_emulation_failure(ctxt, emulation_type);
+>  		}
+>  	}
+>  
+> @@ -6856,7 +6859,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  					emulation_type))
+>  			return 1;
+>  
+> -		return handle_emulation_failure(vcpu, emulation_type);
+> +		return handle_emulation_failure(ctxt, emulation_type);
+>  	}
+>  
+>  	if (ctxt->have_exception) {
 
-I think this would be cleaner if you moved the existing parts of the driver that aren't
-needed when using DDR_CE_INTR and DDR_UE_INTR to the platform data as a preparatory patch.
-You can then add support for these interrupts by adding the bits that are different.
-This should avoid things like trying to undo what zynq_get_error_info() did. Things like
-this are a maintenance headache.
+-- 
+Vitaly
 
-As it is, you're hooking in the differences, then working round some of the things you
-didn't want to happen. (e.g. ECC_CLR_OFST being written as zero)
-
-
-
-Thanks,
-
-James
