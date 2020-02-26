@@ -2,71 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D88C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3819C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B0E24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582696323;
-	bh=adrQAt83Jz1VYJQR0Ydtz4tKVFHlHwdEBeI/YBS3ymM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Rz/kVJh7g/tGdaOWYV1Aro7TrnjmZ/vWUYY7tdrf4MgaqdWgzM7XztJc+CVx5EKui
-	 sRF9eTpJl9//ZxGfuOCL4lob4IUPypKmnRETMfRmolt/1qmTqSOuTQo5LZ1VOEH0mO
-	 6JGPLUriSbn87ACo48nhfnNSXmath6TQoWFAK3Y0=
+	by mail.kernel.org (Postfix) with ESMTP id CA4BD206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBZFwC (ORCPT
+        id S1727105AbgBZFwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:52:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40330 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 00:52:34 -0500
+Received: from mx.socionext.com ([202.248.49.38]:44988 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgBZFwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:52:01 -0500
-Received: from [192.168.0.217] (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA33F206E2;
-        Wed, 26 Feb 2020 05:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582696321;
-        bh=adrQAt83Jz1VYJQR0Ydtz4tKVFHlHwdEBeI/YBS3ymM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=vsQd00aKR+6P4r5gOMoVfbMk6ondEC5mSm/2hSJS7W1hIYh83hmJMf9EKPEEgSic1
-         6BaE9Gp4pYu3B1R6w18sTIElDLFHDWd/4GUAjo7eSOHnnIL6TsKJwuKzzubQSdBKLp
-         Q645Km4twIMAN/R7ohTt4wRlvvnsjj7phdpN1+1A=
-Subject: Re: [patch 01/24] x86/traps: Split trap numbers out in a seperate
- header
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20200225221606.511535280@linutronix.de>
- <20200225222648.285655538@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Message-ID: <3083fa19-8eec-0902-d4fe-7274f420f373@kernel.org>
-Date:   Tue, 25 Feb 2020 21:52:00 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200225222648.285655538@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725789AbgBZFwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 00:52:34 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 26 Feb 2020 14:52:32 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 3CAB8603AB;
+        Wed, 26 Feb 2020 14:52:33 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 26 Feb 2020 14:52:33 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 8D4C81A0006;
+        Wed, 26 Feb 2020 14:52:32 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] PCI: endpoint: Fix clearing start entry in configfs
+Date:   Wed, 26 Feb 2020 14:52:23 +0900
+Message-Id: <1582696343-23049-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 2:16 PM, Thomas Gleixner wrote:
-> So they can be used in ASM code. For this it is also necessary to convert
-> them to defines. Will be used for the rework of the entry code.
-> 
+After endpoint has started using configfs, if 0 is written to the entry
+'start', the controller stops but the entry value remains 1.
 
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
+At this time, unlinking the function from the controller, WARN_ON_ONCE()
+in pci_epc_epf_unlink() will be triggered despite right behavior.
+
+This fixes the issue by clearing the entry when stopping the controller.
+
+Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/endpoint/pci-ep-cfs.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index d1288a0..4fead88 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+ 
+ 	if (!start) {
+ 		pci_epc_stop(epc);
++		epc_group->start = 0;
+ 		return len;
+ 	}
+ 
+-- 
+2.7.4
+
