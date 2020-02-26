@@ -2,1060 +2,621 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BDDC4BA11
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C78C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0C724684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D7120838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgBZLr7 (ORCPT
+        id S1728361AbgBZLtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:47:59 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37987 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbgBZLr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:47:58 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so2744722ljh.5;
-        Wed, 26 Feb 2020 03:47:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=4nG02c0ufrG25Cz9DiTm235emBhYNdJt4I6uokykasU=;
-        b=iITqq3XdsgnU2jXLUZhEcoz9yJxj2VlICfEJrwc7NTF2aG0eCrAo2gY+3Ovtm9kvUF
-         YRvvn2phWr/h4MaFdHDRn13f0Hac/yCc1ol0vDcSGqMYHFzOt8rRErCzWHKj3VvOSxIE
-         7nusLWDVan+fFe9Bcjl6ZFR7JRkC3axoAtFDEI1DU21GdLrjq6I1lpFyjfOtW0HOKD+C
-         Xm98BwuCh3svJQRAaml2TCy6akLwmKr/KQeTEK7OtDMK/SONqCjxt5n1sGvmMqwBNAQd
-         nx0Czzg9tLhLc94wHnlSab4Aln2aUVCPvktbQUueJLQPoZ7GyGWQX1P5uVrb7ONE1+7D
-         7xzQ==
-X-Gm-Message-State: APjAAAXIcDT15SgVx2qMUP3PmkKoQ/n1NFXd+xoR4wgQ4MokgA5rRLR9
-        0LS78ieiLR48SuadkjBM2lk=
-X-Google-Smtp-Source: ADFU+vtunzfdrUbsZN50IfXyun95VNRCCF5gxQLutYOERRdTpilAZsrTbQtca6bmx9AiVwvGm7p3Ww==
-X-Received: by 2002:a05:651c:555:: with SMTP id q21mr2747390ljp.241.1582717673462;
-        Wed, 26 Feb 2020 03:47:53 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id l7sm869000lfc.80.2020.02.26.03.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 03:47:52 -0800 (PST)
-Date:   Wed, 26 Feb 2020 13:47:40 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-Message-ID: <20200226114740.GA17426@localhost.localdomain>
+        Wed, 26 Feb 2020 06:49:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40082 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbgBZLtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:49:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 16876AC44;
+        Wed, 26 Feb 2020 11:48:57 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 12:48:55 +0100
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>, Zorro Lang <zlang@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Add manpages for move_mount(2) and open_tree(2)
+Message-ID: <20200226114855.GA25595@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20200207174236.18882-1-pvorel@suse.cz>
+ <20200207174236.18882-2-pvorel@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200207174236.18882-2-pvorel@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
-the binding document to two separate documents (own documents for BD71837
-and BD71847) as they have different amount of regulators. This way we can
-better enforce the node name check for regulators. ROHM is also providing
-BD71850 - which is almost identical to BD71847 - main difference is some
-initial regulator states. The BD71850 can be driven by same driver and it
-has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
-introduce compatible for it.
+Hi,
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+gentle ping. Could these 2 patches be merged?
 
-This is a resend of a resend of v2 - no changes other than rebasing.
+Kind regards,
+Petr
 
-changes since v1:
-- constrains to short and long presses.
-- reworded commit message to shorten a line exceeding 75 chars
-- added 'additionalProperties: false'
-- removed 'clock-names' from example node
+> From: David Howells <dhowells@redhat.com>
 
- .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
- .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
- .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
- .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
- .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
- .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
- 6 files changed, 658 insertions(+), 252 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
- delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+> Add manual pages to document the move_mount and open_tree() system calls.
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-deleted file mode 100644
-index f22d74c7a8db..000000000000
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-+++ /dev/null
-@@ -1,90 +0,0 @@
--* ROHM BD71837 and BD71847 Power Management Integrated Circuit bindings
--
--BD71837MWV and BD71847MWV are programmable Power Management ICs for powering
--single-core, dual-core, and quad-core SoCs such as NXP-i.MX 8M. They are
--optimized for low BOM cost and compact solution footprint. BD71837MWV
--integrates 8 Buck regulators and 7 LDOs. BD71847MWV contains 6 Buck regulators
--and 6 LDOs.
--
--Datasheet for BD71837 is available at:
--https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
--Datasheet for BD71847 is available at:
--https://www.rohm.com/datasheet/BD71847AMWV/bd71847amwv-e
--
--Required properties:
-- - compatible		: Should be "rohm,bd71837" for bd71837
--				    "rohm,bd71847" for bd71847.
-- - reg			: I2C slave address.
-- - interrupt-parent	: Phandle to the parent interrupt controller.
-- - interrupts		: The interrupt line the device is connected to.
-- - clocks		: The parent clock connected to PMIC. If this is missing
--			  32768 KHz clock is assumed.
-- - #clock-cells		: Should be 0.
-- - regulators:		: List of child nodes that specify the regulators.
--			  Please see ../regulator/rohm,bd71837-regulator.txt
--
--Optional properties:
--- clock-output-names	: Should contain name for output clock.
--- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
--
--The BD718x7 supports two different HW states as reset target states. States
--are called as SNVS and READY. At READY state all the PMIC power outputs go
--down and OTP is reload. At the SNVS state all other logic and external
--devices apart from the SNVS power domain are shut off. Please refer to NXP
--i.MX8 documentation for further information regarding SNVS state. When a
--reset is done via SNVS state the PMIC OTP data is not reload. This causes
--power outputs that have been under SW control to stay down when reset has
--switched power state to SNVS. If reset is done via READY state the power
--outputs will be returned to HW control by OTP loading. Thus the reset
--target state is set to READY by default. If SNVS state is used the boot
--crucial regulators must have the regulator-always-on and regulator-boot-on
--properties set in regulator node.
--
--- rohm,short-press-ms	: Short press duration in milliseconds
--- rohm,long-press-ms	: Long press duration in milliseconds
--
--Configure the "short press" and "long press" timers for the power button.
--Values are rounded to what hardware supports (500ms multiple for short and
--1000ms multiple for long). If these properties are not present the existing
--configuration (from bootloader or OTP) is not touched.
--
--Example:
--
--	/* external oscillator node */
--	osc: oscillator {
--		compatible = "fixed-clock";
--		#clock-cells = <1>;
--		clock-frequency  = <32768>;
--		clock-output-names = "osc";
--	};
--
--	pmic: pmic@4b {
--		compatible = "rohm,bd71837";
--		reg = <0x4b>;
--		interrupt-parent = <&gpio1>;
--		interrupts = <29 GPIO_ACTIVE_LOW>;
--		interrupt-names = "irq";
--		#clock-cells = <0>;
--		clocks = <&osc 0>;
--		clock-output-names = "bd71837-32k-out";
--		rohm,reset-snvs-powered;
--
--		regulators {
--			buck1: BUCK1 {
--				regulator-name = "buck1";
--				regulator-min-microvolt = <700000>;
--				regulator-max-microvolt = <1300000>;
--				regulator-boot-on;
--				regulator-always-on;
--				regulator-ramp-delay = <1250>;
--			};
--			// [...]
--		};
--	};
--
--	/* Clock consumer node */
--	rtc@0 {
--		compatible = "company,my-rtc";
--		clock-names = "my-clock";
--		clocks = <&pmic>;
--	};
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-new file mode 100644
-index 000000000000..aa922c560fcc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-@@ -0,0 +1,236 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd71837-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD71837 Power Management Integrated Circuit bindings
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  BD71837MWV is programmable Power Management ICs for powering single-core,
-+  dual-core, and quad-core SoCs such as NXP-i.MX 8M. It is optimized for low
-+  BOM cost and compact solution footprint. BD71837MWV  integrates 8 Buck
-+  regulators and 7 LDOs.
-+  Datasheet for BD71837 is available at
-+  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71837amwv-product
-+
-+properties:
-+  compatible:
-+    const: rohm,bd71837
-+
-+  reg:
-+    description:
-+      I2C slave address.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 0
-+
-+# The BD718x7 supports two different HW states as reset target states. States
-+# are called as SNVS and READY. At READY state all the PMIC power outputs go
-+# down and OTP is reload. At the SNVS state all other logic and external
-+# devices apart from the SNVS power domain are shut off. Please refer to NXP
-+# i.MX8 documentation for further information regarding SNVS state. When a
-+# reset is done via SNVS state the PMIC OTP data is not reload. This causes
-+# power outputs that have been under SW control to stay down when reset has
-+# switched power state to SNVS. If reset is done via READY state the power
-+# outputs will be returned to HW control by OTP loading. Thus the reset
-+# target state is set to READY by default. If SNVS state is used the boot
-+# crucial regulators must have the regulator-always-on and regulator-boot-on
-+# properties set in regulator node.
-+
-+  rohm,reset-snvs-powered:
-+    description: |
-+      Transfer PMIC to SNVS state at reset
-+    type: boolean
-+
-+# Configure the "short press" and "long press" timers for the power button.
-+# Values are rounded to what hardware supports
-+# Short-press:
-+#   Shortest being 10ms, next 500ms and then multiple of 500ms up to 7,5s
-+# Long-press:
-+#   Shortest being 10ms, next 1000ms and then multiple of 1000ms up to 15s
-+# If these properties are not present the existing configuration (from
-+# bootloader or OTP) is not touched.
-+
-+  rohm,short-press-ms:
-+    description:
-+      Short press duration in milliseconds
-+    enum:
-+      - 10
-+      - 500
-+      - 1000
-+      - 1500
-+      - 2000
-+      - 2500
-+      - 3000
-+      - 3500
-+      - 4000
-+      - 4500
-+      - 5000
-+      - 5500
-+      - 6000
-+      - 6500
-+      - 7000
-+
-+  rohm,long-press-ms:
-+    description:
-+      Long press duration in milliseconds
-+    enum:
-+      - 10
-+      - 1000
-+      - 2000
-+      - 3000
-+      - 4000
-+      - 5000
-+      - 6000
-+      - 7000
-+      - 8000
-+      - 9000
-+      - 10000
-+      - 11000
-+      - 12000
-+      - 13000
-+      - 14000
-+
-+  regulators:
-+    $ref: ../regulator/rohm,bd71837-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - "#clock-cells"
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+
-+    i2c {
-+      pmic: pmic@4b {
-+            compatible = "rohm,bd71837";
-+            reg = <0x4b>;
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+            #clock-cells = <0>;
-+            clocks = <&osc 0>;
-+            rohm,reset-snvs-powered;
-+            rohm,short-press-ms = <10>;
-+            rohm,long-press-ms = <2000>;
-+
-+            regulators {
-+                buck1: BUCK1 {
-+                    regulator-name = "buck1";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1300000>;
-+                    regulator-boot-on;
-+                    regulator-always-on;
-+                    regulator-ramp-delay = <1250>;
-+                    rohm,dvs-run-voltage = <900000>;
-+                    rohm,dvs-idle-voltage = <850000>;
-+                    rohm,dvs-suspend-voltage = <800000>;
-+                };
-+                buck2: BUCK2 {
-+                    regulator-name = "buck2";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1300000>;
-+                    regulator-boot-on;
-+                    regulator-always-on;
-+                    regulator-ramp-delay = <1250>;
-+                    rohm,dvs-run-voltage = <1000000>;
-+                    rohm,dvs-idle-voltage = <900000>;
-+                };
-+                buck3: BUCK3 {
-+                    regulator-name = "buck3";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1300000>;
-+                    regulator-boot-on;
-+                    rohm,dvs-run-voltage = <1000000>;
-+                };
-+                buck4: BUCK4 {
-+                    regulator-name = "buck4";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1300000>;
-+                    regulator-boot-on;
-+                    rohm,dvs-run-voltage = <1000000>;
-+                };
-+                buck5: BUCK5 {
-+                    regulator-name = "buck5";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1350000>;
-+                    regulator-boot-on;
-+                };
-+                buck6: BUCK6 {
-+                    regulator-name = "buck6";
-+                    regulator-min-microvolt = <3000000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                buck7: BUCK7 {
-+                    regulator-name = "buck7";
-+                    regulator-min-microvolt = <1605000>;
-+                    regulator-max-microvolt = <1995000>;
-+                    regulator-boot-on;
-+                };
-+                buck8: BUCK8 {
-+                    regulator-name = "buck8";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <1400000>;
-+                };
-+
-+                ldo1: LDO1 {
-+                    regulator-name = "ldo1";
-+                    regulator-min-microvolt = <3000000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo2: LDO2 {
-+                    regulator-name = "ldo2";
-+                    regulator-min-microvolt = <900000>;
-+                    regulator-max-microvolt = <900000>;
-+                    regulator-boot-on;
-+                };
-+                ldo3: LDO3 {
-+                    regulator-name = "ldo3";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo4: LDO4 {
-+                    regulator-name = "ldo4";
-+                    regulator-min-microvolt = <900000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                ldo5: LDO5 {
-+                    regulator-name = "ldo5";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo6: LDO6 {
-+                    regulator-name = "ldo6";
-+                    regulator-min-microvolt = <900000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                ldo7_reg: LDO7 {
-+                    regulator-name = "ldo7";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-new file mode 100644
-index 000000000000..402e40dfe0b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-@@ -0,0 +1,222 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd71847-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD71847 and BD71850 Power Management Integrated Circuit bindings
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  BD71847AMWV and BD71850MWV are programmable Power Management ICs for powering
-+  single-core,  dual-core, and quad-core SoCs such as NXP-i.MX 8M. It is
-+  optimized for low BOM cost and compact solution footprint. BD71847MWV and
-+  BD71850MWV integrate 6 Buck regulators and 6 LDOs.
-+  Datasheets are available at
-+  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71847amwv-product
-+  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71850mwv-product
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rohm,bd71847
-+      - rohm,bd71850
-+
-+  reg:
-+    description:
-+      I2C slave address.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 0
-+
-+# The BD71847 abd BD71850 support two different HW states as reset target
-+# states. States are called as SNVS and READY. At READY state all the PMIC
-+# power outputs go down and OTP is reload. At the SNVS state all other logic
-+# and external devices apart from the SNVS power domain are shut off. Please
-+# refer to NXP i.MX8 documentation for further information regarding SNVS
-+# state. When a reset is done via SNVS state the PMIC OTP data is not reload.
-+# This causes power outputs that have been under SW control to stay down when
-+# reset has switched power state to SNVS. If reset is done via READY state the
-+# power outputs will be returned to HW control by OTP loading. Thus the reset
-+# target state is set to READY by default. If SNVS state is used the boot
-+# crucial regulators must have the regulator-always-on and regulator-boot-on
-+# properties set in regulator node.
-+
-+  rohm,reset-snvs-powered:
-+    description:
-+      Transfer PMIC to SNVS state at reset.
-+    type: boolean
-+
-+# Configure the "short press" and "long press" timers for the power button.
-+# Values are rounded to what hardware supports
-+# Short-press:
-+#   Shortest being 10ms, next 500ms and then multiple of 500ms up to 7,5s
-+# Long-press:
-+#   Shortest being 10ms, next 1000ms and then multiple of 1000ms up to 15s
-+# If these properties are not present the existing # configuration (from
-+# bootloader or OTP) is not touched.
-+
-+  rohm,short-press-ms:
-+    description:
-+      Short press duration in milliseconds
-+    enum:
-+      - 10
-+      - 500
-+      - 1000
-+      - 1500
-+      - 2000
-+      - 2500
-+      - 3000
-+      - 3500
-+      - 4000
-+      - 4500
-+      - 5000
-+      - 5500
-+      - 6000
-+      - 6500
-+      - 7000
-+      - 7500
-+
-+  rohm,long-press-ms:
-+    description:
-+      Long press duration in milliseconds
-+    enum:
-+      - 10
-+      - 1000
-+      - 2000
-+      - 3000
-+      - 4000
-+      - 5000
-+      - 6000
-+      - 7000
-+      - 8000
-+      - 9000
-+      - 10000
-+      - 11000
-+      - 12000
-+      - 13000
-+      - 14000
-+      - 15000
-+
-+  regulators:
-+    $ref: ../regulator/rohm,bd71847-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - "#clock-cells"
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+
-+    i2c {
-+      pmic: pmic@4b {
-+            compatible = "rohm,bd71847";
-+            reg = <0x4b>;
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+            #clock-cells = <0>;
-+            clocks = <&osc 0>;
-+            rohm,reset-snvs-powered;
-+            rohm,short-press-ms = <10>;
-+            rohm,long-press-ms = <2000>;
-+
-+            regulators {
-+                buck1: BUCK1 {
-+                    regulator-name = "buck1";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1300000>;
-+                    regulator-boot-on;
-+                    regulator-always-on;
-+                    regulator-ramp-delay = <1250>;
-+                    rohm,dvs-run-voltage = <900000>;
-+                    rohm,dvs-idle-voltage = <850000>;
-+                    rohm,dvs-suspend-voltage = <800000>;
-+                };
-+                buck2: BUCK2 {
-+                    regulator-name = "buck2";
-+                    regulator-min-microvolt = <700000>;
-+                    regulator-max-microvolt = <1300000>;
-+                    regulator-boot-on;
-+                    regulator-always-on;
-+                    regulator-ramp-delay = <1250>;
-+                    rohm,dvs-run-voltage = <1000000>;
-+                    rohm,dvs-idle-voltage = <900000>;
-+                };
-+                buck3: BUCK3 {
-+                    regulator-name = "buck3";
-+                    regulator-min-microvolt = <550000>;
-+                    regulator-max-microvolt = <1350000>;
-+                    regulator-boot-on;
-+                };
-+                buck4: BUCK4 {
-+                    regulator-name = "buck4";
-+                    regulator-min-microvolt = <2600000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                buck5: BUCK5 {
-+                    regulator-name = "buck5";
-+                    regulator-min-microvolt = <1605000>;
-+                    regulator-max-microvolt = <1995000>;
-+                    regulator-boot-on;
-+                };
-+                buck8: BUCK6 {
-+                    regulator-name = "buck6";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <1400000>;
-+                };
-+
-+                ldo1: LDO1 {
-+                    regulator-name = "ldo1";
-+                    regulator-min-microvolt = <1600000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-boot-on;
-+                };
-+                ldo2: LDO2 {
-+                    regulator-name = "ldo2";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <900000>;
-+                    regulator-boot-on;
-+                };
-+                ldo3: LDO3 {
-+                    regulator-name = "ldo3";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo4: LDO4 {
-+                    regulator-name = "ldo4";
-+                    regulator-min-microvolt = <900000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                ldo5: LDO5 {
-+                    regulator-name = "ldo5";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo6: LDO6 {
-+                    regulator-name = "ldo6";
-+                    regulator-min-microvolt = <900000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-deleted file mode 100644
-index cbce62c22b60..000000000000
---- a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-+++ /dev/null
-@@ -1,162 +0,0 @@
--ROHM BD71837 and BD71847 Power Management Integrated Circuit regulator bindings
--
--Required properties:
-- - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7" for
--                   BD71837. For BD71847 names should be "buck1", ..., "buck6"
--		   and "ldo1", ..., "ldo6"
--
--List of regulators provided by this controller. BD71837 regulators node
--should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
--Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
--Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
--definition for each of these nodes is defined using the standard
--binding for regulators at
--Documentation/devicetree/bindings/regulator/regulator.txt.
--Note that if BD71837 starts at RUN state you probably want to use
--regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
--disabled by driver at startup. LDO5 and LDO6 are supplied by those and
--if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
--cause PMIC to reset.
--
--The valid names for BD71837 regulator nodes are:
--BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
--LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
--
--The valid names for BD71847 regulator nodes are:
--BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
--LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
--
--Optional properties:
--- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
--				  See below table for bucks which support this.
--- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
--				  See below table for bucks which support this.
--- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in uV.
--				  See below table for bucks which support this.
--- Any optional property defined in bindings/regulator/regulator.txt
--
--Supported default DVS states:
--
--BD71837:
--buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
-------------------------------------------------------------------------------
--1	| supported		| supported		| supported
------------------------------------------------------------------------------
--2	| supported		| supported		| not supported
------------------------------------------------------------------------------
--3	| supported		| not supported		| not supported
------------------------------------------------------------------------------
--4	| supported		| not supported		| not supported
------------------------------------------------------------------------------
--rest	| not supported		| not supported		| not supported
--
--BD71847:
--buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
-------------------------------------------------------------------------------
--1	| supported		| supported		| supported
------------------------------------------------------------------------------
--2	| supported		| supported		| not supported
------------------------------------------------------------------------------
--rest	| not supported		| not supported		| not supported
--
--Example:
--regulators {
--	buck1: BUCK1 {
--		regulator-name = "buck1";
--		regulator-min-microvolt = <700000>;
--		regulator-max-microvolt = <1300000>;
--		regulator-boot-on;
--		regulator-always-on;
--		regulator-ramp-delay = <1250>;
--		rohm,dvs-run-voltage = <900000>;
--		rohm,dvs-idle-voltage = <850000>;
--		rohm,dvs-suspend-voltage = <800000>;
--	};
--	buck2: BUCK2 {
--		regulator-name = "buck2";
--		regulator-min-microvolt = <700000>;
--		regulator-max-microvolt = <1300000>;
--		regulator-boot-on;
--		regulator-always-on;
--		regulator-ramp-delay = <1250>;
--		rohm,dvs-run-voltage = <1000000>;
--		rohm,dvs-idle-voltage = <900000>;
--	};
--	buck3: BUCK3 {
--		regulator-name = "buck3";
--		regulator-min-microvolt = <700000>;
--		regulator-max-microvolt = <1300000>;
--		regulator-boot-on;
--		rohm,dvs-run-voltage = <1000000>;
--	};
--	buck4: BUCK4 {
--		regulator-name = "buck4";
--		regulator-min-microvolt = <700000>;
--		regulator-max-microvolt = <1300000>;
--		regulator-boot-on;
--		rohm,dvs-run-voltage = <1000000>;
--	};
--	buck5: BUCK5 {
--		regulator-name = "buck5";
--		regulator-min-microvolt = <700000>;
--		regulator-max-microvolt = <1350000>;
--		regulator-boot-on;
--	};
--	buck6: BUCK6 {
--		regulator-name = "buck6";
--		regulator-min-microvolt = <3000000>;
--		regulator-max-microvolt = <3300000>;
--		regulator-boot-on;
--	};
--	buck7: BUCK7 {
--		regulator-name = "buck7";
--		regulator-min-microvolt = <1605000>;
--		regulator-max-microvolt = <1995000>;
--		regulator-boot-on;
--	};
--	buck8: BUCK8 {
--		regulator-name = "buck8";
--		regulator-min-microvolt = <800000>;
--		regulator-max-microvolt = <1400000>;
--	};
--
--	ldo1: LDO1 {
--		regulator-name = "ldo1";
--		regulator-min-microvolt = <3000000>;
--		regulator-max-microvolt = <3300000>;
--		regulator-boot-on;
--	};
--	ldo2: LDO2 {
--		regulator-name = "ldo2";
--		regulator-min-microvolt = <900000>;
--		regulator-max-microvolt = <900000>;
--		regulator-boot-on;
--	};
--	ldo3: LDO3 {
--		regulator-name = "ldo3";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <3300000>;
--	};
--	ldo4: LDO4 {
--		regulator-name = "ldo4";
--		regulator-min-microvolt = <900000>;
--		regulator-max-microvolt = <1800000>;
--	};
--	ldo5: LDO5 {
--		regulator-name = "ldo5";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <3300000>;
--	};
--	ldo6: LDO6 {
--		regulator-name = "ldo6";
--		regulator-min-microvolt = <900000>;
--		regulator-max-microvolt = <1800000>;
--	};
--	ldo7_reg: LDO7 {
--		regulator-name = "ldo7";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <3300000>;
--	};
--};
--
--
-diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
-new file mode 100644
-index 000000000000..a323b1696eee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/rohm,bd71837-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD71837 Power Management Integrated Circuit regulators
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  List of regulators provided by this controller. BD71837 regulators node
-+  should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
-+  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-+  Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
-+  definition for each of these nodes is defined using the standard
-+  binding for regulators at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+  Note that if BD71837 starts at RUN state you probably want to use
-+  regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
-+  disabled by driver at startup. LDO5 and LDO6 are supplied by those and
-+  if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
-+  cause PMIC to reset.
-+
-+#The valid names for BD71837 regulator nodes are:
-+#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
-+#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
-+
-+patternProperties:
-+  "^LDO[1-7]$":
-+    type: object
-+    allOf:
-+      - $ref: regulator.yaml#
-+    description:
-+      Properties for single LDO regulator.
-+
-+    properties:
-+      regulator-name:
-+        pattern: "^ldo[1-7]$"
-+        description:
-+          should be "ldo1", ..., "ldo7"
-+
-+  "^BUCK[1-8]$":
-+    type: object
-+    allOf:
-+      - $ref: regulator.yaml#
-+    description:
-+      Properties for single BUCK regulator.
-+
-+    properties:
-+      regulator-name:
-+        pattern: "^buck[1-8]$"
-+        description:
-+          should be "buck1", ..., "buck8"
-+
-+      rohm,dvs-run-voltage:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 1300000
-+        description:
-+          PMIC default "RUN" state voltage in uV. See below table for
-+          bucks which support this. 0 means disabled.
-+
-+      rohm,dvs-idle-voltage:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 1300000
-+        description:
-+          PMIC default "IDLE" state voltage in uV. See below table for
-+          bucks which support this. 0 means disabled.
-+
-+      rohm,dvs-suspend-voltage:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 1300000
-+        description:
-+          PMIC default "SUSPEND" state voltage in uV. See below table for
-+          bucks which support this. 0 means disabled.
-+
-+        # Supported default DVS states:
-+        #
-+        # BD71837:
-+        # buck | dvs-run-voltage | dvs-idle-voltage | dvs-suspend-voltage
-+        # ----------------------------------------------------------------
-+        # 1    | supported       | supported        | supported
-+        # ----------------------------------------------------------------
-+        # 2    | supported       | supported        | not supported
-+        # ----------------------------------------------------------------
-+        # 3    | supported       | not supported    | not supported
-+        # ----------------------------------------------------------------
-+        # 4    | supported       | not supported    | not supported
-+        # ----------------------------------------------------------------
-+        # rest | not supported   | not supported    | not supported
-+
-+
-+    required:
-+      - regulator-name
-+  additionalProperties: false
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
-new file mode 100644
-index 000000000000..526fd00bcb16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/rohm,bd71847-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD71847 and BD71850 Power Management Integrated Circuit regulators
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  List of regulators provided by this controller. BD71847 regulators node
-+  should be sub node of the BD71847 MFD node. See BD71847 MFD bindings at
-+  Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-+  Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
-+  definition for each of these nodes is defined using the standard
-+  binding for regulators at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+  Note that if BD71847 starts at RUN state you probably want to use
-+  regulator-boot-on at least for BUCK5. LDO6 is supplied by it and it must
-+  not be disabled by driver at startup. If BUCK5 is disabled at startup the
-+  voltage monitoring for LDO5/LDO6 can cause PMIC to reset.
-+
-+#The valid names for BD71847 regulator nodes are:
-+#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
-+#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
-+
-+patternProperties:
-+  "^LDO[1-6]$":
-+    type: object
-+    allOf:
-+      - $ref: regulator.yaml#
-+    description:
-+      Properties for single LDO regulator.
-+
-+    properties:
-+      regulator-name:
-+        pattern: "^ldo[1-6]$"
-+        description:
-+          should be "ldo1", ..., "ldo6"
-+
-+  "^BUCK[1-6]$":
-+    type: object
-+    allOf:
-+      - $ref: regulator.yaml#
-+    description:
-+      Properties for single BUCK regulator.
-+
-+    properties:
-+      regulator-name:
-+        pattern: "^buck[1-6]$"
-+        description:
-+          should be "buck1", ..., "buck6"
-+
-+      rohm,dvs-run-voltage:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 1300000
-+        description:
-+          PMIC default "RUN" state voltage in uV. See below table for
-+          bucks which support this. 0 means disabled.
-+
-+      rohm,dvs-idle-voltage:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 1300000
-+        description:
-+          PMIC default "IDLE" state voltage in uV. See below table for
-+          bucks which support this. 0 means disabled.
-+
-+      rohm,dvs-suspend-voltage:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 1300000
-+        description:
-+          PMIC default "SUSPEND" state voltage in uV. See below table for
-+          bucks which support this. 0 means disabled.
-+
-+        # Supported default DVS states:
-+        #
-+        # BD71847:
-+        # buck | dvs-run-voltage | dvs-idle-voltage | dvs-suspend-voltage
-+        # ----------------------------------------------------------------
-+        # 1    | supported       | supported        | supported
-+        # ----------------------------------------------------------------
-+        # 2    | supported       | supported        | not supported
-+        # ----------------------------------------------------------------
-+        # rest | not supported   | not supported    | not supported
-+
-+    required:
-+      - regulator-name
-+  additionalProperties: false
-+additionalProperties: false
+> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+> Hi,
 
-base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
--- 
-2.21.0
+> * man2/move_mount.2
+> fixed MOVE_MOUNT_F_NO_AUTOMOUNT => MOVE_MOUNT_F_AUTOMOUNTS
+> and MOVE_MOUNT_T_NO_AUTOMOUNT => MOVE_MOUNT_T_AUTOMOUNTS
+> maybe mention -EPERM on !may_mount() ?
 
+> * man2/open_tree.2
+> maybe mention -EPERM on (detached && !may_mount()) ?
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+> Kind regards,
+> Petr
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+>  man2/move_mount.2 | 271 ++++++++++++++++++++++++++++++++++++++++++++++
+>  man2/open_tree.2  | 260 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 531 insertions(+)
+>  create mode 100644 man2/move_mount.2
+>  create mode 100644 man2/open_tree.2
+
+> diff --git a/man2/move_mount.2 b/man2/move_mount.2
+> new file mode 100644
+> index 000000000..bca352ad3
+> --- /dev/null
+> +++ b/man2/move_mount.2
+> @@ -0,0 +1,271 @@
+> +'\" t
+> +.\" Copyright (c) 2019 David Howells <dhowells@redhat.com>
+> +.\"
+> +.\" %%%LICENSE_START(VERBATIM)
+> +.\" Permission is granted to make and distribute verbatim copies of this
+> +.\" manual provided the copyright notice and this permission notice are
+> +.\" preserved on all copies.
+> +.\"
+> +.\" Permission is granted to copy and distribute modified versions of this
+> +.\" manual under the conditions for verbatim copying, provided that the
+> +.\" entire resulting derived work is distributed under the terms of a
+> +.\" permission notice identical to this one.
+> +.\"
+> +.\" Since the Linux kernel and libraries are constantly changing, this
+> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+> +.\" responsibility for errors or omissions, or for damages resulting from
+> +.\" the use of the information contained herein.  The author(s) may not
+> +.\" have taken the same level of care in the production of this manual,
+> +.\" which is licensed free of charge, as they might when working
+> +.\" professionally.
+> +.\"
+> +.\" Formatted or processed versions of this manual, if unaccompanied by
+> +.\" the source, must acknowledge the copyright and authors of this work.
+> +.\" %%%LICENSE_END
+> +.\"
+> +.TH MOVE_MOUNT 2 2019-10-10 "Linux" "Linux Programmer's Manual"
+> +.SH NAME
+> +move_mount \- Move mount objects around the filesystem topology
+> +.SH SYNOPSIS
+> +.nf
+> +.B #include <sys/types.h>
+> +.br
+> +.B #include <sys/mount.h>
+> +.br
+> +.B #include <unistd.h>
+> +.br
+> +.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
+> +.PP
+> +.BI "int move_mount(int " from_dirfd ", const char *" from_pathname ","
+> +.BI "               int " to_dirfd ", const char *" to_pathname ","
+> +.BI "               unsigned int " flags );
+> +.fi
+> +.PP
+> +.IR Note :
+> +There is no glibc wrapper for this system call.
+> +.SH DESCRIPTION
+> +The
+> +.BR move_mount ()
+> +call moves a mount from one place to another; it can also be used to attach an
+> +unattached mount created by
+> +.BR fsmount "() or " open_tree "() with " OPEN_TREE_CLONE .
+> +.PP
+> +If
+> +.BR move_mount ()
+> +is called repeatedly with a file descriptor that refers to a mount object,
+> +then the object will be attached/moved the first time and then moved again and
+> +again and again, detaching it from the previous mountpoint each time.
+> +.PP
+> +To access the source mount object or the destination mountpoint, no
+> +permissions are required on the object itself, but if either pathname is
+> +supplied, execute (search) permission is required on all of the directories
+> +specified in
+> +.IR from_pathname " or " to_pathname .
+> +.PP
+> +The caller does, however, require the appropriate capabilities or permission
+> +to effect a mount.
+> +.PP
+> +.BR move_mount ()
+> +uses
+> +.IR from_pathname ", " from_dirfd " and part of " flags
+> +to locate the mount object to be moved and
+> +.IR to_pathname ", " to_dirfd " and another part of " flags
+> +to locate the destination mountpoint.  Each lookup can be done in one of a
+> +variety of ways:
+> +.TP
+> +[*] By absolute path.
+> +The pathname points to an absolute path and the dirfd is ignored.  The file is
+> +looked up by name, starting from the root of the filesystem as seen by the
+> +calling process.
+> +.TP
+> +[*] By cwd-relative path.
+> +The pathname points to a relative path and the dirfd is
+> +.IR AT_FDCWD .
+> +The file is looked up by name, starting from the current working directory.
+> +.TP
+> +[*] By dir-relative path.
+> +The pathname points to relative path and the dirfd indicates a file descriptor
+> +pointing to a directory.  The file is looked up by name, starting from the
+> +directory specified by
+> +.IR dirfd .
+> +.TP
+> +[*] By file descriptor.
+> +The pathname points to "", the dirfd points directly to the mount object to
+> +move or the destination mount point and the appropriate
+> +.B *_EMPTY_PATH
+> +flag is set.
+> +.PP
+> +.I flags
+> +can be used to influence a path-based lookup.  A value for
+> +.I flags
+> +is constructed by OR'ing together zero or more of the following constants:
+> +.TP
+> +.BR MOVE_MOUNT_F_EMPTY_PATH
+> +.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
+> +If
+> +.I from_pathname
+> +is an empty string, operate on the file referred to by
+> +.IR from_dirfd
+> +(which may have been obtained using the
+> +.BR open (2)
+> +.B O_PATH
+> +flag or
+> +.BR open_tree ()).
+> +If
+> +.I from_dirfd
+> +is
+> +.BR AT_FDCWD ,
+> +the call operates on the current working directory.
+> +In this case,
+> +.I from_dirfd
+> +can refer to any type of file, not just a directory.
+> +This flag is Linux-specific; define
+> +.B _GNU_SOURCE
+> +.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
+> +to obtain its definition.
+> +.TP
+> +.B MOVE_MOUNT_T_EMPTY_PATH
+> +As above, but operating on
+> +.IR to_pathname " and " to_dirfd .
+> +.TP
+> +.B MOVE_MOUNT_F_AUTOMOUNTS
+> +Don't automount the terminal ("basename") component of
+> +.I from_pathname
+> +if it is a directory that is an automount point.  This allows a mount object
+> +that has an automount point at its root to be moved and prevents unintended
+> +triggering of an automount point.
+> +The
+> +.B MOVE_MOUNT_F_AUTOMOUNTS
+> +flag has no effect if the automount point has already been mounted over.
+> +.TP
+> +.B MOVE_MOUNT_T_AUTOMOUNTS
+> +As above, but operating on
+> +.IR to_pathname " and " to_dirfd .
+> +This allows an automount point to be manually mounted over.
+> +.TP
+> +.B MOVE_MOUNT_F_SYMLINKS
+> +If
+> +.I from_pathname
+> +is a symbolic link, then dereference it.  The default for
+> +.BR move_mount ()
+> +is to not follow symlinks.
+> +.TP
+> +.B MOVE_MOUNT_T_SYMLINKS
+> +As above, but operating on
+> +.IR to_pathname " and " to_dirfd .
+> +
+> +.SH EXAMPLES
+> +The
+> +.BR move_mount ()
+> +function can be used like the following:
+> +.PP
+> +.RS
+> +.nf
+> +move_mount(AT_FDCWD, "/a", AT_FDCWD, "/b", 0);
+> +.fi
+> +.RE
+> +.PP
+> +This would move the object mounted on "/a" to "/b".  It can also be used in
+> +conjunction with
+> +.BR open_tree "(2) or " open "(2) with " O_PATH :
+> +.PP
+> +.RS
+> +.nf
+> +fd = open_tree(AT_FDCWD, "/mnt", 0);
+> +move_mount(fd, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
+> +move_mount(fd, "", AT_FDCWD, "/mnt3", MOVE_MOUNT_F_EMPTY_PATH);
+> +move_mount(fd, "", AT_FDCWD, "/mnt4", MOVE_MOUNT_F_EMPTY_PATH);
+> +.fi
+> +.RE
+> +.PP
+> +This would attach the path point for "/mnt" to fd, then it would move the
+> +mount to "/mnt2", then move it to "/mnt3" and finally to "/mnt4".
+> +.PP
+> +It can also be used to attach new mounts:
+> +.PP
+> +.RS
+> +.nf
+> +sfd = fsopen("ext4", FSOPEN_CLOEXEC);
+> +fsconfig(sfd, FSCONFIG_SET_STRING, "source", "/dev/sda1", 0);
+> +fsconfig(sfd, FSCONFIG_SET_FLAG, "user_xattr", NULL, 0);
+> +fsconfig(sfd, FSCONFIG_CMD_CREATE, NULL, NULL, 0);
+> +mfd = fsmount(sfd, FSMOUNT_CLOEXEC, MOUNT_ATTR_NODEV);
+> +move_mount(mfd, "", AT_FDCWD, "/home", MOVE_MOUNT_F_EMPTY_PATH);
+> +.fi
+> +.RE
+> +.PP
+> +Which would open the Ext4 filesystem mounted on "/dev/sda1", turn on user
+> +extended attribute support and create a mount object for it.  Finally, the new
+> +mount object would be attached with
+> +.BR move_mount ()
+> +to "/home".
+> +
+> +
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.SH RETURN VALUE
+> +On success, 0 is returned.  On error, \-1 is returned, and
+> +.I errno
+> +is set appropriately.
+> +.SH ERRORS
+> +.TP
+> +.B EACCES
+> +Search permission is denied for one of the directories
+> +in the path prefix of
+> +.IR pathname .
+> +(See also
+> +.BR path_resolution (7).)
+> +.TP
+> +.B EBADF
+> +.IR from_dirfd " or " to_dirfd
+> +is not a valid open file descriptor.
+> +.TP
+> +.B EFAULT
+> +.IR from_pathname " or " to_pathname
+> +is NULL or either one point to a location outside the process's accessible
+> +address space.
+> +.TP
+> +.B EINVAL
+> +Reserved flag specified in
+> +.IR flags .
+> +.TP
+> +.B ELOOP
+> +Too many symbolic links encountered while traversing the pathname.
+> +.TP
+> +.B ENAMETOOLONG
+> +.IR from_pathname " or " to_pathname
+> +is too long.
+> +.TP
+> +.B ENOENT
+> +A component of
+> +.IR from_pathname " or " to_pathname
+> +does not exist, or one is an empty string and the appropriate
+> +.B *_EMPTY_PATH
+> +was not specified in
+> +.IR flags .
+> +.TP
+> +.B ENOMEM
+> +Out of memory (i.e., kernel memory).
+> +.TP
+> +.B ENOTDIR
+> +A component of the path prefix of
+> +.IR from_pathname " or " to_pathname
+> +is not a directory or one or the other is relative and the appropriate
+> +.I *_dirfd
+> +is a file descriptor referring to a file other than a directory.
+> +.SH VERSIONS
+> +.BR move_mount ()
+> +was added to Linux in kernel 5.2.
+> +.SH CONFORMING TO
+> +.BR move_mount ()
+> +is Linux-specific.
+> +.SH NOTES
+> +Glibc does not (yet) provide a wrapper for the
+> +.BR move_mount ()
+> +system call; call it using
+> +.BR syscall (2).
+> +.SH SEE ALSO
+> +.BR fsmount (2),
+> +.BR fsopen (2),
+> +.BR open_tree (2)
+> diff --git a/man2/open_tree.2 b/man2/open_tree.2
+> new file mode 100644
+> index 000000000..56783898f
+> --- /dev/null
+> +++ b/man2/open_tree.2
+> @@ -0,0 +1,260 @@
+> +'\" t
+> +.\" Copyright (c) 2019 David Howells <dhowells@redhat.com>
+> +.\"
+> +.\" %%%LICENSE_START(VERBATIM)
+> +.\" Permission is granted to make and distribute verbatim copies of this
+> +.\" manual provided the copyright notice and this permission notice are
+> +.\" preserved on all copies.
+> +.\"
+> +.\" Permission is granted to copy and distribute modified versions of this
+> +.\" manual under the conditions for verbatim copying, provided that the
+> +.\" entire resulting derived work is distributed under the terms of a
+> +.\" permission notice identical to this one.
+> +.\"
+> +.\" Since the Linux kernel and libraries are constantly changing, this
+> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+> +.\" responsibility for errors or omissions, or for damages resulting from
+> +.\" the use of the information contained herein.  The author(s) may not
+> +.\" have taken the same level of care in the production of this manual,
+> +.\" which is licensed free of charge, as they might when working
+> +.\" professionally.
+> +.\"
+> +.\" Formatted or processed versions of this manual, if unaccompanied by
+> +.\" the source, must acknowledge the copyright and authors of this work.
+> +.\" %%%LICENSE_END
+> +.\"
+> +.TH OPEN_TREE 2 2019-10-10 "Linux" "Linux Programmer's Manual"
+> +.SH NAME
+> +open_tree \- Pick or clone mount object and attach to fd
+> +.SH SYNOPSIS
+> +.nf
+> +.B #include <sys/types.h>
+> +.br
+> +.B #include <sys/mount.h>
+> +.br
+> +.B #include <unistd.h>
+> +.br
+> +.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
+> +.PP
+> +.BI "int open_tree(int " dirfd ", const char *" pathname ", unsigned int " flags );
+> +.fi
+> +.PP
+> +.IR Note :
+> +There are no glibc wrappers for these system calls.
+> +.SH DESCRIPTION
+> +.BR open_tree ()
+> +picks the mount object specified by the pathname and attaches it to a new file
+> +descriptor or clones it and attaches the clone to the file descriptor.  The
+> +resultant file descriptor is indistinguishable from one produced by
+> +.BR open "(2) with " O_PATH .
+> +.PP
+> +In the case that the mount object is cloned, the clone will be "unmounted" and
+> +destroyed when the file descriptor is closed if it is not otherwise mounted
+> +somewhere by calling
+> +.BR move_mount (2).
+> +.PP
+> +To select a mount object, no permissions are required on the object referred
+> +to by the path, but execute (search) permission is required on all of the
+> +directories in
+> +.I pathname
+> +that lead to the object.
+> +.PP
+> +To clone an object, however, the caller must have mount capabilities and
+> +permissions.
+> +.PP
+> +.BR open_tree ()
+> +uses
+> +.IR pathname ", " dirfd " and " flags
+> +to locate the target object in one of a variety of ways:
+> +.TP
+> +[*] By absolute path.
+> +.I pathname
+> +points to an absolute path and
+> +.I dirfd
+> +is ignored.  The object is looked up by name, starting from the root of the
+> +filesystem as seen by the calling process.
+> +.TP
+> +[*] By cwd-relative path.
+> +.I pathname
+> +points to a relative path and
+> +.IR dirfd " is " AT_FDCWD .
+> +The object is looked up by name, starting from the current working directory.
+> +.TP
+> +[*] By dir-relative path.
+> +.I pathname
+> +points to relative path and
+> +.I dirfd
+> +indicates a file descriptor pointing to a directory.  The object is looked up
+> +by name, starting from the directory specified by
+> +.IR dirfd .
+> +.TP
+> +[*] By file descriptor.
+> +.I pathname
+> +is "",
+> +.I dirfd
+> +indicates a file descriptor and
+> +.B AT_EMPTY_PATH
+> +is set in
+> +.IR flags .
+> +The mount attached to the file descriptor is queried directly.  The file
+> +descriptor may point to any type of file, not just a directory.
+> +
+> +.\"______________________________________________________________
+> +.PP
+> +.I flags
+> +can be used to control the operation of the function and to influence a
+> +path-based lookup.  A value for
+> +.I flags
+> +is constructed by OR'ing together zero or more of the following constants:
+> +.TP
+> +.BR AT_EMPTY_PATH
+> +.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
+> +If
+> +.I pathname
+> +is an empty string, operate on the file referred to by
+> +.IR dirfd
+> +(which may have been obtained from
+> +.BR open "(2) with"
+> +.BR O_PATH ", from " fsmount (2)
+> +or from another
+> +.BR open_tree ()).
+> +If
+> +.I dirfd
+> +is
+> +.BR AT_FDCWD ,
+> +the call operates on the current working directory.
+> +In this case,
+> +.I dirfd
+> +can refer to any type of file, not just a directory.
+> +This flag is Linux-specific; define
+> +.B _GNU_SOURCE
+> +.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
+> +to obtain its definition.
+> +.TP
+> +.BR AT_NO_AUTOMOUNT
+> +Don't automount the terminal ("basename") component of
+> +.I pathname
+> +if it is a directory that is an automount point.  This flag allows the
+> +automount point itself to be picked up or a mount cloned that is rooted on the
+> +automount point.  The
+> +.B AT_NO_AUTOMOUNT
+> +flag has no effect if the mount point has already been mounted over.
+> +This flag is Linux-specific; define
+> +.B _GNU_SOURCE
+> +.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
+> +to obtain its definition.
+> +.TP
+> +.B AT_SYMLINK_NOFOLLOW
+> +If
+> +.I pathname
+> +is a symbolic link, do not dereference it: instead pick up or clone a mount
+> +rooted on the link itself.
+> +.TP
+> +.B OPEN_TREE_CLOEXEC
+> +Set the close-on-exec flag for the new file descriptor.  This will cause the
+> +file descriptor to be closed automatically when a process exec's.
+> +.TP
+> +.B OPEN_TREE_CLONE
+> +Rather than directly attaching the selected object to the file descriptor,
+> +clone the object, set the root of the new mount object to that point and
+> +attach the clone to the file descriptor.
+> +.TP
+> +.B AT_RECURSIVE
+> +This is only permitted in conjunction with OPEN_TREE_CLONE.  It causes the
+> +entire mount subtree rooted at the selected spot to be cloned rather than just
+> +that one mount object.
+> +
+> +
+> +.SH EXAMPLE
+> +The
+> +.BR open_tree ()
+> +function can be used like the following:
+> +.PP
+> +.RS
+> +.nf
+> +fd1 = open_tree(AT_FDCWD, "/mnt", 0);
+> +fd2 = open_tree(fd1, "",
+> +                AT_EMPTY_PATH | OPEN_TREE_CLONE | AT_RECURSIVE);
+> +move_mount(fd2, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
+> +.fi
+> +.RE
+> +.PP
+> +This would attach the path point for "/mnt" to fd1, then it would copy the
+> +entire subtree at the point referred to by fd1 and attach that to fd2; lastly,
+> +it would attach the clone to "/mnt2".
+> +
+> +
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.SH RETURN VALUE
+> +On success, the new file descriptor is returned.  On error, \-1 is returned,
+> +and
+> +.I errno
+> +is set appropriately.
+> +.SH ERRORS
+> +.TP
+> +.B EACCES
+> +Search permission is denied for one of the directories
+> +in the path prefix of
+> +.IR pathname .
+> +(See also
+> +.BR path_resolution (7).)
+> +.TP
+> +.B EBADF
+> +.I dirfd
+> +is not a valid open file descriptor.
+> +.TP
+> +.B EFAULT
+> +.I pathname
+> +is NULL or
+> +.IR pathname
+> +point to a location outside the process's accessible address space.
+> +.TP
+> +.B EINVAL
+> +Reserved flag specified in
+> +.IR flags .
+> +.TP
+> +.B ELOOP
+> +Too many symbolic links encountered while traversing the pathname.
+> +.TP
+> +.B ENAMETOOLONG
+> +.I pathname
+> +is too long.
+> +.TP
+> +.B ENOENT
+> +A component of
+> +.I pathname
+> +does not exist, or
+> +.I pathname
+> +is an empty string and
+> +.B AT_EMPTY_PATH
+> +was not specified in
+> +.IR flags .
+> +.TP
+> +.B ENOMEM
+> +Out of memory (i.e., kernel memory).
+> +.TP
+> +.B ENOTDIR
+> +A component of the path prefix of
+> +.I pathname
+> +is not a directory or
+> +.I pathname
+> +is relative and
+> +.I dirfd
+> +is a file descriptor referring to a file other than a directory.
+> +.SH VERSIONS
+> +.BR open_tree ()
+> +was added to Linux in kernel 5.2.
+> +.SH CONFORMING TO
+> +.BR open_tree ()
+> +is Linux-specific.
+> +.SH NOTES
+> +Glibc does not (yet) provide a wrapper for the
+> +.BR open_tree ()
+> +system call; call it using
+> +.BR syscall (2).
+> +.SH SEE ALSO
+> +.BR fsmount (2),
+> +.BR move_mount (2),
+> +.BR open (2)
