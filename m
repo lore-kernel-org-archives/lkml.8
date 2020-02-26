@@ -2,180 +2,125 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FC6C4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9907FC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFB52084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAE121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgBZGvC (ORCPT
+        id S1727035AbgBZG5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:51:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35989 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgBZGvB (ORCPT
+        Wed, 26 Feb 2020 01:57:11 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51836 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgBZG5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:51:01 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1j6qX5-0007ZJ-8p; Wed, 26 Feb 2020 07:50:59 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1j6qX3-0002Rs-Ko; Wed, 26 Feb 2020 07:50:57 +0100
-Date:   Wed, 26 Feb 2020 07:50:57 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Andreas Tobler <andreas.tobler@onway.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
-Message-ID: <20200226065057.GT3335@pengutronix.de>
-References: <20200221072349.335551332@linuxfoundation.org>
- <20200221072403.369335694@linuxfoundation.org>
- <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
- <20200224145718.GD3335@pengutronix.de>
- <20200224212319.GE26320@sasha-vm>
+        Wed, 26 Feb 2020 01:57:11 -0500
+Received: by mail-io1-f72.google.com with SMTP id c7so2107052ioq.18
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 22:57:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0A/aJuXil3fRC5ZrLYrxKglpBgEk4ru362RxrN9hh+E=;
+        b=W4eiip4dKxUaZNwHDnG+xk+Totnot4kAkXhKxL+EI+nimCaVYJ6XhfN0GzhRGIo9nz
+         nQkTFkncDIcz1fGyOWSULptkd2TG1luT8xOCXz2wWserJ61diZmPf4kfY/U01YsYNrZ5
+         D31lk4UZUamjqx6lO2sHeDfZSV6lXp/wHFr1OmIRjXGKl5MDD/SmE0D6Ia5DJc51BwL+
+         duSG1Olt2x2E42NwrtEiDA9Ko03GDYxgmIXOQcTSXYd2b8wiO3qm04fRvbbCEmy7BpQ9
+         WB27/DqbbFAnBjCHQBcamh4mAiyufUwmPzGeRNek+4sezjzB/K9SXPQDrSbCHROY0VTt
+         ZHCA==
+X-Gm-Message-State: APjAAAWl34SsbSSTLibIlamZuFqdOp7pdxStB/dmmS9koVuis3TNnNEd
+        ryaN7hzqG1M24mh3d3vDIRYomUw9N0FSc6Sh+oYvI4mrv63X
+X-Google-Smtp-Source: APXvYqyV/rMRdskpKjSHWEFPaRIKm1VB0/+VtKT2u9fmyU+7gwY/A3JVWR+TPyIwdYf2cRV/mCpX0Zvuw0gq4/zlBtr7VtcV/5/V
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224212319.GE26320@sasha-vm>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 15:00:32 up 5 days, 21:31, 48 users,  load average: 0.59, 0.20, 0.12
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Received: by 2002:a92:3f0f:: with SMTP id m15mr2916799ila.164.1582700231027;
+ Tue, 25 Feb 2020 22:57:11 -0800 (PST)
+Date:   Tue, 25 Feb 2020 22:57:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000e7156059f751d7b@google.com>
+Subject: WARNING in ext4_write_inode
+From:   syzbot <syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 04:23:19PM -0500, Sasha Levin wrote:
-> On Mon, Feb 24, 2020 at 03:57:18PM +0100, Sascha Hauer wrote:
-> > On Mon, Feb 24, 2020 at 01:24:04PM +0000, Andreas Tobler wrote:
-> > > Hi all,
-> > > 
-> > > On 21.02.20 08:39, Greg Kroah-Hartman wrote:
-> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > > >
-> > > > [ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
-> > > >
-> > > > The current descriptor is not on any list of the virtual DMA channel.
-> > > > Once sdma_terminate_all() is called when a descriptor is currently
-> > > > in flight then this one is forgotten to be freed. We have to call
-> > > > vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
-> > > > Now that we also free the currently running descriptor we can (and
-> > > > actually have to) remove the current descriptor from its list also
-> > > > for the cyclic case.
-> > > >
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-> > > > Tested-by: Robin Gong <yibin.gong@nxp.com>
-> > > > Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
-> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > > ---
-> > > >   drivers/dma/imx-sdma.c | 19 +++++++++++--------
-> > > >   1 file changed, 11 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> > > > index c27e206a764c3..66f1b2ac5cde4 100644
-> > > > --- a/drivers/dma/imx-sdma.c
-> > > > +++ b/drivers/dma/imx-sdma.c
-> > > > @@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
-> > > >   		return;
-> > > >   	}
-> > > >   	sdmac->desc = desc = to_sdma_desc(&vd->tx);
-> > > > -	/*
-> > > > -	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
-> > > > -	 * the desc allocated will never be freed in vchan_dma_desc_free_list
-> > > > -	 */
-> > > > -	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
-> > > > -		list_del(&vd->node);
-> > > > +
-> > > > +	list_del(&vd->node);
-> > > >
-> > > >   	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
-> > > >   	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
-> > > > @@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
-> > > >
-> > > >   	spin_lock_irqsave(&sdmac->vc.lock, flags);
-> > > >   	vchan_get_all_descriptors(&sdmac->vc, &head);
-> > > > -	sdmac->desc = NULL;
-> > > >   	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
-> > > >   	vchan_dma_desc_free_list(&sdmac->vc, &head);
-> > > >   	sdmac->context_loaded = false;
-> > > > @@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
-> > > >   static int sdma_disable_channel_async(struct dma_chan *chan)
-> > > >   {
-> > > >   	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> > > > +	unsigned long flags;
-> > > > +
-> > > > +	spin_lock_irqsave(&sdmac->vc.lock, flags);
-> > > >
-> > > >   	sdma_disable_channel(chan);
-> > > >
-> > > > -	if (sdmac->desc)
-> > > > +	if (sdmac->desc) {
-> > > > +		vchan_terminate_vdesc(&sdmac->desc->vd);
-> > > > +		sdmac->desc = NULL;
-> > > >   		schedule_work(&sdmac->terminate_worker);
-> > > > +	}
-> > > > +
-> > > > +	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
-> > > >
-> > > >   	return 0;
-> > > >   }
-> > > >
-> > > 
-> > > This patch breaks our imx6 board with the attached trace.  Reverting the
-> > > patch makes it boot again.
-> > > I tried also 5.6-rc3 and it booted too. A closer look into imx-sdma.c
-> > > from 5.6-rc3 showed me some details which might have to be backported as
-> > > well to make this patch work.
-> > > I tried a1ff6a07f5a3951fcac84f064a76d1ad79c10e40 and was somehow
-> > > successful. I still have one trace but the board boots now.
-> > > 
-> > > Any insights from the experts?
-> > 
-> > This series should be applied as a whole or not, only 7/9 is optional.
-> > 
-> > It seems I have to avoid the trigger word "fix" in my commit messages or
-> > make sure these patches won't apply without their dependencies :-/
-> 
-> Or you could just tag the dependencies so that we could take all of them
-> as well? We have a nice "Depends-on:" tag that makes it easy.
-> 
-> As with everything in life, you want to communicate more effectively
-> rather than not communicate at all.
+Hello,
 
-Speaking of which, if you want people to use that "Depends-on:" tag you
-should spread the word about it. It was used for 30 commits in the whole
-Kernel history and Documentation/ doesn't mention it at all.
+syzbot found the following crash on:
 
-Anyway, this helps only for patches from which I actually know the
-dependencies. I knew them this time, because the whole series only had
-the purpose of making ground for the patch. Often enough I don't know
-them putting a patch onto a kernel just because it applies cleanly
-doesn't seem like a good idea to me.
+HEAD commit:    d2eee258 Merge tag 'for-5.6-rc2-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1706127ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
+dashboard link: https://syzkaller.appspot.com/bug?extid=1f9dc49e8de2582d90c2
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-Sascha
+Unfortunately, I don't have any reproducer for this crash yet.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 2697 at fs/ext4/inode.c:5097 ext4_write_inode+0x4eb/0x5b0 fs/ext4/inode.c:5097
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 2697 Comm: xfsaild/loop1 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1b6/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:ext4_write_inode+0x4eb/0x5b0 fs/ext4/inode.c:5097
+Code: 65 48 8b 04 25 28 00 00 00 48 3b 45 d0 0f 85 d2 00 00 00 44 89 f8 48 83 c4 38 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 d5 37 72 ff <0f> 0b eb d2 e8 cc 37 72 ff 41 bf fb ff ff ff eb c5 89 d9 80 e1 07
+RSP: 0018:ffffc90001b97700 EFLAGS: 00010293
+RAX: ffffffff8204d1ab RBX: 0000000000000800 RCX: ffff888049612580
+RDX: 0000000000000000 RSI: 0000000000000800 RDI: 0000000000000000
+RBP: ffffc90001b97760 R08: ffffffff8204cd2e R09: ffffed1015d47004
+R10: ffffed1015d47004 R11: 0000000000000000 R12: ffff88809229e588
+R13: ffff888049612580 R14: 0000000000200844 R15: 0000000000000000
+ write_inode fs/fs-writeback.c:1312 [inline]
+ __writeback_single_inode+0x550/0x620 fs/fs-writeback.c:1511
+ writeback_single_inode+0x3b9/0x800 fs/fs-writeback.c:1565
+ sync_inode fs/fs-writeback.c:2602 [inline]
+ sync_inode_metadata+0x7a/0xc0 fs/fs-writeback.c:2622
+ ext4_fsync_nojournal fs/ext4/fsync.c:94 [inline]
+ ext4_sync_file+0x4c9/0x890 fs/ext4/fsync.c:172
+ vfs_fsync_range+0xfd/0x1a0 fs/sync.c:197
+ generic_write_sync include/linux/fs.h:2867 [inline]
+ ext4_buffered_write_iter+0x520/0x5c0 fs/ext4/file.c:277
+ ext4_file_write_iter+0xb06/0x1810 include/linux/fs.h:796
+ call_write_iter include/linux/fs.h:1901 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0x5a1/0x740 fs/read_write.c:496
+ __kernel_write+0x11d/0x350 fs/read_write.c:515
+ do_acct_process+0xf9c/0x1390 kernel/acct.c:522
+ slow_acct_process kernel/acct.c:581 [inline]
+ acct_process+0x478/0x590 kernel/acct.c:607
+ do_exit+0x580/0x2000 kernel/exit.c:791
+ kthread+0x350/0x350 kernel/kthread.c:257
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
