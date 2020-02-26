@@ -2,283 +2,201 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521FCC4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44338C4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F59C21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mg37B9EL"
+	by mail.kernel.org (Postfix) with ESMTP id 2104621744
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbgBZCvl (ORCPT
+        id S1730287AbgBZCw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:51:41 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37212 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbgBZCvk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:51:40 -0500
-Received: by mail-qk1-f196.google.com with SMTP id m9so1305800qke.4;
-        Tue, 25 Feb 2020 18:51:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H1WBwrieSTLF8fO+JG2Kpf/pCvdrGgRWSvttc2WBbmE=;
-        b=Mg37B9ELw1vesbtMhlWR3KRq+n1dCP9/OZoY+o4FuFJorS74dl7gWIXTF5y+NJbUsn
-         +Ihu1g44Ho0FYDRBWICYOB6z2Yu2qm9bP4QVhmiEU5rJS085c+2wgbad5VNL8zc7PU9g
-         TxwOmboK0U2zyVOcGOl5NxdG8CzKUz300Z5gX63LjRlatKp+KfhjiWAIO4XlCsFwQX5E
-         aE+fhxukiqSlrlE92iDn6qnIbbpHdZ2nQy9lfmNTHGpw15eKEKPPkd5FNcz2o0tXVAP0
-         gjshRvXEJk0265aACfrpFO4BKya/gL9XpC0RtX+pSie33Tiic5Chn54b7iOqBYsJ4T/o
-         3t7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H1WBwrieSTLF8fO+JG2Kpf/pCvdrGgRWSvttc2WBbmE=;
-        b=AXMBWR2HFRhjOmrzLUdblKJs+9WtDkHsFxcZOQGaHjF8fO2ZT/k+BoeLUEKTYMnn+h
-         hoaxV1EpwW0DHuB2prZR0bbnkK4j3x4oeMo48B9ii1WXbhF1CTRGAkA0cMGwotX/4Hyh
-         keZc34otJi0QyAjeyBf3xNVzLltnYbYPCW4+5iyKHLuvb3ZQY2nroR8nSi8/e/XDy6h/
-         aEx+mlU8iSIAAZ0gdS3+1ILi2nH8Q3TtBUvRrX5N9fw75WoaxpNbbYoofQYlQP+KLADb
-         qKrJ0jZhf9Rl4NAJGkVcOefv521s/ptrnmyDcSgwglVgO0+/O9rkfbFBuzM8BzI/7hKx
-         188Q==
-X-Gm-Message-State: APjAAAV4A5uCbKved0aTzgb69OknQ9kgbBGJMi+jCE73T+KUvb4Xk0HI
-        3aN2MDAZos4IwQoZQbnZ0oY=
-X-Google-Smtp-Source: APXvYqxbwsGTkpsaHww1mi0v33NQAZAHjxabWxGUzrQ1g2UbPFzgK+LgKGS4OncK/tQpL2tSZOCGDQ==
-X-Received: by 2002:a05:620a:709:: with SMTP id 9mr2706660qkc.331.1582685499213;
-        Tue, 25 Feb 2020 18:51:39 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id n1sm338544qkk.52.2020.02.25.18.51.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 18:51:38 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 30FB421EAD;
-        Tue, 25 Feb 2020 21:51:37 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 25 Feb 2020 21:51:37 -0500
-X-ME-Sender: <xms:N91VXs-BAqmp6qON14lmLw8q3I0AKR9VHG3h0i9v2BbAT9pt930L4g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleefgdehvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvsh
-    hmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheeh
-    vddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:N91VXsOWfBtORDvq3rpALRu-KOMBKOIim_h150vliXdJzqcoos-wBw>
-    <xmx:N91VXoF550LzlQmv0v4TiJta3ez4o9BgYETuWhM96iWYgpRzu1JtDA>
-    <xmx:N91VXqirVaTg6ZpXdj68K_j0Rzo372xHwC3jHZfdRhpyqDWy_kxwDQ>
-    <xmx:Od1VXmOREi97f4aoaJcsHaXB-OASD_mnvgmKsIB2OP6zejpmEmw-uMUxxUs>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7EFC93280060;
-        Tue, 25 Feb 2020 21:51:35 -0500 (EST)
-Date:   Wed, 26 Feb 2020 10:51:34 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Luc Maranget <luc.maranget@inria.fr>
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [RFC 2/3] tools/memory-model: Add a litmus test for atomic_set()
-Message-ID: <20200226025134.GQ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200214040132.91934-1-boqun.feng@gmail.com>
- <20200214040132.91934-3-boqun.feng@gmail.com>
- <20200214081213.GA17708@andrea>
- <20200214104003.GC20408@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200225073451.GP69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200225130102.wsz3bpyhjmcru7os@yquem.inria.fr>
+        Tue, 25 Feb 2020 21:52:27 -0500
+Received: from mail5.windriver.com ([192.103.53.11]:45572 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729890AbgBZCw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:52:27 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 01Q2nYvk014201
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 25 Feb 2020 18:49:45 -0800
+Received: from [128.224.162.175] (128.224.162.175) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 25 Feb
+ 2020 18:49:24 -0800
+Subject: Re: [PATCH 2/2] perf: probe-file: Check return value of strlist__add
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <kstewart@linuxfoundation.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <1582641703-233485-1-git-send-email-zhe.he@windriver.com>
+ <1582641703-233485-2-git-send-email-zhe.he@windriver.com>
+ <20200226074906.0acb08b31d01c96c475da0cb@kernel.org>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <b07f670b-6539-1590-88a8-20c58dec3a7e@windriver.com>
+Date:   Wed, 26 Feb 2020 10:49:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225130102.wsz3bpyhjmcru7os@yquem.inria.fr>
+In-Reply-To: <20200226074906.0acb08b31d01c96c475da0cb@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [128.224.162.175]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:01:02PM +0100, Luc Maranget wrote:
-> Hi,
-> 
-> As far as I can remember I have implemented atomic_add_unless in herd7.
-> 
-> As to your test, I have first run a slightly modified version of your test
-> as a kernel module (using klitmus7).
-> 
-> C atomic_add_unless-dependency
-> {
->         atomic_t y = ATOMIC_INIT(1);
-> }
->   P0(int *x, atomic_t *y, int *z)
-> {
->         int r0;
->         r0 = READ_ONCE(*x);
->         if (atomic_add_unless((atomic_t *)y, 2, r0))
->                 WRITE_ONCE(*z, 42);
->         else
->                 WRITE_ONCE(*z, 1);
-> }
->   P1(int *x, int *z)
-> {
->         int r0;
->         r0 = smp_load_acquire(z);
->         WRITE_ONCE(*x, 1);
-> }
-> locations [y]
-> exists
-> (1:r0 = 1 /\ 0:r0 = 1)
-> 
-> 
-> The test is also accepted by herd7, here producing teh same final values
-> as actual run on a raspberry PI4B.
-> 
 
-Thanks, so I'm planning to make the following change to README file in
-memory-model
 
-I will add a separate patch in my v3 patchset of atomic-tests.
+On 2/26/20 6:49 AM, Masami Hiramatsu wrote:
+> On Tue, 25 Feb 2020 22:41:43 +0800
+> <zhe.he@windriver.com> wrote:
+>
+>> From: He Zhe <zhe.he@windriver.com>
+>>
+>> strlist__add may fail with -ENOMEM or -EEXIST. Check it and give debugging
+>> hint when necessary.
+>>
+>> Signed-off-by: He Zhe <zhe.he@windriver.com>
+>> ---
+>>  tools/perf/builtin-probe.c   | 30 ++++++++++++++++--------------
+>>  tools/perf/util/probe-file.c | 26 +++++++++++++++++++++-----
+>>  2 files changed, 37 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+>> index 26bc5923e6b5..8b4511c70fed 100644
+>> --- a/tools/perf/builtin-probe.c
+>> +++ b/tools/perf/builtin-probe.c
+>> @@ -442,24 +442,26 @@ static int perf_del_probe_events(struct strfilter *filter)
+>>  	}
+>>  
+>>  	ret = probe_file__get_events(kfd, filter, klist);
+>> -	if (ret == 0) {
+>> -		strlist__for_each_entry(ent, klist)
+>> -			pr_info("Removed event: %s\n", ent->s);
+>> +	if (ret < 0)
+>> +		goto out;
+> No, this is ignored by design.
+> Since probe_file__get_events() returns -ENOENT when no event is matched,
+> this should be just ignored, and goto uprobe event matching.
+
+Thanks for pointing it out. However when strlist__add in probe_file__get_events
+returns a -ENOMEM and we ignore that, though it happens not very likely, we
+would miss some entries. So I add checks here and in probe_file__get_events to
+give a heads-up in advance.
+
+And the same reason is for the checks below for probe_cache__load,
+probe_cache__add_entry and probe_cache__scan_sdt.
+
 
 Regards,
-Boqun
+Zhe
 
------>8
-diff --git a/tools/memory-model/README b/tools/memory-model/README
-index fc07b52f2028..d974a96ad273 100644
---- a/tools/memory-model/README
-+++ b/tools/memory-model/README
-@@ -207,11 +207,15 @@ The Linux-kernel memory model (LKMM) has the following limitations:
- 		case as a store release.
- 
- 	b.	The "unless" RMW operations are not currently modeled:
--		atomic_long_add_unless(), atomic_add_unless(),
--		atomic_inc_unless_negative(), and
--		atomic_dec_unless_positive().  These can be emulated
-+		atomic_long_add_unless(), atomic_inc_unless_negative(),
-+		and atomic_dec_unless_positive().  These can be emulated
- 		in litmus tests, for example, by using atomic_cmpxchg().
- 
-+		One exception of this limitation is atomic_add_unless(),
-+		which is provide directly by herd7 (so no corresponding
-+		definition in linux-kernel.def). atomic_add_unless() is
-+		modeled by herd7 therefore it can be used in litmus tests.
-+
- 	c.	The call_rcu() function is not modeled.  It can be
- 		emulated in litmus tests by adding another process that
- 		invokes synchronize_rcu() and the body of the callback
+>
+>>  
+>> -		ret = probe_file__del_strlist(kfd, klist);
+>> -		if (ret < 0)
+>> -			goto error;
+>> -	}
+>> +	strlist__for_each_entry(ent, klist)
+>> +		pr_info("Removed event: %s\n", ent->s);
+>> +
+>> +	ret = probe_file__del_strlist(kfd, klist);
+>> +	if (ret < 0)
+>> +		goto error;
+>>  
+>>  	ret2 = probe_file__get_events(ufd, filter, ulist);
+>> -	if (ret2 == 0) {
+>> -		strlist__for_each_entry(ent, ulist)
+>> -			pr_info("Removed event: %s\n", ent->s);
+>> +	if (ret2 < 0)
+>> +		goto out;
+> Ditto.
+>
+> Thank you,
+>
+>>  
+>> -		ret2 = probe_file__del_strlist(ufd, ulist);
+>> -		if (ret2 < 0)
+>> -			goto error;
+>> -	}
+>> +	strlist__for_each_entry(ent, ulist)
+>> +		pr_info("Removed event: %s\n", ent->s);
+>> +
+>> +	ret2 = probe_file__del_strlist(ufd, ulist);
+>> +	if (ret2 < 0)
+>> +		goto error;
+>>  
+>>  	if (ret == -ENOENT && ret2 == -ENOENT)
+>>  		pr_warning("\"%s\" does not hit any event.\n", str);
+>> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+>> index cf44c05f89c1..00f086cba88f 100644
+>> --- a/tools/perf/util/probe-file.c
+>> +++ b/tools/perf/util/probe-file.c
+>> @@ -307,10 +307,14 @@ int probe_file__get_events(int fd, struct strfilter *filter,
+>>  		p = strchr(ent->s, ':');
+>>  		if ((p && strfilter__compare(filter, p + 1)) ||
+>>  		    strfilter__compare(filter, ent->s)) {
+>> -			strlist__add(plist, ent->s);
+>> -			ret = 0;
+>> +			ret = strlist__add(plist, ent->s);
+>> +			if (ret < 0) {
+>> +				pr_debug("strlist__add failed (%d)\n", ret);
+>> +				goto out;
+>> +			}
+>>  		}
+>>  	}
+>> +out:
+>>  	strlist__delete(namelist);
+>>  
+>>  	return ret;
+>> @@ -517,7 +521,11 @@ static int probe_cache__load(struct probe_cache *pcache)
+>>  				ret = -EINVAL;
+>>  				goto out;
+>>  			}
+>> -			strlist__add(entry->tevlist, buf);
+>> +			ret = strlist__add(entry->tevlist, buf);
+>> +			if (ret < 0) {
+>> +				pr_debug("strlist__add failed (%d)\n", ret);
+>> +				goto out;
+>> +			}
+>>  		}
+>>  	}
+>>  out:
+>> @@ -678,7 +686,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
+>>  		command = synthesize_probe_trace_command(&tevs[i]);
+>>  		if (!command)
+>>  			goto out_err;
+>> -		strlist__add(entry->tevlist, command);
+>> +		ret = strlist__add(entry->tevlist, command);
+>> +		if (ret < 0) {
+>> +			pr_debug("strlist__add failed (%d)\n", ret);
+>> +			goto out_err;
+>> +		}
+>> +
+>>  		free(command);
+>>  	}
+>>  	list_add_tail(&entry->node, &pcache->entries);
+>> @@ -859,7 +872,10 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
+>>  			break;
+>>  		}
+>>  
+>> -		strlist__add(entry->tevlist, buf);
+>> +		ret = strlist__add(entry->tevlist, buf);
+>> +		if (ret < 0)
+>> +			pr_debug("strlist__add failed (%d)\n", ret);
+>> +
+>>  		free(buf);
+>>  		entry = NULL;
+>>  	}
+>> -- 
+>> 2.24.1
+>>
+>
 
-> --Luc
-> 
-> > Luc,
-> > 
-> > Could you have a look at the problem Andrea and I discuss here? It seems
-> > that you have done a few things in herd for atomic_add_unless() in
-> > particular, and based on the experiments of Andrea and me, seems
-> > atomic_add_unless() works correctly. So can you confirm that herd now
-> > can handle atomic_add_unless() or there is still something missing?
-> > 
-> > Thanks!
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > On Fri, Feb 14, 2020 at 06:40:03PM +0800, Boqun Feng wrote:
-> > > On Fri, Feb 14, 2020 at 09:12:13AM +0100, Andrea Parri wrote:
-> > > > > @@ -0,0 +1,24 @@
-> > > > > +C Atomic-set-observable-to-RMW
-> > > > > +
-> > > > > +(*
-> > > > > + * Result: Never
-> > > > > + *
-> > > > > + * Test of the result of atomic_set() must be observable to atomic RMWs.
-> > > > > + *)
-> > > > > +
-> > > > > +{
-> > > > > +	atomic_t v = ATOMIC_INIT(1);
-> > > > > +}
-> > > > > +
-> > > > > +P0(atomic_t *v)
-> > > > > +{
-> > > > > +	(void)atomic_add_unless(v,1,0);
-> > > > 
-> > > > We blacklisted this primitive some time ago, cf. section "LIMITATIONS",
-> > > > entry (6b) in tools/memory-model/README; the discussion was here:
-> > > > 
-> > > >   https://lkml.kernel.org/r/20180829211053.20531-3-paulmck@linux.vnet.ibm.com
-> > > > 
-> > > 
-> > > And in an email replying to that email, you just tried and seemed
-> > > atomic_add_unless() works ;-)
-> > > 
-> > > > but unfortunately I can't remember other details at the moment: maybe
-> > > > it is just a matter of or the proper time to update that section.
-> > > > 
-> > > 
-> > > I spend a few time looking into the changes in herd, the dependency
-> > > problem seems to be as follow:
-> > > 
-> > > For atomic_add_unless(ptr, a, u), the return value (true or false)
-> > > depends on both *ptr and u, this is different than other atomic RMW,
-> > > whose return value only depends on *ptr. Considering the following
-> > > litmus test:
-> > > 
-> > > 	C atomic_add_unless-dependency
-> > > 
-> > > 	{
-> > > 		int y = 1;
-> > > 	}
-> > > 
-> > > 	P0(int *x, int *y, int *z)
-> > > 	{
-> > > 		int r0;
-> > > 		int r1;
-> > > 		int r2;
-> > > 
-> > > 		r0 = READ_ONCE(*x);
-> > > 		if (atomic_add_unless(y, 2, r0))
-> > > 			WRITE_ONCE(*z, 42);
-> > > 		else
-> > > 			WRITE_ONCE(*z, 1);
-> > > 	}
-> > > 
-> > > 	P1(int *x, int *y, int *z)
-> > > 	{
-> > > 		int r0;
-> > > 
-> > > 		r0 = smp_load_acquire(z);
-> > > 
-> > > 		WRITE_ONCE(*x, 1);
-> > > 	}
-> > > 
-> > > 	exists
-> > > 	(1:r0 = 1 /\ 0:r0 = 1)
-> > > 
-> > > , the exist-clause will never trigger, however if we replace
-> > > "atomic_add_unless(y, 2, r0)" with "atomic_add_unless(y, 2, 1)", the
-> > > write on *z and the read from *x on CPU 0 are not ordered, so we could
-> > > observe the exist-clause triggered.
-> > > 
-> > > I just tried with the latest herd, and herd can work out this
-> > > dependency. So I think we are good now and can change the limitation
-> > > section in the document. But I will wait for Luc's input for this. Luc,
-> > > did I get this correct? Is there any other limitation on
-> > > atomic_add_unless() now?
-> > > 
-> > > Regards,
-> > > Boqun
-> > > 
-> > > > Thanks,
-> > > >   Andrea
