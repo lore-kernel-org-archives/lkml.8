@@ -2,143 +2,84 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E411C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2029C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE6224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B718824685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="WOvbtHVj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jdMmd6p5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgBZLC0 (ORCPT
+        id S1728049AbgBZLEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:02:26 -0500
-Received: from hermes.aosc.io ([199.195.250.187]:56983 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgBZLCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:02:25 -0500
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id BCD4F4AF6B;
-        Wed, 26 Feb 2020 11:02:19 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 19:02:09 +0800
-In-Reply-To: <f4109d23-4591-1c52-2822-0a2ba358fe1f@suse.de>
-References: <20200221165127.813325-1-icenowy@aosc.io> <20200221171328.GC6928@lst.de> <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io> <f4109d23-4591-1c52-2822-0a2ba358fe1f@suse.de>
+        Wed, 26 Feb 2020 06:04:25 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33235 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbgBZLEZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:04:25 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m10so4298886wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:04:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qxSMSy0KeSHSnmfmzxCA8fCZhL5WkJv642hS2+p/iXs=;
+        b=jdMmd6p57s9T9BTkdnRuKCzYlX8V/mp9wKLj+xSR4sQ85knTGnynU+J+MWkInqs2G3
+         TuOxOkfik5PXGlBUnFPzJEE4FZQUtrvS1kQari9lhsZEx33vjY57Pv2TWD3gnunzn1uK
+         2lGKdc9aIHSaZghpF//01eQMTusQNhrQfGFDfMiQzr9u/E5eGkm+twh6I6jhMXdSnmFQ
+         UCY4tiRHf7WgClGpkoMbI9BS9fGDhLY7gU8P+9dTKlKg9FI8GPqR7SmJ+p2aq+FQtgcR
+         XqIaCN80VtwFWXsvx59xJIHqf5SQe+Kk5FmWfgddnqMWpkOy5wwrDF054l771/6qjUkc
+         XthA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qxSMSy0KeSHSnmfmzxCA8fCZhL5WkJv642hS2+p/iXs=;
+        b=IGIeREJyU2asFZ89RPT1ym8nFhmZZUIjAXucHbsO5/BJB2r3YPoq+f0AwrajqIZH8B
+         DW2GEguwwis+85DQ1Gin/0SMGjcejnBwiGJNbJKDmWYvfC1t8fB1yrhCAcTJwf7NS/Ab
+         FresPoXSCCK3Hfh2N+35+QZkFdCP+paiQb2pZVNeKX12XGUnDWsYwIs1a83iIx3aZhF3
+         DBMC3iqFNhx0ECYLYJ90e6Nj9kJbG8uXl8F8+EkDzbK3iNZNfotEPsdomLkGcLzOrRyd
+         OvA6qxm8+6awfdQV93N8Gv2h0IKUWfhm4X/XWHRQuUu2SRGR6QwZDHdg4f8a5IMIj/Fp
+         3RJg==
+X-Gm-Message-State: APjAAAVqLMBzlwZK4RA2HYB2Id5pPm5cUeNrGi1ZCYrxsZyuf1x3pc/R
+        HbPVo/8pFMU2SQgeDPcHYK3P5A==
+X-Google-Smtp-Source: APXvYqzo1GIu2NTEmeUo+9/xgeAhx5xgSq3jnjXari1yIps6iOhQfLG8Hjj/EVYP231cndzzGUg9rQ==
+X-Received: by 2002:a7b:c019:: with SMTP id c25mr5070418wmb.126.1582715061914;
+        Wed, 26 Feb 2020 03:04:21 -0800 (PST)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id h205sm2448176wmf.25.2020.02.26.03.04.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 26 Feb 2020 03:04:21 -0800 (PST)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH 0/1] interconnect fix for 5.6
+Date:   Wed, 26 Feb 2020 13:04:19 +0200
+Message-Id: <20200226110420.5357-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
-To:     Thomas Zimmermann <tzimmermann@suse.de>, Torsten Duwe <duwe@lst.de>
-CC:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime@cerno.tech>
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1582714944;
-        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
-        bh=pIFoYi183Typp2lmcp92AMk/OHIxESeRN6Iv4o1xpWU=;
-        b=WOvbtHVjWIE9boKR2Mpt+dszNQp2Fuku0lplBgL1Ao10VSD4nV4IeDoEjrwMDcWUp5lpTx
-        94uvk8zIvE3ZO6sqMtXHkhh+QDloNsAlQMO7xJAJQdVikEVdXGjfXHz+Mk3bdxnE2bl4gz
-        j0eWRG/CA7cHbfUSNMcZbnBVNeg1t+Y=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
+This is a fix for the current release. Please apply it to char-misc-linus
+when you get a chance.
 
+Thanks,
+Georgi
 
-=E4=BA=8E 2020=E5=B9=B42=E6=9C=8826=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=886=
-:58:43, Thomas Zimmermann <tzimmermann@suse=2Ede> =E5=86=99=E5=88=B0:
->Hi Iceynow,
->
->Torsten asked me to merge your patch via drm-misc-next=2E I'd add the
->additional cc and fixes tags that Torsten listed=2E Are you OK with that?
+Georgi Djakov (1):
+  interconnect: Handle memory allocation errors
 
-I think this fixes a driver (and a board) available in 5=2E6=2E
+ drivers/interconnect/core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Maybe it should enter fixes?
-
->
->Best regards
->Thomas
->
->Am 22=2E02=2E20 um 03:43 schrieb Icenowy Zheng:
->>=20
->>=20
->> =E4=BA=8E 2020=E5=B9=B42=E6=9C=8822=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=881:13:28, Torsten Duwe <duwe@lst=2Ede> =E5=86=99=E5=88=B0:
->>> On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
->>>> Current code tries to store the link rate (in bps, which is a big
->>>> number) in a u8, which surely overflow=2E Then it's converted back to
->>>> bandwidth code (which is thus 0) and written to the chip=2E
->>>>
->>>> The code sometimes works because the chip will automatically
->fallback
->>> to
->>>> the lowest possible DP link rate (1=2E62Gbps) when get the invalid
->>> value=2E
->>>> However, on the eDP panel of Olimex TERES-I, which wants 2=2E7Gbps
->>> link,
->>>> it failed=2E
->>>>
->>>> As we had already read the link bandwidth as bandwidth code in
->>> earlier
->>>> code (to check whether it is supported), use it when setting
->>> bandwidth,
->>>> instead of converting it to link rate and then converting back=2E
->>>>
->>>> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for
->v5=2E5")
->>>> Signed-off-by: Icenowy Zheng <icenowy@aosc=2Eio>
->>>> ---
->>>>  drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec | 3 +--
->>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
->>> b/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
->>>> index 56f55c53abfd=2E=2E2dfa2fd2a23b 100644
->>>> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
->>>> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
->>>> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct
->>> anx6345 *anx6345)
->>>>  	if (err)
->>>>  		return err;
->>>> =20
->>>> -	dpcd[0] =3D drm_dp_max_link_rate(anx6345->dpcd);
->>>> -	dpcd[0] =3D drm_dp_link_rate_to_bw_code(dpcd[0]);
->>>> +	dpcd[0] =3D dp_bw;
->>>
->>> Why do you make this assignment and not use dp_bw directly in the
->call?
->>=20
->> Because the dpcd array is then written as a continous array
->> back to DPCD=2E
->>=20
->>>
->>>>  	err =3D regmap_write(anx6345->map[I2C_IDX_DPTX],
->>>>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
->>>                                                       ^^^^^^
->>>>  	if (err)
->>>> --=20
->>>> 2=2E24=2E1
->>>
->>> BTW, my version is only a bit more verbose:
->>>
->>> https://patchwork=2Efreedesktop=2Eorg/patch/354344/
->>>
->>> 	Torsten
->>=20
-
---=20
-=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
-ndroid=E8=AE=BE=E5=A4=87=E3=80=82
