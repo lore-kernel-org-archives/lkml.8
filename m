@@ -2,126 +2,125 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF7BC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48678C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE03222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IYIQRdv1"
+	by mail.kernel.org (Postfix) with ESMTP id 20AB42084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgBZHWY (ORCPT
+        id S1727257AbgBZH0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:22:24 -0500
-Received: from mail-dm6nam12on2084.outbound.protection.outlook.com ([40.107.243.84]:6045
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726823AbgBZHWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:22:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e593KR1KcnC6CzUIbAXgf7+9GlvpUyXV9gJrT9bwQvOyQO+ge8nm/x4YfGR6Muvl3svDrJCc1+pR21GxoSLW9aI7y9eJLZqWeLFa+eucAkfIZZX7CJwCuUUgtooxbMfKGuU2Y/EWgcpE3C+wwTexfn180eXttAATyu6QtpkGKOBwghFMO0pCFGGNnk76eC0jsNsdK/EAeXEqK5NmQikYN3z9OA8unETVOIlq7oKNAcbUtzykCGHKxR5+E6YcGDwquJnVeJ2FRWy4vniduRXb2oIP6lPf5o+WMJtaXqpEZyjDt5V3JEl8ZVzPtdJr89D5FcWyD0y+AtHa2rwcmLWQpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQJ/ZVythcDQSoq+PoFJoW6rgJFIDJG6EpIbY+t1MVg=;
- b=kauaKF2/pK0dv2OA/8l7ug9ugfOpQdyEN5xm407NXKXlcSZE+bqgi79XsI4rNzksWJEZV/Bpcd3Qrt4drlIQJ/ytyTGVW6NlbyGEZ1U5QVN2jdXUFAU1ndqTS5kDauI+1MF87FNGEsRH1SSHgXFunsVfK5WsLrRcKkRFqZGWOVRlOQ6Igf7JE7bk0xkjRO4bkewaLDTU9P3+qtDYXBFdIaYgoOThuDBhhHteQnyOeaEunCzP9g1H2qo5mK1YjbFwNmRkb3dUvqZuqByJG6YCgATu3MpvIuD8AfhswketYuMbrka97YfIiBbGemdAUsAH9h0Gonx1+hLy/oIHomYTrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQJ/ZVythcDQSoq+PoFJoW6rgJFIDJG6EpIbY+t1MVg=;
- b=IYIQRdv1TuFJinB6ffMbdXO8TqkuzowVtW4MlOcMtLemt6FVOYZCtV2TES7vBi6sUAD3GauKBp4oZbWx4iaPNdUFYCen250JqIqngx8BCRlDQWQlcbx/4IB8eE1Frn3Mw+X5WSHrQctrz/+gdfyCPbmiWWKQV80AS5Gq3a9lkUk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Akshu.Agrawal@amd.com; 
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com (2603:10b6:208:aa::15)
- by MN2PR12MB3102.namprd12.prod.outlook.com (2603:10b6:208:c6::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Wed, 26 Feb
- 2020 07:22:20 +0000
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c895:8c76:61ae:980f]) by MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c895:8c76:61ae:980f%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 07:22:20 +0000
-Subject: Re: [PATCH] ASoC: amd: Add machine driver for Raven based platform
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 26 Feb 2020 02:26:33 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:42310 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727035AbgBZH0d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:26:33 -0500
+Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01Q7QV4s031800
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:26:31 -0500
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 01Q7QQVV025813
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:26:31 -0500
+Received: by mail-qt1-f199.google.com with SMTP id r9so3264066qtc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:26:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=/RrYGkGua2Nxdn/5XcsUsmert5oNHB1woL1bedy/GmI=;
+        b=Mi9fiv1BCr3hbBIfRDKERWQK+Z2Q2zPE1IR+429m+TmKgL4re59KgrA16rDK7LPJ1O
+         3qSZ50UiG/dmjQyl+8GrNFgOF8lnvFRkr7JZGvY4i/q9n4XUrZ9yqbK4AfEg4LYpmjjW
+         PlxMjL9qcqnEMiypHxcE1Zq/q3MQhjGxtFsrFCpvz4aEf1VBkJvoPkMxTqLxLuJ/+30O
+         sEqiN6OmDhSxyT8IHwla1C4BAKKyrqCFPjchayAj7tjqrgE2seGEMhEfDghY9PToDHkB
+         uCLS3JyUbibw3DJqEAHw+edexWmc5M/BoRsPSWZsC80qwZDAqRhIIqkStpf+PRtHNc34
+         H8VA==
+X-Gm-Message-State: APjAAAXneawsR4KWOsFg6I59LwS7PPDIDR1qtJl2OFCovvawC0URqMkc
+        papFShJgg1LpCKOSqaF/C07permrFtdYmy2vtnkKM6amBLEogXv6WtLhbJdhF0MSWSBnmOTBtvj
+        15c6UugWQ6U0TXUgk4WWNQANc6eTI3SOcrvg=
+X-Received: by 2002:a05:620a:818:: with SMTP id s24mr3993095qks.369.1582701986638;
+        Tue, 25 Feb 2020 23:26:26 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy9jp1KDxLFeQLv7QeR2TtKnSWWQ2++QWZI9Gbb8l6PC8kX3KCPOu2JNC/AcAu35IfNkSy/tg==
+X-Received: by 2002:a05:620a:818:: with SMTP id s24mr3993072qks.369.1582701986335;
+        Tue, 25 Feb 2020 23:26:26 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id x131sm689963qka.1.2020.02.25.23.26.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 23:26:24 -0800 (PST)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>
-References: <20200217050515.3847-1-akshu.agrawal@amd.com>
-From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <d436063d-098b-f49c-c387-abc13bf3b570@amd.com>
-Date:   Wed, 26 Feb 2020 12:52:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-In-Reply-To: <20200217050515.3847-1-akshu.agrawal@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: exfat: remove symlink feature : Additional patch
+In-Reply-To: <20200226063746.3128-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+References: <20200226063746.3128-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1582701983_403032P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::13) To MN2PR12MB2878.namprd12.prod.outlook.com
- (2603:10b6:208:aa::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.136.133.153] (165.204.157.251) by MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Wed, 26 Feb 2020 07:22:17 +0000
-X-Originating-IP: [165.204.157.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bae4ebed-79d3-439b-10aa-08d7ba8c9da9
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3102:|MN2PR12MB3102:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB31022DF70A33CD74AB0024F8F8EA0@MN2PR12MB3102.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
-X-Forefront-PRVS: 0325F6C77B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(366004)(396003)(376002)(189003)(199004)(26005)(52116002)(31696002)(2616005)(956004)(66946007)(186003)(66556008)(37006003)(54906003)(16526019)(16576012)(316002)(2906002)(6636002)(6486002)(66476007)(36756003)(81166006)(5660300002)(6666004)(31686004)(53546011)(4744005)(966005)(4326008)(478600001)(6862004)(81156014)(8676002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3102;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eD3/fzOKuJRKBqNVYqW1YnvJe4qSJuVNBiS9B4vg/XXjpQdsg3TBktZhpQo6f3Zif2JoUs0ENVBxyEcmwWPk3Rro208cfuhPf5u6BYXOlA47PPdcFzztWsFNjeD6Byw9rS5p7GZWWJv1a08j9cVqMjeBYYU6vNUIzDEEiHem8VyjTtDAPpMh8M4IaBur5Bj5bp6sn8KrZ1reVJwNad0xBL2MCFdwRpBY+qQ7DKA0W0JDtnfMpakTm7+JwDPTpCqinbIuPXA5UxHLA1ulkZ9rVW/tXMjwfeXxhm1IKx1sdMgj6VduB2o7McpoNAkjqC6PnTuSKEkbNldqbjG/nigFuO3XEKXZFUPr/ukVVWVpiQ5oeg75EsB2ovuOzlk1vziGkoFrqJWZuVoqfiktXDi8DaqDiMib5tVAefOyt9hZySGJQwUWnMR53O/AKeKp87aCw9dTZJfxZratn5jOS49TaeleOxmoFergOD5NClHLxHEb3eshrtBzj4RuIiPDjhe5ukI19NcGV7f06UUnBilqpg==
-X-MS-Exchange-AntiSpam-MessageData: UFmdCRPX3BCYg52RNcs9egnXyocC9Kn8gHMnfyc3yLb8hYel5eq2bX7yAVp/HgyusNs+IKQKQVW2z5NzN1pdpxT1WgtKUx5f+bW56isBdxCa0gLeCc15vP+Tjh94H2GrJFEjf8OSg9Fij6oYbdQFOg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bae4ebed-79d3-439b-10aa-08d7ba8c9da9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 07:22:20.3952
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gGfusfxTAP1DggcTfSns9YCcNPxqqjxwkxX9D4azjUJWQnggTsfmkC26L3lIRp/suz58/QM6OdGBHcKC/2WGhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3102
+Date:   Wed, 26 Feb 2020 02:26:23 -0500
+Message-ID: <503049.1582701983@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--==_Exmh_1582701983_403032P
+Content-Type: text/plain; charset=us-ascii
 
-On 2/17/2020 10:35 AM, Akshu Agrawal wrote:
-> Add machine driver for Raven based platform using
-> RT5682 + MAX9836 + CROS_EC codecs
+On Wed, 26 Feb 2020 15:37:46 +0900, Tetsuhiro Kohada said:
+> Completely remove symlink codes and definitions.
+
+> In the previous patch, it was not completely removed.
+
+Then this should have been [PATCH v2], and the fixed version [PATCH v3]
+
+> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
 >
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
 > ---
-> This patch is dependent on https://patchwork.kernel.org/patch/11381839/
+And right in here there should be something like this:
+
+v3: fixed subject line
+v2: previous patch didn't completely remove it
+
+>  drivers/staging/exfat/exfat.h       |  3 ---
+>  drivers/staging/exfat/exfat_core.c  |  3 ---
+>  drivers/staging/exfat/exfat_super.c | 27 ---------------------------
+>  3 files changed, 33 deletions(-)
 >
-Hi Mark,
+> diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+> index 4a0a481fe010..cd3479fc78ba 100644
 
-We can take this patch for review now as the patch it was dependent is 
-merged.
 
-Thanks,
 
-Akshu
+--==_Exmh_1582701983_403032P
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXlYdnwdmEQWDXROgAQJaqQ/+LFm+5gnoObjHByvFiSe/WLwyDsLR5ck8
+NxQVtg5wFV9uNxsVdsTCyiwaPril0sXlQfIvt3+di7OqzwfwSmsmLkDNHnrxPoCi
+n874KFMcJ7QpBXNP+FwWKd6tFB6ORf0A4EAQG+oS1afzVvFXKN9Vc+FYiT3GfPlj
+KlUgi8WJpQriRYz2HQ6RcYZj7PrrCSr3AOHTzVpvCwJXSKJlKi62LxRw6yIq5rRZ
+18Sqe8t6v4eX5CNOPvlZPBLYnbyW9AxUslhF/qWTzRIy7Vd/urwRY68tbKsnvMvT
+7dmjmPPOxurq2kirYBGBYdATN6LhIN22OVctFghT10c2ddrwyhnxHtwJbQLGNXcO
+QrHzgkFyabWQlVkQOuG25CBE/d0M7+gtPJmIx+zun63GTvd8m53GZoKkGc8dIDqe
+pLug/kVCbkxtffVovWXSgriu6KQnGa6jTo95l85trYbXbGW9+DAGdmSR5N6HgLb6
+mBi3stwpDgOFq86r+paMyDhZVwfNLh6z0zLf+obEP1W9j3aL8KNx4txUzR7RoKFk
+PizGKPz9E2iQWc/VBsnKa65Of1EwylK0hefiYjM+jTt8zFthT8RG1JXX5CxjeVYF
+UJUUbH9tF+76AsSx4w06kRaiG1kS6bZ9aFhspyZcXYUTBbb2ua19gPsSdg5JAZ8K
+AZraphreKpc=
+=69Q7
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1582701983_403032P--
