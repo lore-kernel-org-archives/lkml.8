@@ -2,259 +2,215 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1EDC4BA11
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8A2C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0DF24689
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9562224688
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:58:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AU9WY7wv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ebcBzj7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgBZK6Y (ORCPT
+        id S1728091AbgBZK63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:58:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:47466 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727339AbgBZK6Y (ORCPT
+        Wed, 26 Feb 2020 05:58:29 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38708 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727686AbgBZK60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:58:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582714703; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=OfSsAupTVWfMR/Vnb306EBgKPtREPx2ttnB7Rk8POgc=; b=AU9WY7wvWJF1XkxXQkZ9fkolGbDKrDqlaIr7cO90eANHFmacDhIBSyun2DVar2ZOOYiR5hjE
- pbS5P5bqS3T0sxgmKQnoQ5KxX1OEEQHJmUpIjnbVMvxtA693e/aKqLk23aXLkC/EtIKa513N
- O6zpQ8cHYkj5WCrAXMet2c8GlIA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e564f46.7efdad67db58-smtp-out-n03;
- Wed, 26 Feb 2020 10:58:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 47536C447A0; Wed, 26 Feb 2020 10:58:13 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E520BC43383;
-        Wed, 26 Feb 2020 10:58:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E520BC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH V3] mmc: mmc_test: Pass different sg lists for non-blocking requests
-Date:   Wed, 26 Feb 2020 16:27:43 +0530
-Message-Id: <1582714668-17247-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
-References: <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
+        Wed, 26 Feb 2020 05:58:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582714705;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ao4shkARYBOlBvwWDPYByOMa60o0c7ck0bB41Z0If+w=;
+        b=ebcBzj7JZRtl4yJG2ucuqBkycELIg2oCp/NYRejkF+wI73YIWTrxeakNKlV50lG0f+76xl
+        lGBrzIKcLS6fYhxxQbn1gwuZQFpuihIjXTgm2vnp/aVSlueg6gF1rfhK1RtJFXyAVu5UU6
+        tdd0vZad3u/dOAV2baj/sy/Y1ODQbvo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-oZBINokqOfOh_LcYTj2SOg-1; Wed, 26 Feb 2020 05:58:23 -0500
+X-MC-Unique: oZBINokqOfOh_LcYTj2SOg-1
+Received: by mail-wm1-f70.google.com with SMTP id w3so560833wmg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:58:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ao4shkARYBOlBvwWDPYByOMa60o0c7ck0bB41Z0If+w=;
+        b=h4vzf7BVP64XR07Ex0yNYEHi7wm5O8Z+pGzXflJ5YHRa9L+rutu9blCEWpNJMERxc2
+         Tu/BDuGqmV6/LmGoAmbbK/j1S4390SseAcEsQ0wgJu8a5Wfs/5CGUKd6Gjp2aW6/9t+c
+         UQtN6KL4/ttGAqVcsij5aO9uApSqW1xzfGT92tPjKTHqtABG9NdWADnxvFJrRDWKoZcJ
+         ABBjArAxcvR/Ia+gqE5rdayPvKRqQwvxiXDgDDRV86oLYSwFvD1YJRe4GX3mHdUN4T03
+         phl+Apn3S6sC7IYb62nkTHrd6whPehUzqe4RFg/ONE4sWJ8VMQNf+1RuVFBvfux/Ls+4
+         xr+g==
+X-Gm-Message-State: APjAAAXp0UztwmTPJuyhQ+0HELmn3rh9SVfSbyL7FGAreVwTFP9mWACj
+        ioQNLlT5GhiuD4TVqGnpQWmCSecsIgBH6dpO5m9WUSq643S37XdC5+D0cwyzy1gb9k5Juz08RvE
+        l77rexh1ZceF3ss+qt5dONZ/M
+X-Received: by 2002:a5d:526c:: with SMTP id l12mr5137363wrc.117.1582714700513;
+        Wed, 26 Feb 2020 02:58:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyh+hNuja55nNfaQjP9nDbwKYYMHtCqsv8lSLIfOPeY/HkJFiCny/r2KQbRfkc32TKRz7Lunw==
+X-Received: by 2002:a5d:526c:: with SMTP id l12mr5137321wrc.117.1582714700113;
+        Wed, 26 Feb 2020 02:58:20 -0800 (PST)
+Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id l132sm2619123wmf.16.2020.02.26.02.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 02:58:19 -0800 (PST)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net
+Cc:     Dexuan Cui <decui@microsoft.com>, Hillf Danton <hdanton@sina.com>,
+        virtualization@lists.linux-foundation.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>, kvm@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com,
+        netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: [PATCH net] vsock: fix potential deadlock in transport->release()
+Date:   Wed, 26 Feb 2020 11:58:18 +0100
+Message-Id: <20200226105818.36055-1-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supply a separate sg list for each of the request in non-blocking
-IO test cases where two requests will be issued at same time.
+Some transports (hyperv, virtio) acquire the sock lock during the
+.release() callback.
 
-Otherwise, sg memory may get unmapped when a request is done while
-same memory is being accessed by controller from the other request,
-and it leads to iommu errors with below call stack:
+In the vsock_stream_connect() we call vsock_assign_transport(); if
+the socket was previously assigned to another transport, the
+vsk->transport->release() is called, but the sock lock is already
+held in the vsock_stream_connect(), causing a deadlock reported by
+syzbot:
 
-	__arm_lpae_unmap+0x2e0/0x478
-	arm_lpae_unmap+0x54/0x70
-	arm_smmu_unmap+0x64/0xa4
-	__iommu_unmap+0xb8/0x1f0
-	iommu_unmap_fast+0x38/0x48
-	__iommu_dma_unmap+0x88/0x108
-	iommu_dma_unmap_sg+0x90/0xa4
-	sdhci_post_req+0x5c/0x78
-	mmc_test_start_areq+0x10c/0x120 [mmc_test]
-	mmc_test_area_io_seq+0x150/0x264 [mmc_test]
-	mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
-	mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
-	mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
-	mtf_test_write+0x238/0x3cc [mmc_test]
+    INFO: task syz-executor280:9768 blocked for more than 143 seconds.
+      Not tainted 5.6.0-rc1-syzkaller #0
+    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+    syz-executor280 D27912  9768   9766 0x00000000
+    Call Trace:
+     context_switch kernel/sched/core.c:3386 [inline]
+     __schedule+0x934/0x1f90 kernel/sched/core.c:4082
+     schedule+0xdc/0x2b0 kernel/sched/core.c:4156
+     __lock_sock+0x165/0x290 net/core/sock.c:2413
+     lock_sock_nested+0xfe/0x120 net/core/sock.c:2938
+     virtio_transport_release+0xc4/0xd60 net/vmw_vsock/virtio_transport_common.c:832
+     vsock_assign_transport+0xf3/0x3b0 net/vmw_vsock/af_vsock.c:454
+     vsock_stream_connect+0x2b3/0xc70 net/vmw_vsock/af_vsock.c:1288
+     __sys_connect_file+0x161/0x1c0 net/socket.c:1857
+     __sys_connect+0x174/0x1b0 net/socket.c:1874
+     __do_sys_connect net/socket.c:1885 [inline]
+     __se_sys_connect net/socket.c:1882 [inline]
+     __x64_sys_connect+0x73/0xb0 net/socket.c:1882
+     do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+     entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To avoid this issue, this patch remove the lock acquiring in the
+.release() callback of hyperv and virtio transports, and it holds
+the lock when we call vsk->transport->release() in the vsock core.
+
+Reported-by: syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com
+Fixes: 408624af4c89 ("vsock: use local transport when it is loaded")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
-Changes since V2:
-	- Simplfied mmc_test_nonblock_transter() function aruguments.
+ net/vmw_vsock/af_vsock.c                | 20 ++++++++++++--------
+ net/vmw_vsock/hyperv_transport.c        |  3 ---
+ net/vmw_vsock/virtio_transport_common.c |  2 --
+ 3 files changed, 12 insertions(+), 13 deletions(-)
 
-Changes since V1:
-	- Freeing-up sg_areq memory.                                        
-	- Added check to ensure sg length is equal for both the sg-lists    
-	  supplied in case of non-blocking requests.
----
- drivers/mmc/core/mmc_test.c | 52 ++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
-index 492dd45..c21b3cb 100644
---- a/drivers/mmc/core/mmc_test.c
-+++ b/drivers/mmc/core/mmc_test.c
-@@ -71,6 +71,7 @@ struct mmc_test_mem {
-  * @sg_len: length of currently mapped scatterlist @sg
-  * @mem: allocated memory
-  * @sg: scatterlist
-+ * @sg_areq: scatterlist for non-blocking request
-  */
- struct mmc_test_area {
- 	unsigned long max_sz;
-@@ -82,6 +83,7 @@ struct mmc_test_area {
- 	unsigned int sg_len;
- 	struct mmc_test_mem *mem;
- 	struct scatterlist *sg;
-+	struct scatterlist *sg_areq;
- };
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 9c5b2a91baad..a5f28708e0e7 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -451,6 +451,12 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+ 		if (vsk->transport == new_transport)
+ 			return 0;
  
- /**
-@@ -836,14 +838,16 @@ static int mmc_test_start_areq(struct mmc_test_card *test,
++		/* transport->release() must be called with sock lock acquired.
++		 * This path can only be taken during vsock_stream_connect(),
++		 * where we have already held the sock lock.
++		 * In the other cases, this function is called on a new socket
++		 * which is not assigned to any transport.
++		 */
+ 		vsk->transport->release(vsk);
+ 		vsock_deassign_transport(vsk);
+ 	}
+@@ -753,20 +759,18 @@ static void __vsock_release(struct sock *sk, int level)
+ 		vsk = vsock_sk(sk);
+ 		pending = NULL;	/* Compiler warning. */
+ 
+-		/* The release call is supposed to use lock_sock_nested()
+-		 * rather than lock_sock(), if a sock lock should be acquired.
+-		 */
+-		if (vsk->transport)
+-			vsk->transport->release(vsk);
+-		else if (sk->sk_type == SOCK_STREAM)
+-			vsock_remove_sock(vsk);
+-
+ 		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
+ 		 * version to avoid the warning "possible recursive locking
+ 		 * detected". When "level" is 0, lock_sock_nested(sk, level)
+ 		 * is the same as lock_sock(sk).
+ 		 */
+ 		lock_sock_nested(sk, level);
++
++		if (vsk->transport)
++			vsk->transport->release(vsk);
++		else if (sk->sk_type == SOCK_STREAM)
++			vsock_remove_sock(vsk);
++
+ 		sock_orphan(sk);
+ 		sk->sk_shutdown = SHUTDOWN_MASK;
+ 
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 3492c021925f..630b851f8150 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -526,12 +526,9 @@ static bool hvs_close_lock_held(struct vsock_sock *vsk)
+ 
+ static void hvs_release(struct vsock_sock *vsk)
+ {
+-	struct sock *sk = sk_vsock(vsk);
+ 	bool remove_sock;
+ 
+-	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+ 	remove_sock = hvs_close_lock_held(vsk);
+-	release_sock(sk);
+ 	if (remove_sock)
+ 		vsock_remove_sock(vsk);
  }
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index d9f0c9c5425a..f3c4bab2f737 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -829,7 +829,6 @@ void virtio_transport_release(struct vsock_sock *vsk)
+ 	struct sock *sk = &vsk->sk;
+ 	bool remove_sock = true;
  
- static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
--				      struct scatterlist *sg, unsigned sg_len,
--				      unsigned dev_addr, unsigned blocks,
--				      unsigned blksz, int write, int count)
-+				      unsigned int dev_addr, int write,
-+				      int count)
- {
- 	struct mmc_test_req *rq1, *rq2;
- 	struct mmc_request *mrq, *prev_mrq;
- 	int i;
- 	int ret = RESULT_OK;
-+	struct mmc_test_area *t = &test->area;
-+	struct scatterlist *sg = t->sg;
-+	struct scatterlist *sg_areq = t->sg_areq;
+-	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+ 	if (sk->sk_type == SOCK_STREAM)
+ 		remove_sock = virtio_transport_close(vsk);
  
- 	rq1 = mmc_test_req_alloc();
- 	rq2 = mmc_test_req_alloc();
-@@ -857,8 +861,8 @@ static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
- 
- 	for (i = 0; i < count; i++) {
- 		mmc_test_req_reset(container_of(mrq, struct mmc_test_req, mrq));
--		mmc_test_prepare_mrq(test, mrq, sg, sg_len, dev_addr, blocks,
--				     blksz, write);
-+		mmc_test_prepare_mrq(test, mrq, sg, t->sg_len, dev_addr,
-+				     t->blocks, 512, write);
- 		ret = mmc_test_start_areq(test, mrq, prev_mrq);
- 		if (ret)
- 			goto err;
-@@ -867,7 +871,8 @@ static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
- 			prev_mrq = &rq2->mrq;
- 
- 		swap(mrq, prev_mrq);
--		dev_addr += blocks;
-+		swap(sg, sg_areq);
-+		dev_addr += t->blocks;
+@@ -837,7 +836,6 @@ void virtio_transport_release(struct vsock_sock *vsk)
+ 		list_del(&pkt->list);
+ 		virtio_transport_free_pkt(pkt);
  	}
+-	release_sock(sk);
  
- 	ret = mmc_test_start_areq(test, NULL, prev_mrq);
-@@ -1396,10 +1401,11 @@ static int mmc_test_no_highmem(struct mmc_test_card *test)
-  * Map sz bytes so that it can be transferred.
-  */
- static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
--			     int max_scatter, int min_sg_len)
-+			     int max_scatter, int min_sg_len, bool nonblock)
- {
- 	struct mmc_test_area *t = &test->area;
- 	int err;
-+	unsigned int sg_len = 0;
- 
- 	t->blocks = sz >> 9;
- 
-@@ -1411,6 +1417,22 @@ static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
- 		err = mmc_test_map_sg(t->mem, sz, t->sg, 1, t->max_segs,
- 				      t->max_seg_sz, &t->sg_len, min_sg_len);
- 	}
-+
-+	if (err || !nonblock)
-+		goto err;
-+
-+	if (max_scatter) {
-+		err = mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_areq,
-+						  t->max_segs, t->max_seg_sz,
-+						  &sg_len);
-+	} else {
-+		err = mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max_segs,
-+				      t->max_seg_sz, &sg_len, min_sg_len);
-+	}
-+	if (!err && sg_len != t->sg_len)
-+		err = -EINVAL;
-+
-+err:
- 	if (err)
- 		pr_info("%s: Failed to map sg list\n",
- 		       mmc_hostname(test->card->host));
-@@ -1440,7 +1462,6 @@ static int mmc_test_area_io_seq(struct mmc_test_card *test, unsigned long sz,
- 	struct timespec64 ts1, ts2;
- 	int ret = 0;
- 	int i;
--	struct mmc_test_area *t = &test->area;
- 
- 	/*
- 	 * In the case of a maximally scattered transfer, the maximum transfer
-@@ -1458,15 +1479,14 @@ static int mmc_test_area_io_seq(struct mmc_test_card *test, unsigned long sz,
- 			sz = max_tfr;
- 	}
- 
--	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len);
-+	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len, nonblock);
- 	if (ret)
- 		return ret;
- 
- 	if (timed)
- 		ktime_get_ts64(&ts1);
- 	if (nonblock)
--		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_len,
--				 dev_addr, t->blocks, 512, write, count);
-+		ret = mmc_test_nonblock_transfer(test, dev_addr, write, count);
- 	else
- 		for (i = 0; i < count && ret == 0; i++) {
- 			ret = mmc_test_area_transfer(test, dev_addr, write);
-@@ -1525,6 +1545,7 @@ static int mmc_test_area_cleanup(struct mmc_test_card *test)
- 	struct mmc_test_area *t = &test->area;
- 
- 	kfree(t->sg);
-+	kfree(t->sg_areq);
- 	mmc_test_free_mem(t->mem);
- 
- 	return 0;
-@@ -1584,6 +1605,13 @@ static int mmc_test_area_init(struct mmc_test_card *test, int erase, int fill)
- 		goto out_free;
- 	}
- 
-+	t->sg_areq = kmalloc_array(t->max_segs, sizeof(*t->sg_areq),
-+				   GFP_KERNEL);
-+	if (!t->sg_areq) {
-+		ret = -ENOMEM;
-+		goto out_free;
-+	}
-+
- 	t->dev_addr = mmc_test_capacity(test->card) / 2;
- 	t->dev_addr -= t->dev_addr % (t->max_sz >> 9);
- 
-@@ -2468,7 +2496,7 @@ static int __mmc_test_cmds_during_tfr(struct mmc_test_card *test,
- 	if (!(test->card->host->caps & MMC_CAP_CMD_DURING_TFR))
- 		return RESULT_UNSUP_HOST;
- 
--	ret = mmc_test_area_map(test, sz, 0, 0);
-+	ret = mmc_test_area_map(test, sz, 0, 0, use_areq);
- 	if (ret)
- 		return ret;
- 
+ 	if (remove_sock)
+ 		vsock_remove_sock(vsk);
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.24.1
+
