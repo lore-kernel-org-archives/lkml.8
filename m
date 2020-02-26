@@ -2,192 +2,132 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C72C4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3046CC4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B744224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B1324685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582739824;
+	bh=Rtl7khPoaaVHzA+qWr6OBdHHYXpHGNpMf1nSUuzRX5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nByz+nsDw0+LgcGqKTGBjFXEZy32NIrdlvF1VJC0bN74DZ/gNmln2MWx0BfR5TmKh
+	 6Plc/fkNdOsLflXCUd/kLrofQRe21Px7FOV+yzmJBB+Bjm9M2EsV+iSe1EKgmyY4sC
+	 jS1IUQLuS8C6C1rzaBqgRJLX60495idwykEXyryo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgBZR4n convert rfc822-to-8bit (ORCPT
+        id S1727127AbgBZR5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:56:43 -0500
-Received: from 11.mo1.mail-out.ovh.net ([188.165.48.29]:53561 "EHLO
-        11.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgBZR4n (ORCPT
+        Wed, 26 Feb 2020 12:57:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37129 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgBZR5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:56:43 -0500
-X-Greylist: delayed 4197 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Feb 2020 12:56:41 EST
-Received: from player157.ha.ovh.net (unknown [10.108.42.142])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id E6D5E1A4165
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:21:35 +0100 (CET)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player157.ha.ovh.net (Postfix) with ESMTPSA id 898E0FCD5725;
-        Wed, 26 Feb 2020 14:20:52 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 15:20:50 +0100
-From:   Greg Kurz <groug@kaod.org>
-To:     'Baoquan He' <bhe@redhat.com>
-Cc:     Alastair D'Silva <alastair@d-silva.org>,
-        'Alastair D'Silva' <alastair@au1.ibm.com>,
-        "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
-        'Oliver O'Halloran' <oohall@gmail.com>,
-        'Benjamin Herrenschmidt' <benh@kernel.crashing.org>,
-        'Paul Mackerras' <paulus@samba.org>,
-        'Michael Ellerman' <mpe@ellerman.id.au>,
-        'Frederic Barrat' <fbarrat@linux.ibm.com>,
-        'Andrew Donnellan' <ajd@linux.ibm.com>,
-        'Arnd Bergmann' <arnd@arndb.de>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        'Dan Williams' <dan.j.williams@intel.com>,
-        'Vishal Verma' <vishal.l.verma@intel.com>,
-        'Dave Jiang' <dave.jiang@intel.com>,
-        'Ira Weiny' <ira.weiny@intel.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        'Rob Herring' <robh@kernel.org>,
-        'Anton Blanchard' <anton@ozlabs.org>,
-        'Krzysztof Kozlowski' <krzk@kernel.org>,
-        'Mahesh Salgaonkar' <mahesh@linux.vnet.ibm.com>,
-        'Madhavan Srinivasan' <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?B?J0PDqWRyaWM=?= Le Goater' <clg@kaod.org>,
-        'Anju T Sudhakar' <anju@linux.vnet.ibm.com>,
-        'Hari Bathini' <hbathini@linux.ibm.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Nicholas Piggin' <npiggin@gmail.com>,
-        'Masahiro Yamada' <yamada.masahiro@socionext.com>,
-        'Alexey Kardashevskiy' <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
-Message-ID: <20200226152050.45547219@bahia.home>
-In-Reply-To: <20200226141523.GI4937@MiWiFi-R3L-srv>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-        <20200221032720.33893-5-alastair@au1.ibm.com>
-        <20200226081447.GH4937@MiWiFi-R3L-srv>
-        <4d49801d5ec7e$7a3e8610$6ebb9230$@d-silva.org>
-        <20200226100102.0aab7dda@bahia.home>
-        <20200226141523.GI4937@MiWiFi-R3L-srv>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 26 Feb 2020 12:57:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id l5so4248673wrx.4;
+        Wed, 26 Feb 2020 09:57:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XYuTT4oBJKWXgeE5+ImMK08MUo+U41eFHMUsFDzXC3g=;
+        b=oCBGomjXEa7q8nPGNu7vagNdWegtPdLdnxeYOwHu5TroqG2ftTPC6TRvZvwgPJG4zY
+         C+FRJ7VF5lL/Pe1kjf16LAH7X2EM9ZNmkVnEwyuXrEwc5l4SMalfykXW5aEkAc3d4mWX
+         VxKTTJQUTLxx34UUoFLFNNSw9eAaLWd5am1H5J8ZWKY20QlNixh2KXJdnEg1rVQzMJsE
+         lWmAoCEeaR0CahfVkUU0LgjpA4iQTiLjJ+E3woGNjvoPnTlFUtWlAuThwGY+bLU8IxCw
+         Df3H0BXD2Tabzi6VvfS3h13pw4rtrd3aMBVoeghmd0996ltY9Y9O+excqd+VtbkHN1OP
+         l9Tg==
+X-Gm-Message-State: APjAAAVCAXGuvPURGjQ5ngTZYy1OqaihAlK5p9L88QZ1f7HJQSQMGR/K
+        7Dq7eruq9kcqApkcPdsIxqPaY2V2
+X-Google-Smtp-Source: APXvYqxn+dTMcNHRegTc1CqQ9KKb5lg3/pc5LpPja6Ha7fAC/Me4YB7FHlZVtun3Ul4E652e35RqQw==
+X-Received: by 2002:adf:dd4d:: with SMTP id u13mr6714677wrm.70.1582739820112;
+        Wed, 26 Feb 2020 09:57:00 -0800 (PST)
+Received: from localhost (ip-37-188-190-100.eurotel.cz. [37.188.190.100])
+        by smtp.gmail.com with ESMTPSA id w7sm3622305wmi.9.2020.02.26.09.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 09:56:59 -0800 (PST)
+Date:   Wed, 26 Feb 2020 18:56:58 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200226175658.GP3771@dhcp22.suse.cz>
+References: <20200214071537.GL31689@dhcp22.suse.cz>
+ <20200214135728.GK88887@mtj.thefacebook.com>
+ <20200214151318.GC31689@dhcp22.suse.cz>
+ <20200214165311.GA253674@cmpxchg.org>
+ <20200217084100.GE31531@dhcp22.suse.cz>
+ <20200218195253.GA13406@cmpxchg.org>
+ <20200221101147.GO20509@dhcp22.suse.cz>
+ <20200221154359.GA70967@cmpxchg.org>
+ <20200225122028.GS22443@dhcp22.suse.cz>
+ <20200225181755.GB10257@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Ovh-Tracer-Id: 9146529370105485748
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrleeggdeihecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgfgsehtqheftdertdejnecuhfhrohhmpefirhgvghcumfhurhiiuceoghhrohhugheskhgrohgurdhorhhgqeenucfkpheptddrtddrtddrtddpkedvrddvheefrddvtdekrddvgeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrudehjedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225181755.GB10257@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 22:15:23 +0800
-'Baoquan He' <bhe@redhat.com> wrote:
-
-> On 02/26/20 at 10:01am, Greg Kurz wrote:
-> > On Wed, 26 Feb 2020 19:26:34 +1100
-> > "Alastair D'Silva" <alastair@d-silva.org> wrote:
+On Tue 25-02-20 13:17:55, Johannes Weiner wrote:
+> On Tue, Feb 25, 2020 at 01:20:28PM +0100, Michal Hocko wrote:
 > > 
-> > > > -----Original Message-----
-> > > > From: Baoquan He <bhe@redhat.com>
-> > > > Sent: Wednesday, 26 February 2020 7:15 PM
-> > > > To: Alastair D'Silva <alastair@au1.ibm.com>
-> > > > Cc: alastair@d-silva.org; Aneesh Kumar K . V
-> > > > <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran <oohall@gmail.com>;
-> > > > Benjamin Herrenschmidt <benh@kernel.crashing.org>; Paul Mackerras
-> > > > <paulus@samba.org>; Michael Ellerman <mpe@ellerman.id.au>; Frederic
-> > > > Barrat <fbarrat@linux.ibm.com>; Andrew Donnellan <ajd@linux.ibm.com>;
-> > > > Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org>; Dan Williams <dan.j.williams@intel.com>;
-> > > > Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
-> > > > <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew Morton
-> > > > <akpm@linux-foundation.org>; Mauro Carvalho Chehab
-> > > > <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.net>;
-> > > > Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.org>;
-> > > > Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
-> > > > <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
-> > > > <maddy@linux.vnet.ibm.com>; Cédric Le Goater <clg@kaod.org>; Anju T
-> > > > Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
-> > > > <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>; Greg
-> > > > Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Masahiro
-> > > > Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
-> > > > <aik@ozlabs.ru>; linux-kernel@vger.kernel.org; linuxppc-
-> > > > dev@lists.ozlabs.org; linux-nvdimm@lists.01.org; linux-mm@kvack.org
-> > > > Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
-> > > > 
-> > > > On 02/21/20 at 02:26pm, Alastair D'Silva wrote:
-> > > > > From: Alastair D'Silva <alastair@d-silva.org>
-> > > > >
-> > > > > Function declarations don't need externs, remove the existing ones so
-> > > > > they are consistent with newer code
-> > > > >
-> > > > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > > > > ---
-> > > > >  arch/powerpc/include/asm/pnv-ocxl.h | 32 ++++++++++++++---------------
-> > > > >  include/misc/ocxl.h                 |  6 +++---
-> > > > >  2 files changed, 18 insertions(+), 20 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > b/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > index 0b2a6707e555..b23c99bc0c84 100644
-> > > > > --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > @@ -9,29 +9,27 @@
-> > > > >  #define PNV_OCXL_TL_BITS_PER_RATE       4
-> > > > >  #define PNV_OCXL_TL_RATE_BUF_SIZE
-> > > > ((PNV_OCXL_TL_MAX_TEMPLATE+1) * PNV_OCXL_TL_BITS_PER_RATE / 8)
-> > > > >
-> > > > > -extern int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base, u16
-> > > > *enabled,
-> > > > > -			u16 *supported);
-> > > > 
-> > > > It works w or w/o extern when declare functions. Searching 'extern'
-> > > > under include can find so many functions with 'extern' adding. Do we have
-> > > a
-> > > > explicit standard if we should add or remove 'exter' in function
-> > > declaration?
-> > > > 
-> > > > I have no objection to this patch, just want to make clear so that I can
-> > > handle
-> > > > it w/o confusion.
-> > > > 
-> > > > Thanks
-> > > > Baoquan
-> > > > 
-> > > 
-> > > For the OpenCAPI driver, we have settled on not having 'extern' on
-> > > functions.
-> > > 
-> > > I don't think I've seen a standard that supports or refutes this, but it
-> > > does not value add.
-> > > 
-> > 
-> > FWIW this is a warning condition for checkpatch:
-> > 
-> > $ ./scripts/checkpatch.pl --strict -f include/misc/ocxl.h
-> 
-> Good to know, thanks.
-> 
-> I didn't know checkpatch.pl can run on header file directly. Tried to
-> check patch with '--strict -f', the below info doesn't appear. But it
-
-Hmm... -f is to check a source file, not a patch... What did you try
-exactly ?
-
-> does give out below information when run on header file.
-> 
-> > 
+> > On Fri 21-02-20 10:43:59, Johannes Weiner wrote:
+> > > On Fri, Feb 21, 2020 at 11:11:47AM +0100, Michal Hocko wrote:
 > > [...]
+> > > > I also have hard time to grasp what you actually mean by the above.
+> > > > Let's say you have hiearchy where you split out low limit unevenly
+> > > >               root (5G of memory)
+> > > >              /    \
+> > > >    (low 3G) A      D (low 1,5G)
+> > > >            / \
+> > > >  (low 1G) B   C (low 2G)
+> > > >
+> > > > B gets lower priority than C and D while C gets higher priority than
+> > > > D? Is there any problem with such a configuration from the semantic
+> > > > point of view?
+> > > 
+> > > No, that's completely fine.
 > > 
-> > CHECK: extern prototypes should be avoided in .h files
-> > #176: FILE: include/misc/ocxl.h:176:
-> > +extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
-> > 
-> > [...]
-> > 
+> > How is B (low $EPS) C (low 3-$EPS) where $EPS->0 so much different
+> > from the above. You prioritize C over B, D over B in both cases under
+> > global memory pressure.
 > 
+> You snipped the explanation for the caveat / the priority inversion
+> that followed; it would be good to reply to that instead.
 
+OK, I have misread your response then. Because you were saying that the
+above example is perfectly fine while it actually matches your example
+of low, mid, high prio example so I was confused.
+
+[...]
+
+I am skipping the large part of your response mostly because I believe
+it would make it easier to move this forward.
+
+> > It would be also really appreciated if we have some more specific examples
+> > of priority inversion problems you have encountered previously and place
+> > them somewhere into our documentation. There is essentially nothing like
+> > that in the tree.
+> 
+> Of course, I wouldn't mind doing that in a separate patch. How about a
+> section in cgroup-v2.rst, at "Issues with v1 and Rationales for v2"?
+
+Yes, makes sense. A subsection about examples/best practices/Lessons
+learned where we can add more sounds like a very good thing in general.
+Because regardless of what tends to work for some deployments it is
+always good to give examples of what hasn't worked for others and was
+non trivial to find out. This can save countless of hourse for other
+people.
+-- 
+Michal Hocko
+SUSE Labs
