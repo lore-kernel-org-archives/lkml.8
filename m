@@ -2,110 +2,133 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0380FC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D965BC4BA1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5441222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E8120801
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgBZRg0 (ORCPT
+        id S1726956AbgBZRhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:36:26 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55320 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726366AbgBZRg0 (ORCPT
+        Wed, 26 Feb 2020 12:37:05 -0500
+Received: from www62.your-server.de ([213.133.104.62]:42022 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgBZRhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:36:26 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QHU3fE115469;
-        Wed, 26 Feb 2020 12:35:19 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydqfuwb4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 12:35:18 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01QHYpxm003952;
-        Wed, 26 Feb 2020 17:35:18 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02dal.us.ibm.com with ESMTP id 2ydcmkrpgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Feb 2020 17:35:18 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QHZHF835127648
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 17:35:17 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56E4FAE064;
-        Wed, 26 Feb 2020 17:35:17 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F4DBAE063;
-        Wed, 26 Feb 2020 17:35:17 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Feb 2020 17:35:17 +0000 (GMT)
-Subject: Re: [PATCH v2 3/4] tpm: Implement tpm2_init to call when
- TPM_OPS_AUTO_STARTUP is not set
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
-References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
- <20200213202329.898607-4-stefanb@linux.vnet.ibm.com>
- <20200225170015.GE15662@linux.intel.com>
- <3813980a-6c5e-c99f-7b37-b20b72eb6a8a@linux.ibm.com>
- <20200226150255.GB3407@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <c31ef080-1172-e10b-e7b1-ab8e1682c860@linux.ibm.com>
-Date:   Wed, 26 Feb 2020 12:35:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 26 Feb 2020 12:37:05 -0500
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j70c8-0002db-0I; Wed, 26 Feb 2020 18:36:52 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j70c7-000Is6-Fc; Wed, 26 Feb 2020 18:36:51 +0100
+Subject: Re: [PATCH bpf-next v4 0/5] Make probes which emit dmesg warnings
+ optional
+To:     Quentin Monnet <quentin@isovalent.com>,
+        Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org
+References: <20200226165941.6379-1-mrostecki@opensuse.org>
+ <e4777396-dbf0-855d-beaf-ba7fd533a4fb@isovalent.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <03558a25-d07c-d4df-6840-4a171f18d893@iogearbox.net>
+Date:   Wed, 26 Feb 2020 18:36:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200226150255.GB3407@linux.intel.com>
+In-Reply-To: <e4777396-dbf0-855d-beaf-ba7fd533a4fb@isovalent.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_06:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0
- bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260115
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25734/Tue Feb 25 15:06:17 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 10:02 AM, Jarkko Sakkinen wrote:
-> On Tue, Feb 25, 2020 at 01:20:39PM -0500, Stefan Berger wrote:
->> On 2/25/20 12:00 PM, Jarkko Sakkinen wrote:
->>> On Thu, Feb 13, 2020 at 03:23:28PM -0500, Stefan Berger wrote:
->>>> From: Stefan Berger <stefanb@linux.ibm.com>
->>>>
->>>> Implement tpm2_init() that gets the TPM 2 timeouts and command durations
->>>> and command code attributes. This function is to be called in case the
->>>> TPM_OPS_AUTO_STARTUP flag is not set and therefore tpm2_auto_startup()
->>>> is not called.
->>>>
->>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>> The commit makes zero effort trying to explain what the heck tpm_init()
->>> is and when it should be used and why the function name tpm2_init().
->> Are you saying the explanation of when to use tpm2_init above is not enough?
->> 'bviously we are trying to cover the case of using the TPM 2 by a driver
->> that doesn't use the TPM_OPS_AUTO_STARTUP flag and therefore the TPM 2
->> timeouts and command durations and command code attributes are not set as
->> they would be if tpm2_auto_startup() was to be called and tpm2_init() is the
->> alternative to call. I didn't like tpm2_init() either... any suggestions for
->> a better name?
-> I'm not getting what this commit is trying to do in the first place.
-I sent out v3, maybe the text there is better.
->
-> /Jarkko
+On 2/26/20 6:22 PM, Quentin Monnet wrote:
+> 2020-02-26 17:59 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+>> Feature probes in bpftool related to bpf_probe_write_user and
+>> bpf_trace_printk helpers emit dmesg warnings which might be confusing
+>> for people running bpftool on production environments. This patch series
+>> addresses that by filtering them out by default and introducing the new
+>> positional argument "full" which enables all available probes.
+>>
+>> The main motivation behind those changes is ability the fact that some
+>> probes (for example those related to "trace" or "write_user" helpers)
+>> emit dmesg messages which might be confusing for people who are running
+>> on production environments. For details see the Cilium issue[0].
+>>
+>> v1 -> v2:
+>> - Do not expose regex filters to users, keep filtering logic internal,
+>> expose only the "full" option for including probes which emit dmesg
+>> warnings.
+>>
+>> v2 -> v3:
+>> - Do not use regex for filtering out probes, use function IDs directly.
+>> - Fix bash completion - in v2 only "prefix" was proposed after "macros",
+>>    "dev" and "kernel" were not.
+>> - Rephrase the man page paragraph, highlight helper function names.
+>> - Remove tests which parse the plain output of bpftool (except the
+>>    header/macros test), focus on testing JSON output instead.
+>> - Add test which compares the output with and without "full" option.
+>>
+>> v3 -> v4:
+>> - Use enum to check for helper functions.
+>> - Make selftests compatible with older versions of Python 3.x than 3.7.
+>>
+>> [0] https://github.com/cilium/cilium/issues/10048
+>>
+>> Michal Rostecki (5):
+>>    bpftool: Move out sections to separate functions
+>>    bpftool: Make probes which emit dmesg warnings optional
+>>    bpftool: Update documentation of "bpftool feature" command
+>>    bpftool: Update bash completion for "bpftool feature" command
+>>    selftests/bpf: Add test for "bpftool feature" command
+>>
+>>   .../bpftool/Documentation/bpftool-feature.rst |  19 +-
+>>   tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+>>   tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
+>>   tools/testing/selftests/.gitignore            |   5 +-
+>>   tools/testing/selftests/bpf/Makefile          |   3 +-
+>>   tools/testing/selftests/bpf/test_bpftool.py   | 178 +++++++++++
+>>   tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
+>>   7 files changed, 373 insertions(+), 123 deletions(-)
+>>   create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
+>>   create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
+>>
+> 
+> Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+> (Please keep tags between versions.)
+> 
+> Your change looks good. The tests in patch 5 still pass with Python 3.7.5 (but I have not tried to run with an older version of Python).
 
+Looks better now ...
 
+# ./test_bpftool.sh
+test_feature_dev_json (test_bpftool.TestBpftool) ... ok
+test_feature_kernel (test_bpftool.TestBpftool) ... ok
+test_feature_kernel_full (test_bpftool.TestBpftool) ... ok
+test_feature_kernel_full_vs_not_full (test_bpftool.TestBpftool) ... ok
+test_feature_macros (test_bpftool.TestBpftool) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.253s
+
+OK
+
+... applied, thanks!
