@@ -2,151 +2,90 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43BDC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789C2C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B6120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5163620838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5rTU9hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgBZM1D (ORCPT
+        id S1727067AbgBZM35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:27:03 -0500
-Received: from icp-osb-irony-out7.external.iinet.net.au ([203.59.1.107]:28279
-        "EHLO icp-osb-irony-out7.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727267AbgBZM1C (ORCPT
+        Wed, 26 Feb 2020 07:29:57 -0500
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:36067 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgBZM34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:27:02 -0500
-X-SMTP-MATCH: 0
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AUAAAXY1Ze/zXSMGcNWRsBAQEBAQE?=
- =?us-ascii?q?BBQEBAREBAQMDAQEBgWoDAQEBCwGDZIR1j1KBN4lxkUwJAQEBAQEBAQEBNwQ?=
- =?us-ascii?q?BAYRAAoIkNwYOAhABAQEFAQEBAQEFAwGFWIY7AQEBAQIBIxVBBQsLDQEKAgI?=
- =?us-ascii?q?mAgJXBg0IAQGDIoJXBa1ndYEyGoUwgzeBPoEOKgGBZIpZeYEHgREngmw+gQQ?=
- =?us-ascii?q?BhleCXgSNYol3gUOWegiCPpZfIo8fA4wMLawagXszGggoCIMoT50ckkEBAQ?=
-X-IPAS-Result: =?us-ascii?q?A2AUAAAXY1Ze/zXSMGcNWRsBAQEBAQEBBQEBAREBAQMDA?=
- =?us-ascii?q?QEBgWoDAQEBCwGDZIR1j1KBN4lxkUwJAQEBAQEBAQEBNwQBAYRAAoIkNwYOA?=
- =?us-ascii?q?hABAQEFAQEBAQEFAwGFWIY7AQEBAQIBIxVBBQsLDQEKAgImAgJXBg0IAQGDI?=
- =?us-ascii?q?oJXBa1ndYEyGoUwgzeBPoEOKgGBZIpZeYEHgREngmw+gQQBhleCXgSNYol3g?=
- =?us-ascii?q?UOWegiCPpZfIo8fA4wMLawagXszGggoCIMoT50ckkEBAQ?=
-X-IronPort-AV: E=Sophos;i="5.70,488,1574092800"; 
-   d="scan'208";a="241459339"
-Received: from unknown (HELO [10.44.0.192]) ([103.48.210.53])
-  by icp-osb-irony-out7.iinet.net.au with ESMTP; 26 Feb 2020 20:26:58 +0800
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
- <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com>
- <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org>
- <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
- <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org>
- <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <a682c89d-baf2-3d3c-647f-a07b2a146c9f@linux-m68k.org>
-Date:   Wed, 26 Feb 2020 22:26:55 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 26 Feb 2020 07:29:56 -0500
+Received: by mail-lj1-f173.google.com with SMTP id r19so2905185ljg.3;
+        Wed, 26 Feb 2020 04:29:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eYRw4tH2Rs/e60d73NUbkuJbxLkTk8K47OrYj1p7M4A=;
+        b=e5rTU9hA8lMf+tk+gVuUunPWotj8HJSvkMmGE3KOwXtl4tirjK2K3T4z65fW1PoYPi
+         Iuj3oINUDtG42mwXpH9JpJdHNK0s0rmHYsGkOO2X7lomI1/D2R27634OQA9jT8O+MQVi
+         ZJmSaUA8/C5nHwBBj0kv+uQaoGBXkBiP8mK25RakFTvjaTqR7XwCz6i7YsolW4prfJrY
+         p/LL1mkTEGEqNgg/ehiug47bLAUaSYvjnqZiudDX1UOWT/GwZ1kIBXLMN1cMrvwU6RrP
+         4bGeInJTN0IdkY2eZrRtLq6n6O3Xf/Izwk+mUl2ditBFkca/23awgXWv9nhEvY+GIlc4
+         0ClQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eYRw4tH2Rs/e60d73NUbkuJbxLkTk8K47OrYj1p7M4A=;
+        b=J60IvysmghzdAsTKjdhz8JOaZ9AuPUc7AIjYZXutL/jlGfiImX4ZVh1fmujVuScyrL
+         2QYBuvMGlNeb7DRT1blUm8E1QPl6fvaww/bt4TLJOPTCn6ebVEpmFw3J2yGPVEtmmh0J
+         BC7c8hkCpIkGJbXXYehhkZLIrUuOwngl5FtnicKbEH3e+itkpsS0G1qw9PVibpamJove
+         a4T2MtzgMKP09PJ/SN1OP/QUgNlM4fL10pakzs/fjJt0WB0chHtw8asP4dmcriR0e5K3
+         vMDJVPloZ1lWLyywlBFFeRiGO3BpMS16FknULbMWM4+MEbZBylTuhMW4mNjb01Jhjukq
+         j87w==
+X-Gm-Message-State: APjAAAV5H36P9mMAQ6xSRGZMeLVN4fwQXVqgnFbVscuVtcJ08u0ftgH1
+        8a+OlMv8jePFrmmMKQZVkAnUqdU91VXDkaDmJtyMEQ==
+X-Google-Smtp-Source: APXvYqwIy0nEZGxxB6rW+LVv5AmFFL7l6FhryvMruyD05L6OvsPvKIXc/q7r6lY5P+ia6fVHqUpCZi4u77hNg/wnfB8=
+X-Received: by 2002:a2e:2e11:: with SMTP id u17mr2825719lju.117.1582720194301;
+ Wed, 26 Feb 2020 04:29:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200213153151.GB6975@optiplex> <AM0PR04MB4211AC5AB9F6A055F36040A2801A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20200213174225.GA11566@ripley> <AM0PR04MB42111BF00621C1949E1FBA9080150@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20200217070429.GB7973@dragon> <VI1PR04MB42220B24B1C46756A4B9E7B180160@VI1PR04MB4222.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB42220B24B1C46756A4B9E7B180160@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 26 Feb 2020 09:29:43 -0300
+Message-ID: <CAOMZO5Dq3i5gVR-vrCeZ+g=fmL7CODchVOg0xdcEg+en8tJtLg@mail.gmail.com>
+Subject: Re: clk: imx: clock driver for imx8qm?
+To:     Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Oliver Graute <oliver.graute@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Aisheng,
 
-On 26/2/20 4:39 pm, Finn Thain wrote:
-> On Wed, 26 Feb 2020, Greg Ungerer wrote:
-> 
->>> That error would almost always be -EBUSY, right?
->>
->> I expect it will never fail this early in boot.
-> 
-> If so, it suggests to me that tweaking the error message string is just
-> bikeshedding and that adding these error messages across the tree is just
-> bloat.
-> 
->> But how will you know if it really is EBUSY if you don't print it out?
->>
->>> Moreover, compare this change,
->>>
->>> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->>> +	request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
->>>
->>> with this change,
->>>
->>> +	int err;
->>>
->>> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->>> +	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
->>> +	if (err)
->>> +		return err;
->>>
->>> Isn't the latter change the more common pattern? It prints nothing.
->>
->> Hmm, in my experience the much more common pattern is:
->>
->>> +	int err;
->>>
->>> -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
->>> +	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
->>> +	if (err) {
->>> +             pr_err("timer: request_irq() failed with err=%d\n", err);
->>> +		return err;
->>> +     }
->>
->> Where the pr_err() could be one of pr_err, printk, dev_err, ...
->>
-> 
-> A rough poll using 'git grep' seems to agree with your assessment.
-> 
-> If -EBUSY means the end user has misconfigured something, printing
-> "request_irq failed" would be helpful. But does that still happen?
+On Mon, Feb 17, 2020 at 4:31 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
 
-I have seen it many times. Its not at all difficult to get interrupt
-assignments wrong, duplicated, or otherwise mistaken when creating
-device trees. Not so much m68k/coldfire platforms where they are
-most commonly hard coded.
+> I remember I addressed all Stephen's comments in the last round of review
+> which is marked in the V5 resend change log.
+> https://www.spinics.net/lists/arm-kernel/msg769365.html
+>
+> But I can double check it.
+> Should I re-send after a checking or wait for Stephen's feedback?
 
+I think it is a good idea to resend the series.
 
-> Printing any error message for -ENOMEM is frowned upon, and printing -12
-> is really unhelpful. So the most popular pattern isn't that great, though
-> it is usually less verbose than the example you've given.
-> 
-> Besides, introducing local variables and altering control flow seems well
-> out-of-scope for this kind of refactoring, right?
-
-I don't agree with the local variable part. Adding a local variable to
-keep track of the error return code doesn't seem out of scope for this change.
-The patch as Afzal sent it doesn't change the control flow - and
-that is the right thing to do here.
-
-
-> Anyway, if you're going to add an error message,
-> pr_err("%s: request_irq failed", foo) is unavoidable whenever foo isn't a
-> string constant, so one can't expect to grep the source code for the
-> literal error message from the log.
-> 
-> BTW, one of the benefits of "%s: request_irq failed" is that a compilation
-> unit with multiple request_irq calls permits the compiler to coalesce all
-> duplicated format strings. Whereas, that's not possible with
-> "foo: request_irq failed" and "bar: request_irq failed".
-
-Given the wide variety of message text used with failed request_irq() calls
-it would be shear luck that this matched anything else. A quick grep shows
-that "%s: request_irq() failed\n" has no other exact matches in the current
-kernel source.
-
-Regards
-Greg
-
-
+Thanks
