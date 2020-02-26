@@ -2,139 +2,146 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098D0C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9016EC4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD072082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522A92465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P42MrSbU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MPwe0oZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgBZCrL (ORCPT
+        id S1729795AbgBZCva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:47:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32996 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728989AbgBZCrL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:47:11 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so551358pgk.0;
-        Tue, 25 Feb 2020 18:47:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1Y1UZOFfTZ0N6C6Za7AR6jiLifnSzYiC7Rf6ZLlfNiw=;
-        b=P42MrSbUt/jDRdsuYTv73WxSBQYHL2ixhS9t3NbKGd9SNMfPqqbEfc8/ME9OkMgfdy
-         UxJQ2v//q3H1K9dDHdH/s0rmT2NorypFnBFmO/S1opc7MQSbVfW5A0dOjZIV6kMvT7uP
-         Kn47dTNifgZMlU2/BSTpjqfJgnP07NjdYPlS6Cm8Lj3vDSoERQSq+7P7OGgqKcNIc2gN
-         XxOCv1xsrSlmosu2wNYEUk1Hx/i5vAHgViV8ZB8zlBwZdaQRXuTJjmfJ3coEWzo+LSGc
-         x7etNWvB6gXGWXw21vWq/kmp6WONGtzPvkJWXBNYmBSelX5il7YJHlaZClzFl7hZ6jBD
-         20jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1Y1UZOFfTZ0N6C6Za7AR6jiLifnSzYiC7Rf6ZLlfNiw=;
-        b=YK2kJ0rd4V1U4oN5eE5cGZrg0+n097BxHEHuZgkI6nLgXgfTesUcsdqsS7honxOonP
-         zsK75+Y1HY2xWxjGO8Yp5SeZhzRYa7wYa+kqRGShA5v8MX65OQGM/amCxDXKlCNVNJ70
-         0Igq8/COktnuuU0bNBsAYqhz17yKf7xBnShqqvcqKYl0SpEERMYmRmUmHkaTrYM1N8Wd
-         RAPwAMkYSNjOFerSjvXgoNB5XYidzcIxX1NLLsLIxk+EwhHqR8HaWq7vMJIdJlAI1792
-         4shLy5QUoPMIqApMfEdplAxLX2XBKG/vIFiHUYHIhSgVjgbTagoEkq5lcpLlraXHQyc9
-         REsQ==
-X-Gm-Message-State: APjAAAWjzJy00t7wju1S21wQB5tjdE21PY9+JvbjuM4MySVY4CgI3S1/
-        l3ZzEuWusz9upm2VPyC+JTI=
-X-Google-Smtp-Source: APXvYqwAGBfDW1W1JoMhxUQofiKL5jbdmw6iHpPOI4qgkIdGrY+7eME4F8Iv+SLzWvp2tiziCUkfiA==
-X-Received: by 2002:aa7:8597:: with SMTP id w23mr1993190pfn.38.1582685229908;
-        Tue, 25 Feb 2020 18:47:09 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id z30sm451033pfq.154.2020.02.25.18.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 18:47:09 -0800 (PST)
-Date:   Tue, 25 Feb 2020 18:47:07 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Christopher S. Hall" <christopher.s.hall@intel.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
-        x86@kernel.org, jacob.e.keller@intel.com, davem@davemloft.net,
-        sean.v.kelley@intel.com
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
- Driver with PHC interface changes to support additional H/W Features
-Message-ID: <20200226024707.GA10271@localhost>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <20200203040838.GA5851@localhost>
- <20200225233707.GA32079@skl-build>
+        Tue, 25 Feb 2020 21:51:30 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47195 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728989AbgBZCv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:51:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48S0gM6B71z9sRG;
+        Wed, 26 Feb 2020 13:51:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582685487;
+        bh=IgJ1YOP5fDNpf2g4PqvkI6AXvNeHCE9jibzVxZ6n8ow=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MPwe0oZ/f4skWUd0TbAc0hje3fN3TByrWyBQ1qeZlS/tzr2HO25PZSoNWiG9z//hu
+         IkGlMvgoiEz5CyciQ2c+ong78pVQLayFoZ90m2aB/z7ty2WgnpWsIo7ltWE3tLVmHA
+         RlQ6p2VLTTib4oIfVqhtTUhJCUVWBUAWp27yWsuseLK2Gg1AxGgZ2bsei13KTwR6Z2
+         MoRSzli1Ryh/bNWal8bNvIiayYfUiROH1yUGLjxf1rPVJrE+vh0WaUDuHcv522zdKD
+         LZ0+/Mi6n2EIQZxICbvi6hv7gfTFcA3E8VxhoIyRs6xxN+H4ZSeYCyNrMdGxmu+oIf
+         WnfUJPdY5N6mQ==
+Date:   Wed, 26 Feb 2020 13:51:27 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>
+Subject: linux-next: build failure after merge of the rdma tree
+Message-ID: <20200226135127.31667f48@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225233707.GA32079@skl-build>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/pr_i=riB3ZvQhbtLbWqPRK5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 03:37:07PM -0800, Christopher S. Hall wrote:
-> On Sun, Feb 02, 2020 at 08:08:38PM -0800, Richard Cochran wrote:
-> > The TGPIO input clock, the ART, is a free running counter, but you
-> > want to support frequency adjustments.  Use a timecounter cyclecounter
-> > pair.
-> 
-> I'm concerned about the complexity that the timecounter adds to
-> the driver. Specifically, the complexity of dealing with any rate mismatches
-> between the timecounter and the periodic output signal. The phase
-> error between the output and timecounter needs to be zero.
+--Sig_/pr_i=riB3ZvQhbtLbWqPRK5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If I understood correctly, the device's outputs are generated from a
-non-adjustable counter.  So, no matter what, you will have the problem
-of changing the pulse period in concert with the user changing the
-desired frequency.
+Hi all,
 
-> My counter-proposal would be to use the real-time clock as the basis of the
-> device clock. This is fairly simple because the relation between ART and the
-> realtime clock is known. When output is enabled any phase error between
-> the realtime clock and the periodic output signal is accumulated in the
-> SYS_OFFSET result.
+After merging the rdma tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
-I don't understand how you intend to do this...
- 
-> This leaves the PHC API behavior as it is currently and uses the frequency
-> adjust API to adjust the output rate.
-> 
-> > Let the user dial a periodic output signal in the normal way.
-> > 
-> > Let the user change the frequency in the normal way, and during this
-> > call, adjust the counter values accordingly.
-> 
-> Yes to both of the above.
+drivers/infiniband/hw/bnxt_re/qplib_res.c: In function '__free_pbl':
+drivers/infiniband/hw/bnxt_re/qplib_res.c:78:2: error: implicit declaration=
+ of function 'vfree'; did you mean 'kfree'? [-Werror=3Dimplicit-function-de=
+claration]
+   78 |  vfree(pbl->pg_arr);
+      |  ^~~~~
+      |  kfree
+drivers/infiniband/hw/bnxt_re/qplib_res.c: In function '__alloc_pbl':
+drivers/infiniband/hw/bnxt_re/qplib_res.c:117:16: error: implicit declarati=
+on of function 'vmalloc'; did you mean 'kmalloc'? [-Werror=3Dimplicit-funct=
+ion-declaration]
+  117 |  pbl->pg_arr =3D vmalloc(pages * sizeof(void *));
+      |                ^~~~~~~
+      |                kmalloc
+drivers/infiniband/hw/bnxt_re/qplib_res.c:117:14: warning: assignment to 'v=
+oid **' from 'int' makes pointer from integer without a cast [-Wint-convers=
+ion]
+  117 |  pbl->pg_arr =3D vmalloc(pages * sizeof(void *));
+      |              ^
+drivers/infiniband/hw/bnxt_re/qplib_res.c:121:18: warning: assignment to 'd=
+ma_addr_t *' {aka 'long long unsigned int *'} from 'int' makes pointer from=
+ integer without a cast [-Wint-conversion]
+  121 |  pbl->pg_map_arr =3D vmalloc(pages * sizeof(dma_addr_t));
+      |                  ^
 
-So, why then do you need this?
+Caused by commit
 
-+#define PTP_EVENT_COUNT_TSTAMP2 \
-+       _IOWR(PTP_CLK_MAGIC, 19, struct ptp_event_count_tstamp)
+  0c4dcd602817 ("RDMA/bnxt_re: Refactor hardware queue memory allocation")
 
-If you can make the device work with the existing user space API,
+I added the following fix for today:
 
-	ioctl(fd, PTP_PEROUT_REQUEST2, ...);
-	while (1) {
-		clock_adjtimex(FD_TO_CLOCKID(fd), ...);
-	}
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 26 Feb 2020 13:46:02 +1100
+Subject: [PATCH] RDMA/bnxt_re: using vmalloc requires including vmalloc.h
 
-that would be ideal.  But I will push back on anything like the
-following.
+Fixes: 0c4dcd602817 ("RDMA/bnxt_re: Refactor hardware queue memory allocati=
+on")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/infiniband/hw/bnxt_re/qplib_res.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	ioctl(fd, PTP_PEROUT_REQUEST2, ...);
-	while (1) {
-		clock_adjtimex(FD_TO_CLOCKID(fd), ...);
-		ioctl(fd, PTP_EVENT_COUNT_TSTAMP, ...);
-	}
+diff --git a/drivers/infiniband/hw/bnxt_re/qplib_res.c b/drivers/infiniband=
+/hw/bnxt_re/qplib_res.c
+index 4346b95963cf..fc5909c7f2e0 100644
+--- a/drivers/infiniband/hw/bnxt_re/qplib_res.c
++++ b/drivers/infiniband/hw/bnxt_re/qplib_res.c
+@@ -44,6 +44,7 @@
+ #include <linux/inetdevice.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/if_vlan.h>
++#include <linux/vmalloc.h>
+ #include "roce_hsi.h"
+ #include "qplib_res.h"
+ #include "qplib_sp.h"
+--=20
+2.25.0
 
-But maybe I misunderstood?
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-Richard
+--Sig_/pr_i=riB3ZvQhbtLbWqPRK5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5V3S8ACgkQAVBC80lX
+0Gx4awf/QWzDqlqRj+GiL3/p9a9b+E+ws8DyHibVIXP/FlgteQwBYkeAjxxetJZ/
+6nueYqCrYCwOczNjRwBYuIOE8YXFAEMdL/A98wgfkSKuHXD+3HLkneN1fv65jjMJ
+1gYiGVM0R/gclJZL7s7IxyUeRmlx1/9QuFAz/1ZF4wHOS6dlh7XuLezgxY/Z6UUp
+slPwnoQyPvAs6d/piObsrLD+Dmv3D9B5RCDGTt1DnDoD51KTXWab58VbCDiIYtuF
+KrI1JHzzvleVwV84qCR11ZPFoCWMuFTot/KQD4i0QdT8mgp3qHFZLq/Xrk7lA3FF
+2N4VOa6qrxr2JiMmKDn07VRglmHv5Q==
+=8WZc
+-----END PGP SIGNATURE-----
+
+--Sig_/pr_i=riB3ZvQhbtLbWqPRK5--
