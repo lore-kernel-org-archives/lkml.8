@@ -2,148 +2,108 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8872C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7910AC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723FE21744
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F16B2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nl+fis2g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJDoUvS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgBZDiv (ORCPT
+        id S1725788AbgBZDmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:38:51 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37317 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBZDiu (ORCPT
+        Tue, 25 Feb 2020 22:42:13 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35500 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgBZDmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 22:38:50 -0500
-Received: by mail-wr1-f66.google.com with SMTP id l5so1187723wrx.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:38:49 -0800 (PST)
+        Tue, 25 Feb 2020 22:42:12 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so1709706otd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MUhme0us7XCJPh4wc0WtPdoMxGC3Hr7PgG+Bm4j+hk0=;
-        b=Nl+fis2gOaoRx3SrTeUUI8sONp5Gdnq27Eg2dVwY/dTetlfPvUy434M2LBm9eRA8K3
-         vcshKxtpCxmJzId+GiDLWBG8skdcwoK8I6TLRDcTXAnqHIsH48tqooV9HxLglGu/6OxE
-         peayvXv5V0qpu2GZHAB5CLyYfuV5OQ1P7uOE7PpTC6nlIMj1V3vtmqXpQG9iZzUlPPgz
-         iwIoyMUcdZRljpIfSfp/JG/eUBZTQPetkwlWv0qVBsgD3zBFUCgneDl24XzI6elAhBva
-         DqeTdJx7ozOW3ODjFz8JX1VIUTnNq+CgQI0bWQvPdOCWCJthOAs9s/UZ53AH2s3mEXLS
-         iSgg==
+        bh=zhbMFZH9TV9xXX3bi0AiULw9sla8JatRwgZ0NfA605c=;
+        b=kJDoUvS6OOJk+ypY1EujEwgsPIKGLXE6pkmbSfiESFefGeQ4Nl1/uklyaEW0ZctjRf
+         /BuGku1pbGbTJQkAKdFDT07ofldpcOno6F37PivyZNi0+RxqwzT/xWZ+7mdmIjlguqAH
+         zHSYv7AFcb+vycN05DI991TYsea4JG/1ynAGU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MUhme0us7XCJPh4wc0WtPdoMxGC3Hr7PgG+Bm4j+hk0=;
-        b=iZq1BNdTBWpIbSABUsBYDItF0Qxw1DXzEZUa6nJpIfPvLxhxVN4yyVF8KFOCa2NMkE
-         T00XjnsTS/9212jbGDB8KN7P3fo3kDZOtMw6QaMkeDiFP7sFaQ0KMrYyvMoa895bLZVl
-         9ZWazI23zQLq/0eL5quxb7FK9R/8e6m6aiuqgGPK/vt16GB8B8TKwVKoUKbHqD+spcc/
-         BAuZpyU/xwmv+9VonAKBaHDt6rZg6flxrzTwqPDWIQW5jIRyYl2EI6gXqP8vaSJXaO9v
-         dsxUOcaA1NSaNS00JGaUHO/R7sOLidM2UMHC2yVlHrYmH81MlB7x7DC/d3bts6snXaM8
-         zB2Q==
-X-Gm-Message-State: APjAAAVIGmwUm0x+x9VlZx1hPqYCK/BzhoeJFJT+hW4aLjbnt5FY4iAn
-        VbW5vqUqlJ3Y8XaoFrKU/UZxrkZ6QxLXnIlqKtUeDw==
-X-Google-Smtp-Source: APXvYqwTZtcMOk0jMNlMfjETTWKxTwPOeL0qN0nSzMjuy9IgiYoPzojXH3flYzobHAaMUZH45Ih+DM3cmj7AE9GDuI0=
-X-Received: by 2002:adf:e40f:: with SMTP id g15mr2574118wrm.223.1582688328104;
- Tue, 25 Feb 2020 19:38:48 -0800 (PST)
+        bh=zhbMFZH9TV9xXX3bi0AiULw9sla8JatRwgZ0NfA605c=;
+        b=WhPraFsbG81HWwVLP4Z80bq2UaPSi4Gw+q6R3JY8gJEU3XqlWDCZxnjM5TU+8vk5Xc
+         2cwDey/crOhSX4HKf+rFamR72eYVBlFaXQi0toSLc2CmuKCIJ443KfwrMj/+dq7VtwTk
+         pZDpSb9BpLzrvWTIAUS4Lu9Bb7sGdupAeVdSDNRov32HPjkMmEszJeLVUv3hZ2dGQKfH
+         YR0hpHwJHqoyqX0LbhH3SjgwVRQ4DcckOdIraYzz5TJIskDUSKCwCealWdj4s9W45zd5
+         yAgqpLSGTV57ohzZmfYDnP7Fc8sxDLOewRtrFRvTiVnQPDABdSzA7txeqBAMv563Ja7e
+         kvEA==
+X-Gm-Message-State: APjAAAWbCCSHFJhoniKxqO7xAv2RTrHqNKPu/Bhrb4SVn+4POtlvkjnh
+        ofaoKJuA+svxsXaNhGlN34GUnnZ95IU=
+X-Google-Smtp-Source: APXvYqwu/7Cg5/db+aNRnUKnXn1HnVT42ZOIVtb9USet8b9BGzIFw2LcKpu67GnK+NYK4NxsFvo7GA==
+X-Received: by 2002:a05:6830:1184:: with SMTP id u4mr1318214otq.221.1582688531429;
+        Tue, 25 Feb 2020 19:42:11 -0800 (PST)
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com. [209.85.167.176])
+        by smtp.gmail.com with ESMTPSA id g5sm282576otp.10.2020.02.25.19.42.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 19:42:10 -0800 (PST)
+Received: by mail-oi1-f176.google.com with SMTP id q84so1638610oic.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:42:10 -0800 (PST)
+X-Received: by 2002:aca:ab53:: with SMTP id u80mr1537577oie.94.1582688529944;
+ Tue, 25 Feb 2020 19:42:09 -0800 (PST)
 MIME-Version: 1.0
-References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com>
- <20200221154923.GC194360@google.com> <1683022606.3452.1582301632640.JavaMail.zimbra@efficios.com>
- <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com>
-In-Reply-To: <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com>
-From:   Chris Kennelly <ckennelly@google.com>
-Date:   Tue, 25 Feb 2020 22:38:37 -0500
-Message-ID: <CAEE+ybmQb02u-=c1sHozkJ+RXOi2Hno6qYJ0Vx9rOpKjSQ4fPQ@mail.gmail.com>
-Subject: Re: Rseq registration: Google tcmalloc vs glibc
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul Turner <pjt@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Carlos O'Donell" <codonell@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-        Brian Geffon <bgeffon@google.com>
+References: <20200226033646.20949-1-gtk_ruiwang@mediatek.com> <20200226033646.20949-2-gtk_ruiwang@mediatek.com>
+In-Reply-To: <20200226033646.20949-2-gtk_ruiwang@mediatek.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Wed, 26 Feb 2020 12:41:58 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MWN6bXfYvpBJ6XyPCuvJSpdxNOf4Z9RbY0jbnB5=JX_sQ@mail.gmail.com>
+Message-ID: <CAPBb6MWN6bXfYvpBJ6XyPCuvJSpdxNOf4Z9RbY0jbnB5=JX_sQ@mail.gmail.com>
+Subject: Re: [PATCH] mediatek: move MT8173 VPU FW to subfolder
+To:     gtk_ruiwang <gtk_ruiwang@mediatek.com>
+List-Id: <linux-firmware.lore.kernel.org>
+Cc:     linux-firmware@kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com,
+        Tomasz Figa <tfiga@chromium.org>, PoChun.Lin@mediatek.com,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:25 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+On Wed, Feb 26, 2020 at 12:38 PM <gtk_ruiwang@mediatek.com> wrote:
 >
-> On Fri, Feb 21, 2020 at 11:13 AM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
-> >
-> > ----- On Feb 21, 2020, at 10:49 AM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-> >
-> > [...]
-> > >>
-> > >> 3) Use the  __rseq_abi TLS cpu_id field to know whether Rseq has been
-> > >> registered.
-> > >>
-> > >> - Current protocol in the most recent glibc integration patch set.
-> > >> - Not supported yet by Linux kernel rseq selftests,
-> > >> - Not supported yet by tcmalloc,
-> > >>
-> > >> Use the per-thread state to figure out whether each thread need to register
-> > >> Rseq individually.
-> > >>
-> > >> Works for integration between a library which exists for the entire lifetime
-> > >> of the executable (e.g. glibc) and other libraries. However, it does not
-> > >> allow a set of libraries which are dlopen'd/dlclose'd to co-exist without
-> > >> having a library like glibc handling the registration present.
-> > >
-> > > Mathieu, could you share more details about why during dlopen/close
-> > > libraries we cannot use the same __rseq_abi TLS to detect that rseq was
-> > > registered?
-> >
-> > Sure,
-> >
-> > A library which is only loaded and never closed during the execution of the
-> > program can let the kernel implicitly unregister rseq at thread exit. For
-> > the dlopen/dlclose use-case, we need to be able to explicitly unregister
-> > each thread's __rseq_abi which sit in a library which is going to be
-> > dlclose'd.
+> From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
 >
-> Mathieu, Thanks a lot for the explanation, it makes complete sense. It
-> sounds from Chris's reply that tcmalloc already checks
-> __rseq_abi.cpu_id and is not dlopened/closed. Considering these, it
-> seems to already handle things properly - CMIIW.
+> Currently vpu_d.bin and vpu_p.bin are at the root of
+> linux-firmware git tree, it's not appropriate so we move
+> them to subfolder mediatek/mt8173
+>
+> Release Version: 1.1.4
+>
+> Signed-off-by: Rui Wang <gtk_ruiwang@mediatek.com>
+> ---
+>  vpu_d.bin => mediatek/mt8173/vpu_d.bin | Bin
+>  vpu_p.bin => mediatek/mt8173/vpu_p.bin | Bin
+>  2 files changed, 0 insertions(+), 0 deletions(-)
+>  rename vpu_d.bin => mediatek/mt8173/vpu_d.bin (100%)
+>  rename vpu_p.bin => mediatek/mt8173/vpu_p.bin (100%)
 
-I'll make a note about this, since we can probably benefit from some
-more comments about the assumptions/invariants the fastpath uses.
-
-> Chris, Brian, is there any other concern to upgrading of tcmalloc
-> version in ChromeOS? I believe there was some concern about detection
-> of rseq kernel support. A quick look at tcmalloc shows it does not do
-> such detection, but I can stand corrected.
-
-The build time configuration is because we need to have an assembly
-implementation of the restartable sequence (example: x86_64
-[https://github.com/google/tcmalloc/blob/master/tcmalloc/internal/percpu_rseq_x86_64.S]),
-although I've been moving these to inline assembly recently.
-
-If we have build time support for the code path, we'll try to invoke
-the rseq() call and see if registration succeeds:
-https://github.com/google/tcmalloc/blob/master/tcmalloc/internal/percpu.cc#L85-L107
-
-> One more thing, currently
-> tcmalloc does not use rseq on ARM. If I recall, ARM does have rseq
-> support as well. So we ought to enable it for that arch as well if
-> possible. Why not enable it on all arches and then dynamically detect
-> at runtime if needed support is available?
-
-As far as ARM support goes for TCMalloc's per-CPU/rseq path, I haven't
-had the bandwidth to write an assembly implementation (although I'd
-welcome one).
-
-Thanks,
-Chris Kennelly
+This is nice as it removes some stuff from the root, but for
+compatibility with older kernels that don't know about the new path
+shouldn't we at least temporarily create a symbolic link between the
+old location and the new one?
