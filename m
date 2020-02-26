@@ -2,126 +2,129 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECA7C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D875C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703B024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582718497;
-	bh=4mBVvWutxTKGbD0JwOssUkKfZxuNu865425HqbLekDo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BP7hSvbbz10eTwsP5L9hGVWLvxQaD/qVjFxGYu9+C7u7u6PKa6Z8HTxyr/lgdrkF8
-	 DMCbW/7UfJ7uOv+eyX+EHGRdnjtNEcJXhLSb6Uh4j0IGgYIBgj1oYYaGGMrtLloUA3
-	 Fa9tzPcMYxxZnTpEY7M903OAi3OQy5QKofwbla3M=
+	by mail.kernel.org (Postfix) with ESMTP id DFB5C24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:02:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ENbT1nfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBZMBg (ORCPT
+        id S1727002AbgBZMCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:01:36 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:30600 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgBZMBf (ORCPT
+        Wed, 26 Feb 2020 07:02:15 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6851 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726272AbgBZMCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:01:35 -0500
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 01QC1CtU011814;
-        Wed, 26 Feb 2020 21:01:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 01QC1CtU011814
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582718473;
-        bh=eXTv3XS960d93mdHxhl8i6TVCJ/l9qSZuAjHESIHG2s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RiBwv/nbo06+ybabZje9MLku45Btk+6OGVb0x+n8SbOsRq5wOgQeMxYIMddVUVaEy
-         /JH6ws7acdEX8lba97FEDcMat2KV3KLj/4JiNJrgQFhmDY0tUVswH3PS0Kc1GZVbFS
-         pKtJzRf1LSygraPW/jZk1rt2Hxsmd/ptzcS53n0c2h0nIx9G+ZR0OTovyE8HJLrNWP
-         SlcdFB0PV5KN1b0BId85rEDHqCls859/m3gOVXtn8FzUCZj9rP6DzOtkIn4kxQwxtx
-         OHOa2T8kqE7rIHOV9fXnqy/dozEHe5SWprLTTkSe6By3tBuf4js0wlrf2RauUUbExz
-         a+j8TT8sdb+wQ==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id a2so1613631vso.3;
-        Wed, 26 Feb 2020 04:01:12 -0800 (PST)
-X-Gm-Message-State: APjAAAVEu2Ktc608rmrfnnZS8iwGiLuNc4pyH6+iVcTepwxBInWWTQuZ
-        eyOjAfvlvxfLNpv2hxqW00e3nlx7PmNKskWyfB0=
-X-Google-Smtp-Source: APXvYqx3LP0q+bkiPVV09PznkyGCTfst/gdYLLu7IP0hS6bM01tzLTzARRP6CwmtiftJ0tFjVgP7GdJLXugAuCGYN2g=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr3585123vsq.215.1582718471427;
- Wed, 26 Feb 2020 04:01:11 -0800 (PST)
+        Wed, 26 Feb 2020 07:02:15 -0500
+X-UUID: 618771a74bec4bba8d11e5bc7ea6f553-20200226
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=HeqaTDjIL0PTx6tfNZRsJGOB5wSUUqHsQNV/Ncz2fJc=;
+        b=ENbT1nfHLPmaa1KnVt+jRf/tknKxc2p2KiK+s6CU1rwJAp+Lk3CSRMzwDpCHeadWl1fqHuy8hhUWvULtNVcLJGPLWkNfldClAau63AQr7JW2Wod7LrFdac8b6i7YmPCYva695mdKqQLe76+fThWjqwBTnhRst8AF2MHGbGBUrjI=;
+X-UUID: 618771a74bec4bba8d11e5bc7ea6f553-20200226
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 804146539; Wed, 26 Feb 2020 20:02:07 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 26 Feb 2020 19:57:57 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 26 Feb 2020 20:01:57 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, <stable@vger.kernel.org>,
+        <andreyknvl@google.com>
+CC:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH v4] usb: gadget: f_fs: try to fix AIO issue under ARM 64 bit TAGGED mode
+Date:   Wed, 26 Feb 2020 20:01:52 +0800
+Message-ID: <1582718512-28923-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-References: <20200224174129.2664-1-ndesaulniers@google.com>
- <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com> <CAKwvOd=mPg79CrYnDm8=z0iJpKL0FHm9J5qZF0_A6BFXBv8Dow@mail.gmail.com>
-In-Reply-To: <CAKwvOd=mPg79CrYnDm8=z0iJpKL0FHm9J5qZF0_A6BFXBv8Dow@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 26 Feb 2020 21:00:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ83rLAm1GcvrgJbinyAVPpM_SoxfO7RdOAfmXyg2tBdQ@mail.gmail.com>
-Message-ID: <CAK7LNAQ83rLAm1GcvrgJbinyAVPpM_SoxfO7RdOAfmXyg2tBdQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 272F8CE54AD6E67D73DACACA69671537612B9D56AD5648D8354972DCC44EFC2F2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 5:52 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Feb 24, 2020 at 4:34 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > On Tue, Feb 25, 2020 at 2:41 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > Added to kbuild documentation. Provides more official info on building
-> > > kernels with Clang and LLVM than our wiki.
-> > >
-> > > Suggested-by: Kees Cook <keescook@chromium.org>
-> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > ---
-> >
-> >
-> > Perhaps, is it better to explicitly add it to MAINTAINERS?
-> >
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4118,6 +4118,7 @@ W:        https://clangbuiltlinux.github.io/
-> >  B:     https://github.com/ClangBuiltLinux/linux/issues
-> >  C:     irc://chat.freenode.net/clangbuiltlinux
-> >  S:     Supported
-> > +F:     Documentation/kbuild/llvm.rst
-> >  K:     \b(?i:clang|llvm)\b
->
-> I'm happy to leave it to the maintainers of Documentation/.  Otherwise
-> we have a file for which there is no MAINTAINER, which seems
-> ambiguous.
+VGhpcyBpc3N1ZSB3YXMgZm91bmQgd2hlbiBhZGJkIHRyeWluZyB0byBvcGVuIGZ1bmN0aW9uZnMg
+d2l0aCBBSU8gbW9kZS4NClVzdWFsbHksIHdlIG5lZWQgdG8gc2V0ICJzZXRwcm9wIHN5cy51c2Iu
+ZmZzLmFpb19jb21wYXQgMCIgdG8gZW5hYmxlDQphZGJkIHdpdGggQUlPIG1vZGUgb24gQW5kcm9p
+ZC4NCg0KV2hlbiBhZGJkIGlzIG9wZW5pbmcgZnVuY3Rpb25mcywgaXQgd2lsbCB0cnkgdG8gcmVh
+ZCAyNCBieXRlcyBhdCB0aGUNCmZpcnN0IHJlYWQgSS9PIGNvbnRyb2wuIElmIHRoaXMgcmVhZGlu
+ZyBoYXMgYmVlbiBmYWlsZWQsIGFkYmQgd2lsbA0KdHJ5IHRvIHNlbmQgRlVOQ1RJT05GU19DTEVB
+Ul9IQUxUIHRvIGZ1bmN0aW9uZnMuIFdoZW4gYWRiZCBpcyBpbiBBSU8NCm1vZGUsIGZ1bmN0aW9u
+ZnMgd2lsbCBiZSBhY3RlZCB3aXRoIGFzeW5jcm9uaXplZCBJL08gcGF0aC4gQWZ0ZXIgdGhlDQpz
+dWNjZXNzZnVsIHJlYWQgdHJhbnNmZXIgaGFzIGJlZW4gY29tcGxldGVkIGJ5IGdhZGdldCBoYXJk
+d2FyZSwgdGhlDQpmb2xsb3dpbmcgc2VyaWVzIG9mIGZ1bmN0aW9ucyB3aWxsIGJlIGNhbGxlZC4N
+CiAgZmZzX2VwZmlsZV9hc3luY19pb19jb21wbGV0ZSgpIC0+IGZmc191c2VyX2NvcHlfd29ya2Vy
+KCkgLT4NCiAgICBjb3B5X3RvX2l0ZXIoKSAtPiBfY29weV90b19pdGVyKCkgLT4gY29weW91dCgp
+IC0+DQogICAgaXRlcmF0ZV9hbmRfYWR2YW5jZSgpIC0+IGl0ZXJhdGVfaW92ZWMoKQ0KDQpBZGRp
+bmcgZGVidWcgdHJhY2UgdG8gdGhlc2UgZnVuY3Rpb25zLCBpdCBoYXMgYmVlbiBmb3VuZCB0aGF0
+IGluDQpjb3B5b3V0KCksIGFjY2Vzc19vaygpIHdpbGwgY2hlY2sgaWYgdGhlIHVzZXIgc3BhY2Ug
+YWRkcmVzcyBpcyB2YWxpZA0KdG8gd3JpdGUuIEhvd2V2ZXIgaWYgQ09ORklHX0FSTTY0X1RBR0dF
+RF9BRERSX0FCSSBpcyBlbmFibGVkLCBhZGJkDQphbHdheXMgcGFzc2VzIHVzZXIgc3BhY2UgYWRk
+cmVzcyBzdGFydCB3aXRoICIweDNDIiB0byBnYWRnZXQncyBBSU8NCmJsb2Nrcy4gVGhpcyB0YWdn
+ZWQgYWRkcmVzcyB3aWxsIGNhdXNlIGFjY2Vzc19vaygpIGNoZWNrIGFsd2F5cyBmYWlsLg0KV2hp
+Y2ggY2F1c2VzIGxhdGVyIGNhbGN1bGF0aW9uIGluIGl0ZXJhdGVfaW92ZWMoKSB0dXJuIHplcm8u
+DQpDb3B5b3V0KCkgd29uJ3QgY29weSBkYXRhIHRvIHVzZXIgc3BhY2Ugc2luY2UgdGhlIGxlbmd0
+aCB0byBiZSBjb3BpZWQNCiJ2Lmlvdl9sZW4iIHdpbGwgYmUgemVyby4gRmluYWxseSBsZWFkcyBm
+ZnNfY29weV90b19pdGVyKCkgYWx3YXlzIHJldHVybg0KLUVGQVVMVCwgY2F1c2VzIGFkYmQgY2Fu
+bm90IG9wZW4gZnVuY3Rpb25mcyBhbmQgc2VuZA0KRlVOQ1RJT05GU19DTEVBUl9IQUxULg0KDQpT
+aWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KQ2M6
+IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4NCkNjOiBDYXRhbGluIE1hcmluYXMgPGNh
+dGFsaW4ubWFyaW5hc0Bhcm0uY29tPg0KQ2M6IE1pbGVzIENoZW4gPG1pbGVzLmNoZW5AbWVkaWF0
+ZWsuY29tPg0KLS0tDQpDaGFuZ2VzIGZvciB2NDoNCiAgLSBBYmFuZG9uIHNvbHV0aW9uIHYzIGJ5
+IGFkZGluZyAiVElGX1RBR0dFRF9BRERSIiBmbGFnIHRvIGdhZGdldCBkcml2ZXIuDQogICAgQWNj
+b3JkaW5nIHRvIENhdGFsaW4ncyBzdWdnZXN0aW9uLCBjaGFuZ2UgdGhlIHNvbHV0aW9uIGJ5IHVu
+dGFnZ2luZyANCiAgICB1c2VyIHNwYWNlIGFkZHJlc3MgcGFzc2VkIGJ5IEFJTyBpbiBnYWRnZXQg
+ZHJpdmVyLg0KDQpDaGFuZ2VzIGZvciB2MzoNCiAgLSBGaXggbWlzc3BlbGxpbmcgaW4gY29tbWl0
+IG1lc3NhZ2UuDQogICAgVGhhbmtzIGZvciBQZXRlcidzIHJldmlldy4NCg0KQ2hhbmdlcyBmb3Ig
+djI6DQogIC0gRml4IGJ1aWxkIGVycm9yIGZvciAzMi1iaXQgbG9hZC4gQW4gI2lmIGRlZmluZWQo
+Q09ORklHX0FSTTY0KSBzdGlsbCBuZWVkDQogICAgZm9yIGF2b2lkaW5nIHVuZGVjbGFyZWQgZGVm
+aW5lcy4NCg0KIGRyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX2ZzLmMgfCAgIDE1ICsrKysr
+KysrKysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9u
+KC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9mcy5jIGIv
+ZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfZnMuYw0KaW5kZXggY2UxZDAyMy4uMTkyOTM1
+ZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX2ZzLmMNCisrKyBi
+L2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX2ZzLmMNCkBAIC03MTUsNyArNzE1LDIwIEBA
+IHN0YXRpYyB2b2lkIGZmc19lcGZpbGVfaW9fY29tcGxldGUoc3RydWN0IHVzYl9lcCAqX2VwLCBz
+dHJ1Y3QgdXNiX3JlcXVlc3QgKnJlcSkNCiANCiBzdGF0aWMgc3NpemVfdCBmZnNfY29weV90b19p
+dGVyKHZvaWQgKmRhdGEsIGludCBkYXRhX2xlbiwgc3RydWN0IGlvdl9pdGVyICppdGVyKQ0KIHsN
+Ci0Jc3NpemVfdCByZXQgPSBjb3B5X3RvX2l0ZXIoZGF0YSwgZGF0YV9sZW4sIGl0ZXIpOw0KKwlz
+c2l6ZV90IHJldDsNCisNCisjaWYgZGVmaW5lZChDT05GSUdfQVJNNjQpDQorCS8qDQorCSAqIFJl
+cGxhY2UgdGFnZ2VkIGFkZHJlc3MgcGFzc2VkIGJ5IHVzZXIgc3BhY2UgYXBwbGljYXRpb24gYmVm
+b3JlDQorCSAqIGNvcHlpbmcuDQorCSAqLw0KKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfQVJNNjRf
+VEFHR0VEX0FERFJfQUJJKSAmJg0KKwkJKGl0ZXItPnR5cGUgPT0gSVRFUl9JT1ZFQykpIHsNCisJ
+CSoodW5zaWduZWQgbG9uZyAqKSZpdGVyLT5pb3YtPmlvdl9iYXNlID0NCisJCQkodW5zaWduZWQg
+bG9uZyl1bnRhZ2dlZF9hZGRyKGl0ZXItPmlvdi0+aW92X2Jhc2UpOw0KKwl9DQorI2VuZGlmDQor
+CXJldCA9IGNvcHlfdG9faXRlcihkYXRhLCBkYXRhX2xlbiwgaXRlcik7DQogCWlmIChsaWtlbHko
+cmV0ID09IGRhdGFfbGVuKSkNCiAJCXJldHVybiByZXQ7DQogDQotLSANCjEuNy45LjUNCg==
 
-It is common that MAINTAINERS lists per-file (per-driver) maintainers.
-It does not necessarily mean a person who picks up patches.
-
-scripts/get_maintainer.pl lists maintainers that
-match any F:, N:, K: patterns.
-So, both Doc and Kbuild maintainers/ML will still be listed.
-
-Having said that, it is up to you. Either is fine with me.
-Another pattern 'K: \b(?i:clang|llvm)\b'  covers this file anyway.
-
-
-(BTW, I am also happy to see your name as the maintainer of this entry.)
-
-
-Thanks.
-
---
-Best Regards
-Masahiro Yamada
