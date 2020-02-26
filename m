@@ -2,199 +2,270 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A976EC4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB1FC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763A524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="j0M98yja"
+	by mail.kernel.org (Postfix) with ESMTP id B079920838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBZKFb (ORCPT
+        id S1727607AbgBZKH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:05:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35145 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgBZKFa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:05:30 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so2217064wrt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:05:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Al3H6KZgkGIqfcdoyxiez7m9SAUTRWEuD27a6Q2autQ=;
-        b=j0M98yjaogcYjsgzW0y5ZqhH0fbl9VDStEvkaeoC/Q8KpdrZBUdsjqGDvtlGHy73Yv
-         MbhkBqhePnuoVrcclW+uiVBJNmeFp5GrtpeC47jAkJa/XoMRzzcdwu/+jc3KPbbb7QYN
-         s7YEp+3QBxlkwANz8hrslsSbxbtlszU3kIxWU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=Al3H6KZgkGIqfcdoyxiez7m9SAUTRWEuD27a6Q2autQ=;
-        b=NASjyhRosHow1Q4sOdZp7JRQb3pVgRwnHIfuDFXG13XYcxPSu/lcJYCPLakYiAU8l1
-         lJk0Awz6hnh01NIAi17AZNSXy9p6JhtI4gSSk84W3oSWs+rigbDOTkSl+WPYzhs/2tbq
-         7tENWI+wmoqvzr4rbx68mZQiSyOMWWhIih9oU/a2GgdfWHWN20CsLLD9xHv9p76+ihUs
-         Pj4zP7Bo7qw9WvvZ+Q9FngeYFM56QfNL5fe+i8xggX7jbvX53+4YLdGhAWa6Nnu8hoCZ
-         5zU8UoSq8B+jJZZIvRKmAf2CsctF7KgEP84I6ZEPw+Imy2fpo5JQ93KoNUAbFR86zmWr
-         OVow==
-X-Gm-Message-State: APjAAAXAzyHreZTjNkSycDxBGqtcoV/Z0CGSZvPEYUq8YT5kywF6ZLbo
-        HCXGls8FoVWTILn73D+KjctxnSU0dnY=
-X-Google-Smtp-Source: APXvYqx4YFv94SVwpTw1EAbdnPvzNbZqxL94kJt3jNH24FAyl1JpVrm+58bVHWDTC6hYHA1gQNGYMQ==
-X-Received: by 2002:adf:a114:: with SMTP id o20mr3560754wro.7.1582711526516;
-        Wed, 26 Feb 2020 02:05:26 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w1sm2607819wro.72.2020.02.26.02.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 02:05:25 -0800 (PST)
-Date:   Wed, 26 Feb 2020 11:05:23 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc:     Jason Ekstrand <jason@jlekstrand.net>, airlied@redhat.com,
-        daniel.vetter@ffwll.ch, jessehall@google.com, jajones@nvidia.com,
-        bas@basnieuwenhuizen.nl, daniels@collabora.com,
-        hoegsberg@google.com, Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting
- sync files
-Message-ID: <20200226100523.GQ2363188@phenom.ffwll.local>
-Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jason Ekstrand <jason@jlekstrand.net>, airlied@redhat.com,
-        jessehall@google.com, jajones@nvidia.com, bas@basnieuwenhuizen.nl,
-        daniels@collabora.com, hoegsberg@google.com,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20200225235856.975366-1-jason@jlekstrand.net>
- <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+        Wed, 26 Feb 2020 05:07:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:33148 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726927AbgBZKH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:07:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1E5A1FB;
+        Wed, 26 Feb 2020 02:07:55 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21B043F9E6;
+        Wed, 26 Feb 2020 02:07:54 -0800 (PST)
+Date:   Wed, 26 Feb 2020 10:07:49 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
+        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
+ initialization
+Message-ID: <20200226100749.GA13197@e121166-lin.cambridge.arm.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+ <20200217121036.3057-6-vidyas@nvidia.com>
+ <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
+ <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 10:16:05AM +0100, Christian König wrote:
-> Hi Jason,
+On Tue, Feb 25, 2020 at 11:43:07PM +0530, Vidya Sagar wrote:
 > 
-> Am 26.02.20 um 00:58 schrieb Jason Ekstrand:
-> > Explicit synchronization is the future.  At least, that seems to be what
-> > most userspace APIs are agreeing on at this point.  However, most of our
-> > Linux APIs (both userspace and kernel UAPI) are currently built around
-> > implicit synchronization with dma-buf.  While work is ongoing to change
-> > many of the userspace APIs and protocols to an explicit synchronization
-> > model, switching over piecemeal is difficult due to the number of
-> > potential components involved.  On the kernel side, many drivers use
-> > dma-buf including GPU (3D/compute), display, v4l, and others.  In
-> > userspace, we have X11, several Wayland compositors, 3D drivers, compute
-> > drivers (OpenCL etc.), media encode/decode, and the list goes on.
+> 
+> On 2/25/2020 5:38 PM, Lorenzo Pieralisi wrote:
+> > External email: Use caution opening links or attachments
 > > 
-> > This patch provides a path forward by allowing userspace to manually
-> > manage the fences attached to a dma-buf.  Alternatively, one can think
-> > of this as making dma-buf's implicit synchronization simply a carrier
-> > for an explicit fence.  This is accomplished by adding two IOCTLs to
-> > dma-buf for importing and exporting a sync file to/from the dma-buf.
-> > This way a userspace component which is uses explicit synchronization,
-> > such as a Vulkan driver, can manually set the write fence on a buffer
-> > before handing it off to an implicitly synchronized component such as a
-> > Wayland compositor or video encoder.  In this way, each of the different
-> > components can be upgraded to an explicit synchronization model one at a
-> > time as long as the userspace pieces connecting them are aware of it and
-> > import/export fences at the right times.
 > > 
-> > There is a potential race condition with this API if userspace is not
-> > careful.  A typical use case for implicit synchronization is to wait for
-> > the dma-buf to be ready, use it, and then signal it for some other
-> > component.  Because a sync_file cannot be created until it is guaranteed
-> > to complete in finite time, userspace can only signal the dma-buf after
-> > it has already submitted the work which uses it to the kernel and has
-> > received a sync_file back.  There is no way to atomically submit a
-> > wait-use-signal operation.  This is not, however, really a problem with
-> > this API so much as it is a problem with explicit synchronization
-> > itself.  The way this is typically handled is to have very explicit
-> > ownership transfer points in the API or protocol which ensure that only
-> > one component is using it at any given time.  Both X11 (via the PRESENT
-> > extension) and Wayland provide such ownership transfer points via
-> > explicit present and idle messages.
+> > On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
+> > > Add support to defer core initialization and to receive a notifier
+> > > when core is ready to accommodate platforms where core is not for
+> > > initialization untile reference clock from host is available.
 > > 
-> > The decision was intentionally made in this patch to make the import and
-> > export operations IOCTLs on the dma-buf itself rather than as a DRM
-> > IOCTL.  This makes it the import/export operation universal across all
-> > components which use dma-buf including GPU, display, v4l, and others.
-> > It also means that a userspace component can do the import/export
-> > without access to the DRM fd which may be tricky to get in cases where
-> > the client communicates with DRM via a userspace API such as OpenGL or
-> > Vulkan.  At a future date we may choose to add direct import/export APIs
-> > to components such as drm_syncobj to avoid allocating a file descriptor
-> > and going through two ioctls.  However, that seems to be something of a
-> > micro-optimization as import/export operations are likely to happen at a
-> > rate of a few per frame of rendered or decoded video.
-> > 
-> > Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
-> > ---
-> > 
-> > This is marked as an RFC because I intend it to start a discussion about
-> > how to solve a problem.  The current patch compiles but that's it for now.
-> > I'll be writing IGT tests and Vulkan driver patches which exercise it over
-> > the next couple of days.  In the mean time, feel free to tell me why you
-> > think this is a great and/or terrible idea. :-)
+> > I don't understand this commit log, please reword it and fix
+> > the typos, I would merge it then, thanks.
+> Would the following be ok?
 > 
-> For the exporting part I think it is an absolutely great idea because it
-> simplifies compatibility with explicit sync quite a bit.
-> 
-> But for the importing part it is a clear NAK at the moment. See we can't
-> allow userspace to mess with DMA-buf fences in that way because it rips open
-> a security hole you can push an elephant through.
-> 
-> Just imagine that you access some DMA-buf with a shader and that operation
-> is presented as a fence on the DMA-bufs reservation object. And now you can
-> go ahead and replace that fence and free up the memory.
-> 
-> Tricking the Linux kernel into allocating page tables in that freed memory
-> is trivial and that's basically it you can overwrite page tables with your
-> shader and gain access to all of system memory :)
-> 
-> What we could do is to always make sure that the added fences will complete
-> later than the already existing ones, but that is also rather tricky to get
-> right. I wouldn't do that if we don't have a rather big use case for this.
+> Add support to defer DWC core initialization for the endpoint mode of
 
-I think the main use-case for adding a fence is adding a write fence for
-vk winsys buffers, which run without any sync at all. So essentially what
-we'd do is promote one of the read fences which are already attached to be
-the write fence.
+I removed "DWC" since this is not what this patch is actually doing.
 
-But yeah making sure we don't break any of the dma_resv guarantees about
-how these fences works is going to be somewhat tricky. Probably can reuse
-a big chunk of the fence container work we've done for syncobj timelines,
-since they have some of the same issues of having to chain fences to not
-break the world.
--Daniel
+> operation. Initialization would resume based on the notifier
+> mechanism. This would enable support for implementations like Tegra194
+> for endpoint mode operation, where the core initialization needs to be
+> deferred until the PCIe reference clock is available from the host
+> system.
+> 
+> If it is ok, I'll send new patch series with this commit log.
 
-> 
-> Regards,
-> Christian.
-> 
+No need, merged in pci/endpoint for v5.7, thanks.
+
+Lorenzo
+
+> Thanks,
+> Vidya Sagar
 > > 
-> > --Jason
-> [SNIP]
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> > Lorenzo
+> > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > > ---
+> > > V3:
+> > > * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > > 
+> > > V2:
+> > > * Addressed review comments from Kishon
+> > > 
+> > >   drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+> > >   1 file changed, 77 insertions(+), 41 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > index bddff15052cc..be04c6220265 100644
+> > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+> > >                           msecs_to_jiffies(1));
+> > >   }
+> > > 
+> > > -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+> > > -                              void *data)
+> > > -{
+> > > -     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+> > > -     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> > > -
+> > > -     queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+> > > -                        msecs_to_jiffies(1));
+> > > -
+> > > -     return NOTIFY_OK;
+> > > -}
+> > > -
+> > >   static void pci_epf_test_unbind(struct pci_epf *epf)
+> > >   {
+> > >        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> > > @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+> > >        return 0;
+> > >   }
+> > > 
+> > > +static int pci_epf_test_core_init(struct pci_epf *epf)
+> > > +{
+> > > +     struct pci_epf_header *header = epf->header;
+> > > +     const struct pci_epc_features *epc_features;
+> > > +     struct pci_epc *epc = epf->epc;
+> > > +     struct device *dev = &epf->dev;
+> > > +     bool msix_capable = false;
+> > > +     bool msi_capable = true;
+> > > +     int ret;
+> > > +
+> > > +     epc_features = pci_epc_get_features(epc, epf->func_no);
+> > > +     if (epc_features) {
+> > > +             msix_capable = epc_features->msix_capable;
+> > > +             msi_capable = epc_features->msi_capable;
+> > > +     }
+> > > +
+> > > +     ret = pci_epc_write_header(epc, epf->func_no, header);
+> > > +     if (ret) {
+> > > +             dev_err(dev, "Configuration header write failed\n");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     ret = pci_epf_test_set_bar(epf);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     if (msi_capable) {
+> > > +             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> > > +             if (ret) {
+> > > +                     dev_err(dev, "MSI configuration failed\n");
+> > > +                     return ret;
+> > > +             }
+> > > +     }
+> > > +
+> > > +     if (msix_capable) {
+> > > +             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> > > +             if (ret) {
+> > > +                     dev_err(dev, "MSI-X configuration failed\n");
+> > > +                     return ret;
+> > > +             }
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+> > > +                              void *data)
+> > > +{
+> > > +     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+> > > +     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> > > +     int ret;
+> > > +
+> > > +     switch (val) {
+> > > +     case CORE_INIT:
+> > > +             ret = pci_epf_test_core_init(epf);
+> > > +             if (ret)
+> > > +                     return NOTIFY_BAD;
+> > > +             break;
+> > > +
+> > > +     case LINK_UP:
+> > > +             queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+> > > +                                msecs_to_jiffies(1));
+> > > +             break;
+> > > +
+> > > +     default:
+> > > +             dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+> > > +             return NOTIFY_BAD;
+> > > +     }
+> > > +
+> > > +     return NOTIFY_OK;
+> > > +}
+> > > +
+> > >   static int pci_epf_test_alloc_space(struct pci_epf *epf)
+> > >   {
+> > >        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> > > @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > >   {
+> > >        int ret;
+> > >        struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> > > -     struct pci_epf_header *header = epf->header;
+> > >        const struct pci_epc_features *epc_features;
+> > >        enum pci_barno test_reg_bar = BAR_0;
+> > >        struct pci_epc *epc = epf->epc;
+> > > -     struct device *dev = &epf->dev;
+> > >        bool linkup_notifier = false;
+> > > -     bool msix_capable = false;
+> > > -     bool msi_capable = true;
+> > > +     bool core_init_notifier = false;
+> > > 
+> > >        if (WARN_ON_ONCE(!epc))
+> > >                return -EINVAL;
+> > > @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > >        epc_features = pci_epc_get_features(epc, epf->func_no);
+> > >        if (epc_features) {
+> > >                linkup_notifier = epc_features->linkup_notifier;
+> > > -             msix_capable = epc_features->msix_capable;
+> > > -             msi_capable = epc_features->msi_capable;
+> > > +             core_init_notifier = epc_features->core_init_notifier;
+> > >                test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+> > >                pci_epf_configure_bar(epf, epc_features);
+> > >        }
+> > > @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > >        epf_test->test_reg_bar = test_reg_bar;
+> > >        epf_test->epc_features = epc_features;
+> > > 
+> > > -     ret = pci_epc_write_header(epc, epf->func_no, header);
+> > > -     if (ret) {
+> > > -             dev_err(dev, "Configuration header write failed\n");
+> > > -             return ret;
+> > > -     }
+> > > -
+> > >        ret = pci_epf_test_alloc_space(epf);
+> > >        if (ret)
+> > >                return ret;
+> > > 
+> > > -     ret = pci_epf_test_set_bar(epf);
+> > > -     if (ret)
+> > > -             return ret;
+> > > -
+> > > -     if (msi_capable) {
+> > > -             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+> > > -             if (ret) {
+> > > -                     dev_err(dev, "MSI configuration failed\n");
+> > > -                     return ret;
+> > > -             }
+> > > -     }
+> > > -
+> > > -     if (msix_capable) {
+> > > -             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+> > > -             if (ret) {
+> > > -                     dev_err(dev, "MSI-X configuration failed\n");
+> > > +     if (!core_init_notifier) {
+> > > +             ret = pci_epf_test_core_init(epf);
+> > > +             if (ret)
+> > >                        return ret;
+> > > -             }
+> > >        }
+> > > 
+> > >        if (linkup_notifier) {
+> > > --
+> > > 2.17.1
+> > > 
