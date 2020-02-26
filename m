@@ -2,175 +2,258 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066E3C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4865C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB77420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790D920838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikzo3ASt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzly5Bt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbgBZGNJ (ORCPT
+        id S1727173AbgBZGOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:13:09 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41062 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726872AbgBZGNJ (ORCPT
+        Wed, 26 Feb 2020 01:14:41 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35721 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgBZGOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:13:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582697588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qomx+ZbKWIrzZtErXMfwcPJrjlc3eZgjsPhGLKwY99k=;
-        b=ikzo3AStrM2846tHd/S5/F/ytuVHn8z+qpwTGY8EK53fqgxvWuN3kXXuzl95M4KZIf28JZ
-        hWefZKC+SCzVFyZhCds5+TrngI2OjrPDKPTF4RtqzyhDDrSoMhyldTdm+kyaCgdUEGRFRV
-        aDiz701cRWmQwUVYQ0ZpTFfAyIUupO4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-147-mlezykjlOrKrQv0WTr5MZQ-1; Wed, 26 Feb 2020 01:13:07 -0500
-X-MC-Unique: mlezykjlOrKrQv0WTr5MZQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4343A800053;
-        Wed, 26 Feb 2020 06:13:04 +0000 (UTC)
-Received: from [10.72.13.217] (ovpn-13-217.pek2.redhat.com [10.72.13.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 09EC0396;
-        Wed, 26 Feb 2020 06:12:30 +0000 (UTC)
-Subject: Re: [PATCH V4 5/5] vdpasim: vDPA device simulator
-From:   Jason Wang <jasowang@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-6-jasowang@redhat.com>
- <20200220151215.GU23930@mellanox.com>
- <6c341a77-a297-b7c7-dea5-b3f7b920b1f3@redhat.com>
-Message-ID: <793a1b81-4f78-c405-4aae-f32a2bf67d87@redhat.com>
-Date:   Wed, 26 Feb 2020 14:12:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 26 Feb 2020 01:14:40 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 145so1639620qkl.2;
+        Tue, 25 Feb 2020 22:14:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ldFSenbRaobXFFVp1f9QUTi/39L2YQ/OqXM/JGo52LQ=;
+        b=fzly5Bt0lxR+i2u0c1cZjYUfRjnq/3BWstDBcDQuvUw7FMyh4CbKJrPP6EKDoQsLdN
+         W3anSQ2tt+1+OR2LXca+GDf1UpOl1qYJUzHV1o5nwtIR9CKp0RvPV0EV9BLhaJ+x8I0C
+         QZgxhDXe5yhh7N5NvxRvtM8EFqHsmGBf5R47CYyawj/TfRBjYzSTd90jRmeiHy08rpIm
+         kuyTxG/BD0VCt70AsDgCttd1JX0rm6Cbjxtoy6N6fH2T392+pgIkiu46ldMi1f5ZLPF/
+         a7jxIsKM6GhdXLeC8BWfwhhgW4ZzlnB92H3G1zmcP1uMVsLtXVi+PGLxHfODd8+fowbm
+         bgeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ldFSenbRaobXFFVp1f9QUTi/39L2YQ/OqXM/JGo52LQ=;
+        b=p8s6p67E+vw7ss41iom/EDaPpWIjNmOBGO4i9BQfSpkV6uhrk3gS/GD/+3SOMovCWF
+         vKmNlM889WNM+VYPCQb6rT/nPIY/CtnxwafWn8Fz13VmUuLukKoHef8LEsSCJaLlVRw/
+         VfaPFfyIh6GTthq/HIuXfb4XgDeL1gPCw80XNmzc5ZUmMB3e8ORMEsVsTF4GhcowF44V
+         /Wwc8ZX7goKXk7zcg6+ZHtRP49Qd74H6XqBDclLUXfwqgN5joCXmZ5NXog0IScTR1IvS
+         Q9aiu2xVMe+/eaqYmo4wzXDEOSDply1hG5FdzjUB/5udb+Dozuc+Li3VCzVHeXK/lsQP
+         /Hxg==
+X-Gm-Message-State: APjAAAUu0rUMPyTbRR5TqvcXvIGqpQZtAMQ9nYjp7upTq36W21GTM82u
+        hgmrxKNbe51UjHHRyfbxwCc=
+X-Google-Smtp-Source: APXvYqx+agJq5UAQQvCSqKYB0p4U2JJemof53VRAGUqT5ucpZVf+jarRYWQ9o50sXaLQuzeDW34nLg==
+X-Received: by 2002:a05:620a:686:: with SMTP id f6mr3628750qkh.86.1582697679383;
+        Tue, 25 Feb 2020 22:14:39 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id x22sm565383qtq.30.2020.02.25.22.14.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Feb 2020 22:14:38 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 1744E21B2C;
+        Wed, 26 Feb 2020 01:14:37 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 26 Feb 2020 01:14:37 -0500
+X-ME-Sender: <xms:yQxWXrUZKMDVe39paIRKBNibCbCC3yny502xUEnhPZzHBltNApQV9g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleefgdelhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
+    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:yQxWXreaspuYoRdWEIVK1yjKzgvGyg6PW7KnOpZQ5HVXXK_27Q1LHA>
+    <xmx:yQxWXmypc8hXxsjbgLnwyCVQ1uuJkxBTAiTRs4MSCbSIq6dAHSQrXQ>
+    <xmx:yQxWXuGyVy_Rm31dVn3Nhi-_sWJ0UyyKsGDpknVVLSwfkOoSdbOV9w>
+    <xmx:zQxWXgKVOnzbvV5I1t3YylBWvcaA3DdsuyOc_aDV46N4CwHC1avBrwtI3kU>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B03DE3060D1A;
+        Wed, 26 Feb 2020 01:14:32 -0500 (EST)
+Date:   Wed, 26 Feb 2020 14:14:30 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org,
+        "# 5 . 5 . x" <stable@vger.kernel.org>
+Subject: Re: [PATCH tip/core/rcu 30/30] rcu: Make rcu_barrier() account for
+ offline no-CBs CPUs
+Message-ID: <20200226061430.GG110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
+ <20200214235607.13749-30-paulmck@kernel.org>
+ <20200225102436.GF110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200226031455.GZ2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <6c341a77-a297-b7c7-dea5-b3f7b920b1f3@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226031455.GZ2935@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 07:14:55PM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 25, 2020 at 06:24:36PM +0800, Boqun Feng wrote:
+> > Hi Paul,
+> > 
+> > On Fri, Feb 14, 2020 at 03:56:07PM -0800, paulmck@kernel.org wrote:
+> > > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > > 
+> > > Currently, rcu_barrier() ignores offline CPUs,  However, it is possible
+> > > for an offline no-CBs CPU to have callbacks queued, and rcu_barrier()
+> > > must wait for those callbacks.  This commit therefore makes rcu_barrier()
+> > > directly invoke the rcu_barrier_func() with interrupts disabled for such
+> > > CPUs.  This requires passing the CPU number into this function so that
+> > > it can entrain the rcu_barrier() callback onto the correct CPU's callback
+> > > list, given that the code must instead execute on the current CPU.
+> > > 
+> > > While in the area, this commit fixes a bug where the first CPU's callback
+> > > might have been invoked before rcu_segcblist_entrain() returned, which
+> > > would also result in an early wakeup.
+> > > 
+> > > Fixes: 5d6742b37727 ("rcu/nocb: Use rcu_segcblist for no-CBs CPUs")
+> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Cc: <stable@vger.kernel.org> # 5.5.x
+> > > ---
+> > >  include/trace/events/rcu.h |  1 +
+> > >  kernel/rcu/tree.c          | 32 ++++++++++++++++++++------------
+> > >  2 files changed, 21 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> > > index 5e49b06..d56d54c 100644
+> > > --- a/include/trace/events/rcu.h
+> > > +++ b/include/trace/events/rcu.h
+> > > @@ -712,6 +712,7 @@ TRACE_EVENT_RCU(rcu_torture_read,
+> > >   *	"Begin": rcu_barrier() started.
+> > >   *	"EarlyExit": rcu_barrier() piggybacked, thus early exit.
+> > >   *	"Inc1": rcu_barrier() piggyback check counter incremented.
+> > > + *	"OfflineNoCBQ": rcu_barrier() found offline no-CBs CPU with callbacks.
+> > >   *	"OnlineQ": rcu_barrier() found online CPU with callbacks.
+> > >   *	"OnlineNQ": rcu_barrier() found online CPU, no callbacks.
+> > >   *	"IRQ": An rcu_barrier_callback() callback posted on remote CPU.
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index d15041f..160643e 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3098,9 +3098,10 @@ static void rcu_barrier_callback(struct rcu_head *rhp)
+> > >  /*
+> > >   * Called with preemption disabled, and from cross-cpu IRQ context.
+> > >   */
+> > > -static void rcu_barrier_func(void *unused)
+> > > +static void rcu_barrier_func(void *cpu_in)
+> > >  {
+> > > -	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
+> > > +	uintptr_t cpu = (uintptr_t)cpu_in;
+> > > +	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> > >  
+> > >  	rcu_barrier_trace(TPS("IRQ"), -1, rcu_state.barrier_sequence);
+> > >  	rdp->barrier_head.func = rcu_barrier_callback;
+> > > @@ -3127,7 +3128,7 @@ static void rcu_barrier_func(void *unused)
+> > >   */
+> > >  void rcu_barrier(void)
+> > >  {
+> > > -	int cpu;
+> > > +	uintptr_t cpu;
+> > >  	struct rcu_data *rdp;
+> > >  	unsigned long s = rcu_seq_snap(&rcu_state.barrier_sequence);
+> > >  
+> > > @@ -3150,13 +3151,14 @@ void rcu_barrier(void)
+> > >  	rcu_barrier_trace(TPS("Inc1"), -1, rcu_state.barrier_sequence);
+> > >  
+> > >  	/*
+> > > -	 * Initialize the count to one rather than to zero in order to
+> > > -	 * avoid a too-soon return to zero in case of a short grace period
+> > > -	 * (or preemption of this task).  Exclude CPU-hotplug operations
+> > > -	 * to ensure that no offline CPU has callbacks queued.
+> > > +	 * Initialize the count to two rather than to zero in order
+> > > +	 * to avoid a too-soon return to zero in case of an immediate
+> > > +	 * invocation of the just-enqueued callback (or preemption of
+> > > +	 * this task).  Exclude CPU-hotplug operations to ensure that no
+> > > +	 * offline non-offloaded CPU has callbacks queued.
+> > >  	 */
+> > >  	init_completion(&rcu_state.barrier_completion);
+> > > -	atomic_set(&rcu_state.barrier_cpu_count, 1);
+> > > +	atomic_set(&rcu_state.barrier_cpu_count, 2);
+> > >  	get_online_cpus();
+> > >  
+> > >  	/*
+> > > @@ -3166,13 +3168,19 @@ void rcu_barrier(void)
+> > >  	 */
+> > >  	for_each_possible_cpu(cpu) {
+> > >  		rdp = per_cpu_ptr(&rcu_data, cpu);
+> > > -		if (!cpu_online(cpu) &&
+> > > +		if (cpu_is_offline(cpu) &&
+> > >  		    !rcu_segcblist_is_offloaded(&rdp->cblist))
+> > >  			continue;
+> > > -		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
+> > > +		if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_online(cpu)) {
+> > >  			rcu_barrier_trace(TPS("OnlineQ"), cpu,
+> > >  					  rcu_state.barrier_sequence);
+> > > -			smp_call_function_single(cpu, rcu_barrier_func, NULL, 1);
+> > > +			smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
+> > > +		} else if (cpu_is_offline(cpu)) {
+> > 
+> > I wonder whether this should be:
+> > 
+> > 		  else if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_is_offline(cpu))
+> > 
+> > ? Because I think we only want to queue the barrier call back if there
+> > are callbacks for a particular CPU. Am I missing something subtle?
+> 
+> I don't believe that you are missing anything at all!
+> 
+> Thank you very much -- this bug would not have shown up in any validation
+> setup that I am aware of.  ;-)
+> 
+> 							Thanx, Paul
+> 
+> > Regards,
+> > Boqun
+> > 
+> > > +			rcu_barrier_trace(TPS("OfflineNoCBQ"), cpu,
+> > > +					  rcu_state.barrier_sequence);
+> > > +			local_irq_disable();
+> > > +			rcu_barrier_func((void *)cpu);
+> > > +			local_irq_enable();
 
-On 2020/2/21 =E4=B8=8B=E5=8D=883:57, Jason Wang wrote:
->
-> On 2020/2/20 =E4=B8=8B=E5=8D=8811:12, Jason Gunthorpe wrote:
->> On Thu, Feb 20, 2020 at 02:11:41PM +0800, Jason Wang wrote:
->>> +static void vdpasim_device_release(struct device *dev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct vdpasim *vdpasim =3D dev_to_sim(dev);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 cancel_work_sync(&vdpasim->work);
->>> +=C2=A0=C2=A0=C2=A0 kfree(vdpasim->buffer);
->>> +=C2=A0=C2=A0=C2=A0 vhost_iotlb_free(vdpasim->iommu);
->>> +=C2=A0=C2=A0=C2=A0 kfree(vdpasim);
->>> +}
->>> +
->>> +static struct vdpasim *vdpasim_create(void)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct virtio_net_config *config;
->>> +=C2=A0=C2=A0=C2=A0 struct vhost_iotlb *iommu;
->>> +=C2=A0=C2=A0=C2=A0 struct vdpasim *vdpasim;
->>> +=C2=A0=C2=A0=C2=A0 struct device *dev;
->>> +=C2=A0=C2=A0=C2=A0 void *buffer;
->>> +=C2=A0=C2=A0=C2=A0 int ret =3D -ENOMEM;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 iommu =3D vhost_iotlb_alloc(2048, 0);
->>> +=C2=A0=C2=A0=C2=A0 if (!iommu)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
->>> +=C2=A0=C2=A0=C2=A0 if (!buffer)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_buffer;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vdpasim =3D kzalloc(sizeof(*vdpasim), GFP_KERNEL)=
-;
->>> +=C2=A0=C2=A0=C2=A0 if (!vdpasim)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_alloc;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vdpasim->buffer =3D buffer;
->>> +=C2=A0=C2=A0=C2=A0 vdpasim->iommu =3D iommu;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 config =3D &vdpasim->config;
->>> +=C2=A0=C2=A0=C2=A0 config->mtu =3D 1500;
->>> +=C2=A0=C2=A0=C2=A0 config->status =3D VIRTIO_NET_S_LINK_UP;
->>> +=C2=A0=C2=A0=C2=A0 eth_random_addr(config->mac);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 INIT_WORK(&vdpasim->work, vdpasim_work);
->>> +=C2=A0=C2=A0=C2=A0 spin_lock_init(&vdpasim->lock);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim-=
->iommu);
->>> +=C2=A0=C2=A0=C2=A0 vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim-=
->iommu);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 dev =3D &vdpasim->dev;
->>> +=C2=A0=C2=A0=C2=A0 dev->release =3D vdpasim_device_release;
->>> +=C2=A0=C2=A0=C2=A0 dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
->>> +=C2=A0=C2=A0=C2=A0 set_dma_ops(dev, &vdpasim_dma_ops);
->>> +=C2=A0=C2=A0=C2=A0 dev_set_name(dev, "%s", VDPASIM_NAME);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 ret =3D device_register(&vdpasim->dev);
->>> +=C2=A0=C2=A0=C2=A0 if (ret)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_init;
->> It is a bit weird to be creating this dummy parent, couldn't this be
->> done by just passing a NULL parent to vdpa_alloc_device, doing
->> set_dma_ops() on the vdpasim->vdpa->dev and setting dma_device to
->> vdpasim->vdpa->dev ?
->
->
-> I think it works.
+Another (interesting) thing I found here is that we actually don't need
+the irq-off section to call rcu_barrier_func() in this branch. Because
+the target CPU is offlined, so only the cblist is only accessed at two
+places, IIUC, one is the rcuo kthread and one is here (in
+rcu_barrier()), and both places are in the process context rather than
+irq context, so irq-off is not required to prevent the deadlock.
 
+But yes, I know, if we drop the local_irq_disable/enable() pair here,
+it will make lockdep very unhappy ;-)
 
-Rethink about this, since most hardware vDPA driver will have a parent=20
-and will use it to find the parent structure e.g
+Regards,
+Boqun
 
-dev_get_drvdata(vdpa->dev->parent)
-
-So I keep this dummy parent in V5.
-
-Thanks
-
-
+> > >  		} else {
+> > >  			rcu_barrier_trace(TPS("OnlineNQ"), cpu,
+> > >  					  rcu_state.barrier_sequence);
+> > > @@ -3184,7 +3192,7 @@ void rcu_barrier(void)
+> > >  	 * Now that we have an rcu_barrier_callback() callback on each
+> > >  	 * CPU, and thus each counted, remove the initial count.
+> > >  	 */
+> > > -	if (atomic_dec_and_test(&rcu_state.barrier_cpu_count))
+> > > +	if (atomic_sub_and_test(2, &rcu_state.barrier_cpu_count))
+> > >  		complete(&rcu_state.barrier_completion);
+> > >  
+> > >  	/* Wait for all rcu_barrier_callback() callbacks to be invoked. */
+> > > -- 
+> > > 2.9.5
+> > > 
