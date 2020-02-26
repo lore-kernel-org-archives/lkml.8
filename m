@@ -2,169 +2,116 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9124C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED35C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B872468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B107F21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:27:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDWmIKd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgBZNWr (ORCPT
+        id S1726974AbgBZN1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:22:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37544 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgBZNWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:22:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 33620B18D;
-        Wed, 26 Feb 2020 13:22:45 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 14:22:37 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200226132237.GA16746@blackbody.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200221171256.GB23476@blackbody.suse.cz>
- <20200221185839.GB70967@cmpxchg.org>
- <20200225133720.GA6709@blackbody.suse.cz>
- <20200225150304.GA10257@cmpxchg.org>
+        Wed, 26 Feb 2020 08:27:03 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31641 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726700AbgBZN1D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 08:27:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582723622;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=agGOO/jU/mknJRwClLvBRzRpHoxWY7K+W0hcMMvjirM=;
+        b=KDWmIKd3ghtRtl0trEyhrWhrihOiv1qYiLo7vGVzQB5YLmW2bmbB6M6sLtDiFPr+iRhFrn
+        WdNoW4B6j3e5aqDEkI74Hzh8bTUH/6+MnKuUaOIY5DB+w8vGnZviPOuExL6EeX5/9HPXDA
+        n1z7mdFWzjLIpo8gkT96glA3YtAwv/0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-wRIqLpGvMoe9XeKYVfpN8Q-1; Wed, 26 Feb 2020 08:27:00 -0500
+X-MC-Unique: wRIqLpGvMoe9XeKYVfpN8Q-1
+Received: by mail-wm1-f71.google.com with SMTP id g26so662176wmk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 05:27:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=agGOO/jU/mknJRwClLvBRzRpHoxWY7K+W0hcMMvjirM=;
+        b=M6ifGgF6jGIhokkMz2irs74sLR5YuAlymfPwkBNrK9hCO8PtYuRFbn/L1YCbojDMq5
+         t9KwBQAwszdHyCs2oUi6ihncnwBDPxUlL1tovsLGX8tkKpcvkRAaqZV8CAGK9B/6QXtB
+         7ES7zSyvMc7ulJQJJQnLYI9zp7K+uKL5SVUP+VTrl4fZtwf8gbfktQuyY2UKMIcJ3pd7
+         xoZxNg2Pn5H1tr5DG8NxAQjvkLIXpL2huEst48/On0VbnWatT/Cpm5lk7WJGd6S0QGOd
+         zsAYO0BjocjrnKTTeQfCA7R5gUY6Gptkia6NydJKE20qNV/nKCCjkO8wJd1sgskcHxKb
+         rHMg==
+X-Gm-Message-State: APjAAAVzI0lGnMQLiIj8Fk+ZTKJDPr07CrslKjXApOjR08emIb/JcbGa
+        Dw+m/rUrn+GB0JTf62l6JOvQDfa3cNgc0U7DcAWiOsRNI81z5IYHRFwqOoqsokCxWm+IrUWxSJX
+        NXlRJNrA7Mdfn8rkCsnp2XNqI
+X-Received: by 2002:a05:600c:d5:: with SMTP id u21mr5634318wmm.98.1582723619303;
+        Wed, 26 Feb 2020 05:26:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzbaVR2/GXYRznvGYxvT6T7M3Mjj6ENzCsNWFgfOyvIICiT5sblVbadki8OFHygUA4d6opyYw==
+X-Received: by 2002:a05:600c:d5:: with SMTP id u21mr5634238wmm.98.1582723618172;
+        Wed, 26 Feb 2020 05:26:58 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
+        by smtp.gmail.com with ESMTPSA id j20sm3238858wmj.46.2020.02.26.05.26.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 05:26:57 -0800 (PST)
+Subject: Re: [PATCH RESEND v2 2/2] KVM: Pre-allocate 1 cpumask variable per
+ cpu for both pv tlb and pv ipis
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wanpeng Li <kernellwp@gmail.com>
+References: <1581988104-16628-1-git-send-email-wanpengli@tencent.com>
+ <1581988104-16628-2-git-send-email-wanpengli@tencent.com>
+ <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
+ <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
+ <87mu95jxy7.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <9506da2d-53fb-c4a3-55b4-fb78e185e9c2@redhat.com>
+Date:   Wed, 26 Feb 2020 14:26:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225150304.GA10257@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87mu95jxy7.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-and thanks for continuing the debate.
-
-On Tue, Feb 25, 2020 at 10:03:04AM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> By origin protection I mean protection [...]
-> If global reclaim occurs, [...]
-> However, if limit reclaim in A occurs due to the 12G max limit [...]
-My previous thinking was too bound to the absolute/global POV. Hence,
-effectiveness of memory.low is relative to reclaim origin:
-- full value -- protection against siblings (i.e. limit in parent).
-- reduced value (share) -- protection against (great)-uncles (i.e. limit in
-  (great)-grandparent).
-
-(And depending on the absolute depth, it means respective protection
-against global reclaim too.)
-
-I see this didn't change since the original implementation w/out
-effective protections. So it was just me being confused that protection
-can be overcommited locally (but not globally/at higher level, so it's
-consistent).
-
-> That hinges on whether an opt-out mechanism makes sense, and we
-> disagree on that part.
-After my correction above, the calculation I had proposed would reduce
-protection unnecessarily for reclaims triggered by nearby limits.
-
-> > Simplest approach would be likely to introduce the special "inherit"
-> > value (such a literal name may be misleading as it would be also
-> > "dont-care").
+On 26/02/20 14:10, Vitaly Kuznetsov wrote:
+> Nick Desaulniers <ndesaulniers@google.com> writes:
 > 
-> Again, a complication of the interface for *everybody* 
-Not if the special value is the new default (alas, that would still need
-the mount option).
-
-
-> Can you explain why you think protection is different from a weight?
-- weights are dimension-less, they represent no real resource
-- sum of sibling weights is meaningless (and independent from parent
-  weight)
-- to me this protection is closer to limits (actually I like your simile
-  that they're very lazily enforced limits)
-
-> Both specify a minimum amount of a resource that the cgroup can use
-> under contention, while allowing the cgroup to use more than that
-> share if there is no contention with siblings.
+>> (putting Paolo in To: field, in case email filters are to blame.
+>> Vitaly, maybe you could ping Paolo internally?)
+>>
+> 
+> I could, but the only difference from what I'm doing right now would
+> proabbly be the absence of non-@redaht.com emails in To/Cc: fields of
+> this email :-)
 >
-> You configure memory in bytes instead of a relative proportion, but
-> that's only because bytes are a natural unit of memory whereas a
-> relative proportion of time is a natural unit of CPU and IO.
-Weights specify ratio (between siblings), not the amount. Single weight
-is meaningless, (the meaningful proportion would be the fraction from
-cpu.max, i.e. relative to absolute resource).
+> Do we want this fix for one of the last 5.6 RCs or 5.7 would be fine?
+> Personally, I'd say we're not in a great hurry and 5.7 is OK.
 
-With weights, non-competing siblings drop out of denominator,
-with protection, non-competing siblings (in the sense of not consuming
-their allowance) may add resource back to the pool (given by parent).
+I think we can do it for 5.6, but we're not in a great hurry. :)  The
+rc4 pull request was already going to be relatively large and I had just
+been scolded by Linus so I postponed this, but I am going to include it
+this week.
 
-> For example, if you assign a share of CPU or IO to a subtree, that
-> applies to the entire subtree. Nobody has proposed being able to
-> opt-out of shares in a subtree, let alone forcing individual cgroups
-> to *opt-in* to receive these shares.
-The former is because it makes no sense to deny all CPU/IO, the latter
-consequence of that too.
+Paolo
 
-> Now you apply memory pressure, what happens?. D isn't reclaimed, C is
-> somewhat reclaimed, E is reclaimed hard. D will not page, C will page
-> a little bit, E will page hard *with the higher IO priority of B*.
-> 
-> Now C is stuck behind E. This is a priority inversion.
-This is how I understand the weights to work.
-
-    A				
-    `- B		io.weight=200
-       `- D		io.weight=100 (e.g.)
-       `- E		io.weight=100 (e.g.)
-    `- C		io.weight=50
-
-Whatever weights I assign to D and E, when only E and C compete, E will
-have higher weight (200 to 50, work-conservacy of weights).
-
-I don't think this inversion is wrong because E's work is still on
-behalf of B.
-
-Or did you mean that if protections were transformed (via effective
-calculation) to have ratios only in the same range as io.weights
-(1e-4..1e4 instead of 0..inf), then it'd prevent the inversion? (By
-setting D,E weights in same ratios as D,E protections.)
-
-> 1. Can you please make a practical use case for having scape goats or
->    donor groups to justify retaining what I consider to be an
->    unimportant artifact in the memory.low semantics?
-    A.low=10G
-    `- B.low=X   u=6G
-    `- C.low=X   u=4G
-    `- D.low=0G  u=5G
-
-B,C   run the workload which should be protected
-D     runs job that doesn't need any protection 
-u     denotes usage
-(I made the example with more than one important sibling to illustrate
-usefulness of some implicit distribution X.)
-
-When outer reclaim comes, reclaiming from B,C would be detrimental to
-their performance, while impact on D is unimportant. (And induced IO
-load on the rest (out of A) too.)
-
-It's not possible to move D to the A's level, since only A is all what a
-given user can control.
-
-> 2. If you think opting out of hierarchically assigned resources is a
->    fundamentally important usecase, can you please either make an
->    argument why it should also apply to CPU and IO, or alternatively
->    explain in detail why they are meaningfully different?
-I'd say that protected memory is a disposable resource in contrast with
-CPU/IO. If you don't have latter, you don't progress; if you lack the
-former, you are refaulting but can make progress. Even more, you should
-be able to give up memory.min.
-
-Michal
