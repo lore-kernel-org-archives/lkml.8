@@ -2,139 +2,194 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D95C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC148C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E4D21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582708466;
-	bh=vWt+x/oO0f54c1axhxBUadcsxr+FHREBDjj0oWw95qA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AIHG+W/39G+ycEiqO1G+VjL0pp1F3pUv5lx+lKEEJOHFTuMdvTfl09Va8VPI/lF/l
-	 m7eGFT8vOWK7bkKXCPeXZB/diABSrgQWp3h0W2O1Jj/x8IHKxopYvRKnH0rqAKzZxF
-	 uX5zbwxpV5AkTFGp1w/AlI6lqmsSi91ZRnnL9lwg=
+	by mail.kernel.org (Postfix) with ESMTP id 7A5F621556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="pyyjLL0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBZJOZ (ORCPT
+        id S1727668AbgBZJQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:14:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34047 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgBZJOY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:14:24 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z15so2019280wrl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 01:14:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=90Gaup4GBl/WZhK+7p3+YI0kruzLG0IEp7O26cMJO1E=;
-        b=OjjG5NdjjvXoXxveLrFLJgIAF8XcsBwYf/hyD9u3TR4xM0MB+6wHciuWyOu7N4fklx
-         hPU6Lf74lqeNBCNP/YCfwNrm3CD7mU+LJLlKjdID+dVWWD7SV2/mlF3yEhUuGrA9nH3G
-         RzEYCEXab0NSzdbuSRcLcn4F7Z2EaLrgJgbjE+C3Kc7+GxcXkl0PbuTYlFyDNuN47+Io
-         ow/OgMxHaMQBdUDWD3WVA6gwIKLNwLK5trjYRoHkP5KK6gtAOJToKODhQXsrglcJSQcH
-         RzE+ujJF829XIiHmp4Q6UhjpATYUo+ngPMkuNL/Shrv8GCMEVM6DOx2sCL0EzcJblkeD
-         aVDw==
-X-Gm-Message-State: APjAAAXcNdfWff/0axflgE6iZDnghLJZ2o7qkEz2fhAW/wp9BEnx8QEf
-        aIaqFpvOQQxWHLJzYHJcgNk=
-X-Google-Smtp-Source: APXvYqyU+AFLfI6C9bXoMHUATVgRno4Q4tuyNnRlEGnnnzJUedVksiuvqUK1i8VPkH85h89Js03b8g==
-X-Received: by 2002:adf:ecc2:: with SMTP id s2mr4382833wro.263.1582708462718;
-        Wed, 26 Feb 2020 01:14:22 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id o15sm2430534wra.83.2020.02.26.01.14.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 01:14:22 -0800 (PST)
-Date:   Wed, 26 Feb 2020 10:14:21 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        richardw.yang@linux.intel.com, osalvador@suse.de,
-        dan.j.williams@intel.com, rppt@linux.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
- case
-Message-ID: <20200226091421.GE3771@dhcp22.suse.cz>
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220103849.GG20509@dhcp22.suse.cz>
- <20200221142847.GG4937@MiWiFi-R3L-srv>
- <75b4f840-7454-d6d0-5453-f0a045c852fa@redhat.com>
- <20200225100226.GM22443@dhcp22.suse.cz>
- <20200226034236.GD24216@MiWiFi-R3L-srv>
+        Wed, 26 Feb 2020 04:16:18 -0500
+Received: from mail-bn8nam11on2086.outbound.protection.outlook.com ([40.107.236.86]:15297
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726082AbgBZJQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 04:16:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VxQgYtpReySaNIbskEmp8IP2RpJ7zmUDD0co4oD7VIqiaBDedYNefGnZHpmKAYdtK9IWAY7y8zTxQL0n1dEDM99N6RTgO3+IW1iTiRVj0ixYyqiIiFEqwLI8YQjn6iNIal33fJGokwOk9E3nlU/BVdj0+zZpPbYpB1GfiaIOn5J7XSpy3Kjdr31V+XbtTfoYyzy0ojwtRSorbYleSdAm1RQiV4+ko0bQv7ny0iFEG5MhiYHqMNtIa2hLxI+hgew57QMWCJ49Tk8jrgznVWNrfWFmcXHIZnOk53bTsEblPZiF2VRFaem9+MUk9eT1MyyMc027/rPzqjZ57qwmPjVsUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=phV13SyoWkujoJh1MRguXHI+RpYvMI44zkgV4V7TfFY=;
+ b=KVNj3tzMKhTsWoaOBVXWqzq8AXktX2OrG3//5Zi/1daJLW/Wwj9u8o0hd89RDCUnrWJa/CpTEseFzQsOOPFVsyzfivUvql9e1bGrGELTOo1bqD9sHaWEl0TqJNW8icp23j1jJR3usG2kwqvmxrK3WjRixUU8EzohJOyYD2dT/rGvT9z7j/6SuSh84RaD1MRWT0LZ+t0jNhYkW1tSaxobXodPQrXeJTHiMA1655bYOtmr1U1EIV4ufaVoyT7tivGKncDQvFJaiKMjX2Tj1myc0jrCWQTDJalxWhMXobWWGk700Tqwa409oUb2wbWMFBfapvl8A0HL/TEuKPSqqPS+NQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=phV13SyoWkujoJh1MRguXHI+RpYvMI44zkgV4V7TfFY=;
+ b=pyyjLL0u5o6fVim7nJ5jLjqI18fSUvxRk6kqFV7639EmYYuRgl3BlOwXIZw1oKArbFh1YUbp2EeHZ/uozoSOyvHruT+YhkiEHEDCXgZJcK8Mhp445UsufTvGOfVSyl/A5GdSmiwp1YQ0drgI/0aAlq0DpTyTO0MEFFHjt+pg8jM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
+ by DM5PR12MB1660.namprd12.prod.outlook.com (2603:10b6:4:9::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.21; Wed, 26 Feb 2020 09:16:14 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2750.021; Wed, 26 Feb
+ 2020 09:16:14 +0000
+Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync
+ files
+To:     Jason Ekstrand <jason@jlekstrand.net>
+Cc:     airlied@redhat.com, daniel.vetter@ffwll.ch, jessehall@google.com,
+        jajones@nvidia.com, bas@basnieuwenhuizen.nl, daniels@collabora.com,
+        hoegsberg@google.com, Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+References: <20200225235856.975366-1-jason@jlekstrand.net>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+Date:   Wed, 26 Feb 2020 10:16:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <20200225235856.975366-1-jason@jlekstrand.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM4PR08CA0045.eurprd08.prod.outlook.com
+ (2603:10a6:205:2::16) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226034236.GD24216@MiWiFi-R3L-srv>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR08CA0045.eurprd08.prod.outlook.com (2603:10a6:205:2::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Wed, 26 Feb 2020 09:16:11 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 92608199-adcf-4fcc-2424-08d7ba9c86c4
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1660:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB166002845D83D1CED29B7FCE83EA0@DM5PR12MB1660.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(396003)(39860400002)(376002)(199004)(189003)(4326008)(2616005)(478600001)(54906003)(6666004)(31686004)(66556008)(7416002)(66946007)(66476007)(6916009)(8936002)(36756003)(2906002)(186003)(16526019)(8676002)(81156014)(81166006)(6486002)(316002)(52116002)(31696002)(5660300002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1660;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: q+raHDIhfQbYiDD5qJjXTbM3JX5JN1OoRKraXRT3LPzbMNzuFnDvZKRIqKp8oLFocZwzxkjGSkSd8Mz/tMig4IZbVfwsIaHLpdm/IPqYG3wJt2R1IGifYGzGSwhnJ4Ap5yq2EKpyGzHmu1XrL/LJ7Pr9Z5YqBWCXMpbM4TzqwLQJfND+0235tI1XQtmnTHv2al/k37Qd9b2OltBfwTF7sPAvMCRv1uF24jUqyekf7Oc0T2N1ZChfgcLJBgzabh2XZGGe1gXhtq3YRWVET6ECdCMP1SRg/2NW/JNIg9hnInwAYSV6ddRkl63i587T96NVLW/8pDapGFZfO37a4ewbXKAo+NY4MTTK4Q5hZzAdVTtSgPO9vvFdj5rSJX8Zm0hBs69OPp/tSc6GgyrswXlfoSngCAn1V/ab9osJDMhbhoaffIg6yG1fIMHb6p9I8s5S
+X-MS-Exchange-AntiSpam-MessageData: wlvReezp6C6J+EB2yej848xzPLINVNAa3mwDscgYogrTyjEPj6SfNikZEABeRz4gqBK9CWiH3wTRXD68nsHsEbYv3zXEbibjabxh4MlIzu4d8aYiT1n4EyGm79UouaGioAD6WBUb2gf0d/U8Z11as1TPy4G0gXchvd1ES80wwF7RQ6Vq2QrJMcJo2v7cgarUkQPN/Tx2l1tDxBoQurvlyg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92608199-adcf-4fcc-2424-08d7ba9c86c4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 09:16:13.8618
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kU3QvkAdPKu1RVhO3S9vsGI64Al1Jt2QJUGLr3XumYxxMm/d/JSw4bUf3dr9fNSg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1660
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-02-20 11:42:36, Baoquan He wrote:
-> On 02/25/20 at 11:02am, Michal Hocko wrote:
-> > On Tue 25-02-20 10:10:45, David Hildenbrand wrote:
-> > > >>>  include/linux/mmzone.h |   2 +
-> > > >>>  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
-> > > >>>  2 files changed, 127 insertions(+), 53 deletions(-)
-> > > >>
-> > > >> Why do we need to add so much code to remove a functionality from one
-> > > >> memory model?
-> > > > 
-> > > > Hmm, Dan also asked this before.
-> > > > 
-> > > > The adding mainly happens in patch 2, 3, 4, including the two newly
-> > > > added function defitions, the code comments above them, and those added
-> > > > dummy functions for !VMEMMAP.
-> > > 
-> > > AFAIKS, it's mostly a bunch of newly added comments on top of functions.
-> > > E.g., the comment for fill_subsection_map() alone spans 12 LOC in total.
-> > > I do wonder if we have to be that verbose. We are barely that verbose on
-> > > MM code (and usually I don't see much benefit unless it's a function
-> > > with many users from many different places).
-> > 
-> > I would tend to agree here. Not that I am against kernel doc
-> > documentation but these are internal functions and the comment doesn't
-> > really give any better insight IMHO. I would be much more inclined if
-> > this was the general pattern in the respective file but it just stands
-> > out.
-> 
-> I saw there are internal functions which have code comments, e.g
-> shrink_slab() in mm/vmscan.c, not only this one place, there are several
-> places. I personally prefer to see code comment for function if
-> possible, this can save time, e.g people can skip the bitmap operation
-> when read code if not necessary. And here I mainly want to tell there
-> are different returned value to note different behaviour when call them.
+Hi Jason,
 
-... yet nobody really cares about different return code. It is an error
-that is propagated up the call chain and that's all.
+Am 26.02.20 um 00:58 schrieb Jason Ekstrand:
+> Explicit synchronization is the future.  At least, that seems to be what
+> most userspace APIs are agreeing on at this point.  However, most of our
+> Linux APIs (both userspace and kernel UAPI) are currently built around
+> implicit synchronization with dma-buf.  While work is ongoing to change
+> many of the userspace APIs and protocols to an explicit synchronization
+> model, switching over piecemeal is difficult due to the number of
+> potential components involved.  On the kernel side, many drivers use
+> dma-buf including GPU (3D/compute), display, v4l, and others.  In
+> userspace, we have X11, several Wayland compositors, 3D drivers, compute
+> drivers (OpenCL etc.), media encode/decode, and the list goes on.
+>
+> This patch provides a path forward by allowing userspace to manually
+> manage the fences attached to a dma-buf.  Alternatively, one can think
+> of this as making dma-buf's implicit synchronization simply a carrier
+> for an explicit fence.  This is accomplished by adding two IOCTLs to
+> dma-buf for importing and exporting a sync file to/from the dma-buf.
+> This way a userspace component which is uses explicit synchronization,
+> such as a Vulkan driver, can manually set the write fence on a buffer
+> before handing it off to an implicitly synchronized component such as a
+> Wayland compositor or video encoder.  In this way, each of the different
+> components can be upgraded to an explicit synchronization model one at a
+> time as long as the userspace pieces connecting them are aware of it and
+> import/export fences at the right times.
+>
+> There is a potential race condition with this API if userspace is not
+> careful.  A typical use case for implicit synchronization is to wait for
+> the dma-buf to be ready, use it, and then signal it for some other
+> component.  Because a sync_file cannot be created until it is guaranteed
+> to complete in finite time, userspace can only signal the dma-buf after
+> it has already submitted the work which uses it to the kernel and has
+> received a sync_file back.  There is no way to atomically submit a
+> wait-use-signal operation.  This is not, however, really a problem with
+> this API so much as it is a problem with explicit synchronization
+> itself.  The way this is typically handled is to have very explicit
+> ownership transfer points in the API or protocol which ensure that only
+> one component is using it at any given time.  Both X11 (via the PRESENT
+> extension) and Wayland provide such ownership transfer points via
+> explicit present and idle messages.
+>
+> The decision was intentionally made in this patch to make the import and
+> export operations IOCTLs on the dma-buf itself rather than as a DRM
+> IOCTL.  This makes it the import/export operation universal across all
+> components which use dma-buf including GPU, display, v4l, and others.
+> It also means that a userspace component can do the import/export
+> without access to the DRM fd which may be tricky to get in cases where
+> the client communicates with DRM via a userspace API such as OpenGL or
+> Vulkan.  At a future date we may choose to add direct import/export APIs
+> to components such as drm_syncobj to avoid allocating a file descriptor
+> and going through two ioctls.  However, that seems to be something of a
+> micro-optimization as import/export operations are likely to happen at a
+> rate of a few per frame of rendered or decoded video.
+>
+> Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+> ---
+>
+> This is marked as an RFC because I intend it to start a discussion about
+> how to solve a problem.  The current patch compiles but that's it for now.
+> I'll be writing IGT tests and Vulkan driver patches which exercise it over
+> the next couple of days.  In the mean time, feel free to tell me why you
+> think this is a great and/or terrible idea. :-)
 
-I also like when there is a kernel doc comment that helps to understand
-the intented usage, context the function can be called from, potential
-side effects, locking requirements and other details people need to know
-when calling functions. But have a look at 
-/**
- * clear_subsection_map - Clear subsection map of one memory region
- *
- * @pfn - start pfn of the memory range
- * @nr_pages - number of pfns to add in the region
- *
- * This is only intended for hotplug, and clear the related subsection
- * map inside one section.
- *
- * Return:
- * * -EINVAL	- Section already deactived.
- * * 0		- Subsection map is emptied.
- * * 1		- Subsection map is not empty.
- */
+For the exporting part I think it is an absolutely great idea because it 
+simplifies compatibility with explicit sync quite a bit.
 
-the only useful information in here is that this is a hotplug stuff but
-I would be completely lost about the intention without already knowing
-what is this whole subsection about.
+But for the importing part it is a clear NAK at the moment. See we can't 
+allow userspace to mess with DMA-buf fences in that way because it rips 
+open a security hole you can push an elephant through.
 
--- 
-Michal Hocko
-SUSE Labs
+Just imagine that you access some DMA-buf with a shader and that 
+operation is presented as a fence on the DMA-bufs reservation object. 
+And now you can go ahead and replace that fence and free up the memory.
+
+Tricking the Linux kernel into allocating page tables in that freed 
+memory is trivial and that's basically it you can overwrite page tables 
+with your shader and gain access to all of system memory :)
+
+What we could do is to always make sure that the added fences will 
+complete later than the already existing ones, but that is also rather 
+tricky to get right. I wouldn't do that if we don't have a rather big 
+use case for this.
+
+Regards,
+Christian.
+
+>
+> --Jason
+[SNIP]
