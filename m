@@ -2,74 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89610C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BC9C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600FC24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1A624685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aUNXjZo2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="drOYBsxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgBZLQ1 (ORCPT
+        id S1728384AbgBZLQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:16:27 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.174]:22387 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728278AbgBZLQS (ORCPT
+        Wed, 26 Feb 2020 06:16:33 -0500
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:37422 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728368AbgBZLQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:16:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582715772;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Ay31G7exAkSbg3PL1nOzfK8qqlNf1gmdrl8NmheHFD8=;
-        b=aUNXjZo2Nd+EpYX3Tz1SJcxlASPRuSebzbyujJcJ7hr/8aLxiA1vbzhu5jhcNMvMoe
-        wD4jF7hR0lV1tcFB6esjhBEH7Uac8qs44/JNDXZz0/x3jX0Xtyg59i6qiIG4UDD+4FD3
-        oMN1wu4FrADA3UEr2Lf0+ZNLe2X0uV6K+ApANGhdPli8CwpEDqVKo3oUdVym4RImKabO
-        va10GWUQQcSIIXtWGH1JLmYOmp9p1gJEdt4BXXqz1YCD80P45I2eWj209I6hOCv+IrxQ
-        uZqPaxeH3+09LU7kJPTG1Vm5ymEJRFbnbswuM/pB9fsovBlJvEN+J9wLCDhisAXd6C8v
-        j5og==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1QBG44Cg
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 26 Feb 2020 12:16:04 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: [PATCH v6 3/6] Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
-Date:   Wed, 26 Feb 2020 12:15:58 +0100
-Message-Id: <e346f76db0cc8ff2f69f3eaf2230e354c29407a2.1582715761.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1582715761.git.hns@goldelico.com>
-References: <cover.1582715761.git.hns@goldelico.com>
+        Wed, 26 Feb 2020 06:16:29 -0500
+Received: by mail-pf1-f180.google.com with SMTP id p14so1308388pfn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:16:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CxsIIu+/8DSr9yF0CIvvdp+l+R1SqYNd7xvzR+EPPKE=;
+        b=drOYBsxYOXn2Xeb56l6caTledM7axnNRIci8lv/j5g0baIJWB2DvjJbjzDaydlaz2L
+         8PMa4wUDNdoQrnRBx6edGr6JU/YzLzA7uRqCV24MS4D09M+Fp7JXOB1OalwDH0Scu9Zh
+         3Le4Sjj4Akni+tjxM0v6nRkRPGUUYyP90oACM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CxsIIu+/8DSr9yF0CIvvdp+l+R1SqYNd7xvzR+EPPKE=;
+        b=NvyD/ZrODPABvjbQqXr13KHZIFIqZI0RIuJRKIKmfITxyCCObiWFuVomS2niiMO3gN
+         wdD3kTBCqNmVNafFYTYLYHbz0ya58s5Llx1vB6GoLxXDhHLcFf2Btm+kay6svin+r7Hb
+         pfC9Q4GHzGLecTIumd9hewBcDz8oDRZEoz0Mf/fbSdzgrdMHF+JxOzJTIStxipA84KVx
+         wwFiwaLG6Hy+yKaKZ8miH7Hpg7HuaXFhIv6IwbA5Hwxz2X0lf/m6qpxNk/hbs1L2a0us
+         VYAgDocT2QxsdWukml+ULmcVvFZ/UgNISmHCBRe5lNHiPv+g2Nw809e8NNEh++bQFO1M
+         6DBA==
+X-Gm-Message-State: APjAAAWoPRg5o6gXrlWHY5VGpF13VBIYlzYDUie9Ff0/yWxL4Ba+ls/T
+        WNNuviSTbrAPmKIs54VmQPBFEg==
+X-Google-Smtp-Source: APXvYqw7geSaJHKQXNxHd+nJsVEm3hH3f9VMmmCHh3bRl9MgtjuMWJBqY01Dt28pW7thPsYChjxijA==
+X-Received: by 2002:a62:25c6:: with SMTP id l189mr3901463pfl.136.1582715788057;
+        Wed, 26 Feb 2020 03:16:28 -0800 (PST)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id o22sm2429993pgj.58.2020.02.26.03.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 03:16:27 -0800 (PST)
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCHv3 11/11] videobuf2: don't test db_attach in dma-contig prepare and finish
+Date:   Wed, 26 Feb 2020 20:15:29 +0900
+Message-Id: <20200226111529.180197-12-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+In-Reply-To: <20200226111529.180197-1-senozhatsky@chromium.org>
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,41 +77,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+We moved cache management decision making to the upper layer and
+rely on buffer's need_cache_sync flags and videobuf2 core. If the
+upper layer (core) has decided to invoke ->prepare() or ->finish()
+then we must sync.
 
-This patch brings support for the JZ4780 efuse. Currently it only exposes
-a read only access to the entire 8K bits efuse memory.
+For DMABUF ->need_cache_sync_on_prepare and ->need_cache_sync_on_flush
+are always false so videobuf core does not call ->prepare() and
+->finish() on such buffers.
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Additionally, scratch the DMABUF comment.
+
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- .../ABI/testing/sysfs-driver-jz4780-efuse        | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+ drivers/media/common/videobuf2/videobuf2-dma-contig.c | 6 ++----
+ drivers/media/common/videobuf2/videobuf2-dma-sg.c     | 8 --------
+ 2 files changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-jz4780-efuse b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
-new file mode 100644
-index 000000000000..bb6f5d6ceea0
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-jz4780-efuse
-@@ -0,0 +1,16 @@
-+What:		/sys/devices/*/<our-device>/nvmem
-+Date:		December 2017
-+Contact:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+Description:	read-only access to the efuse on the Ingenic JZ4780 SoC
-+		The SoC has a one time programmable 8K efuse that is
-+		split into segments. The driver supports read only.
-+		The segments are
-+		0x000   64 bit Random Number
-+		0x008  128 bit Ingenic Chip ID
-+		0x018  128 bit Customer ID
-+		0x028 3520 bit Reserved
-+		0x1E0    8 bit Protect Segment
-+		0x1E1 2296 bit HDMI Key
-+		0x300 2048 bit Security boot key
-+Users:		any user space application which wants to read the Chip
-+		and Customer ID
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+index a387260fb321..6ea0961149d7 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+@@ -100,8 +100,7 @@ static void vb2_dc_prepare(void *buf_priv)
+ 	struct vb2_dc_buf *buf = buf_priv;
+ 	struct sg_table *sgt = buf->dma_sgt;
+ 
+-	/* DMABUF exporter will flush the cache for us */
+-	if (!sgt || buf->db_attach)
++	if (!sgt)
+ 		return;
+ 
+ 	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+@@ -113,8 +112,7 @@ static void vb2_dc_finish(void *buf_priv)
+ 	struct vb2_dc_buf *buf = buf_priv;
+ 	struct sg_table *sgt = buf->dma_sgt;
+ 
+-	/* DMABUF exporter will flush the cache for us */
+-	if (!sgt || buf->db_attach)
++	if (!sgt)
+ 		return;
+ 
+ 	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+index ddc67c9aaedb..2a01bc567321 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+@@ -204,10 +204,6 @@ static void vb2_dma_sg_prepare(void *buf_priv)
+ 	struct vb2_dma_sg_buf *buf = buf_priv;
+ 	struct sg_table *sgt = buf->dma_sgt;
+ 
+-	/* DMABUF exporter will flush the cache for us */
+-	if (buf->db_attach)
+-		return;
+-
+ 	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+ 			       buf->dma_dir);
+ }
+@@ -217,10 +213,6 @@ static void vb2_dma_sg_finish(void *buf_priv)
+ 	struct vb2_dma_sg_buf *buf = buf_priv;
+ 	struct sg_table *sgt = buf->dma_sgt;
+ 
+-	/* DMABUF exporter will flush the cache for us */
+-	if (buf->db_attach)
+-		return;
+-
+ 	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
+ }
+ 
 -- 
-2.23.0
+2.25.0.265.gbab2e86ba0-goog
 
