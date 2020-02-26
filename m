@@ -2,153 +2,192 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861BBC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F40C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC0C2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="WEj7yOV9"
+	by mail.kernel.org (Postfix) with ESMTP id E7B7024653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBZTk3 (ORCPT
+        id S1727305AbgBZTqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:40:29 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:34657 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbgBZTk3 (ORCPT
+        Wed, 26 Feb 2020 14:46:53 -0500
+Received: from mail.willitsonline.com ([216.7.65.54]:36397 "EHLO
+        mail.willitsonline.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbgBZTqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:40:29 -0500
-Received: by mail-qk1-f182.google.com with SMTP id 11so715683qkd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:40:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=82BmcmIVU/khlxiiYLp8kss4jd0AD0u0A2zzeUS4+kw=;
-        b=WEj7yOV9SDW39LsGpGcXtu4EXCsXQZqx+4Ofd8PWITH80J16ytU6qapFwuTqcwcLNb
-         vCXFym+WS7inLUTrgz7QI0EaJuLjT7HQRP/QAblVFLjMClW5mLBLmnxaZ4m0pQ80OcOk
-         vXFZ3mHk9v47818QjdvLM4zepljBKzCNfMrzZMI3CUlVfYAm3HRd6XY6n+2NaDTGI26g
-         +k01NPC4NLEbl7ruddjxdoJgnGvsgArEemcZ6TUGlSGiYw/dpd6q5FRUqa/mo/NvZ/C6
-         Uo/XN+iJPNnoCUwrPzn1xeDTsGfyWm2O2BGwNWyYaBVmjZp96ZEN4nEUFu2hg85iCWVS
-         kSbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=82BmcmIVU/khlxiiYLp8kss4jd0AD0u0A2zzeUS4+kw=;
-        b=Kwseq1o/iTZs5DJy+reP8XJNNAlV79QI32RFp/WvzEGAwc6YnDas5QOuEMu7qcmhoy
-         aKAlrxzCes3ZGx5uSyxFBvovqbxeSENyKe/GJ1tgGoIrSRXzWoc290/BC+bgBCx7C+jN
-         JlnDpPJGkxIVTKkcuJdsvxFmWTJJhqg380zUIwxkokmJuHLJo1WArz6z6r3YZ8Lgda4Q
-         hPP2Ba2zAlEjQxNEN6fMh4osklr5pCk0Rf/vEhMOWQnHqcGE++HryjTMk5Z9mn9Gwhb8
-         fZ83L7C9Yy741+VQpqzREvuiUPndBXwT15AYoprqugOp6wErdW4a3xiS0MR/YtbQd3Op
-         Meww==
-X-Gm-Message-State: APjAAAXB7r+EpcKHJLsgZruQoaZ8uUCCL8LtzMyax9dLn3Q9D+g3T4JB
-        HVbGqJ8jw1z9va6nbyexwHsGLQ7ZpUs=
-X-Google-Smtp-Source: APXvYqw1Qg29Rp2e1xoil2ffgYTFbTfdMcnhwA+5u9lbxZwXh7m+OC+9QUEkTfp74CvksCMrvkukmA==
-X-Received: by 2002:ae9:e8c4:: with SMTP id a187mr759785qkg.243.1582746028036;
-        Wed, 26 Feb 2020 11:40:28 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:6048])
-        by smtp.gmail.com with ESMTPSA id p92sm1628907qtd.14.2020.02.26.11.40.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 11:40:26 -0800 (PST)
-Date:   Wed, 26 Feb 2020 14:40:25 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 2/3] mm: memcontrol: clean up and document effective
- low/min calculations
-Message-ID: <20200226194025.GA30206@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-3-hannes@cmpxchg.org>
- <20200221171024.GA23476@blackbody.suse.cz>
- <20200225184014.GC10257@cmpxchg.org>
- <20200226164632.GL27066@blackbody.suse.cz>
+        Wed, 26 Feb 2020 14:46:53 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.willitsonline.com (Postfix) with ESMTP id 50CE7111D86
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:46:52 -0800 (PST)
+X-Virus-Scanned: Debian amavisd-new at iredmail2.willitsonline.com
+Received: from mail.willitsonline.com ([127.0.0.1])
+        by localhost (iredmail2.willitsonline.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id efMVhbDz9gXO for <linux-kernel@vger.kernel.org>;
+        Wed, 26 Feb 2020 11:46:52 -0800 (PST)
+Received: from _ (localhost.localdomain [127.0.0.1])
+        (Authenticated sender: bluerocksaddles@willitsonline.com)
+        by mail.willitsonline.com (Postfix) with ESMTPSA id AF76A111D7A;
+        Wed, 26 Feb 2020 11:46:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226164632.GL27066@blackbody.suse.cz>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 26 Feb 2020 11:46:36 -0800
+From:   bluerocksaddles@willitsonline.com
+To:     "Michael ." <keltoiboy@gmail.com>
+Cc:     Philip Langdale <philipl@overt.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        linux-mmc@vger.kernel.org
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+In-Reply-To: <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
+References: <20191029170250.GA43972@google.com>
+ <20200222165617.GA207731@google.com>
+ <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+ <20200226011310.GA2116625@rani.riverdale.lan>
+ <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
+ <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
+ <20200226045104.GA2191053@rani.riverdale.lan>
+ <20200225212054.09865e0b@fido6>
+ <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
+Message-ID: <edab20f582d4402baeca9bb80e612ee2@willitsonline.com>
+X-Sender: bluerocksaddles@willitsonline.com
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 05:46:32PM +0100, Michal Koutný wrote:
-> On Tue, Feb 25, 2020 at 01:40:14PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > Hm, this example doesn't change with my patch because there is no
-> > "floating" protection that gets distributed among the siblings.
-> Maybe it had changed even earlier and the example obsoleted.
+Somewhere in these messages is a clue....in that SD reader was involved.
+
+MK 4 and 5 have SD whilst MK 1, 2 and three do not.
+
+
+
+On 2020-02-25 22:10, Michael . wrote:
+>> Someone with access to real hardware could
+>> easily experiment with changing that magic value and seeing if it
+>> changes which function is disabled.
 > 
-> > In my testing with the above parameters, the equilibrium still comes
-> > out to roughly this distribution.
-> I'm attaching my test (10-times smaller) and I'm getting these results:
+> One of our members has offered to supply a machine to a dev that can
+> use it to test any theory.
 > 
-> > /sys/fs/cgroup/test.slice/memory.current:838750208
-> > /sys/fs/cgroup/test.slice/pressure.service/memory.current:616972288
-> > /sys/fs/cgroup/test.slice/test-A.slice/memory.current:221782016
-> > /sys/fs/cgroup/test.slice/test-A.slice/B.service/memory.current:123428864
-> > /sys/fs/cgroup/test.slice/test-A.slice/C.service/memory.current:93495296
-> > /sys/fs/cgroup/test.slice/test-A.slice/D.service/memory.current:4702208
-> > /sys/fs/cgroup/test.slice/test-A.slice/E.service/memory.current:155648
+> It is nearly beyond the scope of the majority of us to do much more
+> than just testing. We appreciate all the effort the devs put in and
+> are willing to help in anyway we can but we aren't kernel devs.
 > 
-> (I'm running that on 5.6.0-rc2 + first two patches of your series.)
+> I, personally, use Debian. Others use Debian based distros such as MX
+> and Mint. We have been able to test many different distros such as
+> those listed in other comments but don't have the skills or expertise
+> to do much more. It is our hope that this discussion and subsequent
+> effort may enable others who prefer distros other than Debian based
+> distros can use a CF-29 (and possibly earlier) Toughbook with the
+> distro of their choice without having to rebuild a kernel so they can
+> use hardware that worked back in 2010. To do this the fix needs to be
+> at the kernel dev level not a local enthusiast level because while I
+> can rebuild a Debian kernel I can't rebuild a Fedora or Arch or
+> Slackware kernel.
 > 
-> That's IMO closer to the my simulation (1.16:0.84)
-> than the example prediction (1.3:0.6)
-
-I think you're correct about the moving points of equilibrium. I'm
-going to experiment more with your script. I had written it off as
-noise from LRU rotations, reclaim concurrency etc. but your script
-shows that these points do shift around as the input parameters
-change. This is useful, thanks.
-
-But AFAICS, my patches here do not change or introduce this behavior
-so it's a longer-standing issue.
-
-> > It's just to illustrate the pressure weight, not to reflect each
-> > factor that can influence the equilibrium.
-> But it's good to have some idea about the equilibrium when configuring
-> the values. 
-
-Agreed.
-
-> > > > @@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
-> > > >   * for next usage. This part is intentionally racy, but it's ok,
-> > > >   * as memory.low is a best-effort mechanism.
-> > > Although it's a different issue but since this updates the docs I'm
-> > > mentioning it -- we treat memory.min the same, i.e. it's subject to the
-> > > same race, however, it's not meant to be best effort. I didn't look into
-> > > outcomes of potential misaccounting but the comment seems to miss impact
-> > > on memory.min protection.
-> > 
-> > Yeah I think we can delete that bit.
-> Erm, which part?
-> Make the racy behavior undocumented or that it applies both memory.low
-> and memory.min?
-
-I'm honestly not sure what it's trying to say. Reclaim and charging
-can happen concurrently, so the protection enforcement, whether it's
-min or low, has always been racy. Even OOM itself is racy.
-
-Caching the parental value while iterating over a group of siblings
-shouldn't fundamentally alter that outcome. We do enough priority
-iterations and reclaim loops from the allocator that we shouldn't see
-premature OOMs or apply totally incorrect balances because of that.
-
-So IMO the statement that "this is racy, but low is best-effort
-anyway, so it's okay" is misleading. I think more accurate would be to
-say that reclaim is fundamentally racy, so a bit of additional noise
-here doesn't matter.
-
-Either way, I don't find this paragraph all that useful. If you think
-it's informative, could you please let me know which important aspect
-it communicates? Otherwise, I'm inclined to delete it.
+> I did a search about this issue before I made initial contact late
+> last year and the issue was discovered on more than Toughbooks and
+> posted about on various sites not long after distros moved from
+> 2.6.32. It seems back then people just got new machines that didn't
+> have a 2nd slot so the search for an answer stopped. Us Toughbook
+> users are a loyal group we use our machines because they are exactly
+> what we need and they take alot of "punishment" taht other machines
+> simply cannot handle. Our machines are used rather than recycled or
+> worse still just left to sit in waste management facilities in a
+> country that the western world dumps its rubbish in, we are Linux and
+> Toughbook enthusiasts and hope to be able to keep our machines running
+> for many years to come with all their native capabilities working as
+> they were designed to but using a modern Linux instead of Windows XP
+> or Windows 7. (that wasn't a pep talk, its just an explanation of why
+> we are passionate about this).
+> 
+> Let us know what you need us to do, we will let you know if we are
+> capable of it and give you any feedback you ask for. Over the weekend
+> I will try to rebuild a Debian kernel with the relevant option
+> disabled, provide it to my peers for testing and report back here what
+> the outcome is.
+> 
+> Thank you all for all your time and effort, it is truly appreciated.
+> Cheers.
+> Michael.
+> 
+> On 26/02/2020, Philip Langdale <philipl@overt.org> wrote:
+>> On Tue, 25 Feb 2020 23:51:05 -0500
+>> Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>> 
+>>> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
+>>> > That's correct, I tested a bunch of the old distros including
+>>> > slackware, and 2.6.32 is where the problem began.
+>>> >
+>>> > Also, the Panasonic Toughbook CF-29s effected that we tested are
+>>> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
+>>> > fine because it has different hardware supporting the PCMCIA slots.
+>>> > I have not tested a MK3 but suspect it would work ok as it also
+>>> > uses the older hardware.
+>>> >
+>>> > Thanks for your help guys!
+>>> > Trevor
+>>> >
+>>> 
+>>> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
+>>> upstream. Can you test a custom kernel based off your distro kernel
+>>> but just disabling that config option? That's probably the easiest 
+>>> fix
+>>> currently, even though not ideal. Perhaps there should be a command
+>>> line option to disable specific pci quirks to make this easier.
+>>> 
+>>> An ideal fix is I feel hard, given this quirk is based on 
+>>> undocumented
+>>> config registers -- it worked on Dell machines (that's where the
+>>> original authors seem to have gotten their info from), perhaps they
+>>> had only one Cardbus slot, but the code ends up disabling your second
+>>> Cardbus slot instead of disabling the MMC controller.
+>> 
+>> Keeping in mind that this was 12+ years ago, you can at least still
+>> read the original discussion in the archives. My original Dell laptop
+>> (XPS m1330) had no cardbus slots at all, and used the r5c832
+>> controller. There was a subsequent change that I was not involved with
+>> which added support for the rl5c476, which is the problematic device 
+>> in
+>> this thread.
+>> 
+>> As a hypothesis, based on the observed behaviour, the quirk (keeping 
+>> in
+>> mind that these are magic configuration register values that are not
+>> documented) probably disabled function 1, regardless of what it is, 
+>> and
+>> the original example that motivated adding the rl5c476 quirk probably
+>> had one cardbus slot and the card reader functions were all moved up
+>> one, or something along those lines.
+>> 
+>> Truly making this smart would then involve having the code enumerate
+>> the pci functions and identify the one that is the unwanted mmc
+>> controller, based on function ID or class or whatever, and then
+>> disabling that (assuming the magic can be reverse engineered: eg, the
+>> current magic ORs the disable flag with 0x02 - chances are, that's the
+>> index of the function: 0x01 would be the 0th function, 0x04 would be
+>> the 2nd function, etc). Someone with access to real hardware could
+>> easily experiment with changing that magic value and seeing if it
+>> changes which function is disabled.
+>> 
+>> Good luck.
+>> 
+>> --phil
+>> 
