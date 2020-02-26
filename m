@@ -2,141 +2,141 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D43BC4BA33
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEABC4BA33
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729B624653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFoUw0Mq"
+	by mail.kernel.org (Postfix) with ESMTP id 7DBA724670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgBZXwW (ORCPT
+        id S1728016AbgBZX4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:52:22 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39241 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBZXwW (ORCPT
+        Wed, 26 Feb 2020 18:56:15 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36162 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgBZX4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:52:22 -0500
-Received: by mail-pf1-f194.google.com with SMTP id l7so179777pff.6;
-        Wed, 26 Feb 2020 15:52:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=XlzTesc/osvmK67dq3mpi/UOZrAvhagv1EzzaH9Ps1E=;
-        b=mFoUw0MqmxHI0oPPMELQOYtzcg9+E08usopU8RyqjLJWRg0LfOnJOWt+AjXWMkSQ/+
-         ik+r+itUBGD5T380/0MmUPBH+89PWyBdB8+F/1DaSYlSp7CIk8Fn/3teXYUW1zo9xLUH
-         v4z8aa9IgEG3jL96PPv5LScPNWljvvNvKlMzL7Be/vTorndLrIXxvpq+plAwXKHkbUom
-         m2el//LdaDsyddJT8U73S8hkrTiL/xXFJolh/qFYcxRZrEI1OuYanj9TXwArqs45lePW
-         vxV7QH+fF42WDZRjYeU3k4tsni1QLk30hSxJFZFEmXkFxeEViN2UHWaJeeMyd3OJu1qD
-         D9Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=XlzTesc/osvmK67dq3mpi/UOZrAvhagv1EzzaH9Ps1E=;
-        b=JfPf9H4h6cP2WDqj6pH+kGANjoMKJ3ylUhYnMC7QSKzqweDbmcltNzSa4mw8Cd777a
-         RENfHDUCKCrHPWooXvE4CxrlXRYENmAozbCIWDJafTQ8VzXMzKqdjQsBVwsf2gVldl7P
-         6X6+xr0oMkpH85MrIfjcvPiXGPTlU9FvQZsY2LMDZfH7oPidtnMGK0Cyjoaur9fM1LMc
-         91QQwn+EwbVlQcYqHkWUjNuxMLtZ+aS4MBbN6OCn7JFvIrJGHKd2FpacKy00OHPfqDnQ
-         UPvNEyhXOK3iPSvIvz8qXcMfxHM3NLyyreDccgQQmaFnwptm49jBMxtwYrsM6vtTY7T2
-         CJIg==
-X-Gm-Message-State: APjAAAWRaLRMlxNdB/JXlbeWo7VEIOrOeQqZ9hD40TjXZkUCSN7N/mXa
-        rE7X+xaMlsQMgoKN/onYR3cAZZHkCZo=
-X-Google-Smtp-Source: APXvYqxvMlCakj/OIN3Ab7wp9/W+3XGgGXTH9cJ24Kd1VC3/qZU0qrVdvmi+QWNetqsm4pIH3dMQwg==
-X-Received: by 2002:a62:fb07:: with SMTP id x7mr1198766pfm.125.1582761139317;
-        Wed, 26 Feb 2020 15:52:19 -0800 (PST)
-Received: from [172.30.88.123] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id 64sm4159507pfd.48.2020.02.26.15.52.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 15:52:18 -0800 (PST)
-Subject: Re: [RESEND PATCH v3 02/17] media: v4l2-fwnode: Pass notifier to
- v4l2_async_register_fwnode_subdev()
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-media@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200215194136.10131-1-slongerbeam@gmail.com>
- <20200215194136.10131-3-slongerbeam@gmail.com>
- <20200225150721.GO5379@paasikivi.fi.intel.com>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <33258045-b708-1390-06e0-fde224296dfb@gmail.com>
-Date:   Wed, 26 Feb 2020 15:50:04 -0800
+        Wed, 26 Feb 2020 18:56:14 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j76XE-0007RA-AR; Wed, 26 Feb 2020 23:56:12 +0000
+Subject: Re: [PATCH] NFS: check for allocation failure from mempool_alloc
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+Cc:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200226234320.7722-1-colin.king@canonical.com>
+ <12d1e7a2ce5b0c64dfd81aeda75879c460e59fcb.camel@hammerspace.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ff2605b3-aefd-04c5-7d50-dc73091cb34e@canonical.com>
+Date:   Wed, 26 Feb 2020 23:56:10 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200225150721.GO5379@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <12d1e7a2ce5b0c64dfd81aeda75879c460e59fcb.camel@hammerspace.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
-
-Thanks for the feedback.
-
-
-On 2/25/20 7:07 AM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Sat, Feb 15, 2020 at 11:41:21AM -0800, Steve Longerbeam wrote:
->> Instead of allocating a notifier in v4l2_async_register_fwnode_subdev(),
->> have the caller provide one. This allows the caller to implement
->> notifier ops (bind, unbind).
+On 26/02/2020 23:48, Trond Myklebust wrote:
+> On Wed, 2020-02-26 at 23:43 +0000, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
 >>
->> The caller is now responsible for first initializing its notifier with a
->> call to v4l2_async_notifier_init().
+>> It is possible for mempool_alloc to return null when using
+>> the GFP_KERNEL flag, so return NULL and avoid a null pointer
+>> dereference on the following memset of the null pointer.
+> 
+> Umm, no. That would be a false positive by coverity.
+
+Ah, sorry for the noise then.
+
+> 
+> If you look at the history of that function, you'll note that we
+> originally had those checks, but that Neil Brown removed them after
+> analysis of the mempool_alloc() function. He determined (correctly, I
+> believe) that any value that includes GFP_WAIT cannot fail to return a
+> valid pointer.
+
+OK - that's very helpful to know. That allows me to mark a shed load of
+false positives on mempool_alloc false positives.
+
+Colin
+
+> 
 >>
->> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-> Instead of improving v4l2_async_register_fwnode_subdev(), could you convert
-> the users (IMX driver in this case) to call the preferred APIs instead?
-
-I presume you mean using v4l2_async_notifier_add_fwnode_remote_subdev(). 
-Ok, I'll convert to use that API.
-
-Steve
-
->   As
-> the lines below show, v4l2_async_register_fwnode_subdev() has only two
-> users left --- the other one of which is the IMX driver. After converting
-> these two, we could just remove this API.
->
-> See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c and
-> drivers/media/platform/omap3isp/isp.c for examples.
->
+>> Addresses-Coverity: ("Dereference null return")
+>> Fixes: 2b17d725f9be ("NFS: Clean up writeback code")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 >> ---
->> Changes in v3:
->> - added the missing calls to unregister/cleanup the new subdev notifiers.
->>    Reported by Rui Silva.
->> ---
->>   drivers/media/platform/video-mux.c         |  8 +++++++-
->>   drivers/media/v4l2-core/v4l2-fwnode.c      | 11 +----------
->>   drivers/staging/media/imx/imx6-mipi-csi2.c |  7 ++++++-
->>   drivers/staging/media/imx/imx7-media-csi.c |  7 ++++++-
->>   drivers/staging/media/imx/imx7-mipi-csis.c |  9 ++++++++-
->>   include/media/v4l2-fwnode.h                | 12 ++++++++----
->>   6 files changed, 36 insertions(+), 18 deletions(-)
+>>  fs/nfs/write.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+>> index c478b772cc49..7ca036660dd1 100644
+>> --- a/fs/nfs/write.c
+>> +++ b/fs/nfs/write.c
+>> @@ -106,6 +106,9 @@ static struct nfs_pgio_header
+>> *nfs_writehdr_alloc(void)
+>>  {
+>>  	struct nfs_pgio_header *p = mempool_alloc(nfs_wdata_mempool,
+>> GFP_KERNEL);
+>>  
+>> +	if (!p)
+>> +		return NULL;
+>> +
+>>  	memset(p, 0, sizeof(*p));
+>>  	p->rw_mode = FMODE_WRITE;
+>>  	return p;
 
