@@ -2,164 +2,188 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E61C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69F5C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 646812082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AEnX/vJp"
+	by mail.kernel.org (Postfix) with ESMTP id 8F34D222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 04:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582690806;
+	bh=wa0ljoR4VKK7AhtcPWEwY9ai7AZZg6kuy4bimaFCvDw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UmtMVszcUvBj9M81GzxZhvGU/e+MKaymuZAWRKrPmV0bE3UbTM4PzkKw6iqkz9fHf
+	 PwHXI8mE8xLpishyPBfjADv68ygVLSZLEJKmQ3Um1HB1QrkKJGix//bUke4jqXXw9G
+	 COoIjlnRDDpaFVL7hNc7fZkJOhWSX5GAqolYTFo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBZELN (ORCPT
+        id S1726386AbgBZESl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 23:11:13 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42088 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgBZELN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 23:11:13 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so1706393otd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 20:11:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kZANbOVwx0zUhbZ1OgC32H4fJ06zLdpnFgGR+tK5l/4=;
-        b=AEnX/vJpfZhdHZM1MmEZR0Vzt5nPaOlT+2owGKNSkO99CR1SYJnwweaEVG3t9OApax
-         OceJwjpeB6DA1OIRlrD0C/MQHx7jwqrx13Lhf9/WAn+nvFZBnZcMteJDEU6MYhTDMGJR
-         Bz49K5RSa2jJmofcgOwVUN2JRd0nc8gbqGAxAszU3dKdupnHwtyI8xqw3XxrBG8YdBP8
-         dFY/rYUG5g7g01GAesqeympSh42KeYLIkAWtn7Aegx3bZP7AeWF/npOmCSM5TuTPU0Tl
-         16T/zvpEHP6NRGbPuu/2lDxUipKjGhfwbjEfSmPIUpKSuFRK+zSdseJF2nuZY8jQDcWT
-         mQeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kZANbOVwx0zUhbZ1OgC32H4fJ06zLdpnFgGR+tK5l/4=;
-        b=RdooJMfj8/8/8jIA0Beq71NxfG/GIl6QEpiba1JaACh+lSNNn1cazw/GwHJh3bZT/h
-         2xBAiWWJd1LXWvkQYAJjpiHXGD4gMLTsgU14e2cuvjlQ6yBS4Pu25nauz8OBcWGxPCkT
-         HbYfxrpLq6aLrjxcVEfw6I+dpqfZjRh/T7dnhQyH9ePEqNv3Uq8mMmu9KyC44KCXgAMR
-         lxsONZb4UPO3I++VIcXRgD0IGowbveXaV/n9qyZg+0K5PJsBJiA5nR9vq59Bh44xmZJi
-         u6u/RNj1/egm0fSyTCxG8I5/8fPqLpKe3vFbGBHFYIOwkpG/8Z4I2RyacDS5EODftP8T
-         0Uvw==
-X-Gm-Message-State: APjAAAVtI3pUa2GLpDRZpx0bOcfEqgkBwh4LGjf08YgmsZB+xN8FQpBJ
-        C+8S46vwNSwzPXK8SGYtt9GBBT5MgxVie1EeBmx7wA==
-X-Google-Smtp-Source: APXvYqwMKzxFoEjWQhYHhfWL4hnCRbnsCxoAMyDIN366E5Rqv2TrOn4yjK9HOqB3QEBybYKq2wi4Dj31O7NIfPWtBYg=
-X-Received: by 2002:a05:6830:1219:: with SMTP id r25mr1533616otp.180.1582690272244;
- Tue, 25 Feb 2020 20:11:12 -0800 (PST)
+        Tue, 25 Feb 2020 23:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgBZESl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 23:18:41 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 452A821D7E;
+        Wed, 26 Feb 2020 04:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582690720;
+        bh=wa0ljoR4VKK7AhtcPWEwY9ai7AZZg6kuy4bimaFCvDw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=XFhFqlnat9Kma6j8YRzZQIF0YpG7+omQM53gZLnZfyg78icJvpZ5C+WNFlVBzMT6F
+         9rAsvD2Kg9A8fFNOxP961HwP/PVlAAMMt24Wq9nFeLo6eqqEQNV1p76pwG1DhndQf2
+         554I/BZFHVYB0HG7LWVvORTkZF08qm9zs/+9hex0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8586635226CF; Tue, 25 Feb 2020 20:18:39 -0800 (PST)
+Date:   Tue, 25 Feb 2020 20:18:39 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org,
+        "# 5 . 5 . x" <stable@vger.kernel.org>
+Subject: Re: [PATCH tip/core/rcu 30/30] rcu: Make rcu_barrier() account for
+ offline no-CBs CPUs
+Message-ID: <20200226041839.GA13200@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200214235536.GA13364@paulmck-ThinkPad-P72>
+ <20200214235607.13749-30-paulmck@kernel.org>
+ <20200225102436.GF110915@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200226031455.GZ2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20191121115902.2551-1-will@kernel.org> <20191121115902.2551-6-will@kernel.org>
-In-Reply-To: <20191121115902.2551-6-will@kernel.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 26 Feb 2020 05:10:46 +0100
-Message-ID: <CAG48ez0CoY2fuxNkdAn_Jx+hffQ1eyM_V++5q6Q5nra+_tE9hQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 05/10] lib/refcount: Improve performance of
- generic REFCOUNT_FULL code
-To:     Will Deacon <will@kernel.org>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226031455.GZ2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 12:58 PM Will Deacon <will@kernel.org> wrote:
-> Rewrite the generic REFCOUNT_FULL implementation so that the saturation
-> point is moved to INT_MIN / 2. This allows us to defer the sanity checks
-> until after the atomic operation, which removes many uses of cmpxchg()
-> in favour of atomic_fetch_{add,sub}().
+On Tue, Feb 25, 2020 at 07:14:55PM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 25, 2020 at 06:24:36PM +0800, Boqun Feng wrote:
+> > Hi Paul,
+> > 
+> > On Fri, Feb 14, 2020 at 03:56:07PM -0800, paulmck@kernel.org wrote:
+> > > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > > 
+> > > Currently, rcu_barrier() ignores offline CPUs,  However, it is possible
+> > > for an offline no-CBs CPU to have callbacks queued, and rcu_barrier()
+> > > must wait for those callbacks.  This commit therefore makes rcu_barrier()
+> > > directly invoke the rcu_barrier_func() with interrupts disabled for such
+> > > CPUs.  This requires passing the CPU number into this function so that
+> > > it can entrain the rcu_barrier() callback onto the correct CPU's callback
+> > > list, given that the code must instead execute on the current CPU.
+> > > 
+> > > While in the area, this commit fixes a bug where the first CPU's callback
+> > > might have been invoked before rcu_segcblist_entrain() returned, which
+> > > would also result in an early wakeup.
+> > > 
+> > > Fixes: 5d6742b37727 ("rcu/nocb: Use rcu_segcblist for no-CBs CPUs")
+> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Cc: <stable@vger.kernel.org> # 5.5.x
+> > > ---
+> > >  include/trace/events/rcu.h |  1 +
+> > >  kernel/rcu/tree.c          | 32 ++++++++++++++++++++------------
+> > >  2 files changed, 21 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> > > index 5e49b06..d56d54c 100644
+> > > --- a/include/trace/events/rcu.h
+> > > +++ b/include/trace/events/rcu.h
+> > > @@ -712,6 +712,7 @@ TRACE_EVENT_RCU(rcu_torture_read,
+> > >   *	"Begin": rcu_barrier() started.
+> > >   *	"EarlyExit": rcu_barrier() piggybacked, thus early exit.
+> > >   *	"Inc1": rcu_barrier() piggyback check counter incremented.
+> > > + *	"OfflineNoCBQ": rcu_barrier() found offline no-CBs CPU with callbacks.
+> > >   *	"OnlineQ": rcu_barrier() found online CPU with callbacks.
+> > >   *	"OnlineNQ": rcu_barrier() found online CPU, no callbacks.
+> > >   *	"IRQ": An rcu_barrier_callback() callback posted on remote CPU.
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index d15041f..160643e 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3098,9 +3098,10 @@ static void rcu_barrier_callback(struct rcu_head *rhp)
+> > >  /*
+> > >   * Called with preemption disabled, and from cross-cpu IRQ context.
+> > >   */
+> > > -static void rcu_barrier_func(void *unused)
+> > > +static void rcu_barrier_func(void *cpu_in)
+> > >  {
+> > > -	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
+> > > +	uintptr_t cpu = (uintptr_t)cpu_in;
+> > > +	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> > >  
+> > >  	rcu_barrier_trace(TPS("IRQ"), -1, rcu_state.barrier_sequence);
+> > >  	rdp->barrier_head.func = rcu_barrier_callback;
+> > > @@ -3127,7 +3128,7 @@ static void rcu_barrier_func(void *unused)
+> > >   */
+> > >  void rcu_barrier(void)
+> > >  {
+> > > -	int cpu;
+> > > +	uintptr_t cpu;
+> > >  	struct rcu_data *rdp;
+> > >  	unsigned long s = rcu_seq_snap(&rcu_state.barrier_sequence);
+> > >  
+> > > @@ -3150,13 +3151,14 @@ void rcu_barrier(void)
+> > >  	rcu_barrier_trace(TPS("Inc1"), -1, rcu_state.barrier_sequence);
+> > >  
+> > >  	/*
+> > > -	 * Initialize the count to one rather than to zero in order to
+> > > -	 * avoid a too-soon return to zero in case of a short grace period
+> > > -	 * (or preemption of this task).  Exclude CPU-hotplug operations
+> > > -	 * to ensure that no offline CPU has callbacks queued.
+> > > +	 * Initialize the count to two rather than to zero in order
+> > > +	 * to avoid a too-soon return to zero in case of an immediate
+> > > +	 * invocation of the just-enqueued callback (or preemption of
+> > > +	 * this task).  Exclude CPU-hotplug operations to ensure that no
+> > > +	 * offline non-offloaded CPU has callbacks queued.
+> > >  	 */
+> > >  	init_completion(&rcu_state.barrier_completion);
+> > > -	atomic_set(&rcu_state.barrier_cpu_count, 1);
+> > > +	atomic_set(&rcu_state.barrier_cpu_count, 2);
+> > >  	get_online_cpus();
+> > >  
+> > >  	/*
+> > > @@ -3166,13 +3168,19 @@ void rcu_barrier(void)
+> > >  	 */
+> > >  	for_each_possible_cpu(cpu) {
+> > >  		rdp = per_cpu_ptr(&rcu_data, cpu);
+> > > -		if (!cpu_online(cpu) &&
+> > > +		if (cpu_is_offline(cpu) &&
+> > >  		    !rcu_segcblist_is_offloaded(&rdp->cblist))
+> > >  			continue;
+> > > -		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
+> > > +		if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_online(cpu)) {
+> > >  			rcu_barrier_trace(TPS("OnlineQ"), cpu,
+> > >  					  rcu_state.barrier_sequence);
+> > > -			smp_call_function_single(cpu, rcu_barrier_func, NULL, 1);
+> > > +			smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
+> > > +		} else if (cpu_is_offline(cpu)) {
+> > 
+> > I wonder whether this should be:
+> > 
+> > 		  else if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_is_offline(cpu))
+> > 
+> > ? Because I think we only want to queue the barrier call back if there
+> > are callbacks for a particular CPU. Am I missing something subtle?
+> 
+> I don't believe that you are missing anything at all!
+> 
+> Thank you very much -- this bug would not have shown up in any validation
+> setup that I am aware of.  ;-)
 
-Oh, I never saw this, this is really neat! CCing the kernel-hardening
-list on this might've been a good idea.
+And with additional adjustment to make tracing accurate.
 
-> + * Saturation semantics
-> + * ====================
-> + *
-> + * refcount_t differs from atomic_t in that the counter saturates at
-> + * REFCOUNT_SATURATED and will not move once there. This avoids wrapping the
-> + * counter and causing 'spurious' use-after-free issues. In order to avoid the
-> + * cost associated with introducing cmpxchg() loops into all of the saturating
-> + * operations, we temporarily allow the counter to take on an unchecked value
-> + * and then explicitly set it to REFCOUNT_SATURATED on detecting that underflow
-> + * or overflow has occurred. Although this is racy when multiple threads
-> + * access the refcount concurrently, by placing REFCOUNT_SATURATED roughly
-> + * equidistant from 0 and INT_MAX we minimise the scope for error:
-> + *
-> + *                                INT_MAX     REFCOUNT_SATURATED   UINT_MAX
-> + *   0                          (0x7fff_ffff)    (0xc000_0000)    (0xffff_ffff)
-> + *   +--------------------------------+----------------+----------------+
-> + *                                     <---------- bad value! ---------->
-> + *
-> + * (in a signed view of the world, the "bad value" range corresponds to
-> + * a negative counter value).
-[...]
-> + * If another thread also performs a refcount_inc() operation between the two
-> + * atomic operations, then the count will continue to edge closer to 0. If it
-> + * reaches a value of 1 before /any/ of the threads reset it to the saturated
-> + * value, then a concurrent refcount_dec_and_test() may erroneously free the
-> + * underlying object. Given the precise timing details involved with the
-> + * round-robin scheduling of each thread manipulating the refcount and the need
-> + * to hit the race multiple times in succession, there doesn't appear to be a
-> + * practical avenue of attack even if using refcount_add() operations with
-> + * larger increments.
-
-On top of that, the number of threads that can actually be running at
-a given time is capped. See include/linux/threads.h, where it is
-capped to pow(2, 22):
-
-    /*
-     * A maximum of 4 million PIDs should be enough for a while.
-     * [NOTE: PID/TIDs are limited to 2^29 ~= 500+ million, see futex.h.]
-     */
-    #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
-            (sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
-
-And in the futex UAPI header, we have this, baking a TID limit into
-the userspace API (note that this is pow(2,30), not pow(2,29) as the
-comment in threads.h claims - I'm not sure where that difference comes
-from):
-
-    /*
-     * The rest of the robust-futex field is for the TID:
-     */
-    #define FUTEX_TID_MASK 0x3fffffff
-
-So AFAICS, with the current PID_MAX_LIMIT, if you assume that all
-participating refcount operations are non-batched (delta 1) and the
-attacker can't cause the threads to oops in the middle of the refcount
-operation (maybe that would be possible if you managed to find
-something like a NULL pointer dereference in perf software event code
-and had perf paranoia at <=1 , or something like that? - I'm not
-sure), then even in a theoretical scenario where an attacker spawns
-the maximum number of tasks possible and manages to get all of them to
-sequentially preempt while being in the middle of increment operations
-in several nested contexts (I'm not sure whether that can even happen
-- you're not going to take typical sleeping exceptions like page
-faults in the middle of a refcount op), the attacker will stay
-comfortably inside the saturated range. Even if the PID_MAX_LIMIT is
-at some point raised to the maximum permitted by the futex UAPI, this
-still holds as long as you assume no nesting. Hm, should I send a
-patch to add something like this to the explanatory comment?
-
-
-Of course, if someone uses refcount batching with sufficiently large
-values, those guarantees go out of the window - if we wanted to be
-perfectionist about this, we could make the batched operations do slow
-cmpxchg stuff while letting the much more performance-critical
-single-reference case continue to use the fast saturation scheme.
-OTOH, the networking folks would probably hate that, since they're
-using the batched ops for ->sk_wmem_alloc stuff, where they count
-bytes as references? So I guess maybe we should leave it as-is.
+							Thanx, Paul
