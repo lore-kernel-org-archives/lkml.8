@@ -2,109 +2,86 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22006C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E29C4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D2A20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582732260;
-	bh=4mj4Lhuk39hWvXQSeFd33euISt6wOckDzm5sWFrW6bc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AyUgov8PSSv87Qv4cYaYTBD7OrEUJJnmXludf0ewWSGjDz2O66/LOruSQCy/KEZVi
-	 EkLVxxr7I4ZvbcwyBIlWxttS19cAmz1Gy1Tp+5aW0wMTl8bv8+twRMLtj+lmvOHnuZ
-	 9IreOwBuA+KRfUUxQUbPHW83OYG9k00+XTVU6/nE=
+	by mail.kernel.org (Postfix) with ESMTP id 1F2E420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbgBZPu7 (ORCPT
+        id S1728480AbgBZPve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:50:59 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45205 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgBZPu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:50:58 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so3327329otp.12;
-        Wed, 26 Feb 2020 07:50:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XLG/HcpDoefwlDbSA6KkLlzoOTV7gKxlBKi85al1w9c=;
-        b=ELz6ZMZr0rtKQ2d7fLzJdm1LmTURZt4Azsc0C2oDviJpliY1ved5qP4QJBBXa9s4Z7
-         buTzqKGcciVBE5NuCzxLfhR+8fPaNz+MTJ+oHEj/K5RKc+JS9SyVDmlxjub7nMAwijLs
-         +xq3U7FAAZo3l0RNuAnubvyzjWH0fDt9pRzEz0dhe5ubJb45tpwW22LJIPm2aR3v4H9D
-         ZBCkt/+dcFjUSvxNW4o/9P0Hk9BOq+FF/k/yaJeGiqYZNo/HN7g+ypmj/HrzDgiEHBpy
-         Ewrq9wMv97A2Ow7lgFOjzoHjOaCDD7ViH73TsHO2zWr6V2tBRB1E/x5+KEnqbg84yKcx
-         JOOA==
-X-Gm-Message-State: APjAAAUMH5x0duMm5wo8HtiWwAqutEXIZMf/3vwRq2DLD91DlYtprq82
-        rXCueEX6jfwxIUOvqlH53g==
-X-Google-Smtp-Source: APXvYqzz9bkQxK085SBSKbtINgYFodulsnBaryzAcNMdYU2j6sh2uVsRdP6BGe4x3hIwiFVgNwCLpg==
-X-Received: by 2002:a05:6830:1e6b:: with SMTP id m11mr3726402otr.293.1582732257205;
-        Wed, 26 Feb 2020 07:50:57 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s128sm923004oia.4.2020.02.26.07.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:50:56 -0800 (PST)
-Received: (nullmailer pid 3525 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:50:55 -0000
-Date:   Wed, 26 Feb 2020 09:50:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] of: property: Add device link support for
- power-domains  and hwlocks
-Message-ID: <20200226155055.GA3403@bogus>
-References: <20200220055250.196456-1-saravanak@google.com>
+        Wed, 26 Feb 2020 10:51:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:37808 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728205AbgBZPve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:51:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BACE630E;
+        Wed, 26 Feb 2020 07:51:33 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 283FA3F819;
+        Wed, 26 Feb 2020 07:51:33 -0800 (PST)
+Subject: Re: Proper way to check for restricted DMA addressing from device
+ driver
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bfecf850-5bd7-3092-b9b3-c5721d7a44ee@arm.com>
+Date:   Wed, 26 Feb 2020 15:51:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220055250.196456-1-saravanak@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2608dfa05478d995586c9e477917349dc18618ac.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 21:52:50 -0800, Saravana Kannan wrote:
-> Add support for creating device links out of more DT properties.
+On 26/02/2020 3:44 pm, Lucas Stach wrote:
+> Hi all,
 > 
-> To: lkml <linux-kernel@vger.kernel.org>
-> To: John Stultz <john.stultz@linaro.org>
-> To: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> I'm currently struggling with how to properly check for restricted DMA
+> addressing from a device driver side. The basic issue I'm facing is
+> that I have a embedded GPU, which isn't able to address all system
+> memory due to interconnect being restricted to 32bit addressing. The
+> limits are properly described in the system device-tree and thus
+> SWIOTLB is working.
 > 
+> However graphics buffers are large and graphics drivers really like to
+> keep the dma mapping alive for performance reasons, which means I'm
+> running out of SWIOTLB space pretty easily, aside from the obvious
+> performance implications of SWIOTLB.
+> 
+> As 3 out of the maximum 4GB system memory are located in the DMA32 zone
+> and thus located in the GPU addressable space, I just want to avoid
+> allocating graphics buffers outside of the DMA32 zone.
+> 
+> To add the DMA32 restriction to my drivers allocations, I need a
+> reliable way from the device driver side to check if the GPU is in such
+> a restricted system. What I'm currently doing in my WIP patch is this:
+> 
+>   /*
+>    * If the GPU is part of a system with only 32bit bus addressing
+>    * capabilities, request pages for our SHM backend buffers from the
+>    * DMA32 zone to avoid performance killing SWIOTLB bounce buffering.
+>    */
+>   if (*gpu->dev->dma_mask < BIT_ULL(32) && !device_iommu_mapped(gpu->dev))
+>           priv->shm_gfp_mask |= GFP_DMA32;
+> 
+> However I'm not sure if there are edge cases where this check would
+> fool me. Is there any better way to check for DMA addressing
+> restrictions from the device driver side?
 
-Applied, thanks.
+dma_addressing_limited()?
 
-Rob
+Robin.
