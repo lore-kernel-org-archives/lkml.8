@@ -2,174 +2,102 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7961EC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D49C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F11924672
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh+8mxxP"
+	by mail.kernel.org (Postfix) with ESMTP id 2669424670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582753740;
+	bh=I4qBE2Lu98HMylNu8wa2EtjZdqrPtZCAh9D+MOcEJNk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=GEJC9pfpY7lJnhPiBqpeF6SzacAsHIKEzJiiw9tKfXcFaLfgF/0U0Dqfdtdq1KJQ/
+	 Cfr4boQC/35gs9TB2ub/tisZ0BfOROLsIgfB6lBSPfwpNDY2MA/aKM4MH46gqKEc4l
+	 WP1hDd0OAnDM1oq8XAHZM3C+8aHRBERN8MX0TF/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgBZVs2 (ORCPT
+        id S1727762AbgBZVs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:48:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44047 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbgBZVs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:48:27 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so641265wrx.11;
-        Wed, 26 Feb 2020 13:48:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
-        b=Gh+8mxxPRmBz5ItD/2Qpd2lmEFDJ6+UlANHisqcl1s46QRxFpBDscYtDqguT1fQo9f
-         bA3GBmdW+rgBSETWdnjzdCP10x3AkIeyT6Ks99zd+RQ1yqo5KrLNC8xMbHrgiBSR1l8g
-         e67fXMSsOsCRHiuMho9fcOYFJ0eUMDZ7A/CY7UkH3zZBjuKfsVUAMhuW2fp22FR0iHSY
-         9wUzotZczhrrPKW0rWhLpx9OPg7QTFQhdomvo5GYWO31AZViCiIaIMO14bNL1XhUV5FG
-         8qdLIigVf06b1l75aRmulDCPA8Mzn5KKvGsP+Z3vo/L/uCG1aUO4ojtmkmfCQxXP8d3K
-         EIFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
-        b=tqqhFZt9Ip6KutsmKh/RNMVJstlM29PtuWDHNwQoifvkEQBXW4OoLOmKjQLmnnKWwx
-         QeeTYQHA/gXqg68jijtqXIm6MxnvBwj+oIBVTC6LKQbxPT5cWEBodwsLTs4QHTHYfIaL
-         qyUoCAYrx2lXtP4YDTwsSIga7Ht0WEIG16TfqasZq9Ds9/h9kz2tDVjI4R6FwVIa/PNV
-         moHv03um2wD0Fub7AkWeABv2cG4XL36gOE5Bb6DIW1bg6L+2CR180JcGV0KHGF43vPvl
-         TP5AFI4WtGjr742Aaqk0ySDFsRshXfSqdI7Ez/klgyGF74AS5D/+oE3ot/INV/vH/gsL
-         MUMw==
-X-Gm-Message-State: APjAAAU4NhExX4Pe5vRTo1fV9uf11dDb9Z1m5oHwojtQ8wjjTOYmZamG
-        vOCu+TgbAlKUtWkLVGAeMr0=
-X-Google-Smtp-Source: APXvYqxsvbKla5iG6TBDnuXgehZINgcnbX8qokIuJnhf3kEFjluM7zyxhNtIpVVPpKQcT4yMIBK9+w==
-X-Received: by 2002:adf:90ee:: with SMTP id i101mr643052wri.417.1582753704877;
-        Wed, 26 Feb 2020 13:48:24 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id b10sm4878846wrw.61.2020.02.26.13.48.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 13:48:24 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-Date:   Wed, 26 Feb 2020 22:48:12 +0100
-Message-Id: <20200226214812.390-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <robh@kernel.org>
-References: <robh@kernel.org>
+        Wed, 26 Feb 2020 16:48:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727503AbgBZVs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:48:58 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 858A124670;
+        Wed, 26 Feb 2020 21:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582753737;
+        bh=I4qBE2Lu98HMylNu8wa2EtjZdqrPtZCAh9D+MOcEJNk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NnxTFGGUr3KKT4drrAzAbpkB8Aaz5HEG4CuhlLRbJDxSVvl3IY8wuOk6EL+N/rn0w
+         duNGEQNNOeyBX42TD218b4cONLlazx4fKSChHUyEhdxh9Wlsdka4l09jvHItR9PLCe
+         ITHaZhS4kFKOIbauEQiZSD8U1u2+W2ybobBzynWA=
+Date:   Wed, 26 Feb 2020 15:48:55 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v15 3/5] PCI/EDR: Export AER, DPC and error recovery
+ functions
+Message-ID: <20200226214855.GA175196@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b37ed9b-3d6f-ea94-4591-86f9d5bbe543@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing definition of rpm clk for ipq806x soc
+On Wed, Feb 26, 2020 at 01:26:09PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> On 2/26/20 1:13 PM, Bjorn Helgaas wrote:
+> > On Wed, Feb 26, 2020 at 11:30:43AM -0800, Kuppuswamy Sathyanarayanan wrote:
+> > > On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
+> > > > On Thu, Feb 13, 2020 at 10:20:15AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > > ...
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Acked-by: John Crispin <john@phrozen.org>
----
- .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
- drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
- 3 files changed, 40 insertions(+)
+> > > > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > > > > index 99fca8400956..acae12dbf9ff 100644
+> > > > > --- a/drivers/pci/pcie/dpc.c
+> > > > > +++ b/drivers/pci/pcie/dpc.c
+> > > > > @@ -15,15 +15,9 @@
+> > > > >    #include <linux/pci.h>
+> > > > >    #include "portdrv.h"
+> > > > > +#include "dpc.h"
+> > > > >    #include "../pci.h"
+> > > > > -struct dpc_dev {
+> > > > > -	struct pci_dev		*pdev;
+> > > > > -	u16			cap_pos;
+> > > > > -	bool			rp_extensions;
+> > > > > -	u8			rp_log_size;
+> > > > > -};
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index 944719bd586f..4bb2cbeff2b4 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -15,6 +15,7 @@ Required properties :
- 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
- 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
-+			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
- 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
-diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
-index 9e3110a71f12..f71d228fd6bd 100644
---- a/drivers/clk/qcom/clk-rpm.c
-+++ b/drivers/clk/qcom/clk-rpm.c
-@@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
- 	.num_clks = ARRAY_SIZE(apq8064_clks),
- };
- 
-+/* ipq806x */
-+DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
-+DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
-+DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
-+DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
-+DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
-+
-+static struct clk_rpm *ipq806x_clks[] = {
-+	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
-+	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
-+	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
-+	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
-+	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
-+	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
-+	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
-+	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
-+	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
-+	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
-+	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
-+	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
-+	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
-+	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
-+	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
-+	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
-+};
-+
-+static const struct rpm_clk_desc rpm_clk_ipq806x = {
-+	.clks = ipq806x_clks,
-+	.num_clks = ARRAY_SIZE(ipq806x_clks),
-+};
-+
- static const struct of_device_id rpm_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
- 	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
- 	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
-+	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index 8e3095720552..ae74c43c485d 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -37,6 +37,10 @@
- #define RPM_XO_A0				27
- #define RPM_XO_A1				28
- #define RPM_XO_A2				29
-+#define RPM_NSS_FABRIC_0_CLK			30
-+#define RPM_NSS_FABRIC_0_A_CLK			31
-+#define RPM_NSS_FABRIC_1_CLK			32
-+#define RPM_NSS_FABRIC_1_A_CLK			33
- 
- /* SMD RPM clocks */
- #define RPM_SMD_XO_CLK_SRC				0
--- 
-2.25.0
+> > > > Adding dpc.h shouldn't be in this patch because there's no need for a
+> > > > separate dpc.h file yet -- it's only included this one place.  I'm not
+> > > > positive a dpc.h is needed at all -- see comments on patch [4/5].
 
+> > > Yes, if we use pdev in dpc functions used by EDR code, we should
+> > > not need it.
+
+> > I think struct dpc_dev might be more trouble than it's worth.  I
+> > attached a possible patch at the end that folds the 25 bits of
+> > DPC-related info into the struct pci_dev and gets rid of struct
+> > dpc_dev completely.  I compiled it but haven't tested it.
+
+> That would solve most of my export issues. Do you want me
+> to add it to my patch list or merge it separately.
+
+If you want to use that, I would merge it first, followed by the error
+clearing cleanup, followed by the other EDR stuff.
+
+Bjorn
