@@ -4,102 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB29C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A92C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A162072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740F62072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582754847;
-	bh=L8aYdOhNb8wSkHJBwtY/mA6RY2dcgDtvoeGAIpG8j5A=;
+	s=default; t=1582754905;
+	bh=5VX8++U9y/LnJoeykKPpWd1u5XoTJOB1WK4xYT12u68=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k/5EEePuYTuNM909dcbOJ1TXNtB84wQLhIEiXvn1A8GCDYPX6uKdZ09+kgratQxo9
-	 Xzw2Wo0oEAz2aQU/9SCPb4N7t9yVLuPzfMfUQamaVwx35lNTpJuHHh20RgnUSmbaIq
-	 3AmuHdNmzwR/Jny+uK/QGRKbXXfwwSC8LoLXL398=
+	b=tNkaqriMIlSB0xgNqm3Ocyg4r2htZUJDtYn03i0vaaju4oHzSqbjtDhHk8YRoTk/w
+	 nERwi7ubgJaQQJnpZpssRrkn7uSHJ2ZJA6tPTimEawLufDHP3I021IUlppnIJ/8Id8
+	 gx0oZepUgcULwfK4CU4hU/3SqD4/oLppWLJW9mXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgBZWH0 (ORCPT
+        id S1727815AbgBZWIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:07:26 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43070 "EHLO
+        Wed, 26 Feb 2020 17:08:24 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36783 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgBZWHY (ORCPT
+        with ESMTP id S1727709AbgBZWIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:07:24 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p125so1153554oif.10;
-        Wed, 26 Feb 2020 14:07:24 -0800 (PST)
+        Wed, 26 Feb 2020 17:08:23 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so1205740oic.3;
+        Wed, 26 Feb 2020 14:08:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mh9L6UBbZd077xS3dYC1Wgq1kmV8/0MwjWPhr3ALxzw=;
-        b=N9w+Nq8poK4jaUe38on2fXvkH2viynFW13WNQroqsmRAJ+UHToAw5A8VL0AlDvGfZb
-         MLEuJeUvVvkqCNUQcun/AJba+hCkBuZgcOwWvyBQ+CVvre8rBf0lli8uk4hrEx+ccfni
-         wUkZJh0qH460B2Zl575crgh9/gTv3WcukfrMPewuM4wi1tKo9+zon9JGQNRhVD4h4jh/
-         0H2zypsL6VKsyui6kKHan1Ct7A1VAbGx6C647KpQfNiJb2YGHT5u4bo+zIpJaruy/FOx
-         1/iZVXYB5r9QtcJ4VdmGjyiuWeLL5AR2T0Hu9gfQtVcjD/UkkH73hru4B1VsngVLwIts
-         fSKA==
-X-Gm-Message-State: APjAAAWOrGu/vJxpAgAROAfSpc/ALKXZN2jLTC+K/tGuwazXx2N5VuQG
-        3bzUz7ndS6zMJqIpoyXpsQuDx4QoWA==
-X-Google-Smtp-Source: APXvYqw1VLx2OrRQwWC2sH4XIbmcGTHpYpjGcFlcP4IOlWJurHfS6aQcTHXktgvzJUWnvB4nMfEaPg==
-X-Received: by 2002:a54:4510:: with SMTP id l16mr969952oil.70.1582754843674;
-        Wed, 26 Feb 2020 14:07:23 -0800 (PST)
+        bh=5sk04Aa0osSD8HvD4zEQiuhG+Svc22FeYyxbfTqw7T0=;
+        b=Xtlr+JBS8WhwZSrDzxGiyA9amTUadjLza628BAe77Dj3tn4gVk10heI74dXuUE4uPX
+         3/rLCwHu/QkJ45wavFqPl4HFD/7kCwTJsfXTjXmHb7ir/Kmb7fYm9zhss9UeeBVDGWlg
+         +t7mse7AqXDkvE5hiiQ33U+HCeyWVID5wSyqBTVT6nDEl0PpRmp6a2UuIf63q2dy9nug
+         OO71iXYfRhGHtcPhyxvDRWKYaNprpdWD9XTvmMqzksfUFULIrzsXZ8Y1L27glxQz2NsK
+         dyqVF1QVuMU7GbPRJ3hKsWxTkle3X9Y+uOzOrhvCYXRWpl8gC/fdOEJDnCFRbxYP9bEz
+         lnDw==
+X-Gm-Message-State: APjAAAX+uCkZP6HVL7feXIk5abUdA/6M2tsUomlAbQcvGhQAwBaRmj3g
+        DRQFgcRgy7UdqQvsoIFoSYWW2a40vg==
+X-Google-Smtp-Source: APXvYqxd1SsKO6HCPpKNN3ewCCxV7z2W8Z76dRsKMhAF2AJ+0XISi4LTkCEmr5LiwzRxiH6hL8yI6A==
+X-Received: by 2002:a05:6808:3b2:: with SMTP id n18mr933712oie.146.1582754902605;
+        Wed, 26 Feb 2020 14:08:22 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j45sm1220921ota.59.2020.02.26.14.07.21
+        by smtp.gmail.com with ESMTPSA id m69sm1215131otc.78.2020.02.26.14.08.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:07:23 -0800 (PST)
-Received: (nullmailer pid 18100 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:07:21 -0000
-Date:   Wed, 26 Feb 2020 16:07:21 -0600
+        Wed, 26 Feb 2020 14:08:22 -0800 (PST)
+Received: (nullmailer pid 19698 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:08:21 -0000
+Date:   Wed, 26 Feb 2020 16:08:21 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin
- controller to json-schema
-Message-ID: <20200226220721.GA18049@bogus>
-References: <20200222060435.971-1-yamada.masahiro@socionext.com>
- <20200222060435.971-3-yamada.masahiro@socionext.com>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: bus: Convert UniPhier System Bus to
+ json-schema
+Message-ID: <20200226220821.GA19595@bogus>
+References: <20200222061109.2021-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200222060435.971-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20200222061109.2021-1-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Feb 2020 15:04:35 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier pin controller binding to DT schema format.
+On Sat, 22 Feb 2020 15:11:09 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier System Bus controller binding to DT schema format.
 > 
 > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
 > 
-> In the original .txt file, there is a description:
-> The UniPhier pinctrl should be a subnode of a "syscon" compatible node
+> Changes in v2:
+>   - Fix the build error in the example
 > 
-> I did not figure out how to represent (or check) it in dt-schema.
-> I just moved it to a comment line in 'examples'.
-> If there is a better way, please let me know.
-> 
-> 
-> Changes in v2: None
-> 
->  .../pinctrl/socionext,uniphier-pinctrl.txt    | 27 ------------
->  .../pinctrl/socionext,uniphier-pinctrl.yaml   | 42 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 43 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+>  .../bus/socionext,uniphier-system-bus.yaml    | 96 +++++++++++++++++++
+>  .../bindings/bus/uniphier-system-bus.txt      | 66 -------------
+>  2 files changed, 96 insertions(+), 66 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
 > 
 
 Applied, thanks.
