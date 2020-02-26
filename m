@@ -2,101 +2,127 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A7CC4BA13
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C209BC4BA15
 	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAC524683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A22324688
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jO6ErSZT"
+	dkim=pass (2048-bit key) header.d=nexus-software-ie.20150623.gappssmtp.com header.i=@nexus-software-ie.20150623.gappssmtp.com header.b="uBz3+g+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgBZOJ1 (ORCPT
+        id S1727591AbgBZOJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:09:27 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37238 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgBZOJ0 (ORCPT
+        Wed, 26 Feb 2020 09:09:51 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41860 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBZOJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:09:26 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QE9BV5019682;
-        Wed, 26 Feb 2020 08:09:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582726151;
-        bh=qUxpFXYzynf3ipW3FKuxj4cz1djFjusDhz0uClvVdSw=;
-        h=From:To:CC:Subject:Date;
-        b=jO6ErSZTVXqX9HpWFTN0w3YCqcD0P/qaduGDLTz9RTOHbcV+fzq+d9YM/dE6idNys
-         4WsJmvliPgjydWCqyx5LzLdmmmqa/zppDRlQDK66CHS63uTW6vdQmXBe7DNXShprGu
-         LHIoD7zVxL9faD3wMXCMagqtSso9Ypd5EPmuNwBY=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QE9B3B075413;
-        Wed, 26 Feb 2020 08:09:11 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 08:09:11 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 08:09:11 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01QE9BAN103623;
-        Wed, 26 Feb 2020 08:09:11 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <mkl@pengutronix.de>, <wg@grandegger.com>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH can-next] can: tcan4x5x: Rename parse_config function
-Date:   Wed, 26 Feb 2020 08:03:58 -0600
-Message-ID: <20200226140358.30017-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 26 Feb 2020 09:09:49 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c26so3893876eds.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:09:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nexus-software-ie.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fXFKoR7odDqKyjm1wlalyPUtaV5JgRAtJWLDNUWDC8E=;
+        b=uBz3+g+j8keWl8UqI79zfp5ubt5QR7/jXbEkrRg/FCZsiZGJC3aScHfLMQZxnVbof3
+         /QZebawsO2zze1XxLqeBsXC2dsMaenQfIFyIOtbY2d5jk5G7uwQkFUZrYjeLa+zy3DE7
+         lzADPtw5KQoK/Pm/ROUTLWxaKS8vLmq7PtHLzzwWCoYi/uqf06dA+oXXNc1vUs/imun1
+         GOWPx1wK29lGZ/IcYPHFQbIU6q34VUM+92OI4u3yF1LEl7bMTJirNuZm/atrMNTPRdg5
+         ZG/tqQrfoKU+uMNPz9Ru9PJe0pyNk6lFQEORi/37O03LN46FGtKkMXMCRNDMc5vDil1W
+         RjJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fXFKoR7odDqKyjm1wlalyPUtaV5JgRAtJWLDNUWDC8E=;
+        b=HRK3OOZjkxFR6k341z3YZIjvbEaB+or5ZEB189yBo9uC37mgwVJPT09gEzZYzAfs8t
+         podb8VHBRTC2M50cN0R64SjpsSPr2gYU65S4D26wQ3eYYDSr1bKFKPVattde/S9FxydQ
+         SND3AcZpQ1zzKVWT9tjYRubs6dCI3SEn/kCf7xfQeIQ0L8tfoWHY7ntpueMXLleWUme4
+         4XVz//yaKz+r/zhf8WTx3Bqyf7WLzNxmM7JlGv8P7NnfXN9Jf91n3CWLd7ViaOqo08sh
+         3s2v1G9PMmibvZpBHM9CWzYykCyheDVN7muAvAfWRtTH/hlsFiDFUtC/r41s1i8hiACE
+         sU4A==
+X-Gm-Message-State: APjAAAVewmzf83W7AP1iLKXnpi/E4ekZfDNX8DpQguDDjf5oOFTVQOxc
+        6jbzOOgVCryivxI1KNo/kMhn+g==
+X-Google-Smtp-Source: APXvYqw0u4w7Awwn/Oq86trc1VxG309aOYxrpuzvaTjpcOA5sSGDTXcJUngxdDIFv1GDoA39EXuUlA==
+X-Received: by 2002:a05:6402:22d4:: with SMTP id dm20mr5099174edb.353.1582726187668;
+        Wed, 26 Feb 2020 06:09:47 -0800 (PST)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id c19sm91152ejm.47.2020.02.26.06.09.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 06:09:46 -0800 (PST)
+Subject: Re: [PATCH v4 0/5] Add clock drivers for SM8250 SoC
+To:     Vinod Koul <vkoul@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, tdas@codeaurora.org,
+        vnkgutta@codeaurora.org
+References: <20200224045003.3783838-1-vkoul@kernel.org>
+From:   Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Message-ID: <ada86697-374c-653d-156e-36af61b53c52@nexus-software.ie>
+Date:   Wed, 26 Feb 2020 14:09:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200224045003.3783838-1-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the tcan4x5x_parse_config function to tcan4x5x_get_gpios since
-the function retrieves the gpio configurations from the firmware.
+On 24/02/2020 04:49, Vinod Koul wrote:
+> This series adds clock drivers support for SM8250 SoC.  As part of the
+> device tree, the sm8250 dts file has basic nodes like CPU, PSCI, intc, timer
+> and clock controller.
+> 
+> Required clock controller driver and RPMH cloks are added to
+> support peripherals like USB.
+> 
+> All this configuration is added to support SM8250 to boot up to the
+> serial console.
+> 
+> Changes in v4:
+>   - Make qcom,gcc-sm8250.yaml license as dual GPL + BSD
+> 
+> Changes in v3:
+> - Dropped accepted patches by Steve
+> - Split the common rename patch to rename and refactor patches
+> - Rebase on clk/clk-qcom and move yaml binding to .../bindings/clock/qcom,gcc-sm8250.yaml
+> - Fix comments form Steve on gcc-sm8250 clk driver
+> 
+> Taniya Das (5):
+>    clk: qcom: clk-alpha-pll: Use common names for defines
+>    clk: qcom: clk-alpha-pll: Refactor trion PLL
+>    clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
+>    dt-bindings: clock: Add SM8250 GCC clock bindings
+>    clk: qcom: gcc: Add global clock controller driver for SM8250
+> 
+>   .../bindings/clock/qcom,gcc-sm8250.yaml       |   72 +
+>   drivers/clk/qcom/Kconfig                      |    7 +
+>   drivers/clk/qcom/Makefile                     |    1 +
+>   drivers/clk/qcom/clk-alpha-pll.c              |  264 +-
+>   drivers/clk/qcom/clk-alpha-pll.h              |   12 +
+>   drivers/clk/qcom/gcc-sm8250.c                 | 3690 +++++++++++++++++
+>   include/dt-bindings/clock/qcom,gcc-sm8250.h   |  271 ++
+>   7 files changed, 4268 insertions(+), 49 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
+>   create mode 100644 drivers/clk/qcom/gcc-sm8250.c
+>   create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
+> 
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
-
-API name change request - https://lore.kernel.org/patchwork/patch/1165091/
-
- drivers/net/can/m_can/tcan4x5x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
-index 9821babef55e..37d53ecc560b 100644
---- a/drivers/net/can/m_can/tcan4x5x.c
-+++ b/drivers/net/can/m_can/tcan4x5x.c
-@@ -381,7 +381,7 @@ static int tcan4x5x_disable_state(struct m_can_classdev *cdev)
- 				  TCAN4X5X_DISABLE_INH_MSK, 0x01);
- }
- 
--static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
-+static int tcan4x5x_get_gpios(struct m_can_classdev *cdev)
- {
- 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
- 	int ret;
-@@ -507,7 +507,7 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
--	ret = tcan4x5x_parse_config(mcan_class);
-+	ret = tcan4x5x_get_gpios(mcan_class);
- 	if (ret)
- 		goto out_power;
- 
--- 
-2.25.0
-
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
