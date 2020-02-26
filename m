@@ -2,104 +2,110 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC02DC4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00587C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A53222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A4E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgBZKSu (ORCPT
+        id S1727686AbgBZKTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:18:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:33286 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgBZKSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:18:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AEA21FB;
-        Wed, 26 Feb 2020 02:18:49 -0800 (PST)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B1DC3F9E6;
-        Wed, 26 Feb 2020 02:18:49 -0800 (PST)
-Date:   Wed, 26 Feb 2020 10:18:47 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        dietmar.eggemann@arm.com, rjw@rjwysocki.net, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 6/7] arm64: use activity monitors for frequency
- invariance
-Message-ID: <20200226101847.GA19513@arm.com>
-References: <20200224141142.25445-1-ionela.voinescu@arm.com>
- <20200224141142.25445-7-ionela.voinescu@arm.com>
- <jhjmu97ygk9.fsf@arm.com>
- <18604cef-1e26-96a6-38b3-ab03b1b53b48@arm.com>
+        Wed, 26 Feb 2020 05:19:35 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39443 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgBZKTf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:19:35 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1j6tmt-0005IF-5H; Wed, 26 Feb 2020 11:19:31 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id A34594C10C3;
+        Wed, 26 Feb 2020 10:19:29 +0000 (UTC)
+Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
+        =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
+ <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
+ <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
+ <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <7b85e098-b9a9-dd14-203f-100cdf2e703e@pengutronix.de>
+Date:   Wed, 26 Feb 2020 11:19:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18604cef-1e26-96a6-38b3-ab03b1b53b48@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin, Lukasz,
-
-On Tuesday 25 Feb 2020 at 09:59:20 (+0000), Lukasz Luba wrote:
-[..]
-> On 2/24/20 6:40 PM, Valentin Schneider wrote:
-> > 
-> > Ionela Voinescu writes:
-> > > +static inline int
-> > 
-> > That should be bool, seeing what it returns.
-> > 
-
-Will do!
-
-[..]
-> > > 
-> > > +#ifndef arch_cpu_freq_counters
-> > > +static __always_inline
-> > > +bool arch_cpu_freq_counters(struct cpumask *cpus)
-> > > +{
-> > > +	return false;
-> > > +}
-> > > +#endif
-> > > 
-> > 
-> > Apologies for commenting on this only now, I had missed it in my earlier
-> > round of review.
-> > 
-> > I would've liked to keep this contained within arm64 stuff until we agreed
-> > on a more generic counter-driven FIE interface, but seems like we can't evade
-> > it due to the arch_topology situation.
-> > 
-> > Would it make sense to relocate this stub to arch_topology.h instead, at
-> > least for the time being? That way the only non-arm64 changes are condensed
-> > in arch_topology (even if it doesn't change much in terms of header files,
-> > since topology.h imports arch_topology.h)
+On 2/26/20 8:37 AM, Marc Kleine-Budde wrote:
+>> Your right... there is the mcp251x_hw_rx_frame() call that also uses
+>> spi_rx_buf after a synchronous transfer (I didn't see any others).
+>> I'll look at this again.
 > 
-> Or make it as a 'weak' and place it just above the arch_set_freq_scale()
-> in arch_topology.c, not touching headers?
+> Have you hardware to test your changes? I think the SPI framework would
+> return an -EINVAL in that case....though the return value is sometimes
+> not checked by the driver :/
 
-Yes, you guys are right, this works better nicely confined to
-arch_topology.c/h. As Lukasz suggested, I'll make
-arch_cpu_freq_counters (while here, it probably works better renamed to
-arch_freq_counters_available) a weak function in arch_topology.c with
-its strong definition in arm64/kernel/topology.c.
+See https://elixir.bootlin.com/linux/v5.5.6/source/drivers/spi/spi.c#L3413
 
-The diff is large(ish) so I'll push v5 directly with this change.
+If you have really have HW with SPI_CONTROLLER_HALF_DUPLEX (a.k.a
+SPI_MASTER_HALF_DUPLEX) restrictions, you need to convert _every_
+mcp251x_spi_trans() call in the driver, as _always_ both rx_buf _and_
+tx_buf are used.
 
-Thank you both for the review,
-Ionela.
+Marc
+
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
