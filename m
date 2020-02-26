@@ -2,167 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53DFC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DB8C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC72724672
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582759637;
-	bh=sRKFXIOdMt3uKwrueRgdk4RpTv6iY5xBSrnyJV5ot80=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=IKaEsW7tU4PykF4dcMMUYUTV7+6TjP85vBTXSaq02zGXJZ6UgMjAiZwZMf8mUQZ2A
-	 9MMnOg5gyugq5zJTdkSHEHvm3u6InoZrbn33xPjjrPA55LBsi0smfVWsC96nvN9Mnb
-	 /IyffPaMSGaP9zqjT7pjOsFuGfNSEk2Hps51Uug0=
+	by mail.kernel.org (Postfix) with ESMTP id E669020658
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgBZX1Q (ORCPT
+        id S1727994AbgBZX1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgBZX1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:27:16 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798F920658;
-        Wed, 26 Feb 2020 23:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582759634;
-        bh=sRKFXIOdMt3uKwrueRgdk4RpTv6iY5xBSrnyJV5ot80=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=wHc72kbgn4rQ84i+w9kYe4ishVjAv196COq/bzb6sBIlV/oVJD95iJfDKF9UMY8uq
-         JklwyX/EVfC8vbzXYnhAbEKlizG22rOzXaWCuYyAocjWndGja5tUn8bpETfZY4UxDD
-         /KSnICnecF0p6mgn7deljGzUVr+eWbVW7vaRGo2I=
-Date:   Wed, 26 Feb 2020 17:27:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Fawad Lateef <fawadlateef@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe
- just goes bad)
-Message-ID: <20200226232713.GA191903@google.com>
+        Wed, 26 Feb 2020 18:27:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60796 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgBZX1a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 18:27:30 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j7651-00008W-8B; Thu, 27 Feb 2020 00:27:03 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BB201100EA1; Thu, 27 Feb 2020 00:27:02 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Patrick Geary <patrickg@supermicro.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] x86/tsc: Add kernel options to disable CPUID and MSR calibrations
+In-Reply-To: <20200226165407.GB18400@hirez.programming.kicks-ass.net>
+References: <20200226164308.14468-1-prarit@redhat.com> <20200226165407.GB18400@hirez.programming.kicks-ass.net>
+Date:   Thu, 27 Feb 2020 00:27:02 +0100
+Message-ID: <87k149nd4p.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226232550.GA191068@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Richard, Lucas]
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Wed, Feb 26, 2020 at 11:43:08AM -0500, Prarit Bhargava wrote:
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index dbc22d684627..0316aadfff08 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -4942,7 +4942,7 @@
+>>  			See Documentation/admin-guide/mm/transhuge.rst
+>>  			for more details.
+>>  
+>> -	tsc=		Disable clocksource stability checks for TSC.
+>> +	tsc=option[,option...]	Various TSC options.
+>>  			Format: <string>
+>>  			[x86] reliable: mark tsc clocksource as reliable, this
+>>  			disables clocksource verification at runtime, as well
+>> @@ -4960,6 +4960,12 @@
+>>  			in situations with strict latency requirements (where
+>>  			interruptions from clocksource watchdog are not
+>>  			acceptable).
+>> +			[x86] no_cpuid_calibration: Disable the CPUID TSC
+>> +			calibration.  Used in situations where the CPUID
+>> +			TSC khz does not match the actual CPU TSC khz
+>> +			[x86] no_msr_calibration: Disable the MSR TSC
+>> +			calibration.  Used in situations where the MSR
+>> +			TSC khz does not match the actual CPU TSC khz.
+>
+> Do we want to mention that these situations are mostly broken firmware?
+> Also do mention that if you disable these you might not boot due to not
+> having a PIT/HPET at all?
 
-On Wed, Feb 26, 2020 at 05:25:52PM -0600, Bjorn Helgaas wrote:
-> On Sat, Feb 22, 2020 at 04:25:41PM +0100, Fawad Lateef wrote:
-> > Hello,
-> > 
-> > I am trying to figure-out an issue on our i.MX6Q platform based design
-> > where PCIe interface goes bad.
-> > 
-> > We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
-> > board. PCIe root-complex from i.MX6Q is attached to PLX switch
-> > (PEX8605).
-> > 
-> > Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
-> > linux-mainline repo). Kernel do not have PCIe hot-plug and PNP enabled
-> > in config.
-> > 
-> > PLX switch #PERST is attached to a GPIO pin and stays in disable state
-> > until Linux is booted. So at boot time only PCIe root-complex is
-> > initialized by kernel.
-> > 
-> > After boot if I do "lspci -v"  and see everything good from PCIe
-> > root-complex (below):
-> > 
-> > ~ # lspci -v
-> > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> > [Normal decode])
-> > Flags: bus master, fast devsel, latency 0, IRQ 295
-> > Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> > Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> > I/O behind bridge: None
-> > Memory behind bridge: None
-> > Prefetchable memory behind bridge: None
-> > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> > Capabilities: [40] Power Management version 3
-> > Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> > Capabilities: [70] Express Root Port (Slot-), MSI 00
-> > Capabilities: [100] Advanced Error Reporting
-> > Capabilities: [140] Virtual Channel
-> > Kernel driver in use: pcieport
-> > 
-> > 
-> > Then I enable the #PERST pin of PLX switch, everything is still good
-> > (no rescan on Linux is done yet)
-> > 
-> > ~ # echo 139 > /sys/class/gpio/export
-> > ~ # echo out > /sys/class/gpio/gpio139/direction
-> > ~ # echo 1 > /sys/class/gpio/gpio139/value
-> > ~ # lspci -v
-> > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> > [Normal decode])
-> > Flags: bus master, fast devsel, latency 0, IRQ 295
-> > Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
-> > Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
-> > I/O behind bridge: None
-> > Memory behind bridge: None
-> > Prefetchable memory behind bridge: None
-> > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> > Capabilities: [40] Power Management version 3
-> > Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
-> > Capabilities: [70] Express Root Port (Slot-), MSI 00
-> > Capabilities: [100] Advanced Error Reporting
-> > Capabilities: [140] Virtual Channel
-> > Kernel driver in use: pcieport
-> > 
-> > 
-> > Now just disable/put-in-reset the PLX switch (Linux don't see the
-> > switch yet, as no rescan on PCIe was done). Now "lspci -v" and
-> > root-complex goes bad.
-> > 
-> > ~ # echo 0 > /sys/class/gpio/gpio139/value
-> > ~ # lspci -v
-> > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
-> > [Normal decode])
-> > Flags: fast devsel, IRQ 295
-> > Memory at 01000000 (64-bit, prefetchable) [disabled] [size=1M]
-> > Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
-> > I/O behind bridge: 00000000-00000fff [size=4K]
-> > Memory behind bridge: 00000000-000fffff [size=1M]
-> > Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
-> > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
-> > Capabilities: [40] Power Management version 3
-> > Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-> > Capabilities: [70] Express Root Port (Slot-), MSI 00
-> > Capabilities: [100] Advanced Error Reporting
-> > Capabilities: [140] Virtual Channel
-> > Kernel driver in use: pcieport
-> > 
-> > ~ # uname -a
-> > Linux buildroot-2019.08-imx6 4.14.134-phy2 #1 SMP Thu Feb 20 12:13:33
-> > UTC 2020 armv7l GNU/Linux
-> > ~ #
-> > 
-> > 
-> > I am really not sure what is going wrong here. Did I am missing
-> > something basic?
-> 
-> I agree, it looks like something's wrong, but I really don't have any
-> ideas.
-> 
-> I would start by using "lspci -xxxx" to see the actual values we get
-> from config space.  It looks like we're reading zeros from at least
-> the bus and window registers.
-> 
-> You could also instrument the i.MX config accessors in case there's
-> something strange going on there.  Maybe try to reproduce this on a
-> current upstream kernel?
-> 
-> Bjorn
+Right. Same discussion as before.
+
+Also why do we want no_cpuid_calibration and no_msr_calibration? How
+should Joe User figure out which one to use? This does not make
+sense. The point is that the BIOS/Firmware supplied value in system
+registers is bogus. So something like "skip_firmware_calibration" might
+be better suitable.
+
+Aside of that this really wants to be combined with the ability to
+supply the actual frequency on the command line as I suggested in the
+other thread to cope with machines which do not expose PIT/HPET or have
+broken variants of them.
+
+Thanks,
+
+        tglx
+
+
