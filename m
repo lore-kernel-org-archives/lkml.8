@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1ABC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF82C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D472B24688
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8546024690
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ev1MjJdU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KmtbFQUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgBZNum (ORCPT
+        id S1727466AbgBZNup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:50:42 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:51687 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgBZNul (ORCPT
+        Wed, 26 Feb 2020 08:50:45 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:50425 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgBZNuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:50:41 -0500
-Received: by mail-pj1-f74.google.com with SMTP id z5so2076359pjt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 05:50:39 -0800 (PST)
+        Wed, 26 Feb 2020 08:50:44 -0500
+Received: by mail-pl1-f202.google.com with SMTP id g5so1957498plq.17
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 05:50:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=W1kcFDCxBAKgTZSDNvvKohek86v0q+UsZEyJchNCOOg=;
-        b=Ev1MjJdUHo1fXI45iPMFb/YK1S5aeMO9r3qt9MOO26XJ/B3tEhzoDV8/1bnD6VOVzO
-         0qLiW2eZyLB/sTMShBiLBj7lr0OuXUpFBbvaPUVnqSd1lFc2ObORZYB+/am8/MnPdaSf
-         GiyoJl/ZtFrXgpd1TdExHY84DfwtgjOZXh2DQkIZP/irJObqsOuBUaFwViCRTsI7PgzH
-         NpfrF6wr9TV9Unc7yuqa6i4VJzGNcslgg2lOgRd3k+RzB3cjYcURF8H42awFuUf1/QWV
-         vLCHeVRfXSdPfUlN8bUkzD9DO0ubjz9Hia4LEPHNNXxE9hP/SeFLnEuriWOL4bTm5p4+
-         BW2g==
+        bh=CuP6fInohI0XjjoRoTIDjibvG/tUyVnMSm7MxozwsWo=;
+        b=KmtbFQUtxV90c2wPU6WggGYfvHJec4CCdxYfR5x3EfGKE4c9WcM4gDwTwlyy1EZg45
+         SAS7hDxrhJ70hSkfYqMl4DRTrO/vM5MtEWZv/OGH2u1VxH0ys7km9sOUuV5XByY1XtnA
+         1pQlQzDcYgxRYra2AsAR+0ehMKr+fnRa6nZmJGu0ypnXfXJrA3ufMlCoccr8r0oiJY8q
+         hMDrUQuwUndkgbjFh7qn5q6oDppi5FvuY6zttIHgi7cbF63tM6g0qjOmzBpXovLDqRRS
+         NnYkwQFleiePiGEt8gPLX+ksIc+vHUJoK6frHlA4yshfm5KJ9UqWzPkEDTvnod0maMQn
+         4nKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=W1kcFDCxBAKgTZSDNvvKohek86v0q+UsZEyJchNCOOg=;
-        b=RVrkqW8hO2xtNhRPjIiQADfCDSe4e+1nyxDKtIemrU5LLaGSkfzU4jfr5aiPitYis1
-         Qi5/zw7CG3a3REdal+DNkm9gcI2XQiI+5jBDV5adJHQmeylaWhdfNYse2+VrNsStFJpD
-         sB3CDBRT8+jN75sSQhnjlLtY1xTGY6Zt7/eSZhKoFMamQcjOgahxJ/ZZEy/nuyXQMl2G
-         b9tajDQAJD3cLnN6MLQ39vn0wvsM+SHvn9z15b6Gu/cRnaptZUcfudd0yfhfcaMa7IkD
-         LZQwvrHdGTxiK4lP/9QsoKRQ92SK02D6hrObzR7+fMkhUvTo1oMSMRWxdAgVIsApPLJj
-         2ejw==
-X-Gm-Message-State: APjAAAU/CDx8G1XUsWz1l757koCERaoOebgXvXnXKNiHGtMU12ekBA8b
-        7R3yjsUzCNxWHQxbrWC9Tbaa/3GUcETVzkA7pIlvsEX9wRhOJafmT9lA3hm1O8lXbB5WOkHy79e
-        HgZeXMRKS9N6seRcH1E4HE8Dws2/u3B1j8tBGYtvykyjVhrIallnZjNpH04XNK0DwQo0YTQ==
-X-Google-Smtp-Source: APXvYqx2QosV+YdWUwJ47Pyas/T6zCzlDN/ToPMo7tko4CAt7Uue9833vSOyMVqmMro/MBNcmZSjH60QMnE=
-X-Received: by 2002:a63:5f8e:: with SMTP id t136mr3911349pgb.411.1582725038910;
- Wed, 26 Feb 2020 05:50:38 -0800 (PST)
-Date:   Wed, 26 Feb 2020 05:50:26 -0800
+        bh=CuP6fInohI0XjjoRoTIDjibvG/tUyVnMSm7MxozwsWo=;
+        b=pSkUleCzlBD0rCpZ0ZcijAE5jS+IsM6Ebxn2Tx/2rDGs86913ZXLVTo+0eKPzn11sE
+         RIgl/7xlvvsKyqIxFg1zME5lQ2j8Iwh5vOKnLK8hp6T9pJO44uWJKaKuEnzsEF20h4ms
+         m528iOSixwcLhFEgdII+gNcKEsugCkfLEKGzR1O9COIm8Oj/yKi4DEA9j6gkQ/HCyVyN
+         z95g2TRJT1dQwbOCGqv3ac8so/ndW7s/XYDXcynlbhxKgA2k0bAFRWjILPzQfz1hiE7K
+         ihuh7qVsLTMH95OSb4Xyu3URQDW72x91WHNs/C1yDkBgOO9G655cAV9TRhUB+4Ay8uyb
+         Ul5g==
+X-Gm-Message-State: APjAAAXbCaEQ6asiF6eDuX6IMwv4mi2ZVKbQDwrT8WaCStkYvxcBqcVs
+        dvSX0YKGaRXPZX2g3e9fjWJF/klCod6A190UTXc3/uhrAZlZhIjKTGUgU6WX1iHuXyNAjdBfuRC
+        +dGGPjRQfG+AgM0PClP6nj/HG3aLvFiNg4eBC8J1ExoVcqrlPB7yMPkywkvVlwz1Aabhicw==
+X-Google-Smtp-Source: APXvYqyEQ1VbhGYj7yROKW/IANhbPjNWyvd0L+93uIlPN/wq8fNB5mT1koNT3bEqB2zLbAfJwyTtsdb4+j0=
+X-Received: by 2002:a63:c507:: with SMTP id f7mr3879450pgd.278.1582725042381;
+ Wed, 26 Feb 2020 05:50:42 -0800 (PST)
+Date:   Wed, 26 Feb 2020 05:50:27 -0800
 In-Reply-To: <20200226135027.34538-1-lrizzo@google.com>
-Message-Id: <20200226135027.34538-2-lrizzo@google.com>
+Message-Id: <20200226135027.34538-3-lrizzo@google.com>
 Mime-Version: 1.0
 References: <20200226135027.34538-1-lrizzo@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v3 1/2] kstats: kernel metric collector
+Subject: [PATCH v3 2/2] kstats: kretprobe and tracepoint support
 From:   Luigi Rizzo <lrizzo@google.com>
 To:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
         akpm@linux-foundation.org, gregkh@linuxfoundation.org,
@@ -74,469 +74,470 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kstats is a helper to accumulate in-kernel metrics (timestamps, sizes,
-etc.) and show distributions through debugfs.
-Set CONFIG_KSTATS=m or y to enable it.
+The following code supports runtime monitoring of the execution time of
+a block of code (a function, a section between two function entry points
+or tracepoints) _and_ the interval between calls to the block.
 
-Creating a metric takes one line of code (and one to destroy it):
+Use as follows:
 
-  struct kstats *key = kstats_new("foo", 3 /* frac_bits */);
-  ...
-  kstats_delete(key);
+  echo "trace S bits B start X end Y" > /sys/kernel/debug/kstats/_control
 
-The following line records a u64 sample:
+	creates node /sys/kernel/debug/kstats/S, traces time between X and Y
+	with 2^B buckets. Arguments after S are optional, X defaults to S,
+	bits defaults to 3, end defaults to empty. X and Y can be function
+	names or __tracepoint_T where T is a tracepoint name.
 
-  kstats_record(key, value);
+	It also creates a second node /sys/kernel/debug/kstats/GAP-S that
+	traces the time end and start of subsequent calls to the function
+	on the same CPU.
 
-kstats_record() is cheap (5ns hot cache, 250ns cold cache). Samples are
-accumulated in a per-cpu array with 2^frac_bits slots for each power
-of 2. Using frac_bits = 3 gives about 30 slots per decade.
+  echo "remove S" > /sys/kernel/debug/kstats/_control
 
-Each metric has an entry in /sys/kernel/debug/kstats which can be used
-to read and control data collection:
+	removes the two /sys/kernel/debugfs/kstats nodes, S and GAP-S
 
-- writing start/stop/reset starts and stops sample collection,
-  or resets the counters, e.g.
+The code uses 3 different methods to track start and end of the block:
 
-  echo reset > /sys/kernel/debug/kstats/foo
+1. if end is not specified, uses kretprobe to collect timestamps around
+   calls to function X.
 
-- reading from the node produces a detailed output that can be
-  processed with external tools for improved presentation:
+2. if end != start, use kprobe to collect timestaps in the two places.
+   Only meaningful when the two functions uniquely identify a code path.
 
-  cat /sys/kernel/debug/kstats/foo
-  ...
-  slot 55  CPU  0    count      589 avg      480 p 0.027613
-  slot 55  CPU  1    count       18 avg      480 p 0.002572
-  slot 55  CPU  2    count       25 avg      480 p 0.003325
-  ...
-  slot 55  CPUS 16   count      814 avg      480 p 0.002474
-  ...
-  slot 97  CPU  8    count     1150 avg    20130 p 0.447442
-  slot 97  CPU  12   count       26 avg    20294 p 0.275555
-  slot 97  CPUS 16   count   152585 avg    19809 p 0.651747
-  slot 98  CPU  0    count       38 avg    21360 p 0.954691
-  slot 98  CPU  1    count      456 avg    21412 p 0.872619
-  ...
-  slot 144 CPUS 16   count       12 avg  1061896 p 0.999999
-  slot 146 CPU  4    count        1 avg  1313664 p 1.000000
-  slot 146 CPUS 16   count        1 avg  1313664 p 1.000000
+3. if names have the form __tracepoint_XXX, collect timestamps at the
+   two tracepoints.
 
-Postprocessing examples:
-look at statistics for a single CPU (note double space)
-        cd /sys/kernel/kstats/
-        echo reset > foo; watch grep "'CPU  12 '" foo
+Metric collection through k[ret]probes or tracepoints is very convenient
+but much more intrusive and less accurate than manual annotation: this is
+because those hooks involve several out of line code and memory accesses,
+particularly expensive when not in cache.
+On a 2020 server-class x86 CPU, tracing a function with kretprobe adds
+~250ns with hot cache, 1500+ns with cold cache; an empty functions reports
+a minimum time of ~90ns with hot cache, 500ns with cold cache.
 
-Use gnuplot to plot distribution and cdf in a terminal from a remote host
-  gnuplot
-  set terminal dumb size 200 80
-  set logscale x
-  plot "<ssh root@myhost grep CPUS /sys/kernel/debug/kstats/foo" u 8:6 w l title "distribution"
-  plot "<ssh root@myhost grep CPUS /sys/kernel/debug/kstats/foo" u 8:10 w l title "cdf"
+(Hot and cold cache behavior can be easily tested by calling the traced
+function at high rates (<20us between calls) and low rates (>1ms))
 
 Signed-off-by: Luigi Rizzo <lrizzo@google.com>
 ---
- include/linux/kstats.h |  62 +++++++++
- lib/Kconfig.debug      |   7 +
- lib/Makefile           |   1 +
- lib/kstats.c           | 290 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 360 insertions(+)
- create mode 100644 include/linux/kstats.h
- create mode 100644 lib/kstats.c
+ lib/kstats.c | 368 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 366 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/kstats.h b/include/linux/kstats.h
-new file mode 100644
-index 0000000000000..636cc007fa138
---- /dev/null
-+++ b/include/linux/kstats.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_KSTATS_H
-+#define _LINUX_KSTATS_H
-+
-+#include <linux/types.h>
-+
-+/*
-+ * Helper to collect and report kernel metrics. Use as follows:
-+ *
-+ * - creates a new debugfs entry in /sys/kernel/debug/kstats/foo
-+ *   to collect the metric, accumulating samples in 2^frac_bits slots
-+ *   per power of 2
-+ *
-+ *	struct kstats *key = kstats_new("foo", frac_bits);
-+ *
-+ * - add instrumentation around code:
-+ *
-+ *	u64 dt = ktime_get_ns();	// about 20ns
-+ *	<section of code to measure>
-+ *	dt = ktime_get_ns() - dt;	// about 20ns
-+ *	kstats_record(key, dt);		// 5ns hot cache, 300ns cold
-+ *
-+ * - read values from debugfs
-+ *	cat /sys/kernel/debug/kstats/foo
-+ *	...
-+ *	slot 55  CPU  0    count      589 avg      480 p 0.027613
-+ *	slot 55  CPU  1    count       18 avg      480 p 0.002572
-+ *	slot 55  CPU  2    count       25 avg      480 p 0.003325
-+ *	...
-+ *	slot 55  CPUS 28   count      814 avg      480 p 0.002474
-+ *	...
-+ *	slot 97  CPU  13   count     1150 avg    20130 p 0.447442
-+ *	slot 97  CPUS 28   count   152585 avg    19809 p 0.651747
-+ *	...
-+ *
-+ * - write to the file STOP, START, RESET executes the corresponding action
-+ *
-+ *	echo RESET > /sys/kernel/debug/kstats/foo
-+ */
-+
-+struct kstats;
-+
-+#if defined(CONFIG_KSTATS) || defined(CONFIG_KSTATS_MODULE)
-+/* Add an entry to debugfs. */
-+struct kstats *kstats_new(const char *name, u8 frac_bits);
-+
-+/* Record a sample */
-+void kstats_record(struct kstats *key, u64 value);
-+
-+/* Remove an entry and frees memory */
-+void kstats_delete(struct kstats *key);
-+#else
-+static inline struct kstats *kstats_new(const char *name, u8 frac_bits)
-+{
-+	return NULL;
-+}
-+
-+static inline void kstats_record(struct kstats *key, u64 value) {}
-+static inline void kstats_delete(struct kstats *key) {}
-+#endif
-+
-+#endif /* _LINUX_KSTATS_H */
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 69def4a9df009..7d7fae57bfde5 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1452,6 +1452,13 @@ config LATENCYTOP
- 	  Enable this option if you want to use the LatencyTOP tool
- 	  to find out which userspace is blocking on what kernel operations.
- 
-+config KSTATS
-+	tristate "collect percpu metrics and export distributions through debugfs"
-+	depends on DEBUG_FS
-+	help
-+	  Helper library to collect percpu kernel metrics, exporting
-+	  distributions through debugfs. See lib/kstats.c
-+
- source "kernel/trace/Kconfig"
- 
- config PROVIDE_OHCI1394_DMA_INIT
-diff --git a/lib/Makefile b/lib/Makefile
-index 611872c069269..3f8578007db4e 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -236,6 +236,7 @@ obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
- obj-$(CONFIG_INTERVAL_TREE_TEST) += interval_tree_test.o
- 
- obj-$(CONFIG_PERCPU_TEST) += percpu_test.o
-+obj-$(CONFIG_KSTATS) += kstats.o
- 
- obj-$(CONFIG_ASN1) += asn1_decoder.o
- 
 diff --git a/lib/kstats.c b/lib/kstats.c
-new file mode 100644
-index 0000000000000..885ab448708de
---- /dev/null
+index 885ab448708de..4507f026b2fbc 100644
+--- a/lib/kstats.c
 +++ b/lib/kstats.c
-@@ -0,0 +1,290 @@
+@@ -21,6 +21,13 @@
+  *	slot 12  CPU  243  count        1 avg       12 p 0.000097
+  *	slot 12  CPUS 256  count    19977 avg       12 p 0.006153
+  *	...
++ *
++ * Besides manual code annotations, the following two commands add and remove
++ * tracing of the execution time of a function or a section of code, see more
++ * details later in this file:
++ *
++ *	echo "trace some_function" > /sys/kernel/debug/kstats/_control
++ *	echo "remove some_function" > /sys/kernel/debug/kstats/_control
+  */
+ 
+ #include <linux/kstats.h>
+@@ -68,6 +75,11 @@ static void ks_print(struct seq_file *p, int slot, int cpu, u64 sum,
+ 		   samples, avg, sum == tot ? '1' : '0', frac);
+ }
+ 
++/* Helpers for user-created nodes via _control */
++static int ks_list_nodes(struct seq_file *p);
++static int ks_control_write(char *buf, int ret);
++static bool ks_delete_nodes(const char *name);
++
+ /* Read handler */
+ static int ks_show_entry(struct seq_file *p, void *v)
+ {
+@@ -78,7 +90,7 @@ static int ks_show_entry(struct seq_file *p, void *v)
+ 	const size_t rowsize = ks ? ks->n_slots * sizeof(struct ks_slot) : 0;
+ 
+ 	if (!ks)
+-		return -ENOENT;
++		return ks_list_nodes(p);
+ 	if (!rowsize)
+ 		return 0;
+ 	/*
+@@ -152,7 +164,7 @@ static ssize_t ks_write(struct file *fp, const char __user *user_buffer,
+ 		buf[count - 1] = '\0';
+ 
+ 	if (ks == NULL)
+-		return -EINVAL;
++		return ks_control_write(buf, ret);
+ 
+ 	if (!strcasecmp(buf, "START")) {
+ 		ks->active = 1;
+@@ -189,11 +201,13 @@ static struct dentry *ks_root;	/* kstats root in debugfs */
+ static int __init ks_init(void)
+ {
+ 	ks_root = debugfs_create_dir("kstats", NULL);
++	debugfs_create_file("_control", 0644, ks_root, NULL, &ks_file_ops);
+ 	return 0;
+ }
+ 
+ static void __exit ks_exit(void)
+ {
++	ks_delete_nodes(NULL);
+ 	debugfs_remove_recursive(ks_root);
+ }
+ 
+@@ -288,3 +302,353 @@ void kstats_record(struct kstats *ks, u64 val)
+ 	preempt_enable();
+ }
+ EXPORT_SYMBOL(kstats_record);
++
 +/*
-+ * kstats, collect samples and export distributions through debugfs
++ * The following code supports runtime monitoring of the execution time of
++ * a block of code (a function, a section between two function entry points
++ * or tracepoints) with the following command:
 + *
-+ * CREATE OBJECT:
-+ *	struct kstats *key = kstats_new("some_name", 3);
++ * echo "trace S bits B start X end Y" > /sys/kernel/debug/kstats/_control
 + *
-+ * ADD A SAMPLE:
-+ *	u64 dt = ktime_get_ns();	// about 20ns
-+ *	<code to instrument>
-+ *	dt = ktime_get_ns() - t;	// about 20ns
-+ *	kstats_record(key, dt);		// 5ns hot cache, 250ns cold
++ *    creates node /sys/kernel/debug/kstats/S, traces time between X and Y
++ *    with 2^B buckets. Arguments after S are optional, X defaults to S,
++ *    bits defaults to 3, end defaults to empty. X and Y can be function names
++ *    or __tracepoint_T where T is a tracepoint name.
 + *
-+ * SHOW DATA:
-+ *	cat /sys/kernel/debug/kstats/some_name
++ *    It also creates a second node /sys/kernel/debug/kstats/GAP-S that traces
++ *    the time between end and start of subsequent calls to the function on
++ *    the same CPU.
 + *
-+ *	...
-+ *	slot 12  CPU  0    count      764 avg       12 p 0.011339
-+ *	slot 12  CPU  1    count      849 avg       12 p 0.011496
-+ *	slot 12  CPU  2    count      712 avg       12 p 0.009705
-+ *	...
-+ *	slot 12  CPU  243  count        1 avg       12 p 0.000097
-+ *	slot 12  CPUS 256  count    19977 avg       12 p 0.006153
-+ *	...
++ * echo "remove S" > /sys/kernel/debug/kstats/_control
++ *
++ *    removes the two /sys/kernel/debugfs/kstats nodes, S and GAP-S
++ *
++ * The code uses 3 different methods to track start and end of the block:
++ *
++ * 1. if end is not specified, uses kretprobe to collect timestamps around
++ *    calls to function X.
++ *
++ * 2. if end != start, use kprobe to collect timestaps in the two places.
++ *    Only meaningful when the two functions uniquely identify a code path.
++ *
++ * 3. if names have the form __tracepoint_XXX, collect timestamps at the
++ *    two tracepoints.
++ *
++ * Metric collection through k[ret]probes or tracepoints is very convenient
++ * but much more intrusive and less accurate than manual annotation: this is
++ * because those hooks involve several out of line code and memory accesses,
++ * particularly expensive when not in cache.
++ * On a 2020 server-class x86 CPU, tracing a function with kretprobe adds
++ * ~250ns with hot cache, 1500+ns with cold cache; an empty functions reports
++ * a minimum time of ~90ns with hot cache, 500ns with cold cache.
 + */
 +
-+#include <linux/kstats.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/percpu.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/debugfs.h>
++#include <linux/kprobes.h>
++#include <linux/tracepoint.h>
 +
-+/*
-+ * Values are 64 bit unsigned and are accumulated per cpu, in one bucket for
-+ * each power of 2. Each bucket is further subdivided in 2^frac_bits slots.
-+ * The range for each slot is 2^-frac_bits of the base value for the bucket.
-+ */
-+#define BUCKETS	64	/* Total powers of 2 */
++/* Manually added entries are in a list protected by ks_mutex */
++static LIST_HEAD(ks_user_nodes);
++static DEFINE_MUTEX(ks_mutex);
 +
-+/* For large values, sum is scaled to reduce the chance of overflow */
-+#define SUM_SCALE 20
-+
-+/* Internal names start with ks_, external ones with kstats_ */
-+
-+struct ks_slot {
-+	u64 samples;
-+	u64 sum;
++/* Manually added nodes */
++enum node_type { KSN_NONE = 0, KSN_KPROBE, KSN_RETPROBE, KSN_TRACEPOINT };
++struct ks_node {
++	struct kstats *ks;	/* record time for a call */
++	struct kstats *ks_gap;	/* record gap between calls */
++	struct list_head link;	/* Set for nodes added to the main list */
++	enum node_type type;
++	/* These could do in a union */
++	struct kprobe kp1;
++	struct kprobe kp2;
++	struct kretprobe kret;
++	struct tracepoint *tp1;
++	struct tracepoint *tp2;
++	char name[0];
 +};
 +
-+struct kstats {
-+	u16 n_slots;		/* typically BUCKETS * 2^frac_bits + 2 */
-+	u8 frac_bits;
-+	u8 frac_mask;		/* 2^frac_bits - 1 */
-+	bool active;		/* recording status */
-+	struct ks_slot __percpu *slots;
-+	struct dentry *entry;	/* debugfs entry */
-+};
-+
-+static void ks_print(struct seq_file *p, int slot, int cpu, u64 sum,
-+		     u64 tot, unsigned long samples, unsigned long avg)
++/* Address of the temporary storage for starting timestamp */
++static u64 *ts_addr(struct kstats *ks)
 +{
-+	unsigned long frac = (tot == 0) ? 0 : ((sum % tot) * 1000000) / tot;
-+
-+	seq_printf(p,
-+		   "slot %-3d CPU%c %-4d count %8lu avg %8lu p %c.%06lu\n",
-+		   slot, cpu == nr_cpu_ids ? 'S' : ' ', cpu,
-+		   samples, avg, sum == tot ? '1' : '0', frac);
++	return &((this_cpu_ptr(ks->slots) + ks->n_slots + 1)->sum);
 +}
 +
-+/* Read handler */
-+static int ks_show_entry(struct seq_file *p, void *v)
++/* Store value in slot if not set already */
++static void ks_ts_start(struct kstats *ks, u64 value)
 +{
-+	u32 slot, cpu;
-+	struct ks_slot *slots, *cur;
-+	struct kstats *ks = p->private;
-+	u64 *partials, *totals, grand_total = 0;
-+	const size_t rowsize = ks ? ks->n_slots * sizeof(struct ks_slot) : 0;
++	u64 *addr = ts_addr(ks);
 +
-+	if (!ks)
-+		return -ENOENT;
-+	if (!rowsize)
-+		return 0;
-+	/*
-+	 * Counters are updated while we read them, so make a copy first.
-+	 * kvzalloc'ed memory contains three areas:
-+	 *
-+	 *   slots:	[ nr_cpu_ids ][ ks->n_slots ](struct ks_slot)
-+	 *   partials:	[ nr_cpu_ids ](u64)
-+	 *   totals:	[ nr_cpu_ids ](u64)
-+	 */
-+	slots = kvzalloc(nr_cpu_ids * (rowsize + 2 * sizeof(u64)), GFP_KERNEL);
-+	if (!slots)
-+		return -ENOMEM;
-+	partials = (u64 *)(slots + ks->n_slots * nr_cpu_ids);
-+	totals = partials + nr_cpu_ids;
-+	/* Copy data and compute counts totals (per-cpu and grand_total).
-+	 * These values are needed to compute percentiles.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		cur = slots + ks->n_slots * cpu;
-+		memcpy(cur, per_cpu_ptr(ks->slots, cpu), rowsize);
-+		for (slot = 0; slot < ks->n_slots; slot++)
-+			totals[cpu] += cur[slot].samples;
-+		grand_total += totals[cpu];
++	if (!*addr)
++		*addr = value;
++}
++
++/* Record value if previous was non zero */
++static void ks_ts_record(struct kstats *ks, u64 value)
++{
++	u64 *addr = ts_addr(ks);
++
++	if (*addr) {
++		kstats_record(ks, value - *addr);
++		*addr = 0;
 +	}
++}
 +
-+	/* Second pass, produce individual lines */
-+	for (slot = 0; slot < ks->n_slots; slot++) {
-+		u64 n, samples = 0, sum = 0, samples_cumulative = 0;
-+		u32 bucket = slot >> ks->frac_bits;
-+		u32 sum_shift = bucket < SUM_SCALE ? 0 : bucket - SUM_SCALE;
++/*
++ * Method 3, tracepoints. The first argument of the tracepoint callback
++ * comes from tracepoint_probe_register, others as defined in the proto.
++ */
++static int ks_tp_start(struct ks_node *cur)
++{
++	u64 now;
 +
-+		for_each_possible_cpu(cpu) {
-+			cur = slots + ks->n_slots * cpu;
-+			sum += cur[slot].sum;
-+			n = cur[slot].samples;
-+			samples += n;
-+			partials[cpu] += n;
-+			samples_cumulative += partials[cpu];
-+			if (n == 0)
-+				continue;
-+			ks_print(p, slot, cpu, partials[cpu], totals[cpu], n,
-+				 (cur[slot].sum / n) << sum_shift);
-+		}
-+		if (samples == 0)
-+			continue;
-+		ks_print(p, slot, nr_cpu_ids, samples_cumulative, grand_total,
-+			 samples, (sum / samples) << sum_shift);
-+	}
-+	kvfree(slots);
++	preempt_disable();
++	now = ktime_get_ns();
++	ks_ts_start(cur->ks, now);
++	if (cur->ks_gap)
++		ks_ts_record(cur->ks_gap, now);
++	preempt_enable();
 +	return 0;
 +}
 +
-+static ssize_t ks_write(struct file *fp, const char __user *user_buffer,
-+			size_t count, loff_t *position)
++static int ks_tp_end(struct ks_node *cur)
 +{
-+	struct inode *ino = fp->f_inode;
-+	struct kstats *ks = ino ? ino->i_private : NULL;
-+	char buf[256] = {};
-+	ssize_t ret;
-+	u32 cpu;
++	u64 now;
 +
-+	if (count >= sizeof(buf) - 1)
-+		return -EINVAL;
-+	ret = simple_write_to_buffer(buf, sizeof(buf),
-+				     position, user_buffer, count);
-+	if (ret < 0)
-+		return ret;
-+	/* Trim final newline if any */
-+	if (count > 0 && buf[count - 1] == '\n')
-+		buf[count - 1] = '\0';
++	preempt_disable();
++	now = ktime_get_ns();
++	ks_ts_record(cur->ks, now);
++	if (cur->ks_gap)
++		ks_ts_start(cur->ks_gap, now);
++	preempt_enable();
++	return 0;
++}
 +
-+	if (ks == NULL)
-+		return -EINVAL;
++/* Method 1: use kretprobe */
++static int ks_kretp_start(struct kretprobe_instance *r, struct pt_regs *regs)
++{
++	return ks_tp_start(container_of(r->rp, struct ks_node, kret));
++}
 +
-+	if (!strcasecmp(buf, "START")) {
-+		ks->active = 1;
-+	} else if (!strcasecmp(buf, "STOP")) {
-+		ks->active = 0;
-+	} else if (!strcasecmp(buf, "RESET")) {
-+		for_each_possible_cpu(cpu) {
-+			memset(per_cpu_ptr(ks->slots, cpu), 0,
-+			       ks->n_slots * sizeof(struct ks_slot));
++static int ks_kretp_end(struct kretprobe_instance *r, struct pt_regs *regs)
++{
++	return ks_tp_end(container_of(r->rp, struct ks_node, kret));
++}
++
++/* Method 2, kprobes */
++static int ks_kprobe_start(struct kprobe *f, struct pt_regs *regs)
++{
++	return ks_tp_start(container_of(f, struct ks_node, kp1));
++}
++
++static int ks_kprobe_end(struct kprobe *f, struct pt_regs *regs)
++{
++	return ks_tp_end(container_of(f, struct ks_node, kp2));
++}
++
++/* Destroy a user-defined node */
++static void ks_node_delete(struct ks_node *cur)
++{
++	if (!cur)
++		return;
++#ifdef CONFIG_TRACEPOINTS
++	if (cur->tp2)
++		tracepoint_probe_unregister(cur->tp2, ks_tp_end, cur);
++	if (cur->tp1)
++		tracepoint_probe_unregister(cur->tp1, ks_tp_start, cur);
++	tracepoint_synchronize_unregister();
++#endif
++	unregister_kretprobe(&cur->kret);
++	unregister_kprobe(&cur->kp1);
++	unregister_kprobe(&cur->kp2);
++	kstats_delete(cur->ks);
++	kstats_delete(cur->ks_gap);
++	kfree(cur);
++}
++
++/* Some names cannot be attached to */
++static bool blacklisted(const char *name)
++{
++	static const char * const blacklist[] = {
++		"kstats_record",
++		NULL
++	};
++	int i;
++
++	for (i = 0; name && blacklist[i]; i++) {
++		if (!strcmp(name, blacklist[i])) {
++			pr_info("%s is blacklisted\n", name);
++			return true;
 +		}
++	}
++	return false;
++}
++
++static const char gap[] = "GAP-";
++static char *ksn_name(struct ks_node *cur)
++{
++	return cur->name + sizeof(gap) - 1;
++}
++
++/* Create a new user-defined node */
++static struct ks_node *ks_node_new(int n, char *argv[])
++{
++	static const char *tp_prefix = "__tracepoint_";
++	char *name = argv[1], *start = name, *end = NULL;
++	struct ks_node *cur;
++	u64 bits = 3;
++	int i, ret;
++
++	/* 'arg value' pairs may override defaults */
++	for (i = 2; i < n - 1; i += 2) {
++		if (!strcasecmp(argv[i], "bits")) {
++			if (kstrtou64(argv[i + 1], 0, &bits) || bits > 4) {
++				pr_info("invalid bits %d\n", (int)bits);
++				break;
++			}
++		} else if (!strcasecmp(argv[i], "start")) {
++			start = argv[i + 1];
++		} else if (!strcasecmp(argv[i], "end")) {
++			end = argv[i + 1];
++		} else {
++			break;
++		}
++	}
++	if (i != n)
++		return ERR_PTR(-EINVAL);
++
++	cur = kzalloc(sizeof(*cur) + strlen(name) + sizeof(gap), GFP_KERNEL);
++	if (!cur) {
++		pr_info("%s: no memory to add %s\n", __func__, name);
++		return ERR_PTR(-ENOMEM);
++	}
++	strcpy(ksn_name(cur), name);
++	if (blacklisted(start) || blacklisted(end))
++		return ERR_PTR(-EINVAL);
++
++	cur->ks = kstats_new(name, bits);
++	if (!cur->ks)
++		goto fail;
++
++	if (!end || !*end) {
++		/* try to create an entry with the gap between calls */
++		memcpy(cur->name, gap, sizeof(gap) - 1);
++		cur->ks_gap = kstats_new(cur->name, bits);
++
++		cur->kret.entry_handler = ks_kretp_start;
++		cur->kret.handler = ks_kretp_end;
++		cur->kret.data_size = 0;
++		cur->kret.kp.symbol_name = start;
++		ret = register_kretprobe(&cur->kret);
++		if (ret)
++			goto fail;
++	} else if (strncmp(start, tp_prefix, strlen(tp_prefix)) != 0) {
++		pr_info("XXX use kprobe on '%s', '%s'\n", start, end);
++		cur->kp2.symbol_name = end;
++		cur->kp2.pre_handler = ks_kprobe_end;
++		if (register_kprobe(&cur->kp2))
++			goto fail;
++		cur->kp1.symbol_name = start;
++		cur->kp1.pre_handler = ks_kprobe_start;
++		if (register_kprobe(&cur->kp1))
++			goto fail;
++	} else {
++		cur->tp1 = (void *)kallsyms_lookup_name(start);
++		cur->tp2 = (void *)kallsyms_lookup_name(end);
++		if (!cur->tp1 || !cur->tp2)
++			goto fail;
++#ifndef CONFIG_TRACEPOINTS
++		goto fail;
++#else
++		ret = tracepoint_probe_register(cur->tp1, ks_tp_start, cur);
++		if (ret)
++			goto fail;
++		ret = tracepoint_probe_register(cur->tp2, ks_tp_end, cur);
++		if (ret)
++			goto fail;
++#endif
++	}
++	return cur;
++
++fail:
++	ks_node_delete(cur);
++	return ERR_PTR(-EINVAL);
++
++}
++
++static int ks_list_nodes(struct seq_file *p)
++{
++	struct ks_node *cur;
++	const char *sep = "";
++
++	mutex_lock(&ks_mutex);
++	list_for_each_entry(cur, &ks_user_nodes, link) {
++		seq_printf(p, "%s%s", sep, ksn_name(cur));
++		sep = " ";
++	}
++	mutex_unlock(&ks_mutex);
++	seq_printf(p, "\n");
++	return 0;
++}
++
++/* Split a string into words, returns number of words */
++static int ks_split_command(char *s, char *words[], int count)
++{
++	int i = 0, n;
++
++	for (n = 0; n < count; n++) {
++		/* Skip and clear leading whitespace */
++		while (s[i] && strchr(" \t\r\n", s[i]))
++			s[i++] = '\0';
++		words[n] = s + i; /* Tentative offset */
++		/* Find end of word */
++		while (s[i] && s[i] > ' ' && s[i] < 127)
++			i++;
++		if (s + i == words[n])
++			break;
++	}
++	return n;
++}
++
++/* Delete one/all nodes (name == NULL). Returns true if some are deleted */
++static bool ks_delete_nodes(const char *name)
++{
++	struct ks_node *tmp, *cur;
++	bool found = false;
++
++	mutex_lock(&ks_mutex);
++	list_for_each_entry_safe(cur, tmp, &ks_user_nodes, link) {
++		if (name != NULL && strcmp(ksn_name(cur), name))
++			continue; /* no match */
++		found = true;
++		list_del(&cur->link);
++		ks_node_delete(cur);
++	}
++	mutex_unlock(&ks_mutex);
++	return found;
++}
++
++static int ks_control_write(char *buf, int ret)
++{
++	char *args[10];	/* we don't need more than 8 */
++	struct ks_node *cur;
++	int n;
++
++	n = ks_split_command(buf, args, ARRAY_SIZE(args));
++	if (n < 2 || n == ARRAY_SIZE(args))
++		return -EINVAL;
++	if (!strcasecmp(args[0], "remove")) {
++		if (n != 2)
++			return -EINVAL;
++		if (!ks_delete_nodes(args[1]))
++			return -ENOENT;
++	} else if (!strcasecmp(args[0], "trace")) {
++		cur = ks_node_new(n, args);
++		if (IS_ERR_OR_NULL(cur))
++			return PTR_ERR(cur);
++		mutex_lock(&ks_mutex);
++		list_add(&cur->link, &ks_user_nodes);
++		mutex_unlock(&ks_mutex);
 +	} else {
 +		ret = -EINVAL;
 +	}
-+	/* TODO: add another command to turn off and deallocate memory. */
 +	return ret;
 +}
-+
-+static int ks_open(struct inode *inode, struct file *f)
-+{
-+	return single_open(f, ks_show_entry, inode->i_private);
-+}
-+
-+static const struct file_operations ks_file_ops = {
-+	.owner = THIS_MODULE,
-+	.open = ks_open,
-+	.release = single_release,
-+	.read = seq_read,
-+	.write = ks_write,
-+	.llseek = seq_lseek,
-+};
-+
-+static struct dentry *ks_root;	/* kstats root in debugfs */
-+
-+static int __init ks_init(void)
-+{
-+	ks_root = debugfs_create_dir("kstats", NULL);
-+	return 0;
-+}
-+
-+static void __exit ks_exit(void)
-+{
-+	debugfs_remove_recursive(ks_root);
-+}
-+
-+/* Run as soon as possible, but after debugfs, which is in core_initcall */
-+postcore_initcall(ks_init);
-+module_exit(ks_exit);
-+MODULE_LICENSE("GPL");
-+
-+/* User API: kstats_new(), kstats_delete(), kstats_record() */
-+
-+struct kstats *kstats_new(const char *name, u8 frac_bits)
-+{
-+	struct kstats *ks = NULL;
-+	const char *errmsg = "";
-+
-+	if (IS_ERR_OR_NULL(ks_root)) {
-+		errmsg = "ks_root not set yet";
-+		goto error;
-+	}
-+
-+	if (frac_bits > 5) {
-+		pr_info("fractional bits %d too large, using 3\n", frac_bits);
-+		frac_bits = 3;
-+	}
-+	ks = kzalloc(sizeof(*ks), GFP_KERNEL);
-+	if (!ks)
-+		return NULL;
-+	ks->active = 1;
-+	ks->frac_bits = frac_bits;
-+	ks->frac_mask = (1 << frac_bits) - 1;
-+	ks->n_slots = ((BUCKETS - frac_bits + 1) << frac_bits) + 1;
-+
-+	/* Add one extra bucket for user timestamps */
-+	ks->slots = __alloc_percpu((1 + ks->n_slots) * sizeof(struct ks_slot),
-+				   sizeof(u64));
-+	if (!ks->slots) {
-+		errmsg = "failed to allocate pcpu";
-+		goto error;
-+	}
-+
-+	/* 'ks' is saved in the inode (entry->d_inode->i_private). */
-+	ks->entry = debugfs_create_file(name, 0444, ks_root, ks, &ks_file_ops);
-+	__module_get(THIS_MODULE);
-+	return ks;
-+
-+error:
-+	pr_info("kstats: '%s' error %s\n", name, errmsg);
-+	kstats_delete(ks);
-+	return NULL;
-+}
-+EXPORT_SYMBOL(kstats_new);
-+
-+void kstats_delete(struct kstats *ks)
-+{
-+	if (!ks)
-+		return;
-+	debugfs_remove(ks->entry);
-+	if (ks->slots)
-+		free_percpu(ks->slots);
-+	*ks = (struct kstats){};
-+	kfree(ks);
-+	module_put(THIS_MODULE);
-+}
-+EXPORT_SYMBOL(kstats_delete);
-+
-+void kstats_record(struct kstats *ks, u64 val)
-+{
-+	u32 bucket, slot;
-+
-+	if (!ks || !ks->active)
-+		return;
-+	/* The leftmost 1 selects the bucket, subsequent frac_bits select
-+	 * the slot within the bucket. fls returns 0 when the argument is 0.
-+	 */
-+	bucket = fls64(val >> ks->frac_bits);
-+	slot = bucket == 0 ? val :
-+		((bucket << ks->frac_bits) |
-+		 ((val >> (bucket - 1)) & ks->frac_mask));
-+
-+	/* Use the last slot on overflow if BUCKETS < 64 */
-+	if (slot > ks->n_slots - 2)
-+		slot = ks->n_slots - 1;
-+
-+	/* preempt_disable makes sure samples and sum modify the same slot.
-+	 * this_cpu_add() uses a non-interruptible add to protect against
-+	 * hardware interrupts which may call kstats_record.
-+	 */
-+	preempt_disable();
-+	this_cpu_add(ks->slots[slot].samples, 1);
-+	this_cpu_add(ks->slots[slot].sum,
-+		     bucket < SUM_SCALE ? val : (val >> (bucket - SUM_SCALE)));
-+	preempt_enable();
-+}
-+EXPORT_SYMBOL(kstats_record);
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
