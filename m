@@ -2,175 +2,82 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B293FC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB14C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7B62084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2036F2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582733529;
+	bh=zD95C8jXvKeA2Lkq8Qa1pNu3GAc/DOkXqzcvvDopkzw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YmBGpRKN2l5y95BFxpvVJE9p9+3qjJ8mwc0WOi0hUZ2Kdnmd1fCZRcQRV75PojkDq
+	 gBv7wcnseVAeH4Hwz8nS+dT+LiFb1x1VkAO7c9A9AszdCHO8NV4yh8oFYm7t2vFnBI
+	 TrBzzhhFvo27D1FGhe+mgQbNxaoTgtVnlShzojVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBZQKF (ORCPT
+        id S1727060AbgBZQMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:10:05 -0500
-Received: from mga01.intel.com ([192.55.52.88]:25114 "EHLO mga01.intel.com"
+        Wed, 26 Feb 2020 11:12:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:38568 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbgBZQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:10:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 08:10:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
-   d="scan'208";a="350419564"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2020 08:10:04 -0800
-Date:   Wed, 26 Feb 2020 08:10:04 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Halliday <jonathan.halliday@redhat.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200226161004.GB22036@iweiny-DESK2.sc.intel.com>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-8-ira.weiny@intel.com>
- <20200221174449.GB11378@lst.de>
- <20200221224419.GW10776@dread.disaster.area>
- <20200224175603.GE7771@lst.de>
- <20200225000937.GA10776@dread.disaster.area>
- <20200225173633.GA30843@lst.de>
- <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
- <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+        id S1726278AbgBZQMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:12:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D7A630E;
+        Wed, 26 Feb 2020 08:12:07 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58AC83F819;
+        Wed, 26 Feb 2020 08:12:06 -0800 (PST)
+Date:   Wed, 26 Feb 2020 16:12:04 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH for-next 3/3] ASoC: tas2562: Fix sample rate error message
+Message-ID: <20200226161204.GG4136@sirena.org.uk>
+References: <20200226130305.12043-1-dmurphy@ti.com>
+ <20200226130305.12043-3-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FwyhczKCDPOVeYh6"
 Content-Disposition: inline
-In-Reply-To: <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200226130305.12043-3-dmurphy@ti.com>
+X-Cookie: May all your PUSHes be POPped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 09:28:57AM +0000, Jonathan Halliday wrote:
-> 
-> Hi All
-> 
-> I'm a middleware developer, focused on how Java (JVM) workloads can benefit
-> from app-direct mode pmem. Initially the target is apps that need a fast
-> binary log for fault tolerance: the classic database WAL use case;
-> transaction coordination systems; enterprise message bus persistence and
-> suchlike. Critically, there are cases where we use log based storage, i.e.
-> it's not the strict 'read rarely, only on recovery' model that a classic db
-> may have, but more of a 'append only, read many times' event stream model.
-> 
-> Think of the log oriented data storage as having logical segments (let's
-> implement them as files), of which the most recent is being appended to
-> (read_write) and the remaining N-1 older segments are full and sealed, so
-> effectively immutable (read_only) until discarded. The tail segment needs to
-> be in DAX mode for optimal write performance, as the size of the append may
-> be sub-block and we don't want the overhead of the kernel call anyhow. So
-> that's clearly a good fit for putting on a DAX fs mount and using mmap with
-> MAP_SYNC.
-> 
-> However, we want fast read access into the segments, to retrieve stored
-> records. The small access index can be built in volatile RAM (assuming we're
-> willing to take the startup overhead of a full file scan at recovery time)
-> but the data itself is big and we don't want to move it all off pmem. Which
-> means the requirements are now different: we want the O/S cache to pull hot
-> data into fast volatile RAM for us, which DAX explicitly won't do.
-> Effectively a poor man's 'memory mode' pmem, rather than app-direct mode,
-> except here we're using the O/S rather than the hardware memory controller
-> to do the cache management for us.
-> 
-> Currently this requires closing the full (read_write) file, then copying it
-> to a non-DAX device and reopening it (read_only) there. Clearly that's
-> expensive and rather tedious. Instead, I'd like to close the MAP_SYNC mmap,
-> then, leaving the file where it is, reopen it in a mode that will instead go
-> via the O/S cache in the traditional manner.
 
-This patch set implements this capability.
+--FwyhczKCDPOVeYh6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Bonus points if I can do it
-> over non-overlapping ranges in a file without closing the DAX mode mmap,
-> since then the segments are entirely logical instead of needing separate
-> physical files.
+On Wed, Feb 26, 2020 at 07:03:05AM -0600, Dan Murphy wrote:
+> Fix error message for setting the sample rate.  It says bitwidth but
+> should say sample rate.
 
-But it is too hard to do so while an mmap is in place so it can't do this.  So
-no bonus points...
+Fixes should always go at the start of a series so they can be applied
+as such without any dependency on any new features or cleanups.
 
-> 
-> I note a comment below regarding a per-directly setting, but don't have the
-> background to fully understand what's being suggested. However, I'll note
-> here that I can live with a per-directory granularity, as relinking a file
-> into a new dir is a constant time operation, whilst the move described above
-> isn't. So if a per-directory granularity is easier than a per-file one
-> that's fine, though as a person with only passing knowledge of filesystem
-> design I don't see how having multiple links to a file can work cleanly in
-> that case.
+--FwyhczKCDPOVeYh6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The more I think about it the more I'm not comfortable with a directory option.
-soft links and hard links complicate that IMO.  The current inheritance model
-is at file creation time and the file sticks with that state (mode).  That is
-easy enough and carry's with the file without having the complexity of possibly
-looking at the wrong parent directory.
+-----BEGIN PGP SIGNATURE-----
 
-Ira
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5WmNMACgkQJNaLcl1U
+h9B0awf9ESCiHU9RD3/A8kZRztiJ/i6v+mqv3grUXiccDepGBvBCBSTt4rAbsR8Z
+1huZ8Sx5uf3xiPy6MxjDtWEoBbr2X/jNM7MRgHc8NLCcGGpv3wvjuvyMcdE38ADg
+SfBT4DHipWUcZ9AxU8ke4DvtiK72PmEzNaQeKxIi59HgfJCBW3y8Fzr48oDSYbkX
+kvGxYLxWaItvEtEHL08jo40+yGaoKHpsG+EGw9qVghTBmhyp8TYdbw6T+RFKGgSa
+U21PS0RePP40e7ypLrueU2wTE2b30z2ti0D/qv2aQ8D0PoM/KOrQ89Vh8r/pzp5m
+vcGYefDoOJxBKpi8S0q3+MWLtGBClw==
+=K3NC
+-----END PGP SIGNATURE-----
 
-
-> 
-> Hope that helps.
-> 
-> Jonathan
-> 
-> P.S. I'll cheekily take the opportunity of having your attention to tack on
-> one minor gripe about the current system: The only way to know if a mmap
-> with MAP_SYNC will work is to try it and catch the error. Which would be
-> reasonable if it were free of side effects.  However, the process requires
-> first expanding the file to at least the size of the desired map, which is
-> done non-atomically i.e. is user visible. There are thus nasty race
-> conditions in the cleanup, where after a failed mmap attempt (e.g the device
-> doesn't support DAX), we try to shrink the file back to its original size,
-> but something else has already opened it at its new, larger size. This is
-> not theoretical: I got caught by it whilst adapting some of our middleware
-> to use pmem.  Therefore, some way to probe the file path for its capability
-> would be nice, much the same as I can e.g. inspect file permissions to (more
-> or less) evaluate if I can write it without actually mutating it.  Thanks!
-> 
-> 
-> 
-> On 25/02/2020 19:37, Jeff Moyer wrote:
-> > Christoph Hellwig <hch@lst.de> writes:
-> > 
-> > > And my point is that if we ensure S_DAX can only be checked if there
-> > > are no blocks on the file, is is fairly easy to provide the same
-> > > guarantee.  And I've not heard any argument that we really need more
-> > > flexibility than that.  In fact I think just being able to change it
-> > > on the parent directory and inheriting the flag might be more than
-> > > plenty, which would lead to a very simple implementation without any
-> > > of the crazy overhead in this series.
-> > 
-> > I know of one user who had at least mentioned it to me, so I cc'd him.
-> > Jonathan, can you describe your use case for being able to change a
-> > file between dax and non-dax modes?  Or, if I'm misremembering, just
-> > correct me?
-> > 
-> > Thanks!
-> > Jeff
-> > 
-> 
-> -- 
-> Registered in England and Wales under Company Registration No. 03798903
-> Directors: Michael Cunningham, Michael ("Mike") O'Neill, Eric Shander
-> 
+--FwyhczKCDPOVeYh6--
