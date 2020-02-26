@@ -2,141 +2,134 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74225C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECC4C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52ED6222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627C1222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZUieuG1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbgBZBL5 (ORCPT
+        id S1729874AbgBZBMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:11:57 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:50308 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729540AbgBZBL5 (ORCPT
+        Tue, 25 Feb 2020 20:12:13 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40888 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbgBZBMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:11:57 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id B1ED329F75;
-        Tue, 25 Feb 2020 20:11:53 -0500 (EST)
-Date:   Wed, 26 Feb 2020 12:11:55 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-In-Reply-To: <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org>
-Message-ID: <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org>
+        Tue, 25 Feb 2020 20:12:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id t24so424535pgj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:12:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6uX/nJPriJhQm0pTaKBAXAE1KxbsYiYr0UB81o3mu3c=;
+        b=ZUieuG1LEZrc+9UMd8Wjg9qwl8Km3LnAYcJc34XaejDqleddc1z6mkrin5d2aNGbnx
+         1kxPiDHq3D7QAFjE7Np/pfMOnDRrYe9eREd/gDffXMjTkuFZoxzH96UVdirYAllTyMSD
+         Y3xw8W4nd+mMxqiylK+WwywhatDceOMfSLwEA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6uX/nJPriJhQm0pTaKBAXAE1KxbsYiYr0UB81o3mu3c=;
+        b=Rp+iYDejV3KNfIOMfSVJzavobMTFHIAkM1ASHK1cewUpAOBkTibFEVIInDTsvolHm0
+         2cAd6LLz7Uc5UB50GcM4z3AoyOWqylE4b3Zd83zP7atLGNjlI8vwR4RdZhtg5x4T7OyA
+         LwN0uc+JB71aMIPVuKhWUII6D2x6gtp/GhCh9slOs/oK1ko0Awk2HnAuYK7U99DR3Yih
+         EgFaA1SoCBAYxAYKq1BkL8mE58AkX0XK6SaROdfkErOxF7863a9Gr6XNgPpFJKF78i5O
+         S/okW2ZqUlCTP8S1TyzO8EUkszn1ci+75HzNQEAnzXXWxVyJl+YnoQEGMYwemLGuCfx3
+         MBig==
+X-Gm-Message-State: APjAAAUiHUV2FeXSanhaRG6ANu2sw3ih62FeodbeocnzGrbc/9aXdJ+r
+        H4uCrPNlNgdJdQYHK5jVTx/HKLVYQBM=
+X-Google-Smtp-Source: APXvYqzrHVv6NdG4njh41aTPOq431N0eMbjw8Fo1OeFZkv+MOqi4PyYAAAwFt/ENjO4X1RKyvNihRg==
+X-Received: by 2002:a62:f94d:: with SMTP id g13mr1537803pfm.60.1582679530660;
+        Tue, 25 Feb 2020 17:12:10 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id w21sm209079pgc.87.2020.02.25.17.12.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 17:12:10 -0800 (PST)
+Date:   Tue, 25 Feb 2020 17:12:08 -0800
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, Enrico Granata <egranata@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fei Shao <fshao@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Evan Green <evgreen@chromium.org>, linux-input@vger.kernel.org
+Subject: Re: [PATCH 0/8] Migrate all cros_ec_cmd_xfer() calls to
+ cros_ec_cmd_xfer_status()
+Message-ID: <20200226011208.GD197302@google.com>
+References: <20200220155859.906647-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220155859.906647-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Greg Ungerer wrote:
-
-> Hi Afzal,
+On Thu, Feb 20, 2020 at 04:58:51PM +0100, Enric Balletbo i Serra wrote:
+> Dear all,
 > 
-> On 24/2/20 10:50 am, afzal mohammed wrote:
-> > request_irq() is preferred over setup_irq(). The early boot setup_irq()
-> > invocations happen either via 'init_IRQ()' or 'time_init()', while
-> > memory allocators are ready by 'mm_init()'.
-> > 
-> > Per tglx[1], setup_irq() existed in olden days when allocators were not
-> > ready by the time early interrupts were initialized.
-> > 
-> > Hence replace setup_irq() by request_irq().
-> > 
-> > Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> > wherever that has been found, it too has been replaced by free_irq().
-> > 
-> > [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> > 
-> > Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-> > Tested-by: Greg Ungerer <gerg@linux-m68k.org> # ColdFire
-> > ---
-> > 
-> > v2:
-> >   * Replace pr_err("request_irq() on %s failed" by
-> >             pr_err("%s: request_irq() failed"
-> >   * Commit message massage
-> >   * remove now irrelevant comment lines at 3 places
-> > 
-> >   arch/m68k/68000/timers.c      | 11 ++---------
-> >   arch/m68k/coldfire/pit.c      | 11 ++---------
-> >   arch/m68k/coldfire/sltimers.c | 19 +++++--------------
-> >   arch/m68k/coldfire/timers.c   | 21 +++++----------------
-> >   4 files changed, 14 insertions(+), 48 deletions(-)
-> > 
-> > diff --git a/arch/m68k/68000/timers.c b/arch/m68k/68000/timers.c
-> > index 71ddb4c98726..55a76a2d3d58 100644
-> > --- a/arch/m68k/68000/timers.c
-> > +++ b/arch/m68k/68000/timers.c
-> > @@ -68,14 +68,6 @@ static irqreturn_t hw_tick(int irq, void *dummy)
-> >     /***************************************************************************/
-> >   -static struct irqaction m68328_timer_irq = {
-> > -	.name	 = "timer",
-> > -	.flags	 = IRQF_TIMER,
-> > -	.handler = hw_tick,
-> > -};
-> > -
-> > 
-> > -/***************************************************************************/
-> > -
-> >   static u64 m68328_read_clk(struct clocksource *cs)
-> >   {
-> >   	unsigned long flags;
-> > @@ -106,7 +98,8 @@ void hw_timer_init(irq_handler_t handler)
-> >   	TCTL = 0;
-> >     	/* set ISR */
-> > -	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> > +	if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
-> > +		pr_err("%s: request_irq() failed\n", "timer");
+> The purpose of this series is get rid of the remaining places where the
+> cros_ec_cmd_xfer() function is used in favour of the
+> cros_ec_cmd_xfer_status() helper. This allows us to make the
+> cros_ec_cmd_xfer() function private and only expose to the users a
+> single way to send commands to the Embedded Controller.
 > 
-> Why not just:
+> With these changes we also want to help future improvements in the
+> interface, like the Prashant's series (i.e [1]) to introduce a
+> cros_ec_cmd() that will allow us to remove more duplicated code in
+> different places.
 > 
->                 pr_err("timer: request_irq() failed\n");
+> Best regards,
+>  Enric
 > 
-
-I believe that the compiler would coalesce the two "timer" string 
-constants in the patch from Afzal (as per my suggestion).
-
-I suspect that your version costs a few extra bytes everywhere it appears 
-(but I didn't check).
-
-> And maybe would it be useful to print out the error return code from a 
-> failed request_irq()?  What about displaying the requested IRQ number as 
-> well? Just a thought.
+> Note: Prashant, looks like you should fix your sendmail as the patches
+>       are not threaded.
 > 
+> [1] https://lkml.org/lkml/2020/2/5/614
+> 
+> Enric Balletbo i Serra (8):
+>   platform/chrome: cros_ec_proto: Report command not supported
+>   Input: cros_ec_keyb: Use cros_ec_cmd_xfer_status helper
+>   platform/chrome: cros_ec_vbc: Use cros_ec_cmd_xfer_status helper
+>   platform/chrome: cros_ec_chardev: Use cros_ec_cmd_xfer_status helper
+>   platform/chrome: cros_ec_sysfs: Use cros_ec_cmd_xfer_status helper
+>   platform/chrome: cros_ec_lightbar: Use cros_ec_cmd_xfer_status helper
+>   platform/chrome: cros_ec: Use cros_ec_cmd_xfer_status helper
+>   platform/chrome: cros_ec_proto: Do not export cros_ec_cmd_xfer()
 
-That error would almost always be -EBUSY, right?
+I picked this series on a device running 4.19 and didn't see any
+unusual behaviour or dmesg logs, so for the entire series:
 
-Moreover, compare this change,
-
--	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-+	request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-
-with this change,
-
-+	int err;
-
--	setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-+	err = request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL);
-+	if (err)
-+		return err;
-
-Isn't the latter change the more common pattern? It prints nothing.
-
-And arguably, the former example is actually the change that's described 
-in the commit description.
-
-This patch seems to be making two orthogonal changes but I'll leave that 
-question to the maintainer. (I'm not really trying to NAK this patch.)
+Tested-by: Prashant Malani <pmalani@chromium.org>
+> 
+>  drivers/input/keyboard/cros_ec_keyb.c       | 14 +++---
+>  drivers/platform/chrome/cros_ec.c           |  2 +-
+>  drivers/platform/chrome/cros_ec_chardev.c   |  2 +-
+>  drivers/platform/chrome/cros_ec_lightbar.c  | 50 ++++++---------------
+>  drivers/platform/chrome/cros_ec_proto.c     | 14 ++++--
+>  drivers/platform/chrome/cros_ec_sysfs.c     | 36 +++++++--------
+>  drivers/platform/chrome/cros_ec_vbc.c       |  4 +-
+>  include/linux/platform_data/cros_ec_proto.h |  3 --
+>  8 files changed, 50 insertions(+), 75 deletions(-)
+> 
+> -- 
+> 2.25.0
+> 
