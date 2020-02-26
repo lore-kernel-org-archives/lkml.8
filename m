@@ -2,85 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BB3C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E27C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227A921D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582730986;
-	bh=Z3y4/knEic2yQ8Egeo6AD73KI5q+q2iFw/IKKbKOBn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0RUWDNnykqfeGD4mTHbG7nmb0DWmWAaPg6729R317vKCH0RSiyDMoThRwv+JZf5bc
-	 wnSKlB8dLdjZIvhls0zUQXVdvl3w4NmqBBzS9orkOh/EpF8dMK4Q2rnjkZSBHaT/w/
-	 Kj1pHt6S7yyawImT/5NDf5s6tz/ZZ9B3trMR+tRA=
+	by mail.kernel.org (Postfix) with ESMTP id 910DE21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgBZP3p (ORCPT
+        id S1728278AbgBZPaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:29:45 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35317 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbgBZP3o (ORCPT
+        Wed, 26 Feb 2020 10:30:30 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:39619 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbgBZPaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:29:44 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so3332987otd.2;
-        Wed, 26 Feb 2020 07:29:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L2eDFUj6+ZgHsv30b3IWHnryr2PQNv2tUG/pwmYNTCY=;
-        b=iCxEUGKPv/FRMfXkLS/uC4TtaW+iOcRft6LE7f4TZcabNMWx3hgO8zAKz8dDuVSLKt
-         oUVC83dHQxmyaYteYKbPieNqcgGLxef5qvp4tBcQFjID3yyWWB0ntQVZ2nta8poOZ7AI
-         OSese1k8zyj9lCNMJyklypMTRCnmLMPal/Sd/EKMH3Ng5G9Z+weNJcHwg1JB1GBLuLlv
-         jKHJVj6nLhyN4IfRAbjfOuFldndcyO8fGMZIiRb8buJDrMKDpZjudWneLg0/qi2Y1/PT
-         EtbiT1r6/uxSRqJ67wa+Haf7Q46PiJ2HSLUBALzfxCTzYCkhqr4DO+NrYs/lRt9IW9Vy
-         D52g==
-X-Gm-Message-State: APjAAAVWcXsayovJsL3c472QdyBS5Q3E1JHgCR+vDVx5NstK/fQGTfLa
-        +T6sOFWDnq/nvQ4tKoRG0dEp/Bs=
-X-Google-Smtp-Source: APXvYqwkgLOQ11KkhrIdopjRwjvsy1oDDhHlY1VCalaAfJDndkzbKF6J3ryE55DovBte5OZJt1wggA==
-X-Received: by 2002:a9d:6ad6:: with SMTP id m22mr3775162otq.7.1582730984108;
-        Wed, 26 Feb 2020 07:29:44 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r2sm874632otk.22.2020.02.26.07.29.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:29:43 -0800 (PST)
-Received: (nullmailer pid 5886 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:29:42 -0000
-Date:   Wed, 26 Feb 2020 09:29:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: clk: g12a-clkc: add SPICC SCLK Source
- clock IDs
-Message-ID: <20200226152942.GA5832@bogus>
-References: <20200219084928.28707-1-narmstrong@baylibre.com>
- <20200219084928.28707-2-narmstrong@baylibre.com>
+        Wed, 26 Feb 2020 10:30:30 -0500
+X-Originating-IP: 90.89.41.158
+Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 5503D1BF215;
+        Wed, 26 Feb 2020 15:30:01 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        foss@0leil.net
+Subject: [PATCH net] net: phy: mscc: fix firmware paths
+Date:   Wed, 26 Feb 2020 16:26:50 +0100
+Message-Id: <20200226152650.1525515-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219084928.28707-2-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 09:49:27 +0100, Neil Armstrong wrote:
-> Add clock ids used by the SPICC Controllers of the G12A and compatible SoCs
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  include/dt-bindings/clock/g12a-clkc.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+The firmware paths for the VSC8584 PHYs not not contain the leading
+'microchip/' directory, as used in linux-firmware, resulting in an
+error when probing the driver. This patch fixes it.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/phy/mscc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 937ac7da2789..f686f40f6bdc 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -345,11 +345,11 @@ enum macsec_bank {
+ 				BIT(VSC8531_FORCE_LED_OFF) | \
+ 				BIT(VSC8531_FORCE_LED_ON))
+ 
+-#define MSCC_VSC8584_REVB_INT8051_FW		"mscc_vsc8584_revb_int8051_fb48.bin"
++#define MSCC_VSC8584_REVB_INT8051_FW		"microchip/mscc_vsc8584_revb_int8051_fb48.bin"
+ #define MSCC_VSC8584_REVB_INT8051_FW_START_ADDR	0xe800
+ #define MSCC_VSC8584_REVB_INT8051_FW_CRC	0xfb48
+ 
+-#define MSCC_VSC8574_REVB_INT8051_FW		"mscc_vsc8574_revb_int8051_29e8.bin"
++#define MSCC_VSC8574_REVB_INT8051_FW		"microchip/mscc_vsc8574_revb_int8051_29e8.bin"
+ #define MSCC_VSC8574_REVB_INT8051_FW_START_ADDR	0x4000
+ #define MSCC_VSC8574_REVB_INT8051_FW_CRC	0x29e8
+ 
+-- 
+2.24.1
+
