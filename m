@@ -2,143 +2,304 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD76C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8444FC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9694421D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EB621D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:48:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZUNb/YBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgBZHhL (ORCPT
+        id S1727366AbgBZHsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:37:11 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48055 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgBZHhK (ORCPT
+        Wed, 26 Feb 2020 02:48:51 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55582 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgBZHsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:37:10 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1j6rFi-0003lK-1n; Wed, 26 Feb 2020 08:37:06 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 4EDEB4C0EEF;
-        Wed, 26 Feb 2020 07:37:04 +0000 (UTC)
-Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
-        =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
- <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
- <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
-Date:   Wed, 26 Feb 2020 08:37:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 02:48:50 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q7mmql058259;
+        Wed, 26 Feb 2020 01:48:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582703328;
+        bh=6XZF2kozMX2IRgvS1AiatX1S6WIW//4tM8Ve7tdXOB8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZUNb/YBubV/HQF3FFYmRDnGM8MH9tGsb5OZeCoQRz2J0m9Y1c5dFzXfmQv5bb/PyR
+         pnojAHbMZ2wOwfkCzgqJE0T2n//gPrvky6M9CpVnRP7oz4ja/QIYwSwt+zu7xeeyc/
+         t7rDMVwsOM4lYmIGMdCGBUSn9ZkBBOFj6f2Brr2o=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q7mmb8090023
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 01:48:48 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 01:48:48 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 01:48:47 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q7mjXY082769;
+        Wed, 26 Feb 2020 01:48:46 -0600
+Subject: Re: [PATCHv7 04/15] remoteproc/omap: Add support to parse internal
+ memories from DT
+To:     "Andrew F. Davis" <afd@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>,
+        <s-anna@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200221101936.16833-1-t-kristo@ti.com>
+ <20200221101936.16833-5-t-kristo@ti.com>
+ <7de4914a-a5c6-b108-af10-45283aabddc7@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <64429c91-cb80-52ce-0906-180ad109d5fb@ti.com>
+Date:   Wed, 26 Feb 2020 09:48:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <7de4914a-a5c6-b108-af10-45283aabddc7@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 11:25 PM, Tim Harvey wrote:
->> On 2/25/20 7:35 PM, Tim Harvey wrote:
->>> Some SPI host controllers such as the Cavium Thunder do not support
->>> full-duplex SPI. Using half-duplex transfers allows the driver to work
->>> with those host controllers.
+On 24/02/2020 16:15, Andrew F. Davis wrote:
+> On 2/21/20 5:19 AM, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> The OMAP remoteproc driver has been enhanced to parse and store
+>> the kernel mappings for different internal RAM memories that may
+>> be present within each remote processor IP subsystem. Different
+>> devices have varying memories present on current SoCs. The current
+>> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+>> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+>> L2 RAM memories.
+>>
+>> IPUs are expected to have the L2RAM at a fixed device address of
+>> 0x20000000, based on the current limitations on Attribute MMU
+>> configurations.
+>>
+>> NOTE:
+>> The current logic doesn't handle the parsing of memories for DRA7
+>> remoteproc devices, and will be added alongside the DRA7 support.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo: converted to parse mem names / device addresses from pdata]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
+>>   1 file changed, 89 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index 64b559caadff..4f92b069f5d0 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
+>>   	unsigned int boot_reg;
+>>   };
+>>   
+>> +/**
+>> + * struct omap_rproc_mem - internal memory structure
+>> + * @cpu_addr: MPU virtual address of the memory region
+>> + * @bus_addr: bus address used to access the memory region
+>> + * @dev_addr: device address of the memory region from DSP view
+>> + * @size: size of the memory region
+>> + */
+>> +struct omap_rproc_mem {
+>> +	void __iomem *cpu_addr;
+>> +	phys_addr_t bus_addr;
+>> +	u32 dev_addr;
+>> +	size_t size;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc - omap remote processor state
+>>    * @mbox: mailbox channel handle
+>>    * @client: mailbox client to request the mailbox channel
+>>    * @boot_data: boot data structure for setting processor boot address
+>> + * @mem: internal memory regions data
+>> + * @num_mems: number of internal memory regions
+>>    * @rproc: rproc handle
+>>    * @reset: reset handle
+>>    */
+>> @@ -51,16 +67,30 @@ struct omap_rproc {
+>>   	struct mbox_chan *mbox;
+>>   	struct mbox_client client;
+>>   	struct omap_rproc_boot_data *boot_data;
+>> +	struct omap_rproc_mem *mem;
+>> +	int num_mems;
+>>   	struct rproc *rproc;
+>>   	struct reset_control *reset;
+>>   };
+>>   
+>> +/**
+>> + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
+>> + * @name: name for this memory entry
+>> + * @dev_addr: device address for the memory entry
+>> + */
+>> +struct omap_rproc_mem_data {
+>> +	const char *name;
+>> +	const u32 dev_addr;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc_dev_data - device data for the omap remote processor
+>>    * @device_name: device name of the remote processor
+>> + * @mems: memory definitions for this remote processor
+>>    */
+>>   struct omap_rproc_dev_data {
+>>   	const char *device_name;
+>> +	const struct omap_rproc_mem_data *mems;
+>>   };
+>>   
+>>   /**
+>> @@ -223,12 +253,18 @@ static const struct rproc_ops omap_rproc_ops = {
+>>   	.kick		= omap_rproc_kick,
+>>   };
+>>   
+>> +static const struct omap_rproc_mem_data ipu_mems[] = {
+>> +	{ .name = "l2ram", .dev_addr = 0x20000000 },
+>> +	{ },
+>> +};
+>> +
+>>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>>   	.device_name	= "dsp",
+>>   };
+>>   
+>>   static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>>   	.device_name	= "ipu",
+>> +	.mems		= ipu_mems,
+>>   };
+>>   
+>>   static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>> @@ -237,6 +273,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>>   
+>>   static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>>   	.device_name	= "ipu",
+>> +	.mems		= ipu_mems,
+>>   };
+>>   
+>>   static const struct of_device_id omap_rproc_of_match[] = {
+>> @@ -311,6 +348,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   	return 0;
+>>   }
+>>   
+>> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>> +					       struct rproc *rproc)
+>> +{
+>> +	struct omap_rproc *oproc = rproc->priv;
+> 
+> 
+> 'rproc' is only used to get 'oproc', why not just pass in 'oproc'?
 
-Hmmm, at least none of the spi-cavium*.c have HALF_DUPLEX set....
+This is mostly to keep the driver internal APIs homogenous, nothing much 
+else passes oproc directly (just the standby status API.) If you pass 
+oproc in some and rproc in others, you get confused really easily.
 
-I only find these ones:
-> drivers/spi/spi-falcon.c:404:   master->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-lp8841-rtc.c:194:       master->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-mt7621.c:360:   master->flags = SPI_CONTROLLER_HALF_DUPLEX;
-> drivers/spi/spi-mxs.c:576:      master->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-omap-uwire.c:490:       master->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-pic32-sqi.c:651:        master->flags           = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-pl022.c:1714:                           SSP_MICROWIRE_CHANNEL_HALF_DUPLEX)) {
-> drivers/spi/spi-qcom-qspi.c:478:        master->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-sprd-adi.c:521: ctlr->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-stm32.c:160:#define STM32H7_SPI_HALF_DUPLEX             3
-> drivers/spi/spi-stm32.c:1469:           mode = STM32H7_SPI_HALF_DUPLEX;
-> drivers/spi/spi-stm32.c:1472:           mode = STM32H7_SPI_HALF_DUPLEX;
-> drivers/spi/spi-ti-qspi.c:758:  master->flags = SPI_MASTER_HALF_DUPLEX;
-> drivers/spi/spi-xcomm.c:222:    master->flags = SPI_MASTER_HALF_DUPLEX;
+> 
+> 
+>> +	struct device *dev = &pdev->dev;
+>> +	const struct omap_rproc_dev_data *data;
+>> +	struct resource *res;
+>> +	int num_mems;
+>> +	int i;
+>> +
+>> +	data = of_device_get_match_data(&pdev->dev);
+> 
+> 
+> just use 'dev'
 
->> There are several transfers left in the driver, where both rx_buf and
->> tx_buf are set. How does your host controller driver know which one to
->> handle?
+Heh, valid cosmetic change, I would not want to re-post the patch just 
+because of this though.
 
-I'm trying to answer my question:
-I think the spi host controller sets SPI_MASTER_HALF_DUPLEX if it only
-supports half duplex and the spi framework checks that only either TX or
-RX is set during one transfer.
+> 
+>> +	if (!data)
+>> +		return -ENODEV;
+>> +
+>> +	if (!data->mems)
+>> +		return 0;
+>> +
+>> +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
+>> +		;
+>> +
+>> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+>> +				  GFP_KERNEL);
+>> +	if (!oproc->mem)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_mems; i++) {
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   data->mems[i].name);
+>> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+>> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+>> +			dev_err(dev, "failed to parse and map %s memory\n",
+>> +				data->mems[i].name);
+>> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+>> +		}
+>> +		oproc->mem[i].bus_addr = res->start;
+>> +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
+>> +		oproc->mem[i].size = resource_size(res);
+>> +
+>> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %pK da 0x%x\n",
+>> +			data->mems[i].name, &oproc->mem[i].bus_addr,
+>> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+> 
+> 
+> I'm not a fan of printing kernel virtual addresses, but not a blocker.
+> 
+> 
+>> +			oproc->mem[i].dev_addr);
+>> +	}
+>> +	oproc->num_mems = num_mems;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int omap_rproc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device_node *np = pdev->dev.of_node;
+>> @@ -350,6 +435,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>   	/* All existing OMAP IPU and DSP processors have an MMU */
+>>   	rproc->has_iommu = true;
+>>   
+>> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+> 
+> 
+> This only looks to be used for the da_to_va() in the next patch, could
+> these be combined?
 
-> Your right... there is the mcp251x_hw_rx_frame() call that also uses
-> spi_rx_buf after a synchronous transfer (I didn't see any others).
-> I'll look at this again.
+Well, they are kinda separate entities, but potentially could be 
+squashed if someone really wants it done.
 
-Have you hardware to test your changes? I think the SPI framework would
-return an -EINVAL in that case....though the return value is sometimes
-not checked by the driver :/
+> 
+> As above not a big deal, so for this patch and the whole series:
+> 
+> Reviewed-by: Andrew F. Davis <afd@ti.com>
 
-> In general is it an ok approach to switch the driver to half-duplex
-> for this issue without the need of complicating things with a
-> module/dt param?
+Thanks Andrew.
 
-AFAICS the chip doesn't do real full duplex. It either send or receives
-data at the same time. With splitting one pseudo full duplex transfer
-into two half duplex transfers brings some minor overhead, but I think
-that's hardly measurable.
+-Tero
 
-Marc
+> 
+> 
+>> +	if (ret)
+>> +		goto free_rproc;
+>> +
+>>   	ret = omap_rproc_get_boot_data(pdev, rproc);
+>>   	if (ret)
+>>   		goto free_rproc;
+>>
 
--- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
