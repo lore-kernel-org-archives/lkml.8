@@ -2,696 +2,98 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE79C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA33C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE55020714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dck0JGHY"
+	by mail.kernel.org (Postfix) with ESMTP id A6ED620714
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgBZSmt (ORCPT
+        id S1727272AbgBZSnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:42:49 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34299 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgBZSmt (ORCPT
+        Wed, 26 Feb 2020 13:43:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59116 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgBZSnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:42:49 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i6so226397pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:42:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3D3oLI6Nsw3BoGxl49qFVizEhIUBHTVwOueR3ykJoHo=;
-        b=Dck0JGHYCiPbmD3nM7OAPoyNJVBTC5ZDEkia2X9rWVwQis63T3CBk6OYCkvllFJLAL
-         9lBVGR96S9W9HqERU3cp+jIhXmWTV3I9eMgrrj1iaBqjoyrQePuTaO1yN44qc2q0+2xP
-         g3Zd9sxwYItE1Qf2cO0fhiZy1rwT5eTGPsb10AWfw1PQMKlC+yBhHzATBXaF5rnu8bo4
-         d1Rm9HbRclOuItADDtewdwHVOcl7rATW3+TX/DMXJIPpd+5Z7m/zf6ei2iTnSaZEGn0r
-         nvRkvHp1V3dNHFzglk8TIRFFdyGJEwwzPe2T2EFNIaRJXk/otbl2vN20f3egK3XHFGR4
-         vWDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3D3oLI6Nsw3BoGxl49qFVizEhIUBHTVwOueR3ykJoHo=;
-        b=tX9GcjHhJzJoN+VW8aT6MxE+HPLiz7nxQeey+L7OfiPaEoFVgswhOXUcQJdIux6/qz
-         JgsJ+nHZ0wb81xnnAaU6rzg9NXBMsuLkEnSxpCqRWsBb+YWv3j1IwdrPJNisXKSdYlWz
-         aSRGxKTo/afR1YiEut6yfMQZc5TGzmFEaDe7C/N811Oew+o1toiS5d9TATb0pTavFdDx
-         kprNS3g5UjkDzZuzFs4dQCzJwOhNdPMP2QyZPrF17USwEI6RD3bAO74p6zn90dqeBBgw
-         hG88DJhv9QxZXjPksrNX0iX+5wpYMJ6XYAQ0ouDO/qS2o4SLZTUeaxbJjLi9u5Wt2pGq
-         /+1w==
-X-Gm-Message-State: APjAAAU35NwJS1MWYymT7MDSSawRTbEWRCQ9J1irhH+nVLRcZj/B4rxi
-        1t2bl22+sIeVx8xaHbT6m477dXRKQOFJhjn87n0pFA==
-X-Google-Smtp-Source: APXvYqzy7hAwcYps46RHUUZgm0/EceXRBAk73qg100Wz1NGk/j/3ehCKUhtU2lQ8uH9U3GOOyo7mVPDeu5z+zUZIJEw=
-X-Received: by 2002:aa7:9629:: with SMTP id r9mr42827pfg.51.1582742566831;
- Wed, 26 Feb 2020 10:42:46 -0800 (PST)
+        Wed, 26 Feb 2020 13:43:09 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j71e2-0004SS-Dc; Wed, 26 Feb 2020 19:42:54 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id CA082104099; Wed, 26 Feb 2020 19:42:53 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 08/10] x86/entry/32: Remove the 0/-1 distinction from exception entries
+In-Reply-To: <6dd020cd-e20a-be12-aba7-bfa9e1a94795@kernel.org>
+References: <20200225213636.689276920@linutronix.de> <20200225220216.933457250@linutronix.de> <6dd020cd-e20a-be12-aba7-bfa9e1a94795@kernel.org>
+Date:   Wed, 26 Feb 2020 19:42:53 +0100
+Message-ID: <87blpli40i.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <cover.1576170740.git.andreyknvl@google.com> <95e7a12ac909e7de584133772efc7ef982a16bbb.1576170740.git.andreyknvl@google.com>
- <CACT4Y+aKOC83Dm=wwZT9zsxi+MAxwZnHp1wBLbF6VH9YPAWLCw@mail.gmail.com>
-In-Reply-To: <CACT4Y+aKOC83Dm=wwZT9zsxi+MAxwZnHp1wBLbF6VH9YPAWLCw@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 26 Feb 2020 19:42:35 +0100
-Message-ID: <CAAeHK+yd-pzgjX07JgQoA_78S=9JPKa=pHWRXr-xjNt_UW1YXQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] kcov: collect coverage from interrupts
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 2:03 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Thu, Dec 12, 2019 at 6:15 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > This change extends kcov remote coverage support to allow collecting
-> > coverage from interrupts in addition to kernel background threads.
-> >
-> > To collect coverage from code that is executed in interrupt context, a
-> > part of that code has to be annotated with kcov_remote_start/stop() in a
-> > similar way as how it is done for global kernel background threads. Then
-> > the handle used for the annotations has to be passed to the
-> > KCOV_REMOTE_ENABLE ioctl.
-> >
-> > Internally this patch adjusts the __sanitizer_cov_trace_pc() compiler
-> > inserted callback to not bail out when called from interrupt context.
-> > kcov_remote_start/stop() are updated to save/restore the current per
-> > task kcov state in a per-cpu area (in case the interrupt came when the
-> > kernel was already collecting coverage in task context). Coverage from
-> > interrupts is collected into pre-allocated per-cpu areas, whose size is
-> > controlled by the new CONFIG_KCOV_IRQ_AREA_SIZE.
-> >
-> > This patch also cleans up some of kcov debug messages.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >  Documentation/dev-tools/kcov.rst   |  16 +--
-> >  drivers/usb/gadget/udc/dummy_hcd.c |   1 +
-> >  include/linux/sched.h              |   3 +
-> >  kernel/kcov.c                      | 196 +++++++++++++++++++----------
-> >  lib/Kconfig.debug                  |   9 ++
-> >  5 files changed, 154 insertions(+), 71 deletions(-)
-> >
-> > diff --git a/Documentation/dev-tools/kcov.rst b/Documentation/dev-tools/kcov.rst
-> > index 1c4e1825d769..fc2bc6883431 100644
-> > --- a/Documentation/dev-tools/kcov.rst
-> > +++ b/Documentation/dev-tools/kcov.rst
-> > @@ -217,14 +217,14 @@ This allows to collect coverage from two types of kernel background
-> >  threads: the global ones, that are spawned during kernel boot in a limited
-> >  number of instances (e.g. one USB hub_event() worker thread is spawned per
-> >  USB HCD); and the local ones, that are spawned when a user interacts with
-> > -some kernel interface (e.g. vhost workers).
-> > +some kernel interface (e.g. vhost workers); as well as from interrupts.
-> >
-> > -To enable collecting coverage from a global background thread, a unique
-> > -global handle must be assigned and passed to the corresponding
-> > -kcov_remote_start() call. Then a userspace process can pass a list of such
-> > -handles to the KCOV_REMOTE_ENABLE ioctl in the handles array field of the
-> > -kcov_remote_arg struct. This will attach the used kcov device to the code
-> > -sections, that are referenced by those handles.
-> > +To enable collecting coverage from a global background thread or from an
-> > +interrupt, a unique global handle must be assigned and passed to the
-> > +corresponding kcov_remote_start() call. Then a userspace process can pass
-> > +a list of such handles to the KCOV_REMOTE_ENABLE ioctl in the handles
-> > +array field of the kcov_remote_arg struct. This will attach the used kcov
-> > +device to the code sections, that are referenced by those handles.
-> >
-> >  Since there might be many local background threads spawned from different
-> >  userspace processes, we can't use a single global handle per annotation.
-> > @@ -242,7 +242,7 @@ handles as they don't belong to a particular subsystem. The bytes 4-7 are
-> >  currently reserved and must be zero. In the future the number of bytes
-> >  used for the subsystem or handle ids might be increased.
-> >
-> > -When a particular userspace proccess collects coverage by via a common
-> > +When a particular userspace proccess collects coverage via a common
-> >  handle, kcov will collect coverage for each code section that is annotated
-> >  to use the common handle obtained as kcov_handle from the current
-> >  task_struct. However non common handles allow to collect coverage
-> > diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-> > index 4c9d1e49d5ed..faf84ada71a5 100644
-> > --- a/drivers/usb/gadget/udc/dummy_hcd.c
-> > +++ b/drivers/usb/gadget/udc/dummy_hcd.c
-> > @@ -38,6 +38,7 @@
-> >  #include <linux/usb/gadget.h>
-> >  #include <linux/usb/hcd.h>
-> >  #include <linux/scatterlist.h>
-> > +#include <linux/kcov.h>
-> >
-> >  #include <asm/byteorder.h>
-> >  #include <linux/io.h>
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index 467d26046416..47d1d556f795 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -1229,6 +1229,9 @@ struct task_struct {
-> >
-> >         /* KCOV sequence number: */
-> >         int                             kcov_sequence;
-> > +
-> > +       /* Collect coverage from interrupt context: */
-> > +       bool                            kcov_interrupt;
-> >  #endif
-> >
-> >  #ifdef CONFIG_MEMCG
-> > diff --git a/kernel/kcov.c b/kernel/kcov.c
-> > index f50354202dbe..5b48a7a5c465 100644
-> > --- a/kernel/kcov.c
-> > +++ b/kernel/kcov.c
-> > @@ -26,6 +26,7 @@
-> >  #include <asm/setup.h>
-> >
-> >  #define kcov_debug(fmt, ...) pr_debug("%s: " fmt, __func__, ##__VA_ARGS__)
-> > +#define kcov_err(fmt, ...) pr_err("%s: " fmt, __func__, ##__VA_ARGS__)
-> >
-> >  /* Number of 64-bit words written per one comparison: */
-> >  #define KCOV_WORDS_PER_CMP 4
-> > @@ -86,6 +87,17 @@ static DEFINE_SPINLOCK(kcov_remote_lock);
-> >  static DEFINE_HASHTABLE(kcov_remote_map, 4);
-> >  static struct list_head kcov_remote_areas = LIST_HEAD_INIT(kcov_remote_areas);
-> >
-> > +struct kcov_remote_irq_data {
-> > +       unsigned int            mode;
-> > +       unsigned int            size;
-> > +       void                    *area;
-> > +       struct kcov             *kcov;
-> > +       unsigned long           flags;
-> > +};
-> > +
-> > +DEFINE_PER_CPU(struct kcov_remote_irq_data, kcov_remote_irq);
-> > +DEFINE_PER_CPU(void *, kcov_irq_area);
-> > +
-> >  /* Must be called with kcov_remote_lock locked. */
-> >  static struct kcov_remote *kcov_remote_find(u64 handle)
-> >  {
-> > @@ -98,6 +110,7 @@ static struct kcov_remote *kcov_remote_find(u64 handle)
-> >         return NULL;
-> >  }
-> >
-> > +/* Must be called with kcov_remote_lock locked. */
-> >  static struct kcov_remote *kcov_remote_add(struct kcov *kcov, u64 handle)
-> >  {
-> >         struct kcov_remote *remote;
-> > @@ -119,16 +132,13 @@ static struct kcov_remote_area *kcov_remote_area_get(unsigned int size)
-> >         struct kcov_remote_area *area;
-> >         struct list_head *pos;
-> >
-> > -       kcov_debug("size = %u\n", size);
-> >         list_for_each(pos, &kcov_remote_areas) {
-> >                 area = list_entry(pos, struct kcov_remote_area, list);
-> >                 if (area->size == size) {
-> >                         list_del(&area->list);
-> > -                       kcov_debug("rv = %px\n", area);
-> >                         return area;
-> >                 }
-> >         }
-> > -       kcov_debug("rv = NULL\n");
-> >         return NULL;
-> >  }
-> >
-> > @@ -136,7 +146,6 @@ static struct kcov_remote_area *kcov_remote_area_get(unsigned int size)
-> >  static void kcov_remote_area_put(struct kcov_remote_area *area,
-> >                                         unsigned int size)
-> >  {
-> > -       kcov_debug("area = %px, size = %u\n", area, size);
-> >         INIT_LIST_HEAD(&area->list);
-> >         area->size = size;
-> >         list_add(&area->list, &kcov_remote_areas);
-> > @@ -148,9 +157,11 @@ static notrace bool check_kcov_mode(enum kcov_mode needed_mode, struct task_stru
-> >
-> >         /*
-> >          * We are interested in code coverage as a function of a syscall inputs,
-> > -        * so we ignore code executed in interrupts.
-> > +        * so we ignore code executed in interrupts, unless we are in a remote
-> > +        * coverage collection section happening in an interrupt, which is
-> > +        * indicated by the t->kcov_interrupt flag.
-> >          */
-> > -       if (!in_task())
-> > +       if (!in_task() && !t->kcov_interrupt)
-> >                 return false;
-> >         mode = READ_ONCE(t->kcov_mode);
-> >         /*
-> > @@ -331,12 +342,12 @@ static void kcov_stop(struct task_struct *t)
-> >         barrier();
-> >         t->kcov_size = 0;
-> >         t->kcov_area = NULL;
-> > +       t->kcov = NULL;
-> >  }
-> >
-> >  static void kcov_task_reset(struct task_struct *t)
-> >  {
-> >         kcov_stop(t);
-> > -       t->kcov = NULL;
-> >         t->kcov_sequence = 0;
-> >         t->kcov_handle = 0;
-> >  }
-> > @@ -361,18 +372,18 @@ static void kcov_remote_reset(struct kcov *kcov)
-> >         int bkt;
-> >         struct kcov_remote *remote;
-> >         struct hlist_node *tmp;
-> > +       unsigned long flags;
-> >
-> > -       spin_lock(&kcov_remote_lock);
-> > +       spin_lock_irqsave(&kcov_remote_lock, flags);
-> >         hash_for_each_safe(kcov_remote_map, bkt, tmp, remote, hnode) {
-> >                 if (remote->kcov != kcov)
-> >                         continue;
-> > -               kcov_debug("removing handle %llx\n", remote->handle);
-> >                 hash_del(&remote->hnode);
-> >                 kfree(remote);
-> >         }
-> >         /* Do reset before unlock to prevent races with kcov_remote_start(). */
-> >         kcov_reset(kcov);
-> > -       spin_unlock(&kcov_remote_lock);
-> > +       spin_unlock_irqrestore(&kcov_remote_lock, flags);
-> >  }
-> >
-> >  static void kcov_disable(struct task_struct *t, struct kcov *kcov)
-> > @@ -401,12 +412,13 @@ static void kcov_put(struct kcov *kcov)
-> >  void kcov_task_exit(struct task_struct *t)
-> >  {
-> >         struct kcov *kcov;
-> > +       unsigned long flags;
-> >
-> >         kcov = t->kcov;
-> >         if (kcov == NULL)
-> >                 return;
-> >
-> > -       spin_lock(&kcov->lock);
-> > +       spin_lock_irqsave(&kcov->lock, flags);
-> >         kcov_debug("t = %px, kcov->t = %px\n", t, kcov->t);
-> >         /*
-> >          * For KCOV_ENABLE devices we want to make sure that t->kcov->t == t,
-> > @@ -430,12 +442,12 @@ void kcov_task_exit(struct task_struct *t)
-> >          * By combining all three checks into one we get:
-> >          */
-> >         if (WARN_ON(kcov->t != t)) {
-> > -               spin_unlock(&kcov->lock);
-> > +               spin_unlock_irqrestore(&kcov->lock, flags);
-> >                 return;
-> >         }
-> >         /* Just to not leave dangling references behind. */
-> >         kcov_disable(t, kcov);
-> > -       spin_unlock(&kcov->lock);
-> > +       spin_unlock_irqrestore(&kcov->lock, flags);
-> >         kcov_put(kcov);
-> >  }
-> >
-> > @@ -446,12 +458,13 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
-> >         struct kcov *kcov = vma->vm_file->private_data;
-> >         unsigned long size, off;
-> >         struct page *page;
-> > +       unsigned long flags;
-> >
-> >         area = vmalloc_user(vma->vm_end - vma->vm_start);
-> >         if (!area)
-> >                 return -ENOMEM;
-> >
-> > -       spin_lock(&kcov->lock);
-> > +       spin_lock_irqsave(&kcov->lock, flags);
-> >         size = kcov->size * sizeof(unsigned long);
-> >         if (kcov->mode != KCOV_MODE_INIT || vma->vm_pgoff != 0 ||
-> >             vma->vm_end - vma->vm_start != size) {
-> > @@ -461,7 +474,7 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
-> >         if (!kcov->area) {
-> >                 kcov->area = area;
-> >                 vma->vm_flags |= VM_DONTEXPAND;
-> > -               spin_unlock(&kcov->lock);
-> > +               spin_unlock_irqrestore(&kcov->lock, flags);
-> >                 for (off = 0; off < size; off += PAGE_SIZE) {
-> >                         page = vmalloc_to_page(kcov->area + off);
-> >                         if (vm_insert_page(vma, vma->vm_start + off, page))
-> > @@ -470,7 +483,7 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
-> >                 return 0;
-> >         }
-> >  exit:
-> > -       spin_unlock(&kcov->lock);
-> > +       spin_unlock_irqrestore(&kcov->lock, flags);
-> >         vfree(area);
-> >         return res;
-> >  }
-> > @@ -550,10 +563,10 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
-> >         int mode, i;
-> >         struct kcov_remote_arg *remote_arg;
-> >         struct kcov_remote *remote;
-> > +       unsigned long flags;
-> >
-> >         switch (cmd) {
-> >         case KCOV_INIT_TRACE:
-> > -               kcov_debug("KCOV_INIT_TRACE\n");
-> >                 /*
-> >                  * Enable kcov in trace mode and setup buffer size.
-> >                  * Must happen before anything else.
-> > @@ -572,7 +585,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
-> >                 kcov->mode = KCOV_MODE_INIT;
-> >                 return 0;
-> >         case KCOV_ENABLE:
-> > -               kcov_debug("KCOV_ENABLE\n");
-> >                 /*
-> >                  * Enable coverage for the current task.
-> >                  * At this point user must have been enabled trace mode,
-> > @@ -598,7 +610,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
-> >                 kcov_get(kcov);
-> >                 return 0;
-> >         case KCOV_DISABLE:
-> > -               kcov_debug("KCOV_DISABLE\n");
-> >                 /* Disable coverage for the current task. */
-> >                 unused = arg;
-> >                 if (unused != 0 || current->kcov != kcov)
-> > @@ -610,7 +621,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
-> >                 kcov_put(kcov);
-> >                 return 0;
-> >         case KCOV_REMOTE_ENABLE:
-> > -               kcov_debug("KCOV_REMOTE_ENABLE\n");
-> >                 if (kcov->mode != KCOV_MODE_INIT || !kcov->area)
-> >                         return -EINVAL;
-> >                 t = current;
-> > @@ -627,41 +637,42 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
-> >                 kcov->t = t;
-> >                 kcov->remote = true;
-> >                 kcov->remote_size = remote_arg->area_size;
-> > -               spin_lock(&kcov_remote_lock);
-> > +               spin_lock_irqsave(&kcov_remote_lock, flags);
-> >                 for (i = 0; i < remote_arg->num_handles; i++) {
-> > -                       kcov_debug("handle %llx\n", remote_arg->handles[i]);
-> >                         if (!kcov_check_handle(remote_arg->handles[i],
-> >                                                 false, true, false)) {
-> > -                               spin_unlock(&kcov_remote_lock);
-> > +                               spin_unlock_irqrestore(&kcov_remote_lock,
-> > +                                                       flags);
-> >                                 kcov_disable(t, kcov);
-> >                                 return -EINVAL;
-> >                         }
-> >                         remote = kcov_remote_add(kcov, remote_arg->handles[i]);
-> >                         if (IS_ERR(remote)) {
-> > -                               spin_unlock(&kcov_remote_lock);
-> > +                               spin_unlock_irqrestore(&kcov_remote_lock,
-> > +                                                       flags);
-> >                                 kcov_disable(t, kcov);
-> >                                 return PTR_ERR(remote);
-> >                         }
-> >                 }
-> >                 if (remote_arg->common_handle) {
-> > -                       kcov_debug("common handle %llx\n",
-> > -                                       remote_arg->common_handle);
-> >                         if (!kcov_check_handle(remote_arg->common_handle,
-> >                                                 true, false, false)) {
-> > -                               spin_unlock(&kcov_remote_lock);
-> > +                               spin_unlock_irqrestore(&kcov_remote_lock,
-> > +                                                       flags);
-> >                                 kcov_disable(t, kcov);
-> >                                 return -EINVAL;
-> >                         }
-> >                         remote = kcov_remote_add(kcov,
-> >                                         remote_arg->common_handle);
-> >                         if (IS_ERR(remote)) {
-> > -                               spin_unlock(&kcov_remote_lock);
-> > +                               spin_unlock_irqrestore(&kcov_remote_lock,
-> > +                                                       flags);
-> >                                 kcov_disable(t, kcov);
-> >                                 return PTR_ERR(remote);
-> >                         }
-> >                         t->kcov_handle = remote_arg->common_handle;
-> >                 }
-> > -               spin_unlock(&kcov_remote_lock);
-> > +               spin_unlock_irqrestore(&kcov_remote_lock, flags);
-> >                 /* Put either in kcov_task_exit() or in KCOV_DISABLE. */
-> >                 kcov_get(kcov);
-> >                 return 0;
-> > @@ -677,6 +688,7 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-> >         struct kcov_remote_arg *remote_arg = NULL;
-> >         unsigned int remote_num_handles;
-> >         unsigned long remote_arg_size;
-> > +       unsigned long flags;
-> >
-> >         if (cmd == KCOV_REMOTE_ENABLE) {
-> >                 if (get_user(remote_num_handles, (unsigned __user *)(arg +
-> > @@ -697,9 +709,9 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-> >         }
-> >
-> >         kcov = filep->private_data;
-> > -       spin_lock(&kcov->lock);
-> > +       spin_lock_irqsave(&kcov->lock, flags);
-> >         res = kcov_ioctl_locked(kcov, cmd, arg);
-> > -       spin_unlock(&kcov->lock);
-> > +       spin_unlock_irqrestore(&kcov->lock, flags);
-> >
-> >         kfree(remote_arg);
-> >
-> > @@ -716,8 +728,8 @@ static const struct file_operations kcov_fops = {
-> >
-> >  /*
-> >   * kcov_remote_start() and kcov_remote_stop() can be used to annotate a section
-> > - * of code in a kernel background thread to allow kcov to be used to collect
-> > - * coverage from that part of code.
-> > + * of code in a kernel background thread or in an interrupt to allow kcov to be
-> > + * used to collect coverage from that part of code.
-> >   *
-> >   * The handle argument of kcov_remote_start() identifies a code section that is
-> >   * used for coverage collection. A userspace process passes this handle to
-> > @@ -728,9 +740,9 @@ static const struct file_operations kcov_fops = {
-> >   * the type of the kernel thread whose code is being annotated.
-> >   *
-> >   * For global kernel threads that are spawned in a limited number of instances
-> > - * (e.g. one USB hub_event() worker thread is spawned per USB HCD), each
-> > - * instance must be assigned a unique 4-byte instance id. The instance id is
-> > - * then combined with a 1-byte subsystem id to get a handle via
-> > + * (e.g. one USB hub_event() worker thread is spawned per USB HCD) and for
-> > + * interrupts, each instance must be assigned a unique 4-byte instance id. The
-> > + * instance id is then combined with a 1-byte subsystem id to get a handle via
-> >   * kcov_remote_handle(subsystem_id, instance_id).
-> >   *
-> >   * For local kernel threads that are spawned from system calls handler when a
-> > @@ -749,13 +761,48 @@ static const struct file_operations kcov_fops = {
-> >   *
-> >   * See Documentation/dev-tools/kcov.rst for more details.
-> >   *
-> > - * Internally, this function looks up the kcov device associated with the
-> > + * Internally, kcov_remote_start() looks up the kcov device associated with the
-> >   * provided handle, allocates an area for coverage collection, and saves the
-> >   * pointers to kcov and area into the current task_struct to allow coverage to
-> >   * be collected via __sanitizer_cov_trace_pc()
-> >   * In turns kcov_remote_stop() clears those pointers from task_struct to stop
-> >   * collecting coverage and copies all collected coverage into the kcov area.
-> >   */
-> > +
-> > +void kcov_remote_swap_irq(struct task_struct *t,
-> > +                               struct kcov_remote_irq_data *irq)
-> > +{
-> > +       t->kcov = xchg(&irq->kcov, t->kcov);
-> > +       t->kcov_size = xchg(&irq->size, t->kcov_size);
-> > +       t->kcov_area = xchg(&irq->area, t->kcov_area);
-> > +       t->kcov_mode = xchg(&irq->mode, t->kcov_mode);
-> > +}
-> > +
-> > +bool kcov_remote_start_irq(struct task_struct *t)
-> > +{
-> > +       struct kcov_remote_irq_data *irq = &get_cpu_var(kcov_remote_irq);
-> > +
-> > +       if (t->kcov_interrupt) {
-> > +               /* Nested interrupt. */
-> > +               put_cpu_var(kcov_remote_irq);
-> > +               return false;
-> > +       }
-> > +       t->kcov_interrupt = true;
-> > +       kcov_remote_swap_irq(t, irq);
-> > +       put_cpu_var(kcov_remote_irq);
-> > +       return true;
-> > +}
-> > +
-> > +void kcov_remote_stop_irq(struct task_struct *t)
-> > +{
-> > +       struct kcov_remote_irq_data *irq = &get_cpu_var(kcov_remote_irq);
-> > +
-> > +       kcov_remote_swap_irq(t, irq);
-> > +       t->kcov_interrupt = false;
-> > +       local_irq_restore(irq->flags);
-> > +       put_cpu_var(kcov_remote_irq);
-> > +}
-> > +
-> >  void kcov_remote_start(u64 handle)
-> >  {
-> >         struct kcov_remote *remote;
-> > @@ -764,28 +811,32 @@ void kcov_remote_start(u64 handle)
-> >         unsigned int size;
-> >         enum kcov_mode mode;
-> >         int sequence;
-> > +       unsigned long flags;
-> >
-> >         if (WARN_ON(!kcov_check_handle(handle, true, true, true)))
-> >                 return;
-> > -       if (WARN_ON(!in_task()))
-> > +       if (WARN_ON(in_nmi()))
-> >                 return;
-> >         t = current;
-> >         /*
-> > -        * Check that kcov_remote_start is not called twice
-> > -        * nor called by user tasks (with enabled kcov).
-> > +        * Check that kcov_remote_start is not called twice in background
-> > +        * threads nor called by user tasks (with enabled kcov).
-> >          */
-> > -       if (WARN_ON(t->kcov))
-> > +       if (WARN_ON(in_task() && t->kcov))
-> >                 return;
-> >
-> > -       kcov_debug("handle = %llx\n", handle);
-> > -
-> > -       spin_lock(&kcov_remote_lock);
-> > +       spin_lock_irqsave(&kcov_remote_lock, flags);
-> >         remote = kcov_remote_find(handle);
-> >         if (!remote) {
-> > -               kcov_debug("no remote found");
-> > -               spin_unlock(&kcov_remote_lock);
-> > +               spin_unlock_irqrestore(&kcov_remote_lock, flags);
-> >                 return;
-> >         }
-> > +       if (!in_task() && !kcov_remote_start_irq(t)) {
-> > +               spin_unlock_irqrestore(&kcov_remote_lock, flags);
-> > +               return;
-> > +       }
-> > +       kcov_debug("handle = %llx, context: %s\n", handle,
-> > +                       in_task() ? "task" : "irq");
-> >         /* Put in kcov_remote_stop(). */
-> >         kcov_get(remote->kcov);
-> >         t->kcov = remote->kcov;
-> > @@ -793,11 +844,19 @@ void kcov_remote_start(u64 handle)
-> >          * Read kcov fields before unlock to prevent races with
-> >          * KCOV_DISABLE / kcov_remote_reset().
-> >          */
-> > -       size = remote->kcov->remote_size;
-> > +       size = min_t(unsigned int, remote->kcov->remote_size,
-> > +                       CONFIG_KCOV_IRQ_AREA_SIZE);
-> >         mode = remote->kcov->mode;
-> >         sequence = remote->kcov->sequence;
-> > -       area = kcov_remote_area_get(size);
-> > -       spin_unlock(&kcov_remote_lock);
-> > +       if (in_task()) {
-> > +               area = kcov_remote_area_get(size);
-> > +               spin_unlock_irqrestore(&kcov_remote_lock, flags);
-> > +       } else {
-> > +               area = *this_cpu_ptr(&kcov_irq_area);
-> > +               /* Flags are restored by kcov_remote_stop_irq(). */
-> > +               this_cpu_ptr(&kcov_remote_irq)->flags = flags;
-> > +               spin_unlock(&kcov_remote_lock);
-> > +       }
-> >
-> >         if (!area) {
-> >                 area = vmalloc(size * sizeof(unsigned long));
-> > @@ -810,8 +869,6 @@ void kcov_remote_start(u64 handle)
-> >         /* Reset coverage size. */
-> >         *(u64 *)area = 0;
-> >
-> > -       kcov_debug("area = %px, size = %u", area, size);
-> > -
-> >         kcov_start(t, size, area, mode, sequence);
-> >
-> >  }
-> > @@ -880,30 +937,30 @@ void kcov_remote_stop(void)
-> >         void *area = t->kcov_area;
-> >         unsigned int size = t->kcov_size;
-> >         int sequence = t->kcov_sequence;
-> > +       unsigned long flags;
-> >
-> > -       if (!kcov) {
-> > -               kcov_debug("no kcov found\n");
-> > +       if (!kcov)
-> >                 return;
-> > -       }
-> >
-> >         kcov_stop(t);
-> > -       t->kcov = NULL;
-> >
-> > -       spin_lock(&kcov->lock);
-> > +       spin_lock_irqsave(&kcov->lock, flags);
-> >         /*
-> >          * KCOV_DISABLE could have been called between kcov_remote_start()
-> > -        * and kcov_remote_stop(), hence the check.
-> > +        * and kcov_remote_stop(), hence the sequence check.
-> >          */
-> > -       kcov_debug("move if: %d == %d && %d\n",
-> > -               sequence, kcov->sequence, (int)kcov->remote);
-> >         if (sequence == kcov->sequence && kcov->remote)
-> >                 kcov_move_area(kcov->mode, kcov->area, kcov->size, area);
-> > -       spin_unlock(&kcov->lock);
-> > +       spin_unlock_irqrestore(&kcov->lock, flags);
-> >
-> > -       spin_lock(&kcov_remote_lock);
-> > -       kcov_remote_area_put(area, size);
-> > -       spin_unlock(&kcov_remote_lock);
-> > +       if (in_task()) {
-> > +               spin_lock_irqsave(&kcov_remote_lock, flags);
-> > +               kcov_remote_area_put(area, size);
-> > +               spin_unlock_irqrestore(&kcov_remote_lock, flags);
-> > +       } else
-> > +               kcov_remote_stop_irq(t);
-> >
-> > +       /* Get in kcov_remote_start(). */
-> >         kcov_put(kcov);
->
-> Is it OK to call kcov_put from interrupts?
+Andy Lutomirski <luto@kernel.org> writes:
 
-Yes, both kfree() and vfree() are safe to call in interrupt context
-AFAIU. I'll fix the rest in the next version. Thanks!
-
+> On 2/25/20 1:36 PM, Thomas Gleixner wrote:
+>> Nothing cares about the -1 "mark as interrupt" in the errorcode anymore. Just
+>> use 0 for all excpetions which do not have an errorcode consistently.
+>> 
 >
-> >  }
-> >  EXPORT_SYMBOL(kcov_remote_stop);
-> > @@ -917,6 +974,19 @@ EXPORT_SYMBOL(kcov_common_handle);
-> >
-> >  static int __init kcov_init(void)
-> >  {
-> > +       int cpu;
-> > +
-> > +       for_each_possible_cpu(cpu) {
-> > +               void **area = per_cpu_ptr(&kcov_irq_area, cpu);
-> > +
-> > +               *area = vmalloc(CONFIG_KCOV_IRQ_AREA_SIZE *
-> > +                               sizeof(unsigned long));
-> > +               if (!*area) {
-> > +                       kcov_err("failed to allocate per-cpu area\n");
-> > +                       return -ENOMEM;
-> > +               }
-> > +       }
-> > +
-> >         /*
-> >          * The kcov debugfs file won't ever get removed and thus,
-> >          * there is no need to protect it against removal races. The
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index d1842fe756d5..03f98c463a9e 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -1695,6 +1695,15 @@ config KCOV_INSTRUMENT_ALL
-> >           filesystem fuzzing with AFL) then you will want to enable coverage
-> >           for more specific subsets of files, and should say n here.
-> >
-> > +config KCOV_IRQ_AREA_SIZE
-> > +       hex "Size of interrupt coverage collection area in words"
-> > +       depends on KCOV
-> > +       default 0x40000
-> > +       help
-> > +         KCOV uses preallocated per-cpu areas to collect coverage from
-> > +         interrupts. This specifies the size of those areas in the number
-> > +         of unsigned long words.
-> > +
-> >  menuconfig RUNTIME_TESTING_MENU
-> >         bool "Runtime Testing"
-> >         def_bool y
-> > --
-> > 2.24.1.735.g03f4e72817-goog
-> >
+> I sincerely wish this were the case.  But look at collect_syscall() in
+> lib/syscall.c.
+>
+> It would be really quite nice to address this for real in some
+> low-overhead way.  My suggestion would be to borrow a trick from 32-bit:
+> split regs->cs into ->cs and ->__csh, and stick CS_FROM_SYSCALL into
+> __csh for syscalls.  This will only add any overhead at all to the int80
+> case.  Then we could adjust syscall_get_nr() to look for CS_FROM_SYSCALL.
+>
+> What do you think?  An alternative would be to use the stack walking
+> machinery in collect_syscall(), since the mere existence of that
+> function is abomination and we may not care about performance.
+
+Looking deeper. The code in common_exception does:
+
+	movl	PT_ORIG_EAX(%esp), %edx		# get the error code
+	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
+
+So whatever the exception pushed on the stack the thing what
+collect_syscall finds is -1.
+
+The pushed value is used as the error_code argument for the exception
+handler and I really can't find a single one which cares (anymore).
+
+But darn and I overlooked that, it's propagated to do_trap() and
+friends, but even if this causes a user visible change, I doubt that
+anything cares about it today simply because for giggles a 64bit kernel
+unconditionally pushes 0 for all exceptions which do not have a hardware
+error code on stack. So any 32bit application which excpects a
+particular error code (0/-1) in the signal would have been broken on the
+first day it ran on a x64 bit kernel.
+
+If someone yells regression, then that's really trivial to fix in
+C-code.
+
+Let me rephrase the changelog for this.
+
+Thanks,
+
+        tglx
