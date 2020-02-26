@@ -2,109 +2,102 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB1BC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55BBC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7754124687
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QZiWhKFy"
+	by mail.kernel.org (Postfix) with ESMTP id 7C5CB24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582731645;
+	bh=rpDkLS7rEK9wXB0675QEydNIO5ST6s8eJaGl0LKMVTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dOMrtvPmFBQIN8rSkMYXAkIA0DN7LWPsK64NQwVnEbH5gn6HlH63LtZPAm5+anpl6
+	 Zhk+A7pthqlldnYRUL7kLrEExdqQKHDNt96wIbF+l8+VI3qBbrrG0oz8dbDC3Lbwyg
+	 H+26l+FF7miaoqJM8Jbq35ydV4R6E4nRyOxq5wXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgBZPkb (ORCPT
+        id S1728419AbgBZPko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:40:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41560 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbgBZPkb (ORCPT
+        Wed, 26 Feb 2020 10:40:44 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37945 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbgBZPko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:40:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=RdfI8zcYUbYtVeFuEktgZYpmdsO2bxZo0zxF/fSi1ho=; b=QZiWhKFyhqE4wOJ4Fc2qb1NIjh
-        +aCjkUnk6fdzX+rGLHwqwjOJ+6bxSaXFwf9Kl5W13iavOwYJu15WkjT+FRP9+8j1dlpP6+w1TjFkb
-        l0KX7scOeP1gS6U0jzc4RTX9aMchaKjhHg00bVZv0j2+t9865z+c/u4otvCYk25mD576+3nVoAD53
-        8reA1R6AD5lLyP+dykIdyV9K4AcNU6zV0ID4tLfSyVLPcXzZDCcP6lj+/O18BdoN69QwxFGcxefhi
-        JsRx6aDf5Jc9A1XlpCtpHNdfuvIuJa1BXqtgkmmPgmJhscCnvmWd3X+Zm1f7o8h7o9sEd1Fut96kG
-        a5cuJNdw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6ynR-0001q6-Qg; Wed, 26 Feb 2020 15:40:25 +0000
-Subject: Re: [PATCH v9 3/4] soc: mediatek: Move mt8173 MMSYS to platform
- driver
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200226105419.632771-1-enric.balletbo@collabora.com>
- <20200226105419.632771-4-enric.balletbo@collabora.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <54b3cfed-92f3-54c8-05a1-90ef4c057e4c@infradead.org>
-Date:   Wed, 26 Feb 2020 07:40:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 10:40:44 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r137so3458139oie.5;
+        Wed, 26 Feb 2020 07:40:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3R1Mq+MisD9G4+ZpOmuB3h2FDH8y3/7UmntuhjMNOV0=;
+        b=pVNbzQ16z2M2NzzQzhTY6SZfRgQ+X/V0BaIoehJM3rODE/U8cA1CbMKmGyMaHq5flo
+         iG68PdXnHQ3PyenOf2Ejt9cdFbsu/1BPKCx6xkAQ1QMldE111BykOQ4xi5Z1DQbhx3Rb
+         goN0z+f7W6wgpe4KK93uHisFC2aHF9tScrOXeTUj16XK/edBVZb3EKvFXuj0TVqvNeNy
+         YdalOoJiPf11LNvnJCq2pR8Klbz0CTG4E3z8uxPi3yEf8a39Qm2YBLIQkl3WezBW6KIq
+         h1Zgi643oqXWzw5IBhX1PQkXLdTfSUoiNNam+QYkX4CvGbMwauRMjQfKil/YkvAQgw74
+         ursA==
+X-Gm-Message-State: APjAAAV+4w7W5ArgRK2jYtQT8e2d9MYenQBNFsXCfgk2C0okJLG3eTxn
+        YyTz7lxICcZagvpfKo6RnOwb2boUtw==
+X-Google-Smtp-Source: APXvYqxcBvbXOvynvDFxXZbtbXfYpnw0GKqWXRxA1hG0x/H5llfZKmKRiUnj9vUsgZ7itckep14F+w==
+X-Received: by 2002:aca:2315:: with SMTP id e21mr3589037oie.147.1582731643096;
+        Wed, 26 Feb 2020 07:40:43 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f1sm889779otq.4.2020.02.26.07.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:40:42 -0800 (PST)
+Received: (nullmailer pid 21596 invoked by uid 1000);
+        Wed, 26 Feb 2020 15:40:40 -0000
+Date:   Wed, 26 Feb 2020 09:40:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     John Crispin <john@phrozen.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Message-ID: <20200226154040.GA17521@bogus>
+References: <20200219185226.1236-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200226105419.632771-4-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219185226.1236-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 2:54 AM, Enric Balletbo i Serra wrote:
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 2114b563478c..dcd6481a14d0 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -44,4 +44,11 @@ config MTK_SCPSYS
->  	  Say yes here to add support for the MediaTek SCPSYS power domain
->  	  driver.
+On Wed, Feb 19, 2020 at 07:52:25PM +0100, Ansuel Smith wrote:
+> Add missing definition of rpm clk for ipq806x soc
+> 
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+>  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+>  3 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> index 944719bd586f..dd0def465c79 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> @@ -16,6 +16,7 @@ Required properties :
+>  			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+>  			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+>  			"qcom,rpmcc-msm8996", "qcom,rpmcc"
+> +			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
+>  			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+
+Perhaps keep this somewhat in sorted order.
+
+>  			"qcom,rpmcc-qcs404", "qcom,rpmcc"
 >  
-> +config MT8173_MMSYS
-> +	bool "MediaTek MT8173 MMSYS Support"
-
-Hi,
-Can this be tristate instead of bool?
-
-> +	depends on COMMON_CLK_MT8173
-> +	help
-> +	  Say yes here to add support for the MediaTek MT8173 Multimedia
-> +	  Subsystem (MMSYS).
-> +
->  endmenu
-
-thanks.
--- 
-~Randy
-
