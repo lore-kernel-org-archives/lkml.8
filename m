@@ -2,120 +2,96 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAE8C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993FDC4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E5F21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664762072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582755466;
-	bh=cs+KD5MTlL+9h4Tj3lAJWI9MH0tgnD0DmNQnuZrw/9c=;
+	s=default; t=1582755582;
+	bh=Nmw5IJVhPO6uCM7Z4OhCEgNNwe0E1dUubp24Ke6R4Oo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F1VGLvvGpxN5V+hgqkscB29PgwnsexPNOF/dswG9KozIhIMpEvS2vgbitl9yJqCtA
-	 5//a4TO07Ej8I6HY5ca1KbkhUsJ6mUmjX/Hx78lSSe3XSVo1aQeGRP24xnfx2b9WXU
-	 BLt3yKe5O4tC13XVO3Ju7sleyQUVzeAclFFgQl3Y=
+	b=gGKf+xRnhc01bSyggqR8WY5AAuj0VDKm7JDXBj3SVx4DOO7YE/NTAWiB1pHFwEmAM
+	 IQdcK/MUqE/hmOGphBKvgKVi29wPQYAwtzR9c03jWvoXUJHAqSn3z87YhuTboTcuSN
+	 s91jCAsbf/JvuIJ0APhmRemB/NY08FSkQsqYyUB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgBZWRo (ORCPT
+        id S1727802AbgBZWTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:17:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbgBZWRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:17:44 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC7702072D;
-        Wed, 26 Feb 2020 22:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582755463;
-        bh=cs+KD5MTlL+9h4Tj3lAJWI9MH0tgnD0DmNQnuZrw/9c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DAebMMviU1D71LPXnPss901gxpWeddvg5oFWeaWscNgSXKScZnKkl2Dw9x39ynyOG
-         QmpkTRir9i88Bu7uB45IQ0SkYdFKHAzxqgQy4R6/Mi0MFma4i1a/cj2K591KSfyOgG
-         mCSzF8p+g5KzQHhHWKmt7G6rV/26BKVg8kbF6Tk8=
-Date:   Wed, 26 Feb 2020 14:17:42 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] crypto: testmgr - use generic algs making test vecs
-Message-ID: <20200226221742.GA135806@gmail.com>
-References: <20200225154834.25108-1-gilad@benyossef.com>
- <20200225154834.25108-2-gilad@benyossef.com>
- <20200225194551.GA114977@gmail.com>
- <CAOtvUMeWB=MiYfzkrPjOctOufKJ8Q81E3m6bq8GJY-enbG6Qjg@mail.gmail.com>
+        Wed, 26 Feb 2020 17:19:41 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42573 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbgBZWTl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:19:41 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so999784otd.9;
+        Wed, 26 Feb 2020 14:19:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sWyxiAEzeSmcElmr0LNMnTgSazdAG9/ZOCElmokQbC0=;
+        b=eCNQ1bdWelAWWtV12myftWYfi0mIzUn9TFdL12VQmYZL5pH9umxIaCdib3hWzerIVh
+         xd3sszSqbCDyPvFYL6T2ARhlNRaN8tfGlwxFDdUFL5O+A8FxJN72so5yBReAuLEuwaxj
+         Wm2cmwawaEj7KfNOFKQmp0vAXco9GUKyGtrYwCaqRG9tkI2dTSF2CE09D3C2g6Xc2chF
+         mkU9KiP9xSevUaNIm79qnePHOtcIIhAHgB7QmBKzbUkQ7yOJb8UJ6QbHkCciDuju524O
+         1dNQs95KXBgbS+UHc2WBLxfho603NCvy+IDzjiTsdUUI2CwYfJR3BfCRgEOMWYskbTIs
+         jPoQ==
+X-Gm-Message-State: APjAAAWJWMeRNEkmeicsfsS7u+qc0PIbFCJd/U8GqmPght53cUi8Xbks
+        VDVLKB5oZi7hYE+g504E9w==
+X-Google-Smtp-Source: APXvYqxcI1f7yAERZ6QtTzOxTYytk6rNbUmt2uL+TovzB/3tIvg04EuFZo6tZhS82ySexTPuu7HfIA==
+X-Received: by 2002:a9d:4d96:: with SMTP id u22mr690140otk.271.1582755580501;
+        Wed, 26 Feb 2020 14:19:40 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h1sm1230129otm.34.2020.02.26.14.19.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 14:19:39 -0800 (PST)
+Received: (nullmailer pid 3500 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:19:39 -0000
+Date:   Wed, 26 Feb 2020 16:19:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mmc: Convert UniPhier SD controller to
+ json-schema
+Message-ID: <20200226221939.GA3373@bogus>
+References: <20200222112541.573-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOtvUMeWB=MiYfzkrPjOctOufKJ8Q81E3m6bq8GJY-enbG6Qjg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200222112541.573-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:42:45PM +0200, Gilad Ben-Yossef wrote:
+On Sat, 22 Feb 2020 20:25:41 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier SD controller binding to DT schema format.
 > 
-> The impetus to write this patch came from my experience debugging a
-> test failure with the ccree driver.
-> At some point while tweaking around I got into a situation where the
-> test was succeeding (that is, declaring the message inauthentic) not
-> because the mutation was being detected but because the generation of
-> the origin was producing a bogus ICV.
-
-That's being fixed by your patch 2/2 though, right?
-
-> At that point it seemed to me that it would be safer to "isolate" the
-> original AEAD messages generation from the code that was being teste.
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 > 
-> > We could also just move test_aead_inauthentic_inputs() to below
-> > test_aead_vs_generic_impl() so that it runs last.
+> If there is a better way to describe reset-names,
+> please let me know.
 > 
-> This would probably be better, although I think that this stage also
-> generates inauthentic messages from time to time, no?
+> 
+>  .../bindings/mmc/socionext,uniphier-sd.yaml   | 99 +++++++++++++++++++
+>  .../devicetree/bindings/mmc/uniphier-sd.txt   | 55 -----------
+>  2 files changed, 99 insertions(+), 55 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/socionext,uniphier-sd.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/uniphier-sd.txt
+> 
 
-That's correct, but in test_aead_vs_generic_impl() the generic implementation is
-used to generate the test vectors.
+Applied, thanks.
 
-> At any rate, I don't have strong feelings about it either way. I defer
-> to your judgment whether it is worth it to add a fallback to use the
-> same implementation and fix what needs fixing or drop the patch
-> altogether if you think this isn't worth the trouble - just let me
-> know.
-
-I just want to avoid adding complexity that isn't worthwhile.
-Beyond your patch 2, how about we just do:
-
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 79b431545249a9..2ab48d4d317250 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -2564,11 +2564,11 @@ static int test_aead_extra(const char *driver,
- 		goto out;
- 	}
- 
--	err = test_aead_inauthentic_inputs(ctx);
-+	err = test_aead_vs_generic_impl(ctx);
- 	if (err)
- 		goto out;
- 
--	err = test_aead_vs_generic_impl(ctx);
-+	err = test_aead_inauthentic_inputs(ctx);
- out:
- 	kfree(ctx->vec.key);
- 	kfree(ctx->vec.iv);
-
-
-Then the dedicated tests for inauthentic inputs wouldn't be run until the fuzz
-tests vs. generic have already passed.
-
-- Eric
+Rob
