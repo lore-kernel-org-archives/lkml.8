@@ -2,177 +2,306 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00090C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897AFC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC96E24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F99F24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:59:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nEMzr1EI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgBZL7U (ORCPT
+        id S1727067AbgBZL7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:59:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48726 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgBZL7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:59:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F07ECADFF;
-        Wed, 26 Feb 2020 11:59:16 +0000 (UTC)
-Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
-To:     Icenowy Zheng <icenowy@aosc.io>, Torsten Duwe <duwe@lst.de>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime@cerno.tech>
-References: <20200221165127.813325-1-icenowy@aosc.io>
- <20200221171328.GC6928@lst.de> <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io>
- <f4109d23-4591-1c52-2822-0a2ba358fe1f@suse.de>
- <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <715efe04-c2f2-48e2-c8e4-009816a8ab69@suse.de>
-Date:   Wed, 26 Feb 2020 12:59:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 26 Feb 2020 06:59:35 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1069 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgBZL7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:59:34 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e565d970000>; Wed, 26 Feb 2020 03:59:19 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Feb 2020 03:59:32 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Feb 2020 03:59:32 -0800
+Received: from [10.25.74.250] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
+ 2020 11:59:28 +0000
+Subject: Re: [PATCH V3 5/5] PCI: pci-epf-test: Add support to defer core
+ initialization
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>, <kishon@ti.com>,
+        <thierry.reding@gmail.com>, <Jisheng.Zhang@synaptics.com>,
+        <jonathanh@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200217121036.3057-1-vidyas@nvidia.com>
+ <20200217121036.3057-6-vidyas@nvidia.com>
+ <20200225120832.GA7710@e121166-lin.cambridge.arm.com>
+ <ac537e94-7ec8-de61-322a-8a8c7ff48ac5@nvidia.com>
+ <20200226100749.GA13197@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ad4eb93b-0c99-42f8-d1ee-3e5513b9be0a@nvidia.com>
+Date:   Wed, 26 Feb 2020 17:29:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200226100749.GA13197@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582718359; bh=ATXt1WS4GNEvZyxJqERlqZmbCuP69KF1XDahM/zOBOA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nEMzr1EI2esFJmbzUY+7K4QW8obtsb1d/9DM91uPJK/uKxXQNtd6vY1tL0Wop9clg
+         jecwP6OyCgdfkMX/sBjhHYAJjwkmTuGctAvgJxme6+dhuOM38JJBMTVGJBpJoOp3l4
+         79pa/S6h6L7ClkKT036sXC6lozMpae0+pcmX4x+CYR+e+r2C16DJ16x4rzUzL8cICa
+         UXnUcPEWnaE7W8UK7CVvziwfEQSpT7u3r7I7upQCyLsvgrRWZdueQ0g2qpcyDc/WXf
+         W5qLSB53Wj/ACa9ybnrLI4qlMkXZ/WrzOYLx2pK6TR0685s4YUi5baFXxoHtXrIgNH
+         PrA9VLVMu3MGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
 
-Am 26.02.20 um 12:02 schrieb Icenowy Zheng:
+
+On 2/26/2020 3:37 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
 > 
 > 
-> 于 2020年2月26日 GMT+08:00 下午6:58:43, Thomas Zimmermann <tzimmermann@suse.de> 写到:
->> Hi Iceynow,
+> On Tue, Feb 25, 2020 at 11:43:07PM +0530, Vidya Sagar wrote:
 >>
->> Torsten asked me to merge your patch via drm-misc-next. I'd add the
->> additional cc and fixes tags that Torsten listed. Are you OK with that?
-> 
-> I think this fixes a driver (and a board) available in 5.6.
-> 
-> Maybe it should enter fixes?
-
-I think we can do that. Anything else?
-
-Best regards
-Thomas
-
-> 
 >>
->> Best regards
->> Thomas
+>> On 2/25/2020 5:38 PM, Lorenzo Pieralisi wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Mon, Feb 17, 2020 at 05:40:36PM +0530, Vidya Sagar wrote:
+>>>> Add support to defer core initialization and to receive a notifier
+>>>> when core is ready to accommodate platforms where core is not for
+>>>> initialization untile reference clock from host is available.
+>>>
+>>> I don't understand this commit log, please reword it and fix
+>>> the typos, I would merge it then, thanks.
+>> Would the following be ok?
 >>
->> Am 22.02.20 um 03:43 schrieb Icenowy Zheng:
->>>
->>>
->>> 于 2020年2月22日 GMT+08:00 上午1:13:28, Torsten Duwe <duwe@lst.de> 写到:
->>>> On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
->>>>> Current code tries to store the link rate (in bps, which is a big
->>>>> number) in a u8, which surely overflow. Then it's converted back to
->>>>> bandwidth code (which is thus 0) and written to the chip.
->>>>>
->>>>> The code sometimes works because the chip will automatically
->> fallback
->>>> to
->>>>> the lowest possible DP link rate (1.62Gbps) when get the invalid
->>>> value.
->>>>> However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps
->>>> link,
->>>>> it failed.
->>>>>
->>>>> As we had already read the link bandwidth as bandwidth code in
->>>> earlier
->>>>> code (to check whether it is supported), use it when setting
->>>> bandwidth,
->>>>> instead of converting it to link rate and then converting back.
->>>>>
->>>>> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for
->> v5.5")
->>>>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>>>> ---
->>>>>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
->>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>> b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>>> index 56f55c53abfd..2dfa2fd2a23b 100644
->>>>> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>>> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>>> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct
->>>> anx6345 *anx6345)
->>>>>  	if (err)
->>>>>  		return err;
->>>>>  
->>>>> -	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
->>>>> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
->>>>> +	dpcd[0] = dp_bw;
->>>>
->>>> Why do you make this assignment and not use dp_bw directly in the
->> call?
->>>
->>> Because the dpcd array is then written as a continous array
->>> back to DPCD.
->>>
->>>>
->>>>>  	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
->>>>>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
->>>>                                                       ^^^^^^
->>>>>  	if (err)
->>>>> -- 
->>>>> 2.24.1
->>>>
->>>> BTW, my version is only a bit more verbose:
->>>>
->>>> https://patchwork.freedesktop.org/patch/354344/
->>>>
->>>> 	Torsten
->>>
+>> Add support to defer DWC core initialization for the endpoint mode of
 > 
+> I removed "DWC" since this is not what this patch is actually doing.
+> 
+>> operation. Initialization would resume based on the notifier
+>> mechanism. This would enable support for implementations like Tegra194
+>> for endpoint mode operation, where the core initialization needs to be
+>> deferred until the PCIe reference clock is available from the host
+>> system.
+>>
+>> If it is ok, I'll send new patch series with this commit log.
+> 
+> No need, merged in pci/endpoint for v5.7, thanks.
+Thanks,
+Vidya Sagar
 
--- 
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-(HRB 36809, AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+> 
+> Lorenzo
+> 
+>> Thanks,
+>> Vidya Sagar
+>>>
+>>> Lorenzo
+>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>> V3:
+>>>> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>
+>>>> V2:
+>>>> * Addressed review comments from Kishon
+>>>>
+>>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+>>>>    1 file changed, 77 insertions(+), 41 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> index bddff15052cc..be04c6220265 100644
+>>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>>>> @@ -360,18 +360,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>>>>                            msecs_to_jiffies(1));
+>>>>    }
+>>>>
+>>>> -static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>>>> -                              void *data)
+>>>> -{
+>>>> -     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>>>> -     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> -
+>>>> -     queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>>>> -                        msecs_to_jiffies(1));
+>>>> -
+>>>> -     return NOTIFY_OK;
+>>>> -}
+>>>> -
+>>>>    static void pci_epf_test_unbind(struct pci_epf *epf)
+>>>>    {
+>>>>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> @@ -428,6 +416,78 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>>>>         return 0;
+>>>>    }
+>>>>
+>>>> +static int pci_epf_test_core_init(struct pci_epf *epf)
+>>>> +{
+>>>> +     struct pci_epf_header *header = epf->header;
+>>>> +     const struct pci_epc_features *epc_features;
+>>>> +     struct pci_epc *epc = epf->epc;
+>>>> +     struct device *dev = &epf->dev;
+>>>> +     bool msix_capable = false;
+>>>> +     bool msi_capable = true;
+>>>> +     int ret;
+>>>> +
+>>>> +     epc_features = pci_epc_get_features(epc, epf->func_no);
+>>>> +     if (epc_features) {
+>>>> +             msix_capable = epc_features->msix_capable;
+>>>> +             msi_capable = epc_features->msi_capable;
+>>>> +     }
+>>>> +
+>>>> +     ret = pci_epc_write_header(epc, epf->func_no, header);
+>>>> +     if (ret) {
+>>>> +             dev_err(dev, "Configuration header write failed\n");
+>>>> +             return ret;
+>>>> +     }
+>>>> +
+>>>> +     ret = pci_epf_test_set_bar(epf);
+>>>> +     if (ret)
+>>>> +             return ret;
+>>>> +
+>>>> +     if (msi_capable) {
+>>>> +             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>>>> +             if (ret) {
+>>>> +                     dev_err(dev, "MSI configuration failed\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>> +     if (msix_capable) {
+>>>> +             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>>>> +             if (ret) {
+>>>> +                     dev_err(dev, "MSI-X configuration failed\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int pci_epf_test_notifier(struct notifier_block *nb, unsigned long val,
+>>>> +                              void *data)
+>>>> +{
+>>>> +     struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
+>>>> +     struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> +     int ret;
+>>>> +
+>>>> +     switch (val) {
+>>>> +     case CORE_INIT:
+>>>> +             ret = pci_epf_test_core_init(epf);
+>>>> +             if (ret)
+>>>> +                     return NOTIFY_BAD;
+>>>> +             break;
+>>>> +
+>>>> +     case LINK_UP:
+>>>> +             queue_delayed_work(kpcitest_workqueue, &epf_test->cmd_handler,
+>>>> +                                msecs_to_jiffies(1));
+>>>> +             break;
+>>>> +
+>>>> +     default:
+>>>> +             dev_err(&epf->dev, "Invalid EPF test notifier event\n");
+>>>> +             return NOTIFY_BAD;
+>>>> +     }
+>>>> +
+>>>> +     return NOTIFY_OK;
+>>>> +}
+>>>> +
+>>>>    static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>>>>    {
+>>>>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> @@ -496,14 +556,11 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>    {
+>>>>         int ret;
+>>>>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>>>> -     struct pci_epf_header *header = epf->header;
+>>>>         const struct pci_epc_features *epc_features;
+>>>>         enum pci_barno test_reg_bar = BAR_0;
+>>>>         struct pci_epc *epc = epf->epc;
+>>>> -     struct device *dev = &epf->dev;
+>>>>         bool linkup_notifier = false;
+>>>> -     bool msix_capable = false;
+>>>> -     bool msi_capable = true;
+>>>> +     bool core_init_notifier = false;
+>>>>
+>>>>         if (WARN_ON_ONCE(!epc))
+>>>>                 return -EINVAL;
+>>>> @@ -511,8 +568,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>         epc_features = pci_epc_get_features(epc, epf->func_no);
+>>>>         if (epc_features) {
+>>>>                 linkup_notifier = epc_features->linkup_notifier;
+>>>> -             msix_capable = epc_features->msix_capable;
+>>>> -             msi_capable = epc_features->msi_capable;
+>>>> +             core_init_notifier = epc_features->core_init_notifier;
+>>>>                 test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+>>>>                 pci_epf_configure_bar(epf, epc_features);
+>>>>         }
+>>>> @@ -520,34 +576,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>         epf_test->test_reg_bar = test_reg_bar;
+>>>>         epf_test->epc_features = epc_features;
+>>>>
+>>>> -     ret = pci_epc_write_header(epc, epf->func_no, header);
+>>>> -     if (ret) {
+>>>> -             dev_err(dev, "Configuration header write failed\n");
+>>>> -             return ret;
+>>>> -     }
+>>>> -
+>>>>         ret = pci_epf_test_alloc_space(epf);
+>>>>         if (ret)
+>>>>                 return ret;
+>>>>
+>>>> -     ret = pci_epf_test_set_bar(epf);
+>>>> -     if (ret)
+>>>> -             return ret;
+>>>> -
+>>>> -     if (msi_capable) {
+>>>> -             ret = pci_epc_set_msi(epc, epf->func_no, epf->msi_interrupts);
+>>>> -             if (ret) {
+>>>> -                     dev_err(dev, "MSI configuration failed\n");
+>>>> -                     return ret;
+>>>> -             }
+>>>> -     }
+>>>> -
+>>>> -     if (msix_capable) {
+>>>> -             ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
+>>>> -             if (ret) {
+>>>> -                     dev_err(dev, "MSI-X configuration failed\n");
+>>>> +     if (!core_init_notifier) {
+>>>> +             ret = pci_epf_test_core_init(epf);
+>>>> +             if (ret)
+>>>>                         return ret;
+>>>> -             }
+>>>>         }
+>>>>
+>>>>         if (linkup_notifier) {
+>>>> --
+>>>> 2.17.1
+>>>>
