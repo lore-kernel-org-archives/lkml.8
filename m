@@ -2,112 +2,80 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCA6C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B80FC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AAF24687
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717A724687
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgBZPA4 (ORCPT
+        id S1727527AbgBZPAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:00:56 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36363 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbgBZPAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 10:00:55 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6yBA-0003Nd-C9; Wed, 26 Feb 2020 16:00:52 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6yB9-0006Vz-EO; Wed, 26 Feb 2020 16:00:51 +0100
-Date:   Wed, 26 Feb 2020 16:00:51 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] pwm: pca9685: initialize all LED registers during
- probe
-Message-ID: <20200226150051.sbopz7uzbdhtccba@pengutronix.de>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226135229.24929-3-matthias.schiffer@ew.tq-group.com>
+Received: from mga04.intel.com ([192.55.52.120]:30051 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727468AbgBZPAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:00:55 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 07:00:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="231425508"
+Received: from avgorshk-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.15.208])
+  by orsmga008.jf.intel.com with ESMTP; 26 Feb 2020 07:00:51 -0800
+Date:   Wed, 26 Feb 2020 17:00:51 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
+Subject: Re: [PATCH v2 2/4] tpm: ibmvtpm: Wait for buffer to be set before
+ proceeding
+Message-ID: <20200226150051.GA3407@linux.intel.com>
+References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
+ <20200213202329.898607-3-stefanb@linux.vnet.ibm.com>
+ <20200225165744.GD15662@linux.intel.com>
+ <8b61d1b4-8503-88e7-271f-da2ea0fc437f@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226135229.24929-3-matthias.schiffer@ew.tq-group.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <8b61d1b4-8503-88e7-271f-da2ea0fc437f@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 02:52:28PM +0100, Matthias Schiffer wrote:
-> Initialize all ON delays to 0 during probe, rather than doing it in
-> pca9685_pwm_enable.
+On Tue, Feb 25, 2020 at 01:14:32PM -0500, Stefan Berger wrote:
+> On 2/25/20 11:57 AM, Jarkko Sakkinen wrote:
+> > On Thu, Feb 13, 2020 at 03:23:27PM -0500, Stefan Berger wrote:
+> > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > > 
+> > > Synchronize with the results from the CRQs before continuing with
+> > > the initialization. This avoids trying to send TPM commands while
+> > > the rtce buffer has not been allocated, yet.
+> > What is CRQ anyway an acronym of?
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/pwm/pwm-pca9685.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> Command request queue.
 > 
-> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> index 393ab92aa945..370691b21107 100644
-> --- a/drivers/pwm/pwm-pca9685.c
-> +++ b/drivers/pwm/pwm-pca9685.c
-> @@ -289,13 +289,6 @@ static int pca9685_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
->  	struct pca9685 *pca = to_pca(chip);
->  
-> -	/*
-> -	 * The PWM subsystem does not support a pre-delay.
-> -	 * So, set the ON-timeout to 0
-> -	 */
-> -	regmap_write(pca->regmap, LED_N_ON_L(pwm->hwpwm), 0);
-> -	regmap_write(pca->regmap, LED_N_ON_H(pwm->hwpwm), 0);
-> -
->  	/*
->  	 * Clear the full-off bit.
->  	 * It has precedence over the others and must be off.
-> @@ -388,6 +381,13 @@ static int pca9685_pwm_probe(struct i2c_client *client,
->  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_L, 0);
->  	regmap_write(pca->regmap, PCA9685_ALL_LED_OFF_H, 0);
->  
-> +	/*
-> +	 * The PWM subsystem does not support a pre-delay.
-> +	 * So, set the ON-timeout to 0
-> +	 */
-> +	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_H, 0);
-> +	regmap_write(pca->regmap, PCA9685_ALL_LED_ON_L, 0);
-> +
+> 
+> > 
+> > > This patch fixes an existing race condition that may occurr if the
+> > > hypervisor does not quickly respond to the VTPM_GET_RTCE_BUFFER_SIZE
+> > > request sent during initialization and therefore the ibmvtpm->rtce_buf
+> > > has not been allocated at the time the first TPM command is sent.
+> > If it fixes a race condition, why doesn't it have a fixes tag?
+> 
+> Which commit should I mention?
 
-What is a pre-delay: Something like:
-          _________                   ______
-    _____/         \_________________/
-    ^                           ^
+The one that introduced the race condition if there is such.
 
-Where ^ marks the period start and then the time between period start
-and the rising signal is the pre-delay?
-
-If so, the IMHO more right approach is to keep the pre-delay until a new
-setting is applied and in .get_state ignore the pre-delay. This way you
-don't modify the output in .probe() which sounds right.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+/Jarkko
