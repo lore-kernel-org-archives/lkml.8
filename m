@@ -2,108 +2,199 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CDBC4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCD6C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5B424685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F66124685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilKxL3+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgBZNDD (ORCPT
+        id S1727283AbgBZNEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:03:03 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:34596 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBZNDC (ORCPT
+        Wed, 26 Feb 2020 08:04:51 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43273 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbgBZNEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:03:02 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CAF6A1C0370; Wed, 26 Feb 2020 14:03:00 +0100 (CET)
-Date:   Wed, 26 Feb 2020 14:03:00 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Ezra Buehler <ezra@easyb.ch>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        csd@princeton.com.tw, devicetree@vger.kernel.org, sales@fdhisi.com,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        zypeng@titanmec.com, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
- TM1628/FD628/AiP1618 LED controllers
-Message-ID: <20200226130300.GB2800@duo.ucw.cz>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <7110806f-ddbd-f055-e107-7a1f7e223102@arm.com>
- <c86c6bc0-b0e5-c46e-da87-9d910b95f9f3@suse.de>
- <04e7d7cd-a8bc-621b-9205-1a058521cabe@arm.com>
- <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
+        Wed, 26 Feb 2020 08:04:50 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e3so1935459lja.10;
+        Wed, 26 Feb 2020 05:04:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O25EKQ/j7WjcsbpKkgnPuipDcLm308M3Qu8bOQqW64A=;
+        b=ilKxL3+WgTagCjZB+A3/fi+owewEyGmO6tSxsdWl9xJkdj7Ke3DEtDuwx/9VC/RPeg
+         ZGBvXcJHemljLzQtxT1+6NkxlbNIlH3Tr3BKXduLPEQi5B2vT3+nJ0TNoif9BT9oAVRq
+         rptC753JSjuGIzjpUVscH24MgHRdLBcbwpq37sVIsj0WUMFZcxeL1wDdI6Xg/L498ZxC
+         TSNSMTJSLUJqhcbXtWGkMRnHJMf3aLsAVyWbW1yebObQrr1/tOjLecAzHB9MACx+IaKy
+         n2GiaHut4k96a1e8EB1hEplUCzLlxrYC8qhEF12aP5P/Hjn1ivCpuE0gthxb/Se4HEqg
+         iNbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O25EKQ/j7WjcsbpKkgnPuipDcLm308M3Qu8bOQqW64A=;
+        b=GwEMaLPGhm4KbcgmYCSfk2IRnNdhf+lkPEYAnsJdaPAbaAxjSxFjI6brUBE50zfFIm
+         FA+pEUWCAoa8FdGWZIY4sM4ruWv/MEnq0lYI1B9B6HDIF2vRFNVaXOsFRSzb3ulnXmBA
+         c+FDgYLaq3Q6vERGrP+k9+TDvUFbnm/jlhPxyALhxL6vFOtpmALzzIqOqoLO5rNBmtDR
+         lhGwbaK7bJmfomqIvXn+aDxUqZoslX8lk9GyMu9wA8xn2AOTGr/B5gGw3rcn72Bzzi3F
+         D1UlI6SFysVU/HdJLvNJC/7KARarKrsWLgHkISKRyWw01IgeMYc4YeUypRRKV0TkYQgM
+         luSA==
+X-Gm-Message-State: APjAAAVnlGcCu17qdNASLaM07BlSoi3tNHm+c3uxDdHQNI1apblnWKVt
+        fYLmW/xWIUjcnuCeTpH/wOk=
+X-Google-Smtp-Source: APXvYqy+w3/Rihtqgl84Z/m0zDxtBGcbJLHw6UD8Tbza68FJyTLvbIZ90z1QtoGVXcysYEmWUrDugw==
+X-Received: by 2002:a2e:8145:: with SMTP id t5mr3043598ljg.144.1582722288157;
+        Wed, 26 Feb 2020 05:04:48 -0800 (PST)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id f8sm1001149lfc.10.2020.02.26.05.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 05:04:47 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 26 Feb 2020 14:04:40 +0100
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200226130440.GA30008@pc636>
+References: <20200220045233.GC476845@mit.edu>
+ <20200221003035.GC2935@paulmck-ThinkPad-P72>
+ <20200221131455.GA4904@pc636>
+ <20200221202250.GK2935@paulmck-ThinkPad-P72>
+ <20200222222415.GC191380@google.com>
+ <20200223011018.GB2935@paulmck-ThinkPad-P72>
+ <20200224174030.GA22138@pc636>
+ <20200225020705.GA253171@google.com>
+ <20200225185400.GA27919@pc636>
+ <20200225224745.GX2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E33E27B9-D33C-4182-A5B1-C72FA40470BC@easyb.ch>
+In-Reply-To: <20200225224745.GX2935@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 02:47:45PM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 25, 2020 at 07:54:00PM +0100, Uladzislau Rezki wrote:
+> > > > > > I was thinking a 2 fold approach (just thinking out loud..):
+> > > > > > 
+> > > > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
+> > > > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
+> > > > > > queue that.
+> > > > > > 
+> > > > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
+> > > > gets failed in atomic context? Or we can just consider it as out of
+> > > > memory and another variant is to say that headless object can be called
+> > > > from preemptible context only.
+> > > 
+> > > Yes that makes sense, and we can always put disclaimer in the API's comments
+> > > saying if this object is expected to be freed a lot, then don't use the
+> > > headless-API to be extra safe.
+> > > 
+> > Agree.
+> > 
+> > > BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
+> > > the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
+> > > there seems to be bigger problems in the system any way. I would say let us
+> > > write a patch to allocate there and see what the -mm guys think.
+> > > 
+> > OK. It might be that they can offer something if they do not like our
+> > approach. I will try to compose something and send the patch to see.
+> > The tree.c implementation is almost done, whereas tiny one is on hold.
+> > 
+> > I think we should support batching as well as bulk interface there.
+> > Another way is to workaround head-less object, just to attach the head
+> > dynamically using kmalloc() and then call_rcu() but then it will not be
+> > a fair headless support :)
+> > 
+> > What is your view?
+> > 
+> > > > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
+> > > > > > synchronize_rcu() inline with it.
+> > > > > > 
+> > > > > >
+> > > > What do you mean here, Joel? "grow an rcu_head on the stack"?
+> > > 
+> > > By "grow on the stack", use the compiler-allocated rcu_head on the
+> > > kfree_rcu() caller's stack.
+> > > 
+> > > I meant here to say, if we are not in atomic context, then we use regular
+> > > GFP_KERNEL allocation, and if that fails, then we just use the stack's
+> > > rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
+> > > the allocation failure would mean the need for RCU to free some memory is
+> > > probably great.
+> > > 
+> > Ah, i got it. I thought you meant something like recursion and then
+> > unwinding the stack back somehow :)
+> > 
+> > > > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
+> > > > > > between the 2 cases.
+> > > > > > 
+> > > > If the current context is preemptable then we can inline synchronize_rcu()
+> > > > together with freeing to handle such corner case, i mean when we are run
+> > > > out of memory.
+> > > 
+> > > Ah yes, exactly what I mean.
+> > > 
+> > OK.
+> > 
+> > > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
+> > > > have a look at preempt_count of current process? If we have for example
+> > > > nested rcu_read_locks:
+> > > > 
+> > > > <snip>
+> > > > rcu_read_lock()
+> > > >     rcu_read_lock()
+> > > >         rcu_read_lock()
+> > > > <snip>
+> > > > 
+> > > > the counter would be 3.
+> > > 
+> > > No, because preempt_count is not incremented during rcu_read_lock(). RCU
+> > > reader sections can be preempted, they just cannot goto sleep in a reader
+> > > section (unless the kernel is RT).
+> > > 
+> > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
+> > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
+> > then we skip it and consider as atomic. Something like:
+> > 
+> > <snip>
+> > static bool is_current_in_atomic()
+> > {
+> > #ifdef CONFIG_PREEMPT_RCU
+> 
+> If possible: if (IS_ENABLED(CONFIG_PREEMPT_RCU))
+> 
+> Much nicer than #ifdef, and I -think- it should work in this case.
+> 
+OK. Thank you, Paul!
 
---zx4FCpZtqtKETZ7O
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There is one point i would like to highlight it is about making caller
+instead to be responsible for atomic or not decision. Like how kmalloc()
+works, it does not really know the context it runs on, so it is up to
+caller to inform.
 
-Hi!
+The same way:
 
-> > On 13 Dec 2019, at 15:07, Robin Murphy <robin.murphy@arm.com> wrote:
-> >=20
-> > I also have one of the H96 Max boxes (which I picked up out of curiosity
-> > for the mysterious RK3318) with an FD6551, although I've not attacked
-> > that one with the logic analyser yet to see how similar it is.
->=20
-> I have a T9 (RK3328) TV box with the same chip in it. The FD6551 uses an
-> I2C-like protocol. Every digit (and the symbols) have an I2C address,
-> but, the display does not signal ACK. AFAIK the FD650 and FD655 which
-> are used in other boxes (Amlogic) are very similar.
->=20
-> So far, I have whipped up a proof-of-cocept driver that uses i2c-gpio.
-> The digits seem to be rotated by 180 degrees. So, in order to use
-> map_to_7segment.h I had to define the BIT_SEG7_* constants differently.
-> My display also has multiple symbols (WIFI, network, pause, play, USB,
-> alarm) that are controlled by writing to the same address as for the
-> colon.
->=20
-> I=E2=80=99d love to work on a driver (similar to Andreas=E2=80=99 SPI bas=
-ed driver) for
-> these I2C connected chips.
+kvfree_rcu(p, atomic = true/false);
 
-Create a driver in drivers/auxdisplay for alphanumeric parts. You can
-then export any remaining symbols as LEDs if it will provide benefits.
+in this case we could cover !CONFIG_PREEMPT case also.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---zx4FCpZtqtKETZ7O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXlZshAAKCRAw5/Bqldv6
-8kZqAJ0eHpZJIq9KvRkuA970vGoHRW+FxwCfUVhxIMi58/nyPvs2Fhxkk2zlRec=
-=UP4r
------END PGP SIGNATURE-----
-
---zx4FCpZtqtKETZ7O--
+--
+Vlad Rezki
