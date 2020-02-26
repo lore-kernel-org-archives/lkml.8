@@ -2,184 +2,97 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DF4C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD1EC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FAB24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1255420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lg7WwIPd"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="hfdLuYaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgBZMcD (ORCPT
+        id S1726963AbgBZMdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:32:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39919 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726889AbgBZMcB (ORCPT
+        Wed, 26 Feb 2020 07:33:33 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53236 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgBZMdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:32:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582720319;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Oy96HdPGzei/vv2WF2/d4Po9U0TB/qWHDxyjGV+aMNU=;
-        b=Lg7WwIPdx2Gu2ieLc8L2IKsPAqc0db5fhhDe/yo+5qy0GZNo2idcnWGWU4Gs6xOoW9YS8c
-        MAE7W5/835e9ZhUe8Bwu3J2cxyszUxC/tB3LyxEFazQsR3kgsoyo5Nko2Ai4+05uoziOds
-        HgKYQilqtOxo+3UISrqVFr81CZXxoxs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432-hdNk-L4xM1KcFTtX2aX70Q-1; Wed, 26 Feb 2020 07:31:58 -0500
-X-MC-Unique: hdNk-L4xM1KcFTtX2aX70Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 656B41084433;
-        Wed, 26 Feb 2020 12:31:56 +0000 (UTC)
-Received: from [10.36.117.196] (ovpn-117-196.ams2.redhat.com [10.36.117.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 51EBE5C13D;
-        Wed, 26 Feb 2020 12:31:54 +0000 (UTC)
-Subject: Re: [PATCH v2 1/7] mm/hotplug: fix hot remove failure in
- SPARSEMEM|!VMEMMAP case
-To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        richardw.yang@linux.intel.com, osalvador@suse.de,
-        dan.j.williams@intel.com, mhocko@suse.com, rppt@linux.ibm.com,
-        robin.murphy@arm.com
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220043316.19668-2-bhe@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <93280f63-bed7-9677-a7fa-8ea2089d26d2@redhat.com>
-Date:   Wed, 26 Feb 2020 13:31:53 +0100
+        Wed, 26 Feb 2020 07:33:31 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so2869522wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 04:33:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0kIIo1lecMssMrTUasr4Z+ioUkeaNygIbZqpO6tuy7U=;
+        b=hfdLuYaaUMr9SBi7O2P91IYzUJ/zTJ2oS0bgVO7G20Gc0lV6lmNPq/5xN/1yLoCaez
+         Z886k1//kTzEvgQADorL1StdQJeX4DGQR8jUCS6NcH9TQ4ajegwlK8MTW8lSAx9x4rQ7
+         JHl9KZSvefslwO/hLtvmU8a/DLORpxStfHfCtwxmM+bDuFE54j0UQ19th6tTAiL2Ojnl
+         wmPMjYPD0FMF3XsqrCEuH3UXNW3YMO7ecvcZNjMqCxRtpRp07Gl2ticJbytLAviZW9eq
+         7cuyBOK/SGF7WKkVXBzN4G4WnMyqe7nQpCgWzl7pV43jy+4h9MsX8cnBOwv85R/yVaPP
+         o2Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0kIIo1lecMssMrTUasr4Z+ioUkeaNygIbZqpO6tuy7U=;
+        b=JAaASwF0BbJWZNxxgvTkh+RbdDwIqTVCz7JDlkyBlY/afpG3aoLBzSLLCYXoQ+bzxv
+         Pt6Mc/iH8nUwPNVtS7C2bayskQ9Kwl2REKfRvf4bwEK5Jq1jJ5HUBiAux1StRzSsdsGM
+         N+OxuzYucyn7wCIqowl9u2THbIlX2VDq57WH0YGwZycKHGjj8EBg2KC/QTKwjlbMvFju
+         j/9FT1+9b3Rox5hWX5ueGOat0qeu3jz9Azr2U8hJLtdgwRY/3aC/lUxQwDEUgxHmvJpb
+         EvS60r9+b7iGzijsP3lvDYtsnZtvzvLg4UG7r1Vxqto2wgsgDnJgvWIFpbG9tjftD/rd
+         isdA==
+X-Gm-Message-State: APjAAAV+PheJRm9K8YDf03zd9VaSZfHiDDkWANvUiErGXEqFn3NmLiqQ
+        QKUzyTYfcq0qcDPWuiTAdutBTA==
+X-Google-Smtp-Source: APXvYqzF4DjO+4GDUDHWRvcM3JgEw8aRfM0WfUIcWWSC7lry6yZFBDyky7ZCIKYhYahJy5QAQ29yoA==
+X-Received: by 2002:a1c:6189:: with SMTP id v131mr5646682wmb.185.1582720409669;
+        Wed, 26 Feb 2020 04:33:29 -0800 (PST)
+Received: from [192.168.1.10] ([194.35.116.65])
+        by smtp.gmail.com with ESMTPSA id a62sm2785097wmh.33.2020.02.26.04.33.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 04:33:29 -0800 (PST)
+Subject: Re: [PATCH bpf-next v3 0/5] bpftool: Make probes which emit dmesg
+ warnings optional
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org
+References: <20200225194446.20651-1-mrostecki@opensuse.org>
+ <e4929660-21ff-e394-37a0-d72b67a3770a@isovalent.com>
+ <0e46d001-a137-97bc-262c-e864cf3f90b8@opensuse.org>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <b638238e-7e35-0ab0-3f0b-315ffd947a8c@isovalent.com>
+Date:   Wed, 26 Feb 2020 12:33:28 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200220043316.19668-2-bhe@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <0e46d001-a137-97bc-262c-e864cf3f90b8@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.02.20 05:33, Baoquan He wrote:
-> In section_deactivate(), pfn_to_page() doesn't work any more after
-> ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
-> It caused hot remove failure:
-> 
-> kernel BUG at mm/page_alloc.c:4806!
-> invalid opcode: 0000 [#1] SMP PTI
-> CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-> Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-> RIP: 0010:free_pages+0x85/0xa0
-> Call Trace:
->  __remove_pages+0x99/0xc0
->  arch_remove_memory+0x23/0x4d
->  try_remove_memory+0xc8/0x130
->  ? walk_memory_blocks+0x72/0xa0
->  __remove_memory+0xa/0x11
->  acpi_memory_device_remove+0x72/0x100
->  acpi_bus_trim+0x55/0x90
->  acpi_device_hotplug+0x2eb/0x3d0
->  acpi_hotplug_work_fn+0x1a/0x30
->  process_one_work+0x1a7/0x370
->  worker_thread+0x30/0x380
->  ? flush_rcu_work+0x30/0x30
->  kthread+0x112/0x130
->  ? kthread_create_on_node+0x60/0x60
->  ret_from_fork+0x35/0x40
-> 
-> Let's move the ->section_mem_map resetting after depopulate_section_memmap()
-> to fix it.
-> 
+2020-02-26 13:17 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
 
-Fixes: Tag? Stable: Tag?
+[...]
 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  mm/sparse.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 596b2a45b100..b8e52c8fed7f 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -779,13 +779,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  			ms->usage = NULL;
->  		}
->  		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> -		ms->section_mem_map = (unsigned long)NULL;
->  	}
->  
->  	if (section_is_early && memmap)
->  		free_map_bootmem(memmap);
->  	else
->  		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +
-> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
-> +		ms->section_mem_map = (unsigned long)NULL;
->  }
->  
->  static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> 
+> I
+> might follow up with some more tests covering the other subcommands in
+> future.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
--- 
+That would be great!
 Thanks,
-
-David / dhildenb
-
+Quentin
