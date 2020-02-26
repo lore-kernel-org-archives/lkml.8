@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D22FC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5459FC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422BD21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262A72468B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/MIoEkI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lvi+D2mw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgBZVEc (ORCPT
+        id S1727730AbgBZVEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:04:32 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33411 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgBZVE3 (ORCPT
+        Wed, 26 Feb 2020 16:04:31 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35534 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbgBZVE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 16:04:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id ay11so200361plb.0;
-        Wed, 26 Feb 2020 13:04:29 -0800 (PST)
+Received: by mail-pf1-f196.google.com with SMTP id i19so405054pfa.2;
+        Wed, 26 Feb 2020 13:04:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xAl1x+LpHJ0/VGX33EY28LK5EWDI6zzFinArxJkf/Us=;
-        b=i/MIoEkIkUelCWWx6h02qcZVRrQclgV7C5pVM14h6peF/Ryl4gGu6eXes/xJT1aE6E
-         mq+oM2W8jWqREiUFdm5SsrqNGQ8hnfXOZP2MrZxKwP9bCwAMoROzYXl2H6/XHKP6PZpj
-         FsBlJyU97lfwxT0sxx+SwL0eYdtK4+ZuFrT2mBVSHAov8oi4NKrG4jwLQJmYEvLqqsdf
-         6eaJhdFFEVINUGhxVi/AkY09abXyerQ9GcwFjRUUIA1DGA110o3rqtIsvbG2O0AesPWo
-         5NClYjADavsoI9fj6GiVslYvq1mASMgXVTJIA5lT0G800a3UNXGVqOEKnq7y/Kg2XpKb
-         Wt+g==
+        bh=A4q0wYqlu/YQUGaARulHVZ/TOwBHToENqiembaxCOww=;
+        b=Lvi+D2mwGNM7GfCWgU1gIb0xLX76x9S5DhlQKZTseMwAa4FO8r0uyRyuTvQSD/eUWl
+         JyCLgnQyA3OCAVi+YfZ0TGIJ2uNDlHCTnqMpvGolFqz2AHwfcS21a7K1DPf9/qEVnSA+
+         ULgB9KbXtjiADHvWYbRlr7acFc8hBxDNznhORM4AjLbFdsR2trDVpIfP7IeNql8ncfNw
+         Bt0br7O8Q0yvjBKN/JlmYkENG1PBiMIpVMmo0Efmaelu7IDN5q8W6JWSFwaFOq4OMo53
+         SAMEaS7sq/gjXBkZZdkfWwA5CKAsiptwaxrn/8mj2yDGbzskixvAV53LC9b1BYWrCHB0
+         iMmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=xAl1x+LpHJ0/VGX33EY28LK5EWDI6zzFinArxJkf/Us=;
-        b=OUS0nIlp1cjVKTQhZ1h7EYiI36cedIz/FKom6wt3Jk4jWuV7dpHYezvApR5dvXWFed
-         8lfE/LsrWclmtljd6hD5sp0E/RBu0ZhuZGPjiIpLZm/93wDfm414eeHCgjHkV21rGlWd
-         jpCHuW14+4AXlKGoChmyltyhbyxpX3+g6N6pqDNBO9bne8+omuu+6MjbmflkP00CH5yq
-         ma06dbZ08skoo/6qsDpQQ7aSmOM3ajMkEMXoIcl5YkWqmoga+pTmrsKL6NlRSxZmxQYP
-         cdn51FODVavVHG5oweYSGk00+XYiNVYolcecKnQaHOPd6P9qe+PLPpdrQJmdi0FdRGrP
-         nivQ==
-X-Gm-Message-State: APjAAAV2iRI3XrDkdEky/Y8ftkgQZsvulE9DXUwvWk3tnF9PqSqmz2c3
-        NWgUfGzG2590YiWt4aclPXA=
-X-Google-Smtp-Source: APXvYqzmRD/mrN418qWZD5WexJgskKTDafa05gVsZZkbQReTFmVojqc2qHVQsWNNEWytgCR8y1/gLA==
-X-Received: by 2002:a17:902:7589:: with SMTP id j9mr1169794pll.312.1582751068697;
-        Wed, 26 Feb 2020 13:04:28 -0800 (PST)
+        bh=A4q0wYqlu/YQUGaARulHVZ/TOwBHToENqiembaxCOww=;
+        b=q/r47hkh2OotBnBpwvHocGVeT1jA7N3wzYtfGDHlKSwOUQqsIzn/iNTz6frOsaQWQ9
+         dLg5B3hXQU5mcT7PV6NQC/eo8WZJFosbqgVfXS07TKWhMWcLR6RjkP+Q5B6GVQYVs8d7
+         6Em5sCssQJxFXtWcrnsQS3O16NJh9sI7sg0REUKHWhWoVsLVIFy5vlEd+/V2owQhPkVH
+         JzIANOlee36xLZwnReLHmu03Q8j+TvoZVniYo6jTsZJEDJm95OSp4tE/vuqwx3lU6Pj6
+         FCUXhf790TpMY+XeEuIkp849TZ4Co385B1oYH3HzUObHfo07Fpt+JqKk5a0rVDr91ayd
+         bsjQ==
+X-Gm-Message-State: APjAAAXaoaLKqTBV0Mz5qzzpoeCTyMMSk5xpfFE2JXVueSnmarGO/ZuC
+        5otLB6wC6/EY1pkxOodtFxw=
+X-Google-Smtp-Source: APXvYqwC5kq+b0yRdWwFkFck1KqmaSIApjaRzd+GDEbmWy8kVOo/wDLxBJik1HZ29d23D5lDQkX+AQ==
+X-Received: by 2002:a63:ec0c:: with SMTP id j12mr694167pgh.78.1582751067307;
+        Wed, 26 Feb 2020 13:04:27 -0800 (PST)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q8sm3966221pfs.161.2020.02.26.13.04.27
+        by smtp.gmail.com with ESMTPSA id g19sm4014393pfh.134.2020.02.26.13.04.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Feb 2020 13:04:28 -0800 (PST)
+        Wed, 26 Feb 2020 13:04:26 -0800 (PST)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Minas Harutyunyan <hminas@synopsys.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Douglas Anderson <dianders@chromium.org>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [RFT PATCH 4/4] usb: dwc2: Make "trimming xfer length" a debug message
-Date:   Wed, 26 Feb 2020 13:04:14 -0800
-Message-Id: <20200226210414.28133-5-linux@roeck-us.net>
+Subject: [RFT PATCH 3/4] usb: dwc2: Abort transaction after errors with unknown reason
+Date:   Wed, 26 Feb 2020 13:04:13 -0800
+Message-Id: <20200226210414.28133-4-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200226210414.28133-1-linux@roeck-us.net>
 References: <20200226210414.28133-1-linux@roeck-us.net>
@@ -74,35 +74,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With some USB network adapters, such as DM96xx, the following message
-is seen for each maximum size receive packet.
+In some situations, the following error messages are reported.
 
-dwc2 ff540000.usb: dwc2_update_urb_state(): trimming xfer length
+dwc2 ff540000.usb: dwc2_hc_chhltd_intr_dma: Channel 1 - ChHltd set, but reason is unknown
+dwc2 ff540000.usb: hcint 0x00000002, intsts 0x04000021
 
-This happens because the packet size requested by the driver is 1522
-bytes, wMaxPacketSize is 64, the dwc2 driver configures the chip to
-receive 24*64 = 1536 bytes, and the chip does indeed send more than
-1522 bytes of data. Since the event does not indicate an error condition,
-the message is just noise. Demote it to debug level.
+This is sometimes followed by:
 
+dwc2 ff540000.usb: dwc2_update_urb_state_abn(): trimming xfer length
+
+and then:
+
+WARNING: CPU: 0 PID: 0 at kernel/v4.19/drivers/usb/dwc2/hcd.c:2913
+			dwc2_assign_and_init_hc+0x98c/0x990
+
+The warning suggests that an odd buffer address is to be used for DMA.
+
+After an error is observed, the receive buffer may be full
+(urb->actual_length >= urb->length). However, the urb is still left in
+the queue unless three errors were observed in a row. When it is queued
+again, the dwc2 hcd code translates this into a 1-block transfer.
+If urb->actual_length (ie the total expected receive length) is not
+DMA-aligned, the buffer pointer programmed into the chip will be
+unaligned. This results in the observed warning.
+
+To solve the problem, abort input transactions after an error with
+unknown cause if the entire packet was already received. This may be
+a bit drastic, but we don't really know why the transfer was aborted
+even though the entire packet was received. Aborting the transfer in
+this situation is less risky than accepting a potentially corrupted
+packet.
+
+With this patch in place, the 'ChHltd set' and 'trimming xfer length'
+messages are still observed, but there are no more transfer attempts
+with odd buffer addresses.
+
+Cc: Boris ARZUR <boris@konbu.org>
+Cc: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/usb/dwc2/hcd_intr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc2/hcd_intr.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/usb/dwc2/hcd_intr.c b/drivers/usb/dwc2/hcd_intr.c
-index 12819e019e13..d5f4ec1b73b1 100644
+index a052d39b4375..12819e019e13 100644
 --- a/drivers/usb/dwc2/hcd_intr.c
 +++ b/drivers/usb/dwc2/hcd_intr.c
-@@ -500,7 +500,7 @@ static int dwc2_update_urb_state(struct dwc2_hsotg *hsotg,
- 						      &short_read);
- 
- 	if (urb->actual_length + xfer_length > urb->length) {
--		dev_warn(hsotg->dev, "%s(): trimming xfer length\n", __func__);
-+		dev_dbg(hsotg->dev, "%s(): trimming xfer length\n", __func__);
- 		xfer_length = urb->length - urb->actual_length;
+@@ -1977,6 +1977,18 @@ static void dwc2_hc_chhltd_intr_dma(struct dwc2_hsotg *hsotg,
+ 		qtd->error_count++;
+ 		dwc2_update_urb_state_abn(hsotg, chan, chnum, qtd->urb,
+ 					  qtd, DWC2_HC_XFER_XACT_ERR);
++		/*
++		 * We can get here after a completed transaction
++		 * (urb->actual_length >= urb->length) which was not reported
++		 * as completed. If that is the case, and we do not abort
++		 * the transfer, a transfer of size 0 will be enqueued
++		 * subsequently. If urb->actual_length is not DMA-aligned,
++		 * the buffer will then point to an unaligned address, and
++		 * the resulting behavior is undefined. Bail out in that
++		 * situation.
++		 */
++		if (qtd->urb->actual_length >= qtd->urb->length)
++			qtd->error_count = 3;
+ 		dwc2_hcd_save_data_toggle(hsotg, chan, chnum, qtd);
+ 		dwc2_halt_channel(hsotg, chan, qtd, DWC2_HC_XFER_XACT_ERR);
  	}
- 
 -- 
 2.17.1
 
