@@ -2,89 +2,121 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE8FC4BA26
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2F7C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5432C24688
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AEA24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dWcCF8s4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fk3KALdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBZTbD (ORCPT
+        id S1727317AbgBZTbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:31:03 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38648 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbgBZTbD (ORCPT
+        Wed, 26 Feb 2020 14:31:16 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35707 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbgBZTbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:31:03 -0500
-Received: by mail-io1-f65.google.com with SMTP id s24so425765iog.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:31:03 -0800 (PST)
+        Wed, 26 Feb 2020 14:31:15 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c7so221698edu.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:31:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5MFxJeomCczgXDzeNV9Xn+RHt64mPvJ12qZr3RbPrbU=;
-        b=dWcCF8s4J9A+iP2iXoWcm3srPwjEatU3HdSYDIVsbNOiHHd7MtnwyuiE9mCNcHaGU0
-         qwCoH2p/6/qrCzG/i3ueu4EZqypRCXV4NQTLYaswGjHLOJWyjjeUM9SXiYcQxeTrcELD
-         ACUWcICt+Ximqv6VZnywYGgK6FeUCdHP4Ttig=
+        bh=tim9X+F9vYHdlPOoRw/qRUISublgBCciYQagSlRF/BQ=;
+        b=fk3KALdk6grE6nY7sZB/mMhkpi/EHCV27nxRPV1AsjEZqMQpBreIX+rtoBJ44sqDsI
+         vwaPGdgc9e+qyka2BcLNlAw6JmpyAGGFeMkNWbUTpaUbGv+vC490mp74n2El5r9njbus
+         ZrytAHK6bEILXuEJk7nUY94hlCx9kNrpyoUxSmX6QzGbTH6kpoiNBAln+vygx0sG3UJd
+         T5ZB/60MxFqThgIC7vlB7egYA6gXLZ+Np1G6L4KFxfD7ILoWF7nINBayxNrqJbENzIRx
+         fMd+lYihMK62FUi+kkvaPGabjSMUzGSu9NiHxhrIG9ZUif+QJLbs1918ZJMIE1F52og8
+         oTAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5MFxJeomCczgXDzeNV9Xn+RHt64mPvJ12qZr3RbPrbU=;
-        b=gsYKltaP1+AiM70l4rgzWm+My/4ZmVnMT44ORzr7WhcL7q7an2d0Rrc0QY1low9s8a
-         2p5hcvhkdttUWaURhdJ4DmHJZU8R4UPZV3t548bbcx78V3rEpvvbYiO0B4Nhvug4AU/7
-         7vouG9p+bNN26Jg+t8jm14FLvJB857/HdW60o2/V75+vCtfSZplt+L1WuNXqx1o4tYjw
-         xg1Vth5TpmV9CYdK9LXvOfd2M2BfsuN1sE/ZKBT/fyn2HGX9FMj4VNx8CsdwnmvqnF9k
-         Aec5J3ep/h3s5UKfnBCR8JPxBpy0fo9+bJ8CIvtW5cvyLsLhTBhqey3pjklpxWZUeaJG
-         BApg==
-X-Gm-Message-State: APjAAAVdJSd0e9P6qw0/Q42ijz3aGpnOB2t66rsB4x+9oeZN5lQOwJyU
-        NbZdXQ57maql8B2TQ/JaQV8unLafgFFLJzS6QVx32w==
-X-Google-Smtp-Source: APXvYqwm7wEEXPS3MuEPhTwwGRUEbcd/4WOJm2XgfK0kRKisj4w+h5pA1wDFpztH3aEcTh+AhwR4v0v1+qCPqLGRK8w=
-X-Received: by 2002:a5d:8955:: with SMTP id b21mr146927iot.41.1582745462529;
- Wed, 26 Feb 2020 11:31:02 -0800 (PST)
+        bh=tim9X+F9vYHdlPOoRw/qRUISublgBCciYQagSlRF/BQ=;
+        b=A6cGlpbumhoWFqpRAWUrWynAsVLo3Ecm5CkmgNu/XY1ZALDaI1vh3vduk+KRlV6A0q
+         ddDHxGRMwr75pTBlg/6D2/KclfnWuvaoHqhd0NP0eSB6S7WqDusBrvSwvxFA7zBpr3NK
+         zHOrxoRRzH5PmhkDf1mrTa5A5a01L/j62/mNDRK2lBw2HzPfD/z58RLC/dUoDJUTHAqO
+         Gbm9bq5Y6aX7ueJy6V4xkI0Q2wi8nKyioaiAIPwrYVRbM8D68YyMCexoixXii1munKf3
+         zqlvzm4iICBMB5eRW57J4qWKkqOef1sivVMvpzMNDOCOlREqPk706A1AK6T/JQMtBQQV
+         TMNw==
+X-Gm-Message-State: APjAAAX+366oR6lYNQykNw0eDivEBQwlIFjZ1fCDm7NLEvUEWO+QiHib
+        Z2zbCI6DgOkvfLZZW37+st+ZHr0rkRT1rz+hps35hQ==
+X-Google-Smtp-Source: APXvYqwmNhCu2uIrsQ/yh0E0Nvm1vihPuVgYoU5bhKWgxgTaUk6av22YZ6E1zy7BoNa+YEWmYIrDLkZXBKzLN79MMT8=
+X-Received: by 2002:a17:906:b7c4:: with SMTP id fy4mr284770ejb.139.1582745473140;
+ Wed, 26 Feb 2020 11:31:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
- <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com> <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-In-Reply-To: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Wed, 26 Feb 2020 11:30:51 -0800
-Message-ID: <CAODwPW_FR0gHO_=yfCPwETXvKG9CvgvPddX-EOT=OXDPEkp_Kg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Evan Benn <evanbenn@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+References: <20200226134637.31670-1-lrizzo@google.com> <20200226134637.31670-2-lrizzo@google.com>
+ <20200226161941.GZ18400@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200226161941.GZ18400@hirez.programming.kicks-ass.net>
+From:   Luigi Rizzo <lrizzo@google.com>
+Date:   Wed, 26 Feb 2020 11:31:01 -0800
+Message-ID: <CAMOZA0LU_mGPre9gsJSZeG19fUjLWb+6xuG8-2yv5gJRHwWzqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kstats: kernel metric collector
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        naveen.n.rao@linux.ibm.com, ardb@kernel.org,
+        Luigi Rizzo <rizzo@iet.unipi.it>,
+        Paolo Abeni <pabeni@redhat.com>, giuseppe.lettieri@unipi.it,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>, mingo@redhat.com,
+        acme@kernel.org, Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Not quite. /firmware is generic container. I'd expect another layer in
-> the middle for the overall set of Mediatek firmware behind smc calls.
-> Look at 'xlnx,zynqmp-firmware' for an example.
+On Wed, Feb 26, 2020 at 8:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Feb 26, 2020 at 05:46:36AM -0800, Luigi Rizzo wrote:
+> > kstats is a helper to accumulate in-kernel metrics (timestamps, sizes,
+> > etc.) and show distributions through debugfs.
+> > Set CONFIG_KSTATS=m or y to enable it.
+> >
+> > Creating a metric takes one line of code (and one to destroy it):
+> >
+> >   struct kstats *key = kstats_new("foo", 3 /* frac_bits */);
+> >   ...
+> >   kstats_delete(key);
+> >
+> > The following line records a u64 sample:
+> >
+> >   kstats_record(key, value);
+> >
+> > kstats_record() is cheap (5ns hot cache, 250ns cold cache). Samples are
+> > accumulated in a per-cpu array with 2^frac_bits slots for each power
+> > of 2. Using frac_bits = 3 gives about 30 slots per decade.
+>
+> So I think everybody + dog has written code like this, although I never
+> bothered with the log2 based buckets myself. Nor have I ever bothered
+> with doing a debugfs interface.
 
-There are no other MediaTek firmware interfaces described in the
-device tree on those platforms. Is it okay if we just call it
-/firmware/watchdog in that case?
+the above is perhaps one excellent argument to why it may deserve to be in:
+so that people don't need to write the measurement code time and again,
+or, as I have done myself multiple times, use some inferior hack (racy
+counter, coarse buckets) or give up measuring things and rely on guessing.
+
+> I find it very hard to convince myself something like this deserves to
+> live upstream, vs. remaining in the local debug/hack toolbox.
+>
+> Tracing has an aggregator (histogram), you can dump the raw deltas, or
+> you can hack up a custom aggregator in a few lines, or you do BPF if
+> you're so inclined.
+
+And this is possibly another good argument: sometimes the systems where it
+would be interesting to collect data are not accessible to the developers with
+skills to write the monitoring code and run a modified kernel.
+
+cheers
+luigi
