@@ -2,111 +2,110 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_RHS_DOB autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B42C4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44659C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548B021744
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13DF221744
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nA2f+OLz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cMZyruXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgBZBbq (ORCPT
+        id S1729854AbgBZBc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:31:46 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35484 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729170AbgBZBbp (ORCPT
+        Tue, 25 Feb 2020 20:32:29 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37306 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbgBZBc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:31:45 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r16so1484774otd.2;
-        Tue, 25 Feb 2020 17:31:45 -0800 (PST)
+        Tue, 25 Feb 2020 20:32:28 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p14so551909pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:32:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m69OUPpDCFCPc/oa2eyFJo4I++z0wlZi/kprUKpLj3Y=;
-        b=nA2f+OLzY/0xumh5TuXz4ftOJdyLWFEddIBk66xJxkReDm94lliWkpwvPZ4a2z3aL+
-         7F+sqVUc1AzH4De2HzKgueukRv45rp0BhL1+N00JyaUl0pf8w2HajjUgeCkoJF7IJOlA
-         ggEwGRbikFgBXKyJuSgVOcXhbcpJCTQKeyo/nw/xbjt6rWvnKRe6cB5I1Zh31qnj988D
-         ZkrhLAL1NuHixK58f6i/pdi/eHNF5m+KjXIhJbAzoqxI3ZfMK2b0tUyDtQ86XgSM/Yq1
-         8gK34CHyXzjHzraPQJFoD50QgHtNUe9dEYNAgyQra9e7EQzFbKF/kURdvfMeW7/ka4B6
-         +tGA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=QGVoInCNmu8ZzMYmZXdTHXHi+j3WLOo8+btiFix0h28=;
+        b=cMZyruXsJf+pGUh7iEAlG5NywteERqKsrsx7J98svJV4/9Xln+d/iie6kpru3zcKvS
+         yw3R+sEA8r5MvMBbXohJ62LLc4RH5VrOHVvWumGNwBAxozyFDkVpFiV0uOf9lSsck96W
+         ohLXDCKiarMkJZbreViNDGewyU7jADg1d+A3tgr/naBCpgrvY49Q8UI2GXDSUngtRdOr
+         k6YoeVSo4i/U52qxoDvgpeSy/SjQPGAvaip4bQn6110e0L6iRSiTsbtxjFEl+gVn7rrT
+         lhDdSj05O2eCngCrgUvJcdHlpWVc3vwqPA+HwWgFhWAQo3if9YK9MuhJT1//L4wi9tI4
+         t2sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m69OUPpDCFCPc/oa2eyFJo4I++z0wlZi/kprUKpLj3Y=;
-        b=KJQ8jt2HgPtLxfqvnaJc7gIHrnRmN+23m4cnYRYAEi7l7rN/hSbJUoYWzYDdL7mKGf
-         +abaZzNu89E0+PNEy5D5YqBReo41egOjPV4uW+WTvb6D6VcM5Iys4kqhw86hJr+wsp46
-         2G21oQ8DCMRtvXEtJM9ALJwi8f3DJGgQQfM1rT5dtKw1LMczbSdNX+padXHtuOpnIuNG
-         xcTHRvb7anJ/OQxJ73ThyO9cbjrxxpCKtcaHlH8bYxK5mksSlFnpWICZKTn0c/RHlQr6
-         GVtCWz0bowEa8Hi7hHcgt0XFhP+Wvj5q7OP1r4x8NVVPVgmYWXtlfWe72k4b1WY+oA77
-         6VZw==
-X-Gm-Message-State: APjAAAXS2Lq5qhEWfyKw2ZxGWQJrJJuWg3VZn6bHKJjqPOnC2+qlM1Dm
-        XN52MejeXm3LJuvevzVzfRrk8VZgD8n7CvSAFq8=
-X-Google-Smtp-Source: APXvYqx4k8rPNcqHzRcAhaiCXWJ4jVniE5gHoAh/s13hkt4+EPZPVv3r7htQo04hdVYPzVU1U3PK6wlRKTZrD779bTc=
-X-Received: by 2002:a9d:6a4f:: with SMTP id h15mr1129292otn.86.1582680704677;
- Tue, 25 Feb 2020 17:31:44 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=QGVoInCNmu8ZzMYmZXdTHXHi+j3WLOo8+btiFix0h28=;
+        b=r+XSeqgYoMIyJMRBPxlMW/yJLMa1gFuyfnOuSdPgVMFf2eHzOVr9FcMmJj1KJAv13z
+         LVVwgyui8Wsa5RP6IbtDabEezHf1uFVEnhLCrQD/EPMSvFN9DVXGI6/3m0Qd6UDHKaPU
+         Z6pKPminHk6xa4ZaaIeBwfuFb4j9N3b+5oYZZfevfihIatBdgH9oRP3+KcG/yG+xBF5s
+         TsqF4fb6VQQJvrFQjUHLzTNOymuIpOm1L7syxt91SXgC3ey5McIqyvtIXAXkhyJkVFxy
+         RJw2oJrkAS8HF8Rj+zVZLkkByJVc15cs0RcrAgzEBOmTCkY1zhFVNoCVnoKb7/BIsPu6
+         jeMQ==
+X-Gm-Message-State: APjAAAX9kQ/xu80oX59N/Onum1LPZ0azvU3RmdZH670L+CFb9sLK7ORk
+        JzHgnDP0sOtggmXuc8DPQWWXtA==
+X-Google-Smtp-Source: APXvYqw5igQcRBjvwdMbNMWg7/TudhemJKHFEauczrz/uXC69lZrRHVFe5sstpLf5F0sd3qHQFlC5g==
+X-Received: by 2002:a62:16d0:: with SMTP id 199mr1643753pfw.96.1582680747619;
+        Tue, 25 Feb 2020 17:32:27 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id b3sm349178pfr.88.2020.02.25.17.32.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 17:32:25 -0800 (PST)
+Date:   Tue, 25 Feb 2020 17:32:24 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Mel Gorman <mgorman@techsingularity.net>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Rik van Riel <riel@surriel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] mm, page_alloc: Disable watermark boosting if THP
+ is disabled at boot
+In-Reply-To: <20200225141534.5044-3-mgorman@techsingularity.net>
+Message-ID: <alpine.DEB.2.21.2002251728520.14021@chino.kir.corp.google.com>
+References: <20200225141534.5044-1-mgorman@techsingularity.net> <20200225141534.5044-3-mgorman@techsingularity.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200215065826.739102-1-gch981213@gmail.com> <20200218125557.GD4232@sirena.org.uk>
- <CAJsYDVL03KJv7eewGekBPCfpbOuTX0tJ6qZaydvJnBDzZ5vEwg@mail.gmail.com> <20200225173137.GA31830@bogus>
-In-Reply-To: <20200225173137.GA31830@bogus>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Wed, 26 Feb 2020 09:31:33 +0800
-Message-ID: <CAJsYDVKqcd-ytLLf5zKqs8DfjPAa5ELCX53OiPDAi-tDnLd=Eg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
-To:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Tue, 25 Feb 2020, Mel Gorman wrote:
 
-On Wed, Feb 26, 2020 at 1:31 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Feb 20, 2020 at 07:58:06AM +0800, Chuanhong Guo wrote:
-> > Hi!
-> >
-> > On Tue, Feb 18, 2020 at 8:55 PM Mark Brown <broonie@kernel.org> wrote:
-> > > This is an ABI break so you shouldn't be doing this, if the existing
-> > > binding works it should continue to work.
-> >
-> > The missing spi-max-frequency is the only part preventing old
-> > device tree to work with this driver.
-> > If the goal is to make existing dt binding work, I could patch dt using
-> > of_add_property in v2. I saw similar device tree patching for legacy
-> > bindings in pinctrl-single driver.
+> Watermark boosting is intended to increase the success rate and reduce
+> latency of high-order allocations, particularly THP. If THP is disabled
+> at boot, then it makes sense to disable watermark boosting as well. While
+> there are other high-order allocations that potentially benefit, they
+> are relatively rare.
+> 
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  mm/huge_memory.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index b08b199f9a11..565bb9973ff8 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -472,6 +472,7 @@ static int __init setup_transparent_hugepage(char *str)
+>  			  &transparent_hugepage_flags);
+>  		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+>  			  &transparent_hugepage_flags);
+> +		disable_watermark_boosting();
+>  		ret = 1;
+>  	}
+>  out:
 
-I just noticed that of_add_property isn't a exported symbol, which means that
-device tree patching isn't possible unless driver is builtin.
-
->
-> You should should really only need 'spi-max-frequency' if the max freq
-> is less than the minimum of the host and device max freq.
-
-But current spi framework forces that a "spi-max-frequency" property
-is present. [0]
-Should we patch spi framework then?
-
-[0] https://elixir.bootlin.com/linux/latest/source/drivers/spi/spi.c#L1951
--- 
-Regards,
-Chuanhong Guo
+Seems like watermark boosting can help prevent fragmentation so it 
+benefits all hugepage sized allocations for the long term and that would 
+include dynamic provisioning of hugetlb memory or hugetlb overcommit?
