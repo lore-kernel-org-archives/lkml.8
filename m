@@ -2,104 +2,90 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31679C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B72C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2BE20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6250920732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R+I4pjf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbgBZBNg (ORCPT
+        id S1730186AbgBZBNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:13:36 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:40719 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729982AbgBZBNd (ORCPT
+        Tue, 25 Feb 2020 20:13:42 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39419 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730135AbgBZBNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:13:33 -0500
-X-IronPort-AV: E=Sophos;i="5.70,486,1574092800"; 
-   d="scan'208";a="84138291"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 26 Feb 2020 09:13:29 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 1832750A9973;
-        Wed, 26 Feb 2020 09:03:40 +0800 (CST)
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.85) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1395.4; Wed, 26 Feb 2020 09:13:23 +0800
-Received: from Fedora-30.g08.fujitsu.local (10.167.220.106) by
- G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- id 14.3.439.0; Wed, 26 Feb 2020 09:13:21 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <joe@perches.com>, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v2] tools/perf/util/*.c: Use "%zu" output format for size_t type
-Date:   Wed, 26 Feb 2020 09:08:18 +0800
-Message-ID: <20200226010818.8639-1-yangx.jy@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 25 Feb 2020 20:13:40 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so1468520ioh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:13:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Md+dR3QAjkgbDHCOD0u7elrQ4FkH1YpiL26CdEGfHpk=;
+        b=R+I4pjf2mqXjj+8BCUTibnuDnoALhtisnlvmkpZOTuALmHc7sxQkJkSmlDj9G1kp4F
+         5BN4PN1Mkph70DyXdrt6H34L57uHBEbuqveIFJOEdumqQGaX7t7ictKgocS237fQvqEo
+         mS1i1JZbRPKsrVo/wv152qvDzlvEDv5Elwub8wVfQX/18NUFIDXkNounJ4Bkwum/W3XS
+         bs2l15mYhvWlgK6GvQGKHdJtRx1GIM7bCfqL4z+J8xDLpUr1ejtu/o+fVT5+VcHx4z2c
+         /+hr2qxBNVjW3inC/MKwqcMmwv6Tgce3DMfVvk6I/17eliRdypZ+IPVA4fIYctm4/bBO
+         +dbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Md+dR3QAjkgbDHCOD0u7elrQ4FkH1YpiL26CdEGfHpk=;
+        b=XoC2gYDRw7O1vNn9Sja3IF1xtn0s76HWlCtbeYzxaDOrdE13LJM5DtxSnkb1V0tQKk
+         hDBUsFRPGmztThb579EHiixKHVrsAr/VZfyHyU/hgQoTyGvBQ9wU433rrUEPw3xaK1yt
+         hbpCxrq6jXWnwvX33Y4Hw61nE/rOKqjCh+YSeIItDmtkEPnRRHfAZUoSOm2hJRqTHgv0
+         yItS0JwsDRxYZb2CNpYagPKzX8xNMMmBPO9ptsZcWbTaEtcOMUnU1rMlLYveHhdzxTa6
+         sxvsTvI6e6l8vyyvONcNuT7uB2D9ZUORjGD0bqAyxyWzTpfgthIyz1m2KPrHdorauWoE
+         NnXw==
+X-Gm-Message-State: APjAAAXGCVtO/AHdME9xWEpxeQHB4JqMMK687pEtumd+aDxyqTjFsNms
+        WmmGaz0hhaIoEgXi7/eSPdrlYfhuruo=
+X-Google-Smtp-Source: APXvYqyziRLA63DqgeyRhiV9j8Pxm2Iva9SkiX6jHMkmIhWdxef0d17W2ImORx3FKCTw289xP0FCYw==
+X-Received: by 2002:a05:6638:1a8:: with SMTP id b8mr1405336jaq.34.1582679618849;
+        Tue, 25 Feb 2020 17:13:38 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id q1sm108128ile.71.2020.02.25.17.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 17:13:38 -0800 (PST)
+Date:   Tue, 25 Feb 2020 18:13:35 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mattias Nissler <mnissler@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Raul Rangel <rrangel@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        Benjamin Gordon <bmgordon@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] Add a "nosymfollow" mount option.
+Message-ID: <20200226011335.GA12632@google.com>
+References: <20200226010706.9431-1-zwisler@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 1832750A9973.ABC49
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226010706.9431-1-zwisler@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid the following errors when building perf on i386:
------------------------------------------------
-util/session.c: In function 'perf_session__process_compressed_event':
-util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
-  pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-...
-til/zstd.c: In function 'zstd_decompress_stream':
-util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
-    pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-...
------------------------------------------------
+On Tue, Feb 25, 2020 at 06:07:06PM -0700, Ross Zwisler wrote:
+<>
+> Changes since v5 [1]:
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
----
- tools/perf/util/session.c | 2 +-
- tools/perf/util/zstd.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d0d7d25b23e3..55c3d2fefd41 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 		session->decomp_last = decomp;
- 	}
- 
--	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-+	pr_debug("decomp (B): %zu to %zu\n", src_size, decomp_size);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index d2202392ffdb..a051237cacf2 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			pr_err("failed to decompress (B): %zu -> %zu, dst_size %zu : %s\n",
- 			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
- 		}
--- 
-2.21.0
-
-
-
+And of course this version is v6.  Sorry for the omission.
