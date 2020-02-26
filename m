@@ -2,63 +2,105 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFFAC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD85DC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF872468D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D7F2468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UkD16FX8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNHjTAaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgBZPpf (ORCPT
+        id S1728499AbgBZPpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:45:35 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:35314 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgBZPpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:45:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=3E7w4HszEsiPDzMy+hldTRLgCjGx/tQUMWCGTcQGxQk=; b=UkD16FX8hvXHmFGyhjZqRRhRH6
-        mjoU2CVba/ZujN7LKUqyesGD4xtSdK3Yx4ptzi5N4x4MjSk5J81Fbu43Y4RLaFHW8Nig2Pnkxw6kk
-        RtaOATBPgUdBCSfwyIvNkOtb+lqduriwo+u0WXqRr5+cceEl89J/pLsElx8tKQ0Pcc4o=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j6ysL-0006hw-8c; Wed, 26 Feb 2020 16:45:29 +0100
-Date:   Wed, 26 Feb 2020 16:45:29 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        foss@0leil.net
-Subject: Re: [PATCH net] net: phy: mscc: fix firmware paths
-Message-ID: <20200226154529.GJ7663@lunn.ch>
-References: <20200226152650.1525515-1-antoine.tenart@bootlin.com>
+        Wed, 26 Feb 2020 10:45:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44976 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZPpm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:45:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=44++bZYwMLEcKWsWEdjH2TMBF93T+j8iNKdpvJ43O1c=; b=eNHjTAaAiO0uN1Hq0VhbkU3MfM
+        OJ/BukAcIMd/vz2VAp5dFX26CbeBlt/altF651kHn5siaSDa4lxIMXWtyWBGoqL6JoxlWowW3e3Vg
+        Ubl9VdHjYOtSfdNHVWl2jWT42wAVHBRH1e2Ztv5jDd0SwT+LRHvBCs+4K13YdiWYi6ClhHN+4h+dk
+        AkyKPgLkLnsnZ0+Vm5Ayn7LM4nKjPeYsJr7Ojkmtt5v+pI668Hp4HKzfLtA70MzRcv2TSz0sGuJlF
+        vkiChdLf3dHErobRul2XeqU3Hm+ezUQCqFQo8ooGSdsxnU1E684lQ5NE9sT3ask7Xh5iE+Qpqcb/D
+        HMRnGUGA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6ysW-0003sn-FG; Wed, 26 Feb 2020 15:45:40 +0000
+Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/
+ Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200224174129.2664-1-ndesaulniers@google.com>
+ <20200225210250.64366-1-ndesaulniers@google.com>
+ <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d70e7d82-4f08-0a30-e54b-8b0f225145df@infradead.org>
+Date:   Wed, 26 Feb 2020 07:45:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226152650.1525515-1-antoine.tenart@bootlin.com>
+In-Reply-To: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:26:50PM +0100, Antoine Tenart wrote:
-> The firmware paths for the VSC8584 PHYs not not contain the leading
-> 'microchip/' directory, as used in linux-firmware, resulting in an
-> error when probing the driver. This patch fixes it.
+On 2/26/20 3:30 AM, Masahiro Yamada wrote:
+> Hi.
 > 
-> Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> 
+> On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+>>
+>> Added to kbuild documentation. Provides more official info on building
+>> kernels with Clang and LLVM than our wiki.
+>>
+>> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>> ---
+>> Changes V1 -> V2:
+>> * s/On going/ongoing/
+>> * add Randy's Suggested-by
+> 
+> 
+> I do not understand this tag update.
+> 
+> As far as I saw the review process,
+> I do not think Randy deserves to have Suggested-by
+> because he just pointed out a typo (on going -> ongoing) :
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I agree.
 
-    Andrew
+> https://patchwork.kernel.org/patch/11401189/#23179575
+> 
+> (or, was there off-line activity I had missed?)
+
+
+-- 
+~Randy
+
