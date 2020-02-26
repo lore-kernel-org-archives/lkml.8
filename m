@@ -2,192 +2,101 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87B1C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4394C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B168620656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9eERp8Q"
+	by mail.kernel.org (Postfix) with ESMTP id B469120656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582735149;
+	bh=WfBWtXT2jEP6x2DycoxZEIGNid68kG1CYPmY4yfUqHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QqwIRb1gd8KQh5Y5HbjR2xpmhdPrqqdaT6dUt2J1CL3FNhuk7hObtOX8aiWUpflht
+	 /78ShLLFkF9CIAf83KnfIoDvEvIVgtlvVOzyehDWamOUztBOfVjDCDIVaSeGvG+9UY
+	 bTjHnuo+2deSblTSDRKrpKis/4XW39YC5VISe08w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgBZQip (ORCPT
+        id S1727982AbgBZQjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:38:45 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:39885 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgBZQio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:38:44 -0500
-Received: by mail-yw1-f66.google.com with SMTP id x184so3652646ywd.6;
-        Wed, 26 Feb 2020 08:38:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=erd2mUrd075M8oO2yPj+tKoxoFziTJnQdLvZCm0QgxY=;
-        b=X9eERp8QG/tuKn6AKY+yJvRNdFHoS9pG+JMlUdxyQYPYSOzXWyPyebgUOFwJQwTnVg
-         4WNiomgsGWrQ0M0jMCaVVWJs7dlZlXLR/eX/6C+oeoKyGLE+jhdN32JS4BYUFo/TxxkK
-         VBegQxaPBHScmsO2HL1l0CyID+cPVJodQeGAqj5sC/1pZ7I+lkj0InOF6xAJuJ5w4/CQ
-         yuksL+0Y/WfH+iSin0lVK6OjOtzg9JxNw5xV8nsH2FQyD2zTZ7iStRxS+zUfqMg59gED
-         V0q+EO0lQnMJdfUJfvaVZ+f23YaZ4eL1wOFDU0GtLKgB08EKzym3aLaNH4VXUidqgdX6
-         7vtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=erd2mUrd075M8oO2yPj+tKoxoFziTJnQdLvZCm0QgxY=;
-        b=EGt4nEDOoWLAuG/caYoSDp3At8m0XlT3XFSj0rcwuhaaRJ5wXRsIDMKObrPPhSFRPE
-         evjs7lnZsggmKiDhMfHtgAAkx9sByYp/Aul4BpeVcRdTqtc+dox9YfYqlKExDc2cnTJN
-         7IZ5oDJS5G6EobkhT5OvzWR0tqdL2kA//pgR/Att/Lz//gJ1KK4dFp5/As5bDSrwAKga
-         5YM4u+MBhtySafppba5QBHQQj3iqHHZPGErF7O/UMabrSec2mBGBE5W5AQkObvGA1jzu
-         Dkx6RmmVexFIsRuLpPt1rP79twmpWJeP3h2uDGTA7HQ+SwKH54zSfwA+d5ghCJmaA8+j
-         9gBw==
-X-Gm-Message-State: APjAAAUEWqeBvdkAeiTmRskfqKHmmRmHxCxkYSJ61XpmUeDV09RZiby4
-        SuXMLzcoI0jB3PjVdgI6Xyo=
-X-Google-Smtp-Source: APXvYqxaNdTjgfv+K7BVwRT1yKLRVTPxR1B/ytKhSJaZCvCJMVXm6o1MFHd3qCmgA1+T5cVjqweqxw==
-X-Received: by 2002:a81:1054:: with SMTP id 81mr35605ywq.57.1582735121692;
-        Wed, 26 Feb 2020 08:38:41 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id h139sm1127231ywa.35.2020.02.26.08.38.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 08:38:41 -0800 (PST)
-Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
- information
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Simon Glass <sjg@chromium.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Ian Lepore <ian@freebsd.org>
-References: <20200221161217.20069-1-alexandre.torgue@st.com>
- <20200221161217.20069-2-alexandre.torgue@st.com>
- <CAK7LNATmJN-U2GNe2Qd7fS=h5URswe=aFgVJRaBTZt7pi374wg@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <e0b65cba-6e37-8937-897d-ae82973f34e8@gmail.com>
-Date:   Wed, 26 Feb 2020 10:38:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 11:39:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:38888 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726905AbgBZQjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:39:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5320C30E;
+        Wed, 26 Feb 2020 08:39:07 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCCC33F819;
+        Wed, 26 Feb 2020 08:39:06 -0800 (PST)
+Date:   Wed, 26 Feb 2020 16:39:05 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
+Message-ID: <20200226163905.GH4136@sirena.org.uk>
+References: <20200224144048.6587-1-jonathanh@nvidia.com>
+ <20200224165859.GJ6215@sirena.org.uk>
+ <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNATmJN-U2GNe2Qd7fS=h5URswe=aFgVJRaBTZt7pi374wg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nOM8ykUjac0mNN89"
+Content-Disposition: inline
+In-Reply-To: <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
+X-Cookie: May all your PUSHes be POPped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
 
-On 2/24/20 11:45 AM, Masahiro Yamada wrote:
-> Hi.
-> 
-> On Sat, Feb 22, 2020 at 1:12 AM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
->>
->> This commit adds a new script to create a file (in dts file directory) with
->> some information (date, Linux version, user). This file could then be used
->> to populate "build-info" property in every dts file that would use this
->> build information:
->>
->> Example:
->>
->> / {
->>         ...
->>         build-info = /incbin/("dtb-build.txt");
->>         ...
->> };
->>
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>
->> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
->> index bae62549e3d2..a5af84ef4ffc 100644
->> --- a/scripts/Makefile.lib
->> +++ b/scripts/Makefile.lib
->> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
->>  # DTC
->>  # ---------------------------------------------------------------------------
->>  DTC ?= $(objtree)/scripts/dtc/dtc
->> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
->>
->>  # Disable noisy checks by default
->>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
->> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->>
->>  quiet_cmd_dtc = DTC     $@
->>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
->> +       $(DTB_GEN_INFO) $(src) ; \
->>         $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
->>         $(DTC) -O $(2) -o $@ -b 0 \
->>                 $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
->> new file mode 100755
->> index 000000000000..0cd8bd98e410
->> --- /dev/null
->> +++ b/scripts/gen_dtb_build_info.sh
->> @@ -0,0 +1,10 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +set -o nounset
->> +
->> +DTB_DIR=$1
->> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
->> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
->> +
->> +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
->> --
->> 2.17.1
->>
-> 
-> 
-> There are more than 1000 *.dts files
-> in arch/arm/boot/dts/.
-> 
-> So, with this patch, the build system will creates
-> arch/arm/boot/dts/dtb-build.txt 1000 times.
-> 
-> 
-> Does it work with parallel build ?
-> 
-> Think about what would happen
-> with 'make -j32 ARCH=arm  dtbs'
-> 
-> 
-> The 32 threads will write to
-> arch/arm/boot/dts/dtb-build.txt
-> at the same time.
-> 
-> Then, some of DTB would very likely to
-> include the broken dtb-build.txt
-> 
-> 
-> A list of missing parts in this approach:
-> 
->  - make it work with parallel build
->  - clean it up with 'make clean'
->  - add it .gitignore  (and Documentation/dontdiff)
-> 
-> 
-> 
+--nOM8ykUjac0mNN89
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You might be able to rework script 'version_dtb_increment_once' from my
-previous attempt at this concept.  I do not know if the build system
-has changed since 2015 in a way that would make the script incorrect
-or if it is still valid.
+On Wed, Feb 26, 2020 at 05:17:57PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Mon, Feb 24, 2020 at 04:58:59PM +0000, Mark Brown wrote:
 
-https://lore.kernel.org/linux-arm-kernel/550A44A8.9090302@gmail.com/
+> > This then means that there's no way for users to determine why the
+> > driver has failed to instantiate which can be frustrating.  It'd be
+> > better to at least have some dev_dbg() output when deferring so that
+> > there's something for people to go on without having to instrument the
+> > code.
 
--Frank
+> Not printing an error message is quite usual however. I think a generic
+
+Usual yet also frustraing.
+
+> approach that for example makes the list of devices that should be
+> retried to probe on the next opportunity inspectable would be nice.
+
+That's not really the issue, the bigger issue is trying to figure out
+why things are stuck - what exactly caused things to fail to
+instantiate.
+
+--nOM8ykUjac0mNN89
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5WnygACgkQJNaLcl1U
+h9C0mQf+Je+yXfq6X/+OPbN4ayVYuPYE2Jogk4VoMhPMPWkBhvvwkMwaer0tCd3p
+3fjLqb+JrBNj/HDM7DuLyAp/gh9KvTeMOvkat713Rtn3N41DhMBykaKzSAHRPRQm
+P4DZJiD1AjacRHfVyFhW0n2HGbQdDCNivbk+JYVyfrkneoY9+d/LbEaKn+P2aoxY
+VSPCIPXT9zmdnfym2UVxjAZXvDbY/PjVE6SOlRapjkkUTlyxMINV12lwC3aLM9ni
+tyLBcvKHXcJMZdh+Mn+YofFOhvCMsC8HbMLTZwNZaAkv9yVpuOEyI7lu7Z87TUpo
+M7XsPuQZQOrPqpCA3pf3fucaux9Dhg==
+=RL9B
+-----END PGP SIGNATURE-----
+
+--nOM8ykUjac0mNN89--
