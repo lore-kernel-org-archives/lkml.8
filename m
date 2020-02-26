@@ -2,175 +2,165 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5469CC4BA33
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83BAC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AD621556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F0621556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:46:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="o0bfRls3"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Rlo5nx1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgBZXqp (ORCPT
+        id S1728025AbgBZXqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:46:45 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33135 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBZXqo (ORCPT
+        Wed, 26 Feb 2020 18:46:48 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52070 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgBZXqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:46:44 -0500
-Received: by mail-qk1-f196.google.com with SMTP id h4so1462036qkm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:46:41 -0800 (PST)
+        Wed, 26 Feb 2020 18:46:47 -0500
+Received: by mail-pj1-f66.google.com with SMTP id fa20so321826pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:46:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4NZOEaquYjC6dLK5p/kcEVRTiSpVwVONixAqYQdq2V8=;
-        b=o0bfRls3pX52Io0xBFTCrxRs7aD96Tv+hUcsMUi0b11VSqN8UHrdFNlYefsd2we1Z4
-         va/Mcipe+NIo9N0ljNcW1bpqEcygvQRY19dpp4s1eIfExUxjkk64RfD69S/dQTq5LtXP
-         yUENsPzrL0Bhv3t8/4ZddB+Xp0XG5f3984yZ9ZFBuRlFnx2k4FFW3c3N1eQsvOC9bk1z
-         7v9rIY4OzK/sbJFGWrPVEPV8RnxeZiAxsvxb/swkLwtTmjvkzq+1r3Aqtf6OMyukKDmR
-         cbat/+wmSSX8Gv/EEemx8hYkhCfrzXUWokZKmtFBWlci/DnSh7x5QN8WrM0lFGwAF63d
-         seYQ==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=djIEdw8ANY4/stYcNyUCAg5bxeUx1iW05K2PCbQB4Xc=;
+        b=Rlo5nx1PTAUXVDdYpnFkNekd6vje9me0Nm7R730e9zCmt5GtcTe5XP9GmY0rK3VPs5
+         R0mrUtX4uqglI8t5qJBY3Ogq71BMF9m7bsFlJwoc/ASOMh6faKy9Ji11Ic/mVKRScJDr
+         0LpMXMR90KpXWn9xhhriMUfVzC2NDGQJfG9IesjzKbVn0wM1b1t2dByUF/bPtk3g2IP+
+         Gpm+kA12aw4OcOGZIwe6eQLBulL39GVFyULVOWUwNffMHvDF+sujWXAiSsQiPNE/l2Le
+         8YPeLpER5zuZ9kH0QxbhpadmGnDYlRe8bwNyQqOBT5mwLATP6OiOUZLvlKZvr/sgW49B
+         6mdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4NZOEaquYjC6dLK5p/kcEVRTiSpVwVONixAqYQdq2V8=;
-        b=SresqaxiDAsq3tmZfe5z/9deCfiyPc5ss+fFZ877opoSKuuZHoNqKxAYixOWCKzhbE
-         HlnD+3R+xSW4x55ftUwI+RePhN/HS+R+/hAGuW0BrMXKDDZQTBghM3kVilBVeTeQWmKX
-         gYZ6JGkG7OkF9bQMrnAb/+P6S1CbTwlBM+FYnKwvltEoy3qibkOBjvVzZoKYQsiRbWSm
-         pu+EzWYGRTO1uIrniUk8BEn1Q32/Tg5AIXfP8gRhzq8FO2SLZS3QzY2fxMZGWDtwo076
-         9+42UyJi6a4vWUH/3GKjY2GKe26h8SZ01d3Qcx6aR4UITd27OjcI8xa0dqoGs5h2e4uS
-         65QA==
-X-Gm-Message-State: APjAAAWpnUNhF12KVucTG9V02NGVbgPpf/wta84JZQSL3rpIxjfusdl4
-        X9y5AH3PkuN8A+dM2l96CsUJAw==
-X-Google-Smtp-Source: APXvYqzpO5hVq7W4W5EweBQsp7C246vurWQVYiFVnTERRI71m4NwRbPP9NgX7AoHLr9aZoKo4eGpeA==
-X-Received: by 2002:a37:61c3:: with SMTP id v186mr638962qkb.96.1582760801070;
-        Wed, 26 Feb 2020 15:46:41 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:6048])
-        by smtp.gmail.com with ESMTPSA id m95sm1984550qte.41.2020.02.26.15.46.40
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=djIEdw8ANY4/stYcNyUCAg5bxeUx1iW05K2PCbQB4Xc=;
+        b=o3lVf1nCIO9bdtvUlbtui5OnkYIR4qcrNmjrYxWVpbQ3YaRO8Iz1OMj1F+Gb2BVjvP
+         zcHJTg5h+XhlgV5ciX4V3tS0AnPBqEfNIxOvMuNbQCevsTnVI4UUnb6uhPQuZH6JpOk4
+         bE00SfLVtHfpxdsop7+ViyKT41EASQa99LOBa8NNm8yH63EVbt8+Rr4wQ8K0qN600qEf
+         uB0m3wUtBMzpuF1F4tRE+Yzbz3x7H/1G3jj8/P0HUWohJ128untt42ntwlMvPvaobqYI
+         7HH7s3pXBzJnzMDxoHl2aj7tQ5b7xiPdWCe7rIxHeOv5UDuFgWku7ROzLsp7HZ33GHUs
+         vVtw==
+X-Gm-Message-State: APjAAAWGEkBSdhR9FYwhXSKptAsHgi8ZyRlkzO4dzRuniNbV23fud7fR
+        ID9PKI5Nnti4psnojhWZYUavxkKHqro=
+X-Google-Smtp-Source: APXvYqyeVQ8XiDhAtqRUbnJkvFlHHgzMPuVzSBSmWD0fYGVoMGMWw1rbT6oPGBkTZmrNxnWabwZ6Pw==
+X-Received: by 2002:a17:902:6ac7:: with SMTP id i7mr1671228plt.314.1582760805540;
+        Wed, 26 Feb 2020 15:46:45 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id q6sm4185715pfh.127.2020.02.26.15.46.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 15:46:40 -0800 (PST)
-Date:   Wed, 26 Feb 2020 18:46:39 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200226234639.GA39625@cmpxchg.org>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
- <20200226222642.GB30206@cmpxchg.org>
- <CALvZod68yLy_qkmMp_yrLg8Up_mSSwiGGCx0J6pkjbuWzSUjZQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod68yLy_qkmMp_yrLg8Up_mSSwiGGCx0J6pkjbuWzSUjZQ@mail.gmail.com>
+        Wed, 26 Feb 2020 15:46:44 -0800 (PST)
+Date:   Wed, 26 Feb 2020 15:46:44 -0800 (PST)
+X-Google-Original-Date: Wed, 26 Feb 2020 15:46:36 PST (-0800)
+Subject:     Re: [RFC PATCH 0/5] Add UEFI support for RISC-V 
+In-Reply-To: <20200226011037.7179-1-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        aou@eecs.berkeley.edu, alexios.zavras@intel.com,
+        allison@lohutok.net, akpm@linux-foundation.org,
+        Anup Patel <Anup.Patel@wdc.com>, ardb@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, bp@suse.de,
+        catalin.marinas@arm.com, greentime.hu@sifive.com,
+        Greg KH <gregkh@linuxfoundation.org>, mingo@kernel.org,
+        kstewart@linuxfoundation.org, keescook@chromium.org,
+        linus.walleij@linaro.org, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org, han_mao@c-sky.com,
+        mchehab+samsung@kernel.org, michal.simek@xilinx.com,
+        rppt@linux.ibm.com, pbonzini@redhat.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux@armlinux.org.uk, tglx@linutronix.de, will@kernel.org,
+        agraf@csgraf.de, leif@nuviainc.com, abner.chang@hpe.com,
+        daniel.schaefer@hpe.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-2fe6e2a0-9291-4810-b42c-af69b8dbaa06@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 03:36:50PM -0800, Shakeel Butt wrote:
-> On Wed, Feb 26, 2020 at 2:26 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > On Wed, Feb 26, 2020 at 12:25:33PM -0800, Shakeel Butt wrote:
-> > > On Wed, Feb 19, 2020 at 10:12 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > > >
-> > > > We have received regression reports from users whose workloads moved
-> > > > into containers and subsequently encountered new latencies. For some
-> > > > users these were a nuisance, but for some it meant missing their SLA
-> > > > response times. We tracked those delays down to cgroup limits, which
-> > > > inject direct reclaim stalls into the workload where previously all
-> > > > reclaim was handled my kswapd.
-> > > >
-> > > > This patch adds asynchronous reclaim to the memory.high cgroup limit
-> > > > while keeping direct reclaim as a fallback. In our testing, this
-> > > > eliminated all direct reclaim from the affected workload.
-> > > >
-> > > > memory.high has a grace buffer of about 4% between when it becomes
-> > > > exceeded and when allocating threads get throttled. We can use the
-> > > > same buffer for the async reclaimer to operate in. If the worker
-> > > > cannot keep up and the grace buffer is exceeded, allocating threads
-> > > > will fall back to direct reclaim before getting throttled.
-> > > >
-> > > > For irq-context, there's already async memory.high enforcement. Re-use
-> > > > that work item for all allocating contexts, but switch it to the
-> > > > unbound workqueue so reclaim work doesn't compete with the workload.
-> > > > The work item is per cgroup, which means the workqueue infrastructure
-> > > > will create at maximum one worker thread per reclaiming cgroup.
-> > > >
-> > > > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> > > > ---
-> > > >  mm/memcontrol.c | 60 +++++++++++++++++++++++++++++++++++++------------
-> > > >  mm/vmscan.c     | 10 +++++++--
-> > >
-> > > This reminds me of the per-memcg kswapd proposal from LSFMM 2018
-> > > (https://lwn.net/Articles/753162/).
-> >
-> > Ah yes, I remember those discussions. :)
-> >
-> > One thing that has changed since we tried to implement this last was
-> > the workqueue concurrency code. We don't have to worry about a single
-> > thread or fixed threads per cgroup, because the workqueue code has
-> > improved significantly to handle concurrency demands, and having one
-> > work item per cgroup makes sure we have anywhere between 0 threads and
-> > one thread per cgroup doing this reclaim work, completely on-demand.
-> >
-> > Also, with cgroup2, memory and cpu always have overlapping control
-> > domains, so the question who to account the work to becomes a much
-> > easier one to answer.
-> >
-> > > If I understand this correctly, the use-case is that the job instead
-> > > of direct reclaiming (potentially in latency sensitive tasks), prefers
-> > > a background non-latency sensitive task to do the reclaim. I am
-> > > wondering if we can use the memory.high notification along with a new
-> > > memcg interface (like memory.try_to_free_pages) to implement a user
-> > > space background reclaimer. That would resolve the cpu accounting
-> > > concerns as the user space background reclaimer can share the cpu cost
-> > > with the task.
-> >
-> > The idea is not necessarily that the background reclaimer is lower
-> > priority work, but that it can execute in parallel on a separate CPU
-> > instead of being forced into the execution stream of the main work.
-> >
-> > So we should be able to fully resolve this problem inside the kernel,
-> > without going through userspace, by accounting CPU cycles used by the
-> > background reclaim worker to the cgroup that is being reclaimed.
-> >
-> > > One concern with this approach will be that the memory.high
-> > > notification is too late and the latency sensitive task has faced the
-> > > stall. We can either introduce a threshold notification or another
-> > > notification only limit like memory.near_high which can be set based
-> > > on the job's rate of allocations and when the usage hits this limit
-> > > just notify the user space.
-> >
-> > Yeah, I think it would be a pretty drastic expansion of the memory
-> > controller's interface.
-> 
-> I understand the concern of expanding the interface and resolving the
-> problem within kernel but there are genuine use-cases which can be
-> fulfilled by these interfaces. We have a distributed caching service
-> which manages the caches in anon pages and their hotness. It is
-> preferable to drop a cold cache known to the application in the user
-> space on near stall/oom/memory_pressure then let the kernel swap it
-> out and face a stall on fault as the caches are replicated and other
-> nodes can serve it. For such workloads kernel reclaim does not help.
-> What would be your recommendation for such a workload. I can envision
-> memory.high + PSI notification but note that these are based on stalls
-> which the application wants to avoid.
+On Tue, 25 Feb 2020 17:10:32 PST (-0800), Atish Patra wrote:
+> This series adds UEFI support for RISC-V. Currently, only boot time
+> services have been added. Runtime services will be added in a separate
+> series. This series depends on some core EFI patches
+> present in current in efi-next and following other patches.
+>
+> U-Boot: Adds the boot hartid under chosen node.
+> https://lists.denx.de/pipermail/u-boot/2020-February/401227.html
+>
+> Linux kernel: SBI v0.2 and HSM extension support. This series is a mandatory
+> pre-requisite for UEFI support as only single core can boot EFI stub and
+> Linux via UEFI. All other cores are brought up using SBI HSM extension.
+> http://lists.infradead.org/pipermail/linux-riscv/2020-February/008513.html
+>
+> OpenSBI: master (commit: ge3f69fc1e934)
+>
+> Patch 1 just moves arm-stub code to a generic code so that it can be used
+> across different architecture.
+>
+> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
+> have create separate config to enable boot time services.
+> As runtime services are not enabled at this time, full generic early ioremap
+> support is also not added in this series.
+>
+> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
+> respectively.
+>
+> The patches can also be found in following git repo.
+>
+> https://github.com/atishp04/linux/tree/wip_uefi_riscv
+>
+> The patches have been verified on Qemu using bootefi command in U-Boot.
+> Here is a boot log.
+>
+> Atish Patra (5):
+> efi: Move arm-stub to a common file
+> include: pe.h: Add RISC-V related PE definition
+> RISC-V: Define fixmap bindings for generic early ioremap support
+> RISC-V: Add PE/COFF header for EFI stub
+> RISC-V: Add EFI stub support.
+>
+> arch/arm/Kconfig                              |   2 +-
+> arch/arm64/Kconfig                            |   2 +-
+> arch/riscv/Kconfig                            |  21 +++
+> arch/riscv/Makefile                           |   1 +
+> arch/riscv/configs/defconfig                  |   1 +
+> arch/riscv/include/asm/Kbuild                 |   2 +-
+> arch/riscv/include/asm/fixmap.h               |  21 ++-
+> arch/riscv/include/asm/io.h                   |   1 +
+> arch/riscv/include/asm/sections.h             |  13 ++
+> arch/riscv/kernel/Makefile                    |   4 +
+> arch/riscv/kernel/efi-header.S                | 107 ++++++++++++++
+> arch/riscv/kernel/head.S                      |  15 ++
+> arch/riscv/kernel/image-vars.h                |  52 +++++++
+> arch/riscv/kernel/vmlinux.lds.S               |  27 +++-
+> drivers/firmware/efi/Kconfig                  |   6 +-
+> drivers/firmware/efi/libstub/Makefile         |  20 ++-
+> .../efi/libstub/{arm-stub.c => efi-stub.c}    |   7 +-
+> drivers/firmware/efi/libstub/riscv-stub.c     | 135 ++++++++++++++++++
+> include/linux/pe.h                            |   3 +
+> 19 files changed, 420 insertions(+), 20 deletions(-)
+> create mode 100644 arch/riscv/include/asm/sections.h
+> create mode 100644 arch/riscv/kernel/efi-header.S
+> create mode 100644 arch/riscv/kernel/image-vars.h
+> rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (98%)
+> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
 
-Oh sure, for such a usecase it would make sense to explore some sort
-of usage notification system.
+I'm in favor of adding EFI support, and I'd rather have it sooner than later so
+we don't paint ourselves into a corner.  I'm not sure what happened to the
+RISC-V EFI spec process, though, which would be my only worry here (also I
+haven't looked at the code :)).  Do we have enough of a spec through the EFI
+process that this is all kosher on their end?
 
-My observation was in the context of getting kernel background reclaim
-cycles accounted properly, not for userspace reclaim algorithms :)
+Given that this definately isn't for these RCs, I'm going to leave it in my
+review queue.  It might be best to get the "move stuff to generic" work merged
+on its own, as then we can carry less diff around.
+
+Thanks!
