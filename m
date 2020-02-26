@@ -2,74 +2,74 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF20C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A1FC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631D924685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F1B24689
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lw0yY2Qo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Tae/Qp/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgBZLQn (ORCPT
+        id S1728236AbgBZLQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:16:43 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34334 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728317AbgBZLQU (ORCPT
+        Wed, 26 Feb 2020 06:16:48 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.102]:29327 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728280AbgBZLQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:16:20 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j7so1180666plt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:16:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JCmxjKYr6h+HQkJ8I2sAt9HA3Gj5LCEzRtahfHgdo0A=;
-        b=lw0yY2Qor//ZEUu1GpyfA2emUMnuSoecVy9q8cJzKNy2GUuZwK16AIKpL4A5Czlo90
-         KeHG1xGlmhagCJhp6nThjt3QE0uu83oA5EekEoMuVn+WeSzaM64/yGzyiw5/oVt0UVhC
-         2f4qYBy8qEx4Cw7EN8DVkuIpdeoeJl5mmmcm4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JCmxjKYr6h+HQkJ8I2sAt9HA3Gj5LCEzRtahfHgdo0A=;
-        b=Fc9iFRab2hhMCRbOBzx4sbL1EFbDbWx1LLSdL0Bdgk9PK/1gL/KprouxOc4qtOWe0w
-         bNvPlfDVHALGrXgArLwZTZgFLeGfs/1GpM5T1kYqLSrkq4RUyBc/U21okPA65eQGFP6k
-         jREG3dFs1uV+B1H1DvQrxY6ep10UwyNdhYEdBRSA4TXBezvkmqqtJwQfYnPnmvF4Twpi
-         AfQEm8jrsM6kboYdRfIWxyJyBQJ+TJaKqnOfN/mfaYv1kzzpHgNs6Ix1wxOigI+sTXLk
-         dNGaiSAFf6Bx4UTwZ4TKEK0GXGEAzCa5M6jazBA2F2JHshjAoZXf4q0R+h29xcN2xriM
-         gdgw==
-X-Gm-Message-State: APjAAAU51KeHr2W/zZYBLki7bkkqL29gH0jKAL6eaG1/6lYvMsvY2uvW
-        ZokNoJyQwPR6dn1HKpxLCbp8+Q==
-X-Google-Smtp-Source: APXvYqxtS5WDiX+fS/IvZhS9qTmEMxpoSGMWZO9YA9VURvHi53gevzaMm9d7V9HHbkgzuOKa50WCUw==
-X-Received: by 2002:a17:90a:178f:: with SMTP id q15mr4767582pja.132.1582715779415;
-        Wed, 26 Feb 2020 03:16:19 -0800 (PST)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id o22sm2429993pgj.58.2020.02.26.03.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 03:16:18 -0800 (PST)
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv3 09/11] videobuf2: add begin/end cpu_access callbacks to dma-contig
-Date:   Wed, 26 Feb 2020 20:15:27 +0900
-Message-Id: <20200226111529.180197-10-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200226111529.180197-1-senozhatsky@chromium.org>
-References: <20200226111529.180197-1-senozhatsky@chromium.org>
+        Wed, 26 Feb 2020 06:16:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582715773;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=V1+Q4JesqWcFYmt/4rldi7rtX4QsYdV77esVgLGK1a4=;
+        b=Tae/Qp/Ja566cNGQElT1z8dOewGBmIYeJesrt05WHca0qCipyysGV7x/2NtB2MsFot
+        tNmUUiIaH3AyWNtoGYeFW6vIaMkXFktsoxhvFIpO/8Ybu96v2sxSd55k4poTiPnKWxFq
+        P1JCYn0Jq0KPNMNJNO4Jg0qm1zbqIdokbWaDyu2OB9bOYzwFt/E19bg1ogyfSlxXqbMY
+        zNovyDmxZrtAt9x89IX+WXiH95VmSA8LeU3M+iVqof7JZhwCYWvsryYDaj3hO1Vv8gJL
+        ZSNJmDmF4sVqMyqmvbpizmVXzs90OhRYG2Cx9oE8NboJG6iJW/zyorZInd6m1lqPVXOX
+        dZ2g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1QBG54Ci
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Feb 2020 12:16:05 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [PATCH v6 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
+Date:   Wed, 26 Feb 2020 12:16:00 +0100
+Message-Id: <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1582715761.git.hns@goldelico.com>
+References: <cover.1582715761.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,76 +77,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide begin_cpu_access() and end_cpu_access() callbacks for
-cache synchronisation on exported buffers.
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 
-The patch also adds a new helper function - vb2_dc_buffer_consistent(),
-which returns true is if the buffer is consistent (DMA_ATTR_NON_CONSISTENT
-bit cleared), so then we don't need to sync anything.
+This patch brings support for the JZ4780 efuse. Currently it only exposes
+a read only access to the entire 8K bits efuse memory and the
+ethernet mac address for the davicom dm9000 chip on the CI20 board.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+It also changes the nemc reg range to avoid overlap.
+
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../common/videobuf2/videobuf2-dma-contig.c   | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-index d0c9dffe49e5..a387260fb321 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -42,6 +42,11 @@ struct vb2_dc_buf {
- 	struct dma_buf_attachment	*db_attach;
- };
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index f928329b034b..1e266be28096 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -358,7 +358,7 @@
  
-+static inline bool vb2_dc_buffer_consistent(unsigned long attr)
-+{
-+	return !(attr & DMA_ATTR_NON_CONSISTENT);
-+}
-+
- /*********************************************/
- /*        scatterlist table functions        */
- /*********************************************/
-@@ -335,6 +340,32 @@ static void vb2_dc_dmabuf_ops_release(struct dma_buf *dbuf)
- 	vb2_dc_put(dbuf->priv);
- }
+ 	nemc: nemc@13410000 {
+ 		compatible = "ingenic,jz4780-nemc";
+-		reg = <0x13410000 0x10000>;
++		reg = <0x13410000 0x4c>;
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+ 		ranges = <1 0 0x1b000000 0x1000000
+@@ -373,6 +373,21 @@
+ 		status = "disabled";
+ 	};
  
-+static int vb2_dc_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-+					      enum dma_data_direction direction)
-+{
-+	struct vb2_dc_buf *buf = dbuf->priv;
-+	struct sg_table *sgt = buf->dma_sgt;
++	efuse: efuse@134100d0 {
++		compatible = "ingenic,jz4780-efuse";
++		reg = <0x134100d0 0x2c>;
 +
-+	if (vb2_dc_buffer_consistent(buf->attrs))
-+		return 0;
++		clocks = <&cgu JZ4780_CLK_AHB2>;
++		clock-names = "ahb2";
 +
-+	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-+	return 0;
-+}
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+static int vb2_dc_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
-+					    enum dma_data_direction direction)
-+{
-+	struct vb2_dc_buf *buf = dbuf->priv;
-+	struct sg_table *sgt = buf->dma_sgt;
++		eth0_addr: eth-mac-addr@0x22 {
++			reg = <0x22 0x6>;
++		};
++	};
 +
-+	if (vb2_dc_buffer_consistent(buf->attrs))
-+		return 0;
-+
-+	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-+	return 0;
-+}
-+
- static void *vb2_dc_dmabuf_ops_vmap(struct dma_buf *dbuf)
- {
- 	struct vb2_dc_buf *buf = dbuf->priv;
-@@ -353,6 +384,8 @@ static const struct dma_buf_ops vb2_dc_dmabuf_ops = {
- 	.detach = vb2_dc_dmabuf_ops_detach,
- 	.map_dma_buf = vb2_dc_dmabuf_ops_map,
- 	.unmap_dma_buf = vb2_dc_dmabuf_ops_unmap,
-+	.begin_cpu_access = vb2_dc_dmabuf_ops_begin_cpu_access,
-+	.end_cpu_access = vb2_dc_dmabuf_ops_end_cpu_access,
- 	.vmap = vb2_dc_dmabuf_ops_vmap,
- 	.mmap = vb2_dc_dmabuf_ops_mmap,
- 	.release = vb2_dc_dmabuf_ops_release,
+ 	dma: dma@13420000 {
+ 		compatible = "ingenic,jz4780-dma";
+ 		reg = <0x13420000 0x400
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.23.0
 
